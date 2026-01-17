@@ -3,7 +3,7 @@
  * Consolidates patient state management using backend API
  */
 
-import React, { type ReactNode, useCallback, useState } from 'react';
+import React, { type ReactNode, useCallback, useState, useEffect } from 'react';
 import type { Patient } from '@/types';
 import { createFeatureContext } from '@/shared/context/createFeatureContext';
 import { patientAPI } from '@/services/api/patients';
@@ -69,6 +69,11 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
     }
   }, []);
 
+  // Load patients on mount
+  useEffect(() => {
+    refreshPatients();
+  }, [refreshPatients]);
+
   /**
    * Add a new patient
    */
@@ -76,11 +81,13 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
     try {
       const created = await patientAPI.create(patient);
       setPatients(prev => [...prev, created]);
+      // Refresh to ensure full data consistency with server
+      await refreshPatients();
     } catch (error) {
       console.error('Failed to create patient:', error);
       throw error;
     }
-  }, []);
+  }, [refreshPatients]);
 
   /**
    * Update an existing patient
@@ -93,11 +100,13 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
           patient.id === id ? updated : patient
         )
       );
+      // Refresh to ensure full data consistency with server
+      await refreshPatients();
     } catch (error) {
       console.error('Failed to update patient:', error);
       throw error;
     }
-  }, []);
+  }, [refreshPatients]);
 
   /**
    * Delete a patient

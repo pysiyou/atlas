@@ -175,19 +175,19 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       },
       medicalHistory: {
         chronicConditions: formData.chronicConditions
-          .split(',')
+          .split(';')
           .map((c: string) => c.trim())
           .filter((c: string) => c.length > 0),
         currentMedications: formData.currentMedications
-          .split(',')
+          .split(';')
           .map((m: string) => m.trim())
           .filter((m: string) => m.length > 0),
         allergies: formData.allergies
-          .split(',')
+          .split(';')
           .map((a: string) => a.trim())
           .filter((a: string) => a.length > 0),
         previousSurgeries: formData.previousSurgeries
-          .split(',')
+          .split(';')
           .map((s: string) => s.trim())
           .filter((s: string) => s.length > 0),
         familyHistory: formData.familyHistory.trim(),
@@ -225,19 +225,19 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       },
       medicalHistory: {
         chronicConditions: formData.chronicConditions
-          .split(',')
+          .split(';')
           .map((c) => c.trim())
           .filter((c) => c.length > 0),
         currentMedications: formData.currentMedications
-          .split(',')
+          .split(';')
           .map((m) => m.trim())
           .filter((m) => m.length > 0),
         allergies: formData.allergies
-          .split(',')
+          .split(';')
           .map((a) => a.trim())
           .filter((a) => a.length > 0),
         previousSurgeries: formData.previousSurgeries
-          .split(',')
+          .split(';')
           .map((s) => s.trim())
           .filter((s) => s.length > 0),
         familyHistory: formData.familyHistory.trim(),

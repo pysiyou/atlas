@@ -17,32 +17,42 @@ export const formatCurrency = (amount: number, currency: string = 'USD'): string
 /**
  * Format date to readable format
  */
-export const formatDate = (date: string | Date): string => {
+export const formatDate = (date: string | Date | undefined | null): string => {
+  if (!date) return 'N/A';
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  if (!isValidDate(dateObj)) return 'Invalid Date';
   return format(dateObj, 'MMM dd, yyyy');
 };
 
 /**
  * Format date and time to readable format
  */
-export const formatDateTime = (date: string | Date): string => {
+export const formatDateTime = (date: string | Date | undefined | null): string => {
+  if (!date) return 'N/A';
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  if (!isValidDate(dateObj)) return 'Invalid Date';
   return format(dateObj, 'MMM dd, yyyy HH:mm');
 };
 
 /**
  * Format time only
  */
-export const formatTime = (date: string | Date): string => {
+export const formatTime = (date: string | Date | undefined | null): string => {
+  if (!date) return '';
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  if (!isValidDate(dateObj)) return '';
   return format(dateObj, 'HH:mm');
 };
 
 /**
  * Calculate age from date of birth
  */
-export const calculateAge = (dateOfBirth: string | Date): number => {
+export const calculateAge = (dateOfBirth: string | Date | undefined): number => {
+  if (!dateOfBirth) return 0;
   const dob = typeof dateOfBirth === 'string' ? parseISO(dateOfBirth) : dateOfBirth;
+  
+  if (!isValidDate(dob)) return 0;
+
   const today = new Date();
   let age = today.getFullYear() - dob.getFullYear();
   const monthDiff = today.getMonth() - dob.getMonth();
@@ -52,6 +62,10 @@ export const calculateAge = (dateOfBirth: string | Date): number => {
   }
   
   return age;
+};
+
+const isValidDate = (d: any): d is Date => {
+  return d instanceof Date && !isNaN(d.getTime());
 };
 
 /**

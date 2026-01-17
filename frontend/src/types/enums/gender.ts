@@ -3,7 +3,7 @@
  */
 
 // 1. VALUES - The single source of truth
-export const GENDER_VALUES = ['male', 'female'] as const;
+export const GENDER_VALUES = ['male', 'female', 'other'] as const;
 
 // 2. TYPE - Derived from values
 export type Gender = (typeof GENDER_VALUES)[number];
@@ -12,6 +12,7 @@ export type Gender = (typeof GENDER_VALUES)[number];
 export const GENDER_CONFIG: Record<Gender, { label: string; color: string }> = {
   male: { label: 'Male', color: 'primary' },
   female: { label: 'Female', color: 'pink' },
+  other: { label: 'Other', color: 'gray' },
 };
 
 // 4. OPTIONS - For dropdowns/selects

@@ -133,14 +133,14 @@ def seed_database():
         patients_data = [
             {
                 "id": "PAT-20260117-001",
-                "full_name": "John Smith",
-                "date_of_birth": "1985-03-15",
+                "fullName": "John Smith",
+                "dateOfBirth": "1985-03-15",
                 "gender": Gender.MALE,
                 "phone": "+1-555-0101",
                 "email": "john.smith@email.com",
                 "address": {"street": "123 Main St", "city": "New York", "postalCode": "10001"},
-                "emergency_contact": {"name": "Jane Smith", "phone": "+1-555-0102"},
-                "medical_history": {
+                "emergencyContact": {"name": "Jane Smith", "phone": "+1-555-0102"},
+                "medicalHistory": {
                     "chronicConditions": ["Hypertension"],
                     "currentMedications": ["Lisinopril 10mg"],
                     "allergies": ["Penicillin"],
@@ -148,20 +148,20 @@ def seed_database():
                     "familyHistory": "Father had diabetes",
                     "lifestyle": {"smoking": False, "alcohol": False}
                 },
-                "registration_date": datetime.utcnow(),
-                "created_by": "USR-00000000-001",
-                "updated_by": "USR-00000000-001",
+                "registrationDate": datetime.utcnow(),
+                "createdBy": "USR-00000000-001",
+                "updatedBy": "USR-00000000-001",
             },
             {
                 "id": "PAT-20260117-002",
-                "full_name": "Maria Garcia",
-                "date_of_birth": "1992-07-22",
+                "fullName": "Maria Garcia",
+                "dateOfBirth": "1992-07-22",
                 "gender": Gender.FEMALE,
                 "phone": "+1-555-0201",
                 "email": "maria.garcia@email.com",
                 "address": {"street": "456 Oak Ave", "city": "Los Angeles", "postalCode": "90001"},
-                "emergency_contact": {"name": "Carlos Garcia", "phone": "+1-555-0202"},
-                "medical_history": {
+                "emergencyContact": {"name": "Carlos Garcia", "phone": "+1-555-0202"},
+                "medicalHistory": {
                     "chronicConditions": [],
                     "currentMedications": [],
                     "allergies": [],
@@ -169,18 +169,18 @@ def seed_database():
                     "familyHistory": "None reported",
                     "lifestyle": {"smoking": False, "alcohol": True}
                 },
-                "registration_date": datetime.utcnow(),
-                "created_by": "USR-00000000-002",
-                "updated_by": "USR-00000000-002",
+                "registrationDate": datetime.utcnow(),
+                "createdBy": "USR-00000000-002",
+                "updatedBy": "USR-00000000-002",
             },
         ]
-        
+
         for patient_data in patients_data:
             existing = db.query(Patient).filter(Patient.id == patient_data["id"]).first()
             if not existing:
                 patient = Patient(**patient_data)
                 db.add(patient)
-                print(f"  ✓ Created patient: {patient_data['full_name']} ({patient_data['id']})")
+                print(f"  ✓ Created patient: {patient_data['fullName']} ({patient_data['id']})")
         
         db.commit()
         

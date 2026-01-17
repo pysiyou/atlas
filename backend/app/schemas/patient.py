@@ -1,7 +1,8 @@
 """
 Pydantic schemas for Patient
+All fields use camelCase - no aliases needed
 """
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from datetime import datetime
 from app.schemas.enums import Gender, AffiliationDuration
 
@@ -9,10 +10,7 @@ from app.schemas.enums import Gender, AffiliationDuration
 class Address(BaseModel):
     street: str
     city: str
-    postalCode: str = Field(alias="postal_code")
-    
-    class Config:
-        populate_by_name = True
+    postalCode: str
 
 
 class EmergencyContact(BaseModel):
@@ -26,36 +24,30 @@ class Lifestyle(BaseModel):
 
 
 class MedicalHistory(BaseModel):
-    chronicConditions: list[str] = Field(alias="chronic_conditions")
-    currentMedications: list[str] = Field(alias="current_medications")
+    chronicConditions: list[str]
+    currentMedications: list[str]
     allergies: list[str]
-    previousSurgeries: list[str] = Field(alias="previous_surgeries")
-    familyHistory: str = Field(alias="family_history")
+    previousSurgeries: list[str]
+    familyHistory: str
     lifestyle: Lifestyle
-    
-    class Config:
-        populate_by_name = True
 
 
 class Affiliation(BaseModel):
-    assuranceNumber: str = Field(alias="assurance_number")
-    startDate: str = Field(alias="start_date")
-    endDate: str = Field(alias="end_date")
+    assuranceNumber: str
+    startDate: str
+    endDate: str
     duration: AffiliationDuration
-    
-    class Config:
-        populate_by_name = True
 
 
 class PatientBase(BaseModel):
-    fullName: str = Field(alias="full_name")
-    dateOfBirth: str = Field(alias="date_of_birth")
+    fullName: str
+    dateOfBirth: str
     gender: Gender
     phone: str
     email: str | None = None
     address: Address
-    emergencyContact: EmergencyContact = Field(alias="emergency_contact")
-    medicalHistory: MedicalHistory = Field(alias="medical_history")
+    emergencyContact: EmergencyContact
+    medicalHistory: MedicalHistory
     affiliation: Affiliation | None = None
 
 
@@ -64,23 +56,22 @@ class PatientCreate(PatientBase):
 
 
 class PatientUpdate(BaseModel):
-    fullName: str | None = Field(None, alias="full_name")
+    fullName: str | None = None
     phone: str | None = None
     email: str | None = None
     address: Address | None = None
-    emergencyContact: EmergencyContact | None = Field(None, alias="emergency_contact")
-    medicalHistory: MedicalHistory | None = Field(None, alias="medical_history")
+    emergencyContact: EmergencyContact | None = None
+    medicalHistory: MedicalHistory | None = None
     affiliation: Affiliation | None = None
 
 
 class PatientResponse(PatientBase):
     id: str
-    registrationDate: datetime = Field(alias="registration_date")
-    createdBy: str = Field(alias="created_by")
-    createdAt: datetime = Field(alias="created_at")
-    updatedAt: datetime = Field(alias="updated_at")
-    updatedBy: str = Field(alias="updated_by")
-    
+    registrationDate: datetime
+    createdBy: str
+    createdAt: datetime
+    updatedAt: datetime
+    updatedBy: str
+
     class Config:
         from_attributes = True
-        populate_by_name = True

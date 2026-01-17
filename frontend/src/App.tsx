@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast';
 
 // Composed Providers
 import { AppProviders } from '@/shared/providers';
+import { DataLoader } from '@/shared/components/DataLoader';
 
 // Components
 import { LoginForm } from '@/features/auth/LoginForm';
@@ -148,7 +149,8 @@ const App: React.FC = () => {
   return (
     <Router>
       <AppProviders>
-        <AppRoutes />
+        <DataLoader>
+          <AppRoutes />
         <ModalRenderer />
         <Toaster
           position="top-right"
@@ -174,6 +176,7 @@ const App: React.FC = () => {
             },
           }}
         />
+        </DataLoader>
       </AppProviders>
     </Router>
   );

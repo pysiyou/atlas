@@ -133,7 +133,7 @@ export const PatientDetail: React.FC = () => {
                   <div>
                     <p className="text-xs text-gray-500">Address</p>
                     <p className="text-sm font-medium text-gray-900 mt-0.5">
-                      {patient.address.street}, {patient.address.city} {patient.address.postalCode}
+                      {patient.address?.street || 'N/A'}, {patient.address?.city || ''} {patient.address?.postalCode || ''}
                     </p>
                   </div>
                 </div>
@@ -162,8 +162,8 @@ export const PatientDetail: React.FC = () => {
                   <div>
                     <p className="text-sm font-medium text-gray-900">Chronic Disease</p>
                     <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
-                      {patient.medicalHistory.chronicConditions.length > 0 
-                        ? patient.medicalHistory.chronicConditions.join(', ') 
+                      {patient.medicalHistory?.chronicConditions?.length > 0
+                        ? patient.medicalHistory.chronicConditions.join(', ')
                         : 'None'}
                     </p>
                   </div>
@@ -177,8 +177,8 @@ export const PatientDetail: React.FC = () => {
                   <div>
                     <p className="text-sm font-medium text-gray-900">Current Medications</p>
                     <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
-                      {patient.medicalHistory.currentMedications.length > 0 
-                        ? patient.medicalHistory.currentMedications.join(', ') 
+                      {patient.medicalHistory?.currentMedications?.length > 0
+                        ? patient.medicalHistory.currentMedications.join(', ')
                         : 'None'}
                     </p>
                   </div>
@@ -192,8 +192,8 @@ export const PatientDetail: React.FC = () => {
                   <div>
                     <p className="text-sm font-medium text-gray-900">Surgery</p>
                     <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
-                       {patient.medicalHistory.previousSurgeries.length > 0 
-                        ? patient.medicalHistory.previousSurgeries.join(', ') 
+                       {patient.medicalHistory?.previousSurgeries?.length > 0
+                        ? patient.medicalHistory.previousSurgeries.join(', ')
                         : 'None'}
                     </p>
                   </div>
@@ -207,11 +207,11 @@ export const PatientDetail: React.FC = () => {
                   <div>
                     <p className="text-sm font-medium text-gray-900">Family Disease</p>
                     <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
-                       {patient.medicalHistory.familyHistory || 'None'}
+                       {patient.medicalHistory?.familyHistory || 'None'}
                     </p>
                   </div>
                 </div>
-                
+
                 {/* Allergies */}
                 <div className="flex gap-3">
                   <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
@@ -220,8 +220,8 @@ export const PatientDetail: React.FC = () => {
                   <div>
                     <p className="text-sm font-medium text-gray-900">Allergies</p>
                     <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
-                       {patient.medicalHistory.allergies.length > 0 
-                        ? patient.medicalHistory.allergies.join(', ') 
+                       {patient.medicalHistory?.allergies?.length > 0
+                        ? patient.medicalHistory.allergies.join(', ')
                         : 'None'}
                     </p>
                   </div>
