@@ -1,0 +1,4140 @@
+[
+  {
+    "aliquotId": "ALQ-20251216-001",
+    "parentSampleId": "SAM-20251216-002",
+    "orderId": "ORD-20251216-002",
+    "patientId": "PAT-20251218-002",
+    "aliquotNumber": 1,
+    "volume": 2.8,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "VIRO004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251216002A01",
+    "status": "consumed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-16T08:59:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "VIRO004"
+    ],
+    "consumedAt": "2025-12-16T11:01:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251216-002",
+    "parentSampleId": "SAM-20251216-006",
+    "orderId": "ORD-20251216-005",
+    "patientId": "PAT-20260106-003",
+    "aliquotNumber": 1,
+    "volume": 2.6,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "TUMOR001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251216006A01",
+    "status": "consumed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-16T09:11:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "TUMOR001"
+    ],
+    "consumedAt": "2025-12-16T10:35:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251216-003",
+    "parentSampleId": "SAM-20251216-006",
+    "orderId": "ORD-20251216-005",
+    "patientId": "PAT-20260106-003",
+    "aliquotNumber": 2,
+    "volume": 2.6,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251216006A02",
+    "status": "consumed",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2025-12-16T09:29:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM004"
+    ],
+    "consumedAt": "2025-12-16T12:47:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251216-004",
+    "parentSampleId": "SAM-20251216-011",
+    "orderId": "ORD-20251216-008",
+    "patientId": "PAT-20260112-005",
+    "aliquotNumber": 1,
+    "volume": 3.3,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM013"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251216011A01",
+    "status": "consumed",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-16T11:42:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM013"
+    ],
+    "consumedAt": "2025-12-16T13:05:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251217-001",
+    "parentSampleId": "SAM-20251217-001",
+    "orderId": "ORD-20251217-001",
+    "patientId": "PAT-20260110-001",
+    "aliquotNumber": 1,
+    "volume": 3,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM018"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251217001A01",
+    "status": "consumed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-17T14:54:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM018"
+    ],
+    "consumedAt": "2025-12-17T18:30:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251217-002",
+    "parentSampleId": "SAM-20251217-003",
+    "orderId": "ORD-20251217-002",
+    "patientId": "PAT-20251216-003",
+    "aliquotNumber": 1,
+    "volume": 2,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "PARA004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251217003A01",
+    "status": "consumed",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-17T12:52:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "PARA004"
+    ],
+    "consumedAt": "2025-12-17T16:16:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251217-003",
+    "parentSampleId": "SAM-20251217-005",
+    "orderId": "ORD-20251217-003",
+    "patientId": "PAT-20260115-004",
+    "aliquotNumber": 1,
+    "volume": 2.8,
+    "remainingVolume": 2.8,
+    "linkedTestCodes": [
+      "CHEM033"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251217005A01",
+    "status": "available",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-17T19:05:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251217-004",
+    "parentSampleId": "SAM-20251217-007",
+    "orderId": "ORD-20251217-004",
+    "patientId": "PAT-20251231-007",
+    "aliquotNumber": 1,
+    "volume": 3.5,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM009"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251217007A01",
+    "status": "consumed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-17T10:57:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM009"
+    ],
+    "consumedAt": "2025-12-17T14:41:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251217-005",
+    "parentSampleId": "SAM-20251217-009",
+    "orderId": "ORD-20251217-006",
+    "patientId": "PAT-20251221-001",
+    "aliquotNumber": 1,
+    "volume": 2.9,
+    "remainingVolume": 2.9,
+    "linkedTestCodes": [
+      "CHEM025"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251217009A01",
+    "status": "stored",
+    "currentLocation": "Refrigerator B",
+    "createdAt": "2025-12-17T13:14:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM025"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Refrigerator B",
+    "storageConditions": "Protected from light"
+  },
+  {
+    "aliquotId": "ALQ-20251217-006",
+    "parentSampleId": "SAM-20251217-009",
+    "orderId": "ORD-20251217-006",
+    "patientId": "PAT-20251221-001",
+    "aliquotNumber": 2,
+    "volume": 2.9,
+    "remainingVolume": 2.9,
+    "linkedTestCodes": [
+      "SER005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251217009A02",
+    "status": "disposed",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2025-12-17T13:51:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "SER005"
+    ],
+    "consumedAt": "2025-12-17T16:50:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": "2025-12-17T16:50:00.000Z",
+    "disposedBy": "USR-003"
+  },
+  {
+    "aliquotId": "ALQ-20251217-007",
+    "parentSampleId": "SAM-20251217-013",
+    "orderId": "ORD-20251217-009",
+    "patientId": "PAT-20251224-003",
+    "aliquotNumber": 1,
+    "volume": 2.4,
+    "remainingVolume": 1.2,
+    "linkedTestCodes": [
+      "CHEM005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251217013A01",
+    "status": "in-use",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-17T13:46:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM005"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251217-008",
+    "parentSampleId": "SAM-20251217-013",
+    "orderId": "ORD-20251217-009",
+    "patientId": "PAT-20251224-003",
+    "aliquotNumber": 2,
+    "volume": 2.4,
+    "remainingVolume": 1.2,
+    "linkedTestCodes": [
+      "CHEM032"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251217013A02",
+    "status": "in-use",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-17T13:58:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM032"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251217-009",
+    "parentSampleId": "SAM-20251217-016",
+    "orderId": "ORD-20251217-012",
+    "patientId": "PAT-20260115-003",
+    "aliquotNumber": 1,
+    "volume": 2.9,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM026"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251217016A01",
+    "status": "consumed",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-17T19:34:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM026"
+    ],
+    "consumedAt": "2025-12-17T22:21:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Primary testing"
+  },
+  {
+    "aliquotId": "ALQ-20251217-010",
+    "parentSampleId": "SAM-20251217-016",
+    "orderId": "ORD-20251217-012",
+    "patientId": "PAT-20260115-003",
+    "aliquotNumber": 2,
+    "volume": 2.9,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "VIRO005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251217016A02",
+    "status": "consumed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-17T19:34:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "VIRO005"
+    ],
+    "consumedAt": "2025-12-17T21:24:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Quality control"
+  },
+  {
+    "aliquotId": "ALQ-20251218-001",
+    "parentSampleId": "SAM-20251218-002",
+    "orderId": "ORD-20251218-001",
+    "patientId": "PAT-20251217-001",
+    "aliquotNumber": 1,
+    "volume": 3,
+    "remainingVolume": 3,
+    "linkedTestCodes": [
+      "CHEM038"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251218002A01",
+    "status": "available",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-18T13:04:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Quality control"
+  },
+  {
+    "aliquotId": "ALQ-20251218-002",
+    "parentSampleId": "SAM-20251218-003",
+    "orderId": "ORD-20251218-001",
+    "patientId": "PAT-20251217-001",
+    "aliquotNumber": 1,
+    "volume": 10.6,
+    "remainingVolume": 10.6,
+    "linkedTestCodes": [
+      "MICRO005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251218003A01",
+    "status": "available",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2025-12-18T14:13:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Backup/retest"
+  },
+  {
+    "aliquotId": "ALQ-20251218-003",
+    "parentSampleId": "SAM-20251218-006",
+    "orderId": "ORD-20251218-004",
+    "patientId": "PAT-20251224-002",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "HEMA001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251218006A01",
+    "status": "disposed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-18T17:34:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "HEMA001"
+    ],
+    "consumedAt": "2025-12-18T19:52:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": "2025-12-18T19:52:00.000Z",
+    "disposedBy": "USR-004"
+  },
+  {
+    "aliquotId": "ALQ-20251218-004",
+    "parentSampleId": "SAM-20251218-006",
+    "orderId": "ORD-20251218-004",
+    "patientId": "PAT-20251224-002",
+    "aliquotNumber": 2,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "PARA004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251218006A02",
+    "status": "stored",
+    "currentLocation": "Refrigerator B",
+    "createdAt": "2025-12-18T17:54:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "PARA004"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Refrigerator B",
+    "storageConditions": "2-8°C"
+  },
+  {
+    "aliquotId": "ALQ-20251218-005",
+    "parentSampleId": "SAM-20251218-011",
+    "orderId": "ORD-20251218-006",
+    "patientId": "PAT-20260107-002",
+    "aliquotNumber": 1,
+    "volume": 6.8,
+    "remainingVolume": 3.4,
+    "linkedTestCodes": [
+      "ENDO001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251218011A01",
+    "status": "in-use",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-18T17:44:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "ENDO001"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251218-006",
+    "parentSampleId": "SAM-20251218-011",
+    "orderId": "ORD-20251218-006",
+    "patientId": "PAT-20260107-002",
+    "aliquotNumber": 2,
+    "volume": 6.8,
+    "remainingVolume": 3.4,
+    "linkedTestCodes": [
+      "MICRO005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251218011A02",
+    "status": "in-use",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-18T17:16:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "MICRO005"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251219-001",
+    "parentSampleId": "SAM-20251219-002",
+    "orderId": "ORD-20251219-002",
+    "patientId": "PAT-20251218-002",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "TUMOR002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251219002A01",
+    "status": "disposed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-19T18:15:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "TUMOR002"
+    ],
+    "consumedAt": "2025-12-19T21:52:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": "2025-12-19T21:52:00.000Z",
+    "disposedBy": "USR-002"
+  },
+  {
+    "aliquotId": "ALQ-20251219-002",
+    "parentSampleId": "SAM-20251219-002",
+    "orderId": "ORD-20251219-002",
+    "patientId": "PAT-20251218-002",
+    "aliquotNumber": 2,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "ENDO002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251219002A02",
+    "status": "stored",
+    "currentLocation": "Room Temperature Storage",
+    "createdAt": "2025-12-19T18:10:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "ENDO002"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Room Temperature Storage",
+    "storageConditions": "-80°C"
+  },
+  {
+    "aliquotId": "ALQ-20251219-003",
+    "parentSampleId": "SAM-20251219-007",
+    "orderId": "ORD-20251219-005",
+    "patientId": "PAT-20251223-001",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "ENDO002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251219007A01",
+    "status": "available",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-19T10:00:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251219-004",
+    "parentSampleId": "SAM-20251219-007",
+    "orderId": "ORD-20251219-005",
+    "patientId": "PAT-20251223-001",
+    "aliquotNumber": 2,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "CHEM024"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251219007A02",
+    "status": "available",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2025-12-19T10:18:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251219-005",
+    "parentSampleId": "SAM-20251219-008",
+    "orderId": "ORD-20251219-005",
+    "patientId": "PAT-20251223-001",
+    "aliquotNumber": 1,
+    "volume": 3.2,
+    "remainingVolume": 3.2,
+    "linkedTestCodes": [
+      "MICRO002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251219008A01",
+    "status": "available",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2025-12-19T17:29:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Quality control"
+  },
+  {
+    "aliquotId": "ALQ-20251219-006",
+    "parentSampleId": "SAM-20251219-010",
+    "orderId": "ORD-20251219-006",
+    "patientId": "PAT-20260112-001",
+    "aliquotNumber": 1,
+    "volume": 21.9,
+    "remainingVolume": 10.9,
+    "linkedTestCodes": [
+      "URINE001"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20251219010A01",
+    "status": "in-use",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-19T09:44:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "URINE001"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251219-007",
+    "parentSampleId": "SAM-20251219-011",
+    "orderId": "ORD-20251219-006",
+    "patientId": "PAT-20260112-001",
+    "aliquotNumber": 1,
+    "volume": 2.9,
+    "remainingVolume": 1.4,
+    "linkedTestCodes": [
+      "CHEM019"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251219011A01",
+    "status": "in-use",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-19T10:48:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM019"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251219-008",
+    "parentSampleId": "SAM-20251219-011",
+    "orderId": "ORD-20251219-006",
+    "patientId": "PAT-20260112-001",
+    "aliquotNumber": 2,
+    "volume": 2.9,
+    "remainingVolume": 1.4,
+    "linkedTestCodes": [
+      "CHEM005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251219011A02",
+    "status": "in-use",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-19T10:44:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM005"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Archive"
+  },
+  {
+    "aliquotId": "ALQ-20251219-009",
+    "parentSampleId": "SAM-20251219-012",
+    "orderId": "ORD-20251219-007",
+    "patientId": "PAT-20251227-002",
+    "aliquotNumber": 1,
+    "volume": 2.1,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "VIRO001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251219012A01",
+    "status": "consumed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-19T13:09:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "VIRO001"
+    ],
+    "consumedAt": "2025-12-19T16:02:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Primary testing"
+  },
+  {
+    "aliquotId": "ALQ-20251220-001",
+    "parentSampleId": "SAM-20251220-002",
+    "orderId": "ORD-20251220-002",
+    "patientId": "PAT-20251222-003",
+    "aliquotNumber": 1,
+    "volume": 3.8,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "SER006"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251220002A01",
+    "status": "consumed",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-20T13:35:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "SER006"
+    ],
+    "consumedAt": "2025-12-20T14:45:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251220-002",
+    "parentSampleId": "SAM-20251220-006",
+    "orderId": "ORD-20251220-005",
+    "patientId": "PAT-20251226-003",
+    "aliquotNumber": 1,
+    "volume": 3.3,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "COAG003"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251220006A01",
+    "status": "consumed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-20T08:37:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "COAG003"
+    ],
+    "consumedAt": "2025-12-20T11:37:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251220-003",
+    "parentSampleId": "SAM-20251220-007",
+    "orderId": "ORD-20251220-005",
+    "patientId": "PAT-20251226-003",
+    "aliquotNumber": 1,
+    "volume": 2.7,
+    "remainingVolume": 2.7,
+    "linkedTestCodes": [
+      "CHEM002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251220007A01",
+    "status": "disposed",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-20T15:37:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM002"
+    ],
+    "consumedAt": "2025-12-20T18:16:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": "2025-12-20T18:16:00.000Z",
+    "disposedBy": "USR-004"
+  },
+  {
+    "aliquotId": "ALQ-20251220-004",
+    "parentSampleId": "SAM-20251220-008",
+    "orderId": "ORD-20251220-006",
+    "patientId": "PAT-20251224-001",
+    "aliquotNumber": 1,
+    "volume": 3.3,
+    "remainingVolume": 3.3,
+    "linkedTestCodes": [
+      "CHEM029"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251220008A01",
+    "status": "stored",
+    "currentLocation": "Freezer -20°C",
+    "createdAt": "2025-12-20T12:06:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM029"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Freezer -20°C",
+    "storageConditions": "Room temperature"
+  },
+  {
+    "aliquotId": "ALQ-20251220-005",
+    "parentSampleId": "SAM-20251220-009",
+    "orderId": "ORD-20251220-007",
+    "patientId": "PAT-20260109-003",
+    "aliquotNumber": 1,
+    "volume": 2.8,
+    "remainingVolume": 2.8,
+    "linkedTestCodes": [
+      "HEM003"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251220009A01",
+    "status": "available",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2025-12-20T16:30:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251220-006",
+    "parentSampleId": "SAM-20251220-010",
+    "orderId": "ORD-20251220-008",
+    "patientId": "PAT-20260104-003",
+    "aliquotNumber": 1,
+    "volume": 3.6,
+    "remainingVolume": 3.6,
+    "linkedTestCodes": [
+      "CHEM005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251220010A01",
+    "status": "available",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-20T15:20:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251220-007",
+    "parentSampleId": "SAM-20251220-011",
+    "orderId": "ORD-20251220-009",
+    "patientId": "PAT-20251224-002",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "CHEM024"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251220011A01",
+    "status": "available",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-20T17:05:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251220-008",
+    "parentSampleId": "SAM-20251220-011",
+    "orderId": "ORD-20251220-009",
+    "patientId": "PAT-20251224-002",
+    "aliquotNumber": 2,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "CHEM019"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251220011A02",
+    "status": "available",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-20T17:34:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251220-009",
+    "parentSampleId": "SAM-20251220-012",
+    "orderId": "ORD-20251220-009",
+    "patientId": "PAT-20251224-002",
+    "aliquotNumber": 1,
+    "volume": 6.5,
+    "remainingVolume": 6.5,
+    "linkedTestCodes": [
+      "MICRO001"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20251220012A01",
+    "status": "available",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-20T16:32:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251221-001",
+    "parentSampleId": "SAM-20251221-002",
+    "orderId": "ORD-20251221-002",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 1,
+    "volume": 2.6,
+    "remainingVolume": 2.6,
+    "linkedTestCodes": [
+      "SER001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251221002A01",
+    "status": "available",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2025-12-21T15:48:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251221-002",
+    "parentSampleId": "SAM-20251221-003",
+    "orderId": "ORD-20251221-002",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 1,
+    "volume": 21.1,
+    "remainingVolume": 10.6,
+    "linkedTestCodes": [
+      "URINE002"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20251221003A01",
+    "status": "in-use",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2025-12-21T13:35:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "URINE002"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Sendout laboratory"
+  },
+  {
+    "aliquotId": "ALQ-20251221-003",
+    "parentSampleId": "SAM-20251221-004",
+    "orderId": "ORD-20251221-003",
+    "patientId": "PAT-20260114-003",
+    "aliquotNumber": 1,
+    "volume": 1.5,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "VIRO002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251221004A01",
+    "status": "consumed",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-21T12:38:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "VIRO002"
+    ],
+    "consumedAt": "2025-12-21T14:51:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251221-004",
+    "parentSampleId": "SAM-20251221-005",
+    "orderId": "ORD-20251221-004",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 1,
+    "volume": 5.7,
+    "remainingVolume": 5.7,
+    "linkedTestCodes": [
+      "MICRO001"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20251221005A01",
+    "status": "available",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-21T16:38:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Backup/retest"
+  },
+  {
+    "aliquotId": "ALQ-20251221-005",
+    "parentSampleId": "SAM-20251221-006",
+    "orderId": "ORD-20251221-004",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 1,
+    "volume": 2.6,
+    "remainingVolume": 2.6,
+    "linkedTestCodes": [
+      "CHEM031"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251221006A01",
+    "status": "available",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2025-12-21T11:50:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251221-006",
+    "parentSampleId": "SAM-20251221-006",
+    "orderId": "ORD-20251221-004",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 2,
+    "volume": 2.6,
+    "remainingVolume": 2.6,
+    "linkedTestCodes": [
+      "CHEM030"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251221006A02",
+    "status": "available",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-21T11:52:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251221-007",
+    "parentSampleId": "SAM-20251221-008",
+    "orderId": "ORD-20251221-004",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 1,
+    "volume": 3.1,
+    "remainingVolume": 3.1,
+    "linkedTestCodes": [
+      "SER001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251221008A01",
+    "status": "available",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-21T13:52:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Primary testing"
+  },
+  {
+    "aliquotId": "ALQ-20251221-008",
+    "parentSampleId": "SAM-20251221-009",
+    "orderId": "ORD-20251221-005",
+    "patientId": "PAT-20260113-003",
+    "aliquotNumber": 1,
+    "volume": 2.7,
+    "remainingVolume": 2.7,
+    "linkedTestCodes": [
+      "ENDO003"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251221009A01",
+    "status": "available",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-21T14:51:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251221-009",
+    "parentSampleId": "SAM-20251221-009",
+    "orderId": "ORD-20251221-005",
+    "patientId": "PAT-20260113-003",
+    "aliquotNumber": 2,
+    "volume": 2.7,
+    "remainingVolume": 2.7,
+    "linkedTestCodes": [
+      "CHEM016"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251221009A02",
+    "status": "available",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-21T15:35:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251221-010",
+    "parentSampleId": "SAM-20251221-010",
+    "orderId": "ORD-20251221-006",
+    "patientId": "PAT-20260106-002",
+    "aliquotNumber": 1,
+    "volume": 4.7,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM006"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251221010A01",
+    "status": "consumed",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2025-12-21T19:01:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM006"
+    ],
+    "consumedAt": "2025-12-21T22:34:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Primary testing"
+  },
+  {
+    "aliquotId": "ALQ-20251221-011",
+    "parentSampleId": "SAM-20251221-011",
+    "orderId": "ORD-20251221-007",
+    "patientId": "PAT-20251231-001",
+    "aliquotNumber": 1,
+    "volume": 3.6,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "HEMA002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251221011A01",
+    "status": "consumed",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-21T17:43:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "HEMA002"
+    ],
+    "consumedAt": "2025-12-21T20:46:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251221-012",
+    "parentSampleId": "SAM-20251221-013",
+    "orderId": "ORD-20251221-008",
+    "patientId": "PAT-20251217-001",
+    "aliquotNumber": 1,
+    "volume": 3.7,
+    "remainingVolume": 3.7,
+    "linkedTestCodes": [
+      "SER011"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251221013A01",
+    "status": "stored",
+    "currentLocation": "Room Temperature Storage",
+    "createdAt": "2025-12-21T11:40:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "SER011"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Room Temperature Storage",
+    "storageConditions": "Room temperature"
+  },
+  {
+    "aliquotId": "ALQ-20251222-001",
+    "parentSampleId": "SAM-20251222-004",
+    "orderId": "ORD-20251222-003",
+    "patientId": "PAT-20251231-001",
+    "aliquotNumber": 1,
+    "volume": 6.9,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "MICRO001"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20251222004A01",
+    "status": "consumed",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2025-12-22T09:43:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "MICRO001"
+    ],
+    "consumedAt": "2025-12-22T10:58:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251222-002",
+    "parentSampleId": "SAM-20251222-005",
+    "orderId": "ORD-20251222-003",
+    "patientId": "PAT-20251231-001",
+    "aliquotNumber": 1,
+    "volume": 4,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM037"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251222005A01",
+    "status": "consumed",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2025-12-22T09:18:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM037"
+    ],
+    "consumedAt": "2025-12-22T10:48:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251222-003",
+    "parentSampleId": "SAM-20251222-007",
+    "orderId": "ORD-20251222-005",
+    "patientId": "PAT-20260103-001",
+    "aliquotNumber": 1,
+    "volume": 2.7,
+    "remainingVolume": 2.7,
+    "linkedTestCodes": [
+      "COAG004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251222007A01",
+    "status": "available",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-22T12:43:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251222-004",
+    "parentSampleId": "SAM-20251222-008",
+    "orderId": "ORD-20251222-005",
+    "patientId": "PAT-20260103-001",
+    "aliquotNumber": 1,
+    "volume": 3,
+    "remainingVolume": 1.5,
+    "linkedTestCodes": [
+      "CHEM020"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251222008A01",
+    "status": "in-use",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-22T15:46:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM020"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Primary testing"
+  },
+  {
+    "aliquotId": "ALQ-20251222-005",
+    "parentSampleId": "SAM-20251222-008",
+    "orderId": "ORD-20251222-005",
+    "patientId": "PAT-20260103-001",
+    "aliquotNumber": 2,
+    "volume": 3,
+    "remainingVolume": 3,
+    "linkedTestCodes": [
+      "CHEM014"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251222008A02",
+    "status": "available",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-22T15:10:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251222-006",
+    "parentSampleId": "SAM-20251222-010",
+    "orderId": "ORD-20251222-006",
+    "patientId": "PAT-20260102-003",
+    "aliquotNumber": 1,
+    "volume": 2.3,
+    "remainingVolume": 1.1,
+    "linkedTestCodes": [
+      "CHEM020"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251222010A01",
+    "status": "in-use",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-22T13:43:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM020"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251222-007",
+    "parentSampleId": "SAM-20251222-010",
+    "orderId": "ORD-20251222-006",
+    "patientId": "PAT-20260102-003",
+    "aliquotNumber": 2,
+    "volume": 2.3,
+    "remainingVolume": 1.1,
+    "linkedTestCodes": [
+      "TUMOR001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251222010A02",
+    "status": "in-use",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-22T13:15:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "TUMOR001"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Quality control"
+  },
+  {
+    "aliquotId": "ALQ-20251222-008",
+    "parentSampleId": "SAM-20251222-011",
+    "orderId": "ORD-20251222-006",
+    "patientId": "PAT-20260102-003",
+    "aliquotNumber": 1,
+    "volume": 5.6,
+    "remainingVolume": 2.8,
+    "linkedTestCodes": [
+      "MICRO001"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20251222011A01",
+    "status": "in-use",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-22T11:45:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "MICRO001"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251222-009",
+    "parentSampleId": "SAM-20251222-012",
+    "orderId": "ORD-20251222-006",
+    "patientId": "PAT-20260102-003",
+    "aliquotNumber": 1,
+    "volume": 3.9,
+    "remainingVolume": 1.9,
+    "linkedTestCodes": [
+      "CHEM008"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251222012A01",
+    "status": "in-use",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2025-12-22T15:35:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM008"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251222-010",
+    "parentSampleId": "SAM-20251222-016",
+    "orderId": "ORD-20251222-008",
+    "patientId": "PAT-20260106-002",
+    "aliquotNumber": 1,
+    "volume": 3.8,
+    "remainingVolume": 1.9,
+    "linkedTestCodes": [
+      "CHEM017"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251222016A01",
+    "status": "in-use",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2025-12-22T17:49:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM017"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251223-001",
+    "parentSampleId": "SAM-20251223-008",
+    "orderId": "ORD-20251223-006",
+    "patientId": "PAT-20260114-004",
+    "aliquotNumber": 1,
+    "volume": 2.1,
+    "remainingVolume": 2.1,
+    "linkedTestCodes": [
+      "PARA004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251223008A01",
+    "status": "available",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-23T16:30:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Backup/retest"
+  },
+  {
+    "aliquotId": "ALQ-20251223-002",
+    "parentSampleId": "SAM-20251223-010",
+    "orderId": "ORD-20251223-007",
+    "patientId": "PAT-20251219-001",
+    "aliquotNumber": 1,
+    "volume": 3.1,
+    "remainingVolume": 1.6,
+    "linkedTestCodes": [
+      "COAG002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251223010A01",
+    "status": "in-use",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-23T10:05:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "COAG002"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Primary testing"
+  },
+  {
+    "aliquotId": "ALQ-20251223-003",
+    "parentSampleId": "SAM-20251223-015",
+    "orderId": "ORD-20251223-008",
+    "patientId": "PAT-20260109-002",
+    "aliquotNumber": 1,
+    "volume": 3.1,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM029"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251223015A01",
+    "status": "consumed",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-23T12:36:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM029"
+    ],
+    "consumedAt": "2025-12-23T14:32:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251223-004",
+    "parentSampleId": "SAM-20251223-016",
+    "orderId": "ORD-20251223-008",
+    "patientId": "PAT-20260109-002",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "HEMA002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251223016A01",
+    "status": "stored",
+    "currentLocation": "Refrigerator A",
+    "createdAt": "2025-12-23T10:56:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "HEMA002"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Primary testing",
+    "storageLocation": "Refrigerator A",
+    "storageConditions": "-80°C"
+  },
+  {
+    "aliquotId": "ALQ-20251223-005",
+    "parentSampleId": "SAM-20251223-017",
+    "orderId": "ORD-20251223-008",
+    "patientId": "PAT-20260109-002",
+    "aliquotNumber": 1,
+    "volume": 5,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM006"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251223017A01",
+    "status": "consumed",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-23T08:33:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM006"
+    ],
+    "consumedAt": "2025-12-23T12:26:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251224-001",
+    "parentSampleId": "SAM-20251224-004",
+    "orderId": "ORD-20251224-004",
+    "patientId": "PAT-20260114-005",
+    "aliquotNumber": 1,
+    "volume": 2.9,
+    "remainingVolume": 2.9,
+    "linkedTestCodes": [
+      "CHEM016"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251224004A01",
+    "status": "available",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-24T17:45:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Quality control"
+  },
+  {
+    "aliquotId": "ALQ-20251224-002",
+    "parentSampleId": "SAM-20251224-004",
+    "orderId": "ORD-20251224-004",
+    "patientId": "PAT-20260114-005",
+    "aliquotNumber": 2,
+    "volume": 2.9,
+    "remainingVolume": 2.9,
+    "linkedTestCodes": [
+      "SER010"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251224004A02",
+    "status": "available",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2025-12-24T17:27:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251224-003",
+    "parentSampleId": "SAM-20251224-005",
+    "orderId": "ORD-20251224-004",
+    "patientId": "PAT-20260114-005",
+    "aliquotNumber": 1,
+    "volume": 11.7,
+    "remainingVolume": 11.7,
+    "linkedTestCodes": [
+      "MICRO003"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20251224005A01",
+    "status": "available",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-24T18:29:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Quality control"
+  },
+  {
+    "aliquotId": "ALQ-20251224-004",
+    "parentSampleId": "SAM-20251224-007",
+    "orderId": "ORD-20251224-006",
+    "patientId": "PAT-20251224-001",
+    "aliquotNumber": 1,
+    "volume": 2.6,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM027"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251224007A01",
+    "status": "consumed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-24T14:43:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM027"
+    ],
+    "consumedAt": "2025-12-24T16:00:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251224-005",
+    "parentSampleId": "SAM-20251224-007",
+    "orderId": "ORD-20251224-006",
+    "patientId": "PAT-20251224-001",
+    "aliquotNumber": 2,
+    "volume": 2.6,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM012"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251224007A02",
+    "status": "consumed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-24T14:23:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM012"
+    ],
+    "consumedAt": "2025-12-24T18:17:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251225-001",
+    "parentSampleId": "SAM-20251225-002",
+    "orderId": "ORD-20251225-002",
+    "patientId": "PAT-20251225-001",
+    "aliquotNumber": 1,
+    "volume": 3.2,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM018"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251225002A01",
+    "status": "consumed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-25T13:11:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM018"
+    ],
+    "consumedAt": "2025-12-25T15:25:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251225-002",
+    "parentSampleId": "SAM-20251225-006",
+    "orderId": "ORD-20251225-004",
+    "patientId": "PAT-20251221-002",
+    "aliquotNumber": 1,
+    "volume": 3.3,
+    "remainingVolume": 3.3,
+    "linkedTestCodes": [
+      "HEM004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251225006A01",
+    "status": "available",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2025-12-25T15:43:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Backup/retest"
+  },
+  {
+    "aliquotId": "ALQ-20251225-003",
+    "parentSampleId": "SAM-20251225-007",
+    "orderId": "ORD-20251225-005",
+    "patientId": "PAT-20260105-002",
+    "aliquotNumber": 1,
+    "volume": 3.6,
+    "remainingVolume": 3.6,
+    "linkedTestCodes": [
+      "PROT001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251225007A01",
+    "status": "disposed",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-25T13:13:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "PROT001"
+    ],
+    "consumedAt": "2025-12-25T16:47:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": "2025-12-25T16:47:00.000Z",
+    "disposedBy": "USR-002",
+    "purpose": "Primary testing"
+  },
+  {
+    "aliquotId": "ALQ-20251225-004",
+    "parentSampleId": "SAM-20251225-012",
+    "orderId": "ORD-20251225-008",
+    "patientId": "PAT-20260112-001",
+    "aliquotNumber": 1,
+    "volume": 3.9,
+    "remainingVolume": 3.9,
+    "linkedTestCodes": [
+      "MICRO002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251225012A01",
+    "status": "disposed",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-25T11:01:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "MICRO002"
+    ],
+    "consumedAt": "2025-12-25T14:23:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": "2025-12-25T14:23:00.000Z",
+    "disposedBy": "USR-004"
+  },
+  {
+    "aliquotId": "ALQ-20251225-005",
+    "parentSampleId": "SAM-20251225-013",
+    "orderId": "ORD-20251225-008",
+    "patientId": "PAT-20260112-001",
+    "aliquotNumber": 1,
+    "volume": 2.7,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251225013A01",
+    "status": "consumed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-25T12:37:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM005"
+    ],
+    "consumedAt": "2025-12-25T15:52:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251226-001",
+    "parentSampleId": "SAM-20251226-004",
+    "orderId": "ORD-20251226-004",
+    "patientId": "PAT-20260105-001",
+    "aliquotNumber": 1,
+    "volume": 2.6,
+    "remainingVolume": 2.6,
+    "linkedTestCodes": [
+      "CHEM011"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251226004A01",
+    "status": "available",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2025-12-26T14:14:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Primary testing"
+  },
+  {
+    "aliquotId": "ALQ-20251226-002",
+    "parentSampleId": "SAM-20251226-004",
+    "orderId": "ORD-20251226-004",
+    "patientId": "PAT-20260105-001",
+    "aliquotNumber": 2,
+    "volume": 2.6,
+    "remainingVolume": 2.6,
+    "linkedTestCodes": [
+      "PROT001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251226004A02",
+    "status": "available",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-26T13:42:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251227-001",
+    "parentSampleId": "SAM-20251227-006",
+    "orderId": "ORD-20251227-003",
+    "patientId": "PAT-20260114-006",
+    "aliquotNumber": 1,
+    "volume": 2.2,
+    "remainingVolume": 2.2,
+    "linkedTestCodes": [
+      "HEM004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251227006A01",
+    "status": "available",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2025-12-27T11:12:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Primary testing"
+  },
+  {
+    "aliquotId": "ALQ-20251228-001",
+    "parentSampleId": "SAM-20251228-005",
+    "orderId": "ORD-20251228-004",
+    "patientId": "PAT-20251227-001",
+    "aliquotNumber": 1,
+    "volume": 1.6,
+    "remainingVolume": 1.6,
+    "linkedTestCodes": [
+      "HEM003"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251228005A01",
+    "status": "stored",
+    "currentLocation": "Refrigerator B",
+    "createdAt": "2025-12-28T11:31:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "HEM003"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Sendout laboratory",
+    "storageLocation": "Refrigerator B",
+    "storageConditions": "-20°C"
+  },
+  {
+    "aliquotId": "ALQ-20251228-002",
+    "parentSampleId": "SAM-20251228-008",
+    "orderId": "ORD-20251228-006",
+    "patientId": "PAT-20251219-001",
+    "aliquotNumber": 1,
+    "volume": 3.7,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "TUMOR001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251228008A01",
+    "status": "consumed",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2025-12-28T11:46:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "TUMOR001"
+    ],
+    "consumedAt": "2025-12-28T14:12:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251228-003",
+    "parentSampleId": "SAM-20251228-009",
+    "orderId": "ORD-20251228-007",
+    "patientId": "PAT-20251221-006",
+    "aliquotNumber": 1,
+    "volume": 3.4,
+    "remainingVolume": 3.4,
+    "linkedTestCodes": [
+      "CHEM030"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251228009A01",
+    "status": "available",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2025-12-28T19:11:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251229-001",
+    "parentSampleId": "SAM-20251229-002",
+    "orderId": "ORD-20251229-001",
+    "patientId": "PAT-20260110-001",
+    "aliquotNumber": 1,
+    "volume": 3.4,
+    "remainingVolume": 3.4,
+    "linkedTestCodes": [
+      "CHEM017"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251229002A01",
+    "status": "stored",
+    "currentLocation": "Room Temperature Storage",
+    "createdAt": "2025-12-29T18:01:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM017"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Room Temperature Storage",
+    "storageConditions": "Room temperature"
+  },
+  {
+    "aliquotId": "ALQ-20251229-002",
+    "parentSampleId": "SAM-20251229-007",
+    "orderId": "ORD-20251229-005",
+    "patientId": "PAT-20251231-005",
+    "aliquotNumber": 1,
+    "volume": 1.5,
+    "remainingVolume": 1.5,
+    "linkedTestCodes": [
+      "PARA001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251229007A01",
+    "status": "stored",
+    "currentLocation": "Room Temperature Storage",
+    "createdAt": "2025-12-29T12:25:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "PARA001"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Room Temperature Storage",
+    "storageConditions": "-20°C"
+  },
+  {
+    "aliquotId": "ALQ-20251230-001",
+    "parentSampleId": "SAM-20251230-001",
+    "orderId": "ORD-20251230-001",
+    "patientId": "PAT-20260115-001",
+    "aliquotNumber": 1,
+    "volume": 3.3,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM019"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251230001A01",
+    "status": "consumed",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2025-12-30T14:42:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM019"
+    ],
+    "consumedAt": "2025-12-30T18:23:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251230-002",
+    "parentSampleId": "SAM-20251230-002",
+    "orderId": "ORD-20251230-001",
+    "patientId": "PAT-20260115-001",
+    "aliquotNumber": 1,
+    "volume": 3.2,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "PARA003"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20251230002A01",
+    "status": "consumed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2025-12-30T10:16:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "PARA003"
+    ],
+    "consumedAt": "2025-12-30T11:36:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20251230-003",
+    "parentSampleId": "SAM-20251230-003",
+    "orderId": "ORD-20251230-002",
+    "patientId": "PAT-20260114-003",
+    "aliquotNumber": 1,
+    "volume": 20.6,
+    "remainingVolume": 20.6,
+    "linkedTestCodes": [
+      "URINE002"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20251230003A01",
+    "status": "stored",
+    "currentLocation": "Refrigerator A",
+    "createdAt": "2025-12-30T13:36:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "URINE002"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Refrigerator A",
+    "storageConditions": "2-8°C"
+  },
+  {
+    "aliquotId": "ALQ-20260101-001",
+    "parentSampleId": "SAM-20260101-006",
+    "orderId": "ORD-20260101-003",
+    "patientId": "PAT-20260114-005",
+    "aliquotNumber": 1,
+    "volume": 3.8,
+    "remainingVolume": 3.8,
+    "linkedTestCodes": [
+      "CHEM008"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260101006A01",
+    "status": "stored",
+    "currentLocation": "Room Temperature Storage",
+    "createdAt": "2026-01-01T17:41:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM008"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Room Temperature Storage",
+    "storageConditions": "2-8°C"
+  },
+  {
+    "aliquotId": "ALQ-20260101-002",
+    "parentSampleId": "SAM-20260101-008",
+    "orderId": "ORD-20260101-004",
+    "patientId": "PAT-20251217-006",
+    "aliquotNumber": 1,
+    "volume": 3.1,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "HEM004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260101008A01",
+    "status": "consumed",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2026-01-01T15:09:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "HEM004"
+    ],
+    "consumedAt": "2026-01-01T17:05:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260101-003",
+    "parentSampleId": "SAM-20260101-012",
+    "orderId": "ORD-20260101-008",
+    "patientId": "PAT-20251227-002",
+    "aliquotNumber": 1,
+    "volume": 6.3,
+    "remainingVolume": 6.3,
+    "linkedTestCodes": [
+      "CHEM016"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260101012A01",
+    "status": "stored",
+    "currentLocation": "Freezer -20°C",
+    "createdAt": "2026-01-01T17:40:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM016"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Sendout laboratory",
+    "storageLocation": "Freezer -20°C",
+    "storageConditions": "Protected from light"
+  },
+  {
+    "aliquotId": "ALQ-20260101-004",
+    "parentSampleId": "SAM-20260101-012",
+    "orderId": "ORD-20260101-008",
+    "patientId": "PAT-20251227-002",
+    "aliquotNumber": 2,
+    "volume": 6.3,
+    "remainingVolume": 6.3,
+    "linkedTestCodes": [
+      "MICRO005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260101012A02",
+    "status": "disposed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-01T17:35:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "MICRO005"
+    ],
+    "consumedAt": "2026-01-01T19:45:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": "2026-01-01T19:45:00.000Z",
+    "disposedBy": "USR-002"
+  },
+  {
+    "aliquotId": "ALQ-20260102-001",
+    "parentSampleId": "SAM-20260102-006",
+    "orderId": "ORD-20260102-002",
+    "patientId": "PAT-20251219-001",
+    "aliquotNumber": 1,
+    "volume": 2.7,
+    "remainingVolume": 2.7,
+    "linkedTestCodes": [
+      "CHEM010"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260102006A01",
+    "status": "disposed",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2026-01-02T13:41:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM010"
+    ],
+    "consumedAt": "2026-01-02T15:31:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": "2026-01-02T15:31:00.000Z",
+    "disposedBy": "USR-004",
+    "purpose": "Sendout laboratory"
+  },
+  {
+    "aliquotId": "ALQ-20260102-002",
+    "parentSampleId": "SAM-20260102-006",
+    "orderId": "ORD-20260102-002",
+    "patientId": "PAT-20251219-001",
+    "aliquotNumber": 2,
+    "volume": 2.7,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260102006A02",
+    "status": "consumed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-02T14:05:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM005"
+    ],
+    "consumedAt": "2026-01-02T15:33:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Archive"
+  },
+  {
+    "aliquotId": "ALQ-20260102-003",
+    "parentSampleId": "SAM-20260102-009",
+    "orderId": "ORD-20260102-004",
+    "patientId": "PAT-20251225-002",
+    "aliquotNumber": 1,
+    "volume": 2.6,
+    "remainingVolume": 2.6,
+    "linkedTestCodes": [
+      "CHEM030"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260102009A01",
+    "status": "available",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2026-01-02T15:17:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Backup/retest"
+  },
+  {
+    "aliquotId": "ALQ-20260102-004",
+    "parentSampleId": "SAM-20260102-009",
+    "orderId": "ORD-20260102-004",
+    "patientId": "PAT-20251225-002",
+    "aliquotNumber": 2,
+    "volume": 2.6,
+    "remainingVolume": 2.6,
+    "linkedTestCodes": [
+      "SER014"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260102009A02",
+    "status": "available",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-02T15:46:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260102-005",
+    "parentSampleId": "SAM-20260102-011",
+    "orderId": "ORD-20260102-006",
+    "patientId": "PAT-20251219-001",
+    "aliquotNumber": 1,
+    "volume": 2.7,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM035"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260102011A01",
+    "status": "consumed",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-02T15:32:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM035"
+    ],
+    "consumedAt": "2026-01-02T18:59:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Quality control"
+  },
+  {
+    "aliquotId": "ALQ-20260103-001",
+    "parentSampleId": "SAM-20260103-002",
+    "orderId": "ORD-20260103-002",
+    "patientId": "PAT-20251218-003",
+    "aliquotNumber": 1,
+    "volume": 2.6,
+    "remainingVolume": 1.3,
+    "linkedTestCodes": [
+      "CHEM004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260103002A01",
+    "status": "in-use",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-03T19:07:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM004"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Archive"
+  },
+  {
+    "aliquotId": "ALQ-20260103-002",
+    "parentSampleId": "SAM-20260103-003",
+    "orderId": "ORD-20260103-002",
+    "patientId": "PAT-20251218-003",
+    "aliquotNumber": 1,
+    "volume": 20.5,
+    "remainingVolume": 10.3,
+    "linkedTestCodes": [
+      "URINE001"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20260103003A01",
+    "status": "in-use",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2026-01-03T15:48:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "URINE001"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260103-003",
+    "parentSampleId": "SAM-20260103-004",
+    "orderId": "ORD-20260103-003",
+    "patientId": "PAT-20260103-002",
+    "aliquotNumber": 1,
+    "volume": 2.8,
+    "remainingVolume": 1.4,
+    "linkedTestCodes": [
+      "COAG002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260103004A01",
+    "status": "in-use",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-03T18:30:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "COAG002"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260103-004",
+    "parentSampleId": "SAM-20260103-004",
+    "orderId": "ORD-20260103-003",
+    "patientId": "PAT-20260103-002",
+    "aliquotNumber": 2,
+    "volume": 2.8,
+    "remainingVolume": 1.4,
+    "linkedTestCodes": [
+      "COAG001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260103004A02",
+    "status": "in-use",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2026-01-03T18:18:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "COAG001"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260103-005",
+    "parentSampleId": "SAM-20260103-006",
+    "orderId": "ORD-20260103-003",
+    "patientId": "PAT-20260103-002",
+    "aliquotNumber": 1,
+    "volume": 11.7,
+    "remainingVolume": 5.8,
+    "linkedTestCodes": [
+      "PARA005"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20260103006A01",
+    "status": "in-use",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-03T11:52:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "PARA005"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260103-006",
+    "parentSampleId": "SAM-20260103-007",
+    "orderId": "ORD-20260103-003",
+    "patientId": "PAT-20260103-002",
+    "aliquotNumber": 1,
+    "volume": 3,
+    "remainingVolume": 1.5,
+    "linkedTestCodes": [
+      "CHEM007"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260103007A01",
+    "status": "in-use",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2026-01-03T11:25:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM007"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260103-007",
+    "parentSampleId": "SAM-20260103-008",
+    "orderId": "ORD-20260103-004",
+    "patientId": "PAT-20251228-001",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM034"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260103008A01",
+    "status": "consumed",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-03T16:34:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM034"
+    ],
+    "consumedAt": "2026-01-03T20:26:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260103-008",
+    "parentSampleId": "SAM-20260103-008",
+    "orderId": "ORD-20260103-004",
+    "patientId": "PAT-20251228-001",
+    "aliquotNumber": 2,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "CHEM010"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260103008A02",
+    "status": "stored",
+    "currentLocation": "Room Temperature Storage",
+    "createdAt": "2026-01-03T17:03:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM010"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Primary testing",
+    "storageLocation": "Room Temperature Storage",
+    "storageConditions": "-20°C"
+  },
+  {
+    "aliquotId": "ALQ-20260104-001",
+    "parentSampleId": "SAM-20260104-001",
+    "orderId": "ORD-20260104-001",
+    "patientId": "PAT-20251217-005",
+    "aliquotNumber": 1,
+    "volume": 2.7,
+    "remainingVolume": 2.7,
+    "linkedTestCodes": [
+      "CHEM021"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260104001A01",
+    "status": "stored",
+    "currentLocation": "Room Temperature Storage",
+    "createdAt": "2026-01-04T12:06:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM021"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Sendout laboratory",
+    "storageLocation": "Room Temperature Storage",
+    "storageConditions": "Room temperature"
+  },
+  {
+    "aliquotId": "ALQ-20260104-002",
+    "parentSampleId": "SAM-20260104-005",
+    "orderId": "ORD-20260104-005",
+    "patientId": "PAT-20251231-002",
+    "aliquotNumber": 1,
+    "volume": 3.6,
+    "remainingVolume": 3.6,
+    "linkedTestCodes": [
+      "SER001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260104005A01",
+    "status": "stored",
+    "currentLocation": "Refrigerator A",
+    "createdAt": "2026-01-04T16:02:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "SER001"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Refrigerator A",
+    "storageConditions": "-80°C"
+  },
+  {
+    "aliquotId": "ALQ-20260104-003",
+    "parentSampleId": "SAM-20260104-006",
+    "orderId": "ORD-20260104-006",
+    "patientId": "PAT-20260107-001",
+    "aliquotNumber": 1,
+    "volume": 2.8,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM035"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260104006A01",
+    "status": "consumed",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-04T13:38:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM035"
+    ],
+    "consumedAt": "2026-01-04T15:20:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260104-004",
+    "parentSampleId": "SAM-20260104-008",
+    "orderId": "ORD-20260104-006",
+    "patientId": "PAT-20260107-001",
+    "aliquotNumber": 1,
+    "volume": 4,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM008"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260104008A01",
+    "status": "consumed",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2026-01-04T14:42:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM008"
+    ],
+    "consumedAt": "2026-01-04T16:19:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260105-001",
+    "parentSampleId": "SAM-20260105-005",
+    "orderId": "ORD-20260105-004",
+    "patientId": "PAT-20260115-004",
+    "aliquotNumber": 1,
+    "volume": 3.1,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "SER008"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260105005A01",
+    "status": "consumed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2026-01-05T12:34:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "SER008"
+    ],
+    "consumedAt": "2026-01-05T14:08:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260106-001",
+    "parentSampleId": "SAM-20260106-001",
+    "orderId": "ORD-20260106-001",
+    "patientId": "PAT-20251231-006",
+    "aliquotNumber": 1,
+    "volume": 3.2,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "COAG001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260106001A01",
+    "status": "consumed",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-06T15:45:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "COAG001"
+    ],
+    "consumedAt": "2026-01-06T18:34:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260106-002",
+    "parentSampleId": "SAM-20260106-002",
+    "orderId": "ORD-20260106-002",
+    "patientId": "PAT-20260109-003",
+    "aliquotNumber": 1,
+    "volume": 3.2,
+    "remainingVolume": 3.2,
+    "linkedTestCodes": [
+      "COAG003"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260106002A01",
+    "status": "disposed",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2026-01-06T10:02:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "COAG003"
+    ],
+    "consumedAt": "2026-01-06T11:37:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": "2026-01-06T11:37:00.000Z",
+    "disposedBy": "USR-002"
+  },
+  {
+    "aliquotId": "ALQ-20260106-003",
+    "parentSampleId": "SAM-20260106-004",
+    "orderId": "ORD-20260106-002",
+    "patientId": "PAT-20260109-003",
+    "aliquotNumber": 1,
+    "volume": 2.9,
+    "remainingVolume": 2.9,
+    "linkedTestCodes": [
+      "CHEM005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260106004A01",
+    "status": "stored",
+    "currentLocation": "Freezer -20°C",
+    "createdAt": "2026-01-06T18:38:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM005"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Sendout laboratory",
+    "storageLocation": "Freezer -20°C",
+    "storageConditions": "-20°C"
+  },
+  {
+    "aliquotId": "ALQ-20260106-004",
+    "parentSampleId": "SAM-20260106-010",
+    "orderId": "ORD-20260106-005",
+    "patientId": "PAT-20251231-003",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "SER014"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260106010A01",
+    "status": "available",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2026-01-06T10:37:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Sendout laboratory"
+  },
+  {
+    "aliquotId": "ALQ-20260107-001",
+    "parentSampleId": "SAM-20260107-003",
+    "orderId": "ORD-20260107-002",
+    "patientId": "PAT-20251231-005",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 1.3,
+    "linkedTestCodes": [
+      "ENDO002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260107003A01",
+    "status": "in-use",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-07T13:18:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "ENDO002"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260107-002",
+    "parentSampleId": "SAM-20260107-003",
+    "orderId": "ORD-20260107-002",
+    "patientId": "PAT-20251231-005",
+    "aliquotNumber": 2,
+    "volume": 2.5,
+    "remainingVolume": 1.3,
+    "linkedTestCodes": [
+      "CHEM036"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260107003A02",
+    "status": "in-use",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-07T13:21:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM036"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260107-003",
+    "parentSampleId": "SAM-20260107-004",
+    "orderId": "ORD-20260107-003",
+    "patientId": "PAT-20260102-001",
+    "aliquotNumber": 1,
+    "volume": 3.1,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM033"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260107004A01",
+    "status": "consumed",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2026-01-07T12:16:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM033"
+    ],
+    "consumedAt": "2026-01-07T13:43:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260107-004",
+    "parentSampleId": "SAM-20260107-005",
+    "orderId": "ORD-20260107-003",
+    "patientId": "PAT-20260102-001",
+    "aliquotNumber": 1,
+    "volume": 1.6,
+    "remainingVolume": 1.6,
+    "linkedTestCodes": [
+      "PARA001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260107005A01",
+    "status": "stored",
+    "currentLocation": "Refrigerator A",
+    "createdAt": "2026-01-07T12:37:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "PARA001"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Refrigerator A",
+    "storageConditions": "Protected from light"
+  },
+  {
+    "aliquotId": "ALQ-20260107-005",
+    "parentSampleId": "SAM-20260107-006",
+    "orderId": "ORD-20260107-004",
+    "patientId": "PAT-20260112-001",
+    "aliquotNumber": 1,
+    "volume": 2.7,
+    "remainingVolume": 2.7,
+    "linkedTestCodes": [
+      "SER011"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260107006A01",
+    "status": "available",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2026-01-07T17:05:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260107-006",
+    "parentSampleId": "SAM-20260107-006",
+    "orderId": "ORD-20260107-004",
+    "patientId": "PAT-20260112-001",
+    "aliquotNumber": 2,
+    "volume": 2.7,
+    "remainingVolume": 2.7,
+    "linkedTestCodes": [
+      "CHEM022"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260107006A02",
+    "status": "available",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2026-01-07T17:02:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260107-007",
+    "parentSampleId": "SAM-20260107-007",
+    "orderId": "ORD-20260107-005",
+    "patientId": "PAT-20251223-003",
+    "aliquotNumber": 1,
+    "volume": 3.2,
+    "remainingVolume": 3.2,
+    "linkedTestCodes": [
+      "SER001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260107007A01",
+    "status": "available",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2026-01-07T11:55:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260108-001",
+    "parentSampleId": "SAM-20260108-002",
+    "orderId": "ORD-20260108-002",
+    "patientId": "PAT-20260109-003",
+    "aliquotNumber": 1,
+    "volume": 2.8,
+    "remainingVolume": 2.8,
+    "linkedTestCodes": [
+      "ENDO002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260108002A01",
+    "status": "available",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-08T16:11:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260108-002",
+    "parentSampleId": "SAM-20260108-002",
+    "orderId": "ORD-20260108-002",
+    "patientId": "PAT-20260109-003",
+    "aliquotNumber": 2,
+    "volume": 2.8,
+    "remainingVolume": 2.8,
+    "linkedTestCodes": [
+      "CHEM032"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260108002A02",
+    "status": "available",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-08T16:06:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260109-001",
+    "parentSampleId": "SAM-20260109-001",
+    "orderId": "ORD-20260109-001",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 1,
+    "volume": 2.2,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "SER005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260109001A01",
+    "status": "consumed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2026-01-09T10:21:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "SER005"
+    ],
+    "consumedAt": "2026-01-09T13:14:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Quality control"
+  },
+  {
+    "aliquotId": "ALQ-20260109-002",
+    "parentSampleId": "SAM-20260109-001",
+    "orderId": "ORD-20260109-001",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 2,
+    "volume": 2.2,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "SER013"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260109001A02",
+    "status": "consumed",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2026-01-09T10:36:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "SER013"
+    ],
+    "consumedAt": "2026-01-09T13:05:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260109-003",
+    "parentSampleId": "SAM-20260109-001",
+    "orderId": "ORD-20260109-001",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 3,
+    "volume": 2.2,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM030"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260109001A03",
+    "status": "consumed",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-09T10:26:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM030"
+    ],
+    "consumedAt": "2026-01-09T11:54:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260109-004",
+    "parentSampleId": "SAM-20260109-002",
+    "orderId": "ORD-20260109-001",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 1,
+    "volume": 3.8,
+    "remainingVolume": 3.8,
+    "linkedTestCodes": [
+      "CHEM009"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260109002A01",
+    "status": "stored",
+    "currentLocation": "Refrigerator A",
+    "createdAt": "2026-01-09T15:31:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM009"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Refrigerator A",
+    "storageConditions": "Protected from light"
+  },
+  {
+    "aliquotId": "ALQ-20260109-005",
+    "parentSampleId": "SAM-20260109-006",
+    "orderId": "ORD-20260109-003",
+    "patientId": "PAT-20251229-002",
+    "aliquotNumber": 1,
+    "volume": 3.5,
+    "remainingVolume": 1.8,
+    "linkedTestCodes": [
+      "HEM002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260109006A01",
+    "status": "in-use",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2026-01-09T10:52:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "HEM002"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Archive"
+  },
+  {
+    "aliquotId": "ALQ-20260109-006",
+    "parentSampleId": "SAM-20260109-009",
+    "orderId": "ORD-20260109-006",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 1,
+    "volume": 5.5,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "MICRO004"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20260109009A01",
+    "status": "consumed",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2026-01-09T18:15:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "MICRO004"
+    ],
+    "consumedAt": "2026-01-09T21:54:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Backup/retest"
+  },
+  {
+    "aliquotId": "ALQ-20260109-007",
+    "parentSampleId": "SAM-20260109-010",
+    "orderId": "ORD-20260109-006",
+    "patientId": "PAT-20260105-003",
+    "aliquotNumber": 1,
+    "volume": 3.2,
+    "remainingVolume": 3.2,
+    "linkedTestCodes": [
+      "CHEM001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260109010A01",
+    "status": "stored",
+    "currentLocation": "Refrigerator A",
+    "createdAt": "2026-01-09T12:43:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM001"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Refrigerator A",
+    "storageConditions": "-80°C"
+  },
+  {
+    "aliquotId": "ALQ-20260110-001",
+    "parentSampleId": "SAM-20260110-001",
+    "orderId": "ORD-20260110-001",
+    "patientId": "PAT-20260108-001",
+    "aliquotNumber": 1,
+    "volume": 3.5,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM007"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260110001A01",
+    "status": "consumed",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2026-01-10T11:53:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM007"
+    ],
+    "consumedAt": "2026-01-10T14:06:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260110-002",
+    "parentSampleId": "SAM-20260110-002",
+    "orderId": "ORD-20260110-002",
+    "patientId": "PAT-20260105-002",
+    "aliquotNumber": 1,
+    "volume": 3.2,
+    "remainingVolume": 3.2,
+    "linkedTestCodes": [
+      "SER007"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260110002A01",
+    "status": "available",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2026-01-10T12:21:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260110-003",
+    "parentSampleId": "SAM-20260110-003",
+    "orderId": "ORD-20260110-003",
+    "patientId": "PAT-20260102-001",
+    "aliquotNumber": 1,
+    "volume": 2.4,
+    "remainingVolume": 1.2,
+    "linkedTestCodes": [
+      "VIRO003"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260110003A01",
+    "status": "in-use",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2026-01-10T13:23:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "VIRO003"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260110-004",
+    "parentSampleId": "SAM-20260110-003",
+    "orderId": "ORD-20260110-003",
+    "patientId": "PAT-20260102-001",
+    "aliquotNumber": 2,
+    "volume": 2.4,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM027"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260110003A02",
+    "status": "consumed",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2026-01-10T12:55:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM027"
+    ],
+    "consumedAt": "2026-01-10T14:42:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260110-005",
+    "parentSampleId": "SAM-20260110-004",
+    "orderId": "ORD-20260110-004",
+    "patientId": "PAT-20260109-004",
+    "aliquotNumber": 1,
+    "volume": 15.3,
+    "remainingVolume": 15.3,
+    "linkedTestCodes": [
+      "UREA001"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20260110004A01",
+    "status": "stored",
+    "currentLocation": "Refrigerator A",
+    "createdAt": "2026-01-10T14:39:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "UREA001"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Refrigerator A",
+    "storageConditions": "Protected from light"
+  },
+  {
+    "aliquotId": "ALQ-20260110-006",
+    "parentSampleId": "SAM-20260110-004",
+    "orderId": "ORD-20260110-004",
+    "patientId": "PAT-20260109-004",
+    "aliquotNumber": 2,
+    "volume": 15.3,
+    "remainingVolume": 15.3,
+    "linkedTestCodes": [
+      "URINE001"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20260110004A02",
+    "status": "disposed",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2026-01-10T14:07:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "URINE001"
+    ],
+    "consumedAt": "2026-01-10T16:34:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": "2026-01-10T16:34:00.000Z",
+    "disposedBy": "USR-004"
+  },
+  {
+    "aliquotId": "ALQ-20260110-007",
+    "parentSampleId": "SAM-20260110-005",
+    "orderId": "ORD-20260110-004",
+    "patientId": "PAT-20260109-004",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM036"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260110005A01",
+    "status": "consumed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2026-01-10T08:58:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "CHEM036"
+    ],
+    "consumedAt": "2026-01-10T12:42:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260110-008",
+    "parentSampleId": "SAM-20260110-005",
+    "orderId": "ORD-20260110-004",
+    "patientId": "PAT-20260109-004",
+    "aliquotNumber": 2,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "SER010"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260110005A02",
+    "status": "disposed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-10T09:08:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "SER010"
+    ],
+    "consumedAt": "2026-01-10T12:59:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": "2026-01-10T12:59:00.000Z",
+    "disposedBy": "USR-002"
+  },
+  {
+    "aliquotId": "ALQ-20260110-009",
+    "parentSampleId": "SAM-20260110-005",
+    "orderId": "ORD-20260110-004",
+    "patientId": "PAT-20260109-004",
+    "aliquotNumber": 3,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "ENDO002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260110005A03",
+    "status": "disposed",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2026-01-10T08:40:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "ENDO002"
+    ],
+    "consumedAt": "2026-01-10T10:21:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": "2026-01-10T10:21:00.000Z",
+    "disposedBy": "USR-004",
+    "purpose": "Backup/retest"
+  },
+  {
+    "aliquotId": "ALQ-20260111-001",
+    "parentSampleId": "SAM-20260111-002",
+    "orderId": "ORD-20260111-002",
+    "patientId": "PAT-20260112-002",
+    "aliquotNumber": 1,
+    "volume": 11.8,
+    "remainingVolume": 11.8,
+    "linkedTestCodes": [
+      "PARA005"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20260111002A01",
+    "status": "stored",
+    "currentLocation": "Refrigerator B",
+    "createdAt": "2026-01-11T14:54:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "PARA005"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Refrigerator B",
+    "storageConditions": "Room temperature"
+  },
+  {
+    "aliquotId": "ALQ-20260111-002",
+    "parentSampleId": "SAM-20260111-005",
+    "orderId": "ORD-20260111-004",
+    "patientId": "PAT-20251231-003",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "VIRO004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260111005A01",
+    "status": "stored",
+    "currentLocation": "Refrigerator A",
+    "createdAt": "2026-01-11T09:49:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "VIRO004"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Sendout laboratory",
+    "storageLocation": "Refrigerator A",
+    "storageConditions": "Room temperature"
+  },
+  {
+    "aliquotId": "ALQ-20260111-003",
+    "parentSampleId": "SAM-20260111-006",
+    "orderId": "ORD-20260111-005",
+    "patientId": "PAT-20251226-003",
+    "aliquotNumber": 1,
+    "volume": 1.5,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "HEM003"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260111006A01",
+    "status": "consumed",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2026-01-11T12:10:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "HEM003"
+    ],
+    "consumedAt": "2026-01-11T14:03:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260111-004",
+    "parentSampleId": "SAM-20260111-006",
+    "orderId": "ORD-20260111-005",
+    "patientId": "PAT-20251226-003",
+    "aliquotNumber": 2,
+    "volume": 1.5,
+    "remainingVolume": 1.5,
+    "linkedTestCodes": [
+      "PARA002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260111006A02",
+    "status": "disposed",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-11T12:02:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "PARA002"
+    ],
+    "consumedAt": "2026-01-11T15:05:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": "2026-01-11T15:05:00.000Z",
+    "disposedBy": "USR-002"
+  },
+  {
+    "aliquotId": "ALQ-20260111-005",
+    "parentSampleId": "SAM-20260111-008",
+    "orderId": "ORD-20260111-007",
+    "patientId": "PAT-20260104-001",
+    "aliquotNumber": 1,
+    "volume": 2.6,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM016"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260111008A01",
+    "status": "consumed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-11T14:39:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM016"
+    ],
+    "consumedAt": "2026-01-11T16:44:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260111-006",
+    "parentSampleId": "SAM-20260111-008",
+    "orderId": "ORD-20260111-007",
+    "patientId": "PAT-20260104-001",
+    "aliquotNumber": 2,
+    "volume": 2.6,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "TUMOR002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260111008A02",
+    "status": "consumed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-11T14:24:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "TUMOR002"
+    ],
+    "consumedAt": "2026-01-11T16:38:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Backup/retest"
+  },
+  {
+    "aliquotId": "ALQ-20260111-007",
+    "parentSampleId": "SAM-20260111-008",
+    "orderId": "ORD-20260111-007",
+    "patientId": "PAT-20260104-001",
+    "aliquotNumber": 3,
+    "volume": 2.6,
+    "remainingVolume": 2.6,
+    "linkedTestCodes": [
+      "CHEM010"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260111008A03",
+    "status": "disposed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-11T14:33:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM010"
+    ],
+    "consumedAt": "2026-01-11T16:27:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": "2026-01-11T16:27:00.000Z",
+    "disposedBy": "USR-003",
+    "purpose": "Archive"
+  },
+  {
+    "aliquotId": "ALQ-20260111-008",
+    "parentSampleId": "SAM-20260111-009",
+    "orderId": "ORD-20260111-008",
+    "patientId": "PAT-20251218-002",
+    "aliquotNumber": 1,
+    "volume": 3,
+    "remainingVolume": 3,
+    "linkedTestCodes": [
+      "SER002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260111009A01",
+    "status": "stored",
+    "currentLocation": "Freezer -20°C",
+    "createdAt": "2026-01-11T18:07:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "SER002"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Freezer -20°C",
+    "storageConditions": "-20°C"
+  },
+  {
+    "aliquotId": "ALQ-20260111-009",
+    "parentSampleId": "SAM-20260111-010",
+    "orderId": "ORD-20260111-008",
+    "patientId": "PAT-20251218-002",
+    "aliquotNumber": 1,
+    "volume": 4,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM013"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260111010A01",
+    "status": "consumed",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2026-01-11T10:34:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM013"
+    ],
+    "consumedAt": "2026-01-11T13:50:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260112-001",
+    "parentSampleId": "SAM-20260112-007",
+    "orderId": "ORD-20260112-003",
+    "patientId": "PAT-20260102-001",
+    "aliquotNumber": 1,
+    "volume": 3.8,
+    "remainingVolume": 1.9,
+    "linkedTestCodes": [
+      "CHEM006"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260112007A01",
+    "status": "in-use",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-12T12:25:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM006"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260112-002",
+    "parentSampleId": "SAM-20260112-008",
+    "orderId": "ORD-20260112-003",
+    "patientId": "PAT-20260102-001",
+    "aliquotNumber": 1,
+    "volume": 3.9,
+    "remainingVolume": 3.9,
+    "linkedTestCodes": [
+      "COAG001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260112008A01",
+    "status": "disposed",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2026-01-12T13:07:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "COAG001"
+    ],
+    "consumedAt": "2026-01-12T15:14:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": "2026-01-12T15:14:00.000Z",
+    "disposedBy": "USR-004",
+    "purpose": "Sendout laboratory"
+  },
+  {
+    "aliquotId": "ALQ-20260112-003",
+    "parentSampleId": "SAM-20260112-009",
+    "orderId": "ORD-20260112-003",
+    "patientId": "PAT-20260102-001",
+    "aliquotNumber": 1,
+    "volume": 3.9,
+    "remainingVolume": 1.9,
+    "linkedTestCodes": [
+      "CHEM035"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260112009A01",
+    "status": "in-use",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2026-01-12T11:50:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM035"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260113-001",
+    "parentSampleId": "SAM-20260113-001",
+    "orderId": "ORD-20260113-001",
+    "patientId": "PAT-20260102-005",
+    "aliquotNumber": 1,
+    "volume": 2.7,
+    "remainingVolume": 1.4,
+    "linkedTestCodes": [
+      "TUMOR002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260113001A01",
+    "status": "in-use",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2026-01-13T11:07:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "TUMOR002"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260113-002",
+    "parentSampleId": "SAM-20260113-001",
+    "orderId": "ORD-20260113-001",
+    "patientId": "PAT-20260102-005",
+    "aliquotNumber": 2,
+    "volume": 2.7,
+    "remainingVolume": 1.4,
+    "linkedTestCodes": [
+      "SER006"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260113001A02",
+    "status": "in-use",
+    "currentLocation": "Urinalysis Station",
+    "createdAt": "2026-01-13T11:38:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "SER006"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260114-001",
+    "parentSampleId": "SAM-20260114-001",
+    "orderId": "ORD-20260114-001",
+    "patientId": "PAT-20260115-001",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "CHEM036"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260114001A01",
+    "status": "stored",
+    "currentLocation": "Freezer -20°C",
+    "createdAt": "2026-01-14T16:18:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM036"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "storageLocation": "Freezer -20°C",
+    "storageConditions": "-80°C"
+  },
+  {
+    "aliquotId": "ALQ-20260114-002",
+    "parentSampleId": "SAM-20260114-001",
+    "orderId": "ORD-20260114-001",
+    "patientId": "PAT-20260115-001",
+    "aliquotNumber": 2,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "CHEM021"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260114001A02",
+    "status": "stored",
+    "currentLocation": "Freezer -80°C",
+    "createdAt": "2026-01-14T16:59:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "CHEM021"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Quality control",
+    "storageLocation": "Freezer -80°C",
+    "storageConditions": "-80°C"
+  },
+  {
+    "aliquotId": "ALQ-20260114-003",
+    "parentSampleId": "SAM-20260114-003",
+    "orderId": "ORD-20260114-002",
+    "patientId": "PAT-20260102-004",
+    "aliquotNumber": 1,
+    "volume": 21.7,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "URINE002"
+    ],
+    "containerType": "cup",
+    "barcode": "SAM20260114003A01",
+    "status": "consumed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-14T17:24:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "URINE002"
+    ],
+    "consumedAt": "2026-01-14T18:30:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260115-001",
+    "parentSampleId": "SAM-20260115-002",
+    "orderId": "ORD-20260115-001",
+    "patientId": "PAT-20251216-003",
+    "aliquotNumber": 1,
+    "volume": 3.6,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "CHEM009"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260115002A01",
+    "status": "consumed",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2026-01-15T12:18:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM009"
+    ],
+    "consumedAt": "2026-01-15T13:48:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260115-002",
+    "parentSampleId": "SAM-20260115-003",
+    "orderId": "ORD-20260115-002",
+    "patientId": "PAT-20251231-003",
+    "aliquotNumber": 1,
+    "volume": 2.5,
+    "remainingVolume": 2.5,
+    "linkedTestCodes": [
+      "MICRO002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260115003A01",
+    "status": "available",
+    "currentLocation": "Hematology Station",
+    "createdAt": "2026-01-15T17:10:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260115-003",
+    "parentSampleId": "SAM-20260115-004",
+    "orderId": "ORD-20260115-002",
+    "patientId": "PAT-20251231-003",
+    "aliquotNumber": 1,
+    "volume": 2.8,
+    "remainingVolume": 2.8,
+    "linkedTestCodes": [
+      "CHEM011"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260115004A01",
+    "status": "available",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-15T15:30:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Archive"
+  },
+  {
+    "aliquotId": "ALQ-20260115-004",
+    "parentSampleId": "SAM-20260115-005",
+    "orderId": "ORD-20260115-002",
+    "patientId": "PAT-20251231-003",
+    "aliquotNumber": 1,
+    "volume": 1.9,
+    "remainingVolume": 1.9,
+    "linkedTestCodes": [
+      "PARA002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260115005A01",
+    "status": "available",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-15T09:12:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260115-005",
+    "parentSampleId": "SAM-20260115-006",
+    "orderId": "ORD-20260115-003",
+    "patientId": "PAT-20251228-001",
+    "aliquotNumber": 1,
+    "volume": 1.6,
+    "remainingVolume": 1.6,
+    "linkedTestCodes": [
+      "PARA002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260115006A01",
+    "status": "disposed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-15T18:04:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "PARA002"
+    ],
+    "consumedAt": "2026-01-15T19:09:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": "2026-01-15T19:09:00.000Z",
+    "disposedBy": "USR-003",
+    "purpose": "Archive"
+  },
+  {
+    "aliquotId": "ALQ-20260115-006",
+    "parentSampleId": "SAM-20260115-007",
+    "orderId": "ORD-20260115-003",
+    "patientId": "PAT-20251228-001",
+    "aliquotNumber": 1,
+    "volume": 3.8,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "ENDO001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260115007A01",
+    "status": "consumed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-15T18:59:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "ENDO001"
+    ],
+    "consumedAt": "2026-01-15T21:40:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Backup/retest"
+  },
+  {
+    "aliquotId": "ALQ-20260115-007",
+    "parentSampleId": "SAM-20260115-008",
+    "orderId": "ORD-20260115-004",
+    "patientId": "PAT-20260112-002",
+    "aliquotNumber": 1,
+    "volume": 2.2,
+    "remainingVolume": 2.2,
+    "linkedTestCodes": [
+      "HEM004"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260115008A01",
+    "status": "disposed",
+    "currentLocation": "Coagulation Station",
+    "createdAt": "2026-01-15T10:54:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [
+      "HEM004"
+    ],
+    "consumedAt": "2026-01-15T14:04:00.000Z",
+    "consumedBy": "USR-004",
+    "disposedAt": "2026-01-15T14:04:00.000Z",
+    "disposedBy": "USR-004"
+  },
+  {
+    "aliquotId": "ALQ-20260115-008",
+    "parentSampleId": "SAM-20260115-010",
+    "orderId": "ORD-20260115-005",
+    "patientId": "PAT-20260103-001",
+    "aliquotNumber": 1,
+    "volume": 1.2,
+    "remainingVolume": 0,
+    "linkedTestCodes": [
+      "VIRO002"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260115010A01",
+    "status": "consumed",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-15T15:44:00.000Z",
+    "createdBy": "USR-003",
+    "usedForTests": [
+      "VIRO002"
+    ],
+    "consumedAt": "2026-01-15T18:45:00.000Z",
+    "consumedBy": "USR-002",
+    "disposedAt": null,
+    "disposedBy": null
+  },
+  {
+    "aliquotId": "ALQ-20260115-009",
+    "parentSampleId": "SAM-20260115-016",
+    "orderId": "ORD-20260115-010",
+    "patientId": "PAT-20260114-001",
+    "aliquotNumber": 1,
+    "volume": 2.7,
+    "remainingVolume": 1.4,
+    "linkedTestCodes": [
+      "CHEM005"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260115016A01",
+    "status": "in-use",
+    "currentLocation": "Chemistry Analyzer",
+    "createdAt": "2026-01-15T12:18:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "CHEM005"
+    ],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null,
+    "purpose": "Quality control"
+  },
+  {
+    "aliquotId": "ALQ-20260115-010",
+    "parentSampleId": "SAM-20260115-016",
+    "orderId": "ORD-20260115-010",
+    "patientId": "PAT-20260114-001",
+    "aliquotNumber": 2,
+    "volume": 2.7,
+    "remainingVolume": 2.7,
+    "linkedTestCodes": [
+      "ENDO001"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260115016A02",
+    "status": "disposed",
+    "currentLocation": "Immunoassay Station",
+    "createdAt": "2026-01-15T12:52:00.000Z",
+    "createdBy": "USR-002",
+    "usedForTests": [
+      "ENDO001"
+    ],
+    "consumedAt": "2026-01-15T16:30:00.000Z",
+    "consumedBy": "USR-003",
+    "disposedAt": "2026-01-15T16:30:00.000Z",
+    "disposedBy": "USR-003",
+    "purpose": "Primary testing"
+  },
+  {
+    "aliquotId": "ALQ-20260115-011",
+    "parentSampleId": "SAM-20260115-018",
+    "orderId": "ORD-20260115-011",
+    "patientId": "PAT-20260114-001",
+    "aliquotNumber": 1,
+    "volume": 2.2,
+    "remainingVolume": 2.2,
+    "linkedTestCodes": [
+      "CHEM029"
+    ],
+    "containerType": "tube",
+    "barcode": "SAM20260115018A01",
+    "status": "available",
+    "currentLocation": "Microbiology Lab",
+    "createdAt": "2026-01-15T17:08:00.000Z",
+    "createdBy": "USR-004",
+    "usedForTests": [],
+    "consumedAt": null,
+    "consumedBy": null,
+    "disposedAt": null,
+    "disposedBy": null
+  }
+]

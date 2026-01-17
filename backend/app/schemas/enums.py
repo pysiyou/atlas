@@ -1,0 +1,142 @@
+"""
+Enum types matching frontend TypeScript enums
+"""
+import enum
+
+
+class Gender(str, enum.Enum):
+    MALE = "male"
+    FEMALE = "female"
+    OTHER = "other"
+
+
+class AffiliationDuration(int, enum.Enum):
+    THREE_MONTHS = 3
+    SIX_MONTHS = 6
+    TWELVE_MONTHS = 12
+    TWENTY_FOUR_MONTHS = 24
+
+
+class UserRole(str, enum.Enum):
+    ADMIN = "admin"
+    RECEPTIONIST = "receptionist"
+    LAB_TECH = "lab-tech"
+    VALIDATOR = "validator"
+    BILLING = "billing"
+
+
+class SampleType(str, enum.Enum):
+    BLOOD = "blood"
+    URINE = "urine"
+    STOOL = "stool"
+    SALIVA = "saliva"
+    SWAB = "swab"
+    TISSUE = "tissue"
+    OTHER = "other"
+
+
+class SampleStatus(str, enum.Enum):
+    PENDING = "pending"
+    COLLECTED = "collected"
+    REJECTED = "rejected"
+
+
+class ContainerType(str, enum.Enum):
+    TUBE = "tube"
+    CUP = "cup"
+
+
+class ContainerTopColor(str, enum.Enum):
+    RED = "red"
+    PURPLE = "purple"
+    BLUE = "blue"
+    GREEN = "green"
+    GRAY = "gray"
+    YELLOW = "yellow"
+    LIGHT_BLUE = "light-blue"
+    PINK = "pink"
+    WHITE = "white"
+    BLACK = "black"
+    ORANGE = "orange"
+    CLEAR = "clear"
+
+
+class RejectionReason(str, enum.Enum):
+    HEMOLYZED = "hemolyzed"
+    CLOTTED = "clotted"
+    INSUFFICIENT_VOLUME = "insufficient-volume"
+    WRONG_CONTAINER = "wrong-container"
+    UNLABELED = "unlabeled"
+    CONTAMINATED = "contaminated"
+    LIPEMIC = "lipemic"
+    EXPIRED = "expired"
+
+
+class TestStatus(str, enum.Enum):
+    PENDING = "pending"
+    SAMPLE_COLLECTED = "sample-collected"
+    IN_PROGRESS = "in-progress"
+    COMPLETED = "completed"
+    VALIDATED = "validated"
+    REJECTED = "rejected"
+
+
+class OrderStatus(str, enum.Enum):
+    PENDING = "pending"
+    SAMPLE_COLLECTION = "sample-collection"
+    IN_PROGRESS = "in-progress"
+    COMPLETED = "completed"
+    VALIDATED = "validated"
+    REPORTED = "reported"
+
+
+class PriorityLevel(str, enum.Enum):
+    ROUTINE = "routine"
+    URGENT = "urgent"
+    STAT = "stat"
+
+
+class PaymentStatus(str, enum.Enum):
+    PENDING = "pending"
+    PARTIAL = "partial"
+    PAID = "paid"
+    OVERDUE = "overdue"
+
+
+class PaymentMethod(str, enum.Enum):
+    CASH = "cash"
+    CREDIT_CARD = "credit-card"
+    DEBIT_CARD = "debit-card"
+    INSURANCE = "insurance"
+    BANK_TRANSFER = "bank-transfer"
+
+
+class ClaimStatus(str, enum.Enum):
+    SUBMITTED = "submitted"
+    PROCESSING = "processing"
+    APPROVED = "approved"
+    DENIED = "denied"
+    PAID = "paid"
+
+
+class AliquotStatus(str, enum.Enum):
+    AVAILABLE = "available"
+    IN_USE = "in-use"
+    CONSUMED = "consumed"
+    STORED = "stored"
+    DISPOSED = "disposed"
+
+
+class ResultStatus(str, enum.Enum):
+    NORMAL = "normal"
+    HIGH = "high"
+    LOW = "low"
+    CRITICAL = "critical"
+    CRITICAL_HIGH = "critical-high"
+    CRITICAL_LOW = "critical-low"
+
+
+class ValidationDecision(str, enum.Enum):
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    REPEAT_REQUIRED = "repeat-required"

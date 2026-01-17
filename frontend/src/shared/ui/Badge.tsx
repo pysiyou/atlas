@@ -1,0 +1,148 @@
+import React from 'react';
+import { cn } from '@/utils';
+
+export type BadgeVariant = 
+  // Base variants
+  | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success' | 'warning' | 'info' | 'purple' | 'orange' | 'teal'
+  // Statuses
+  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'collected' | 'scheduled' | 'confirmed' | 'no-show' | 'pending' | 'partial' | 'paid'
+  // Priorities
+  | 'routine' | 'urgent' | 'stat'
+  // Test Categories
+  | 'hematology' | 'biochemistry' | 'microbiology' | 'serology' | 'urinalysis' | 'imaging' | 'immunology' | 'molecular' | 'toxicology' | 'coagulation' | 'chemistry'
+  // Sample Types
+  | 'blood' | 'urine' | 'stool' | 'swab' | 'tissue' | 'fluid' | 'csf' | 'sputum' | 'other' | 'plasma' | 'serum'
+  // Sex
+  | 'male' | 'female'
+  // Arbitrary string fallback
+  | (string & {});
+
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: BadgeVariant;
+  size?: 'xs' | 'sm' | 'md';
+}
+
+// Maps specific domain keys (status, priority, etc.) to base visual styles
+const VARIANT_STYLES: Record<string, string> = {
+  // Base Colors
+  default: 'bg-gray-100 text-gray-800 border-transparent',
+  primary: 'bg-sky-100 text-sky-800 border-transparent',
+  secondary: 'bg-gray-100 text-gray-800 border-transparent', // Same as default for now
+  outline: 'text-gray-800 border-gray-200 bg-transparent',
+  ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 border-transparent',
+  danger: 'bg-red-100 text-red-800 border-transparent',
+  success: 'bg-green-100 text-green-800 border-transparent',
+  warning: 'bg-yellow-100 text-yellow-800 border-transparent',
+  info: 'bg-blue-100 text-blue-800 border-transparent',
+  purple: 'bg-purple-100 text-purple-800 border-transparent',
+  orange: 'bg-orange-100 text-orange-800 border-transparent',
+  teal: 'bg-teal-100 text-teal-800 border-transparent',
+
+  // Status Mappings
+  'ordered': 'bg-blue-100 text-blue-800 border-transparent',
+  'in-progress': 'bg-yellow-100 text-yellow-800 border-transparent',
+  'completed': 'bg-green-100 text-green-800 border-transparent',
+  'delivered': 'bg-gray-100 text-gray-800 border-transparent',
+  'cancelled': 'bg-red-100 text-red-800 border-transparent',
+  'validated': 'bg-green-100 text-green-800 border-transparent',
+  'reported': 'bg-gray-100 text-gray-800 border-transparent',
+  'collected': 'bg-purple-100 text-purple-800 border-transparent',
+  'scheduled': 'bg-blue-100 text-blue-800 border-transparent',
+  'confirmed': 'bg-green-100 text-green-800 border-transparent',
+  'no-show': 'bg-orange-100 text-orange-800 border-transparent',
+  'pending': 'bg-yellow-100 text-yellow-800 border-transparent',
+  'partial': 'bg-orange-100 text-orange-800 border-transparent',
+  'paid': 'bg-green-100 text-green-800 border-transparent',
+  
+  // Priority Mappings
+  'routine': 'bg-blue-100 text-blue-800 border-transparent',
+  'urgent': 'bg-orange-100 text-orange-800 border-transparent',
+  'stat': 'bg-red-100 text-red-800 border-transparent font-bold',
+
+  // Sample Type Mappings
+  'blood': 'bg-red-100 text-red-800 border-transparent',
+  'plasma': 'bg-emerald-100 text-emerald-800 border-transparent',
+  'serum': 'bg-amber-100 text-amber-800 border-transparent',
+  'urine': 'bg-yellow-100 text-yellow-800 border-transparent',
+  'stool': 'bg-orange-100 text-orange-800 border-transparent',
+  'swab': 'bg-teal-100 text-teal-800 border-transparent',
+  'tissue': 'bg-purple-100 text-purple-800 border-transparent',
+  'csf': 'bg-blue-100 text-blue-800 border-transparent',
+  'sputum': 'bg-gray-100 text-gray-800 border-transparent',
+  'fluid': 'bg-cyan-100 text-cyan-800 border-transparent',
+  'other': 'bg-gray-100 text-gray-800 border-transparent',
+  'unknown': 'bg-gray-100 text-gray-800 border-transparent',
+
+  // Test Category Mappings
+  'hematology': 'bg-pink-100 text-pink-800 border-transparent',
+  'biochemistry': 'bg-blue-100 text-blue-800 border-transparent', 
+  'chemistry': 'bg-blue-100 text-blue-800 border-transparent',
+  'microbiology': 'bg-emerald-100 text-emerald-800 border-transparent',
+  'serology': 'bg-purple-100 text-purple-800 border-transparent',
+  'urinalysis': 'bg-yellow-100 text-yellow-800 border-transparent',
+  'imaging': 'bg-gray-100 text-gray-800 border-transparent',
+  'immunology': 'bg-indigo-100 text-indigo-800 border-transparent',
+  'molecular': 'bg-cyan-100 text-cyan-800 border-transparent',
+  'toxicology': 'bg-red-100 text-red-800 border-transparent',
+  'coagulation': 'bg-rose-100 text-rose-800 border-transparent',
+
+  // Sex Mappings
+  'male': 'bg-blue-50 text-blue-700 border-blue-200',
+  'female': 'bg-pink-50 text-pink-700 border-pink-200',
+};
+
+const SIZES = {
+  xs: 'px-1.5 py-0.5 text-[10px]',
+  sm: 'px-2 py-0.5 text-xs',
+  md: 'px-2.5 py-0.5 text-sm',
+};
+
+/**
+ * Badge Component
+ * 
+ * Displays a small badge with color variants.
+ * Uses a single `variant` prop to determine styling based on:
+ * - Base colors (primary, danger, etc.)
+ * - Status (ordered, completed, etc.)
+ * - Priority (urgent, stat, etc.)
+ * - Sample Type (blood, urine, etc.)
+ * - Sex (male, female)
+ * 
+ * If `children` is omitted, it will try to format the `variant` string to display.
+ */
+export const Badge: React.FC<BadgeProps> = ({ 
+  className, 
+  variant = 'default', 
+  size = 'md', 
+  children,
+  ...props 
+}) => {
+  // Normalize variant to lowercase string for lookup
+  const normalizedVariant = String(variant).toLowerCase();
+  
+  // Lookup style or fallback to default
+  const variantClass = VARIANT_STYLES[normalizedVariant] || VARIANT_STYLES['default'];
+  
+  // Auto-generate content if children is missing (and it's not a generic variant like 'default')
+  let content = children;
+  
+  if (!content && variant !== 'default') {
+    // Basic formatting: replace hyphens with spaces and uppercase
+    // Special case for 'stat' which is usually uppercase
+    content = String(variant).replace(/-/g, ' ').toUpperCase();
+  }
+
+  return (
+    <div 
+      className={cn(
+        'inline-flex items-center font-medium rounded-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+        variantClass,
+        SIZES[size],
+        className
+      )}
+      {...props}
+    >
+      {content}
+    </div>
+  );
+};
