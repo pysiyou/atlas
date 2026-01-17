@@ -1,48 +1,58 @@
 /**
  * Authentication Provider Component
- * Manages user authentication and role-based access
+ * Manages user authentication and role-based access using backend API
  */
 
 import React, { useState, type ReactNode } from 'react';
-import type { AuthUser, User, UserRole } from '@/types';
-import { STORAGE_KEYS, loadFromLocalStorage, saveToLocalStorage, removeFromLocalStorage } from '@/utils';
+import type { AuthUser, UserRole } from '@/types';
 import { AuthContext, type AuthContextType } from './AuthContext';
+import { apiClient } from '@/services/api/client';
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // Initialize state directly from localStorage using lazy initialization
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => 
-    loadFromLocalStorage<AuthUser | null>(STORAGE_KEYS.CURRENT_USER, null)
-  );
-  const [users] = useState<User[]>(() => 
-    loadFromLocalStorage<User[]>(STORAGE_KEYS.USERS, [])
-  );
+  // Initialize state from sessionStorage (for page refreshes)
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => {
+    const stored = sessionStorage.getItem('atlas_current_user');
+    return stored ? JSON.parse(stored) : null;
+  });
 
   /**
-   * Login function - simplified for demo (no real authentication)
+   * Login function - authenticates with backend API
    */
-  const login = (username: string, password: string, role: UserRole): boolean => {
-    // Find user in users array
-    const user = users.find(u => u.username === username && u.password === password && u.role === role);
-    
-    if (user) {
+  const login = async (username: string, password: string, role: UserRole): Promise<boolean> => {
+    try {
+      // Call backend login endpoint
+      const response = await apiClient.post<{ access_token: string; refresh_token: string }>('/auth/login', {
+        username,
+        password,
+      });
+
+      // Get user info
+      const userInfo = await apiClient.get<AuthUser>('/auth/me');
+      
+      // Verify role matches
+      if (userInfo.role !== role) {
+        return false;
+      }
+
       const authUser: AuthUser = {
-        id: user.id,
-        username: user.username,
-        name: user.name,
-        role: user.role,
+        ...userInfo,
         loggedInAt: new Date().toISOString(),
       };
 
       setCurrentUser(authUser);
-      saveToLocalStorage(STORAGE_KEYS.CURRENT_USER, authUser);
+      sessionStorage.setItem('atlas_current_user', JSON.stringify(authUser));
+      sessionStorage.setItem('atlas_access_token', response.access_token);
+      sessionStorage.setItem('atlas_refresh_token', response.refresh_token);
+      
       return true;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
     }
-    
-    return false;
   };
 
   /**
@@ -50,7 +60,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    */
   const logout = () => {
     setCurrentUser(null);
-    removeFromLocalStorage(STORAGE_KEYS.CURRENT_USER);
+    sessionStorage.removeItem('atlas_current_user');
+    sessionStorage.removeItem('atlas_access_token');
+    sessionStorage.removeItem('atlas_refresh_token');
   };
 
   /**
@@ -73,7 +85,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const value: AuthContextType = {
     currentUser,
-    users,
+    users: [], // No longer needed with backend
     login,
     logout,
     isAuthenticated,
@@ -82,3 +94,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+

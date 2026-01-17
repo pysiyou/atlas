@@ -9,7 +9,7 @@ git init
 echo "Adding files to git..."
 git add .
 
-echo "Creating initial commit..."
+echo "Creating initial commit with backend implementation..."
 git commit -m "feat: Initial backend implementation with FastAPI
 
 - Complete database models (User, Patient, Test, Order, Sample, Aliquot, Billing, Report)
@@ -21,4 +21,10 @@ git commit -m "feat: Initial backend implementation with FastAPI
 - Database initialization script
 - Comprehensive API documentation"
 
-echo "✅ Git repository initialized and committed!"
+echo "Creating new branch for frontend cleanup..."
+git checkout -b feature/remove-localstorage
+
+echo "✅ Git repository initialized!"
+echo "✅ Backend committed to main branch"
+echo "✅ Switched to 'feature/remove-localstorage' branch for frontend cleanup"
+

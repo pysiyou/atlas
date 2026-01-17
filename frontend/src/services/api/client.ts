@@ -29,17 +29,7 @@ export class APIClient {
    * Get authorization token from storage
    */
   private getAuthToken(): string | null {
-    // TODO: Implement proper token retrieval
-    const user = localStorage.getItem('medlab_current_user');
-    if (user) {
-      try {
-        const parsed = JSON.parse(user);
-        return parsed.token || null;
-      } catch {
-        return null;
-      }
-    }
-    return null;
+    return sessionStorage.getItem('atlas_access_token');
   }
 
   /**

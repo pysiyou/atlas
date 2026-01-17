@@ -1,16 +1,13 @@
 /**
  * Patients Context, Provider, and Hook
- * Consolidates patient state management into a single module:
- * - PatientsContext: React Context for patient data
- * - PatientsProvider: Provider component managing patient operations
- * - usePatients: Hook to consume patient context
+ * Consolidates patient state management using backend API
  */
 
-import React, { type ReactNode, useCallback } from 'react';
+import React, { type ReactNode, useCallback, useState, useEffect } from 'react';
 import type { Patient } from '@/types';
-import { STORAGE_KEYS, loadFromLocalStorage } from '@/utils';
-import { useLocalStorage, useAuth } from '@/hooks';
+import { useAuth } from '@/hooks';
 import { createFeatureContext } from '@/shared/context/createFeatureContext';
+import { patientAPI } from '@/services/api/patients';
 
 // ============================================================================
 // Context Type Definition
@@ -21,12 +18,13 @@ import { createFeatureContext } from '@/shared/context/createFeatureContext';
  */
 export interface PatientsContextType {
   patients: Patient[];
-  addPatient: (patient: Patient) => void;
-  updatePatient: (id: string, updates: Partial<Patient>) => void;
-  deletePatient: (id: string) => void;
+  addPatient: (patient: Patient) => Promise<void>;
+  updatePatient: (id: string, updates: Partial<Patient>) => Promise<void>;
+  deletePatient: (id: string) => Promise<void>;
   getPatient: (id: string) => Patient | undefined;
   searchPatients: (query: string) => Patient[];
-  refreshPatients: () => void;
+  refreshPatients: () => Promise<void>;
+  loading: boolean;
 }
 
 // ============================================================================
@@ -49,51 +47,77 @@ interface PatientsProviderProps {
 
 /**
  * Patients Provider Component
- * Manages patient data and operations
+ * Manages patient data using backend API
  */
 export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) => {
-  const [patients, setPatients] = useLocalStorage<Patient[]>(STORAGE_KEYS.PATIENTS, []);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
+
+  /**
+   * Load patients from backend on mount
+   */
+  useEffect(() => {
+    refreshPatients();
+  }, []);
+
+  /**
+   * Refresh patients from backend
+   */
+  const refreshPatients = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await patientAPI.getAll();
+      setPatients(data);
+    } catch (error) {
+      console.error('Failed to load patients:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   /**
    * Add a new patient
    */
-  const addPatient = useCallback((patient: Patient) => {
-    const now = new Date().toISOString();
-    const patientWithTimestamps: Patient = {
-      ...patient,
-      registrationDate: patient.registrationDate || now,
-      createdAt: now,
-      createdBy: currentUser?.username || 'system',
-      updatedAt: now,
-      updatedBy: currentUser?.username || 'system',
-    };
-    setPatients(prev => [...prev, patientWithTimestamps]);
-  }, [setPatients, currentUser]);
+  const addPatient = useCallback(async (patient: Patient) => {
+    try {
+      const created = await patientAPI.create(patient);
+      setPatients(prev => [...prev, created]);
+    } catch (error) {
+      console.error('Failed to create patient:', error);
+      throw error;
+    }
+  }, []);
 
   /**
    * Update an existing patient
    */
-  const updatePatient = useCallback((id: string, updates: Partial<Patient>) => {
-    const now = new Date().toISOString();
-    const updatesWithTimestamps = {
-      ...updates,
-      updatedAt: now,
-      updatedBy: currentUser?.username || 'system',
-    };
-    setPatients(prev =>
-      prev.map(patient =>
-        patient.id === id ? { ...patient, ...updatesWithTimestamps } : patient
-      )
-    );
-  }, [setPatients, currentUser]);
+  const updatePatient = useCallback(async (id: string, updates: Partial<Patient>) => {
+    try {
+      const updated = await patientAPI.update(id, updates);
+      setPatients(prev =>
+        prev.map(patient =>
+          patient.id === id ? updated : patient
+        )
+      );
+    } catch (error) {
+      console.error('Failed to update patient:', error);
+      throw error;
+    }
+  }, []);
 
   /**
    * Delete a patient
    */
-  const deletePatient = useCallback((id: string) => {
-    setPatients(prev => prev.filter(patient => patient.id !== id));
-  }, [setPatients]);
+  const deletePatient = useCallback(async (id: string) => {
+    try {
+      await patientAPI.delete(id);
+      setPatients(prev => prev.filter(patient => patient.id !== id));
+    } catch (error) {
+      console.error('Failed to delete patient:', error);
+      throw error;
+    }
+  }, []);
 
   /**
    * Get a patient by ID
@@ -116,15 +140,6 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
     );
   }, [patients]);
 
-  /**
-   * Refresh patients from localStorage (useful after external updates)
-   */
-  const refreshPatients = useCallback(() => {
-    // Force a re-read from localStorage
-    const refreshedData = loadFromLocalStorage<Patient[]>(STORAGE_KEYS.PATIENTS, []);
-    setPatients(refreshedData);
-  }, [setPatients]);
-
   const value: PatientsContextType = {
     patients,
     addPatient,
@@ -133,7 +148,9 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
     getPatient,
     searchPatients,
     refreshPatients,
+    loading,
   };
 
   return <PatientsContext.Provider value={value}>{children}</PatientsContext.Provider>;
 };
+
