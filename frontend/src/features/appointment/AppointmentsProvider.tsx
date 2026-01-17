@@ -3,10 +3,8 @@
  * Manages appointment scheduling and operations
  */
 
-import React, { type ReactNode, useCallback } from 'react';
+import React, { type ReactNode, useCallback, useState } from 'react';
 import type { Appointment } from '@/types';
-import { STORAGE_KEYS } from '@/utils';
-import { useLocalStorage } from '@/hooks';
 import { parseISO, isAfter, isBefore, startOfDay, endOfDay } from 'date-fns';
 import { AppointmentsContext, type AppointmentsContextType } from './AppointmentsContext';
 
@@ -15,7 +13,7 @@ interface AppointmentsProviderProps {
 }
 
 export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ children }) => {
-  const [appointments, setAppointments] = useLocalStorage<Appointment[]>(STORAGE_KEYS.APPOINTMENTS, []);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   /**
    * Add a new appointment

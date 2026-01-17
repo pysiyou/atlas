@@ -3,7 +3,7 @@
  * Manages sample collection and tracking
  */
 
-import React, { useCallback, type ReactNode } from 'react';
+import React, { useCallback, useState, type ReactNode } from 'react';
 import type {
   Sample,
   CollectedSample,
@@ -15,35 +15,15 @@ import type {
 } from '@/types';
 import { isCollectedSample } from '@/types';
 import { generateSampleId } from '@/utils/sampleHelpers';
-import { useLocalStorage } from '@/hooks';
-import { STORAGE_KEYS } from '@/utils';
 import { SamplesContext, type SamplesContextType } from './SamplesContext';
 
 interface SamplesProviderProps {
   children: ReactNode;
 }
 
-/**
- * Validates and migrates sample data from localStorage
- */
-const validateSamples = (samples: Sample[]): Sample[] => {
-  if (!Array.isArray(samples) || samples.length === 0) return [];
-
-  const firstSample = samples[0];
-  if (!('priority' in firstSample) || !('testCodes' in firstSample) ||
-      !('requiredContainerTypes' in firstSample)) {
-    console.warn('Old sample structure detected. Clearing samples...');
-    return [];
-  }
-
-  return samples.filter((s: Sample) =>
-    s.status === 'pending' || s.status === 'collected'
-  );
-};
-
 export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) => {
-  const [rawSamples, setSamples] = useLocalStorage<Sample[]>(STORAGE_KEYS.SAMPLES, []);
-  const samples = validateSamples(rawSamples);
+  const [samples, setSamples] = useState<Sample[]>([]);
+
 
 
 

@@ -6,8 +6,8 @@ from typing import List
 
 
 class Settings(BaseSettings):
-    # Database
-    DATABASE_URL: str = "sqlite:///./atlas_lab.db"
+    # Database - PostgreSQL only
+    DATABASE_URL: str = "postgresql://atlas:atlas123@localhost:5432/atlas_lab"
     
     # JWT
     SECRET_KEY: str

@@ -115,12 +115,9 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
           completedAt: order.orderDate,
         };
       case 'collected': {
-        const collectedTest = order.tests.find((t) =>
-          ['collected', 'in-progress', 'completed', 'validated', 'reported'].includes(t.status)
-        );
         return {
-          completedBy: collectedTest?.collectedBy || order.createdBy,
-          completedAt: collectedTest?.collectedAt || order.createdAt,
+          completedBy: order.createdBy,
+          completedAt: order.createdAt,
         };
       }
       case 'in-progress': {
@@ -141,8 +138,8 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
       }
       case 'delivered':
         return {
-          completedBy: order.deliveredBy || order.createdBy,
-          completedAt: order.deliveredAt || order.updatedAt,
+          completedBy: order.createdBy,
+          completedAt: order.updatedAt,
         };
       default:
         return {};

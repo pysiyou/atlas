@@ -2,24 +2,58 @@
 
 ## Quick Start
 
-### 1. Install Dependencies
+### 1. Start PostgreSQL Database
+
+Using Docker (recommended):
+
+```bash
+cd backend
+docker-compose up -d
+```
+
+Or install PostgreSQL locally and create database:
+
+```sql
+CREATE DATABASE atlas_lab;
+CREATE USER atlas WITH PASSWORD 'atlas123';
+GRANT ALL PRIVILEGES ON DATABASE atlas_lab TO atlas;
+```
+
+### 2. Install Dependencies
 
 ```bash
 cd backend
 poetry install
 ```
 
-### 2. Configure Environment
+### 3. Configure Environment
 
-Copy `.env.example` to `.env` and update the values:
+Copy `.env.example` to `.env` (already configured for local PostgreSQL):
 
 ```bash
 cp .env.example .env
 ```
 
-For development, you can use SQLite (default) or PostgreSQL.
+### 4. Initialize Database
 
-### 3. Run the Server
+```bash
+poetry run python init_db.py
+```
+
+### 5. Seed Example Data (Optional)
+
+```bash
+poetry run python seed_data.py
+```
+
+This creates:
+
+- 4 users (admin, receptionist, labtech, validator)
+- 4 test types (CBC, Glucose, Lipid Panel, Urinalysis)
+- 2 example patients
+- 2 example orders
+
+### 6. Run the Server
 
 ```bash
 poetry run uvicorn app.main:app --reload

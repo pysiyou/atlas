@@ -21,7 +21,8 @@ export const LoginForm: React.FC = () => {
   const [role, setRole] = useState<UserRole>('receptionist');
   const [error, setError] = useState('');
   
-  const handleSubmit = (e: React.FormEvent) => {
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -30,7 +31,7 @@ export const LoginForm: React.FC = () => {
       return;
     }
 
-    const success = login(username, password, role);
+    const success = await login(username, password, role);
 
     if (success) {
       navigate(ROUTES.DASHBOARD);
@@ -39,13 +40,13 @@ export const LoginForm: React.FC = () => {
     }
   };
 
-  const handleQuickLogin = (demoUsername: string, demoRole: UserRole) => {
+  const handleQuickLogin = async (demoUsername: string, demoRole: UserRole) => {
     setUsername(demoUsername);
     setPassword(DEMO_PASSWORD);
     setRole(demoRole);
 
-    setTimeout(() => {
-      const success = login(demoUsername, DEMO_PASSWORD, demoRole);
+    setTimeout(async () => {
+      const success = await login(demoUsername, DEMO_PASSWORD, demoRole);
       if (success) {
         navigate(ROUTES.DASHBOARD);
       }

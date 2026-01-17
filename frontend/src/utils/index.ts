@@ -17,7 +17,6 @@ export {
 export * from './validation';
 export * from './formatters';
 export * from './reference-ranges';
-export * from './storage';
 export * from './statusHelpers';
 export * from './sampleHelpers';
 export * from './classnames';

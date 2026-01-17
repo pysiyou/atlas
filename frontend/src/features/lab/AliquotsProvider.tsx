@@ -3,7 +3,7 @@
  * Manages sample aliquots for distributed testing
  */
 
-import React, { useState, useEffect, type ReactNode } from 'react';
+import React, { useState, type ReactNode } from 'react';
 import type { Aliquot, AliquotPlan, AliquotStatus, ContainerType } from '@/types';
 import { generateAliquotId } from '@/utils/sampleHelpers';
 import { AliquotsContext, type AliquotsContextType } from './AliquotsContext';
@@ -13,24 +13,8 @@ interface AliquotsProviderProps {
 }
 
 export const AliquotsProvider: React.FC<AliquotsProviderProps> = ({ children }) => {
-  // Initialize state directly from localStorage using lazy initialization
-  const [aliquots, setAliquots] = useState<Aliquot[]>(() => {
-    const stored = localStorage.getItem('medlab_aliquots');
-    if (stored) {
-      try {
-        return JSON.parse(stored);
-      } catch (error) {
-        console.error('Error loading aliquots from localStorage:', error);
-        return [];
-      }
-    }
-    return [];
-  });
+  const [aliquots, setAliquots] = useState<Aliquot[]>([]);
 
-  // Save to localStorage whenever aliquots change
-  useEffect(() => {
-    localStorage.setItem('medlab_aliquots', JSON.stringify(aliquots));
-  }, [aliquots]);
 
   const getAliquot = (aliquotId: string) => {
     return aliquots.find((a) => a.aliquotId === aliquotId);

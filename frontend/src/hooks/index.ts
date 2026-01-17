@@ -2,7 +2,6 @@
  * Central export for all hooks
  */
 
-export * from './useLocalStorage';
 export * from './useFiltering';
 
 // Re-export from features for convenience

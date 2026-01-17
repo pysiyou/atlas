@@ -3,7 +3,7 @@
  * Sets up routing and context providers
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
@@ -29,8 +29,6 @@ import {
 } from '@/pages';
 
 // Utils & Config
-import { initializeSeedData, seedDataExists } from '@/utils/data';
-import { logger } from '@/utils';
 import { ROUTES } from '@/config';
 
 /**
@@ -147,14 +145,6 @@ const AppRoutes: React.FC = () => {
  * Main App Component
  */
 const App: React.FC = () => {
-  // Initialize seed data on first load
-  useEffect(() => {
-    if (!seedDataExists()) {
-      logger.info('First time load - initializing seed data');
-      initializeSeedData();
-    }
-  }, []);
-
   return (
     <Router>
       <AppProviders>

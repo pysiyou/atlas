@@ -6,10 +6,8 @@
  * - useOrders: Hook to consume order context
  */
 
-import React, { type ReactNode, useCallback } from 'react';
+import React, { type ReactNode, useCallback, useState } from 'react';
 import type { Order, OrderStatus, TestStatus, OrderTest, TestResult } from '@/types';
-import { STORAGE_KEYS } from '@/utils';
-import { useLocalStorage } from '@/hooks';
 import { createFeatureContext } from '@/shared/context/createFeatureContext';
 import {
   updateOrderTestStatus,
@@ -90,7 +88,7 @@ export interface OrdersContextType {
 /**
  * React Context for Orders using generic factory
  */
-export const { Context: OrdersContext, useFeature: useOrders } = 
+export const { Context: OrdersContext, useFeature: useOrders} = 
   createFeatureContext<OrdersContextType>('Orders');
 
 // ============================================================================
@@ -106,7 +104,7 @@ interface OrdersProviderProps {
  * Manages test orders and operations
  */
 export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
-  const [orders, setOrders] = useLocalStorage<Order[]>(STORAGE_KEYS.ORDERS, []);
+  const [orders, setOrders] = useState<Order[]>([]);
 
   /**
    * Add a new order

@@ -3,10 +3,8 @@
  * Manages invoices, payments, and financial operations
  */
 
-import React, { type ReactNode, useCallback } from 'react';
+import React, { type ReactNode, useCallback, useState } from 'react';
 import type { Invoice, Payment, InsuranceClaim } from '@/types';
-import { STORAGE_KEYS } from '@/utils';
-import { useLocalStorage } from '@/hooks';
 import { BillingContext, type BillingContextType } from './BillingContext';
 
 interface BillingProviderProps {
@@ -14,9 +12,9 @@ interface BillingProviderProps {
 }
 
 export const BillingProvider: React.FC<BillingProviderProps> = ({ children }) => {
-  const [invoices, setInvoices] = useLocalStorage<Invoice[]>(STORAGE_KEYS.INVOICES, []);
-  const [payments, setPayments] = useLocalStorage<Payment[]>(STORAGE_KEYS.PAYMENTS, []);
-  const [claims, setClaims] = useLocalStorage<InsuranceClaim[]>(STORAGE_KEYS.CLAIMS, []);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [claims, setClaims] = useState<InsuranceClaim[]>([]);
 
   /**
    * Add a new invoice

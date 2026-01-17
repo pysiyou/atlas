@@ -30,11 +30,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         password,
       });
 
-      // Get user info
+      // Store tokens FIRST so they're available for the next request
+      sessionStorage.setItem('atlas_access_token', response.access_token);
+      sessionStorage.setItem('atlas_refresh_token', response.refresh_token);
+
+      // Get user info (now with token in sessionStorage)
       const userInfo = await apiClient.get<AuthUser>('/auth/me');
       
       // Verify role matches
       if (userInfo.role !== role) {
+        // Clear tokens if role doesn't match
+        sessionStorage.removeItem('atlas_access_token');
+        sessionStorage.removeItem('atlas_refresh_token');
         return false;
       }
 
@@ -45,12 +52,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       setCurrentUser(authUser);
       sessionStorage.setItem('atlas_current_user', JSON.stringify(authUser));
-      sessionStorage.setItem('atlas_access_token', response.access_token);
-      sessionStorage.setItem('atlas_refresh_token', response.refresh_token);
       
       return true;
     } catch (error) {
       console.error('Login failed:', error);
+      // Clear any tokens on error
+      sessionStorage.removeItem('atlas_access_token');
+      sessionStorage.removeItem('atlas_refresh_token');
       return false;
     }
   };

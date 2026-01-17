@@ -4,15 +4,15 @@
  */
 
 import { createContext } from 'react';
-import type { AuthUser, User, UserRole } from '@/types';
+import type { AuthUser, UserRole } from '@/types';
 
 /**
  * AuthContext type definition
  */
 export interface AuthContextType {
   currentUser: AuthUser | null;
-  users: User[];
-  login: (username: string, password: string, role: UserRole) => boolean;
+  users: never[]; // Deprecated - kept for compatibility
+  login: (username: string, password: string, role: UserRole) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
   hasRole: (roles: UserRole | UserRole[]) => boolean;
@@ -22,3 +22,4 @@ export interface AuthContextType {
  * React Context for Authentication
  */
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+

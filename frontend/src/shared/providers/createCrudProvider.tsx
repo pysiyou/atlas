@@ -1,6 +1,4 @@
-import { type ReactNode, useCallback } from 'react';
-import { useLocalStorage } from '@/hooks';
-import { loadFromLocalStorage } from '@/utils';
+import { type ReactNode, useCallback, useState } from 'react';
 
 export interface CrudConfig<T extends { id: string }> {
   storageKey: string;
@@ -50,19 +48,19 @@ export function createCrudProvider<T extends { id: string }>(
   Context: React.Context<CrudContextValue<T> | undefined>
 ) {
   return function CrudProvider({ children, initialData }: CrudProviderProps<T>) {
-    const [items, setItems] = useLocalStorage<T[]>(config.storageKey, initialData ?? []);
+    const [items, setItems] = useState<T[]>(initialData ?? []);
 
     const add = useCallback((item: Omit<T, 'id'>) => {
       const newItem = config.onBeforeAdd 
         ? config.onBeforeAdd(item)
         : { ...item, id: config.generateId() } as T;
       
-      setItems(prev => [...prev, newItem]);
+      setItems((prev: T[]) => [...prev, newItem]);
       return newItem;
     }, [setItems]);
 
     const update = useCallback((id: string, updates: Partial<T>) => {
-      setItems(prev => prev.map(item => {
+      setItems((prev: T[]) => prev.map((item: T) => {
         if (item.id !== id) return item;
         
         const finalUpdates = config.onBeforeUpdate
@@ -74,17 +72,17 @@ export function createCrudProvider<T extends { id: string }>(
     }, [setItems]);
 
     const remove = useCallback((id: string) => {
-      setItems(prev => prev.filter(item => item.id !== id));
+      setItems((prev: T[]) => prev.filter((item: T) => item.id !== id));
     }, [setItems]);
 
     const getById = useCallback((id: string) => {
-      return items.find(item => item.id === id);
+      return items.find((item: T) => item.id === id);
     }, [items]);
 
     const refresh = useCallback(() => {
-      const refreshedData = loadFromLocalStorage<T[]>(config.storageKey, []);
-      setItems(refreshedData);
-    }, [setItems]);
+      // Refresh is now a no-op since we don't use localStorage
+      // Data should be fetched from backend API instead
+    }, []);
 
     const value: CrudContextValue<T> = {
       items,

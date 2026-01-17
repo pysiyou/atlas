@@ -3,9 +3,8 @@
  * Consolidates patient state management using backend API
  */
 
-import React, { type ReactNode, useCallback, useState, useEffect } from 'react';
+import React, { type ReactNode, useCallback, useState } from 'react';
 import type { Patient } from '@/types';
-import { useAuth } from '@/hooks';
 import { createFeatureContext } from '@/shared/context/createFeatureContext';
 import { patientAPI } from '@/services/api/patients';
 
@@ -51,15 +50,7 @@ interface PatientsProviderProps {
  */
 export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) => {
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { currentUser } = useAuth();
-
-  /**
-   * Load patients from backend on mount
-   */
-  useEffect(() => {
-    refreshPatients();
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   /**
    * Refresh patients from backend
@@ -71,6 +62,8 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
       setPatients(data);
     } catch (error) {
       console.error('Failed to load patients:', error);
+      // Don't throw error - just log it and keep empty array
+      setPatients([]);
     } finally {
       setLoading(false);
     }

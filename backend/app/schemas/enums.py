@@ -18,10 +18,10 @@ class AffiliationDuration(int, enum.Enum):
 
 
 class UserRole(str, enum.Enum):
-    ADMIN = "admin"
+    ADMIN = "administrator"
     RECEPTIONIST = "receptionist"
-    LAB_TECH = "lab-tech"
-    VALIDATOR = "validator"
+    LAB_TECH = "lab-technician"
+    VALIDATOR = "pathologist"
     BILLING = "billing"
 
 

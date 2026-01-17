@@ -3,10 +3,8 @@
  * Manages test catalog and operations
  */
 
-import React, { type ReactNode, useCallback } from 'react';
+import React, { type ReactNode, useCallback, useState } from 'react';
 import type { Test, TestCategory } from '@/types';
-import { STORAGE_KEYS } from '@/utils';
-import { useLocalStorage } from '@/hooks';
 import { TestsContext, type TestsContextType } from './TestsContext';
 
 interface TestsProviderProps {
@@ -14,7 +12,7 @@ interface TestsProviderProps {
 }
 
 export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
-  const [tests, setTests] = useLocalStorage<Test[]>(STORAGE_KEYS.TESTS, []);
+  const [tests, setTests] = useState<Test[]>([]);
 
   /**
    * Add a new test
