@@ -4,13 +4,13 @@ import { useTests } from '@/features/test/TestsContext';
 import { usePatients } from '@/hooks';
 import { useSamples } from '@/features/lab/SamplesContext';
 import { getPatientName, getTestName, getTestSampleType } from '@/utils/typeHelpers';
-import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
 import { SearchBar, EmptyState } from '@/shared/ui';
 import { ResultValidationCard } from './ValidationCard';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { useSearch } from '@/utils/filtering';
 import type { TestWithContext } from '@/types';
+import { resultAPI } from '@/services/api';
 /**
  * Filter function for test search
  */
@@ -36,7 +36,6 @@ const filterTest = (test: TestWithContext, query: string): boolean => {
  * components for each test.
  */
 export const ResultValidation: React.FC = () => {
-  const { currentUser } = useAuth();
   const ordersContext = useOrders();
   const testsContext = useTests();
   const patientsContext = usePatients();
@@ -91,8 +90,6 @@ export const ResultValidation: React.FC = () => {
 
   if (!ordersContext || !testsContext || !patientsContext || !samplesContext) return <div>Loading...</div>;
 
-  const { updateTestStatus } = ordersContext;
-
   const handleCommentsChange = (commentKey: string, value: string) => {
     setComments(prev => ({
       ...prev,
@@ -100,7 +97,7 @@ export const ResultValidation: React.FC = () => {
     }));
   };
 
-  const handleValidate = (
+  const handleValidate = async (
     orderId: string, 
     testCode: string, 
     approve: boolean,
@@ -109,40 +106,55 @@ export const ResultValidation: React.FC = () => {
   ) => {
     const commentKey = `${orderId}-${testCode}`;
 
-    if (approve) {
-      updateTestStatus(orderId, testCode, 'validated', {
-        validatedBy: currentUser?.id,
-        resultValidatedAt: new Date().toISOString(),
-        validationNotes: comments[commentKey] || undefined,
-      });
-      toast.success('Results approved');
-    } else {
-      if (!rejectionNotes) {
-          // Fallback if no notes (e.g. from card quick action if not updated)
+    try {
+      if (approve) {
+        // Approve results via API
+        await resultAPI.validateResults(orderId, testCode, {
+          decision: 'approved',
+          validationNotes: comments[commentKey] || undefined,
+        });
+        
+        // Refresh orders from backend
+        await ordersContext.refreshOrders();
+        
+        toast.success('Results approved');
+      } else {
+        if (!rejectionNotes) {
+          // Fallback if no notes
           const confirmed = window.confirm(
-            'Are you sure you want to reject these results? This will delete the entered results and require re-collection and re-testing.'
+            'Are you sure you want to reject these results?'
           );
           if (!confirmed) return;
+        }
+
+        // Determine decision based on rejection type
+        const decision = rejectionType === 're-collect' ? 'repeat-required' : 'rejected';
+        
+        // Reject results via API
+        await resultAPI.validateResults(orderId, testCode, {
+          decision,
+          validationNotes: rejectionNotes || 'Rejected by validator',
+        });
+        
+        // Refresh orders from backend
+        await ordersContext.refreshOrders();
+        
+        const message = rejectionType === 're-collect' 
+          ? 'Sample rejected - new collection required' 
+          : 'Results rejected - re-test required';
+        toast.error(message);
       }
 
-      const status = rejectionType === 're-collect' ? 'pending' : 'sample-collected';
-      const notesPrefix = rejectionType === 're-collect' ? 'Sample Rejected: ' : 'Re-test Required: ';
-      const notes = rejectionNotes ? `${notesPrefix}${rejectionNotes}` : 'Rejected by pathologist';
-
-      updateTestStatus(orderId, testCode, status, {
-        technicianNotes: notes,
-        // If re-collecting, we effectively reset the sample cycle for this test?
-        // For simple workflow, setting status to pending allows re-collection flow if simplified.
-        // But 'pending' means pending collection. 
+      // Clear local state
+      setComments(prev => {
+        const newComments = { ...prev };
+        delete newComments[commentKey];
+        return newComments;
       });
-      toast.error(rejectionType === 're-collect' ? 'Sample rejected - new collection required' : 'Results rejected - re-test required');
+    } catch (error) {
+      console.error('Error validating results:', error);
+      toast.error('Failed to validate results. Please try again.');
     }
-
-    setComments(prev => {
-      const newComments = { ...prev };
-      delete newComments[commentKey];
-      return newComments;
-    });
   };
 
   const openValidationModal = (test: TestWithContext) => {

@@ -13,6 +13,7 @@ import type { SampleDisplay } from './types';
 const SAMPLE_STATUS_FILTER_OPTIONS: FilterOption[] = [
   { id: 'pending', label: 'PENDING', color: 'warning' },
   { id: 'collected', label: 'COLLECTED', color: 'success' },
+  { id: 'rejected', label: 'REJECTED', color: 'error' },
 ];
 
 const createFilterSample = (patients: Patient[], tests: Test[]) => (display: SampleDisplay, query: string): boolean => {
@@ -37,7 +38,7 @@ const createFilterSample = (patients: Patient[], tests: Test[]) => (display: Sam
 
 export const SampleCollectionView: React.FC = () => {
   const { currentUser } = useAuth();
-  const { orders, collectSampleForTests } = useOrders();
+  const { orders, refreshOrders } = useOrders();
   const { tests } = useTests();
   const { samples, collectSample } = useSamples();
   const { getPatient, patients } = usePatients();
@@ -131,6 +132,10 @@ export const SampleCollectionView: React.FC = () => {
 
     try {
       // Collect the sample via API
+      // This will:
+      // 1. Update sample status to COLLECTED
+      // 2. Update associated test statuses to SAMPLE_COLLECTED
+      // 3. Link tests to this sampleId
       await collectSample(
         display.sample.sampleId,
         volume,
@@ -139,18 +144,9 @@ export const SampleCollectionView: React.FC = () => {
         notes
       );
 
-      // Update the order tests to mark them as collected and link to the sample
-      const collectionDate = new Date().toISOString();
-      collectSampleForTests(
-        display.order.orderId,
-        display.requirement.testCodes,
-        display.sample.sampleId,
-        {
-          collectionDate,
-          collectedBy: currentUser.id,
-          collectionNotes: notes,
-        }
-      );
+      // Refresh orders from backend to get updated test statuses
+      // This is critical so tests appear in Result Entry page
+      await refreshOrders();
 
       toast.success(`${display.sample.sampleType.toUpperCase()} sample collected`);
     } catch (error) {

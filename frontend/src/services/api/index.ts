@@ -8,3 +8,4 @@ export { patientAPI } from './patients';
 export { orderAPI } from './orders';
 export { testAPI } from './tests';
 export { sampleAPI } from './samples';
+export { resultAPI } from './results';

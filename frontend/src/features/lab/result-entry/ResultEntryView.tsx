@@ -5,7 +5,6 @@ import { useSamples } from '@/features/lab/SamplesContext';
 import { usePatients } from '@/hooks';
 import { checkReferenceRangeWithDemographics } from '@/utils';
 import { getPatientName, getTestName, getTestSampleType } from '@/utils/typeHelpers';
-import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
 import type { TestResult, TestWithContext } from '@/types';
 import { isCollectedSample } from '@/types';
@@ -13,6 +12,7 @@ import { SearchBar, EmptyState } from '@/shared/ui';
 import { ResultEntryCard } from './ResultCard';
 import { useSearch } from '@/utils/filtering';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
+import { resultAPI } from '@/services/api';
 /**
  * Filter function for test search
  */
@@ -38,7 +38,6 @@ const filterTest = (test: TestWithContext, query: string): boolean => {
  * components for each test.
  */
 export const ResultEntry: React.FC = () => {
-  const { currentUser } = useAuth();
   const ordersContext = useOrders();
   const testsContext = useContext(TestsContext);
   const patientsContext = usePatients();
@@ -99,7 +98,6 @@ export const ResultEntry: React.FC = () => {
 
   if (!ordersContext || !testsContext || !patientsContext || !samplesContext) return <div>Loading...</div>;
 
-  const { updateTestStatus } = ordersContext;
   const { getTest } = testsContext;
 
   const handleResultChange = (resultKey: string, paramCode: string, value: string) => {
@@ -126,7 +124,7 @@ export const ResultEntry: React.FC = () => {
     return filledCount === parameterCount;
   };
 
-  const handleSaveResults = (orderId: string, testCode: string, finalResults?: Record<string, string>, finalNotes?: string) => {
+  const handleSaveResults = async (orderId: string, testCode: string, finalResults?: Record<string, string>, finalNotes?: string) => {
     const resultKey = `${orderId}-${testCode}`;
     // Use provided finalResults if available, otherwise fall back to state
     const testResults = finalResults || results[resultKey];
@@ -196,25 +194,33 @@ export const ResultEntry: React.FC = () => {
       }
     });
 
-    updateTestStatus(orderId, testCode, 'completed', {
-      results: formattedResults,
-      resultEnteredAt: new Date().toISOString(),
-      enteredBy: currentUser?.id,
-      flags: flags.length > 0 ? flags : undefined,
-      technicianNotes: finalNotes || technicianNotes[resultKey] || undefined,
-    });
+    try {
+      // Call backend API to persist results
+      await resultAPI.enterResults(orderId, testCode, {
+        results: formattedResults,
+        technicianNotes: finalNotes || technicianNotes[resultKey] || undefined,
+      });
 
-    toast.success('Results saved successfully');
-    setResults(prev => {
-      const newResults = { ...prev };
-      delete newResults[resultKey];
-      return newResults;
-    });
-    setTechnicianNotes(prev => {
-      const newNotes = { ...prev };
-      delete newNotes[resultKey];
-      return newNotes;
-    });
+      // Refresh orders from backend to get updated data
+      await ordersContext.refreshOrders();
+
+      toast.success('Results saved successfully');
+      
+      // Clear local state
+      setResults(prev => {
+        const newResults = { ...prev };
+        delete newResults[resultKey];
+        return newResults;
+      });
+      setTechnicianNotes(prev => {
+        const newNotes = { ...prev };
+        delete newNotes[resultKey];
+        return newNotes;
+      });
+    } catch (error) {
+      console.error('Error saving results:', error);
+      toast.error('Failed to save results. Please try again.');
+    }
   };
 
   const openTestModal = (test: TestWithContext) => {

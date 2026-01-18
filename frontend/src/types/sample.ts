@@ -40,6 +40,12 @@ interface BaseSample {
   requiredContainerTypes: ContainerType[];
   requiredContainerColors: ContainerTopColor[];
 
+  // Recollection tracking (present if this sample is a recollection)
+  isRecollection?: boolean;
+  originalSampleId?: string;           // The rejected sample this replaces
+  recollectionReason?: string;
+  recollectionAttempt?: number;        // 1 = original, 2 = 1st recollection, etc.
+
   // Timestamps
   createdAt: string;
   createdBy: string;

@@ -1,0 +1,87 @@
+Complete Blood Count (CBC) / Full Blood Count (FBC)
+Reticulocyte Count
+Peripheral Blood Smear with Manual Differential
+Erythrocyte Sedimentation Rate (ESR)
+Blood Grouping - ABO and Rh D System
+Glucose (Fasting)
+Glucose (Random/Post-prandial)
+Hemoglobin A1c (HbA1c)
+Creatinine (Serum)
+Blood Urea Nitrogen (BUN)
+eGFR (Estimated Glomerular Filtration Rate)
+Sodium (Serum/Plasma)
+Potassium (Serum/Plasma)
+Chloride (Serum/Plasma)
+Bicarbonate / Total CO2
+Calcium (Serum) - Total
+Magnesium (Serum)
+Phosphate (Inorganic)
+Alanine Aminotransferase (ALT)
+Aspartate Aminotransferase (AST)
+Alkaline Phosphatase (ALP)
+Gamma-Glutamyl Transferase (GGT)
+Bilirubin - Total
+Bilirubin - Direct (Conjugated)
+Albumin (Serum)
+Total Protein (Serum)
+Cholesterol - Total
+HDL Cholesterol
+LDL Cholesterol
+Triglycerides
+Amylase (Serum)
+Lipase (Serum)
+C-Reactive Protein (CRP)
+Troponin I (Cardiac)
+Creatine Kinase-MB (CK-MB)
+Serum Iron
+Ferritin (Serum)
+TIBC (Total Iron-Binding Capacity)
+Vitamin B12 (Cobalamin) - Serum
+Folate - Serum or RBC Folate
+Vitamin D, 25-Hydroxy (25-OH Vitamin D)
+Prothrombin Time (PT) / International Normalized Ratio (INR)
+Activated Partial Thromboplastin Time (aPTT)
+Fibrinogen
+D-dimer
+Urinalysis - Dipstick and Microscopy
+Pregnancy Test (Urine hCG)
+Beta-hCG (Human Chorionic Gonadotropin) - Serum Quantitative
+Thyroid Stimulating Hormone (TSH)
+Free Thyroxine (FT4)
+HIV 1/2 Antibody + p24 Antigen (Fourth-Generation Combo Test)
+HIV Confirmation Test (HIV Immunoblot or HIV RNA-PCR)
+HIV-1 Viral Load (RNA-PCR Quantitative)
+HBsAg (Hepatitis B Surface Antigen)
+Anti-HBc (Hepatitis B Core Antibody)
+Anti-HBs (Hepatitis B Surface Antibody)
+Anti-HCV (Hepatitis C Antibody)
+Syphilis Screening - RPR/VDRL (Non-Treponemal Test)
+Syphilis Confirmation - TPHA/TPPA (Treponemal Test)
+Helicobacter pylori (H. pylori) Serology (IgG)
+Toxoplasma gondii Serology (IgG and IgM)
+Cytomegalovirus (CMV) Serology (IgG and IgM)
+Epstein-Barr Virus (EBV) Serology (VCA-IgG, VCA-IgM, EBNA)
+Rubella Serology (IgG Antibody) - Immunity
+Malaria RDT (Rapid Diagnostic Test)
+Malaria Microscopy (Thick and Thin Blood Films)
+Sickle Cell Screening / Hemoglobin Electrophoresis
+G6PD (Glucose-6-Phosphate Dehydrogenase) Screening
+Stool Ova and Parasites (O&P) Microscopy
+AFB (Acid-Fast Bacilli) Sputum Smear - Ziehl-Neelsen
+GeneXpert MTB/RIF (Rapid TB + Rifampicin Resistance)
+Urine Culture with Antibiotic Susceptibility Testing
+Stool Culture with Antibiotic Susceptibility
+Blood Culture (Aerobic and Anaerobic)
+SARS-CoV-2 RT-PCR (COVID-19 Molecular Test)
+SARS-CoV-2 Antigen RDT (COVID-19 Rapid Test)
+Dengue Serology (IgM and IgG)
+Chikungunya Serology (IgM)
+Blood Cross-Match (Compatibility Test)
+PSA (Prostate-Specific Antigen)
+CEA (Carcinoembryonic Antigen)
+Prealbumin (Transthyretin)
+Lactate (Serum/Plasma)
+Hemoglobin Electrophoresis - Advanced
+Protein Electrophoresis (Serum)
+Urea Culture / Quantitative Urine Culture
+Yellow Fever Serology (IgM/IgG)

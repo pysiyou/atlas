@@ -5,7 +5,8 @@
 import React, { useMemo } from 'react';
 import { Modal } from '@/shared/ui/Modal';
 import { Badge, Icon, SectionContainer, TabsList, useTabs, DetailField, IconButton } from '@/shared/ui';
-import type { ContainerType } from '@/types';
+import type { ContainerType, RejectedSample } from '@/types';
+import { REJECTION_REASON_CONFIG } from '@/types/enums/rejection-reason';
 import Barcode from 'react-barcode';
 import toast from 'react-hot-toast';
 import { formatDate as formatDateTime } from '@/utils';
@@ -175,7 +176,11 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
   }
 
   const isPending = sample.status === 'pending';
-  const isCollected = !isPending;
+  const isRejected = sample.status === 'rejected';
+  const isCollected = sample.status === 'collected';
+  
+  // Type guard for rejected sample properties
+  const rejectedSample = isRejected ? (sample as RejectedSample) : null;
 
   // Extract common fields - now properly using fetched order
   const patientId = order?.patientId || 'Unknown';
@@ -183,15 +188,16 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
   const orderId = sample.orderId;
   const testNames = sample.testCodes ? getTestNames(sample.testCodes, tests) : [];
 
-  // Get color name for display
-  const containerColor = isCollected && 'actualContainerColor' in sample ? sample.actualContainerColor : undefined;
+  // Get color name for display (available for collected and rejected samples)
+  const hasContainerInfo = (isCollected || isRejected) && 'actualContainerColor' in sample;
+  const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
   const colorName = containerColor
     ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.name || 'N/A'
     : 'N/A';
 
 
 
-  const containerType = isCollected && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
+  const containerType = hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
   const effectiveContainerType: ContainerType = containerType ||
     (sample.sampleType === 'urine' || sample.sampleType === 'stool' ? 'cup' : 'tube');
 
@@ -229,8 +235,8 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
             {/* Row 1: Container icon and badges */}
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-3 flex-wrap">
-                {/* Container icon (only for collected) */}
-                {isCollected && containerColor && (
+                {/* Container icon (for collected and rejected) */}
+                {(isCollected || isRejected) && containerColor && (
                   <span
                     className="flex items-center"
                     title={`Container: ${effectiveContainerType}, Color: ${colorName}`}
@@ -253,9 +259,9 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
                 )}
 
                 {/* Volume badges */}
-                {isCollected && 'collectedVolume' in sample && (
+                {(isCollected || isRejected) && 'collectedVolume' in sample && (
                   <Badge size="sm" variant="default" className="text-gray-500">
-                    {formatVolume(sample.collectedVolume)} collected
+                    {formatVolume(sample.collectedVolume)} {isRejected ? 'was collected' : 'collected'}
                   </Badge>
                 )}
                 <Badge size="sm" variant="default" className="text-gray-500">
@@ -268,9 +274,20 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
                 )}
 
                 {/* Collection status badge */}
-                <Badge variant={isPending ? 'pending' : 'collected'} size="sm">
-                  {isPending ? 'PENDING COLLECTION' : 'COLLECTED'}
+                <Badge 
+                  variant={isPending ? 'pending' : isRejected ? 'error' : 'collected'} 
+                  size="sm"
+                >
+                  {isPending ? 'PENDING COLLECTION' : isRejected ? 'REJECTED' : 'COLLECTED'}
                 </Badge>
+
+                {/* Recollection indicator */}
+                {sample.isRecollection && (
+                  <Badge size="sm" variant="warning" className="flex items-center gap-1">
+                    <Icon name="hourglass" className="w-3 h-3" />
+                    RECOLLECTION #{sample.recollectionAttempt || 2}
+                  </Badge>
+                )}
               </div>
 
               {/* Action buttons */}
@@ -282,6 +299,9 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
                   size="sm"
                   title="Print Sample Label"
                 />
+              ) : isRejected ? (
+                // No actions for rejected samples
+                null
               ) : (
                 requirement && onCollect && (
                   <SampleCollectionPopover
@@ -294,8 +314,8 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
               )}
             </div>
 
-            {/* Barcode - only for collected samples */}
-            {isCollected && sample.sampleId && !sample.sampleId.includes('PENDING') && (
+            {/* Barcode - for collected and rejected samples */}
+            {(isCollected || isRejected) && sample.sampleId && !sample.sampleId.includes('PENDING') && (
               <div className="flex items-center justify-center bg-gray-50 rounded p-4 border border-gray-200">
                 <Barcode
                   value={sample.sampleId}
@@ -318,7 +338,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
               </div>
 
               {/* Collection info */}
-              {isCollected && 'collectedAt' in sample && sample.collectedAt && (
+              {(isCollected || isRejected) && 'collectedAt' in sample && sample.collectedAt && (
                 <div className="text-xs text-gray-500">
                   Collected <span className="font-medium text-gray-700">{formatDate(sample.collectedAt)}</span>
                   {sample.collectedBy && <span> by {getUserName(sample.collectedBy)}</span>}
@@ -327,6 +347,76 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
             </div>
           </div>
         </SectionContainer>
+
+        {/* Rejection Details Section - only for rejected samples */}
+        {isRejected && rejectedSample && (
+          <SectionContainer title="Rejection Details">
+            <div className="p-3 bg-red-50 border border-red-100 rounded-md">
+              <div className="flex items-start gap-3">
+                <Icon name="alert-circle" className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div>
+                    <div className="text-xs font-medium text-red-800 mb-1">Rejection Reasons</div>
+                    <div className="flex flex-wrap gap-1">
+                      {rejectedSample.rejectionReasons?.map((reason) => (
+                        <Badge key={reason} size="sm" variant="error">
+                          {REJECTION_REASON_CONFIG[reason]?.label || reason}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  {rejectedSample.rejectionNotes && (
+                    <div>
+                      <div className="text-xs font-medium text-red-800 mb-1">Notes</div>
+                      <p className="text-xs text-red-700 italic">"{rejectedSample.rejectionNotes}"</p>
+                    </div>
+                  )}
+                  <div className="pt-2 border-t border-red-200 text-xs text-red-600">
+                    Rejected by {getUserName(rejectedSample.rejectedBy)} on{' '}
+                    {formatDate(rejectedSample.rejectedAt)}
+                  </div>
+                  {rejectedSample.recollectionRequired && (
+                    <div className="flex items-center gap-2 pt-1">
+                      <Badge size="sm" variant="warning">Recollection Required</Badge>
+                      {rejectedSample.recollectionSampleId && (
+                        <span className="text-xs text-gray-600">
+                          New sample: <span className="font-mono font-medium">{rejectedSample.recollectionSampleId}</span>
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </SectionContainer>
+        )}
+
+        {/* Recollection Info Section - for samples that are recollections */}
+        {sample.isRecollection && sample.recollectionReason && (
+          <SectionContainer title="Recollection Information">
+            <div className="p-3 bg-amber-50 border border-amber-100 rounded-md">
+              <div className="flex items-start gap-3">
+                <Icon name="hourglass" className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div>
+                    <div className="text-xs font-medium text-amber-800 mb-1">This is a Recollection</div>
+                    <p className="text-xs text-amber-700">
+                      Attempt #{sample.recollectionAttempt || 2} - Previous sample was rejected
+                    </p>
+                  </div>
+                  <div>
+                    <div className="text-xs font-medium text-amber-800 mb-1">Original Sample</div>
+                    <span className="text-xs font-mono text-amber-700">{sample.originalSampleId}</span>
+                  </div>
+                  <div>
+                    <div className="text-xs font-medium text-amber-800 mb-1">Reason for Recollection</div>
+                    <p className="text-xs text-amber-700">{sample.recollectionReason}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </SectionContainer>
+        )}
 
         {/* Linked Tests Section */}
         <SectionContainer title={isCollected ? 'Linked Tests' : 'Required for'}>
@@ -358,8 +448,8 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
 
         {/* 2-column layout for details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Collection Details - only for collected samples */}
-          {isCollected && 'collectedAt' in sample && (
+          {/* Collection Details - for collected and rejected samples */}
+          {(isCollected || isRejected) && 'collectedAt' in sample && (
             <SectionContainer title="Collection Details">
               <div className="space-y-2">
               {sample.collectedAt && (
@@ -397,10 +487,10 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
           <SectionContainer title="Volume Tracking">
             <div className="space-y-2">
               <DetailField label="Required" value={formatVolume(sample.requiredVolume)} />
-              {isCollected && 'collectedVolume' in sample && (
+              {(isCollected || isRejected) && 'collectedVolume' in sample && (
                 <DetailField label="Collected" value={formatVolume(sample.collectedVolume)} />
               )}
-              {isCollected && 'remainingVolume' in sample && sample.remainingVolume !== undefined && (
+              {(isCollected || isRejected) && 'remainingVolume' in sample && sample.remainingVolume !== undefined && (
                 <DetailField
                   label="Remaining"
                   value={
@@ -454,8 +544,8 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
             </SectionContainer>
           )}
 
-          {/* Audit Trail - only for collected samples */}
-          {isCollected && (
+          {/* Audit Trail - for collected and rejected samples */}
+          {(isCollected || isRejected) && (
             <SectionContainer title="Audit Trail">
               <div className="space-y-2">
               <DetailField label="Created" value={formatDateTime(sample.createdAt)} />
