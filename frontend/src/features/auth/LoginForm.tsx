@@ -1,16 +1,13 @@
 /**
  * LoginForm Component
- * Login page with role selection for demo mode
+ * Enhanced login page with modern design elements
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks';
-import type { UserRole } from '@/types';
-import { USER_ROLE_OPTIONS, USER_ROLE_CONFIG } from '@/types';
-import { ROUTES, DEMO_PASSWORD, QUICK_LOGIN_OPTIONS, VALIDATION_MESSAGES } from '@/config';
-import { Button, Input, Select, Alert, Icon } from '@/shared/ui';
-import { LogIn } from 'lucide-react';
+import { ROUTES } from '@/config';
+import { Icon } from '@/shared/ui';
 
 export const LoginForm: React.FC = () => {
   const navigate = useNavigate();
@@ -18,137 +15,221 @@ export const LoginForm: React.FC = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<UserRole>('receptionist');
   const [error, setError] = useState('');
-  
-  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const formContainerRef = useRef<HTMLDivElement>(null);
+  const usernameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (usernameInputRef.current) {
+      usernameInputRef.current.focus();
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     if (!username || !password) {
-      setError(VALIDATION_MESSAGES.GENERIC.REQUIRED_FIELDS);
+      setError('Please enter both username and password');
       return;
     }
 
-    const success = await login(username, password, role);
+    setIsSubmitting(true);
 
-    if (success) {
-      navigate(ROUTES.DASHBOARD);
-    } else {
-      setError(VALIDATION_MESSAGES.INVALID.CREDENTIALS);
+    try {
+      const success = await login(username, password);
+
+      if (success) {
+        navigate(ROUTES.DASHBOARD);
+      } else {
+        setError('Invalid username or password');
+      }
+    } catch (err) {
+      setError('An error occurred during login. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleQuickLogin = async (demoUsername: string, demoRole: UserRole) => {
-    setUsername(demoUsername);
-    setPassword(DEMO_PASSWORD);
-    setRole(demoRole);
-
-    setTimeout(async () => {
-      const success = await login(demoUsername, DEMO_PASSWORD, demoRole);
-      if (success) {
-        navigate(ROUTES.DASHBOARD);
-      }
-    }, 100);
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
   };
-  
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl flex gap-8">
-        {/* Login Form */}
-        <div className="flex-1 bg-white rounded p-8">
-          <div className="mb-8 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-sky-600 rounded mb-4 p-3">
-              <Icon name="app-logo" className="w-full h-full text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-sky-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-sky-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-sky-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
+
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItMnptMCAwdjJoLTJ2LTJoMnptLTIgMmgtMnYtMmgydjJ6bTAtMnYtMmgydjJoLTJ6bTItMnYtMmgydjJoLTJ6bS0yIDB2LTJoMnYyaC0yem0wLTJ2LTJoMnYyaC0yem0yIDB2LTJoMnYyaC0yem0wLTJ2LTJoMnYyaC0yem0tMiAwdi0yaDJ2MmgtMnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30"></div>
+
+      <div
+        ref={formContainerRef}
+        className="w-full max-w-5xl flex items-center justify-center gap-12 relative z-10"
+      >
+        {/* Left side - Branding */}
+        <div className="hidden lg:flex flex-col items-start text-white space-y-8 flex-1">
+          <div>
+            <div className="flex items-center space-x-4 mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-blue-600 rounded-lg flex items-center justify-center shadow-2xl shadow-sky-500/50">
+                <Icon name="app-logo" className="w-10 h-10 text-white" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold">Atlas</h1>
+                <p className="text-sky-200 text-sm">Clinical Labs</p>
+              </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Atlas Clinical Labs</h1>
-            <p className="text-gray-600">Medical Analysis Center Management</p>
-            <div className="mt-3 inline-block px-3 py-1 bg-orange-100 text-orange-700 text-sm font-medium rounded-full">
-              DEMO MODE
+            <p className="text-xl text-sky-100 leading-relaxed">
+              Advanced Laboratory Management System for Modern Healthcare
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-start space-x-3">
+              <div className="w-8 h-8 bg-sky-500/20 rounded-sm flex items-center justify-center flex-shrink-0 mt-1">
+                <Icon name="check-circle" className="w-5 h-5 text-sky-300" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Comprehensive Patient Management</h3>
+                <p className="text-sm text-sky-200 mt-1">Track patient records, appointments, and medical history</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3">
+              <div className="w-8 h-8 bg-sky-500/20 rounded-sm flex items-center justify-center flex-shrink-0 mt-1">
+                <Icon name="check-circle" className="w-5 h-5 text-sky-300" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Advanced Laboratory Workflows</h3>
+                <p className="text-sm text-sky-200 mt-1">Streamlined sample collection and test processing</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3">
+              <div className="w-8 h-8 bg-sky-500/20 rounded-sm flex items-center justify-center flex-shrink-0 mt-1">
+                <Icon name="check-circle" className="w-5 h-5 text-sky-300" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Real-time Result Validation</h3>
+                <p className="text-sm text-sky-200 mt-1">Instant quality control and result verification</p>
+              </div>
             </div>
           </div>
-          
-          {error && (
-            <Alert variant="danger" className="mb-6" onClose={() => setError('')}>
-              {error}
-            </Alert>
-          )}
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter username"
-              required
-            />
-            
-            <Input
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
-              required
-            />
-            
-            <Select
-              label="Select Role"
-              value={role}
-              onChange={(e) => setRole(e.target.value as UserRole)}
-              options={USER_ROLE_OPTIONS}
-              required
-            />
-            
-            <Button type="submit" fullWidth size="lg" className="mt-6">
-              <LogIn size={20} className="mr-2" />
-              Login
-            </Button>
-          </form>
-          
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-500">
-              Demo password for all users: <code className="bg-gray-100 px-2 py-1 rounded">{DEMO_PASSWORD}</code>
+
+          <div className="pt-8 border-t border-sky-500/20">
+            <p className="text-sm text-sky-300">
+              Trusted by healthcare professionals worldwide
             </p>
           </div>
         </div>
-        
-        {/* Quick Login Panel */}
-        <div className="w-96 bg-white rounded p-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Login</h2>
-          <p className="text-sm text-gray-600 mb-6">
-            Click any demo user to login instantly
-          </p>
-          
-          <div className="space-y-3">
-            {QUICK_LOGIN_OPTIONS.map((cred, index) => (
-              <button
-                key={index}
-                onClick={() => handleQuickLogin(cred.username, cred.role)}
-                className="w-full text-left p-4 border-2 border-gray-200 rounded hover:border-sky-500 hover:bg-sky-50 transition-all"
-              >
-                <div className="font-medium text-gray-900">{cred.name}</div>
-                <div className="text-sm text-gray-500">{USER_ROLE_CONFIG[cred.role].label}</div>
-                <div className="text-xs text-gray-400 mt-1">
-                  Username: {cred.username}
+
+        {/* Right side - Login Form */}
+        <div className="w-full lg:w-auto lg:min-w-[480px]">
+          <div className="bg-white/95 backdrop-blur-xl rounded-lg shadow-2xl border border-white/20 p-10">
+            {/* Header */}
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+              <p className="text-gray-600">Sign in to access your account</p>
+            </div>
+
+            {/* Display error if present */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
+                <div className="flex items-center">
+                  <Icon name="alert-circle" className="h-5 w-5 text-red-500 mr-3" />
+                  <p className="text-sm text-red-700 font-medium">{error}</p>
                 </div>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Username field */}
+              <div>
+                <label htmlFor="username" className="block text-sm font-semibold text-gray-500 mb-2">
+                  Username
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Icon name="user" className="h-5 w-5 text-gray-400 group-focus-within:text-sky-500 transition-colors" />
+                  </div>
+                  <input
+                    ref={usernameInputRef}
+                    id="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => {
+                      setUsername(e.target.value);
+                      if (error) setError('');
+                    }}
+                    placeholder="Enter your username"
+                    className="block w-full pl-11 pr-4 py-3.5 border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Password field */}
+              <div>
+                <label htmlFor="password" className="block text-sm font-semibold text-gray-500 mb-2">
+                  Password
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Icon name="lock" className="h-5 w-5 text-gray-400 group-focus-within:text-sky-500 transition-colors" />
+                  </div>
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (error) setError('');
+                    }}
+                    placeholder="Enter your password"
+                    className="block w-full pl-11 pr-12 py-3.5 border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-sky-600 transition-colors"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <Icon name="eye" className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit button */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0"
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center">
+                    <Icon name="loading" className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
+                    Signing in...
+                  </span>
+                ) : (
+                  'Sign In'
+                )}
               </button>
-            ))}
-          </div>
-          
-          <div className="mt-8 p-4 bg-blue-50 rounded">
-            <h3 className="text-sm font-semibold text-blue-900 mb-2">Demo Features</h3>
-            <ul className="text-xs text-blue-800 space-y-1">
-              <li>✓ Patient Management</li>
-              <li>✓ Test Orders & Results</li>
-              <li>✓ Sample Collection</li>
-              <li>✓ Result Validation</li>
-              <li>✓ Billing & Payments</li>
-              <li>✓ Appointments</li>
-              <li>✓ Reports Generation</li>
-            </ul>
+            </form>
+
+            {/* Footer */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <p className="text-center text-sm text-gray-500">
+                © 2026 Atlas Clinical Labs. All rights reserved.
+              </p>
+            </div>
           </div>
         </div>
       </div>

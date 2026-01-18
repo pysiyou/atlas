@@ -5,8 +5,7 @@ import type { Sample, ContainerType, ContainerTopColor, SampleStatus } from '@/t
 import { calculateRequiredSamples, sortByPriority, getCollectionRequirements } from '../../../utils/sampleHelpers';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { SampleCard } from './SampleCard';
-import { SearchBar, MultiSelectFilter, type FilterOption } from '@/shared/ui';
-import { EmptyState } from '../shared/EmptyState';
+import { SearchBar, MultiSelectFilter, type FilterOption, EmptyState } from '@/shared/ui';
 import { useTestFiltering } from '../useTestFiltering';
 import type { SampleDisplay } from './types';
 
@@ -214,8 +213,8 @@ export const SampleCollectionView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col md:flex-row md:items-center justify-between">
+    <div className="h-full flex flex-col space-y-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">
         <div className="flex items-center gap-4">
           <h3 className="text-base font-medium text-gray-900">Sample Collection</h3>
           {allSampleDisplays.length > 0 && (
@@ -245,7 +244,7 @@ export const SampleCollectionView: React.FC = () => {
         )}
       </div>
 
-      <div className="grid gap-4">
+      <div className={`flex-1 ${displayedSamples.length === 0 ? 'flex flex-col' : 'grid gap-4 overflow-y-auto min-h-0'}`}>
         {displayedSamples.map((display, idx) => (
           <SampleCard
             key={`${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`}
@@ -255,10 +254,13 @@ export const SampleCollectionView: React.FC = () => {
         ))}
 
         {isEmpty && (
-          <EmptyState
-            type={searchQuery ? 'search' : 'no-samples'}
-            searchQuery={searchQuery}
-          />
+          <div className="flex-1">
+            <EmptyState
+              icon={searchQuery ? 'search' : 'sample-collection'}
+              title={searchQuery ? 'No Matches Found' : 'No Pending Collections'}
+              description={searchQuery ? `No tests found matching "${searchQuery}"` : 'There are no samples waiting to be collected.'}
+            />
+          </div>
         )}
       </div>
     </div>

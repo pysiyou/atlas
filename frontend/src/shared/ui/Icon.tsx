@@ -85,6 +85,11 @@ export type IconName =
   | "hashtag"
   | "danger-square"
   | "bill"
+  | "trash"
+  | "folder-open"
+  | "medical-kit"
+  | "document-medicine"
+  | "lock"
   ;
 
 interface IconProps {

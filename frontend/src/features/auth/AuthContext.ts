@@ -12,7 +12,7 @@ import type { AuthUser, UserRole } from '@/types';
 export interface AuthContextType {
   currentUser: AuthUser | null;
   users: never[]; // Deprecated - kept for compatibility
-  login: (username: string, password: string, role: UserRole) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
   hasRole: (roles: UserRole | UserRole[]) => boolean;

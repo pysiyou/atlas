@@ -7,7 +7,7 @@ import React from 'react';
 import { useOrders } from '@/features/order/OrderContext';
 import { usePatients } from '@/hooks';
 import { useTests } from '@/features/test/useTests';
-import { SectionContainer, Badge, Button } from '@/shared/ui';
+import { SectionContainer, Badge, Button, EmptyState } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { getPatientName, getTestName } from '@/utils/typeHelpers';
 import { FileText, Download } from 'lucide-react';
@@ -78,11 +78,11 @@ export const Reports: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 text-gray-500">
-            <FileText size={48} className="mx-auto mb-3 opacity-50" />
-            <p>No validated orders available for reporting</p>
-            <p className="text-sm mt-1">Orders must be validated by a pathologist first</p>
-          </div>
+          <EmptyState
+            icon="pdf"
+            title="No Validated Orders"
+            description="Orders must be validated before reports can be generated."
+          />
         )}
       </SectionContainer>
     </div>

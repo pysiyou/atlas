@@ -22,10 +22,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   /**
    * Login function - authenticates with backend API
    */
-  const login = async (username: string, password: string, role: UserRole): Promise<boolean> => {
+  const login = async (username: string, password: string): Promise<boolean> => {
     try {
       // Call backend login endpoint
-      const response = await apiClient.post<{ access_token: string; refresh_token: string }>('/auth/login', {
+      const response = await apiClient.post<{ access_token: string; refresh_token: string; role: UserRole }>('/auth/login', {
         username,
         password,
       });
@@ -36,14 +36,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // Get user info (now with token in sessionStorage)
       const userInfo = await apiClient.get<AuthUser>('/auth/me');
-      
-      // Verify role matches
-      if (userInfo.role !== role) {
-        // Clear tokens if role doesn't match
-        sessionStorage.removeItem('atlas_access_token');
-        sessionStorage.removeItem('atlas_refresh_token');
-        return false;
-      }
 
       const authUser: AuthUser = {
         ...userInfo,

@@ -28,7 +28,7 @@ class MedicalHistory(BaseModel):
     currentMedications: list[str]
     allergies: list[str]
     previousSurgeries: list[str]
-    familyHistory: str
+    familyHistory: list[str]
     lifestyle: Lifestyle
 
 

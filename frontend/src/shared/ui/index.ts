@@ -17,4 +17,5 @@ export * from './Alert';
 export * from './Avatar';
 export * from './LoadingSpinner';
 export * from './TableActionMenu';
+export * from './EmptyState';
 export * from './MultiSelectFilter';

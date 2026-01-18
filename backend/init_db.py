@@ -1,46 +1,41 @@
 """
 Database initialization script
-Creates tables and seeds initial data
+Recreates the database, seeds initial data, and generates test data.
 """
 from app.database import engine, Base, SessionLocal
-from app.models.user import User
-from app.core.security import get_password_hash
-from app.schemas.enums import UserRole
-
+from db_scripts.generate_users import generate_users
+from db_scripts.generate_patients import generate_patients
 
 def init_db():
-    """Initialize database with tables and seed data"""
-    print("Creating database tables...")
+    """Initialize database with fresh tables and data"""
+    print("🚀 Initializing Database...")
+
+    # 1. Drop and Create Tables
+    print("\n🗑️  Dropping all tables...")
+    Base.metadata.drop_all(bind=engine)
+    
+    print("✅ Creating tables...")
     Base.metadata.create_all(bind=engine)
     print("✓ Tables created")
-    
-    # Create default admin user
+
+    # 2. Seed Data
     db = SessionLocal()
     try:
-        # Check if admin exists
-        admin = db.query(User).filter(User.username == "admin").first()
-        if not admin:
-            print("Creating default admin user...")
-            admin = User(
-                id="USR-00000000-001",
-                username="admin",
-                hashed_password=get_password_hash("admin123"),
-                name="System Administrator",
-                role=UserRole.ADMIN,
-                email="admin@atlas.local"
-            )
-            db.add(admin)
-            db.commit()
-            print("✓ Default admin user created")
-            print("  Username: admin")
-            print("  Password: admin123")
-        else:
-            print("✓ Admin user already exists")
+        # Seed core configuration data
+        generate_users(db)
+        
+        # 3. Generate Patient Data
+        # Generate random patients
+        generate_patients(db, count=10)
+        
+        print("\n✅ Database initialization complete!")
+        
+    except Exception as e:
+        print(f"\n❌ Error during initialization: {e}")
+        db.rollback()
+        raise
     finally:
         db.close()
-    
-    print("\n✅ Database initialization complete!")
-
 
 if __name__ == "__main__":
     init_db()

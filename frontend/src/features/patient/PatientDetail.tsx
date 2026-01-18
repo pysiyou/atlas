@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePatients } from '@/hooks';
 import { useOrders } from '@/features/order/OrderContext';
-import { Button, Avatar, Badge, Icon, SectionContainer, IconButton } from '@/shared/ui';
+import { Button, Avatar, Badge, Icon, SectionContainer, IconButton, EmptyState } from '@/shared/ui';
 // import { MedicalHistoryCard } from './MedicalHistory';
 // import { OrderHistoryCard } from './OrderHistory';
 // import { PatientInfoCard } from './PatientCard';
@@ -250,13 +250,11 @@ export const PatientDetail: React.FC = () => {
 
               if (patientOrders.length === 0) {
                 return (
-                  <div className="h-full flex flex-col items-center justify-center text-center p-4">
-                    <div className="w-12 h-12 flex items-center justify-center mb-3">
-                      <Icon name="document" className="w-full h-full text-gray-200" />
-                    </div>
-                    <p className="text-sm font-medium text-gray-900">No Orders Found</p>
-                    <p className="text-xs text-gray-500 mt-1">This patient has no orders yet.</p>
-                  </div>
+                  <EmptyState
+                    icon="document-medicine"
+                    title="No Orders Found"
+                    description="This patient has no orders yet."
+                  />
                 );
               }
 
@@ -380,13 +378,11 @@ export const PatientDetail: React.FC = () => {
 
               if (reportableOrders.length === 0) {
                 return (
-                  <div className="flex-1 flex flex-col items-center justify-center text-center p-4">
-                    <div className="w-12 h-12 flex items-center justify-center mb-3 opacity-50">
-                      <Icon name="pdf" className="w-full h-full text-red-400" />
-                    </div>
-                    <p className="text-sm font-medium text-gray-400">No Reports Available</p>
-                    <p className="text-xs text-gray-400 mt-1">There are no validated reports for this patient yet.</p>
-                  </div>
+                  <EmptyState
+                    icon="checklist"
+                    title="No Reports Available"
+                    description="There are no validated reports for this patient yet."
+                  />
                 );
               }
 

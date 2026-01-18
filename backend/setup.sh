@@ -35,9 +35,7 @@ poetry install
 echo "🗄️  Initializing database..."
 poetry run python init_db.py
 
-# Seed example data
-echo "🌱 Seeding example data..."
-poetry run python seed_data.py
+
 
 echo ""
 echo "✅ Setup complete!"

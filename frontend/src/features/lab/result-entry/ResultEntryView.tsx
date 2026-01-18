@@ -10,8 +10,7 @@ import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
 import type { TestResult, TestWithContext } from '@/types';
 import { isCollectedSample } from '@/types';
-import { SearchBar } from '@/shared/ui';
-import { EmptyState } from '../shared/EmptyState';
+import { SearchBar, EmptyState } from '@/shared/ui';
 import { ResultEntryCard } from './ResultCard';
 import { useTestFiltering } from '../useTestFiltering';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
@@ -265,8 +264,8 @@ export const ResultEntry: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col md:flex-row md:items-center justify-between">
+    <div className="h-full flex flex-col space-y-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">
         <div>
           <h3 className="text-base font-medium text-gray-900">Result Entry</h3>
         </div>
@@ -283,7 +282,7 @@ export const ResultEntry: React.FC = () => {
         )}
       </div>
 
-      <div className="grid gap-4">
+      <div className={`flex-1 ${filteredTests.length === 0 ? 'flex flex-col' : 'grid gap-4 overflow-y-auto min-h-0'}`}>
         {filteredTests.map((test, idx) => {
           const testDef = getTest(test.testCode);
           const resultKey = `${test.orderId}-${test.testCode}`;
@@ -308,10 +307,24 @@ export const ResultEntry: React.FC = () => {
           );
         })}
 
-        {allTests.length === 0 && <EmptyState type="no-results" />}
+        {allTests.length === 0 && (
+          <div className="flex-1">
+            <EmptyState
+              icon="checklist"
+              title="No Pending Results"
+              description="There are no samples waiting for result entry."
+            />
+          </div>
+        )}
 
         {allTests.length > 0 && isEmpty && (
-          <EmptyState type="search" searchQuery={searchQuery} />
+          <div className="flex-1">
+            <EmptyState
+              icon="search"
+              title="No Matches Found"
+              description={`No tests found matching "${searchQuery}"`}
+            />
+          </div>
         )}
       </div>
     </div>

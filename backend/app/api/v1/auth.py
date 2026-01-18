@@ -35,6 +35,7 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     return Token(
         access_token=access_token,
         refresh_token=refresh_token,
+        role=user.role,
     )
 
 

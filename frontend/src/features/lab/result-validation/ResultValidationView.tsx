@@ -6,8 +6,7 @@ import { useSamples } from '@/features/lab/useSamples';
 import { getPatientName, getTestName, getTestSampleType } from '@/utils/typeHelpers';
 import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
-import { SearchBar } from '@/shared/ui';
-import { EmptyState } from '../shared/EmptyState';
+import { SearchBar, EmptyState } from '@/shared/ui';
 import { ResultValidationCard } from './ValidationCard';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { useTestFiltering } from '../useTestFiltering';
@@ -160,8 +159,8 @@ export const ResultValidation: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col md:flex-row md:items-center justify-between">
+    <div className="h-full flex flex-col space-y-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">
         <div>
           <h3 className="text-base font-medium text-gray-900">Result Validation</h3>
         </div>
@@ -178,7 +177,7 @@ export const ResultValidation: React.FC = () => {
         )}
       </div>
 
-      <div className="grid gap-4">
+      <div className={`flex-1 ${filteredTests.length === 0 ? 'flex flex-col' : 'grid gap-4 overflow-y-auto min-h-0'}`}>
         {filteredTests.map((test, idx) => {
           const commentKey = `${test.orderId}-${test.testCode}`;
 
@@ -196,10 +195,24 @@ export const ResultValidation: React.FC = () => {
           );
         })}
 
-        {allTests.length === 0 && <EmptyState type="no-validation" />}
+        {allTests.length === 0 && (
+          <div className="flex-1">
+            <EmptyState
+              icon="shield-check"
+              title="No Pending Validations"
+              description="There are no results waiting for validation."
+            />
+          </div>
+        )}
 
         {allTests.length > 0 && isEmpty && (
-          <EmptyState type="search" searchQuery={searchQuery} />
+          <div className="flex-1">
+            <EmptyState
+              icon="search"
+              title="No Matches Found"
+              description={`No tests found matching "${searchQuery}"`}
+            />
+          </div>
         )}
       </div>
     </div>

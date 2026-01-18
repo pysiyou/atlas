@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePatients } from '@/hooks';
 import { useOrders } from '../order/OrderContext';
 import { useFiltering } from '@/hooks/useFiltering';
-import { Table, Button, Badge, Avatar, TableActionMenu, TableActionItem } from '@/shared/ui';
+import { Table, Button, Badge, Avatar, TableActionMenu, TableActionItem, EmptyState } from '@/shared/ui';
 import { Plus, Eye, Edit, FileText } from 'lucide-react';
 import { PatientFilters } from './PatientFilters';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
@@ -237,7 +237,13 @@ export const PatientList: React.FC = () => {
           <Table
             data={filteredPatients}
             columns={columns}
-            emptyMessage="No patients found. Try adjusting your search or filters."
+            emptyMessage={
+              <EmptyState
+                icon="users-group"
+                title="No Patients Found"
+                description="Try adjusting your search or filters to find what you're looking for."
+              />
+            }
             pagination={true}
             initialPageSize={20}
             pageSizeOptions={[10, 20, 50, 100]}

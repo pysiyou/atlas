@@ -4,7 +4,7 @@ import { useOrders } from '@/features/order/OrderContext';
 import { usePatients } from '@/hooks';
 import { useBilling } from '@/features/billing/useBilling';
 import { useTests } from '@/features/test/useTests';
-import { Button, Avatar, Badge, Icon, SectionContainer, IconButton } from '@/shared/ui';
+import { Button, Avatar, Badge, Icon, SectionContainer, IconButton, EmptyState } from '@/shared/ui';
 import { formatCurrency, calculateAge } from '@/utils';
 import { getTestName, getTestSampleType, getTestCategory } from '@/utils/typeHelpers';
 import type { OrderTest } from '@/types';
@@ -311,13 +311,11 @@ export const OrderDetail: React.FC = () => {
             contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
           >
             {order.tests.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center p-4">
-                <div className="w-12 h-12 flex items-center justify-center mb-3">
-                  <Icon name="health" className="w-full h-full text-gray-200" />
-                </div>
-                <p className="text-sm font-medium text-gray-900">No Tests</p>
-                <p className="text-xs text-gray-500 mt-1">This order has no tests.</p>
-              </div>
+              <EmptyState
+                icon="health"
+                title="No Tests"
+                description="This order has no tests."
+              />
             ) : (
               <table className="w-full text-left text-xs table-fixed">
                 <colgroup>

@@ -16,7 +16,7 @@ interface TableProps<T> {
   data: T[];
   columns: Column<T>[];
   onRowClick?: (item: T) => void;
-  emptyMessage?: string;
+  emptyMessage?: React.ReactNode;
   isLoading?: boolean;
   pagination?: boolean;
   initialPageSize?: number;
@@ -97,9 +97,17 @@ export function Table<T extends Record<string, any>>({
   }
 
   if (data.length === 0) {
+    if (typeof emptyMessage === 'string') {
+      return (
+        <div className={`text-center py-12 ${!embedded ? 'border rounded bg-gray-50' : ''}`}>
+          <p className="text-gray-500">{emptyMessage}</p>
+        </div>
+      );
+    }
+    
     return (
-      <div className={`text-center py-12 ${!embedded ? 'border rounded bg-gray-50' : ''}`}>
-        <p className="text-gray-500">{emptyMessage}</p>
+      <div className={`h-full ${!embedded ? 'border rounded bg-gray-50' : ''}`}>
+        {emptyMessage}
       </div>
     );
   }

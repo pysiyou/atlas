@@ -4,7 +4,7 @@ import { useOrders } from '@/features/order/OrderContext';
 import { usePatients } from '@/hooks';
 import { useTests } from '@/features/test/useTests';
 import { useFiltering } from '@/hooks/useFiltering';
-import { Table, Button } from '@/shared/ui';
+import { Table, Button, EmptyState } from '@/shared/ui';
 import { Plus } from 'lucide-react';
 import { OrderFilters } from './OrderFilters';
 import { getOrderTableColumns } from './OrderTableColumns';
@@ -118,7 +118,13 @@ export const OrderList: React.FC = () => {
           <Table
             data={filteredOrders}
             columns={columns}
-            emptyMessage="No orders found. Try adjusting your search or filters."
+            emptyMessage={
+              <EmptyState
+                icon="checklist"
+                title="No Orders Found"
+                description="Try adjusting your search or filters to find what you're looking for."
+              />
+            }
             pagination={true}
             initialPageSize={20}
             pageSizeOptions={[10, 20, 50, 100]}
