@@ -35,8 +35,8 @@ export const getOrderTableColumns = (
     sortable: true,
     render: (order: Order) => (
       <div>
-        <div className="font-medium text-gray-900">{getPatientNameFn(order.patientId)}</div>
-        <div className="text-xs text-gray-500">{order.patientId}</div>
+        <div className="font-semibold text-gray-900">{getPatientNameFn(order.patientId)}</div>
+        <div className="text-[10px] text-gray-500">{order.patientId}</div>
       </div>
     ),
   },
