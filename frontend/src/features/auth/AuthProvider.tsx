@@ -16,7 +16,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Initialize state from sessionStorage (for page refreshes)
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => {
     const stored = sessionStorage.getItem('atlas_current_user');
-    return stored ? JSON.parse(stored) : null;
+    const token = sessionStorage.getItem('atlas_access_token');
+    
+    // Only restore user if token also exists
+    if (stored && token) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        console.error('Failed to parse stored user:', e);
+        return null;
+      }
+    }
+    return null;
   });
 
   /**
@@ -30,9 +41,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         password,
       });
 
-      // Store tokens FIRST so they're available for the next request
-      sessionStorage.setItem('atlas_access_token', response.access_token);
-      sessionStorage.setItem('atlas_refresh_token', response.refresh_token);
+      console.log('DEBUG: Login response received:', response);
+
+      if (response.access_token) {
+        // Store tokens FIRST so they're available for the next request
+        sessionStorage.setItem('atlas_access_token', response.access_token);
+        sessionStorage.setItem('atlas_refresh_token', response.refresh_token);
+        console.log('DEBUG: Tokens stored in sessionStorage. Access Token:', response.access_token.substring(0, 10) + '...');
+      } else {
+        console.error('DEBUG: No access_token in login response!');
+      }
 
       // Get user info (now with token in sessionStorage)
       const userInfo = await apiClient.get<AuthUser>('/auth/me');

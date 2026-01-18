@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useOrders, useTests, useAuth, useSamples, usePatients } from '@/hooks';
 import toast from 'react-hot-toast';
-import type { Sample, ContainerType, ContainerTopColor, SampleStatus, Patient, Test } from '@/types';
+import type { ContainerType, ContainerTopColor, SampleStatus, Patient, Test } from '@/types';
 import { calculateRequiredSamples, sortByPriority, getCollectionRequirements } from '../../../utils/sampleHelpers';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { SampleCard } from './SampleCard';
@@ -46,86 +46,42 @@ export const SampleCollectionView: React.FC = () => {
   const allSampleDisplays = useMemo(() => {
     const displays: SampleDisplay[] = [];
 
-    orders.forEach(order => {
+    // ONLY use real samples from database
+    samples.forEach(sample => {
+      const order = orders.find(o => o.orderId === sample.orderId);
+      if (!order) return; // Skip if order not found (shouldn't happen)
+
       const patient = getPatient(order.patientId);
       if (!patient) return; // Skip if patient not found
 
-      const uncollectedTests = order.tests.filter(test => test.status === 'pending');
+      // Find tests associated with this sample
+      const testsForSample = order.tests.filter(t => sample.testCodes.includes(t.testCode));
 
-      // Create pending sample displays for uncollected tests
-      if (uncollectedTests.length > 0) {
-        const requirements = calculateRequiredSamples(uncollectedTests, tests, order.priority, order.orderId);
-        requirements.forEach(req => {
-          // Check if we already have a pending sample for this
-          const existingSample = samples.find(
-            s => s.orderId === order.orderId &&
-                 s.sampleType === req.sampleType &&
-                 s.status === 'pending'
-          );
+      if (testsForSample.length > 0) {
+        // Calculate requirements just to get the display info in standard format
+        // We pass the subset of tests that belong to this sample
+        const requirements = calculateRequiredSamples(
+          testsForSample, 
+          tests, 
+          order.priority, 
+          order.orderId
+        );
 
-          if (existingSample) {
-            // Use the existing pending sample from seed data
-            displays.push({
-              sample: existingSample,
-              order,
-              patient,
-              priority: order.priority,
-              requirement: req,
-            });
-          } else {
-            // Create a virtual pending sample for display
-            const pendingSample: Sample = {
-              sampleId: `PENDING-${order.orderId}-${req.sampleType}`,
-              orderId: order.orderId,
-              sampleType: req.sampleType,
-              testCodes: req.testCodes,
-              requiredVolume: req.totalVolume,
-              priority: req.priority,
-              requiredContainerTypes: req.containerTypes,
-              requiredContainerColors: req.containerTopColors,
-              createdAt: new Date().toISOString(),
-              createdBy: 'system',
-              updatedAt: new Date().toISOString(),
-              updatedBy: 'system',
-              status: 'pending',
-            };
-
-            displays.push({
-              sample: pendingSample,
-              order,
-              patient,
-              priority: order.priority,
-              requirement: req,
-            });
-          }
-        });
-      }
-
-      // Add collected samples
-      const collectedTests = order.tests.filter(test => test.status !== 'pending');
-      const collectedSampleIds = new Set(collectedTests.map(t => t.sampleId).filter(Boolean));
-
-      collectedSampleIds.forEach(sampleId => {
-        const sample = samples.find(s => s.sampleId === sampleId);
-        if (sample) {
-          const testsForSample = collectedTests.filter(t => t.sampleId === sampleId);
-          const requirements = calculateRequiredSamples(testsForSample, tests, order.priority, order.orderId);
-
-          if (requirements.length > 0) {
-            displays.push({
-              sample,
-              order,
-              patient,
-              priority: order.priority,
-              requirement: requirements[0],
-            });
-          }
+        // Should ideally return 1 requirement since we grouped by sample/testCodes
+        if (requirements.length > 0) {
+           displays.push({
+            sample,
+            order,
+            patient,
+            priority: sample.priority,
+            requirement: requirements[0],
+          });
         }
-      });
+      }
     });
 
     return displays;
-  }, [orders, tests, samples, getPatient]);
+  }, [samples, orders, tests, getPatient]);
 
   const filterSample = useMemo(() => createFilterSample(patients, tests), [patients, tests]);
 

@@ -10,8 +10,10 @@ from app.core.dependencies import get_current_user, require_lab_tech
 from app.models.user import User
 from app.models.sample import Sample
 from app.models.order import OrderTest
-from app.schemas.sample import SampleResponse, SampleCollectRequest, SampleRejectRequest
-from app.schemas.enums import SampleStatus, TestStatus
+from app.schemas.sample import SampleResponse, SampleCollectRequest, SampleRejectRequest, RecollectionRequest
+from app.schemas.enums import SampleStatus, TestStatus, PriorityLevel
+from app.services.id_generator import generate_id
+from app.services.order_status_updater import update_order_status
 
 router = APIRouter()
 
@@ -116,6 +118,9 @@ def collect_sample(
 
     db.commit()
     db.refresh(sample)
+    
+    # Update order status
+    update_order_status(db, sample.orderId)
 
     return sample
 
@@ -163,5 +168,77 @@ def reject_sample(
 
     db.commit()
     db.refresh(sample)
+    
+    # Update order status
+    update_order_status(db, sample.orderId)
 
     return sample
+
+
+@router.post("/samples/{sampleId}/request-recollection", response_model=SampleResponse)
+def request_recollection(
+    sampleId: str,
+    recollection_data: RecollectionRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_lab_tech)
+):
+    """
+    Request recollection for a rejected sample
+    - Creates new PENDING sample
+    - Links to original rejected sample
+    - Resets order tests to PENDING
+    - Escalates priority to URGENT
+    """
+    original = db.query(Sample).filter(Sample.sampleId == sampleId).first()
+    if not original:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Sample {sampleId} not found"
+        )
+    
+    if original.status != SampleStatus.REJECTED:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Only rejected samples can be recollected"
+        )
+    
+    # Create new sample (clone of original)
+    new_sample = Sample(
+        sampleId=generate_id("sample", db),
+        orderId=original.orderId,
+        sampleType=original.sampleType,
+        status=SampleStatus.PENDING,
+        testCodes=original.testCodes,
+        requiredVolume=original.requiredVolume,
+        priority=PriorityLevel.URGENT,  # Escalate priority
+        requiredContainerTypes=original.requiredContainerTypes,
+        requiredContainerColors=original.requiredContainerColors,
+        isRecollection=True,
+        originalSampleId=sampleId,
+        recollectionReason=recollection_data.reason,
+        recollectionAttempt=(original.recollectionAttempt or 1) + 1,
+        createdBy=current_user.id,
+        updatedBy=current_user.id,
+    )
+    
+    # Update original
+    original.recollectionSampleId = new_sample.sampleId
+    
+    # Reset order tests
+    order_tests = db.query(OrderTest).filter(
+        OrderTest.orderId == original.orderId,
+        OrderTest.testCode.in_(original.testCodes)
+    ).all()
+    
+    for test in order_tests:
+        test.status = TestStatus.PENDING
+        test.sampleId = None
+    
+    db.add(new_sample)
+    db.commit()
+    db.refresh(new_sample)
+    
+    # Update order status
+    update_order_status(db, original.orderId)
+    
+    return new_sample

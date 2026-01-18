@@ -29,6 +29,10 @@ class SampleRejectRequest(BaseModel):
     recollectionRequired: bool = True
 
 
+class RecollectionRequest(BaseModel):
+    reason: str
+
+
 class SampleResponse(SampleBase):
     sampleId: str
     orderId: str
@@ -47,6 +51,12 @@ class SampleResponse(SampleBase):
     rejectionNotes: str | None = None
     recollectionRequired: bool = False
     recollectionSampleId: str | None = None
+    
+    # Recollection Tracking
+    isRecollection: bool = False
+    originalSampleId: str | None = None
+    recollectionReason: str | None = None
+    recollectionAttempt: int = 1
     createdAt: datetime
     createdBy: str
     updatedAt: datetime

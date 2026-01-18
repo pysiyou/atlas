@@ -33,12 +33,23 @@ class SampleType(str, enum.Enum):
     SALIVA = "saliva"
     SWAB = "swab"
     TISSUE = "tissue"
+    SPUTUM = "sputum"
+    CSF = "csf"  # Cerebrospinal fluid
+    PLEURAL_FLUID = "pleural_fluid"
+    SERUM = "serum"
+    PLASMA = "plasma"
     OTHER = "other"
 
 
 class SampleStatus(str, enum.Enum):
     PENDING = "pending"
     COLLECTED = "collected"
+    RECEIVED = "received"
+    ACCESSIONED = "accessioned"
+    IN_PROGRESS = "in-progress"
+    COMPLETED = "completed"
+    STORED = "stored"
+    DISPOSED = "disposed"
     REJECTED = "rejected"
 
 

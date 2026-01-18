@@ -31,6 +31,7 @@ def get_orders(
     """
     Get all orders with optional filters
     """
+    print(f"DEBUG: Entering get_orders. User: {current_user.username}")
     query = db.query(Order)
 
     if patientId:
@@ -126,6 +127,7 @@ def create_order(
 
     # Generate samples for this order
     generate_samples_for_order(orderId, db, current_user.id)
+    db.commit()  # Commit the generated samples
 
     db.refresh(order)
     return order

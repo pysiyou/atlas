@@ -40,7 +40,10 @@ export class APIClient {
     const token = this.getAuthToken();
     
     if (token) {
+      // console.log('DEBUG: Attaching token to request header');
       headers['Authorization'] = `Bearer ${token}`;
+    } else {
+      console.warn('DEBUG: No token found in storage for request');
     }
     
     return headers;
@@ -51,6 +54,17 @@ export class APIClient {
    */
   private handleError(error: unknown): never {
     if (error instanceof Response) {
+      if (error.status === 401 || error.status === 403) {
+        // Clear token and redirect to login
+        sessionStorage.removeItem('atlas_access_token');
+        sessionStorage.removeItem('atlas_refresh_token');
+        sessionStorage.removeItem('atlas_current_user');
+        
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login';
+        }
+      }
+
       const apiError: APIError = {
         message: error.statusText || 'API request failed',
         status: error.status,

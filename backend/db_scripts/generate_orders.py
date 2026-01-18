@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.models.order import Order, OrderTest
 from app.models.test import Test
 from app.schemas.enums import OrderStatus, PaymentStatus, TestStatus, PriorityLevel
+from app.services.sample_generator import generate_samples_for_order
 
 REQUIRED_PATIENTS = {
     "PAT-20260118-001": 5,
@@ -26,6 +27,7 @@ def generate_orders(db: Session):
         return
 
     orders_created = 0
+    samples_created = 0
     
     try:
         for patient_id, num_orders in REQUIRED_PATIENTS.items():
@@ -68,12 +70,25 @@ def generate_orders(db: Session):
                     )
                     db.add(order_test)
                 
+                # Flush to ensure order and tests are committed before generating samples
+                db.flush()
+                
+                # Generate samples for this order
+                samples = generate_samples_for_order(order_id, db, "system")
+                db.flush()  # Flush samples to make IDs visible for next iteration
+                samples_created += len(samples)
+                
                 orders_created += 1
+                print(f"  ✓ {order_id}: {num_tests} tests, {len(samples)} sample(s)")
                 
         db.commit()
+        print(f"\n{'='*60}")
         print(f"✅ Successfully created {orders_created} orders for {len(REQUIRED_PATIENTS)} patients!")
+        print(f"✅ Generated {samples_created} samples total")
+        print(f"{'='*60}\n")
         
     except Exception as e:
         print(f"\n❌ Error generating orders: {e}")
         db.rollback()
         raise
+

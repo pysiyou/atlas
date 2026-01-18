@@ -1,7 +1,7 @@
 """
 Sample Model - All fields use camelCase
 """
-from sqlalchemy import Column, String, Float, DateTime, JSON, Enum, ForeignKey, Boolean
+from sqlalchemy import Column, String, Float, DateTime, JSON, Enum, ForeignKey, Boolean, Integer
 from sqlalchemy.sql import func
 from app.database import Base
 from app.schemas.enums import SampleStatus, SampleType, ContainerType, ContainerTopColor, PriorityLevel
@@ -50,6 +50,12 @@ class Sample(Base):
     # Recollection
     recollectionRequired = Column(Boolean, default=False)
     recollectionSampleId = Column(String, nullable=True)
+    
+    # New fields for recollection tracking
+    isRecollection = Column(Boolean, default=False)
+    originalSampleId = Column(String, nullable=True)  # Pointer to the sample this replaced
+    recollectionReason = Column(String, nullable=True)
+    recollectionAttempt = Column(Integer, default=1)  # 1 = original, 2 = 1st recollection, etc.
 
     # Metadata
     createdAt = Column(DateTime(timezone=True), server_default=func.now())

@@ -11,6 +11,7 @@ from app.models.user import User
 from app.models.order import OrderTest
 from app.schemas.enums import TestStatus, ValidationDecision
 from pydantic import BaseModel
+from app.services.order_status_updater import update_order_status
 
 router = APIRouter()
 
@@ -84,6 +85,9 @@ def enter_results(
 
     db.commit()
     db.refresh(order_test)
+    
+    # Update order status
+    update_order_status(db, orderId)
 
     return order_test
 
@@ -128,5 +132,8 @@ def validate_results(
 
     db.commit()
     db.refresh(order_test)
+    
+    # Update order status
+    update_order_status(db, orderId)
 
     return order_test

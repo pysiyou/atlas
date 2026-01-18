@@ -76,4 +76,11 @@ export const sampleAPI = {
   async reject(sampleId: string, data: RejectSampleRequest): Promise<Sample> {
     return apiClient.patch<Sample>(`/samples/${sampleId}/reject`, data);
   },
+
+  /**
+   * Request recollection for a rejected sample
+   */
+  async requestRecollection(sampleId: string, reason: string): Promise<Sample> {
+    return apiClient.post<Sample>(`/samples/${sampleId}/request-recollection`, { reason });
+  },
 };

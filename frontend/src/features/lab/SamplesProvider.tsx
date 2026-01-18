@@ -132,11 +132,22 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
     requireRecollection: boolean = true
   ) => {
     try {
+      // 1. Reject the sample
       await sampleAPI.reject(sampleId, {
         rejectionReasons: reasons,
         rejectionNotes: notes,
         recollectionRequired: requireRecollection,
       });
+
+      // 2. Request recollection if required
+      if (requireRecollection) {
+        // Construct a reason for the new sample creation
+        const reasonStr = reasons.map(r => r.replace('_', ' ')).join(', ');
+        const fullReason = notes ? `${reasonStr} - ${notes}` : reasonStr;
+        
+        await sampleAPI.requestRecollection(sampleId, fullReason);
+      }
+
       await refreshSamples();
     } catch (err) {
       console.error('Failed to reject sample:', err);

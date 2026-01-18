@@ -75,7 +75,8 @@ def generate_samples_for_order(orderId: str, db: Session, createdBy: str) -> Lis
         )
 
         db.add(sample)
+        db.flush()  # Flush to make this sample's ID visible for next sample
         samples.append(sample)
 
-    db.commit()
+    # Note: Caller is responsible for committing the transaction
     return samples
