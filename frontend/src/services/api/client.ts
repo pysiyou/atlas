@@ -186,6 +186,33 @@ export class APIClient {
       return this.handleError(error);
     }
   }
+
+  /**
+   * Generic PATCH request
+   */
+  async patch<T, D = unknown>(endpoint: string, data?: D): Promise<T> {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+      const response = await fetch(`${this.baseURL}${endpoint}`, {
+        method: 'PATCH',
+        headers: this.buildHeaders(),
+        body: data ? JSON.stringify(data) : undefined,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        this.handleError(response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
 }
 
 // Export singleton instance

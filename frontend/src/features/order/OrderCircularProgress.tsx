@@ -14,7 +14,7 @@ export const OrderCircularProgress: React.FC<OrderCircularProgressProps> = ({ or
     }
 
     // Count fully completed tests (validated or reported)
-    const completed = order.tests.filter((t) => ['validated', 'reported'].includes(t.status)).length;
+    const completed = order.tests.filter((t) => ['validated', 'rejected'].includes(t.status)).length;
     const pct = Math.round((completed / total) * 100);
 
     return { percentage: pct, completedTests: completed, totalTests: total };

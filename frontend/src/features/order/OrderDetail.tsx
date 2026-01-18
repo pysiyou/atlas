@@ -74,10 +74,10 @@ export const OrderDetail: React.FC = () => {
   const getTestStatusVariant = (status: string) => {
     switch (status) {
       case 'validated':
-      case 'reported': return 'success';
+      case 'rejected': return 'success';
       case 'completed': return 'primary';
       case 'in-progress': return 'warning';
-      case 'collected': return 'info';
+      case 'sample-collected': return 'info';
       default: return 'default';
     }
   };

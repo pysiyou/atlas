@@ -92,7 +92,7 @@ const ListItem: React.FC<{
 
       {/* Badge */}
       <Badge variant={option.color || "default"} size="sm">
-        {option.label}
+        {option.label.toUpperCase()}
       </Badge>
     </label>
   );
@@ -171,7 +171,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
 
     if (singleSelectedOption) {
       // Show badge for single selection
-      return <Badge variant={singleSelectedOption.color || "default"} size="xs">{singleSelectedOption.label}</Badge>;
+      return <Badge variant={singleSelectedOption.color || "default"} size="xs">{singleSelectedOption.label.toUpperCase()}</Badge>;
     }
 
     // Show count for multiple selections

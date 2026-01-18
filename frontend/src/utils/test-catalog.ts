@@ -186,7 +186,7 @@ function transformTestEntry(entry: TestCatalogEntry): Test {
     referenceRanges: [], // Legacy format - can be populated if needed
     parameters: entry.result_items.map(transformResultItem),
     isActive: true, // All tests active by default
-    createdAt: entry.enriched_at || now,
+    createdAt: now,
     updatedAt: now,
     
     // Container requirements

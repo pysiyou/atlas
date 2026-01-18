@@ -301,7 +301,6 @@ function enrichTest(test) {
     price_usd: price,
     
     // Add timestamps for app compatibility
-    enriched_at: new Date().toISOString(),
   };
 }
 
@@ -327,8 +326,7 @@ function enrichCatalog(catalog) {
     ...catalog,
     tests: enrichedTests,
     enrichment_metadata: {
-      enriched_at: new Date().toISOString(),
-      original_version: catalog.metadata.version,
+      original_version: catalog.metadata?.version || "2.0",
       enriched_version: "2.0-enriched",
       category_mappings_count: Object.keys(CATEGORY_MAP).length,
       sample_type_mappings_count: Object.keys(SAMPLE_TYPE_MAP).length,
@@ -432,7 +430,7 @@ function main() {
   
   // Define file paths
   const inputPath = path.join(__dirname, '..', 'lab_test_catalog_full.json');
-  const outputPath = path.join(__dirname, '..', 'lab_test_catalog_enriched.json');
+  const outputPath = path.join(__dirname, '..', 'src', 'data', 'test-catalog.json');
   
   // Check if input file exists
   if (!fs.existsSync(inputPath)) {

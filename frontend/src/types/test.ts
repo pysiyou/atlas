@@ -117,7 +117,6 @@ export interface TestCatalogEntry {
   container_top_colors: ContainerTopColor[];
   sample_volume_description?: string;
   price: number;
-  enriched_at?: string;
 }
 
 /**

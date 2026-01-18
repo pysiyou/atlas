@@ -11,21 +11,24 @@ import type { Test, TestCategory } from '@/types';
  */
 export interface TestsContextType {
   tests: Test[];
-  addTest: (test: Test) => void;
-  updateTest: (code: string, updates: Partial<Test>) => void;
-  deleteTest: (code: string) => void;
+  loading: boolean;
+  error: string | null;
+  refreshTests: () => Promise<void>;
+  addTest: (test: Test) => Promise<void>;
+  updateTest: (code: string, updates: Partial<Test>) => Promise<void>;
+  deleteTest: (code: string) => Promise<void>;
   getTest: (code: string) => Test | undefined;
   getTestsByCategory: (category: TestCategory) => Test[];
   getActiveTests: () => Test[];
   searchTests: (query: string) => Test[];
-  toggleTestActive: (code: string) => void;
-  
+  toggleTestActive: (code: string) => Promise<void>;
+
   // Enhanced search methods
   searchBySynonym: (synonym: string) => Test[];
   getTestsByPanel: (panelName: string) => Test[];
   getTestByLoincCode: (loincCode: string) => Test | undefined;
   getTestsBySampleRequirements: (sampleType: string) => Test[];
-  updateTestPrice: (code: string, price: number) => void;
+  updateTestPrice: (code: string, price: number) => Promise<void>;
 }
 
 /**

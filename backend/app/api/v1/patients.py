@@ -40,20 +40,20 @@ def get_patients(
     return [PatientResponse.model_validate(p).model_dump() for p in patients]
 
 
-@router.get("/patients/{patient_id}")
+@router.get("/patients/{patientId}")
 def get_patient(
-    patient_id: str,
+    patientId: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
     Get patient by ID
     """
-    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    patient = db.query(Patient).filter(Patient.id == patientId).first()
     if not patient:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Patient {patient_id} not found"
+            detail=f"Patient {patientId} not found"
         )
     return PatientResponse.model_validate(patient).model_dump()
 
@@ -67,10 +67,10 @@ def create_patient(
     """
     Create a new patient
     """
-    patient_id = generate_id("patient", db)
+    patientId = generate_id("patient", db)
 
     patient = Patient(
-        id=patient_id,
+        id=patientId,
         fullName=patient_data.fullName,
         dateOfBirth=patient_data.dateOfBirth,
         gender=patient_data.gender,
@@ -92,9 +92,9 @@ def create_patient(
     return PatientResponse.model_validate(patient).model_dump()
 
 
-@router.put("/patients/{patient_id}")
+@router.put("/patients/{patientId}")
 def update_patient(
-    patient_id: str,
+    patientId: str,
     patient_data: PatientUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_receptionist)
@@ -102,11 +102,11 @@ def update_patient(
     """
     Update patient information
     """
-    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    patient = db.query(Patient).filter(Patient.id == patientId).first()
     if not patient:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Patient {patient_id} not found"
+            detail=f"Patient {patientId} not found"
         )
 
     # Update fields directly - no mapping needed, all camelCase
@@ -123,20 +123,20 @@ def update_patient(
     return PatientResponse.model_validate(patient).model_dump()
 
 
-@router.delete("/patients/{patient_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/patients/{patientId}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_patient(
-    patient_id: str,
+    patientId: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_receptionist)
 ):
     """
     Delete a patient
     """
-    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    patient = db.query(Patient).filter(Patient.id == patientId).first()
     if not patient:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Patient {patient_id} not found"
+            detail=f"Patient {patientId} not found"
         )
 
     db.delete(patient)

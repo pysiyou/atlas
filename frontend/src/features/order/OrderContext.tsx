@@ -6,9 +6,10 @@
  * - useOrders: Hook to consume order context
  */
 
-import React, { type ReactNode, useCallback, useState } from 'react';
+import React, { type ReactNode, useCallback, useState, useEffect } from 'react';
 import type { Order, OrderStatus, TestStatus, OrderTest, TestResult } from '@/types';
 import { createFeatureContext } from '@/shared/context/createFeatureContext';
+import { orderAPI } from '@/services/api';
 import {
   updateOrderTestStatus,
   createReflexTest,
@@ -36,6 +37,8 @@ export interface OrdersContextType {
   getOrdersByStatus: (status: OrderStatus) => Order[];
   getOrdersByPatient: (patientId: string) => Order[];
   searchOrders: (query: string) => Order[];
+  refreshOrders: () => Promise<void>;
+  loading: boolean;
 
   // Sample-based collection
   collectSampleForTests: (
@@ -105,26 +108,60 @@ interface OrdersProviderProps {
  */
 export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  /**
+   * Refresh orders from backend
+   */
+  const refreshOrders = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await orderAPI.getAll();
+      setOrders(data);
+    } catch (error) {
+      console.error('Failed to load orders:', error);
+      setOrders([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Load orders on mount
+  useEffect(() => {
+    refreshOrders();
+  }, [refreshOrders]);
 
   /**
    * Add a new order
    */
-  const addOrder = useCallback((order: Order) => {
-    setOrders(prev => [...prev, order]);
-  }, [setOrders]);
+  const addOrder = useCallback(async (order: Order) => {
+    try {
+      const created = await orderAPI.create(order);
+      setOrders(prev => [...prev, created]);
+      await refreshOrders();
+    } catch (error) {
+      console.error('Failed to create order:', error);
+      throw error;
+    }
+  }, [refreshOrders]);
 
   /**
    * Update an existing order
    */
-  const updateOrder = useCallback((orderId: string, updates: Partial<Order>) => {
-    setOrders(prev =>
-      prev.map(order =>
-        order.orderId === orderId
-          ? { ...order, ...updates, updatedAt: new Date().toISOString() }
-          : order
-      )
-    );
-  }, [setOrders]);
+  const updateOrder = useCallback(async (orderId: string, updates: Partial<Order>) => {
+    try {
+      const updated = await orderAPI.update(orderId, updates);
+      setOrders(prev =>
+        prev.map(order =>
+          order.orderId === orderId ? updated : order
+        )
+      );
+      await refreshOrders();
+    } catch (error) {
+      console.error('Failed to update order:', error);
+      throw error;
+    }
+  }, [refreshOrders]);
 
   /**
    * Delete an order
@@ -213,7 +250,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
             if (testCodes.includes(test.testCode)) {
               return {
                 ...test,
-                status: 'collected' as TestStatus,
+                status: 'sample-collected' as TestStatus,
                 sampleId,
               };
             }
@@ -226,7 +263,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
             updatedAt: new Date().toISOString(),
           };
 
-          if (updatedTests.some(t => t.status === 'collected' || t.status === 'in-progress')) {
+          if (updatedTests.some(t => t.status === 'sample-collected' || t.status === 'in-progress')) {
             updates.overallStatus = 'in-progress';
           }
 
@@ -380,6 +417,8 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     acknowledgeCriticalResult,
     getOrdersForBatchCollection,
     getTestsNeedingCollection,
+    refreshOrders,
+    loading,
   };
 
   return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>;

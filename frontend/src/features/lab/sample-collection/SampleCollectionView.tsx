@@ -39,7 +39,7 @@ export const SampleCollectionView: React.FC = () => {
   const { currentUser } = useAuth();
   const { orders, collectSampleForTests } = useOrders();
   const { tests } = useTests();
-  const { samples, createSample } = useSamples();
+  const { samples, collectSample } = useSamples();
   const { getPatient, patients } = usePatients();
   const [statusFilters, setStatusFilters] = useState<SampleStatus[]>(['pending']);
 
@@ -50,7 +50,7 @@ export const SampleCollectionView: React.FC = () => {
       const patient = getPatient(order.patientId);
       if (!patient) return; // Skip if patient not found
 
-      const uncollectedTests = order.tests.filter(test => test.status === 'ordered');
+      const uncollectedTests = order.tests.filter(test => test.status === 'pending');
 
       // Create pending sample displays for uncollected tests
       if (uncollectedTests.length > 0) {
@@ -102,7 +102,7 @@ export const SampleCollectionView: React.FC = () => {
       }
 
       // Add collected samples
-      const collectedTests = order.tests.filter(test => test.status !== 'ordered');
+      const collectedTests = order.tests.filter(test => test.status !== 'pending');
       const collectedSampleIds = new Set(collectedTests.map(t => t.sampleId).filter(Boolean));
 
       collectedSampleIds.forEach(sampleId => {
@@ -143,7 +143,7 @@ export const SampleCollectionView: React.FC = () => {
     return sortByPriority(statusFiltered.map(d => ({ ...d, priority: d.sample?.priority || d.priority })));
   }, [filteredDisplays, statusFilters]);
 
-  const handleCollect = (
+  const handleCollect = async (
     display: SampleDisplay,
     volume: number,
     notes?: string,
@@ -174,22 +174,13 @@ export const SampleCollectionView: React.FC = () => {
     }
 
     try {
-      // Create the sample
-      const collectedSample = createSample(
-        display.order.orderId,
-        display.sample.sampleType,
-        display.requirement.totalVolume,
-        display.requirement.testCodes,
-        display.requirement.containerTypes,
-        display.requirement.containerTopColors,
-        display.requirement.priority,
-        {
-          collectedBy: currentUser.id,
-          collectedVolume: volume,
-          actualContainerType: selectedContainerType,
-          actualContainerColor: selectedColor as ContainerTopColor,
-          collectionNotes: notes,
-        }
+      // Collect the sample via API
+      await collectSample(
+        display.sample.sampleId,
+        volume,
+        selectedContainerType,
+        selectedColor as ContainerTopColor,
+        notes
       );
 
       // Update the order tests to mark them as collected and link to the sample
@@ -197,7 +188,7 @@ export const SampleCollectionView: React.FC = () => {
       collectSampleForTests(
         display.order.orderId,
         display.requirement.testCodes,
-        collectedSample.sampleId,
+        display.sample.sampleId,
         {
           collectionDate,
           collectedBy: currentUser.id,

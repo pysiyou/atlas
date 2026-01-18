@@ -11,8 +11,8 @@
  * Used by StatusTimeline component to show order progress
  */
 export const STATUS_TIMELINE_STEPS = [
-  { status: 'ordered', label: 'Ordered' },
-  { status: 'collected', label: 'Collected' },
+  { status: 'pending', label: 'Ordered' },
+  { status: 'sample-collected', label: 'Collected' },
   { status: 'in-progress', label: 'In Progress' },
   { status: 'completed', label: 'Completed' },
   { status: 'delivered', label: 'Delivered' },

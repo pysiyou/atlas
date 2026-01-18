@@ -109,12 +109,12 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
   // Get completion info for each step
   const getStepCompletionInfo = (stepStatus: string): { completedBy?: string; completedAt?: string } => {
     switch (stepStatus) {
-      case 'ordered':
+      case 'pending':
         return {
           completedBy: order.createdBy,
           completedAt: order.orderDate,
         };
-      case 'collected': {
+      case 'sample-collected': {
         return {
           completedBy: order.createdBy,
           completedAt: order.createdAt,
@@ -122,7 +122,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
       }
       case 'in-progress': {
         const inProgressTest = order.tests.find((t) =>
-          ['in-progress', 'completed', 'validated', 'reported'].includes(t.status)
+          ['in-progress', 'completed', 'validated', 'rejected'].includes(t.status)
         );
         return {
           completedBy: inProgressTest?.enteredBy || order.createdBy,
@@ -130,7 +130,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
         };
       }
       case 'completed': {
-        const completedTest = order.tests.find((t) => ['completed', 'validated', 'reported'].includes(t.status));
+        const completedTest = order.tests.find((t) => ['completed', 'validated', 'rejected'].includes(t.status));
         return {
           completedBy: completedTest?.validatedBy || order.createdBy,
           completedAt: completedTest?.resultValidatedAt || order.updatedAt,
@@ -204,8 +204,8 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
           return 'bg-gray-200';
         };
 
-        // Show test dots for multi-test orders (except 'ordered' step which is always 100%)
-        const showTestDots = step.status !== 'ordered' && order.tests.length > 1;
+        // Show test dots for multi-test orders (except 'pending' step which is always 100%)
+        const showTestDots = step.status !== 'pending' && order.tests.length > 1;
 
         return (
           <div key={step.status} className="flex items-start gap-3">

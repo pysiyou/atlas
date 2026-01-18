@@ -477,7 +477,20 @@ def generate_african_name(gender: str) -> tuple[str, str]:
     return parts[0], "Doe"
 
 
-def _create_single_patient_data(index: int) -> dict:
+FIXED_PATIENT_IDS = [
+    "PAT-20260118-001",
+    "PAT-20260118-002",
+    "PAT-20260118-003",
+    "PAT-20260118-004",
+    "PAT-20260118-005",
+    "PAT-20260118-006",
+    "PAT-20260118-007",
+    "PAT-20260118-008",
+    "PAT-20260118-009",
+    "PAT-20260118-010"
+]
+
+def _create_single_patient_data(patient_id: str) -> dict:
     """Internal helper to generate realistic patient data"""
     
     # Random gender
@@ -582,9 +595,6 @@ def _create_single_patient_data(index: int) -> dict:
     # Registration date (within last 2 years)
     registrationDate = datetime.now() - timedelta(days=random.randint(0, 730))
 
-    # Patient ID
-    patient_id = f"PAT-{registrationDate.strftime('%Y%m%d')}-{index+1:03d}"
-
     return {
         'id': patient_id,
         'fullName': full_name,
@@ -666,32 +676,39 @@ def generate_dev_patients(db):
 def generate_patients(db, count: int = 10):
     """Generate and insert patients into the database"""
     
+    # Ignore count parameter if using fixed list, or use it to limit the fixed list if needed.
+    # But user asked for THESE IDs specifically.
+    
     try:
-        print(f"🌍 Generating {count} patients with African names...")
+        print(f"🌍 Generating patients from fixed list ({len(FIXED_PATIENT_IDS)})...")
         
         patients_created = 0
         
-        for i in range(count):
-            patient_data = _create_single_patient_data(i)
+        for patient_id in FIXED_PATIENT_IDS:
+            # Check if patient exists to avoid duplicates if re-running
+            existing = db.query(Patient).filter(Patient.id == patient_id).first()
+            if existing:
+                print(f"  • Skipping existing patient: {patient_id}")
+                continue
+
+            patient_data = _create_single_patient_data(patient_id)
             
             # Create patient model
             patient = Patient(**patient_data)
             
             db.add(patient)
             patients_created += 1
-            
-            if (i + 1) % 10 == 0:
-                print(f"  ✓ Created {i + 1}/{count} patients...")
+            print(f"  ✓ Created patient: {patient_data['fullName']} ({patient_id})")
         
         db.commit()
         print(f"\n✅ Successfully created {patients_created} patients!")
         
         # Show some examples
-        print("\n📋 Sample patients created:")
-        sample_patients = db.query(Patient).limit(5).all()
+        print("\n📋 Sample patients create/found:")
+        sample_patients = db.query(Patient).filter(Patient.id.in_(FIXED_PATIENT_IDS)).all()
         for p in sample_patients:
             insurance = "✓" if p.affiliation else "✗"
-            print(f"  • {p.fullName} ({p.gender.value}) - {p.phone} - Insurance: {insurance}")
+            print(f"  • {p.fullName} ({p.gender.value}) - ID: {p.id}")
         
     except Exception as e:
         print(f"\n❌ Error generating patients: {e}")

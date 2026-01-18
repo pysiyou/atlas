@@ -7,16 +7,16 @@ import type { Order, OrderStatus, TestStatus, OrderTest } from '@/types';
 
 /**
  * Determines the overall order status based on the status of all contained tests
- * Uses a precedence model: delivered > completed > in-progress > ordered
+ * Uses a precedence model: delivered > completed > in-progress > pending
  */
 export const calculateOrderStatus = (testStatuses: TestStatus[]): OrderStatus => {
-  if (testStatuses.every(s => s === 'reported')) {
+  if (testStatuses.every(s => s === 'rejected')) {
     return 'delivered';
   }
   if (testStatuses.some(s => s === 'validated' || s === 'completed')) {
     return 'completed';
   }
-  if (testStatuses.some(s => s === 'in-progress' || s === 'collected')) {
+  if (testStatuses.some(s => s === 'in-progress' || s === 'sample-collected')) {
     return 'in-progress';
   }
   return 'ordered';
@@ -72,7 +72,7 @@ export const createRepeatTest = (
   sampleId?: string
 ): OrderTest => ({
   ...originalTest,
-  status: sampleId ? 'collected' : 'ordered',
+  status: sampleId ? 'sample-collected' : 'pending',
   isRepeatTest: true,
   repeatReason,
   originalTestId: originalTest.testCode,
@@ -100,7 +100,7 @@ export const markTestAsCritical = (
  * Filters orders that have tests needing collection
  */
 export const getOrdersNeedingCollection = (orders: Order[]): Order[] =>
-  orders.filter(order => order.tests.some(test => test.status === 'ordered'));
+  orders.filter(order => order.tests.some(test => test.status === 'pending'));
 
 /**
  * Gets all test-order pairs that need collection
@@ -112,7 +112,7 @@ export const getAllTestsNeedingCollection = (
 
   orders.forEach(order => {
     order.tests.forEach(test => {
-      if (test.status === 'ordered') {
+      if (test.status === 'pending') {
         result.push({ order, test });
       }
     });

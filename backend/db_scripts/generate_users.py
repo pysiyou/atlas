@@ -49,7 +49,7 @@ def generate_users(db):
             user = User(
                 id=user_data["id"],
                 username=user_data["username"],
-                hashed_password=get_password_hash(user_data["password"]),
+                hashedPassword=get_password_hash(user_data["password"]),
                 name=user_data["name"],
                 role=user_data["role"],
                 email=user_data["email"]

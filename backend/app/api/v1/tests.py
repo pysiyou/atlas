@@ -16,7 +16,7 @@ router = APIRouter()
 @router.get("/tests", response_model=List[TestResponse])
 def get_tests(
     category: str | None = None,
-    active_only: bool = True,
+    activeOnly: bool = True,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     db: Session = Depends(get_db),
@@ -26,31 +26,31 @@ def get_tests(
     Get all tests with optional category filter
     """
     query = db.query(Test)
-    
-    if active_only:
-        query = query.filter(Test.is_active == True)
-    
+
+    if activeOnly:
+        query = query.filter(Test.isActive == True)
+
     if category:
         query = query.filter(Test.category == category)
-    
+
     tests = query.offset(skip).limit(limit).all()
     return tests
 
 
-@router.get("/tests/{test_code}", response_model=TestResponse)
+@router.get("/tests/{testCode}", response_model=TestResponse)
 def get_test(
-    test_code: str,
+    testCode: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
     Get test by code
     """
-    test = db.query(Test).filter(Test.code == test_code).first()
+    test = db.query(Test).filter(Test.code == testCode).first()
     if not test:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Test {test_code} not found"
+            detail=f"Test {testCode} not found"
         )
     return test
 
@@ -67,7 +67,7 @@ def search_tests(
     search_term = f"%{q.lower()}%"
     tests = db.query(Test).filter(
         (Test.name.ilike(search_term)) |
-        (Test.display_name.ilike(search_term)) |
+        (Test.displayName.ilike(search_term)) |
         (Test.code.ilike(search_term))
     ).all()
     return tests
@@ -98,9 +98,9 @@ def create_test(
     return test
 
 
-@router.put("/tests/{test_code}", response_model=TestResponse)
+@router.put("/tests/{testCode}", response_model=TestResponse)
 def update_test(
-    test_code: str,
+    testCode: str,
     test_data: TestUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
@@ -108,11 +108,11 @@ def update_test(
     """
     Update test (price, active status)
     """
-    test = db.query(Test).filter(Test.code == test_code).first()
+    test = db.query(Test).filter(Test.code == testCode).first()
     if not test:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Test {test_code} not found"
+            detail=f"Test {testCode} not found"
         )
     
     update_data = test_data.model_dump(exclude_unset=True)

@@ -54,7 +54,7 @@ export const ResultEntry: React.FC = () => {
         const patientName = getPatientName(order.patientId, patientsContext.patients);
         
         return order.tests
-          .filter(test => test.status === 'collected' || test.status === 'in-progress')
+          .filter(test => test.status === 'sample-collected' || test.status === 'in-progress')
           .map(test => {
             // Get test name and sample type
             const testName = getTestName(test.testCode, testsContext.tests);

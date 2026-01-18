@@ -29,8 +29,8 @@ class TestCreate(TestBase):
     fastingRequired: bool = False
     collectionNotes: str | None = None
     rejectionCriteria: list[str] | None = None
-    referenceRanges: dict | None = None
-    resultItems: dict | None = None
+    referenceRanges: list | None = None
+    resultItems: list | None = None
     panels: list[str] | None = None
     loincCodes: list[str] | None = None
     methodology: str | None = None
@@ -54,8 +54,8 @@ class TestResponse(TestBase):
     fastingRequired: bool | None = None
     collectionNotes: str | None = None
     rejectionCriteria: list[str] | None = None
-    referenceRanges: dict | None = None
-    resultItems: dict | None = None
+    referenceRanges: list | None = None
+    resultItems: list | None = None
     panels: list[str] | None = None
     loincCodes: list[str] | None = None
     methodology: str | None = None

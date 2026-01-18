@@ -1,10 +1,8 @@
-"""
-Database initialization script
-Recreates the database, seeds initial data, and generates test data.
-"""
 from app.database import engine, Base, SessionLocal
 from db_scripts.generate_users import generate_users
 from db_scripts.generate_patients import generate_patients
+from db_scripts.generate_tests import generate_tests
+from db_scripts.generate_orders import generate_orders
 
 def init_db():
     """Initialize database with fresh tables and data"""
@@ -24,9 +22,15 @@ def init_db():
         # Seed core configuration data
         generate_users(db)
         
-        # 3. Generate Patient Data
+        # 3. Generate Catalog Data
+        generate_tests(db)
+        
+        # 4. Generate Patient Data
         # Generate random patients
         generate_patients(db, count=10)
+
+        # 5. Generate Order Data
+        generate_orders(db)
         
         print("\n✅ Database initialization complete!")
         

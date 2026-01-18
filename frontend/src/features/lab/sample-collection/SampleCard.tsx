@@ -5,7 +5,7 @@ import type { ContainerType } from '@/types';
 
 import { getContainerIconColor, getCollectionRequirements } from '@/utils';
 import { formatVolume } from '@/utils';
-import { usePatients, useTests, useSamples, useAuth } from '@/hooks';
+import { usePatients, useTests, useSamples } from '@/hooks';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import toast from 'react-hot-toast';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
@@ -44,7 +44,6 @@ export const SampleCard: React.FC<SampleCardProps> = ({
   const { patients } = usePatients();
   const { tests } = useTests();
   const { rejectSample } = useSamples();
-  const { currentUser } = useAuth();
 
   const { sample, order, requirement } = display;
   
@@ -195,7 +194,6 @@ export const SampleCard: React.FC<SampleCardProps> = ({
                   await rejectSample(
                     sample.sampleId,
                     reasons,
-                    currentUser?.id || 'unknown',
                     notes,
                     requireRecollection
                   );

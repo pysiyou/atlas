@@ -105,7 +105,7 @@ export const CreateOrder: React.FC = () => {
 
         return {
           testCode: test.code,
-          status: 'ordered',
+          status: 'pending',
           priceAtOrder: test.price,
           results: null,
         };

@@ -1,56 +1,56 @@
 """
-Test Catalog Model
+Test Catalog Model - All fields use camelCase
 """
-from sqlalchemy import Column, String, Float, Integer, Boolean, JSON, Enum, DateTime
+from sqlalchemy import Column, String, Float, Integer, Boolean, JSON, DateTime
 from sqlalchemy.sql import func
 from app.database import Base
 
 
 class Test(Base):
     __tablename__ = "tests"
-    
+
     code = Column(String, primary_key=True, index=True)  # e.g., HEM001
     name = Column(String, nullable=False, index=True)
-    display_name = Column(String, nullable=False)
+    displayName = Column(String, nullable=False)
     synonyms = Column(JSON, nullable=True)  # Array of alternative names
     category = Column(String, nullable=False, index=True)
-    
+
     # Pricing and timing
     price = Column(Float, nullable=False)
-    turnaround_time_hours = Column(Integer, nullable=False)
-    
+    turnaroundTimeHours = Column(Integer, nullable=False)
+
     # Sample requirements (JSON)
-    sample_type = Column(String, nullable=False)
-    sample_volume = Column(String, nullable=True)
-    minimum_volume = Column(Float, nullable=True)
-    optimal_volume = Column(Float, nullable=True)
-    
+    sampleType = Column(String, nullable=False)
+    sampleVolume = Column(String, nullable=True)
+    minimumVolume = Column(Float, nullable=True)
+    optimalVolume = Column(Float, nullable=True)
+
     # Container requirements
-    container_types = Column(JSON, nullable=False)  # Array of ContainerType
-    container_top_colors = Column(JSON, nullable=False)  # Array of ContainerTopColor
-    number_of_containers = Column(Integer, nullable=True)
-    container_description = Column(String, nullable=True)
-    
+    containerTypes = Column(JSON, nullable=False)  # Array of ContainerType
+    containerTopColors = Column(JSON, nullable=False)  # Array of ContainerTopColor
+    numberOfContainers = Column(Integer, nullable=True)
+    containerDescription = Column(String, nullable=True)
+
     # Special requirements
-    special_requirements = Column(String, nullable=True)
-    fasting_required = Column(Boolean, default=False)
-    collection_notes = Column(String, nullable=True)
-    rejection_criteria = Column(JSON, nullable=True)  # Array of strings
-    
+    specialRequirements = Column(String, nullable=True)
+    fastingRequired = Column(Boolean, default=False)
+    collectionNotes = Column(String, nullable=True)
+    rejectionCriteria = Column(JSON, nullable=True)  # Array of strings
+
     # Reference ranges and parameters (JSON)
-    reference_ranges = Column(JSON, nullable=True)  # Array of ReferenceRange objects
-    result_items = Column(JSON, nullable=True)  # Array of ResultItem objects from catalog
-    
+    referenceRanges = Column(JSON, nullable=True)  # Array of ReferenceRange objects
+    resultItems = Column(JSON, nullable=True)  # Array of ResultItem objects from catalog
+
     # Additional catalog fields
     panels = Column(JSON, nullable=True)  # Related test panels
-    loinc_codes = Column(JSON, nullable=True)  # LOINC codes
+    loincCodes = Column(JSON, nullable=True)  # LOINC codes
     methodology = Column(String, nullable=True)
     confidence = Column(String, nullable=True)  # HIGH, MEDIUM, LOW
     notes = Column(String, nullable=True)
-    
+
     # Status
-    is_active = Column(Boolean, default=True)
-    
+    isActive = Column(Boolean, default=True)
+
     # Metadata
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    createdAt = Column(DateTime(timezone=True), server_default=func.now())
+    updatedAt = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

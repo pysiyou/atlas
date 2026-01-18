@@ -68,7 +68,7 @@ def create_user(
     user = User(
         id=user_id,
         username=user_data.username,
-        hashed_password=get_password_hash(user_data.password),
+        hashedPassword=get_password_hash(user_data.password),
         name=user_data.name,
         role=user_data.role,
         email=user_data.email,
@@ -102,7 +102,7 @@ def update_user(
     update_data = user_data.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         if field == "password":
-            user.hashed_password = get_password_hash(value)
+            user.hashedPassword = get_password_hash(value)
         else:
             setattr(user, field, value)
     

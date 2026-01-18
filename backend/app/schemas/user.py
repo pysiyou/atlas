@@ -27,8 +27,8 @@ class UserUpdate(BaseModel):
 
 class UserResponse(UserBase):
     id: str
-    created_at: datetime
-    
+    createdAt: datetime
+
     class Config:
         from_attributes = True
 

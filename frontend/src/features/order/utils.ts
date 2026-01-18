@@ -1,8 +1,8 @@
 import type { Order } from '@/types';
 
 export const STATUS_TIMELINE_STEPS = [
-  { status: 'ordered', label: 'Order Created' },
-  { status: 'collected', label: 'Sample Collected' },
+  { status: 'pending', label: 'Order Created' },
+  { status: 'sample-collected', label: 'Sample Collected' },
   { status: 'in-progress', label: 'Analysis In Progress' },
   { status: 'completed', label: 'Analysis Complete' },
   { status: 'delivered', label: 'Results Delivered' },
@@ -10,11 +10,11 @@ export const STATUS_TIMELINE_STEPS = [
 
 // Test statuses that indicate a test has reached or passed each order step
 const STEP_STATUS_THRESHOLDS: Record<string, string[]> = {
-  ordered: ['ordered', 'collected', 'in-progress', 'completed', 'validated', 'reported'],
-  collected: ['collected', 'in-progress', 'completed', 'validated', 'reported'],
-  'in-progress': ['in-progress', 'completed', 'validated', 'reported'],
-  completed: ['completed', 'validated', 'reported'],
-  delivered: ['reported'],
+  pending: ['pending', 'sample-collected', 'in-progress', 'completed', 'validated', 'rejected'],
+  'sample-collected': ['sample-collected', 'in-progress', 'completed', 'validated', 'rejected'],
+  'in-progress': ['in-progress', 'completed', 'validated', 'rejected'],
+  completed: ['completed', 'validated', 'rejected'],
+  delivered: ['rejected'],
 };
 
 export interface StepProgress {
@@ -36,8 +36,8 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
     return { completed: 0, total: 0, percentage: 0, isFullyComplete: false, isPartial: false, isStarted: false };
   }
 
-  // Special case for 'ordered' - all tests are ordered when order exists
-  if (stepStatus === 'ordered') {
+  // Special case for 'pending' - all tests are pending when order exists
+  if (stepStatus === 'pending') {
     return { completed: total, total, percentage: 100, isFullyComplete: true, isPartial: false, isStarted: true };
   }
 
@@ -64,12 +64,12 @@ export const getOverallOrderProgress = (order: Order): number => {
 
   // Weight for each test status (0-100 scale)
   const statusWeights: Record<string, number> = {
-    ordered: 0,
-    collected: 20,
+    pending: 0,
+    'sample-collected': 20,
     'in-progress': 40,
     completed: 60,
     validated: 80,
-    reported: 100,
+    rejected: 100,
   };
 
   const totalWeight = order.tests.reduce((sum, test) => {

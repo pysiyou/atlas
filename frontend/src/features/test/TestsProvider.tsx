@@ -1,11 +1,12 @@
 /**
  * Tests Provider Component
- * Manages test catalog and operations
+ * Manages test catalog and operations using backend API
  */
 
-import React, { type ReactNode, useCallback, useState } from 'react';
+import React, { type ReactNode, useCallback, useState, useEffect } from 'react';
 import type { Test, TestCategory } from '@/types';
 import { TestsContext, type TestsContextType } from './TestsContext';
+import { testAPI } from '@/services/api';
 
 interface TestsProviderProps {
   children: ReactNode;
@@ -13,32 +14,67 @@ interface TestsProviderProps {
 
 export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
   const [tests, setTests] = useState<Test[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  /**
+   * Refresh tests from backend
+   */
+  const refreshTests = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await testAPI.getAll();
+      setTests(data);
+    } catch (err) {
+      console.error('Failed to load tests:', err);
+      setError('Failed to load tests');
+      setTests([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Load tests on mount
+  useEffect(() => {
+    refreshTests();
+  }, [refreshTests]);
 
   /**
    * Add a new test
    */
-  const addTest = useCallback((test: Test) => {
-    setTests(prev => [...prev, test]);
-  }, [setTests]);
+  const addTest = useCallback(async (test: Test) => {
+    try {
+      const created = await testAPI.create(test);
+      setTests(prev => [...prev, created]);
+      await refreshTests();
+    } catch (err) {
+      console.error('Failed to create test:', err);
+      throw err;
+    }
+  }, [refreshTests]);
 
   /**
    * Update an existing test
    */
-  const updateTest = useCallback((code: string, updates: Partial<Test>) => {
-    setTests(prev => 
-      prev.map(test => 
-        test.code === code 
-          ? { ...test, ...updates, updatedAt: new Date().toISOString() } 
-          : test
-      )
-    );
-  }, [setTests]);
+  const updateTest = useCallback(async (code: string, updates: Partial<Test>) => {
+    try {
+      const updated = await testAPI.update(code, updates);
+      setTests(prev =>
+        prev.map(test => (test.code === code ? updated : test))
+      );
+      await refreshTests();
+    } catch (err) {
+      console.error('Failed to update test:', err);
+      throw err;
+    }
+  }, [refreshTests]);
 
   /**
-   * Delete a test (mark as inactive instead)
+   * Delete a test (mark as inactive)
    */
-  const deleteTest = useCallback((code: string) => {
-    updateTest(code, { isActive: false });
+  const deleteTest = useCallback(async (code: string) => {
+    await updateTest(code, { isActive: false });
   }, [updateTest]);
 
   /**
@@ -67,26 +103,26 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
    */
   const searchTests = useCallback((query: string): Test[] => {
     if (!query.trim()) return getActiveTests();
-    
+
     const lowerQuery = query.toLowerCase();
     return tests.filter(test => {
       if (!test.isActive) return false;
-      
+
       // Search in name
       if (test.name.toLowerCase().includes(lowerQuery)) return true;
-      
+
       // Search in code
       if (test.code.toLowerCase().includes(lowerQuery)) return true;
-      
+
       // Search in synonyms
       if (test.synonyms?.some(syn => syn.toLowerCase().includes(lowerQuery))) return true;
-      
+
       // Search in LOINC codes
       if (test.loincCodes?.some(loinc => loinc.toLowerCase().includes(lowerQuery))) return true;
-      
+
       // Search in panels
       if (test.panels?.some(panel => panel.toLowerCase().includes(lowerQuery))) return true;
-      
+
       return false;
     });
   }, [tests, getActiveTests]);
@@ -96,9 +132,9 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
    */
   const searchBySynonym = useCallback((synonym: string): Test[] => {
     if (!synonym.trim()) return [];
-    
+
     const lowerSynonym = synonym.toLowerCase();
-    return tests.filter(test => 
+    return tests.filter(test =>
       test.isActive &&
       test.synonyms?.some(syn => syn.toLowerCase().includes(lowerSynonym))
     );
@@ -109,9 +145,9 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
    */
   const getTestsByPanel = useCallback((panelName: string): Test[] => {
     if (!panelName.trim()) return [];
-    
+
     const lowerPanel = panelName.toLowerCase();
-    return tests.filter(test => 
+    return tests.filter(test =>
       test.isActive &&
       test.panels?.some(panel => panel.toLowerCase().includes(lowerPanel))
     );
@@ -122,9 +158,9 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
    */
   const getTestByLoincCode = useCallback((loincCode: string): Test | undefined => {
     if (!loincCode.trim()) return undefined;
-    
+
     const lowerLoinc = loincCode.toLowerCase();
-    return tests.find(test => 
+    return tests.find(test =>
       test.isActive &&
       test.loincCodes?.some(loinc => loinc.toLowerCase() === lowerLoinc)
     );
@@ -135,9 +171,9 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
    */
   const getTestsBySampleRequirements = useCallback((sampleType: string): Test[] => {
     if (!sampleType.trim()) return [];
-    
+
     const lowerSampleType = sampleType.toLowerCase();
-    return tests.filter(test => 
+    return tests.filter(test =>
       test.isActive &&
       test.sampleType.toLowerCase() === lowerSampleType
     );
@@ -146,29 +182,29 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
   /**
    * Update test price (custom pricing override)
    */
-  const updateTestPrice = useCallback((code: string, price: number) => {
+  const updateTestPrice = useCallback(async (code: string, price: number) => {
     if (price < 0) {
       console.warn('Price cannot be negative');
       return;
     }
-    updateTest(code, { price, updatedAt: new Date().toISOString() });
+    await updateTest(code, { price });
   }, [updateTest]);
 
   /**
    * Toggle test active status
    */
-  const toggleTestActive = useCallback((code: string) => {
-    setTests(prev => 
-      prev.map(test => 
-        test.code === code 
-          ? { ...test, isActive: !test.isActive, updatedAt: new Date().toISOString() }
-          : test
-      )
-    );
-  }, [setTests]);
+  const toggleTestActive = useCallback(async (code: string) => {
+    const test = tests.find(t => t.code === code);
+    if (test) {
+      await updateTest(code, { isActive: !test.isActive });
+    }
+  }, [tests, updateTest]);
 
   const value: TestsContextType = {
     tests,
+    loading,
+    error,
+    refreshTests,
     addTest,
     updateTest,
     deleteTest,
@@ -177,7 +213,6 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
     getActiveTests,
     searchTests,
     toggleTestActive,
-    // New enhanced methods
     searchBySynonym,
     getTestsByPanel,
     getTestByLoincCode,

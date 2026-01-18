@@ -1,216 +1,4 @@
 {
-  "metadata": {
-    "generated_at": "2026-01-12T10:41:20.563306Z",
-    "version": "2.0",
-    "title": "Pan-African Clinical Laboratory Test Catalog",
-    "target_scope": "Comprehensive pan-African clinical laboratory test catalog aligned to worldwide standards (WHO, CLSI, ISO 15189)",
-    "geographic_scope": "Sub-Saharan Africa, with primary reference to Cameroon and applicability across African private/reference labs",
-    "total_tests": 87,
-    "disclaimer": "Reference ranges are default suggestions; each laboratory MUST validate locally per ISO 15189:2022 requirements. This catalog is a template; implementations must comply with national regulations and standards.",
-    "unit_policy": "SI units preferred; conventional units in parentheses",
-    "sources_index": [
-      {
-        "id": "SRC001",
-        "title": "WHO-AFRO Regional Strategy on Diagnostic and Laboratory Services",
-        "publisher": "World Health Organization Africa Region",
-        "year": 2023,
-        "url": "https://www.afro.who.int",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC002",
-        "title": "CLSI Standards: Hematology, Chemistry, Microbiology (H21, H26, C series)",
-        "publisher": "Clinical and Laboratory Standards Institute",
-        "year": 2024,
-        "url": "https://clsi.org",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC003",
-        "title": "Mayo Clinic Laboratory Reference Ranges",
-        "publisher": "Mayo Clinic",
-        "year": 2024,
-        "url": "https://www.mayocliniclabs.com",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC004",
-        "title": "Cameroon National Laboratory Policy",
-        "publisher": "Ministry of Public Health Cameroon",
-        "year": 2022,
-        "url": "https://files.aho.afro.who.int",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC005",
-        "title": "Uganda National Standard Test Menu",
-        "publisher": "Uganda Ministry of Health",
-        "year": 2017,
-        "url": "https://cphl.go.ug",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC006",
-        "title": "NBME Laboratory Reference Values",
-        "publisher": "National Board of Medical Examiners",
-        "year": 2024,
-        "url": "https://www.nbme.org",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC007",
-        "title": "South Africa Malaria Quality Assurance Guidelines",
-        "publisher": "NICD",
-        "year": 2014,
-        "url": "https://www.nicd.ac.za",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC008",
-        "title": "WHO HIV/HBV/HCV Testing and Confirmation Algorithms",
-        "publisher": "World Health Organization",
-        "year": 2024,
-        "url": "https://www.who.int",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC009",
-        "title": "Reference Intervals of Thyroid Hormones in Sub-Saharan Africa",
-        "publisher": "African Studies",
-        "year": 2024,
-        "url": "https://pmc.ncbi.nlm.nih.gov",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC010",
-        "title": "Nigeria National TB Diagnosis Guidelines",
-        "publisher": "NTBLCP",
-        "year": 2015,
-        "url": "https://ntblcp.org.ng",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC011",
-        "title": "LOINC Laboratory Code Database",
-        "publisher": "Regenstrief Institute",
-        "year": 2024,
-        "url": "https://www.loinc.org",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC012",
-        "title": "ISO 15189:2022 Medical Laboratories Quality Standards",
-        "publisher": "ISO",
-        "year": 2022,
-        "url": "https://www.iso.org",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC013",
-        "title": "CBC Reference Ranges in African Populations",
-        "publisher": "PMCID",
-        "year": 2024,
-        "url": "https://pmc.ncbi.nlm.nih.gov",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC014",
-        "title": "G6PD Deficiency Epidemiology in Sub-Saharan Africa",
-        "publisher": "Pan African Medical Journal",
-        "year": 2025,
-        "url": "https://www.panafrican-med-journal.com",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC015",
-        "title": "Malaria RDT Performance Standards",
-        "publisher": "WHO",
-        "year": 2024,
-        "url": "https://www.who.int",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC016",
-        "title": "COVID-19 RT-PCR and Antigen Testing in Africa",
-        "publisher": "Nigeria CDC",
-        "year": 2021,
-        "url": "https://pubmed.ncbi.nlm.nih.gov",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC017",
-        "title": "Syphilis Testing Algorithms (Reverse vs Traditional)",
-        "publisher": "CDC",
-        "year": 2024,
-        "url": "https://pubmed.ncbi.nlm.nih.gov",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC018",
-        "title": "Blood Group Typing and Transfusion Medicine Africa",
-        "publisher": "BMJ Open",
-        "year": 2023,
-        "url": "https://bmjopen.bmj.com",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC019",
-        "title": "Dengue and Chikungunya Testing in Africa",
-        "publisher": "Africa CDC",
-        "year": 2025,
-        "url": "https://africacdc.org",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC020",
-        "title": "Vitamin B12 and Folate in Sub-Saharan Africa",
-        "publisher": "Pathcare",
-        "year": 2024,
-        "url": "https://pubmed.ncbi.nlm.nih.gov",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC021",
-        "title": "H. pylori Testing Guidelines",
-        "publisher": "WHO",
-        "year": 2023,
-        "url": "https://www.who.int",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC022",
-        "title": "Toxoplasmosis Serology in Pregnancy",
-        "publisher": "CDC",
-        "year": 2023,
-        "url": "https://www.cdc.gov",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC023",
-        "title": "CMV and EBV Serology Testing",
-        "publisher": "Mayo Clinic",
-        "year": 2024,
-        "url": "https://www.mayocliniclabs.com",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC024",
-        "title": "Rubella Immunity Testing in Pregnancy",
-        "publisher": "CDC",
-        "year": 2023,
-        "url": "https://www.cdc.gov",
-        "date_accessed": "2026-01-12"
-      },
-      {
-        "id": "SRC025",
-        "title": "Stool O&P Microscopy for Helminthiasis",
-        "publisher": "CLSI",
-        "year": 2023,
-        "url": "https://pubmed.ncbi.nlm.nih.gov",
-        "date_accessed": "2026-01-12"
-      }
-    ]
-  },
   "tests": [
     {
       "test_code": "HEM001",
@@ -389,9 +177,7 @@
         "purple"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 25,
-      "enriched_at": "2026-01-12T16:16:02.885Z"
-    },
+      "price_usd": 25},
     {
       "test_code": "HEM002",
       "display_name": "Reticulocyte Count",
@@ -470,9 +256,7 @@
         "purple"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 25,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 25},
     {
       "test_code": "HEM003",
       "display_name": "Peripheral Blood Smear with Manual Differential",
@@ -542,9 +326,7 @@
         "purple"
       ],
       "sample_volume_description": "1ml",
-      "price_usd": 25,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 25},
     {
       "test_code": "HEM004",
       "display_name": "Erythrocyte Sedimentation Rate (ESR)",
@@ -609,9 +391,7 @@
         "purple"
       ],
       "sample_volume_description": "2mL",
-      "price_usd": 25,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 25},
     {
       "test_code": "HEMA001",
       "display_name": "Blood Grouping - ABO and Rh D System",
@@ -680,9 +460,7 @@
         "purple"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 25,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 25},
     {
       "test_code": "CHEM001",
       "display_name": "Glucose (Fasting)",
@@ -750,9 +528,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM002",
       "display_name": "Glucose (Random/Post-prandial)",
@@ -814,9 +590,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM003",
       "display_name": "Hemoglobin A1c (HbA1c)",
@@ -873,9 +647,7 @@
         "purple"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM004",
       "display_name": "Creatinine (Serum)",
@@ -941,9 +713,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM005",
       "display_name": "Blood Urea Nitrogen (BUN)",
@@ -1005,9 +775,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM006",
       "display_name": "eGFR (Estimated Glomerular Filtration Rate)",
@@ -1064,9 +832,7 @@
         "red"
       ],
       "sample_volume_description": "As required",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM007",
       "display_name": "Sodium (Serum/Plasma)",
@@ -1129,9 +895,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM008",
       "display_name": "Potassium (Serum/Plasma)",
@@ -1199,9 +963,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM009",
       "display_name": "Chloride (Serum/Plasma)",
@@ -1259,9 +1021,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM010",
       "display_name": "Bicarbonate / Total CO2",
@@ -1318,9 +1078,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM011",
       "display_name": "Calcium (Serum) - Total",
@@ -1381,9 +1139,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM012",
       "display_name": "Magnesium (Serum)",
@@ -1440,9 +1196,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM013",
       "display_name": "Phosphate (Inorganic)",
@@ -1499,9 +1253,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM014",
       "display_name": "Alanine Aminotransferase (ALT)",
@@ -1566,9 +1318,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM015",
       "display_name": "Aspartate Aminotransferase (AST)",
@@ -1633,9 +1383,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM016",
       "display_name": "Alkaline Phosphatase (ALP)",
@@ -1692,9 +1440,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM017",
       "display_name": "Gamma-Glutamyl Transferase (GGT)",
@@ -1755,9 +1501,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM018",
       "display_name": "Bilirubin - Total",
@@ -1819,9 +1563,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM019",
       "display_name": "Bilirubin - Direct (Conjugated)",
@@ -1878,9 +1620,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM020",
       "display_name": "Albumin (Serum)",
@@ -1936,9 +1676,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM021",
       "display_name": "Total Protein (Serum)",
@@ -1995,9 +1733,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM022",
       "display_name": "Cholesterol - Total",
@@ -2055,9 +1791,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM023",
       "display_name": "HDL Cholesterol",
@@ -2118,9 +1852,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM024",
       "display_name": "LDL Cholesterol",
@@ -2177,9 +1909,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM025",
       "display_name": "Triglycerides",
@@ -2237,9 +1967,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM026",
       "display_name": "Amylase (Serum)",
@@ -2300,9 +2028,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM027",
       "display_name": "Lipase (Serum)",
@@ -2362,9 +2088,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM028",
       "display_name": "C-Reactive Protein (CRP)",
@@ -2421,9 +2145,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM029",
       "display_name": "Troponin I (Cardiac)",
@@ -2486,9 +2208,7 @@
         "red"
       ],
       "sample_volume_description": "2mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM030",
       "display_name": "Creatine Kinase-MB (CK-MB)",
@@ -2545,9 +2265,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM031",
       "display_name": "Serum Iron",
@@ -2609,9 +2327,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM032",
       "display_name": "Ferritin (Serum)",
@@ -2671,9 +2387,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM033",
       "display_name": "TIBC (Total Iron-Binding Capacity)",
@@ -2730,9 +2444,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM034",
       "display_name": "Vitamin B12 (Cobalamin) - Serum",
@@ -2787,9 +2499,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM035",
       "display_name": "Folate - Serum or RBC Folate",
@@ -2846,9 +2556,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM036",
       "display_name": "Vitamin D, 25-Hydroxy (25-OH Vitamin D)",
@@ -2904,9 +2612,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "COAG001",
       "display_name": "Prothrombin Time (PT) / International Normalized Ratio (INR)",
@@ -2989,9 +2695,7 @@
         "blue"
       ],
       "sample_volume_description": "2.7mL",
-      "price_usd": 35,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 35},
     {
       "test_code": "COAG002",
       "display_name": "Activated Partial Thromboplastin Time (aPTT)",
@@ -3053,9 +2757,7 @@
         "blue"
       ],
       "sample_volume_description": "2.7mL",
-      "price_usd": 35,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 35},
     {
       "test_code": "COAG003",
       "display_name": "Fibrinogen",
@@ -3117,9 +2819,7 @@
         "blue"
       ],
       "sample_volume_description": "2.4ml",
-      "price_usd": 35,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 35},
     {
       "test_code": "COAG004",
       "display_name": "D-dimer",
@@ -3176,9 +2876,7 @@
         "blue"
       ],
       "sample_volume_description": "2ml",
-      "price_usd": 35,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 35},
     {
       "test_code": "URINE001",
       "display_name": "Urinalysis - Dipstick and Microscopy",
@@ -3412,9 +3110,7 @@
         "red"
       ],
       "sample_volume_description": "50mL",
-      "price_usd": 20,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 20},
     {
       "test_code": "URINE002",
       "display_name": "Pregnancy Test (Urine hCG)",
@@ -3467,9 +3163,7 @@
         "red"
       ],
       "sample_volume_description": "30mL",
-      "price_usd": 20,
-      "enriched_at": "2026-01-12T16:16:02.886Z"
-    },
+      "price_usd": 20},
     {
       "test_code": "ENDO001",
       "display_name": "Beta-hCG (Human Chorionic Gonadotropin) - Serum Quantitative",
@@ -3534,9 +3228,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "ENDO002",
       "display_name": "Thyroid Stimulating Hormone (TSH)",
@@ -3595,9 +3287,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "ENDO003",
       "display_name": "Free Thyroxine (FT4)",
@@ -3656,9 +3346,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "SER001",
       "display_name": "HIV 1/2 Antibody + p24 Antigen (Fourth-Generation Combo Test)",
@@ -3714,9 +3402,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER002",
       "display_name": "HIV Confirmation Test (HIV Immunoblot or HIV RNA-PCR)",
@@ -3772,9 +3458,7 @@
         "red"
       ],
       "sample_volume_description": "5mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER003",
       "display_name": "HIV-1 Viral Load (RNA-PCR Quantitative)",
@@ -3834,9 +3518,7 @@
         "purple"
       ],
       "sample_volume_description": "5mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER004",
       "display_name": "HBsAg (Hepatitis B Surface Antigen)",
@@ -3888,9 +3570,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER005",
       "display_name": "Anti-HBc (Hepatitis B Core Antibody)",
@@ -3941,9 +3621,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER006",
       "display_name": "Anti-HBs (Hepatitis B Surface Antibody)",
@@ -3994,9 +3672,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER007",
       "display_name": "Anti-HCV (Hepatitis C Antibody)",
@@ -4049,9 +3725,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER008",
       "display_name": "Syphilis Screening - RPR/VDRL (Non-Treponemal Test)",
@@ -4105,9 +3779,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER009",
       "display_name": "Syphilis Confirmation - TPHA/TPPA (Treponemal Test)",
@@ -4160,9 +3832,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER010",
       "display_name": "Helicobacter pylori (H. pylori) Serology (IgG)",
@@ -4215,9 +3885,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER011",
       "display_name": "Toxoplasma gondii Serology (IgG and IgM)",
@@ -4282,9 +3950,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER012",
       "display_name": "Cytomegalovirus (CMV) Serology (IgG and IgM)",
@@ -4349,9 +4015,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER013",
       "display_name": "Epstein-Barr Virus (EBV) Serology (VCA-IgG, VCA-IgM, EBNA)",
@@ -4429,9 +4093,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "SER014",
       "display_name": "Rubella Serology (IgG Antibody) - Immunity",
@@ -4483,9 +4145,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "PARA001",
       "display_name": "Malaria RDT (Rapid Diagnostic Test)",
@@ -4543,9 +4203,7 @@
         "purple"
       ],
       "sample_volume_description": "10μL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "PARA002",
       "display_name": "Malaria Microscopy (Thick and Thin Blood Films)",
@@ -4597,9 +4255,7 @@
         "purple"
       ],
       "sample_volume_description": "10μL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "PARA003",
       "display_name": "Sickle Cell Screening / Hemoglobin Electrophoresis",
@@ -4668,9 +4324,7 @@
         "purple"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 25,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 25},
     {
       "test_code": "PARA004",
       "display_name": "G6PD (Glucose-6-Phosphate Dehydrogenase) Screening",
@@ -4724,9 +4378,7 @@
         "purple"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 25,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 25},
     {
       "test_code": "PARA005",
       "display_name": "Stool Ova and Parasites (O&P) Microscopy",
@@ -4775,9 +4427,7 @@
         "red"
       ],
       "sample_volume_description": "30g",
-      "price_usd": 45,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 45},
     {
       "test_code": "MICRO001",
       "display_name": "AFB (Acid-Fast Bacilli) Sputum Smear - Ziehl-Neelsen",
@@ -4835,9 +4485,7 @@
         "red"
       ],
       "sample_volume_description": "10mL",
-      "price_usd": 45,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 45},
     {
       "test_code": "MICRO002",
       "display_name": "GeneXpert MTB/RIF (Rapid TB + Rifampicin Resistance)",
@@ -4892,9 +4540,7 @@
         "red"
       ],
       "sample_volume_description": "2ml",
-      "price_usd": 45,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 45},
     {
       "test_code": "MICRO003",
       "display_name": "Urine Culture with Antibiotic Susceptibility Testing",
@@ -4975,9 +4621,7 @@
         "red"
       ],
       "sample_volume_description": "30mL",
-      "price_usd": 45,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 45},
     {
       "test_code": "MICRO004",
       "display_name": "Stool Culture with Antibiotic Susceptibility",
@@ -5045,9 +4689,7 @@
         "red"
       ],
       "sample_volume_description": "10g",
-      "price_usd": 45,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 45},
     {
       "test_code": "MICRO005",
       "display_name": "Blood Culture (Aerobic and Anaerobic)",
@@ -5124,9 +4766,7 @@
         "red"
       ],
       "sample_volume_description": "10mL",
-      "price_usd": 45,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 45},
     {
       "test_code": "VIRO001",
       "display_name": "SARS-CoV-2 RT-PCR (COVID-19 Molecular Test)",
@@ -5180,9 +4820,7 @@
         "red"
       ],
       "sample_volume_description": "1ml",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "VIRO002",
       "display_name": "SARS-CoV-2 Antigen RDT (COVID-19 Rapid Test)",
@@ -5236,9 +4874,7 @@
         "red"
       ],
       "sample_volume_description": "0.5ml",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "VIRO003",
       "display_name": "Dengue Serology (IgM and IgG)",
@@ -5303,9 +4939,7 @@
         "red"
       ],
       "sample_volume_description": "5mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "VIRO004",
       "display_name": "Chikungunya Serology (IgM)",
@@ -5357,9 +4991,7 @@
         "red"
       ],
       "sample_volume_description": "5μL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 50},
     {
       "test_code": "HEMA002",
       "display_name": "Blood Cross-Match (Compatibility Test)",
@@ -5412,9 +5044,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 25,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 25},
     {
       "test_code": "TUMOR001",
       "display_name": "PSA (Prostate-Specific Antigen)",
@@ -5469,9 +5099,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "TUMOR002",
       "display_name": "CEA (Carcinoembryonic Antigen)",
@@ -5529,9 +5157,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM037",
       "display_name": "Prealbumin (Transthyretin)",
@@ -5586,9 +5212,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "CHEM038",
       "display_name": "Lactate (Serum/Plasma)",
@@ -5643,9 +5267,7 @@
         "green"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "HEMO001",
       "display_name": "Hemoglobin Electrophoresis - Advanced",
@@ -5693,9 +5315,7 @@
         "purple"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 25,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 25},
     {
       "test_code": "PROT001",
       "display_name": "Protein Electrophoresis (Serum)",
@@ -5743,9 +5363,7 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 30,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 30},
     {
       "test_code": "UREA001",
       "display_name": "Urea Culture / Quantitative Urine Culture",
@@ -5794,9 +5412,7 @@
         "red"
       ],
       "sample_volume_description": "30mL",
-      "price_usd": 45,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    },
+      "price_usd": 45},
     {
       "test_code": "VIRO005",
       "display_name": "Yellow Fever Serology (IgM/IgG)",
@@ -5861,16 +5477,6 @@
         "red"
       ],
       "sample_volume_description": "3mL",
-      "price_usd": 50,
-      "enriched_at": "2026-01-12T16:16:02.887Z"
-    }
-  ],
-  "enrichment_metadata": {
-    "enriched_at": "2026-01-12T16:16:02.887Z",
-    "original_version": "2.0",
-    "enriched_version": "2.0-enriched",
-    "category_mappings_count": 44,
-    "sample_type_mappings_count": 26,
-    "total_tests_enriched": 87
-  }
+      "price_usd": 50}
+  ]
 }

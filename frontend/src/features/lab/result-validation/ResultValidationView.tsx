@@ -125,7 +125,7 @@ export const ResultValidation: React.FC = () => {
           if (!confirmed) return;
       }
 
-      const status = rejectionType === 're-collect' ? 'ordered' : 'collected';
+      const status = rejectionType === 're-collect' ? 'pending' : 'sample-collected';
       const notesPrefix = rejectionType === 're-collect' ? 'Sample Rejected: ' : 'Re-test Required: ';
       const notes = rejectionNotes ? `${notesPrefix}${rejectionNotes}` : 'Rejected by pathologist';
 

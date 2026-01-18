@@ -21,7 +21,7 @@ router = APIRouter()
 
 @router.get("/orders", response_model=List[OrderResponse])
 def get_orders(
-    patient_id: str | None = None,
+    patientId: str | None = None,
     status: OrderStatus | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -32,31 +32,31 @@ def get_orders(
     Get all orders with optional filters
     """
     query = db.query(Order)
-    
-    if patient_id:
-        query = query.filter(Order.patient_id == patient_id)
-    
+
+    if patientId:
+        query = query.filter(Order.patientId == patientId)
+
     if status:
-        query = query.filter(Order.overall_status == status)
-    
-    orders = query.order_by(Order.created_at.desc()).offset(skip).limit(limit).all()
+        query = query.filter(Order.overallStatus == status)
+
+    orders = query.order_by(Order.createdAt.desc()).offset(skip).limit(limit).all()
     return orders
 
 
-@router.get("/orders/{order_id}", response_model=OrderResponse)
+@router.get("/orders/{orderId}", response_model=OrderResponse)
 def get_order(
-    order_id: str,
+    orderId: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
     Get order by ID with all tests
     """
-    order = db.query(Order).filter(Order.order_id == order_id).first()
+    order = db.query(Order).filter(Order.orderId == orderId).first()
     if not order:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Order {order_id} not found"
+            detail=f"Order {orderId} not found"
         )
     return order
 
@@ -77,12 +77,12 @@ def create_order(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Patient {order_data.patientId} not found"
         )
-    
+
     # Calculate total price and create order tests
     total_price = 0.0
-    order_id = generate_id("order", db)
+    orderId = generate_id("order", db)
     order_tests = []
-    
+
     for test_data in order_data.tests:
         # Get test from catalog
         test = db.query(Test).filter(Test.code == test_data.testCode).first()
@@ -91,49 +91,49 @@ def create_order(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Test {test_data.testCode} not found"
             )
-        
+
         total_price += test.price
-        
+
         # Create OrderTest
         order_test = OrderTest(
-            id=f"{order_id}_{test.code}",
-            order_id=order_id,
-            test_code=test.code,
+            id=f"{orderId}_{test.code}",
+            orderId=orderId,
+            testCode=test.code,
             status=TestStatus.PENDING,
-            price_at_order=test.price,
+            priceAtOrder=test.price,
         )
         order_tests.append(order_test)
-    
+
     # Create order
     order = Order(
-        order_id=order_id,
-        patient_id=order_data.patientId,
-        order_date=datetime.utcnow(),
-        total_price=total_price,
-        payment_status=PaymentStatus.PENDING,
-        overall_status=OrderStatus.PENDING,
+        orderId=orderId,
+        patientId=order_data.patientId,
+        orderDate=datetime.utcnow(),
+        totalPrice=total_price,
+        paymentStatus=PaymentStatus.PENDING,
+        overallStatus=OrderStatus.PENDING,
         priority=order_data.priority,
-        referring_physician=order_data.referringPhysician,
-        clinical_notes=order_data.clinicalNotes,
-        special_instructions=order_data.specialInstructions,
-        patient_prep_instructions=order_data.patientPrepInstructions,
-        created_by=current_user.id,
+        referringPhysician=order_data.referringPhysician,
+        clinicalNotes=order_data.clinicalNotes,
+        specialInstructions=order_data.specialInstructions,
+        patientPrepInstructions=order_data.patientPrepInstructions,
+        createdBy=current_user.id,
         tests=order_tests,
     )
-    
+
     db.add(order)
     db.commit()
-    
+
     # Generate samples for this order
-    generate_samples_for_order(order_id, db, current_user.id)
-    
+    generate_samples_for_order(orderId, db, current_user.id)
+
     db.refresh(order)
     return order
 
 
-@router.put("/orders/{order_id}", response_model=OrderResponse)
+@router.put("/orders/{orderId}", response_model=OrderResponse)
 def update_order(
-    order_id: str,
+    orderId: str,
     order_data: OrderUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_receptionist)
@@ -141,18 +141,18 @@ def update_order(
     """
     Update order information
     """
-    order = db.query(Order).filter(Order.order_id == order_id).first()
+    order = db.query(Order).filter(Order.orderId == orderId).first()
     if not order:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Order {order_id} not found"
+            detail=f"Order {orderId} not found"
         )
-    
+
     update_data = order_data.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(order, field, value)
-    
+
     db.commit()
     db.refresh(order)
-    
+
     return order

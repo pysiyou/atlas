@@ -53,10 +53,10 @@ def get_pending_validation(
     return tests
 
 
-@router.post("/results/{order_id}/tests/{test_code}")
+@router.post("/results/{orderId}/tests/{testCode}")
 def enter_results(
-    order_id: str,
-    test_code: str,
+    orderId: str,
+    testCode: str,
     result_data: ResultEntryRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech)
@@ -65,33 +65,33 @@ def enter_results(
     Enter results for a test
     """
     order_test = db.query(OrderTest).filter(
-        OrderTest.order_id == order_id,
-        OrderTest.test_code == test_code
+        OrderTest.orderId == orderId,
+        OrderTest.testCode == testCode
     ).first()
-    
+
     if not order_test:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Test {test_code} not found in order {order_id}"
+            detail=f"Test {testCode} not found in order {orderId}"
         )
-    
+
     # Update results
     order_test.results = result_data.results
-    order_test.result_entered_at = datetime.utcnow()
-    order_test.entered_by = current_user.id
-    order_test.technician_notes = result_data.technicianNotes
+    order_test.resultEnteredAt = datetime.utcnow()
+    order_test.enteredBy = current_user.id
+    order_test.technicianNotes = result_data.technicianNotes
     order_test.status = TestStatus.COMPLETED
-    
+
     db.commit()
     db.refresh(order_test)
-    
+
     return order_test
 
 
-@router.post("/results/{order_id}/tests/{test_code}/validate")
+@router.post("/results/{orderId}/tests/{testCode}/validate")
 def validate_results(
-    order_id: str,
-    test_code: str,
+    orderId: str,
+    testCode: str,
     validation_data: ResultValidationRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_validator)
@@ -100,33 +100,33 @@ def validate_results(
     Validate test results
     """
     order_test = db.query(OrderTest).filter(
-        OrderTest.order_id == order_id,
-        OrderTest.test_code == test_code
+        OrderTest.orderId == orderId,
+        OrderTest.testCode == testCode
     ).first()
-    
+
     if not order_test:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Test {test_code} not found in order {order_id}"
+            detail=f"Test {testCode} not found in order {orderId}"
         )
-    
+
     if order_test.status != TestStatus.COMPLETED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Test must be completed before validation"
         )
-    
+
     # Update validation
-    order_test.result_validated_at = datetime.utcnow()
-    order_test.validated_by = current_user.id
-    order_test.validation_notes = validation_data.validationNotes
-    
+    order_test.resultValidatedAt = datetime.utcnow()
+    order_test.validatedBy = current_user.id
+    order_test.validationNotes = validation_data.validationNotes
+
     if validation_data.decision == ValidationDecision.APPROVED:
         order_test.status = TestStatus.VALIDATED
     elif validation_data.decision == ValidationDecision.REJECTED:
         order_test.status = TestStatus.REJECTED
-    
+
     db.commit()
     db.refresh(order_test)
-    
+
     return order_test

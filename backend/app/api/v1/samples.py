@@ -18,7 +18,7 @@ router = APIRouter()
 
 @router.get("/samples", response_model=List[SampleResponse])
 def get_samples(
-    order_id: str | None = None,
+    orderId: str | None = None,
     status: SampleStatus | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -29,31 +29,31 @@ def get_samples(
     Get all samples with optional filters
     """
     query = db.query(Sample)
-    
-    if order_id:
-        query = query.filter(Sample.order_id == order_id)
-    
+
+    if orderId:
+        query = query.filter(Sample.orderId == orderId)
+
     if status:
         query = query.filter(Sample.status == status)
-    
+
     samples = query.offset(skip).limit(limit).all()
     return samples
 
 
-@router.get("/samples/{sample_id}", response_model=SampleResponse)
+@router.get("/samples/{sampleId}", response_model=SampleResponse)
 def get_sample(
-    sample_id: str,
+    sampleId: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
     Get sample by ID
     """
-    sample = db.query(Sample).filter(Sample.sample_id == sample_id).first()
+    sample = db.query(Sample).filter(Sample.sampleId == sampleId).first()
     if not sample:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Sample {sample_id} not found"
+            detail=f"Sample {sampleId} not found"
         )
     return sample
 
@@ -70,9 +70,9 @@ def get_pending_samples(
     return samples
 
 
-@router.patch("/samples/{sample_id}/collect", response_model=SampleResponse)
+@router.patch("/samples/{sampleId}/collect", response_model=SampleResponse)
 def collect_sample(
-    sample_id: str,
+    sampleId: str,
     collect_data: SampleCollectRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech)
@@ -80,49 +80,49 @@ def collect_sample(
     """
     Mark sample as collected
     """
-    sample = db.query(Sample).filter(Sample.sample_id == sample_id).first()
+    sample = db.query(Sample).filter(Sample.sampleId == sampleId).first()
     if not sample:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Sample {sample_id} not found"
+            detail=f"Sample {sampleId} not found"
         )
-    
+
     if sample.status != SampleStatus.PENDING:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Sample {sample_id} is not pending collection"
+            detail=f"Sample {sampleId} is not pending collection"
         )
-    
+
     # Update sample
     sample.status = SampleStatus.COLLECTED
-    sample.collected_at = datetime.utcnow()
-    sample.collected_by = current_user.id
-    sample.collected_volume = collect_data.collectedVolume
-    sample.actual_container_type = collect_data.actualContainerType
-    sample.actual_container_color = collect_data.actualContainerColor
-    sample.collection_notes = collect_data.collectionNotes
-    sample.remaining_volume = collect_data.collectedVolume
-    sample.updated_by = current_user.id
-    
+    sample.collectedAt = datetime.utcnow()
+    sample.collectedBy = current_user.id
+    sample.collectedVolume = collect_data.collectedVolume
+    sample.actualContainerType = collect_data.actualContainerType
+    sample.actualContainerColor = collect_data.actualContainerColor
+    sample.collectionNotes = collect_data.collectionNotes
+    sample.remainingVolume = collect_data.collectedVolume
+    sample.updatedBy = current_user.id
+
     # Update associated order tests
     order_tests = db.query(OrderTest).filter(
-        OrderTest.order_id == sample.order_id,
-        OrderTest.test_code.in_(sample.test_codes)
+        OrderTest.orderId == sample.orderId,
+        OrderTest.testCode.in_(sample.testCodes)
     ).all()
-    
+
     for order_test in order_tests:
         order_test.status = TestStatus.SAMPLE_COLLECTED
-        order_test.sample_id = sample_id
-    
+        order_test.sampleId = sampleId
+
     db.commit()
     db.refresh(sample)
-    
+
     return sample
 
 
-@router.patch("/samples/{sample_id}/reject", response_model=SampleResponse)
+@router.patch("/samples/{sampleId}/reject", response_model=SampleResponse)
 def reject_sample(
-    sample_id: str,
+    sampleId: str,
     reject_data: SampleRejectRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech)
@@ -130,38 +130,38 @@ def reject_sample(
     """
     Reject a sample
     """
-    sample = db.query(Sample).filter(Sample.sample_id == sample_id).first()
+    sample = db.query(Sample).filter(Sample.sampleId == sampleId).first()
     if not sample:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Sample {sample_id} not found"
+            detail=f"Sample {sampleId} not found"
         )
-    
+
     if sample.status != SampleStatus.COLLECTED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Sample {sample_id} must be collected before rejection"
+            detail=f"Sample {sampleId} must be collected before rejection"
         )
-    
+
     # Update sample
     sample.status = SampleStatus.REJECTED
-    sample.rejected_at = datetime.utcnow()
-    sample.rejected_by = current_user.id
-    sample.rejection_reasons = [r.value for r in reject_data.rejectionReasons]
-    sample.rejection_notes = reject_data.rejectionNotes
-    sample.recollection_required = reject_data.recollectionRequired
-    sample.updated_by = current_user.id
-    
+    sample.rejectedAt = datetime.utcnow()
+    sample.rejectedBy = current_user.id
+    sample.rejectionReasons = [r.value for r in reject_data.rejectionReasons]
+    sample.rejectionNotes = reject_data.rejectionNotes
+    sample.recollectionRequired = reject_data.recollectionRequired
+    sample.updatedBy = current_user.id
+
     # Update associated order tests
     order_tests = db.query(OrderTest).filter(
-        OrderTest.order_id == sample.order_id,
-        OrderTest.test_code.in_(sample.test_codes)
+        OrderTest.orderId == sample.orderId,
+        OrderTest.testCode.in_(sample.testCodes)
     ).all()
-    
+
     for order_test in order_tests:
         order_test.status = TestStatus.REJECTED
-    
+
     db.commit()
     db.refresh(sample)
-    
+
     return sample

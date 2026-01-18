@@ -41,13 +41,13 @@ def generate_id(entity_type: str, db: Session) -> str:
     
     model_map = {
         "patient": (Patient, "id"),
-        "order": (Order, "order_id"),
-        "sample": (Sample, "sample_id"),
-        "aliquot": (Aliquot, "aliquot_id"),
-        "invoice": (Invoice, "invoice_id"),
-        "payment": (Payment, "payment_id"),
-        "claim": (InsuranceClaim, "claim_id"),
-        "report": (Report, "report_id"),
+        "order": (Order, "orderId"),
+        "sample": (Sample, "sampleId"),
+        "aliquot": (Aliquot, "aliquotId"),
+        "invoice": (Invoice, "invoiceId"),
+        "payment": (Payment, "paymentId"),
+        "claim": (InsuranceClaim, "claimId"),
+        "report": (Report, "reportId"),
         "user": (User, "id"),
     }
     
