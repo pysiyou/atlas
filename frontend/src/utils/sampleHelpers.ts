@@ -39,8 +39,8 @@ export function getCollectionRequirements(sampleType: SampleType): {
   const def = getSampleDefinition(sampleType);
   
   return {
-    collectionType: def.collectionSource || def.code,
-    isDerived: def.isDerived,
+    collectionType: sampleType,
+    isDerived: def.isDerived ?? false,
     label: def.collectionInstruction || `Collect ${def.label}`
   };
 }

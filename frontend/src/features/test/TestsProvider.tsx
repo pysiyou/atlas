@@ -5,7 +5,7 @@
 
 import React, { type ReactNode, useCallback, useState, useEffect } from 'react';
 import type { Test, TestCategory } from '@/types';
-import { TestsContext, type TestsContextType } from './TestsContext';
+import { TestsContext, type TestsContextType, type TestError } from './TestsContext';
 import { testAPI } from '@/services/api';
 
 interface TestsProviderProps {
@@ -15,7 +15,14 @@ interface TestsProviderProps {
 export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
   const [tests, setTests] = useState<Test[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<TestError | null>(null);
+
+  /**
+   * Clear any error state
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   /**
    * Refresh tests from backend
@@ -27,8 +34,12 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
       const data = await testAPI.getAll();
       setTests(data);
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load tests';
       console.error('Failed to load tests:', err);
-      setError('Failed to load tests');
+      setError({
+        message: errorMessage,
+        operation: 'load',
+      });
       setTests([]);
     } finally {
       setLoading(false);
@@ -218,6 +229,7 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
     getTestByLoincCode,
     getTestsBySampleRequirements,
     updateTestPrice,
+    clearError,
   };
 
   return <TestsContext.Provider value={value}>{children}</TestsContext.Provider>;

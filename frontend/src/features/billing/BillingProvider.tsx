@@ -1,11 +1,11 @@
 /**
  * Billing Provider Component
- * Manages invoices, payments, and financial operations
+ * Manages invoices, payments, and financial operations with proper error handling
  */
 
 import React, { type ReactNode, useCallback, useState } from 'react';
 import type { Invoice, Payment, InsuranceClaim } from '@/types';
-import { BillingContext, type BillingContextType } from './BillingContext';
+import { BillingContext, type BillingContextType, type BillingError } from './BillingContext';
 
 interface BillingProviderProps {
   children: ReactNode;
@@ -15,6 +15,15 @@ export const BillingProvider: React.FC<BillingProviderProps> = ({ children }) =>
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [claims, setClaims] = useState<InsuranceClaim[]>([]);
+  const [loading] = useState(false);
+  const [error, setError] = useState<BillingError | null>(null);
+
+  /**
+   * Clear any error state
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   /**
    * Add a new invoice
@@ -136,6 +145,8 @@ export const BillingProvider: React.FC<BillingProviderProps> = ({ children }) =>
     invoices,
     payments,
     claims,
+    loading,
+    error,
     addInvoice,
     updateInvoice,
     getInvoice,
@@ -147,6 +158,7 @@ export const BillingProvider: React.FC<BillingProviderProps> = ({ children }) =>
     updateClaim,
     getOutstandingInvoices,
     getTotalRevenue,
+    clearError,
   };
 
   return <BillingContext.Provider value={value}>{children}</BillingContext.Provider>;

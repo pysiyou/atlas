@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Gender, AffiliationDuration, Affiliation } from '@/types';
+import type { Gender, AffiliationDuration, Affiliation, Patient } from '@/types';
 import {
   validateRequired,
   validateLength,
@@ -62,7 +62,7 @@ export const getAffiliationStatus = (affiliation?: Affiliation): 'active' | 'exp
   return isAffiliationActive(affiliation) ? 'active' : 'expired';
 };
 
-export const usePatientForm = (initialData?: any) => {
+export const usePatientForm = (initialData?: Partial<Patient>) => {
   const [formData, setFormData] = useState<PatientFormData>(() => {
     if (initialData) {
       return {

@@ -2,27 +2,26 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useOrders } from '@/features/order/OrderContext';
 import { usePatients } from '@/hooks';
-import { useTests } from '@/features/test/useTests';
-import { useFiltering } from '@/hooks/useFiltering';
+import { useTests } from '@/features/test/TestsContext';
+import { useFiltering } from '@/utils/filtering';
 import { Table, Button, EmptyState } from '@/shared/ui';
 import { Plus } from 'lucide-react';
 import { OrderFilters } from './OrderFilters';
 import { getOrderTableColumns } from './OrderTableColumns';
 import { getPatientName, getTestName } from '@/utils/typeHelpers';
+import { ErrorAlert } from '@/shared/components/ErrorAlert';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
 
 export const OrderList: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const ordersContext = useOrders();
-  const patientsContext = usePatients();
-  const testsContext = useTests();
+  const { orders, error, clearError, refreshOrders, loading } = useOrders();
+  const { patients } = usePatients();
+  const { tests } = useTests();
   const patientIdFilter = searchParams.get('patientId');
 
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
   const [paymentFilters, setPaymentFilters] = useState<PaymentStatus[]>([]);
-
-  const orders = ordersContext?.orders || [];
   
   // Use shared filtering hook for search and order status filters
   const { 
@@ -35,7 +34,7 @@ export const OrderList: React.FC = () => {
     searchFields: (order) => [
       order.orderId, 
       order.patientId,
-      getPatientName(order.patientId, patientsContext.patients)
+      getPatientName(order.patientId, patients)
     ],
     statusField: 'overallStatus',
     defaultSort: { field: 'orderDate', direction: 'desc' }
@@ -72,20 +71,33 @@ export const OrderList: React.FC = () => {
     return filtered;
   }, [preFilteredOrders, patientIdFilter, dateRange, paymentFilters]);
 
-  if (!ordersContext || !patientsContext || !testsContext) {
-    return <div>Loading...</div>;
-  }
-
-  const getPatientNameFn = (patientId: string) =>
-    getPatientName(patientId, patientsContext.patients);
-  const getTestNameFn = (testCode: string) =>
-    getTestName(testCode, testsContext.tests);
+  // Helper functions for getting names
+  const getPatientNameFn = useMemo(
+    () => (patientId: string) => getPatientName(patientId, patients),
+    [patients]
+  );
+  const getTestNameFn = useMemo(
+    () => (testCode: string) => getTestName(testCode, tests),
+    [tests]
+  );
 
   // Memoize columns to prevent recreation on every render
   const columns = useMemo(
     () => getOrderTableColumns(navigate, getPatientNameFn, getTestNameFn),
     [navigate, getPatientNameFn, getTestNameFn]
   );
+
+  // Show loading state
+  if (loading && orders.length === 0) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600"></div>
+          <p className="mt-2 text-gray-600">Loading orders...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col p-4 space-y-6">
@@ -101,6 +113,16 @@ export const OrderList: React.FC = () => {
           Create New Order
         </Button>
       </div>
+
+      {/* Error Alert */}
+      {error && (
+        <ErrorAlert
+          error={error}
+          onDismiss={clearError}
+          onRetry={refreshOrders}
+          className="shrink-0"
+        />
+      )}
 
       <div className="flex-1 flex flex-col bg-white rounded border border-gray-200 overflow-hidden min-h-0 text-xs">
         <OrderFilters

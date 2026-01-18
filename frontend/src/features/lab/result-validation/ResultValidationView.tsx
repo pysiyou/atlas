@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useOrders } from '@/features/order/OrderContext';
-import { useTests } from '@/features/test/useTests';
+import { useTests } from '@/features/test/TestsContext';
 import { usePatients } from '@/hooks';
-import { useSamples } from '@/features/lab/useSamples';
+import { useSamples } from '@/features/lab/SamplesContext';
 import { getPatientName, getTestName, getTestSampleType } from '@/utils/typeHelpers';
 import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
 import { SearchBar, EmptyState } from '@/shared/ui';
 import { ResultValidationCard } from './ValidationCard';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
-import { useTestFiltering } from '../useTestFiltering';
+import { useSearch } from '@/utils/filtering';
 import type { TestWithContext } from '@/types';
 /**
  * Filter function for test search
@@ -84,7 +84,7 @@ export const ResultValidation: React.FC = () => {
       })
     : [];
 
-  const { filteredItems: filteredTests, searchQuery, setSearchQuery, isEmpty } = useTestFiltering(
+  const { filteredItems: filteredTests, searchQuery, setSearchQuery, isEmpty } = useSearch(
     allTests,
     filterTest
   );

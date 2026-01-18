@@ -7,7 +7,7 @@
 
 import React, { useMemo, createElement } from 'react';
 import { useModal } from '@/shared/contexts/ModalContext';
-import { useSamples } from '@/features/lab/useSamples';
+import { useSamples } from '@/features/lab/SamplesContext';
 import { getRegisteredModal } from './modalRegistry';
 import { initializeModalRegistry } from './registerModals';
 

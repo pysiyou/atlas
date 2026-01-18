@@ -6,8 +6,8 @@
 import React from 'react';
 import { usePatients } from '@/hooks';
 import { useOrders } from '@/features/order/OrderContext';
-import { useTests } from '@/features/test/useTests';
-import { useBilling } from '@/features/billing/useBilling';
+import { useTests } from '@/features/test/TestsContext';
+import { useBilling } from '@/features/billing/BillingContext';
 import { Card, SectionContainer, Table } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import { Users, FileText, Beaker, DollarSign } from 'lucide-react';

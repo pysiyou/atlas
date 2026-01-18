@@ -1,111 +1,83 @@
 /**
  * Formatting Utilities
+ * Common formatting functions for dates, currency, phone numbers, etc.
  */
 
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, isValid } from 'date-fns';
 
 /**
- * Format currency amount
+ * Format a date string or Date object to a human-readable format
+ * @param date - ISO date string or Date object
+ * @param formatStr - date-fns format string (default: 'MMM d, yyyy')
+ * @returns Formatted date string or empty string if invalid
  */
-export const formatCurrency = (amount: number, currency: string = 'USD'): string => {
+export function formatDate(date: string | Date | undefined | null, formatStr = 'MMM d, yyyy'): string {
+  if (!date) return '';
+  
+  try {
+    const dateObj = typeof date === 'string' ? parseISO(date) : date;
+    if (!isValid(dateObj)) return '';
+    return format(dateObj, formatStr);
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Format a number as currency (USD)
+ * @param amount - Number to format
+ * @returns Formatted currency string
+ */
+export function formatCurrency(amount: number | undefined | null): string {
+  if (amount === undefined || amount === null) return '$0.00';
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: currency,
+    currency: 'USD',
   }).format(amount);
-};
+}
 
 /**
- * Format date to readable format
+ * Format a phone number to (XXX) XXX-XXXX format
+ * @param phone - Phone number string
+ * @returns Formatted phone number or original string if invalid
  */
-export const formatDate = (date: string | Date | undefined | null): string => {
-  if (!date) return 'N/A';
-  const dateObj = typeof date === 'string' ? parseISO(date) : date;
-  if (!isValidDate(dateObj)) return 'Invalid Date';
-  return format(dateObj, 'MMM dd, yyyy');
-};
-
-/**
- * Format date and time to readable format
- */
-export const formatDateTime = (date: string | Date | undefined | null): string => {
-  if (!date) return 'N/A';
-  const dateObj = typeof date === 'string' ? parseISO(date) : date;
-  if (!isValidDate(dateObj)) return 'Invalid Date';
-  return format(dateObj, 'MMM dd, yyyy HH:mm');
-};
-
-/**
- * Format time only
- */
-export const formatTime = (date: string | Date | undefined | null): string => {
-  if (!date) return '';
-  const dateObj = typeof date === 'string' ? parseISO(date) : date;
-  if (!isValidDate(dateObj)) return '';
-  return format(dateObj, 'HH:mm');
-};
-
-/**
- * Calculate age from date of birth
- */
-export const calculateAge = (dateOfBirth: string | Date | undefined): number => {
-  if (!dateOfBirth) return 0;
-  const dob = typeof dateOfBirth === 'string' ? parseISO(dateOfBirth) : dateOfBirth;
+export function formatPhoneNumber(phone: string | undefined | null): string {
+  if (!phone) return '';
   
-  if (!isValidDate(dob)) return 0;
-
-  const today = new Date();
-  let age = today.getFullYear() - dob.getFullYear();
-  const monthDiff = today.getMonth() - dob.getMonth();
-  
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-    age--;
-  }
-  
-  return age;
-};
-
-const isValidDate = (d: any): d is Date => {
-  return d instanceof Date && !isNaN(d.getTime());
-};
-
-/**
- * Format phone number to standard format
- */
-export const formatPhoneNumber = (phone: string): string => {
+  // Remove all non-digits
   const digits = phone.replace(/\D/g, '');
   
+  // Format as (XXX) XXX-XXXX if 10 digits
   if (digits.length === 10) {
     return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
   }
   
+  // Return original if not 10 digits
   return phone;
-};
+}
 
 /**
- * Format patient name to title case
+ * Calculate age from date of birth
+ * @param dateOfBirth - ISO date string or Date object
+ * @returns Age in years
  */
-export const formatName = (name: string): string => {
-  return name
-    .toLowerCase()
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-};
-
-/**
- * Format test result with unit
- */
-export const formatTestResult = (value: string | number, unit?: string): string => {
-  if (unit) {
-    return `${value} ${unit}`;
+export function calculateAge(dateOfBirth: string | Date | undefined | null): number {
+  if (!dateOfBirth) return 0;
+  
+  try {
+    const birthDate = typeof dateOfBirth === 'string' ? parseISO(dateOfBirth) : dateOfBirth;
+    if (!isValid(birthDate)) return 0;
+    
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
+  } catch {
+    return 0;
   }
-  return String(value);
-};
-
-/**
- * Truncate text to specified length
- */
-export const truncateText = (text: string, maxLength: number): string => {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
-};
+}

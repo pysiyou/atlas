@@ -2,8 +2,8 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useOrders } from '@/features/order/OrderContext';
 import { usePatients } from '@/hooks';
-import { useBilling } from '@/features/billing/useBilling';
-import { useTests } from '@/features/test/useTests';
+import { useBilling } from '@/features/billing/BillingContext';
+import { useTests } from '@/features/test/TestsContext';
 import { Button, Avatar, Badge, Icon, SectionContainer, IconButton, EmptyState } from '@/shared/ui';
 import { formatCurrency, calculateAge } from '@/utils';
 import { getTestName, getTestSampleType, getTestCategory } from '@/utils/typeHelpers';
@@ -351,10 +351,10 @@ export const OrderDetail: React.FC = () => {
                           {testName}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">
-                          <Badge variant={category as any} size="sm" />
+                          <Badge variant={category as 'default'} size="sm" />
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">
-                          <Badge variant={sampleType as any} size="sm" />
+                          <Badge variant={sampleType as 'default'} size="sm" />
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">
                           <Badge

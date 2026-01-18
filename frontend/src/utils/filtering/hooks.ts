@@ -1,57 +1,33 @@
 /**
- * Generic Filtering Hook
- * Provides reusable filtering, searching, and sorting functionality
+ * Filtering Hooks
+ * React hooks for filtering, searching, and sorting
  */
 
 import { useState, useMemo, useCallback } from 'react';
-
-type SortDirection = 'asc' | 'desc';
-
-interface SortConfig<T> {
-  field: keyof T;
-  direction: SortDirection;
-}
-
-interface UseFilteringOptions<T, S extends string = string> {
-  /** Function to get searchable string fields from an item */
-  searchFields?: (item: T) => string[];
-  /** Default sort configuration */
-  defaultSort?: SortConfig<T>;
-  /** Available status values for filtering */
-  statusField?: keyof T;
-  /** Initial status filters */
-  initialStatusFilters?: S[];
-}
-
-interface UseFilteringReturn<T, S extends string = string> {
-  /** Filtered and sorted items */
-  filteredItems: T[];
-  /** Current search query */
-  searchQuery: string;
-  /** Set search query */
-  setSearchQuery: (query: string) => void;
-  /** Current status filters */
-  statusFilters: S[];
-  /** Set status filters */
-  setStatusFilters: (filters: S[]) => void;
-  /** Toggle a status filter */
-  toggleStatusFilter: (status: S) => void;
-  /** Current sort configuration */
-  sortConfig: SortConfig<T> | null;
-  /** Set sort field and direction */
-  setSort: (field: keyof T, direction?: SortDirection) => void;
-  /** Toggle sort direction for a field */
-  toggleSort: (field: keyof T) => void;
-  /** Whether the filtered result is empty */
-  isEmpty: boolean;
-  /** Whether search is active */
-  hasActiveSearch: boolean;
-  /** Clear all filters */
-  clearFilters: () => void;
-}
+import type {
+  SortDirection,
+  SortConfig,
+  UseFilteringOptions,
+  UseFilteringReturn,
+} from './types';
 
 /**
  * Generic hook for filtering, searching, and sorting lists
+ * 
+ * @example
+ * ```typescript
+ * const {
+ *   filteredItems,
+ *   searchQuery,
+ *   setSearchQuery,
+ *   statusFilters,
+ *   setStatusFilters,
+ * } = useFiltering<Patient, Gender>(patients, {
+ *   searchFields: (p) => [p.name, p.email],
+ *   statusField: 'gender',
+ *   defaultSort: { field: 'name', direction: 'asc' },
+ * });
+ * ```
  */
 export function useFiltering<T, S extends string = string>(
   items: T[],
@@ -146,6 +122,14 @@ export function useFiltering<T, S extends string = string>(
 /**
  * Simpler search-only filtering hook
  * For cases where you just need search functionality
+ * 
+ * @example
+ * ```typescript
+ * const { filteredItems, searchQuery, setSearchQuery } = useSearch(
+ *   items,
+ *   (item, query) => item.name.toLowerCase().includes(query.toLowerCase())
+ * );
+ * ```
  */
 export function useSearch<T>(
   items: T[],
@@ -163,5 +147,47 @@ export function useSearch<T>(
     searchQuery,
     setSearchQuery,
     isEmpty: filteredItems.length === 0,
+  };
+}
+
+/**
+ * Hook for managing multi-select filter state
+ * 
+ * @example
+ * ```typescript
+ * const { selected, toggle, clear, isSelected } = useMultiSelect<OrderStatus>(['pending']);
+ * ```
+ */
+export function useMultiSelect<T extends string>(initialValues: T[] = []) {
+  const [selected, setSelected] = useState<T[]>(initialValues);
+
+  const toggle = useCallback((value: T) => {
+    setSelected(prev =>
+      prev.includes(value)
+        ? prev.filter(v => v !== value)
+        : [...prev, value]
+    );
+  }, []);
+
+  const clear = useCallback(() => {
+    setSelected([]);
+  }, []);
+
+  const isSelected = useCallback((value: T) => {
+    return selected.includes(value);
+  }, [selected]);
+
+  const selectAll = useCallback((values: T[]) => {
+    setSelected(values);
+  }, []);
+
+  return {
+    selected,
+    setSelected,
+    toggle,
+    clear,
+    isSelected,
+    selectAll,
+    hasSelection: selected.length > 0,
   };
 }

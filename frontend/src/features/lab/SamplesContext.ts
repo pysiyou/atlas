@@ -3,7 +3,7 @@
  * Separate file for context to support Fast Refresh
  */
 
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 import type {
   Sample,
   SampleStatus,
@@ -13,12 +13,25 @@ import type {
 } from '@/types';
 
 /**
+ * Error state for sample operations
+ */
+export interface SampleError {
+  message: string;
+  code?: string;
+  operation?: 'load' | 'collect' | 'reject' | 'update';
+}
+
+/**
  * SamplesContext type definition
  */
 export interface SamplesContextType {
+  /** List of all samples */
   samples: Sample[];
+  /** Loading state for async operations */
   loading: boolean;
-  error: string | null;
+  /** Error state for failed operations */
+  error: SampleError | null;
+  /** Refresh samples from backend */
   refreshSamples: () => Promise<void>;
 
   // Query operations
@@ -43,9 +56,24 @@ export interface SamplesContextType {
     notes?: string,
     requireRecollection?: boolean
   ) => Promise<void>;
+
+  /** Clear any error state */
+  clearError: () => void;
 }
 
 /**
  * React Context for Samples
  */
 export const SamplesContext = createContext<SamplesContextType | undefined>(undefined);
+
+/**
+ * Hook to access the Samples context
+ * @throws Error if used outside of SamplesProvider
+ */
+export function useSamples(): SamplesContextType {
+  const context = useContext(SamplesContext);
+  if (!context) {
+    throw new Error('useSamples must be used within a SamplesProvider');
+  }
+  return context;
+}

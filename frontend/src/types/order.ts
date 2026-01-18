@@ -38,6 +38,8 @@ export interface TestResult {
 export interface OrderTest {
   // Identity
   testCode: string;                    // Links to Test catalog
+  testName: string;                    // From API relationship
+  sampleType: string;                  // From API relationship
 
   // Order-specific state
   status: TestStatus;
@@ -80,7 +82,8 @@ export interface OrderTest {
 export interface Order {
   // Identity
   orderId: string;
-  patientId: string;                   // Links to Patient (no patientName)
+  patientId: string;                   // Links to Patient
+  patientName: string;                 // From API relationship
   orderDate: string;
 
   // Tests

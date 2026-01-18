@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { useAppointments } from '@/features/appointment/useAppointments';
+import { useAppointments } from '@/features/appointment/AppointmentsContext';
 import { SectionContainer, Badge } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { Calendar as CalendarIcon } from 'lucide-react';

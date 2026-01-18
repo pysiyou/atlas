@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { usePatients } from '@/hooks';
 import { useOrders } from '@/features/order/OrderContext';
-import { useTests } from '@/features/test/useTests';
-import { useBilling } from '@/features/billing/useBilling';
+import { useTests } from '@/features/test/TestsContext';
+import { useBilling } from '@/features/billing/BillingContext';
 import { SectionContainer, Badge, Button } from '@/shared/ui';
 import { generateOrderId, generateInvoiceId, formatCurrency } from '@/utils';
 import type { Order, OrderTest, Invoice } from '@/types';
@@ -105,6 +105,8 @@ export const CreateOrder: React.FC = () => {
 
         return {
           testCode: test.code,
+          testName: test.name,
+          sampleType: test.sampleType,
           status: 'pending',
           priceAtOrder: test.price,
           results: null,
@@ -114,6 +116,7 @@ export const CreateOrder: React.FC = () => {
       const newOrder: Order = {
         orderId,
         patientId: selectedPatient.id,
+        patientName: selectedPatient.fullName,
         orderDate: new Date().toISOString(),
         referringPhysician: formData.referringPhysician.trim() || undefined,
         tests: orderTests,

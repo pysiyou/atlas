@@ -47,7 +47,7 @@ export const LoginForm: React.FC = () => {
       } else {
         setError('Invalid username or password');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred during login. Please try again.');
     } finally {
       setIsSubmitting(false);

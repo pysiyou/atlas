@@ -1,14 +1,17 @@
 /**
- * Orders Context, Provider, and Hook
- * Consolidates order state management into a single module:
- * - OrdersContext: React Context for order data
- * - OrdersProvider: Provider component managing order operations
- * - useOrders: Hook to consume order context
+ * Orders Provider Component
+ * Manages test orders and operations with proper error handling
  */
 
 import React, { type ReactNode, useCallback, useState, useEffect } from 'react';
-import type { Order, OrderStatus, TestStatus, OrderTest, TestResult } from '@/types';
-import { createFeatureContext } from '@/shared/context/createFeatureContext';
+import type { Order, OrderStatus, TestStatus, OrderTest } from '@/types';
+import {
+  OrdersContext,
+  type OrdersContextType,
+  type OrderError,
+  type TestStatusUpdateData,
+  type CollectionData,
+} from './OrderContext';
 import { orderAPI } from '@/services/api';
 import {
   updateOrderTestStatus,
@@ -19,96 +22,25 @@ import {
   getAllTestsNeedingCollection,
 } from '@/utils/orderUtils';
 
-// ============================================================================
-// Context Type Definition
-// ============================================================================
-
-/**
- * OrdersContext type definition
- */
-export interface OrdersContextType {
-  orders: Order[];
-  addOrder: (order: Order) => void;
-  updateOrder: (orderId: string, updates: Partial<Order>) => void;
-  deleteOrder: (orderId: string) => void;
-  getOrder: (orderId: string) => Order | undefined;
-  updateTestStatus: (orderId: string, testCode: string, status: TestStatus, additionalData?: Partial<{ resultEnteredAt?: string; resultValidatedAt?: string; results?: Record<string, TestResult> | null; sampleId?: string; enteredBy?: string; validatedBy?: string; technicianNotes?: string; validationNotes?: string; flags?: string[]; }>) => void;
-  updateOrderStatus: (orderId: string, status: OrderStatus) => void;
-  getOrdersByStatus: (status: OrderStatus) => Order[];
-  getOrdersByPatient: (patientId: string) => Order[];
-  searchOrders: (query: string) => Order[];
-  refreshOrders: () => Promise<void>;
-  loading: boolean;
-
-  // Sample-based collection
-  collectSampleForTests: (
-    orderId: string,
-    testCodes: string[],
-    sampleId: string,
-    collectionData: {
-      collectionDate: string;
-      collectedBy: string;
-      collectionNotes?: string;
-    }
-  ) => void;
-
-  // Reflex testing
-  addReflexTest: (
-    orderId: string,
-    reflexTest: OrderTest,
-    triggeredByTestCode: string,
-    reflexRule: string
-  ) => void;
-
-  // Repeat testing
-  addRepeatTest: (
-    orderId: string,
-    originalTestCode: string,
-    repeatReason: string,
-    sampleId?: string
-  ) => void;
-
-  // Critical results
-  markTestCritical: (
-    orderId: string,
-    testCode: string,
-    notifiedTo: string
-  ) => void;
-
-  acknowledgeCriticalResult: (orderId: string, testCode: string) => void;
-
-  // Batch operations
-  getOrdersForBatchCollection: (sampleType: string) => Order[];
-
-  // Utility
-  getTestsNeedingCollection: () => { order: Order; test: OrderTest }[];
-}
-
-// ============================================================================
-// Context Creation
-// ============================================================================
-
-/**
- * React Context for Orders using generic factory
- */
-export const { Context: OrdersContext, useFeature: useOrders} = 
-  createFeatureContext<OrdersContextType>('Orders');
-
-// ============================================================================
-// Provider Component
-// ============================================================================
-
 interface OrdersProviderProps {
   children: ReactNode;
 }
 
 /**
  * Orders Provider Component
- * Manages test orders and operations
+ * Manages test orders and operations with comprehensive error handling
  */
 export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<OrderError | null>(null);
+
+  /**
+   * Clear any error state
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   /**
    * Refresh orders from backend
@@ -116,10 +48,16 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   const refreshOrders = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const data = await orderAPI.getAll();
       setOrders(data);
-    } catch (error) {
-      console.error('Failed to load orders:', error);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load orders';
+      console.error('Failed to load orders:', err);
+      setError({
+        message: errorMessage,
+        operation: 'load',
+      });
       setOrders([]);
     } finally {
       setLoading(false);
@@ -136,12 +74,18 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
    */
   const addOrder = useCallback(async (order: Order) => {
     try {
+      setError(null);
       const created = await orderAPI.create(order);
       setOrders(prev => [...prev, created]);
       await refreshOrders();
-    } catch (error) {
-      console.error('Failed to create order:', error);
-      throw error;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create order';
+      console.error('Failed to create order:', err);
+      setError({
+        message: errorMessage,
+        operation: 'create',
+      });
+      throw err;
     }
   }, [refreshOrders]);
 
@@ -150,6 +94,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
    */
   const updateOrder = useCallback(async (orderId: string, updates: Partial<Order>) => {
     try {
+      setError(null);
       const updated = await orderAPI.update(orderId, updates);
       setOrders(prev =>
         prev.map(order =>
@@ -157,9 +102,14 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
         )
       );
       await refreshOrders();
-    } catch (error) {
-      console.error('Failed to update order:', error);
-      throw error;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update order';
+      console.error('Failed to update order:', err);
+      setError({
+        message: errorMessage,
+        operation: 'update',
+      });
+      throw err;
     }
   }, [refreshOrders]);
 
@@ -168,7 +118,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
    */
   const deleteOrder = useCallback((orderId: string) => {
     setOrders(prev => prev.filter(order => order.orderId !== orderId));
-  }, [setOrders]);
+  }, []);
 
   /**
    * Get an order by ID
@@ -184,7 +134,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     orderId: string,
     testCode: string,
     status: TestStatus,
-    additionalData?: Partial<{ collectedAt?: string; resultEnteredAt?: string; resultValidatedAt?: string; results?: Record<string, TestResult> | null; sampleId?: string; enteredBy?: string; validatedBy?: string; technicianNotes?: string; validationNotes?: string; flags?: string[]; }>
+    additionalData?: Partial<TestStatusUpdateData>
   ) => {
     setOrders(prev =>
       prev.map(order =>
@@ -193,7 +143,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
           : order
       )
     );
-  }, [setOrders]);
+  }, []);
 
   /**
    * Update overall order status
@@ -237,11 +187,8 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     orderId: string,
     testCodes: string[],
     sampleId: string,
-    _collectionData: {
-      collectionDate: string;
-      collectedBy: string;
-      collectionNotes?: string;
-    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _collectionData: CollectionData
   ) => {
     setOrders(prev =>
       prev.map(order => {
@@ -272,7 +219,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
         return order;
       })
     );
-  }, [setOrders]);
+  }, []);
 
   /**
    * Add reflex test to an order
@@ -296,7 +243,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
         };
       })
     );
-  }, [setOrders]);
+  }, []);
 
   /**
    * Add repeat test
@@ -328,7 +275,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
         };
       })
     );
-  }, [setOrders]);
+  }, []);
 
   /**
    * Mark test as having critical values
@@ -351,7 +298,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
         return { ...order, tests: updatedTests, updatedAt: now };
       })
     );
-  }, [setOrders]);
+  }, []);
 
   /**
    * Acknowledge critical result
@@ -381,12 +328,13 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
         return order;
       })
     );
-  }, [setOrders]);
+  }, []);
 
   /**
    * Get orders that need collection for a specific sample type
    */
   const getOrdersForBatchCollection = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (_sampleType: string): Order[] => getOrdersNeedingCollection(orders),
     [orders]
   );
@@ -401,6 +349,8 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
 
   const value: OrdersContextType = {
     orders,
+    loading,
+    error,
     addOrder,
     updateOrder,
     deleteOrder,
@@ -418,7 +368,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     getOrdersForBatchCollection,
     getTestsNeedingCollection,
     refreshOrders,
-    loading,
+    clearError,
   };
 
   return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>;

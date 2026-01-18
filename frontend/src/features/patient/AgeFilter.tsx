@@ -60,41 +60,32 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
     });
   }, [getValueFromPosition]);
 
-  const handleMouseUp = useCallback(() => {
-    isDragging.current = null;
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
-    
-    // Commit the change
-    // access the latest state in a different way or pass it from somewhere else?
-    // Actually, localValue inside this callback might be stale if closure problems exist.
-    // However, we used setLocalValue updater which is fine, but we need the FINAL value to call onChange.
-    // simpler: pass the new value to onChange in mouse move? No, expensive.
-    // Solution: Use a ref to track current local value for commit
-  }, []);
-
   // Use a ref to keep track of latest local value for the mouseup commit
   const latestValueRef = useRef(localValue);
   useEffect(() => {
-      latestValueRef.current = localValue;
+    latestValueRef.current = localValue;
   }, [localValue]);
+
+  // Use ref to store the mouseup handler to avoid circular dependency
+  const mouseUpHandlerRef = useRef<() => void>(() => {});
   
-  // Re-bind mouseup to access correct ref
-  const handleMouseUpCommit = useCallback(() => {
+  // Update the handler ref whenever dependencies change
+  useEffect(() => {
+    mouseUpHandlerRef.current = () => {
       if (isDragging.current) {
-          onChange(latestValueRef.current);
+        onChange(latestValueRef.current);
       }
       isDragging.current = null;
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUpCommit);
-  }, [onChange]);
-  
-  // Need to fix the event listener attach/detach loop
-    const onMouseDown = (type: 'min' | 'max') => (e: React.MouseEvent) => {
+      document.removeEventListener('mouseup', mouseUpHandlerRef.current);
+    };
+  }, [onChange, handleMouseMove]);
+
+  const onMouseDown = (type: 'min' | 'max') => (e: React.MouseEvent) => {
     e.preventDefault();
     isDragging.current = type;
     document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUpCommit);
+    document.addEventListener('mouseup', mouseUpHandlerRef.current);
   };
 
 

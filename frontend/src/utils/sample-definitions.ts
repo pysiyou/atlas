@@ -1,99 +1,155 @@
-import type { SampleType } from '@/types';
+/**
+ * Sample Definitions
+ * Configuration for sample types, containers, and collection requirements
+ */
 
+import type { SampleType, ContainerType, ContainerTopColor } from '@/types';
+
+/**
+ * Sample definition interface
+ */
 export interface SampleDefinition {
-  code: SampleType;
+  sampleType: SampleType;
+  code: string;
   label: string;
-  isDerived: boolean;
-  collectionSource?: SampleType;
-  iconName: string; // Icon name for the Icon component
-  colors: {
-    bg: string;
-    text: string;
-  };
+  defaultContainer: ContainerType;
+  defaultTopColor: ContainerTopColor;
+  defaultVolume: number;
+  collectionNotes?: string;
+  collectionSource?: string;
   collectionInstruction?: string;
+  isDerived?: boolean;
 }
 
-export const SAMPLE_DEFINITIONS: Record<SampleType, SampleDefinition> = {
-  blood: { 
-    code: 'blood', 
-    label: 'Blood', 
-    isDerived: false, 
-    iconName: 'droplet', 
-    colors: { bg: 'bg-red-100', text: 'text-red-800' }
+/**
+ * Default sample definitions by sample type
+ */
+const SAMPLE_DEFINITIONS: Record<SampleType, SampleDefinition> = {
+  blood: {
+    sampleType: 'blood',
+    code: 'BLD',
+    label: 'Whole Blood',
+    defaultContainer: 'tube',
+    defaultTopColor: 'purple',
+    defaultVolume: 5,
+    collectionNotes: 'Venipuncture required',
+    collectionSource: 'venipuncture',
+    collectionInstruction: 'Draw from antecubital vein',
+    isDerived: false,
   },
-  plasma: { 
-    code: 'plasma', 
-    label: 'Plasma', 
-    isDerived: true, 
-    collectionSource: 'blood', // Physically collected as blood
-    iconName: 'droplet', // Uses same icon family
-    colors: { bg: 'bg-emerald-100', text: 'text-emerald-800' },
-    collectionInstruction: 'Collect Whole Blood'
+  serum: {
+    sampleType: 'serum',
+    code: 'SER',
+    label: 'Serum',
+    defaultContainer: 'tube',
+    defaultTopColor: 'red',
+    defaultVolume: 3,
+    collectionNotes: 'Allow to clot before centrifugation',
+    collectionSource: 'venipuncture',
+    collectionInstruction: 'Allow to clot 30 min, centrifuge',
+    isDerived: true,
   },
-  serum: { 
-    code: 'serum', 
-    label: 'Serum', 
-    isDerived: true, 
-    collectionSource: 'blood', // Physically collected as blood
-    iconName: 'droplet', 
-    colors: { bg: 'bg-amber-100', text: 'text-amber-800' },
-    collectionInstruction: 'Collect Whole Blood'
+  plasma: {
+    sampleType: 'plasma',
+    code: 'PLS',
+    label: 'Plasma',
+    defaultContainer: 'tube',
+    defaultTopColor: 'green',
+    defaultVolume: 3,
+    collectionNotes: 'Mix gently after collection',
+    collectionSource: 'venipuncture',
+    collectionInstruction: 'Centrifuge immediately after collection',
+    isDerived: true,
   },
   urine: {
-    code: 'urine',
+    sampleType: 'urine',
+    code: 'URN',
     label: 'Urine',
+    defaultContainer: 'cup',
+    defaultTopColor: 'yellow',
+    defaultVolume: 30,
+    collectionNotes: 'Clean catch midstream preferred',
+    collectionSource: 'patient',
+    collectionInstruction: 'Clean catch midstream collection',
     isDerived: false,
-    iconName: 'flask-conical', // approximated lab-flask
-    colors: { bg: 'bg-yellow-100', text: 'text-yellow-800' }
   },
   stool: {
-    code: 'stool',
+    sampleType: 'stool',
+    code: 'STL',
     label: 'Stool',
+    defaultContainer: 'cup',
+    defaultTopColor: 'gray',
+    defaultVolume: 10,
+    collectionNotes: 'Collect in provided container',
+    collectionSource: 'patient',
+    collectionInstruction: 'Collect in sterile container',
     isDerived: false,
-    iconName: 'circle', // generic
-    colors: { bg: 'bg-orange-100', text: 'text-orange-800' }
   },
   swab: {
-    code: 'swab',
+    sampleType: 'swab',
+    code: 'SWB',
     label: 'Swab',
+    defaultContainer: 'tube',
+    defaultTopColor: 'gray',
+    defaultVolume: 1,
+    collectionNotes: 'Use sterile technique',
+    collectionSource: 'site-specific',
+    collectionInstruction: 'Use sterile swab technique',
     isDerived: false,
-    iconName: 'dna', // approximated
-    colors: { bg: 'bg-green-100', text: 'text-green-800' }
-  },
-  tissue: {
-    code: 'tissue',
-    label: 'Tissue',
-    isDerived: false,
-    iconName: 'microscope',
-    colors: { bg: 'bg-purple-100', text: 'text-purple-800' }
   },
   csf: {
-    code: 'csf',
-    label: 'CSF',
+    sampleType: 'csf',
+    code: 'CSF',
+    label: 'Cerebrospinal Fluid',
+    defaultContainer: 'tube',
+    defaultTopColor: 'gray',
+    defaultVolume: 2,
+    collectionNotes: 'Lumbar puncture required - physician only',
+    collectionSource: 'lumbar puncture',
+    collectionInstruction: 'Physician collection only',
     isDerived: false,
-    iconName: 'droplet', // clear fluid
-    colors: { bg: 'bg-blue-100', text: 'text-blue-800' }
+  },
+  tissue: {
+    sampleType: 'tissue',
+    code: 'TIS',
+    label: 'Tissue',
+    defaultContainer: 'cup',
+    defaultTopColor: 'gray',
+    defaultVolume: 1,
+    collectionNotes: 'Place in formalin immediately',
+    collectionSource: 'biopsy',
+    collectionInstruction: 'Place in formalin immediately',
+    isDerived: false,
   },
   sputum: {
-    code: 'sputum',
+    sampleType: 'sputum',
+    code: 'SPT',
     label: 'Sputum',
+    defaultContainer: 'cup',
+    defaultTopColor: 'gray',
+    defaultVolume: 5,
+    collectionNotes: 'Early morning sample preferred',
+    collectionSource: 'patient',
+    collectionInstruction: 'Deep cough into sterile container',
     isDerived: false,
-    iconName: 'wind', // approximated
-    colors: { bg: 'bg-gray-100', text: 'text-gray-800' }
   },
   other: {
-    code: 'other',
+    sampleType: 'other',
+    code: 'OTH',
     label: 'Other',
+    defaultContainer: 'cup',
+    defaultTopColor: 'gray',
+    defaultVolume: 5,
+    collectionNotes: 'See specific test requirements',
+    collectionSource: 'varies',
+    collectionInstruction: 'See test-specific instructions',
     isDerived: false,
-    iconName: 'flask-round',
-    colors: { bg: 'bg-gray-100', text: 'text-gray-800' }
-  }
+  },
 };
 
 /**
- * Helper to get definition with fallback
+ * Get sample definition for a given sample type
  */
-export function getSampleDefinition(type: SampleType | string): SampleDefinition {
-  const normalizedType = (typeof type === 'string' ? type.toLowerCase() : type) as SampleType;
-  return SAMPLE_DEFINITIONS[normalizedType] || SAMPLE_DEFINITIONS.other;
+export function getSampleDefinition(sampleType: SampleType): SampleDefinition {
+  return SAMPLE_DEFINITIONS[sampleType] || SAMPLE_DEFINITIONS.other;
 }

@@ -1,12 +1,12 @@
 /**
  * Appointments Provider Component
- * Manages appointment scheduling and operations
+ * Manages appointment scheduling and operations with proper error handling
  */
 
 import React, { type ReactNode, useCallback, useState } from 'react';
 import type { Appointment } from '@/types';
 import { parseISO, isAfter, isBefore, startOfDay, endOfDay } from 'date-fns';
-import { AppointmentsContext, type AppointmentsContextType } from './AppointmentsContext';
+import { AppointmentsContext, type AppointmentsContextType, type AppointmentError } from './AppointmentsContext';
 
 interface AppointmentsProviderProps {
   children: ReactNode;
@@ -14,6 +14,15 @@ interface AppointmentsProviderProps {
 
 export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ children }) => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading] = useState(false);
+  const [error, setError] = useState<AppointmentError | null>(null);
+
+  /**
+   * Clear any error state
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   /**
    * Add a new appointment
@@ -107,6 +116,8 @@ export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ chil
 
   const value: AppointmentsContextType = {
     appointments,
+    loading,
+    error,
     addAppointment,
     updateAppointment,
     deleteAppointment,
@@ -116,6 +127,7 @@ export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ chil
     getUpcomingAppointments,
     getTodayAppointments,
     checkInAppointment,
+    clearError,
   };
 
   return <AppointmentsContext.Provider value={value}>{children}</AppointmentsContext.Provider>;

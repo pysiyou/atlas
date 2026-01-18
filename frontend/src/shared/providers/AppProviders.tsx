@@ -8,8 +8,8 @@ import React, { type ReactNode } from 'react';
 
 // Feature Providers
 import { AuthProvider } from '@/features/auth/AuthProvider';
-import { PatientsProvider } from '@/features/patient/PatientContext';
-import { OrdersProvider } from '@/features/order/OrderContext';
+import { PatientsProvider } from '@/features/patient/PatientProvider';
+import { OrdersProvider } from '@/features/order/OrderProvider';
 import { TestsProvider } from '@/features/test/TestsProvider';
 import { SamplesProvider } from '@/features/lab/SamplesProvider';
 import { AliquotsProvider } from '@/features/lab/AliquotsProvider';

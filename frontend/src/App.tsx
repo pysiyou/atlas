@@ -1,6 +1,6 @@
 /**
  * Main App Component
- * Sets up routing and context providers
+ * Sets up routing and context providers with error boundaries
  */
 
 import React from 'react';
@@ -10,6 +10,8 @@ import { Toaster } from 'react-hot-toast';
 // Composed Providers
 import { AppProviders } from '@/shared/providers';
 import { DataLoader } from '@/shared/components/DataLoader';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { FeatureErrorBoundary } from '@/shared/components/FeatureErrorBoundary';
 
 // Components
 import { LoginForm } from '@/features/auth/LoginForm';
@@ -33,15 +35,30 @@ import {
 import { ROUTES } from '@/config';
 
 /**
- * Protected Route Component
+ * Wrapper component for protected routes with feature error boundary
  */
-interface ProtectedRouteProps {
+interface ProtectedFeatureRouteProps {
   children: React.ReactNode;
+  featureName: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ 
+  children, 
+  featureName 
+}) => {
   const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <>{children}</> : <Navigate to={ROUTES.LOGIN} replace />;
+  
+  if (!isAuthenticated) {
+    return <Navigate to={ROUTES.LOGIN} replace />;
+  }
+  
+  return (
+    <DashboardLayout>
+      <FeatureErrorBoundary featureName={featureName}>
+        {children}
+      </FeatureErrorBoundary>
+    </DashboardLayout>
+  );
 };
 
 /**
@@ -53,85 +70,69 @@ const AppRoutes: React.FC = () => {
       {/* Public Routes */}
       <Route path={ROUTES.LOGIN} element={<LoginForm />} />
 
-      {/* Protected Routes */}
+      {/* Protected Routes with Feature Error Boundaries */}
       <Route
         path={ROUTES.DASHBOARD}
         element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <Dashboard />
-            </DashboardLayout>
-          </ProtectedRoute>
+          <ProtectedFeatureRoute featureName="Dashboard">
+            <Dashboard />
+          </ProtectedFeatureRoute>
         }
       />
       <Route
         path={`${ROUTES.PATIENTS}/*`}
         element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <Patients />
-            </DashboardLayout>
-          </ProtectedRoute>
+          <ProtectedFeatureRoute featureName="Patients">
+            <Patients />
+          </ProtectedFeatureRoute>
         }
       />
       <Route
         path={`${ROUTES.ORDERS}/*`}
         element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <Orders />
-            </DashboardLayout>
-          </ProtectedRoute>
+          <ProtectedFeatureRoute featureName="Orders">
+            <Orders />
+          </ProtectedFeatureRoute>
         }
       />
       <Route
         path={ROUTES.LABORATORY}
         element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <Laboratory />
-            </DashboardLayout>
-          </ProtectedRoute>
+          <ProtectedFeatureRoute featureName="Laboratory">
+            <Laboratory />
+          </ProtectedFeatureRoute>
         }
       />
       <Route
         path={ROUTES.APPOINTMENTS}
         element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <Appointments />
-            </DashboardLayout>
-          </ProtectedRoute>
+          <ProtectedFeatureRoute featureName="Appointments">
+            <Appointments />
+          </ProtectedFeatureRoute>
         }
       />
       <Route
         path={ROUTES.BILLING}
         element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <Billing />
-            </DashboardLayout>
-          </ProtectedRoute>
+          <ProtectedFeatureRoute featureName="Billing">
+            <Billing />
+          </ProtectedFeatureRoute>
         }
       />
       <Route
         path={ROUTES.REPORTS}
         element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <Reports />
-            </DashboardLayout>
-          </ProtectedRoute>
+          <ProtectedFeatureRoute featureName="Reports">
+            <Reports />
+          </ProtectedFeatureRoute>
         }
       />
       <Route
         path={ROUTES.ADMIN}
         element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <Admin />
-            </DashboardLayout>
-          </ProtectedRoute>
+          <ProtectedFeatureRoute featureName="Admin">
+            <Admin />
+          </ProtectedFeatureRoute>
         }
       />
 
@@ -144,41 +145,44 @@ const AppRoutes: React.FC = () => {
 
 /**
  * Main App Component
+ * Wrapped with global ErrorBoundary for catastrophic error handling
  */
 const App: React.FC = () => {
   return (
-    <Router>
-      <AppProviders>
-        <DataLoader>
-          <AppRoutes />
-        <ModalRenderer />
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 3000,
-            style: {
-              background: '#fff',
-              color: '#363636',
-            },
-            success: {
-              duration: 3000,
-              iconTheme: {
-                primary: '#10B981',
-                secondary: '#fff',
-              },
-            },
-            error: {
-              duration: 4000,
-              iconTheme: {
-                primary: '#EF4444',
-                secondary: '#fff',
-              },
-            },
-          }}
-        />
-        </DataLoader>
-      </AppProviders>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <AppProviders>
+          <DataLoader>
+            <AppRoutes />
+            <ModalRenderer />
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  background: '#fff',
+                  color: '#363636',
+                },
+                success: {
+                  duration: 3000,
+                  iconTheme: {
+                    primary: '#10B981',
+                    secondary: '#fff',
+                  },
+                },
+                error: {
+                  duration: 4000,
+                  iconTheme: {
+                    primary: '#EF4444',
+                    secondary: '#fff',
+                  },
+                },
+              }}
+            />
+          </DataLoader>
+        </AppProviders>
+      </Router>
+    </ErrorBoundary>
   );
 };
 

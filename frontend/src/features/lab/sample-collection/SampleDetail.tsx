@@ -8,7 +8,7 @@ import { Badge, Icon, SectionContainer, TabsList, useTabs, DetailField, IconButt
 import type { ContainerType } from '@/types';
 import Barcode from 'react-barcode';
 import toast from 'react-hot-toast';
-import { formatDateTime } from '../../../utils/formatters';
+import { formatDate as formatDateTime } from '@/utils';
 import { useUserDisplay } from '@/hooks';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { getContainerIconColor, getContainerColor, getCollectionRequirements } from '@/utils';
@@ -19,6 +19,18 @@ import { useSamples, useTests, usePatients, useOrders } from '@/hooks';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import type { SampleDisplay } from './types';
 import { AlertCircle, Clock } from 'lucide-react';
+
+/**
+ * Test detail information for requirements display
+ */
+interface TestDetail {
+  code: string;
+  fastingRequired?: boolean;
+  containerDescription?: string;
+  collectionNotes?: string;
+  rejectionCriteria?: string[];
+  minimumVolume?: number;
+}
 
 interface SampleDetailModalProps {
   isOpen: boolean;
@@ -36,7 +48,7 @@ interface SampleDetailModalProps {
 
 
 // Helper component to manage tabs state
-const RequirementsSection: React.FC<{ testDetails: any[] }> = ({ testDetails }) => {
+const RequirementsSection: React.FC<{ testDetails: TestDetail[] }> = ({ testDetails }) => {
   const tabs = useMemo(() => testDetails.map(test => ({
     id: test.code,
     label: test.code,

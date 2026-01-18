@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { useOrders, useTests, useAuth, useSamples, usePatients } from '@/hooks';
 import toast from 'react-hot-toast';
-import type { Sample, ContainerType, ContainerTopColor, SampleStatus } from '@/types';
+import type { Sample, ContainerType, ContainerTopColor, SampleStatus, Patient, Test } from '@/types';
 import { calculateRequiredSamples, sortByPriority, getCollectionRequirements } from '../../../utils/sampleHelpers';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { SampleCard } from './SampleCard';
 import { SearchBar, MultiSelectFilter, type FilterOption, EmptyState } from '@/shared/ui';
-import { useTestFiltering } from '../useTestFiltering';
+import { useSearch } from '@/utils/filtering';
 import type { SampleDisplay } from './types';
 
 // Sample status filter options with colors
@@ -15,7 +15,7 @@ const SAMPLE_STATUS_FILTER_OPTIONS: FilterOption[] = [
   { id: 'collected', label: 'COLLECTED', color: 'success' },
 ];
 
-const createFilterSample = (patients: any[], tests: any[]) => (display: SampleDisplay, query: string): boolean => {
+const createFilterSample = (patients: Patient[], tests: Test[]) => (display: SampleDisplay, query: string): boolean => {
   const lowerQuery = query.toLowerCase();
   const sampleType = display.sample?.sampleType;
   
@@ -129,7 +129,7 @@ export const SampleCollectionView: React.FC = () => {
 
   const filterSample = useMemo(() => createFilterSample(patients, tests), [patients, tests]);
 
-  const { filteredItems: filteredDisplays, searchQuery, setSearchQuery, isEmpty } = useTestFiltering(
+  const { filteredItems: filteredDisplays, searchQuery, setSearchQuery, isEmpty } = useSearch(
     allSampleDisplays,
     filterSample
   );

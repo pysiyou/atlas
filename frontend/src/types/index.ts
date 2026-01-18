@@ -13,7 +13,6 @@ export * from './sample';
 export * from './aliquot';
 export * from './appointment';
 export * from './billing';
-export * from './report';
 
 // Re-export types from feature-specific files
 export type { SampleDisplay, SampleRequirement } from '@/features/lab/sample-collection/types';

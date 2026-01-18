@@ -1,4 +1,3 @@
-
 /**
  * PatientList Component
  * Displays a filterable and sortable list of patients with actions
@@ -8,14 +7,15 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePatients } from '@/hooks';
 import { useOrders } from '../order/OrderContext';
-import { useFiltering } from '@/hooks/useFiltering';
+import { useFiltering } from '@/utils/filtering';
 import { Table, Button, Badge, Avatar, TableActionMenu, TableActionItem, EmptyState } from '@/shared/ui';
 import { Plus, Eye, Edit, FileText } from 'lucide-react';
 import { PatientFilters } from './PatientFilters';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
-import type { Patient, Gender } from '@/types';
+import type { Patient, Gender, Order } from '@/types';
 import { EditPatientModal } from './EditPatientModal';
 import { isAffiliationActive } from './usePatientForm';
+import { ErrorAlert } from '@/shared/components/ErrorAlert';
 
 /**
  * Generate table column definitions for patient list
@@ -25,7 +25,7 @@ import { isAffiliationActive } from './usePatientForm';
  */
 const getPatientTableColumns = (
   navigate: ReturnType<typeof useNavigate>,
-  getOrdersByPatient: (patientId: string) => any[]
+  getOrdersByPatient: (patientId: string) => Order[]
 ) => [
   {
     key: 'id',
@@ -159,13 +159,11 @@ const getPatientTableColumns = (
 
 export const PatientList: React.FC = () => {
   const navigate = useNavigate();
-  const patientsContext = usePatients();
-  const ordersContext = useOrders();
+  const { patients, error, clearError, refreshPatients, loading } = usePatients();
+  const { getOrdersByPatient } = useOrders();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
   const [ageRange, setAgeRange] = useState<[number, number]>([0, 150]);
-
-  const patients = patientsContext?.patients || [];
   
   // Use shared filtering hook for search and gender filters
   const { 
@@ -196,17 +194,23 @@ export const PatientList: React.FC = () => {
     });
   }, [preFilteredPatients, ageRange]);
 
-  if (!patientsContext || !ordersContext) {
-    return <div>Loading...</div>;
-  }
-  
-  const { getOrdersByPatient } = ordersContext;
-  
   // Memoize columns to prevent recreation on every render
   const columns = useMemo(
     () => getPatientTableColumns(navigate, getOrdersByPatient),
     [navigate, getOrdersByPatient]
   );
+
+  // Show loading state
+  if (loading && patients.length === 0) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600"></div>
+          <p className="mt-2 text-gray-600">Loading patients...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col p-4 space-y-6">
@@ -222,6 +226,16 @@ export const PatientList: React.FC = () => {
           New Patient
         </Button>
       </div>
+
+      {/* Error Alert */}
+      {error && (
+        <ErrorAlert
+          error={error}
+          onDismiss={clearError}
+          onRetry={refreshPatients}
+          className="shrink-0"
+        />
+      )}
 
       <div className="flex-1 flex flex-col bg-white rounded border border-gray-200 overflow-hidden min-h-0 text-xs">
         <PatientFilters

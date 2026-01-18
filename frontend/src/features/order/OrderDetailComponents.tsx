@@ -10,8 +10,6 @@
 import React from 'react';
 import { SectionContainer, Badge, Avatar } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
-import { useTests } from '@/features/test/useTests';
-import { getTestName, getTestSampleType } from '@/utils/typeHelpers';
 import type { OrderTest, PaymentStatus } from '@/types';
 
 // ============================================================================
@@ -140,23 +138,17 @@ export const TestListCard: React.FC<TestListCardProps> = ({
   tests,
   title,
 }) => {
-  const testsContext = useTests();
-  const testCatalog = testsContext?.tests || [];
-
   return (
     <SectionContainer title={title || `Tests (${tests.length})`}>
       <div className="space-y-3">
         {tests.map((test, index) => {
-          const testName = getTestName(test.testCode, testCatalog);
-          const sampleType = getTestSampleType(test.testCode, testCatalog);
-
           return (
             <div key={index} className="border border-gray-200 rounded p-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <div className="font-medium text-gray-900">{testName}</div>
+                  <div className="font-medium text-gray-900">{test.testName}</div>
                   <div className="text-sm text-gray-600">
-                    {test.testCode} • {sampleType}
+                    {test.testCode} • {test.sampleType}
                   </div>
                 </div>
                 <div className="text-right">

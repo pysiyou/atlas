@@ -1,12 +1,12 @@
 /**
  * Aliquots Provider Component
- * Manages sample aliquots for distributed testing
+ * Manages sample aliquots for distributed testing with proper error handling
  */
 
-import React, { useState, type ReactNode } from 'react';
+import React, { useState, useCallback, type ReactNode } from 'react';
 import type { Aliquot, AliquotPlan, AliquotStatus, ContainerType } from '@/types';
 import { generateAliquotId } from '@/utils/sampleHelpers';
-import { AliquotsContext, type AliquotsContextType } from './AliquotsContext';
+import { AliquotsContext, type AliquotsContextType, type AliquotError } from './AliquotsContext';
 
 interface AliquotsProviderProps {
   children: ReactNode;
@@ -14,6 +14,15 @@ interface AliquotsProviderProps {
 
 export const AliquotsProvider: React.FC<AliquotsProviderProps> = ({ children }) => {
   const [aliquots, setAliquots] = useState<Aliquot[]>([]);
+  const [loading] = useState(false);
+  const [error, setError] = useState<AliquotError | null>(null);
+
+  /**
+   * Clear any error state
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
 
   const getAliquot = (aliquotId: string) => {
@@ -233,6 +242,8 @@ export const AliquotsProvider: React.FC<AliquotsProviderProps> = ({ children }) 
 
   const value: AliquotsContextType = {
     aliquots,
+    loading,
+    error,
     getAliquot,
     getAliquotsBySample,
     getAliquotsByOrder,
@@ -245,6 +256,7 @@ export const AliquotsProvider: React.FC<AliquotsProviderProps> = ({ children }) 
     updateRemainingVolume,
     moveAliquot,
     disposeAliquot,
+    clearError,
   };
 
   return <AliquotsContext.Provider value={value}>{children}</AliquotsContext.Provider>;

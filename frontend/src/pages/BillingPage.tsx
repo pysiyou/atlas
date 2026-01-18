@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { useBilling } from '@/features/billing/useBilling';
+import { useBilling } from '@/features/billing/BillingContext';
 import { useOrders } from '@/features/order/OrderContext';
 import { Card, SectionContainer, Badge, Button, Input, Select } from '@/shared/ui';
 import { formatCurrency, formatDate } from '@/utils';

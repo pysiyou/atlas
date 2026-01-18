@@ -2,31 +2,86 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Pagination } from './Pagination';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 
+/**
+ * Column definition for Table component
+ * @template T - The type of data items in the table
+ */
 export interface Column<T> {
+  /** Unique key for the column, used for sorting and accessing data */
   key: string;
+  /** Header text to display */
   header: string;
+  /** Custom render function for cell content */
   render?: (item: T) => React.ReactNode;
+  /** Column width (number for pixels, string for CSS value) */
   width?: number | string;
+  /** Whether the column is sortable */
   sortable?: boolean;
+  /** Additional CSS classes for cells */
   className?: string;
+  /** Additional CSS classes for header */
   headerClassName?: string;
 }
 
+/**
+ * Props for the Table component
+ * @template T - The type of data items in the table
+ */
 interface TableProps<T> {
+  /** Array of data items to display */
   data: T[];
+  /** Column definitions */
   columns: Column<T>[];
+  /** Callback when a row is clicked */
   onRowClick?: (item: T) => void;
+  /** Message or component to show when data is empty */
   emptyMessage?: React.ReactNode;
+  /** Whether the table is in loading state */
   isLoading?: boolean;
+  /** Whether to show pagination */
   pagination?: boolean;
+  /** Initial page size */
   initialPageSize?: number;
+  /** Available page size options */
   pageSizeOptions?: number[];
+  /** Default sort configuration */
   defaultSortConfig?: { key: string; direction: "asc" | "desc" };
+  /** Whether the table is embedded (affects styling) */
+  embedded?: boolean;
 }
 
 type SortConfig = { key: string; direction: "asc" | "desc" } | null;
 
-export function Table<T extends Record<string, any>>({
+/**
+ * Base type constraint for table data items
+ * Items must be objects - using generic constraint instead of strict Record type
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type TableDataItem = Record<string, any>;
+
+/**
+ * Generic Table Component
+ * Displays data in a sortable, paginated table format
+ * 
+ * @template T - The type of data items, must extend TableDataItem
+ * 
+ * @example
+ * ```tsx
+ * interface User {
+ *   id: string;
+ *   name: string;
+ *   email: string;
+ * }
+ * 
+ * const columns: Column<User>[] = [
+ *   { key: 'name', header: 'Name', sortable: true },
+ *   { key: 'email', header: 'Email' },
+ * ];
+ * 
+ * <Table data={users} columns={columns} onRowClick={(user) => navigate(`/users/${user.id}`)} />
+ * ```
+ */
+export function Table<T extends TableDataItem>({
   data,
   columns,
   onRowClick,
@@ -37,7 +92,7 @@ export function Table<T extends Record<string, any>>({
   pageSizeOptions = [10, 25, 50, 100],
   defaultSortConfig,
   embedded = false,
-}: TableProps<T> & { embedded?: boolean }) {
+}: TableProps<T>) {
   const [sortConfig, setSortConfig] = useState<SortConfig>(defaultSortConfig || null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(initialPageSize);
@@ -147,7 +202,7 @@ export function Table<T extends Record<string, any>>({
                   className={`px-6 py-2 text-sm text-gray-900 whitespace-nowrap ${column.className || 'overflow-hidden text-ellipsis'}`}
                   style={{ width: typeof column.width === 'number' ? column.width : undefined, flex: typeof column.width === 'number' ? 'none' : 1 }}
                 >
-                  {column.render ? column.render(item) : item[column.key]}
+                  {column.render ? column.render(item) : String(item[column.key] ?? '')}
                 </div>
               ))}
             </div>

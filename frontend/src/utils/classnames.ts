@@ -1,23 +1,19 @@
 /**
- * Utility function to merge class names
- * Similar to clsx or classnames, but simpler
- * 
- * @param classes - Array of class names or conditional class objects
- * @returns Merged class string
+ * Classname Utilities
+ * Utility for conditionally joining classNames together
  */
-export function cn(...classes: (string | undefined | null | false | Record<string, boolean>)[]): string {
+
+type ClassValue = string | number | boolean | undefined | null | ClassValue[];
+
+/**
+ * Conditionally join classNames together
+ * @param classes - Class values to join
+ * @returns Joined class string
+ */
+export function cn(...classes: ClassValue[]): string {
   return classes
-    .filter(Boolean)
-    .map((cls) => {
-      if (typeof cls === 'string') return cls;
-      if (typeof cls === 'object' && cls !== null) {
-        return Object.entries(cls)
-          .filter(([, condition]) => condition)
-          .map(([className]) => className)
-          .join(' ');
-      }
-      return '';
-    })
-    .filter(Boolean)
+    .flat()
+    .filter((x): x is string | number => Boolean(x) && typeof x !== 'boolean')
+    .map(String)
     .join(' ');
 }

@@ -73,15 +73,8 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   mode,
 }) => {
   const { currentUser } = useAuth();
-  const patientsContext = usePatients();
+  const { patients, addPatient, updatePatient } = usePatients();
   const [isRenewing, setIsRenewing] = useState(false);
-
-  // Safety check: if patient context is missing, don't render the modal
-  if (!patientsContext) {
-    return null;
-  }
-
-  const { patients, addPatient, updatePatient } = patientsContext;
 
   const {
     formData,

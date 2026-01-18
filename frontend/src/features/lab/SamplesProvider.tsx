@@ -1,6 +1,6 @@
 /**
  * Samples Provider Component
- * Manages sample collection and tracking using backend API
+ * Manages sample collection and tracking using backend API with proper error handling
  */
 
 import React, { useCallback, useState, useEffect, type ReactNode } from 'react';
@@ -11,7 +11,7 @@ import type {
   ContainerTopColor,
   RejectionReason,
 } from '@/types';
-import { SamplesContext, type SamplesContextType } from './SamplesContext';
+import { SamplesContext, type SamplesContextType, type SampleError } from './SamplesContext';
 import { sampleAPI } from '@/services/api';
 
 interface SamplesProviderProps {
@@ -21,7 +21,14 @@ interface SamplesProviderProps {
 export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) => {
   const [samples, setSamples] = useState<Sample[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<SampleError | null>(null);
+
+  /**
+   * Clear any error state
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   /**
    * Refresh samples from backend
@@ -33,8 +40,12 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
       const data = await sampleAPI.getAll();
       setSamples(data);
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load samples';
       console.error('Failed to load samples:', err);
-      setError('Failed to load samples');
+      setError({
+        message: errorMessage,
+        operation: 'load',
+      });
       setSamples([]);
     } finally {
       setLoading(false);
@@ -145,6 +156,7 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
     getPendingSamples,
     collectSample,
     rejectSample,
+    clearError,
   };
 
   return <SamplesContext.Provider value={value}>{children}</SamplesContext.Provider>;

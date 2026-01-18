@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useOrders } from '@/features/order/OrderContext';
 import { TestsContext } from '@/features/test/TestsContext';
-
-import { useSamples } from '@/features/lab/useSamples';
+import { useSamples } from '@/features/lab/SamplesContext';
 import { usePatients } from '@/hooks';
 import { checkReferenceRangeWithDemographics } from '@/utils';
 import { getPatientName, getTestName, getTestSampleType } from '@/utils/typeHelpers';
@@ -12,7 +11,7 @@ import type { TestResult, TestWithContext } from '@/types';
 import { isCollectedSample } from '@/types';
 import { SearchBar, EmptyState } from '@/shared/ui';
 import { ResultEntryCard } from './ResultCard';
-import { useTestFiltering } from '../useTestFiltering';
+import { useSearch } from '@/utils/filtering';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 /**
  * Filter function for test search
@@ -93,7 +92,7 @@ export const ResultEntry: React.FC = () => {
       })
     : [];
 
-  const { filteredItems: filteredTests, searchQuery, setSearchQuery, isEmpty } = useTestFiltering(
+  const { filteredItems: filteredTests, searchQuery, setSearchQuery, isEmpty } = useSearch(
     allTests,
     filterTest
   );

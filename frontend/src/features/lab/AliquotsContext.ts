@@ -3,14 +3,28 @@
  * Separate file for context to support Fast Refresh
  */
 
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 import type { Aliquot, AliquotPlan, AliquotStatus, ContainerType } from '@/types';
+
+/**
+ * Error state for aliquot operations
+ */
+export interface AliquotError {
+  message: string;
+  code?: string;
+  operation?: 'load' | 'create' | 'update' | 'delete';
+}
 
 /**
  * AliquotsContext type definition
  */
 export interface AliquotsContextType {
+  /** List of all aliquots */
   aliquots: Aliquot[];
+  /** Loading state for async operations */
+  loading: boolean;
+  /** Error state for failed operations */
+  error: AliquotError | null;
 
   // CRUD operations
   getAliquot: (aliquotId: string) => Aliquot | undefined;
@@ -61,9 +75,24 @@ export interface AliquotsContextType {
 
   // Disposal
   disposeAliquot: (aliquotId: string, disposedBy: string) => void;
+
+  /** Clear any error state */
+  clearError: () => void;
 }
 
 /**
  * React Context for Aliquots
  */
 export const AliquotsContext = createContext<AliquotsContextType | undefined>(undefined);
+
+/**
+ * Hook to access the Aliquots context
+ * @throws Error if used outside of AliquotsProvider
+ */
+export function useAliquots(): AliquotsContextType {
+  const context = useContext(AliquotsContext);
+  if (!context) {
+    throw new Error('useAliquots must be used within an AliquotsProvider');
+  }
+  return context;
+}

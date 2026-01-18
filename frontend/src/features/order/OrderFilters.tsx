@@ -3,7 +3,7 @@ import { DateFilter } from './DateFilter';
 import { SearchBar, MultiSelectFilter } from '@/shared/ui';
 import type { OrderStatus, PaymentStatus } from '@/types';
 import { ORDER_STATUS_VALUES, PAYMENT_STATUS_VALUES, ORDER_STATUS_CONFIG, PAYMENT_STATUS_CONFIG } from '@/types';
-import { createFilterOptions } from '@/utils/filterUtils';
+import { createFilterOptions } from '@/utils/filtering';
 
 const orderStatusOptions = createFilterOptions(ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG);
 const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);

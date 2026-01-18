@@ -37,7 +37,13 @@ class Order(Base):
     updatedAt = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     # Relationships
+    patient = relationship("Patient", foreign_keys=[patientId])
     tests = relationship("OrderTest", back_populates="order", cascade="all, delete-orphan")
+
+    @property
+    def patientName(self) -> str:
+        """Get patient full name from relationship"""
+        return self.patient.fullName if self.patient else "Unknown"
 
 
 class OrderTest(Base):
@@ -84,5 +90,16 @@ class OrderTest(Base):
     criticalNotifiedTo = Column(String, nullable=True)
     criticalAcknowledgedAt = Column(DateTime(timezone=True), nullable=True)
 
-    # Relationship
+    # Relationships
     order = relationship("Order", back_populates="tests")
+    test = relationship("Test", foreign_keys=[testCode])
+
+    @property
+    def testName(self) -> str:
+        """Get test display name from relationship"""
+        return self.test.displayName if self.test else "Unknown"
+
+    @property
+    def sampleType(self) -> str:
+        """Get test sample type from relationship"""
+        return self.test.sampleType if self.test else "Unknown"

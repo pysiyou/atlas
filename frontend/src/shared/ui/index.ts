@@ -19,3 +19,4 @@ export * from './LoadingSpinner';
 export * from './TableActionMenu';
 export * from './EmptyState';
 export * from './MultiSelectFilter';
+export * from './Skeleton';

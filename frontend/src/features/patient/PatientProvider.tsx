@@ -1,44 +1,12 @@
 /**
- * Patients Context, Provider, and Hook
- * Consolidates patient state management using backend API
+ * Patients Provider Component
+ * Manages patient data using backend API with proper error handling
  */
 
 import React, { type ReactNode, useCallback, useState, useEffect } from 'react';
 import type { Patient } from '@/types';
-import { createFeatureContext } from '@/shared/context/createFeatureContext';
+import { PatientsContext, type PatientsContextType, type PatientError } from './PatientContext';
 import { patientAPI } from '@/services/api/patients';
-
-// ============================================================================
-// Context Type Definition
-// ============================================================================
-
-/**
- * PatientsContext type definition
- */
-export interface PatientsContextType {
-  patients: Patient[];
-  addPatient: (patient: Patient) => Promise<void>;
-  updatePatient: (id: string, updates: Partial<Patient>) => Promise<void>;
-  deletePatient: (id: string) => Promise<void>;
-  getPatient: (id: string) => Patient | undefined;
-  searchPatients: (query: string) => Patient[];
-  refreshPatients: () => Promise<void>;
-  loading: boolean;
-}
-
-// ============================================================================
-// Context Creation
-// ============================================================================
-
-/**
- * React Context for Patients using generic factory
- */
-export const { Context: PatientsContext, useFeature: usePatients } = 
-  createFeatureContext<PatientsContextType>('Patients');
-
-// ============================================================================
-// Provider Component
-// ============================================================================
 
 interface PatientsProviderProps {
   children: ReactNode;
@@ -46,11 +14,19 @@ interface PatientsProviderProps {
 
 /**
  * Patients Provider Component
- * Manages patient data using backend API
+ * Manages patient data using backend API with comprehensive error handling
  */
 export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<PatientError | null>(null);
+
+  /**
+   * Clear any error state
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   /**
    * Refresh patients from backend
@@ -58,11 +34,16 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
   const refreshPatients = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const data = await patientAPI.getAll();
       setPatients(data);
-    } catch (error) {
-      console.error('Failed to load patients:', error);
-      // Don't throw error - just log it and keep empty array
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load patients';
+      console.error('Failed to load patients:', err);
+      setError({
+        message: errorMessage,
+        operation: 'load',
+      });
       setPatients([]);
     } finally {
       setLoading(false);
@@ -79,13 +60,19 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
    */
   const addPatient = useCallback(async (patient: Patient) => {
     try {
+      setError(null);
       const created = await patientAPI.create(patient);
       setPatients(prev => [...prev, created]);
       // Refresh to ensure full data consistency with server
       await refreshPatients();
-    } catch (error) {
-      console.error('Failed to create patient:', error);
-      throw error;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create patient';
+      console.error('Failed to create patient:', err);
+      setError({
+        message: errorMessage,
+        operation: 'create',
+      });
+      throw err;
     }
   }, [refreshPatients]);
 
@@ -94,6 +81,7 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
    */
   const updatePatient = useCallback(async (id: string, updates: Partial<Patient>) => {
     try {
+      setError(null);
       const updated = await patientAPI.update(id, updates);
       setPatients(prev =>
         prev.map(patient =>
@@ -102,9 +90,14 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
       );
       // Refresh to ensure full data consistency with server
       await refreshPatients();
-    } catch (error) {
-      console.error('Failed to update patient:', error);
-      throw error;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update patient';
+      console.error('Failed to update patient:', err);
+      setError({
+        message: errorMessage,
+        operation: 'update',
+      });
+      throw err;
     }
   }, [refreshPatients]);
 
@@ -113,11 +106,17 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
    */
   const deletePatient = useCallback(async (id: string) => {
     try {
+      setError(null);
       await patientAPI.delete(id);
       setPatients(prev => prev.filter(patient => patient.id !== id));
-    } catch (error) {
-      console.error('Failed to delete patient:', error);
-      throw error;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete patient';
+      console.error('Failed to delete patient:', err);
+      setError({
+        message: errorMessage,
+        operation: 'delete',
+      });
+      throw err;
     }
   }, []);
 
@@ -151,8 +150,9 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
     searchPatients,
     refreshPatients,
     loading,
+    error,
+    clearError,
   };
 
   return <PatientsContext.Provider value={value}>{children}</PatientsContext.Provider>;
 };
-

@@ -13,6 +13,8 @@ class OrderTestCreate(BaseModel):
 class OrderTestResponse(BaseModel):
     id: str
     testCode: str
+    testName: str  # From relationship
+    sampleType: str  # From relationship
     status: TestStatus
     priceAtOrder: float
     sampleId: str | None = None
@@ -49,6 +51,7 @@ class OrderUpdate(BaseModel):
 class OrderResponse(BaseModel):
     orderId: str
     patientId: str
+    patientName: str  # From relationship
     orderDate: datetime
     tests: list[OrderTestResponse]
     totalPrice: float

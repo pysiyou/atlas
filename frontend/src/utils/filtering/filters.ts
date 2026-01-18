@@ -1,12 +1,20 @@
 /**
- * Common Filtering Utilities
- * Reusable filtering functions to reduce code duplication
+ * Pure Filter Functions
+ * Reusable filtering functions without React dependencies
  */
 
 /**
  * Create a generic search filter function
  * @param searchFields Function that extracts searchable fields from an item
  * @returns Filter function that checks if item matches query
+ * 
+ * @example
+ * ```typescript
+ * const searchFilter = createSearchFilter<Patient>(
+ *   (patient) => [patient.name, patient.email, patient.phone]
+ * );
+ * const matches = searchFilter(patient, 'john');
+ * ```
  */
 export const createSearchFilter = <T,>(
   searchFields: (item: T) => string[]
@@ -24,6 +32,12 @@ export const createSearchFilter = <T,>(
 /**
  * Create a multi-field search filter
  * Searches across multiple fields with OR logic
+ * 
+ * @example
+ * ```typescript
+ * const filter = createMultiFieldFilter<Patient>(['name', 'email', 'phone']);
+ * const matches = filter(patient, 'john');
+ * ```
  */
 export const createMultiFieldFilter = <T,>(
   fields: Array<keyof T>
@@ -46,6 +60,12 @@ export const createMultiFieldFilter = <T,>(
 
 /**
  * Create a date range filter
+ * 
+ * @example
+ * ```typescript
+ * const filter = createDateRangeFilter<Order>('orderDate');
+ * const matches = filter(order, startDate, endDate);
+ * ```
  */
 export const createDateRangeFilter = <T,>(
   dateField: keyof T
@@ -66,6 +86,12 @@ export const createDateRangeFilter = <T,>(
 
 /**
  * Create a status filter
+ * 
+ * @example
+ * ```typescript
+ * const filter = createStatusFilter<Order, OrderStatus>('status');
+ * const matches = filter(order, ['pending', 'processing']);
+ * ```
  */
 export const createStatusFilter = <T, S extends string>(
   statusField: keyof T
@@ -78,6 +104,16 @@ export const createStatusFilter = <T, S extends string>(
 
 /**
  * Combine multiple filters with AND logic
+ * 
+ * @example
+ * ```typescript
+ * const combinedFilter = combineFilters(
+ *   (item) => searchFilter(item, query),
+ *   (item) => statusFilter(item, statuses),
+ *   (item) => dateFilter(item, start, end)
+ * );
+ * const matches = combinedFilter(item);
+ * ```
  */
 export const combineFilters = <T,>(
   ...filters: Array<(item: T) => boolean>
@@ -87,10 +123,43 @@ export const combineFilters = <T,>(
 
 /**
  * Filter array by multiple criteria
+ * 
+ * @example
+ * ```typescript
+ * const filtered = filterByMultipleCriteria(items, [
+ *   (item) => item.active,
+ *   (item) => item.name.includes(query),
+ * ]);
+ * ```
  */
 export const filterByMultipleCriteria = <T,>(
   items: T[],
   criteria: Array<(item: T) => boolean>
 ): T[] => {
   return items.filter(item => criteria.every(criterion => criterion(item)));
+};
+
+/**
+ * Sort items by a field
+ * 
+ * @example
+ * ```typescript
+ * const sorted = sortItems(items, 'name', 'asc');
+ * ```
+ */
+export const sortItems = <T,>(
+  items: T[],
+  field: keyof T,
+  direction: 'asc' | 'desc' = 'asc'
+): T[] => {
+  return [...items].sort((a, b) => {
+    const aVal = a[field];
+    const bVal = b[field];
+
+    let comparison = 0;
+    if (aVal < bVal) comparison = -1;
+    if (aVal > bVal) comparison = 1;
+
+    return direction === 'desc' ? -comparison : comparison;
+  });
 };

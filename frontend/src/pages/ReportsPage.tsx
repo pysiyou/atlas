@@ -6,7 +6,7 @@
 import React from 'react';
 import { useOrders } from '@/features/order/OrderContext';
 import { usePatients } from '@/hooks';
-import { useTests } from '@/features/test/useTests';
+import { useTests } from '@/features/test/TestsContext';
 import { SectionContainer, Badge, Button, EmptyState } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { getPatientName, getTestName } from '@/utils/typeHelpers';
