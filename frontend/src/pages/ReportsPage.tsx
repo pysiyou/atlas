@@ -72,7 +72,7 @@ export const Reports: React.FC = () => {
                     <Download size={16} />
                     Generate PDF
                   </Button>
-                  <Badge variant="success" size="sm" className="border-none font-medium">VALIDATED</Badge>
+                  <Badge variant="validated" size="sm" />
                 </div>
               </div>
             ))}

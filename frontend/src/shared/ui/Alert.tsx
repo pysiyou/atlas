@@ -19,27 +19,28 @@ export const Alert: React.FC<AlertProps> = ({
   onClose,
   className = '',
 }) => {
+  // Colors match Badge component for visual consistency
   const variants = {
     info: {
-      bg: 'bg-blue-50',
+      bg: 'bg-blue-100',
       border: 'border-blue-200',
       text: 'text-blue-800',
       icon: <Info size={20} />,
     },
     success: {
-      bg: 'bg-green-50',
+      bg: 'bg-green-100',
       border: 'border-green-200',
       text: 'text-green-800',
       icon: <CheckCircle size={20} />,
     },
     warning: {
-      bg: 'bg-yellow-50',
+      bg: 'bg-yellow-100',
       border: 'border-yellow-200',
       text: 'text-yellow-800',
       icon: <AlertCircle size={20} />,
     },
     danger: {
-      bg: 'bg-red-50',
+      bg: 'bg-red-100',
       border: 'border-red-200',
       text: 'text-red-800',
       icon: <XCircle size={20} />,

@@ -1,3 +1,9 @@
+/**
+ * ResultValidationCard - Card component for result validation workflow
+ * 
+ * Displays test results with approval/rejection actions.
+ */
+
 import React from 'react';
 import { Badge, Icon, IconButton } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
@@ -5,6 +11,7 @@ import { formatDate } from '@/utils';
 import { useUserDisplay } from '@/hooks';
 import { LabCard, FlagsSection } from '../shared/LabCard';
 import { ResultRejectionPopover } from './ResultRejectionPopover';
+import { ResultStatusBadge } from '../shared/StatusBadges';
 
 interface TestWithContext {
   orderId: string;
@@ -51,6 +58,9 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
 
   if (!test.results) return null;
 
+  const resultCount = Object.keys(test.results).length;
+  const hasFlags = test.flags && test.flags.length > 0;
+
   const handleCardClick = () => {
     if (onClick) {
       onClick();
@@ -61,31 +71,22 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
     });
   };
 
-  const handleApprove = (e: React.MouseEvent) => { e.stopPropagation(); onApprove(); };
-  
-  const resultCount = Object.keys(test.results).length;
-  const hasFlags = test.flags && test.flags.length > 0;
-
   // Badges ordered by importance for validation workflow
   const badges = (
     <>
-      {/* 1. Test name - what test is being validated */}
       <h3 className="text-sm font-medium text-gray-900">{test.testName}</h3>
-      {/* 2. Flags - CRITICAL: abnormal/critical values are life-threatening */}
       {hasFlags && (
         <Badge size="sm" variant="danger">
           {test.flags!.length} FLAG{test.flags!.length > 1 ? 'S' : ''}
         </Badge>
       )}
-      {/* 3. Priority - urgency of the result */}
       <Badge variant={test.priority} size="sm" />
-      {/* 4. Sample type - context */}
       <Badge variant={test.sampleType} size="sm" />
-      {/* 5. Test code - reference identifier */}
       <Badge size="sm" variant="default" className="text-gray-600">{test.testCode}</Badge>
     </>
   );
 
+  // Approve/Reject actions
   const actions = (
     <div className="flex items-center gap-2 z-10" onClick={(e) => e.stopPropagation()}>
       <ResultRejectionPopover
@@ -95,7 +96,7 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
         onReject={onReject}
       />
       <IconButton
-        onClick={handleApprove}
+        onClick={(e) => { e.stopPropagation(); onApprove(); }}
         icon={<Icon name="check" />}
         variant="success"
         size="sm"
@@ -104,6 +105,7 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
     </div>
   );
 
+  // Additional info (result entry time)
   const additionalInfo = test.resultEnteredAt && (
     <span className="text-xs text-gray-500">
       Results entered <span className="text-gray-700">{formatDate(test.resultEnteredAt)}</span>
@@ -111,20 +113,18 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
     </span>
   );
 
+  // Results grid
   const content = (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-2">
       {Object.entries(test.results).map(([key, value]) => {
-        // Safe casting to handle the unknown type
-        const resultValue = typeof value === 'object' && value !== null && 'value' in value 
-          ? (value as { value: unknown }).value 
+        const resultValue = typeof value === 'object' && value !== null && 'value' in value
+          ? (value as { value: unknown }).value
           : value;
-          
-        const unit = typeof value === 'object' && value !== null && 'unit' in value 
-          ? (value as { unit: string }).unit 
+        const unit = typeof value === 'object' && value !== null && 'unit' in value
+          ? (value as { unit: string }).unit
           : '';
-          
-        const status = typeof value === 'object' && value !== null && 'status' in value 
-          ? (value as { status: string }).status 
+        const status = typeof value === 'object' && value !== null && 'status' in value
+          ? (value as { status: string }).status as 'normal' | 'high' | 'low' | 'critical'
           : 'normal';
 
         return (
@@ -132,22 +132,14 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
             <span className="text-xs text-gray-500 truncate shrink-0" title={key}>{key}:</span>
             <div className="flex items-center gap-2">
               <span className={`text-sm font-medium ${
-                status === 'critical' ? 'text-red-600 font-bold' : 
-                status === 'high' || status === 'low' ? 'text-amber-600' : 
+                status === 'critical' ? 'text-red-600 font-bold' :
+                status === 'high' || status === 'low' ? 'text-amber-600' :
                 'text-gray-900'
               }`}>
                 {String(resultValue)}
                 {unit && <span className="text-xs text-gray-400 ml-1 font-normal">{unit}</span>}
               </span>
-              {status !== 'normal' && (
-                <Badge 
-                  size="sm" 
-                  variant={status === 'critical' ? 'danger' : 'warning'}
-                  className="px-1.5 py-0 h-5"
-                >
-                  {status.toUpperCase().slice(0, 1)}
-                </Badge>
-              )}
+              <ResultStatusBadge status={status} />
             </div>
           </div>
         );

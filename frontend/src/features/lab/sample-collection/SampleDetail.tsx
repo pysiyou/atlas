@@ -1,10 +1,12 @@
 /**
- * Sample Detail Modal - Simplified version
+ * SampleDetailModal - Extended view for sample details
+ * 
+ * Provides a full view of sample information including collection requirements,
+ * rejection details, and linked tests.
  */
 
 import React, { useMemo } from 'react';
-import { Modal } from '@/shared/ui/Modal';
-import { Badge, Icon, SectionContainer, TabsList, useTabs, DetailField, IconButton } from '@/shared/ui';
+import { Badge, Icon, DetailField, IconButton } from '@/shared/ui';
 import type { ContainerType, RejectedSample } from '@/types';
 import { REJECTION_REASON_CONFIG } from '@/types/enums/rejection-reason';
 import Barcode from 'react-barcode';
@@ -12,19 +14,18 @@ import toast from 'react-hot-toast';
 import { formatDate as formatDateTime } from '@/utils';
 import { useUserDisplay } from '@/hooks';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
-import { getContainerIconColor, getContainerColor, getCollectionRequirements } from '@/utils';
+import { getContainerIconColor, getCollectionRequirements } from '@/utils';
 import { formatVolume, formatDate } from '@/utils';
 import { printSampleLabel } from './SampleLabel';
 import { SampleCollectionPopover } from './SampleCollectionPopover';
 import { SampleRejectionPopover } from './SampleRejectionPopover';
 import { useSamples, useTests, usePatients, useOrders } from '@/hooks';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
+import { LabDetailModal, DetailSection, DetailGrid, StatusBadgeRow } from '../shared/LabDetailModal';
 import type { SampleDisplay } from './types';
 import { AlertCircle, Clock } from 'lucide-react';
 
-/**
- * Test detail information for requirements display
- */
+/** Test detail for requirements display */
 interface TestDetail {
   code: string;
   fastingRequired?: boolean;
@@ -42,22 +43,36 @@ interface SampleDetailModalProps {
   onCollect?: (display: SampleDisplay, volume: number, notes?: string, selectedColor?: string, containerType?: ContainerType) => void;
 }
 
-/**
- * Reusable detail field component
- */
-
-
-
-
-// Helper component to manage tabs state
+/** Requirements section with tabs for each test */
 const RequirementsSection: React.FC<{ testDetails: TestDetail[] }> = ({ testDetails }) => {
-  const tabs = useMemo(() => testDetails.map(test => ({
-    id: test.code,
-    label: test.code,
-    content: (
-      <div className="space-y-3 pt-2">
-        {/* Fasting requirement */}
-        {test.fastingRequired && (
+  const [activeTestCode, setActiveTestCode] = React.useState(testDetails[0]?.code || '');
+  const activeTest = testDetails.find(t => t.code === activeTestCode) || testDetails[0];
+
+  if (!activeTest) return null;
+
+  return (
+    <DetailSection
+      title="Collection Requirements & Instructions"
+      headerRight={
+        <div className="flex gap-1">
+          {testDetails.map(test => (
+            <button
+              key={test.code}
+              onClick={() => setActiveTestCode(test.code)}
+              className={`px-2 py-1 text-xs rounded transition-colors ${
+                activeTestCode === test.code
+                  ? 'bg-blue-100 text-blue-700 font-medium'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              {test.code}
+            </button>
+          ))}
+        </div>
+      }
+    >
+      <div className="space-y-3 pt-2 animate-in fade-in duration-200">
+        {activeTest.fastingRequired && (
           <div className="flex items-start gap-2 p-2 bg-orange-50 border border-orange-200 rounded">
             <span className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 shrink-0" />
             <div className="flex-1">
@@ -69,36 +84,33 @@ const RequirementsSection: React.FC<{ testDetails: TestDetail[] }> = ({ testDeta
           </div>
         )}
 
-        {/* Container descriptions */}
-        {test.containerDescription && (
+        {activeTest.containerDescription && (
           <div className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1.5 shrink-0" />
             <div className="flex-1">
               <div className="text-xs font-medium text-gray-700 mb-1">Container Specifications</div>
-              <div className="text-xs text-gray-600">{test.containerDescription}</div>
+              <div className="text-xs text-gray-600">{activeTest.containerDescription}</div>
             </div>
           </div>
         )}
 
-        {/* Collection notes */}
-        {test.collectionNotes && (
+        {activeTest.collectionNotes && (
           <div className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1.5 shrink-0" />
             <div className="flex-1">
               <div className="text-xs font-medium text-gray-700 mb-1">Collection Instructions</div>
-              <div className="text-xs text-gray-600">{test.collectionNotes}</div>
+              <div className="text-xs text-gray-600">{activeTest.collectionNotes}</div>
             </div>
           </div>
         )}
 
-        {/* Rejection criteria */}
-        {test.rejectionCriteria && test.rejectionCriteria.length > 0 && (
+        {activeTest.rejectionCriteria && activeTest.rejectionCriteria.length > 0 && (
           <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-200 rounded">
             <AlertCircle size={16} className="text-red-600 mt-0.5 shrink-0" />
             <div className="flex-1">
               <div className="text-xs font-medium text-red-900 mb-1">Rejection Criteria</div>
               <ul className="list-disc list-inside space-y-0.5">
-                {test.rejectionCriteria.map((criteria: string, idx: number) => (
+                {activeTest.rejectionCriteria.map((criteria, idx) => (
                   <li key={idx} className="text-xs text-red-700">{criteria}</li>
                 ))}
               </ul>
@@ -106,41 +118,72 @@ const RequirementsSection: React.FC<{ testDetails: TestDetail[] }> = ({ testDeta
           </div>
         )}
 
-        {/* Minimum volume requirement */}
-        {test.minimumVolume && (
+        {activeTest.minimumVolume && (
           <div className="flex items-center gap-2 text-xs text-gray-600">
             <span className="font-medium">Minimum Volume:</span>
-            <span>
-              {test.minimumVolume} mL
-            </span>
+            <span>{activeTest.minimumVolume} mL</span>
           </div>
         )}
       </div>
-    )
-  })), [testDetails]);
-
-  const { activeTabId, setActiveTabId, activeTab } = useTabs(tabs);
-
-  return (
-    <SectionContainer 
-      title="Collection Requirements & Instructions"
-      headerRight={
-        <TabsList 
-          tabs={tabs} 
-          activeTabId={activeTabId} 
-          onTabChange={setActiveTabId} 
-          variant="pills"
-          className="scale-90 origin-right" // Make tabs slightly smaller in header
-        />
-      }
-    >
-      <div className="animate-in fade-in duration-200">
-        {activeTab.content}
-      </div>
-    </SectionContainer>
+    </DetailSection>
   );
 };
 
+/** Rejection history section */
+const RejectionSection: React.FC<{
+  title: string;
+  reasons?: string[];
+  notes?: string;
+  rejectedBy?: string;
+  rejectedAt?: string;
+  recollectionRequired?: boolean;
+  recollectionSampleId?: string;
+  variant?: 'red' | 'yellow';
+  getUserName: (id: string) => string;
+}> = ({ title, reasons, notes, rejectedBy, rejectedAt, recollectionRequired, recollectionSampleId, variant = 'red', getUserName }) => {
+  const bulletColor = variant === 'red' ? 'bg-red-500' : 'bg-yellow-500';
+  const textColor = variant === 'red' ? 'text-red-700' : 'text-yellow-700';
+  const notesColor = variant === 'red' ? 'text-red-600' : 'text-yellow-600';
+
+  return (
+    <DetailSection title={title}>
+      <ul className="space-y-1">
+        {reasons && (
+          <li className={`flex items-center text-xs ${textColor}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${bulletColor} mr-2`} />
+            <span className="font-medium">
+              {reasons.map(r => REJECTION_REASON_CONFIG[r as keyof typeof REJECTION_REASON_CONFIG]?.label || r).join(', ')}
+            </span>
+          </li>
+        )}
+        {notes && (
+          <li className={`flex items-center text-xs ${notesColor} italic`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${bulletColor} mr-2`} />
+            "{notes}"
+          </li>
+        )}
+        {rejectedBy && rejectedAt && (
+          <li className="flex items-center text-xs text-gray-600">
+            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
+            <span>{getUserName(rejectedBy)} · {formatDate(rejectedAt)}</span>
+          </li>
+        )}
+        {recollectionRequired && (
+          <li className="flex items-center text-xs text-gray-600">
+            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
+            <span>Recollection required</span>
+          </li>
+        )}
+        {recollectionSampleId && (
+          <li className="flex items-center text-xs text-gray-600">
+            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
+            <span>Recollection sample: <span className="font-mono font-medium">{recollectionSampleId}</span></span>
+          </li>
+        )}
+      </ul>
+    </DetailSection>
+  );
+};
 
 export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
   isOpen,
@@ -155,14 +198,10 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
   const { patients } = usePatients();
   const { getOrder } = useOrders();
 
-  // Get the sample from context if sampleId provided
   const sample = sampleId ? getSample(sampleId) : pendingSampleDisplay?.sample;
-  
-  // Get order - either from prop or fetch using sample's orderId
   const order = pendingSampleDisplay?.order || (sample ? getOrder(sample.orderId) : undefined);
   const requirement = pendingSampleDisplay?.requirement;
 
-  // Get test details from catalog for enhanced requirements display
   const testDetails = useMemo(() => {
     if (!sample?.testCodes) return [];
     return sample.testCodes
@@ -170,34 +209,23 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
       .filter((test): test is NonNullable<typeof test> => test !== undefined);
   }, [sample, getTest]);
 
-
-
-  if (!sample) {
-    return null;
-  }
+  if (!sample) return null;
 
   const isPending = sample.status === 'pending';
   const isRejected = sample.status === 'rejected';
   const isCollected = sample.status === 'collected';
-  
-  // Type guard for rejected sample properties
   const rejectedSample = isRejected ? (sample as RejectedSample) : null;
 
-  // Extract common fields - now properly using fetched order
   const patientId = order?.patientId || 'Unknown';
   const patientName = order ? getPatientName(order.patientId, patients) : 'Unknown';
   const orderId = sample.orderId;
   const testNames = sample.testCodes ? getTestNames(sample.testCodes, tests) : [];
 
-  // Get color name for display (available for collected and rejected samples)
   const hasContainerInfo = (isCollected || isRejected) && 'actualContainerColor' in sample;
   const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
   const colorName = containerColor
     ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.name || 'N/A'
     : 'N/A';
-
-
-
   const containerType = hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
   const effectiveContainerType: ContainerType = containerType ||
     (sample.sampleType === 'urine' || sample.sampleType === 'stool' ? 'cup' : 'tube');
@@ -207,375 +235,193 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
     try {
       printSampleLabel(pendingSampleDisplay, patientName);
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error('Failed to print label');
-      }
+      toast.error(error instanceof Error ? error.message : 'Failed to print label');
     }
   };
 
-  const handleCollectConfirm = (volume: number, notes?: string, color?: string, containerType?: ContainerType) => {
+  const handleCollectConfirm = (volume: number, notes?: string, color?: string, ct?: ContainerType) => {
     if (!pendingSampleDisplay || !onCollect) return;
-    onCollect(pendingSampleDisplay, volume, notes, color, containerType);
+    onCollect(pendingSampleDisplay, volume, notes, color, ct);
     onClose();
   };
 
+  // Build header badges
+  const headerBadges = (
+    <>
+      {(isCollected || isRejected) && containerColor && (
+        <span className="flex items-center" title={`Container: ${effectiveContainerType}, Color: ${colorName}`}>
+          <Icon
+            name={effectiveContainerType === 'cup' ? 'lab-cup' : 'lab-tube'}
+            className={`w-7 h-7 ${getContainerIconColor(containerColor)}`}
+          />
+        </span>
+      )}
+      <StatusBadgeRow sampleType={sample.sampleType} priority={sample.priority} />
+      {getCollectionRequirements(sample.sampleType).isDerived && (
+        <Badge size="sm" variant="default" className="text-gray-600">
+          {getCollectionRequirements(sample.sampleType).label}
+        </Badge>
+      )}
+      {(isCollected || isRejected) && 'collectedVolume' in sample && (
+        <Badge size="sm" variant="default" className="text-gray-500">
+          {formatVolume(sample.collectedVolume)} {isRejected ? 'was collected' : 'collected'}
+        </Badge>
+      )}
+      <Badge size="sm" variant="default" className="text-gray-500">
+        {formatVolume(sample.requiredVolume)} required
+      </Badge>
+      <Badge variant={isPending ? 'pending' : isRejected ? 'rejected' : 'collected'} size="sm" />
+    </>
+  );
+
+  // Build action buttons
+  const actionButtons = (
+    <div className="flex items-center gap-2">
+      {isCollected ? (
+        <>
+          <IconButton onClick={handlePrintLabel} icon={<Icon name="printer" />} variant="primary" size="sm" title="Print Sample Label" />
+          {sample.sampleId && !sample.sampleId.includes('PENDING') && (
+            <SampleRejectionPopover
+              sampleId={sample.sampleId}
+              sampleType={sample.sampleType}
+              patientName={patientName}
+              isRecollection={sample.isRecollection || false}
+              rejectionHistoryCount={sample.rejectionHistory?.length || 0}
+              onReject={async (reasons, notes, requireRecollection) => {
+                try {
+                  await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
+                  toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
+                  onClose();
+                } catch (error) {
+                  console.error('Failed to reject sample:', error);
+                  toast.error('Failed to reject sample');
+                }
+              }}
+            />
+          )}
+        </>
+      ) : isRejected ? (
+        rejectedSample?.recollectionSampleId && (
+          <Badge size="sm" variant="info" className="flex items-center gap-1">
+            <Icon name="check-circle" className="w-3 h-3" />
+            Recollection: {rejectedSample.recollectionSampleId}
+          </Badge>
+        )
+      ) : (
+        requirement && onCollect && (
+          <SampleCollectionPopover
+            requirement={requirement}
+            patientName={patientName}
+            testName={testNames.join(', ')}
+            isRecollection={sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)}
+            onConfirm={handleCollectConfirm}
+          />
+        )
+      )}
+    </div>
+  );
+
   return (
-    <Modal
+    <LabDetailModal
       isOpen={isOpen}
       onClose={onClose}
       title={sample.sampleId}
       subtitle={`${patientName} - ${sample.sampleType.toUpperCase()}`}
-      size="3xl"
+      headerBadges={
+        <div className="flex items-center justify-between gap-3 flex-wrap w-full">
+          <div className="flex items-center gap-3 flex-wrap">{headerBadges}</div>
+          {actionButtons}
+        </div>
+      }
+      contextInfo={{ patientName, patientId, orderId }}
+      additionalContextInfo={
+        <>
+          {/* Barcode */}
+          {(isCollected || isRejected) && sample.sampleId && !sample.sampleId.includes('PENDING') && (
+            <div className="flex items-center justify-center bg-gray-50 rounded p-4 border border-gray-200 mt-2">
+              <Barcode value={sample.sampleId} height={40} displayValue={false} background="transparent" margin={0} />
+            </div>
+          )}
+          {/* Collection info */}
+          {(isCollected || isRejected) && 'collectedAt' in sample && sample.collectedAt && (
+            <div className="text-xs text-gray-500 mt-1">
+              Collected <span className="font-medium text-gray-700">{formatDate(sample.collectedAt)}</span>
+              {sample.collectedBy && <span> by {getUserName(sample.collectedBy)}</span>}
+            </div>
+          )}
+        </>
+      }
     >
-      <div className="overflow-y-auto p-6 bg-gray-50 space-y-4">
-        {/* Header Section */}
-        <SectionContainer hideHeader>
-          <div className="flex flex-col gap-4">
-            {/* Row 1: Container icon and badges */}
-            <div className="flex items-center justify-between gap-3 flex-wrap">
-              <div className="flex items-center gap-3 flex-wrap">
-                {/* Container icon (for collected and rejected) */}
-                {(isCollected || isRejected) && containerColor && (
-                  <span
-                    className="flex items-center"
-                    title={`Container: ${effectiveContainerType}, Color: ${colorName}`}
-                  >
-                    <Icon
-                      name={effectiveContainerType === 'cup' ? 'lab-cup' : 'lab-tube'}
-                      className={`w-7 h-7 ${getContainerIconColor(containerColor)}`}
-                    />
+      {/* Rejection Details */}
+      {isRejected && rejectedSample && (
+        <RejectionSection
+          title={`Rejection Details${(rejectedSample.rejectionHistory?.length || 1) > 1 ? ` (${rejectedSample.rejectionHistory?.length || 1} attempts)` : ''}`}
+          reasons={rejectedSample.rejectionReasons}
+          notes={rejectedSample.rejectionNotes}
+          rejectedBy={rejectedSample.rejectedBy}
+          rejectedAt={rejectedSample.rejectedAt}
+          recollectionRequired={rejectedSample.recollectionRequired}
+          recollectionSampleId={rejectedSample.recollectionSampleId}
+          getUserName={getUserName}
+        />
+      )}
+
+      {/* Previous Rejection History */}
+      {!isRejected && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (() => {
+        const lastRejection = sample.rejectionHistory[sample.rejectionHistory.length - 1];
+        return (
+          <RejectionSection
+            title={`Previous Rejection${sample.rejectionHistory.length > 1 ? ` (${sample.rejectionHistory.length} attempts)` : ''}`}
+            reasons={lastRejection.rejectionReasons}
+            notes={lastRejection.rejectionNotes}
+            rejectedBy={lastRejection.rejectedBy}
+            rejectedAt={lastRejection.rejectedAt}
+            variant="yellow"
+            getUserName={getUserName}
+          />
+        );
+      })()}
+
+      {/* Linked Tests */}
+      <DetailSection title={isCollected ? 'Linked Tests' : 'Required for'}>
+        <ul className="space-y-1">
+          {testNames.map((testName, i) => {
+            const testCode = sample.testCodes[i];
+            const test = testCode ? getTest(testCode) : undefined;
+            return (
+              <li key={testCode || i} className="flex items-center text-xs text-gray-700">
+                <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
+                <span className="font-medium mr-1">{testName}</span>
+                <span className="text-gray-500 mr-2">{testCode}</span>
+                {test?.turnaroundTime && (
+                  <span className="text-gray-400 flex items-center gap-1">
+                    <Clock size={10} />
+                    {test.turnaroundTime}h
                   </span>
                 )}
+              </li>
+            );
+          })}
+        </ul>
+      </DetailSection>
 
-                {/* Sample type badge */}
-                <Badge variant={sample.sampleType} size="sm" />
+      {/* Requirements Section - pending only */}
+      {isPending && testDetails.length > 0 && <RequirementsSection testDetails={testDetails} />}
 
-                {/* Collection instruction for derived types */}
-                {getCollectionRequirements(sample.sampleType).isDerived && (
-                  <Badge size="sm" variant="default" className="text-gray-600">
-                    {getCollectionRequirements(sample.sampleType).label}
-                  </Badge>
-                )}
-
-                {/* Volume badges */}
-                {(isCollected || isRejected) && 'collectedVolume' in sample && (
-                  <Badge size="sm" variant="default" className="text-gray-500">
-                    {formatVolume(sample.collectedVolume)} {isRejected ? 'was collected' : 'collected'}
-                  </Badge>
-                )}
-                <Badge size="sm" variant="default" className="text-gray-500">
-                  {formatVolume(sample.requiredVolume)} required
-                </Badge>
-
-                {/* Priority badge */}
-                {sample.priority && (
-                  <Badge variant={sample.priority} size="sm" />
-                )}
-
-                {/* Collection status badge */}
-                <Badge 
-                  variant={isPending ? 'pending' : isRejected ? 'error' : 'collected'} 
-                  size="sm"
-                >
-                  {isPending ? 'PENDING COLLECTION' : isRejected ? 'REJECTED' : 'COLLECTED'}
-                </Badge>
-              </div>
-
-              {/* Action buttons */}
-              {isCollected ? (
-                <div className="flex items-center gap-2">
-                  <IconButton
-                    onClick={handlePrintLabel}
-                    icon={<Icon name="printer" />}
-                    variant="primary"
-                    size="sm"
-                    title="Print Sample Label"
-                  />
-                  {sample.sampleId && !sample.sampleId.includes('PENDING') && (
-                    <SampleRejectionPopover
-                      sampleId={sample.sampleId}
-                      sampleType={sample.sampleType}
-                      patientName={patientName}
-                      isRecollection={sample.isRecollection || false}
-                      rejectionHistoryCount={sample.rejectionHistory?.length || 0}
-                      onReject={async (reasons, notes, requireRecollection) => {
-                        try {
-                          await rejectSample(
-                            sample.sampleId,
-                            reasons,
-                            notes,
-                            requireRecollection
-                          );
-                          toast.success(
-                            requireRecollection
-                              ? 'Sample rejected - recollection will be requested'
-                              : 'Sample rejected'
-                          );
-                          onClose();
-                        } catch (error) {
-                          console.error('Failed to reject sample:', error);
-                          toast.error('Failed to reject sample');
-                        }
-                      }}
-                    />
-                  )}
-                </div>
-              ) : isRejected ? (
-                // Rejected: Show recollection sample ID if exists (READ-ONLY - no actions)
-                <div className="flex items-center gap-2">
-                  {rejectedSample?.recollectionSampleId && (
-                    <Badge size="sm" variant="info" className="flex items-center gap-1">
-                      <Icon name="check-circle" className="w-3 h-3" />
-                      Recollection: {rejectedSample.recollectionSampleId}
-                    </Badge>
-                  )}
-                </div>
-              ) : (
-                requirement && onCollect && (
-                  <SampleCollectionPopover
-                    requirement={requirement}
-                    isRecollection={sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)}
-                    onConfirm={(volume, notes, color, containerType) => {
-                      handleCollectConfirm(volume, notes, color, containerType);
-                    }}
-                  />
-                )
-              )}
-            </div>
-
-            {/* Barcode - for collected and rejected samples */}
-            {(isCollected || isRejected) && sample.sampleId && !sample.sampleId.includes('PENDING') && (
-              <div className="flex items-center justify-center bg-gray-50 rounded p-4 border border-gray-200">
-                <Barcode
-                  value={sample.sampleId}
-                  height={40}
-                  displayValue={false}
-                  background="transparent"
-                  margin={0}
-                />
-              </div>
-            )}
-
-            {/* Patient & Order context */}
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2 text-sm text-gray-700 flex-wrap">
-                <span className="font-semibold text-gray-900">{patientName}</span>
-                <span className="text-gray-300">|</span>
-                <span className="font-medium text-gray-900 text-xs">{patientId}</span>
-                <span className="text-gray-300">|</span>
-                <span className="font-medium text-gray-900 text-xs">{orderId}</span>
-              </div>
-
-              {/* Collection info */}
-              {(isCollected || isRejected) && 'collectedAt' in sample && sample.collectedAt && (
-                <div className="text-xs text-gray-500">
-                  Collected <span className="font-medium text-gray-700">{formatDate(sample.collectedAt)}</span>
-                  {sample.collectedBy && <span> by {getUserName(sample.collectedBy)}</span>}
-                </div>
-              )}
-            </div>
-          </div>
-        </SectionContainer>
-
-        {/* Rejection Details Section - consolidated rejection information */}
-        {isRejected && rejectedSample && (() => {
-          // Get rejection data - prefer history if available, fallback to direct properties
-          const rejectionHistory = rejectedSample.rejectionHistory || [];
-          const hasHistory = rejectionHistory.length > 0;
-          const attemptCount = hasHistory ? rejectionHistory.length : 1;
-          
-          return (
-            <SectionContainer 
-              title={attemptCount > 1 ? `Rejection Details (${attemptCount} attempts)` : "Rejection Details"}
-            >
-              <div className="space-y-3">
-                {/* Show all rejection attempts */}
-                {hasHistory ? (
-                  rejectionHistory.map((rejection, index) => (
-                    <div
-                      key={index}
-                      className="flex items-start gap-3 p-3 rounded border border-red-200 bg-red-50"
-                    >
-                      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-700 text-xs font-bold shrink-0">
-                        {index + 1}
-                      </div>
-                      <div className="flex-1 min-w-0 space-y-2">
-                        {/* Rejection reasons as inline badges */}
-                        <div className="flex flex-wrap gap-1">
-                          {rejection.rejectionReasons?.map((reason) => (
-                            <Badge key={reason} size="sm" variant="error">
-                              {REJECTION_REASON_CONFIG[reason]?.label || reason}
-                            </Badge>
-                          ))}
-                        </div>
-
-                        {/* Notes */}
-                        {rejection.rejectionNotes && (
-                          <p className="text-xs text-red-700 italic">"{rejection.rejectionNotes}"</p>
-                        )}
-
-                        {/* Metadata row */}
-                        <div className="flex items-center gap-2 text-xs text-red-600">
-                          <span>{getUserName(rejection.rejectedBy)}</span>
-                          <span className="text-red-300">•</span>
-                          <span>{formatDate(rejection.rejectedAt)}</span>
-                          {rejection.recollectionRequired && (
-                            <>
-                              <span className="text-red-300">•</span>
-                              <Badge size="sm" variant="warning">Recollection Required</Badge>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  /* Fallback to single rejection display if no history */
-                  <div className="flex items-start gap-3 p-3 rounded-lg border border-red-200 bg-red-50">
-                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-700 text-xs font-bold shrink-0">
-                      1
-                    </div>
-                    <div className="flex-1 min-w-0 space-y-2">
-                      {/* Rejection reasons as inline badges */}
-                      <div className="flex flex-wrap gap-1">
-                        {rejectedSample.rejectionReasons?.map((reason) => (
-                          <Badge key={reason} size="sm" variant="error">
-                            {REJECTION_REASON_CONFIG[reason]?.label || reason}
-                          </Badge>
-                        ))}
-                      </div>
-
-                      {/* Notes */}
-                      {rejectedSample.rejectionNotes && (
-                        <p className="text-xs text-red-700 italic">"{rejectedSample.rejectionNotes}"</p>
-                      )}
-
-                      {/* Metadata row */}
-                      <div className="flex items-center gap-2 text-xs text-red-600">
-                        <span>{getUserName(rejectedSample.rejectedBy)}</span>
-                        <span className="text-red-300">•</span>
-                        <span>{formatDate(rejectedSample.rejectedAt)}</span>
-                        {rejectedSample.recollectionRequired && (
-                          <>
-                            <span className="text-red-300">•</span>
-                            <Badge size="sm" variant="warning">Recollection Required</Badge>
-                          </>
-                        )}
-                      </div>
-
-                      {/* Recollection sample link */}
-                      {rejectedSample.recollectionSampleId && (
-                        <div className="pt-2 border-t border-red-200">
-                          <span className="text-xs text-red-600">
-                            Recollection sample: <span className="font-mono font-medium">{rejectedSample.recollectionSampleId}</span>
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Recollection sample link at bottom if history exists */}
-                {hasHistory && rejectedSample.recollectionSampleId && (
-                  <div className="pt-2 border-t border-gray-200">
-                    <span className="text-xs text-gray-600">
-                      Recollection sample: <span className="font-mono font-medium text-gray-900">{rejectedSample.recollectionSampleId}</span>
-                    </span>
-                  </div>
-                )}
-              </div>
-            </SectionContainer>
-          );
-        })()}
-
-        {/* Last Collection Details - for pending/collected samples with rejection history (recollections) */}
-        {!isRejected && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (() => {
-          const lastRejection = sample.rejectionHistory[sample.rejectionHistory.length - 1];
-          return (
-            <SectionContainer title="Previous Collection (Rejected)">
-              <div className="flex items-start gap-3 p-3 rounded-lg border border-orange-200 bg-orange-50">
-                <Icon name="alert-circle" className="w-5 h-5 text-orange-600 mt-0.5 shrink-0" />
-                <div className="flex-1 min-w-0 space-y-2">
-                  {/* Rejection reasons */}
-                  <div className="flex flex-wrap gap-1">
-                    {lastRejection.rejectionReasons?.map((reason) => (
-                      <Badge key={reason} size="sm" variant="warning">
-                        {REJECTION_REASON_CONFIG[reason]?.label || reason}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  {/* Notes */}
-                  {lastRejection.rejectionNotes && (
-                    <p className="text-xs text-orange-700 italic">"{lastRejection.rejectionNotes}"</p>
-                  )}
-
-                  {/* Metadata row */}
-                  <div className="flex items-center gap-2 text-xs text-orange-600">
-                    <span>{getUserName(lastRejection.rejectedBy)}</span>
-                    <span className="text-orange-300">•</span>
-                    <span>{formatDate(lastRejection.rejectedAt)}</span>
-                  </div>
-                </div>
-              </div>
-            </SectionContainer>
-          );
-        })()}
-
-        {/* Linked Tests Section */}
-        <SectionContainer title={isCollected ? 'Linked Tests' : 'Required for'}>
-          <ul className="space-y-1">
-            {testNames.map((testName, i) => {
-              const testCode = sample.testCodes[i];
-              const test = testCode ? getTest(testCode) : undefined;
-              return (
-                <li key={testCode || i} className="flex items-center text-xs text-gray-700">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
-                  <span className="font-medium mr-1">{testName}</span>
-                  <span className="text-gray-500 mr-2">{testCode}</span>
-                  {test?.turnaroundTime && (
-                    <span className="text-gray-400 flex items-center gap-1">
-                      <Clock size={10} />
-                      {test.turnaroundTime}h
-                    </span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </SectionContainer>
-
-        {/* Enhanced Requirements Section - only for pending samples */}
-        {isPending && testDetails.length > 0 && (
-          <RequirementsSection testDetails={testDetails} />
-        )}
-
-        {/* 2-column layout for details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Collection Details - for collected and rejected samples */}
-          {(isCollected || isRejected) && 'collectedAt' in sample && (
-            <SectionContainer title="Collection Details">
-              <div className="space-y-2">
-              {sample.collectedAt && (
-                <DetailField label="Collected" value={formatDateTime(sample.collectedAt)} />
-              )}
-              {sample.collectedBy && (
-                <DetailField label="Collected By" value={getUserName(sample.collectedBy)} />
-              )}
+      {/* Detail Sections */}
+      <DetailGrid>
+        {/* Collection Details - collected/rejected */}
+        {(isCollected || isRejected) && 'collectedAt' in sample && (
+          <DetailSection title="Collection Details">
+            <div className="space-y-2">
+              {sample.collectedAt && <DetailField label="Collected" value={formatDateTime(sample.collectedAt)} />}
+              {sample.collectedBy && <DetailField label="Collected By" value={getUserName(sample.collectedBy)} />}
               <DetailField
                 label="Container"
                 value={
                   <div className="flex items-center gap-2">
-                    <Badge size="sm" variant="primary" className="capitalize">
-                      {effectiveContainerType}
-                    </Badge>
-                    {containerColor && (
-                      <Badge size="sm" className={`${getContainerColor(containerColor)} border-none text-white font-medium`}>
-                        {colorName} Top
-                      </Badge>
-                    )}
+                    <Badge size="sm" variant="primary" className="capitalize">{effectiveContainerType}</Badge>
+                    {containerColor && <Badge size="sm" variant={`container-${containerColor}` as never}>{colorName} Top</Badge>}
                   </div>
                 }
               />
@@ -585,48 +431,42 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
                   <div className="text-sm text-gray-900">{sample.collectionNotes}</div>
                 </div>
               )}
-              </div>
-            </SectionContainer>
-          )}
-
-          {/* Volume Information */}
-          <SectionContainer title="Volume Tracking">
-            <div className="space-y-2">
-              <DetailField label="Required" value={formatVolume(sample.requiredVolume)} />
-              {(isCollected || isRejected) && 'collectedVolume' in sample && (
-                <DetailField label="Collected" value={formatVolume(sample.collectedVolume)} />
-              )}
-              {(isCollected || isRejected) && 'remainingVolume' in sample && sample.remainingVolume !== undefined && (
-                <DetailField
-                  label="Remaining"
-                  value={
-                    <span className={sample.remainingVolume < sample.requiredVolume * 0.2 ? 'text-red-600' : ''}>
-                      {formatVolume(sample.remainingVolume)}
-                    </span>
-                  }
-                />
-              )}
             </div>
-          </SectionContainer>
+          </DetailSection>
+        )}
 
-          {/* Requirements - only for pending samples */}
-          {isPending && requirement && (
-            <SectionContainer title="Collection Requirements">
-              <div className="space-y-2">
-              {sample.priority && (
-                <DetailField label="Priority" value={
-                  <Badge variant={sample.priority} size="sm" />
-                } />
-              )}
+        {/* Volume Tracking */}
+        <DetailSection title="Volume Tracking">
+          <div className="space-y-2">
+            <DetailField label="Required" value={formatVolume(sample.requiredVolume)} />
+            {(isCollected || isRejected) && 'collectedVolume' in sample && (
+              <DetailField label="Collected" value={formatVolume(sample.collectedVolume)} />
+            )}
+            {(isCollected || isRejected) && 'remainingVolume' in sample && sample.remainingVolume !== undefined && (
+              <DetailField
+                label="Remaining"
+                value={
+                  <span className={sample.remainingVolume < sample.requiredVolume * 0.2 ? 'text-red-600' : ''}>
+                    {formatVolume(sample.remainingVolume)}
+                  </span>
+                }
+              />
+            )}
+          </div>
+        </DetailSection>
+
+        {/* Requirements - pending only */}
+        {isPending && requirement && (
+          <DetailSection title="Collection Requirements">
+            <div className="space-y-2">
+              {sample.priority && <DetailField label="Priority" value={<Badge variant={sample.priority} size="sm" />} />}
               {requirement.containerTypes.length > 0 && (
                 <DetailField
                   label="Required Container Types"
                   value={
                     <div className="flex flex-wrap gap-1 justify-end">
                       {requirement.containerTypes.map((type, idx) => (
-                        <Badge key={idx} size="sm" variant="primary" className="capitalize">
-                          {type}
-                        </Badge>
+                        <Badge key={idx} size="sm" variant="primary" className="capitalize">{type}</Badge>
                       ))}
                     </div>
                   }
@@ -638,33 +478,30 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
                   value={
                     <div className="flex flex-wrap gap-1 justify-end">
                       {requirement.containerTopColors.map((color, idx) => (
-                        <Badge key={idx} size="sm" className={`${getContainerColor(color)} border-none text-white font-medium`}>
-                          {CONTAINER_COLOR_OPTIONS.find(opt => opt.value === color)?.name || color}
+                        <Badge key={idx} size="sm" variant={`container-${color}` as never}>
+                          {CONTAINER_COLOR_OPTIONS.find(opt => opt.value === color)?.name || color} Top
                         </Badge>
                       ))}
                     </div>
                   }
                 />
               )}
-              </div>
-            </SectionContainer>
-          )}
+            </div>
+          </DetailSection>
+        )}
 
-          {/* Audit Trail - for collected and rejected samples */}
-          {(isCollected || isRejected) && (
-            <SectionContainer title="Audit Trail">
-              <div className="space-y-2">
+        {/* Audit Trail - collected/rejected */}
+        {(isCollected || isRejected) && (
+          <DetailSection title="Audit Trail">
+            <div className="space-y-2">
               <DetailField label="Created" value={formatDateTime(sample.createdAt)} />
               <DetailField label="Created By" value={getUserName(sample.createdBy)} />
               <DetailField label="Last Updated" value={formatDateTime(sample.updatedAt)} />
-              {sample.updatedBy && (
-                <DetailField label="Updated By" value={getUserName(sample.updatedBy)} />
-              )}
-              </div>
-            </SectionContainer>
-          )}
-        </div>
-      </div>
-    </Modal>
+              {sample.updatedBy && <DetailField label="Updated By" value={getUserName(sample.updatedBy)} />}
+            </div>
+          </DetailSection>
+        )}
+      </DetailGrid>
+    </LabDetailModal>
   );
 };

@@ -1,13 +1,13 @@
+/**
+ * ResultForm - Form for entering test results
+ */
+
 import React from 'react';
 import { Button, Textarea } from '@/shared/ui';
 import { AlertTriangle } from 'lucide-react';
 import { Icon } from '@/shared/ui/Icon';
-import type { Test, TestParameter } from '@/types';
-import type { Patient } from '@/types';
-import {
-  formatReferenceRange,
-  isCriticalValue
-} from '@/utils/reference-ranges';
+import type { Test, TestParameter, Patient } from '@/types';
+import { formatReferenceRange, isCriticalValue } from '@/utils/reference-ranges';
 
 interface ResultFormProps {
   testDef: Test;
@@ -19,37 +19,27 @@ interface ResultFormProps {
   onNotesChange: (resultKey: string, notes: string) => void;
   onSave: () => void;
   isComplete: boolean;
-  /** Optional: If true, uses more columns for better space utilization in modal context */
   isModal?: boolean;
 }
 
-/**
- * Render input field based on parameter value type
- * 
- * Ensures all input types are fully editable and handle edge cases properly
- */
-const renderParameterInput = (
-  param: TestParameter,
-  value: string,
-  onChange: (value: string) => void,
-  onKeyDown: (e: React.KeyboardEvent) => void,
-  inputId?: string
-): React.ReactNode => {
+/** Render input based on parameter type */
+const ParameterInput: React.FC<{
+  param: TestParameter;
+  value: string;
+  onChange: (value: string) => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
+  inputId: string;
+}> = ({ param, value, onChange, onKeyDown, inputId }) => {
   const valueType = param.valueType || (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
-  
-  // Normalize value to ensure it's always a string (never undefined or null)
   const normalizedValue = value ?? '';
-  
-  // Common input props
+
   const commonProps = {
     id: inputId,
     value: normalizedValue,
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-      onChange(e.target.value);
-    },
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => onChange(e.target.value),
     onKeyDown,
   };
-  
+
   if (valueType === 'SELECT' && param.allowedValues) {
     return (
       <select
@@ -63,7 +53,7 @@ const renderParameterInput = (
       </select>
     );
   }
-  
+
   if (valueType === 'TEXT') {
     return (
       <textarea
@@ -74,10 +64,7 @@ const renderParameterInput = (
       />
     );
   }
-  
-  // NUMERIC type - use text input with decimal inputMode for better control
-  // This allows full fillability and removes spinner arrows
-  // Using inputMode="decimal" allows decimals, inputMode="numeric" only allows integers
+
   return (
     <input
       {...commonProps}
@@ -85,15 +72,11 @@ const renderParameterInput = (
       inputMode="decimal"
       className="block w-full pl-3 pr-12 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed placeholder:text-gray-300 transition-shadow relative z-10"
       placeholder="--"
-      // Allow any numeric input including decimals
-      // Validation happens on save, not during input
     />
   );
 };
 
-/**
- * Get reference range display for parameter
- */
+/** Get reference range display */
 const getReferenceRangeDisplay = (param: TestParameter, patient?: Patient): string => {
   if (param.catalogReferenceRange) {
     return formatReferenceRange(param.catalogReferenceRange, patient);
@@ -101,17 +84,12 @@ const getReferenceRangeDisplay = (param: TestParameter, patient?: Patient): stri
   return param.referenceRange || 'N/A';
 };
 
-/**
- * Check if current value is critical
- */
+/** Check if value is critical */
 const checkCriticalStatus = (param: TestParameter, value: string): boolean => {
   if (param.valueType !== 'NUMERIC' && param.type !== 'numeric') return false;
   const numValue = parseFloat(value);
   if (isNaN(numValue)) return false;
-  return isCriticalValue(numValue, {
-    low: param.criticalLow,
-    high: param.criticalHigh,
-  });
+  return isCriticalValue(numValue, { low: param.criticalLow, high: param.criticalHigh });
 };
 
 export const ResultForm: React.FC<ResultFormProps> = ({
@@ -128,56 +106,42 @@ export const ResultForm: React.FC<ResultFormProps> = ({
 }) => {
   if (!testDef?.parameters) return null;
 
-  // Use more columns in modal context for better space utilization
-  const gridCols = isModal 
-    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
-    : 'grid-cols-1 sm:grid-cols-2';
+  const gridCols = isModal ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2';
 
   return (
     <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
       <div className={`grid ${gridCols} gap-4`}>
         {testDef.parameters.map(param => {
-          // Ensure value is always a string, never undefined or null
           const value = results[param.code] ?? '';
           const refRange = getReferenceRangeDisplay(param, patient);
           const isCritical = checkCriticalStatus(param, value);
           const valueType = param.valueType || (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
-          
+
           return (
             <div key={param.code} className="group">
               <div className="flex justify-between items-baseline mb-1">
-                <label 
-                  htmlFor={`result-${resultKey}-${param.code}`}
-                  className="text-xs font-medium text-gray-500 cursor-pointer"
-                >
+                <label htmlFor={`result-${resultKey}-${param.code}`} className="text-xs font-medium text-gray-500 cursor-pointer">
                   {param.name}
                 </label>
                 <div className="flex items-center gap-1">
-                  {isCritical && (
-                    <AlertTriangle size={12} className="text-red-500" />
-                  )}
-                  <span className="text-[10px] text-gray-400">
-                    Ref: {refRange}
-                  </span>
+                  {isCritical && <AlertTriangle size={12} className="text-red-500" />}
+                  <span className="text-[10px] text-gray-400">Ref: {refRange}</span>
                 </div>
               </div>
 
               <div className="relative">
-                {renderParameterInput(
-                  param,
-                  value,
-                  (newValue) => {
-                    // Ensure we always pass a string value
-                    onResultsChange(resultKey, param.code, newValue ?? '');
-                  },
-                  (e) => {
+                <ParameterInput
+                  param={param}
+                  value={value}
+                  onChange={(newValue) => onResultsChange(resultKey, param.code, newValue ?? '')}
+                  onKeyDown={(e) => {
                     if (e.key === 'Enter' && isComplete) {
                       e.preventDefault();
                       onSave();
                     }
-                  },
-                  `result-${resultKey}-${param.code}`
-                )}
+                  }}
+                  inputId={`result-${resultKey}-${param.code}`}
+                />
                 {valueType !== 'TEXT' && (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0">
                     <span className="text-xs text-gray-400 select-none">{param.unit || ''}</span>
@@ -194,11 +158,9 @@ export const ResultForm: React.FC<ResultFormProps> = ({
         })}
       </div>
 
+      {/* Technician Notes */}
       <div className="mt-4">
-        <label 
-          htmlFor={`notes-${resultKey}`}
-          className="text-xs font-medium text-gray-500 mb-1 block"
-        >
+        <label htmlFor={`notes-${resultKey}`} className="text-xs font-medium text-gray-500 mb-1 block">
           Technician Notes (Optional)
         </label>
         <Textarea
@@ -210,14 +172,10 @@ export const ResultForm: React.FC<ResultFormProps> = ({
         />
       </div>
 
-      {/* Only show submit button in card context - modal has its own footer */}
+      {/* Submit button (card context only) */}
       {!isModal && (
         <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-gray-50 border-t border-gray-100 rounded-b flex items-center justify-end">
-          <Button
-            onClick={onSave}
-            disabled={!isComplete}
-            className="shadow-sm flex items-center gap-2 text-xs"
-          >
+          <Button onClick={onSave} disabled={!isComplete} className="shadow-sm flex items-center gap-2 text-xs">
             <Icon name="notebook" className="w-4 h-4" />
             Submit Results
           </Button>

@@ -282,38 +282,6 @@ export const PatientDetail: React.FC = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {patientOrders.map((order) => {
-                      // Determine Badge Color for Order Status
-                      let statusVariant: 'default' | 'primary' | 'success' | 'warning' | 'danger' = 'default';
-                      switch (order.overallStatus) {
-                        case 'completed':
-                        case 'delivered':
-                          statusVariant = 'success';
-                          break;
-                        case 'in-progress':
-                          statusVariant = 'primary';
-                          break;
-                        case 'ordered':
-                        default:
-                          statusVariant = 'default';
-                          break;
-                      }
-
-                      // Determine Badge Color for Payment Status
-                      let paymentVariant: 'default' | 'primary' | 'success' | 'warning' | 'danger' = 'default';
-                      switch (order.paymentStatus) {
-                        case 'paid':
-                          paymentVariant = 'success';
-                          break;
-                        case 'pending':
-                          paymentVariant = 'warning';
-                          break;
-                        case 'partial':
-                          paymentVariant = 'primary';
-                          break;
-                        default:
-                          paymentVariant = 'default';
-                        }
-
                       return (
                         <tr key={order.orderId} className="hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => navigate(`/orders/${order.orderId}`)}>
                           <td className="px-4 py-3 font-medium font-mono text-sky-600 truncate">
@@ -327,26 +295,16 @@ export const PatientDetail: React.FC = () => {
                             <span className="text-gray-500 ml-1">tests</span>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <Badge 
-                              variant={order.priority === 'stat' ? 'danger' : order.priority === 'urgent' ? 'warning' : 'default'} 
-                              size="sm" 
-                              className="uppercase"
-                            >
-                              {order.priority}
-                            </Badge>
+                            <Badge variant={order.priority} size="sm" />
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <Badge variant={statusVariant} size="sm" className="uppercase">
-                              {order.overallStatus.replace('-', ' ')}
-                            </Badge>
+                            <Badge variant={order.overallStatus} size="sm" />
                           </td>
                           <td className="px-4 py-3 font-medium text-sky-600 whitespace-nowrap">
                             {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.totalPrice)}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <Badge variant={paymentVariant} size="sm" className="uppercase">
-                              {order.paymentStatus}
-                            </Badge>
+                            <Badge variant={order.paymentStatus} size="sm" />
                           </td>
                         </tr>
                       );

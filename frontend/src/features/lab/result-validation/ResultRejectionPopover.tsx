@@ -1,6 +1,12 @@
+/**
+ * ResultRejectionPopover - Popover for rejecting test results
+ * 
+ * Allows validators to reject results with a reason and specify follow-up action.
+ */
+
 import React, { useState } from 'react';
-import { Popover, IconButton, Icon, Button, Textarea, Alert } from '@/shared/ui';
-import { useAuth } from '@/hooks';
+import { Popover, IconButton, Icon, Alert } from '@/shared/ui';
+import { PopoverForm, RadioCard } from '../shared/PopoverForm';
 
 interface ResultRejectionPopoverContentProps {
   onConfirm: (reason: string, type: 're-test' | 're-collect') => void;
@@ -17,153 +23,86 @@ export const ResultRejectionPopoverContent: React.FC<ResultRejectionPopoverConte
   testCode,
   patientName,
 }) => {
-  const { currentUser } = useAuth();
   const [reason, setReason] = useState('');
   const [type, setType] = useState<'re-test' | 're-collect'>('re-test');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleConfirm = async () => {
-    if (!reason.trim()) {
-      return;
-    }
-
+    if (!reason.trim()) return;
     setIsSubmitting(true);
-    // Simulate short delay for UX
     await new Promise(resolve => setTimeout(resolve, 300));
     onConfirm(reason, type);
     setIsSubmitting(false);
   };
 
+  const subtitle = [testName, testCode ? `(${testCode})` : '', patientName ? `- ${patientName}` : '']
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <div className="w-90 md:w-96 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex flex-col max-h-[600px]">
-      <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-start justify-between">
+    <PopoverForm
+      title="Reject Results"
+      subtitle={subtitle || undefined}
+      onCancel={onCancel}
+      onConfirm={handleConfirm}
+      confirmLabel="Reject"
+      confirmVariant="danger"
+      isSubmitting={isSubmitting}
+      disabled={!reason.trim()}
+      footerInfo={
+        <>
+          <Icon name="alert-circle" className="w-3.5 h-3.5" />
+          <span>Rejecting results</span>
+        </>
+      }
+    >
+      {/* Warning Alert */}
+      <Alert variant="warning" className="py-2">
         <div className="space-y-0.5">
-          <h4 className="font-medium text-gray-900">Reject Results</h4>
-          {(testName || testCode || patientName) && (
-            <p className="text-xs text-gray-500">
-               {testName} {testCode ? `(${testCode})` : ''} {patientName ? `- ${patientName}` : ''}
-            </p>
-          )}
+          <p className="font-medium text-xs">Action Required</p>
+          <p className="text-[10px] opacity-90 leading-tight">
+            You are rejecting results. Please specify the required follow-up action.
+          </p>
         </div>
-        <button onClick={onCancel} className="text-gray-400 hover:text-gray-600 mt-0.5">
-          <Icon name="close" className="w-4 h-4" />
-        </button>
+      </Alert>
+
+      {/* Action Type Selection */}
+      <div>
+        <label className="block text-xs font-medium text-gray-500 mb-1">Follow-up Action</label>
+        <div className="grid grid-cols-1 gap-2">
+          <RadioCard
+            name="rejection-type"
+            selected={type === 're-test'}
+            onClick={() => setType('re-test')}
+            label="Re-test Sample"
+            description="Perform the test again using the existing sample."
+            variant="blue"
+          />
+          <RadioCard
+            name="rejection-type"
+            selected={type === 're-collect'}
+            onClick={() => setType('re-collect')}
+            label="New Sample Required"
+            description="Reject current sample and request new collection."
+            variant="red"
+          />
+        </div>
       </div>
 
-      <div className="p-4 space-y-4 overflow-y-auto flex-1">
-        {/* Warning Alert */}
-        <Alert variant="warning" className="py-2">
-            <div className="space-y-0.5">
-              <p className="font-medium text-xs">Action Required</p>
-              <p className="text-[10px] opacity-90 leading-tight">
-                You are rejecting results. Please specify the required follow-up action.
-              </p>
-            </div>
-        </Alert>
-
-        {/* Action Type Selection */}
-        <div>
-           <label className="block text-xs font-medium text-gray-500 mb-1">Follow-up Action</label>
-           <div className="grid grid-cols-1 gap-2">
-              <div 
-                className={`
-                  relative flex items-start p-3 cursor-pointer rounded-lg border transition-all duration-200
-                  ${type === 're-test' 
-                    ? 'bg-blue-50 border-blue-200 ring-1 ring-blue-200' 
-                    : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                  }
-                `}
-                onClick={() => setType('re-test')}
-              >
-                <div className="flex items-center h-4 mt-0.5">
-                  <input
-                    type="radio"
-                    name="rejection-type"
-                    checked={type === 're-test'}
-                    onChange={() => setType('re-test')}
-                    className="h-3.5 w-3.5 text-blue-600 border-gray-300 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="ml-2.5">
-                  <span className={`block text-xs font-medium ${type === 're-test' ? 'text-blue-900' : 'text-gray-900'}`}>
-                    Re-test Sample
-                  </span>
-                  <span className={`block text-[10px] mt-0.5 ${type === 're-test' ? 'text-blue-700' : 'text-gray-500'}`}>
-                    Perform the test again using the existing sample.
-                  </span>
-                </div>
-              </div>
-
-              <div 
-                className={`
-                  relative flex items-start p-3 cursor-pointer rounded-lg border transition-all duration-200
-                  ${type === 're-collect' 
-                    ? 'bg-red-50 border-red-200 ring-1 ring-red-200' 
-                    : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                  }
-                `}
-                onClick={() => setType('re-collect')}
-              >
-                <div className="flex items-center h-4 mt-0.5">
-                  <input
-                    type="radio"
-                    name="rejection-type"
-                    checked={type === 're-collect'}
-                    onChange={() => setType('re-collect')}
-                    className="h-3.5 w-3.5 text-red-600 border-gray-300 focus:ring-red-500"
-                  />
-                </div>
-                <div className="ml-2.5">
-                  <span className={`block text-xs font-medium ${type === 're-collect' ? 'text-red-900' : 'text-gray-900'}`}>
-                    New Sample Required
-                  </span>
-                  <span className={`block text-[10px] mt-0.5 ${type === 're-collect' ? 'text-red-700' : 'text-gray-500'}`}>
-                    Reject current sample and request new collection.
-                  </span>
-                </div>
-              </div>
-           </div>
-        </div>
-
-        {/* Rejection Reason */}
-        <Textarea
-          label="Rejection Reason"
-          required
+      {/* Rejection Reason */}
+      <div>
+        <label className="block text-xs font-medium text-gray-700 mb-1">
+          Rejection Reason <span className="text-red-500">*</span>
+        </label>
+        <textarea
           rows={3}
           placeholder="Please explain why the results are being rejected..."
           value={reason}
           onChange={(e) => setReason(e.target.value)}
-          className="text-xs"
+          className="w-full px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
         />
       </div>
-
-      {/* Footer */}
-      <div className="p-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-2 shrink-0">
-         <div className="text-xs text-gray-500 flex items-center gap-1.5">
-          <Icon name="alert-circle" className="w-3.5 h-3.5" />
-          <span>Rejecting as {currentUser?.name || 'Lab Staff'}</span>
-         </div>
-         <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={onCancel}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={handleConfirm}
-              isLoading={isSubmitting}
-              disabled={!reason.trim()}
-            >
-              Reject
-            </Button>
-         </div>
-      </div>
-    </div>
+    </PopoverForm>
   );
 };
 
@@ -179,34 +118,32 @@ export const ResultRejectionPopover: React.FC<ResultRejectionPopoverProps> = ({
   testCode,
   patientName,
   onReject,
-}) => {
-  return (
-    <Popover
-      placement="bottom-end"
-      offsetValue={8}
-      trigger={
-        <IconButton
-          icon={<Icon name="close" />}
-          variant="danger"
-          size="sm"
-          title="Reject Results"
+}) => (
+  <Popover
+    placement="bottom-end"
+    offsetValue={8}
+    trigger={
+      <IconButton
+        icon={<Icon name="close" />}
+        variant="danger"
+        size="sm"
+        title="Reject Results"
+      />
+    }
+  >
+    {({ close }) => (
+      <div data-popover-content onClick={(e) => e.stopPropagation()}>
+        <ResultRejectionPopoverContent
+          onConfirm={(reason, type) => {
+            onReject(reason, type);
+            close();
+          }}
+          onCancel={close}
+          testName={testName}
+          testCode={testCode}
+          patientName={patientName}
         />
-      }
-    >
-      {({ close }) => (
-        <div data-popover-content onClick={(e) => e.stopPropagation()}>
-          <ResultRejectionPopoverContent
-            onConfirm={(reason, type) => {
-              onReject(reason, type);
-              close();
-            }}
-            onCancel={close}
-            testName={testName}
-            testCode={testCode}
-            patientName={patientName}
-          />
-        </div>
-      )}
-    </Popover>
-  );
-};
+      </div>
+    )}
+  </Popover>
+);

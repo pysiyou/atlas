@@ -330,12 +330,9 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
               <div className="text-xs text-gray-600 mb-1">Chronic Conditions</div>
               <div className="flex flex-wrap gap-2">
                 {medicalHistory.chronicConditions.map((condition: string, index: number) => (
-                  <span
-                    key={index}
-                    className="inline-block px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded font-medium"
-                  >
+                  <Badge key={index} variant="chronic-condition" size="sm">
                     {condition}
-                  </span>
+                  </Badge>
                 ))}
               </div>
             </div>
@@ -350,12 +347,9 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
               <div className="text-xs text-gray-600 mb-1">Current Medications</div>
               <div className="flex flex-wrap gap-2">
                 {medicalHistory.currentMedications.map((medication: string, index: number) => (
-                  <span
-                    key={index}
-                    className="inline-block px-2 py-1 bg-green-50 text-green-700 text-xs rounded font-medium"
-                  >
+                  <Badge key={index} variant="medication" size="sm">
                     {medication}
-                  </span>
+                  </Badge>
                 ))}
               </div>
             </div>
@@ -370,12 +364,9 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
               <div className="text-xs text-gray-600 mb-1">Allergies</div>
               <div className="flex flex-wrap gap-2">
                 {medicalHistory.allergies.map((allergy: string, index: number) => (
-                  <span
-                    key={index}
-                    className="inline-block px-2 py-1 bg-orange-50 text-orange-700 text-xs rounded font-medium"
-                  >
+                  <Badge key={index} variant="allergy" size="sm">
                     {allergy}
-                  </span>
+                  </Badge>
                 ))}
               </div>
             </div>
@@ -390,12 +381,9 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
               <div className="text-xs text-gray-600 mb-1">Previous Surgeries</div>
               <div className="flex flex-wrap gap-2">
                 {medicalHistory.previousSurgeries.map((surgery: string, index: number) => (
-                  <span
-                    key={index}
-                    className="inline-block px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded font-medium"
-                  >
+                  <Badge key={index} variant="surgery" size="sm">
                     {surgery}
-                  </span>
+                  </Badge>
                 ))}
               </div>
             </div>
@@ -525,12 +513,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-semibold text-gray-900 text-sm">{order.orderId}</span>
-                        <Badge
-                          variant={order.overallStatus}
-                          size="sm"
-                        >
-                          {order.overallStatus.replace('-', ' ').toUpperCase()}
-                        </Badge>
+                        <Badge variant={order.overallStatus} size="sm" />
                       </div>
                       <div className="text-xs text-gray-600">
                         {formatDate(order.orderDate)} • {order.tests.length} test(s)

@@ -228,7 +228,7 @@ def request_recollection(
         )
     
     # Generate new sample ID
-    new_sample_id = generate_id("SAM")
+    new_sample_id = generate_id("sample", db)
     
     # Calculate recollection attempt number
     # Count: original (1) + number of rejections in history

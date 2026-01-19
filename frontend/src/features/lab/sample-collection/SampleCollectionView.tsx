@@ -1,60 +1,61 @@
+/**
+ * SampleCollectionView - Main view for sample collection workflow
+ * 
+ * Displays samples awaiting collection with filtering by status.
+ */
+
 import React, { useMemo, useState } from 'react';
 import { useOrders, useTests, useAuth, useSamples, usePatients } from '@/hooks';
 import toast from 'react-hot-toast';
 import type { ContainerType, ContainerTopColor, SampleStatus, Patient, Test } from '@/types';
-import { calculateRequiredSamples, sortByPriority, getCollectionRequirements } from '../../../utils/sampleHelpers';
+import { calculateRequiredSamples, getCollectionRequirements } from '../../../utils/sampleHelpers';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { SampleCard } from './SampleCard';
-import { SearchBar, MultiSelectFilter, type FilterOption, EmptyState } from '@/shared/ui';
-import { useSearch } from '@/utils/filtering';
+import { MultiSelectFilter, type FilterOption } from '@/shared/ui';
+import { LabWorkflowView } from '../shared/LabWorkflowView';
 import type { SampleDisplay } from './types';
 
-// Sample status filter options with colors
+/** Sample status filter options */
 const SAMPLE_STATUS_FILTER_OPTIONS: FilterOption[] = [
   { id: 'pending', label: 'PENDING', color: 'warning' },
   { id: 'collected', label: 'COLLECTED', color: 'success' },
   { id: 'rejected', label: 'REJECTED', color: 'error' },
 ];
 
-const createFilterSample = (patients: Patient[], tests: Test[]) => (display: SampleDisplay, query: string): boolean => {
-  const lowerQuery = query.toLowerCase();
-  const sample = display.sample;
-  const sampleType = sample?.sampleType;
-  
-  // Also match on collection type (e.g. searching "blood" should find plasma)
-  const collectionType = sampleType ? getCollectionRequirements(sampleType).collectionType : '';
-  
-  const patientName = getPatientName(display.order.patientId, patients);
-  const testNames = sample?.testCodes ? getTestNames(sample.testCodes, tests) : [];
-  
-  // Search in rejection reasons if sample is rejected
-  const rejectionReasons = sample?.status === 'rejected' && 'rejectionReasons' in sample
-    ? (sample.rejectionReasons || []).join(' ').toLowerCase()
-    : '';
-  
-  // Search in rejection notes
-  const rejectionNotes = sample?.status === 'rejected' && 'rejectionNotes' in sample
-    ? (sample.rejectionNotes || '').toLowerCase()
-    : '';
-  
-  // Search in collection notes
-  const collectionNotes = (sample?.status === 'collected' || sample?.status === 'rejected') && 'collectionNotes' in sample
-    ? (sample.collectionNotes || '').toLowerCase()
-    : '';
-  
-  return (
-    display.order.orderId.toLowerCase().includes(lowerQuery) ||
-    sample?.sampleId?.toLowerCase().includes(lowerQuery) ||
-    patientName.toLowerCase().includes(lowerQuery) ||
-    (sampleType?.toLowerCase()?.includes(lowerQuery) || false) ||
-    (collectionType.toLowerCase().includes(lowerQuery) && collectionType !== sampleType) ||
-    (testNames.some((name: string) => name.toLowerCase().includes(lowerQuery))) ||
-    rejectionReasons.includes(lowerQuery) ||
-    rejectionNotes.includes(lowerQuery) ||
-    collectionNotes.includes(lowerQuery) ||
-    false
-  );
-};
+/**
+ * Creates a filter function for samples that searches across multiple fields
+ */
+const createSampleFilter = (patients: Patient[], tests: Test[]) => 
+  (display: SampleDisplay, query: string): boolean => {
+    const lowerQuery = query.toLowerCase();
+    const sample = display.sample;
+    const sampleType = sample?.sampleType;
+    const collectionType = sampleType ? getCollectionRequirements(sampleType).collectionType : '';
+    const patientName = getPatientName(display.order.patientId, patients);
+    const testNames = sample?.testCodes ? getTestNames(sample.testCodes, tests) : [];
+    
+    // Search in rejection reasons/notes for rejected samples
+    const rejectionReasons = sample?.status === 'rejected' && 'rejectionReasons' in sample
+      ? (sample.rejectionReasons || []).join(' ').toLowerCase() : '';
+    const rejectionNotes = sample?.status === 'rejected' && 'rejectionNotes' in sample
+      ? (sample.rejectionNotes || '').toLowerCase() : '';
+    
+    // Search in collection notes
+    const collectionNotes = (sample?.status === 'collected' || sample?.status === 'rejected') && 'collectionNotes' in sample
+      ? (sample.collectionNotes || '').toLowerCase() : '';
+    
+    return (
+      display.order.orderId.toLowerCase().includes(lowerQuery) ||
+      sample?.sampleId?.toLowerCase().includes(lowerQuery) ||
+      patientName.toLowerCase().includes(lowerQuery) ||
+      sampleType?.toLowerCase()?.includes(lowerQuery) ||
+      (collectionType.toLowerCase().includes(lowerQuery) && collectionType !== sampleType) ||
+      testNames.some((name: string) => name.toLowerCase().includes(lowerQuery)) ||
+      rejectionReasons.includes(lowerQuery) ||
+      rejectionNotes.includes(lowerQuery) ||
+      collectionNotes.includes(lowerQuery)
+    );
+  };
 
 export const SampleCollectionView: React.FC = () => {
   const { currentUser } = useAuth();
@@ -64,33 +65,22 @@ export const SampleCollectionView: React.FC = () => {
   const { getPatient, patients } = usePatients();
   const [statusFilters, setStatusFilters] = useState<SampleStatus[]>(['pending']);
 
+  // Build display objects for all samples
   const allSampleDisplays = useMemo(() => {
     const displays: SampleDisplay[] = [];
 
-    // ONLY use real samples from database
     samples.forEach(sample => {
       const order = orders.find(o => o.orderId === sample.orderId);
-      if (!order) return; // Skip if order not found (shouldn't happen)
+      if (!order) return;
 
       const patient = getPatient(order.patientId);
-      if (!patient) return; // Skip if patient not found
+      if (!patient) return;
 
-      // Find tests associated with this sample
       const testsForSample = order.tests.filter(t => sample.testCodes.includes(t.testCode));
-
       if (testsForSample.length > 0) {
-        // Calculate requirements just to get the display info in standard format
-        // We pass the subset of tests that belong to this sample
-        const requirements = calculateRequiredSamples(
-          testsForSample, 
-          tests, 
-          order.priority, 
-          order.orderId
-        );
-
-        // Should ideally return 1 requirement since we grouped by sample/testCodes
+        const requirements = calculateRequiredSamples(testsForSample, tests, order.priority, order.orderId);
         if (requirements.length > 0) {
-           displays.push({
+          displays.push({
             sample,
             order,
             patient,
@@ -104,22 +94,18 @@ export const SampleCollectionView: React.FC = () => {
     return displays;
   }, [samples, orders, tests, getPatient]);
 
-  const filterSample = useMemo(() => createFilterSample(patients, tests), [patients, tests]);
+  // Create memoized filter function
+  const filterSample = useMemo(() => createSampleFilter(patients, tests), [patients, tests]);
 
-  const { filteredItems: filteredDisplays, searchQuery, setSearchQuery, isEmpty } = useSearch(
-    allSampleDisplays,
-    filterSample
-  );
+  // Apply status filter to displays
+  const filteredByStatus = useMemo(() => {
+    if (statusFilters.length === 0) return allSampleDisplays;
+    return allSampleDisplays.filter(d => d.sample?.status && statusFilters.includes(d.sample.status));
+  }, [allSampleDisplays, statusFilters]);
 
-  const displayedSamples = useMemo(() => {
-    // Apply status filter (if any selected, otherwise show all)
-    const statusFiltered = statusFilters.length === 0
-      ? filteredDisplays
-      : filteredDisplays.filter(d => d.sample?.status && statusFilters.includes(d.sample.status));
-
-    return sortByPriority(statusFiltered.map(d => ({ ...d, priority: d.sample?.priority || d.priority })));
-  }, [filteredDisplays, statusFilters]);
-
+  /**
+   * Handle sample collection
+   */
   const handleCollect = async (
     display: SampleDisplay,
     volume: number,
@@ -131,31 +117,20 @@ export const SampleCollectionView: React.FC = () => {
       toast.error('You must be logged in to collect samples');
       return;
     }
-
     if (!display.sample || !display.requirement) {
       toast.error('Invalid sample data');
       return;
     }
-
     if (!selectedColor) {
-      const errorMessage = display.sample.sampleType === 'urine'
-        ? 'Container color is required for sample identification'
-        : 'Container color is required for physical tube identification';
-      toast.error(errorMessage);
+      toast.error('Container color is required');
       return;
     }
-
     if (!selectedContainerType) {
       toast.error('Container type is required');
       return;
     }
 
     try {
-      // Collect the sample via API
-      // This will:
-      // 1. Update sample status to COLLECTED
-      // 2. Update associated test statuses to SAMPLE_COLLECTED
-      // 3. Link tests to this sampleId
       await collectSample(
         display.sample.sampleId,
         volume,
@@ -163,11 +138,7 @@ export const SampleCollectionView: React.FC = () => {
         selectedColor as ContainerTopColor,
         notes
       );
-
-      // Refresh orders from backend to get updated test statuses
-      // This is critical so tests appear in Result Entry page
       await refreshOrders();
-
       toast.success(`${display.sample.sampleType.toUpperCase()} sample collected`);
     } catch (error) {
       console.error('Error collecting sample:', error);
@@ -176,56 +147,30 @@ export const SampleCollectionView: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col space-y-4">
-      <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">
-        <div className="flex items-center gap-4 flex-wrap">
-          <h3 className="text-base font-medium text-gray-900">Sample Collection</h3>
-          {allSampleDisplays.length > 0 && (
-            <>
-              <div className="h-6 w-px bg-gray-300 hidden md:block" />
-              <MultiSelectFilter
-                label="Status"
-                options={SAMPLE_STATUS_FILTER_OPTIONS}
-                selectedIds={statusFilters}
-                onChange={(ids) => setStatusFilters(ids as SampleStatus[])}
-                selectAllLabel="Select all"
-                icon="checklist"
-              />              
-            </>
-          )}
-        </div>
-
-        {allSampleDisplays.length > 0 && (
-          <div className="w-full md:w-72">
-            <SearchBar
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search samples..."
-              size="sm"
-            />
-          </div>
-        )}
-      </div>
-
-      <div className={`flex-1 ${displayedSamples.length === 0 ? 'flex flex-col' : 'grid gap-4 overflow-y-auto min-h-0'}`}>
-        {displayedSamples.map((display, idx) => (
-          <SampleCard
-            key={`${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`}
-            display={display}
-            onCollect={handleCollect}
-          />
-        ))}
-
-        {isEmpty && (
-          <div className="flex-1">
-            <EmptyState
-              icon={searchQuery ? 'search' : 'sample-collection'}
-              title={searchQuery ? 'No Matches Found' : 'No Pending Collections'}
-              description={searchQuery ? `No tests found matching "${searchQuery}"` : 'There are no samples waiting to be collected.'}
-            />
-          </div>
-        )}
-      </div>
-    </div>
+    <LabWorkflowView
+      title="Sample Collection"
+      items={filteredByStatus}
+      filterFn={filterSample}
+      renderCard={(display) => (
+        <SampleCard display={display} onCollect={handleCollect} />
+      )}
+      getItemKey={(display, idx) => 
+        `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
+      }
+      emptyIcon="sample-collection"
+      emptyTitle="No Pending Collections"
+      emptyDescription="There are no samples waiting to be collected."
+      searchPlaceholder="Search samples..."
+      filters={
+        <MultiSelectFilter
+          label="Status"
+          options={SAMPLE_STATUS_FILTER_OPTIONS}
+          selectedIds={statusFilters}
+          onChange={(ids) => setStatusFilters(ids as SampleStatus[])}
+          selectAllLabel="Select all"
+          icon="checklist"
+        />
+      }
+    />
   );
 };

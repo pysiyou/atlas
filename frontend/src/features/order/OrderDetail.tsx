@@ -40,47 +40,9 @@ export const OrderDetail: React.FC = () => {
     );
   }
 
-  // Priority badge variant
-  const getPriorityVariant = (priority: string) => {
-    switch (priority) {
-      case 'stat': return 'danger';
-      case 'urgent': return 'warning';
-      default: return 'default';
-    }
-  };
-
-  // Status badge variant
-  const getStatusVariant = (status: string) => {
-    switch (status) {
-      case 'completed':
-      case 'delivered': return 'success';
-      case 'in-progress': return 'primary';
-      case 'ordered': return 'default';
-      default: return 'default';
-    }
-  };
-
-  // Payment status badge variant
-  const getPaymentVariant = (status: string) => {
-    switch (status) {
-      case 'paid': return 'success';
-      case 'pending': return 'warning';
-      case 'partial': return 'primary';
-      default: return 'default';
-    }
-  };
-
-  // Test status badge variant
-  const getTestStatusVariant = (status: string) => {
-    switch (status) {
-      case 'validated':
-      case 'rejected': return 'success';
-      case 'completed': return 'primary';
-      case 'in-progress': return 'warning';
-      case 'sample-collected': return 'info';
-      default: return 'default';
-    }
-  };
+  // Note: Priority, status, and payment variants use the Badge component's built-in variants directly.
+  // The Badge component has predefined styles for: 'stat', 'urgent', 'routine', 'ordered', 'in-progress',
+  // 'completed', 'delivered', 'validated', 'rejected', 'pending', 'paid', 'partial', etc.
 
   return (
     <div className="h-full flex flex-col p-6">
@@ -92,20 +54,8 @@ export const OrderDetail: React.FC = () => {
               <h1 className="text-sm font-bold text-gray-900">
                 {order.orderId}
               </h1>
-              <Badge
-                variant={getPriorityVariant(order.priority)}
-                size="sm"
-                className="uppercase"
-              >
-                {order.priority}
-              </Badge>
-              <Badge
-                variant={getStatusVariant(order.overallStatus)}
-                size="sm"
-                className="uppercase"
-              >
-                {order.overallStatus.replace('-', ' ')}
-              </Badge>
+              <Badge variant={order.priority} size="sm" />
+              <Badge variant={order.overallStatus} size="sm" />
             </div>
           </div>
         </div>
@@ -167,9 +117,7 @@ export const OrderDetail: React.FC = () => {
                 <div>
                   <p className="text-xs text-gray-500">Priority</p>
                   <div className="mt-0.5">
-                    <Badge variant={getPriorityVariant(order.priority)} size="sm" className="uppercase">
-                      {order.priority}
-                    </Badge>
+                    <Badge variant={order.priority} size="sm" />
                   </div>
                 </div>
               </div>
@@ -180,9 +128,7 @@ export const OrderDetail: React.FC = () => {
                 <div>
                   <p className="text-xs text-gray-500">Status</p>
                   <div className="mt-0.5">
-                    <Badge variant={getStatusVariant(order.overallStatus)} size="sm" className="uppercase">
-                      {order.overallStatus.replace('-', ' ')}
-                    </Badge>
+                    <Badge variant={order.overallStatus} size="sm" />
                   </div>
                 </div>
               </div>
@@ -357,13 +303,7 @@ export const OrderDetail: React.FC = () => {
                           <Badge variant={sampleType as 'default'} size="sm" />
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">
-                          <Badge
-                            variant={getTestStatusVariant(test.status)}
-                            size="sm"
-                            className="uppercase"
-                          >
-                            {test.status.replace('-', ' ')}
-                          </Badge>
+                          <Badge variant={test.status} size="sm" />
                         </td>
                         <td className="px-4 py-3 text-right font-medium text-sky-600 whitespace-nowrap">
                           {formatCurrency(test.priceAtOrder)}
@@ -404,13 +344,7 @@ export const OrderDetail: React.FC = () => {
 
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Payment Status</span>
-                <Badge
-                  variant={getPaymentVariant(order.paymentStatus)}
-                  size="sm"
-                  className="uppercase"
-                >
-                  {order.paymentStatus}
-                </Badge>
+                <Badge variant={order.paymentStatus} size="sm" />
               </div>
             </div>
 

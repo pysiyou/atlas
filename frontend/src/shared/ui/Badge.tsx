@@ -14,6 +14,10 @@ export type BadgeVariant =
   | 'blood' | 'urine' | 'stool' | 'swab' | 'tissue' | 'fluid' | 'csf' | 'sputum' | 'other' | 'plasma' | 'serum'
   // Sex
   | 'male' | 'female'
+  // Medical History
+  | 'chronic-condition' | 'medication' | 'allergy' | 'surgery'
+  // Container Top Colors (for physical tube representation)
+  | 'container-red' | 'container-yellow' | 'container-purple' | 'container-blue' | 'container-green' | 'container-gray' | 'container-black'
   // Arbitrary string fallback
   | (string & {});
 
@@ -47,7 +51,7 @@ const VARIANT_STYLES: Record<string, string> = {
   'cancelled': 'bg-red-100 text-red-800 border-transparent',
   'validated': 'bg-green-100 text-green-800 border-transparent',
   'reported': 'bg-gray-100 text-gray-800 border-transparent',
-  'collected': 'bg-purple-100 text-purple-800 border-transparent',
+  'collected': 'bg-green-100 text-green-800 border-transparent',
   'rejected': 'bg-red-100 text-red-800 border-transparent',
   'scheduled': 'bg-blue-100 text-blue-800 border-transparent',
   'confirmed': 'bg-green-100 text-green-800 border-transparent',
@@ -91,6 +95,21 @@ const VARIANT_STYLES: Record<string, string> = {
   // Sex Mappings
   'male': 'bg-blue-50 text-blue-700 border-blue-200',
   'female': 'bg-pink-50 text-pink-700 border-pink-200',
+
+  // Medical History Mappings
+  'chronic-condition': 'bg-blue-50 text-blue-700 border-transparent',
+  'medication': 'bg-green-50 text-green-700 border-transparent',
+  'allergy': 'bg-orange-50 text-orange-700 border-transparent',
+  'surgery': 'bg-purple-50 text-purple-700 border-transparent',
+
+  // Container Top Color Mappings (solid colors for physical tube representation)
+  'container-red': 'bg-red-500 text-white border-transparent',
+  'container-yellow': 'bg-yellow-500 text-white border-transparent',
+  'container-purple': 'bg-purple-500 text-white border-transparent',
+  'container-blue': 'bg-blue-500 text-white border-transparent',
+  'container-green': 'bg-green-500 text-white border-transparent',
+  'container-gray': 'bg-gray-500 text-white border-transparent',
+  'container-black': 'bg-black text-white border-transparent',
 };
 
 const SIZES = {

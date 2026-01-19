@@ -36,9 +36,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
       <div className="flex items-center gap-3 flex-wrap">
         <h2 className="text-2xl font-bold text-gray-900">{orderId}</h2>
         <Badge variant={priority} size="sm" />
-        <Badge variant={status} size="sm">
-          {status.replace('-', ' ').toUpperCase()}
-        </Badge>
+        <Badge variant={status} size="sm" />
         <span className="text-sm text-gray-600">{formatDate(orderDate)}</span>
       </div>
     </div>
@@ -153,9 +151,7 @@ export const TestListCard: React.FC<TestListCardProps> = ({
                 </div>
                 <div className="text-right">
                   <div className="font-medium text-sky-600">{formatCurrency(test.priceAtOrder)}</div>
-                  <Badge variant={test.status} size="sm">
-                    {test.status.replace('-', ' ').toUpperCase()}
-                  </Badge>
+                  <Badge variant={test.status} size="sm" />
                 </div>
               </div>
 
