@@ -8,6 +8,7 @@ import React, { type ReactNode } from 'react';
 
 // Feature Providers
 import { AuthProvider } from '@/features/auth/AuthProvider';
+import { UsersProvider } from '@/features/user';
 import { PatientsProvider } from '@/features/patient/PatientProvider';
 import { OrdersProvider } from '@/features/order/OrderProvider';
 import { TestsProvider } from '@/features/test/TestsProvider';
@@ -40,6 +41,7 @@ function composeProviders(
  */
 const featureProviders = [
   AuthProvider,
+  UsersProvider, // Must come after AuthProvider (depends on authentication state)
   PatientsProvider,
   OrdersProvider,
   TestsProvider,
@@ -71,6 +73,7 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => (
  */
 export {
   AuthProvider,
+  UsersProvider,
   PatientsProvider,
   OrdersProvider,
   TestsProvider,

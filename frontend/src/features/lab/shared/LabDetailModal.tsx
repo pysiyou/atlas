@@ -173,10 +173,14 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children }) => (
  * ModalFooter - Common footer layout with status message and action buttons
  */
 interface ModalFooterProps {
+  /** Optional icon to display before status message */
   statusIcon?: ReactNode;
+  /** Status message text */
   statusMessage: string;
+  /** Custom className for status text */
   statusClassName?: string;
-  children: ReactNode;
+  /** Optional action buttons (displayed on the right side) */
+  children?: ReactNode;
 }
 
 export const ModalFooter: React.FC<ModalFooterProps> = ({

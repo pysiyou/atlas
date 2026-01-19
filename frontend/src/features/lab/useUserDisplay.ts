@@ -1,12 +1,36 @@
 /**
  * User display hook
  * Returns helper functions to display user information
+ * 
+ * Uses the UsersContext to look up user names by ID.
+ * Falls back gracefully if user data is not available.
  */
+
+import { useUsers } from '@/features/user';
+
 export const useUserDisplay = () => {
+  const { getUserName, getUserInfo } = useUsers();
+
   return {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getUserDisplay: (_userId: string) => 'User',
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getUserName: (_userId: string) => 'User',
+    /**
+     * Get formatted display string for a user
+     * @param userId - The user's ID
+     * @returns User's name, or fallback string if not found
+     */
+    getUserDisplay: (userId: string) => getUserName(userId),
+
+    /**
+     * Get user's name by ID
+     * @param userId - The user's ID
+     * @returns User's name, or fallback string if not found
+     */
+    getUserName: (userId: string) => getUserName(userId),
+
+    /**
+     * Get full user info by ID (for more detailed displays)
+     * @param userId - The user's ID
+     * @returns User display info object, or undefined if not found
+     */
+    getUserInfo,
   };
 };

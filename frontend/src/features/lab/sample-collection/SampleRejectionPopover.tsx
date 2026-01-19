@@ -187,12 +187,20 @@ const SampleRejectionPopoverContent: React.FC<SampleRejectionPopoverContentProps
 };
 
 interface SampleRejectionPopoverProps {
+  /** Sample ID */
   sampleId: string;
+  /** Sample type for display */
   sampleType?: string;
+  /** Patient name for display */
   patientName?: string;
+  /** Whether this is a recollection sample */
   isRecollection?: boolean;
+  /** Number of previous rejections */
   rejectionHistoryCount?: number;
+  /** Callback when rejection is confirmed */
   onReject: (reasons: RejectionReason[], notes: string, requireRecollection: boolean) => Promise<void> | void;
+  /** Custom trigger element (uses default icon button if not provided) */
+  trigger?: React.ReactNode;
 }
 
 export const SampleRejectionPopover: React.FC<SampleRejectionPopoverProps> = ({
@@ -202,17 +210,20 @@ export const SampleRejectionPopover: React.FC<SampleRejectionPopoverProps> = ({
   isRecollection,
   rejectionHistoryCount,
   onReject,
+  trigger,
 }) => (
   <Popover
     placement="bottom-end"
     offsetValue={8}
     trigger={
-      <IconButton
-        icon={<Icon name="close" />}
-        variant="danger"
-        size="sm"
-        title="Reject Sample"
-      />
+      trigger || (
+        <IconButton
+          icon={<Icon name="close" />}
+          variant="danger"
+          size="sm"
+          title="Reject Sample"
+        />
+      )
     }
   >
     {({ close }) => (

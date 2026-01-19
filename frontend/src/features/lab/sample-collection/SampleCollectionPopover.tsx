@@ -226,11 +226,18 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
 };
 
 interface SampleCollectionPopoverProps {
+  /** Sample requirement data */
   requirement: SampleRequirement;
+  /** Patient name for display */
   patientName?: string;
+  /** Test name for display */
   testName?: string;
+  /** Whether this is a recollection */
   isRecollection?: boolean;
+  /** Callback when collection is confirmed */
   onConfirm: (volume: number, notes?: string, color?: string, containerType?: ContainerType) => void;
+  /** Custom trigger element (uses default button if not provided) */
+  trigger?: React.ReactNode;
 }
 
 export const SampleCollectionPopover: React.FC<SampleCollectionPopoverProps> = ({
@@ -239,14 +246,17 @@ export const SampleCollectionPopover: React.FC<SampleCollectionPopoverProps> = (
   testName,
   isRecollection = false,
   onConfirm,
+  trigger,
 }) => (
   <Popover
     placement="bottom-end"
     offsetValue={8}
     trigger={
-      <Button variant="primary" size="xs" icon={<Icon name="sample-collection" className="text-white" />}>
-        {isRecollection ? 'RECOLLECT' : 'COLLECT'}
-      </Button>
+      trigger || (
+        <Button variant="primary" size="xs" icon={<Icon name="sample-collection" className="text-white" />}>
+          {isRecollection ? 'RECOLLECT' : 'COLLECT'}
+        </Button>
+      )
     }
   >
     {({ close }) => (

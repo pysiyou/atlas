@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Badge, Icon, DetailField, IconButton } from '@/shared/ui';
+import { Badge, Icon, DetailField, Button } from '@/shared/ui';
 import type { ContainerType, RejectedSample } from '@/types';
 import { REJECTION_REASON_CONFIG } from '@/types/enums/rejection-reason';
 import Barcode from 'react-barcode';
@@ -21,9 +21,9 @@ import { SampleCollectionPopover } from './SampleCollectionPopover';
 import { SampleRejectionPopover } from './SampleRejectionPopover';
 import { useSamples, useTests, usePatients, useOrders } from '@/hooks';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
-import { LabDetailModal, DetailSection, DetailGrid, StatusBadgeRow } from '../shared/LabDetailModal';
+import { LabDetailModal, DetailSection, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
 import type { SampleDisplay } from './types';
-import { AlertCircle, Clock } from 'lucide-react';
+import { AlertCircle, Clock, FlaskConical, XCircle, CheckCircle, Printer } from 'lucide-react';
 
 /** Test detail for requirements display */
 interface TestDetail {
@@ -271,55 +271,113 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
         {formatVolume(sample.requiredVolume)} required
       </Badge>
       <Badge variant={isPending ? 'pending' : isRejected ? 'rejected' : 'collected'} size="sm" />
+      {/* Show recollection badge in header for rejected samples */}
+      {isRejected && rejectedSample?.recollectionSampleId && (
+        <Badge size="sm" variant="info" className="flex items-center gap-1">
+          <Icon name="check-circle" className="w-3 h-3" />
+          Recollection: {rejectedSample.recollectionSampleId}
+        </Badge>
+      )}
     </>
   );
 
-  // Build action buttons
-  const actionButtons = (
-    <div className="flex items-center gap-2">
-      {isCollected ? (
-        <>
-          <IconButton onClick={handlePrintLabel} icon={<Icon name="printer" />} variant="primary" size="sm" title="Print Sample Label" />
-          {sample.sampleId && !sample.sampleId.includes('PENDING') && (
-            <SampleRejectionPopover
-              sampleId={sample.sampleId}
-              sampleType={sample.sampleType}
-              patientName={patientName}
-              isRecollection={sample.isRecollection || false}
-              rejectionHistoryCount={sample.rejectionHistory?.length || 0}
-              onReject={async (reasons, notes, requireRecollection) => {
-                try {
-                  await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
-                  toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
-                  onClose();
-                } catch (error) {
-                  console.error('Failed to reject sample:', error);
-                  toast.error('Failed to reject sample');
-                }
-              }}
-            />
-          )}
-        </>
-      ) : isRejected ? (
-        rejectedSample?.recollectionSampleId && (
-          <Badge size="sm" variant="info" className="flex items-center gap-1">
-            <Icon name="check-circle" className="w-3 h-3" />
-            Recollection: {rejectedSample.recollectionSampleId}
-          </Badge>
-        )
-      ) : (
-        requirement && onCollect && (
+  /**
+   * Build footer content with action buttons
+   * - Pending: Show Collect button
+   * - Collected: Show Print and Reject buttons
+   * - Rejected: Show status message only
+   * 
+   * Button styles match ResultDetail modal pattern (size="md")
+   */
+  const footerContent = (() => {
+    // For pending samples - show collect button
+    if (isPending && requirement && onCollect) {
+      const isRecollection = sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0);
+      return (
+        <ModalFooter
+          statusIcon={<FlaskConical size={16} className="text-yellow-500" />}
+          statusMessage="Sample pending collection"
+          statusClassName="text-gray-600"
+        >
           <SampleCollectionPopover
             requirement={requirement}
             patientName={patientName}
             testName={testNames.join(', ')}
-            isRecollection={sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)}
+            isRecollection={isRecollection}
             onConfirm={handleCollectConfirm}
+            trigger={
+              <Button
+                variant="primary"
+                size="md"
+                icon={<FlaskConical size={16} />}
+              >
+                {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
+              </Button>
+            }
           />
-        )
-      )}
-    </div>
-  );
+        </ModalFooter>
+      );
+    }
+
+    // For collected samples - show print and reject buttons
+    if (isCollected && sample.sampleId && !sample.sampleId.includes('PENDING')) {
+      return (
+        <ModalFooter
+          statusIcon={<CheckCircle size={16} className="text-green-500" />}
+          statusMessage="Sample collected successfully"
+          statusClassName="text-green-600"
+        >
+          <Button
+            onClick={handlePrintLabel}
+            variant="outline"
+            size="md"
+            icon={<Printer size={16} />}
+          >
+            Print Label
+          </Button>
+          <SampleRejectionPopover
+            sampleId={sample.sampleId}
+            sampleType={sample.sampleType}
+            patientName={patientName}
+            isRecollection={sample.isRecollection || false}
+            rejectionHistoryCount={sample.rejectionHistory?.length || 0}
+            onReject={async (reasons, notes, requireRecollection) => {
+              try {
+                await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
+                toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
+                onClose();
+              } catch (error) {
+                console.error('Failed to reject sample:', error);
+                toast.error('Failed to reject sample');
+              }
+            }}
+            trigger={
+              <Button
+                variant="danger"
+                size="md"
+                icon={<XCircle size={16} />}
+              >
+                Reject Sample
+              </Button>
+            }
+          />
+        </ModalFooter>
+      );
+    }
+
+    // For rejected samples - show status only, no action buttons
+    if (isRejected) {
+      return (
+        <ModalFooter
+          statusIcon={<XCircle size={16} className="text-red-500" />}
+          statusMessage={rejectedSample?.recollectionRequired ? 'Sample rejected - recollection requested' : 'Sample rejected'}
+          statusClassName="text-red-600"
+        />
+      );
+    }
+
+    return null;
+  })();
 
   return (
     <LabDetailModal
@@ -327,13 +385,9 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
       onClose={onClose}
       title={sample.sampleId}
       subtitle={`${patientName} - ${sample.sampleType.toUpperCase()}`}
-      headerBadges={
-        <div className="flex items-center justify-between gap-3 flex-wrap w-full">
-          <div className="flex items-center gap-3 flex-wrap">{headerBadges}</div>
-          {actionButtons}
-        </div>
-      }
+      headerBadges={headerBadges}
       contextInfo={{ patientName, patientId, orderId }}
+      footer={footerContent}
       additionalContextInfo={
         <>
           {/* Barcode */}
