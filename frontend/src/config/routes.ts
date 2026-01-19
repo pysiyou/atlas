@@ -11,6 +11,7 @@ export const ROUTES = {
   LABORATORY: '/laboratory',
   APPOINTMENTS: '/appointments',
   BILLING: '/billing',
+  PAYMENTS: '/payments',
   REPORTS: '/reports',
   ADMIN: '/admin',
 } as const;

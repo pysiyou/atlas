@@ -3,6 +3,7 @@ from db_scripts.generate_users import generate_users
 from db_scripts.generate_patients import generate_patients
 from db_scripts.generate_tests import generate_tests
 from db_scripts.generate_orders import generate_orders
+from db_scripts.generate_payments import generate_payments
 
 def init_db():
     """Initialize database with fresh tables and data"""
@@ -31,6 +32,9 @@ def init_db():
 
         # 5. Generate Order Data
         generate_orders(db)
+        
+        # 6. Generate Payment Data
+        generate_payments(db)
         
         print("\n✅ Database initialization complete!")
         

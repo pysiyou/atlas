@@ -7,7 +7,7 @@ from app.config import settings
 from app.database import engine, Base
 
 # Import routers
-from app.api.v1 import auth, patients, tests, orders, samples, results, users
+from app.api.v1 import auth, patients, tests, orders, samples, results, users, payments
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -43,4 +43,5 @@ app.include_router(orders.router, prefix=settings.API_V1_PREFIX, tags=["orders"]
 app.include_router(samples.router, prefix=settings.API_V1_PREFIX, tags=["samples"])
 app.include_router(results.router, prefix=settings.API_V1_PREFIX, tags=["results"])
 app.include_router(users.router, prefix=settings.API_V1_PREFIX, tags=["users"])
+app.include_router(payments.router, prefix=settings.API_V1_PREFIX, tags=["payments"])
 

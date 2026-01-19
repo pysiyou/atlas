@@ -24,30 +24,32 @@ export const getOrderTableColumns = (
   {
     key: 'orderId',
     header: 'Order ID',
+    width: '14%',
     sortable: true,
     render: (order: Order) => (
-      <span className="text-xs text-sky-600 font-medium font-mono">{order.orderId}</span>
+      <span className="text-xs text-sky-600 font-medium font-mono truncate block">{order.orderId}</span>
     ),
   },
   {
     key: 'patientName',
     header: 'Patient',
+    width: '17%',
     sortable: true,
     render: (order: Order) => (
-      <div>
-        <div className="font-semibold text-gray-900">{getPatientNameFn(order.patientId)}</div>
-        <div className="text-[10px] text-gray-500">{order.patientId}</div>
+      <div className="min-w-0">
+        <div className="font-semibold text-gray-900 truncate">{getPatientNameFn(order.patientId)}</div>
+        <div className="text-[10px] text-gray-500 truncate">{order.patientId}</div>
       </div>
     ),
   },
-
   {
     key: 'tests',
     header: 'Tests',
+    width: '14%',
     render: (order: Order) => (
-      <div>
-        <div className="font-medium">{order.tests.length} test{order.tests.length !== 1 ? 's' : ''}</div>
-        <div className="text-xs text-gray-500">
+      <div className="min-w-0">
+        <div className="font-medium truncate">{order.tests.length} test{order.tests.length !== 1 ? 's' : ''}</div>
+        <div className="text-xs text-gray-500 truncate">
           {order.tests.slice(0, 2).map(t => getTestNameFn(t.testCode)).join(', ')}
           {order.tests.length > 2 && ` +${order.tests.length - 2} more`}
         </div>
@@ -57,7 +59,7 @@ export const getOrderTableColumns = (
   {
     key: 'priority',
     header: 'Priority',
-    width: 120,
+    width: '10%',
     sortable: true,
     render: (order: Order) => (
       <Badge
@@ -72,7 +74,7 @@ export const getOrderTableColumns = (
   {
     key: 'overallStatus',
     header: 'Status',
-    width: 150,
+    width: '10%',
     sortable: true,
     render: (order: Order) => (
       <Badge
@@ -86,16 +88,16 @@ export const getOrderTableColumns = (
   {
     key: 'totalPrice',
     header: 'Amount',
-    width: 100,
+    width: '10%',
     sortable: true,
     render: (order: Order) => (
-      <div className="font-medium text-sky-600">{formatCurrency(order.totalPrice)}</div>
+      <div className="font-medium text-sky-600 truncate">{formatCurrency(order.totalPrice)}</div>
     ),
   },
   {
     key: 'paymentStatus',
     header: 'Payment',
-    width: 120,
+    width: '10%',
     sortable: true,
     render: (order: Order) => (
       <Badge
@@ -109,16 +111,16 @@ export const getOrderTableColumns = (
   {
     key: 'orderDate',
     header: 'Date',
-    width: 100,
+    width: '10%',
     sortable: true,
     render: (order: Order) => (
-      <div className="text-xs text-gray-500">{formatDate(order.orderDate)}</div>
+      <div className="text-xs text-gray-500 truncate">{formatDate(order.orderDate)}</div>
     ),
   },
   {
     key: 'actions',
     header: '',
-    width: 50,
+    width: '3%',
     className: 'overflow-visible !px-1',
     headerClassName: '!px-1',
     render: (order: Order) => (

@@ -114,10 +114,8 @@ class PriorityLevel(str, enum.Enum):
 
 
 class PaymentStatus(str, enum.Enum):
-    PENDING = "pending"
-    PARTIAL = "partial"
+    UNPAID = "unpaid"
     PAID = "paid"
-    OVERDUE = "overdue"
 
 
 class PaymentMethod(str, enum.Enum):
@@ -126,6 +124,7 @@ class PaymentMethod(str, enum.Enum):
     DEBIT_CARD = "debit-card"
     INSURANCE = "insurance"
     BANK_TRANSFER = "bank-transfer"
+    MOBILE_MONEY = "mobile-money"
 
 
 class ClaimStatus(str, enum.Enum):

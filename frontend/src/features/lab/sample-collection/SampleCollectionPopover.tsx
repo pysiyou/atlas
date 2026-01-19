@@ -83,14 +83,9 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
       confirmVariant="primary"
       disabled={!isValid}
       footerInfo={
-        <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-1.5">
-            <Icon name="alert-circle" className="w-3.5 h-3.5" />
-            <span>Collecting sample</span>
-          </div>
-          <div className="text-xxs text-gray-400">
-            <kbd className="px-1 py-0.5 bg-gray-200 rounded text-xxs">Enter</kbd> to confirm · <kbd className="px-1 py-0.5 bg-gray-200 rounded text-xxs">Esc</kbd> to cancel
-          </div>
+        <div className="flex items-center gap-1.5">
+          <Icon name="alert-circle" className="w-3.5 h-3.5" />
+          <span>Collecting sample</span>
         </div>
       }
     >

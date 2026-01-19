@@ -261,13 +261,13 @@ export const PatientDetail: React.FC = () => {
               return (
                 <table className="w-full text-left text-xs table-fixed">
                   <colgroup>
-                    <col style={{ width: '21%' }} /> {/* Order ID */}
-                    <col style={{ width: '14%' }} /> {/* Date */}
-                    <col style={{ width: '8%' }} /> {/* Tests - smallest */}
-                    <col style={{ width: '14%' }} /> {/* Priority */}
-                    <col style={{ width: '21%' }} /> {/* Status */}
-                    <col style={{ width: '8%' }} /> {/* Amount - smallest */}
-                    <col style={{ width: '14%' }} /> {/* Payment */}
+                    <col style={{ width: '15%' }} /> {/* Order ID */}
+                    <col style={{ width: '12%' }} /> {/* Date */}
+                    <col style={{ width: '18%' }} /> {/* Tests */}
+                    <col style={{ width: '12%' }} /> {/* Priority */}
+                    <col style={{ width: '15%' }} /> {/* Status */}
+                    <col style={{ width: '13%' }} /> {/* Amount */}
+                    <col style={{ width: '15%' }} /> {/* Payment */}
                   </colgroup>
                   <thead className="text-xs bg-gray-50 text-gray-500 uppercase sticky top-0 z-10 border-b border-gray-200 [&_th]:font-normal">
                     <tr>
@@ -284,26 +284,31 @@ export const PatientDetail: React.FC = () => {
                     {patientOrders.map((order) => {
                       return (
                         <tr key={order.orderId} className="hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => navigate(`/orders/${order.orderId}`)}>
-                          <td className="px-4 py-3 font-medium font-mono text-sky-600 truncate">
-                            {order.orderId}
+                          <td className="px-4 py-3 text-xs text-sky-600 font-medium font-mono max-w-0">
+                            <span className="block truncate">{order.orderId}</span>
                           </td>
-                          <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap truncate">
-                            {new Date(order.orderDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          <td className="px-4 py-3 text-xs text-gray-500 max-w-0">
+                            <span className="block truncate">{new Date(order.orderDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap truncate">
-                            <span className="font-medium text-gray-900">{order.tests.length}</span>
-                            <span className="text-gray-500 ml-1">tests</span>
+                          <td className="px-4 py-3 max-w-0">
+                            <div className="min-w-0">
+                              <div className="font-medium truncate">{order.tests.length} test{order.tests.length !== 1 ? 's' : ''}</div>
+                              <div className="text-xs text-gray-500 truncate">
+                                {order.tests.slice(0, 2).map(t => t.testName || t.testCode).join(', ')}
+                                {order.tests.length > 2 && ` +${order.tests.length - 2} more`}
+                              </div>
+                            </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-4 py-3">
                             <Badge variant={order.priority} size="sm" />
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-4 py-3">
                             <Badge variant={order.overallStatus} size="sm" />
                           </td>
-                          <td className="px-4 py-3 font-medium text-sky-600 whitespace-nowrap">
-                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.totalPrice)}
+                          <td className="px-4 py-3 font-medium text-sky-600 max-w-0">
+                            <span className="block truncate">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.totalPrice)}</span>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-4 py-3">
                             <Badge variant={order.paymentStatus} size="sm" />
                           </td>
                         </tr>

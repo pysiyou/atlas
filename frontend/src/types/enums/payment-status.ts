@@ -3,16 +3,15 @@
  */
 
 // 1. VALUES - The single source of truth
-export const PAYMENT_STATUS_VALUES = ['pending', 'partial', 'paid'] as const;
+export const PAYMENT_STATUS_VALUES = ['unpaid', 'paid'] as const;
 
 // 2. TYPE - Derived from values
 export type PaymentStatus = (typeof PAYMENT_STATUS_VALUES)[number];
 
-// 3. CONFIG - Metadata for each value
+// 3. CONFIG - Metadata for each value (color maps to Badge variant)
 export const PAYMENT_STATUS_CONFIG: Record<PaymentStatus, { label: string; color: string }> = {
-  pending: { label: 'Unpaid', color: 'warning' },
-  partial: { label: 'Partial', color: 'info' },
-  paid: { label: 'Paid', color: 'success' },
+  unpaid: { label: 'Unpaid', color: 'unpaid' },
+  paid: { label: 'Paid', color: 'paid' },
 };
 
 // 4. OPTIONS - For dropdowns/selects

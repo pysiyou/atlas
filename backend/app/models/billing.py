@@ -25,7 +25,7 @@ class Invoice(Base):
     total = Column(Float, nullable=False)
 
     # Payment tracking
-    paymentStatus = Column(Enum(PaymentStatus), nullable=False, default=PaymentStatus.PENDING)
+    paymentStatus = Column(Enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
     amountPaid = Column(Float, default=0.0)
     amountDue = Column(Float, nullable=False)
 
@@ -39,7 +39,7 @@ class Payment(Base):
 
     paymentId = Column(String, primary_key=True, index=True)  # PAY-YYYYMMDD-XXX
     orderId = Column(String, ForeignKey("orders.orderId"), nullable=False, index=True)
-    invoiceId = Column(String, ForeignKey("invoices.invoiceId"), nullable=False, index=True)
+    invoiceId = Column(String, ForeignKey("invoices.invoiceId"), nullable=True, index=True)
 
     amount = Column(Float, nullable=False)
     paymentMethod = Column(Enum(PaymentMethod), nullable=False)
@@ -48,10 +48,6 @@ class Payment(Base):
     receivedBy = Column(String, nullable=False)
     receiptGenerated = Column(Boolean, default=False)
     notes = Column(String, nullable=True)
-
-    # For cash payments
-    amountTendered = Column(Float, nullable=True)
-    change = Column(Float, nullable=True)
 
 
 class InsuranceClaim(Base):

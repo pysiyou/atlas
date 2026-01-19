@@ -30,35 +30,37 @@ const getPatientTableColumns = (
   {
     key: 'id',
     header: 'Patient ID',
+    width: '12%',
     sortable: true,
     render: (patient: Patient) => (
-      <span className="text-xs text-sky-600 font-mono">{patient.id}</span>
+      <span className="text-xs text-sky-600 font-medium font-mono truncate block">{patient.id}</span>
     ),
   },
   {
     key: 'fullName',
     header: 'Name',
+    width: '18%',
     sortable: true,
     render: (patient: Patient) => (
-      <div className="flex items-center gap-3">
-        <Avatar name={patient.fullName} size="sm" />
-        <div className="font-medium text-gray-900">{patient.fullName}</div>
+      <div className="flex items-center gap-3 min-w-0">
+        <Avatar name={patient.fullName} size="sm" className="shrink-0" />
+        <div className="font-medium text-gray-900 truncate">{patient.fullName}</div>
       </div>
     ),
   },
   {
     key: 'dateOfBirth',
     header: 'Age',
-    width: 100,
+    width: '8%',
     sortable: true,
     render: (patient: Patient) => (
-      <div className="text-xs text-gray-500">{calculateAge(patient.dateOfBirth)} years old</div>
+      <div className="text-xs text-gray-500 truncate">{calculateAge(patient.dateOfBirth)} years old</div>
     ),
   },
   {
     key: 'gender',
-    header: 'gender',
-    width: 100,
+    header: 'Gender',
+    width: '8%',
     sortable: true,
     render: (patient: Patient) => (
       <Badge
@@ -74,39 +76,44 @@ const getPatientTableColumns = (
   {
     key: 'tests',
     header: 'Tests',
-    width: 100,
+    width: '10%',
     render: (patient: Patient) => {
       const patientOrders = getOrdersByPatient(patient.id);
       const testCount = patientOrders.reduce((acc, order) => acc + (order.tests?.length || 0), 0);
       
       return (
-        <span className="text-xs text-gray-500">
-          {testCount} {testCount === 1 ? 'Test' : 'Tests'}
-        </span>
+        <div className="min-w-0">
+          <div className="font-medium truncate">{testCount} test{testCount !== 1 ? 's' : ''}</div>
+          <div className="text-xs text-gray-500 truncate">
+            {patientOrders.length} order{patientOrders.length !== 1 ? 's' : ''}
+          </div>
+        </div>
       );
     },
   },
   {
     key: 'contact',
     header: 'Contact',
+    width: '15%',
     render: (patient: Patient) => (
-      <div className="text-xs">
-        <div>{formatPhoneNumber(patient.phone)}</div>
-        {patient.email && <div className="text-xs text-gray-500">{patient.email}</div>}
+      <div className="text-xs min-w-0">
+        <div className="truncate">{formatPhoneNumber(patient.phone)}</div>
+        {patient.email && <div className="text-xs text-gray-500 truncate">{patient.email}</div>}
       </div>
     ),
   },
   {
     key: 'affiliation',
     header: 'Affiliation',
+    width: '14%',
     sortable: true,
     render: (patient: Patient) => {
       if (!patient.affiliation) {
-        return <span className="text-xs text-gray-500">No Affiliation</span>;
+        return <span className="text-xs text-gray-500 truncate block">No Affiliation</span>;
       }
       const isActive = isAffiliationActive(patient.affiliation);
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           {/* {isActive && (
             <Icon 
               name="verified" 
@@ -114,7 +121,7 @@ const getPatientTableColumns = (
               aria-label="Verified affiliation"
             />
           )} */}
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-gray-500 truncate">
             {isActive ? 'Expires' : 'Expired'}: {formatDate(patient.affiliation.endDate)}
           </span>
         </div>
@@ -124,15 +131,16 @@ const getPatientTableColumns = (
   {
     key: 'registrationDate',
     header: 'Registered',
+    width: '11%',
     sortable: true,
     render: (patient: Patient) => (
-      <div className="text-xs text-gray-500">{formatDate(patient.registrationDate)}</div>
+      <div className="text-xs text-gray-500 truncate">{formatDate(patient.registrationDate)}</div>
     ),
   },
   {
     key: 'actions',
     header: '',
-    width: 50,
+    width: '4%',
     className: 'overflow-visible !px-1',
     headerClassName: '!px-1',
     render: (patient: Patient) => (

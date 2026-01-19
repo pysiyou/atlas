@@ -5,7 +5,7 @@ export type BadgeVariant =
   // Base variants
   | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'error' | 'success' | 'warning' | 'info' | 'purple' | 'orange' | 'teal'
   // Statuses
-  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'collected' | 'sample-collected' | 'rejected' | 'scheduled' | 'confirmed' | 'no-show' | 'pending' | 'partial' | 'paid'
+  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'collected' | 'sample-collected' | 'rejected' | 'scheduled' | 'confirmed' | 'no-show' | 'pending' | 'partial' | 'paid' | 'unpaid'
   // Priorities
   | 'routine' | 'urgent' | 'stat'
   // Test Categories
@@ -18,6 +18,8 @@ export type BadgeVariant =
   | 'chronic-condition' | 'medication' | 'allergy' | 'surgery'
   // Container Top Colors (for physical tube representation)
   | 'container-red' | 'container-yellow' | 'container-purple' | 'container-blue' | 'container-green' | 'container-gray' | 'container-black'
+  // Payment Methods
+  | 'cash' | 'credit-card' | 'debit-card' | 'insurance' | 'bank-transfer' | 'mobile-money'
   // Arbitrary string fallback
   | (string & {});
 
@@ -60,6 +62,7 @@ const VARIANT_STYLES: Record<string, string> = {
   'pending': 'bg-yellow-100 text-yellow-800 border-transparent',
   'partial': 'bg-orange-100 text-orange-800 border-transparent',
   'paid': 'bg-green-100 text-green-800 border-transparent',
+  'unpaid': 'bg-red-100 text-red-800 border-transparent',
   
   // Priority Mappings
   'routine': 'bg-blue-100 text-blue-800 border-transparent',
@@ -111,6 +114,14 @@ const VARIANT_STYLES: Record<string, string> = {
   'container-green': 'bg-green-500 text-white border-transparent',
   'container-gray': 'bg-gray-500 text-white border-transparent',
   'container-black': 'bg-black text-white border-transparent',
+
+  // Payment Method Mappings
+  'cash': 'bg-emerald-100 text-emerald-800 border-transparent',
+  'credit-card': 'bg-sky-100 text-sky-800 border-transparent',
+  'debit-card': 'bg-blue-100 text-blue-800 border-transparent',
+  'insurance': 'bg-purple-100 text-purple-800 border-transparent',
+  'bank-transfer': 'bg-indigo-100 text-indigo-800 border-transparent',
+  'mobile-money': 'bg-orange-100 text-orange-800 border-transparent',
 };
 
 const SIZES = {
@@ -125,6 +136,11 @@ const VARIANT_LABELS: Record<string, string> = {
   'in-progress': 'IN PROGRESS',
   'no-show': 'NO SHOW',
   'chronic-condition': 'CHRONIC',
+  // Payment method labels
+  'credit-card': 'CREDIT CARD',
+  'debit-card': 'DEBIT CARD',
+  'bank-transfer': 'BANK TRANSFER',
+  'mobile-money': 'MOBILE MONEY',
 };
 
 /**

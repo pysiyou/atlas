@@ -178,7 +178,7 @@ export function Table<T extends TableDataItem>({
             <div
               key={column.key}
               className={`px-6 py-3 flex items-center gap-2 ${column.sortable ? 'cursor-pointer hover:bg-gray-100' : ''} ${column.headerClassName || ''}`}
-              style={{ width: typeof column.width === 'number' ? column.width : undefined, flex: typeof column.width === 'number' ? 'none' : 1 }}
+              style={{ width: column.width ?? undefined, flex: column.width ? 'none' : 1 }}
               onClick={() => column.sortable && handleSort(column.key)}
             >
               <span>{column.header}</span>
@@ -201,10 +201,12 @@ export function Table<T extends TableDataItem>({
               {columns.map((column) => (
                 <div
                   key={column.key}
-                  className={`px-6 py-2 text-sm text-gray-900 whitespace-nowrap ${column.className || 'overflow-hidden text-ellipsis'}`}
-                  style={{ width: typeof column.width === 'number' ? column.width : undefined, flex: typeof column.width === 'number' ? 'none' : 1 }}
+                  className={`px-6 py-2 text-sm text-gray-900 overflow-hidden ${column.className || ''}`}
+                  style={{ width: column.width ?? undefined, flex: column.width ? 'none' : 1, minWidth: 0 }}
                 >
-                  {column.render ? column.render(item) : String(item[column.key] ?? '')}
+                  {column.render ? column.render(item) : (
+                    <span className="block truncate">{String(item[column.key] ?? '')}</span>
+                  )}
                 </div>
               ))}
             </div>

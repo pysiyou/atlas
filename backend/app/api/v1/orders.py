@@ -110,7 +110,7 @@ def create_order(
         patientId=order_data.patientId,
         orderDate=datetime.utcnow(),
         totalPrice=total_price,
-        paymentStatus=PaymentStatus.PENDING,
+        paymentStatus=PaymentStatus.UNPAID,
         overallStatus=OrderStatus.PENDING,
         priority=order_data.priority,
         referringPhysician=order_data.referringPhysician,

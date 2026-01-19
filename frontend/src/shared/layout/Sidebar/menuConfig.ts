@@ -10,7 +10,7 @@ import {
   FileText,
   FlaskConical,
   Calendar,
-  DollarSign,
+  Wallet,
   ClipboardList,
   UserCog,
   Settings,
@@ -57,9 +57,9 @@ export const menuItems: MenuItem[] = [
     roles: ['receptionist', 'administrator'],
   },
   {
-    path: ROUTES.BILLING,
-    label: 'Billing',
-    icon: React.createElement(DollarSign, { size: 20 }),
+    path: ROUTES.PAYMENTS,
+    label: 'Payments',
+    icon: React.createElement(Wallet, { size: 20 }),
     roles: ['receptionist', 'administrator'],
   },
   {

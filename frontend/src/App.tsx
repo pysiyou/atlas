@@ -26,7 +26,7 @@ import {
   OrdersPage as Orders,
   LaboratoryPage as Laboratory,
   AppointmentsPage as Appointments,
-  BillingPage as Billing,
+  PaymentsPage as Payments,
   ReportsPage as Reports,
   AdminPage as Admin,
 } from '@/pages';
@@ -112,10 +112,10 @@ const AppRoutes: React.FC = () => {
         }
       />
       <Route
-        path={ROUTES.BILLING}
+        path={ROUTES.PAYMENTS}
         element={
-          <ProtectedFeatureRoute featureName="Billing">
-            <Billing />
+          <ProtectedFeatureRoute featureName="Payments">
+            <Payments />
           </ProtectedFeatureRoute>
         }
       />

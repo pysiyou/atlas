@@ -52,7 +52,7 @@ def generate_orders(db: Session):
                     patientId=patient_id,
                     orderDate=order_date,
                     totalPrice=total_price,
-                    paymentStatus=PaymentStatus.PENDING,
+                    paymentStatus=PaymentStatus.UNPAID,
                     overallStatus=OrderStatus.PENDING,
                     priority=PriorityLevel.ROUTINE,
                     createdBy="system"

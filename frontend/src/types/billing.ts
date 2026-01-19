@@ -7,7 +7,8 @@ export type PaymentMethod =
   | 'credit-card' 
   | 'debit-card' 
   | 'insurance' 
-  | 'bank-transfer';
+  | 'bank-transfer'
+  | 'mobile-money';
 
 export type ClaimStatus = 
   | 'submitted' 
@@ -44,15 +45,17 @@ export interface Invoice {
 export interface Payment {
   paymentId: string; // PAY-YYYYMMDD-XXX
   orderId: string;
-  invoiceId: string;
+  invoiceId: string | null;
   amount: number;
   paymentMethod: PaymentMethod;
   paidAt: string;
   receivedBy: string;
   receiptGenerated: boolean;
   notes?: string;
-  amountTendered?: number; // For cash payments
-  change?: number; // For cash payments
+  // Computed fields from relationships
+  orderTotalPrice?: number;
+  numberOfTests?: number;
+  patientName?: string;
 }
 
 export interface InsuranceClaim {
