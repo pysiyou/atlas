@@ -122,9 +122,6 @@ export const LabCard: React.FC<LabCardProps> = ({
             {additionalInfo}
           </div>
 
-          {/* Recollection Banner - displayed before content section */}
-          {recollectionBanner}
-
           {/* Row 3: Content section */}
           <div className={LAB_CARD_CONTAINERS.contentSection}>
             <div className={`${LAB_CARD_TYPOGRAPHY.sectionTitle} ${LAB_CARD_SPACING.sectionTitleMargin}`}>
@@ -135,6 +132,9 @@ export const LabCard: React.FC<LabCardProps> = ({
 
           {/* Row 4: Optional flags */}
           {flags}
+
+          {/* Recollection Banner - displayed at the bottom */}
+          {recollectionBanner}
         </div>
       </Card>
     </div>

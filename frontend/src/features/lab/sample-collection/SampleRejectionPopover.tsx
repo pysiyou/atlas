@@ -181,7 +181,7 @@ const SampleRejectionPopoverContent: React.FC<SampleRejectionPopoverContentProps
                  Require Recollection
                </span>
                <span className={`block text-[10px] mt-0.5 ${requireRecollection ? 'text-blue-700' : 'text-gray-500'}`}>
-                 A new pending sample will be created for this order.
+                 A new pending sample will be automatically created and linked to this rejection.
                </span>
              </div>
            </div>

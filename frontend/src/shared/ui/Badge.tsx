@@ -3,9 +3,9 @@ import { cn } from '@/utils';
 
 export type BadgeVariant = 
   // Base variants
-  | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success' | 'warning' | 'info' | 'purple' | 'orange' | 'teal'
+  | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'error' | 'success' | 'warning' | 'info' | 'purple' | 'orange' | 'teal'
   // Statuses
-  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'collected' | 'scheduled' | 'confirmed' | 'no-show' | 'pending' | 'partial' | 'paid'
+  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'collected' | 'rejected' | 'scheduled' | 'confirmed' | 'no-show' | 'pending' | 'partial' | 'paid'
   // Priorities
   | 'routine' | 'urgent' | 'stat'
   // Test Categories
@@ -31,6 +31,7 @@ const VARIANT_STYLES: Record<string, string> = {
   outline: 'text-gray-800 border-gray-200 bg-transparent',
   ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 border-transparent',
   danger: 'bg-red-100 text-red-800 border-transparent',
+  error: 'bg-red-100 text-red-800 border-transparent',
   success: 'bg-green-100 text-green-800 border-transparent',
   warning: 'bg-yellow-100 text-yellow-800 border-transparent',
   info: 'bg-blue-100 text-blue-800 border-transparent',
@@ -47,6 +48,7 @@ const VARIANT_STYLES: Record<string, string> = {
   'validated': 'bg-green-100 text-green-800 border-transparent',
   'reported': 'bg-gray-100 text-gray-800 border-transparent',
   'collected': 'bg-purple-100 text-purple-800 border-transparent',
+  'rejected': 'bg-red-100 text-red-800 border-transparent',
   'scheduled': 'bg-blue-100 text-blue-800 border-transparent',
   'confirmed': 'bg-green-100 text-green-800 border-transparent',
   'no-show': 'bg-orange-100 text-orange-800 border-transparent',

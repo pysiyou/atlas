@@ -139,14 +139,12 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
         recollectionRequired: requireRecollection,
       });
 
-      // 2. Request recollection if required
-      // MOVED TO MANUAL STEP: We now require a manual "Recollect" action
-      // to allow the "Awaiting Recollection" state to be visible and checked.
-      // if (requireRecollection) {
-      //   const reasonStr = reasons.map(r => r.replace('_', ' ')).join(', ');
-      //   const fullReason = notes ? `${reasonStr} - ${notes}` : reasonStr;
-      //   await sampleAPI.requestRecollection(sampleId, fullReason);
-      // }
+      // 2. Automatically request recollection if required
+      if (requireRecollection) {
+        const reasonStr = reasons.map(r => r.replace('_', ' ')).join(', ');
+        const fullReason = notes ? `${reasonStr} - ${notes}` : reasonStr;
+        await sampleAPI.requestRecollection(sampleId, fullReason);
+      }
 
       await refreshSamples();
     } catch (err) {

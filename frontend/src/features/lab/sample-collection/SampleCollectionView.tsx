@@ -190,34 +190,7 @@ export const SampleCollectionView: React.FC = () => {
                 onChange={(ids) => setStatusFilters(ids as SampleStatus[])}
                 selectAllLabel="Select all"
                 icon="checklist"
-              />
-              <div className="h-6 w-px bg-gray-300 hidden md:block" />
-              {/* Quick filter buttons */}
-              <button
-                onClick={() => {
-                  const recollectionSamples = allSampleDisplays.filter(d => d.sample?.isRecollection);
-                  if (recollectionSamples.length > 0) {
-                    setStatusFilters(['pending', 'collected']);
-                  }
-                }}
-                className="text-xs px-2 py-1 rounded border border-orange-300 bg-orange-50 text-orange-700 hover:bg-orange-100 transition-colors"
-                title="Show only recollection samples"
-              >
-                🔄 Recollections ({allSampleDisplays.filter(d => d.sample?.isRecollection).length})
-              </button>
-              <button
-                onClick={() => {
-                  setStatusFilters(['rejected']);
-                }}
-                className="text-xs px-2 py-1 rounded border border-red-300 bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
-                title="Show samples with multiple rejections"
-              >
-                ⚠️ Multiple Rejections ({allSampleDisplays.filter(d => 
-                  d.sample?.status === 'rejected' && 
-                  'rejectionHistory' in d.sample && 
-                  (d.sample.rejectionHistory?.length || 0) > 1
-                ).length})
-              </button>
+              />              
             </>
           )}
         </div>

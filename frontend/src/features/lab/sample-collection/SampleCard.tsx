@@ -1,8 +1,7 @@
 import React from 'react';
-import { Badge, Icon, IconButton, Button } from '@/shared/ui';
+import { Badge, Icon, IconButton } from '@/shared/ui';
 import Barcode from 'react-barcode';
 import type { ContainerType, RejectedSample } from '@/types';
-import { REJECTION_REASON_CONFIG } from '@/types/enums/rejection-reason';
 
 import { getContainerIconColor, getCollectionRequirements } from '@/utils';
 import { formatVolume } from '@/utils';
@@ -44,7 +43,7 @@ export const SampleCard: React.FC<SampleCardProps> = ({
   const { openModal } = useModal();
   const { patients } = usePatients();
   const { tests } = useTests();
-  const { rejectSample, requestRecollection } = useSamples();
+  const { rejectSample } = useSamples();
 
   const { sample, order, requirement } = display;
   
@@ -75,17 +74,6 @@ export const SampleCard: React.FC<SampleCardProps> = ({
   const containerType = hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
   const effectiveContainerType: ContainerType = containerType ||
     (sample.sampleType === 'urine' || sample.sampleType === 'stool' ? 'cup' : 'tube');
-
-  const handleRecollect = async () => {
-    if (!rejectedSample) return;
-    try {
-      const lastRejection = rejectedSample.rejectionReasons?.map(r => REJECTION_REASON_CONFIG[r]?.label || r).join(', ') || 'Manual Request';
-      await requestRecollection(sample.sampleId, `Recollection of rejected sample: ${lastRejection}`);
-      toast.success('Recollection ordered');
-    } catch (e) {
-      toast.error('Failed to order recollection');
-    }
-  };
 
   const handleConfirm = (volume: number, notes?: string, color?: string, containerType?: ContainerType) => {
     onCollect(display, volume, notes, color, containerType);
@@ -180,8 +168,8 @@ export const SampleCard: React.FC<SampleCardProps> = ({
         </Badge>
       )}
 
-      {/* 7. Barcode - for automated identification (for collected and rejected) */}
-      {(isCollected || isRejected) && sample.sampleId && !sample.sampleId.includes('PENDING') && (
+      {/* 7. Barcode - for automated identification (collected samples only) */}
+      {isCollected && sample.sampleId && !sample.sampleId.includes('PENDING') && (
         <div className="flex items-center">
           <Barcode
             value={sample.sampleId}
@@ -210,7 +198,7 @@ export const SampleCard: React.FC<SampleCardProps> = ({
           }}
         />
       ) : isRejected ? (
-        // Rejected: Show rejection badge and info
+        // Rejected: Show rejection badge and recollection status (READ-ONLY - no actions)
         <>
           <Badge size="sm" variant="error">
             REJECTED
@@ -220,24 +208,11 @@ export const SampleCard: React.FC<SampleCardProps> = ({
               {rejectedSample.rejectionHistory.length} Attempts
             </Badge>
           )}
-          {rejectedSample?.recollectionRequired && !rejectedSample?.recollectionSampleId && (
-            <>
-              <Badge size="sm" variant="warning" className="flex items-center gap-1">
-                <Icon name="alert-circle" className="w-3 h-3" />
-                Recollection Needed
-              </Badge>
-              <Button
-                  size="xs"
-                  variant="primary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRecollect();
-                  }}
-                  icon={<Icon name="sample-collection" className="w-3 h-3 text-white" />}
-                >
-                  Recollect
-              </Button>
-            </>
+          {rejectedSample?.recollectionSampleId && (
+            <Badge size="sm" variant="info" className="flex items-center gap-1">
+              <Icon name="check-circle" className="w-3 h-3" />
+              Recollection: {rejectedSample.recollectionSampleId}
+            </Badge>
           )}
         </>
       ) : (
@@ -296,21 +271,57 @@ export const SampleCard: React.FC<SampleCardProps> = ({
   // Recollection banner - displayed outside content section
   const recollectionBanner = (
     <>
-      {/* Simplified recollection info */}
+      {/* Recollection info banner - context-aware messaging */}
       {(isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)) && (
         <div className="p-2.5 bg-yellow-50 border border-yellow-200 rounded-md">
           <div className="flex items-center gap-2">
             <Icon name="alert-circle" className="w-4 h-4 text-yellow-600 shrink-0" />
             <p className="text-xs text-yellow-800">
-              {/* Use recollectionAttempt from backend if available, otherwise calculate */}
               {(() => {
-                const attemptNumber = sample.recollectionAttempt || (sample.rejectionHistory?.length || 0) + 1;
+                const rejectionCount = sample.rejectionHistory?.length || 0;
+                
+                // Pending recollection sample - needs to be collected
+                if (isPending && isRecollection) {
+                  return (
+                    <>
+                      <span className="font-semibold">Recollection required.</span>
+                      {' '}Previous sample{rejectionCount > 1 ? 's were' : ' was'} rejected {rejectionCount} {rejectionCount === 1 ? 'time' : 'times'}.
+                      {sample.originalSampleId && (
+                        <span className="ml-1 text-yellow-700">(Original: {sample.originalSampleId})</span>
+                      )}
+                    </>
+                  );
+                }
+                
+                // Collected recollection sample - successfully recollected
+                if (isCollected && isRecollection) {
+                  return (
+                    <>
+                      <span className="font-semibold">Recollection successful.</span>
+                      {' '}This is attempt #{rejectionCount + 1} after {rejectionCount} previous rejection{rejectionCount === 1 ? '' : 's'}.
+                    </>
+                  );
+                }
+                
+                // Rejected sample with history - multiple rejections
+                if (isRejected && rejectionCount > 0) {
+                  return (
+                    <>
+                      <span className="font-semibold">Sample rejected {rejectionCount} {rejectionCount === 1 ? 'time' : 'times'}.</span>
+                      {rejectedSample?.recollectionRequired && !rejectedSample?.recollectionSampleId && (
+                        <span className="ml-1">Awaiting new collection.</span>
+                      )}
+                      {rejectedSample?.recollectionSampleId && (
+                        <span className="ml-1">Recollection in progress ({rejectedSample.recollectionSampleId}).</span>
+                      )}
+                    </>
+                  );
+                }
+                
+                // Fallback for other cases with rejection history
                 return (
                   <>
-                    This sample has been collected <span className="font-semibold">{attemptNumber} {attemptNumber === 1 ? 'time' : 'times'}</span>
-                    {isRecollection && sample.originalSampleId && (
-                      <span className="ml-1 text-yellow-700">(recollection of {sample.originalSampleId})</span>
-                    )}
+                    This sample has {rejectionCount} previous rejection{rejectionCount === 1 ? '' : 's'} on record.
                   </>
                 );
               })()}
@@ -321,73 +332,9 @@ export const SampleCard: React.FC<SampleCardProps> = ({
     </>
   );
 
-  // Build content with rejection details
+  // Content section - just the test list
   const content = (
-    <>
-
-      {/* Rejection details for rejected samples - show only most recent */}
-      {isRejected && rejectedSample && (
-        <div className="mb-3 p-2 bg-red-50 border border-red-100 rounded-md">
-          <div className="flex items-start gap-2">
-            <Icon name="alert-circle" className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between mb-1">
-                <div className="text-xs font-medium text-red-800">
-                  {rejectedSample.rejectionHistory && rejectedSample.rejectionHistory.length > 1
-                    ? `Most Recent Rejection (${rejectedSample.rejectionHistory.length} total)`
-                    : 'Rejection Details'}
-                </div>
-                {rejectedSample.rejectionHistory && rejectedSample.rejectionHistory.length > 1 && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openModal(ModalType.SAMPLE_DETAIL, { sampleId: sample.sampleId });
-                    }}
-                    className="text-xxs text-red-600 hover:text-red-800 underline"
-                  >
-                    View Full History
-                  </button>
-                )}
-              </div>
-              
-              {/* Show most recent rejection */}
-              {(() => {
-                const mostRecent = rejectedSample.rejectionHistory && rejectedSample.rejectionHistory.length > 0
-                  ? rejectedSample.rejectionHistory[rejectedSample.rejectionHistory.length - 1]
-                  : {
-                      rejectionReasons: rejectedSample.rejectionReasons,
-                      rejectionNotes: rejectedSample.rejectionNotes,
-                      rejectedBy: rejectedSample.rejectedBy,
-                      rejectedAt: rejectedSample.rejectedAt
-                    };
-                
-                return (
-                  <>
-                    <div className="flex flex-wrap gap-1 mb-1">
-                      {mostRecent.rejectionReasons?.map((reason) => (
-                        <Badge key={reason} size="sm" variant="error" className="text-xxs">
-                          {REJECTION_REASON_CONFIG[reason]?.label || reason}
-                        </Badge>
-                      ))}
-                    </div>
-                    {mostRecent.rejectionNotes && (
-                      <p className="text-xxs text-red-700 italic mb-1">
-                        "{mostRecent.rejectionNotes}"
-                      </p>
-                    )}
-                    <p className="text-xxs text-red-600">
-                      Rejected by {mostRecent.rejectedBy} on{' '}
-                      {new Date(mostRecent.rejectedAt).toLocaleDateString()}
-                    </p>
-                  </>
-                );
-              })()}
-            </div>
-          </div>
-        </div>
-      )}
-      <TestList tests={testListItems} />
-    </>
+    <TestList tests={testListItems} />
   );
 
   return (
