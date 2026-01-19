@@ -24,6 +24,7 @@ export const ResultValidation: React.FC = () => {
   const samplesContext = useSamples();
   const { openModal } = useModal();
   const [comments, setComments] = useState<Record<string, string>>({});
+  const [isValidating, setIsValidating] = useState<Record<string, boolean>>({});
 
   // Build list of tests awaiting validation
   const allTests: TestWithContext[] = useMemo(() => {
@@ -80,6 +81,13 @@ export const ResultValidation: React.FC = () => {
 
     const commentKey = `${orderId}-${testCode}`;
 
+    // Prevent concurrent validations
+    if (isValidating[commentKey]) {
+      return;
+    }
+
+    setIsValidating(prev => ({ ...prev, [commentKey]: true }));
+
     try {
       if (approve) {
         await resultAPI.validateResults(orderId, testCode, {
@@ -112,8 +120,10 @@ export const ResultValidation: React.FC = () => {
     } catch (error) {
       console.error('Error validating results:', error);
       toast.error('Failed to validate results. Please try again.');
+    } finally {
+      setIsValidating(prev => ({ ...prev, [commentKey]: false }));
     }
-  }, [comments, ordersContext]);
+  }, [comments, ordersContext, isValidating]);
 
   const openValidationModal = useCallback((test: TestWithContext) => {
     const commentKey = `${test.orderId}-${test.testCode}`;

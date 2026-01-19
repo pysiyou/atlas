@@ -271,7 +271,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       if (mode === 'edit' && patient) {
         // Build and send partial update payload
         const updatedPatient = buildUpdatedPatientPayload();
-        updatePatient(patient.id, updatedPatient);
+        await updatePatient(patient.id, updatedPatient);
 
         if (isRenewing) {
           toast.success('Affiliation renewed successfully');
@@ -282,7 +282,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         // Create new patient with generated ID
         const patientId = generatePatientId(patients.map((p: Patient) => p.id));
         const newPatient = buildNewPatient(patientId);
-        addPatient(newPatient);
+        await addPatient(newPatient);
         toast.success(`Patient ${newPatient.fullName} registered successfully! ID: ${patientId}`);
       }
 

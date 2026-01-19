@@ -109,10 +109,14 @@ def update_patient(
             detail=f"Patient {patientId} not found"
         )
 
-    # Update fields directly - no mapping needed, all camelCase
+    # Update only allowed fields - whitelist for security
+    ALLOWED_UPDATE_FIELDS = {
+        'fullName', 'dateOfBirth', 'gender', 'phone', 'email',
+        'address', 'emergencyContact', 'medicalHistory', 'affiliation'
+    }
     update_data = patient_data.model_dump(exclude_unset=True)
     for field, value in update_data.items():
-        if hasattr(patient, field):
+        if field in ALLOWED_UPDATE_FIELDS and hasattr(patient, field):
             setattr(patient, field, value)
 
     patient.updatedBy = current_user.id

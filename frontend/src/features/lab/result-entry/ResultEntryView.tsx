@@ -27,6 +27,7 @@ export const ResultEntry: React.FC = () => {
   const { openModal } = useModal();
   const [results, setResults] = useState<Record<string, Record<string, string>>>({});
   const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
+  const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
 
   // Build list of tests awaiting result entry
   const allTests: TestWithContext[] = useMemo(() => {
@@ -98,6 +99,12 @@ export const ResultEntry: React.FC = () => {
     if (!testsContext || !ordersContext) return;
 
     const resultKey = `${orderId}-${testCode}`;
+
+    // Prevent concurrent submissions
+    if (isSaving[resultKey]) {
+      return;
+    }
+
     const testResults = finalResults || results[resultKey];
     if (!testResults || Object.keys(testResults).length === 0) {
       toast.error('No results to save');
@@ -112,7 +119,11 @@ export const ResultEntry: React.FC = () => {
 
     const formattedResults: Record<string, TestResult> = {};
     const testItem = allTests.find(t => t.orderId === orderId && t.testCode === testCode);
-    const patient = testItem?.patient;
+    if (!testItem) {
+      toast.error('Test not found in current list');
+      return;
+    }
+    const patient = testItem.patient;
 
     testDef.parameters.forEach(param => {
       const value = testResults[param.code];
@@ -144,6 +155,8 @@ export const ResultEntry: React.FC = () => {
       };
     });
 
+    setIsSaving(prev => ({ ...prev, [resultKey]: true }));
+
     try {
       await resultAPI.enterResults(orderId, testCode, {
         results: formattedResults,
@@ -158,8 +171,10 @@ export const ResultEntry: React.FC = () => {
     } catch (error) {
       console.error('Error saving results:', error);
       toast.error('Failed to save results. Please try again.');
+    } finally {
+      setIsSaving(prev => ({ ...prev, [resultKey]: false }));
     }
-  }, [results, technicianNotes, allTests, testsContext, ordersContext]);
+  }, [results, technicianNotes, allTests, testsContext, ordersContext, isSaving]);
 
   // Use a ref to store the openTestModal function to avoid circular dependency
   const openTestModalRef = useRef<(test: TestWithContext, filteredTests: TestWithContext[]) => void>(undefined);

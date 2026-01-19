@@ -130,7 +130,7 @@ export const CreateOrder: React.FC = () => {
         updatedAt: new Date().toISOString(),
       };
 
-      addOrder(newOrder);
+      await addOrder(newOrder);
 
       const invoiceId = generateInvoiceId(invoices.map((i) => i.invoiceId));
       const invoice: Invoice = {
@@ -158,13 +158,10 @@ export const CreateOrder: React.FC = () => {
         createdAt: new Date().toISOString(),
       };
 
-      addInvoice(invoice);
+      await addInvoice(invoice);
 
       toast.success(`Order ${orderId} created successfully!`);
-
-      setTimeout(() => {
-        navigate(`/orders/${orderId}`);
-      }, 1000);
+      navigate(`/orders/${orderId}`);
     } catch (error) {
       console.error('Error creating order:', error);
       toast.error('Failed to create order. Please try again.');

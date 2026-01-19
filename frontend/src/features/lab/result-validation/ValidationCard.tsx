@@ -115,7 +115,7 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
 
   // Results grid - each item stays on a single line
   const content = (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2">
       {Object.entries(test.results).map(([key, value]) => {
         const resultValue = typeof value === 'object' && value !== null && 'value' in value
           ? (value as { value: unknown }).value

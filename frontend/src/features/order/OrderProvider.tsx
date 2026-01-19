@@ -77,7 +77,6 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
       setError(null);
       const created = await orderAPI.create(order);
       setOrders(prev => [...prev, created]);
-      await refreshOrders();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create order';
       console.error('Failed to create order:', err);
@@ -101,7 +100,6 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
           order.orderId === orderId ? updated : order
         )
       );
-      await refreshOrders();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to update order';
       console.error('Failed to update order:', err);
@@ -116,8 +114,20 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   /**
    * Delete an order
    */
-  const deleteOrder = useCallback((orderId: string) => {
-    setOrders(prev => prev.filter(order => order.orderId !== orderId));
+  const deleteOrder = useCallback(async (orderId: string) => {
+    try {
+      setError(null);
+      await orderAPI.delete(orderId);
+      setOrders(prev => prev.filter(order => order.orderId !== orderId));
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete order';
+      console.error('Failed to delete order:', err);
+      setError({
+        message: errorMessage,
+        operation: 'delete',
+      });
+      throw err;
+    }
   }, []);
 
   /**
@@ -130,19 +140,31 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   /**
    * Update status of a specific test within an order
    */
-  const updateTestStatus = useCallback((
+  const updateTestStatus = useCallback(async (
     orderId: string,
     testCode: string,
     status: TestStatus,
     additionalData?: Partial<TestStatusUpdateData>
   ) => {
-    setOrders(prev =>
-      prev.map(order =>
-        order.orderId === orderId
-          ? updateOrderTestStatus(order, testCode, status, additionalData)
-          : order
-      )
-    );
+    try {
+      setError(null);
+      await orderAPI.updateTestStatus(orderId, testCode, status, additionalData as Record<string, unknown>);
+      setOrders(prev =>
+        prev.map(order =>
+          order.orderId === orderId
+            ? updateOrderTestStatus(order, testCode, status, additionalData)
+            : order
+        )
+      );
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update test status';
+      console.error('Failed to update test status:', err);
+      setError({
+        message: errorMessage,
+        operation: 'update',
+      });
+      throw err;
+    }
   }, []);
 
   /**
@@ -151,6 +173,29 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   const updateOrderStatus = useCallback((orderId: string, status: OrderStatus) => {
     updateOrder(orderId, { overallStatus: status });
   }, [updateOrder]);
+
+  /**
+   * Update payment status
+   */
+  const updatePaymentStatus = useCallback(async (orderId: string, paymentStatus: string, amountPaid?: number) => {
+    try {
+      setError(null);
+      const updated = await orderAPI.updatePaymentStatus(orderId, paymentStatus, amountPaid);
+      setOrders(prev =>
+        prev.map(order =>
+          order.orderId === orderId ? updated : order
+        )
+      );
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update payment status';
+      console.error('Failed to update payment status:', err);
+      setError({
+        message: errorMessage,
+        operation: 'update',
+      });
+      throw err;
+    }
+  }, []);
 
   /**
    * Get orders by status
@@ -280,24 +325,36 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   /**
    * Mark test as having critical values
    */
-  const markTestCritical = useCallback((
+  const markTestCritical = useCallback(async (
     orderId: string,
     testCode: string,
     notifiedTo: string
   ) => {
-    const now = new Date().toISOString();
+    try {
+      setError(null);
+      await orderAPI.markTestCritical(orderId, testCode, notifiedTo);
+      const now = new Date().toISOString();
 
-    setOrders(prev =>
-      prev.map(order => {
-        if (order.orderId !== orderId) return order;
+      setOrders(prev =>
+        prev.map(order => {
+          if (order.orderId !== orderId) return order;
 
-        const updatedTests = order.tests.map(test =>
-          test.testCode === testCode ? markTestAsCritical(test, notifiedTo, now) : test
-        );
+          const updatedTests = order.tests.map(test =>
+            test.testCode === testCode ? markTestAsCritical(test, notifiedTo, now) : test
+          );
 
-        return { ...order, tests: updatedTests, updatedAt: now };
-      })
-    );
+          return { ...order, tests: updatedTests, updatedAt: now };
+        })
+      );
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to mark test as critical';
+      console.error('Failed to mark test as critical:', err);
+      setError({
+        message: errorMessage,
+        operation: 'update',
+      });
+      throw err;
+    }
   }, []);
 
   /**
@@ -357,6 +414,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     getOrder,
     updateTestStatus,
     updateOrderStatus,
+    updatePaymentStatus,
     getOrdersByStatus,
     getOrdersByPatient,
     searchOrders,

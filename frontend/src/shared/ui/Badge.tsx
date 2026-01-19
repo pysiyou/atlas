@@ -5,7 +5,7 @@ export type BadgeVariant =
   // Base variants
   | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'error' | 'success' | 'warning' | 'info' | 'purple' | 'orange' | 'teal'
   // Statuses
-  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'collected' | 'rejected' | 'scheduled' | 'confirmed' | 'no-show' | 'pending' | 'partial' | 'paid'
+  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'collected' | 'sample-collected' | 'rejected' | 'scheduled' | 'confirmed' | 'no-show' | 'pending' | 'partial' | 'paid'
   // Priorities
   | 'routine' | 'urgent' | 'stat'
   // Test Categories
@@ -52,6 +52,7 @@ const VARIANT_STYLES: Record<string, string> = {
   'validated': 'bg-green-100 text-green-800 border-transparent',
   'reported': 'bg-gray-100 text-gray-800 border-transparent',
   'collected': 'bg-green-100 text-green-800 border-transparent',
+  'sample-collected': 'bg-blue-100 text-blue-800 border-transparent',
   'rejected': 'bg-red-100 text-red-800 border-transparent',
   'scheduled': 'bg-blue-100 text-blue-800 border-transparent',
   'confirmed': 'bg-green-100 text-green-800 border-transparent',
@@ -118,6 +119,14 @@ const SIZES = {
   md: 'px-2.5 py-0.5 text-sm',
 };
 
+// Custom display labels for variants (shorter/abbreviated versions)
+const VARIANT_LABELS: Record<string, string> = {
+  'sample-collected': 'COLLECTED',
+  'in-progress': 'IN PROGRESS',
+  'no-show': 'NO SHOW',
+  'chronic-condition': 'CHRONIC',
+};
+
 /**
  * Badge Component
  * 
@@ -148,9 +157,8 @@ export const Badge: React.FC<BadgeProps> = ({
   let content = children;
   
   if (!content && variant !== 'default') {
-    // Basic formatting: replace hyphens with spaces and uppercase
-    // Special case for 'stat' which is usually uppercase
-    content = String(variant).replace(/-/g, ' ').toUpperCase();
+    // Use custom label if available, otherwise format the variant string
+    content = VARIANT_LABELS[normalizedVariant] || String(variant).replace(/-/g, ' ').toUpperCase();
   }
 
   return (

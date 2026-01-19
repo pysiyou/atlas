@@ -3,9 +3,8 @@
  */
 
 import React from 'react';
-import { Button, Badge, Textarea, Icon, Popover } from '@/shared/ui';
+import { Badge, Textarea } from '@/shared/ui';
 import type { TestResult } from '@/types';
-import { ResultRejectionPopoverContent } from './ResultRejectionPopover';
 
 interface ValidationFormProps {
   results: Record<string, TestResult>;
@@ -27,10 +26,10 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   comments,
   onCommentsChange,
   onApprove,
-  onReject,
-  testName,
-  testCode,
-  patientName,
+  onReject: _onReject,
+  testName: _testName,
+  testCode: _testCode,
+  patientName: _patientName,
 }) => {
   const hasResults = results && Object.keys(results).length > 0;
   const hasFlags = flags && flags.length > 0;
@@ -86,7 +85,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
         </div>
       )}
 
-      {/* Validation Notes and Actions */}
+      {/* Validation Notes */}
       <div className="space-y-3">
         <Textarea
           label="Validation Notes"
@@ -101,41 +100,9 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
           placeholder="Add validation notes..."
           rows={2}
         />
-
-        <div className="flex justify-between items-center pt-2">
-          <span className="text-xs text-gray-400 hidden sm:inline-block">
-            Ctrl+Enter to approve
-          </span>
-          <div className="flex gap-3">
-            <Popover
-              placement="top-end"
-              offsetValue={8}
-              trigger={
-                <Button size="sm" variant="danger" className="flex items-center gap-1">
-                  <Icon name="close" className="w-4 h-4" />
-                  Reject
-                </Button>
-              }
-            >
-              {({ close }) => (
-                <div data-popover-content onClick={(e) => e.stopPropagation()}>
-                  <ResultRejectionPopoverContent
-                    onConfirm={(reason, type) => { onReject(reason, type); close(); }}
-                    onCancel={close}
-                    testName={testName}
-                    testCode={testCode}
-                    patientName={patientName}
-                  />
-                </div>
-              )}
-            </Popover>
-
-            <Button size="sm" variant="success" onClick={onApprove} className="flex items-center gap-1">
-              <Icon name="check" className="w-4 h-4" />
-              Approve
-            </Button>
-          </div>
-        </div>
+        <span className="text-xs text-gray-400 hidden sm:inline-block">
+          Ctrl+Enter to approve
+        </span>
       </div>
     </div>
   );

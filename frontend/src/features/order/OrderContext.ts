@@ -66,6 +66,8 @@ export interface OrdersContextType {
   ) => void;
   /** Update overall order status */
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
+  /** Update payment status */
+  updatePaymentStatus: (orderId: string, paymentStatus: string, amountPaid?: number) => Promise<void>;
   /** Get orders by status */
   getOrdersByStatus: (status: OrderStatus) => Order[];
   /** Get orders by patient ID */

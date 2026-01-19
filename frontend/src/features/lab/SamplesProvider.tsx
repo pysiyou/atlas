@@ -93,7 +93,12 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
     try {
       return await sampleAPI.getPending();
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to get pending samples';
       console.error('Failed to get pending samples:', err);
+      setError({
+        message: errorMessage,
+        operation: 'load',
+      });
       return [];
     }
   }, []);

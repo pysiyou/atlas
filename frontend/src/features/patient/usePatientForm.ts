@@ -136,6 +136,10 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
       newErrors.fullName = VALIDATION_MESSAGES.LENGTH.NAME;
     }
 
+    if (!formData.gender) {
+      newErrors.gender = 'Please select a gender';
+    }
+
     if (!validateRequired(formData.dateOfBirth)) {
       newErrors.dateOfBirth = VALIDATION_MESSAGES.REQUIRED.DATE_OF_BIRTH;
     } else {

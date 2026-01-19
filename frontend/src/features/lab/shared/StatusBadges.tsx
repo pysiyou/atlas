@@ -177,11 +177,10 @@ export const ResultStatusBadge: React.FC<ResultStatusBadgeProps> = ({ status }) 
 
   return (
     <Badge
-      size="sm"
+      size="xs"
       variant={status === 'critical' ? 'danger' : 'warning'}
-      className="px-1.5 py-0 h-5"
     >
-      {status.toUpperCase().slice(0, 1)}
+      {status.toUpperCase()}
     </Badge>
   );
 };

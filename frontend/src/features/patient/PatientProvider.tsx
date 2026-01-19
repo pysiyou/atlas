@@ -63,8 +63,6 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
       setError(null);
       const created = await patientAPI.create(patient);
       setPatients(prev => [...prev, created]);
-      // Refresh to ensure full data consistency with server
-      await refreshPatients();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create patient';
       console.error('Failed to create patient:', err);
@@ -88,8 +86,6 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
           patient.id === id ? updated : patient
         )
       );
-      // Refresh to ensure full data consistency with server
-      await refreshPatients();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to update patient';
       console.error('Failed to update patient:', err);

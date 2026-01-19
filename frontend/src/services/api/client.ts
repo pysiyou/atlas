@@ -50,21 +50,52 @@ export class APIClient {
   }
 
   /**
-   * Handle API errors
+   * Handle API errors - async to parse response body
    */
-  private handleError(error: unknown): never {
+  private async handleErrorAsync(error: unknown): Promise<never> {
     if (error instanceof Response) {
       if (error.status === 401 || error.status === 403) {
         // Clear token and redirect to login
         sessionStorage.removeItem('atlas_access_token');
         sessionStorage.removeItem('atlas_refresh_token');
         sessionStorage.removeItem('atlas_current_user');
-        
+
         if (!window.location.pathname.includes('/login')) {
           window.location.href = '/login';
         }
       }
 
+      // Try to parse error body for detailed message
+      let errorMessage = error.statusText || 'API request failed';
+      try {
+        const errorBody = await error.json();
+        if (errorBody.detail) {
+          errorMessage = errorBody.detail;
+        } else if (errorBody.message) {
+          errorMessage = errorBody.message;
+        }
+      } catch {
+        // If parsing fails, use statusText
+      }
+
+      const apiError: APIError = {
+        message: errorMessage,
+        status: error.status,
+      };
+      logger.error('API request failed', error, { status: error.status });
+      throw apiError;
+    }
+
+    // Fallback for non-Response errors
+    return this.handleError(error);
+  }
+
+  /**
+   * Handle API errors - sync version for non-Response errors
+   */
+  private handleError(error: unknown): never {
+    if (error instanceof Response) {
+      // Should use handleErrorAsync for Response objects
       const apiError: APIError = {
         message: error.statusText || 'API request failed',
         status: error.status,
@@ -112,7 +143,7 @@ export class APIClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        this.handleError(response);
+        await this.handleErrorAsync(response);
       }
 
       return await response.json();
@@ -139,7 +170,7 @@ export class APIClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        this.handleError(response);
+        await this.handleErrorAsync(response);
       }
 
       return await response.json();
@@ -166,7 +197,7 @@ export class APIClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        this.handleError(response);
+        await this.handleErrorAsync(response);
       }
 
       return await response.json();
@@ -192,10 +223,12 @@ export class APIClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        this.handleError(response);
+        await this.handleErrorAsync(response);
       }
 
-      return await response.json();
+      // DELETE may return empty response
+      const text = await response.text();
+      return text ? JSON.parse(text) : ({} as T);
     } catch (error) {
       return this.handleError(error);
     }
@@ -219,7 +252,7 @@ export class APIClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        this.handleError(response);
+        await this.handleErrorAsync(response);
       }
 
       return await response.json();

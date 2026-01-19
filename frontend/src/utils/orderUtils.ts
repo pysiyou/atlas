@@ -11,7 +11,7 @@ import type { Order, OrderStatus, TestStatus, OrderTest } from '@/types';
  */
 export const calculateOrderStatus = (testStatuses: TestStatus[]): OrderStatus => {
   if (testStatuses.every(s => s === 'rejected')) {
-    return 'delivered';
+    return 'rejected';
   }
   if (testStatuses.some(s => s === 'validated' || s === 'completed')) {
     return 'completed';

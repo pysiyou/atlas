@@ -43,6 +43,18 @@ def get_samples(
     return samples
 
 
+@router.get("/samples/pending", response_model=List[SampleResponse])
+def get_pending_samples(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_lab_tech)
+):
+    """
+    Get all pending sample collections
+    """
+    samples = db.query(Sample).filter(Sample.status == SampleStatus.PENDING).all()
+    return samples
+
+
 @router.get("/samples/{sampleId}", response_model=SampleResponse)
 def get_sample(
     sampleId: str,
@@ -59,18 +71,6 @@ def get_sample(
             detail=f"Sample {sampleId} not found"
         )
     return sample
-
-
-@router.get("/samples/pending", response_model=List[SampleResponse])
-def get_pending_samples(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)
-):
-    """
-    Get all pending sample collections
-    """
-    samples = db.query(Sample).filter(Sample.status == SampleStatus.PENDING).all()
-    return samples
 
 
 @router.patch("/samples/{sampleId}/collect", response_model=SampleResponse)
@@ -277,6 +277,10 @@ def request_recollection(
     for test in order_tests:
         test.status = TestStatus.PENDING
         test.sampleId = new_sample_id
+        test.results = None  # Clear previous results for re-testing
+        test.resultEnteredAt = None
+        test.resultEnteredBy = None
+        test.technicianNotes = None
     
     db.commit()
     db.refresh(new_sample)

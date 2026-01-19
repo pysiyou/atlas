@@ -27,12 +27,14 @@ def update_order_status(db: Session, order_id: str) -> None:
     if all_validated:
         order.overallStatus = OrderStatus.VALIDATED
         db.add(order)
+        db.commit()
         return
 
     all_completed = all(t.status in [TestStatus.COMPLETED, TestStatus.VALIDATED] for t in tests)
     if all_completed:
         order.overallStatus = OrderStatus.COMPLETED
         db.add(order)
+        db.commit()
         return
 
     # Check Sample Statuses
@@ -46,47 +48,50 @@ def update_order_status(db: Session, order_id: str) -> None:
     # Simplified: check if all non-rejected samples are collected+
     
     non_rejected_samples = [s for s in samples if s.status != SampleStatus.REJECTED]
-    
+
     if not non_rejected_samples:
-         # All rejected? 
-         # Keep as PENDING or IN_PROGRESS depending on if recollection exists
-         # For now, let's treat as PENDING if nothing valid exists
-         pass
-    else:
-        all_collected = all(
-            s.status in [
-                SampleStatus.COLLECTED, 
-                SampleStatus.RECEIVED, 
-                SampleStatus.ACCESSIONED, 
-                SampleStatus.IN_PROGRESS, 
-                SampleStatus.COMPLETED, 
-                SampleStatus.STORED
-            ] 
-            for s in non_rejected_samples
-        )
-        
-        if all_collected:
-            order.overallStatus = OrderStatus.IN_PROGRESS
-            db.add(order)
-            return
+        # All samples rejected - set order back to pending for recollection
+        order.overallStatus = OrderStatus.PENDING
+        db.add(order)
+        db.commit()
+        return
 
-        any_collected = any(
-            s.status in [
-                SampleStatus.COLLECTED, 
-                SampleStatus.RECEIVED, 
-                SampleStatus.ACCESSIONED
-            ]
-            for s in non_rejected_samples
-        )
-        
-        if any_collected:
-            order.overallStatus = OrderStatus.SAMPLE_COLLECTION
-            db.add(order)
-            return
+    # Check if all non-rejected samples are collected
+    all_collected = all(
+        s.status in [
+            SampleStatus.COLLECTED,
+            SampleStatus.RECEIVED,
+            SampleStatus.ACCESSIONED,
+            SampleStatus.IN_PROGRESS,
+            SampleStatus.COMPLETED,
+            SampleStatus.STORED
+        ]
+        for s in non_rejected_samples
+    )
 
-    # Default
+    if all_collected:
+        order.overallStatus = OrderStatus.IN_PROGRESS
+        db.add(order)
+        db.commit()
+        return
+
+    any_collected = any(
+        s.status in [
+            SampleStatus.COLLECTED,
+            SampleStatus.RECEIVED,
+            SampleStatus.ACCESSIONED
+        ]
+        for s in non_rejected_samples
+    )
+
+    if any_collected:
+        order.overallStatus = OrderStatus.SAMPLE_COLLECTION
+        db.add(order)
+        db.commit()
+        return
+
+    # Default: ensure pending status if no other condition matched
     if order.overallStatus != OrderStatus.PENDING:
-        # content-aware fallback? 
-        # For now, if none of above, maybe it really is PENDING
-        pass
-        
+        order.overallStatus = OrderStatus.PENDING
+        db.add(order)
+        db.commit()
