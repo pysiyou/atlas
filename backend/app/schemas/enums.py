@@ -74,14 +74,19 @@ class ContainerTopColor(str, enum.Enum):
 
 
 class RejectionReason(str, enum.Enum):
+    """
+    Sample rejection reasons - must match frontend values exactly
+    """
     HEMOLYZED = "hemolyzed"
     CLOTTED = "clotted"
-    INSUFFICIENT_VOLUME = "insufficient-volume"
-    WRONG_CONTAINER = "wrong-container"
-    UNLABELED = "unlabeled"
+    QNS = "qns"  # Quantity Not Sufficient
+    WRONG_CONTAINER = "wrong_container"
+    LABELING_ERROR = "labeling_error"
+    TRANSPORT_DELAY = "transport_delay"
     CONTAMINATED = "contaminated"
     LIPEMIC = "lipemic"
-    EXPIRED = "expired"
+    ICTERIC = "icteric"
+    OTHER = "other"
 
 
 class TestStatus(str, enum.Enum):

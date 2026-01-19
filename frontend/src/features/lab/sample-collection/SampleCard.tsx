@@ -117,14 +117,6 @@ export const SampleCard: React.FC<SampleCardProps> = ({
       {/* 1. Patient name - most important for patient safety */}
       <h3 className="text-sm font-medium text-gray-900">{patientName}</h3>
 
-      {/* 1b. Recollection indicator - important for lab staff awareness */}
-      {isRecollection && (
-        <Badge size="sm" variant="warning" className="flex items-center gap-1">
-          <Icon name="hourglass" className="w-3 h-3" />
-          RECOLLECTION #{sample.recollectionAttempt || 2}
-        </Badge>
-      )}
-
       {/* 2. Priority - STAT samples need immediate attention */}
       {sample.priority && (
         <Badge variant={sample.priority} size="sm">
@@ -193,6 +185,7 @@ export const SampleCard: React.FC<SampleCardProps> = ({
           requirement={requirement}
           patientName={patientName}
           testName={testNames.join(', ')}
+          isRecollection={isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)}
           onConfirm={(volume, notes, color, containerType) => {
             handleConfirm(volume, notes, color, containerType);
           }}
@@ -203,6 +196,11 @@ export const SampleCard: React.FC<SampleCardProps> = ({
           <Badge size="sm" variant="error">
             REJECTED
           </Badge>
+          {rejectedSample?.rejectionHistory && rejectedSample.rejectionHistory.length > 1 && (
+            <Badge size="sm" variant="warning">
+              {rejectedSample.rejectionHistory.length} Attempts
+            </Badge>
+          )}
           {rejectedSample?.recollectionRequired && !rejectedSample?.recollectionSampleId && (
             <Badge size="sm" variant="warning">
               Awaiting Recollection
@@ -260,23 +258,26 @@ export const SampleCard: React.FC<SampleCardProps> = ({
     code: requirement.testCodes[i] || '',
   }));
 
-  // Build content with rejection details or recollection info if applicable
-  const content = (
+  // Recollection banner - displayed outside content section
+  const recollectionBanner = (
     <>
-      {/* Recollection info for samples that replace rejected ones */}
-      {isRecollection && sample.recollectionReason && (
-        <div className="mb-3 p-2 bg-amber-50 border border-amber-100 rounded-md">
-          <div className="flex items-start gap-2">
-            <Icon name="hourglass" className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-medium text-amber-800 mb-1">Recollection Required</div>
-              <p className="text-xxs text-amber-700">
-                Previous sample ({sample.originalSampleId}) was rejected: {sample.recollectionReason}
-              </p>
-            </div>
+      {/* Simplified recollection info */}
+      {(isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)) && (
+        <div className="p-2.5 bg-yellow-50 border border-yellow-200 rounded-md">
+          <div className="flex items-center gap-2">
+            <Icon name="alert-circle" className="w-4 h-4 text-yellow-600 shrink-0" />
+            <p className="text-xs text-yellow-800">
+              This sample has been collected <span className="font-semibold">{(sample.rejectionHistory?.length || 0) + 1} {(sample.rejectionHistory?.length || 0) + 1 === 1 ? 'time' : 'times'}</span>
+            </p>
           </div>
         </div>
       )}
+    </>
+  );
+
+  // Build content with rejection details
+  const content = (
+    <>
 
       {/* Rejection details for rejected samples */}
       {isRejected && rejectedSample && (
@@ -284,21 +285,72 @@ export const SampleCard: React.FC<SampleCardProps> = ({
           <div className="flex items-start gap-2">
             <Icon name="alert-circle" className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-medium text-red-800 mb-1">Rejection Reasons</div>
-              <div className="flex flex-wrap gap-1 mb-1">
-                {rejectedSample.rejectionReasons?.map((reason) => (
-                  <Badge key={reason} size="sm" variant="error" className="text-xxs">
-                    {REJECTION_REASON_CONFIG[reason]?.label || reason}
-                  </Badge>
-                ))}
+              <div className="text-xs font-medium text-red-800 mb-2">
+                {rejectedSample.rejectionHistory && rejectedSample.rejectionHistory.length > 1
+                  ? `Rejection History (${rejectedSample.rejectionHistory.length} attempts)`
+                  : 'Rejection Details'}
               </div>
-              {rejectedSample.rejectionNotes && (
-                <p className="text-xxs text-red-700 italic">"{rejectedSample.rejectionNotes}"</p>
+              
+              {/* Show all rejection attempts from history */}
+              {rejectedSample.rejectionHistory && rejectedSample.rejectionHistory.length > 0 ? (
+                <div className="space-y-2">
+                  {rejectedSample.rejectionHistory.map((rejection, index) => (
+                    <div
+                      key={index}
+                      className={`pb-2 ${
+                        index < rejectedSample.rejectionHistory!.length - 1
+                          ? 'border-b border-red-200'
+                          : ''
+                      }`}
+                    >
+                      <div className="flex items-center gap-1 mb-1">
+                        <span className="text-xxs font-medium text-red-700">
+                          Attempt #{index + 1}
+                        </span>
+                        {index === rejectedSample.rejectionHistory!.length - 1 && (
+                          <Badge size="sm" variant="error" className="text-xxs">
+                            Most Recent
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-1 mb-1">
+                        {rejection.rejectionReasons?.map((reason) => (
+                          <Badge key={reason} size="sm" variant="error" className="text-xxs">
+                            {REJECTION_REASON_CONFIG[reason]?.label || reason}
+                          </Badge>
+                        ))}
+                      </div>
+                      {rejection.rejectionNotes && (
+                        <p className="text-xxs text-red-700 italic mb-1">
+                          "{rejection.rejectionNotes}"
+                        </p>
+                      )}
+                      <p className="text-xxs text-red-600">
+                        Rejected by {rejection.rejectedBy} on{' '}
+                        {new Date(rejection.rejectedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                /* Fallback to single rejection fields if history not available */
+                <>
+                  <div className="flex flex-wrap gap-1 mb-1">
+                    {rejectedSample.rejectionReasons?.map((reason) => (
+                      <Badge key={reason} size="sm" variant="error" className="text-xxs">
+                        {REJECTION_REASON_CONFIG[reason]?.label || reason}
+                      </Badge>
+                    ))}
+                  </div>
+                  {rejectedSample.rejectionNotes && (
+                    <p className="text-xxs text-red-700 italic">"{rejectedSample.rejectionNotes}"</p>
+                  )}
+                  <p className="text-xxs text-red-600 mt-1">
+                    Rejected by {rejectedSample.rejectedBy} on{' '}
+                    {new Date(rejectedSample.rejectedAt).toLocaleDateString()}
+                  </p>
+                </>
               )}
-              <p className="text-xxs text-red-600 mt-1">
-                Rejected by {rejectedSample.rejectedBy} on{' '}
-                {new Date(rejectedSample.rejectedAt).toLocaleDateString()}
-              </p>
             </div>
           </div>
         </div>
@@ -325,6 +377,7 @@ export const SampleCard: React.FC<SampleCardProps> = ({
       }
       badges={badges}
       actions={actions}
+      recollectionBanner={recollectionBanner}
       content={content}
       contentTitle="Required for"
     />

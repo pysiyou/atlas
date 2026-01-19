@@ -102,6 +102,9 @@ def validate_results(
 ):
     """
     Validate test results
+    - APPROVED: Mark as validated
+    - REJECTED: Reset to sample-collected (re-test with same sample)
+    - REPEAT_REQUIRED: Reset to pending (requires new sample collection)
     """
     order_test = db.query(OrderTest).filter(
         OrderTest.orderId == orderId,
@@ -120,15 +123,33 @@ def validate_results(
             detail=f"Test must be completed before validation"
         )
 
-    # Update validation
+    # Update validation metadata
     order_test.resultValidatedAt = datetime.utcnow()
     order_test.validatedBy = current_user.id
     order_test.validationNotes = validation_data.validationNotes
 
     if validation_data.decision == ValidationDecision.APPROVED:
+        # Approve results
         order_test.status = TestStatus.VALIDATED
+        
     elif validation_data.decision == ValidationDecision.REJECTED:
-        order_test.status = TestStatus.REJECTED
+        # Reject for re-test (same sample, re-enter results)
+        order_test.status = TestStatus.SAMPLE_COLLECTED
+        # Clear previous results but keep sample
+        order_test.results = None
+        order_test.resultEnteredAt = None
+        order_test.enteredBy = None
+        order_test.technicianNotes = f"Re-test required: {validation_data.validationNotes or 'Results rejected by validator'}"
+        
+    elif validation_data.decision == ValidationDecision.REPEAT_REQUIRED:
+        # Reject for re-collection (new sample needed)
+        order_test.status = TestStatus.PENDING
+        # Clear all sample and result data
+        order_test.sampleId = None
+        order_test.results = None
+        order_test.resultEnteredAt = None
+        order_test.enteredBy = None
+        order_test.technicianNotes = f"Re-collection required: {validation_data.validationNotes or 'Sample rejected by validator'}"
 
     db.commit()
     db.refresh(order_test)

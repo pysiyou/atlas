@@ -280,14 +280,6 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
                 >
                   {isPending ? 'PENDING COLLECTION' : isRejected ? 'REJECTED' : 'COLLECTED'}
                 </Badge>
-
-                {/* Recollection indicator */}
-                {sample.isRecollection && (
-                  <Badge size="sm" variant="warning" className="flex items-center gap-1">
-                    <Icon name="hourglass" className="w-3 h-3" />
-                    RECOLLECTION #{sample.recollectionAttempt || 2}
-                  </Badge>
-                )}
               </div>
 
               {/* Action buttons */}
@@ -306,6 +298,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
                 requirement && onCollect && (
                   <SampleCollectionPopover
                     requirement={requirement}
+                    isRecollection={sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)}
                     onConfirm={(volume, notes, color, containerType) => {
                       handleCollectConfirm(volume, notes, color, containerType);
                     }}
@@ -348,75 +341,164 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
           </div>
         </SectionContainer>
 
-        {/* Rejection Details Section - only for rejected samples */}
+        {/* Rejection History Section - for rejected samples with history */}
         {isRejected && rejectedSample && (
-          <SectionContainer title="Rejection Details">
-            <div className="p-3 bg-red-50 border border-red-100 rounded-md">
-              <div className="flex items-start gap-3">
-                <Icon name="alert-circle" className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
-                <div className="flex-1 min-w-0 space-y-2">
-                  <div>
-                    <div className="text-xs font-medium text-red-800 mb-1">Rejection Reasons</div>
-                    <div className="flex flex-wrap gap-1">
-                      {rejectedSample.rejectionReasons?.map((reason) => (
-                        <Badge key={reason} size="sm" variant="error">
-                          {REJECTION_REASON_CONFIG[reason]?.label || reason}
-                        </Badge>
-                      ))}
+          <SectionContainer 
+            title={
+              rejectedSample.rejectionHistory && rejectedSample.rejectionHistory.length > 1
+                ? `Rejection History (${rejectedSample.rejectionHistory.length} attempts)`
+                : "Rejection Details"
+            }
+          >
+            {/* Show rejection history timeline if available */}
+            {rejectedSample.rejectionHistory && rejectedSample.rejectionHistory.length > 0 ? (
+              <div className="space-y-3">
+                {rejectedSample.rejectionHistory.map((rejection, index) => (
+                  <div
+                    key={index}
+                    className={`p-3 bg-red-50 border border-red-200 rounded-md ${
+                      index === rejectedSample.rejectionHistory!.length - 1
+                        ? 'ring-2 ring-red-300'
+                        : ''
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <Icon name="alert-circle" className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
+                      <div className="flex-1 min-w-0 space-y-2">
+                        {/* Header with attempt number */}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-semibold text-red-900">
+                            Attempt #{index + 1}
+                          </span>
+                          {index === rejectedSample.rejectionHistory!.length - 1 && (
+                            <Badge size="sm" variant="error">
+                              Most Recent
+                            </Badge>
+                          )}
+                        </div>
+
+                        {/* Rejection reasons */}
+                        <div>
+                          <div className="text-xs font-medium text-red-800 mb-1">Rejection Reasons</div>
+                          <div className="flex flex-wrap gap-1">
+                            {rejection.rejectionReasons?.map((reason) => (
+                              <Badge key={reason} size="sm" variant="error">
+                                {REJECTION_REASON_CONFIG[reason]?.label || reason}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Notes */}
+                        {rejection.rejectionNotes && (
+                          <div>
+                            <div className="text-xs font-medium text-red-800 mb-1">Notes</div>
+                            <p className="text-xs text-red-700 italic">"{rejection.rejectionNotes}"</p>
+                          </div>
+                        )}
+
+                        {/* Metadata */}
+                        <div className="pt-2 border-t border-red-200 text-xs text-red-600">
+                          Rejected by {getUserName(rejection.rejectedBy)} on{' '}
+                          {formatDate(rejection.rejectedAt)}
+                        </div>
+
+                        {/* Recollection status */}
+                        {rejection.recollectionRequired && (
+                          <div className="flex items-center gap-2 pt-1">
+                            <Badge size="sm" variant="warning">Recollection Required</Badge>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                  {rejectedSample.rejectionNotes && (
+                ))}
+              </div>
+            ) : (
+              /* Fallback to single rejection display if no history */
+              <div className="p-3 bg-red-50 border border-red-100 rounded-md">
+                <div className="flex items-start gap-3">
+                  <Icon name="alert-circle" className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
+                  <div className="flex-1 min-w-0 space-y-2">
                     <div>
-                      <div className="text-xs font-medium text-red-800 mb-1">Notes</div>
-                      <p className="text-xs text-red-700 italic">"{rejectedSample.rejectionNotes}"</p>
+                      <div className="text-xs font-medium text-red-800 mb-1">Rejection Reasons</div>
+                      <div className="flex flex-wrap gap-1">
+                        {rejectedSample.rejectionReasons?.map((reason) => (
+                          <Badge key={reason} size="sm" variant="error">
+                            {REJECTION_REASON_CONFIG[reason]?.label || reason}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                  )}
-                  <div className="pt-2 border-t border-red-200 text-xs text-red-600">
-                    Rejected by {getUserName(rejectedSample.rejectedBy)} on{' '}
-                    {formatDate(rejectedSample.rejectedAt)}
+                    {rejectedSample.rejectionNotes && (
+                      <div>
+                        <div className="text-xs font-medium text-red-800 mb-1">Notes</div>
+                        <p className="text-xs text-red-700 italic">"{rejectedSample.rejectionNotes}"</p>
+                      </div>
+                    )}
+                    <div className="pt-2 border-t border-red-200 text-xs text-red-600">
+                      Rejected by {getUserName(rejectedSample.rejectedBy)} on{' '}
+                      {formatDate(rejectedSample.rejectedAt)}
+                    </div>
+                    {rejectedSample.recollectionRequired && (
+                      <div className="flex items-center gap-2 pt-1">
+                        <Badge size="sm" variant="warning">Recollection Required</Badge>
+                        {rejectedSample.recollectionSampleId && (
+                          <span className="text-xs text-gray-600">
+                            New sample: <span className="font-mono font-medium">{rejectedSample.recollectionSampleId}</span>
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  {rejectedSample.recollectionRequired && (
-                    <div className="flex items-center gap-2 pt-1">
-                      <Badge size="sm" variant="warning">Recollection Required</Badge>
-                      {rejectedSample.recollectionSampleId && (
-                        <span className="text-xs text-gray-600">
-                          New sample: <span className="font-mono font-medium">{rejectedSample.recollectionSampleId}</span>
-                        </span>
-                      )}
-                    </div>
-                  )}
                 </div>
               </div>
-            </div>
+            )}
           </SectionContainer>
         )}
 
-        {/* Recollection Info Section - for samples that are recollections */}
-        {sample.isRecollection && sample.recollectionReason && (
-          <SectionContainer title="Recollection Information">
-            <div className="p-3 bg-amber-50 border border-amber-100 rounded-md">
-              <div className="flex items-start gap-3">
-                <Icon name="hourglass" className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
-                <div className="flex-1 min-w-0 space-y-2">
-                  <div>
-                    <div className="text-xs font-medium text-amber-800 mb-1">This is a Recollection</div>
-                    <p className="text-xs text-amber-700">
-                      Attempt #{sample.recollectionAttempt || 2} - Previous sample was rejected
-                    </p>
-                  </div>
-                  <div>
-                    <div className="text-xs font-medium text-amber-800 mb-1">Original Sample</div>
-                    <span className="text-xs font-mono text-amber-700">{sample.originalSampleId}</span>
-                  </div>
-                  <div>
-                    <div className="text-xs font-medium text-amber-800 mb-1">Reason for Recollection</div>
-                    <p className="text-xs text-amber-700">{sample.recollectionReason}</p>
+
+
+        {/* Recent Collection Activity - show details of the last collection/rejection */}
+        {sample.rejectionHistory && sample.rejectionHistory.length > 0 && (() => {
+          const lastRejection = sample.rejectionHistory[sample.rejectionHistory.length - 1];
+          return (
+            <SectionContainer title="Last Collection Details">
+              <div className="p-3 bg-orange-50 border border-orange-200 rounded-md">
+                <div className="flex items-start gap-3">
+                  <Icon name="alert-circle" className="w-5 h-5 text-orange-600 mt-0.5 shrink-0" />
+                  <div className="flex-1 min-w-0 space-y-2">
+                    {/* Rejection reasons */}
+                    <div>
+                      <div className="text-xs font-medium text-orange-800 mb-1">Rejection Reasons</div>
+                      <div className="flex flex-wrap gap-1">
+                        {lastRejection.rejectionReasons?.map((reason) => (
+                          <Badge key={reason} size="sm" variant="warning">
+                            {REJECTION_REASON_CONFIG[reason]?.label || reason}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Notes */}
+                    {lastRejection.rejectionNotes && (
+                      <div>
+                        <div className="text-xs font-medium text-orange-800 mb-1">Notes</div>
+                        <p className="text-xs text-orange-700 italic">"{lastRejection.rejectionNotes}"</p>
+                      </div>
+                    )}
+
+                    {/* Metadata */}
+                    <div className="pt-2 border-t border-orange-200 text-xs text-orange-600">
+                      Rejected by {getUserName(lastRejection.rejectedBy)} on{' '}
+                      {formatDate(lastRejection.rejectedAt)}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </SectionContainer>
-        )}
+            </SectionContainer>
+          );
+        })()}
 
         {/* Linked Tests Section */}
         <SectionContainer title={isCollected ? 'Linked Tests' : 'Required for'}>

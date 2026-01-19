@@ -33,6 +33,14 @@ class RecollectionRequest(BaseModel):
     reason: str
 
 
+class RejectionRecord(BaseModel):
+    rejectedAt: datetime
+    rejectedBy: str
+    rejectionReasons: list[RejectionReason]
+    rejectionNotes: str | None = None
+    recollectionRequired: bool = False
+
+
 class SampleResponse(SampleBase):
     sampleId: str
     orderId: str
@@ -49,6 +57,7 @@ class SampleResponse(SampleBase):
     rejectedBy: str | None = None
     rejectionReasons: list[RejectionReason] | None = None
     rejectionNotes: str | None = None
+    rejectionHistory: list[RejectionRecord] | None = None
     recollectionRequired: bool = False
     recollectionSampleId: str | None = None
     
@@ -56,7 +65,7 @@ class SampleResponse(SampleBase):
     isRecollection: bool = False
     originalSampleId: str | None = None
     recollectionReason: str | None = None
-    recollectionAttempt: int = 1
+    recollectionAttempt: int = 0
     createdAt: datetime
     createdBy: str
     updatedAt: datetime

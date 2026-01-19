@@ -200,6 +200,7 @@ interface SampleCollectionPopoverProps {
   requirement: SampleRequirement;
   patientName?: string;
   testName?: string;
+  isRecollection?: boolean;
   onConfirm: (volume: number, notes?: string, color?: string, containerType?: ContainerType) => void;
 }
 
@@ -207,6 +208,7 @@ export const SampleCollectionPopover: React.FC<SampleCollectionPopoverProps> = (
   requirement,
   patientName,
   testName,
+  isRecollection = false,
   onConfirm,
 }) => {
   return (
@@ -215,7 +217,7 @@ export const SampleCollectionPopover: React.FC<SampleCollectionPopoverProps> = (
       offsetValue={8}
       trigger={
         <Button variant="primary" size="xs" icon={<Icon name="sample-collection" className="text-white" />}>
-          COLLECT
+          {isRecollection ? 'RECOLLECT' : 'COLLECT'}
         </Button>
       }
     >

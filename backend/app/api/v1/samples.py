@@ -3,6 +3,7 @@ Sample API Routes
 """
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.attributes import flag_modified
 from typing import List
 from datetime import datetime
 from app.database import get_db
@@ -133,7 +134,7 @@ def reject_sample(
     current_user: User = Depends(require_lab_tech)
 ):
     """
-    Reject a sample
+    Reject a sample and append to rejection history
     """
     sample = db.query(Sample).filter(Sample.sampleId == sampleId).first()
     if not sample:
@@ -148,7 +149,24 @@ def reject_sample(
             detail=f"Sample {sampleId} must be collected before rejection"
         )
 
-    # Update sample
+    # Create rejection record for history
+    rejection_record = {
+        "rejectedAt": datetime.utcnow().isoformat(),
+        "rejectedBy": current_user.id,
+        "rejectionReasons": [r.value for r in reject_data.rejectionReasons],
+        "rejectionNotes": reject_data.rejectionNotes,
+        "recollectionRequired": reject_data.recollectionRequired
+    }
+    
+    # Append to rejection history
+    if sample.rejectionHistory is None:
+        sample.rejectionHistory = []
+    sample.rejectionHistory.append(rejection_record)
+    
+    # Mark the field as modified so SQLAlchemy persists the change
+    flag_modified(sample, 'rejectionHistory')
+    
+    # Update single rejection fields (most recent)
     sample.status = SampleStatus.REJECTED
     sample.rejectedAt = datetime.utcnow()
     sample.rejectedBy = current_user.id
@@ -184,61 +202,68 @@ def request_recollection(
 ):
     """
     Request recollection for a rejected sample
-    - Creates new PENDING sample
-    - Links to original rejected sample
-    - Resets order tests to PENDING
+    - Resets sample status to PENDING
+    - Sets isRecollection flag to True
+    - Clears collection data
+    - Keeps rejection history intact
     - Escalates priority to URGENT
     """
-    original = db.query(Sample).filter(Sample.sampleId == sampleId).first()
-    if not original:
+    sample = db.query(Sample).filter(Sample.sampleId == sampleId).first()
+    if not sample:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Sample {sampleId} not found"
         )
     
-    if original.status != SampleStatus.REJECTED:
+    if sample.status != SampleStatus.REJECTED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Only rejected samples can be recollected"
         )
     
-    # Create new sample (clone of original)
-    new_sample = Sample(
-        sampleId=generate_id("sample", db),
-        orderId=original.orderId,
-        sampleType=original.sampleType,
-        status=SampleStatus.PENDING,
-        testCodes=original.testCodes,
-        requiredVolume=original.requiredVolume,
-        priority=PriorityLevel.URGENT,  # Escalate priority
-        requiredContainerTypes=original.requiredContainerTypes,
-        requiredContainerColors=original.requiredContainerColors,
-        isRecollection=True,
-        originalSampleId=sampleId,
-        recollectionReason=recollection_data.reason,
-        recollectionAttempt=(original.recollectionAttempt or 1) + 1,
-        createdBy=current_user.id,
-        updatedBy=current_user.id,
-    )
+    # Reset sample to pending state
+    sample.status = SampleStatus.PENDING
+    sample.priority = PriorityLevel.URGENT  # Escalate priority
     
-    # Update original
-    original.recollectionSampleId = new_sample.sampleId
+    # Mark as recollection sample
+    sample.isRecollection = True
+    sample.recollectionReason = recollection_data.reason
+    
+    # Clear collection data (will be filled again on recollection)
+    sample.collectedAt = None
+    sample.collectedBy = None
+    sample.collectedVolume = None
+    sample.actualContainerType = None
+    sample.actualContainerColor = None
+    sample.collectionNotes = None
+    sample.remainingVolume = None
+    
+    # Keep rejection history intact - it's already in rejectionHistory array
+    # Clear the single rejection fields since we're resetting
+    sample.rejectedAt = None
+    sample.rejectedBy = None
+    sample.rejectionReasons = None
+    sample.rejectionNotes = None
+    sample.recollectionRequired = False
+    sample.recollectionSampleId = None
+    
+    # Update recollection tracking
+    sample.recollectionAttempt = (sample.recollectionAttempt or 0) + 1
+    sample.updatedBy = current_user.id
     
     # Reset order tests
     order_tests = db.query(OrderTest).filter(
-        OrderTest.orderId == original.orderId,
-        OrderTest.testCode.in_(original.testCodes)
+        OrderTest.orderId == sample.orderId,
+        OrderTest.testCode.in_(sample.testCodes)
     ).all()
     
     for test in order_tests:
         test.status = TestStatus.PENDING
-        test.sampleId = None
     
-    db.add(new_sample)
     db.commit()
-    db.refresh(new_sample)
+    db.refresh(sample)
     
     # Update order status
-    update_order_status(db, original.orderId)
+    update_order_status(db, sample.orderId)
     
-    return new_sample
+    return sample

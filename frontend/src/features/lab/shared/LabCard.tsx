@@ -45,6 +45,8 @@ interface LabCardProps {
   content: ReactNode;
   /** Section title for content area */
   contentTitle: string;
+  /** Optional recollection banner (displayed before content section) */
+  recollectionBanner?: ReactNode;
   /** Optional flags section */
   flags?: ReactNode;
   /** Optional className */
@@ -69,6 +71,7 @@ export const LabCard: React.FC<LabCardProps> = ({
   actions,
   content,
   contentTitle,
+  recollectionBanner,
   flags,
   className = '',
 }) => {
@@ -118,6 +121,9 @@ export const LabCard: React.FC<LabCardProps> = ({
             {/* Additional info line */}
             {additionalInfo}
           </div>
+
+          {/* Recollection Banner - displayed before content section */}
+          {recollectionBanner}
 
           {/* Row 3: Content section */}
           <div className={LAB_CARD_CONTAINERS.contentSection}>
