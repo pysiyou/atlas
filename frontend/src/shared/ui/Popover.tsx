@@ -10,7 +10,12 @@
  * - Click outside to dismiss
  * - Portal rendering to avoid z-index issues
  * - Responsive sizing
+ * 
+ * Note: The react-hooks/refs rule is disabled because @floating-ui/react's refs.setFloating
+ * and refs.setReference are callback ref setters, not ref.current accesses. This is a
+ * false positive from the ESLint rule.
  */
+/* eslint-disable react-hooks/refs */
 
 import React, { useState, useEffect } from "react";
 import {
@@ -82,6 +87,60 @@ const hideScrollbarStyle = `
     scrollbar-width: none;
   }
 `;
+
+/**
+ * Props for the FloatingContent inner component
+ */
+interface FloatingContentProps {
+  floatingRef: (node: HTMLElement | null) => void;
+  floatingStyles: React.CSSProperties;
+  floatingProps: Record<string, unknown>;
+  noBorder: boolean;
+  className: string;
+  onClose: () => void;
+  children: React.ReactNode | ((props: { close: () => void }) => React.ReactNode);
+}
+
+/**
+ * Inner component for popover content to properly handle the floating ref
+ * Extracted to avoid eslint react-hooks/refs false positive
+ */
+const FloatingContent: React.FC<FloatingContentProps> = ({
+  floatingRef,
+  floatingStyles,
+  floatingProps,
+  noBorder,
+  className,
+  onClose,
+  children,
+}) => {
+  return (
+    <div
+      ref={floatingRef}
+      style={floatingStyles}
+      className="z-[100]"
+    >
+      <motion.div
+        {...floatingProps}
+        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+        transition={{ duration: 0.2 }}
+        className={cn(
+          "bg-white border border-gray-200 shadow-lg rounded overflow-hidden flex flex-col h-full",
+          noBorder && "border-0",
+          className
+        )}
+      >
+        <div className="hide-scrollbar h-full flex flex-col">
+          {typeof children === "function"
+            ? children({ close: onClose })
+            : children}
+        </div>
+      </motion.div>
+    </div>
+  );
+};
 
 /**
  * Popover component that automatically positions itself relative to a trigger element
@@ -178,31 +237,17 @@ export const Popover: React.FC<PopoverProps> = ({
                 />
               )}
 
-              {/* Popover content */}
-              <div
-                ref={refs.setFloating}
-                style={floatingStyles}
-                className="z-[100]"
+              {/* Popover content - refs.setFloating is a callback ref setter from @floating-ui/react, safe to use during render */}
+              <FloatingContent
+                floatingRef={refs.setFloating}
+                floatingStyles={floatingStyles}
+                floatingProps={getFloatingProps()}
+                noBorder={noBorder}
+                className={className}
+                onClose={() => setIsOpen(false)}
               >
-                <motion.div
-                  {...getFloatingProps()}
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className={cn(
-                    "bg-white border border-gray-200 shadow-lg rounded overflow-hidden flex flex-col h-full",
-                    noBorder && "border-0",
-                    className
-                  )}
-                >
-                  <div className="hide-scrollbar h-full flex flex-col">
-                    {typeof children === "function"
-                      ? children({ close: () => setIsOpen(false) })
-                      : children}
-                  </div>
-                </motion.div>
-              </div>
+                {children}
+              </FloatingContent>
             </>
           )}
         </AnimatePresence>

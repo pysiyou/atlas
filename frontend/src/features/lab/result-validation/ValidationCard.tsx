@@ -113,7 +113,7 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
     </span>
   );
 
-  // Results grid
+  // Results grid - each item stays on a single line
   const content = (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-2">
       {Object.entries(test.results).map(([key, value]) => {
@@ -128,19 +128,17 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
           : 'normal';
 
         return (
-          <div key={key} className="flex items-center gap-20">
-            <span className="text-xs text-gray-500 truncate shrink-0" title={key}>{key}:</span>
-            <div className="flex items-center gap-2">
-              <span className={`text-sm font-medium ${
-                status === 'critical' ? 'text-red-600 font-bold' :
-                status === 'high' || status === 'low' ? 'text-amber-600' :
-                'text-gray-900'
-              }`}>
-                {String(resultValue)}
-                {unit && <span className="text-xs text-gray-400 ml-1 font-normal">{unit}</span>}
-              </span>
-              <ResultStatusBadge status={status} />
-            </div>
+          <div key={key} className="flex items-center gap-8 min-w-0 whitespace-nowrap">
+            <span className="text-xs text-gray-500 shrink-0" title={key}>{key}:</span>
+            <span className={`text-sm font-medium shrink-0 ${
+              status === 'critical' ? 'text-red-600 font-bold' :
+              status === 'high' || status === 'low' ? 'text-amber-600' :
+              'text-gray-900'
+            }`}>
+              {String(resultValue)}
+              {unit && <span className="text-xs text-gray-400 ml-1 font-normal">{unit}</span>}
+            </span>
+            <ResultStatusBadge status={status} />
           </div>
         );
       })}

@@ -17,7 +17,6 @@ import React, {
 /**
  * Available modal types in the application
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export const ModalType = {
   SAMPLE_DETAIL: "SAMPLE_DETAIL",
   PATIENT_DETAIL: "PATIENT_DETAIL",
@@ -25,11 +24,8 @@ export const ModalType = {
   CONFIRMATION: "CONFIRMATION",
   RESULT_DETAIL: "RESULT_DETAIL",
   VALIDATION_DETAIL: "VALIDATION_DETAIL",
-
-
 } as const;
 
-// eslint-disable-next-line react-refresh/only-export-components
 export type ModalType = typeof ModalType[keyof typeof ModalType];
 
 /**
@@ -55,6 +51,7 @@ const ModalContext = createContext<ModalContextType>({
  * Provides access to modal UI state and actions.
  * Used to open and close modals throughout the application.
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const useModal = () => {
   const context = useContext(ModalContext);
   if (!context) {

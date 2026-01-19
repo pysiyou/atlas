@@ -4,7 +4,6 @@
  */
 
 import { createContext } from 'react';
-import type { User } from '@/types';
 
 /**
  * Minimal user info needed for display purposes

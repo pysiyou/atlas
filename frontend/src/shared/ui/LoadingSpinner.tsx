@@ -15,6 +15,21 @@ const SIZE_MAP: Record<ClaudeLoaderSize, number> = {
   lg: 96,
 };
 
+/**
+ * Seeded random number generator for deterministic "random" values
+ * Uses a simple linear congruential generator (LCG)
+ */
+function seededRandom(seed: number): () => number {
+  let state = seed;
+  return () => {
+    state = (state * 1103515245 + 12345) & 0x7fffffff;
+    return state / 0x7fffffff;
+  };
+}
+
+// Fixed seed for deterministic appearance - defined outside component
+const LOADER_SEED = 42;
+
 export const ClaudeLoader: React.FC<ClaudeLoaderProps> = ({
   size = "md",
   color = "#10b981", // emerald-500
@@ -25,18 +40,19 @@ export const ClaudeLoader: React.FC<ClaudeLoaderProps> = ({
   const armConfigs = useMemo(() => {
     const baseWidth = pixelSize * 0.08;
     const armLength = pixelSize * 0.35;
+    const random = seededRandom(LOADER_SEED);
 
     return Array.from({ length: armCount }, (_, i) => {
       const angle = (i * 360) / armCount;
-      const delay = (i / armCount) * 0.8 + Math.random() * 0.6;
-      const duration = 1.2 + Math.random() * 1.2;
+      const delay = (i / armCount) * 0.8 + random() * 0.6;
+      const duration = 1.2 + random() * 1.2;
 
       // Varying widths create natural center intersection
-      const widthVariation = Math.random();
+      const widthVariation = random();
       const armWidth =
         widthVariation < 0.3
-          ? baseWidth * (0.4 + Math.random() * 0.4)
-          : baseWidth * (0.8 + Math.random() * 0.8);
+          ? baseWidth * (0.4 + random() * 0.4)
+          : baseWidth * (0.8 + random() * 0.8);
 
       return { angle, delay, duration, armWidth, armLength };
     });

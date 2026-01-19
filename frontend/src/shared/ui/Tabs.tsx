@@ -16,6 +16,7 @@ export interface TabsProps {
 }
 
 // Export hooks for custom tab implementations
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTabs = (tabs: TabItem[], defaultTabId?: string) => {
   const [activeTabId, setActiveTabId] = useState(defaultTabId || tabs[0]?.id);
   const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0];

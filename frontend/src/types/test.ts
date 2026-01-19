@@ -4,6 +4,7 @@
 
 import type { ContainerType, ContainerTopColor, SampleType } from './sample';
 import type { Patient } from './patient';
+import type { TestResult } from './order';
 
 /**
  * Test category types - expanded to match catalog categories
@@ -199,7 +200,7 @@ export interface TestWithContext {
   validatedBy?: string;
   referringPhysician?: string;
   patient?: Patient; // Full patient object if needed
-  results?: Record<string, any>;
+  results?: Record<string, TestResult>;
   flags?: string[];
   technicianNotes?: string;
   validationNotes?: string;

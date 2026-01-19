@@ -88,7 +88,7 @@ export function LabWorkflowView<T>({
       </div>
 
       {/* Content */}
-      <div className={`flex-1 ${showEmptyState ? 'flex flex-col' : 'grid gap-4 overflow-y-auto min-h-0'}`}>
+      <div className={`flex-1 ${showEmptyState ? 'flex flex-col' : 'grid gap-4 content-start overflow-y-auto min-h-0'}`}>
         {!showEmptyState && filteredItems.map((item, idx) => (
           <React.Fragment key={getItemKey(item, idx)}>
             {renderCard(item, idx, filteredItems)}
@@ -122,7 +122,9 @@ export function LabWorkflowView<T>({
 /**
  * Helper to create a filter function for tests/samples
  * Searches across common fields: orderId, patientName, testName, sampleId
+ * Note: This utility function is intentionally co-located with LabWorkflowView
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function createLabItemFilter<T extends {
   orderId?: string;
   patientName?: string;

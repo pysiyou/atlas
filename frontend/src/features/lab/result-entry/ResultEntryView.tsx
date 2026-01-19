@@ -4,7 +4,7 @@
  * Displays tests awaiting result entry (status: sample-collected or in-progress).
  */
 
-import React, { useContext, useState, useMemo, useCallback } from 'react';
+import React, { useContext, useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useOrders } from '@/features/order/OrderContext';
 import { TestsContext } from '@/features/test/TestsContext';
 import { useSamples } from '@/features/lab/SamplesContext';
@@ -161,6 +161,9 @@ export const ResultEntry: React.FC = () => {
     }
   }, [results, technicianNotes, allTests, testsContext, ordersContext]);
 
+  // Use a ref to store the openTestModal function to avoid circular dependency
+  const openTestModalRef = useRef<(test: TestWithContext, filteredTests: TestWithContext[]) => void>(undefined);
+
   const openTestModal = useCallback((test: TestWithContext, filteredTests: TestWithContext[]) => {
     if (!testsContext) return;
 
@@ -173,11 +176,12 @@ export const ResultEntry: React.FC = () => {
       t => t.orderId === test.orderId && t.testCode === test.testCode
     );
 
+    // Use ref for recursive calls to avoid circular dependency warning
     const onNext = currentIndex < filteredTests.length - 1
-      ? () => openTestModal(filteredTests[currentIndex + 1], filteredTests)
+      ? () => openTestModalRef.current?.(filteredTests[currentIndex + 1], filteredTests)
       : undefined;
     const onPrev = currentIndex > 0
-      ? () => openTestModal(filteredTests[currentIndex - 1], filteredTests)
+      ? () => openTestModalRef.current?.(filteredTests[currentIndex - 1], filteredTests)
       : undefined;
 
     openModal(ModalType.RESULT_DETAIL, {
@@ -195,6 +199,11 @@ export const ResultEntry: React.FC = () => {
       onPrev,
     });
   }, [testsContext, results, technicianNotes, areAllParametersFilled, handleResultChange, handleNotesChange, handleSaveResults, openModal]);
+
+  // Keep ref in sync with the callback
+  useEffect(() => {
+    openTestModalRef.current = openTestModal;
+  }, [openTestModal]);
 
   if (!ordersContext || !testsContext || !patientsContext || !samplesContext) {
     return <div>Loading...</div>;

@@ -31,6 +31,6 @@ declare module 'react-barcode' {
 
 // JSON module support
 declare module '*.json' {
-  const value: any;
+  const value: Record<string, unknown> | unknown[];
   export default value;
 }

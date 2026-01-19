@@ -62,5 +62,6 @@ export const Sidebar: React.FC = () => {
 export { SidebarHeader } from './SidebarHeader';
 export { SidebarNav } from './SidebarNav';
 export { SidebarProfile } from './SidebarProfile';
+// eslint-disable-next-line react-refresh/only-export-components
 export { menuItems, settingsItems, getFilteredMenuItems } from './menuConfig';
 export type { MenuItem, SettingsItem } from './types';

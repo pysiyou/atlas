@@ -90,7 +90,29 @@ registerModal(
   (props, baseProps) => {
     const {
       test, commentKey, comments, onCommentsChange, onApprove, onReject
-    } = props as any;
+    } = props as {
+      test: {
+        orderId: string;
+        patientId: string;
+        patientName: string;
+        testName: string;
+        testCode: string;
+        priority: string;
+        status: string;
+        results?: Record<string, unknown>;
+        flags?: string[];
+        collectedAt?: string;
+        collectedBy?: string;
+        resultEnteredAt?: string;
+        enteredBy?: string;
+        [key: string]: unknown;
+      };
+      commentKey: string;
+      comments: string;
+      onCommentsChange: (commentKey: string, comments: string) => void;
+      onApprove: () => void;
+      onReject: (reason: string, type: 're-test' | 're-collect') => void;
+    };
 
     return {
       ...baseProps,

@@ -5,7 +5,7 @@
  * Used for modals, tooltips, and other overlay elements.
  */
 
-import { useState, useLayoutEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 
 interface PortalProps {
@@ -14,24 +14,31 @@ interface PortalProps {
 }
 
 /**
+ * Client-only render detection using useSyncExternalStore
+ * This is the recommended approach for detecting client-side rendering
+ */
+function useIsClient(): boolean {
+  return useSyncExternalStore(
+    // Subscribe function (no-op since this value never changes)
+    () => () => {},
+    // Get snapshot on client
+    () => true,
+    // Get snapshot on server
+    () => false
+  );
+}
+
+/**
  * Portal component that renders children in a separate DOM tree
- * Uses useLayoutEffect to avoid hydration issues
+ * Uses useSyncExternalStore to avoid hydration issues and comply with React rules
  */
 export const Portal: React.FC<PortalProps> = ({ 
   children, 
   container = document.body 
 }) => {
-  const [mounted, setMounted] = useState(false);
+  const isClient = useIsClient();
 
-  // Use useLayoutEffect to set mounted state before paint
-  // This is the recommended approach for portal mounting
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useLayoutEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
-
-  if (!mounted) return null;
+  if (!isClient) return null;
 
   return createPortal(children, container);
 };

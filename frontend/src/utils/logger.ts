@@ -14,7 +14,7 @@ export const LogLevel = {
 export type LogLevel = typeof LogLevel[keyof typeof LogLevel];
 
 interface LogContext {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 class Logger {
@@ -96,14 +96,22 @@ class Logger {
 
   /**
    * Send logs to monitoring service (placeholder for production integration)
+   * @param level - Log level (DEBUG, INFO, WARN, ERROR)
+   * @param message - Log message
+   * @param context - Optional context data
    */
-  private sendToMonitoring(_level: LogLevel, _message: string, _context?: LogContext): void {
+  private sendToMonitoring(level: LogLevel, message: string, context?: LogContext): void {
     // TODO: Integrate with monitoring service (Sentry, LogRocket, etc.)
     // Example:
     // Sentry.captureMessage(message, {
     //   level: level.toLowerCase(),
     //   extra: context,
     // });
+    
+    // Prevent unused variable warnings until monitoring is integrated
+    void level;
+    void message;
+    void context;
   }
 }
 

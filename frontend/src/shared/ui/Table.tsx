@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Pagination } from './Pagination';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 
@@ -97,15 +97,17 @@ export function Table<T extends TableDataItem>({
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(initialPageSize);
 
-  // Reset page when filters change (data length changes significantly)
-  useEffect(() => {
-    // Basic heuristic: if current page is out of bounds, reset. 
-    // Ideally, the parent should handle filter resets, but BaseTable does some internal management.
-    const totalPages = Math.ceil(data.length / pageSize);
+  // Calculate total pages for validation
+  const totalPages = Math.ceil(data.length / pageSize);
+  
+  // Compute the effective current page - reset to 1 if out of bounds
+  // This avoids setState in effect which causes cascading renders
+  const effectiveCurrentPage = useMemo(() => {
     if (currentPage > totalPages && totalPages > 0) {
-      setCurrentPage(1);
+      return 1;
     }
-  }, [data.length, pageSize, currentPage]);
+    return currentPage;
+  }, [currentPage, totalPages]);
 
   const sortedData = useMemo(() => {
     if (!sortConfig) return data;
@@ -125,9 +127,9 @@ export function Table<T extends TableDataItem>({
 
   const paginatedData = useMemo(() => {
     if (!pagination) return sortedData;
-    const startIndex = (currentPage - 1) * pageSize;
+    const startIndex = (effectiveCurrentPage - 1) * pageSize;
     return sortedData.slice(startIndex, startIndex + pageSize);
-  }, [sortedData, currentPage, pageSize, pagination]);
+  }, [sortedData, effectiveCurrentPage, pageSize, pagination]);
 
   const handleSort = (columnKey: string) => {
     setSortConfig((current) => {
@@ -212,7 +214,7 @@ export function Table<T extends TableDataItem>({
 
       {pagination && (
         <Pagination
-          currentPage={currentPage}
+          currentPage={effectiveCurrentPage}
           totalItems={sortedData.length}
           pageSize={pageSize}
           onPageChange={setCurrentPage}
