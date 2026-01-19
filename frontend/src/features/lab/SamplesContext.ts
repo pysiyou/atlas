@@ -57,6 +57,11 @@ export interface SamplesContextType {
     requireRecollection?: boolean
   ) => Promise<void>;
 
+  requestRecollection: (
+    sampleId: string,
+    reason: string
+  ) => Promise<void>;
+
   /** Clear any error state */
   clearError: () => void;
 }

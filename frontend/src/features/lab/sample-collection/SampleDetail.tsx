@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { Modal } from '@/shared/ui/Modal';
-import { Badge, Icon, SectionContainer, TabsList, useTabs, DetailField, IconButton } from '@/shared/ui';
+import { Badge, Icon, SectionContainer, TabsList, useTabs, DetailField, IconButton, Button } from '@/shared/ui';
 import type { ContainerType, RejectedSample } from '@/types';
 import { REJECTION_REASON_CONFIG } from '@/types/enums/rejection-reason';
 import Barcode from 'react-barcode';
@@ -16,6 +16,7 @@ import { getContainerIconColor, getContainerColor, getCollectionRequirements } f
 import { formatVolume, formatDate } from '@/utils';
 import { printSampleLabel } from './SampleLabel';
 import { SampleCollectionPopover } from './SampleCollectionPopover';
+import { SampleRejectionPopover } from './SampleRejectionPopover';
 import { useSamples, useTests, usePatients, useOrders } from '@/hooks';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import type { SampleDisplay } from './types';
@@ -149,7 +150,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
   onCollect,
 }) => {
   const { getUserName } = useUserDisplay();
-  const { getSample } = useSamples();
+  const { getSample, rejectSample, requestRecollection } = useSamples();
   const { getTest, tests } = useTests();
   const { patients } = usePatients();
   const { getOrder } = useOrders();
@@ -220,6 +221,18 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
     onClose();
   };
 
+  const handleRecollect = async () => {
+    if (!rejectedSample || !sample) return;
+    try {
+      const lastRejection = rejectedSample.rejectionReasons?.map(r => REJECTION_REASON_CONFIG[r]?.label || r).join(', ') || 'Manual Request';
+      await requestRecollection(sampleId || sample.sampleId, `Recollection of rejected sample: ${lastRejection}`);
+      toast.success('Recollection ordered');
+      onClose();
+    } catch (e) {
+      toast.error('Failed to order recollection');
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -284,16 +297,55 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
 
               {/* Action buttons */}
               {isCollected ? (
-                <IconButton
-                  onClick={handlePrintLabel}
-                  icon={<Icon name="printer" />}
-                  variant="primary"
-                  size="sm"
-                  title="Print Sample Label"
-                />
+                <div className="flex items-center gap-2">
+                  <IconButton
+                    onClick={handlePrintLabel}
+                    icon={<Icon name="printer" />}
+                    variant="primary"
+                    size="sm"
+                    title="Print Sample Label"
+                  />
+                  {sample.sampleId && !sample.sampleId.includes('PENDING') && (
+                    <SampleRejectionPopover
+                      sampleId={sample.sampleId}
+                      sampleType={sample.sampleType}
+                      patientName={patientName}
+                      isRecollection={sample.isRecollection || false}
+                      rejectionHistoryCount={sample.rejectionHistory?.length || 0}
+                      onReject={async (reasons, notes, requireRecollection) => {
+                        try {
+                          await rejectSample(
+                            sample.sampleId,
+                            reasons,
+                            notes,
+                            requireRecollection
+                          );
+                          toast.success(
+                            requireRecollection
+                              ? 'Sample rejected - recollection will be requested'
+                              : 'Sample rejected'
+                          );
+                          onClose();
+                        } catch (error) {
+                          console.error('Failed to reject sample:', error);
+                          toast.error('Failed to reject sample');
+                        }
+                      }}
+                    />
+                  )}
+                </div>
               ) : isRejected ? (
-                // No actions for rejected samples
-                null
+                // Manual Recollect Action
+                rejectedSample?.recollectionRequired && !rejectedSample?.recollectionSampleId && (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleRecollect}
+                    icon={<Icon name="sample-collection" className="text-white" />}
+                  >
+                    Recollect
+                  </Button>
+                )
               ) : (
                 requirement && onCollect && (
                   <SampleCollectionPopover

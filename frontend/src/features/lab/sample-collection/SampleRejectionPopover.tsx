@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Popover, IconButton, Icon, Button, Textarea, Alert } from '@/shared/ui';
+import { Popover, IconButton, Icon, Button, Textarea, Alert, Badge } from '@/shared/ui';
 import { useAuth } from '@/hooks';
 import type { RejectionReason } from '@/types';
 
@@ -23,6 +23,8 @@ interface SampleRejectionPopoverContentProps {
   sampleId: string;
   sampleType?: string;
   patientName?: string;
+  isRecollection?: boolean;
+  rejectionHistoryCount?: number;
 }
 
 const SampleRejectionPopoverContent: React.FC<SampleRejectionPopoverContentProps> = ({
@@ -31,6 +33,8 @@ const SampleRejectionPopoverContent: React.FC<SampleRejectionPopoverContentProps
   sampleId,
   sampleType,
   patientName,
+  isRecollection = false,
+  rejectionHistoryCount = 0,
 }) => {
   const { currentUser } = useAuth();
   const [reasons, setReasons] = useState<RejectionReason[]>([]);
@@ -59,11 +63,35 @@ const SampleRejectionPopoverContent: React.FC<SampleRejectionPopoverContentProps
     );
   };
 
+  // Keyboard shortcuts
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && !e.shiftKey && reasons.length > 0) {
+        e.preventDefault();
+        handleConfirm();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        onCancel();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [reasons, notes, requireRecollection]);
+
   return (
     <div className="w-90 md:w-96 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex flex-col max-h-[600px]">
       <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-start justify-between">
         <div className="space-y-0.5">
-          <h4 className="font-medium text-gray-900">{patientName}</h4>
+          <div className="flex items-center gap-2">
+            <h4 className="font-medium text-gray-900">{patientName}</h4>
+            {isRecollection && (
+              <Badge size="sm" variant="warning">Recollection</Badge>
+            )}
+            {rejectionHistoryCount > 0 && (
+              <Badge size="sm" variant="error">{rejectionHistoryCount} Previous Rejection{rejectionHistoryCount > 1 ? 's' : ''}</Badge>
+            )}
+          </div>
           <p className="text-xs text-gray-500">
              {sampleType?.toUpperCase()} - {sampleId}
           </p>
@@ -75,17 +103,28 @@ const SampleRejectionPopoverContent: React.FC<SampleRejectionPopoverContentProps
 
       <div className="p-4 space-y-4 overflow-y-auto flex-1">
         {/* Warning Alert */}
-        <Alert variant="warning" className="py-2">
-            <div className="space-y-0.5">
-              <p className="font-medium text-xs">Action Required</p>
-              <p className="text-[10px] opacity-90 leading-tight">
-                {patientName
-                  ? `Sample for ${patientName} will be marked as rejected.`
-                  : 'The sample will be marked as rejected.'
-                }
-              </p>
-            </div>
-        </Alert>
+        {rejectionHistoryCount > 1 ? (
+          <Alert variant="danger" className="py-2">
+              <div className="space-y-0.5">
+                <p className="font-medium text-xs">⚠️ Multiple Rejections Detected</p>
+                <p className="text-[10px] opacity-90 leading-tight">
+                  This sample has been rejected {rejectionHistoryCount} times already. Consider escalating to supervisor or investigating systematic issues.
+                </p>
+              </div>
+          </Alert>
+        ) : (
+          <Alert variant="warning" className="py-2">
+              <div className="space-y-0.5">
+                <p className="font-medium text-xs">Action Required</p>
+                <p className="text-[10px] opacity-90 leading-tight">
+                  {patientName
+                    ? `Sample for ${patientName} will be marked as rejected.`
+                    : 'The sample will be marked as rejected.'
+                  }
+                </p>
+              </div>
+          </Alert>
+        )}
 
         {/* Rejection Reason */}
         <div className="space-y-2">
@@ -195,6 +234,8 @@ interface SampleRejectionPopoverProps {
   sampleId: string;
   sampleType?: string;
   patientName?: string;
+  isRecollection?: boolean;
+  rejectionHistoryCount?: number;
   onReject: (reasons: RejectionReason[], notes: string, requireRecollection: boolean) => Promise<void> | void;
 }
 
@@ -202,6 +243,8 @@ export const SampleRejectionPopover: React.FC<SampleRejectionPopoverProps> = ({
   sampleId,
   sampleType,
   patientName,
+  isRecollection,
+  rejectionHistoryCount,
   onReject,
 }) => {
   return (
@@ -223,6 +266,8 @@ export const SampleRejectionPopover: React.FC<SampleRejectionPopoverProps> = ({
             sampleId={sampleId}
             sampleType={sampleType}
             patientName={patientName}
+            isRecollection={isRecollection}
+            rejectionHistoryCount={rejectionHistoryCount}
             onCancel={close}
             onConfirm={async (reasons, notes, requireRecollection) => {
                 await onReject(reasons, notes, requireRecollection);

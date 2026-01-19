@@ -56,7 +56,7 @@ class Sample(Base):
     isRecollection = Column(Boolean, default=False)
     originalSampleId = Column(String, nullable=True)  # Pointer to the sample this replaced
     recollectionReason = Column(String, nullable=True)
-    recollectionAttempt = Column(Integer, default=0)  # 0 = original, 1 = 1st recollection, etc.
+    recollectionAttempt = Column(Integer, default=1)  # 1 = original/first collection, 2 = 1st recollection, etc.
 
     # Metadata
     createdAt = Column(DateTime(timezone=True), server_default=func.now())

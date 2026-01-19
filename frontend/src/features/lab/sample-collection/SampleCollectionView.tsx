@@ -18,20 +18,40 @@ const SAMPLE_STATUS_FILTER_OPTIONS: FilterOption[] = [
 
 const createFilterSample = (patients: Patient[], tests: Test[]) => (display: SampleDisplay, query: string): boolean => {
   const lowerQuery = query.toLowerCase();
-  const sampleType = display.sample?.sampleType;
+  const sample = display.sample;
+  const sampleType = sample?.sampleType;
   
   // Also match on collection type (e.g. searching "blood" should find plasma)
   const collectionType = sampleType ? getCollectionRequirements(sampleType).collectionType : '';
   
   const patientName = getPatientName(display.order.patientId, patients);
-  const testNames = display.sample?.testCodes ? getTestNames(display.sample.testCodes, tests) : [];
+  const testNames = sample?.testCodes ? getTestNames(sample.testCodes, tests) : [];
+  
+  // Search in rejection reasons if sample is rejected
+  const rejectionReasons = sample?.status === 'rejected' && 'rejectionReasons' in sample
+    ? (sample.rejectionReasons || []).join(' ').toLowerCase()
+    : '';
+  
+  // Search in rejection notes
+  const rejectionNotes = sample?.status === 'rejected' && 'rejectionNotes' in sample
+    ? (sample.rejectionNotes || '').toLowerCase()
+    : '';
+  
+  // Search in collection notes
+  const collectionNotes = (sample?.status === 'collected' || sample?.status === 'rejected') && 'collectionNotes' in sample
+    ? (sample.collectionNotes || '').toLowerCase()
+    : '';
   
   return (
     display.order.orderId.toLowerCase().includes(lowerQuery) ||
+    sample?.sampleId?.toLowerCase().includes(lowerQuery) ||
     patientName.toLowerCase().includes(lowerQuery) ||
     (sampleType?.toLowerCase()?.includes(lowerQuery) || false) ||
     (collectionType.toLowerCase().includes(lowerQuery) && collectionType !== sampleType) ||
     (testNames.some((name: string) => name.toLowerCase().includes(lowerQuery))) ||
+    rejectionReasons.includes(lowerQuery) ||
+    rejectionNotes.includes(lowerQuery) ||
+    collectionNotes.includes(lowerQuery) ||
     false
   );
 };
@@ -158,7 +178,7 @@ export const SampleCollectionView: React.FC = () => {
   return (
     <div className="h-full flex flex-col space-y-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
           <h3 className="text-base font-medium text-gray-900">Sample Collection</h3>
           {allSampleDisplays.length > 0 && (
             <>
@@ -171,6 +191,33 @@ export const SampleCollectionView: React.FC = () => {
                 selectAllLabel="Select all"
                 icon="checklist"
               />
+              <div className="h-6 w-px bg-gray-300 hidden md:block" />
+              {/* Quick filter buttons */}
+              <button
+                onClick={() => {
+                  const recollectionSamples = allSampleDisplays.filter(d => d.sample?.isRecollection);
+                  if (recollectionSamples.length > 0) {
+                    setStatusFilters(['pending', 'collected']);
+                  }
+                }}
+                className="text-xs px-2 py-1 rounded border border-orange-300 bg-orange-50 text-orange-700 hover:bg-orange-100 transition-colors"
+                title="Show only recollection samples"
+              >
+                🔄 Recollections ({allSampleDisplays.filter(d => d.sample?.isRecollection).length})
+              </button>
+              <button
+                onClick={() => {
+                  setStatusFilters(['rejected']);
+                }}
+                className="text-xs px-2 py-1 rounded border border-red-300 bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
+                title="Show samples with multiple rejections"
+              >
+                ⚠️ Multiple Rejections ({allSampleDisplays.filter(d => 
+                  d.sample?.status === 'rejected' && 
+                  'rejectionHistory' in d.sample && 
+                  (d.sample.rejectionHistory?.length || 0) > 1
+                ).length})
+              </button>
             </>
           )}
         </div>

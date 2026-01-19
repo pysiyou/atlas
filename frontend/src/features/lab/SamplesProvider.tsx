@@ -140,17 +140,33 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
       });
 
       // 2. Request recollection if required
-      if (requireRecollection) {
-        // Construct a reason for the new sample creation
-        const reasonStr = reasons.map(r => r.replace('_', ' ')).join(', ');
-        const fullReason = notes ? `${reasonStr} - ${notes}` : reasonStr;
-        
-        await sampleAPI.requestRecollection(sampleId, fullReason);
-      }
+      // MOVED TO MANUAL STEP: We now require a manual "Recollect" action
+      // to allow the "Awaiting Recollection" state to be visible and checked.
+      // if (requireRecollection) {
+      //   const reasonStr = reasons.map(r => r.replace('_', ' ')).join(', ');
+      //   const fullReason = notes ? `${reasonStr} - ${notes}` : reasonStr;
+      //   await sampleAPI.requestRecollection(sampleId, fullReason);
+      // }
 
       await refreshSamples();
     } catch (err) {
       console.error('Failed to reject sample:', err);
+      throw err;
+    }
+  }, [refreshSamples]);
+
+  /**
+   * Request recollection for a rejected sample
+   */
+  const requestRecollection = useCallback(async (
+    sampleId: string,
+    reason: string
+  ) => {
+    try {
+      await sampleAPI.requestRecollection(sampleId, reason);
+      await refreshSamples();
+    } catch (err) {
+      console.error('Failed to request recollection:', err);
       throw err;
     }
   }, [refreshSamples]);
@@ -167,6 +183,7 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
     getPendingSamples,
     collectSample,
     rejectSample,
+    requestRecollection,
     clearError,
   };
 

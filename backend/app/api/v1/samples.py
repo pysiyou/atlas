@@ -202,68 +202,86 @@ def request_recollection(
 ):
     """
     Request recollection for a rejected sample
-    - Resets sample status to PENDING
-    - Sets isRecollection flag to True
-    - Clears collection data
-    - Keeps rejection history intact
+    - Creates a NEW sample with a new ID
+    - Links new sample to original via originalSampleId
+    - Sets recollectionSampleId on the rejected sample
+    - Preserves rejection history in the new sample
     - Escalates priority to URGENT
     """
-    sample = db.query(Sample).filter(Sample.sampleId == sampleId).first()
-    if not sample:
+    original_sample = db.query(Sample).filter(Sample.sampleId == sampleId).first()
+    if not original_sample:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Sample {sampleId} not found"
         )
     
-    if sample.status != SampleStatus.REJECTED:
+    if original_sample.status != SampleStatus.REJECTED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Only rejected samples can be recollected"
         )
     
-    # Reset sample to pending state
-    sample.status = SampleStatus.PENDING
-    sample.priority = PriorityLevel.URGENT  # Escalate priority
+    if original_sample.recollectionSampleId:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Recollection already requested. New sample: {original_sample.recollectionSampleId}"
+        )
     
-    # Mark as recollection sample
-    sample.isRecollection = True
-    sample.recollectionReason = recollection_data.reason
+    # Generate new sample ID
+    new_sample_id = generate_id("SAM")
     
-    # Clear collection data (will be filled again on recollection)
-    sample.collectedAt = None
-    sample.collectedBy = None
-    sample.collectedVolume = None
-    sample.actualContainerType = None
-    sample.actualContainerColor = None
-    sample.collectionNotes = None
-    sample.remainingVolume = None
+    # Calculate recollection attempt number
+    # Count: original (1) + number of rejections in history
+    recollection_attempt = len(original_sample.rejectionHistory or []) + 1
     
-    # Keep rejection history intact - it's already in rejectionHistory array
-    # Clear the single rejection fields since we're resetting
-    sample.rejectedAt = None
-    sample.rejectedBy = None
-    sample.rejectionReasons = None
-    sample.rejectionNotes = None
-    sample.recollectionRequired = False
-    sample.recollectionSampleId = None
+    # Create new sample inheriting from original
+    new_sample = Sample(
+        sampleId=new_sample_id,
+        orderId=original_sample.orderId,
+        sampleType=original_sample.sampleType,
+        status=SampleStatus.PENDING,
+        testCodes=original_sample.testCodes,
+        requiredVolume=original_sample.requiredVolume,
+        priority=PriorityLevel.URGENT,  # Escalate priority for recollections
+        requiredContainerTypes=original_sample.requiredContainerTypes,
+        requiredContainerColors=original_sample.requiredContainerColors,
+        
+        # Recollection tracking
+        isRecollection=True,
+        originalSampleId=sampleId,
+        recollectionReason=recollection_data.reason,
+        recollectionAttempt=recollection_attempt,
+        
+        # Copy rejection history from original sample
+        rejectionHistory=original_sample.rejectionHistory or [],
+        
+        # Metadata
+        createdAt=datetime.utcnow(),
+        createdBy=current_user.id,
+        updatedBy=current_user.id
+    )
     
-    # Update recollection tracking
-    sample.recollectionAttempt = (sample.recollectionAttempt or 0) + 1
-    sample.updatedBy = current_user.id
+    # Update original sample to link to new recollection sample
+    original_sample.recollectionSampleId = new_sample_id
+    original_sample.updatedBy = current_user.id
     
-    # Reset order tests
+    # Add new sample to database
+    db.add(new_sample)
+    
+    # Update order tests to point to new sample
     order_tests = db.query(OrderTest).filter(
-        OrderTest.orderId == sample.orderId,
-        OrderTest.testCode.in_(sample.testCodes)
+        OrderTest.orderId == original_sample.orderId,
+        OrderTest.testCode.in_(original_sample.testCodes)
     ).all()
     
     for test in order_tests:
         test.status = TestStatus.PENDING
+        test.sampleId = new_sample_id
     
     db.commit()
-    db.refresh(sample)
+    db.refresh(new_sample)
     
     # Update order status
-    update_order_status(db, sample.orderId)
+    update_order_status(db, original_sample.orderId)
     
-    return sample
+    return new_sample

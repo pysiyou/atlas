@@ -65,7 +65,7 @@ class SampleResponse(SampleBase):
     isRecollection: bool = False
     originalSampleId: str | None = None
     recollectionReason: str | None = None
-    recollectionAttempt: int = 0
+    recollectionAttempt: int = 1
     createdAt: datetime
     createdBy: str
     updatedAt: datetime

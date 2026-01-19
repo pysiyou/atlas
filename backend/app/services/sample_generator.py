@@ -70,6 +70,10 @@ def generate_samples_for_order(orderId: str, db: Session, createdBy: str) -> Lis
             priority=order.priority,
             requiredContainerTypes=list(container_types_set),
             requiredContainerColors=list(container_colors_set),
+            # Recollection tracking - initialize with defaults
+            isRecollection=False,
+            recollectionAttempt=1,  # First collection is attempt 1
+            rejectionHistory=[],  # Empty array for new samples
             createdBy=createdBy,
             updatedBy=createdBy,
         )

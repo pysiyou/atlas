@@ -54,6 +54,22 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
     onConfirm(volume, notes, selectedColor, selectedContainerType);
   };
 
+  // Keyboard shortcuts
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSubmit();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        onCancel();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [volume, selectedColor, selectedContainerType, notes]);
+
   return (
     <div className="w-90 md:w-96 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex flex-col max-h-[600px]">
       {/* Header */}
@@ -89,10 +105,15 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
             <input
               type="number"
               min={minimumVolume}
+              max={200}
               value={volume}
               onChange={(e) => setVolume(Number(e.target.value))}
               className={`w-full pl-3 pr-8 py-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all placeholder-gray-400 ${
-                volume < minimumVolume ? 'border-red-500' : 'border-gray-300'
+                volume < minimumVolume 
+                  ? 'border-red-500' 
+                  : volume > 100 
+                  ? 'border-yellow-500' 
+                  : 'border-gray-300'
               }`}
               placeholder="0.0"
             />
@@ -100,6 +121,12 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
               mL
             </span>
           </div>
+          {volume > 100 && (
+            <div className="text-xs text-yellow-600 mt-1.5 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100">
+              <Icon name="alert-circle" className="w-3.5 h-3.5" />
+              Unusually high volume - please verify
+            </div>
+          )}
         </div>
 
         {/* Container Type */}
@@ -108,26 +135,40 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
             Container Type <span className="text-red-500">*</span>
           </label>
           <div className="flex gap-2">
-            {CONTAINER_TYPE_OPTIONS.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setSelectedContainerType(option.value as ContainerType)}
-                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-sm border transition-all duration-200 text-xs font-medium w-28 ${
-                  selectedContainerType === option.value
-                    ? 'bg-blue-50 border-blue-500 text-blue-700 ring-1 ring-blue-200'
-                    : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
-                }`}
-              >
-                <Icon
-                  name={option.value === 'cup' ? 'lab-cup' : 'lab-tube'}
-                  className={`w-4 h-4 ${
-                    selectedContainerType === option.value ? 'text-blue-600' : 'text-gray-500'
+            {CONTAINER_TYPE_OPTIONS.map((option) => {
+              const isRequired = requirement.containerTypes.includes(option.value as ContainerType);
+              return (
+                <button
+                  key={option.value}
+                  onClick={() => setSelectedContainerType(option.value as ContainerType)}
+                  className={`flex items-center justify-center gap-2 py-2 px-3 rounded-sm border transition-all duration-200 text-xs font-medium w-28 ${
+                    selectedContainerType === option.value
+                      ? isRequired
+                        ? 'bg-blue-50 border-blue-500 text-blue-700 ring-1 ring-blue-200'
+                        : 'bg-yellow-50 border-yellow-500 text-yellow-700 ring-1 ring-yellow-200'
+                      : isRequired
+                      ? 'bg-white border-green-300 text-gray-700 hover:bg-green-50 hover:border-green-400'
+                      : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
                   }`}
-                />
-                <span>{option.name}</span>
-              </button>
-            ))}
+                  title={isRequired ? 'Required container type' : 'Not in requirements'}
+                >
+                  <Icon
+                    name={option.value === 'cup' ? 'lab-cup' : 'lab-tube'}
+                    className={`w-4 h-4 ${
+                      selectedContainerType === option.value ? 'text-blue-600' : 'text-gray-500'
+                    }`}
+                  />
+                  <span>{option.name}</span>
+                </button>
+              );
+            })}
           </div>
+          {selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) && (
+            <div className="text-xs text-yellow-600 mt-1.5 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100">
+              <Icon name="alert-circle" className="w-3.5 h-3.5" />
+              Warning: Selected container type not in requirements
+            </div>
+          )}
         </div>
 
         {/* Container Color */}
@@ -136,23 +177,34 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
             Container Color <span className="text-red-500">*</span>
           </label>
           <div className="flex gap-3">
-            {CONTAINER_COLOR_OPTIONS.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setSelectedColor(option.value)}
-                className={`w-8 h-8 rounded-full transition-all duration-200 ${option.colorClass} ${
-                  selectedColor === option.value
-                    ? 'scale-110 ring-2 ring-offset-2 ring-blue-400 shadow-md'
-                    : 'opacity-80 hover:opacity-100 hover:scale-105 hover:shadow-sm'
-                }`}
-                title={option.name}
-              />
-            ))}
+            {CONTAINER_COLOR_OPTIONS.map((option) => {
+              const isRequired = requirement.containerTopColors.includes(option.value);
+              return (
+                <button
+                  key={option.value}
+                  onClick={() => setSelectedColor(option.value)}
+                  className={`w-8 h-8 rounded-full transition-all duration-200 ${option.colorClass} ${
+                    selectedColor === option.value
+                      ? 'scale-110 ring-2 ring-offset-2 ring-blue-400 shadow-md'
+                      : isRequired
+                      ? 'opacity-100 hover:scale-105 hover:shadow-sm ring-2 ring-green-300'
+                      : 'opacity-60 hover:opacity-80 hover:scale-105 hover:shadow-sm'
+                  }`}
+                  title={`${option.name}${isRequired ? ' (Required)' : ''}`}
+                />
+              );
+            })}
           </div>
           {!selectedColor && (
             <div className="text-xs text-orange-600 mt-2 flex items-center gap-1.5 bg-orange-50 p-1.5 rounded border border-orange-100">
               <Icon name="alert-circle" className="w-3.5 h-3.5" />
               Selection required
+            </div>
+          )}
+          {selectedColor && !requirement.containerTopColors.includes(selectedColor as any) && (
+            <div className="text-xs text-yellow-600 mt-1.5 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100">
+              <Icon name="alert-circle" className="w-3.5 h-3.5" />
+              Warning: Selected color not in requirements
             </div>
           )}
         </div>
@@ -170,9 +222,14 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
 
       {/* Footer */}
       <div className="p-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-2 shrink-0">
-         <div className="text-xs text-gray-500 flex items-center gap-1.5">
-          <Icon name="alert-circle" className="w-3.5 h-3.5" />
-          <span>Collecting as {currentUser?.name || 'Lab Staff'}</span>
+         <div className="flex flex-col gap-0.5">
+           <div className="text-xs text-gray-500 flex items-center gap-1.5">
+             <Icon name="alert-circle" className="w-3.5 h-3.5" />
+             <span>Collecting as {currentUser?.name || 'Lab Staff'}</span>
+           </div>
+           <div className="text-xxs text-gray-400">
+             <kbd className="px-1 py-0.5 bg-gray-200 rounded text-xxs">Enter</kbd> to confirm · <kbd className="px-1 py-0.5 bg-gray-200 rounded text-xxs">Esc</kbd> to cancel
+           </div>
          </div>
          <div className="flex items-center gap-2">
             <Button
