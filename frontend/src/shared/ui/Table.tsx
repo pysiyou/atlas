@@ -177,7 +177,7 @@ export function Table<T extends TableDataItem>({
           {columns.map((column) => (
             <div
               key={column.key}
-              className={`px-6 py-3 flex items-center gap-2 ${column.sortable ? 'cursor-pointer hover:bg-gray-100' : ''} ${column.headerClassName || ''}`}
+              className={`px-6 py-3 flex items-center gap-2 whitespace-nowrap ${column.sortable ? 'cursor-pointer hover:bg-gray-100' : ''} ${column.headerClassName || ''}`}
               style={{ width: column.width ?? undefined, flex: column.width ? 'none' : 1 }}
               onClick={() => column.sortable && handleSort(column.key)}
             >
@@ -201,7 +201,7 @@ export function Table<T extends TableDataItem>({
               {columns.map((column) => (
                 <div
                   key={column.key}
-                  className={`px-6 py-2 text-sm text-gray-900 overflow-hidden ${column.className || ''}`}
+                  className={`px-6 py-2 text-sm text-gray-900 overflow-hidden whitespace-nowrap ${column.className || ''}`}
                   style={{ width: column.width ?? undefined, flex: column.width ? 'none' : 1, minWidth: 0 }}
                 >
                   {column.render ? column.render(item) : (

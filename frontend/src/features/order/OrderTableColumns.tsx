@@ -38,7 +38,7 @@ export const getOrderTableColumns = (
     render: (order: Order) => (
       <div className="min-w-0">
         <div className="font-semibold text-gray-900 truncate">{getPatientNameFn(order.patientId)}</div>
-        <div className="text-[10px] text-gray-500 truncate">{order.patientId}</div>
+        <div className="text-xxs text-gray-500 truncate">{order.patientId}</div>
       </div>
     ),
   },
@@ -66,9 +66,7 @@ export const getOrderTableColumns = (
         variant={order.priority}
         size="sm"
         className="border-none font-medium"
-      >
-        {order.priority.toUpperCase()}
-      </Badge>
+      />
     ),
   },
   {
@@ -80,9 +78,7 @@ export const getOrderTableColumns = (
       <Badge
         variant={order.overallStatus}
         size="sm"
-      >
-        {order.overallStatus.replace('-', ' ').toUpperCase()}
-      </Badge>
+      />
     ),
   },
   {
@@ -103,9 +99,7 @@ export const getOrderTableColumns = (
       <Badge
         variant={order.paymentStatus}
         size="sm"
-      >
-        {order.paymentStatus.toUpperCase()}
-      </Badge>
+      />
     ),
   },
   {

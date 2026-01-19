@@ -180,7 +180,7 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <div 
       className={cn(
-        'inline-flex items-center font-medium rounded-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+        'inline-flex items-center font-medium rounded-sm border transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
         variantClass,
         SIZES[size],
         className

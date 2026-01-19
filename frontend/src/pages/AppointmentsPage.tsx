@@ -34,9 +34,7 @@ export const Appointments: React.FC = () => {
                     <div className="text-sm text-gray-600">{appointment.time} • {appointment.type}</div>
                     {appointment.purpose && <div className="text-sm text-gray-500">{appointment.purpose}</div>}
                   </div>
-                  <Badge variant={appointment.status} size="sm">
-                    {appointment.status.toUpperCase()}
-                  </Badge>
+                  <Badge variant={appointment.status} size="sm" />
                 </div>
               ))}
             </div>
@@ -58,9 +56,7 @@ export const Appointments: React.FC = () => {
                     <div className="text-sm text-gray-600">{formatDate(appointment.date)} • {appointment.time}</div>
                     <div className="text-sm text-gray-500">{appointment.type}</div>
                   </div>
-                  <Badge variant={appointment.status} size="sm">
-                    {appointment.status.toUpperCase()}
-                  </Badge>
+                  <Badge variant={appointment.status} size="sm" />
                 </div>
               ))}
             </div>

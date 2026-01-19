@@ -90,6 +90,7 @@ export type IconName =
   | "medical-kit"
   | "document-medicine"
   | "lock"
+  | "smartphone"
   ;
 
 interface IconProps {

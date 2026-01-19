@@ -129,9 +129,7 @@ export const Billing: React.FC = () => {
                   </div>
                   <div className="text-right">
                     <div className="text-xl font-bold text-sky-600">{formatCurrency(invoice.total)}</div>
-                    <Badge variant={invoice.paymentStatus} size="sm">
-                      {invoice.paymentStatus.toUpperCase()}
-                    </Badge>
+                    <Badge variant={invoice.paymentStatus} size="sm" />
                   </div>
                 </div>
                 

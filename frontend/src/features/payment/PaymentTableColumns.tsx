@@ -11,7 +11,7 @@ export const getPaymentTableColumns = (navigate: NavigateFunction) => [
   {
     key: 'orderId',
     header: 'Order ID',
-    width: '12%',
+    width: '14%',
     sortable: true,
     render: (order: OrderWithPaymentMethod) => (
       <button
@@ -28,12 +28,12 @@ export const getPaymentTableColumns = (navigate: NavigateFunction) => [
   {
     key: 'patientName',
     header: 'Patient',
-    width: '18%',
+    width: '16%',
     sortable: true,
     render: (order: OrderWithPaymentMethod) => (
       <div className="min-w-0">
         <div className="font-semibold text-gray-900 truncate">{order.patientName || 'N/A'}</div>
-        <div className="text-[10px] text-gray-500 truncate">{order.patientId}</div>
+        <div className="text-xxs text-gray-500 truncate">{order.patientId}</div>
       </div>
     ),
   },

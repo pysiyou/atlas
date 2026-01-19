@@ -6,7 +6,13 @@ import { createFilterOptions } from '@/utils/filtering';
 
 const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
 
-const PAYMENT_METHOD_VALUES: PaymentMethod[] = ['cash', 'credit-card', 'debit-card', 'insurance', 'bank-transfer', 'mobile-money'];
+// Full list of payment methods (kept for reference)
+// const ALL_PAYMENT_METHOD_VALUES: PaymentMethod[] = ['cash', 'credit-card', 'debit-card', 'insurance', 'bank-transfer', 'mobile-money'];
+
+// Currently enabled payment methods - only Cash and Mobile Money are active
+// TODO: Enable other payment methods when backend support is ready
+const PAYMENT_METHOD_VALUES: PaymentMethod[] = ['cash', 'mobile-money'];
+
 const PAYMENT_METHOD_CONFIG: Record<PaymentMethod, { label: string; color: string }> = {
   'cash': { label: 'Cash', color: 'cash' },
   'credit-card': { label: 'Credit Card', color: 'credit-card' },

@@ -5,11 +5,12 @@
  * Uses the shared PopoverForm component for consistent styling with other lab popovers.
  */
 import React, { useState, useCallback, useEffect } from 'react';
-import { Popover, Button, Icon, Alert } from '@/shared/ui';
+import { Popover, Button, Icon, Alert, Badge } from '@/shared/ui';
 import { PopoverForm } from '@/features/lab/shared/PopoverForm';
 import { formatCurrency } from '@/utils';
 import type { Order, PaymentMethod } from '@/types';
 import { createPayment, type PaymentCreate } from '@/services/api/payments';
+import type { IconName } from '@/shared/ui/Icon';
 
 interface PaymentPopoverProps {
   /** Order to process payment for */
@@ -20,14 +21,18 @@ interface PaymentPopoverProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-/** Available payment method options */
-const PAYMENT_METHODS: { value: PaymentMethod; label: string; icon: string }[] = [
-  { value: 'cash', label: 'Cash', icon: 'dollar-sign' },
-  { value: 'credit-card', label: 'Credit Card', icon: 'credit-card' },
-  { value: 'debit-card', label: 'Debit Card', icon: 'credit-card' },
-  { value: 'insurance', label: 'Insurance', icon: 'shield' },
-  { value: 'bank-transfer', label: 'Bank Transfer', icon: 'wallet' },
-  { value: 'mobile-money', label: 'Mobile Money', icon: 'phone' },
+/** 
+ * Available payment method options 
+ * TODO: Enable other payment methods when backend support is ready
+ */
+const PAYMENT_METHODS: { value: PaymentMethod; label: string; icon: IconName }[] = [
+  { value: 'cash', label: 'Cash', icon: 'cash' },
+  { value: 'mobile-money', label: 'Mobile Money', icon: 'smartphone' },
+  // Disabled payment methods:
+  // { value: 'credit-card', label: 'Credit Card', icon: 'credit-card' },
+  // { value: 'debit-card', label: 'Debit Card', icon: 'credit-card' },
+  // { value: 'insurance', label: 'Insurance', icon: 'shield' },
+  // { value: 'bank-transfer', label: 'Bank Transfer', icon: 'wallet' },
 ];
 
 interface PaymentPopoverContentProps {
@@ -49,15 +54,14 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   onSuccess,
 }) => {
   // Form state
-  const [amount, setAmount] = useState<string>(order.totalPrice.toString());
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
   const [notes, setNotes] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Computed values for validation
-  const amountNum = parseFloat(amount) || 0;
-  const isValid = amountNum > 0;
+  // Amount is fixed to the order's total price
+  const amount = order.totalPrice;
+  const isValid = amount > 0;
 
   /**
    * Handles form submission and payment creation
@@ -66,7 +70,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
     setError(null);
 
     // Validate amount
-    if (amountNum <= 0) {
+    if (amount <= 0) {
       setError('Amount must be greater than 0');
       return;
     }
@@ -77,7 +81,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       // Build payment request
       const paymentData: PaymentCreate = {
         orderId: order.orderId,
-        amount: amountNum,
+        amount,
         paymentMethod,
         notes: notes.trim() || undefined,
       };
@@ -87,12 +91,13 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       // Invoke success callback and close popover
       onSuccess?.();
       onConfirm();
-    } catch (err: any) {
-      setError(err.message || 'Failed to process payment');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to process payment';
+      setError(errorMessage);
     } finally {
       setSubmitting(false);
     }
-  }, [amountNum, paymentMethod, notes, order.orderId, onSuccess, onConfirm]);
+  }, [amount, paymentMethod, notes, order.orderId, onSuccess, onConfirm]);
 
   // Keyboard shortcuts for submit (Enter) and cancel (Escape)
   useEffect(() => {
@@ -132,31 +137,9 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
           <span className="text-gray-500">Total Price:</span>
           <span className="font-semibold text-gray-900">{formatCurrency(order.totalPrice)}</span>
         </div>
-        <div className="flex justify-between text-xs">
+        <div className="flex justify-between items-center text-xs">
           <span className="text-gray-500">Payment Status:</span>
-          <span className="capitalize text-gray-900">{order.paymentStatus}</span>
-        </div>
-      </div>
-
-      {/* Amount Input */}
-      <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">
-          Amount <span className="text-red-500">*</span>
-        </label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-400 pointer-events-none">
-            $
-          </span>
-          <input
-            type="text"
-            inputMode="decimal"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className={`w-full pl-7 pr-3 py-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all placeholder-gray-400 ${
-              amountNum <= 0 ? 'border-red-300' : 'border-gray-300'
-            }`}
-            placeholder="0.00"
-          />
+          <Badge variant={order.paymentStatus} size="xs" />
         </div>
       </div>
 
@@ -165,7 +148,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
         <label className="block text-xs font-medium text-gray-500 mb-1">
           Payment Method <span className="text-red-500">*</span>
         </label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="flex gap-2">
           {PAYMENT_METHODS.map((method) => {
             const isSelected = paymentMethod === method.value;
             return (
@@ -173,14 +156,14 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                 key={method.value}
                 type="button"
                 onClick={() => setPaymentMethod(method.value)}
-                className={`flex items-center gap-2 py-2 px-3 rounded-sm border transition-all duration-200 text-xs font-medium ${
+                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-sm border transition-all duration-200 text-xs font-medium w-32 ${
                   isSelected
                     ? 'bg-blue-50 border-blue-500 text-blue-700 ring-1 ring-blue-200'
                     : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
                 }`}
               >
                 <Icon
-                  name={method.icon}
+                  name={method.icon as IconName}
                   className={`w-4 h-4 ${isSelected ? 'text-blue-600' : 'text-gray-500'}`}
                 />
                 <span>{method.label}</span>
