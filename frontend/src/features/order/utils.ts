@@ -1,47 +1,117 @@
 import type { Order } from '@/types';
 
+/**
+ * Timeline steps for order progress visualization.
+ * 
+ * The order workflow follows this sequence:
+ * 1. Order Created - Order placed in system
+ * 2. Payment Received - Patient completes payment (required before sample collection)
+ * 3. Sample Collected - Physical sample obtained from patient
+ * 4. Results Entered - Lab technician enters test results
+ * 5. Results Validated - Pathologist/supervisor validates results
+ * 6. Delivered - Report generated and sent to patient/physician
+ */
 export const STATUS_TIMELINE_STEPS = [
-  { status: 'pending', label: 'Order Created' },
+  { status: 'created', label: 'Order Created' },
+  { status: 'paid', label: 'Payment Received' },
   { status: 'sample-collected', label: 'Sample Collected' },
-  { status: 'in-progress', label: 'Analysis In Progress' },
-  { status: 'completed', label: 'Analysis Complete' },
-  { status: 'delivered', label: 'Results Delivered' },
+  { status: 'results-entered', label: 'Results Entered' },
+  { status: 'validated', label: 'Results Validated' },
+  { status: 'delivered', label: 'Delivered' },
 ] as const;
 
-// Test statuses that indicate a test has reached or passed each order step
-const STEP_STATUS_THRESHOLDS: Record<string, string[]> = {
-  pending: ['pending', 'sample-collected', 'in-progress', 'completed', 'validated', 'rejected'],
+/**
+ * Test statuses that indicate a test has reached or passed each order step.
+ * Used to calculate progress for test-based steps.
+ */
+const TEST_STATUS_THRESHOLDS: Record<string, string[]> = {
   'sample-collected': ['sample-collected', 'in-progress', 'completed', 'validated', 'rejected'],
-  'in-progress': ['in-progress', 'completed', 'validated', 'rejected'],
-  completed: ['completed', 'validated', 'rejected'],
-  delivered: ['rejected'],
+  'results-entered': ['completed', 'validated'],
+  'validated': ['validated'],
 };
 
 export interface StepProgress {
+  /** Number of tests that have completed this step */
   completed: number;
+  /** Total number of tests in the order */
   total: number;
+  /** Percentage of tests completed (0-100) */
   percentage: number;
+  /** True if all tests have completed this step */
   isFullyComplete: boolean;
+  /** True if some but not all tests have completed this step */
   isPartial: boolean;
+  /** True if at least one test has started this step */
   isStarted: boolean;
 }
 
 /**
  * Calculate the progress of tests through a specific order step.
  * Returns the count and percentage of tests that have reached or passed this step.
+ * 
+ * @param order - The order to check progress for
+ * @param stepStatus - The timeline step status to check
+ * @returns StepProgress object with completion details
  */
 export const getOrderStepProgress = (order: Order, stepStatus: string): StepProgress => {
   const total = order.tests.length;
+  const emptyProgress: StepProgress = { 
+    completed: 0, 
+    total: 0, 
+    percentage: 0, 
+    isFullyComplete: false, 
+    isPartial: false, 
+    isStarted: false 
+  };
+
   if (total === 0) {
-    return { completed: 0, total: 0, percentage: 0, isFullyComplete: false, isPartial: false, isStarted: false };
+    return emptyProgress;
   }
 
-  // Special case for 'pending' - all tests are pending when order exists
-  if (stepStatus === 'pending') {
-    return { completed: total, total, percentage: 100, isFullyComplete: true, isPartial: false, isStarted: true };
+  // Step 1: Order Created - Always complete when order exists
+  if (stepStatus === 'created') {
+    return { 
+      completed: total, 
+      total, 
+      percentage: 100, 
+      isFullyComplete: true, 
+      isPartial: false, 
+      isStarted: true 
+    };
   }
 
-  const validStatuses = STEP_STATUS_THRESHOLDS[stepStatus] || [];
+  // Step 2: Payment Received - Based on order payment status
+  if (stepStatus === 'paid') {
+    const isPaid = order.paymentStatus === 'paid';
+    return {
+      completed: isPaid ? total : 0,
+      total,
+      percentage: isPaid ? 100 : 0,
+      isFullyComplete: isPaid,
+      isPartial: false,
+      isStarted: true, // Always show as started since it's a required step
+    };
+  }
+
+  // Step 6: Delivered - Based on order overall status
+  if (stepStatus === 'delivered') {
+    const isDelivered = order.overallStatus === 'delivered';
+    return {
+      completed: isDelivered ? total : 0,
+      total,
+      percentage: isDelivered ? 100 : 0,
+      isFullyComplete: isDelivered,
+      isPartial: false,
+      isStarted: isDelivered,
+    };
+  }
+
+  // Steps 3-5: Test-based progress (sample-collected, results-entered, validated)
+  const validStatuses = TEST_STATUS_THRESHOLDS[stepStatus] || [];
+  if (validStatuses.length === 0) {
+    return emptyProgress;
+  }
+
   const completed = order.tests.filter((t) => validStatuses.includes(t.status)).length;
   const percentage = Math.round((completed / total) * 100);
 
@@ -58,6 +128,16 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
 /**
  * Calculate the overall order progress as a weighted percentage based on all tests.
  * Each test contributes equally, and progress is based on how far each test has advanced.
+ * 
+ * The weighting accounts for the full workflow:
+ * - pending: 0% (order created, awaiting payment/collection)
+ * - sample-collected: 25% (sample obtained)
+ * - in-progress: 50% (analysis started)
+ * - completed: 75% (results entered, awaiting validation)
+ * - validated: 100% (results validated and ready)
+ * 
+ * @param order - The order to calculate progress for
+ * @returns Overall progress percentage (0-100)
  */
 export const getOverallOrderProgress = (order: Order): number => {
   if (order.tests.length === 0) return 0;
@@ -65,18 +145,114 @@ export const getOverallOrderProgress = (order: Order): number => {
   // Weight for each test status (0-100 scale)
   const statusWeights: Record<string, number> = {
     pending: 0,
-    'sample-collected': 20,
-    'in-progress': 40,
-    completed: 60,
-    validated: 80,
-    rejected: 100,
+    'sample-collected': 25,
+    'in-progress': 50,
+    completed: 75,
+    validated: 100,
+    rejected: 100, // Rejected tests are considered "done" for progress purposes
+    superseded: 0, // Superseded tests don't count toward progress
   };
 
-  const totalWeight = order.tests.reduce((sum, test) => {
+  // Filter out superseded tests from progress calculation
+  const activeTests = order.tests.filter(t => t.status !== 'superseded');
+  if (activeTests.length === 0) return 0;
+
+  const totalWeight = activeTests.reduce((sum, test) => {
     return sum + (statusWeights[test.status] ?? 0);
   }, 0);
 
-  return Math.round(totalWeight / order.tests.length);
+  return Math.round(totalWeight / activeTests.length);
+};
+
+/**
+ * Get completion information for a specific step in the order timeline.
+ * Returns the user who completed the step and when.
+ * 
+ * @param order - The order to get completion info for
+ * @param stepStatus - The timeline step to check
+ * @returns Object with completedBy user ID and completedAt timestamp
+ */
+export const getStepCompletionInfo = (
+  order: Order, 
+  stepStatus: string
+): { completedBy?: string; completedAt?: string } => {
+  switch (stepStatus) {
+    case 'created':
+      return {
+        completedBy: order.createdBy,
+        completedAt: order.orderDate,
+      };
+
+    case 'paid':
+      // Payment completion - use paidAt if available, otherwise fall back to updatedAt
+      if (order.paymentStatus === 'paid') {
+        return {
+          completedBy: order.createdBy,
+          completedAt: order.paidAt || order.updatedAt,
+        };
+      }
+      return {};
+
+    case 'sample-collected': {
+      // Find the first test that has been collected
+      const collectedTest = order.tests.find((t) =>
+        ['sample-collected', 'in-progress', 'completed', 'validated', 'rejected'].includes(t.status)
+      );
+      return {
+        completedBy: order.createdBy,
+        completedAt: collectedTest ? order.updatedAt : undefined,
+      };
+    }
+
+    case 'results-entered': {
+      // Find the first test with results entered
+      const enteredTest = order.tests.find((t) =>
+        ['completed', 'validated'].includes(t.status)
+      );
+      return {
+        completedBy: enteredTest?.enteredBy,
+        completedAt: enteredTest?.resultEnteredAt,
+      };
+    }
+
+    case 'validated': {
+      // Find the first validated test
+      const validatedTest = order.tests.find((t) => t.status === 'validated');
+      return {
+        completedBy: validatedTest?.validatedBy,
+        completedAt: validatedTest?.resultValidatedAt,
+      };
+    }
+
+    case 'delivered':
+      if (order.overallStatus === 'delivered') {
+        return {
+          completedBy: order.deliveredBy || order.createdBy,
+          completedAt: order.deliveredAt || order.updatedAt,
+        };
+      }
+      return {};
+
+    default:
+      return {};
+  }
+};
+
+/**
+ * Check if a step is blocked by a previous incomplete step.
+ * Used to show "locked" state for steps that can't proceed yet.
+ * 
+ * @param order - The order to check
+ * @param stepStatus - The step to check if blocked
+ * @returns True if the step is blocked by a previous incomplete step
+ */
+export const isStepBlocked = (order: Order, stepStatus: string): boolean => {
+  // Sample collection and beyond is blocked if payment is not received
+  const paymentRequired = ['sample-collected', 'results-entered', 'validated', 'delivered'];
+  if (paymentRequired.includes(stepStatus) && order.paymentStatus !== 'paid') {
+    return true;
+  }
+  return false;
 };
 
 // Legacy function - kept for backward compatibility

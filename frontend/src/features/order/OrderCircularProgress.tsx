@@ -1,31 +1,41 @@
 import React, { useMemo } from 'react';
 import type { Order } from '@/types';
 import { CircularProgress } from '@/shared/ui/CircularProgress';
+import { STATUS_TIMELINE_STEPS, getOrderStepProgress } from './utils';
 
 interface OrderCircularProgressProps {
   order: Order;
 }
 
+/**
+ * OrderCircularProgress - Shows overall order progress through all 6 timeline steps.
+ * 
+ * Steps: Created, Paid, Sample Collected, Results Entered, Validated, Delivered
+ * 
+ * Progress is calculated as: (completed steps / total steps) * 100
+ */
 export const OrderCircularProgress: React.FC<OrderCircularProgressProps> = ({ order }) => {
-  const { percentage, completedTests, totalTests } = useMemo(() => {
-    const total = order.tests.length;
-    if (total === 0) {
-      return { percentage: 0, completedTests: 0, totalTests: 0 };
+  const { percentage, completedSteps, totalSteps } = useMemo(() => {
+    const total = STATUS_TIMELINE_STEPS.length; // 6 steps
+
+    // Count fully completed steps
+    let completed = 0;
+    for (const step of STATUS_TIMELINE_STEPS) {
+      const progress = getOrderStepProgress(order, step.status);
+      if (progress.isFullyComplete) {
+        completed++;
+      }
     }
 
-    // Count fully completed tests (validated or reported)
-    const completed = order.tests.filter((t) => ['validated', 'rejected'].includes(t.status)).length;
     const pct = Math.round((completed / total) * 100);
 
-    return { percentage: pct, completedTests: completed, totalTests: total };
+    return { percentage: pct, completedSteps: completed, totalSteps: total };
   }, [order]);
 
-  // Generate label: "X/Y" for multi-test, "XX%" for single test
+  // Generate label: "X/Y" showing completed steps out of total
   const label = useMemo(() => {
-    if (totalTests === 0) return '0%';
-    if (totalTests === 1) return `${percentage}%`;
-    return `${completedTests}/${totalTests}`;
-  }, [percentage, completedTests, totalTests]);
+    return `${completedSteps}/${totalSteps}`;
+  }, [completedSteps, totalSteps]);
 
   return (
     <CircularProgress

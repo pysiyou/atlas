@@ -148,26 +148,36 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
         <label className="block text-xs font-medium text-gray-500 mb-1">
           Payment Method <span className="text-red-500">*</span>
         </label>
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {PAYMENT_METHODS.map((method) => {
             const isSelected = paymentMethod === method.value;
             return (
-              <button
+              <div
                 key={method.value}
-                type="button"
+                className={`
+                  relative flex items-center gap-2 p-3 rounded-lg border transition-all duration-200 cursor-pointer
+                  ${isSelected 
+                    ? 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
+                    : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                  }
+                `}
                 onClick={() => setPaymentMethod(method.value)}
-                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-sm border transition-all duration-200 text-xs font-medium w-32 ${
-                  isSelected
-                    ? 'bg-blue-50 border-blue-500 text-blue-700 ring-1 ring-blue-200'
-                    : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
-                }`}
               >
+                <input
+                  type="radio"
+                  name="payment-method"
+                  checked={isSelected}
+                  onChange={() => setPaymentMethod(method.value)}
+                  className="h-3.5 w-3.5 border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <span className={`flex-1 text-xs font-medium ${isSelected ? 'text-blue-900' : 'text-gray-900'}`}>
+                  {method.label}
+                </span>
                 <Icon
                   name={method.icon as IconName}
-                  className={`w-4 h-4 ${isSelected ? 'text-blue-600' : 'text-gray-500'}`}
+                  className={`w-5 h-5 ${isSelected ? 'text-blue-600' : 'text-gray-400'}`}
                 />
-                <span>{method.label}</span>
-              </button>
+              </div>
             );
           })}
         </div>

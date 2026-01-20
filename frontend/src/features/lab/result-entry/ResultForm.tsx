@@ -247,13 +247,13 @@ export const ResultForm: React.FC<ResultFormProps> = ({
 
           return (
             <div key={param.code} className="group">
-              <div className="flex justify-between items-baseline mb-1">
-                <label htmlFor={`result-${resultKey}-${param.code}`} className="text-xs font-medium text-gray-500 cursor-pointer">
+              <div className="flex justify-between items-baseline mb-1 gap-2">
+                <label htmlFor={`result-${resultKey}-${param.code}`} className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0">
                   {param.name}
                 </label>
-                <div className="flex items-center gap-1">
-                  {isCritical && <AlertTriangle size={12} className="text-red-500" />}
-                  <span className="text-[10px] text-gray-400">Ref: {refRange}</span>
+                <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
+                  {isCritical && <AlertTriangle size={12} className="text-red-500 shrink-0" />}
+                  <span className="text-[10px] text-gray-400 truncate">Ref: {refRange}</span>
                 </div>
               </div>
 
@@ -271,8 +271,8 @@ export const ResultForm: React.FC<ResultFormProps> = ({
                   inputId={`result-${resultKey}-${param.code}`}
                 />
                 {valueType !== 'TEXT' && (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0">
-                    <span className="text-xs text-gray-400 select-none">{param.unit || ''}</span>
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0 max-w-[40%]">
+                    <span className="text-xs text-gray-400 select-none truncate">{param.unit || ''}</span>
                   </div>
                 )}
                 {isCritical && (

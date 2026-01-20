@@ -133,6 +133,15 @@ export interface Order {
   referringPhysician?: string;
   priority: PriorityLevel;
 
+  // Delivery tracking (optional - for detailed timeline)
+  deliveredAt?: string;                // When results were delivered
+  deliveredBy?: string;                // User who delivered results
+  deliveryMethod?: 'email' | 'portal' | 'print' | 'sms';
+
+  // Payment tracking (optional - for detailed timeline)
+  paidAt?: string;                     // When payment was received
+  paymentMethod?: string;              // How payment was made
+
   // Metadata
   createdBy: string;
   createdAt: string;

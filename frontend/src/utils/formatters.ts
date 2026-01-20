@@ -81,3 +81,37 @@ export function calculateAge(dateOfBirth: string | Date | undefined | null): num
     return 0;
   }
 }
+
+/**
+ * Get initials from a full name
+ * Extracts the first letter of the first and last name components.
+ * If the name has only one component, returns a single letter initial.
+ * @param name - Full name string
+ * @returns Uppercase initials (1-2 characters) or '??' if name is empty/invalid
+ * @example
+ * getInitials('John Doe') // 'JD'
+ * getInitials('John Michael Doe') // 'JD' (first and last only)
+ * getInitials('Madonna') // 'M'
+ * getInitials('') // '??'
+ */
+export function getInitials(name: string | undefined | null): string {
+  // Handle empty or invalid input
+  if (!name || typeof name !== 'string') return '??';
+  
+  // Trim and split by whitespace, filtering out empty strings
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  
+  // Handle no valid parts
+  if (parts.length === 0) return '??';
+  
+  // Single name: return first letter only
+  if (parts.length === 1) {
+    return parts[0][0].toUpperCase();
+  }
+  
+  // Multiple names: return first letter of first and last parts
+  const firstInitial = parts[0][0];
+  const lastInitial = parts[parts.length - 1][0];
+  
+  return (firstInitial + lastInitial).toUpperCase();
+}

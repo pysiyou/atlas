@@ -134,6 +134,18 @@ export function useUserLookup() {
       return `User ${userId.slice(4)}`;
     }
 
+    // Handle common system identifiers with more descriptive names
+    const systemUserNames: Record<string, string> = {
+      'system': 'System Admin',
+      'admin': 'System Admin',
+      'unknown': 'Unknown User',
+    };
+
+    const lowerUserId = userId.toLowerCase();
+    if (systemUserNames[lowerUserId]) {
+      return systemUserNames[lowerUserId];
+    }
+
     return userId;
   }, [usersMap]);
 

@@ -1,6 +1,13 @@
 import React from 'react';
 import { Avatar } from '@/shared/ui';
-import { STATUS_TIMELINE_STEPS, getOrderStepProgress, type StepProgress } from './utils';
+import { useUserDisplay } from '@/features/lab/useUserDisplay';
+import { 
+  STATUS_TIMELINE_STEPS, 
+  getOrderStepProgress, 
+  getStepCompletionInfo, 
+  isStepBlocked,
+  type StepProgress 
+} from './utils';
 import type { Order } from '@/types';
 
 interface OrderTimelineProps {
@@ -9,22 +16,22 @@ interface OrderTimelineProps {
 
 interface StepIndicatorProps {
   progress: StepProgress;
-  isInProgress: boolean;
+  isBlocked: boolean;
 }
 
-const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isInProgress }) => {
-  const { isFullyComplete, isPartial, percentage } = progress;
+/**
+ * StepIndicator - Visual indicator for each step in the timeline.
+ * Shows different states: complete, in-progress (with pulsing blue dot), partial, blocked, or pending.
+ * 
+ * Any step that is started but not fully complete will show the pulsing blue dot indicator.
+ */
+const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) => {
+  const { isFullyComplete, isStarted } = progress;
 
-  // In progress state - pulsing indicator
-  if (isInProgress) {
-    return (
-      <div className="w-5 h-5 rounded-full border-2 border-sky-500 bg-sky-50 flex items-center justify-center">
-        <div className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
-      </div>
-    );
-  }
+  // Determine if this step should show the pulsing blue dot (started but not complete)
+  const showPulsingDot = isStarted && !isFullyComplete;
 
-  // Fully complete - green checkmark
+  // Fully complete - green checkmark (no animation)
   if (isFullyComplete) {
     return (
       <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
@@ -35,28 +42,22 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isInProgress })
     );
   }
 
-  // Partial completion - percentage ring
-  if (isPartial) {
-    const circumference = 2 * Math.PI * 8; // radius = 8
-    const strokeDashoffset = circumference - (percentage / 100) * circumference;
-
+  // Started but not complete - show pulsing blue dot indicator
+  // This applies to ALL incomplete steps that have started (payment, sample collection, etc.)
+  if (showPulsingDot) {
     return (
-      <div className="w-5 h-5 relative">
-        <svg className="w-5 h-5 -rotate-90" viewBox="0 0 20 20">
-          {/* Background circle */}
-          <circle cx="10" cy="10" r="8" fill="none" stroke="#e5e7eb" strokeWidth="2.5" />
-          {/* Progress circle */}
-          <circle
-            cx="10"
-            cy="10"
-            r="8"
-            fill="none"
-            stroke="#10b981"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-          />
+      <div className="w-5 h-5 rounded-full border-2 border-sky-500 bg-sky-50 flex items-center justify-center">
+        <div className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
+      </div>
+    );
+  }
+
+  // Blocked state (not started) - lock icon (payment required)
+  if (isBlocked) {
+    return (
+      <div className="w-5 h-5 rounded-full border-2 border-amber-300 bg-amber-50 flex items-center justify-center">
+        <svg className="w-2.5 h-2.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
         </svg>
       </div>
     );
@@ -70,10 +71,28 @@ interface TestDotsProps {
   progress: StepProgress;
 }
 
+/**
+ * TestDots - Visual indicator showing progress for multi-test orders.
+ * Displays a dot for each test, filled if that test has completed the step.
+ */
 const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
   const { completed, total } = progress;
 
-  if (total === 0) return null;
+  // Only show dots for multi-test orders
+  if (total <= 1) return null;
+
+  // Limit to max 6 dots for visual clarity
+  const maxDots = 6;
+  const showDots = total <= maxDots;
+
+  if (!showDots) {
+    // For many tests, show count instead of dots
+    return (
+      <span className="ml-2 text-xs text-gray-500 font-medium">
+        {completed}/{total}
+      </span>
+    );
+  }
 
   return (
     <div className="flex items-center gap-1.5 ml-3">
@@ -94,7 +113,20 @@ const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
   );
 };
 
+/**
+ * OrderTimeline - Displays the order progress through the lab workflow.
+ * 
+ * Steps:
+ * 1. Order Created - Order placed in system
+ * 2. Payment Received - Payment completed (required before collection)
+ * 3. Sample Collected - Physical sample obtained
+ * 4. Results Entered - Lab technician enters results
+ * 5. Results Validated - Pathologist validates results
+ * 6. Delivered - Report sent to patient/physician
+ */
 export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
+  const { getUserName } = useUserDisplay();
+
   // Get progress for each step
   const stepProgressMap = React.useMemo(() => {
     return STATUS_TIMELINE_STEPS.reduce(
@@ -106,47 +138,10 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
     );
   }, [order]);
 
-  // Get completion info for each step
-  const getStepCompletionInfo = (stepStatus: string): { completedBy?: string; completedAt?: string } => {
-    switch (stepStatus) {
-      case 'pending':
-        return {
-          completedBy: order.createdBy,
-          completedAt: order.orderDate,
-        };
-      case 'sample-collected': {
-        return {
-          completedBy: order.createdBy,
-          completedAt: order.createdAt,
-        };
-      }
-      case 'in-progress': {
-        const inProgressTest = order.tests.find((t) =>
-          ['in-progress', 'completed', 'validated', 'rejected'].includes(t.status)
-        );
-        return {
-          completedBy: inProgressTest?.enteredBy || order.createdBy,
-          completedAt: inProgressTest?.resultEnteredAt || order.updatedAt,
-        };
-      }
-      case 'completed': {
-        const completedTest = order.tests.find((t) => ['completed', 'validated', 'rejected'].includes(t.status));
-        return {
-          completedBy: completedTest?.validatedBy || order.createdBy,
-          completedAt: completedTest?.resultValidatedAt || order.updatedAt,
-        };
-      }
-      case 'delivered':
-        return {
-          completedBy: order.createdBy,
-          completedAt: order.updatedAt,
-        };
-      default:
-        return {};
-    }
-  };
-
-  // Format timestamp for display
+  /**
+   * Format timestamp for display.
+   * Shows relative time for recent events, full date for older ones.
+   */
   const formatTimestamp = (dateString?: string): string => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -169,20 +164,33 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
     });
   };
 
-  // Determine the current active step (first step that is started but not fully complete)
-  const getActiveStepIndex = (): number => {
-    for (let i = 0; i < STATUS_TIMELINE_STEPS.length; i++) {
-      const progress = stepProgressMap[STATUS_TIMELINE_STEPS[i].status];
-      if (progress.isStarted && !progress.isFullyComplete) {
-        return i;
+  /**
+   * Get the status message for a step that is in progress or blocked.
+   */
+  const getStatusMessage = (stepStatus: string, progress: StepProgress, blocked: boolean): string | null => {
+    // Payment step special handling
+    if (stepStatus === 'paid') {
+      if (!progress.isFullyComplete) {
+        return 'Awaiting payment';
       }
+      return null;
     }
-    // If all steps are complete, return -1
-    const lastProgress = stepProgressMap[STATUS_TIMELINE_STEPS[STATUS_TIMELINE_STEPS.length - 1].status];
-    return lastProgress.isFullyComplete ? -1 : STATUS_TIMELINE_STEPS.length - 1;
-  };
 
-  const activeStepIndex = getActiveStepIndex();
+    // Blocked steps show lock message
+    if (blocked && !progress.isFullyComplete) {
+      return 'Awaiting payment';
+    }
+
+    // In progress steps
+    if (progress.isStarted && !progress.isFullyComplete) {
+      if (progress.isPartial) {
+        return `${progress.completed}/${progress.total} tests complete`;
+      }
+      return 'In progress...';
+    }
+
+    return null;
+  };
 
   return (
     <div className="p-4 space-y-0">
@@ -190,8 +198,9 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
         const progress = stepProgressMap[step.status];
         const isLast = index === STATUS_TIMELINE_STEPS.length - 1;
         const nextProgress = !isLast ? stepProgressMap[STATUS_TIMELINE_STEPS[index + 1].status] : null;
-        const isInProgress = index === activeStepIndex && progress.isStarted && !progress.isFullyComplete;
-        const completionInfo = progress.isStarted ? getStepCompletionInfo(step.status) : {};
+        const blocked = isStepBlocked(order, step.status);
+        const completionInfo = progress.isFullyComplete ? getStepCompletionInfo(order, step.status) : {};
+        const statusMessage = getStatusMessage(step.status, progress, blocked);
 
         // Determine connecting line color
         const getLineColor = () => {
@@ -201,17 +210,39 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
           if (progress.isFullyComplete) {
             return 'bg-gray-300';
           }
+          if (blocked) {
+            return 'bg-amber-200';
+          }
           return 'bg-gray-200';
         };
 
-        // Show test dots for multi-test orders (except 'pending' step which is always 100%)
-        const showTestDots = step.status !== 'pending' && order.tests.length > 1;
+        // Show test dots for test-based steps (not for order-level steps like created, paid, delivered)
+        const testBasedSteps = ['sample-collected', 'results-entered', 'validated'];
+        const showTestDots = testBasedSteps.includes(step.status) && order.tests.length > 1;
+
+        // Determine label color based on state
+        const getLabelColor = () => {
+          if (progress.isFullyComplete) return 'text-gray-900';
+          if (blocked && step.status !== 'paid') return 'text-gray-400';
+          if (progress.isStarted) return 'text-gray-900';
+          return 'text-gray-400';
+        };
+
+        // Determine status message color
+        const getStatusColor = () => {
+          if (step.status === 'paid' && !progress.isFullyComplete) return 'text-amber-600';
+          if (blocked) return 'text-amber-600';
+          return 'text-sky-600';
+        };
 
         return (
           <div key={step.status} className="flex items-start gap-3">
             {/* Timeline Indicator */}
             <div className="flex flex-col items-center">
-              <StepIndicator progress={progress} isInProgress={isInProgress} />
+              <StepIndicator 
+                progress={progress} 
+                isBlocked={blocked}
+              />
 
               {/* Connecting Line */}
               {!isLast && (
@@ -226,7 +257,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
               {/* Left: Label with dots, and Timestamp */}
               <div className="flex flex-col flex-1 min-w-0">
                 <div className="flex items-center">
-                  <p className={`text-sm font-medium ${progress.isStarted ? 'text-gray-900' : 'text-gray-400'}`}>
+                  <p className={`text-sm font-medium ${getLabelColor()}`}>
                     {step.label}
                   </p>
                   {/* Test completion dots */}
@@ -234,11 +265,9 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
                 </div>
 
                 {/* Status text */}
-                {isInProgress && (
-                  <p className="text-xs text-sky-600 mt-1">
-                    {progress.isPartial
-                      ? `${progress.completed}/${progress.total} tests complete`
-                      : 'In progress...'}
+                {statusMessage && (
+                  <p className={`text-xs mt-1 ${getStatusColor()}`}>
+                    {statusMessage}
                   </p>
                 )}
                 {progress.isFullyComplete && completionInfo.completedAt && (
@@ -248,7 +277,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
 
               {/* Right: Avatar of operator */}
               {progress.isFullyComplete && completionInfo.completedBy && (
-                <Avatar name={completionInfo.completedBy} size="xs" className="ring-2 ring-white shadow-sm ml-2" />
+                <Avatar name={getUserName(completionInfo.completedBy)} size="xs" className="ring-2 ring-white shadow-sm ml-2" />
               )}
             </div>
           </div>

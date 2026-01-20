@@ -10,13 +10,10 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
-import { Card } from '@/shared/ui';
 import { PaymentFilters } from './PaymentFilters';
 import { getPaymentTableColumns } from './PaymentTableColumns';
 import { useOrdersList, usePaymentMethodByOrder } from '@/hooks/queries';
 import type { Order, PaymentStatus, PaymentMethod } from '@/types';
-import { formatCurrency } from '@/utils';
-import { DollarSign, TrendingUp, CreditCard } from 'lucide-react';
 
 /** Extended order type with payment method from cross-referencing */
 export interface OrderWithPaymentMethod extends Order {
@@ -56,24 +53,6 @@ export const PaymentList: React.FC = () => {
     }));
   }, [orders, paymentMethodMap]);
 
-  // Calculate stats from cached orders data
-  const stats = useMemo(() => {
-    const today = new Date().toISOString().split('T')[0];
-    const todayOrders = orders.filter(o => o.orderDate.startsWith(today));
-    const todayRevenue = todayOrders
-      .filter(o => o.paymentStatus === 'paid')
-      .reduce((sum, o) => sum + o.totalPrice, 0);
-    
-    const unpaidOrders = orders.filter(o => o.paymentStatus === 'unpaid').length;
-    const paidOrders = orders.filter(o => o.paymentStatus === 'paid').length;
-    
-    return {
-      todayRevenue,
-      unpaidOrders,
-      paidOrders,
-    };
-  }, [orders]);
-
   // Use shared filtering hook for search and status filters
   const {
     filteredItems: preFilteredOrders,
@@ -109,74 +88,29 @@ export const PaymentList: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col p-4 space-y-6">
-      {/* Stats Cards */}
-      <div className="grid grid-cols-3 gap-4 shrink-0">
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-green-50 rounded-lg">
-              <DollarSign className="w-6 h-6 text-green-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Today's Revenue</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(stats.todayRevenue)}</p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-red-50 rounded-lg">
-              <TrendingUp className="w-6 h-6 text-red-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Unpaid Orders</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.unpaidOrders}</p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <CreditCard className="w-6 h-6 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Paid Orders</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.paidOrders}</p>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      {/* List View */}
-      <div className="flex-1 min-h-0">
-        <ListView
-          mode="table"
-          items={filteredOrders}
-          columns={columns}
-          loading={isLoading}
-          error={error}
-          onRetry={refetch}
-          onDismissError={handleDismissError}
-          onRowClick={(order: OrderWithPaymentMethod) => navigate(`/orders/${order.orderId}`)}
-          title="Payments"
-          filters={
-            <PaymentFilters
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              statusFilters={statusFilters}
-              onStatusFiltersChange={setStatusFilters}
-              methodFilters={methodFilters}
-              onMethodFiltersChange={setMethodFilters}
-            />
-          }
-          pagination={true}
-          pageSize={20}
-          pageSizeOptions={[10, 20, 50, 100]}
-          className="h-full"
+    <ListView
+      mode="table"
+      items={filteredOrders}
+      columns={columns}
+      loading={isLoading}
+      error={error}
+      onRetry={refetch}
+      onDismissError={handleDismissError}
+      onRowClick={(order: OrderWithPaymentMethod) => navigate(`/orders/${order.orderId}`)}
+      title="Payments"
+      filters={
+        <PaymentFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          statusFilters={statusFilters}
+          onStatusFiltersChange={setStatusFilters}
+          methodFilters={methodFilters}
+          onMethodFiltersChange={setMethodFilters}
         />
-      </div>
-    </div>
+      }
+      pagination={true}
+      pageSize={20}
+      pageSizeOptions={[10, 20, 50, 100]}
+    />
   );
 };

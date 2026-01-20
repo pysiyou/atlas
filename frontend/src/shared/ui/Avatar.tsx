@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getInitials } from '@/utils';
 
 export interface AvatarProps {
   name: string;
@@ -16,16 +17,6 @@ export const Avatar: React.FC<AvatarProps> = ({
   onClick
 }) => {
   const [imageError, setImageError] = useState(false);
-
-  const getInitials = (name: string) => {
-    if (!name) return '??';
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .substring(0, 2)
-      .toUpperCase();
-  };
 
   const sizeClasses = {
     xs: 'w-6 h-6 text-[8px]',
