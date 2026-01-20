@@ -92,6 +92,20 @@ export type IconName =
   | "document-medicine"
   | "lock"
   | "smartphone"
+  | "dna-landing-page"
+  | "atom-landing-page"
+  | "beaker-landing-page"
+  | "bond-molecule-landing-page"
+  | "drops-droplet-landing-page"
+  | "microscope-landing-page"
+  | "flask-chemical-landing-page"
+  | "flask-education-landing-page"
+  | "medicines-medicine-landing-page"
+  | "microscope-landing-page"
+  | "syringe-landing-page"
+  | "test-tube-landing-page"
+  | "thermometer-landing-page"
+  | "vial-landing-page"
   ;
 
 interface IconProps {
