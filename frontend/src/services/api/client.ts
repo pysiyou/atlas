@@ -40,10 +40,9 @@ export class APIClient {
     const token = this.getAuthToken();
     
     if (token) {
-      // console.log('DEBUG: Attaching token to request header');
       headers['Authorization'] = `Bearer ${token}`;
     } else {
-      console.warn('DEBUG: No token found in storage for request');
+      logger.warn('No token found in storage for request');
     }
     
     return headers;

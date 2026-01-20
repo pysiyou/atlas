@@ -31,6 +31,7 @@ import {
   useRequestRecollection,
   useInvalidateSamples,
 } from '@/hooks/queries';
+import { logger } from '@/utils/logger';
 
 interface SamplesProviderProps {
   children: ReactNode;
@@ -136,7 +137,7 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
         collectionNotes,
       });
     } catch (err) {
-      console.error('Failed to collect sample:', err);
+      logger.error('Failed to collect sample', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [collectSampleMutation]);
@@ -158,7 +159,7 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
         requireRecollection,
       });
     } catch (err) {
-      console.error('Failed to reject sample:', err);
+      logger.error('Failed to reject sample', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [rejectSampleMutation]);
@@ -173,7 +174,7 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
     try {
       await requestRecollectionMutation.mutateAsync({ sampleId, reason });
     } catch (err) {
-      console.error('Failed to request recollection:', err);
+      logger.error('Failed to request recollection', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [requestRecollectionMutation]);

@@ -1,6 +1,7 @@
 """
 FastAPI dependencies for authentication and authorization
 """
+import logging
 from typing import Optional
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -9,6 +10,8 @@ from app.database import get_db
 from app.core.security import decode_token
 from app.models.user import User
 from app.schemas.enums import UserRole
+
+logger = logging.getLogger(__name__)
 
 security = HTTPBearer(auto_error=False)
 
@@ -19,7 +22,7 @@ def get_current_user(
 ) -> User:
     """Get current authenticated user from JWT token"""
     if not credentials:
-        print("DEBUG: No credentials found in request (Authorization header missing or invalid scheme)")
+        logger.debug("No credentials found in request")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authenticated",
@@ -52,16 +55,15 @@ def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    print(f"DEBUG: User {user.username} authenticated successfully. Role: {user.role}")
+    logger.info(f"User {user.username} authenticated")
     return user
 
 
 def require_role(*allowed_roles: UserRole):
     """Dependency factory to check if user has required role"""
     def role_checker(current_user: User = Depends(get_current_user)) -> User:
-        # print(f"DEBUG: Checking role for {current_user.username}. Has {current_user.role}. Requires {allowed_roles}")
         if current_user.role not in allowed_roles:
-            print(f"DEBUG: ACCESS DENIED. User {current_user.username} (role={current_user.role}) attempted to access resource requiring {allowed_roles}")
+            logger.warning(f"Access denied for user {current_user.username}")
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Access denied. Required roles: {[role.value for role in allowed_roles]}"

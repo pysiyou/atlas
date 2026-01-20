@@ -4,7 +4,7 @@ All fields use camelCase - no mapping needed
 """
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from datetime import datetime
+from datetime import datetime, timezone
 from app.database import get_db
 from app.core.dependencies import get_current_user, require_receptionist
 from app.models.user import User
@@ -19,7 +19,7 @@ router = APIRouter()
 def get_patients(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    search: str | None = None,
+    search: str | None = Query(None, max_length=100),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -80,7 +80,7 @@ def create_patient(
         emergencyContact=patient_data.emergencyContact.model_dump(),
         medicalHistory=patient_data.medicalHistory.model_dump(),
         affiliation=patient_data.affiliation.model_dump() if patient_data.affiliation else None,
-        registrationDate=datetime.utcnow(),
+        registrationDate=datetime.now(timezone.utc),
         createdBy=current_user.id,
         updatedBy=current_user.id,
     )

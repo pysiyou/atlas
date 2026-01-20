@@ -26,9 +26,14 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   comments,
   onCommentsChange,
   onApprove,
+  // Props available for future use when rejection UI is implemented
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onReject: _onReject,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   testName: _testName,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   testCode: _testCode,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   patientName: _patientName,
 }) => {
   const hasResults = results && Object.keys(results).length > 0;

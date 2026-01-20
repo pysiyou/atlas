@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
 from typing import List
-from datetime import datetime
+from datetime import datetime, timezone
 from app.database import get_db
 from app.core.dependencies import get_current_user, require_lab_tech
 from app.models.user import User
@@ -98,7 +98,7 @@ def collect_sample(
 
     # Update sample
     sample.status = SampleStatus.COLLECTED
-    sample.collectedAt = datetime.utcnow()
+    sample.collectedAt = datetime.now(timezone.utc)
     sample.collectedBy = current_user.id
     sample.collectedVolume = collect_data.collectedVolume
     sample.actualContainerType = collect_data.actualContainerType
@@ -151,7 +151,7 @@ def reject_sample(
 
     # Create rejection record for history
     rejection_record = {
-        "rejectedAt": datetime.utcnow().isoformat(),
+        "rejectedAt": datetime.now(timezone.utc).isoformat(),
         "rejectedBy": current_user.id,
         "rejectionReasons": [r.value for r in reject_data.rejectionReasons],
         "rejectionNotes": reject_data.rejectionNotes,
@@ -168,7 +168,7 @@ def reject_sample(
     
     # Update single rejection fields (most recent)
     sample.status = SampleStatus.REJECTED
-    sample.rejectedAt = datetime.utcnow()
+    sample.rejectedAt = datetime.now(timezone.utc)
     sample.rejectedBy = current_user.id
     sample.rejectionReasons = [r.value for r in reject_data.rejectionReasons]
     sample.rejectionNotes = reject_data.rejectionNotes
@@ -256,7 +256,7 @@ def request_recollection(
         rejectionHistory=original_sample.rejectionHistory or [],
         
         # Metadata
-        createdAt=datetime.utcnow(),
+        createdAt=datetime.now(timezone.utc),
         createdBy=current_user.id,
         updatedBy=current_user.id
     )

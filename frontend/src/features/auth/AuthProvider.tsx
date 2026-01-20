@@ -7,6 +7,7 @@ import React, { useState, type ReactNode } from 'react';
 import type { AuthUser, UserRole } from '@/types';
 import { AuthContext, type AuthContextType } from './AuthContext';
 import { apiClient } from '@/services/api/client';
+import { logger } from '@/utils/logger';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -23,7 +24,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         return JSON.parse(stored);
       } catch (e) {
-        console.error('Failed to parse stored user:', e);
+        logger.error('Failed to parse stored user', e instanceof Error ? e : undefined);
         return null;
       }
     }
@@ -41,15 +42,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         password,
       });
 
-      console.log('DEBUG: Login response received:', response);
+      logger.debug('Login response received');
 
       if (response.access_token) {
         // Store tokens FIRST so they're available for the next request
         sessionStorage.setItem('atlas_access_token', response.access_token);
         sessionStorage.setItem('atlas_refresh_token', response.refresh_token);
-        console.log('DEBUG: Tokens stored in sessionStorage. Access Token:', response.access_token.substring(0, 10) + '...');
+        logger.debug('Tokens stored in sessionStorage');
       } else {
-        console.error('DEBUG: No access_token in login response!');
+        logger.error('No access_token in login response');
       }
 
       // Get user info (now with token in sessionStorage)
@@ -65,7 +66,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       return true;
     } catch (error) {
-      console.error('Login failed:', error);
+      logger.error('Login failed', error instanceof Error ? error : undefined);
       // Clear any tokens on error
       sessionStorage.removeItem('atlas_access_token');
       sessionStorage.removeItem('atlas_refresh_token');

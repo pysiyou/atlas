@@ -2,21 +2,22 @@
 Configuration management using Pydantic Settings
 """
 from pydantic_settings import BaseSettings
+from pydantic import Field
 from typing import List
 
 
 class Settings(BaseSettings):
-    # Database - PostgreSQL only
-    DATABASE_URL: str = "postgresql://atlas:atlas123@localhost:5432/atlas_lab"
+    # Database - PostgreSQL only (MUST be set via environment variable)
+    DATABASE_URL: str = Field(..., description="PostgreSQL connection string (required)")
     
     # JWT
-    SECRET_KEY: str
+    SECRET_KEY: str = Field(..., description="JWT secret key (required)")
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     
-    # CORS
-    CORS_ORIGINS: str = "http://localhost:5173"
+    # CORS (empty default for security - must be configured in production)
+    CORS_ORIGINS: str = Field(default="", description="Comma-separated list of allowed origins")
     
     # API
     API_V1_PREFIX: str = "/api/v1"

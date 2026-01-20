@@ -116,42 +116,6 @@ export const isCritical = (status: ResultStatus): boolean => {
 };
 
 /**
- * Get color for result status
- */
-export const getResultColor = (status: ResultStatus): string => {
-  switch (status) {
-    case 'normal':
-      return 'text-green-600';
-    case 'high':
-      return 'text-orange-600';
-    case 'low':
-      return 'text-orange-600';
-    case 'critical':
-      return 'text-red-600';
-    default:
-      return 'text-gray-600';
-  }
-};
-
-/**
- * Get badge color for result status
- */
-export const getResultBadgeColor = (status: ResultStatus): string => {
-  switch (status) {
-    case 'normal':
-      return 'bg-green-100 text-green-800';
-    case 'high':
-      return 'bg-orange-100 text-orange-800';
-    case 'low':
-      return 'bg-orange-100 text-orange-800';
-    case 'critical':
-      return 'bg-red-100 text-red-800';
-    default:
-      return 'bg-gray-100 text-gray-800';
-  }
-};
-
-/**
  * Get applicable reference range based on patient demographics
  */
 export interface ReferenceRangeDisplay {

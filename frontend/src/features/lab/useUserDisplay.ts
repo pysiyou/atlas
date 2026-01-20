@@ -13,13 +13,6 @@ export const useUserDisplay = () => {
 
   return {
     /**
-     * Get formatted display string for a user
-     * @param userId - The user's ID
-     * @returns User's name, or fallback string if not found
-     */
-    getUserDisplay: (userId: string) => getUserName(userId),
-
-    /**
      * Get user's name by ID
      * @param userId - The user's ID
      * @returns User's name, or fallback string if not found

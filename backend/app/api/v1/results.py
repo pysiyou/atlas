@@ -4,7 +4,7 @@ Results API Routes - for result entry and validation
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
-from datetime import datetime
+from datetime import datetime, timezone
 from app.database import get_db
 from app.core.dependencies import get_current_user, require_lab_tech, require_validator
 from app.models.user import User
@@ -78,7 +78,7 @@ def enter_results(
 
     # Update results
     order_test.results = result_data.results
-    order_test.resultEnteredAt = datetime.utcnow()
+    order_test.resultEnteredAt = datetime.now(timezone.utc)
     order_test.enteredBy = current_user.id
     order_test.technicianNotes = result_data.technicianNotes
     order_test.status = TestStatus.COMPLETED
@@ -124,7 +124,7 @@ def validate_results(
         )
 
     # Update validation metadata
-    order_test.resultValidatedAt = datetime.utcnow()
+    order_test.resultValidatedAt = datetime.now(timezone.utc)
     order_test.validatedBy = current_user.id
     order_test.validationNotes = validation_data.validationNotes
 

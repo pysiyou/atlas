@@ -4,15 +4,21 @@ import { cn } from '@/utils';
 export type BadgeVariant = 
   // Base variants
   | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'error' | 'success' | 'warning' | 'info' | 'purple' | 'orange' | 'teal'
-  // Statuses
-  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'collected' | 'sample-collected' | 'rejected' | 'scheduled' | 'confirmed' | 'no-show' | 'pending' | 'partial' | 'paid' | 'unpaid'
+  // Order Statuses
+  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'rejected'
+  // Sample Statuses
+  | 'pending' | 'collected' | 'received' | 'accessioned' | 'stored' | 'disposed' | 'sample-collected'
+  // Appointment Statuses
+  | 'scheduled' | 'confirmed' | 'no-show'
+  // Payment Statuses
+  | 'partial' | 'paid' | 'unpaid'
   // Priorities
   | 'routine' | 'urgent' | 'stat'
   // Test Categories
   | 'hematology' | 'biochemistry' | 'microbiology' | 'serology' | 'urinalysis' | 'imaging' | 'immunology' | 'molecular' | 'toxicology' | 'coagulation' | 'chemistry'
   // Sample Types
   | 'blood' | 'urine' | 'stool' | 'swab' | 'tissue' | 'fluid' | 'csf' | 'sputum' | 'other' | 'plasma' | 'serum'
-  // Sex
+  // Sex/Gender
   | 'male' | 'female'
   // Medical History
   | 'chronic-condition' | 'medication' | 'allergy' | 'surgery'
@@ -20,6 +26,8 @@ export type BadgeVariant =
   | 'container-red' | 'container-yellow' | 'container-purple' | 'container-blue' | 'container-green' | 'container-gray' | 'container-black'
   // Payment Methods
   | 'cash' | 'credit-card' | 'debit-card' | 'insurance' | 'bank-transfer' | 'mobile-money'
+  // User Roles
+  | 'receptionist' | 'lab-technician' | 'pathologist' | 'administrator'
   // Arbitrary string fallback
   | (string & {});
 
@@ -45,7 +53,7 @@ const VARIANT_STYLES: Record<string, string> = {
   orange: 'bg-orange-100 text-orange-800 border-transparent',
   teal: 'bg-teal-100 text-teal-800 border-transparent',
 
-  // Status Mappings
+  // Order Status Mappings
   'ordered': 'bg-blue-100 text-blue-800 border-transparent',
   'in-progress': 'bg-yellow-100 text-yellow-800 border-transparent',
   'completed': 'bg-green-100 text-green-800 border-transparent',
@@ -53,13 +61,23 @@ const VARIANT_STYLES: Record<string, string> = {
   'cancelled': 'bg-red-100 text-red-800 border-transparent',
   'validated': 'bg-green-100 text-green-800 border-transparent',
   'reported': 'bg-gray-100 text-gray-800 border-transparent',
-  'collected': 'bg-green-100 text-green-800 border-transparent',
-  'sample-collected': 'bg-blue-100 text-blue-800 border-transparent',
   'rejected': 'bg-red-100 text-red-800 border-transparent',
+
+  // Sample Status Mappings
+  'pending': 'bg-yellow-100 text-yellow-800 border-transparent',
+  'collected': 'bg-green-100 text-green-800 border-transparent',
+  'received': 'bg-blue-100 text-blue-800 border-transparent',
+  'accessioned': 'bg-indigo-100 text-indigo-800 border-transparent',
+  'stored': 'bg-gray-100 text-gray-800 border-transparent',
+  'disposed': 'bg-gray-200 text-gray-800 border-transparent',
+  'sample-collected': 'bg-teal-100 text-teal-800 border-transparent',
+
+  // Appointment Status Mappings
   'scheduled': 'bg-blue-100 text-blue-800 border-transparent',
   'confirmed': 'bg-green-100 text-green-800 border-transparent',
   'no-show': 'bg-orange-100 text-orange-800 border-transparent',
-  'pending': 'bg-yellow-100 text-yellow-800 border-transparent',
+
+  // Payment Status Mappings
   'partial': 'bg-orange-100 text-orange-800 border-transparent',
   'paid': 'bg-green-100 text-green-800 border-transparent',
   'unpaid': 'bg-red-100 text-red-800 border-transparent',
@@ -122,6 +140,12 @@ const VARIANT_STYLES: Record<string, string> = {
   'insurance': 'bg-purple-100 text-purple-800 border-transparent',
   'bank-transfer': 'bg-indigo-100 text-indigo-800 border-transparent',
   'mobile-money': 'bg-orange-100 text-orange-800 border-transparent',
+
+  // User Role Mappings
+  'receptionist': 'bg-blue-100 text-blue-800 border-transparent',
+  'lab-technician': 'bg-green-100 text-green-800 border-transparent',
+  'pathologist': 'bg-purple-100 text-purple-800 border-transparent',
+  'administrator': 'bg-red-100 text-red-800 border-transparent',
 };
 
 const SIZES = {

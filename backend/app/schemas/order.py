@@ -1,16 +1,18 @@
 """
 Pydantic schemas for Order
 """
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
 from app.schemas.enums import OrderStatus, PaymentStatus, PriorityLevel, TestStatus
 
 
 class OrderTestCreate(BaseModel):
-    testCode: str
+    """Schema for creating a test within an order."""
+    testCode: str = Field(..., min_length=1, max_length=50, description="Test code from catalog")
 
 
 class OrderTestResponse(BaseModel):
+    """Schema for test response data."""
     id: str
     testCode: str
     testName: str  # From relationship
@@ -32,13 +34,23 @@ class OrderTestResponse(BaseModel):
 
 
 class OrderCreate(BaseModel):
-    patientId: str
-    tests: list[OrderTestCreate]
+    """Schema for creating a new order."""
+    patientId: str = Field(..., min_length=1, description="Patient ID")
+    tests: list[OrderTestCreate] = Field(..., min_length=1, description="At least one test required")
     priority: PriorityLevel = PriorityLevel.ROUTINE
-    referringPhysician: str | None = None
-    clinicalNotes: str | None = None
+    referringPhysician: str | None = Field(None, max_length=200)
+    clinicalNotes: str | None = Field(None, max_length=2000)
     specialInstructions: list[str] | None = None
-    patientPrepInstructions: str | None = None
+    patientPrepInstructions: str | None = Field(None, max_length=1000)
+
+    @field_validator('tests')
+    @classmethod
+    def no_duplicate_tests(cls, v: list[OrderTestCreate]) -> list[OrderTestCreate]:
+        """Ensure no duplicate test codes in the order."""
+        codes = [t.testCode for t in v]
+        if len(codes) != len(set(codes)):
+            raise ValueError('Duplicate test codes not allowed')
+        return v
 
 
 class OrderUpdate(BaseModel):

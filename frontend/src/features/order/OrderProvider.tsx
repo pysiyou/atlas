@@ -39,6 +39,7 @@ import {
   getOrdersNeedingCollection,
   getAllTestsNeedingCollection,
 } from '@/utils/orderUtils';
+import { logger } from '@/utils/logger';
 
 interface OrdersProviderProps {
   children: ReactNode;
@@ -96,7 +97,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     try {
       await createOrderMutation.mutateAsync(order);
     } catch (err) {
-      console.error('Failed to create order:', err);
+      logger.error('Failed to create order', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [createOrderMutation]);
@@ -108,7 +109,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     try {
       await updateOrderMutation.mutateAsync({ orderId, updates });
     } catch (err) {
-      console.error('Failed to update order:', err);
+      logger.error('Failed to update order', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [updateOrderMutation]);
@@ -120,7 +121,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     try {
       await deleteOrderMutation.mutateAsync(orderId);
     } catch (err) {
-      console.error('Failed to delete order:', err);
+      logger.error('Failed to delete order', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [deleteOrderMutation]);
@@ -149,7 +150,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
         additionalData: additionalData as Record<string, unknown>,
       });
     } catch (err) {
-      console.error('Failed to update test status:', err);
+      logger.error('Failed to update test status', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [updateTestStatusMutation]);
@@ -168,7 +169,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     try {
       await updatePaymentStatusMutation.mutateAsync({ orderId, paymentStatus, amountPaid });
     } catch (err) {
-      console.error('Failed to update payment status:', err);
+      logger.error('Failed to update payment status', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [updatePaymentStatusMutation]);
@@ -292,7 +293,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     try {
       await markTestCriticalMutation.mutateAsync({ orderId, testCode, notifiedTo });
     } catch (err) {
-      console.error('Failed to mark test as critical:', err);
+      logger.error('Failed to mark test as critical', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [markTestCriticalMutation]);

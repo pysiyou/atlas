@@ -82,21 +82,6 @@ export const createRepeatTest = (
 });
 
 /**
- * Adds critical value metadata to a test
- */
-export const markTestAsCritical = (
-  test: OrderTest,
-  notifiedTo: string,
-  now: string
-): OrderTest => ({
-  ...test,
-  hasCriticalValues: true,
-  criticalNotificationSent: true,
-  criticalNotifiedAt: now,
-  criticalNotifiedTo: notifiedTo,
-});
-
-/**
  * Filters orders that have tests needing collection
  */
 export const getOrdersNeedingCollection = (orders: Order[]): Order[] =>

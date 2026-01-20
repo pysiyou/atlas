@@ -24,6 +24,7 @@ import {
   useDeletePatient,
   useInvalidatePatients,
 } from '@/hooks/queries';
+import { logger } from '@/utils/logger';
 
 interface PatientsProviderProps {
   children: ReactNode;
@@ -78,7 +79,7 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
     try {
       await createPatientMutation.mutateAsync(patient);
     } catch (err) {
-      console.error('Failed to create patient:', err);
+      logger.error('Failed to create patient', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [createPatientMutation]);
@@ -90,7 +91,7 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
     try {
       await updatePatientMutation.mutateAsync({ id, updates });
     } catch (err) {
-      console.error('Failed to update patient:', err);
+      logger.error('Failed to update patient', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [updatePatientMutation]);
@@ -102,7 +103,7 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
     try {
       await deletePatientMutation.mutateAsync(id);
     } catch (err) {
-      console.error('Failed to delete patient:', err);
+      logger.error('Failed to delete patient', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [deletePatientMutation]);

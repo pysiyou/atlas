@@ -117,7 +117,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
                 }, 500);
               };
             } catch (e) {
-              console.error('Barcode generation error:', e);
+              // Barcode generation error - display fallback in UI
               document.getElementById('barcode').innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="red" font-size="10">Barcode Error</text>';
             }
           })();

@@ -3,8 +3,9 @@ Order API Routes
 """
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from typing import List
-from datetime import datetime
+from datetime import datetime, timezone
 from app.database import get_db
 from app.core.dependencies import get_current_user, require_receptionist
 from app.models.user import User
@@ -108,7 +109,7 @@ def create_order(
     order = Order(
         orderId=orderId,
         patientId=order_data.patientId,
-        orderDate=datetime.utcnow(),
+        orderDate=datetime.now(timezone.utc),
         totalPrice=total_price,
         paymentStatus=PaymentStatus.UNPAID,
         overallStatus=OrderStatus.PENDING,
@@ -121,14 +122,19 @@ def create_order(
         tests=order_tests,
     )
 
-    db.add(order)
-    db.commit()
+    try:
+        db.add(order)
+        db.flush()  # Get order ID without committing
 
-    # Generate samples for this order
-    generate_samples_for_order(orderId, db, current_user.id)
-    db.commit()  # Commit the generated samples
+        # Generate samples for this order
+        generate_samples_for_order(orderId, db, current_user.id)
 
-    db.refresh(order)
+        db.commit()
+        db.refresh(order)
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to create order")
+
     return order
 
 

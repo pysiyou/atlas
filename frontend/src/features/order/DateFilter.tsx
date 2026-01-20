@@ -26,6 +26,7 @@ import {
 import { Icon } from '@/shared/ui/Icon';
 import { Popover } from '@/shared/ui/Popover';
 import { cn } from '@/utils';
+import { DATE_RANGE_CONFIG } from '@/config';
 
 interface DateFilterProps {
   value: [Date, Date] | null;
@@ -45,10 +46,10 @@ export const DateFilter: React.FC<DateFilterProps> = ({
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [view, setView] = useState<CalendarView>('days');
 
-  // Calculate limits: 10 years back, 1 year forward
+  // Calculate date limits from config
   const today = new Date();
-  const minDate = subYears(startOfDay(today), 10);
-  const maxDate = addYears(endOfYear(today), 1);
+  const minDate = subYears(startOfDay(today), DATE_RANGE_CONFIG.maxYearsBack);
+  const maxDate = addYears(endOfYear(today), DATE_RANGE_CONFIG.maxYearsForward);
 
   // Days View Helpers
   const generateDays = () => {

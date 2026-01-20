@@ -403,7 +403,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
 
         {/* Lifestyle */}
         <div className="flex items-start gap-3">
-          <div className="text-gray-400 mt-1 shrink-0" style={{ width: 20, height: 20 }} />
+          <div className="text-gray-400 mt-1 shrink-0 w-5 h-5" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-2">Lifestyle</div>
             <div className="flex gap-4">

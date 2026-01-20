@@ -1,5 +1,8 @@
 /**
  * Order Status - Single Source of Truth
+ * 
+ * Note: Badge colors for order status are defined in the Badge component.
+ * Use the status value directly as the Badge variant (e.g., variant="ordered").
  */
 
 // 1. VALUES - The single source of truth
@@ -8,13 +11,13 @@ export const ORDER_STATUS_VALUES = ['ordered', 'in-progress', 'completed', 'deli
 // 2. TYPE - Derived from values
 export type OrderStatus = (typeof ORDER_STATUS_VALUES)[number];
 
-// 3. CONFIG - Metadata for each value
-export const ORDER_STATUS_CONFIG: Record<OrderStatus, { label: string; color: string }> = {
-  ordered: { label: 'Ordered', color: 'info' },
-  'in-progress': { label: 'In Progress', color: 'warning' },
-  completed: { label: 'Completed', color: 'success' },
-  delivered: { label: 'Delivered', color: 'purple' },
-  rejected: { label: 'Rejected', color: 'danger' },
+// 3. CONFIG - Metadata for each value (label only, colors handled by Badge)
+export const ORDER_STATUS_CONFIG: Record<OrderStatus, { label: string }> = {
+  ordered: { label: 'Ordered' },
+  'in-progress': { label: 'In Progress' },
+  completed: { label: 'Completed' },
+  delivered: { label: 'Delivered' },
+  rejected: { label: 'Rejected' },
 };
 
 // 4. OPTIONS - For dropdowns/selects

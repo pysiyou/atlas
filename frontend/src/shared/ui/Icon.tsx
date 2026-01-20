@@ -10,6 +10,7 @@
  */
 
 import React, { useEffect, useState } from "react";
+import { logger } from "@/utils/logger";
 
 /**
  * Available icon names - add new icons here as SVG files are added
@@ -135,14 +136,14 @@ export const Icon: React.FC<IconProps> = ({
         const content = await loadSvg(name);
         setSvgContent(content);
       } catch (error) {
-        console.error(`[Icon] Failed to load icon: ${name}`, error);
+        logger.error(`Failed to load icon: ${name}`, error instanceof Error ? error : undefined);
 
         if (fallback && fallback !== name) {
           try {
             const fallbackContent = await loadSvg(fallback);
             setSvgContent(fallbackContent);
           } catch (fallbackError) {
-            console.error(`Failed to load fallback icon: ${fallback}`, fallbackError);
+            logger.error(`Failed to load fallback icon: ${fallback}`, fallbackError instanceof Error ? fallbackError : undefined);
             setSvgContent(null);
           }
         } else {
