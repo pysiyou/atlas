@@ -209,7 +209,7 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-[#1a1f2e] flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
       {/* CSS Keyframes for custom animations */}
       <style>{`
         @keyframes floatIcon {
@@ -240,7 +240,7 @@ export const LoginForm: React.FC = () => {
           100% { transform: scale(0.95); opacity: 0.5; }
         }
         .animate-shimmer {
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
           background-size: 200% 100%;
           animation: shimmer 2s infinite;
         }
@@ -257,41 +257,41 @@ export const LoginForm: React.FC = () => {
       `}</style>
 
       {/* ============================================
-          BACKGROUND LAYER - Atmospheric effects
+          BACKGROUND LAYER - Matte atmospheric effects
           ============================================ */}
       
-      {/* Primary gradient orbs */}
+      {/* Subtle matte color accents - flat, desaturated colors */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Top-right warm accent */}
+        {/* Top-right muted teal accent */}
         <div 
-          className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-30"
+          className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-20"
           style={{
-            background: 'radial-gradient(circle, rgba(251, 191, 36, 0.15) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(94, 129, 138, 0.25) 0%, transparent 70%)',
           }}
         />
-        {/* Bottom-left cool accent */}
+        {/* Bottom-left muted slate accent */}
         <div 
-          className="absolute -bottom-48 -left-48 w-[600px] h-[600px] rounded-full opacity-40"
+          className="absolute -bottom-48 -left-48 w-[600px] h-[600px] rounded-full opacity-25"
           style={{
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(100, 116, 139, 0.2) 0%, transparent 70%)',
           }}
         />
-        {/* Center subtle glow */}
+        {/* Center subtle matte glow */}
         <div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-20"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-15"
           style={{
-            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 60%)',
+            background: 'radial-gradient(circle, rgba(120, 130, 150, 0.12) 0%, transparent 60%)',
           }}
         />
       </div>
 
-      {/* Subtle grid pattern overlay */}
+      {/* Subtle grid pattern overlay - reduced for matte look */}
       <div 
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.02]"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
           `,
           backgroundSize: '60px 60px',
         }}
@@ -312,7 +312,7 @@ export const LoginForm: React.FC = () => {
         }`}
       >
         {/* ============================================
-            LEFT PANEL - Branding & Features
+            LEFT PANEL - Branding & Features (Matte styling)
             ============================================ */}
         <div 
           className={`hidden lg:flex flex-col items-start text-white space-y-10 flex-1 max-w-lg transition-all duration-1000 delay-200 ${
@@ -322,34 +322,34 @@ export const LoginForm: React.FC = () => {
           {/* Logo and brand name */}
           <div className="space-y-6">
             <div className="flex items-center gap-5">
-              {/* Logo container with animated ring */}
+              {/* Logo container with matte finish - subtle ring effect */}
               <div className="relative">
                 <div 
-                  className="absolute inset-0 rounded-lg bg-gradient-to-br from-sky-400 to-indigo-500 blur-xl opacity-50"
+                  className="absolute inset-0 rounded-lg bg-[#4a6670] blur-xl opacity-30"
                   style={{ animation: 'pulse-ring 3s ease-in-out infinite' }}
                 />
-                <div className="relative w-16 h-16 bg-gradient-to-br from-sky-400 via-sky-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-2xl shadow-sky-500/30 transform hover:scale-105 transition-transform duration-300">
-                  <Icon name="app-logo" className="w-9 h-9te" />
+                <div className="relative w-16 h-16 bg-[#3d5a66] rounded-lg flex items-center justify-center shadow-lg shadow-black/20 transform hover:scale-105 transition-transform duration-300">
+                  <Icon name="app-logo" className="w-9 h-9" />
                 </div>
               </div>
               <div>
-                <h1 className="font-display text-5xl text-white tracking-tight">
+                <h1 className="font-display text-5xl text-[#e8eaed] tracking-tight">
                   Atlas
                 </h1>
-                <p className="font-body text-sky-300/80 text-sm tracking-widest uppercase mt-1">
+                <p className="font-body text-[#7a9ba8] text-sm tracking-widest uppercase mt-1">
                   Clinical Labs
                 </p>
               </div>
             </div>
 
             {/* Tagline */}
-            <p className="font-body text-xl text-slate-300 leading-relaxed max-w-md">
+            <p className="font-body text-xl text-[#9ca3af] leading-relaxed max-w-md">
               Next-generation laboratory information system built for precision, 
               speed, and seamless clinical workflows.
             </p>
           </div>
 
-          {/* Feature highlights with elegant styling */}
+          {/* Feature highlights with matte styling */}
           <div className="space-y-5 w-full">
             {[
               {
@@ -367,20 +367,20 @@ export const LoginForm: React.FC = () => {
             ].map((feature, index) => (
               <div
                 key={feature.title}
-                className={`group flex items-start gap-4 p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] hover:border-white/[0.1] transition-all duration-300 ${
+                className={`group flex items-start gap-4 p-4 rounded-xl bg-[#232938] border border-[#2d3548] hover:bg-[#283040] hover:border-[#3d4760] transition-all duration-300 ${
                   isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                 }`}
                 style={{ transitionDelay: `${400 + index * 100}ms` }}
               >
-                {/* Feature icon */}
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500/20 to-indigo-500/20 border border-sky-400/20 flex items-center justify-center flex-shrink-0 group-hover:from-sky-500/30 group-hover:to-indigo-500/30 transition-colors duration-300">
-                  <Icon name="check-circle" className="w-5 h-5 text-sky-400" />
+                {/* Feature icon with matte teal */}
+                <div className="w-10 h-10 rounded-lg bg-[#2d4550] border border-[#3d5a66] flex items-center justify-center flex-shrink-0 group-hover:bg-[#3a5663] transition-colors duration-300">
+                  <Icon name="check-circle" className="w-5 h-5 text-[#7a9ba8]" />
                 </div>
                 <div>
-                  <h3 className="font-body font-semibold text-white text-[15px] leading-tight">
+                  <h3 className="font-body font-semibold text-[#e8eaed] text-[15px] leading-tight">
                     {feature.title}
                   </h3>
-                  <p className="font-body text-sm text-slate-400 mt-1 leading-relaxed">
+                  <p className="font-body text-sm text-[#8892a6] mt-1 leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -388,71 +388,71 @@ export const LoginForm: React.FC = () => {
             ))}
           </div>
 
-          {/* Trust indicators */}
-          <div className="pt-6 border-t border-white/10 w-full">
+          {/* Trust indicators with matte styling */}
+          <div className="pt-6 border-t border-[#2d3548] w-full">
             <div className="flex items-center gap-3">
               <div className="flex -space-x-2">
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 border-2 border-slate-900 flex items-center justify-center"
+                    className="w-8 h-8 rounded-full bg-[#3a4556] border-2 border-[#1a1f2e] flex items-center justify-center"
                   >
-                    <Icon name="user" className="w-4 h-4 text-slate-400" />
+                    <Icon name="user" className="w-4 h-4 text-[#8892a6]" />
                   </div>
                 ))}
               </div>
-              <p className="font-body text-sm text-slate-400">
-                Trusted by <span className="text-sky-400 font-semibold">500+</span> healthcare professionals
+              <p className="font-body text-sm text-[#8892a6]">
+                Trusted by <span className="text-[#7a9ba8] font-semibold">500+</span> healthcare professionals
               </p>
             </div>
           </div>
         </div>
 
         {/* ============================================
-            RIGHT PANEL - Login Form Card
+            RIGHT PANEL - Login Form Card (Matte styling)
             ============================================ */}
         <div 
           className={`w-full max-w-xl lg:w-auto lg:min-w-[440px] transition-all duration-1000 delay-300 ${
             isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
           }`}
         >
-          {/* Card with sophisticated glass effect */}
+          {/* Card with matte finish - no glass effect */}
           <div className="relative">
             
-            {/* Main card */}
-            <div className="relative bg-slate-900/80 backdrop-blur-2xl rounded-lg shadow-2xl border border-white/10 p-8 sm:p-10">
-              {/* Subtle top accent line */}
-              <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-sky-400/50 to-transparent" />
+            {/* Main card - solid matte background */}
+            <div className="relative bg-[#232938] rounded-lg shadow-xl shadow-black/30 border border-[#2d3548] p-8 sm:p-10">
+              {/* Subtle top accent line - matte teal */}
+              <div className="absolute top-0 left-8 right-8 h-px bg-[#3d5a66]/50" />
 
               {/* Mobile logo - only shown on smaller screens */}
               <div className="flex lg:hidden items-center gap-3 mb-8">
-                <div className="w-11 h-11 bg-gradient-to-br from-sky-400 to-indigo-600 rounded flex items-center justify-center shadow-lg shadow-sky-500/25">
+                <div className="w-11 h-11 bg-[#3d5a66] rounded flex items-center justify-center shadow-md shadow-black/20">
                   <Icon name="app-logo" className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="font-display text-2xl text-white">Atlas</h1>
-                  <p className="font-body text-sky-400/70 text-xs tracking-wider uppercase">Clinical Labs</p>
+                  <h1 className="font-display text-2xl text-[#e8eaed]">Atlas</h1>
+                  <p className="font-body text-[#7a9ba8] text-xs tracking-wider uppercase">Clinical Labs</p>
                 </div>
               </div>
 
               {/* Form header */}
               <div className="mb-8">
-                <h2 className="font-display text-3xl sm:text-4xl text-white mb-2">
+                <h2 className="font-display text-3xl sm:text-4xl text-[#e8eaed] mb-2">
                   Welcome back
                 </h2>
-                <p className="font-body text-slate-400 text-[15px]">
+                <p className="font-body text-[#8892a6] text-[15px]">
                   Sign in to continue to your dashboard
                 </p>
               </div>
 
-              {/* Error message display */}
+              {/* Error message display - matte red */}
               {error && (
-                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg animate-[shake_0.5s_ease-in-out]">
+                <div className="mb-6 p-4 bg-[#3d2a2e] border border-[#5a3a40] rounded-lg animate-[shake_0.5s_ease-in-out]">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0">
-                      <Icon name="alert-circle" className="h-4 w-4 text-red-400" />
+                    <div className="w-8 h-8 rounded-lg bg-[#4a3035] flex items-center justify-center flex-shrink-0">
+                      <Icon name="alert-circle" className="h-4 w-4 text-[#c9787e]" />
                     </div>
-                    <p className="font-body text-sm text-red-300">{error}</p>
+                    <p className="font-body text-sm text-[#d4989d]">{error}</p>
                   </div>
                 </div>
               )}
@@ -463,7 +463,7 @@ export const LoginForm: React.FC = () => {
                 <div className="space-y-2">
                   <label 
                     htmlFor="username" 
-                    className="block font-body text-sm font-medium text-slate-300"
+                    className="block font-body text-sm font-medium text-[#b0b8c8]"
                   >
                     Username
                   </label>
@@ -472,10 +472,10 @@ export const LoginForm: React.FC = () => {
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
                       <Icon 
                         name="user" 
-                        className="h-5 w-5 text-slate-500 group-focus-within:text-sky-400 transition-colors duration-200" 
+                        className="h-5 w-5 text-[#6b7280] group-focus-within:text-[#7a9ba8] transition-colors duration-200" 
                       />
                     </div>
-                    {/* Input field */}
+                    {/* Input field - matte styling */}
                     <input
                       ref={usernameInputRef}
                       id="username"
@@ -486,7 +486,7 @@ export const LoginForm: React.FC = () => {
                         if (error) setError('');
                       }}
                       placeholder="Enter your username"
-                      className="font-body block w-full pl-12 pr-4 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500/50 focus:bg-slate-800 transition-all duration-200"
+                      className="font-body block w-full pl-12 pr-4 py-3.5 bg-[#1a1f2e] border border-[#2d3548] rounded-lg text-[#e8eaed] placeholder-[#5c6478] focus:outline-none focus:ring-2 focus:ring-[#4a6670]/50 focus:border-[#4a6670] focus:bg-[#1e242f] transition-all duration-200"
                       required
                     />
                   </div>
@@ -496,7 +496,7 @@ export const LoginForm: React.FC = () => {
                 <div className="space-y-2">
                   <label 
                     htmlFor="password" 
-                    className="block font-body text-sm font-medium text-slate-300"
+                    className="block font-body text-sm font-medium text-[#b0b8c8]"
                   >
                     Password
                   </label>
@@ -505,10 +505,10 @@ export const LoginForm: React.FC = () => {
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
                       <Icon 
                         name="lock" 
-                        className="h-5 w-5 text-slate-500 group-focus-within:text-sky-400 transition-colors duration-200" 
+                        className="h-5 w-5 text-[#6b7280] group-focus-within:text-[#7a9ba8] transition-colors duration-200" 
                       />
                     </div>
-                    {/* Input field */}
+                    {/* Input field - matte styling */}
                     <input
                       id="password"
                       type={showPassword ? 'text' : 'password'}
@@ -518,14 +518,14 @@ export const LoginForm: React.FC = () => {
                         if (error) setError('');
                       }}
                       placeholder="Enter your password"
-                      className="font-body block w-full pl-12 pr-12 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500/50 focus:bg-slate-800 transition-all duration-200"
+                      className="font-body block w-full pl-12 pr-12 py-3.5 bg-[#1a1f2e] border border-[#2d3548] rounded-lg text-[#e8eaed] placeholder-[#5c6478] focus:outline-none focus:ring-2 focus:ring-[#4a6670]/50 focus:border-[#4a6670] focus:bg-[#1e242f] transition-all duration-200"
                       required
                     />
                     {/* Password visibility toggle */}
                     <button
                       type="button"
                       onClick={togglePasswordVisibility}
-                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-500 hover:text-sky-400 transition-colors duration-200 z-10 cursor-pointer"
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#6b7280] hover:text-[#7a9ba8] transition-colors duration-200 z-10 cursor-pointer"
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
                       <Icon name="eye" className="h-5 w-5" />
@@ -533,15 +533,15 @@ export const LoginForm: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Submit button */}
+                {/* Submit button - matte teal, no gradient */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="relative w-full mt-2 font-body font-semibold py-4 px-6 rounded-lg text-white overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sky-400/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+                  className="relative w-full mt-2 font-body font-semibold py-4 px-6 rounded-lg text-white overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#4a6670]/50 focus:ring-offset-2 focus:ring-offset-[#232938]"
                 >
-                  {/* Button gradient background */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-sky-500 via-sky-600 to-indigo-600 transition-all duration-300 group-hover:from-sky-400 group-hover:via-sky-500 group-hover:to-indigo-500" />
-                  {/* Shimmer effect on hover */}
+                  {/* Button solid matte background - no gradient */}
+                  <div className="absolute inset-0 bg-[#3d5a66] transition-all duration-300 group-hover:bg-[#4a6b78]" />
+                  {/* Subtle shimmer effect on hover */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer" />
                   {/* Button content */}
                   <span className="relative flex items-center justify-center">
@@ -558,8 +558,8 @@ export const LoginForm: React.FC = () => {
               </form>
 
               {/* Footer with copyright */}
-              <div className="mt-8 pt-6 border-t border-slate-800">
-                <p className="font-body text-center text-sm text-slate-500">
+              <div className="mt-8 pt-6 border-t border-[#2d3548]">
+                <p className="font-body text-center text-sm text-[#6b7280]">
                   © 2026 Atlas Clinical Labs. All rights reserved.
                 </p>
               </div>

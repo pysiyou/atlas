@@ -117,12 +117,12 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
             mL
           </span>
         </div>
-        {volume > 100 && (
-          <div className="text-xs text-yellow-600 mt-1.5 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100">
+        <div className="h-6 mt-1.5">
+          <div className={`text-xs text-yellow-600 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100 transition-opacity duration-200 ${volume > 100 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <Icon name="alert-circle" className="w-3.5 h-3.5" />
             Unusually high volume - please verify
           </div>
-        )}
+        </div>
       </div>
 
       {/* Container Type */}
@@ -130,40 +130,50 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
         <label className="block text-xs font-medium text-gray-500 mb-1">
           Container Type <span className="text-red-500">*</span>
         </label>
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {CONTAINER_TYPE_OPTIONS.map((option) => {
             const isRequired = requirement.containerTypes.includes(option.value as ContainerType);
             const isSelected = selectedContainerType === option.value;
+            const showWarning = isSelected && !isRequired;
             return (
-              <button
+              <div
                 key={option.value}
+                className={`
+                  relative flex items-center gap-2 p-3 rounded-lg border transition-all duration-200 cursor-pointer
+                  ${isSelected 
+                    ? showWarning
+                      ? 'bg-yellow-50 border-yellow-200 ring-1 ring-yellow-200'
+                      : 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
+                    : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                  }
+                `}
                 onClick={() => setSelectedContainerType(option.value as ContainerType)}
-                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-sm border transition-all duration-200 text-xs font-medium w-28 ${
-                  isSelected
-                    ? isRequired
-                      ? 'bg-blue-50 border-blue-500 text-blue-700 ring-1 ring-blue-200'
-                      : 'bg-yellow-50 border-yellow-500 text-yellow-700 ring-1 ring-yellow-200'
-                    : isRequired
-                    ? 'bg-white border-green-300 text-gray-700 hover:bg-green-50 hover:border-green-400'
-                    : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
-                }`}
                 title={isRequired ? 'Required container type' : 'Not in requirements'}
               >
+                <input
+                  type="radio"
+                  name="container-type"
+                  checked={isSelected}
+                  onChange={() => setSelectedContainerType(option.value as ContainerType)}
+                  className={`h-3.5 w-3.5 border-gray-300 ${showWarning ? 'text-yellow-600 focus:ring-yellow-500' : 'text-blue-600 focus:ring-blue-500'}`}
+                />
+                <span className={`flex-1 text-xs font-medium ${isSelected ? (showWarning ? 'text-yellow-900' : 'text-blue-900') : 'text-gray-900'}`}>
+                  {option.name}
+                </span>
                 <Icon
                   name={option.value === 'cup' ? 'lab-cup' : 'lab-tube'}
-                  className={`w-4 h-4 ${isSelected ? 'text-blue-600' : 'text-gray-500'}`}
+                  className={`w-5 h-5 ${isSelected ? (showWarning ? 'text-yellow-600' : 'text-blue-600') : 'text-gray-400'}`}
                 />
-                <span>{option.name}</span>
-              </button>
+              </div>
             );
           })}
         </div>
-        {selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) && (
-          <div className="text-xs text-yellow-600 mt-1.5 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100">
+        <div className="h-6 mt-1.5">
+          <div className={`text-xs text-yellow-600 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100 transition-opacity duration-200 ${selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <Icon name="alert-circle" className="w-3.5 h-3.5" />
             Warning: Selected container type not in requirements
           </div>
-        )}
+        </div>
       </div>
 
       {/* Container Color */}
@@ -191,18 +201,18 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
             );
           })}
         </div>
-        {!selectedColor && (
-          <div className="text-xs text-orange-600 mt-2 flex items-center gap-1.5 bg-orange-50 p-1.5 rounded border border-orange-100">
+        <div className="h-6 mt-1.5">
+          <div className={`text-xs flex items-center gap-1.5 p-1.5 rounded border transition-opacity duration-200 ${
+            !selectedColor 
+              ? 'opacity-100 text-orange-600 bg-orange-50 border-orange-100' 
+              : selectedColor && !requirement.containerTopColors.includes(selectedColor as never)
+                ? 'opacity-100 text-yellow-600 bg-yellow-50 border-yellow-100'
+                : 'opacity-0 pointer-events-none border-transparent'
+          }`}>
             <Icon name="alert-circle" className="w-3.5 h-3.5" />
-            Selection required
+            {!selectedColor ? 'Selection required' : 'Warning: Selected color not in requirements'}
           </div>
-        )}
-        {selectedColor && !requirement.containerTopColors.includes(selectedColor as never) && (
-          <div className="text-xs text-yellow-600 mt-1.5 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100">
-            <Icon name="alert-circle" className="w-3.5 h-3.5" />
-            Warning: Selected color not in requirements
-          </div>
-        )}
+        </div>
       </div>
 
       {/* Notes */}
