@@ -1,32 +1,46 @@
 """
 Sample API Routes
+
+Uses the unified LabOperationsService for all operations.
 """
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from sqlalchemy.orm.attributes import flag_modified
-from typing import List
-from datetime import datetime, timezone
+from typing import List, Optional
+from pydantic import BaseModel, Field
 from app.database import get_db
 from app.core.dependencies import get_current_user, require_lab_tech
 from app.models.user import User
 from app.models.sample import Sample
 from app.models.order import Order, OrderTest
 from app.schemas.sample import SampleResponse, SampleCollectRequest, SampleRejectRequest, RecollectionRequest
-from app.schemas.enums import SampleStatus, TestStatus, UserRole
-from app.services.order_status_updater import update_order_status
-from app.services.sample_recollection import (
-    create_recollection_sample,
-    RecollectionError,
-    MAX_RECOLLECTION_ATTEMPTS
-)
+from app.schemas.enums import SampleStatus, TestStatus, UserRole, RejectionReason
+from app.services.lab_operations import LabOperationsService, LabOperationError
 
 router = APIRouter()
 
 
+class RejectAndRecollectRequest(BaseModel):
+    """Request body for combined reject and recollect operation"""
+    rejectionReasons: List[RejectionReason] = Field(..., min_length=1, description="Rejection reasons")
+    rejectionNotes: Optional[str] = Field(None, max_length=1000, description="Rejection notes")
+    recollectionReason: Optional[str] = Field(None, max_length=1000, description="Reason for recollection")
+
+
+class RejectAndRecollectResponse(BaseModel):
+    """Response for combined reject and recollect operation"""
+    rejectedSample: dict
+    newSample: dict
+    recollectionAttempt: int
+    message: str
+
+    class Config:
+        from_attributes = True
+
+
 @router.get("/samples", response_model=List[SampleResponse])
 def get_samples(
-    orderId: str | None = None,
-    sampleStatus: SampleStatus | None = None,
+    orderId: Optional[str] = None,
+    sampleStatus: Optional[SampleStatus] = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     db: Session = Depends(get_db),
@@ -34,7 +48,7 @@ def get_samples(
 ):
     """
     Get all samples with optional filters.
-    
+
     Role-based filtering:
     - Admin/Receptionist: All samples
     - Lab Tech: Only samples they need to process (pending/collected)
@@ -104,49 +118,22 @@ def collect_sample(
     current_user: User = Depends(require_lab_tech)
 ):
     """
-    Mark sample as collected
+    Mark sample as collected.
+    Uses the LabOperationsService for state validation and audit logging.
     """
-    sample = db.query(Sample).filter(Sample.sampleId == sampleId).first()
-    if not sample:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Sample {sampleId} not found"
+    try:
+        service = LabOperationsService(db)
+        sample = service.collect_sample(
+            sample_id=sampleId,
+            user_id=current_user.id,
+            collected_volume=collect_data.collectedVolume,
+            container_type=collect_data.actualContainerType.value,
+            container_color=collect_data.actualContainerColor.value,
+            collection_notes=collect_data.collectionNotes
         )
-
-    if sample.status != SampleStatus.PENDING:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Sample {sampleId} is not pending collection"
-        )
-
-    # Update sample
-    sample.status = SampleStatus.COLLECTED
-    sample.collectedAt = datetime.now(timezone.utc)
-    sample.collectedBy = current_user.id
-    sample.collectedVolume = collect_data.collectedVolume
-    sample.actualContainerType = collect_data.actualContainerType
-    sample.actualContainerColor = collect_data.actualContainerColor
-    sample.collectionNotes = collect_data.collectionNotes
-    sample.remainingVolume = collect_data.collectedVolume
-    sample.updatedBy = current_user.id
-
-    # Update associated order tests
-    order_tests = db.query(OrderTest).filter(
-        OrderTest.orderId == sample.orderId,
-        OrderTest.testCode.in_(sample.testCodes)
-    ).all()
-
-    for order_test in order_tests:
-        order_test.status = TestStatus.SAMPLE_COLLECTED
-        order_test.sampleId = sampleId
-
-    db.commit()
-    db.refresh(sample)
-    
-    # Update order status
-    update_order_status(db, sample.orderId)
-
-    return sample
+        return sample
+    except LabOperationError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
 @router.patch("/samples/{sampleId}/reject", response_model=SampleResponse)
@@ -157,63 +144,21 @@ def reject_sample(
     current_user: User = Depends(require_lab_tech)
 ):
     """
-    Reject a sample and append to rejection history
+    Reject a sample and append to rejection history.
+    Uses the LabOperationsService for state validation and audit logging.
     """
-    sample = db.query(Sample).filter(Sample.sampleId == sampleId).first()
-    if not sample:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Sample {sampleId} not found"
+    try:
+        service = LabOperationsService(db)
+        sample = service.reject_sample(
+            sample_id=sampleId,
+            user_id=current_user.id,
+            rejection_reasons=[r.value for r in reject_data.rejectionReasons],
+            rejection_notes=reject_data.rejectionNotes,
+            recollection_required=reject_data.recollectionRequired
         )
-
-    if sample.status != SampleStatus.COLLECTED:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Sample {sampleId} must be collected before rejection"
-        )
-
-    # Create rejection record for history
-    rejection_record = {
-        "rejectedAt": datetime.now(timezone.utc).isoformat(),
-        "rejectedBy": current_user.id,
-        "rejectionReasons": [r.value for r in reject_data.rejectionReasons],
-        "rejectionNotes": reject_data.rejectionNotes,
-        "recollectionRequired": reject_data.recollectionRequired
-    }
-    
-    # Append to rejection history
-    if sample.rejectionHistory is None:
-        sample.rejectionHistory = []
-    sample.rejectionHistory.append(rejection_record)
-    
-    # Mark the field as modified so SQLAlchemy persists the change
-    flag_modified(sample, 'rejectionHistory')
-    
-    # Update single rejection fields (most recent)
-    sample.status = SampleStatus.REJECTED
-    sample.rejectedAt = datetime.now(timezone.utc)
-    sample.rejectedBy = current_user.id
-    sample.rejectionReasons = [r.value for r in reject_data.rejectionReasons]
-    sample.rejectionNotes = reject_data.rejectionNotes
-    sample.recollectionRequired = reject_data.recollectionRequired
-    sample.updatedBy = current_user.id
-
-    # Update associated order tests
-    order_tests = db.query(OrderTest).filter(
-        OrderTest.orderId == sample.orderId,
-        OrderTest.testCode.in_(sample.testCodes)
-    ).all()
-
-    for order_test in order_tests:
-        order_test.status = TestStatus.REJECTED
-
-    db.commit()
-    db.refresh(sample)
-    
-    # Update order status
-    update_order_status(db, sample.orderId)
-
-    return sample
+        return sample
+    except LabOperationError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
 @router.post("/samples/{sampleId}/request-recollection", response_model=SampleResponse)
@@ -225,41 +170,74 @@ def request_recollection(
 ):
     """
     Request recollection for a rejected sample.
-    Uses the shared sample_recollection service.
-    
+    Uses the LabOperationsService for state validation and audit logging.
+
     - Creates a NEW sample with a new ID
     - Links new sample to original via originalSampleId
     - Sets recollectionSampleId on the rejected sample
     - Preserves rejection history in the new sample
     - Escalates priority to URGENT
     """
-    original_sample = db.query(Sample).filter(Sample.sampleId == sampleId).first()
-    if not original_sample:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Sample {sampleId} not found"
-        )
-    
     try:
-        # Use the shared recollection service
-        new_sample = create_recollection_sample(
-            db=db,
-            original_sample=original_sample,
+        service = LabOperationsService(db)
+        new_sample = service.request_recollection(
+            sample_id=sampleId,
+            user_id=current_user.id,
             recollection_reason=recollection_data.reason,
-            created_by=current_user.id,
             update_order_tests=True
         )
-        
-        db.commit()
-        db.refresh(new_sample)
-        
-        # Update order status
-        update_order_status(db, original_sample.orderId)
-        
         return new_sample
-        
-    except RecollectionError as e:
-        raise HTTPException(
-            status_code=e.status_code,
-            detail=e.message
+    except LabOperationError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
+
+
+@router.post("/samples/{sampleId}/reject-and-recollect", response_model=RejectAndRecollectResponse)
+def reject_and_recollect_sample(
+    sampleId: str,
+    request_data: RejectAndRecollectRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_lab_tech)
+):
+    """
+    Atomically reject a sample and request recollection.
+    Combines two operations into one transaction.
+
+    This is useful when you know immediately that a sample needs to be rejected
+    and a new collection is required.
+
+    - Rejects the current sample with provided reasons
+    - Creates a new recollection sample in PENDING status
+    - Links the two samples together
+    - Updates order tests to point to the new sample
+    - Escalates priority to URGENT
+    """
+    try:
+        service = LabOperationsService(db)
+        rejected_sample, new_sample = service.reject_and_recollect(
+            sample_id=sampleId,
+            user_id=current_user.id,
+            rejection_reasons=[r.value for r in request_data.rejectionReasons],
+            rejection_notes=request_data.rejectionNotes,
+            recollection_reason=request_data.recollectionReason
         )
+
+        return RejectAndRecollectResponse(
+            rejectedSample={
+                "sampleId": rejected_sample.sampleId,
+                "status": rejected_sample.status.value,
+                "rejectedAt": rejected_sample.rejectedAt.isoformat() if rejected_sample.rejectedAt else None,
+                "recollectionSampleId": rejected_sample.recollectionSampleId
+            },
+            newSample={
+                "sampleId": new_sample.sampleId,
+                "status": new_sample.status.value,
+                "priority": new_sample.priority.value,
+                "isRecollection": new_sample.isRecollection,
+                "originalSampleId": new_sample.originalSampleId,
+                "recollectionAttempt": new_sample.recollectionAttempt
+            },
+            recollectionAttempt=new_sample.recollectionAttempt,
+            message=f"Sample rejected and recollection requested successfully"
+        )
+    except LabOperationError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)

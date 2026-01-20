@@ -11,7 +11,7 @@ import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { formatDate } from '@/utils';
 import { useUserDisplay } from '@/hooks';
 import { LabCard, FlagsSection } from '../shared/LabCard';
-import { ResultRejectionPopover } from './ResultRejectionPopover';
+import { RejectionDialog } from '../shared';
 import { ResultStatusBadge } from '../shared/StatusBadges';
 import type { ResultRejectionRecord } from '@/types';
 
@@ -96,7 +96,7 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
       <h3 className="text-sm font-medium text-gray-900">{test.testName}</h3>
       {isRetest && (
         <Badge variant="warning" size="sm" className="flex items-center gap-1">
-          <Icon name="refresh-cw" className="w-3 h-3" />
+          <Icon name="loading" className="w-3 h-3" />
           Re-test #{retestNumber}
         </Badge>
       )}
@@ -111,14 +111,36 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
     </>
   );
 
+  /**
+   * Handle rejection result from the RejectionDialog.
+   * 
+   * IMPORTANT: The RejectionDialog already calls the API via useRejectionManager.
+   * We must NOT call onReject here as that would trigger a second API call.
+   * Instead, we just trigger a data refresh by calling onReject with a special
+   * flag or empty values to signal that the API call already happened.
+   * 
+   * The result object contains:
+   * - action: 'retest_same_sample' | 'recollect_new_sample'
+   * - message: Success message from the API
+   * - newTestId?: ID of the newly created retest (if applicable)
+   */
+  const handleRejectionResult = () => {
+    // The RejectionDialog already called the API and the rejection succeeded.
+    // We call onReject with undefined values to signal to the parent that
+    // it should refresh data WITHOUT making another API call.
+    // The parent (ResultValidationView.handleValidate) needs to check for this.
+    onReject(undefined, undefined);
+  };
+
   // Approve/Reject actions
   const actions = (
     <div className="flex items-center gap-2 z-10" onClick={(e) => e.stopPropagation()}>
-      <ResultRejectionPopover
-        testName={test.testName}
+      <RejectionDialog
+        orderId={test.orderId}
         testCode={test.testCode}
+        testName={test.testName}
         patientName={test.patientName}
-        onReject={onReject}
+        onReject={handleRejectionResult}
       />
       <IconButton
         onClick={(e) => { e.stopPropagation(); onApprove(); }}
@@ -138,9 +160,9 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
     </span>
   );
 
-  // Results grid - each item stays on a single line
+  // Results grid - using three-column layout for proper alignment of name, value, and badge
   const content = (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-40">
       {Object.entries(test.results).map(([key, value]) => {
         const resultValue = typeof value === 'object' && value !== null && 'value' in value
           ? (value as { value: unknown }).value
@@ -153,9 +175,15 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
           : 'normal';
 
         return (
-          <div key={key} className="flex items-center gap-8 min-w-0 whitespace-nowrap">
-            <span className="text-xs text-gray-500 shrink-0" title={key}>{key}:</span>
-            <span className={`text-sm font-medium shrink-0 ${
+          <div 
+            key={key} 
+            className="grid grid-cols-[1fr_auto_auto] items-center gap-x-2 py-1.5 whitespace-nowrap"
+          >
+            {/* Parameter Name Column */}
+            <span className="text-xs text-gray-500" title={key}>{key}:</span>
+            
+            {/* Value Column - left aligned */}
+            <span className={`text-sm font-medium text-left ${
               status === 'critical' ? 'text-red-600 font-bold' :
               status === 'high' || status === 'low' ? 'text-amber-600' :
               'text-gray-900'
@@ -163,7 +191,18 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
               {String(resultValue)}
               {unit && <span className="text-xs text-gray-400 ml-1 font-normal">{unit}</span>}
             </span>
-            <ResultStatusBadge status={status} />
+            
+            {/* Badge Column - fixed width for alignment */}
+            <div className="w-16 flex justify-start">
+              {status !== 'normal' ? (
+                <ResultStatusBadge status={status} />
+              ) : (
+                // Empty placeholder to maintain column structure
+                <span className="invisible">
+                  <ResultStatusBadge status="high" />
+                </span>
+              )}
+            </div>
           </div>
         );
       })}

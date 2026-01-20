@@ -18,6 +18,7 @@ ID_PREFIXES = {
     "claim": "CLM",
     "report": "RPT",
     "user": "USR",
+    "audit": "AUD",
 }
 
 
@@ -36,9 +37,10 @@ def generate_id(entity_type: str, db: Session) -> str:
     # Get the appropriate model
     from app.models import (
         Patient, Order, Sample, Aliquot,
-        Invoice, Payment, InsuranceClaim, Report, User
+        Invoice, Payment, InsuranceClaim, Report, User,
+        LabOperationLog
     )
-    
+
     model_map = {
         "patient": (Patient, "id"),
         "order": (Order, "orderId"),
@@ -49,6 +51,7 @@ def generate_id(entity_type: str, db: Session) -> str:
         "claim": (InsuranceClaim, "claimId"),
         "report": (Report, "reportId"),
         "user": (User, "id"),
+        "audit": (LabOperationLog, "id"),
     }
     
     model, id_field = model_map[entity_type]

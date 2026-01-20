@@ -182,6 +182,10 @@ export interface TestParameter {
  * Standardized interface for a test with its associated order and patient context.
  * Used in Result Entry and Validation lists.
  */
+// Import ResultRejectionRecord from order.ts
+import type { ResultRejectionRecord } from './order';
+import type { RejectionRecord } from './sample';
+
 export interface TestWithContext {
   orderId: string;
   patientId: string;
@@ -204,5 +208,19 @@ export interface TestWithContext {
   flags?: string[];
   technicianNotes?: string;
   validationNotes?: string;
+
+  // Retest tracking fields (for result validation re-test flow)
+  isRetest?: boolean;
+  retestOfTestId?: string;
+  retestNumber?: number;
+  resultRejectionHistory?: ResultRejectionRecord[];
+
+  // Sample recollection tracking fields (for sample re-collect flow)
+  sampleIsRecollection?: boolean;
+  sampleOriginalSampleId?: string;
+  sampleRecollectionReason?: string;
+  sampleRecollectionAttempt?: number;
+  sampleRejectionHistory?: RejectionRecord[];
+
   [key: string]: unknown;
 }

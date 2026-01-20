@@ -11,6 +11,7 @@ import type {
   ContainerTopColor,
   RejectionReason,
 } from '@/types';
+import type { RejectAndRecollectResponse } from '@/types/lab-operations';
 
 interface GetSamplesParams {
   orderId?: string;
@@ -30,6 +31,12 @@ interface RejectSampleRequest {
   rejectionReasons: RejectionReason[];
   rejectionNotes?: string;
   recollectionRequired?: boolean;
+}
+
+interface RejectAndRecollectRequest {
+  rejectionReasons: RejectionReason[];
+  rejectionNotes?: string;
+  recollectionReason?: string;
 }
 
 export const sampleAPI = {
@@ -82,5 +89,28 @@ export const sampleAPI = {
    */
   async requestRecollection(sampleId: string, reason: string): Promise<Sample> {
     return apiClient.post<Sample>(`/samples/${sampleId}/request-recollection`, { reason });
+  },
+
+  /**
+   * Atomically reject a sample and request recollection.
+   * Combines two operations into one transaction.
+   *
+   * This is useful when you know immediately that a sample needs to be rejected
+   * and a new collection is required.
+   *
+   * - Rejects the current sample with provided reasons
+   * - Creates a new recollection sample in PENDING status
+   * - Links the two samples together
+   * - Updates order tests to point to the new sample
+   * - Escalates priority to URGENT
+   */
+  async rejectAndRecollect(
+    sampleId: string,
+    data: RejectAndRecollectRequest
+  ): Promise<RejectAndRecollectResponse> {
+    return apiClient.post<RejectAndRecollectResponse>(
+      `/samples/${sampleId}/reject-and-recollect`,
+      data
+    );
   },
 };

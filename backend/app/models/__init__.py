@@ -9,6 +9,7 @@ from app.models.sample import Sample
 from app.models.aliquot import Aliquot
 from app.models.billing import Invoice, Payment, InsuranceClaim
 from app.models.report import Report
+from app.models.lab_audit import LabOperationLog
 
 __all__ = [
     "User",
@@ -22,4 +23,5 @@ __all__ = [
     "Payment",
     "InsuranceClaim",
     "Report",
+    "LabOperationLog",
 ]

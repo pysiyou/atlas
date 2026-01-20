@@ -40,9 +40,10 @@ export const ResultEntry: React.FC = () => {
       const patientName = getPatientName(order.patientId, patientsContext.patients);
 
       return order.tests
-        .filter(test => 
-          (test.status === 'sample-collected' || test.status === 'in-progress') &&
-          test.status !== 'superseded'  // Filter out superseded tests
+        .filter(test =>
+          // Filter for tests awaiting result entry (sample-collected or in-progress)
+          // Superseded tests are already excluded by status check
+          test.status === 'sample-collected' || test.status === 'in-progress'
         )
         .map(test => {
           const testName = getTestName(test.testCode, testsContext.tests);

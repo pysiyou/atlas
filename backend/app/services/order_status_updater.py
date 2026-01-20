@@ -107,15 +107,39 @@ def update_order_status(db: Session, order_id: str) -> None:
     samples = db.query(Sample).filter(Sample.orderId == order_id).all()
     new_status = _calculate_order_status(order, samples)
     
-    # Prevent regression from COMPLETED to earlier states
+    # Handle regression from COMPLETED to earlier states
+    # This can legitimately happen when a test is rejected and a retest is created
     if current_status == OrderStatus.COMPLETED and new_status in {
         OrderStatus.PENDING, 
         OrderStatus.SAMPLE_COLLECTION
     }:
-        logger.warning(
-            f"Prevented regression of order {order_id} from {current_status} to {new_status}"
+        # Check if there are active tests that need work (not VALIDATED or SUPERSEDED)
+        active_tests = [t for t in order.tests if t.status not in {
+            TestStatus.VALIDATED, 
+            TestStatus.SUPERSEDED
+        }]
+        has_pending_work = any(
+            t.status in {
+                TestStatus.PENDING, 
+                TestStatus.SAMPLE_COLLECTED, 
+                TestStatus.IN_PROGRESS,
+                TestStatus.COMPLETED  # Needs validation
+            }
+            for t in active_tests
         )
-        return
+        
+        if has_pending_work:
+            # Allow regression to IN_PROGRESS - there's legitimate work to do (e.g., retest)
+            new_status = OrderStatus.IN_PROGRESS
+            logger.info(
+                f"Order {order_id} regressing from {current_status} to {new_status} due to pending work"
+            )
+        else:
+            # No pending work, block the regression
+            logger.warning(
+                f"Prevented regression of order {order_id} from {current_status} to {new_status}"
+            )
+            return
     
     if order.overallStatus != new_status:
         order.overallStatus = new_status

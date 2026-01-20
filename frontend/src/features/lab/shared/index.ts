@@ -11,6 +11,12 @@ export { LAB_CARD_TYPOGRAPHY, LAB_CARD_SPACING, LAB_CARD_CONTAINERS, LAB_CARD_LI
 // Popover form
 export { PopoverForm, RadioCard, CheckboxCard } from './PopoverForm';
 
+// Rejection dialog
+export { RejectionDialog, RejectionDialogContent, RejectionHistoryBanner } from './RejectionDialog';
+
+// Hooks
+export { useRejectionManager } from './hooks';
+
 // Workflow view
 export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
 

@@ -2,10 +2,11 @@
  * ResultForm - Form for entering test results
  */
 
-import React from 'react';
-import { Button, Textarea } from '@/shared/ui';
+import React, { useCallback } from 'react';
+import { Button, Textarea, Popover } from '@/shared/ui';
 import { AlertTriangle } from 'lucide-react';
 import { Icon } from '@/shared/ui/Icon';
+import { cn } from '@/utils';
 import type { Test, TestParameter, Patient } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '@/utils/reference-ranges';
 
@@ -21,6 +22,135 @@ interface ResultFormProps {
   isComplete: boolean;
   isModal?: boolean;
 }
+
+/**
+ * RadioOption - Individual radio option in the select popover
+ */
+const RadioOption: React.FC<{
+  option: string;
+  isSelected: boolean;
+  onSelect: () => void;
+}> = ({ option, isSelected, onSelect }) => {
+  return (
+    <label
+      className={cn(
+        "group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150",
+        "hover:bg-gray-50/80",
+        isSelected && "bg-sky-50/50"
+      )}
+    >
+      {/* Radio button */}
+      <div className="flex-shrink-0 mr-3">
+        <input
+          type="radio"
+          checked={isSelected}
+          onChange={onSelect}
+          className="sr-only"
+        />
+        {isSelected ? (
+          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-sky-500 transition-all duration-150">
+            <div className="w-2 h-2 rounded-full bg-white" />
+          </div>
+        ) : (
+          <div className="w-5 h-5 rounded-full border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
+        )}
+      </div>
+
+      {/* Option label */}
+      <span className={cn(
+        "text-sm transition-colors",
+        isSelected ? "text-gray-900 font-medium" : "text-gray-600 group-hover:text-gray-900"
+      )}>
+        {option}
+      </span>
+    </label>
+  );
+};
+
+/**
+ * SelectParameterInput - Popover-based select input styled like MultiSelectFilter
+ */
+const SelectParameterInput: React.FC<{
+  param: TestParameter;
+  value: string;
+  onChange: (value: string) => void;
+  inputId: string;
+}> = ({ param, value, onChange, inputId }) => {
+  /** Handle clearing selection */
+  const handleClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onChange('');
+    },
+    [onChange]
+  );
+
+  return (
+    <Popover
+      placement="bottom-start"
+      showBackdrop={false}
+      trigger={({ isOpen }) => (
+        <div
+          id={inputId}
+          className={cn(
+            "flex items-center gap-2 px-3 py-2 bg-white border rounded cursor-pointer transition-colors w-full h-[38px]",
+            isOpen
+              ? "border-sky-500 ring-2 ring-sky-500/20"
+              : "border-gray-300 hover:border-gray-400"
+          )}
+        >
+          {/* Content */}
+          <div className="flex-1 text-sm truncate">
+            {value ? (
+              <span className="text-gray-900">{value}</span>
+            ) : (
+              <span className="text-gray-400">-- Select --</span>
+            )}
+          </div>
+
+          {/* Chevron */}
+          <Icon
+            name="chevron-down"
+            className={cn(
+              "w-4 h-4 text-gray-400 transition-transform flex-shrink-0",
+              isOpen && "rotate-180"
+            )}
+          />
+
+          {/* Clear button */}
+          {value && (
+            <button
+              onClick={handleClear}
+              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer flex-shrink-0"
+            >
+              <Icon name="close" className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+            </button>
+          )}
+        </div>
+      )}
+      className="min-w-[200px]"
+    >
+      {({ close }) => (
+        <div className="flex flex-col py-1">
+          {/* Options list */}
+          <div className="max-h-[250px] overflow-y-auto">
+            {param.allowedValues?.map((option) => (
+              <RadioOption
+                key={option}
+                option={option}
+                isSelected={value === option}
+                onSelect={() => {
+                  onChange(option);
+                  close();
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </Popover>
+  );
+};
 
 /** Render input based on parameter type */
 const ParameterInput: React.FC<{
@@ -40,27 +170,25 @@ const ParameterInput: React.FC<{
     onKeyDown,
   };
 
+  // Use the new popover-based select for SELECT type
   if (valueType === 'SELECT' && param.allowedValues) {
     return (
-      <select
-        {...commonProps}
-        className="block w-full pl-3 pr-12 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed bg-white cursor-pointer"
-      >
-        <option value="">-- Select --</option>
-        {param.allowedValues.map(option => (
-          <option key={option} value={option}>{option}</option>
-        ))}
-      </select>
+      <SelectParameterInput
+        param={param}
+        value={normalizedValue}
+        onChange={onChange}
+        inputId={inputId}
+      />
     );
   }
 
   if (valueType === 'TEXT') {
     return (
-      <textarea
+      <input
         {...commonProps}
-        className="block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed placeholder:text-gray-300 transition-shadow resize-none"
+        type="text"
+        className="block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed placeholder:text-gray-300 placeholder:text-xs transition-shadow bg-white"
         placeholder="Enter text result..."
-        rows={2}
       />
     );
   }
@@ -70,7 +198,7 @@ const ParameterInput: React.FC<{
       {...commonProps}
       type="text"
       inputMode="decimal"
-      className="block w-full pl-3 pr-12 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed placeholder:text-gray-300 transition-shadow relative z-10"
+      className="block w-full pl-3 pr-12 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed placeholder:text-gray-300 transition-shadow relative z-10 bg-white"
       placeholder="--"
     />
   );

@@ -157,3 +157,30 @@ class ValidationDecision(str, enum.Enum):
     APPROVED = "approved"
     REJECTED = "rejected"
     REPEAT_REQUIRED = "repeat-required"
+
+
+class LabOperationType(str, enum.Enum):
+    """Types of laboratory operations for audit tracking"""
+    # Sample Operations
+    SAMPLE_COLLECT = "sample_collect"
+    SAMPLE_REJECT = "sample_reject"
+    SAMPLE_RECOLLECTION_REQUEST = "sample_recollection_request"
+
+    # Result Operations
+    RESULT_ENTRY = "result_entry"
+    RESULT_VALIDATION_APPROVE = "result_validation_approve"
+    RESULT_VALIDATION_REJECT_RETEST = "result_validation_reject_retest"
+    RESULT_VALIDATION_REJECT_RECOLLECT = "result_validation_reject_recollect"
+
+
+class RejectionAction(str, enum.Enum):
+    """Action to take when rejecting a result or sample"""
+    RETEST_SAME_SAMPLE = "retest_same_sample"      # Use existing sample, run test again
+    RECOLLECT_NEW_SAMPLE = "recollect_new_sample"  # Get new sample from patient
+    ESCALATE_TO_SUPERVISOR = "escalate"            # Limits exceeded, need supervisor
+
+
+class RejectionSource(str, enum.Enum):
+    """Where the rejection originated from"""
+    SAMPLE_COLLECTION = "sample_collection"   # Rejected during/after collection
+    RESULT_VALIDATION = "result_validation"   # Rejected during result validation

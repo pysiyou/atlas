@@ -111,13 +111,13 @@ export const ResultEntryCard: React.FC<ResultEntryCardProps> = ({
       <h3 className="text-sm font-medium text-gray-900">{test.testName}</h3>
       {isRetest && (
         <Badge variant="warning" size="sm" className="flex items-center gap-1">
-          <Icon name="refresh-cw" className="w-3 h-3" />
+          <Icon name="loading" className="w-3 h-3" />
           Re-test #{retestNumber}
         </Badge>
       )}
       {isSampleRecollection && !isRetest && (
         <Badge variant="warning" size="sm" className="flex items-center gap-1">
-          <Icon name="refresh-cw" className="w-3 h-3" />
+          <Icon name="loading" className="w-3 h-3" />
           Re-collect #{sampleRecollectionAttempt}
         </Badge>
       )}

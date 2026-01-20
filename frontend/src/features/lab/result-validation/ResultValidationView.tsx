@@ -36,10 +36,11 @@ export const ResultValidation: React.FC = () => {
       const patientName = getPatientName(order.patientId, patientsContext.patients);
 
       return order.tests
-        .filter(test => 
-          test.status === 'completed' && 
-          !test.validatedBy &&
-          test.status !== 'superseded'  // Filter out superseded tests
+        .filter(test =>
+          // Filter for tests awaiting validation (completed but not yet validated)
+          // Superseded tests are already excluded by status check
+          test.status === 'completed' &&
+          !test.validatedBy
         )
         .map(test => {
           const testName = getTestName(test.testCode, testsContext.tests);
@@ -87,6 +88,19 @@ export const ResultValidation: React.FC = () => {
     setComments(prev => ({ ...prev, [commentKey]: value }));
   }, []);
 
+  /**
+   * Handle validation (approval or rejection) of test results.
+   * 
+   * @param orderId - Order ID
+   * @param testCode - Test code
+   * @param approve - True for approval, false for rejection
+   * @param rejectionNotes - Reason for rejection (if rejecting)
+   * @param rejectionType - Type of rejection action (if rejecting)
+   * 
+   * NOTE: When called with approve=false and BOTH rejectionNotes and rejectionType
+   * are undefined, this indicates the rejection was already performed by the
+   * RejectionDialog and we only need to refresh the data.
+   */
   const handleValidate = useCallback(async (
     orderId: string,
     testCode: string,
@@ -115,26 +129,37 @@ export const ResultValidation: React.FC = () => {
         await ordersContext.refreshOrders();
         toast.success('Results approved');
       } else {
-        // Use the new reject endpoint for proper tracking
-        if (!rejectionNotes) {
-          const confirmed = window.confirm('Are you sure you want to reject these results?');
-          if (!confirmed) {
-            setIsValidating(prev => ({ ...prev, [commentKey]: false }));
-            return;
+        // Check if the rejection was already performed by the RejectionDialog.
+        // When both rejectionNotes and rejectionType are undefined, the dialog
+        // already called the API and we only need to refresh the data.
+        const alreadyRejected = rejectionNotes === undefined && rejectionType === undefined;
+
+        if (alreadyRejected) {
+          // Rejection was already performed by RejectionDialog - just refresh
+          await ordersContext.refreshOrders();
+          toast.success('Results rejected');
+        } else {
+          // Legacy path: rejection not yet performed, we need to call the API
+          if (!rejectionNotes) {
+            const confirmed = window.confirm('Are you sure you want to reject these results?');
+            if (!confirmed) {
+              setIsValidating(prev => ({ ...prev, [commentKey]: false }));
+              return;
+            }
           }
+
+          const rejectType = rejectionType || 're-test';  // Default to re-test
+          await resultAPI.rejectResults(orderId, testCode, {
+            rejectionReason: rejectionNotes || 'Rejected by validator',
+            rejectionType: rejectType,
+          });
+          await ordersContext.refreshOrders();
+
+          const message = rejectType === 're-collect'
+            ? 'Sample rejected - new collection required'
+            : 'Results rejected - re-test created';
+          toast.error(message);
         }
-
-        const rejectType = rejectionType || 're-test';  // Default to re-test
-        await resultAPI.rejectResults(orderId, testCode, {
-          rejectionReason: rejectionNotes || 'Rejected by validator',
-          rejectionType: rejectType,
-        });
-        await ordersContext.refreshOrders();
-
-        const message = rejectType === 're-collect'
-          ? 'Sample rejected - new collection required'
-          : 'Results rejected - re-test created';
-        toast.error(message);
       }
 
       // Clear local state

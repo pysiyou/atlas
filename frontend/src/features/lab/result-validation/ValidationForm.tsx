@@ -40,13 +40,13 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   const hasFlags = flags && flags.length > 0;
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className="bg-gray-50 rounded border border-gray-200 p-4">
       {/* Results Grid */}
       {hasResults && (
         <div className="mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2">
             {Object.entries(results).map(([key, result]) => (
-              <div key={key} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0 md:last:border-b-0">
+              <div key={key} className="flex items-center justify-between py-2">
                 <span className="text-xs font-medium text-gray-600">{key}</span>
                 <div className="flex items-center gap-3">
                   <span className={`text-xs ${
@@ -91,7 +91,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
       )}
 
       {/* Validation Notes */}
-      <div className="space-y-3">
+      <div className="space-y-3 border-t border-gray-200 pt-4">
         <Textarea
           label="Validation Notes"
           value={comments}
