@@ -55,7 +55,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
           </div>
           <button
             onClick={onToggleCollapse}
-            className="shrink-0 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+            className="shrink-0 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors cursor-pointer"
             title="Collapse Sidebar"
           >
             <ChevronsLeft size={20} />

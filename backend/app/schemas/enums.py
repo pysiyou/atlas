@@ -5,9 +5,9 @@ import enum
 
 
 class Gender(str, enum.Enum):
+    """Gender enum - only male and female values"""
     MALE = "male"
     FEMALE = "female"
-    OTHER = "other"
 
 
 class AffiliationDuration(int, enum.Enum):
@@ -96,6 +96,7 @@ class TestStatus(str, enum.Enum):
     COMPLETED = "completed"
     VALIDATED = "validated"
     REJECTED = "rejected"
+    SUPERSEDED = "superseded"  # Original test after retest is created during result validation rejection
 
 
 class OrderStatus(str, enum.Enum):

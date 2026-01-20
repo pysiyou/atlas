@@ -79,7 +79,7 @@ export const RangeFilter: React.FC<RangeFilterProps> = ({
         {!isDefault && (
           <button
             onClick={handleReset}
-            className="text-xs text-sky-600 hover:text-sky-700 transition-colors"
+            className="text-xs text-sky-600 hover:text-sky-700 transition-colors cursor-pointer"
           >
             Reset
           </button>

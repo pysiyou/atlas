@@ -52,7 +52,7 @@ export const TabsList: React.FC<TabsListProps> = ({
       {tabs.map(tab => {
         const isActive = activeTabId === tab.id;
         
-        let buttonClass = 'whitespace-nowrap flex items-center justify-center transition-all duration-200 font-medium text-xs ';
+        let buttonClass = 'whitespace-nowrap flex items-center justify-center transition-all duration-200 font-medium text-xs cursor-pointer ';
         
         if (variant === 'underline') {
           buttonClass += `px-4 py-2 border-b-2 -mb-px ${

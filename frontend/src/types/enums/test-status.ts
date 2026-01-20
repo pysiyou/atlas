@@ -14,6 +14,7 @@ export const TEST_STATUS_VALUES = [
   'completed',
   'validated',
   'rejected',
+  'superseded',  // Original test after retest is created during result validation rejection
 ] as const;
 
 // 2. TYPE - Derived from values
@@ -27,6 +28,7 @@ export const TEST_STATUS_CONFIG: Record<TestStatus, { label: string }> = {
   completed: { label: 'Completed' },
   validated: { label: 'Validated' },
   rejected: { label: 'Rejected' },
+  superseded: { label: 'Superseded' },
 };
 
 // 4. OPTIONS - For dropdowns/selects

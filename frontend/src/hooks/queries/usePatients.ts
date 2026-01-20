@@ -11,11 +11,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { patientAPI } from '@/services/api/patients';
+import { useAuth } from '@/features/auth/useAuth';
 import type { Patient } from '@/types';
 
 /**
  * Hook to fetch and cache all patients.
  * Uses semi-static cache - data is considered fresh for 5 minutes.
+ * Only fetches when user is authenticated to prevent race conditions on login.
  * 
  * @returns Query result containing patients array and loading state
  * 
@@ -25,9 +27,12 @@ import type { Patient } from '@/types';
  * ```
  */
 export function usePatientsList() {
+  const { isAuthenticated } = useAuth();
+
   const query = useQuery({
     queryKey: queryKeys.patients.list(),
     queryFn: () => patientAPI.getAll(),
+    enabled: isAuthenticated, // Only fetch when authenticated
     ...cacheConfig.semiStatic, // 5 min stale, 30 min gc
   });
 
@@ -44,6 +49,7 @@ export function usePatientsList() {
 
 /**
  * Hook to fetch a single patient by ID.
+ * Only fetches when user is authenticated to prevent race conditions on login.
  * 
  * @param patientId - The patient ID to fetch
  * @returns Query result with patient data
@@ -54,10 +60,12 @@ export function usePatientsList() {
  * ```
  */
 export function usePatient(patientId: string | undefined) {
+  const { isAuthenticated } = useAuth();
+
   const query = useQuery({
     queryKey: queryKeys.patients.byId(patientId ?? ''),
     queryFn: () => patientAPI.getById(patientId!),
-    enabled: !!patientId,
+    enabled: isAuthenticated && !!patientId, // Only fetch when authenticated
     ...cacheConfig.semiStatic,
   });
 

@@ -6,8 +6,30 @@
 import React, { useState, type ReactNode } from 'react';
 import type { AuthUser, UserRole } from '@/types';
 import { AuthContext, type AuthContextType } from './AuthContext';
-import { apiClient } from '@/services/api/client';
+import { apiClient, type APIError } from '@/services/api/client';
 import { logger } from '@/utils/logger';
+
+/**
+ * Custom error class for authentication failures
+ * Provides specific error codes for different failure scenarios
+ */
+export class AuthError extends Error {
+  /** Error code for categorizing the error type */
+  code: 'INVALID_CREDENTIALS' | 'NETWORK_ERROR' | 'SERVER_ERROR' | 'TIMEOUT' | 'UNKNOWN';
+  /** HTTP status code if available */
+  status?: number;
+  
+  constructor(
+    message: string, 
+    code: AuthError['code'], 
+    status?: number
+  ) {
+    super(message);
+    this.name = 'AuthError';
+    this.code = code;
+    this.status = status;
+  }
+}
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -33,6 +55,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   /**
    * Login function - authenticates with backend API
+   * @param username - User's username
+   * @param password - User's password
+   * @returns true if login succeeded
+   * @throws AuthError with specific error code for different failure types
    */
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
@@ -67,10 +93,90 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return true;
     } catch (error) {
       logger.error('Login failed', error instanceof Error ? error : undefined);
+      
       // Clear any tokens on error
       sessionStorage.removeItem('atlas_access_token');
       sessionStorage.removeItem('atlas_refresh_token');
-      return false;
+      
+      // Determine error type and throw appropriate AuthError
+      const apiError = error as APIError;
+      
+      // Check if it's a network/connection error (no status means no HTTP response)
+      if (!apiError.status) {
+        const errorMessage = apiError.message?.toLowerCase() || '';
+        
+        // Check for timeout errors
+        if (errorMessage.includes('abort') || errorMessage.includes('timeout')) {
+          throw new AuthError(
+            'Request timed out. Please check your connection and try again.',
+            'TIMEOUT'
+          );
+        }
+        
+        // Check for network/connection errors
+        if (
+          errorMessage.includes('fetch') ||
+          errorMessage.includes('network') ||
+          errorMessage.includes('failed to fetch') ||
+          errorMessage.includes('connection') ||
+          errorMessage.includes('econnrefused') ||
+          errorMessage === 'load failed' ||
+          errorMessage === 'networkerror when attempting to fetch resource'
+        ) {
+          throw new AuthError(
+            'Unable to connect to the server. Please check if the server is running.',
+            'NETWORK_ERROR'
+          );
+        }
+        
+        // Generic error without status - likely network-related
+        throw new AuthError(
+          'Unable to connect to the server. Please try again later.',
+          'NETWORK_ERROR'
+        );
+      }
+      
+      // HTTP 401 - Invalid credentials
+      if (apiError.status === 401) {
+        throw new AuthError(
+          'Invalid username or password',
+          'INVALID_CREDENTIALS',
+          401
+        );
+      }
+      
+      // HTTP 403 - Forbidden (account disabled, etc.)
+      if (apiError.status === 403) {
+        throw new AuthError(
+          apiError.message || 'Access denied. Your account may be disabled.',
+          'INVALID_CREDENTIALS',
+          403
+        );
+      }
+      
+      // HTTP 5xx - Server errors
+      if (apiError.status && apiError.status >= 500) {
+        throw new AuthError(
+          'Server error occurred. Please try again later.',
+          'SERVER_ERROR',
+          apiError.status
+        );
+      }
+      
+      // Other HTTP errors (400, 404, etc.)
+      if (apiError.status && apiError.status >= 400) {
+        throw new AuthError(
+          apiError.message || 'Login request failed. Please try again.',
+          'UNKNOWN',
+          apiError.status
+        );
+      }
+      
+      // Fallback for unexpected errors
+      throw new AuthError(
+        'An unexpected error occurred. Please try again.',
+        'UNKNOWN'
+      );
     }
   };
 

@@ -72,7 +72,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
             <p className="text-xs text-gray-500">{subtitle}</p>
           )}
         </div>
-        <button onClick={onCancel} className="text-gray-400 hover:text-gray-600 mt-0.5">
+        <button onClick={onCancel} className="text-gray-400 hover:text-gray-600 mt-0.5 cursor-pointer">
           <Icon name="close" className="w-4 h-4" />
         </button>
       </div>
@@ -132,6 +132,10 @@ interface RadioCardProps {
   variant?: 'blue' | 'red';
   /** Radio input name for grouping */
   name: string;
+  /** Whether the option is disabled */
+  disabled?: boolean;
+  /** Optional reason why the option is disabled (shown as tooltip) */
+  disabledReason?: string;
 }
 
 export const RadioCard: React.FC<RadioCardProps> = ({
@@ -141,41 +145,65 @@ export const RadioCard: React.FC<RadioCardProps> = ({
   description,
   variant = 'blue',
   name,
+  disabled = false,
+  disabledReason,
 }) => {
   const selectedStyles = variant === 'red'
     ? 'bg-red-50 border-red-200 ring-1 ring-red-200'
     : 'bg-blue-50 border-blue-200 ring-1 ring-blue-200';
   
-  const labelColor = variant === 'red'
-    ? (selected ? 'text-red-900' : 'text-gray-900')
-    : (selected ? 'text-blue-900' : 'text-gray-900');
+  const disabledStyles = 'bg-gray-100 border-gray-200 cursor-not-allowed opacity-60';
   
-  const descColor = variant === 'red'
-    ? (selected ? 'text-red-700' : 'text-gray-500')
-    : (selected ? 'text-blue-700' : 'text-gray-500');
+  const labelColor = disabled
+    ? 'text-gray-400'
+    : variant === 'red'
+      ? (selected ? 'text-red-900' : 'text-gray-900')
+      : (selected ? 'text-blue-900' : 'text-gray-900');
+  
+  const descColor = disabled
+    ? 'text-gray-400'
+    : variant === 'red'
+      ? (selected ? 'text-red-700' : 'text-gray-500')
+      : (selected ? 'text-blue-700' : 'text-gray-500');
 
   const radioColor = variant === 'red' ? 'text-red-600 focus:ring-red-500' : 'text-blue-600 focus:ring-blue-500';
+
+  const handleClick = () => {
+    if (!disabled) {
+      onClick();
+    }
+  };
 
   return (
     <div
       className={`
-        relative flex items-start p-3 cursor-pointer rounded-lg border transition-all duration-200
-        ${selected ? selectedStyles : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'}
+        relative flex items-start p-3 rounded-lg border transition-all duration-200
+        ${disabled 
+          ? disabledStyles 
+          : selected 
+            ? selectedStyles 
+            : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50 cursor-pointer'
+        }
       `}
-      onClick={onClick}
+      onClick={handleClick}
+      title={disabled ? disabledReason : undefined}
     >
       <div className="flex items-center h-4 mt-0.5">
         <input
           type="radio"
           name={name}
           checked={selected}
-          onChange={onClick}
-          className={`h-3.5 w-3.5 border-gray-300 ${radioColor}`}
+          onChange={handleClick}
+          disabled={disabled}
+          className={`h-3.5 w-3.5 border-gray-300 ${radioColor} ${disabled ? 'cursor-not-allowed' : ''}`}
         />
       </div>
       <div className="ml-2.5">
         <span className={`block text-xs font-medium ${labelColor}`}>{label}</span>
         <span className={`block text-[10px] mt-0.5 ${descColor}`}>{description}</span>
+        {disabled && disabledReason && (
+          <span className="block text-[10px] mt-1 text-red-500 font-medium">{disabledReason}</span>
+        )}
       </div>
     </div>
   );

@@ -195,15 +195,15 @@ export const DateFilter: React.FC<DateFilterProps> = ({
         <button 
             onClick={handlePrevClick}
             disabled={isPrevDisabled}
-            className="p-1 hover:bg-gray-100 rounded text-gray-500 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center"
+            className="p-1 hover:bg-gray-100 rounded text-gray-500 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
         >
             <Icon name="chevron-left" className="w-4 h-4" />
         </button>
         <button 
           onClick={handleTitleClick}
           className={cn(
-            "text-sm font-semibold text-gray-700 hover:bg-gray-50 px-2 py-1 rounded transition-colors",
-            view === 'years' && "pointer-events-none hover:bg-transparent"
+            "text-sm font-semibold text-gray-700 hover:bg-gray-50 px-2 py-1 rounded transition-colors cursor-pointer",
+            view === 'years' && "pointer-events-none hover:bg-transparent cursor-default"
           )}
         >
             {title}
@@ -211,7 +211,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
         <button 
             onClick={handleNextClick}
             disabled={isNextDisabled}
-            className="p-1 hover:bg-gray-100 rounded text-gray-500 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center"
+            className="p-1 hover:bg-gray-100 rounded text-gray-500 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
         >
             <Icon name="chevron-right" className="w-4 h-4" />
         </button>
@@ -262,7 +262,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
             {value && (
                 <button
                 onClick={handleClear}
-                className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center"
+                className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer"
                 >
                 <Icon name="close" className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
                 </button>
@@ -299,7 +299,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                             onClick={() => handleDateClick(day)}
                             disabled={disabled}
                             className={cn(
-                                "h-8 w-8 text-xs rounded-full flex items-center justify-center transition-colors relative",
+                                "h-8 w-8 text-xs rounded-full flex items-center justify-center transition-colors relative cursor-pointer",
                                 disabled && "opacity-30 cursor-not-allowed",
                                 !isCurrentMonth && "text-gray-300",
                                 isCurrentMonth && !selected && !inRange && !disabled && "text-gray-700 hover:bg-gray-100",
@@ -335,7 +335,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                     }}
                     disabled={disabled}
                     className={cn(
-                        "h-10 text-sm rounded flex items-center justify-center transition-colors",
+                        "h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer",
                          disabled && "opacity-30 cursor-not-allowed",
                         !disabled && isSameMonth(month, new Date()) && "text-sky-600 font-bold bg-sky-50",
                         !disabled && isSameMonth(month, currentMonth) ? "bg-sky-100 text-sky-700" : "hover:bg-gray-100 text-gray-700",
@@ -364,7 +364,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                         }}
                         disabled={disabled}
                         className={cn(
-                            "h-10 text-sm rounded flex items-center justify-center transition-colors",
+                            "h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer",
                             disabled && "opacity-30 cursor-not-allowed",
                             !disabled && year.getFullYear() === new Date().getFullYear() && "text-sky-600 font-bold bg-sky-50",
                             !disabled && year.getFullYear() === currentMonth.getFullYear() ? "bg-sky-100 text-sky-700" : "hover:bg-gray-100 text-gray-700",
@@ -386,7 +386,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                  setCurrentMonth(today);
                  setView('days');
                }}
-               className="hover:text-sky-600 font-medium px-1 py-0.5 rounded hover:bg-sky-50 transition-colors"
+               className="hover:text-sky-600 font-medium px-1 py-0.5 rounded hover:bg-sky-50 transition-colors cursor-pointer"
              >
                Today
              </button>
@@ -397,7 +397,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                  setCurrentMonth(yesterday);
                  setView('days');
                }}
-               className="hover:text-sky-600 font-medium px-1 py-0.5 rounded hover:bg-sky-50 transition-colors"
+               className="hover:text-sky-600 font-medium px-1 py-0.5 rounded hover:bg-sky-50 transition-colors cursor-pointer"
              >
                Yesterday
              </button>
@@ -409,7 +409,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                  setCurrentMonth(today);
                  setView('days');
                }}
-               className="hover:text-sky-600 font-medium px-1 py-0.5 rounded hover:bg-sky-50 transition-colors"
+               className="hover:text-sky-600 font-medium px-1 py-0.5 rounded hover:bg-sky-50 transition-colors cursor-pointer"
              >
                Last Week
              </button>

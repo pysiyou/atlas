@@ -39,7 +39,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 
   return (
     <Container
-      className={`relative inline-flex items-center justify-center ${className}`}
+      className={`relative inline-flex items-center justify-center ${onClick ? 'cursor-pointer' : ''} ${className}`}
       onClick={onClick}
     >
       {src && !imageError ? (

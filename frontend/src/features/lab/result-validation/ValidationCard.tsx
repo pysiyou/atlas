@@ -2,16 +2,18 @@
  * ResultValidationCard - Card component for result validation workflow
  * 
  * Displays test results with approval/rejection actions.
+ * Shows retest information and previous rejection history.
  */
 
 import React from 'react';
-import { Badge, Icon, IconButton } from '@/shared/ui';
+import { Badge, Icon, IconButton, Alert } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { formatDate } from '@/utils';
 import { useUserDisplay } from '@/hooks';
 import { LabCard, FlagsSection } from '../shared/LabCard';
 import { ResultRejectionPopover } from './ResultRejectionPopover';
 import { ResultStatusBadge } from '../shared/StatusBadges';
+import type { ResultRejectionRecord } from '@/types';
 
 interface TestWithContext {
   orderId: string;
@@ -31,6 +33,11 @@ interface TestWithContext {
   results?: Record<string, unknown>;
   flags?: string[];
   technicianNotes?: string;
+  // Retest tracking fields
+  isRetest?: boolean;
+  retestOfTestId?: string;
+  retestNumber?: number;
+  resultRejectionHistory?: ResultRejectionRecord[];
   [key: string]: unknown;
 }
 
@@ -61,6 +68,17 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
   const resultCount = Object.keys(test.results).length;
   const hasFlags = test.flags && test.flags.length > 0;
 
+  // Determine if this is a retest or recollection
+  const isRetest = test.isRetest === true;
+  const retestNumber = test.retestNumber || 0;
+  const rejectionHistory = test.resultRejectionHistory || [];
+  const lastRejection = rejectionHistory.length > 0 ? rejectionHistory[rejectionHistory.length - 1] : null;
+  
+  // Check if this has any rejection history (covers both re-test and re-collect scenarios)
+  const hasRejectionHistory = rejectionHistory.length > 0;
+  // For re-collect, the last rejection type will be 're-collect'
+  const isRecollection = lastRejection?.rejectionType === 're-collect';
+
   const handleCardClick = () => {
     if (onClick) {
       onClick();
@@ -72,9 +90,16 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
   };
 
   // Badges ordered by importance for validation workflow
+  // Note: Re-collect badge is shown in the rejection banner below, so we only show Re-test here
   const badges = (
     <>
       <h3 className="text-sm font-medium text-gray-900">{test.testName}</h3>
+      {isRetest && (
+        <Badge variant="warning" size="sm" className="flex items-center gap-1">
+          <Icon name="refresh-cw" className="w-3 h-3" />
+          Re-test #{retestNumber}
+        </Badge>
+      )}
       {hasFlags && (
         <Badge size="sm" variant="danger">
           {test.flags!.length} FLAG{test.flags!.length > 1 ? 'S' : ''}
@@ -145,9 +170,50 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
     </div>
   );
 
+  // Rejection banner (shows previous rejection info for both re-test and re-collect)
+  const rejectionBanner = hasRejectionHistory && lastRejection ? (
+    <Alert variant="warning" className="py-2">
+      <div className="space-y-0.5">
+        <p className="font-medium text-xs">
+          {isRetest 
+            ? `Re-test #${retestNumber} - Previous Result Rejected`
+            : `Re-collect #${rejectionHistory.length} - Previous Sample Rejected`
+          }
+        </p>
+        <p className="text-xxs opacity-90 leading-tight">
+          Reason: {lastRejection.rejectionReason}
+        </p>
+        {rejectionHistory.length > 1 && (
+          <p className="text-xxs opacity-75">
+            ({rejectionHistory.length} previous rejection{rejectionHistory.length > 1 ? 's' : ''})
+          </p>
+        )}
+      </div>
+    </Alert>
+  ) : undefined;
+
+  // Additional info for retest/recollection tracking
+  const rejectionTrackingInfo = hasRejectionHistory ? (
+    <div className="flex items-center gap-2 flex-wrap">
+      {isRetest && test.retestOfTestId && (
+        <Badge size="sm" variant="warning" className="flex items-center gap-1">
+          <Icon name="alert-circle" className="w-3 h-3" />
+          Re-test of {test.retestOfTestId}
+        </Badge>
+      )}
+      {isRecollection && !isRetest && (
+        <Badge size="sm" variant="warning" className="flex items-center gap-1">
+          <Icon name="alert-circle" className="w-3 h-3" />
+          Recollection attempt #{rejectionHistory.length}
+        </Badge>
+      )}
+    </div>
+  ) : undefined;
+
   return (
     <LabCard
       onClick={handleCardClick}
+      className={hasRejectionHistory ? 'border-l-4 border-l-yellow-400' : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,
@@ -158,9 +224,15 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
         collectedAt: test.collectedAt,
         collectedBy: test.collectedBy,
       }}
-      additionalInfo={additionalInfo}
+      additionalInfo={
+        <>
+          {additionalInfo}
+          {rejectionTrackingInfo}
+        </>
+      }
       badges={badges}
       actions={actions}
+      recollectionBanner={rejectionBanner}
       content={content}
       contentTitle={`Results (${resultCount})`}
       flags={hasFlags ? <FlagsSection flags={test.flags!} /> : undefined}

@@ -11,6 +11,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { getPayments, getPayment, getPaymentsByOrder, createPayment } from '@/services/api/payments';
+import { useAuth } from '@/features/auth/useAuth';
 import type { PaymentMethod } from '@/types';
 
 /**
@@ -24,6 +25,7 @@ export interface PaymentsFilters {
 /**
  * Hook to fetch and cache all payments.
  * Uses dynamic cache - data is considered fresh for 30 seconds.
+ * Only fetches when user is authenticated to prevent race conditions on login.
  * 
  * @param filters - Optional filters to apply
  * @returns Query result containing payments array and loading state
@@ -34,9 +36,12 @@ export interface PaymentsFilters {
  * ```
  */
 export function usePaymentsList(filters?: PaymentsFilters) {
+  const { isAuthenticated } = useAuth();
+
   const query = useQuery({
     queryKey: queryKeys.payments.list(filters),
     queryFn: () => getPayments(filters),
+    enabled: isAuthenticated, // Only fetch when authenticated
     ...cacheConfig.dynamic, // 30s stale, 5 min gc
   });
 
@@ -53,6 +58,7 @@ export function usePaymentsList(filters?: PaymentsFilters) {
 
 /**
  * Hook to fetch a single payment by ID.
+ * Only fetches when user is authenticated to prevent race conditions on login.
  * 
  * @param paymentId - The payment ID to fetch
  * @returns Query result with payment data
@@ -63,10 +69,12 @@ export function usePaymentsList(filters?: PaymentsFilters) {
  * ```
  */
 export function usePayment(paymentId: string | undefined) {
+  const { isAuthenticated } = useAuth();
+
   const query = useQuery({
     queryKey: queryKeys.payments.byId(paymentId ?? ''),
     queryFn: () => getPayment(paymentId!),
-    enabled: !!paymentId,
+    enabled: isAuthenticated && !!paymentId, // Only fetch when authenticated
     ...cacheConfig.dynamic,
   });
 
@@ -82,15 +90,18 @@ export function usePayment(paymentId: string | undefined) {
 
 /**
  * Hook to get payments by order ID.
+ * Only fetches when user is authenticated to prevent race conditions on login.
  * 
  * @param orderId - The order ID to filter by
  * @returns Array of payments for the order
  */
 export function usePaymentsByOrder(orderId: string | undefined) {
+  const { isAuthenticated } = useAuth();
+
   const query = useQuery({
     queryKey: queryKeys.payments.byOrder(orderId ?? ''),
     queryFn: () => getPaymentsByOrder(orderId!),
-    enabled: !!orderId,
+    enabled: isAuthenticated && !!orderId, // Only fetch when authenticated
     ...cacheConfig.dynamic,
   });
 

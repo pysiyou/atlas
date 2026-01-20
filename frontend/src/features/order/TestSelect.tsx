@@ -79,7 +79,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                     <button
                       type="button"
                       onClick={() => onToggleTest(testCode)}
-                      className="p-1 text-red-600 hover:bg-red-50 rounded"
+                      className="p-1 text-red-600 hover:bg-red-50 rounded cursor-pointer"
                     >
                       <X size={16} />
                     </button>
@@ -98,7 +98,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                 key={test.code}
                 type="button"
                 onClick={() => onToggleTest(test.code)}
-                className={`w-full text-left p-3 hover:bg-gray-50 transition-colors ${
+                className={`w-full text-left p-3 hover:bg-gray-50 transition-colors cursor-pointer ${
                   isSelected ? 'bg-sky-50' : ''
                 }`}
               >

@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks';
 import { ROUTES } from '@/config';
 import { Icon } from '@/shared/ui';
+import { AuthError } from './AuthProvider';
 
 /**
  * Configuration for each floating icon element
@@ -134,6 +135,7 @@ export const LoginForm: React.FC = () => {
   /**
    * Handle form submission
    * Validates inputs and attempts authentication
+   * Handles different error types with appropriate user messaging
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -152,11 +154,48 @@ export const LoginForm: React.FC = () => {
 
       if (success) {
         navigate(ROUTES.DASHBOARD);
-      } else {
-        setError('Invalid username or password');
       }
-    } catch {
-      setError('An error occurred during login. Please try again.');
+    } catch (err) {
+      // Handle AuthError with specific error codes
+      if (err instanceof AuthError) {
+        switch (err.code) {
+          case 'INVALID_CREDENTIALS':
+            setError(err.message);
+            break;
+          case 'NETWORK_ERROR':
+            setError(err.message);
+            break;
+          case 'TIMEOUT':
+            setError(err.message);
+            break;
+          case 'SERVER_ERROR':
+            setError(err.message);
+            break;
+          default:
+            setError(err.message || 'An unexpected error occurred. Please try again.');
+        }
+      } else if (err instanceof Error) {
+        // Handle generic Error objects
+        const errorMessage = err.message?.toLowerCase() || '';
+        
+        // Detect network/connection errors from generic Error messages
+        if (
+          errorMessage.includes('fetch') ||
+          errorMessage.includes('network') ||
+          errorMessage.includes('failed to fetch') ||
+          errorMessage.includes('connection') ||
+          errorMessage === 'load failed'
+        ) {
+          setError('Unable to connect to the server. Please check if the server is running.');
+        } else if (errorMessage.includes('abort') || errorMessage.includes('timeout')) {
+          setError('Request timed out. Please check your connection and try again.');
+        } else {
+          setError('An error occurred during login. Please try again.');
+        }
+      } else {
+        // Fallback for unknown error types
+        setError('An unexpected error occurred. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -286,10 +325,10 @@ export const LoginForm: React.FC = () => {
               {/* Logo container with animated ring */}
               <div className="relative">
                 <div 
-                  className="absolute inset-0 rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-500 blur-xl opacity-50"
+                  className="absolute inset-0 rounded-lg bg-gradient-to-br from-sky-400 to-indigo-500 blur-xl opacity-50"
                   style={{ animation: 'pulse-ring 3s ease-in-out infinite' }}
                 />
-                <div className="relative w-16 h-16 bg-gradient-to-br from-sky-400 via-sky-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-sky-500/30 transform hover:scale-105 transition-transform duration-300">
+                <div className="relative w-16 h-16 bg-gradient-to-br from-sky-400 via-sky-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-2xl shadow-sky-500/30 transform hover:scale-105 transition-transform duration-300">
                   <Icon name="app-logo" className="w-9 h-9te" />
                 </div>
               </div>
@@ -379,17 +418,15 @@ export const LoginForm: React.FC = () => {
         >
           {/* Card with sophisticated glass effect */}
           <div className="relative">
-            {/* Glow effect behind card */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-sky-500/20 via-indigo-500/20 to-sky-500/20 rounded-3xl blur-xl opacity-50 animate-gradient" />
             
             {/* Main card */}
-            <div className="relative bg-slate-900/80 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/10 p-8 sm:p-10">
+            <div className="relative bg-slate-900/80 backdrop-blur-2xl rounded-lg shadow-2xl border border-white/10 p-8 sm:p-10">
               {/* Subtle top accent line */}
               <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-sky-400/50 to-transparent" />
 
               {/* Mobile logo - only shown on smaller screens */}
               <div className="flex lg:hidden items-center gap-3 mb-8">
-                <div className="w-11 h-11 bg-gradient-to-br from-sky-400 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-sky-500/25">
+                <div className="w-11 h-11 bg-gradient-to-br from-sky-400 to-indigo-600 rounded flex items-center justify-center shadow-lg shadow-sky-500/25">
                   <Icon name="app-logo" className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -410,7 +447,7 @@ export const LoginForm: React.FC = () => {
 
               {/* Error message display */}
               {error && (
-                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl animate-[shake_0.5s_ease-in-out]">
+                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg animate-[shake_0.5s_ease-in-out]">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0">
                       <Icon name="alert-circle" className="h-4 w-4 text-red-400" />
@@ -449,11 +486,9 @@ export const LoginForm: React.FC = () => {
                         if (error) setError('');
                       }}
                       placeholder="Enter your username"
-                      className="font-body block w-full pl-12 pr-4 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500/50 focus:bg-slate-800 transition-all duration-200"
+                      className="font-body block w-full pl-12 pr-4 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500/50 focus:bg-slate-800 transition-all duration-200"
                       required
                     />
-                    {/* Focus ring decoration */}
-                    <div className="absolute inset-0 rounded-xl bg-sky-500/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none" />
                   </div>
                 </div>
 
@@ -483,20 +518,18 @@ export const LoginForm: React.FC = () => {
                         if (error) setError('');
                       }}
                       placeholder="Enter your password"
-                      className="font-body block w-full pl-12 pr-12 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500/50 focus:bg-slate-800 transition-all duration-200"
+                      className="font-body block w-full pl-12 pr-12 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500/50 focus:bg-slate-800 transition-all duration-200"
                       required
                     />
                     {/* Password visibility toggle */}
                     <button
                       type="button"
                       onClick={togglePasswordVisibility}
-                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-500 hover:text-sky-400 transition-colors duration-200 z-10"
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-500 hover:text-sky-400 transition-colors duration-200 z-10 cursor-pointer"
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
                       <Icon name="eye" className="h-5 w-5" />
                     </button>
-                    {/* Focus ring decoration */}
-                    <div className="absolute inset-0 rounded-xl bg-sky-500/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none" />
                   </div>
                 </div>
 
@@ -504,7 +537,7 @@ export const LoginForm: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="relative w-full mt-2 font-body font-semibold py-4 px-6 rounded-xl text-white overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sky-400/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+                  className="relative w-full mt-2 font-body font-semibold py-4 px-6 rounded-lg text-white overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sky-400/50 focus:ring-offset-2 focus:ring-offset-slate-900"
                 >
                   {/* Button gradient background */}
                   <div className="absolute inset-0 bg-gradient-to-r from-sky-500 via-sky-600 to-indigo-600 transition-all duration-300 group-hover:from-sky-400 group-hover:via-sky-500 group-hover:to-indigo-500" />

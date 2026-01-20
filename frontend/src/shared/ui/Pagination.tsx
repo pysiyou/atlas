@@ -60,7 +60,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             <select
                 value={pageSize}
                 onChange={(e) => onPageSizeChange(Number(e.target.value))}
-                className="block w-full py-1 pl-3 pr-8 text-xs border border-gray-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 rounded"
+                className="block w-full py-1 pl-3 pr-8 text-xs border border-gray-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 rounded cursor-pointer"
             >
                 {pageSizeOptions.map((option) => (
                     <option key={option} value={option} className="text-xs">
@@ -78,7 +78,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-1 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-1 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <ChevronLeft className="w-5 h-5 text-gray-500" />
         </button>
@@ -91,7 +91,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                     ) : (
                         <button
                             onClick={() => onPageChange(page as number)}
-                            className={`px-3 py-1 text-xs rounded ${
+                            className={`px-3 py-1 text-xs rounded cursor-pointer ${
                                 page === currentPage
                                     ? 'bg-sky-600 text-white font-medium'
                                     : 'text-gray-700 hover:bg-gray-100'
@@ -107,7 +107,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="p-1 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-1 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <ChevronRight className="w-5 h-5 text-gray-500" />
         </button>

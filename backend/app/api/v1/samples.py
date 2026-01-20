@@ -12,14 +12,15 @@ from app.models.user import User
 from app.models.sample import Sample
 from app.models.order import Order, OrderTest
 from app.schemas.sample import SampleResponse, SampleCollectRequest, SampleRejectRequest, RecollectionRequest
-from app.schemas.enums import SampleStatus, TestStatus, PriorityLevel, UserRole
-from app.services.id_generator import generate_id
+from app.schemas.enums import SampleStatus, TestStatus, UserRole
 from app.services.order_status_updater import update_order_status
+from app.services.sample_recollection import (
+    create_recollection_sample,
+    RecollectionError,
+    MAX_RECOLLECTION_ATTEMPTS
+)
 
 router = APIRouter()
-
-# Maximum recollection attempts before requiring supervisor escalation
-MAX_RECOLLECTION_ATTEMPTS = 3
 
 
 @router.get("/samples", response_model=List[SampleResponse])
@@ -223,7 +224,9 @@ def request_recollection(
     current_user: User = Depends(require_lab_tech)
 ):
     """
-    Request recollection for a rejected sample
+    Request recollection for a rejected sample.
+    Uses the shared sample_recollection service.
+    
     - Creates a NEW sample with a new ID
     - Links new sample to original via originalSampleId
     - Sets recollectionSampleId on the rejected sample
@@ -237,85 +240,26 @@ def request_recollection(
             detail=f"Sample {sampleId} not found"
         )
     
-    if original_sample.status != SampleStatus.REJECTED:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Only rejected samples can be recollected"
+    try:
+        # Use the shared recollection service
+        new_sample = create_recollection_sample(
+            db=db,
+            original_sample=original_sample,
+            recollection_reason=recollection_data.reason,
+            created_by=current_user.id,
+            update_order_tests=True
         )
-    
-    if original_sample.recollectionSampleId:
+        
+        db.commit()
+        db.refresh(new_sample)
+        
+        # Update order status
+        update_order_status(db, original_sample.orderId)
+        
+        return new_sample
+        
+    except RecollectionError as e:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Recollection already requested. New sample: {original_sample.recollectionSampleId}"
+            status_code=e.status_code,
+            detail=e.message
         )
-    
-    # Check recollection limit
-    rejection_count = len(original_sample.rejectionHistory or [])
-    if rejection_count >= MAX_RECOLLECTION_ATTEMPTS:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Maximum recollection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. Please escalate to supervisor."
-        )
-    
-    # Generate new sample ID
-    new_sample_id = generate_id("sample", db)
-    
-    # Calculate recollection attempt number
-    # Count: original (1) + number of rejections in history
-    recollection_attempt = len(original_sample.rejectionHistory or []) + 1
-    
-    # Create new sample inheriting from original
-    new_sample = Sample(
-        sampleId=new_sample_id,
-        orderId=original_sample.orderId,
-        sampleType=original_sample.sampleType,
-        status=SampleStatus.PENDING,
-        testCodes=original_sample.testCodes,
-        requiredVolume=original_sample.requiredVolume,
-        priority=PriorityLevel.URGENT,  # Escalate priority for recollections
-        requiredContainerTypes=original_sample.requiredContainerTypes,
-        requiredContainerColors=original_sample.requiredContainerColors,
-        
-        # Recollection tracking
-        isRecollection=True,
-        originalSampleId=sampleId,
-        recollectionReason=recollection_data.reason,
-        recollectionAttempt=recollection_attempt,
-        
-        # Copy rejection history from original sample
-        rejectionHistory=original_sample.rejectionHistory or [],
-        
-        # Metadata
-        createdAt=datetime.now(timezone.utc),
-        createdBy=current_user.id,
-        updatedBy=current_user.id
-    )
-    
-    # Update original sample to link to new recollection sample
-    original_sample.recollectionSampleId = new_sample_id
-    original_sample.updatedBy = current_user.id
-    
-    # Add new sample to database
-    db.add(new_sample)
-    
-    # Update order tests to point to new sample
-    order_tests = db.query(OrderTest).filter(
-        OrderTest.orderId == original_sample.orderId,
-        OrderTest.testCode.in_(original_sample.testCodes)
-    ).all()
-    
-    for test in order_tests:
-        test.status = TestStatus.PENDING
-        test.sampleId = new_sample_id
-        test.results = None  # Clear previous results for re-testing
-        test.resultEnteredAt = None
-        test.resultEnteredBy = None
-        test.technicianNotes = None
-    
-    db.commit()
-    db.refresh(new_sample)
-    
-    # Update order status
-    update_order_status(db, original_sample.orderId)
-    
-    return new_sample

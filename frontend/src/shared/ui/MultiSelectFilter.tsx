@@ -218,7 +218,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
           {selectedIds.length > 0 && (
             <button
               onClick={handleClear}
-              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center"
+              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer"
             >
               <Icon name="close" className="w-4 h-4 text-gray-400 hover:text-gray-600" />
             </button>

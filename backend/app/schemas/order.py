@@ -3,7 +3,30 @@ Pydantic schemas for Order
 """
 from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
+from typing import Literal
 from app.schemas.enums import OrderStatus, PaymentStatus, PriorityLevel, TestStatus
+
+
+class ResultRejectionRecord(BaseModel):
+    """
+    Record of a result rejection event during validation.
+    Stored in resultRejectionHistory array on OrderTest.
+    """
+    rejectedAt: datetime
+    rejectedBy: str
+    rejectionReason: str
+    rejectionType: Literal['re-test', 're-collect']  # 're-test' = same sample, 're-collect' = new sample needed
+
+
+class ResultRejectionRequest(BaseModel):
+    """
+    Request body for rejecting test results during validation.
+    """
+    rejectionReason: str = Field(..., min_length=1, max_length=1000, description="Reason for rejection")
+    rejectionType: Literal['re-test', 're-collect'] = Field(
+        ...,
+        description="'re-test' = re-run with same sample, 're-collect' = new sample needed"
+    )
 
 
 class OrderTestCreate(BaseModel):
@@ -28,6 +51,15 @@ class OrderTestResponse(BaseModel):
     validationNotes: str | None = None
     flags: list[str] | None = None
     technicianNotes: str | None = None
+    
+    # Re-test tracking fields
+    isRetest: bool = False
+    retestOfTestId: str | None = None  # Original test ID that was rejected
+    retestNumber: int = 0  # 0 = original, 1 = 1st retest, etc.
+    retestOrderTestId: str | None = None  # New test ID created after rejection
+    
+    # Result rejection history
+    resultRejectionHistory: list[ResultRejectionRecord] | None = None
     
     class Config:
         from_attributes = True

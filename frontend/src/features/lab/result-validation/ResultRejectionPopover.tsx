@@ -2,11 +2,15 @@
  * ResultRejectionPopover - Popover for rejecting test results
  * 
  * Allows validators to reject results with a reason and specify follow-up action.
+ * Disables "New Sample Required" option when max recollection attempts reached.
  */
 
 import React, { useState } from 'react';
 import { Popover, IconButton, Icon, Alert } from '@/shared/ui';
 import { PopoverForm, RadioCard } from '../shared/PopoverForm';
+
+/** Maximum recollection attempts before requiring supervisor escalation (matches backend) */
+const MAX_RECOLLECTION_ATTEMPTS = 3;
 
 interface ResultRejectionPopoverContentProps {
   onConfirm: (reason: string, type: 're-test' | 're-collect') => void;
@@ -14,6 +18,8 @@ interface ResultRejectionPopoverContentProps {
   testName?: string;
   testCode?: string;
   patientName?: string;
+  /** Current number of sample recollection attempts (from sample.recollectionAttempt or rejection history length) */
+  recollectionAttempts?: number;
 }
 
 export const ResultRejectionPopoverContent: React.FC<ResultRejectionPopoverContentProps> = ({
@@ -22,10 +28,14 @@ export const ResultRejectionPopoverContent: React.FC<ResultRejectionPopoverConte
   testName,
   testCode,
   patientName,
+  recollectionAttempts = 0,
 }) => {
   const [reason, setReason] = useState('');
   const [type, setType] = useState<'re-test' | 're-collect'>('re-test');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Check if recollection is disabled (max attempts reached)
+  const isRecollectionDisabled = recollectionAttempts >= MAX_RECOLLECTION_ATTEMPTS;
 
   const handleConfirm = async () => {
     if (!reason.trim()) return;
@@ -81,10 +91,16 @@ export const ResultRejectionPopoverContent: React.FC<ResultRejectionPopoverConte
           <RadioCard
             name="rejection-type"
             selected={type === 're-collect'}
-            onClick={() => setType('re-collect')}
+            onClick={() => !isRecollectionDisabled && setType('re-collect')}
             label="New Sample Required"
-            description="Reject current sample and request new collection."
+            description={
+              isRecollectionDisabled
+                ? `Maximum ${MAX_RECOLLECTION_ATTEMPTS} recollection attempts reached.`
+                : "Reject current sample and request new collection."
+            }
             variant="red"
+            disabled={isRecollectionDisabled}
+            disabledReason={isRecollectionDisabled ? "Please escalate to supervisor" : undefined}
           />
         </div>
       </div>
@@ -111,6 +127,8 @@ interface ResultRejectionPopoverProps {
   testCode?: string;
   patientName?: string;
   onReject: (reason: string, type: 're-test' | 're-collect') => void;
+  /** Current number of sample recollection attempts */
+  recollectionAttempts?: number;
 }
 
 export const ResultRejectionPopover: React.FC<ResultRejectionPopoverProps> = ({
@@ -118,6 +136,7 @@ export const ResultRejectionPopover: React.FC<ResultRejectionPopoverProps> = ({
   testCode,
   patientName,
   onReject,
+  recollectionAttempts,
 }) => (
   <Popover
     placement="bottom-end"
@@ -142,6 +161,7 @@ export const ResultRejectionPopover: React.FC<ResultRejectionPopoverProps> = ({
           testName={testName}
           testCode={testCode}
           patientName={patientName}
+          recollectionAttempts={recollectionAttempts}
         />
       </div>
     )}

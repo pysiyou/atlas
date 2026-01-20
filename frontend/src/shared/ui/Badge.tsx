@@ -5,7 +5,7 @@ export type BadgeVariant =
   // Base variants
   | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'error' | 'success' | 'warning' | 'info' | 'purple' | 'orange' | 'teal'
   // Order Statuses
-  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'rejected'
+  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'rejected' | 'superseded'
   // Sample Statuses
   | 'pending' | 'collected' | 'received' | 'accessioned' | 'stored' | 'disposed' | 'sample-collected'
   // Appointment Statuses
@@ -62,6 +62,7 @@ const VARIANT_STYLES: Record<string, string> = {
   'validated': 'bg-green-100 text-green-800 border-transparent',
   'reported': 'bg-gray-100 text-gray-800 border-transparent',
   'rejected': 'bg-red-100 text-red-800 border-transparent',
+  'superseded': 'bg-slate-200 text-slate-600 border-transparent line-through',  // Grayed out, struck-through for replaced tests
 
   // Sample Status Mappings
   'pending': 'bg-yellow-100 text-yellow-800 border-transparent',
@@ -160,6 +161,7 @@ const VARIANT_LABELS: Record<string, string> = {
   'in-progress': 'IN PROGRESS',
   'no-show': 'NO SHOW',
   'chronic-condition': 'CHRONIC',
+  'superseded': 'SUPERSEDED',  // Test replaced by retest
   // Payment method labels
   'credit-card': 'CREDIT CARD',
   'debit-card': 'DEBIT CARD',

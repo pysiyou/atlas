@@ -52,7 +52,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                   key={patient.id}
                   type="button"
                   onClick={() => onSelectPatient(patient)}
-                  className="w-full text-left p-3 hover:bg-gray-50 transition-colors"
+                  className="w-full text-left p-3 hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <div className="font-medium text-gray-900">{patient.fullName}</div>
                   <div className="text-sm text-gray-600">

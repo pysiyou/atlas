@@ -48,7 +48,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
           </div>
           <button
             onClick={onLogout}
-            className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+            className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
           >
             <LogOut size={16} />
             <span>Logout</span>
@@ -86,7 +86,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
               e.stopPropagation();
               onLogout();
             }}
-            className="shrink-0 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors ml-2"
+            className="shrink-0 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors ml-2 cursor-pointer"
             title="Logout"
           >
             <LogOut size={18} />

@@ -134,7 +134,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           {value && (value[0] !== min || value[1] !== max) && (
             <button
               onClick={handleClear}
-              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center"
+              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer"
             >
               <Icon name="close" className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
             </button>

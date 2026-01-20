@@ -2,6 +2,7 @@
  * ValidationDetailModal - Extended view for result validation
  * 
  * Provides a larger interface for validating test results with full review options.
+ * Shows previous rejection history for retests.
  */
 
 import React from 'react';
@@ -9,9 +10,10 @@ import { Badge, DetailField, Button, Icon, Popover } from '@/shared/ui';
 import { ValidationForm } from './ValidationForm';
 import { formatDate } from '@/utils';
 import { useUserDisplay } from '@/hooks';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { LabDetailModal, DetailSection, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
 import { ResultRejectionPopoverContent } from './ResultRejectionPopover';
+import { ResultRejectionSection } from '../result-entry/ResultRejectionSection';
 import type { TestWithContext } from '@/types';
 
 interface ValidationDetailModalProps {
@@ -45,6 +47,17 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   };
 
   const hasFlags = test.flags && test.flags.length > 0;
+  
+  // Determine if this is a retest or recollection
+  const isRetest = test.isRetest === true;
+  const retestNumber = test.retestNumber || 0;
+  const rejectionHistory = test.resultRejectionHistory || [];
+  
+  // Check if this has any rejection history (covers both re-test and re-collect scenarios)
+  const hasRejectionHistory = rejectionHistory.length > 0;
+  // For re-collect, the last rejection type will be 're-collect'
+  const lastRejection = hasRejectionHistory ? rejectionHistory[rejectionHistory.length - 1] : null;
+  const isRecollection = lastRejection?.rejectionType === 're-collect';
 
   return (
     <LabDetailModal
@@ -58,12 +71,26 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           priority={test.priority}
           status={test.status}
           extraBadges={
-            hasFlags && (
-              <Badge size="sm" variant="danger" className="flex items-center gap-1.5">
-                <AlertTriangle size={12} className="text-red-600" />
-                {test.flags!.length} flag{test.flags!.length !== 1 ? 's' : ''}
-              </Badge>
-            )
+            <>
+              {isRetest && (
+                <Badge size="sm" variant="warning" className="flex items-center gap-1.5">
+                  <RefreshCw size={12} />
+                  Re-test #{retestNumber}
+                </Badge>
+              )}
+              {isRecollection && !isRetest && (
+                <Badge size="sm" variant="warning" className="flex items-center gap-1.5">
+                  <RefreshCw size={12} />
+                  Re-collect #{rejectionHistory.length}
+                </Badge>
+              )}
+              {hasFlags && (
+                <Badge size="sm" variant="danger" className="flex items-center gap-1.5">
+                  <AlertTriangle size={12} className="text-red-600" />
+                  {test.flags!.length} flag{test.flags!.length !== 1 ? 's' : ''}
+                </Badge>
+              )}
+            </>
           }
         />
       }
@@ -119,16 +146,44 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
         </ModalFooter>
       }
     >
+      {/* Previous Rejection History - show for both retests and recollections */}
+      {hasRejectionHistory && (
+        <ResultRejectionSection
+          title={
+            isRetest 
+              ? `Previous Rejection${rejectionHistory.length > 1 ? ` (${rejectionHistory.length} attempts)` : ''}`
+              : `Recollection History (${rejectionHistory.length} attempt${rejectionHistory.length > 1 ? 's' : ''})`
+          }
+          rejectionHistory={rejectionHistory}
+          getUserName={getUserName}
+          showOnlyLatest={false}
+        />
+      )}
+
       {/* Validation Form */}
       <DetailSection
         title="Result Validation"
         headerRight={
-          hasFlags && (
-            <Badge size="sm" variant="danger" className="flex items-center gap-1">
-              <AlertTriangle size={12} />
-              Review Required
-            </Badge>
-          )
+          <>
+            {isRetest && (
+              <Badge size="sm" variant="warning" className="flex items-center gap-1 mr-2">
+                <RefreshCw size={12} />
+                Re-test #{retestNumber}
+              </Badge>
+            )}
+            {isRecollection && !isRetest && (
+              <Badge size="sm" variant="warning" className="flex items-center gap-1 mr-2">
+                <RefreshCw size={12} />
+                Re-collect #{rejectionHistory.length}
+              </Badge>
+            )}
+            {hasFlags && (
+              <Badge size="sm" variant="danger" className="flex items-center gap-1">
+                <AlertTriangle size={12} />
+                Review Required
+              </Badge>
+            )}
+          </>
         }
       >
         <ValidationForm

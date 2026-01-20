@@ -11,6 +11,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { orderAPI } from '@/services/api/orders';
+import { useAuth } from '@/features/auth/useAuth';
 import type { Order, OrderStatus, PaymentStatus, TestStatus } from '@/types';
 
 /**
@@ -25,6 +26,7 @@ export interface OrdersFilters {
 /**
  * Hook to fetch and cache all orders.
  * Uses dynamic cache - data is considered fresh for 30 seconds.
+ * Only fetches when user is authenticated to prevent race conditions on login.
  * 
  * @param filters - Optional filters to apply
  * @returns Query result containing orders array and loading state
@@ -35,9 +37,12 @@ export interface OrdersFilters {
  * ```
  */
 export function useOrdersList(filters?: OrdersFilters) {
+  const { isAuthenticated } = useAuth();
+
   const query = useQuery({
     queryKey: queryKeys.orders.list(filters),
     queryFn: () => orderAPI.getAll(),
+    enabled: isAuthenticated, // Only fetch when authenticated
     ...cacheConfig.dynamic, // 30s stale, 5 min gc
   });
 
@@ -72,6 +77,7 @@ export function useOrdersList(filters?: OrdersFilters) {
 
 /**
  * Hook to fetch a single order by ID.
+ * Only fetches when user is authenticated to prevent race conditions on login.
  * 
  * @param orderId - The order ID to fetch
  * @returns Query result with order data
@@ -82,10 +88,12 @@ export function useOrdersList(filters?: OrdersFilters) {
  * ```
  */
 export function useOrder(orderId: string | undefined) {
+  const { isAuthenticated } = useAuth();
+
   const query = useQuery({
     queryKey: queryKeys.orders.byId(orderId ?? ''),
     queryFn: () => orderAPI.getById(orderId!),
-    enabled: !!orderId,
+    enabled: isAuthenticated && !!orderId, // Only fetch when authenticated
     ...cacheConfig.dynamic,
   });
 

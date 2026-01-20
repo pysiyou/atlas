@@ -28,6 +28,7 @@ export const ResultValidation: React.FC = () => {
   const [isValidating, setIsValidating] = useState<Record<string, boolean>>({});
 
   // Build list of tests awaiting validation
+  // Excludes superseded tests (those replaced by retests)
   const allTests: TestWithContext[] = useMemo(() => {
     if (!ordersContext || !testsContext || !patientsContext || !samplesContext) return [];
 
@@ -35,7 +36,11 @@ export const ResultValidation: React.FC = () => {
       const patientName = getPatientName(order.patientId, patientsContext.patients);
 
       return order.tests
-        .filter(test => test.status === 'completed' && !test.validatedBy)
+        .filter(test => 
+          test.status === 'completed' && 
+          !test.validatedBy &&
+          test.status !== 'superseded'  // Filter out superseded tests
+        )
         .map(test => {
           const testName = getTestName(test.testCode, testsContext.tests);
           const sampleType = getTestSampleType(test.testCode, testsContext.tests);
@@ -60,6 +65,17 @@ export const ResultValidation: React.FC = () => {
             resultEnteredAt: test.resultEnteredAt ?? undefined,
             resultValidatedAt: test.resultValidatedAt ?? undefined,
             results: test.results ?? undefined,
+            // Include retest tracking info
+            isRetest: test.isRetest,
+            retestOfTestId: test.retestOfTestId,
+            retestNumber: test.retestNumber,
+            resultRejectionHistory: test.resultRejectionHistory,
+            // Include sample recollection info
+            sampleIsRecollection: sample?.isRecollection,
+            sampleOriginalSampleId: sample?.originalSampleId,
+            sampleRecollectionReason: sample?.recollectionReason,
+            sampleRecollectionAttempt: sample?.recollectionAttempt,
+            sampleRejectionHistory: sample?.rejectionHistory,
           };
         });
     });
@@ -91,6 +107,7 @@ export const ResultValidation: React.FC = () => {
 
     try {
       if (approve) {
+        // Use validate endpoint for approvals
         await resultAPI.validateResults(orderId, testCode, {
           decision: 'approved',
           validationNotes: comments[commentKey] || undefined,
@@ -98,21 +115,25 @@ export const ResultValidation: React.FC = () => {
         await ordersContext.refreshOrders();
         toast.success('Results approved');
       } else {
+        // Use the new reject endpoint for proper tracking
         if (!rejectionNotes) {
           const confirmed = window.confirm('Are you sure you want to reject these results?');
-          if (!confirmed) return;
+          if (!confirmed) {
+            setIsValidating(prev => ({ ...prev, [commentKey]: false }));
+            return;
+          }
         }
 
-        const decision = rejectionType === 're-collect' ? 'repeat-required' : 'rejected';
-        await resultAPI.validateResults(orderId, testCode, {
-          decision,
-          validationNotes: rejectionNotes || 'Rejected by validator',
+        const rejectType = rejectionType || 're-test';  // Default to re-test
+        await resultAPI.rejectResults(orderId, testCode, {
+          rejectionReason: rejectionNotes || 'Rejected by validator',
+          rejectionType: rejectType,
         });
         await ordersContext.refreshOrders();
 
-        const message = rejectionType === 're-collect'
+        const message = rejectType === 're-collect'
           ? 'Sample rejected - new collection required'
-          : 'Results rejected - re-test required';
+          : 'Results rejected - re-test created';
         toast.error(message);
       }
 
@@ -120,7 +141,11 @@ export const ResultValidation: React.FC = () => {
       setComments(prev => { const n = { ...prev }; delete n[commentKey]; return n; });
     } catch (error) {
       logger.error('Error validating results', error instanceof Error ? error : undefined);
-      toast.error('Failed to validate results. Please try again.');
+      // Extract error message from API error (APIError interface has a message property)
+      const errorMessage = error && typeof error === 'object' && 'message' in error
+        ? (error as { message: string }).message
+        : 'Unknown error';
+      toast.error(`Failed to validate results: ${errorMessage}`);
     } finally {
       setIsValidating(prev => ({ ...prev, [commentKey]: false }));
     }

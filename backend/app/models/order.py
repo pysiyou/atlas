@@ -83,6 +83,15 @@ class OrderTest(Base):
     originalTestId = Column(String, nullable=True)
     repeatNumber = Column(Integer, nullable=True)
 
+    # Re-test tracking (for result validation rejection flow)
+    isRetest = Column(Boolean, default=False)
+    retestOfTestId = Column(String, nullable=True)  # Links to original OrderTest.id that was rejected
+    retestNumber = Column(Integer, default=0)  # 0 = original, 1 = 1st retest, etc.
+    retestOrderTestId = Column(String, nullable=True)  # Points to the new retest entry created after rejection
+
+    # Result rejection history (for validation rejections)
+    resultRejectionHistory = Column(JSON, nullable=True, default=list)  # Array of ResultRejectionRecord
+
     # Critical values
     hasCriticalValues = Column(Boolean, default=False)
     criticalNotificationSent = Column(Boolean, default=False)

@@ -59,7 +59,7 @@ export const Alert: React.FC<AlertProps> = ({
       {onClose && (
         <button
           onClick={onClose}
-          className="flex-shrink-0 hover:opacity-70 transition-opacity"
+          className="flex-shrink-0 hover:opacity-70 transition-opacity cursor-pointer"
           aria-label="Close alert"
         >
           <X size={20} />

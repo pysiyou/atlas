@@ -107,7 +107,7 @@ export const InlineError: React.FC<{
       {onDismiss && (
         <button 
           onClick={onDismiss}
-          className="text-red-400 hover:text-red-600"
+          className="text-red-400 hover:text-red-600 cursor-pointer"
           aria-label="Dismiss error"
         >
           ×

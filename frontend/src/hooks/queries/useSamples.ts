@@ -11,6 +11,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { sampleAPI } from '@/services/api/samples';
+import { useAuth } from '@/features/auth/useAuth';
 import type {
   Sample,
   SampleStatus,
@@ -30,6 +31,7 @@ export interface SamplesFilters {
 /**
  * Hook to fetch and cache all samples.
  * Uses dynamic cache - data is considered fresh for 30 seconds.
+ * Only fetches when user is authenticated to prevent race conditions on login.
  * 
  * @param filters - Optional filters to apply
  * @returns Query result containing samples array and loading state
@@ -40,9 +42,12 @@ export interface SamplesFilters {
  * ```
  */
 export function useSamplesList(filters?: SamplesFilters) {
+  const { isAuthenticated } = useAuth();
+
   const query = useQuery({
     queryKey: queryKeys.samples.list(filters),
     queryFn: () => sampleAPI.getAll(filters),
+    enabled: isAuthenticated, // Only fetch when authenticated
     ...cacheConfig.dynamic, // 30s stale, 5 min gc
   });
 
@@ -59,6 +64,7 @@ export function useSamplesList(filters?: SamplesFilters) {
 
 /**
  * Hook to fetch a single sample by ID.
+ * Only fetches when user is authenticated to prevent race conditions on login.
  * 
  * @param sampleId - The sample ID to fetch
  * @returns Query result with sample data
@@ -69,10 +75,12 @@ export function useSamplesList(filters?: SamplesFilters) {
  * ```
  */
 export function useSample(sampleId: string | undefined) {
+  const { isAuthenticated } = useAuth();
+
   const query = useQuery({
     queryKey: queryKeys.samples.byId(sampleId ?? ''),
     queryFn: () => sampleAPI.getById(sampleId!),
-    enabled: !!sampleId,
+    enabled: isAuthenticated && !!sampleId, // Only fetch when authenticated
     ...cacheConfig.dynamic,
   });
 
@@ -130,13 +138,17 @@ export function useSamplesByStatus(status: SampleStatus | undefined) {
 
 /**
  * Hook to get pending samples.
+ * Only fetches when user is authenticated to prevent race conditions on login.
  * 
  * @returns Array of samples with pending status
  */
 export function usePendingSamples() {
+  const { isAuthenticated } = useAuth();
+
   const query = useQuery({
     queryKey: queryKeys.samples.pending(),
     queryFn: () => sampleAPI.getPending(),
+    enabled: isAuthenticated, // Only fetch when authenticated
     ...cacheConfig.dynamic,
   });
 

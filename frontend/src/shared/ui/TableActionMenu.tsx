@@ -34,7 +34,7 @@ export const TableActionMenu: React.FC<TableActionMenuProps> = ({ children }) =>
     <div className="relative inline-block text-left" ref={menuRef}>
       <button
         onClick={toggleMenu}
-        className={`w-8 h-8 flex items-center justify-center rounded transition-colors focus:outline-none ${
+        className={`w-8 h-8 flex items-center justify-center rounded transition-colors focus:outline-none cursor-pointer ${
           isOpen 
             ? 'bg-sky-50 text-sky-600' 
             : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
@@ -78,7 +78,7 @@ export const TableActionItem: React.FC<TableActionItemProps> = ({
         // However, usually navigation or state change will happen. 
         // For now let's rely on standard flow.
       }}
-      className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-50 transition-colors ${
+      className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-50 transition-colors cursor-pointer ${
         variant === 'danger' ? 'text-red-600 hover:bg-red-50' : 'text-gray-700'
       }`}
     >

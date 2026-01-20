@@ -31,6 +31,7 @@ export const ResultEntry: React.FC = () => {
   const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
 
   // Build list of tests awaiting result entry
+  // Excludes superseded tests (those replaced by retests)
   const allTests: TestWithContext[] = useMemo(() => {
     if (!ordersContext || !testsContext || !patientsContext || !samplesContext) return [];
 
@@ -39,7 +40,10 @@ export const ResultEntry: React.FC = () => {
       const patientName = getPatientName(order.patientId, patientsContext.patients);
 
       return order.tests
-        .filter(test => test.status === 'sample-collected' || test.status === 'in-progress')
+        .filter(test => 
+          (test.status === 'sample-collected' || test.status === 'in-progress') &&
+          test.status !== 'superseded'  // Filter out superseded tests
+        )
         .map(test => {
           const testName = getTestName(test.testCode, testsContext.tests);
           const sampleType = getTestSampleType(test.testCode, testsContext.tests);
@@ -67,6 +71,17 @@ export const ResultEntry: React.FC = () => {
             resultEnteredAt: test.resultEnteredAt ?? undefined,
             resultValidatedAt: test.resultValidatedAt ?? undefined,
             results: test.results ?? undefined,
+            // Include retest tracking info
+            isRetest: test.isRetest,
+            retestOfTestId: test.retestOfTestId,
+            retestNumber: test.retestNumber,
+            resultRejectionHistory: test.resultRejectionHistory,
+            // Include sample recollection info
+            sampleIsRecollection: sample?.isRecollection,
+            sampleOriginalSampleId: sample?.originalSampleId,
+            sampleRecollectionReason: sample?.recollectionReason,
+            sampleRecollectionAttempt: sample?.recollectionAttempt,
+            sampleRejectionHistory: sample?.rejectionHistory,
           };
         });
     });

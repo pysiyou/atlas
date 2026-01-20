@@ -5,8 +5,8 @@
  * Use the gender value directly as the Badge variant (e.g., variant="male").
  */
 
-// 1. VALUES - The single source of truth
-export const GENDER_VALUES = ['male', 'female', 'other'] as const;
+// 1. VALUES - The single source of truth (only male and female)
+export const GENDER_VALUES = ['male', 'female'] as const;
 
 // 2. TYPE - Derived from values
 export type Gender = (typeof GENDER_VALUES)[number];
@@ -15,7 +15,6 @@ export type Gender = (typeof GENDER_VALUES)[number];
 export const GENDER_CONFIG: Record<Gender, { label: string }> = {
   male: { label: 'Male' },
   female: { label: 'Female' },
-  other: { label: 'Other' },
 };
 
 // 4. OPTIONS - For dropdowns/selects

@@ -28,6 +28,24 @@ export type ResultStatus = 'normal' | 'high' | 'low' | 'critical' | 'critical-hi
 
 export type ValidationDecision = 'approved' | 'rejected' | 'repeat-required';
 
+/**
+ * Type for result rejection during validation.
+ * 're-test': Re-run test with same sample, creates new OrderTest
+ * 're-collect': New sample required, triggers sample recollection
+ */
+export type ResultRejectionType = 're-test' | 're-collect';
+
+/**
+ * Record of a result rejection event during validation.
+ * Stored in resultRejectionHistory array on OrderTest.
+ */
+export interface ResultRejectionRecord {
+  rejectedAt: string;
+  rejectedBy: string;
+  rejectionReason: string;
+  rejectionType: ResultRejectionType;
+}
+
 export interface TestResult {
   value: string | number;
   unit?: string;
@@ -37,6 +55,7 @@ export interface TestResult {
 
 export interface OrderTest {
   // Identity
+  id?: string;                         // Unique ID (orderId_testCode or orderId_testCode_RT1 for retests)
   testCode: string;                    // Links to Test catalog
   testName: string;                    // From API relationship
   sampleType: string;                  // From API relationship
@@ -70,6 +89,15 @@ export interface OrderTest {
   repeatReason?: string;
   originalTestId?: string;
   repeatNumber?: number;
+
+  // Re-test tracking (for result validation rejection flow)
+  isRetest?: boolean;                   // True if this is a retest of a rejected result
+  retestOfTestId?: string;              // Links to original OrderTest.id that was rejected
+  retestNumber?: number;                // 0 = original, 1 = 1st retest, etc.
+  retestOrderTestId?: string;           // Points to the new retest entry created after rejection
+
+  // Result rejection history (for validation rejections)
+  resultRejectionHistory?: ResultRejectionRecord[];
 
   // Critical values (order-specific)
   hasCriticalValues?: boolean;
