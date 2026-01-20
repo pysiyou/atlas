@@ -129,13 +129,44 @@ def create_payment(
     current_user: User = Depends(require_receptionist)
 ):
     """
-    Create a new payment and update order payment status
+    Create a new payment and update order payment status.
+    
+    Validates:
+    - Order exists
+    - Payment amount is positive
+    - Payment does not exceed remaining balance (prevents overpayment)
     """
+    # Fetch order
     order = db.query(Order).filter(Order.orderId == payment_data.orderId).first()
     if not order:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Order {payment_data.orderId} not found"
+        )
+    
+    # Validate payment amount is positive
+    if payment_data.amount <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Payment amount must be greater than zero"
+        )
+    
+    # Calculate existing payments and remaining balance
+    existing_payments = db.query(Payment).filter(Payment.orderId == payment_data.orderId).all()
+    total_paid = sum(p.amount for p in existing_payments)
+    remaining = order.totalPrice - total_paid
+    
+    # Prevent overpayment
+    if remaining <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Order is already fully paid"
+        )
+    
+    if payment_data.amount > remaining:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Payment amount (${payment_data.amount:.2f}) exceeds remaining balance (${remaining:.2f})"
         )
     
     # Create payment
@@ -154,15 +185,11 @@ def create_payment(
     
     db.add(payment)
     
-    # Calculate total amount paid for this order
-    existing_payments = db.query(Payment).filter(Payment.orderId == payment_data.orderId).all()
-    total_paid = sum(p.amount for p in existing_payments) + payment_data.amount
-    
-    # Update order payment status - only PAID or UNPAID
-    if total_paid >= order.totalPrice:
+    # Update order payment status
+    new_total_paid = total_paid + payment_data.amount
+    if new_total_paid >= order.totalPrice:
         order.paymentStatus = PaymentStatus.PAID
-    else:
-        order.paymentStatus = PaymentStatus.UNPAID
+    # Note: UNPAID remains until fully paid
     
     db.commit()
     db.refresh(payment)

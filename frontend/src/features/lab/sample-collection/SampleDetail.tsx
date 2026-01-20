@@ -8,9 +8,9 @@
 import React, { useMemo } from 'react';
 import { Badge, Icon, DetailField, Button } from '@/shared/ui';
 import type { ContainerType, RejectedSample } from '@/types';
-import { REJECTION_REASON_CONFIG } from '@/types/enums/rejection-reason';
 import Barcode from 'react-barcode';
 import toast from 'react-hot-toast';
+import { logger } from '@/utils/logger';
 import { formatDate as formatDateTime } from '@/utils';
 import { useUserDisplay } from '@/hooks';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
@@ -19,21 +19,13 @@ import { formatVolume, formatDate } from '@/utils';
 import { printSampleLabel } from './SampleLabel';
 import { SampleCollectionPopover } from './SampleCollectionPopover';
 import { SampleRejectionPopover } from './SampleRejectionPopover';
+import { SampleRequirementsSection } from './SampleRequirementsSection';
+import { SampleRejectionSection } from './SampleRejectionSection';
 import { useSamples, useTests, usePatients, useOrders } from '@/hooks';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { LabDetailModal, DetailSection, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
 import type { SampleDisplay } from './types';
-import { AlertCircle, Clock, FlaskConical, XCircle, CheckCircle, Printer } from 'lucide-react';
-
-/** Test detail for requirements display */
-interface TestDetail {
-  code: string;
-  fastingRequired?: boolean;
-  containerDescription?: string;
-  collectionNotes?: string;
-  rejectionCriteria?: string[];
-  minimumVolume?: number;
-}
+import { Clock, FlaskConical, XCircle, CheckCircle, Printer } from 'lucide-react';
 
 interface SampleDetailModalProps {
   isOpen: boolean;
@@ -42,148 +34,6 @@ interface SampleDetailModalProps {
   pendingSampleDisplay?: SampleDisplay;
   onCollect?: (display: SampleDisplay, volume: number, notes?: string, selectedColor?: string, containerType?: ContainerType) => void;
 }
-
-/** Requirements section with tabs for each test */
-const RequirementsSection: React.FC<{ testDetails: TestDetail[] }> = ({ testDetails }) => {
-  const [activeTestCode, setActiveTestCode] = React.useState(testDetails[0]?.code || '');
-  const activeTest = testDetails.find(t => t.code === activeTestCode) || testDetails[0];
-
-  if (!activeTest) return null;
-
-  return (
-    <DetailSection
-      title="Collection Requirements & Instructions"
-      headerRight={
-        <div className="flex gap-1">
-          {testDetails.map(test => (
-            <button
-              key={test.code}
-              onClick={() => setActiveTestCode(test.code)}
-              className={`px-2 py-1 text-xs rounded transition-colors ${
-                activeTestCode === test.code
-                  ? 'bg-blue-100 text-blue-700 font-medium'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {test.code}
-            </button>
-          ))}
-        </div>
-      }
-    >
-      <div className="space-y-3 pt-2 animate-in fade-in duration-200">
-        {activeTest.fastingRequired && (
-          <div className="flex items-start gap-2 p-2 bg-orange-50 border border-orange-200 rounded">
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 shrink-0" />
-            <div className="flex-1">
-              <div className="text-xs font-medium text-orange-900">Fasting Required</div>
-              <div className="text-xs text-orange-700 mt-0.5">
-                Patient must fast before sample collection. Verify fasting status before proceeding.
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTest.containerDescription && (
-          <div className="flex items-start gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1.5 shrink-0" />
-            <div className="flex-1">
-              <div className="text-xs font-medium text-gray-700 mb-1">Container Specifications</div>
-              <div className="text-xs text-gray-600">{activeTest.containerDescription}</div>
-            </div>
-          </div>
-        )}
-
-        {activeTest.collectionNotes && (
-          <div className="flex items-start gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1.5 shrink-0" />
-            <div className="flex-1">
-              <div className="text-xs font-medium text-gray-700 mb-1">Collection Instructions</div>
-              <div className="text-xs text-gray-600">{activeTest.collectionNotes}</div>
-            </div>
-          </div>
-        )}
-
-        {activeTest.rejectionCriteria && activeTest.rejectionCriteria.length > 0 && (
-          <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-200 rounded">
-            <AlertCircle size={16} className="text-red-600 mt-0.5 shrink-0" />
-            <div className="flex-1">
-              <div className="text-xs font-medium text-red-900 mb-1">Rejection Criteria</div>
-              <ul className="list-disc list-inside space-y-0.5">
-                {activeTest.rejectionCriteria.map((criteria, idx) => (
-                  <li key={idx} className="text-xs text-red-700">{criteria}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
-
-        {activeTest.minimumVolume && (
-          <div className="flex items-center gap-2 text-xs text-gray-600">
-            <span className="font-medium">Minimum Volume:</span>
-            <span>{activeTest.minimumVolume} mL</span>
-          </div>
-        )}
-      </div>
-    </DetailSection>
-  );
-};
-
-/** Rejection history section */
-const RejectionSection: React.FC<{
-  title: string;
-  reasons?: string[];
-  notes?: string;
-  rejectedBy?: string;
-  rejectedAt?: string;
-  recollectionRequired?: boolean;
-  recollectionSampleId?: string;
-  variant?: 'red' | 'yellow';
-  getUserName: (id: string) => string;
-}> = ({ title, reasons, notes, rejectedBy, rejectedAt, recollectionRequired, recollectionSampleId, variant = 'red', getUserName }) => {
-  const bulletColor = variant === 'red' ? 'bg-red-500' : 'bg-yellow-500';
-  const textColor = variant === 'red' ? 'text-red-700' : 'text-yellow-700';
-  const notesColor = variant === 'red' ? 'text-red-600' : 'text-yellow-600';
-
-  return (
-    <DetailSection title={title}>
-      <ul className="space-y-1">
-        {reasons && (
-          <li className={`flex items-center text-xs ${textColor}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${bulletColor} mr-2`} />
-            <span className="font-medium">
-              {reasons.map(r => REJECTION_REASON_CONFIG[r as keyof typeof REJECTION_REASON_CONFIG]?.label || r).join(', ')}
-            </span>
-          </li>
-        )}
-        {notes && (
-          <li className={`flex items-center text-xs ${notesColor} italic`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${bulletColor} mr-2`} />
-            "{notes}"
-          </li>
-        )}
-        {rejectedBy && rejectedAt && (
-          <li className="flex items-center text-xs text-gray-600">
-            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
-            <span>{getUserName(rejectedBy)} · {formatDate(rejectedAt)}</span>
-          </li>
-        )}
-        {recollectionRequired && (
-          <li className="flex items-center text-xs text-gray-600">
-            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
-            <span>Recollection required</span>
-          </li>
-        )}
-        {recollectionSampleId && (
-          <li className="flex items-center text-xs text-gray-600">
-            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
-            <span>Recollection sample: <span className="font-mono font-medium">{recollectionSampleId}</span></span>
-          </li>
-        )}
-      </ul>
-    </DetailSection>
-  );
-};
 
 export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
   isOpen,
@@ -347,7 +197,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
                 toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
                 onClose();
               } catch (error) {
-                console.error('Failed to reject sample:', error);
+                logger.error('Failed to reject sample', error instanceof Error ? error : undefined);
                 toast.error('Failed to reject sample');
               }
             }}
@@ -408,7 +258,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
     >
       {/* Rejection Details */}
       {isRejected && rejectedSample && (
-        <RejectionSection
+        <SampleRejectionSection
           title={`Rejection Details${(rejectedSample.rejectionHistory?.length || 1) > 1 ? ` (${rejectedSample.rejectionHistory?.length || 1} attempts)` : ''}`}
           reasons={rejectedSample.rejectionReasons}
           notes={rejectedSample.rejectionNotes}
@@ -424,7 +274,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
       {!isRejected && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (() => {
         const lastRejection = sample.rejectionHistory[sample.rejectionHistory.length - 1];
         return (
-          <RejectionSection
+          <SampleRejectionSection
             title={`Previous Rejection${sample.rejectionHistory.length > 1 ? ` (${sample.rejectionHistory.length} attempts)` : ''}`}
             reasons={lastRejection.rejectionReasons}
             notes={lastRejection.rejectionNotes}
@@ -460,7 +310,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
       </DetailSection>
 
       {/* Requirements Section - pending only */}
-      {isPending && testDetails.length > 0 && <RequirementsSection testDetails={testDetails} />}
+      {isPending && testDetails.length > 0 && <SampleRequirementsSection testDetails={testDetails} />}
 
       {/* Detail Sections */}
       <DetailGrid>

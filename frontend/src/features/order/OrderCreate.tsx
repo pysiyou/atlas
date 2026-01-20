@@ -9,6 +9,7 @@ import { generateOrderId, generateInvoiceId, formatCurrency } from '@/utils';
 import type { Order, OrderTest, Invoice } from '@/types';
 import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
+import { logger } from '@/utils/logger';
 import { PatientSelect as PatientSelector } from './PatientSelect';
 import { TestSelect as TestSelector } from './TestSelect';
 import { OrderForm as OrderDetailsForm } from './OrderForm';
@@ -152,7 +153,7 @@ export const CreateOrder: React.FC = () => {
         discount: 0,
         tax: 0,
         total: totalPrice,
-        paymentStatus: 'pending',
+        paymentStatus: 'unpaid',
         amountPaid: 0,
         amountDue: totalPrice,
         createdAt: new Date().toISOString(),
@@ -163,7 +164,7 @@ export const CreateOrder: React.FC = () => {
       toast.success(`Order ${orderId} created successfully!`);
       navigate(`/orders/${orderId}`);
     } catch (error) {
-      console.error('Error creating order:', error);
+      logger.error('Error creating order', error instanceof Error ? error : undefined);
       toast.error('Failed to create order. Please try again.');
     } finally {
       setIsSubmitting(false);

@@ -35,7 +35,7 @@ export interface Invoice {
   discount: number; // percentage or fixed amount
   tax: number;
   total: number;
-  paymentStatus: 'pending' | 'partial' | 'paid';
+  paymentStatus: 'unpaid' | 'paid';
   amountPaid: number;
   amountDue: number;
   createdAt: string;

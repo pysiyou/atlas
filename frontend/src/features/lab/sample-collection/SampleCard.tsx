@@ -11,6 +11,7 @@ import type { ContainerType, RejectedSample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { usePatients, useTests, useSamples } from '@/hooks';
 import toast from 'react-hot-toast';
+import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
@@ -139,7 +140,7 @@ export const SampleCard: React.FC<SampleCardProps> = ({ display, onCollect }) =>
                     await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
                     toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
                   } catch (error) {
-                    console.error('Failed to reject sample:', error);
+                    logger.error('Failed to reject sample', error instanceof Error ? error : undefined);
                     toast.error('Failed to reject sample');
                   }
                 }}

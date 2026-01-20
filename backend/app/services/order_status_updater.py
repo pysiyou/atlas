@@ -2,10 +2,17 @@
 Order status update service.
 Calculates and updates order status based on test and sample statuses.
 """
+import logging
+from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 from app.models.order import Order, OrderTest
 from app.models.sample import Sample
 from app.schemas.enums import OrderStatus, TestStatus, SampleStatus
+
+logger = logging.getLogger(__name__)
+
+# Terminal states that should not regress
+TERMINAL_STATUSES = {OrderStatus.VALIDATED, OrderStatus.REPORTED}
 
 
 def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
@@ -80,6 +87,8 @@ def update_order_status(db: Session, order_id: str) -> None:
     """
     Update order status based on the status of its samples and tests.
     
+    Prevents backward transitions from terminal states (VALIDATED, REPORTED).
+    
     Args:
         db: Database session
         order_id: The order ID to update
@@ -88,11 +97,28 @@ def update_order_status(db: Session, order_id: str) -> None:
     if not order:
         return
 
-    samples = db.query(Sample).filter(Sample.orderId == order_id).all()
+    current_status = order.overallStatus
     
+    # Prevent regression from terminal states
+    if current_status in TERMINAL_STATUSES:
+        logger.debug(f"Order {order_id} is in terminal state {current_status}, skipping status update")
+        return
+
+    samples = db.query(Sample).filter(Sample.orderId == order_id).all()
     new_status = _calculate_order_status(order, samples)
+    
+    # Prevent regression from COMPLETED to earlier states
+    if current_status == OrderStatus.COMPLETED and new_status in {
+        OrderStatus.PENDING, 
+        OrderStatus.SAMPLE_COLLECTION
+    }:
+        logger.warning(
+            f"Prevented regression of order {order_id} from {current_status} to {new_status}"
+        )
+        return
     
     if order.overallStatus != new_status:
         order.overallStatus = new_status
+        order.updatedAt = datetime.now(timezone.utc)
         db.add(order)
         db.commit()

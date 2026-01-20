@@ -4,6 +4,7 @@ import { usePatients } from '@/hooks';
 import { Button, Modal, SectionContainer } from '@/shared/ui';
 import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
+import { logger } from '@/utils/logger';
 import {
   DemographicsSection,
   AddressSection,
@@ -291,7 +292,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       reset();
       onClose();
     } catch (error) {
-      console.error('Error saving patient:', error);
+      logger.error('Error saving patient', error instanceof Error ? error : undefined);
       toast.error('Failed to save patient');
     } finally {
       setIsSubmitting(false);

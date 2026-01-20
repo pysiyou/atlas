@@ -18,6 +18,7 @@ import type { Test, TestCategory } from '@/types';
 import { TestsContext, type TestsContextType, type TestError } from './TestsContext';
 import { useTestCatalog, useInvalidateTestCatalog } from '@/hooks/queries';
 import { testAPI } from '@/services/api';
+import { logger } from '@/utils/logger';
 
 interface TestsProviderProps {
   children: ReactNode;
@@ -69,7 +70,7 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
       await testAPI.create(test);
       await refreshTests();
     } catch (err) {
-      console.error('Failed to create test:', err);
+      logger.error('Failed to create test', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [refreshTests]);
@@ -82,7 +83,7 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
       await testAPI.update(code, updates);
       await refreshTests();
     } catch (err) {
-      console.error('Failed to update test:', err);
+      logger.error('Failed to update test', err instanceof Error ? err : undefined);
       throw err;
     }
   }, [refreshTests]);
@@ -201,7 +202,7 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
    */
   const updateTestPrice = useCallback(async (code: string, price: number) => {
     if (price < 0) {
-      console.warn('Price cannot be negative');
+      logger.warn('Price cannot be negative');
       return;
     }
     await updateTest(code, { price });

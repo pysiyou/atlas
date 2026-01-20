@@ -14,3 +14,4 @@ export * from './logger';
 export * from './orderUtils';
 export * from './typeHelpers';
 export * from './filtering';
+export * from './errorHelpers';

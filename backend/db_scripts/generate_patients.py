@@ -2,7 +2,7 @@
 Generate realistic patient data with African names using NiaFaker
 """
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from faker import Faker
 import niafaker
 from app.models.patient import Patient
@@ -636,7 +636,7 @@ def generate_dev_patients(db):
                 "familyHistory": ["Father had diabetes"],
                 "lifestyle": {"smoking": False, "alcohol": False}
             },
-            "registrationDate": datetime.utcnow(),
+            "registrationDate": datetime.now(timezone.utc),
             "createdBy": "USR-00000000-001",
             "updatedBy": "USR-00000000-001",
         },
@@ -657,7 +657,7 @@ def generate_dev_patients(db):
                 "familyHistory": ["None reported"],
                 "lifestyle": {"smoking": False, "alcohol": True}
             },
-            "registrationDate": datetime.utcnow(),
+            "registrationDate": datetime.now(timezone.utc),
             "createdBy": "USR-00000000-002",
             "updatedBy": "USR-00000000-002",
         },

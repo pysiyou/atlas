@@ -13,7 +13,7 @@ class Sample(Base):
     sampleId = Column(String, primary_key=True, index=True)  # SAM-YYYYMMDD-XXX
     orderId = Column(String, ForeignKey("orders.orderId"), nullable=False, index=True)
     sampleType = Column(Enum(SampleType), nullable=False)
-    status = Column(Enum(SampleStatus), nullable=False, default=SampleStatus.PENDING)
+    status = Column(Enum(SampleStatus), nullable=False, default=SampleStatus.PENDING, index=True)
 
     # What this sample is for
     testCodes = Column(JSON, nullable=False)  # Array of test codes

@@ -10,6 +10,7 @@ import { useModal } from '@/shared/contexts/ModalContext';
 import { useSamples } from '@/features/lab/SamplesContext';
 import { getRegisteredModal } from './modalRegistry';
 import { initializeModalRegistry } from './registerModals';
+import { logger } from '@/utils/logger';
 
 // Initialize modal registry on module load
 initializeModalRegistry();
@@ -31,7 +32,7 @@ export const ModalRenderer: React.FC = () => {
 
     const entry = getRegisteredModal(modalType);
     if (!entry) {
-      console.warn(`No modal registered for type: ${modalType}`);
+      logger.warn(`No modal registered for type: ${modalType}`);
       return null;
     }
 

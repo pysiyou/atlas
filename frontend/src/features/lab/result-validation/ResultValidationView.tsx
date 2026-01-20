@@ -11,6 +11,7 @@ import { usePatients } from '@/hooks';
 import { useSamples } from '@/features/lab/SamplesContext';
 import { getPatientName, getTestName, getTestSampleType } from '@/utils/typeHelpers';
 import toast from 'react-hot-toast';
+import { logger } from '@/utils/logger';
 import { ResultValidationCard } from './ValidationCard';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../shared/LabWorkflowView';
@@ -118,7 +119,7 @@ export const ResultValidation: React.FC = () => {
       // Clear local state
       setComments(prev => { const n = { ...prev }; delete n[commentKey]; return n; });
     } catch (error) {
-      console.error('Error validating results:', error);
+      logger.error('Error validating results', error instanceof Error ? error : undefined);
       toast.error('Failed to validate results. Please try again.');
     } finally {
       setIsValidating(prev => ({ ...prev, [commentKey]: false }));

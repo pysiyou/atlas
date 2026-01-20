@@ -54,7 +54,7 @@ class OrderTest(Base):
     testCode = Column(String, ForeignKey("tests.code"), nullable=False, index=True)
 
     # Order-specific state
-    status = Column(Enum(TestStatus), nullable=False, default=TestStatus.PENDING)
+    status = Column(Enum(TestStatus), nullable=False, default=TestStatus.PENDING, index=True)
     priceAtOrder = Column(Float, nullable=False)  # Snapshot for billing
 
     # Sample linkage

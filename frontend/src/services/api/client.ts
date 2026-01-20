@@ -6,12 +6,113 @@
 
 import { API_CONFIG } from '@/config/api';
 import { logger } from '@/utils/logger';
+import type { Patient, Order, Sample, Test, Payment, AuthUser } from '@/types';
 
+/**
+ * API Error structure returned by the client
+ */
 export interface APIError {
   message: string;
   status?: number;
   code?: string;
   details?: unknown;
+}
+
+/**
+ * Type-safe API endpoint definitions
+ * Maps endpoints to their expected response types
+ */
+export interface APIEndpoints {
+  // Auth endpoints
+  '/auth/login': { access_token: string; refresh_token: string; role: string };
+  '/auth/me': AuthUser;
+  
+  // Patient endpoints
+  '/patients': Patient[];
+  '/patients/:id': Patient;
+  
+  // Order endpoints
+  '/orders': Order[];
+  '/orders/:id': Order;
+  
+  // Sample endpoints
+  '/samples': Sample[];
+  '/samples/:id': Sample;
+  '/samples/pending': Sample[];
+  
+  // Test catalog endpoints
+  '/tests': Test[];
+  '/tests/:id': Test;
+  
+  // Payment endpoints
+  '/payments': Payment[];
+  '/payments/:id': Payment;
+}
+
+/**
+ * Type helper for extracting endpoint response type
+ */
+export type EndpointResponse<E extends keyof APIEndpoints> = APIEndpoints[E];
+
+/**
+ * Retry configuration for API requests
+ */
+interface RetryConfig {
+  maxRetries: number;
+  baseDelay: number;
+  maxDelay: number;
+}
+
+const DEFAULT_RETRY_CONFIG: RetryConfig = {
+  maxRetries: 3,
+  baseDelay: 1000,
+  maxDelay: 10000,
+};
+
+/**
+ * Execute a function with exponential backoff retry
+ * @param fn - The async function to execute
+ * @param config - Retry configuration
+ * @returns The result of the function
+ */
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  config: RetryConfig = DEFAULT_RETRY_CONFIG
+): Promise<T> {
+  let lastError: Error | APIError = new Error('Unknown error');
+
+  for (let attempt = 0; attempt <= config.maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error as Error | APIError;
+
+      // Don't retry on 4xx errors (client errors) - these won't succeed on retry
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'status' in error &&
+        typeof (error as APIError).status === 'number'
+      ) {
+        const status = (error as APIError).status!;
+        if (status >= 400 && status < 500) {
+          throw error;
+        }
+      }
+
+      // If we have retries left, wait with exponential backoff
+      if (attempt < config.maxRetries) {
+        const delay = Math.min(
+          config.baseDelay * Math.pow(2, attempt),
+          config.maxDelay
+        );
+        await new Promise(resolve => setTimeout(resolve, delay));
+        logger.debug(`Retrying request (attempt ${attempt + 2}/${config.maxRetries + 1})`);
+      }
+    }
+  }
+
+  throw lastError;
 }
 
 export class APIClient {
@@ -119,9 +220,16 @@ export class APIClient {
   }
 
   /**
-   * Generic GET request
+   * Generic GET request with automatic retry for transient failures
    */
   async get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
+    return withRetry(() => this._get<T>(endpoint, params));
+  }
+
+  /**
+   * Internal GET implementation
+   */
+  private async _get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
     try {
       const url = new URL(`${this.baseURL}${endpoint}`);
       if (params) {

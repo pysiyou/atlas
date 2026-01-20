@@ -70,12 +70,11 @@ export const BillingProvider: React.FC<BillingProviderProps> = ({ children }) =>
         const newAmountPaid = invoice.amountPaid + payment.amount;
         const newAmountDue = invoice.total - newAmountPaid;
         
-        let paymentStatus: 'pending' | 'partial' | 'paid' = 'pending';
+        let paymentStatus: 'unpaid' | 'paid' = 'unpaid';
         if (newAmountDue <= 0) {
           paymentStatus = 'paid';
-        } else if (newAmountPaid > 0) {
-          paymentStatus = 'partial';
         }
+        // Note: Status remains 'unpaid' until fully paid
         
         updateInvoice(payment.invoiceId, {
           amountPaid: newAmountPaid,

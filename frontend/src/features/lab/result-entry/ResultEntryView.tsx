@@ -12,6 +12,7 @@ import { usePatients } from '@/hooks';
 import { checkReferenceRangeWithDemographics } from '@/utils';
 import { getPatientName, getTestName, getTestSampleType } from '@/utils/typeHelpers';
 import toast from 'react-hot-toast';
+import { logger } from '@/utils/logger';
 import type { TestResult, TestWithContext } from '@/types';
 import { isCollectedSample } from '@/types';
 import { ResultEntryCard } from './ResultCard';
@@ -169,7 +170,7 @@ export const ResultEntry: React.FC = () => {
       setResults(prev => { const n = { ...prev }; delete n[resultKey]; return n; });
       setTechnicianNotes(prev => { const n = { ...prev }; delete n[resultKey]; return n; });
     } catch (error) {
-      console.error('Error saving results:', error);
+      logger.error('Error saving results', error instanceof Error ? error : undefined);
       toast.error('Failed to save results. Please try again.');
     } finally {
       setIsSaving(prev => ({ ...prev, [resultKey]: false }));

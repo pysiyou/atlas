@@ -6,14 +6,29 @@
 import type { Test, Sample, Patient, SampleType, TestCategory } from '@/types';
 
 /**
+ * Generic test property lookup function
+ * @param testCode - The test code to look up
+ * @param property - The property key to retrieve
+ * @param testCatalog - Array of Test catalog entries
+ * @returns The property value, or undefined if not found
+ */
+export function getTestProperty<K extends keyof Test>(
+  testCode: string,
+  property: K,
+  testCatalog: Test[]
+): Test[K] | undefined {
+  const test = testCatalog.find((t) => t.code === testCode);
+  return test?.[property];
+}
+
+/**
  * Get test name from test code by looking up in test catalog
  * @param testCode - The test code to look up
  * @param testCatalog - Array of Test catalog entries
  * @returns The test name, or 'Unknown Test' if not found
  */
 export function getTestName(testCode: string, testCatalog: Test[]): string {
-  const test = testCatalog.find((t) => t.code === testCode);
-  return test?.name || 'Unknown Test';
+  return getTestProperty(testCode, 'name', testCatalog) || 'Unknown Test';
 }
 
 /**
@@ -23,8 +38,7 @@ export function getTestName(testCode: string, testCatalog: Test[]): string {
  * @returns The sample type, or 'other' if not found
  */
 export function getTestSampleType(testCode: string, testCatalog: Test[]): SampleType {
-  const test = testCatalog.find((t) => t.code === testCode);
-  return (test?.sampleType || 'other') as SampleType;
+  return (getTestProperty(testCode, 'sampleType', testCatalog) || 'other') as SampleType;
 }
 
 /**
@@ -34,8 +48,7 @@ export function getTestSampleType(testCode: string, testCatalog: Test[]): Sample
  * @returns The test category, or 'other' if not found
  */
 export function getTestCategory(testCode: string, testCatalog: Test[]): TestCategory | 'other' {
-  const test = testCatalog.find((t) => t.code === testCode);
-  return test?.category || 'other';
+  return getTestProperty(testCode, 'category', testCatalog) || 'other';
 }
 
 /**

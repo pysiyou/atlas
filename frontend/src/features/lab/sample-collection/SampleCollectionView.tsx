@@ -7,6 +7,7 @@
 import React, { useMemo, useState } from 'react';
 import { useOrders, useTests, useAuth, useSamples, usePatients } from '@/hooks';
 import toast from 'react-hot-toast';
+import { logger } from '@/utils/logger';
 import type { ContainerType, ContainerTopColor, SampleStatus, Patient, Test } from '@/types';
 import { calculateRequiredSamples, getCollectionRequirements } from '../../../utils/sampleHelpers';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
@@ -141,7 +142,7 @@ export const SampleCollectionView: React.FC = () => {
       await refreshOrders();
       toast.success(`${display.sample.sampleType.toUpperCase()} sample collected`);
     } catch (error) {
-      console.error('Error collecting sample:', error);
+      logger.error('Error collecting sample', error instanceof Error ? error : undefined);
       toast.error('Failed to collect sample. Please try again.');
     }
   };
