@@ -6,6 +6,9 @@
 
 import React, { type ReactNode } from 'react';
 
+// Query Provider (TanStack Query) - must be at the root
+import { QueryProvider } from '@/lib/query';
+
 // Feature Providers
 import { AuthProvider } from '@/features/auth/AuthProvider';
 import { UsersProvider } from '@/features/user';
@@ -57,6 +60,10 @@ const ComposedProviders = composeProviders(featureProviders);
 /**
  * AppProviders - Single component that provides all app context
  *
+ * QueryProvider wraps everything to enable TanStack Query caching.
+ * Feature providers are composed inside for backward compatibility
+ * during migration to query hooks.
+ *
  * Usage:
  * ```tsx
  * <AppProviders>
@@ -65,13 +72,16 @@ const ComposedProviders = composeProviders(featureProviders);
  * ```
  */
 export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => (
-  <ComposedProviders>{children}</ComposedProviders>
+  <QueryProvider>
+    <ComposedProviders>{children}</ComposedProviders>
+  </QueryProvider>
 );
 
 /**
  * Re-export individual providers for cases where selective provision is needed
  */
 export {
+  QueryProvider,
   AuthProvider,
   UsersProvider,
   PatientsProvider,

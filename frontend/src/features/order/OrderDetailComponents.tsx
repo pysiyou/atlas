@@ -108,7 +108,7 @@ export const BillingSummaryCard: React.FC<BillingSummaryCardProps> = ({
             variant={
               paymentStatus === 'paid'
                 ? 'success'
-                : paymentStatus === 'partial'
+                : paymentStatus === 'unpaid'
                 ? 'warning'
                 : 'default'
             }

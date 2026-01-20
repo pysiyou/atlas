@@ -63,24 +63,26 @@ export const BillingProvider: React.FC<BillingProviderProps> = ({ children }) =>
   const addPayment = useCallback((payment: Payment) => {
     setPayments(prev => [...prev, payment]);
     
-    // Update invoice payment status
-    const invoice = getInvoice(payment.invoiceId);
-    if (invoice) {
-      const newAmountPaid = invoice.amountPaid + payment.amount;
-      const newAmountDue = invoice.total - newAmountPaid;
-      
-      let paymentStatus: 'pending' | 'partial' | 'paid' = 'pending';
-      if (newAmountDue <= 0) {
-        paymentStatus = 'paid';
-      } else if (newAmountPaid > 0) {
-        paymentStatus = 'partial';
+    // Update invoice payment status if invoiceId exists
+    if (payment.invoiceId) {
+      const invoice = getInvoice(payment.invoiceId);
+      if (invoice) {
+        const newAmountPaid = invoice.amountPaid + payment.amount;
+        const newAmountDue = invoice.total - newAmountPaid;
+        
+        let paymentStatus: 'pending' | 'partial' | 'paid' = 'pending';
+        if (newAmountDue <= 0) {
+          paymentStatus = 'paid';
+        } else if (newAmountPaid > 0) {
+          paymentStatus = 'partial';
+        }
+        
+        updateInvoice(payment.invoiceId, {
+          amountPaid: newAmountPaid,
+          amountDue: newAmountDue,
+          paymentStatus,
+        });
       }
-      
-      updateInvoice(payment.invoiceId, {
-        amountPaid: newAmountPaid,
-        amountDue: newAmountDue,
-        paymentStatus,
-      });
     }
   }, [setPayments, getInvoice, updateInvoice]);
 

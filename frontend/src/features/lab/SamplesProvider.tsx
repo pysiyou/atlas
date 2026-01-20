@@ -1,9 +1,20 @@
 /**
  * Samples Provider Component
- * Manages sample collection and tracking using backend API with proper error handling
+ * 
+ * MIGRATION NOTE: This provider now delegates to TanStack Query hooks.
+ * It maintains backward compatibility for components still using useSamples() context.
+ * 
+ * New components should use the query hooks directly:
+ * - useSamplesList() for fetching samples
+ * - useSample(id) for single sample
+ * - usePendingSamples() for pending samples
+ * - useCollectSample() for collecting
+ * - useRejectSample() for rejecting
+ * 
+ * This provider will be deprecated once all consumers are migrated.
  */
 
-import React, { useCallback, useState, useEffect, type ReactNode } from 'react';
+import React, { useCallback, useMemo, type ReactNode } from 'react';
 import type {
   Sample,
   SampleStatus,
@@ -12,50 +23,63 @@ import type {
   RejectionReason,
 } from '@/types';
 import { SamplesContext, type SamplesContextType, type SampleError } from './SamplesContext';
-import { sampleAPI } from '@/services/api';
+import {
+  useSamplesList,
+  usePendingSamples,
+  useCollectSample,
+  useRejectSample,
+  useRequestRecollection,
+  useInvalidateSamples,
+} from '@/hooks/queries';
 
 interface SamplesProviderProps {
   children: ReactNode;
 }
 
+/**
+ * SamplesProvider - Backward compatible wrapper around TanStack Query
+ * 
+ * Delegates data fetching to useSamplesList() hook which provides:
+ * - 30 second stale time (dynamic data)
+ * - Request deduplication
+ * - Automatic cache invalidation on mutations
+ */
 export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) => {
-  const [samples, setSamples] = useState<Sample[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<SampleError | null>(null);
+  // Delegate to TanStack Query hooks for data fetching
+  const { samples, isLoading: loading, isError, error: queryError, refetch } = useSamplesList();
+  const { invalidateAll } = useInvalidateSamples();
+  
+  // Mutation hooks
+  const collectSampleMutation = useCollectSample();
+  const rejectSampleMutation = useRejectSample();
+  const requestRecollectionMutation = useRequestRecollection();
+  
+  // Pending samples query
+  const { samples: pendingSamplesData } = usePendingSamples();
+
+  // Format error for backward compatibility
+  const error: SampleError | null = useMemo(() => {
+    if (!isError) return null;
+    return {
+      message: queryError instanceof Error ? queryError.message : 'Failed to load samples',
+      operation: 'load',
+    };
+  }, [isError, queryError]);
 
   /**
    * Clear any error state
    */
   const clearError = useCallback(() => {
-    setError(null);
+    // With TanStack Query, errors are cleared on successful refetch
   }, []);
 
   /**
    * Refresh samples from backend
    */
   const refreshSamples = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await sampleAPI.getAll();
-      setSamples(data);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load samples';
-      console.error('Failed to load samples:', err);
-      setError({
-        message: errorMessage,
-        operation: 'load',
-      });
-      setSamples([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Load samples on mount
-  useEffect(() => {
-    refreshSamples();
-  }, [refreshSamples]);
+    await invalidateAll();
+    await refetch();
+  }, [invalidateAll, refetch]);
 
   /**
    * Get a sample by ID (local lookup)
@@ -90,18 +114,8 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
    * Get pending samples from backend
    */
   const getPendingSamples = useCallback(async (): Promise<Sample[]> => {
-    try {
-      return await sampleAPI.getPending();
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to get pending samples';
-      console.error('Failed to get pending samples:', err);
-      setError({
-        message: errorMessage,
-        operation: 'load',
-      });
-      return [];
-    }
-  }, []);
+    return pendingSamplesData;
+  }, [pendingSamplesData]);
 
   /**
    * Collect a sample via backend API
@@ -114,18 +128,18 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
     collectionNotes?: string
   ) => {
     try {
-      await sampleAPI.collect(sampleId, {
+      await collectSampleMutation.mutateAsync({
+        sampleId,
         collectedVolume,
         actualContainerType,
         actualContainerColor,
         collectionNotes,
       });
-      await refreshSamples();
     } catch (err) {
       console.error('Failed to collect sample:', err);
       throw err;
     }
-  }, [refreshSamples]);
+  }, [collectSampleMutation]);
 
   /**
    * Reject a sample via backend API
@@ -137,26 +151,17 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
     requireRecollection: boolean = true
   ) => {
     try {
-      // 1. Reject the sample
-      await sampleAPI.reject(sampleId, {
-        rejectionReasons: reasons,
-        rejectionNotes: notes,
-        recollectionRequired: requireRecollection,
+      await rejectSampleMutation.mutateAsync({
+        sampleId,
+        reasons,
+        notes,
+        requireRecollection,
       });
-
-      // 2. Automatically request recollection if required
-      if (requireRecollection) {
-        const reasonStr = reasons.map(r => r.replace('_', ' ')).join(', ');
-        const fullReason = notes ? `${reasonStr} - ${notes}` : reasonStr;
-        await sampleAPI.requestRecollection(sampleId, fullReason);
-      }
-
-      await refreshSamples();
     } catch (err) {
       console.error('Failed to reject sample:', err);
       throw err;
     }
-  }, [refreshSamples]);
+  }, [rejectSampleMutation]);
 
   /**
    * Request recollection for a rejected sample
@@ -166,13 +171,12 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
     reason: string
   ) => {
     try {
-      await sampleAPI.requestRecollection(sampleId, reason);
-      await refreshSamples();
+      await requestRecollectionMutation.mutateAsync({ sampleId, reason });
     } catch (err) {
       console.error('Failed to request recollection:', err);
       throw err;
     }
-  }, [refreshSamples]);
+  }, [requestRecollectionMutation]);
 
   const value: SamplesContextType = {
     samples,

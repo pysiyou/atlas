@@ -1,24 +1,46 @@
+/**
+ * OrderList Component
+ * 
+ * Displays a list of test orders with filtering and search capabilities.
+ * Uses TanStack Query hooks for efficient data fetching and caching.
+ */
+
 import React, { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useOrders } from '@/features/order/OrderContext';
-import { usePatients } from '@/hooks';
-import { useTests } from '@/features/test/TestsContext';
+import { useOrdersList, usePatientNameLookup, useTestNameLookup, useInvalidateOrders } from '@/hooks/queries';
 import { useFiltering } from '@/utils/filtering';
 import { Table, Button, EmptyState } from '@/shared/ui';
 import { Plus } from 'lucide-react';
 import { OrderFilters } from './OrderFilters';
 import { getOrderTableColumns } from './OrderTableColumns';
-import { getPatientName, getTestName } from '@/utils/typeHelpers';
 import { ErrorAlert } from '@/shared/components/ErrorAlert';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
 
+/**
+ * OrderList Component
+ * 
+ * Displays orders with filtering, search, and pagination.
+ * Now uses shared query hooks for efficient caching and data sharing.
+ */
 export const OrderList: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { orders, error, clearError, refreshOrders, loading } = useOrders();
-  const { patients } = usePatients();
-  const { tests } = useTests();
   const patientIdFilter = searchParams.get('patientId');
+
+  // Use new query hooks - data is cached and shared across components
+  const { orders, isLoading, isError, error: queryError, refetch } = useOrdersList();
+  const { getPatientName, isLoading: patientsLoading } = usePatientNameLookup();
+  const { getTestName, isLoading: testsLoading } = useTestNameLookup();
+  const { invalidateAll: invalidateOrders } = useInvalidateOrders();
+
+  // Combined loading state
+  const loading = isLoading || patientsLoading || testsLoading;
+
+  // Format error for ErrorAlert component
+  const error = isError ? {
+    message: queryError instanceof Error ? queryError.message : 'Failed to load orders',
+    operation: 'load' as const,
+  } : null;
 
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
   const [paymentFilters, setPaymentFilters] = useState<PaymentStatus[]>([]);
@@ -34,7 +56,7 @@ export const OrderList: React.FC = () => {
     searchFields: (order) => [
       order.orderId, 
       order.patientId,
-      getPatientName(order.patientId, patients)
+      getPatientName(order.patientId)
     ],
     statusField: 'overallStatus',
     defaultSort: { field: 'orderDate', direction: 'desc' }
@@ -71,21 +93,16 @@ export const OrderList: React.FC = () => {
     return filtered;
   }, [preFilteredOrders, patientIdFilter, dateRange, paymentFilters]);
 
-  // Helper functions for getting names
-  const getPatientNameFn = useMemo(
-    () => (patientId: string) => getPatientName(patientId, patients),
-    [patients]
-  );
-  const getTestNameFn = useMemo(
-    () => (testCode: string) => getTestName(testCode, tests),
-    [tests]
-  );
-
   // Memoize columns to prevent recreation on every render
   const columns = useMemo(
-    () => getOrderTableColumns(navigate, getPatientNameFn, getTestNameFn),
-    [navigate, getPatientNameFn, getTestNameFn]
+    () => getOrderTableColumns(navigate, getPatientName, getTestName),
+    [navigate, getPatientName, getTestName]
   );
+
+  // Clear error by invalidating and refetching
+  const clearError = () => {
+    invalidateOrders();
+  };
 
   // Show loading state
   if (loading && orders.length === 0) {
@@ -119,7 +136,7 @@ export const OrderList: React.FC = () => {
         <ErrorAlert
           error={error}
           onDismiss={clearError}
-          onRetry={refreshOrders}
+          onRetry={refetch}
           className="shrink-0"
         />
       )}

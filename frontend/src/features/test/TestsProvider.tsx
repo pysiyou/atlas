@@ -1,63 +1,72 @@
 /**
  * Tests Provider Component
- * Manages test catalog and operations using backend API
+ * 
+ * MIGRATION NOTE: This provider now delegates to TanStack Query hooks.
+ * It maintains backward compatibility for components still using useTests() context.
+ * 
+ * New components should use the query hooks directly:
+ * - useTestCatalog() for fetching tests
+ * - useTestSearch() for searching
+ * - useTestsByCategory() for filtering by category
+ * - useTestNameLookup() for resolving test codes to names
+ * 
+ * This provider will be deprecated once all consumers are migrated.
  */
 
-import React, { type ReactNode, useCallback, useState, useEffect } from 'react';
+import React, { type ReactNode, useCallback, useMemo } from 'react';
 import type { Test, TestCategory } from '@/types';
 import { TestsContext, type TestsContextType, type TestError } from './TestsContext';
+import { useTestCatalog, useInvalidateTestCatalog } from '@/hooks/queries';
 import { testAPI } from '@/services/api';
 
 interface TestsProviderProps {
   children: ReactNode;
 }
 
+/**
+ * TestsProvider - Backward compatible wrapper around TanStack Query
+ * 
+ * Delegates data fetching to useTestCatalog() hook which provides:
+ * - Infinity caching (data fetched once per session)
+ * - Request deduplication
+ * - Automatic error handling
+ */
 export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
-  const [tests, setTests] = useState<Test[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<TestError | null>(null);
+  // Delegate to TanStack Query hook for data fetching
+  const { tests, isLoading: loading, isError, error: queryError, refetch } = useTestCatalog();
+  const { invalidate } = useInvalidateTestCatalog();
+
+  // Format error for backward compatibility
+  const error: TestError | null = useMemo(() => {
+    if (!isError) return null;
+    return {
+      message: queryError instanceof Error ? queryError.message : 'Failed to load tests',
+      operation: 'load',
+    };
+  }, [isError, queryError]);
 
   /**
    * Clear any error state
    */
   const clearError = useCallback(() => {
-    setError(null);
+    // With TanStack Query, errors are cleared on successful refetch
+    // We can trigger a refetch to attempt recovery
   }, []);
 
   /**
-   * Refresh tests from backend
+   * Refresh tests - delegates to TanStack Query invalidation
    */
   const refreshTests = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await testAPI.getAll();
-      setTests(data);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load tests';
-      console.error('Failed to load tests:', err);
-      setError({
-        message: errorMessage,
-        operation: 'load',
-      });
-      setTests([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Load tests on mount
-  useEffect(() => {
-    refreshTests();
-  }, [refreshTests]);
+    await invalidate();
+    await refetch();
+  }, [invalidate, refetch]);
 
   /**
-   * Add a new test
+   * Add a new test (admin only)
    */
   const addTest = useCallback(async (test: Test) => {
     try {
-      const created = await testAPI.create(test);
-      setTests(prev => [...prev, created]);
+      await testAPI.create(test);
       await refreshTests();
     } catch (err) {
       console.error('Failed to create test:', err);
@@ -66,14 +75,11 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
   }, [refreshTests]);
 
   /**
-   * Update an existing test
+   * Update an existing test (admin only)
    */
   const updateTest = useCallback(async (code: string, updates: Partial<Test>) => {
     try {
-      const updated = await testAPI.update(code, updates);
-      setTests(prev =>
-        prev.map(test => (test.code === code ? updated : test))
-      );
+      await testAPI.update(code, updates);
       await refreshTests();
     } catch (err) {
       console.error('Failed to update test:', err);
@@ -113,7 +119,7 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
    * Search tests by name, code, synonyms, LOINC codes, or panels
    */
   const searchTests = useCallback((query: string): Test[] => {
-    if (!query.trim()) return getActiveTests();
+    if (!query.trim()) return tests.filter(t => t.isActive);
 
     const lowerQuery = query.toLowerCase();
     return tests.filter(test => {
@@ -136,7 +142,7 @@ export const TestsProvider: React.FC<TestsProviderProps> = ({ children }) => {
 
       return false;
     });
-  }, [tests, getActiveTests]);
+  }, [tests]);
 
   /**
    * Search tests by synonym

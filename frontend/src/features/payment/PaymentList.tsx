@@ -1,12 +1,18 @@
-import React, { useMemo, useState, useEffect } from 'react';
+/**
+ * PaymentList Component
+ * 
+ * Displays a list of orders with payment information.
+ * Uses TanStack Query hooks for efficient data fetching and caching.
+ */
+
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFiltering } from '@/utils/filtering';
 import { Table, EmptyState, Card } from '@/shared/ui';
 import { PaymentFilters } from './PaymentFilters';
 import { getPaymentTableColumns } from './PaymentTableColumns';
-import type { Order, Payment, PaymentStatus, PaymentMethod } from '@/types';
-import { orderAPI } from '@/services/api/orders';
-import { getPayments } from '@/services/api/payments';
+import { useOrdersList, usePaymentMethodByOrder } from '@/hooks/queries';
+import type { Order, PaymentStatus, PaymentMethod } from '@/types';
 import { formatCurrency } from '@/utils';
 import { DollarSign, TrendingUp, CreditCard } from 'lucide-react';
 
@@ -15,62 +21,38 @@ export interface OrderWithPaymentMethod extends Order {
   lastPaymentMethod?: PaymentMethod;
 }
 
+/**
+ * PaymentList Component
+ * 
+ * Displays orders with their payment status and allows filtering.
+ * Now uses shared query hooks instead of direct API calls, eliminating
+ * redundant network requests when order data is already cached.
+ */
 export const PaymentList: React.FC = () => {
   const navigate = useNavigate();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [methodFilters, setMethodFilters] = useState<PaymentMethod[]>([]);
 
-  // Fetch all orders and payments
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [ordersData, paymentsData] = await Promise.all([
-          orderAPI.getAll(),
-          getPayments(),
-        ]);
-        setOrders(ordersData);
-        setPayments(paymentsData);
-        setError(null);
-      } catch (err) {
-        setError('Failed to load data');
-        console.error('Error fetching data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Use shared query hooks - data is cached and shared across components
+  const { orders, isLoading: ordersLoading, isError: ordersError, error: ordersErrorObj } = useOrdersList();
+  const { paymentMethodMap, isLoading: paymentsLoading } = usePaymentMethodByOrder();
 
-    fetchData();
-  }, []);
+  // Combined loading state
+  const isLoading = ordersLoading || paymentsLoading;
 
-  // Create a map of orderId -> most recent payment method
-  const paymentMethodByOrder = useMemo(() => {
-    const map = new Map<string, PaymentMethod>();
-    // Sort payments by date descending to get most recent first
-    const sortedPayments = [...payments].sort(
-      (a, b) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime()
-    );
-    // Map each order to its most recent payment method
-    for (const payment of sortedPayments) {
-      if (!map.has(payment.orderId)) {
-        map.set(payment.orderId, payment.paymentMethod);
-      }
-    }
-    return map;
-  }, [payments]);
+  // Format error message
+  const error = ordersError 
+    ? (ordersErrorObj instanceof Error ? ordersErrorObj.message : 'Failed to load data')
+    : null;
 
-  // Merge orders with payment method
+  // Merge orders with payment method from cached payments data
   const ordersWithPaymentMethod: OrderWithPaymentMethod[] = useMemo(() => {
     return orders.map(order => ({
       ...order,
-      lastPaymentMethod: paymentMethodByOrder.get(order.orderId),
+      lastPaymentMethod: paymentMethodMap.get(order.orderId),
     }));
-  }, [orders, paymentMethodByOrder]);
+  }, [orders, paymentMethodMap]);
 
-  // Calculate stats
+  // Calculate stats from cached orders data
   const stats = useMemo(() => {
     const today = new Date().toISOString().split('T')[0];
     const todayOrders = orders.filter(o => o.orderDate.startsWith(today));
@@ -119,7 +101,7 @@ export const PaymentList: React.FC = () => {
   );
 
   // Show loading state
-  if (loading && orders.length === 0) {
+  if (isLoading && orders.length === 0) {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center">
@@ -218,4 +200,3 @@ export const PaymentList: React.FC = () => {
     </div>
   );
 };
-

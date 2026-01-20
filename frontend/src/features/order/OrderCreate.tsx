@@ -123,7 +123,7 @@ export const CreateOrder: React.FC = () => {
         priority: formData.priority,
         clinicalNotes: formData.clinicalNotes.trim() || undefined,
         totalPrice,
-        paymentStatus: 'pending',
+        paymentStatus: 'unpaid',
         overallStatus: 'ordered',
         createdBy: currentUser?.id || 'unknown',
         createdAt: new Date().toISOString(),

@@ -54,8 +54,9 @@ export const Billing: React.FC = () => {
     
     // Update order payment status
     const newAmountPaid = invoice.amountPaid + amount;
-    const paymentStatus = newAmountPaid >= invoice.total ? 'paid' : newAmountPaid > 0 ? 'partial' : 'pending';
-    updateOrder(invoice.orderId, { paymentStatus });
+    // Order uses 'unpaid' | 'paid', so we convert the status
+    const orderPaymentStatus = newAmountPaid >= invoice.total ? 'paid' : 'unpaid';
+    updateOrder(invoice.orderId, { paymentStatus: orderPaymentStatus });
     
     toast.success('Payment processed successfully');
     setSelectedInvoice(null);

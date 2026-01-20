@@ -1,9 +1,20 @@
 /**
  * Orders Provider Component
- * Manages test orders and operations with proper error handling
+ * 
+ * MIGRATION NOTE: This provider now delegates to TanStack Query hooks.
+ * It maintains backward compatibility for components still using useOrders() context.
+ * 
+ * New components should use the query hooks directly:
+ * - useOrdersList() for fetching orders
+ * - useOrder(id) for single order
+ * - useCreateOrder() for creating orders
+ * - useUpdateOrder() for updating orders
+ * - useUpdateTestStatus() for updating test status
+ * 
+ * This provider will be deprecated once all consumers are migrated.
  */
 
-import React, { type ReactNode, useCallback, useState, useEffect } from 'react';
+import React, { type ReactNode, useCallback, useMemo } from 'react';
 import type { Order, OrderStatus, TestStatus, OrderTest } from '@/types';
 import {
   OrdersContext,
@@ -12,12 +23,19 @@ import {
   type TestStatusUpdateData,
   type CollectionData,
 } from './OrderContext';
-import { orderAPI } from '@/services/api';
 import {
-  updateOrderTestStatus,
+  useOrdersList,
+  useCreateOrder,
+  useUpdateOrder,
+  useDeleteOrder,
+  useUpdateTestStatus,
+  useUpdatePaymentStatus,
+  useMarkTestCritical,
+  useInvalidateOrders,
+} from '@/hooks/queries';
+import {
   createReflexTest,
   createRepeatTest,
-  markTestAsCritical,
   getOrdersNeedingCollection,
   getAllTestsNeedingCollection,
 } from '@/utils/orderUtils';
@@ -27,108 +45,85 @@ interface OrdersProviderProps {
 }
 
 /**
- * Orders Provider Component
- * Manages test orders and operations with comprehensive error handling
+ * OrdersProvider - Backward compatible wrapper around TanStack Query
+ * 
+ * Delegates data fetching to useOrdersList() hook which provides:
+ * - 30 second stale time with background refetching
+ * - Request deduplication
+ * - Optimistic updates for mutations
  */
 export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<OrderError | null>(null);
+  // Delegate to TanStack Query hooks for data fetching
+  const { orders, isLoading: loading, isError, error: queryError, refetch } = useOrdersList();
+  const { invalidateAll } = useInvalidateOrders();
+  
+  // Mutation hooks
+  const createOrderMutation = useCreateOrder();
+  const updateOrderMutation = useUpdateOrder();
+  const deleteOrderMutation = useDeleteOrder();
+  const updateTestStatusMutation = useUpdateTestStatus();
+  const updatePaymentStatusMutation = useUpdatePaymentStatus();
+  const markTestCriticalMutation = useMarkTestCritical();
+
+  // Format error for backward compatibility
+  const error: OrderError | null = useMemo(() => {
+    if (!isError) return null;
+    return {
+      message: queryError instanceof Error ? queryError.message : 'Failed to load orders',
+      operation: 'load',
+    };
+  }, [isError, queryError]);
 
   /**
    * Clear any error state
    */
   const clearError = useCallback(() => {
-    setError(null);
+    // With TanStack Query, errors are cleared on successful refetch
   }, []);
 
   /**
    * Refresh orders from backend
    */
   const refreshOrders = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await orderAPI.getAll();
-      setOrders(data);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load orders';
-      console.error('Failed to load orders:', err);
-      setError({
-        message: errorMessage,
-        operation: 'load',
-      });
-      setOrders([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Load orders on mount
-  useEffect(() => {
-    refreshOrders();
-  }, [refreshOrders]);
+    await invalidateAll();
+    await refetch();
+  }, [invalidateAll, refetch]);
 
   /**
    * Add a new order
    */
   const addOrder = useCallback(async (order: Order) => {
     try {
-      setError(null);
-      const created = await orderAPI.create(order);
-      setOrders(prev => [...prev, created]);
+      await createOrderMutation.mutateAsync(order);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to create order';
       console.error('Failed to create order:', err);
-      setError({
-        message: errorMessage,
-        operation: 'create',
-      });
       throw err;
     }
-  }, [refreshOrders]);
+  }, [createOrderMutation]);
 
   /**
    * Update an existing order
    */
   const updateOrder = useCallback(async (orderId: string, updates: Partial<Order>) => {
     try {
-      setError(null);
-      const updated = await orderAPI.update(orderId, updates);
-      setOrders(prev =>
-        prev.map(order =>
-          order.orderId === orderId ? updated : order
-        )
-      );
+      await updateOrderMutation.mutateAsync({ orderId, updates });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to update order';
       console.error('Failed to update order:', err);
-      setError({
-        message: errorMessage,
-        operation: 'update',
-      });
       throw err;
     }
-  }, [refreshOrders]);
+  }, [updateOrderMutation]);
 
   /**
    * Delete an order
    */
   const deleteOrder = useCallback(async (orderId: string) => {
     try {
-      setError(null);
-      await orderAPI.delete(orderId);
-      setOrders(prev => prev.filter(order => order.orderId !== orderId));
+      await deleteOrderMutation.mutateAsync(orderId);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to delete order';
       console.error('Failed to delete order:', err);
-      setError({
-        message: errorMessage,
-        operation: 'delete',
-      });
       throw err;
     }
-  }, []);
+  }, [deleteOrderMutation]);
 
   /**
    * Get an order by ID
@@ -147,25 +142,17 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     additionalData?: Partial<TestStatusUpdateData>
   ) => {
     try {
-      setError(null);
-      await orderAPI.updateTestStatus(orderId, testCode, status, additionalData as Record<string, unknown>);
-      setOrders(prev =>
-        prev.map(order =>
-          order.orderId === orderId
-            ? updateOrderTestStatus(order, testCode, status, additionalData)
-            : order
-        )
-      );
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to update test status';
-      console.error('Failed to update test status:', err);
-      setError({
-        message: errorMessage,
-        operation: 'update',
+      await updateTestStatusMutation.mutateAsync({
+        orderId,
+        testCode,
+        status,
+        additionalData: additionalData as Record<string, unknown>,
       });
+    } catch (err) {
+      console.error('Failed to update test status:', err);
       throw err;
     }
-  }, []);
+  }, [updateTestStatusMutation]);
 
   /**
    * Update overall order status
@@ -179,23 +166,12 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
    */
   const updatePaymentStatus = useCallback(async (orderId: string, paymentStatus: string, amountPaid?: number) => {
     try {
-      setError(null);
-      const updated = await orderAPI.updatePaymentStatus(orderId, paymentStatus, amountPaid);
-      setOrders(prev =>
-        prev.map(order =>
-          order.orderId === orderId ? updated : order
-        )
-      );
+      await updatePaymentStatusMutation.mutateAsync({ orderId, paymentStatus, amountPaid });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to update payment status';
       console.error('Failed to update payment status:', err);
-      setError({
-        message: errorMessage,
-        operation: 'update',
-      });
       throw err;
     }
-  }, []);
+  }, [updatePaymentStatusMutation]);
 
   /**
    * Get orders by status
@@ -213,7 +189,6 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
 
   /**
    * Search orders by order ID
-   * Note: Patient name search removed - use getOrdersByPatient with patient lookup instead
    */
   const searchOrders = useCallback((query: string): Order[] => {
     if (!query.trim()) return orders;
@@ -235,36 +210,28 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _collectionData: CollectionData
   ) => {
-    setOrders(prev =>
-      prev.map(order => {
-        if (order.orderId === orderId) {
-          const updatedTests = order.tests.map(test => {
-            if (testCodes.includes(test.testCode)) {
-              return {
-                ...test,
-                status: 'sample-collected' as TestStatus,
-                sampleId,
-              };
-            }
-            return test;
-          });
-
-          // Update overall status
-          const updates: Partial<Order> = {
-            tests: updatedTests,
-            updatedAt: new Date().toISOString(),
+    // This is handled by the samples mutation now
+    // For backward compatibility, we invalidate to refresh
+    const order = orders.find(o => o.orderId === orderId);
+    if (order) {
+      const updatedTests = order.tests.map(test => {
+        if (testCodes.includes(test.testCode)) {
+          return {
+            ...test,
+            status: 'sample-collected' as TestStatus,
+            sampleId,
           };
-
-          if (updatedTests.some(t => t.status === 'sample-collected' || t.status === 'in-progress')) {
-            updates.overallStatus = 'in-progress';
-          }
-
-          return { ...order, ...updates };
         }
-        return order;
-      })
-    );
-  }, []);
+        return test;
+      });
+
+      updateOrder(orderId, {
+        tests: updatedTests,
+        overallStatus: 'in-progress',
+        updatedAt: new Date().toISOString(),
+      });
+    }
+  }, [orders, updateOrder]);
 
   /**
    * Add reflex test to an order
@@ -275,20 +242,16 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     triggeredByTestCode: string,
     reflexRule: string
   ) => {
-    setOrders(prev =>
-      prev.map(order => {
-        if (order.orderId !== orderId) return order;
+    const order = orders.find(o => o.orderId === orderId);
+    if (!order) return;
 
-        const newTest = createReflexTest(reflexTest, triggeredByTestCode, reflexRule);
-        return {
-          ...order,
-          tests: [...order.tests, newTest],
-          totalPrice: order.totalPrice + reflexTest.priceAtOrder,
-          updatedAt: new Date().toISOString(),
-        };
-      })
-    );
-  }, []);
+    const newTest = createReflexTest(reflexTest, triggeredByTestCode, reflexRule);
+    updateOrder(orderId, {
+      tests: [...order.tests, newTest],
+      totalPrice: order.totalPrice + reflexTest.priceAtOrder,
+      updatedAt: new Date().toISOString(),
+    });
+  }, [orders, updateOrder]);
 
   /**
    * Add repeat test
@@ -299,28 +262,24 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     repeatReason: string,
     sampleId?: string
   ) => {
-    setOrders(prev =>
-      prev.map(order => {
-        if (order.orderId !== orderId) return order;
+    const order = orders.find(o => o.orderId === orderId);
+    if (!order) return;
 
-        const originalTest = order.tests.find(t => t.testCode === originalTestCode);
-        if (!originalTest) return order;
+    const originalTest = order.tests.find(t => t.testCode === originalTestCode);
+    if (!originalTest) return;
 
-        const existingRepeats = order.tests.filter(
-          t => t.originalTestId === originalTestCode ||
-               (t.testCode === originalTestCode && t.isRepeatTest)
-        ).length;
+    const existingRepeats = order.tests.filter(
+      t => t.originalTestId === originalTestCode ||
+           (t.testCode === originalTestCode && t.isRepeatTest)
+    ).length;
 
-        const repeatTest = createRepeatTest(originalTest, repeatReason, existingRepeats, sampleId);
+    const repeatTest = createRepeatTest(originalTest, repeatReason, existingRepeats, sampleId);
 
-        return {
-          ...order,
-          tests: [...order.tests, repeatTest],
-          updatedAt: new Date().toISOString(),
-        };
-      })
-    );
-  }, []);
+    updateOrder(orderId, {
+      tests: [...order.tests, repeatTest],
+      updatedAt: new Date().toISOString(),
+    });
+  }, [orders, updateOrder]);
 
   /**
    * Mark test as having critical values
@@ -331,61 +290,36 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     notifiedTo: string
   ) => {
     try {
-      setError(null);
-      await orderAPI.markTestCritical(orderId, testCode, notifiedTo);
-      const now = new Date().toISOString();
-
-      setOrders(prev =>
-        prev.map(order => {
-          if (order.orderId !== orderId) return order;
-
-          const updatedTests = order.tests.map(test =>
-            test.testCode === testCode ? markTestAsCritical(test, notifiedTo, now) : test
-          );
-
-          return { ...order, tests: updatedTests, updatedAt: now };
-        })
-      );
+      await markTestCriticalMutation.mutateAsync({ orderId, testCode, notifiedTo });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to mark test as critical';
       console.error('Failed to mark test as critical:', err);
-      setError({
-        message: errorMessage,
-        operation: 'update',
-      });
       throw err;
     }
-  }, []);
+  }, [markTestCriticalMutation]);
 
   /**
    * Acknowledge critical result
    */
   const acknowledgeCriticalResult = useCallback((orderId: string, testCode: string) => {
+    const order = orders.find(o => o.orderId === orderId);
+    if (!order) return;
+
     const now = new Date().toISOString();
+    const updatedTests = order.tests.map(test => {
+      if (test.testCode === testCode) {
+        return {
+          ...test,
+          criticalAcknowledgedAt: now,
+        };
+      }
+      return test;
+    });
 
-    setOrders(prev =>
-      prev.map(order => {
-        if (order.orderId === orderId) {
-          const updatedTests = order.tests.map(test => {
-            if (test.testCode === testCode) {
-              return {
-                ...test,
-                criticalAcknowledgedAt: now,
-              };
-            }
-            return test;
-          });
-
-          return {
-            ...order,
-            tests: updatedTests,
-            updatedAt: now,
-          };
-        }
-        return order;
-      })
-    );
-  }, []);
+    updateOrder(orderId, {
+      tests: updatedTests,
+      updatedAt: now,
+    });
+  }, [orders, updateOrder]);
 
   /**
    * Get orders that need collection for a specific sample type
