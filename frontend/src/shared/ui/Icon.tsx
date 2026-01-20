@@ -106,6 +106,11 @@ export type IconName =
   | "test-tube-landing-page"
   | "thermometer-landing-page"
   | "vial-landing-page"
+  | "flask"
+  | "dashboard"
+  | "warning"
+  | "close"
+  | "cross"
   ;
 
 interface IconProps {

@@ -25,7 +25,6 @@ import { useSamples, useTests, usePatients, useOrders } from '@/hooks';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { LabDetailModal, DetailSection, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
 import type { SampleDisplay } from './types';
-import { Clock, FlaskConical, XCircle, CheckCircle, Printer } from 'lucide-react';
 
 interface SampleDetailModalProps {
   isOpen: boolean;
@@ -145,7 +144,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
       const isRecollection = sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0);
       return (
         <ModalFooter
-          statusIcon={<FlaskConical size={16} className="text-yellow-500" />}
+          statusIcon={<Icon name="flask" className="w-4 h-4 text-yellow-500" />}
           statusMessage="Sample pending collection"
           statusClassName="text-gray-600"
         >
@@ -159,7 +158,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
               <Button
                 variant="primary"
                 size="md"
-                icon={<FlaskConical size={16} />}
+                icon={<Icon name="flask" className="w-4 h-4" />}
               >
                 {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
               </Button>
@@ -173,7 +172,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
     if (isCollected && sample.sampleId && !sample.sampleId.includes('PENDING')) {
       return (
         <ModalFooter
-          statusIcon={<CheckCircle size={16} className="text-green-500" />}
+          statusIcon={<Icon name="check-circle" className="w-4 h-4 text-green-500" />}
           statusMessage="Sample collected successfully"
           statusClassName="text-green-600"
         >
@@ -181,7 +180,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
             onClick={handlePrintLabel}
             variant="outline"
             size="md"
-            icon={<Printer size={16} />}
+            icon={<Icon name="printer" className="w-4 h-4" />}
           >
             Print Label
           </Button>
@@ -205,7 +204,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
               <Button
                 variant="danger"
                 size="md"
-                icon={<XCircle size={16} />}
+                icon={<Icon name="close" className="w-4 h-4" />}
               >
                 Reject Sample
               </Button>
@@ -219,7 +218,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
     if (isRejected) {
       return (
         <ModalFooter
-          statusIcon={<XCircle size={16} className="text-red-500" />}
+          statusIcon={<Icon name="x-circle" className="w-4 h-4 text-red-500" />}
           statusMessage={rejectedSample?.recollectionRequired ? 'Sample rejected - recollection requested' : 'Sample rejected'}
           statusClassName="text-red-600"
         />
@@ -293,7 +292,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
                 <span className="text-gray-500 mr-2">{testCode}</span>
                 {test?.turnaroundTime && (
                   <span className="text-gray-400 flex items-center gap-1">
-                    <Clock size={10} />
+                    <Icon name="clock" className="w-2.5 h-2.5" />
                     {test.turnaroundTime}h
                   </span>
                 )}

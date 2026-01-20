@@ -258,7 +258,7 @@ export const SampleCollectionPopover: React.FC<SampleCollectionPopoverProps> = (
     offsetValue={8}
     trigger={
       trigger || (
-        <Button variant="primary" size="xs" icon={<Icon name="sample-collection" className="text-white" />}>
+        <Button variant="primary" size="xs" icon={<Icon name="flask" className="text-white" />}>
           {isRecollection ? 'RECOLLECT' : 'COLLECT'}
         </Button>
       )

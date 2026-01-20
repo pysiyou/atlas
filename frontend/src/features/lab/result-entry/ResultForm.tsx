@@ -3,9 +3,7 @@
  */
 
 import React, { useCallback } from 'react';
-import { Button, Textarea, Popover } from '@/shared/ui';
-import { AlertTriangle } from 'lucide-react';
-import { Icon } from '@/shared/ui/Icon';
+import { Button, Textarea, Popover, Icon } from '@/shared/ui';
 import { cn } from '@/utils';
 import type { Test, TestParameter, Patient } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '@/utils/reference-ranges';
@@ -252,7 +250,7 @@ export const ResultForm: React.FC<ResultFormProps> = ({
                   {param.name}
                 </label>
                 <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
-                  {isCritical && <AlertTriangle size={12} className="text-red-500 shrink-0" />}
+                  {isCritical && <Icon name="danger-square" className="w-3 h-3 text-red-500 shrink-0" />}
                   <span className="text-[10px] text-gray-400 truncate">Ref: {refRange}</span>
                 </div>
               </div>

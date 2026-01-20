@@ -5,13 +5,12 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import { Badge, DetailField, Button } from '@/shared/ui';
+import { Badge, DetailField, Button, Icon } from '@/shared/ui';
 import { ResultForm } from './ResultForm';
 import { formatDate } from '@/utils';
 import { useUserDisplay } from '@/hooks';
 import { LabDetailModal, DetailSection, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
 import type { Test, TestWithContext } from '@/types';
-import { Clock, ClipboardCheck, AlertTriangle } from 'lucide-react';
 
 interface ResultDetailModalProps {
   isOpen: boolean;
@@ -122,7 +121,7 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
               </Badge>
               {turnaroundTime && (
                 <Badge size="sm" variant="default" className="text-gray-700 flex items-center gap-1.5">
-                  <Clock size={12} className="text-gray-600" />
+                  <Icon name="clock" className="w-3 h-3 text-gray-600" />
                   {turnaroundTime}h TAT
                 </Badge>
               )}
@@ -152,8 +151,8 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
       footer={
         <ModalFooter
           statusIcon={isComplete 
-            ? <ClipboardCheck size={16} className="text-green-500" />
-            : <AlertTriangle size={16} className="text-yellow-500" />
+            ? <Icon name="checklist" className="w-4 h-4 text-green-500" />
+            : <Icon name="warning" className="w-4 h-4 text-yellow-500" />
           }
           statusMessage={isComplete ? 'Ready to submit' : 'Complete all parameters to submit results'}
           statusClassName={isComplete ? 'text-green-600 font-medium' : 'text-gray-600'}
@@ -163,7 +162,7 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
             onClick={handleSave}
             variant="primary"
             size="md"
-            icon={<ClipboardCheck size={16} />}
+            icon={<Icon name="checklist" className="w-4 h-4" />}
             disabled={!isComplete}
           >
             Submit Results
@@ -221,7 +220,7 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
             {turnaroundTime && (
               <DetailField
                 label="Turnaround Time"
-                value={<span className="flex items-center gap-1"><Clock size={14} />{turnaroundTime} hours</span>}
+                value={<span className="flex items-center gap-1"><Icon name="clock" className="w-3.5 h-3.5" />{turnaroundTime} hours</span>}
               />
             )}
           </div>

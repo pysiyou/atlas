@@ -7,9 +7,9 @@
 
 import React, { memo, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, Check } from "lucide-react";
 import { Portal } from "./Portal";
 import { IconButton } from "./IconButton";
+import { Icon } from "./Icon";
 
 /**
  * Backdrop component with blur and opacity effects
@@ -213,7 +213,7 @@ const Modal = memo(
                     <div className="flex gap-2 shrink-0">
                       <IconButton
                         onClick={onClose}
-                        icon={<X />}
+                        icon={<Icon name="cross" className="w-5 h-5" />}
                         variant="danger"
                         size="md"
                         title="Close"
@@ -223,7 +223,7 @@ const Modal = memo(
                       {onConfirm && (
                         <IconButton
                           onClick={onConfirm}
-                          icon={<Check />}
+                          icon={<Icon name="check" className="w-5 h-5" />}
                           variant="success"
                           size="md"
                           disabled={confirmDisabled}
