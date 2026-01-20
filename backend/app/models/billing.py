@@ -2,6 +2,7 @@
 Billing Models - Invoice, Payment, InsuranceClaim - All fields use camelCase
 """
 from sqlalchemy import Column, String, Float, DateTime, JSON, Enum, ForeignKey, Boolean
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
 from app.schemas.enums import PaymentStatus, PaymentMethod, ClaimStatus
@@ -48,6 +49,9 @@ class Payment(Base):
     receivedBy = Column(String, nullable=False)
     receiptGenerated = Column(Boolean, default=False)
     notes = Column(String, nullable=True)
+
+    # Relationship for eager loading
+    order = relationship("Order", foreign_keys=[orderId])
 
 
 class InsuranceClaim(Base):

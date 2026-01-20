@@ -44,7 +44,7 @@ export const CreateOrder: React.FC = () => {
   }
 
   const { patients, searchPatients } = patientsContext;
-  const { orders, addOrder } = ordersContext;
+  const { orders, addOrder, deleteOrder } = ordersContext;
   const { getActiveTests } = testsContext;
   const { invoices, addInvoice } = billingContext;
 
@@ -131,8 +131,10 @@ export const CreateOrder: React.FC = () => {
         updatedAt: new Date().toISOString(),
       };
 
+      // Create order first
       await addOrder(newOrder);
 
+      // Then create invoice with rollback on failure
       const invoiceId = generateInvoiceId(invoices.map((i) => i.invoiceId));
       const invoice: Invoice = {
         invoiceId,
@@ -159,13 +161,25 @@ export const CreateOrder: React.FC = () => {
         createdAt: new Date().toISOString(),
       };
 
-      await addInvoice(invoice);
+      try {
+        await addInvoice(invoice);
+      } catch (invoiceError) {
+        // ROLLBACK: Delete the orphaned order if invoice creation fails
+        logger.error('Invoice creation failed, rolling back order', invoiceError instanceof Error ? invoiceError : undefined);
+        try {
+          await deleteOrder(orderId);
+        } catch (rollbackError) {
+          logger.error('Failed to rollback order', rollbackError instanceof Error ? rollbackError : undefined);
+        }
+        throw new Error('Failed to create invoice. Order has been cancelled.');
+      }
 
       toast.success(`Order ${orderId} created successfully!`);
       navigate(`/orders/${orderId}`);
     } catch (error) {
       logger.error('Error creating order', error instanceof Error ? error : undefined);
-      toast.error('Failed to create order. Please try again.');
+      const message = error instanceof Error ? error.message : 'Failed to create order. Please try again.';
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }

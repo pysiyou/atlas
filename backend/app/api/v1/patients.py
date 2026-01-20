@@ -4,12 +4,16 @@ All fields use camelCase - no mapping needed
 """
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from datetime import datetime, timezone
 from app.database import get_db
 from app.core.dependencies import get_current_user, require_receptionist
 from app.models.user import User
 from app.models.patient import Patient
+from app.models.order import Order, OrderTest
+from app.models.sample import Sample
 from app.schemas.patient import PatientCreate, PatientUpdate, PatientResponse
+from app.schemas.enums import SampleStatus, TestStatus, UserRole
 from app.services.id_generator import generate_id
 
 router = APIRouter()
@@ -24,18 +28,39 @@ def get_patients(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Get all patients with pagination and optional search
+    Get all patients with pagination and optional search.
+    
+    Role-based filtering:
+    - Admin/Receptionist: All patients
+    - Lab Tech: Only patients with pending/collected samples
+    - Validator: Only patients with results to validate
     """
     query = db.query(Patient)
+
+    # Role-based filtering
+    if current_user.role == UserRole.LAB_TECH:
+        # Lab techs only see patients with pending samples
+        query = query.join(Order).join(Sample).filter(
+            Sample.status.in_([SampleStatus.PENDING, SampleStatus.COLLECTED])
+        ).distinct()
+    elif current_user.role == UserRole.VALIDATOR:
+        # Validators only see patients with results to validate
+        query = query.join(Order).join(OrderTest).filter(
+            OrderTest.status == TestStatus.COMPLETED
+        ).distinct()
+    # Admin and Receptionist see all patients (no filter)
 
     if search:
         search_term = f"%{search.lower()}%"
         query = query.filter(
-            (Patient.fullName.ilike(search_term)) |
-            (Patient.id.ilike(search_term)) |
-            (Patient.phone.contains(search))
+            or_(
+                Patient.fullName.ilike(search_term),
+                Patient.id.ilike(search_term),
+                Patient.phone.contains(search)
+            )
         )
 
+    query = query.order_by(Patient.createdAt.desc())
     patients = query.offset(skip).limit(limit).all()
     return [PatientResponse.model_validate(p).model_dump() for p in patients]
 

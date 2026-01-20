@@ -60,9 +60,31 @@ def get_payments(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Get all payments with optional filters
+    Get all payments with optional filters.
+    
+    Role-based filtering:
+    - Admin/Receptionist/Billing: All payments
+    - Lab Tech/Validator: Only payments for orders they can access
     """
-    query = db.query(Payment)
+    from sqlalchemy.orm import joinedload
+    from app.models.sample import Sample
+    from app.models.order import OrderTest
+    from app.schemas.enums import SampleStatus, TestStatus, UserRole
+    
+    query = db.query(Payment).options(joinedload(Payment.order))
+
+    # Role-based filtering
+    if current_user.role == UserRole.LAB_TECH:
+        # Lab techs only see payments for orders with samples to process
+        query = query.join(Order).join(Sample).filter(
+            Sample.status.in_([SampleStatus.PENDING, SampleStatus.COLLECTED])
+        ).distinct()
+    elif current_user.role == UserRole.VALIDATOR:
+        # Validators only see payments for orders with results to validate
+        query = query.join(Order).join(OrderTest).filter(
+            OrderTest.status == TestStatus.COMPLETED
+        ).distinct()
+    # Admin, Receptionist, and Billing see all payments
 
     if orderId:
         query = query.filter(Payment.orderId == orderId)
@@ -72,13 +94,8 @@ def get_payments(
 
     payments = query.order_by(Payment.paidAt.desc()).offset(skip).limit(limit).all()
     
-    # Enrich with order data
-    enriched_payments = []
-    for payment in payments:
-        order = db.query(Order).filter(Order.orderId == payment.orderId).first()
-        enriched_payments.append(PaymentResponse(**_enrich_payment(payment, order)))
-    
-    return enriched_payments
+    # Use pre-loaded order relationship (N+1 fix)
+    return [PaymentResponse(**_enrich_payment(p, p.order)) for p in payments]
 
 
 @router.get("/payments/{paymentId}", response_model=PaymentResponse)

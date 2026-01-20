@@ -10,35 +10,57 @@ from app.database import get_db
 from app.core.dependencies import get_current_user, require_lab_tech
 from app.models.user import User
 from app.models.sample import Sample
-from app.models.order import OrderTest
+from app.models.order import Order, OrderTest
 from app.schemas.sample import SampleResponse, SampleCollectRequest, SampleRejectRequest, RecollectionRequest
-from app.schemas.enums import SampleStatus, TestStatus, PriorityLevel
+from app.schemas.enums import SampleStatus, TestStatus, PriorityLevel, UserRole
 from app.services.id_generator import generate_id
 from app.services.order_status_updater import update_order_status
 
 router = APIRouter()
 
+# Maximum recollection attempts before requiring supervisor escalation
+MAX_RECOLLECTION_ATTEMPTS = 3
+
 
 @router.get("/samples", response_model=List[SampleResponse])
 def get_samples(
     orderId: str | None = None,
-    status: SampleStatus | None = None,
+    sampleStatus: SampleStatus | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
-    Get all samples with optional filters
+    Get all samples with optional filters.
+    
+    Role-based filtering:
+    - Admin/Receptionist: All samples
+    - Lab Tech: Only samples they need to process (pending/collected)
+    - Validator: Only samples with completed results to validate
     """
     query = db.query(Sample)
+
+    # Role-based filtering
+    if current_user.role == UserRole.LAB_TECH:
+        # Lab techs only see pending/collected samples
+        query = query.filter(
+            Sample.status.in_([SampleStatus.PENDING, SampleStatus.COLLECTED])
+        )
+    elif current_user.role == UserRole.VALIDATOR:
+        # Validators only see samples with completed tests
+        query = query.join(Order).join(OrderTest).filter(
+            OrderTest.status == TestStatus.COMPLETED
+        ).distinct()
+    # Admin and Receptionist see all samples
 
     if orderId:
         query = query.filter(Sample.orderId == orderId)
 
-    if status:
-        query = query.filter(Sample.status == status)
+    if sampleStatus:
+        query = query.filter(Sample.status == sampleStatus)
 
+    query = query.order_by(Sample.createdAt.desc())
     samples = query.offset(skip).limit(limit).all()
     return samples
 
@@ -225,6 +247,14 @@ def request_recollection(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Recollection already requested. New sample: {original_sample.recollectionSampleId}"
+        )
+    
+    # Check recollection limit
+    rejection_count = len(original_sample.rejectionHistory or [])
+    if rejection_count >= MAX_RECOLLECTION_ATTEMPTS:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Maximum recollection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. Please escalate to supervisor."
         )
     
     # Generate new sample ID

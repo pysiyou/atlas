@@ -7,15 +7,17 @@ from sqlalchemy.exc import SQLAlchemyError
 from typing import List
 from datetime import datetime, timezone
 from app.database import get_db
-from app.core.dependencies import get_current_user, require_receptionist
+from app.core.dependencies import get_current_user, require_receptionist, require_validator
 from app.models.user import User
 from app.models.order import Order, OrderTest
 from app.models.test import Test
 from app.models.patient import Patient
+from app.models.sample import Sample
 from app.schemas.order import OrderCreate, OrderUpdate, OrderResponse
-from app.schemas.enums import OrderStatus, PaymentStatus, TestStatus
+from app.schemas.enums import OrderStatus, PaymentStatus, TestStatus, SampleStatus, UserRole
 from app.services.id_generator import generate_id
 from app.services.sample_generator import generate_samples_for_order
+from app.utils.db_helpers import get_or_404
 
 router = APIRouter()
 
@@ -30,9 +32,27 @@ def get_orders(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Get all orders with optional filters
+    Get all orders with optional filters.
+    
+    Role-based filtering:
+    - Admin/Receptionist: All orders
+    - Lab Tech: Only orders with pending/collected samples
+    - Validator: Only orders with results to validate
     """
     query = db.query(Order)
+
+    # Role-based filtering
+    if current_user.role == UserRole.LAB_TECH:
+        # Lab techs only see orders with samples to process
+        query = query.join(Sample).filter(
+            Sample.status.in_([SampleStatus.PENDING, SampleStatus.COLLECTED])
+        ).distinct()
+    elif current_user.role == UserRole.VALIDATOR:
+        # Validators only see orders with results to validate
+        query = query.join(OrderTest).filter(
+            OrderTest.status == TestStatus.COMPLETED
+        ).distinct()
+    # Admin and Receptionist see all orders
 
     if patientId:
         query = query.filter(Order.patientId == patientId)
@@ -163,3 +183,28 @@ def update_order(
     db.refresh(order)
 
     return order
+
+
+@router.post("/orders/{orderId}/report", status_code=status.HTTP_200_OK)
+def mark_as_reported(
+    orderId: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_validator)
+):
+    """
+    Mark a validated order as reported (final state).
+    Only validators can mark orders as reported.
+    """
+    order = get_or_404(db, Order, orderId, "orderId")
+
+    if order.overallStatus != OrderStatus.VALIDATED:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Order must be VALIDATED before reporting. Current status: {order.overallStatus}"
+        )
+
+    order.overallStatus = OrderStatus.REPORTED
+    order.updatedAt = datetime.now(timezone.utc)
+    db.commit()
+
+    return {"orderId": orderId, "status": "reported", "message": "Order marked as reported"}
