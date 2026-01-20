@@ -90,16 +90,10 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
   };
 
   // Badges ordered by importance for validation workflow
-  // Note: Re-collect badge is shown in the rejection banner below, so we only show Re-test here
+  // Note: Re-test/Re-collect badges are shown in the rejection banner below
   const badges = (
     <>
       <h3 className="text-sm font-medium text-gray-900">{test.testName}</h3>
-      {isRetest && (
-        <Badge variant="warning" size="sm" className="flex items-center gap-1">
-          <Icon name="loading" className="w-3 h-3" />
-          Re-test #{retestNumber}
-        </Badge>
-      )}
       {hasFlags && (
         <Badge size="sm" variant="danger">
           {test.flags!.length} FLAG{test.flags!.length > 1 ? 'S' : ''}

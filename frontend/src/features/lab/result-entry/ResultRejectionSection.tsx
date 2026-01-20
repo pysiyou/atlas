@@ -1,8 +1,8 @@
 /**
  * ResultRejectionSection - Rejection history display section for result validation
  * 
- * Displays result rejection history with details about each rejection event.
- * Similar to SampleRejectionSection but for result validation flow.
+ * Displays result rejection history with tabs for each rejection attempt.
+ * Similar to SampleRequirementsSection tab pattern.
  */
 
 import React from 'react';
@@ -24,6 +24,7 @@ interface ResultRejectionRecordDisplayProps {
 
 /**
  * Single rejection record display component
+ * Matches the layout structure of SampleRejectionSection
  */
 const RejectionRecordDisplay: React.FC<ResultRejectionRecordDisplayProps> = ({
   record,
@@ -41,20 +42,32 @@ const RejectionRecordDisplay: React.FC<ResultRejectionRecordDisplayProps> = ({
 
   return (
     <ul className="space-y-1">
+      {/* Rejection type - similar to reasons in SampleRejectionSection */}
       <li className={`flex items-center text-xs ${textColor}`}>
         <span className={`w-1.5 h-1.5 rounded-full ${bulletColor} mr-2`} />
         <span className="font-medium">{rejectionTypeLabel}</span>
       </li>
+      {/* Rejection reason/notes - italic style */}
       {record.rejectionReason && (
         <li className={`flex items-center text-xs ${notesColor} italic`}>
           <span className={`w-1.5 h-1.5 rounded-full ${bulletColor} mr-2`} />
           "{record.rejectionReason}"
         </li>
       )}
-      <li className="flex items-center text-xs text-gray-600">
-        <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
-        <span>{getUserName(record.rejectedBy)} · {formatDate(record.rejectedAt)}</span>
-      </li>
+      {/* Rejected by and timestamp */}
+      {record.rejectedBy && record.rejectedAt && (
+        <li className="flex items-center text-xs text-gray-600">
+          <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
+          <span>{getUserName(record.rejectedBy)} · {formatDate(record.rejectedAt)}</span>
+        </li>
+      )}
+      {/* Re-collect indicator - similar to recollectionRequired in SampleRejectionSection */}
+      {record.rejectionType === 're-collect' && (
+        <li className="flex items-center text-xs text-gray-600">
+          <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
+          <span>Recollection required</span>
+        </li>
+      )}
     </ul>
   );
 };
@@ -76,7 +89,7 @@ interface ResultRejectionSectionProps {
 /**
  * ResultRejectionSection - Component for displaying result rejection history
  * 
- * Shows rejection events from result validation with:
+ * Shows rejection events from result validation with tabs for each attempt:
  * - Rejection type (re-test or re-collect)
  * - Rejection reason/notes
  * - Who rejected and when
@@ -87,29 +100,71 @@ export const ResultRejectionSection: React.FC<ResultRejectionSectionProps> = ({
   getUserName,
   showOnlyLatest = false,
 }) => {
+  // Sort by date (oldest first for chronological tab numbering)
+  const sortedHistory = React.useMemo(() => 
+    [...(rejectionHistory || [])].sort((a, b) => 
+      new Date(a.rejectedAt).getTime() - new Date(b.rejectedAt).getTime()
+    ), [rejectionHistory]
+  );
+
+  // Default to showing the most recent (last) attempt
+  const [activeIndex, setActiveIndex] = React.useState(sortedHistory.length - 1);
+
+  // Update active index when history changes
+  React.useEffect(() => {
+    setActiveIndex(sortedHistory.length - 1);
+  }, [sortedHistory.length]);
+
   if (!rejectionHistory || rejectionHistory.length === 0) {
     return null;
   }
 
-  // Sort by date (newest first) for display
-  const sortedHistory = [...rejectionHistory].sort((a, b) => 
-    new Date(b.rejectedAt).getTime() - new Date(a.rejectedAt).getTime()
-  );
+  // For showOnlyLatest mode, just show the most recent without tabs
+  if (showOnlyLatest) {
+    const latestRecord = sortedHistory[sortedHistory.length - 1];
+    return (
+      <DetailSection title={title}>
+        <RejectionRecordDisplay
+          record={latestRecord}
+          getUserName={getUserName}
+          variant="red"
+        />
+      </DetailSection>
+    );
+  }
 
-  const recordsToShow = showOnlyLatest ? [sortedHistory[0]] : sortedHistory;
+  const activeRecord = sortedHistory[activeIndex];
+  // Most recent (last in sorted array) gets red variant
+  const isLatest = activeIndex === sortedHistory.length - 1;
 
   return (
-    <DetailSection title={title}>
-      <div className="space-y-3">
-        {recordsToShow.map((record, index) => (
-          <RejectionRecordDisplay
-            key={`${record.rejectedAt}-${index}`}
-            record={record}
-            getUserName={getUserName}
-            variant={index === 0 ? 'red' : 'yellow'}
-          />
-        ))}
-      </div>
+    <DetailSection
+      title={title}
+      headerRight={
+        sortedHistory.length > 1 ? (
+          <div className="flex gap-1">
+            {sortedHistory.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveIndex(index)}
+                className={`px-2 py-1 text-xs rounded transition-colors ${
+                  activeIndex === index
+                    ? 'bg-yellow-100 text-yellow-700 font-medium'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        ) : undefined
+      }
+    >
+      <RejectionRecordDisplay
+        record={activeRecord}
+        getUserName={getUserName}
+        variant={isLatest ? 'red' : 'yellow'}
+      />
     </DetailSection>
   );
 };

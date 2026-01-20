@@ -185,7 +185,9 @@ export const ResultValidation: React.FC = () => {
       comments: comments[commentKey] || '',
       onCommentsChange: handleCommentsChange,
       onApprove: () => handleValidate(test.orderId, test.testCode, true),
-      onReject: (reason: string, type: 're-test' | 're-collect') =>
+      // When RejectionDialogContent is used, it calls the API directly.
+      // Undefined values signal that the API was already called.
+      onReject: (reason?: string, type?: 're-test' | 're-collect') =>
         handleValidate(test.orderId, test.testCode, false, reason, type),
     });
   }, [comments, handleCommentsChange, handleValidate, openModal]);

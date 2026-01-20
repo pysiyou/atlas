@@ -148,10 +148,13 @@ def create_recollection_sample(
     db.add(new_sample)
     
     # Update order tests to point to new sample if requested
+    # IMPORTANT: Exclude SUPERSEDED tests - these were replaced by retests and should
+    # not be revived. Only update active tests that need the new sample.
     if update_order_tests:
         order_tests = db.query(OrderTest).filter(
             OrderTest.orderId == original_sample.orderId,
-            OrderTest.testCode.in_(original_sample.testCodes)
+            OrderTest.testCode.in_(original_sample.testCodes),
+            OrderTest.status != TestStatus.SUPERSEDED  # Don't revive superseded tests
         ).all()
         
         for test in order_tests:

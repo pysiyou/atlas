@@ -270,21 +270,15 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
         />
       )}
 
-      {/* Previous Rejection History */}
-      {!isRejected && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (() => {
-        const lastRejection = sample.rejectionHistory[sample.rejectionHistory.length - 1];
-        return (
-          <SampleRejectionSection
-            title={`Previous Rejection${sample.rejectionHistory.length > 1 ? ` (${sample.rejectionHistory.length} attempts)` : ''}`}
-            reasons={lastRejection.rejectionReasons}
-            notes={lastRejection.rejectionNotes}
-            rejectedBy={lastRejection.rejectedBy}
-            rejectedAt={lastRejection.rejectedAt}
-            variant="yellow"
-            getUserName={getUserName}
-          />
-        );
-      })()}
+      {/* Previous Rejection History - shows tabs for multiple rejections */}
+      {!isRejected && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (
+        <SampleRejectionSection
+          title={`Previous Rejection${sample.rejectionHistory.length > 1 ? ` (${sample.rejectionHistory.length} attempts)` : ''}`}
+          rejectionHistory={sample.rejectionHistory}
+          variant="yellow"
+          getUserName={getUserName}
+        />
+      )}
 
       {/* Linked Tests */}
       <DetailSection title={isCollected ? 'Linked Tests' : 'Required for'}>

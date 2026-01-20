@@ -12,7 +12,7 @@ import { formatDate } from '@/utils';
 import { useUserDisplay } from '@/hooks';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { LabDetailModal, DetailSection, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
-import { ResultRejectionPopoverContent } from './ResultRejectionPopover';
+import { RejectionDialogContent } from '../shared/RejectionDialog';
 import { ResultRejectionSection } from '../result-entry/ResultRejectionSection';
 import type { TestWithContext } from '@/types';
 
@@ -24,7 +24,13 @@ interface ValidationDetailModalProps {
   comments: string;
   onCommentsChange: (commentKey: string, value: string) => void;
   onApprove: () => void;
-  onReject: (reason: string, type: 're-test' | 're-collect') => void;
+  /** 
+   * Called when rejection is performed.
+   * When RejectionDialogContent is used, it calls the API directly.
+   * Passing undefined values signals that the API was already called and
+   * the parent should only refresh data.
+   */
+  onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
 }
 
 export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
@@ -126,16 +132,20 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           >
             {({ close }) => (
               <div data-popover-content onClick={(e) => e.stopPropagation()}>
-                <ResultRejectionPopoverContent
-                  onConfirm={(reason, type) => {
-                    onReject(reason, type);
+                <RejectionDialogContent
+                  orderId={test.orderId}
+                  testCode={test.testCode}
+                  testName={test.testName}
+                  patientName={test.patientName}
+                  onConfirm={() => {
+                    // RejectionDialogContent already calls the API via useRejectionManager.
+                    // Signal to parent to refresh data without making another API call
+                    // by passing undefined values (see ResultValidationView.handleValidate).
+                    onReject(undefined, undefined);
                     close();
                     onClose();
                   }}
                   onCancel={close}
-                  testName={test.testName}
-                  testCode={test.testCode}
-                  patientName={test.patientName}
                 />
               </div>
             )}
@@ -146,20 +156,6 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
         </ModalFooter>
       }
     >
-      {/* Previous Rejection History - show for both retests and recollections */}
-      {hasRejectionHistory && (
-        <ResultRejectionSection
-          title={
-            isRetest 
-              ? `Previous Rejection${rejectionHistory.length > 1 ? ` (${rejectionHistory.length} attempts)` : ''}`
-              : `Recollection History (${rejectionHistory.length} attempt${rejectionHistory.length > 1 ? 's' : ''})`
-          }
-          rejectionHistory={rejectionHistory}
-          getUserName={getUserName}
-          showOnlyLatest={false}
-        />
-      )}
-
       {/* Validation Form */}
       <DetailSection
         title="Result Validation"
@@ -199,6 +195,20 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           patientName={test.patientName}
         />
       </DetailSection>
+
+      {/* Previous Rejection History - show for both retests and recollections */}
+      {hasRejectionHistory && (
+        <ResultRejectionSection
+          title={
+            isRetest 
+              ? `Previous Rejection${rejectionHistory.length > 1 ? ` (${rejectionHistory.length} attempts)` : ''}`
+              : `Recollection History (${rejectionHistory.length} attempt${rejectionHistory.length > 1 ? 's' : ''})`
+          }
+          rejectionHistory={rejectionHistory}
+          getUserName={getUserName}
+          showOnlyLatest={false}
+        />
+      )}
 
       {/* Test Details */}
       <DetailGrid>
