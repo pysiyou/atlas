@@ -73,7 +73,7 @@ export const LAB_CARD_CONTAINERS = {
   cardBase: 'border border-gray-200 hover:border hover:border-blue-100 hover:bg-blue-50 transition-all duration-200',
 
   // Content section (gray background)
-  contentSection: 'bg-gray-50 rounded p-4 border border-gray-100',
+  contentSection: 'bg-gray-50 rounded p-2 border border-gray-100',
 
   // Flags section (red background)
   flagsSection: 'bg-red-50 rounded p-2 border border-red-100',

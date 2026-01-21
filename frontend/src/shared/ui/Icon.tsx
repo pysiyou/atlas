@@ -117,6 +117,7 @@ export type IconName =
   | "cart-plus"
   | "cart"
   | "close-circle"
+  | "book"
   ;
 
 interface IconProps {

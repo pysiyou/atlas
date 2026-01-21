@@ -258,11 +258,11 @@ export const RecollectionAttemptBadge: React.FC<RecollectionAttemptBadgeProps> =
   attemptNumber,
   size = 'sm',
   className = '',
-  showIcon = true,
+  showIcon = false,
 }) => (
   <Badge size={size} variant="warning" className={`flex items-center gap-1 ${className}`}>
     {showIcon && <Icon name="loading" className="w-3 h-3" />}
-    Re-collect #{attemptNumber}
+    RE-COLLECT #{attemptNumber}
   </Badge>
 );
 

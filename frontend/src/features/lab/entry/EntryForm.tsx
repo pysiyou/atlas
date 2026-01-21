@@ -246,7 +246,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
           return (
             <div key={param.code} className="group">
               <div className="flex justify-between items-baseline mb-1 gap-2">
-                <label htmlFor={`result-${resultKey}-${param.code}`} className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0">
+                <label htmlFor={`result-${resultKey}-${param.code}`} className="text-[10px] font-medium text-gray-500 cursor-pointer truncate min-w-0">
                   {param.name}
                 </label>
                 <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
