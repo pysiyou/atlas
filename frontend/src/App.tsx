@@ -24,6 +24,7 @@ import {
   DashboardPage as Dashboard,
   PatientsPage as Patients,
   OrdersPage as Orders,
+  CatalogPage as Catalog,
   LaboratoryPage as Laboratory,
   AppointmentsPage as Appointments,
   PaymentsPage as Payments,
@@ -92,6 +93,14 @@ const AppRoutes: React.FC = () => {
         element={
           <ProtectedFeatureRoute featureName="Orders">
             <Orders />
+          </ProtectedFeatureRoute>
+        }
+      />
+      <Route
+        path={`${ROUTES.CATALOG}/*`}
+        element={
+          <ProtectedFeatureRoute featureName="Catalog">
+            <Catalog />
           </ProtectedFeatureRoute>
         }
       />

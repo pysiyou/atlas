@@ -1,0 +1,205 @@
+/**
+ * CatalogDetail Component
+ * 
+ * Displays comprehensive details about a single test from the catalog.
+ * Uses BalancedDetailsLayout for automatic table arrangement.
+ */
+
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { useTest } from '@/hooks/queries';
+import { EmptyState, BalancedDetailsLayout } from '@/shared/ui';
+import { LoadingState } from '@/shared/components';
+import { formatCurrency } from '@/utils';
+import type { TableInput } from '@/shared/ui/BalancedDetailsLayout';
+
+/**
+ * Format turnaround time for display
+ * @param hours - Turnaround time in hours
+ * @returns Formatted string
+ */
+const formatTurnaroundTime = (hours: number): string => {
+  if (hours < 24) {
+    return `${hours} hour${hours !== 1 ? 's' : ''}`;
+  } else if (hours === 24) {
+    return '1 day';
+  } else if (hours < 168) {
+    const days = Math.round(hours / 24);
+    return `${days} day${days > 1 ? 's' : ''}`;
+  } else {
+    const weeks = Math.round(hours / 168);
+    return `${weeks} week${weeks > 1 ? 's' : ''}`;
+  }
+};
+
+/**
+ * Format array to comma-separated string
+ */
+const formatArray = (arr: string[] | undefined): string => {
+  if (!arr || arr.length === 0) return '-';
+  return arr.join(', ');
+};
+
+/**
+ * Format boolean to Yes/No
+ */
+const formatBoolean = (val: boolean | undefined): string => {
+  if (val === undefined) return '-';
+  return val ? 'Yes' : 'No';
+};
+
+/**
+ * Format date for display
+ */
+const formatDate = (dateStr: string): string => {
+  return new Date(dateStr).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+};
+
+/**
+ * Capitalize first letter
+ */
+const capitalize = (str: string): string => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+/**
+ * CatalogDetail Component
+ */
+export const CatalogDetail: React.FC = () => {
+  const { testCode } = useParams<{ testCode: string }>();
+
+  // Fetch test details using the query hook
+  const { test, isLoading, isError } = useTest(testCode);
+
+  // Show loading state
+  if (isLoading) {
+    return <LoadingState message="Loading test details..." fullScreen />;
+  }
+
+  // Show error or not found state
+  if (isError || !test) {
+    return (
+      <div className="h-full flex flex-col p-6">
+        <div className="flex-1 flex items-center justify-center">
+          <EmptyState
+            icon="alert-circle"
+            title="Test Not Found"
+            description={`The test with code "${testCode}" could not be found in the catalog.`}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Build tables for BalancedDetailsLayout
+  const tables: TableInput[] = [
+    {
+      key: 'overview',
+      title: 'Test Overview',
+      rows: [
+        { label: 'Test Code', value: test.code },
+        { label: 'Test Name', value: test.name },
+        { label: 'Category', value: capitalize(test.category) },
+        { label: 'Turnaround Time', value: formatTurnaroundTime(test.turnaroundTime) },
+        { label: 'Methodology', value: test.methodology || '-' },
+        { label: 'Synonyms', value: formatArray(test.synonyms) },
+        { label: 'LOINC Codes', value: formatArray(test.loincCodes) },
+        { label: 'Panels', value: formatArray(test.panels) },
+        { label: 'Notes', value: test.notes || '-' },
+      ],
+    },
+    {
+      key: 'sample',
+      title: 'Sample Requirements',
+      rows: [
+        { label: 'Sample Type', value: capitalize(test.sampleType) },
+        { label: 'Container', value: test.containerDescription || '-' },
+        { label: 'Container Types', value: formatArray(test.containerTypes) },
+        { label: 'Container Colors', value: formatArray(test.containerTopColors) },
+        { label: 'Sample Volume', value: test.sampleVolume },
+        { label: 'Minimum Volume', value: test.minimumVolume ? `${test.minimumVolume} mL` : '-' },
+        { label: 'Fasting Required', value: formatBoolean(test.fastingRequired) },
+        { label: 'Collection Notes', value: test.collectionNotes || '-' },
+        { label: 'Special Requirements', value: test.specialRequirements || '-' },
+        { label: 'Rejection Criteria', value: formatArray(test.rejectionCriteria) },
+      ],
+    },
+    {
+      key: 'pricing',
+      title: 'Pricing & Status',
+      rows: [
+        { label: 'Price', value: formatCurrency(test.price) },
+        { label: 'Status', value: test.isActive ? 'Active' : 'Inactive' },
+        { label: 'Confidence Level', value: test.confidence || '-' },
+        { label: 'Created', value: formatDate(test.createdAt) },
+        { label: 'Last Updated', value: formatDate(test.updatedAt) },
+      ],
+    },
+  ];
+
+  // Add parameters table if test has parameters
+  if (test.parameters && test.parameters.length > 0) {
+    tables.push({
+      key: 'parameters',
+      title: `Result Parameters (${test.parameters.length})`,
+      rows: test.parameters.map((param) => ({
+        label: param.code,
+        value: `${param.name}${param.unit ? ` (${param.unit})` : ''}${param.referenceRange ? ` — ${param.referenceRange}` : ''}`,
+      })),
+    });
+  }
+
+  // Add reference ranges table if available
+  if (test.referenceRanges && test.referenceRanges.length > 0) {
+    tables.push({
+      key: 'ranges',
+      title: `Reference Ranges (${test.referenceRanges.length})`,
+      rows: test.referenceRanges.map((range, idx) => {
+        const rangeStr = range.text || 
+          (range.min !== undefined && range.max !== undefined ? `${range.min} - ${range.max}` :
+           range.min !== undefined ? `≥ ${range.min}` :
+           range.max !== undefined ? `≤ ${range.max}` : 'N/A');
+        
+        const genderStr = range.gender ? ` (${capitalize(range.gender)})` : '';
+        const ageStr = range.ageMin !== undefined || range.ageMax !== undefined
+          ? ` [${range.ageMin ?? 0}-${range.ageMax ?? '∞'} yrs]`
+          : '';
+        const criticalStr = range.criticalLow !== undefined || range.criticalHigh !== undefined
+          ? ` Critical: ${range.criticalLow !== undefined ? `<${range.criticalLow}` : ''}${range.criticalLow !== undefined && range.criticalHigh !== undefined ? ' / ' : ''}${range.criticalHigh !== undefined ? `>${range.criticalHigh}` : ''}`
+          : '';
+
+        return {
+          label: `Range ${idx + 1}${genderStr}${ageStr}`,
+          value: `${rangeStr}${criticalStr}`,
+        };
+      }),
+    });
+  }
+
+  return (
+    <div className="h-full flex flex-col p-6 overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4 shrink-0">
+        <div className="flex items-center gap-2">
+          <div>
+            <h1 className="text-sm font-medium text-gray-900">{test.name}</h1>
+            <p className="text-xs text-gray-500 font-mono">{test.code}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content - Balanced Layout */}
+      <div className="flex-1 overflow-y-auto min-h-0">
+        <BalancedDetailsLayout
+          tables={tables}
+          columns={3}
+          className="pb-6"
+        />
+      </div>
+    </div>
+  );
+};

@@ -63,6 +63,12 @@ export const menuItems: MenuItem[] = [
     icon: React.createElement(Icon, { name: 'document-medicine', className: 'w-5 h-5' }),
     roles: ['pathologist', 'administrator'],
   },
+  {
+    path: ROUTES.CATALOG,
+    label: 'Catalog',
+    icon: React.createElement(Icon, { name: 'book', className: 'w-5 h-5' }),
+    roles: ALL_ROLES,
+  },
 ];
 
 /**
