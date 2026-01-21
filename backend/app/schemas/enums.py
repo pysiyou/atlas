@@ -93,19 +93,17 @@ class TestStatus(str, enum.Enum):
     PENDING = "pending"
     SAMPLE_COLLECTED = "sample-collected"
     IN_PROGRESS = "in-progress"
-    COMPLETED = "completed"
+    RESULTED = "resulted"      # Results entered, awaiting validation
     VALIDATED = "validated"
     REJECTED = "rejected"
     SUPERSEDED = "superseded"  # Original test after retest is created during result validation rejection
 
 
 class OrderStatus(str, enum.Enum):
-    PENDING = "pending"
-    SAMPLE_COLLECTION = "sample-collection"
+    ORDERED = "ordered"
     IN_PROGRESS = "in-progress"
     COMPLETED = "completed"
-    VALIDATED = "validated"
-    REPORTED = "reported"
+    CANCELLED = "cancelled"
 
 
 class PriorityLevel(str, enum.Enum):

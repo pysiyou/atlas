@@ -82,7 +82,7 @@ def get_payments(
     elif current_user.role == UserRole.VALIDATOR:
         # Validators only see payments for orders with results to validate
         query = query.join(Order).join(OrderTest).filter(
-            OrderTest.status == TestStatus.COMPLETED
+            OrderTest.status == TestStatus.RESULTED
         ).distinct()
     # Admin, Receptionist, and Billing see all payments
 

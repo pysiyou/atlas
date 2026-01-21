@@ -2,22 +2,20 @@ import type { Order } from '@/types';
 
 /**
  * Timeline steps for order progress visualization.
- * 
+ *
  * The order workflow follows this sequence:
  * 1. Order Created - Order placed in system
  * 2. Payment Received - Patient completes payment (required before sample collection)
  * 3. Sample Collected - Physical sample obtained from patient
  * 4. Results Entered - Lab technician enters test results
- * 5. Results Validated - Pathologist/supervisor validates results
- * 6. Delivered - Report generated and sent to patient/physician
+ * 5. Completed - All results validated by pathologist/supervisor
  */
 export const STATUS_TIMELINE_STEPS = [
   { status: 'created', label: 'Order Created' },
   { status: 'paid', label: 'Payment Received' },
   { status: 'sample-collected', label: 'Sample Collected' },
   { status: 'results-entered', label: 'Results Entered' },
-  { status: 'validated', label: 'Results Validated' },
-  { status: 'delivered', label: 'Delivered' },
+  { status: 'completed', label: 'Completed' },
 ] as const;
 
 /**
@@ -25,9 +23,9 @@ export const STATUS_TIMELINE_STEPS = [
  * Used to calculate progress for test-based steps.
  */
 const TEST_STATUS_THRESHOLDS: Record<string, string[]> = {
-  'sample-collected': ['sample-collected', 'in-progress', 'completed', 'validated', 'rejected'],
-  'results-entered': ['completed', 'validated'],
-  'validated': ['validated'],
+  'sample-collected': ['sample-collected', 'in-progress', 'resulted', 'validated', 'rejected'],
+  'results-entered': ['resulted', 'validated'],
+  'completed': ['validated'],  // Order is completed when all tests are validated
 };
 
 export interface StepProgress {
@@ -97,20 +95,7 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
     };
   }
 
-  // Step 6: Delivered - Based on order overall status
-  if (stepStatus === 'delivered') {
-    const isDelivered = order.overallStatus === 'delivered';
-    return {
-      completed: isDelivered ? total : 0,
-      total,
-      percentage: isDelivered ? 100 : 0,
-      isFullyComplete: isDelivered,
-      isPartial: false,
-      isStarted: isDelivered,
-    };
-  }
-
-  // Steps 3-5: Test-based progress (sample-collected, results-entered, validated)
+  // Steps 3-5: Test-based progress (sample-collected, results-entered, completed)
   const validStatuses = TEST_STATUS_THRESHOLDS[stepStatus] || [];
   if (validStatuses.length === 0) {
     return emptyProgress;
@@ -200,7 +185,7 @@ export const getStepCompletionInfo = (
     case 'sample-collected': {
       // Find the first test that has been collected
       const collectedTest = order.tests.find((t) =>
-        ['sample-collected', 'in-progress', 'completed', 'validated', 'rejected'].includes(t.status)
+        ['sample-collected', 'in-progress', 'resulted', 'validated', 'rejected'].includes(t.status)
       );
       return {
         completedBy: order.createdBy,
@@ -211,7 +196,7 @@ export const getStepCompletionInfo = (
     case 'results-entered': {
       // Find the first test with results entered
       const enteredTest = order.tests.find((t) =>
-        ['completed', 'validated'].includes(t.status)
+        ['resulted', 'validated'].includes(t.status)
       );
       return {
         completedBy: enteredTest?.enteredBy,
@@ -219,23 +204,14 @@ export const getStepCompletionInfo = (
       };
     }
 
-    case 'validated': {
-      // Find the first validated test
+    case 'completed': {
+      // Find the first validated test (order is completed when all tests validated)
       const validatedTest = order.tests.find((t) => t.status === 'validated');
       return {
         completedBy: validatedTest?.validatedBy,
         completedAt: validatedTest?.resultValidatedAt,
       };
     }
-
-    case 'delivered':
-      if (order.overallStatus === 'delivered') {
-        return {
-          completedBy: order.deliveredBy || order.createdBy,
-          completedAt: order.deliveredAt || order.updatedAt,
-        };
-      }
-      return {};
 
     default:
       return {};
@@ -252,7 +228,7 @@ export const getStepCompletionInfo = (
  */
 export const isStepBlocked = (order: Order, stepStatus: string): boolean => {
   // Sample collection and beyond is blocked if payment is not received
-  const paymentRequired = ['sample-collected', 'results-entered', 'validated', 'delivered'];
+  const paymentRequired = ['sample-collected', 'results-entered', 'completed'];
   if (paymentRequired.includes(stepStatus) && order.paymentStatus !== 'paid') {
     return true;
   }
@@ -263,4 +239,38 @@ export const isStepBlocked = (order: Order, stepStatus: string): boolean => {
 export const getOrderStepStatus = (order: Order, stepStatus: string): boolean => {
   const progress = getOrderStepProgress(order, stepStatus);
   return progress.isStarted;
+};
+
+/**
+ * Check if an order contains any validated tests.
+ * 
+ * This is used to prevent contradictory actions:
+ * - Sample rejection when a test from the order is already validated
+ * - Re-collect option during result validation when another test is validated
+ * 
+ * Once a test is validated, the sample cannot be rejected or recollected
+ * because it would invalidate the already-validated results.
+ * 
+ * @param order - The order to check
+ * @returns True if the order has at least one validated test
+ */
+export const orderHasValidatedTests = (order: Order): boolean => {
+  if (!order?.tests || order.tests.length === 0) {
+    return false;
+  }
+  return order.tests.some(test => test.status === 'validated');
+};
+
+/**
+ * Get the count of validated tests in an order.
+ * Useful for displaying more detailed blocking messages.
+ * 
+ * @param order - The order to check
+ * @returns Number of validated tests
+ */
+export const getValidatedTestCount = (order: Order): number => {
+  if (!order?.tests || order.tests.length === 0) {
+    return 0;
+  }
+  return order.tests.filter(test => test.status === 'validated').length;
 };

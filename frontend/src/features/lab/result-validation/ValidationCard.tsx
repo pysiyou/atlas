@@ -49,6 +49,12 @@ interface ResultValidationCardProps {
   onApprove: () => void;
   onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
   onClick?: () => void;
+  /**
+   * When true, the re-collect option is blocked because the order contains
+   * validated tests. This prevents contradictory actions where a sample 
+   * recollection would invalidate already-validated results.
+   */
+  orderHasValidatedTests?: boolean;
 }
 
 export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
@@ -59,6 +65,7 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
   onApprove,
   onReject,
   onClick,
+  orderHasValidatedTests = false,
 }) => {
   const { openModal } = useModal();
   const { getUserName } = useUserDisplay();
@@ -85,7 +92,7 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
       return;
     }
     openModal(ModalType.VALIDATION_DETAIL, {
-      test, commentKey, comments, onCommentsChange, onApprove, onReject,
+      test, commentKey, comments, onCommentsChange, onApprove, onReject, orderHasValidatedTests,
     });
   };
 
@@ -134,6 +141,7 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
         testCode={test.testCode}
         testName={test.testName}
         patientName={test.patientName}
+        orderHasValidatedTests={orderHasValidatedTests}
         onReject={handleRejectionResult}
       />
       <IconButton

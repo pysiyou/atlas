@@ -99,7 +99,7 @@ def get_pending_validation(
     Returns tests with status COMPLETED (not SUPERSEDED).
     """
     tests = db.query(OrderTest).filter(
-        OrderTest.status == TestStatus.COMPLETED
+        OrderTest.status == TestStatus.RESULTED
     ).all()
     return tests
 

@@ -40,6 +40,12 @@ interface ValidationDetailModalProps {
    * the parent should only refresh data.
    */
   onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
+  /**
+   * When true, the re-collect option is blocked because the order contains
+   * validated tests. This prevents contradictory actions where a sample 
+   * recollection would invalidate already-validated results.
+   */
+  orderHasValidatedTests?: boolean;
 }
 
 export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
@@ -51,6 +57,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   onCommentsChange,
   onApprove,
   onReject,
+  orderHasValidatedTests = false,
 }) => {
   if (!test.results) return null;
 
@@ -156,6 +163,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
                   testCode={test.testCode}
                   testName={test.testName}
                   patientName={test.patientName}
+                  orderHasValidatedTests={orderHasValidatedTests}
                   onConfirm={() => {
                     // RejectionDialogContent already calls the API via useRejectionManager.
                     // Signal to parent to refresh data without making another API call

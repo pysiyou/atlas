@@ -29,6 +29,7 @@ import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../shar
 import type { DetailGridSectionConfig } from '../shared/LabDetailModal';
 import { CollectionInfoLine } from '../shared/StatusBadges';
 import type { SampleDisplay } from './types';
+import { orderHasValidatedTests, getValidatedTestCount } from '@/features/order/utils';
 
 interface SampleDetailModalProps {
   isOpen: boolean;
@@ -174,11 +175,18 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
 
     // For collected samples - show print and reject buttons
     if (isCollected && sample.sampleId && !sample.sampleId.includes('PENDING')) {
+      // Check if sample rejection should be blocked due to validated tests in the order
+      const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
+      const validatedCount = order ? getValidatedTestCount(order) : 0;
+
       return (
         <ModalFooter
           statusIcon={<Icon name="check-circle" className="w-4 h-4 text-gray-400" />}
-          statusMessage="Sample collected successfully"
-          statusClassName="text-gray-500"
+          statusMessage={hasValidatedTests 
+            ? `Cannot reject - ${validatedCount} test${validatedCount > 1 ? 's' : ''} already validated`
+            : "Sample collected successfully"
+          }
+          statusClassName={hasValidatedTests ? "text-amber-600" : "text-gray-500"}
         >
           <Button
             onClick={handlePrintLabel}
@@ -187,31 +195,43 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
           >
             Print Label
           </Button>
-          <SampleRejectionPopover
-            sampleId={sample.sampleId}
-            sampleType={sample.sampleType}
-            patientName={patientName}
-            isRecollection={sample.isRecollection || false}
-            rejectionHistoryCount={sample.rejectionHistory?.length || 0}
-            onReject={async (reasons, notes, requireRecollection) => {
-              try {
-                await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
-                toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
-                onClose();
-              } catch (error) {
-                logger.error('Failed to reject sample', error instanceof Error ? error : undefined);
-                toast.error('Failed to reject sample');
+          {/* Block sample rejection if order has validated tests to prevent contradiction */}
+          {hasValidatedTests ? (
+            <Button
+              variant="reject"
+              size="md"
+              disabled
+              title={`Cannot reject sample: ${validatedCount} test${validatedCount > 1 ? 's have' : ' has'} already been validated`}
+            >
+              Reject Sample
+            </Button>
+          ) : (
+            <SampleRejectionPopover
+              sampleId={sample.sampleId}
+              sampleType={sample.sampleType}
+              patientName={patientName}
+              isRecollection={sample.isRecollection || false}
+              rejectionHistoryCount={sample.rejectionHistory?.length || 0}
+              onReject={async (reasons, notes, requireRecollection) => {
+                try {
+                  await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
+                  toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
+                  onClose();
+                } catch (error) {
+                  logger.error('Failed to reject sample', error instanceof Error ? error : undefined);
+                  toast.error('Failed to reject sample');
+                }
+              }}
+              trigger={
+                <Button
+                  variant="reject"
+                  size="md"
+                >
+                  Reject Sample
+                </Button>
               }
-            }}
-            trigger={
-              <Button
-                variant="reject"
-                size="md"
-              >
-                Reject Sample
-              </Button>
-            }
-          />
+            />
+          )}
         </ModalFooter>
       );
     }

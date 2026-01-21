@@ -151,7 +151,7 @@ class LabOperationsService:
         Returns:
             RejectionOptions with available actions and their status
         """
-        order_test = self._get_order_test(order_id, test_code, status=TestStatus.COMPLETED)
+        order_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
         sample = self._get_sample(order_test.sampleId) if order_test.sampleId else None
 
         # Calculate retest availability
@@ -573,7 +573,7 @@ class LabOperationsService:
         order_test.resultEnteredAt = datetime.now(timezone.utc)
         order_test.enteredBy = user_id
         order_test.technicianNotes = technician_notes
-        order_test.status = TestStatus.COMPLETED
+        order_test.status = TestStatus.RESULTED
 
         # Log audit
         self.audit.log_result_entry(
@@ -611,7 +611,7 @@ class LabOperationsService:
         Returns:
             The updated order test
         """
-        order_test = self._get_order_test(order_id, test_code, status=TestStatus.COMPLETED)
+        order_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
 
         # Validate state transition
         can_validate, reason = TestStateMachine.can_validate(order_test.status)
@@ -683,7 +683,7 @@ class LabOperationsService:
                 success=True,
                 action=action,
                 message="Escalation required. Please contact your supervisor.",
-                originalTestId=self._get_order_test(order_id, test_code, TestStatus.COMPLETED).id,
+                originalTestId=self._get_order_test(order_id, test_code, TestStatus.RESULTED).id,
                 escalationRequired=True
             )
         else:
@@ -701,7 +701,7 @@ class LabOperationsService:
 
         Creates a new OrderTest entry and marks original as SUPERSEDED.
         """
-        original_test = self._get_order_test(order_id, test_code, status=TestStatus.COMPLETED)
+        original_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
 
         # Get current retest number
         current_retest_number = original_test.retestNumber or 0
@@ -789,7 +789,7 @@ class LabOperationsService:
 
         Rejects the sample and creates a new recollection sample.
         """
-        original_test = self._get_order_test(order_id, test_code, status=TestStatus.COMPLETED)
+        original_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
 
         if not original_test.sampleId:
             raise LabOperationError("Cannot request recollection - no sample linked to this test")

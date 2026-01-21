@@ -113,9 +113,9 @@ class TestStateMachine:
 
     TRANSITIONS: Dict[TestStatus, Set[TestStatus]] = {
         TestStatus.PENDING: {TestStatus.SAMPLE_COLLECTED, TestStatus.REJECTED},
-        TestStatus.SAMPLE_COLLECTED: {TestStatus.IN_PROGRESS, TestStatus.COMPLETED, TestStatus.REJECTED},
-        TestStatus.IN_PROGRESS: {TestStatus.COMPLETED, TestStatus.REJECTED},
-        TestStatus.COMPLETED: {TestStatus.VALIDATED, TestStatus.SUPERSEDED},
+        TestStatus.SAMPLE_COLLECTED: {TestStatus.IN_PROGRESS, TestStatus.RESULTED, TestStatus.REJECTED},
+        TestStatus.IN_PROGRESS: {TestStatus.RESULTED, TestStatus.REJECTED},
+        TestStatus.RESULTED: {TestStatus.VALIDATED, TestStatus.SUPERSEDED},
         TestStatus.VALIDATED: set(),  # Terminal
         TestStatus.REJECTED: {TestStatus.PENDING},  # Can transition to pending when recollection is ready
         TestStatus.SUPERSEDED: set(),  # Terminal - replaced by retest
@@ -128,7 +128,7 @@ class TestStateMachine:
 
     # States from which results can be validated
     VALIDATION_STATES: Set[TestStatus] = {
-        TestStatus.COMPLETED,
+        TestStatus.RESULTED,
     }
 
     @classmethod
@@ -167,7 +167,7 @@ class TestStateMachine:
             return True, ""
         if status == TestStatus.PENDING:
             return False, "Sample must be collected before results can be entered"
-        if status == TestStatus.COMPLETED:
+        if status == TestStatus.RESULTED:
             return False, "Results already entered for this test"
         if status == TestStatus.VALIDATED:
             return False, "Test has already been validated"

@@ -5,7 +5,9 @@ export type BadgeVariant =
   // Base variants
   | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'error' | 'success' | 'warning' | 'info' | 'purple' | 'orange' | 'teal'
   // Order Statuses
-  | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'rejected' | 'superseded'
+  | 'ordered' | 'in-progress' | 'completed' | 'cancelled' | 'validated' | 'rejected' | 'superseded'
+  // Test Statuses (in addition to above)
+  | 'resulted'
   // Rejection Types
   | 're-test' | 're-collect'
   // Sample Statuses
@@ -61,12 +63,13 @@ const VARIANT_STYLES: Record<string, string> = {
   'ordered': 'bg-blue-100 text-blue-800 border-transparent',
   'in-progress': 'bg-yellow-100 text-yellow-800 border-transparent',
   'completed': 'bg-green-100 text-green-800 border-transparent',
-  'delivered': 'bg-gray-100 text-gray-800 border-transparent',
   'cancelled': 'bg-red-100 text-red-800 border-transparent',
   'validated': 'bg-green-100 text-green-800 border-transparent',
-  'reported': 'bg-gray-100 text-gray-800 border-transparent',
   'rejected': 'bg-red-100 text-red-800 border-transparent',
   'superseded': 'bg-slate-200 text-slate-600 border-transparent line-through',  // Grayed out, struck-through for replaced tests
+
+  // Test Status Mappings
+  'resulted': 'bg-purple-100 text-purple-800 border-transparent',  // Results entered, awaiting validation
 
   // Rejection Type Mappings
   're-test': 'bg-amber-100 text-amber-800 border-transparent',

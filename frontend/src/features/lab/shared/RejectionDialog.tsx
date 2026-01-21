@@ -23,6 +23,11 @@ interface RejectionDialogContentProps {
   patientName?: string;
   onConfirm: (result: RejectionResult) => void;
   onCancel: () => void;
+  /** 
+   * When true, the re-collect option is blocked because the order contains 
+   * validated tests. Rejecting the sample would invalidate those results.
+   */
+  orderHasValidatedTests?: boolean;
 }
 
 /**
@@ -36,6 +41,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   patientName,
   onConfirm,
   onCancel,
+  orderHasValidatedTests = false,
 }) => {
   const [reason, setReason] = useState('');
   const [selectedType, setSelectedType] = useState<ResultRejectionType>('re-test');
@@ -55,17 +61,28 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     clearError,
   } = useRejectionManager({ orderId, testCode, autoFetch: true });
 
+  /**
+   * Check if re-collect is allowed considering both API limits and validated tests.
+   * Re-collect is blocked if:
+   * 1. The API indicates it's not available (limit reached)
+   * 2. The order has validated tests (would create contradiction)
+   */
+  const isRecollectBlocked = orderHasValidatedTests || !isActionEnabled('re-collect');
+  const recollectBlockedReason = orderHasValidatedTests 
+    ? 'Order has validated tests - sample cannot be rejected'
+    : getDisabledReason('re-collect');
+
   // Reset selection when options are loaded
   useEffect(() => {
     if (options) {
-      // Default to retest if available, otherwise recollect
+      // Default to retest if available, otherwise recollect (if not blocked)
       if (isActionEnabled('re-test')) {
         setSelectedType('re-test');
-      } else if (isActionEnabled('re-collect')) {
+      } else if (!isRecollectBlocked) {
         setSelectedType('re-collect');
       }
     }
-  }, [options, isActionEnabled]);
+  }, [options, isActionEnabled, isRecollectBlocked]);
 
   const handleConfirm = async () => {
     if (!reason.trim()) return;
@@ -110,7 +127,11 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     );
   }
 
-  const isConfirmDisabled = !reason.trim() || escalationRequired || (!isActionEnabled('re-test') && !isActionEnabled('re-collect'));
+  // Confirm is disabled if:
+  // 1. No reason provided
+  // 2. Escalation is required (all options exhausted)
+  // 3. Neither re-test nor re-collect is available (considering validated tests block)
+  const isConfirmDisabled = !reason.trim() || escalationRequired || (!isActionEnabled('re-test') && isRecollectBlocked);
 
   return (
     <PopoverForm
@@ -178,12 +199,12 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
             <RadioCard
               name="rejection-type"
               selected={selectedType === 're-collect'}
-              onClick={() => isActionEnabled('re-collect') && setSelectedType('re-collect')}
-              label={`New Sample Required${recollectionAttemptsRemaining > 0 ? ` (${recollectionAttemptsRemaining} remaining)` : ''}`}
+              onClick={() => !isRecollectBlocked && setSelectedType('re-collect')}
+              label={`New Sample Required${!orderHasValidatedTests && recollectionAttemptsRemaining > 0 ? ` (${recollectionAttemptsRemaining} remaining)` : ''}`}
               description="Reject current sample and request new collection."
               variant="red"
-              disabled={!isActionEnabled('re-collect')}
-              disabledReason={getDisabledReason('re-collect') || undefined}
+              disabled={isRecollectBlocked}
+              disabledReason={recollectBlockedReason || undefined}
             />
           </div>
         </div>
@@ -220,6 +241,11 @@ interface RejectionDialogProps {
   onReject: (result: RejectionResult) => void;
   /** Custom trigger element (defaults to IconButton) */
   trigger?: React.ReactNode;
+  /** 
+   * When true, the re-collect option is blocked because the order contains 
+   * validated tests. Rejecting the sample would invalidate those results.
+   */
+  orderHasValidatedTests?: boolean;
 }
 
 /**
@@ -235,6 +261,7 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
   patientName,
   onReject,
   trigger,
+  orderHasValidatedTests,
 }) => (
   <Popover
     placement="bottom-end"
@@ -256,6 +283,7 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
           testCode={testCode}
           testName={testName}
           patientName={patientName}
+          orderHasValidatedTests={orderHasValidatedTests}
           onConfirm={(result) => {
             onReject(result);
             close();

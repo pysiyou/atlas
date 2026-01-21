@@ -1,7 +1,7 @@
 /**
  * ResultValidationView - Main view for result validation workflow
- * 
- * Displays tests awaiting validation (status: completed and not yet validated).
+ *
+ * Displays tests awaiting validation (status: resulted and not yet validated).
  */
 
 import React, { useState, useMemo, useCallback } from 'react';
@@ -17,6 +17,7 @@ import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../shared/LabWorkflowView';
 import type { TestWithContext, CollectedSample } from '@/types';
 import { resultAPI } from '@/services/api';
+import { orderHasValidatedTests } from '@/features/order/utils';
 
 export const ResultValidation: React.FC = () => {
   const ordersContext = useOrders();
@@ -37,9 +38,9 @@ export const ResultValidation: React.FC = () => {
 
       return order.tests
         .filter(test =>
-          // Filter for tests awaiting validation (completed but not yet validated)
+          // Filter for tests awaiting validation (resulted but not yet validated)
           // Superseded tests are already excluded by status check
-          test.status === 'completed' &&
+          test.status === 'resulted' &&
           !test.validatedBy
         )
         .map(test => {
@@ -178,6 +179,10 @@ export const ResultValidation: React.FC = () => {
 
   const openValidationModal = useCallback((test: TestWithContext) => {
     const commentKey = `${test.orderId}-${test.testCode}`;
+    
+    // Check if the order has validated tests to block re-collect option
+    const order = ordersContext?.getOrder(test.orderId);
+    const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
 
     openModal(ModalType.VALIDATION_DETAIL, {
       test,
@@ -189,8 +194,9 @@ export const ResultValidation: React.FC = () => {
       // Undefined values signal that the API was already called.
       onReject: (reason?: string, type?: 're-test' | 're-collect') =>
         handleValidate(test.orderId, test.testCode, false, reason, type),
+      orderHasValidatedTests: hasValidatedTests,
     });
-  }, [comments, handleCommentsChange, handleValidate, openModal]);
+  }, [comments, handleCommentsChange, handleValidate, openModal, ordersContext]);
 
   if (!ordersContext || !testsContext || !patientsContext || !samplesContext) {
     return <div>Loading...</div>;
@@ -203,6 +209,10 @@ export const ResultValidation: React.FC = () => {
       filterFn={filterTest}
       renderCard={(test) => {
         const commentKey = `${test.orderId}-${test.testCode}`;
+        // Check if the order has validated tests to block re-collect option
+        const order = ordersContext?.getOrder(test.orderId);
+        const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
+        
         return (
           <ResultValidationCard
             test={test}
@@ -212,6 +222,7 @@ export const ResultValidation: React.FC = () => {
             onApprove={() => handleValidate(test.orderId, test.testCode, true)}
             onReject={(reason, type) => handleValidate(test.orderId, test.testCode, false, reason, type)}
             onClick={() => openValidationModal(test)}
+            orderHasValidatedTests={hasValidatedTests}
           />
         );
       }}

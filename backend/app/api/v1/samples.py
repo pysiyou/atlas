@@ -65,7 +65,7 @@ def get_samples(
     elif current_user.role == UserRole.VALIDATOR:
         # Validators only see samples with completed tests
         query = query.join(Order).join(OrderTest).filter(
-            OrderTest.status == TestStatus.COMPLETED
+            OrderTest.status == TestStatus.RESULTED
         ).distinct()
     # Admin and Receptionist see all samples
 

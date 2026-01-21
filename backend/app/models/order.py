@@ -18,7 +18,7 @@ class Order(Base):
     # Pricing
     totalPrice = Column(Float, nullable=False)
     paymentStatus = Column(Enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
-    overallStatus = Column(Enum(OrderStatus), nullable=False, default=OrderStatus.PENDING)
+    overallStatus = Column(Enum(OrderStatus), nullable=False, default=OrderStatus.ORDERED)
 
     # Scheduling (optional - for future appointment integration)
     appointmentId = Column(String, nullable=True)

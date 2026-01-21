@@ -53,7 +53,7 @@ def generate_orders(db: Session):
                     orderDate=order_date,
                     totalPrice=total_price,
                     paymentStatus=PaymentStatus.UNPAID,
-                    overallStatus=OrderStatus.PENDING,
+                    overallStatus=OrderStatus.ORDERED,
                     priority=PriorityLevel.ROUTINE,
                     createdBy="system"
                 )

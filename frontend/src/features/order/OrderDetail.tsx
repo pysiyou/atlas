@@ -47,7 +47,7 @@ export const OrderDetail: React.FC = () => {
 
   // Note: Priority, status, and payment variants use the Badge component's built-in variants directly.
   // The Badge component has predefined styles for: 'stat', 'urgent', 'routine', 'ordered', 'in-progress',
-  // 'completed', 'delivered', 'validated', 'rejected', 'pending', 'paid', 'partial', etc.
+  // 'completed', 'rejected', 'pending', 'paid', 'partial', etc.
 
   return (
     <div className="h-full flex flex-col p-6">

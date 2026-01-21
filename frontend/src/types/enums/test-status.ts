@@ -11,10 +11,10 @@ export const TEST_STATUS_VALUES = [
   'pending',
   'sample-collected',
   'in-progress',
-  'completed',
+  'resulted',     // Results entered, awaiting validation
   'validated',
   'rejected',
-  'superseded',  // Original test after retest is created during result validation rejection
+  'superseded',   // Original test after retest is created during result validation rejection
 ] as const;
 
 // 2. TYPE - Derived from values
@@ -25,7 +25,7 @@ export const TEST_STATUS_CONFIG: Record<TestStatus, { label: string }> = {
   pending: { label: 'Pending' },
   'sample-collected': { label: 'Sample Collected' },
   'in-progress': { label: 'In Progress' },
-  completed: { label: 'Completed' },
+  resulted: { label: 'Resulted' },
   validated: { label: 'Validated' },
   rejected: { label: 'Rejected' },
   superseded: { label: 'Superseded' },

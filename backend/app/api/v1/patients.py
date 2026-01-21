@@ -46,7 +46,7 @@ def get_patients(
     elif current_user.role == UserRole.VALIDATOR:
         # Validators only see patients with results to validate
         query = query.join(Order).join(OrderTest).filter(
-            OrderTest.status == TestStatus.COMPLETED
+            OrderTest.status == TestStatus.RESULTED
         ).distinct()
     # Admin and Receptionist see all patients (no filter)
 

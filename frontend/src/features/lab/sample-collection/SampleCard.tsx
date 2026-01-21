@@ -20,6 +20,7 @@ import { SampleCollectionPopover } from './SampleCollectionPopover';
 import { SampleRejectionPopover } from './SampleRejectionPopover';
 import { handlePrintSampleLabel, getEffectiveContainerType, formatRejectionReasons } from '../shared/labUtils';
 import type { SampleDisplay } from './types';
+import { orderHasValidatedTests } from '@/features/order/utils';
 
 interface SampleCardProps {
   display: SampleDisplay;
@@ -104,6 +105,9 @@ export const SampleCard: React.FC<SampleCardProps> = ({ display, onCollect }) =>
     </>
   );
 
+  // Check if sample rejection should be blocked due to validated tests in the order
+  const hasValidatedTests = orderHasValidatedTests(order);
+
   // Build actions
   const actions = (
     <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
@@ -122,22 +126,32 @@ export const SampleCard: React.FC<SampleCardProps> = ({ display, onCollect }) =>
           <Badge size="sm" variant="collected" />
           {sample.sampleId && !sample.sampleId.includes('PENDING') && (
             <>
-              <SampleRejectionPopover
-                sampleId={sample.sampleId}
-                sampleType={sample.sampleType}
-                patientName={patientName}
-                isRecollection={isRecollection}
-                rejectionHistoryCount={sample.rejectionHistory?.length || 0}
-                onReject={async (reasons, notes, requireRecollection) => {
-                  try {
-                    await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
-                    toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
-                  } catch (error) {
-                    logger.error('Failed to reject sample', error instanceof Error ? error : undefined);
-                    toast.error('Failed to reject sample');
-                  }
-                }}
-              />
+              {/* Block sample rejection if order has validated tests to prevent contradiction */}
+              {hasValidatedTests ? (
+                <IconButton
+                  variant="delete"
+                  size="sm"
+                  title="Cannot reject: order has validated tests"
+                  disabled
+                />
+              ) : (
+                <SampleRejectionPopover
+                  sampleId={sample.sampleId}
+                  sampleType={sample.sampleType}
+                  patientName={patientName}
+                  isRecollection={isRecollection}
+                  rejectionHistoryCount={sample.rejectionHistory?.length || 0}
+                  onReject={async (reasons, notes, requireRecollection) => {
+                    try {
+                      await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
+                      toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
+                    } catch (error) {
+                      logger.error('Failed to reject sample', error instanceof Error ? error : undefined);
+                      toast.error('Failed to reject sample');
+                    }
+                  }}
+                />
+              )}
               <IconButton
                 onClick={() => handlePrintSampleLabel(display, patientName)}
                 variant="print"

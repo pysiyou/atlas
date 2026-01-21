@@ -8,15 +8,15 @@ interface OrderCircularProgressProps {
 }
 
 /**
- * OrderCircularProgress - Shows overall order progress through all 6 timeline steps.
- * 
- * Steps: Created, Paid, Sample Collected, Results Entered, Validated, Delivered
- * 
+ * OrderCircularProgress - Shows overall order progress through all timeline steps.
+ *
+ * Steps: Created, Paid, Sample Collected, Results Entered, Completed
+ *
  * Progress is calculated as: (completed steps / total steps) * 100
  */
 export const OrderCircularProgress: React.FC<OrderCircularProgressProps> = ({ order }) => {
   const { percentage, completedSteps, totalSteps } = useMemo(() => {
-    const total = STATUS_TIMELINE_STEPS.length; // 6 steps
+    const total = STATUS_TIMELINE_STEPS.length;
 
     // Count fully completed steps
     let completed = 0;

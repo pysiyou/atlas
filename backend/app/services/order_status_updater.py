@@ -11,25 +11,26 @@ from app.schemas.enums import OrderStatus, TestStatus, SampleStatus
 
 logger = logging.getLogger(__name__)
 
-# Terminal states that should not regress
-TERMINAL_STATUSES = {OrderStatus.VALIDATED, OrderStatus.REPORTED}
+# Terminal states that should not regress (CANCELLED is set manually, not calculated)
+TERMINAL_STATUSES = {OrderStatus.COMPLETED, OrderStatus.CANCELLED}
 
 
 def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
     """
-    Calculate the appropriate order status based on tests and samples.
-    
+    Calculate the appropriate order status based on tests.
+
     Logic:
-    1. If all tests VALIDATED -> VALIDATED
-    2. If all tests COMPLETED (or VALIDATED) -> COMPLETED
-    3. If all samples COLLECTED (or received/accessioned) -> IN_PROGRESS
-    4. If any sample COLLECTED -> SAMPLE_COLLECTION
-    5. Default -> PENDING
-    
+    1. If all tests VALIDATED -> COMPLETED
+    2. If any test started (not pending) -> IN_PROGRESS
+    3. Default -> ORDERED
+
+    Note: CANCELLED status is set manually, not calculated.
+    Rejected tests are considered "in progress" since work continues (retest/recollection).
+
     Args:
         order: The order to calculate status for
-        samples: List of samples associated with the order
-        
+        samples: List of samples associated with the order (unused but kept for API compatibility)
+
     Returns:
         The calculated OrderStatus
     """
@@ -37,57 +38,38 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
     if not tests:
         return order.overallStatus
 
-    # Check Test Statuses
-    all_validated = all(t.status == TestStatus.VALIDATED for t in tests)
-    if all_validated:
-        return OrderStatus.VALIDATED
-
-    all_completed = all(t.status in [TestStatus.COMPLETED, TestStatus.VALIDATED] for t in tests)
-    if all_completed:
-        return OrderStatus.COMPLETED
-
-    # Check Sample Statuses
-    if not samples:
+    # Filter out superseded tests - only count active tests
+    active_tests = [t for t in tests if t.status != TestStatus.SUPERSEDED]
+    if not active_tests:
         return order.overallStatus
 
-    non_rejected_samples = [s for s in samples if s.status != SampleStatus.REJECTED]
+    # Check if all active tests are validated -> COMPLETED
+    all_validated = all(t.status == TestStatus.VALIDATED for t in active_tests)
+    if all_validated:
+        return OrderStatus.COMPLETED
 
-    if not non_rejected_samples:
-        # All samples rejected - set order back to pending for recollection
-        return OrderStatus.PENDING
-
-    # Check if all non-rejected samples are collected
-    collected_statuses = {
-        SampleStatus.COLLECTED,
-        SampleStatus.RECEIVED,
-        SampleStatus.ACCESSIONED,
-        SampleStatus.IN_PROGRESS,
-        SampleStatus.COMPLETED,
-        SampleStatus.STORED
+    # Check if any test has started (not pending) -> IN_PROGRESS
+    # This includes rejected tests since work continues (retest/recollection)
+    started_statuses = {
+        TestStatus.SAMPLE_COLLECTED,
+        TestStatus.IN_PROGRESS,
+        TestStatus.RESULTED,
+        TestStatus.VALIDATED,
+        TestStatus.REJECTED,
     }
-    
-    all_collected = all(s.status in collected_statuses for s in non_rejected_samples)
-    if all_collected:
+    any_started = any(t.status in started_statuses for t in active_tests)
+    if any_started:
         return OrderStatus.IN_PROGRESS
 
-    partial_collected_statuses = {
-        SampleStatus.COLLECTED,
-        SampleStatus.RECEIVED,
-        SampleStatus.ACCESSIONED
-    }
-    
-    any_collected = any(s.status in partial_collected_statuses for s in non_rejected_samples)
-    if any_collected:
-        return OrderStatus.SAMPLE_COLLECTION
-
-    return OrderStatus.PENDING
+    # All tests are pending -> ORDERED
+    return OrderStatus.ORDERED
 
 
 def update_order_status(db: Session, order_id: str) -> None:
     """
     Update order status based on the status of its samples and tests.
-    
-    Prevents backward transitions from terminal states (VALIDATED, REPORTED).
+
+    Prevents backward transitions from terminal states (COMPLETED, CANCELLED).
     
     Args:
         db: Database session
@@ -109,25 +91,22 @@ def update_order_status(db: Session, order_id: str) -> None:
     
     # Handle regression from COMPLETED to earlier states
     # This can legitimately happen when a test is rejected and a retest is created
-    if current_status == OrderStatus.COMPLETED and new_status in {
-        OrderStatus.PENDING, 
-        OrderStatus.SAMPLE_COLLECTION
-    }:
+    if current_status == OrderStatus.COMPLETED and new_status == OrderStatus.ORDERED:
         # Check if there are active tests that need work (not VALIDATED or SUPERSEDED)
         active_tests = [t for t in order.tests if t.status not in {
-            TestStatus.VALIDATED, 
+            TestStatus.VALIDATED,
             TestStatus.SUPERSEDED
         }]
         has_pending_work = any(
             t.status in {
-                TestStatus.PENDING, 
-                TestStatus.SAMPLE_COLLECTED, 
+                TestStatus.PENDING,
+                TestStatus.SAMPLE_COLLECTED,
                 TestStatus.IN_PROGRESS,
-                TestStatus.COMPLETED  # Needs validation
+                TestStatus.RESULTED  # Needs validation
             }
             for t in active_tests
         )
-        
+
         if has_pending_work:
             # Allow regression to IN_PROGRESS - there's legitimate work to do (e.g., retest)
             new_status = OrderStatus.IN_PROGRESS

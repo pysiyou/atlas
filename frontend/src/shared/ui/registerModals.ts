@@ -89,7 +89,7 @@ registerModal(
   ValidationDetailModal,
   (props, baseProps) => {
     const {
-      test, commentKey, comments, onCommentsChange, onApprove, onReject
+      test, commentKey, comments, onCommentsChange, onApprove, onReject, orderHasValidatedTests
     } = props as {
       test: {
         orderId: string;
@@ -112,11 +112,13 @@ registerModal(
       onCommentsChange: (commentKey: string, comments: string) => void;
       onApprove: () => void;
       onReject: (reason: string, type: 're-test' | 're-collect') => void;
+      /** When true, re-collect option is blocked due to validated tests in the order */
+      orderHasValidatedTests?: boolean;
     };
 
     return {
       ...baseProps,
-      test, commentKey, comments, onCommentsChange, onApprove, onReject
+      test, commentKey, comments, onCommentsChange, onApprove, onReject, orderHasValidatedTests
     };
   }
 );

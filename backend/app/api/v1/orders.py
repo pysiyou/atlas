@@ -50,7 +50,7 @@ def get_orders(
     elif current_user.role == UserRole.VALIDATOR:
         # Validators only see orders with results to validate
         query = query.join(OrderTest).filter(
-            OrderTest.status == TestStatus.COMPLETED
+            OrderTest.status == TestStatus.RESULTED
         ).distinct()
     # Admin and Receptionist see all orders
 
@@ -132,7 +132,7 @@ def create_order(
         orderDate=datetime.now(timezone.utc),
         totalPrice=total_price,
         paymentStatus=PaymentStatus.UNPAID,
-        overallStatus=OrderStatus.PENDING,
+        overallStatus=OrderStatus.ORDERED,
         priority=order_data.priority,
         referringPhysician=order_data.referringPhysician,
         clinicalNotes=order_data.clinicalNotes,
@@ -192,19 +192,16 @@ def mark_as_reported(
     current_user: User = Depends(require_validator)
 ):
     """
-    Mark a validated order as reported (final state).
-    Only validators can mark orders as reported.
+    Confirm order completion (all tests validated).
+    Only validators can confirm completed orders.
     """
     order = get_or_404(db, Order, orderId, "orderId")
 
-    if order.overallStatus != OrderStatus.VALIDATED:
+    if order.overallStatus != OrderStatus.COMPLETED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Order must be VALIDATED before reporting. Current status: {order.overallStatus}"
+            detail=f"Order must be COMPLETED before reporting. Current status: {order.overallStatus}"
         )
 
-    order.overallStatus = OrderStatus.REPORTED
-    order.updatedAt = datetime.now(timezone.utc)
-    db.commit()
-
-    return {"orderId": orderId, "status": "reported", "message": "Order marked as reported"}
+    # Order is already in COMPLETED state (final state), just acknowledge
+    return {"orderId": orderId, "status": "completed", "message": "Order is complete"}

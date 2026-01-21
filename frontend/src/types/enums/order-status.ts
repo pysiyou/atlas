@@ -6,7 +6,7 @@
  */
 
 // 1. VALUES - The single source of truth
-export const ORDER_STATUS_VALUES = ['ordered', 'in-progress', 'completed', 'delivered', 'rejected'] as const;
+export const ORDER_STATUS_VALUES = ['ordered', 'in-progress', 'completed', 'cancelled'] as const;
 
 // 2. TYPE - Derived from values
 export type OrderStatus = (typeof ORDER_STATUS_VALUES)[number];
@@ -16,8 +16,7 @@ export const ORDER_STATUS_CONFIG: Record<OrderStatus, { label: string }> = {
   ordered: { label: 'Ordered' },
   'in-progress': { label: 'In Progress' },
   completed: { label: 'Completed' },
-  delivered: { label: 'Delivered' },
-  rejected: { label: 'Rejected' },
+  cancelled: { label: 'Cancelled' },
 };
 
 // 4. OPTIONS - For dropdowns/selects
