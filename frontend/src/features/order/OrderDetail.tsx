@@ -40,6 +40,11 @@ export const OrderDetail: React.FC = () => {
     );
   }
 
+  // Calculate active vs superseded test counts for display
+  // Superseded tests are those that have been replaced by retests after rejection
+  const activeTests = order.tests.filter(t => t.status !== 'superseded');
+  const supersededCount = order.tests.length - activeTests.length;
+
   // Note: Priority, status, and payment variants use the Badge component's built-in variants directly.
   // The Badge component has predefined styles for: 'stat', 'urgent', 'routine', 'ordered', 'in-progress',
   // 'completed', 'delivered', 'validated', 'rejected', 'pending', 'paid', 'partial', etc.
@@ -250,7 +255,10 @@ export const OrderDetail: React.FC = () => {
         <div className="grid grid-cols-3 gap-4 min-h-0 h-full">
           {/* Tests List - spans 2 columns to align with Row 1 */}
           <SectionContainer
-            title={`Tests (${order.tests.length})`}
+            title={supersededCount > 0 
+              ? `Tests (${activeTests.length} active)` 
+              : `Tests (${order.tests.length})`
+            }
             className="h-full flex flex-col col-span-2 min-h-0"
             contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
           >
@@ -285,25 +293,67 @@ export const OrderDetail: React.FC = () => {
                     const testName = getTestName(test.testCode, testCatalog);
                     const sampleType = getTestSampleType(test.testCode, testCatalog);
                     const category = getTestCategory(test.testCode, testCatalog);
+                    
+                    // Check if this test has been superseded (replaced by a retest)
+                    const isSuperseded = test.status === 'superseded';
+                    // Check if this is a retest of a previous test
+                    const isRetest = test.isRetest || false;
+                    const retestNumber = test.retestNumber || 0;
 
                     return (
-                      <tr key={index} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-3 font-mono text-sky-600 truncate whitespace-nowrap">
+                      <tr 
+                        key={test.id || index} 
+                        className={`transition-colors ${
+                          isSuperseded 
+                            ? 'bg-gray-50/50 opacity-60' 
+                            : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        {/* Test Code */}
+                        <td className={`px-4 py-3 font-mono truncate whitespace-nowrap ${
+                          isSuperseded ? 'text-gray-400 line-through' : 'text-sky-600'
+                        }`}>
                           {test.testCode}
                         </td>
-                        <td className="px-4 py-3 font-medium text-gray-900 whitespace-normal break-words">
-                          {testName}
+                        
+                        {/* Test Name with Retest Badge */}
+                        <td className={`px-4 py-3 whitespace-normal wrap-break-word ${
+                          isSuperseded ? 'line-through' : ''
+                        }`}>
+                          <div className="flex items-center gap-1">
+                            <span className={`font-medium ${
+                              isSuperseded ? 'text-gray-400' : 'text-gray-900'
+                            }`}>
+                              {testName}
+                            </span>
+                            {/* Show retest indicator for retests */}
+                            {isRetest && retestNumber > 0 && (
+                              <Badge variant="default" size="xs" className="text-xs bg-blue-50 text-blue-600 border-blue-200">
+                                #{retestNumber}
+                              </Badge>
+                            )}
+                          </div>
                         </td>
+                        
+                        {/* Category */}
                         <td className="px-4 py-3 whitespace-nowrap">
-                          <Badge variant={category as 'default'} size="sm" />
+                          <Badge variant={category as 'default'} size="sm" strikethrough={isSuperseded} />
                         </td>
+                        
+                        {/* Sample Type */}
                         <td className="px-4 py-3 whitespace-nowrap">
-                          <Badge variant={sampleType as 'default'} size="sm" />
+                          <Badge variant={sampleType as 'default'} size="sm" strikethrough={isSuperseded} />
                         </td>
+                        
+                        {/* Status */}
                         <td className="px-4 py-3 whitespace-nowrap">
-                          <Badge variant={test.status} size="sm" />
+                          <Badge variant={test.status} size="sm" strikethrough={isSuperseded} />
                         </td>
-                        <td className="px-4 py-3 text-right font-medium text-sky-600 whitespace-nowrap">
+                        
+                        {/* Price */}
+                        <td className={`px-4 py-3 text-right font-medium whitespace-nowrap ${
+                          isSuperseded ? 'text-gray-400 line-through' : 'text-sky-600'
+                        }`}>
                           {formatCurrency(test.priceAtOrder)}
                         </td>
                       </tr>

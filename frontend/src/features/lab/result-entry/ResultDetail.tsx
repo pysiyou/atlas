@@ -10,7 +10,7 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import { Badge, Button, Icon, SectionContainer } from '@/shared/ui';
+import { Badge, Button, Icon, SectionContainer, CircularProgress } from '@/shared/ui';
 import { ResultForm } from './ResultForm';
 import { ResultRejectionSection } from './ResultRejectionSection';
 import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
@@ -99,22 +99,18 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
   };
 
   /**
-   * Progress bar component for header
-   * Shows completion percentage with color coding
+   * Circular progress indicator for header
+   * Shows completion percentage with color coding matching order progress style
    */
-  const progressBar = (
-    <div className="flex items-center gap-2">
-      <div className="w-32 bg-gray-200 rounded-full h-2">
-        <div
-          className={`h-2 rounded-full transition-all ${
-            completionPercentage === 100 ? 'bg-green-500' :
-            completionPercentage >= 50 ? 'bg-yellow-500' : 'bg-blue-500'
-          }`}
-          style={{ width: `${completionPercentage}%` }}
-        />
-      </div>
-      <span className="text-xs text-gray-600 font-medium">{completionPercentage}%</span>
-    </div>
+  const progressIndicator = (
+    <CircularProgress
+      size={18}
+      percentage={completionPercentage}
+      trackColorClass="stroke-gray-200"
+      progressColorClass={completionPercentage === 100 ? 'stroke-emerald-500' : 'stroke-blue-500'}
+      label={`${filledCount}/${totalParams}`}
+      className="h-7"
+    />
   );
 
   /**
@@ -208,7 +204,7 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
       }
     >
       {/* Result Entry Form Section */}
-      <SectionContainer title="Result Entry" headerRight={progressBar}>
+      <SectionContainer title="Result Entry" headerRight={progressIndicator}>
         <ResultForm
           testDef={testDef}
           resultKey={resultKey}

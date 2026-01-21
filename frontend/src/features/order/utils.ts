@@ -54,7 +54,6 @@ export interface StepProgress {
  * @returns StepProgress object with completion details
  */
 export const getOrderStepProgress = (order: Order, stepStatus: string): StepProgress => {
-  const total = order.tests.length;
   const emptyProgress: StepProgress = { 
     completed: 0, 
     total: 0, 
@@ -63,6 +62,11 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
     isPartial: false, 
     isStarted: false 
   };
+
+  // Filter out superseded tests - only count active tests toward progress
+  // Superseded tests have been replaced by retests and should not be counted
+  const activeTests = order.tests.filter(t => t.status !== 'superseded');
+  const total = activeTests.length;
 
   if (total === 0) {
     return emptyProgress;
@@ -112,7 +116,7 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
     return emptyProgress;
   }
 
-  const completed = order.tests.filter((t) => validStatuses.includes(t.status)).length;
+  const completed = activeTests.filter((t) => validStatuses.includes(t.status)).length;
   const percentage = Math.round((completed / total) * 100);
 
   return {

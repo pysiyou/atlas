@@ -224,10 +224,9 @@ export const PatientList: React.FC = () => {
         title="Patients"
         headerActions={
           <Button
+            variant="add"
             onClick={() => setIsCreateModalOpen(true)}
-            className="flex items-center gap-2 text-sm"
           >
-            <Icon name="plus" className="w-4 h-4" />
             New Patient
           </Button>
         }

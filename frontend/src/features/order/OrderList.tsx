@@ -11,7 +11,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useOrdersList, usePatientNameLookup, useTestNameLookup } from '@/hooks/queries';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
-import { Button, Icon } from '@/shared/ui';
+import { Button } from '@/shared/ui';
 import { OrderFilters } from './OrderFilters';
 import { getOrderTableColumns } from './OrderTableColumns';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
@@ -118,10 +118,9 @@ export const OrderList: React.FC = () => {
       title="Orders"
       headerActions={
         <Button
+          variant="add"
           onClick={() => navigate('/orders/new')}
-          className="flex items-center gap-2 text-sm"
         >
-          <Icon name="plus" className="w-4 h-4" />
           New Order
         </Button>
       }

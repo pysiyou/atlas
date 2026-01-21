@@ -72,14 +72,15 @@ interface TestDotsProps {
 }
 
 /**
- * TestDots - Visual indicator showing progress for multi-test orders.
+ * TestDots - Visual indicator showing progress for test-based steps.
  * Displays a dot for each test, filled if that test has completed the step.
+ * Shows even for single-test orders to maintain visual consistency.
  */
 const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
   const { completed, total } = progress;
 
-  // Only show dots for multi-test orders
-  if (total <= 1) return null;
+  // Don't show if there are no tests
+  if (total < 1) return null;
 
   // Limit to max 6 dots for visual clarity
   const maxDots = 6;
@@ -217,8 +218,9 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
         };
 
         // Show test dots for test-based steps (not for order-level steps like created, paid, delivered)
+        // Always show dots even for single-test orders to maintain visual consistency
         const testBasedSteps = ['sample-collected', 'results-entered', 'validated'];
-        const showTestDots = testBasedSteps.includes(step.status) && order.tests.length > 1;
+        const showTestDots = testBasedSteps.includes(step.status) && order.tests.length >= 1;
 
         // Determine label color based on state
         const getLabelColor = () => {

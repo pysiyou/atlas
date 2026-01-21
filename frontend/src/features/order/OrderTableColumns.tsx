@@ -45,15 +45,21 @@ export const getOrderTableColumns = (
     key: 'tests',
     header: 'Tests',
     width: '14%',
-    render: (order: Order) => (
-      <div className="min-w-0">
-        <div className="font-medium truncate">{order.tests.length} test{order.tests.length !== 1 ? 's' : ''}</div>
-        <div className="text-xs text-gray-500 truncate">
-          {order.tests.slice(0, 2).map(t => getTestNameFn(t.testCode)).join(', ')}
-          {order.tests.length > 2 && ` +${order.tests.length - 2} more`}
+    render: (order: Order) => {
+      // Filter out superseded tests - only count active tests
+      const activeTests = order.tests.filter(t => t.status !== 'superseded');
+      const activeCount = activeTests.length;
+      
+      return (
+        <div className="min-w-0">
+          <div className="font-medium truncate">{activeCount} test{activeCount !== 1 ? 's' : ''}</div>
+          <div className="text-xs text-gray-500 truncate">
+            {activeTests.slice(0, 2).map(t => getTestNameFn(t.testCode)).join(', ')}
+            {activeCount > 2 && ` +${activeCount - 2} more`}
+          </div>
         </div>
-      </div>
-    ),
+      );
+    },
   },
   {
     key: 'priority',

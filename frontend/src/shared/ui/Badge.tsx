@@ -36,6 +36,8 @@ export type BadgeVariant =
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: BadgeVariant;
   size?: 'xs' | 'sm' | 'md';
+  /** Apply strikethrough styling to the badge content */
+  strikethrough?: boolean;
 }
 
 // Maps specific domain keys (status, priority, etc.) to base visual styles
@@ -195,6 +197,7 @@ export const Badge: React.FC<BadgeProps> = ({
   className, 
   variant = 'default', 
   size = 'md', 
+  strikethrough = false,
   children,
   ...props 
 }) => {
@@ -218,6 +221,7 @@ export const Badge: React.FC<BadgeProps> = ({
         'inline-flex items-center font-medium rounded-sm border transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
         variantClass,
         SIZES[size],
+        strikethrough && 'line-through',
         className
       )}
       {...props}
