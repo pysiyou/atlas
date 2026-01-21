@@ -12,7 +12,7 @@
 import React from 'react';
 import { Badge, Icon } from '@/shared/ui';
 import { formatDate } from '@/utils';
-import { useUserDisplay } from '@/hooks';
+import { useUsers } from '@/hooks';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { getContainerIconColor } from '@/utils';
@@ -66,7 +66,7 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
   collectedBy,
   className = 'text-xs text-gray-500',
 }) => {
-  const { getUserName } = useUserDisplay();
+  const { getUserName } = useUsers();
 
   if (!collectedAt) return null;
 
@@ -204,7 +204,7 @@ export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
   enteredBy,
   className = 'text-xs text-gray-500',
 }) => {
-  const { getUserName } = useUserDisplay();
+  const { getUserName } = useUsers();
 
   if (!enteredAt) return null;
 

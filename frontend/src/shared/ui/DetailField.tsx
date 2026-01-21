@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, type BadgeVariant } from './Badge';
 import { formatDate } from '@/utils';
-import { useUserDisplay } from '@/hooks';
+import { useUsers } from '@/hooks';
 
 /**
  * Badge configuration for DetailField
@@ -76,7 +76,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
   user,
   badge,
 }) => {
-  const { getUserName } = useUserDisplay();
+  const { getUserName } = useUsers();
 
   /**
    * Renders the value portion of the field based on props priority:

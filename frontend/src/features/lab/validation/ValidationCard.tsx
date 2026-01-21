@@ -1,5 +1,5 @@
 /**
- * ResultValidationCard - Card component for result validation workflow
+ * ValidationCard - Card component for result validation workflow
  * 
  * Displays test results with approval/rejection actions.
  * Shows retest information and previous rejection history.
@@ -9,39 +9,13 @@ import React from 'react';
 import { Badge, Icon, IconButton, Alert } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { formatDate } from '@/utils';
-import { useUserDisplay } from '@/hooks';
-import { LabCard, FlagsSection } from '../shared/LabCard';
-import { RejectionDialog } from '../shared';
-import { ResultStatusBadge } from '../shared/StatusBadges';
-import type { ResultRejectionRecord } from '@/types';
+import { useUsers } from '@/hooks';
+import { LabCard, FlagsSection } from '../components/LabCard';
+import { RejectionDialog } from '../components';
+import { ResultStatusBadge } from '../components/StatusBadges';
+import type { TestWithContext } from '@/types';
 
-interface TestWithContext {
-  orderId: string;
-  patientId: string;
-  patientName: string;
-  testName: string;
-  testCode: string;
-  sampleType?: string;
-  sampleId?: string;
-  priority: string;
-  status: string;
-  collectedAt?: string;
-  collectedBy?: string;
-  resultEnteredAt?: string;
-  enteredBy?: string;
-  referringPhysician?: string;
-  results?: Record<string, unknown>;
-  flags?: string[];
-  technicianNotes?: string;
-  // Retest tracking fields
-  isRetest?: boolean;
-  retestOfTestId?: string;
-  retestNumber?: number;
-  resultRejectionHistory?: ResultRejectionRecord[];
-  [key: string]: unknown;
-}
-
-interface ResultValidationCardProps {
+interface ValidationCardProps {
   test: TestWithContext;
   commentKey: string;
   comments: string;
@@ -57,7 +31,7 @@ interface ResultValidationCardProps {
   orderHasValidatedTests?: boolean;
 }
 
-export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
+export const ValidationCard: React.FC<ValidationCardProps> = ({
   test,
   commentKey,
   comments,
@@ -68,7 +42,7 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
   orderHasValidatedTests = false,
 }) => {
   const { openModal } = useModal();
-  const { getUserName } = useUserDisplay();
+  const { getUserName } = useUsers();
 
   if (!test.results) return null;
 

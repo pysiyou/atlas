@@ -1,5 +1,5 @@
 /**
- * ResultValidationView - Main view for result validation workflow
+ * ValidationView - Main view for result validation workflow
  *
  * Displays tests awaiting validation (status: resulted and not yet validated).
  */
@@ -12,14 +12,14 @@ import { useSamples } from '@/features/lab/SamplesContext';
 import { getPatientName, getTestName, getTestSampleType } from '@/utils/typeHelpers';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
-import { ResultValidationCard } from './ValidationCard';
+import { ValidationCard } from './ValidationCard';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
-import { LabWorkflowView, createLabItemFilter } from '../shared/LabWorkflowView';
+import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import type { TestWithContext, CollectedSample } from '@/types';
 import { resultAPI } from '@/services/api';
 import { orderHasValidatedTests } from '@/features/order/utils';
 
-export const ResultValidation: React.FC = () => {
+export const ValidationView: React.FC = () => {
   const ordersContext = useOrders();
   const testsContext = useTests();
   const patientsContext = usePatients();
@@ -214,7 +214,7 @@ export const ResultValidation: React.FC = () => {
         const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
         
         return (
-          <ResultValidationCard
+          <ValidationCard
             test={test}
             commentKey={commentKey}
             comments={comments[commentKey] || ''}

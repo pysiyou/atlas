@@ -1,5 +1,5 @@
 /**
- * ResultDetailModal - Extended view for result entry
+ * EntryDetailModal - Extended view for result entry
  * 
  * Provides a larger interface for entering test results with full parameter display.
  * 
@@ -11,13 +11,13 @@
 
 import React, { useMemo, useState } from 'react';
 import { Badge, Button, Icon, SectionContainer, CircularProgress } from '@/shared/ui';
-import { ResultForm } from './ResultForm';
-import { ResultRejectionSection } from './ResultRejectionSection';
-import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
-import { CollectionInfoLine, RetestBadge, RecollectionAttemptBadge } from '../shared/StatusBadges';
+import { EntryForm } from './EntryForm';
+import { EntryRejectionSection } from './EntryRejectionSection';
+import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../components/LabDetailModal';
+import { CollectionInfoLine, RetestBadge, RecollectionAttemptBadge } from '../components/StatusBadges';
 import type { Test, TestWithContext } from '@/types';
 
-interface ResultDetailModalProps {
+interface EntryDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   test: TestWithContext;
@@ -33,7 +33,7 @@ interface ResultDetailModalProps {
   onPrev?: () => void;
 }
 
-export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
+export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   isOpen,
   onClose,
   test,
@@ -205,7 +205,7 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
     >
       {/* Result Entry Form Section */}
       <SectionContainer title="Result Entry" headerRight={progressIndicator}>
-        <ResultForm
+        <EntryForm
           testDef={testDef}
           resultKey={resultKey}
           results={localResults}
@@ -221,7 +221,7 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
 
       {/* Previous Rejection History - show for both retests and recollections */}
       {hasRejectionHistory && (
-        <ResultRejectionSection
+        <EntryRejectionSection
           title={rejectionHistoryTitle}
           rejectionHistory={rejectionHistory}
           showOnlyLatest={false}

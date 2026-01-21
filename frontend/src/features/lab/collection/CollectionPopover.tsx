@@ -1,5 +1,5 @@
 /**
- * SampleCollectionPopover - Popover for collecting samples
+ * CollectionPopover - Popover for collecting samples
  * 
  * Allows lab staff to record collection details: volume, container type, and color.
  */
@@ -7,12 +7,12 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { Popover, Button, Icon } from '@/shared/ui';
-import { PopoverForm } from '../shared/PopoverForm';
+import { PopoverForm } from '../components/PopoverForm';
 import type { ContainerType } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS } from '@/types';
 import type { SampleRequirement } from '../../../utils/sampleHelpers';
 
-interface SampleCollectionPopoverContentProps {
+interface CollectionPopoverContentProps {
   requirement: SampleRequirement;
   patientName?: string;
   testName?: string;
@@ -20,7 +20,7 @@ interface SampleCollectionPopoverContentProps {
   onCancel: () => void;
 }
 
-const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentProps> = ({
+const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   requirement,
   patientName,
   testName,
@@ -230,7 +230,7 @@ const SampleCollectionPopoverContent: React.FC<SampleCollectionPopoverContentPro
   );
 };
 
-interface SampleCollectionPopoverProps {
+interface CollectionPopoverProps {
   /** Sample requirement data */
   requirement: SampleRequirement;
   /** Patient name for display */
@@ -245,7 +245,7 @@ interface SampleCollectionPopoverProps {
   trigger?: React.ReactNode;
 }
 
-export const SampleCollectionPopover: React.FC<SampleCollectionPopoverProps> = ({
+export const CollectionPopover: React.FC<CollectionPopoverProps> = ({
   requirement,
   patientName,
   testName,
@@ -266,7 +266,7 @@ export const SampleCollectionPopover: React.FC<SampleCollectionPopoverProps> = (
   >
     {({ close }) => (
       <div data-popover-content onClick={(e) => e.stopPropagation()}>
-        <SampleCollectionPopoverContent
+        <CollectionPopoverContent
           requirement={requirement}
           patientName={patientName}
           testName={testName}

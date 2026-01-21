@@ -16,4 +16,4 @@ export * from './billing';
 export * from './lab-operations';
 
 // Re-export types from feature-specific files
-export type { SampleDisplay, SampleRequirement } from '@/features/lab/sample-collection/types';
+export type { SampleDisplay, SampleRequirement } from '@/features/lab/types';

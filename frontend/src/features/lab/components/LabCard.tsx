@@ -6,7 +6,7 @@
 import React, { type ReactNode } from 'react';
 import { Card, Badge } from '@/shared/ui';
 import { formatDate } from '@/utils';
-import { useUserDisplay } from '@/hooks';
+import { useUsers } from '@/hooks';
 import {
   LAB_CARD_TYPOGRAPHY,
   LAB_CARD_SPACING,
@@ -75,7 +75,7 @@ export const LabCard: React.FC<LabCardProps> = ({
   flags,
   className = '',
 }) => {
-  const { getUserName } = useUserDisplay();
+  const { getUserName } = useUsers();
 
   return (
     <div className={`${LAB_CARD_CONTAINERS.cardWrapper} ${className}`} onClick={onClick}>

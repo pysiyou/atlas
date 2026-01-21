@@ -10,13 +10,16 @@ import type { Order, OrderStatus, TestStatus, OrderTest } from '@/types';
  * Uses a precedence model: delivered > completed > in-progress > pending
  */
 export const calculateOrderStatus = (testStatuses: TestStatus[]): OrderStatus => {
-  if (testStatuses.every(s => s === 'rejected')) {
-    return 'rejected';
+  // If all tests are rejected or superseded, order is cancelled
+  if (testStatuses.every(s => s === 'rejected' || s === 'superseded')) {
+    return 'cancelled';
   }
-  if (testStatuses.some(s => s === 'validated' || s === 'completed')) {
+  // If any test is validated, order is completed
+  if (testStatuses.some(s => s === 'validated')) {
     return 'completed';
   }
-  if (testStatuses.some(s => s === 'in-progress' || s === 'sample-collected')) {
+  // If any test is in progress (sample-collected, in-progress, or resulted)
+  if (testStatuses.some(s => s === 'in-progress' || s === 'sample-collected' || s === 'resulted')) {
     return 'in-progress';
   }
   return 'ordered';

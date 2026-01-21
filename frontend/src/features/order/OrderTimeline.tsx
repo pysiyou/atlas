@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar } from '@/shared/ui';
-import { useUserDisplay } from '@/features/lab/useUserDisplay';
+import { useUsers } from '@/features/user';
 import { 
   STATUS_TIMELINE_STEPS, 
   getOrderStepProgress, 
@@ -126,7 +126,7 @@ const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
  * 6. Delivered - Report sent to patient/physician
  */
 export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
-  const { getUserName } = useUserDisplay();
+  const { getUserName } = useUsers();
 
   // Get progress for each step
   const stepProgressMap = React.useMemo(() => {

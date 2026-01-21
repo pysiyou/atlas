@@ -6,17 +6,16 @@
 
 import { ModalType } from '@/shared/contexts/ModalContext';
 import { registerModal } from './modalRegistry';
-import { SampleDetailModal } from '@/features/lab/sample-collection/SampleDetail';
-
-import { ResultDetailModal } from '@/features/lab/result-entry/ResultDetail';
-import { ValidationDetailModal } from '@/features/lab/result-validation/ValidationDetail';
+import { CollectionDetailModal } from '@/features/lab/collection/CollectionDetailModal';
+import { EntryDetailModal } from '@/features/lab/entry/EntryDetailModal';
+import { ValidationDetailModal } from '@/features/lab/validation/ValidationDetailModal';
 
 import type { ContainerType, SampleDisplay, Test, Patient } from '@/types';
 
-// Register Sample Detail Modal
+// Register Collection Detail Modal (Sample Detail)
 registerModal(
   ModalType.SAMPLE_DETAIL,
-  SampleDetailModal,
+  CollectionDetailModal,
   (props, baseProps, helpers) => {
     const { sampleId, pendingSampleDisplay, onCollect } = props as {
       sampleId?: string;
@@ -40,10 +39,10 @@ registerModal(
 
 
 
-// Register Result Detail Modal
+// Register Entry Detail Modal (Result Detail)
 registerModal(
   ModalType.RESULT_DETAIL,
-  ResultDetailModal,
+  EntryDetailModal,
   (props, baseProps) => {
     const {
       test, testDef, resultKey, results, technicianNotes, isComplete,

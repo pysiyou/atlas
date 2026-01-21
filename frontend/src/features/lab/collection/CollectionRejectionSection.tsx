@@ -1,8 +1,8 @@
 /**
- * SampleRejectionSection - Rejection history display section with tabs
+ * CollectionRejectionSection - Rejection history display section with tabs
  * 
  * Displays sample rejection history with simple, professional layout.
- * Similar to ResultRejectionSection style.
+ * Similar to EntryRejectionSection style.
  */
 
 import React from 'react';
@@ -101,14 +101,14 @@ interface SingleRejectionProps {
 }
 
 /**
- * SampleRejectionSection - Component for displaying sample rejection history
+ * CollectionRejectionSection - Component for displaying sample rejection history
  * 
  * Simple, professional layout showing rejection details.
  * Supports two modes:
  * 1. Single rejection: Pass individual props (reasons, notes, etc.)
  * 2. Multiple rejections with tabs: Pass rejectionHistory array
  */
-export const SampleRejectionSection: React.FC<SingleRejectionProps> = ({
+export const CollectionRejectionSection: React.FC<SingleRejectionProps> = ({
   title,
   reasons,
   notes,

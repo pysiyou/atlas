@@ -16,7 +16,6 @@ import { PatientsProvider } from '@/features/patient/PatientProvider';
 import { OrdersProvider } from '@/features/order/OrderProvider';
 import { TestsProvider } from '@/features/test/TestsProvider';
 import { SamplesProvider } from '@/features/lab/SamplesProvider';
-import { AliquotsProvider } from '@/features/lab/AliquotsProvider';
 import { AppointmentsProvider } from '@/features/appointment/AppointmentsProvider';
 import { BillingProvider } from '@/features/billing/BillingProvider';
 import { ModalProvider } from '@/shared/contexts/ModalContext';
@@ -49,7 +48,6 @@ const featureProviders = [
   OrdersProvider,
   TestsProvider,
   SamplesProvider,
-  AliquotsProvider,
   AppointmentsProvider,
   BillingProvider,
   ModalProvider,
@@ -88,7 +86,6 @@ export {
   OrdersProvider,
   TestsProvider,
   SamplesProvider,
-  AliquotsProvider,
   AppointmentsProvider,
   BillingProvider,
   ModalProvider,

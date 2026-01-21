@@ -1,10 +1,9 @@
 /**
- * SampleRequirementsSection - Collection requirements with tabs for each test
+ * CollectionRequirementsSection - Collection requirements with tabs for each test
  */
 
 import React from 'react';
-import { Icon } from '@/shared/ui/Icon';
-import { DetailSection } from '../shared/LabDetailModal';
+import { Icon, SectionContainer } from '@/shared/ui';
 
 /** Test detail for requirements display */
 export interface TestDetail {
@@ -16,7 +15,7 @@ export interface TestDetail {
   minimumVolume?: number;
 }
 
-interface SampleRequirementsSectionProps {
+interface CollectionRequirementsSectionProps {
   testDetails: TestDetail[];
 }
 
@@ -24,14 +23,14 @@ interface SampleRequirementsSectionProps {
  * Requirements section with tabs for each test
  * Displays collection requirements, fasting info, and rejection criteria
  */
-export const SampleRequirementsSection: React.FC<SampleRequirementsSectionProps> = ({ testDetails }) => {
+export const CollectionRequirementsSection: React.FC<CollectionRequirementsSectionProps> = ({ testDetails }) => {
   const [activeTestCode, setActiveTestCode] = React.useState(testDetails[0]?.code || '');
   const activeTest = testDetails.find(t => t.code === activeTestCode) || testDetails[0];
 
   if (!activeTest) return null;
 
   return (
-    <DetailSection
+    <SectionContainer
       title="Collection Requirements & Instructions"
       headerRight={
         <div className="flex gap-1">
@@ -105,6 +104,6 @@ export const SampleRequirementsSection: React.FC<SampleRequirementsSectionProps>
           </div>
         )}
       </div>
-    </DetailSection>
+    </SectionContainer>
   );
 };

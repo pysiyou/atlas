@@ -1,5 +1,5 @@
 /**
- * ResultEntryView - Main view for result entry workflow
+ * EntryView - Main view for result entry workflow
  * 
  * Displays tests awaiting result entry (status: sample-collected or in-progress).
  */
@@ -15,12 +15,12 @@ import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import type { TestResult, TestWithContext } from '@/types';
 import { isCollectedSample } from '@/types';
-import { ResultEntryCard } from './ResultCard';
-import { LabWorkflowView, createLabItemFilter } from '../shared/LabWorkflowView';
+import { EntryCard } from './EntryCard';
+import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { resultAPI } from '@/services/api';
 
-export const ResultEntry: React.FC = () => {
+export const EntryView: React.FC = () => {
   const ordersContext = useOrders();
   const testsContext = useContext(TestsContext);
   const patientsContext = usePatients();
@@ -254,7 +254,7 @@ export const ResultEntry: React.FC = () => {
           : false;
 
         return (
-          <ResultEntryCard
+          <EntryCard
             key={`${test.orderId}-${test.testCode}-${idx}`}
             test={test}
             testDef={testDef}

@@ -13,16 +13,16 @@
 import React from 'react';
 import { Button, Icon, Popover, SectionContainer } from '@/shared/ui';
 import { ValidationForm } from './ValidationForm';
-import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
-import { RejectionDialogContent } from '../shared/RejectionDialog';
-import { ResultRejectionSection } from '../result-entry/ResultRejectionSection';
+import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../components/LabDetailModal';
+import { RejectionDialogContent } from '../components/RejectionDialog';
+import { EntryRejectionSection } from '../entry/EntryRejectionSection';
 import { 
   RetestBadge, 
   RecollectionAttemptBadge, 
   FlagCountBadge, 
   ReviewRequiredBadge,
   EntryInfoLine 
-} from '../shared/StatusBadges';
+} from '../components/StatusBadges';
 import type { TestWithContext } from '@/types';
 
 interface ValidationDetailModalProps {
@@ -201,7 +201,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
 
       {/* Previous Rejection History - show for both retests and recollections */}
       {hasRejectionHistory && (
-        <ResultRejectionSection
+        <EntryRejectionSection
           title={rejectionHistoryTitle}
           rejectionHistory={rejectionHistory}
           showOnlyLatest={false}

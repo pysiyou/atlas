@@ -1,4 +1,4 @@
-import type { SampleDisplay } from './types';
+import type { SampleDisplay } from '../types';
 import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
 
 /**
@@ -131,7 +131,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
  * Opens a print window with the sample label
  * Note: patientName should be looked up before calling this function
  */
-export const printSampleLabel = (display: SampleDisplay, patientName: string): void => {
+export const printCollectionLabel = (display: SampleDisplay, patientName: string): void => {
   try {
     const htmlContent = generatePrintLabelHTML(display, patientName);
     const printWindow = window.open('', '', 'width=400,height=250');

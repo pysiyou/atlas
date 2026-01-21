@@ -31,8 +31,7 @@ export { useAuth } from '@/features/auth/useAuth';
 // New components should use the query hooks directly.
 // =============================================================================
 export { useSamples } from '@/features/lab/SamplesContext';
-export { useAliquots } from '@/features/lab/AliquotsContext';
-export { useUserDisplay } from '@/features/lab/useUserDisplay';
+export { useUsers } from '@/features/user';
 export { useOrders } from '@/features/order/OrderContext';
 export { useTests } from '@/features/test/TestsContext';
 export { usePatients } from '@/features/patient/PatientContext';

@@ -1,5 +1,5 @@
 /**
- * SampleCollectionView - Main view for sample collection workflow
+ * CollectionView - Main view for sample collection workflow
  * 
  * Displays samples awaiting collection with filtering by status.
  */
@@ -11,10 +11,10 @@ import { logger } from '@/utils/logger';
 import type { ContainerType, ContainerTopColor, SampleStatus, Patient, Test } from '@/types';
 import { calculateRequiredSamples, getCollectionRequirements } from '../../../utils/sampleHelpers';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
-import { SampleCard } from './SampleCard';
+import { CollectionCard } from './CollectionCard';
 import { MultiSelectFilter, type FilterOption } from '@/shared/ui';
-import { LabWorkflowView } from '../shared/LabWorkflowView';
-import type { SampleDisplay } from './types';
+import { LabWorkflowView } from '../components/LabWorkflowView';
+import type { SampleDisplay } from '../types';
 
 /** Sample status filter options */
 const SAMPLE_STATUS_FILTER_OPTIONS: FilterOption[] = [
@@ -58,7 +58,7 @@ const createSampleFilter = (patients: Patient[], tests: Test[]) =>
     );
   };
 
-export const SampleCollectionView: React.FC = () => {
+export const CollectionView: React.FC = () => {
   const { currentUser } = useAuth();
   const { orders, refreshOrders } = useOrders();
   const { tests } = useTests();
@@ -153,7 +153,7 @@ export const SampleCollectionView: React.FC = () => {
       items={filteredByStatus}
       filterFn={filterSample}
       renderCard={(display) => (
-        <SampleCard display={display} onCollect={handleCollect} />
+        <CollectionCard display={display} onCollect={handleCollect} />
       )}
       getItemKey={(display, idx) => 
         `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`

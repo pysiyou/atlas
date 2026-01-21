@@ -13,7 +13,7 @@ import { Modal } from '@/shared/ui/Modal';
 import { Badge, SectionContainer, DetailFieldGroup } from '@/shared/ui';
 import type { DetailFieldConfig } from '@/shared/ui/DetailFieldGroup';
 import { formatDate } from '@/utils';
-import { useUserDisplay } from '@/hooks';
+import { useUsers } from '@/hooks';
 
 interface ContextInfo {
   patientName: string;
@@ -69,7 +69,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
   children,
   footer,
 }) => {
-  const { getUserName } = useUserDisplay();
+  const { getUserName } = useUsers();
 
   return (
     <Modal

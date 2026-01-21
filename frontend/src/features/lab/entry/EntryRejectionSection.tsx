@@ -1,13 +1,13 @@
 /**
- * ResultRejectionSection - Rejection history display section for result validation
+ * EntryRejectionSection - Rejection history display section for result entry
  * 
  * Displays result rejection history with simple, professional layout.
- * Uses useUserDisplay hook internally for user name resolution.
+ * Uses useUsers hook internally for user name resolution.
  */
 
 import React from 'react';
 import { formatDate } from '@/utils';
-import { useUserDisplay } from '@/hooks';
+import { useUsers } from '@/hooks';
 import { Badge, SectionContainer } from '@/shared/ui';
 import type { ResultRejectionRecord } from '@/types';
 
@@ -65,16 +65,16 @@ const RejectionRecordDisplay: React.FC<ResultRejectionRecordDisplayProps> = ({
 };
 
 /**
- * Props for the ResultRejectionSection component
+ * Props for the EntryRejectionSection component
  */
-interface ResultRejectionSectionProps {
+interface EntryRejectionSectionProps {
   /** Section title */
   title: string;
   /** Array of rejection records */
   rejectionHistory: ResultRejectionRecord[];
   /** 
    * Optional function to resolve user ID to display name.
-   * If not provided, uses useUserDisplay hook internally.
+   * If not provided, uses useUsers hook internally.
    * @deprecated Pass this prop only for backward compatibility. Will be removed in future.
    */
   getUserName?: (id: string) => string;
@@ -83,18 +83,18 @@ interface ResultRejectionSectionProps {
 }
 
 /**
- * ResultRejectionSection - Component for displaying result rejection history
+ * EntryRejectionSection - Component for displaying result rejection history
  * 
  * Simple, professional layout showing rejection details.
- * Uses useUserDisplay hook internally for user name resolution.
+ * Uses useUsers hook internally for user name resolution.
  */
-export const ResultRejectionSection: React.FC<ResultRejectionSectionProps> = ({
+export const EntryRejectionSection: React.FC<EntryRejectionSectionProps> = ({
   title,
   rejectionHistory,
   getUserName: getUserNameProp,
   showOnlyLatest = false,
 }) => {
-  const { getUserName: getUserNameFromHook } = useUserDisplay();
+  const { getUserName: getUserNameFromHook } = useUsers();
   const getUserName = getUserNameProp || getUserNameFromHook;
   
   // Sort by date (oldest first for chronological tab numbering)

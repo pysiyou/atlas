@@ -1,5 +1,5 @@
 /**
- * SampleCard - Card component for sample collection workflow
+ * CollectionCard - Card component for sample collection workflow
  * 
  * Displays sample information with collection/rejection actions.
  */
@@ -15,19 +15,19 @@ import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
-import { LabCard, TestList } from '../shared/LabCard';
-import { SampleCollectionPopover } from './SampleCollectionPopover';
-import { SampleRejectionPopover } from './SampleRejectionPopover';
-import { handlePrintSampleLabel, getEffectiveContainerType, formatRejectionReasons } from '../shared/labUtils';
-import type { SampleDisplay } from './types';
+import { LabCard, TestList } from '../components/LabCard';
+import { CollectionPopover } from './CollectionPopover';
+import { CollectionRejectionPopover } from './CollectionRejectionPopover';
+import { handlePrintCollectionLabel, getEffectiveContainerType, formatRejectionReasons } from '../components/labUtils';
+import type { SampleDisplay } from '../types';
 import { orderHasValidatedTests } from '@/features/order/utils';
 
-interface SampleCardProps {
+interface CollectionCardProps {
   display: SampleDisplay;
   onCollect: (display: SampleDisplay, volume: number, notes?: string, selectedColor?: string, containerType?: ContainerType) => void;
 }
 
-export const SampleCard: React.FC<SampleCardProps> = ({ display, onCollect }) => {
+export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onCollect }) => {
   const { openModal } = useModal();
   const { patients } = usePatients();
   const { tests } = useTests();
@@ -112,7 +112,7 @@ export const SampleCard: React.FC<SampleCardProps> = ({ display, onCollect }) =>
   const actions = (
     <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
       {isPending ? (
-        <SampleCollectionPopover
+        <CollectionPopover
           requirement={requirement}
           patientName={patientName}
           testName={testNames.join(', ')}
@@ -135,7 +135,7 @@ export const SampleCard: React.FC<SampleCardProps> = ({ display, onCollect }) =>
                   disabled
                 />
               ) : (
-                <SampleRejectionPopover
+                <CollectionRejectionPopover
                   sampleId={sample.sampleId}
                   sampleType={sample.sampleType}
                   patientName={patientName}
@@ -153,7 +153,7 @@ export const SampleCard: React.FC<SampleCardProps> = ({ display, onCollect }) =>
                 />
               )}
               <IconButton
-                onClick={() => handlePrintSampleLabel(display, patientName)}
+                onClick={() => handlePrintCollectionLabel(display, patientName)}
                 variant="print"
                 size="sm"
                 title="Print Sample Label"

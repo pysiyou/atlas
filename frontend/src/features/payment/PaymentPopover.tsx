@@ -7,7 +7,7 @@
  */
 import React, { useState, useCallback, useEffect } from 'react';
 import { Popover, Button, Icon, Alert, Badge } from '@/shared/ui';
-import { PopoverForm } from '@/features/lab/shared/PopoverForm';
+import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { formatCurrency } from '@/utils';
 import type { Order } from '@/types';
 import { getEnabledPaymentMethods, getDefaultPaymentMethod, type PaymentMethod } from '@/types/billing';

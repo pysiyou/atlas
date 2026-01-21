@@ -12,7 +12,7 @@ import React, { useState, useEffect } from 'react';
 import { Popover, IconButton, Icon, Alert, Button, ClaudeLoader } from '@/shared/ui';
 // Note: Icon is still used for Alert content and RejectionHistoryBanner
 import { PopoverForm, RadioCard } from './PopoverForm';
-import { useRejectionManager } from './hooks/useRejectionManager';
+import { useRejectionManager } from '../hooks/useRejectionManager';
 import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
 

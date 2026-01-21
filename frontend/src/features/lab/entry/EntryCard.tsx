@@ -1,5 +1,5 @@
 /**
- * ResultEntryCard - Card component for result entry workflow
+ * EntryCard - Card component for result entry workflow
  * 
  * Displays test information with parameter completion progress.
  * Shows retest banners for tests that are retests of previously rejected results.
@@ -8,40 +8,10 @@
 import React from 'react';
 import { Badge, Alert, Icon } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
-import { LabCard, ProgressBadge } from '../shared/LabCard';
-import type { Test, Patient, ResultRejectionRecord } from '@/types';
+import { LabCard, ProgressBadge } from '../components/LabCard';
+import type { Test, TestWithContext } from '@/types';
 
-import type { RejectionRecord } from '@/types';
-
-interface TestWithContext {
-  orderId: string;
-  patientId: string;
-  patientName: string;
-  testName: string;
-  testCode: string;
-  sampleType?: string;
-  sampleId?: string;
-  priority: string;
-  status: string;
-  collectedAt?: string;
-  collectedBy?: string;
-  referringPhysician?: string;
-  patient?: Patient;
-  // Retest tracking fields (for result validation re-test flow)
-  isRetest?: boolean;
-  retestOfTestId?: string;
-  retestNumber?: number;
-  resultRejectionHistory?: ResultRejectionRecord[];
-  // Sample recollection tracking fields (for sample re-collect flow)
-  sampleIsRecollection?: boolean;
-  sampleOriginalSampleId?: string;
-  sampleRecollectionReason?: string;
-  sampleRecollectionAttempt?: number;
-  sampleRejectionHistory?: RejectionRecord[];
-  [key: string]: unknown;
-}
-
-interface ResultEntryCardProps {
+interface EntryCardProps {
   test: TestWithContext;
   testDef: Test | undefined;
   resultKey: string;
@@ -56,7 +26,7 @@ interface ResultEntryCardProps {
   onClick?: () => void;
 }
 
-export const ResultEntryCard: React.FC<ResultEntryCardProps> = ({
+export const EntryCard: React.FC<EntryCardProps> = ({
   test,
   testDef,
   resultKey,

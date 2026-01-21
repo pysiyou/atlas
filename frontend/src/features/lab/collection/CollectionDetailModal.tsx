@@ -1,5 +1,5 @@
 /**
- * SampleDetailModal - Extended view for sample details
+ * CollectionDetailModal - Extended view for sample details
  * 
  * Provides a full view of sample information including collection requirements,
  * rejection details, and linked tests.
@@ -18,20 +18,20 @@ import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
-import { printSampleLabel } from './SampleLabel';
-import { SampleCollectionPopover } from './SampleCollectionPopover';
-import { SampleRejectionPopover } from './SampleRejectionPopover';
-import { SampleRequirementsSection } from './SampleRequirementsSection';
-import { SampleRejectionSection } from './SampleRejectionSection';
-import { useSamples, useTests, usePatients, useOrders, useUserDisplay } from '@/hooks';
+import { printCollectionLabel } from './CollectionLabel';
+import { CollectionPopover } from './CollectionPopover';
+import { CollectionRejectionPopover } from './CollectionRejectionPopover';
+import { CollectionRequirementsSection } from './CollectionRequirementsSection';
+import { CollectionRejectionSection } from './CollectionRejectionSection';
+import { useSamples, useTests, usePatients, useOrders, useUsers } from '@/hooks';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
-import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
-import type { DetailGridSectionConfig } from '../shared/LabDetailModal';
-import { CollectionInfoLine } from '../shared/StatusBadges';
-import type { SampleDisplay } from './types';
+import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../components/LabDetailModal';
+import type { DetailGridSectionConfig } from '../components/LabDetailModal';
+import { CollectionInfoLine } from '../components/StatusBadges';
+import type { SampleDisplay } from '../types';
 import { orderHasValidatedTests, getValidatedTestCount } from '@/features/order/utils';
 
-interface SampleDetailModalProps {
+interface CollectionDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   sampleId?: string;
@@ -39,14 +39,14 @@ interface SampleDetailModalProps {
   onCollect?: (display: SampleDisplay, volume: number, notes?: string, selectedColor?: string, containerType?: ContainerType) => void;
 }
 
-export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
+export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   isOpen,
   onClose,
   sampleId,
   pendingSampleDisplay,
   onCollect,
 }) => {
-  const { getUserName } = useUserDisplay();
+  const { getUserName } = useUsers();
   const { getSample, rejectSample } = useSamples();
   const { getTest, tests } = useTests();
   const { patients } = usePatients();
@@ -87,7 +87,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
   const handlePrintLabel = () => {
     if (!pendingSampleDisplay) return;
     try {
-      printSampleLabel(pendingSampleDisplay, patientName);
+      printCollectionLabel(pendingSampleDisplay, patientName);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to print label');
     }
@@ -153,7 +153,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
           statusMessage="Sample pending collection"
           statusClassName="text-gray-500"
         >
-          <SampleCollectionPopover
+          <CollectionPopover
             requirement={requirement}
             patientName={patientName}
             testName={testNames.join(', ')}
@@ -206,7 +206,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
               Reject Sample
             </Button>
           ) : (
-            <SampleRejectionPopover
+            <CollectionRejectionPopover
               sampleId={sample.sampleId}
               sampleType={sample.sampleType}
               patientName={patientName}
@@ -402,7 +402,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
 
       {/* Rejection Details - for rejected samples */}
       {isRejected && rejectedSample && (
-        <SampleRejectionSection
+        <CollectionRejectionSection
           title={`Rejection Details${(rejectedSample.rejectionHistory?.length || 1) > 1 ? ` (${rejectedSample.rejectionHistory?.length || 1} attempts)` : ''}`}
           reasons={rejectedSample.rejectionReasons}
           notes={rejectedSample.rejectionNotes}
@@ -414,7 +414,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
 
       {/* Previous Rejection History - shows tabs for multiple rejections */}
       {!isRejected && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (
-        <SampleRejectionSection
+        <CollectionRejectionSection
           title={`Previous Rejection${sample.rejectionHistory.length > 1 ? ` (${sample.rejectionHistory.length} attempts)` : ''}`}
           rejectionHistory={sample.rejectionHistory}
           getUserName={getUserName}
@@ -422,7 +422,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
       )}
 
       {/* Requirements Section - pending only */}
-      {isPending && testDetails.length > 0 && <SampleRequirementsSection testDetails={testDetails} />}
+      {isPending && testDetails.length > 0 && <CollectionRequirementsSection testDetails={testDetails} />}
 
       {/* Collection Notes - shown separately if present */}
       {collectionNotes && (

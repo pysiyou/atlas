@@ -4,9 +4,9 @@
  */
 
 import React, { useState } from 'react';
-import { SampleCollectionView as SampleCollection } from '@/features/lab/sample-collection/SampleCollectionView';
-import { ResultEntry } from '@/features/lab/result-entry/ResultEntryView';
-import { ResultValidation } from '@/features/lab/result-validation/ResultValidationView';
+import { CollectionView } from '@/features/lab/collection/CollectionView';
+import { EntryView } from '@/features/lab/entry/EntryView';
+import { ValidationView } from '@/features/lab/validation/ValidationView';
 import { Icon } from '@/shared/ui/Icon';
 
 export const Laboratory: React.FC = () => {
@@ -56,9 +56,9 @@ export const Laboratory: React.FC = () => {
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto min-h-0 bg-gray-50 p-6">
-          {activeTab === 'collection' && <SampleCollection />}
-          {activeTab === 'entry' && <ResultEntry />}
-          {activeTab === 'validation' && <ResultValidation />}
+          {activeTab === 'collection' && <CollectionView />}
+          {activeTab === 'entry' && <EntryView />}
+          {activeTab === 'validation' && <ValidationView />}
         </div>
       </div>
     </div>

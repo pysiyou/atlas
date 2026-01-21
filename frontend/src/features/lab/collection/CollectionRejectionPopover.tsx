@@ -1,12 +1,12 @@
 /**
- * SampleRejectionPopover - Popover for rejecting collected samples
+ * CollectionRejectionPopover - Popover for rejecting collected samples
  * 
  * Allows lab staff to reject samples with reasons, notes, and recollection options.
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Popover, IconButton, Icon, Alert, Badge } from '@/shared/ui';
-import { PopoverForm, CheckboxCard } from '../shared/PopoverForm';
+import { PopoverForm, CheckboxCard } from '../components/PopoverForm';
 import type { RejectionReason } from '@/types';
 
 /** Rejection reason options with labels and descriptions */
@@ -23,7 +23,7 @@ const REJECTION_REASONS: { value: RejectionReason; label: string; description: s
   { value: 'other', label: 'Other', description: 'Other reason (specify in notes)' },
 ];
 
-interface SampleRejectionPopoverContentProps {
+interface CollectionRejectionPopoverContentProps {
   onConfirm: (reasons: RejectionReason[], notes: string, requireRecollection: boolean) => void;
   onCancel: () => void;
   sampleId: string;
@@ -33,7 +33,7 @@ interface SampleRejectionPopoverContentProps {
   rejectionHistoryCount?: number;
 }
 
-const SampleRejectionPopoverContent: React.FC<SampleRejectionPopoverContentProps> = ({
+const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverContentProps> = ({
   onConfirm,
   onCancel,
   sampleId,
@@ -186,7 +186,7 @@ const SampleRejectionPopoverContent: React.FC<SampleRejectionPopoverContentProps
   );
 };
 
-interface SampleRejectionPopoverProps {
+interface CollectionRejectionPopoverProps {
   /** Sample ID */
   sampleId: string;
   /** Sample type for display */
@@ -203,7 +203,7 @@ interface SampleRejectionPopoverProps {
   trigger?: React.ReactNode;
 }
 
-export const SampleRejectionPopover: React.FC<SampleRejectionPopoverProps> = ({
+export const CollectionRejectionPopover: React.FC<CollectionRejectionPopoverProps> = ({
   sampleId,
   sampleType,
   patientName,
@@ -227,7 +227,7 @@ export const SampleRejectionPopover: React.FC<SampleRejectionPopoverProps> = ({
   >
     {({ close }) => (
       <div data-popover-content onClick={(e) => e.stopPropagation()}>
-        <SampleRejectionPopoverContent
+        <CollectionRejectionPopoverContent
           sampleId={sampleId}
           sampleType={sampleType}
           patientName={patientName}

@@ -6,7 +6,6 @@
 
 // Card components
 export { LabCard, ProgressBadge, FlagsSection, TestList } from './LabCard';
-export { LAB_CARD_TYPOGRAPHY, LAB_CARD_SPACING, LAB_CARD_CONTAINERS, LAB_CARD_LIST_ITEMS, LAB_CARD_CONTEXT, LAB_CARD_HEADER } from './labCardStyles';
 
 // Popover form
 export { PopoverForm, RadioCard, CheckboxCard } from './PopoverForm';
@@ -15,7 +14,7 @@ export { PopoverForm, RadioCard, CheckboxCard } from './PopoverForm';
 export { RejectionDialog, RejectionDialogContent, RejectionHistoryBanner } from './RejectionDialog';
 
 // Hooks
-export { useRejectionManager } from './hooks';
+export { useRejectionManager } from '../hooks';
 
 // Workflow view
 export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
@@ -23,8 +22,6 @@ export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
 // Detail modal
 export { 
   LabDetailModal, 
-  /** @deprecated Use SectionContainer from '@/shared/ui' instead */
-  DetailSection, 
   DetailGrid, 
   ModalFooter, 
   StatusBadgeRow 
@@ -33,15 +30,9 @@ export type { DetailGridSectionConfig } from './LabDetailModal';
 
 // Status badges
 export {
-  ContainerInfo,
   CollectionInfoLine,
-  VolumeBadge,
-  FlagBadge,
-  RecollectionBadge,
-  ParameterProgressBadge,
   ResultStatusBadge,
   EntryInfoLine,
-  // Centralized badge components
   RetestBadge,
   RecollectionAttemptBadge,
   FlagCountBadge,
@@ -50,12 +41,7 @@ export {
 
 // Utilities
 export {
-  handlePrintSampleLabel,
-  createSampleDisplayFilter,
+  handlePrintCollectionLabel,
   formatRejectionReasons,
-  getContainerDisplayName,
-  hasContainerInfo,
   getEffectiveContainerType,
-  buildTestKey,
-  buildSampleKey,
 } from './labUtils';

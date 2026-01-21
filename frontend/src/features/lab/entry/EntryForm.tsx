@@ -1,5 +1,5 @@
 /**
- * ResultForm - Form for entering test results
+ * EntryForm - Form for entering test results
  */
 
 import React, { useCallback } from 'react';
@@ -8,7 +8,7 @@ import { cn } from '@/utils';
 import type { Test, TestParameter, Patient } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '@/utils/reference-ranges';
 
-interface ResultFormProps {
+interface EntryFormProps {
   testDef: Test;
   resultKey: string;
   results: Record<string, string>;
@@ -218,7 +218,7 @@ const checkCriticalStatus = (param: TestParameter, value: string): boolean => {
   return isCriticalValue(numValue, { low: param.criticalLow, high: param.criticalHigh });
 };
 
-export const ResultForm: React.FC<ResultFormProps> = ({
+export const EntryForm: React.FC<EntryFormProps> = ({
   testDef,
   resultKey,
   results,
