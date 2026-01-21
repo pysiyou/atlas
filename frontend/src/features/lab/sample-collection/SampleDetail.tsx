@@ -158,7 +158,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
               <Button
                 variant="primary"
                 size="md"
-                icon={<Icon name="flask" className="w-4 h-4" />}
+                icon={<Icon name="flask" />}
               >
                 {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
               </Button>
@@ -178,9 +178,8 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
         >
           <Button
             onClick={handlePrintLabel}
-            variant="outline"
+            variant="print"
             size="md"
-            icon={<Icon name="printer" className="w-4 h-4" />}
           >
             Print Label
           </Button>
@@ -202,9 +201,8 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
             }}
             trigger={
               <Button
-                variant="danger"
+                variant="reject"
                 size="md"
-                icon={<Icon name="trash" className="w-4 h-4" />}
               >
                 Reject Sample
               </Button>

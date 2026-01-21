@@ -9,7 +9,6 @@ import React, { memo, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Portal } from "./Portal";
 import { IconButton } from "./IconButton";
-import { Icon } from "./Icon";
 
 /**
  * Backdrop component with blur and opacity effects
@@ -213,8 +212,7 @@ const Modal = memo(
                     <div className="flex gap-2 shrink-0">
                       <IconButton
                         onClick={onClose}
-                        icon={<Icon name="cross" className="w-5 h-5" />}
-                        variant="danger"
+                        variant="close"
                         size="md"
                         title="Close"
                         disabled={disableClose}
@@ -223,8 +221,7 @@ const Modal = memo(
                       {onConfirm && (
                         <IconButton
                           onClick={onConfirm}
-                          icon={<Icon name="check" className="w-5 h-5" />}
-                          variant="success"
+                          variant="confirm"
                           size="md"
                           disabled={confirmDisabled}
                           title={confirmText}

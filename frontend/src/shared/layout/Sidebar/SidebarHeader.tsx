@@ -4,8 +4,7 @@
  */
 
 import React from 'react';
-import { Icon } from '@/shared/ui/Icon';
-import { ChevronsLeft } from 'lucide-react';
+import { Icon, IconButton } from '@/shared/ui';
 
 interface SidebarHeaderProps {
   /** Whether the sidebar is collapsed */
@@ -53,13 +52,13 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
             </h1>
             <p className="text-xs text-gray-500">Version 2.4</p>
           </div>
-          <button
+          <IconButton
+            variant="collapse"
+            size="sm"
             onClick={onToggleCollapse}
-            className="shrink-0 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors cursor-pointer"
             title="Collapse Sidebar"
-          >
-            <ChevronsLeft size={20} />
-          </button>
+            icon={<Icon name="chevrons-left" />}
+          />
         </div>
       </div>
     </div>

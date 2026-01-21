@@ -64,11 +64,10 @@ export const Reports: React.FC = () => {
                 
                 <div className="flex flex-col gap-2">
                   <Button
+                    variant="download"
                     size="sm"
                     onClick={() => handleGenerateReport(order.orderId)}
-                    className="flex items-center gap-1"
                   >
-                    <Icon name="download" className="w-4 h-4" />
                     Generate PDF
                   </Button>
                   <Badge variant="validated" size="sm" />

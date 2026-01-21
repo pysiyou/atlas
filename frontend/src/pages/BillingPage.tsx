@@ -147,10 +147,10 @@ export const Billing: React.FC = () => {
                       options={paymentMethodOptions}
                     />
                     <div className="flex gap-2">
-                      <Button size="sm" variant="secondary" onClick={() => setSelectedInvoice(null)}>
+                      <Button size="sm" variant="cancel" showIcon={false} onClick={() => setSelectedInvoice(null)}>
                         Cancel
                       </Button>
-                      <Button size="sm" onClick={handleProcessPayment}>
+                      <Button size="sm" variant="submit" onClick={handleProcessPayment}>
                         Process
                       </Button>
                     </div>

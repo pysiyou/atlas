@@ -5,8 +5,8 @@
 
 import React, { useState } from 'react';
 import { Avatar } from '@/shared/ui/Avatar';
+import { Button, IconButton } from '@/shared/ui';
 import { formatStatus } from '@/utils/statusHelpers';
-import { LogOut } from 'lucide-react';
 import type { AuthUser } from '@/types';
 import defaultAvatar from '@/assets/images/default-avatar.jpg';
 
@@ -46,13 +46,15 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
               {formatStatus(currentUser.role)}
             </p>
           </div>
-          <button
+          <Button
+            variant="logout"
+            size="sm"
+            fullWidth
             onClick={onLogout}
-            className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+            className="justify-start rounded-none"
           >
-            <LogOut size={16} />
-            <span>Logout</span>
-          </button>
+            Logout
+          </Button>
         </div>
       )}
 
@@ -81,16 +83,16 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
             </p>
           </div>
 
-          <button
+          <IconButton
+            variant="logout"
+            size="sm"
             onClick={(e) => {
               e.stopPropagation();
               onLogout();
             }}
-            className="shrink-0 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors ml-2 cursor-pointer"
             title="Logout"
-          >
-            <LogOut size={18} />
-          </button>
+            className="ml-2"
+          />
         </div>
       </div>
 

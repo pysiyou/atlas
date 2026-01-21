@@ -62,9 +62,8 @@ export const OrderDetail: React.FC = () => {
 
         <div className="flex items-center gap-3">
           <Button
-            variant="secondary"
+            variant="print"
             size="sm"
-            icon={<Icon name="printer" className="w-4 h-4" />}
             onClick={() => {/* Print functionality */}}
           >
             Print
@@ -166,8 +165,7 @@ export const OrderDetail: React.FC = () => {
             headerRight={
               <IconButton
                 onClick={() => navigate(`/patients/${order.patientId}`)}
-                icon={<Icon name="eye" />}
-                variant="primary"
+                variant="view"
                 size="sm"
                 title="View Patient"
               />

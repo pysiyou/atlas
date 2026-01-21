@@ -74,8 +74,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
         </div>
         <IconButton
           onClick={onCancel}
-          icon={<Icon name="cross" className="w-4 h-4" />}
-          variant="danger"
+          variant="close"
           size="sm"
           title="Close"
         />
@@ -98,8 +97,9 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
         </div>
         <div className="flex items-center gap-2">
           <Button
-            variant="secondary"
+            variant="cancel"
             size="sm"
+            showIcon={false}
             onClick={onCancel}
             disabled={isSubmitting}
           >
@@ -108,6 +108,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
           <Button
             variant={confirmVariant}
             size="sm"
+            showIcon={false}
             onClick={onConfirm}
             isLoading={isSubmitting}
             disabled={disabled}

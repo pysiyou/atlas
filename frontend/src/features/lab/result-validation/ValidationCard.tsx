@@ -138,8 +138,7 @@ export const ResultValidationCard: React.FC<ResultValidationCardProps> = ({
       />
       <IconButton
         onClick={(e) => { e.stopPropagation(); onApprove(); }}
-        icon={<Icon name="check" />}
-        variant="success"
+        variant="approve"
         size="sm"
         title="Approve Results"
       />

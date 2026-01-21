@@ -113,6 +113,8 @@ export type IconName =
   | "cross"
   | "menu-dots"
   | "plus-circle"
+  | "save"
+  | "cart-plus"
   ;
 
 interface IconProps {

@@ -99,10 +99,8 @@ export const DataLoader: React.FC<DataLoaderProps> = ({
               </ul>
               <Button
                 onClick={handleRetry}
-                variant="outline"
-                className="flex items-center gap-2"
+                variant="retry"
               >
-                <Icon name="loading" className="w-4 h-4" />
                 Retry
               </Button>
             </div>

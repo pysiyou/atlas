@@ -104,7 +104,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
               ))}
               {orders.length > 10 && (
                 <div className="text-center pt-2">
-                  <Button variant="secondary" size="sm" onClick={onViewAllOrders}>
+                  <Button variant="view" size="sm" onClick={onViewAllOrders}>
                     View All {orders.length} Orders
                   </Button>
                 </div>

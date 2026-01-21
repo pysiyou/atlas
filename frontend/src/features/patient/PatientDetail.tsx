@@ -64,17 +64,15 @@ export const PatientDetail: React.FC = () => {
 
         <div className="flex items-center gap-3">
           <Button
-            variant="secondary"
+            variant="edit"
             size="sm"
-            icon={<Icon name="pen" />}
             onClick={() => setIsEditModalOpen(true)}
           >
             Edit
           </Button>
           <Button
-            variant="primary"
+            variant="add"
             size="sm"
-            icon={<Icon name="plus" />}
             onClick={() => navigate(`/orders/new?patientId=${patient.id}`)}
           >
             New Order
@@ -238,8 +236,7 @@ export const PatientDetail: React.FC = () => {
             headerRight={
               <IconButton
                 onClick={() => navigate(`/orders/new?patientId=${patient.id}`)}
-                icon={<Icon name="plus" />}
-                variant="primary"
+                variant="add"
                 size="sm"
                 title="New Order"
               />
@@ -364,9 +361,11 @@ export const PatientDetail: React.FC = () => {
                           </p>
                         </div>
                       </div>
-                      <button className="flex items-center justify-center ">
-                        <Icon name="download" className="w-5 h-5 hover:text-blue-400 hover:cursor-pointer transition-colors" />
-                      </button>
+                      <IconButton
+                        variant="download"
+                        size="sm"
+                        title="Download Report"
+                      />
                     </div>
                   ))}
                 </div>

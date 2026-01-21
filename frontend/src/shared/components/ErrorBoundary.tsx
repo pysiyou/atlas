@@ -101,7 +101,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <div className="mt-6 flex gap-3">
               <Button
                 onClick={this.handleReset}
-                variant="primary"
+                variant="retry"
                 size="md"
                 className="flex-1"
               >
@@ -109,7 +109,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </Button>
               <Button
                 onClick={() => window.location.href = '/'}
-                variant="secondary"
+                variant="back"
                 size="md"
                 className="flex-1"
               >

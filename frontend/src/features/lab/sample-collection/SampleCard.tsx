@@ -140,8 +140,7 @@ export const SampleCard: React.FC<SampleCardProps> = ({ display, onCollect }) =>
               />
               <IconButton
                 onClick={() => handlePrintSampleLabel(display, patientName)}
-                icon={<Icon name="printer" />}
-                variant="primary"
+                variant="print"
                 size="sm"
                 title="Print Sample Label"
               />

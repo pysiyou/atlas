@@ -301,8 +301,7 @@ export const ResultForm: React.FC<ResultFormProps> = ({
       {/* Submit button (card context only) */}
       {!isModal && (
         <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-gray-50 border-t border-gray-100 rounded-b flex items-center justify-end">
-          <Button onClick={onSave} disabled={!isComplete} className="shadow-sm flex items-center gap-2 text-xs">
-            <Icon name="notebook" className="w-4 h-4" />
+          <Button onClick={onSave} disabled={!isComplete} variant="submit" className="shadow-sm text-xs">
             Submit Results
           </Button>
         </div>

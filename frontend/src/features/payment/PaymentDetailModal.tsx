@@ -298,8 +298,9 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         {/* Footer */}
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-white shrink-0">
           <Button
-            variant="secondary"
+            variant={isPaid ? 'close' : 'cancel'}
             size="md"
+            showIcon={false}
             onClick={onClose}
             disabled={submitting}
           >
@@ -313,7 +314,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
               onClick={handlePayment}
               disabled={submitting}
               isLoading={submitting}
-              icon={!submitting ? <Icon name="wallet" className="w-4 h-4" /> : undefined}
+              icon={!submitting ? <Icon name="wallet" /> : undefined}
             >
               {submitting ? 'Processing...' : `Pay ${formatCurrency(order.totalPrice)}`}
             </Button>

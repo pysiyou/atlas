@@ -157,23 +157,22 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
           statusMessage={isComplete ? 'Ready to submit' : 'Complete all parameters to submit results'}
           statusClassName={isComplete ? 'text-green-600 font-medium' : 'text-gray-600'}
         >
-          <Button onClick={onClose} variant="outline" size="md">Cancel</Button>
+          <Button onClick={onClose} variant="cancel" size="md">Cancel</Button>
           <Button
             onClick={handleSave}
-            variant="primary"
+            variant="save"
             size="md"
-            icon={<Icon name="checklist" className="w-4 h-4" />}
             disabled={!isComplete}
           >
-            Submit Results
+            Save
           </Button>
           {onNext && (
-            <Button onClick={handleSaveAndNext} variant="primary" size="md" disabled={!isComplete}>
+            <Button onClick={handleSaveAndNext} variant="save" size="md" disabled={!isComplete}>
               Save & Next
             </Button>
           )}
           {onPrev && (
-            <Button onClick={onPrev} variant="outline" size="md">Previous</Button>
+            <Button onClick={onPrev} variant="previous" size="md">Previous</Button>
           )}
         </ModalFooter>
       }

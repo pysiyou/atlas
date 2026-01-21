@@ -261,12 +261,13 @@ export const CreateOrder: React.FC = () => {
         <div className="flex items-center justify-end gap-3">
           <Button
             type="button"
-            variant="secondary"
+            variant="cancel"
+            showIcon={false}
             onClick={() => navigate('/orders')}
           >
             Cancel
           </Button>
-          <Button type="submit" variant="primary" isLoading={isSubmitting} disabled={isSubmitting}>
+          <Button type="submit" variant="create" isLoading={isSubmitting} disabled={isSubmitting}>
             {isSubmitting ? 'Creating Order...' : 'Create Order'}
           </Button>
         </div>

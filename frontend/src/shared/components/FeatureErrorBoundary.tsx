@@ -107,21 +107,17 @@ export class FeatureErrorBoundary extends Component<
               <div className="flex gap-3">
                 <Button
                   onClick={this.handleReset}
-                  variant="outline"
+                  variant="retry"
                   size="sm"
-                  className="flex items-center gap-2"
                 >
-                  <Icon name="loading" className="w-3.5 h-3.5" />
                   Try Again
                 </Button>
                 {showHomeButton && (
                   <Button
                     onClick={() => window.location.href = '/dashboard'}
-                    variant="outline"
+                    variant="back"
                     size="sm"
-                    className="flex items-center gap-2"
                   >
-                    <Icon name="dashboard" className="w-3.5 h-3.5" />
                     Go to Dashboard
                   </Button>
                 )}

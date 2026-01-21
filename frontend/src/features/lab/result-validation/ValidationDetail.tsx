@@ -126,7 +126,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
             placement="top-end"
             offsetValue={8}
             trigger={
-              <Button variant="danger" size="md" icon={<Icon name="trash" />}>Reject</Button>
+              <Button variant="reject" size="md">Reject</Button>
             }
           >
             {({ close }) => (
@@ -149,7 +149,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               </div>
             )}
           </Popover>
-          <Button onClick={handleApprove} variant="success" size="md" icon={<Icon name="check" />}>
+          <Button onClick={handleApprove} variant="approve" size="md">
             Approve
           </Button>
         </ModalFooter>

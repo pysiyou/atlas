@@ -491,8 +491,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
               <Icon name="document" className="w-12 h-12 text-gray-300 mb-4" />
               <p className="text-gray-600 font-medium mb-2">No orders found</p>
               <p className="text-sm text-gray-500 mb-4">Create a new order for this patient</p>
-              <Button size="sm" onClick={onCreateOrder} className="flex items-center gap-2">
-                <Icon name="plus" className="w-3.5 h-3.5" />
+              <Button size="sm" variant="create" onClick={onCreateOrder}>
                 Create Order
               </Button>
             </div>
@@ -532,7 +531,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
               ))}
               {orders.length > 10 && (
                 <div className="text-center pt-2">
-                  <Button variant="secondary" size="sm" onClick={onViewAllOrders}>
+                  <Button variant="view" size="sm" onClick={onViewAllOrders}>
                     View All {orders.length} Orders
                   </Button>
                 </div>

@@ -10,6 +10,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Popover, IconButton, Icon, Alert, Button, ClaudeLoader } from '@/shared/ui';
+// Note: Icon is still used for Alert content and RejectionHistoryBanner
 import { PopoverForm, RadioCard } from './PopoverForm';
 import { useRejectionManager } from './hooks/useRejectionManager';
 import type { ResultRejectionType } from '@/types';
@@ -98,10 +99,10 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
           <p className="text-[10px] mt-1">{error}</p>
         </Alert>
         <div className="flex justify-end gap-2">
-          <Button variant="secondary" size="sm" onClick={onCancel}>
+          <Button variant="cancel" size="sm" showIcon={false} onClick={onCancel}>
             Cancel
           </Button>
-          <Button variant="primary" size="sm" onClick={() => { clearError(); fetchOptions(); }}>
+          <Button variant="retry" size="sm" onClick={() => { clearError(); fetchOptions(); }}>
             Retry
           </Button>
         </div>
@@ -241,8 +242,7 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
     trigger={
       trigger || (
         <IconButton
-          icon={<Icon name="trash" />}
-          variant="danger"
+          variant="delete"
           size="sm"
           title="Reject Results"
         />

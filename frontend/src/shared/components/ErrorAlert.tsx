@@ -77,12 +77,10 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
         {showRetry && onRetry && (
           <div className="flex gap-2 mt-2">
             <Button
-              variant="outline"
+              variant="retry"
               size="sm"
               onClick={onRetry}
-              className="flex items-center gap-2"
             >
-              <Icon name="loading" className="w-3.5 h-3.5" />
               Retry
             </Button>
           </div>

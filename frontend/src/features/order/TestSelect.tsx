@@ -1,5 +1,5 @@
 import React from 'react';
-import { SectionContainer, SearchBar, Badge, Icon } from '@/shared/ui';
+import { SectionContainer, SearchBar, Badge, Icon, IconButton } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 
@@ -75,13 +75,12 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                         </div>
                       )}
                     </div>
-                    <button
-                      type="button"
+                    <IconButton
+                      variant="remove"
+                      size="xs"
                       onClick={() => onToggleTest(testCode)}
-                      className="p-1 text-red-600 hover:bg-red-50 rounded cursor-pointer"
-                    >
-                      <Icon name="cross" className="w-4 h-4" />
-                    </button>
+                      title="Remove test"
+                    />
                   </div>
                 );
               })}
