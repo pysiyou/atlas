@@ -11,8 +11,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useOrdersList, usePatientNameLookup, useTestNameLookup } from '@/hooks/queries';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
-import { Button } from '@/shared/ui';
-import { Plus } from 'lucide-react';
+import { Button, Icon } from '@/shared/ui';
 import { OrderFilters } from './OrderFilters';
 import { getOrderTableColumns } from './OrderTableColumns';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
@@ -122,7 +121,7 @@ export const OrderList: React.FC = () => {
           onClick={() => navigate('/orders/new')}
           className="flex items-center gap-2 text-sm"
         >
-          <Plus size={16} />
+          <Icon name="plus" className="w-4 h-4" />
           New Order
         </Button>
       }

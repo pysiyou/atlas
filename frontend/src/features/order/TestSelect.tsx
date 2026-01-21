@@ -1,6 +1,5 @@
 import React from 'react';
-import { SectionContainer, SearchBar, Badge } from '@/shared/ui';
-import { ShoppingCart, X, Clock, Droplet, AlertCircle, Beaker } from 'lucide-react';
+import { SectionContainer, SearchBar, Badge, Icon } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 
@@ -46,7 +45,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         {selectedTests.length > 0 && (
           <div className="border border-green-200 bg-green-50 rounded p-4">
             <div className="font-medium text-green-900 mb-2 flex items-center gap-2">
-              <ShoppingCart size={16} />
+              <Icon name="checklist" className="w-4 h-4" />
               Selected Tests
             </div>
             <div className="space-y-2">
@@ -71,7 +70,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                       )}
                       {test.fastingRequired && (
                         <div className="text-xs text-orange-600 mt-1 flex items-center gap-1">
-                          <AlertCircle size={12} />
+                          <Icon name="alert-circle" className="w-3 h-3" />
                           Fasting required
                         </div>
                       )}
@@ -81,7 +80,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                       onClick={() => onToggleTest(testCode)}
                       className="p-1 text-red-600 hover:bg-red-50 rounded cursor-pointer"
                     >
-                      <X size={16} />
+                      <Icon name="cross" className="w-4 h-4" />
                     </button>
                   </div>
                 );
@@ -130,19 +129,19 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                     
                     <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-gray-500">
                       <div className="flex items-center gap-1">
-                        <Droplet size={12} />
+                        <Icon name="pour" className="w-3 h-3" />
                         <span>{test.sampleType}</span>
                         {test.minimumVolume && (
                           <span className="text-gray-400">({test.minimumVolume}mL min)</span>
                         )}
                       </div>
                       <div className="flex items-center gap-1">
-                        <Clock size={12} />
+                        <Icon name="clock" className="w-3 h-3" />
                         <span>{test.turnaroundTime}h</span>
                       </div>
                       {test.containerDescription && (
                         <div className="flex items-center gap-1">
-                          <Beaker size={12} />
+                          <Icon name="flask" className="w-3 h-3" />
                           <span className="text-gray-400">{test.containerDescription}</span>
                         </div>
                       )}
@@ -150,7 +149,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                     
                     {test.fastingRequired && (
                       <div className="text-xs text-orange-600 mt-1 flex items-center gap-1">
-                        <AlertCircle size={12} />
+                        <Icon name="alert-circle" className="w-3 h-3" />
                         Fasting required
                       </div>
                     )}

@@ -10,7 +10,6 @@ import { Badge, DetailField, Button, Icon, Popover } from '@/shared/ui';
 import { ValidationForm } from './ValidationForm';
 import { formatDate } from '@/utils';
 import { useUserDisplay } from '@/hooks';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { LabDetailModal, DetailSection, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
 import { RejectionDialogContent } from '../shared/RejectionDialog';
 import { ResultRejectionSection } from '../result-entry/ResultRejectionSection';
@@ -80,19 +79,19 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
             <>
               {isRetest && (
                 <Badge size="sm" variant="warning" className="flex items-center gap-1.5">
-                  <RefreshCw size={12} />
+                  <Icon name="loading" className="w-3 h-3" />
                   Re-test #{retestNumber}
                 </Badge>
               )}
               {isRecollection && !isRetest && (
                 <Badge size="sm" variant="warning" className="flex items-center gap-1.5">
-                  <RefreshCw size={12} />
+                  <Icon name="loading" className="w-3 h-3" />
                   Re-collect #{rejectionHistory.length}
                 </Badge>
               )}
               {hasFlags && (
                 <Badge size="sm" variant="danger" className="flex items-center gap-1.5">
-                  <AlertTriangle size={12} className="text-red-600" />
+                  <Icon name="warning" className="w-3 h-3 text-red-600" />
                   {test.flags!.length} flag{test.flags!.length !== 1 ? 's' : ''}
                 </Badge>
               )}
@@ -120,14 +119,14 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       }
       footer={
         <ModalFooter
-          statusIcon={hasFlags && <AlertTriangle size={16} className="text-red-500" />}
+          statusIcon={hasFlags && <Icon name="warning" className="w-4 h-4 text-red-500" />}
           statusMessage={hasFlags ? 'Review flags carefully before approving' : 'Verify all results match expected values'}
         >
           <Popover
             placement="top-end"
             offsetValue={8}
             trigger={
-              <Button variant="danger" size="md" icon={<Icon name="close" />}>Reject</Button>
+              <Button variant="danger" size="md" icon={<Icon name="trash" />}>Reject</Button>
             }
           >
             {({ close }) => (
@@ -163,19 +162,19 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           <>
             {isRetest && (
               <Badge size="sm" variant="warning" className="flex items-center gap-1 mr-2">
-                <RefreshCw size={12} />
+                <Icon name="loading" className="w-3 h-3" />
                 Re-test #{retestNumber}
               </Badge>
             )}
             {isRecollection && !isRetest && (
               <Badge size="sm" variant="warning" className="flex items-center gap-1 mr-2">
-                <RefreshCw size={12} />
+                <Icon name="loading" className="w-3 h-3" />
                 Re-collect #{rejectionHistory.length}
               </Badge>
             )}
             {hasFlags && (
               <Badge size="sm" variant="danger" className="flex items-center gap-1">
-                <AlertTriangle size={12} />
+                <Icon name="warning" className="w-3 h-3" />
                 Review Required
               </Badge>
             )}

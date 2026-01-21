@@ -241,7 +241,7 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
     trigger={
       trigger || (
         <IconButton
-          icon={<Icon name="close" />}
+          icon={<Icon name="trash" />}
           variant="danger"
           size="sm"
           title="Reject Results"

@@ -6,7 +6,7 @@
 import React from 'react';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
-import { RefreshCw } from 'lucide-react';
+import { Icon } from '@/shared/ui/Icon';
 
 /**
  * Generic error type that matches all context error types
@@ -82,7 +82,7 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
               onClick={onRetry}
               className="flex items-center gap-2"
             >
-              <RefreshCw size={14} />
+              <Icon name="loading" className="w-3.5 h-3.5" />
               Retry
             </Button>
           </div>

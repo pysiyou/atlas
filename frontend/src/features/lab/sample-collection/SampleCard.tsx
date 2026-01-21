@@ -122,13 +122,6 @@ export const SampleCard: React.FC<SampleCardProps> = ({ display, onCollect }) =>
           <Badge size="sm" variant="collected" />
           {sample.sampleId && !sample.sampleId.includes('PENDING') && (
             <>
-              <IconButton
-                onClick={() => handlePrintSampleLabel(display, patientName)}
-                icon={<Icon name="printer" />}
-                variant="primary"
-                size="sm"
-                title="Print Sample Label"
-              />
               <SampleRejectionPopover
                 sampleId={sample.sampleId}
                 sampleType={sample.sampleType}
@@ -144,6 +137,13 @@ export const SampleCard: React.FC<SampleCardProps> = ({ display, onCollect }) =>
                     toast.error('Failed to reject sample');
                   }
                 }}
+              />
+              <IconButton
+                onClick={() => handlePrintSampleLabel(display, patientName)}
+                icon={<Icon name="printer" />}
+                variant="primary"
+                size="sm"
+                title="Print Sample Label"
               />
             </>
           )}

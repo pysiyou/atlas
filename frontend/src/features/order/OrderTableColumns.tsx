@@ -4,8 +4,7 @@
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge, TableActionMenu, TableActionItem } from '@/shared/ui';
-import { Eye, FileText } from 'lucide-react';
+import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
 import type { Order } from '@/types';
 
@@ -121,12 +120,12 @@ export const getOrderTableColumns = (
       <TableActionMenu>
         <TableActionItem
           label="View Details"
-          icon={<Eye size={16} />}
+          icon={<Icon name="eye" className="w-4 h-4" />}
           onClick={() => navigate(`/orders/${order.orderId}`)}
         />
         <TableActionItem
           label="View Patient"
-          icon={<FileText size={16} />}
+          icon={<Icon name="user" className="w-4 h-4" />}
           onClick={() => navigate(`/patients/${order.patientId}`)}
         />
       </TableActionMenu>

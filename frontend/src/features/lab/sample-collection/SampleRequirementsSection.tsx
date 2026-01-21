@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { AlertCircle } from 'lucide-react';
+import { Icon } from '@/shared/ui/Icon';
 import { DetailSection } from '../shared/LabDetailModal';
 
 /** Test detail for requirements display */
@@ -86,7 +86,7 @@ export const SampleRequirementsSection: React.FC<SampleRequirementsSectionProps>
 
         {activeTest.rejectionCriteria && activeTest.rejectionCriteria.length > 0 && (
           <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-200 rounded">
-            <AlertCircle size={16} className="text-red-600 mt-0.5 shrink-0" />
+            <Icon name="alert-circle" className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
             <div className="flex-1">
               <div className="text-xs font-medium text-red-900 mb-1">Rejection Criteria</div>
               <ul className="list-disc list-inside space-y-0.5">

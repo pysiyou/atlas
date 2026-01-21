@@ -13,7 +13,7 @@ export const Laboratory: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'collection' | 'entry' | 'validation'>('collection');
   
   const tabs = [
-    { id: 'collection' as const, label: 'Sample Collection', icon: <Icon name="sample-collection" className="w-4 h-4" /> },
+    { id: 'collection' as const, label: 'Sample Collection', icon: <Icon name="flask" className="w-4 h-4" /> },
     { id: 'entry' as const, label: 'Result Entry', icon: <Icon name="notebook" className="w-4 h-4" /> },
     { id: 'validation' as const, label: 'Validation', icon: <Icon name="shield-check" className="w-4 h-4" /> },
   ];

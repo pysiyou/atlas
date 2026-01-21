@@ -11,8 +11,7 @@ import { usePatients } from '@/hooks';
 import { useOrders } from '../order/OrderContext';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
-import { Button, Badge, Avatar, TableActionMenu, TableActionItem } from '@/shared/ui';
-import { Plus, Eye, Edit, FileText } from 'lucide-react';
+import { Button, Badge, Avatar, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import { PatientFilters } from './PatientFilters';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import type { Patient, Gender, Order } from '@/types';
@@ -140,17 +139,17 @@ const getPatientTableColumns = (
       <TableActionMenu>
         <TableActionItem
           label="View Details"
-          icon={<Eye size={16} />}
+          icon={<Icon name="eye" className="w-4 h-4" />}
           onClick={() => navigate(`/patients/${patient.id}`)}
         />
         <TableActionItem
           label="Edit Patient"
-          icon={<Edit size={16} />}
+          icon={<Icon name="pen" className="w-4 h-4" />}
           onClick={() => navigate(`/patients/${patient.id}/edit`)}
         />
         <TableActionItem
           label="Create Order"
-          icon={<FileText size={16} />}
+          icon={<Icon name="document" className="w-4 h-4" />}
           onClick={() => navigate(`/orders/new?patientId=${patient.id}`)}
         />
       </TableActionMenu>
@@ -228,7 +227,7 @@ export const PatientList: React.FC = () => {
             onClick={() => setIsCreateModalOpen(true)}
             className="flex items-center gap-2 text-sm"
           >
-            <Plus size={16} />
+            <Icon name="plus" className="w-4 h-4" />
             New Patient
           </Button>
         }

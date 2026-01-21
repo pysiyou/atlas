@@ -143,7 +143,7 @@ export const ResultRejectionPopover: React.FC<ResultRejectionPopoverProps> = ({
     offsetValue={8}
     trigger={
       <IconButton
-        icon={<Icon name="close" />}
+        icon={<Icon name="trash" />}
         variant="danger"
         size="sm"
         title="Reject Results"

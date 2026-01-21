@@ -9,11 +9,6 @@
 
 import React from 'react';
 import { SectionContainer, Badge, Button, Icon } from '@/shared/ui';
-import { 
-  User, Phone, Mail, MapPin, Shield, UserPlus, Calendar, Clock,
-  Activity, Pill, AlertTriangle, Scissors, Users, Cigarette, Wine,
-  Plus, Eye, FileText, XCircle
-} from 'lucide-react';
 import { formatDate, calculateAge, formatPhoneNumber, formatCurrency } from '@/utils';
 import type { Patient, Affiliation, Order } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
@@ -42,7 +37,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
         
         {/* Patient ID Section */}
         <div className="flex items-start gap-3 pb-3 border-b border-gray-100">
-          <User className="text-gray-400 mt-1" size={20} />
+          <Icon name="user" className="w-5 h-5 text-gray-400 mt-1" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Patient ID</div>
             <div className="font-mono font-medium text-gray-900">{patient.id}</div>
@@ -52,7 +47,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
         {/* Demographics Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-start gap-3">
-            <User className="text-gray-400 mt-1" size={20} />
+            <Icon name="user" className="w-5 h-5 text-gray-400 mt-1" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Full Name</div>
               <div className="font-medium text-gray-900">{patient.fullName}</div>
@@ -60,7 +55,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           </div>
 
           <div className="flex items-start gap-3">
-            <User className="text-gray-400 mt-1" size={20} />
+            <Icon name="user" className="w-5 h-5 text-gray-400 mt-1" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Age & Gender</div>
               <div className="font-medium text-gray-900">
@@ -74,7 +69,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           </div>
 
           <div className="flex items-start gap-3">
-            <Phone className="text-gray-400 mt-1" size={20} />
+            <Icon name="phone" className="w-5 h-5 text-gray-400 mt-1" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Phone</div>
               <div className="font-medium text-gray-900">{formatPhoneNumber(patient.phone)}</div>
@@ -82,7 +77,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           </div>
 
           <div className="flex items-start gap-3">
-            <Mail className="text-gray-400 mt-1" size={20} />
+            <Icon name="mail" className="w-5 h-5 text-gray-400 mt-1" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Email</div>
               <div className="font-medium text-gray-900">{patient.email || 'Not provided'}</div>
@@ -90,7 +85,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           </div>
 
           <div className="flex items-start gap-3 md:col-span-2">
-            <MapPin className="text-gray-400 mt-1" size={20} />
+            <Icon name="map-pin" className="w-5 h-5 text-gray-400 mt-1" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Address</div>
               <div className="font-medium text-gray-900">{patient.address.street}</div>
@@ -104,7 +99,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
         {/* Emergency Contact Section */}
         <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="flex items-start gap-3">
-            <UserPlus className="text-gray-400 mt-1" size={20} />
+            <Icon name="user-hands" className="w-5 h-5 text-gray-400 mt-1" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-2">Emergency Contact</div>
               <div className="font-medium text-gray-900">{patient.emergencyContact.name}</div>
@@ -118,7 +113,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
         {/* Lab Affiliation Section */}
         <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="flex items-start gap-3">
-            <Shield className="text-gray-400 mt-1" size={20} />
+            <Icon name="shield" className="w-5 h-5 text-gray-400 mt-1" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-2">Lab Affiliation</div>
               {!patient.affiliation ? (
@@ -155,7 +150,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
         <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-start gap-3">
-              <Calendar className="text-gray-400 mt-1" size={20} />
+              <Icon name="calendar" className="w-5 h-5 text-gray-400 mt-1" />
               <div className="flex-1">
                 <div className="text-xs text-gray-600 mb-1">Registration Date</div>
                 <div className="font-medium text-gray-900">{formatDate(patient.registrationDate)}</div>
@@ -166,7 +161,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
             </div>
 
             <div className="flex items-start gap-3">
-              <Clock className="text-gray-400 mt-1" size={20} />
+              <Icon name="clock" className="w-5 h-5 text-gray-400 mt-1" />
               <div className="flex-1">
                 <div className="text-xs text-gray-600 mb-1">Last Updated</div>
                 <div className="font-medium text-gray-900">{formatDate(patient.updatedAt)}</div>
@@ -263,7 +258,7 @@ export const AffiliationCard: React.FC<AffiliationCardProps> = ({
                   />
               ) : (
                 <>
-                  <XCircle className="w-4 h-4 text-white/80" />
+                  <Icon name="x-circle" className="w-4 h-4 text-white/80" />
                   <span className="text-xs font-medium text-white/80">Expired</span>
                 </>
               )}
@@ -325,7 +320,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         {/* Chronic Conditions */}
         {medicalHistory.chronicConditions.length > 0 && (
           <div className="flex items-start gap-3">
-            <Activity className="text-gray-400 mt-1 shrink-0" size={20} />
+            <Icon name="health" className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Chronic Conditions</div>
               <div className="flex flex-wrap gap-2">
@@ -342,7 +337,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         {/* Current Medications */}
         {medicalHistory.currentMedications.length > 0 && (
           <div className="flex items-start gap-3">
-            <Pill className="text-gray-400 mt-1 shrink-0" size={20} />
+            <Icon name="medicine" className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Current Medications</div>
               <div className="flex flex-wrap gap-2">
@@ -359,7 +354,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         {/* Allergies */}
         {medicalHistory.allergies.length > 0 && (
           <div className="flex items-start gap-3">
-            <AlertTriangle className="text-orange-400 mt-1 shrink-0" size={20} />
+            <Icon name="warning" className="w-5 h-5 text-orange-400 mt-1 shrink-0" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Allergies</div>
               <div className="flex flex-wrap gap-2">
@@ -376,7 +371,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         {/* Previous Surgeries */}
         {medicalHistory.previousSurgeries.length > 0 && (
           <div className="flex items-start gap-3">
-            <Scissors className="text-gray-400 mt-1 shrink-0" size={20} />
+            <Icon name="medical-kit" className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Previous Surgeries</div>
               <div className="flex flex-wrap gap-2">
@@ -393,7 +388,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         {/* Family History */}
         {medicalHistory.familyHistory && (
           <div className="flex items-start gap-3">
-            <Users className="text-gray-400 mt-1 shrink-0" size={20} />
+            <Icon name="users-group" className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Family History</div>
               <div className="text-sm text-gray-900">{medicalHistory.familyHistory}</div>
@@ -408,13 +403,13 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
             <div className="text-xs text-gray-600 mb-2">Lifestyle</div>
             <div className="flex gap-4">
               <div className="flex items-center gap-2">
-                <Cigarette className="text-gray-400" size={16} />
+                <Icon name="health" className="w-4 h-4 text-gray-400" />
                 <span className="text-xs text-gray-700">
                   Smoking: {medicalHistory.lifestyle.smoking ? 'Yes' : 'No'}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Wine className="text-gray-400" size={16} />
+                <Icon name="health" className="w-4 h-4 text-gray-400" />
                 <span className="text-xs text-gray-700">
                   Alcohol: {medicalHistory.lifestyle.alcohol ? 'Yes' : 'No'}
                 </span>
@@ -463,7 +458,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
         onClick={onViewAllOrders}
         className="flex items-center gap-2 text-xs"
       >
-        <Eye size={14} />
+        <Icon name="eye" className="w-3.5 h-3.5" />
         View All
       </Button>
       <Button
@@ -471,7 +466,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
         onClick={onCreateOrder}
         className="flex items-center gap-2 text-xs"
       >
-        <Plus size={14} />
+        <Icon name="plus" className="w-3.5 h-3.5" />
         New Order
       </Button>
     </div>
@@ -493,11 +488,11 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
       <div className="flex-1 overflow-y-auto min-h-0">
           {orders.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <FileText className="text-gray-300 mb-4" size={48} />
+              <Icon name="document" className="w-12 h-12 text-gray-300 mb-4" />
               <p className="text-gray-600 font-medium mb-2">No orders found</p>
               <p className="text-sm text-gray-500 mb-4">Create a new order for this patient</p>
               <Button size="sm" onClick={onCreateOrder} className="flex items-center gap-2">
-                <Plus size={14} />
+                <Icon name="plus" className="w-3.5 h-3.5" />
                 Create Order
               </Button>
             </div>

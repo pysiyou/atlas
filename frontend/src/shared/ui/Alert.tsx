@@ -4,7 +4,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { AlertCircle, CheckCircle, Info, XCircle, X } from 'lucide-react';
+import { Icon } from './Icon';
 
 interface AlertProps {
   children: ReactNode;
@@ -25,25 +25,25 @@ export const Alert: React.FC<AlertProps> = ({
       bg: 'bg-blue-100',
       border: 'border-blue-200',
       text: 'text-blue-800',
-      icon: <Info size={20} />,
+      icon: <Icon name="info-circle" className="w-5 h-5" />,
     },
     success: {
       bg: 'bg-green-100',
       border: 'border-green-200',
       text: 'text-green-800',
-      icon: <CheckCircle size={20} />,
+      icon: <Icon name="check-circle" className="w-5 h-5" />,
     },
     warning: {
       bg: 'bg-yellow-100',
       border: 'border-yellow-200',
       text: 'text-yellow-800',
-      icon: <AlertCircle size={20} />,
+      icon: <Icon name="warning" className="w-5 h-5" />,
     },
     danger: {
       bg: 'bg-red-100',
       border: 'border-red-200',
       text: 'text-red-800',
-      icon: <XCircle size={20} />,
+      icon: <Icon name="x-circle" className="w-5 h-5" />,
     },
   };
   
@@ -62,7 +62,7 @@ export const Alert: React.FC<AlertProps> = ({
           className="flex-shrink-0 hover:opacity-70 transition-opacity cursor-pointer"
           aria-label="Close alert"
         >
-          <X size={20} />
+          <Icon name="cross" className="w-5 h-5" />
         </button>
       )}
     </div>

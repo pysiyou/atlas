@@ -218,7 +218,7 @@ export const SampleRejectionPopover: React.FC<SampleRejectionPopoverProps> = ({
     trigger={
       trigger || (
         <IconButton
-          icon={<Icon name="close" />}
+          icon={<Icon name="trash" />}
           variant="danger"
           size="sm"
           title="Reject Sample"

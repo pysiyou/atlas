@@ -6,9 +6,8 @@
 import React, { useState } from 'react';
 import { useBilling } from '@/features/billing/BillingContext';
 import { useOrders } from '@/features/order/OrderContext';
-import { Card, SectionContainer, Badge, Button, Input, Select } from '@/shared/ui';
+import { Card, SectionContainer, Badge, Button, Input, Select, Icon } from '@/shared/ui';
 import { formatCurrency, formatDate } from '@/utils';
-import { DollarSign, TrendingUp, CreditCard } from 'lucide-react';
 import toast from 'react-hot-toast';
 import type { PaymentMethod } from '@/types';
 
@@ -80,7 +79,7 @@ export const Billing: React.FC = () => {
         <Card>
           <div className="flex items-start gap-3">
             <div className="p-3 bg-green-50 rounded">
-              <TrendingUp className="text-green-600" size={24} />
+              <Icon name="trending-up" className="w-6 h-6 text-green-600" />
             </div>
             <div>
               <div className="text-sm text-gray-600">Today's Revenue</div>
@@ -92,7 +91,7 @@ export const Billing: React.FC = () => {
         <Card>
           <div className="flex items-start gap-3">
             <div className="p-3 bg-orange-50 rounded">
-              <DollarSign className="text-orange-600" size={24} />
+              <Icon name="dollar-sign" className="w-6 h-6 text-orange-600" />
             </div>
             <div>
               <div className="text-sm text-gray-600">Outstanding</div>
@@ -104,7 +103,7 @@ export const Billing: React.FC = () => {
         <Card>
           <div className="flex items-start gap-3">
             <div className="p-3 bg-sky-50 rounded">
-              <CreditCard className="text-sky-600" size={24} />
+              <Icon name="credit-card" className="w-6 h-6 text-sky-600" />
             </div>
             <div>
               <div className="text-sm text-gray-600">Total Payments</div>

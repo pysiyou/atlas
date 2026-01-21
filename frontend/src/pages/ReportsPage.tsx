@@ -7,10 +7,9 @@ import React from 'react';
 import { useOrders } from '@/features/order/OrderContext';
 import { usePatients } from '@/hooks';
 import { useTests } from '@/features/test/TestsContext';
-import { SectionContainer, Badge, Button, EmptyState } from '@/shared/ui';
+import { SectionContainer, Badge, Button, EmptyState, Icon } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { getPatientName, getTestName } from '@/utils/typeHelpers';
-import { FileText, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export const Reports: React.FC = () => {
@@ -46,7 +45,7 @@ export const Reports: React.FC = () => {
             {validatedOrders.map(order => (
               <div key={order.orderId} className="flex items-start justify-between p-4 border border-gray-200 rounded">
                 <div className="flex items-start gap-3">
-                  <FileText className="text-sky-600 mt-1" size={24} />
+                  <Icon name="document" className="w-6 h-6 text-sky-600 mt-1" />
                   <div>
                     <div className="font-medium text-gray-900">{order.orderId}</div>
                     <div className="text-sm text-gray-600">{getPatientName(order.patientId, patients)}</div>
@@ -69,7 +68,7 @@ export const Reports: React.FC = () => {
                     onClick={() => handleGenerateReport(order.orderId)}
                     className="flex items-center gap-1"
                   >
-                    <Download size={16} />
+                    <Icon name="download" className="w-4 h-4" />
                     Generate PDF
                   </Button>
                   <Badge variant="validated" size="sm" />

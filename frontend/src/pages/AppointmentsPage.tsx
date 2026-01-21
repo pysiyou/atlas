@@ -5,9 +5,8 @@
 
 import React from 'react';
 import { useAppointments } from '@/features/appointment/AppointmentsContext';
-import { SectionContainer, Badge } from '@/shared/ui';
+import { SectionContainer, Badge, Icon } from '@/shared/ui';
 import { formatDate } from '@/utils';
-import { Calendar as CalendarIcon } from 'lucide-react';
 
 export const Appointments: React.FC = () => {
   const appointmentsContext = useAppointments();
@@ -40,7 +39,7 @@ export const Appointments: React.FC = () => {
             </div>
           ) : (
             <div className="text-center py-8 text-gray-500">
-              <CalendarIcon size={32} className="mx-auto mb-2 opacity-50" />
+              <Icon name="calendar" className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p>No appointments today</p>
             </div>
           )}

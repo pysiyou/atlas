@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MoreVertical } from 'lucide-react';
+import { Icon } from './Icon';
 
 interface TableActionMenuProps {
   children: React.ReactNode;
@@ -41,7 +41,7 @@ export const TableActionMenu: React.FC<TableActionMenuProps> = ({ children }) =>
         }`}
         title="Actions"
       >
-        <MoreVertical size={12} />
+        <Icon name="menu-dots" className="w-5 h-5" />
       </button>
 
       {isOpen && (

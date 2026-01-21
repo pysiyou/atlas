@@ -111,6 +111,8 @@ export type IconName =
   | "warning"
   | "close"
   | "cross"
+  | "menu-dots"
+  | "plus-circle"
   ;
 
 interface IconProps {

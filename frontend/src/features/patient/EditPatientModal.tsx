@@ -19,7 +19,7 @@ import {
   isAffiliationActive,
 } from './usePatientForm';
 import { generatePatientId } from '@/utils';
-import { User, Shield, Stethoscope } from 'lucide-react';
+import { Icon } from '@/shared/ui';
 
 /**
  * Props for EditPatientModal component.
@@ -326,7 +326,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
             {/* Personal Information Section */}
             <SectionContainer
               title="Personal Information"
-              headerLeft={<SectionIcon icon={<User size={16} />} color="sky" />}
+              headerLeft={<SectionIcon icon={<Icon name="user" className="w-4 h-4" />} color="sky" />}
             >
               <div className="pl-4 space-y-6">
                 <DemographicsSection
@@ -350,7 +350,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
             {/* Lab Affiliation Section */}
             <SectionContainer
               title="Lab Affiliation"
-              headerLeft={<SectionIcon icon={<Shield size={16} />} color="emerald" />}
+              headerLeft={<SectionIcon icon={<Icon name="shield" className="w-4 h-4" />} color="emerald" />}
             >
               <div className="pl-4">
                 <AffiliationSection
@@ -365,7 +365,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
             {/* Medical History Section */}
             <SectionContainer
               title="Medical History"
-              headerLeft={<SectionIcon icon={<Stethoscope size={16} />} color="rose" />}
+              headerLeft={<SectionIcon icon={<Icon name="stethoscope" className="w-4 h-4" />} color="rose" />}
             >
               <div className="pl-4">
                 <MedicalHistorySection

@@ -8,7 +8,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Button, Icon } from '@/shared/ui';
+import { Button, Icon, IconButton } from '@/shared/ui';
 import { useAuth } from '@/hooks';
 
 interface PopoverFormProps {
@@ -72,9 +72,13 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
             <p className="text-xs text-gray-500">{subtitle}</p>
           )}
         </div>
-        <button onClick={onCancel} className="text-gray-400 hover:text-gray-600 mt-0.5 cursor-pointer">
-          <Icon name="close" className="w-4 h-4" />
-        </button>
+        <IconButton
+          onClick={onCancel}
+          icon={<Icon name="cross" className="w-4 h-4" />}
+          variant="danger"
+          size="sm"
+          title="Close"
+        />
       </div>
 
       {/* Body - scrollable content area */}

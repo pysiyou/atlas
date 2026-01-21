@@ -8,9 +8,8 @@ import { usePatients } from '@/hooks';
 import { useOrders } from '@/features/order/OrderContext';
 import { useTests } from '@/features/test/TestsContext';
 import { useBilling } from '@/features/billing/BillingContext';
-import { Card, SectionContainer, Table } from '@/shared/ui';
+import { Card, SectionContainer, Table, Icon } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
-import { Users, FileText, Beaker, DollarSign } from 'lucide-react';
 import type { Test } from '@/types';
 
 export const Admin: React.FC = () => {
@@ -29,10 +28,10 @@ export const Admin: React.FC = () => {
   const { getTotalRevenue } = billingContext;
   
   const stats = [
-    { label: 'Total Patients', value: patients.length, icon: <Users />, color: 'sky' },
-    { label: 'Total Orders', value: orders.length, icon: <FileText />, color: 'green' },
-    { label: 'Active Tests', value: tests.filter(t => t.isActive).length, icon: <Beaker />, color: 'purple' },
-    { label: 'Total Revenue', value: formatCurrency(getTotalRevenue()), icon: <DollarSign />, color: 'orange' },
+    { label: 'Total Patients', value: patients.length, icon: <Icon name="users-group" className="w-6 h-6" />, color: 'sky' },
+    { label: 'Total Orders', value: orders.length, icon: <Icon name="document" className="w-6 h-6" />, color: 'green' },
+    { label: 'Active Tests', value: tests.filter(t => t.isActive).length, icon: <Icon name="flask" className="w-6 h-6" />, color: 'purple' },
+    { label: 'Total Revenue', value: formatCurrency(getTotalRevenue()), icon: <Icon name="dollar-sign" className="w-6 h-6" />, color: 'orange' },
   ];
   
   const testColumns = [

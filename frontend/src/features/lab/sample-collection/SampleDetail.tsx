@@ -204,7 +204,7 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
               <Button
                 variant="danger"
                 size="md"
-                icon={<Icon name="close" className="w-4 h-4" />}
+                icon={<Icon name="trash" className="w-4 h-4" />}
               >
                 Reject Sample
               </Button>

@@ -3,12 +3,14 @@
  * Popover interface for processing payments on orders
  * 
  * Uses the shared PopoverForm component for consistent styling with other lab popovers.
+ * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
 import React, { useState, useCallback, useEffect } from 'react';
 import { Popover, Button, Icon, Alert, Badge } from '@/shared/ui';
 import { PopoverForm } from '@/features/lab/shared/PopoverForm';
 import { formatCurrency } from '@/utils';
-import type { Order, PaymentMethod } from '@/types';
+import type { Order } from '@/types';
+import { getEnabledPaymentMethods, getDefaultPaymentMethod, type PaymentMethod } from '@/types/billing';
 import { createPayment, type PaymentCreate } from '@/services/api/payments';
 import type { IconName } from '@/shared/ui/Icon';
 
@@ -21,19 +23,8 @@ interface PaymentPopoverProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-/** 
- * Available payment method options 
- * TODO: Enable other payment methods when backend support is ready
- */
-const PAYMENT_METHODS: { value: PaymentMethod; label: string; icon: IconName }[] = [
-  { value: 'cash', label: 'Cash', icon: 'cash' },
-  { value: 'mobile-money', label: 'Mobile Money', icon: 'smartphone' },
-  // Disabled payment methods:
-  // { value: 'credit-card', label: 'Credit Card', icon: 'credit-card' },
-  // { value: 'debit-card', label: 'Debit Card', icon: 'credit-card' },
-  // { value: 'insurance', label: 'Insurance', icon: 'shield' },
-  // { value: 'bank-transfer', label: 'Bank Transfer', icon: 'wallet' },
-];
+/** Get enabled payment methods from the single source of truth */
+const PAYMENT_METHODS = getEnabledPaymentMethods();
 
 interface PaymentPopoverContentProps {
   order: Order;
@@ -53,8 +44,8 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  // Form state
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
+  // Form state - use default payment method from centralized config
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
   const [notes, setNotes] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

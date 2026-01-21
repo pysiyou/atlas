@@ -13,7 +13,7 @@ import { useSamples } from '@/features/lab/SamplesContext';
 import { SkeletonPage } from '@/shared/ui/Skeleton';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
-import { RefreshCw } from 'lucide-react';
+import { Icon } from '@/shared/ui/Icon';
 
 interface DataLoaderProps {
   children: React.ReactNode;
@@ -102,7 +102,7 @@ export const DataLoader: React.FC<DataLoaderProps> = ({
                 variant="outline"
                 className="flex items-center gap-2"
               >
-                <RefreshCw size={16} />
+                <Icon name="loading" className="w-4 h-4" />
                 Retry
               </Button>
             </div>

@@ -8,7 +8,7 @@ import { Component, type ReactNode, type ErrorInfo } from 'react';
 import { logger } from '@/utils/logger';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
-import { RefreshCw, Home } from 'lucide-react';
+import { Icon } from '@/shared/ui/Icon';
 
 interface FeatureErrorBoundaryProps {
   /** Child components to render */
@@ -111,7 +111,7 @@ export class FeatureErrorBoundary extends Component<
                   size="sm"
                   className="flex items-center gap-2"
                 >
-                  <RefreshCw size={14} />
+                  <Icon name="loading" className="w-3.5 h-3.5" />
                   Try Again
                 </Button>
                 {showHomeButton && (
@@ -121,7 +121,7 @@ export class FeatureErrorBoundary extends Component<
                     size="sm"
                     className="flex items-center gap-2"
                   >
-                    <Home size={14} />
+                    <Icon name="dashboard" className="w-3.5 h-3.5" />
                     Go to Dashboard
                   </Button>
                 )}

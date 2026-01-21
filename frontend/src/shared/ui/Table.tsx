@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Pagination } from './Pagination';
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import { Icon } from './Icon';
 
 /**
  * Column definition for Table component
@@ -183,7 +183,7 @@ export function Table<T extends TableDataItem>({
             >
               <span>{column.header}</span>
               {sortConfig?.key === column.key && (
-                sortConfig.direction === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />
+                sortConfig.direction === 'asc' ? <Icon name="arrow-up" className="w-3.5 h-3.5" /> : <Icon name="arrow-down" className="w-3.5 h-3.5" />
               )}
             </div>
           ))}

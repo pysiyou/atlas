@@ -5,12 +5,11 @@
 
 import React from 'react';
 import { useAuth } from '@/hooks';
-import { Card, SectionContainer, Badge } from '@/shared/ui';
+import { Card, SectionContainer, Badge, Icon } from '@/shared/ui';
 import { usePatients } from '@/hooks';
 import { useOrders } from '@/features/order/OrderContext';
 import { useAppointments } from '@/features/appointment/AppointmentsContext';
 import { useBilling } from '@/features/billing/BillingContext';
-import { Users, FileText, Calendar, DollarSign, TrendingUp } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/utils';
 import { getPatientName } from '@/utils/typeHelpers';
 
@@ -35,26 +34,26 @@ export const Dashboard: React.FC = () => {
       label: 'Total Patients',
       value: patients.length,
       today: todayPatients,
-      icon: <Users className="text-sky-600" size={32} />,
+      icon: <Icon name="users-group" className="w-8 h-8 text-sky-600" />,
       color: 'bg-sky-50',
     },
     {
       label: 'Total Orders',
       value: orders.length,
       today: todayOrders,
-      icon: <FileText className="text-green-600" size={32} />,
+      icon: <Icon name="document" className="w-8 h-8 text-green-600" />,
       color: 'bg-green-50',
     },
     {
       label: 'Appointments Today',
       value: todayAppointments,
-      icon: <Calendar className="text-purple-600" size={32} />,
+      icon: <Icon name="calendar" className="w-8 h-8 text-purple-600" />,
       color: 'bg-purple-50',
     },
     {
       label: 'Revenue Today',
       value: formatCurrency(todayRevenue),
-      icon: <DollarSign className="text-orange-600" size={32} />,
+      icon: <Icon name="dollar-sign" className="w-8 h-8 text-orange-600" />,
       color: 'bg-orange-50',
     },
   ];
@@ -98,7 +97,7 @@ export const Dashboard: React.FC = () => {
       {pendingOrders > 0 && (
         <Card padding="md">
           <div className="flex items-center gap-3">
-            <TrendingUp className="text-yellow-600" size={24} />
+            <Icon name="trending-up" className="w-6 h-6 text-yellow-600" />
             <div>
               <p className="font-medium text-gray-900">Pending Actions</p>
               <p className="text-sm text-gray-600">
