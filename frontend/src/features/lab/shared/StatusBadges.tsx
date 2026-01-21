@@ -2,6 +2,11 @@
  * StatusBadges - Reusable badge components for lab workflows
  * 
  * Provides consistent badge rendering across cards and modals.
+ * Centralized components for:
+ * - Container info display
+ * - Collection/Entry metadata lines
+ * - Volume, flag, and progress badges
+ * - Retest and recollection status badges
  */
 
 import React from 'react';
@@ -210,3 +215,107 @@ export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
     </span>
   );
 };
+
+/**
+ * RetestBadge - Badge indicating a test is a retest of a previously rejected result
+ * Used in result entry and validation workflows
+ */
+interface RetestBadgeProps {
+  /** The retest attempt number (1, 2, 3, etc.) */
+  retestNumber: number;
+  /** Badge size */
+  size?: 'sm' | 'xs';
+  /** Additional CSS classes */
+  className?: string;
+}
+
+export const RetestBadge: React.FC<RetestBadgeProps> = ({
+  retestNumber,
+  size = 'sm',
+  className = '',
+}) => (
+  <Badge size={size} variant="warning" className={className}>
+    RE-TEST #{retestNumber}
+  </Badge>
+);
+
+/**
+ * RecollectionAttemptBadge - Badge indicating a sample recollection attempt number
+ * Used when a sample was rejected and a new sample needs to be collected
+ */
+interface RecollectionAttemptBadgeProps {
+  /** The recollection attempt number (1, 2, 3, etc.) */
+  attemptNumber: number;
+  /** Badge size */
+  size?: 'sm' | 'xs';
+  /** Additional CSS classes */
+  className?: string;
+  /** Whether to show the icon */
+  showIcon?: boolean;
+}
+
+export const RecollectionAttemptBadge: React.FC<RecollectionAttemptBadgeProps> = ({
+  attemptNumber,
+  size = 'sm',
+  className = '',
+  showIcon = true,
+}) => (
+  <Badge size={size} variant="warning" className={`flex items-center gap-1 ${className}`}>
+    {showIcon && <Icon name="loading" className="w-3 h-3" />}
+    Re-collect #{attemptNumber}
+  </Badge>
+);
+
+/**
+ * FlagCountBadge - Badge showing the number of flags on a result
+ * Used in validation workflow to highlight results needing review
+ */
+interface FlagCountBadgeProps {
+  /** Number of flags */
+  count: number;
+  /** Badge size */
+  size?: 'sm' | 'xs';
+  /** Additional CSS classes */
+  className?: string;
+  /** Whether to show the warning icon */
+  showIcon?: boolean;
+}
+
+export const FlagCountBadge: React.FC<FlagCountBadgeProps> = ({
+  count,
+  size = 'sm',
+  className = '',
+  showIcon = true,
+}) => {
+  if (count === 0) return null;
+
+  return (
+    <Badge size={size} variant="danger" className={`flex items-center gap-1.5 ${className}`}>
+      {showIcon && <Icon name="warning" className="w-3 h-3 text-red-600" />}
+      {count} flag{count !== 1 ? 's' : ''}
+    </Badge>
+  );
+};
+
+/**
+ * ReviewRequiredBadge - Badge indicating review is required (e.g., due to flags)
+ */
+interface ReviewRequiredBadgeProps {
+  /** Badge size */
+  size?: 'sm' | 'xs';
+  /** Additional CSS classes */
+  className?: string;
+  /** Whether to show the warning icon */
+  showIcon?: boolean;
+}
+
+export const ReviewRequiredBadge: React.FC<ReviewRequiredBadgeProps> = ({
+  size = 'sm',
+  className = '',
+  showIcon = true,
+}) => (
+  <Badge size={size} variant="danger" className={`flex items-center gap-1 ${className}`}>
+    {showIcon && <Icon name="warning" className="w-3 h-3" />}
+    Review Required
+  </Badge>
+);

@@ -8,7 +8,6 @@ import { Component, type ReactNode, type ErrorInfo } from 'react';
 import { logger } from '@/utils/logger';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
-import { Icon } from '@/shared/ui/Icon';
 
 interface FeatureErrorBoundaryProps {
   /** Child components to render */

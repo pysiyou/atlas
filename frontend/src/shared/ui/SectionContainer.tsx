@@ -6,6 +6,15 @@
 
 import React from 'react';
 
+/**
+ * Content spacing presets for the section container
+ * - compact: Minimal spacing (space-y-1)
+ * - normal: Standard spacing (space-y-2) - default
+ * - relaxed: More breathing room (space-y-3)
+ * - none: No automatic spacing applied
+ */
+type ContentSpacing = 'compact' | 'normal' | 'relaxed' | 'none';
+
 export interface SectionContainerProps {
   /** Section title displayed in header */
   title?: string;
@@ -27,6 +36,8 @@ export interface SectionContainerProps {
   headerRight?: React.ReactNode;
   /** Data test ID for testing */
   testId?: string;
+  /** Preset spacing between child elements (applies space-y-* class) */
+  spacing?: ContentSpacing;
 }
 
 /**
@@ -46,6 +57,16 @@ export interface SectionContainerProps {
  * </SectionContainer>
  * ```
  */
+/**
+ * Spacing class map for content area
+ */
+const SPACING_CLASSES: Record<ContentSpacing, string> = {
+  compact: 'space-y-1',
+  normal: 'space-y-2',
+  relaxed: 'space-y-3',
+  none: '',
+};
+
 export const SectionContainer: React.FC<SectionContainerProps> = ({
   title,
   children,
@@ -57,15 +78,18 @@ export const SectionContainer: React.FC<SectionContainerProps> = ({
   headerLeft,
   headerRight,
   testId,
+  spacing = 'none',
 }) => {
-  // Base styles for wrapper: border, background, rounded corners
-  const wrapperStyles = `w-full bg-gray-50 border border-gray-200 rounded-lg ${className}`;
+  // Base styles for wrapper: border, background, rounded corners, overflow hidden to clip content
+  const wrapperStyles = `w-full bg-white border border-gray-200 rounded-lg overflow-hidden ${className}`;
   
   // Base styles for header: padding, border-bottom, uppercase text
   const headerStyles = `w-full px-4 py-3 border-b border-gray-200 text-xs text-gray-700 uppercase font-semibold tracking-wide flex items-center justify-between bg-gray-50 ${headerClassName}`;
   
-  // Base styles for content: padding, white background
-  const contentStyles = `p-4 bg-white ${contentClassName}`;
+  // Base styles for content: padding, white background (inherits from wrapper)
+  // Includes spacing class if specified
+  const spacingClass = SPACING_CLASSES[spacing];
+  const contentStyles = `p-4 ${spacingClass} ${contentClassName}`.trim();
 
   return (
     <section className={wrapperStyles} data-testid={testId}>

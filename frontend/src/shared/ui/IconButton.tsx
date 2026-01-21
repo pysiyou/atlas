@@ -79,7 +79,7 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   next: { style: 'primary', icon: 'chevron-right' },
   previous: { style: 'secondary', icon: 'chevron-left' },
   expand: { style: 'secondary', icon: 'chevron-down' },
-  collapse: { style: 'secondary', icon: 'chevron-up' },
+  collapse: { style: 'secondary', icon: 'chevron-left' },
   menu: { style: 'secondary', icon: 'more-vertical' },
   
   // User actions

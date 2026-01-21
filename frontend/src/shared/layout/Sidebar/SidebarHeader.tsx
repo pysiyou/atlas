@@ -57,7 +57,6 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
             size="sm"
             onClick={onToggleCollapse}
             title="Collapse Sidebar"
-            icon={<Icon name="chevrons-left" />}
           />
         </div>
       </div>

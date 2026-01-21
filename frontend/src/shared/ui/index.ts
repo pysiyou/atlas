@@ -12,6 +12,7 @@ export * from './SectionContainer';
 export * from './Tabs';
 export * from './Popover';
 export * from './DetailField';
+export * from './DetailFieldGroup';
 export * from './ModalRenderer';
 export * from './Alert';
 export * from './Avatar';

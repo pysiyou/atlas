@@ -1,14 +1,14 @@
 /**
  * SampleRejectionSection - Rejection history display section with tabs
  * 
- * Displays sample rejection history with tabs for each rejection attempt.
- * Similar to ResultRejectionSection tab pattern.
+ * Displays sample rejection history with simple, professional layout.
+ * Similar to ResultRejectionSection style.
  */
 
 import React from 'react';
 import { REJECTION_REASON_CONFIG } from '@/types/enums/rejection-reason';
 import { formatDate } from '@/utils';
-import { DetailSection } from '../shared/LabDetailModal';
+import { SectionContainer } from '@/shared/ui';
 import type { RejectionRecord } from '@/types';
 
 /**
@@ -23,68 +23,60 @@ interface RejectionRecordDisplayProps {
   rejectedBy?: string;
   /** Timestamp of rejection */
   rejectedAt?: string;
-  /** Whether recollection is required */
-  recollectionRequired?: boolean;
-  /** ID of recollection sample if created */
-  recollectionSampleId?: string;
-  /** Visual variant - red for current rejection, yellow for history */
-  variant?: 'red' | 'yellow';
   /** Function to resolve user ID to display name */
   getUserName: (id: string) => string;
 }
 
 /**
  * Single rejection record display component
+ * Simple text-based layout
  */
 const RejectionRecordDisplay: React.FC<RejectionRecordDisplayProps> = ({
   reasons,
   notes,
   rejectedBy,
   rejectedAt,
-  recollectionRequired,
-  recollectionSampleId,
-  variant = 'red',
   getUserName,
 }) => {
-  const bulletColor = variant === 'red' ? 'bg-red-500' : 'bg-yellow-500';
-  const textColor = variant === 'red' ? 'text-red-700' : 'text-yellow-700';
-  const notesColor = variant === 'red' ? 'text-red-600' : 'text-yellow-600';
+  // Format reasons to readable labels
+  const reasonLabels = reasons?.map(
+    r => REJECTION_REASON_CONFIG[r as keyof typeof REJECTION_REASON_CONFIG]?.label || r
+  ).join(', ');
 
   return (
-    <ul className="space-y-1">
-      {reasons && (
-        <li className={`flex items-center text-xs ${textColor}`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${bulletColor} mr-2`} />
-          <span className="font-medium">
-            {reasons.map(r => REJECTION_REASON_CONFIG[r as keyof typeof REJECTION_REASON_CONFIG]?.label || r).join(', ')}
-          </span>
-        </li>
+    <div className="space-y-1.5 text-xs">
+      {/* Reasons */}
+      {reasonLabels && (
+        <div className="flex">
+          <span className="text-gray-500 w-16 shrink-0">Reasons</span>
+          <span className="text-gray-900">{reasonLabels}</span>
+        </div>
       )}
+
+      {/* Notes */}
       {notes && (
-        <li className={`flex items-center text-xs ${notesColor} italic`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${bulletColor} mr-2`} />
-          "{notes}"
-        </li>
+        <div className="flex">
+          <span className="text-gray-500 w-16 shrink-0">Notes</span>
+          <span className="text-gray-900">{notes}</span>
+        </div>
       )}
-      {rejectedBy && rejectedAt && (
-        <li className="flex items-center text-xs text-gray-600">
-          <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
-          <span>{getUserName(rejectedBy)} · {formatDate(rejectedAt)}</span>
-        </li>
+
+      {/* Rejected by */}
+      {rejectedBy && (
+        <div className="flex">
+          <span className="text-gray-500 w-16 shrink-0">By</span>
+          <span className="text-gray-900">{getUserName(rejectedBy)}</span>
+        </div>
       )}
-      {recollectionRequired && (
-        <li className="flex items-center text-xs text-gray-600">
-          <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
-          <span>Recollection required</span>
-        </li>
+
+      {/* Date */}
+      {rejectedAt && (
+        <div className="flex">
+          <span className="text-gray-500 w-16 shrink-0">Date</span>
+          <span className="text-gray-900">{formatDate(rejectedAt)}</span>
+        </div>
       )}
-      {recollectionSampleId && (
-        <li className="flex items-center text-xs text-gray-600">
-          <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
-          <span>Recollection sample: <span className="font-mono font-medium">{recollectionSampleId}</span></span>
-        </li>
-      )}
-    </ul>
+    </div>
   );
 };
 
@@ -102,12 +94,6 @@ interface SingleRejectionProps {
   rejectedBy?: string;
   /** Timestamp of rejection */
   rejectedAt?: string;
-  /** Whether recollection is required */
-  recollectionRequired?: boolean;
-  /** ID of recollection sample if created */
-  recollectionSampleId?: string;
-  /** Visual variant - red for current rejection, yellow for history */
-  variant?: 'red' | 'yellow';
   /** Function to resolve user ID to display name */
   getUserName: (id: string) => string;
   /** Rejection history array - when provided, shows tabs for each rejection */
@@ -117,6 +103,7 @@ interface SingleRejectionProps {
 /**
  * SampleRejectionSection - Component for displaying sample rejection history
  * 
+ * Simple, professional layout showing rejection details.
  * Supports two modes:
  * 1. Single rejection: Pass individual props (reasons, notes, etc.)
  * 2. Multiple rejections with tabs: Pass rejectionHistory array
@@ -127,9 +114,6 @@ export const SampleRejectionSection: React.FC<SingleRejectionProps> = ({
   notes,
   rejectedBy,
   rejectedAt,
-  recollectionRequired,
-  recollectionSampleId,
-  variant = 'red',
   getUserName,
   rejectionHistory,
 }) => {
@@ -154,58 +138,49 @@ export const SampleRejectionSection: React.FC<SingleRejectionProps> = ({
   // Mode 1: Multiple rejections with tabs
   if (rejectionHistory && rejectionHistory.length > 0) {
     const activeRecord = sortedHistory[activeIndex];
-    // Most recent (last in sorted array) gets red variant
-    const isLatest = activeIndex === sortedHistory.length - 1;
+
+    // Simple tab buttons for multiple rejections
+    const TabNavigation = sortedHistory.length > 1 ? (
+      <div className="flex gap-1">
+        {sortedHistory.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setActiveIndex(index)}
+            className={`px-2 py-0.5 text-xs rounded ${
+              activeIndex === index
+                ? 'bg-gray-200 text-gray-800 font-medium'
+                : 'text-gray-500 hover:bg-gray-100'
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+    ) : null;
 
     return (
-      <DetailSection
-        title={title}
-        headerRight={
-          sortedHistory.length > 1 ? (
-            <div className="flex gap-1">
-              {sortedHistory.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActiveIndex(index)}
-                  className={`px-2 py-1 text-xs rounded transition-colors ${
-                    activeIndex === index
-                      ? 'bg-yellow-100 text-yellow-700 font-medium'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
-                >
-                  {index + 1}
-                </button>
-              ))}
-            </div>
-          ) : undefined
-        }
-      >
+      <SectionContainer title={title} headerRight={TabNavigation} spacing="normal">
         <RejectionRecordDisplay
           reasons={activeRecord.rejectionReasons}
           notes={activeRecord.rejectionNotes}
           rejectedBy={activeRecord.rejectedBy}
           rejectedAt={activeRecord.rejectedAt}
-          recollectionRequired={activeRecord.recollectionRequired}
-          variant={isLatest ? 'red' : 'yellow'}
           getUserName={getUserName}
         />
-      </DetailSection>
+      </SectionContainer>
     );
   }
 
   // Mode 2: Single rejection (backwards compatible)
   return (
-    <DetailSection title={title}>
+    <SectionContainer title={title} spacing="normal">
       <RejectionRecordDisplay
         reasons={reasons}
         notes={notes}
         rejectedBy={rejectedBy}
         rejectedAt={rejectedAt}
-        recollectionRequired={recollectionRequired}
-        recollectionSampleId={recollectionSampleId}
-        variant={variant}
         getUserName={getUserName}
       />
-    </DetailSection>
+    </SectionContainer>
   );
 };

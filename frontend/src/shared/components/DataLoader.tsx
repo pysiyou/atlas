@@ -13,7 +13,6 @@ import { useSamples } from '@/features/lab/SamplesContext';
 import { SkeletonPage } from '@/shared/ui/Skeleton';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
-import { Icon } from '@/shared/ui/Icon';
 
 interface DataLoaderProps {
   children: React.ReactNode;

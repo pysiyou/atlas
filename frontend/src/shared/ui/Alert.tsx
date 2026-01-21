@@ -43,7 +43,7 @@ export const Alert: React.FC<AlertProps> = ({
       bg: 'bg-red-100',
       border: 'border-red-200',
       text: 'text-red-800',
-      icon: <Icon name="x-circle" className="w-5 h-5" />,
+      icon: <Icon name="close-circle" className="w-5 h-5" />,
     },
   };
   

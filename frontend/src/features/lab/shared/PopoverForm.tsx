@@ -64,12 +64,14 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
       {/* Header */}
       <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-start justify-between">
         <div className="space-y-0.5">
-          <div className="flex items-center gap-2">
-            <h4 className="font-medium text-gray-900">{title}</h4>
-            {headerBadges}
-          </div>
+          <h4 className="font-medium text-gray-900">{title}</h4>
           {subtitle && (
             <p className="text-xs text-gray-500">{subtitle}</p>
+          )}
+          {headerBadges && (
+            <div className="flex items-center gap-2 pt-1">
+              {headerBadges}
+            </div>
           )}
         </div>
         <IconButton

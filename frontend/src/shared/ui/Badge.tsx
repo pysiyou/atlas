@@ -6,6 +6,8 @@ export type BadgeVariant =
   | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'error' | 'success' | 'warning' | 'info' | 'purple' | 'orange' | 'teal'
   // Order Statuses
   | 'ordered' | 'in-progress' | 'completed' | 'delivered' | 'cancelled' | 'validated' | 'reported' | 'rejected' | 'superseded'
+  // Rejection Types
+  | 're-test' | 're-collect'
   // Sample Statuses
   | 'pending' | 'collected' | 'received' | 'accessioned' | 'stored' | 'disposed' | 'sample-collected'
   // Appointment Statuses
@@ -63,6 +65,10 @@ const VARIANT_STYLES: Record<string, string> = {
   'reported': 'bg-gray-100 text-gray-800 border-transparent',
   'rejected': 'bg-red-100 text-red-800 border-transparent',
   'superseded': 'bg-slate-200 text-slate-600 border-transparent line-through',  // Grayed out, struck-through for replaced tests
+
+  // Rejection Type Mappings
+  're-test': 'bg-amber-100 text-amber-800 border-transparent',
+  're-collect': 'bg-orange-100 text-orange-800 border-transparent',
 
   // Sample Status Mappings
   'pending': 'bg-yellow-100 text-yellow-800 border-transparent',
@@ -167,6 +173,9 @@ const VARIANT_LABELS: Record<string, string> = {
   'debit-card': 'DEBIT CARD',
   'bank-transfer': 'BANK TRANSFER',
   'mobile-money': 'MOBILE MONEY',
+  // Rejection type labels
+  're-test': 'RE-TEST',
+  're-collect': 'RE-COLLECT',
 };
 
 /**

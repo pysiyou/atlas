@@ -10,7 +10,8 @@
 
 import React, { type ReactNode } from 'react';
 import { Modal } from '@/shared/ui/Modal';
-import { Badge, SectionContainer } from '@/shared/ui';
+import { Badge, SectionContainer, DetailFieldGroup } from '@/shared/ui';
+import type { DetailFieldConfig } from '@/shared/ui/DetailFieldGroup';
 import { formatDate } from '@/utils';
 import { useUserDisplay } from '@/hooks';
 
@@ -139,6 +140,16 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 
 /**
  * DetailSection - Wrapper for content sections in detail modals
+ * 
+ * @deprecated Use SectionContainer directly from '@/shared/ui' instead.
+ * This wrapper is kept for backward compatibility with existing components.
+ * 
+ * @example
+ * // Instead of:
+ * <DetailSection title="Section">...</DetailSection>
+ * 
+ * // Use:
+ * <SectionContainer title="Section" spacing="normal">...</SectionContainer>
  */
 interface DetailSectionProps {
   title: string;
@@ -151,23 +162,105 @@ export const DetailSection: React.FC<DetailSectionProps> = ({
   headerRight,
   children,
 }) => (
-  <SectionContainer title={title} headerRight={headerRight}>
+  <SectionContainer title={title} headerRight={headerRight} spacing="normal">
     {children}
   </SectionContainer>
 );
 
 /**
- * DetailGrid - Two-column grid for detail sections
+ * Configuration for a section in the DetailGrid
  */
-interface DetailGridProps {
-  children: ReactNode;
+export interface DetailGridSectionConfig {
+  /** Section title */
+  title: string;
+  /** Array of field configurations for this section */
+  fields: DetailFieldConfig[];
+  /** Content to display in the header right side */
+  headerRight?: ReactNode;
 }
 
-export const DetailGrid: React.FC<DetailGridProps> = ({ children }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    {children}
-  </div>
-);
+/**
+ * DetailGrid - Two-column grid for detail sections
+ * 
+ * Can be used in two ways:
+ * 1. With children (legacy): Pass DetailSection components as children
+ * 2. With sections config (new): Pass array of section configurations
+ * 
+ * @example
+ * // Using sections config (recommended)
+ * <DetailGrid
+ *   sections={[
+ *     {
+ *       title: "Collection Information",
+ *       fields: [
+ *         { label: "Sample ID", badge: { value: "SAM-001", variant: "primary" } },
+ *         { label: "Collected", timestamp: "2024-01-01", user: "user123" },
+ *       ]
+ *     },
+ *     {
+ *       title: "Test Information",
+ *       fields: [
+ *         { label: "Test Code", badge: { value: "CBC", variant: "primary" } },
+ *       ]
+ *     }
+ *   ]}
+ * />
+ * 
+ * @example
+ * // Using children (legacy)
+ * <DetailGrid>
+ *   <DetailSection title="Section 1">...</DetailSection>
+ *   <DetailSection title="Section 2">...</DetailSection>
+ * </DetailGrid>
+ */
+interface DetailGridProps {
+  /** Child elements (legacy usage) */
+  children?: ReactNode;
+  /** Section configurations (new declarative approach) */
+  sections?: DetailGridSectionConfig[];
+}
+
+export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) => {
+  // If sections config is provided, render using the new declarative approach
+  if (sections && sections.length > 0) {
+    // Filter out sections with no displayable fields
+    const visibleSections = sections.filter(section => {
+      return section.fields.some(field => {
+        if (field.hidden) return false;
+        const hasValue = field.value !== undefined && field.value !== null && field.value !== '';
+        const hasTimestamp = field.timestamp !== undefined && field.timestamp !== '';
+        const hasBadge = field.badge?.value !== undefined && field.badge?.value !== '';
+        return hasValue || hasTimestamp || hasBadge;
+      });
+    });
+
+    if (visibleSections.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {visibleSections.map((section) => (
+          <SectionContainer 
+            key={section.title} 
+            title={section.title}
+            headerRight={section.headerRight}
+            spacing="normal"
+          >
+            <DetailFieldGroup fields={section.fields} />
+          </SectionContainer>
+        ))}
+      </div>
+    );
+  }
+
+  // Legacy: render children directly
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {children}
+    </div>
+  );
+};
 
 /**
  * ModalFooter - Common footer layout with status message and action buttons

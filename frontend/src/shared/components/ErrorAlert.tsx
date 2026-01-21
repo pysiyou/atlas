@@ -6,7 +6,6 @@
 import React from 'react';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
-import { Icon } from '@/shared/ui/Icon';
 
 /**
  * Generic error type that matches all context error types

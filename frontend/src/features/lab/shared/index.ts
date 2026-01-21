@@ -21,7 +21,15 @@ export { useRejectionManager } from './hooks';
 export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
 
 // Detail modal
-export { LabDetailModal, DetailSection, DetailGrid, ModalFooter, StatusBadgeRow } from './LabDetailModal';
+export { 
+  LabDetailModal, 
+  /** @deprecated Use SectionContainer from '@/shared/ui' instead */
+  DetailSection, 
+  DetailGrid, 
+  ModalFooter, 
+  StatusBadgeRow 
+} from './LabDetailModal';
+export type { DetailGridSectionConfig } from './LabDetailModal';
 
 // Status badges
 export {
@@ -33,6 +41,11 @@ export {
   ParameterProgressBadge,
   ResultStatusBadge,
   EntryInfoLine,
+  // Centralized badge components
+  RetestBadge,
+  RecollectionAttemptBadge,
+  FlagCountBadge,
+  ReviewRequiredBadge,
 } from './StatusBadges';
 
 // Utilities

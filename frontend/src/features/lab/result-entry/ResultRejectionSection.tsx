@@ -1,13 +1,14 @@
 /**
  * ResultRejectionSection - Rejection history display section for result validation
  * 
- * Displays result rejection history with tabs for each rejection attempt.
- * Similar to SampleRequirementsSection tab pattern.
+ * Displays result rejection history with simple, professional layout.
+ * Uses useUserDisplay hook internally for user name resolution.
  */
 
 import React from 'react';
 import { formatDate } from '@/utils';
-import { DetailSection } from '../shared/LabDetailModal';
+import { useUserDisplay } from '@/hooks';
+import { Badge, SectionContainer } from '@/shared/ui';
 import type { ResultRejectionRecord } from '@/types';
 
 /**
@@ -18,57 +19,48 @@ interface ResultRejectionRecordDisplayProps {
   record: ResultRejectionRecord;
   /** Function to resolve user ID to display name */
   getUserName: (id: string) => string;
-  /** Visual variant - red for most recent, yellow for history */
-  variant?: 'red' | 'yellow';
 }
 
 /**
  * Single rejection record display component
- * Matches the layout structure of SampleRejectionSection
+ * Simple text-based layout with badge for type
  */
 const RejectionRecordDisplay: React.FC<ResultRejectionRecordDisplayProps> = ({
   record,
   getUserName,
-  variant = 'yellow',
 }) => {
-  const bulletColor = variant === 'red' ? 'bg-red-500' : 'bg-yellow-500';
-  const textColor = variant === 'red' ? 'text-red-700' : 'text-yellow-700';
-  const notesColor = variant === 'red' ? 'text-red-600' : 'text-yellow-600';
-
-  // Map rejection type to display label
-  const rejectionTypeLabel = record.rejectionType === 're-test' 
-    ? 'Re-test (same sample)' 
-    : 'Re-collect (new sample)';
-
   return (
-    <ul className="space-y-1">
-      {/* Rejection type - similar to reasons in SampleRejectionSection */}
-      <li className={`flex items-center text-xs ${textColor}`}>
-        <span className={`w-1.5 h-1.5 rounded-full ${bulletColor} mr-2`} />
-        <span className="font-medium">{rejectionTypeLabel}</span>
-      </li>
-      {/* Rejection reason/notes - italic style */}
+    <div className="space-y-1.5 text-xs">
+      {/* Type - displayed as badge */}
+      <div className="flex items-center">
+        <span className="text-gray-500 w-16 shrink-0">Type</span>
+        <Badge variant={record.rejectionType} size="xs" />
+      </div>
+
+      {/* Reason */}
       {record.rejectionReason && (
-        <li className={`flex items-center text-xs ${notesColor} italic`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${bulletColor} mr-2`} />
-          "{record.rejectionReason}"
-        </li>
+        <div className="flex">
+          <span className="text-gray-500 w-16 shrink-0">Reason</span>
+          <span className="text-gray-900">{record.rejectionReason}</span>
+        </div>
       )}
-      {/* Rejected by and timestamp */}
-      {record.rejectedBy && record.rejectedAt && (
-        <li className="flex items-center text-xs text-gray-600">
-          <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
-          <span>{getUserName(record.rejectedBy)} · {formatDate(record.rejectedAt)}</span>
-        </li>
+
+      {/* Rejected by */}
+      {record.rejectedBy && (
+        <div className="flex">
+          <span className="text-gray-500 w-16 shrink-0">By</span>
+          <span className="text-gray-900">{getUserName(record.rejectedBy)}</span>
+        </div>
       )}
-      {/* Re-collect indicator - similar to recollectionRequired in SampleRejectionSection */}
-      {record.rejectionType === 're-collect' && (
-        <li className="flex items-center text-xs text-gray-600">
-          <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
-          <span>Recollection required</span>
-        </li>
+
+      {/* Date */}
+      {record.rejectedAt && (
+        <div className="flex">
+          <span className="text-gray-500 w-16 shrink-0">Date</span>
+          <span className="text-gray-900">{formatDate(record.rejectedAt)}</span>
+        </div>
       )}
-    </ul>
+    </div>
   );
 };
 
@@ -80,8 +72,12 @@ interface ResultRejectionSectionProps {
   title: string;
   /** Array of rejection records */
   rejectionHistory: ResultRejectionRecord[];
-  /** Function to resolve user ID to display name */
-  getUserName: (id: string) => string;
+  /** 
+   * Optional function to resolve user ID to display name.
+   * If not provided, uses useUserDisplay hook internally.
+   * @deprecated Pass this prop only for backward compatibility. Will be removed in future.
+   */
+  getUserName?: (id: string) => string;
   /** Whether to show only the most recent rejection (default: false - show all) */
   showOnlyLatest?: boolean;
 }
@@ -89,17 +85,18 @@ interface ResultRejectionSectionProps {
 /**
  * ResultRejectionSection - Component for displaying result rejection history
  * 
- * Shows rejection events from result validation with tabs for each attempt:
- * - Rejection type (re-test or re-collect)
- * - Rejection reason/notes
- * - Who rejected and when
+ * Simple, professional layout showing rejection details.
+ * Uses useUserDisplay hook internally for user name resolution.
  */
 export const ResultRejectionSection: React.FC<ResultRejectionSectionProps> = ({
   title,
   rejectionHistory,
-  getUserName,
+  getUserName: getUserNameProp,
   showOnlyLatest = false,
 }) => {
+  const { getUserName: getUserNameFromHook } = useUserDisplay();
+  const getUserName = getUserNameProp || getUserNameFromHook;
+  
   // Sort by date (oldest first for chronological tab numbering)
   const sortedHistory = React.useMemo(() => 
     [...(rejectionHistory || [])].sort((a, b) => 
@@ -123,49 +120,37 @@ export const ResultRejectionSection: React.FC<ResultRejectionSectionProps> = ({
   if (showOnlyLatest) {
     const latestRecord = sortedHistory[sortedHistory.length - 1];
     return (
-      <DetailSection title={title}>
-        <RejectionRecordDisplay
-          record={latestRecord}
-          getUserName={getUserName}
-          variant="red"
-        />
-      </DetailSection>
+      <SectionContainer title={title} spacing="normal">
+        <RejectionRecordDisplay record={latestRecord} getUserName={getUserName} />
+      </SectionContainer>
     );
   }
 
   const activeRecord = sortedHistory[activeIndex];
-  // Most recent (last in sorted array) gets red variant
-  const isLatest = activeIndex === sortedHistory.length - 1;
+
+  // Simple tab buttons for multiple rejections
+  const TabNavigation = sortedHistory.length > 1 ? (
+    <div className="flex gap-1">
+      {sortedHistory.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => setActiveIndex(index)}
+          className={`px-2 py-0.5 text-xs rounded ${
+            activeIndex === index
+              ? 'bg-gray-200 text-gray-800 font-medium'
+              : 'text-gray-500 hover:bg-gray-100'
+          }`}
+        >
+          {index + 1}
+        </button>
+      ))}
+    </div>
+  ) : null;
 
   return (
-    <DetailSection
-      title={title}
-      headerRight={
-        sortedHistory.length > 1 ? (
-          <div className="flex gap-1">
-            {sortedHistory.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveIndex(index)}
-                className={`px-2 py-1 text-xs rounded transition-colors ${
-                  activeIndex === index
-                    ? 'bg-yellow-100 text-yellow-700 font-medium'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
-        ) : undefined
-      }
-    >
-      <RejectionRecordDisplay
-        record={activeRecord}
-        getUserName={getUserName}
-        variant={isLatest ? 'red' : 'yellow'}
-      />
-    </DetailSection>
+    <SectionContainer title={title} headerRight={TabNavigation} spacing="normal">
+      <RejectionRecordDisplay record={activeRecord} getUserName={getUserName} />
+    </SectionContainer>
   );
 };
 
@@ -187,14 +172,10 @@ export const ResultRejectionBanner: React.FC<ResultRejectionBannerProps> = ({
   const typeLabel = rejection.rejectionType === 're-test' ? 'Re-test' : 'Re-collect';
 
   return (
-    <div className="bg-yellow-50 border border-yellow-200 rounded px-3 py-2">
-      <p className="font-medium text-xs text-yellow-800">
-        {typeLabel} #{retestNumber}
-      </p>
+    <div className="text-xs text-gray-600">
+      <span className="font-medium">{typeLabel} #{retestNumber}</span>
       {rejection.rejectionReason && (
-        <p className="text-xxs text-yellow-700 mt-0.5 leading-tight">
-          Reason: {rejection.rejectionReason}
-        </p>
+        <span className="text-gray-500"> · {rejection.rejectionReason}</span>
       )}
     </div>
   );

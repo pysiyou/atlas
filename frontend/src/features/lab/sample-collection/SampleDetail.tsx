@@ -3,27 +3,31 @@
  * 
  * Provides a full view of sample information including collection requirements,
  * rejection details, and linked tests.
+ * 
+ * Uses centralized components:
+ * - DetailGrid with sections config for consistent layout  
+ * - SectionContainer for custom sections
+ * - CollectionInfoLine for sample metadata
  */
 
 import React, { useMemo } from 'react';
-import { Badge, Icon, DetailField, Button } from '@/shared/ui';
+import { Badge, Icon, Button, SectionContainer } from '@/shared/ui';
 import type { ContainerType, RejectedSample } from '@/types';
 import Barcode from 'react-barcode';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
-import { formatDate as formatDateTime } from '@/utils';
-import { useUserDisplay } from '@/hooks';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
-import { getContainerIconColor, getCollectionRequirements } from '@/utils';
-import { formatVolume, formatDate } from '@/utils';
+import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
 import { printSampleLabel } from './SampleLabel';
 import { SampleCollectionPopover } from './SampleCollectionPopover';
 import { SampleRejectionPopover } from './SampleRejectionPopover';
 import { SampleRequirementsSection } from './SampleRequirementsSection';
 import { SampleRejectionSection } from './SampleRejectionSection';
-import { useSamples, useTests, usePatients, useOrders } from '@/hooks';
+import { useSamples, useTests, usePatients, useOrders, useUserDisplay } from '@/hooks';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
-import { LabDetailModal, DetailSection, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
+import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
+import type { DetailGridSectionConfig } from '../shared/LabDetailModal';
+import { CollectionInfoLine } from '../shared/StatusBadges';
 import type { SampleDisplay } from './types';
 
 interface SampleDetailModalProps {
@@ -144,9 +148,9 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
       const isRecollection = sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0);
       return (
         <ModalFooter
-          statusIcon={<Icon name="flask" className="w-4 h-4 text-yellow-500" />}
+          statusIcon={<Icon name="flask" className="w-4 h-4 text-gray-400" />}
           statusMessage="Sample pending collection"
-          statusClassName="text-gray-600"
+          statusClassName="text-gray-500"
         >
           <SampleCollectionPopover
             requirement={requirement}
@@ -172,9 +176,9 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
     if (isCollected && sample.sampleId && !sample.sampleId.includes('PENDING')) {
       return (
         <ModalFooter
-          statusIcon={<Icon name="check-circle" className="w-4 h-4 text-green-500" />}
+          statusIcon={<Icon name="check-circle" className="w-4 h-4 text-gray-400" />}
           statusMessage="Sample collected successfully"
-          statusClassName="text-green-600"
+          statusClassName="text-gray-500"
         >
           <Button
             onClick={handlePrintLabel}
@@ -216,15 +220,114 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
     if (isRejected) {
       return (
         <ModalFooter
-          statusIcon={<Icon name="x-circle" className="w-4 h-4 text-red-500" />}
+          statusIcon={<Icon name="close-circle" className="w-4 h-4 text-gray-400" />}
           statusMessage={rejectedSample?.recollectionRequired ? 'Sample rejected - recollection requested' : 'Sample rejected'}
-          statusClassName="text-red-600"
+          statusClassName="text-gray-500"
         />
       );
     }
 
     return null;
   })();
+
+  // Collection info for collected/rejected samples
+  const collectedAt = (isCollected || isRejected) && 'collectedAt' in sample ? sample.collectedAt : undefined;
+  const collectedBy = (isCollected || isRejected) && 'collectedBy' in sample ? sample.collectedBy : undefined;
+  const collectedVolume = (isCollected || isRejected) && 'collectedVolume' in sample ? sample.collectedVolume : undefined;
+  const remainingVolume = (isCollected || isRejected) && 'remainingVolume' in sample ? sample.remainingVolume : undefined;
+  const collectionNotes = (isCollected || isRejected) && 'collectionNotes' in sample ? sample.collectionNotes : undefined;
+
+  /**
+   * Build dynamic grid sections based on sample status
+   * Uses the declarative sections config pattern
+   */
+  const buildGridSections = (): DetailGridSectionConfig[] => {
+    const sections: DetailGridSectionConfig[] = [];
+
+    // Collection Details - collected/rejected only
+    if ((isCollected || isRejected) && collectedAt) {
+      sections.push({
+        title: "Collection Details",
+        fields: [
+          { label: "Collected", timestamp: collectedAt },
+          { label: "Collected By", value: collectedBy ? getUserName(collectedBy) : undefined },
+          { 
+            label: "Container", 
+            value: (
+              <div className="flex items-center gap-2">
+                <Badge size="sm" variant="primary" className="capitalize">{effectiveContainerType}</Badge>
+                {containerColor && <Badge size="sm" variant={`container-${containerColor}` as never}>{colorName} Top</Badge>}
+              </div>
+            )
+          },
+        ]
+      });
+    }
+
+    // Volume Tracking - always shown
+    sections.push({
+      title: "Volume Tracking",
+      fields: [
+        { label: "Required", value: formatVolume(sample.requiredVolume) },
+        { label: "Collected", value: collectedVolume !== undefined ? formatVolume(collectedVolume) : undefined },
+        { 
+          label: "Remaining", 
+          value: remainingVolume !== undefined ? (
+            <span className={remainingVolume < sample.requiredVolume * 0.2 ? 'text-red-600' : ''}>
+              {formatVolume(remainingVolume)}
+            </span>
+          ) : undefined
+        },
+      ]
+    });
+
+    // Collection Requirements - pending only
+    if (isPending && requirement) {
+      sections.push({
+        title: "Collection Requirements",
+        fields: [
+          { label: "Priority", badge: sample.priority ? { value: sample.priority, variant: sample.priority } : undefined },
+          { 
+            label: "Required Container Types", 
+            value: requirement.containerTypes.length > 0 ? (
+              <div className="flex flex-wrap gap-1 justify-end">
+                {requirement.containerTypes.map((type, idx) => (
+                  <Badge key={idx} size="sm" variant="primary" className="capitalize">{type}</Badge>
+                ))}
+              </div>
+            ) : undefined
+          },
+          { 
+            label: "Required Container Colors", 
+            value: requirement.containerTopColors.length > 0 ? (
+              <div className="flex flex-wrap gap-1 justify-end">
+                {requirement.containerTopColors.map((color, idx) => (
+                  <Badge key={idx} size="sm" variant={`container-${color}` as never}>
+                    {CONTAINER_COLOR_OPTIONS.find(opt => opt.value === color)?.name || color} Top
+                  </Badge>
+                ))}
+              </div>
+            ) : undefined
+          },
+        ]
+      });
+    }
+
+    // Audit Trail - collected/rejected only
+    if (isCollected || isRejected) {
+      sections.push({
+        title: "Audit Trail",
+        fields: [
+          { label: "Created", timestamp: sample.createdAt },
+          { label: "Created By", value: getUserName(sample.createdBy) },
+          { label: "Last Updated", timestamp: sample.updatedAt },
+          { label: "Updated By", value: sample.updatedBy ? getUserName(sample.updatedBy) : undefined },
+        ]
+      });
+    }
+
+    return sections;
+  };
 
   return (
     <LabDetailModal
@@ -243,42 +346,19 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
               <Barcode value={sample.sampleId} height={40} displayValue={false} background="transparent" margin={0} />
             </div>
           )}
-          {/* Collection info */}
-          {(isCollected || isRejected) && 'collectedAt' in sample && sample.collectedAt && (
-            <div className="text-xs text-gray-500 mt-1">
-              Collected <span className="font-medium text-gray-700">{formatDate(sample.collectedAt)}</span>
-              {sample.collectedBy && <span> by {getUserName(sample.collectedBy)}</span>}
-            </div>
+          {/* Collection info - using centralized component */}
+          {collectedAt && (
+            <CollectionInfoLine 
+              collectedAt={collectedAt} 
+              collectedBy={collectedBy} 
+              className="text-xs text-gray-500 mt-1"
+            />
           )}
         </>
       }
     >
-      {/* Rejection Details */}
-      {isRejected && rejectedSample && (
-        <SampleRejectionSection
-          title={`Rejection Details${(rejectedSample.rejectionHistory?.length || 1) > 1 ? ` (${rejectedSample.rejectionHistory?.length || 1} attempts)` : ''}`}
-          reasons={rejectedSample.rejectionReasons}
-          notes={rejectedSample.rejectionNotes}
-          rejectedBy={rejectedSample.rejectedBy}
-          rejectedAt={rejectedSample.rejectedAt}
-          recollectionRequired={rejectedSample.recollectionRequired}
-          recollectionSampleId={rejectedSample.recollectionSampleId}
-          getUserName={getUserName}
-        />
-      )}
-
-      {/* Previous Rejection History - shows tabs for multiple rejections */}
-      {!isRejected && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (
-        <SampleRejectionSection
-          title={`Previous Rejection${sample.rejectionHistory.length > 1 ? ` (${sample.rejectionHistory.length} attempts)` : ''}`}
-          rejectionHistory={sample.rejectionHistory}
-          variant="yellow"
-          getUserName={getUserName}
-        />
-      )}
-
-      {/* Linked Tests */}
-      <DetailSection title={isCollected ? 'Linked Tests' : 'Required for'}>
+      {/* Linked Tests - custom section with list */}
+      <SectionContainer title={isCollected ? 'Linked Tests' : 'Required for'}>
         <ul className="space-y-1">
           {testNames.map((testName, i) => {
             const testCode = sample.testCodes[i];
@@ -298,105 +378,41 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
             );
           })}
         </ul>
-      </DetailSection>
+      </SectionContainer>
+
+      {/* Rejection Details - for rejected samples */}
+      {isRejected && rejectedSample && (
+        <SampleRejectionSection
+          title={`Rejection Details${(rejectedSample.rejectionHistory?.length || 1) > 1 ? ` (${rejectedSample.rejectionHistory?.length || 1} attempts)` : ''}`}
+          reasons={rejectedSample.rejectionReasons}
+          notes={rejectedSample.rejectionNotes}
+          rejectedBy={rejectedSample.rejectedBy}
+          rejectedAt={rejectedSample.rejectedAt}
+          getUserName={getUserName}
+        />
+      )}
+
+      {/* Previous Rejection History - shows tabs for multiple rejections */}
+      {!isRejected && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (
+        <SampleRejectionSection
+          title={`Previous Rejection${sample.rejectionHistory.length > 1 ? ` (${sample.rejectionHistory.length} attempts)` : ''}`}
+          rejectionHistory={sample.rejectionHistory}
+          getUserName={getUserName}
+        />
+      )}
 
       {/* Requirements Section - pending only */}
       {isPending && testDetails.length > 0 && <SampleRequirementsSection testDetails={testDetails} />}
 
-      {/* Detail Sections */}
-      <DetailGrid>
-        {/* Collection Details - collected/rejected */}
-        {(isCollected || isRejected) && 'collectedAt' in sample && (
-          <DetailSection title="Collection Details">
-            <div className="space-y-2">
-              {sample.collectedAt && <DetailField label="Collected" value={formatDateTime(sample.collectedAt)} />}
-              {sample.collectedBy && <DetailField label="Collected By" value={getUserName(sample.collectedBy)} />}
-              <DetailField
-                label="Container"
-                value={
-                  <div className="flex items-center gap-2">
-                    <Badge size="sm" variant="primary" className="capitalize">{effectiveContainerType}</Badge>
-                    {containerColor && <Badge size="sm" variant={`container-${containerColor}` as never}>{colorName} Top</Badge>}
-                  </div>
-                }
-              />
-              {sample.collectionNotes && (
-                <div className="pt-2 border-t border-gray-200">
-                  <div className="text-xs text-gray-500 mb-1">Notes</div>
-                  <div className="text-sm text-gray-900">{sample.collectionNotes}</div>
-                </div>
-              )}
-            </div>
-          </DetailSection>
-        )}
+      {/* Collection Notes - shown separately if present */}
+      {collectionNotes && (
+        <SectionContainer title="Collection Notes">
+          <div className="text-sm text-gray-900">{collectionNotes}</div>
+        </SectionContainer>
+      )}
 
-        {/* Volume Tracking */}
-        <DetailSection title="Volume Tracking">
-          <div className="space-y-2">
-            <DetailField label="Required" value={formatVolume(sample.requiredVolume)} />
-            {(isCollected || isRejected) && 'collectedVolume' in sample && (
-              <DetailField label="Collected" value={formatVolume(sample.collectedVolume)} />
-            )}
-            {(isCollected || isRejected) && 'remainingVolume' in sample && sample.remainingVolume !== undefined && (
-              <DetailField
-                label="Remaining"
-                value={
-                  <span className={sample.remainingVolume < sample.requiredVolume * 0.2 ? 'text-red-600' : ''}>
-                    {formatVolume(sample.remainingVolume)}
-                  </span>
-                }
-              />
-            )}
-          </div>
-        </DetailSection>
-
-        {/* Requirements - pending only */}
-        {isPending && requirement && (
-          <DetailSection title="Collection Requirements">
-            <div className="space-y-2">
-              {sample.priority && <DetailField label="Priority" value={<Badge variant={sample.priority} size="sm" />} />}
-              {requirement.containerTypes.length > 0 && (
-                <DetailField
-                  label="Required Container Types"
-                  value={
-                    <div className="flex flex-wrap gap-1 justify-end">
-                      {requirement.containerTypes.map((type, idx) => (
-                        <Badge key={idx} size="sm" variant="primary" className="capitalize">{type}</Badge>
-                      ))}
-                    </div>
-                  }
-                />
-              )}
-              {requirement.containerTopColors.length > 0 && (
-                <DetailField
-                  label="Required Container Colors"
-                  value={
-                    <div className="flex flex-wrap gap-1 justify-end">
-                      {requirement.containerTopColors.map((color, idx) => (
-                        <Badge key={idx} size="sm" variant={`container-${color}` as never}>
-                          {CONTAINER_COLOR_OPTIONS.find(opt => opt.value === color)?.name || color} Top
-                        </Badge>
-                      ))}
-                    </div>
-                  }
-                />
-              )}
-            </div>
-          </DetailSection>
-        )}
-
-        {/* Audit Trail - collected/rejected */}
-        {(isCollected || isRejected) && (
-          <DetailSection title="Audit Trail">
-            <div className="space-y-2">
-              <DetailField label="Created" value={formatDateTime(sample.createdAt)} />
-              <DetailField label="Created By" value={getUserName(sample.createdBy)} />
-              <DetailField label="Last Updated" value={formatDateTime(sample.updatedAt)} />
-              {sample.updatedBy && <DetailField label="Updated By" value={getUserName(sample.updatedBy)} />}
-            </div>
-          </DetailSection>
-        )}
-      </DetailGrid>
+      {/* Detail Sections - using declarative sections config */}
+      <DetailGrid sections={buildGridSections()} />
     </LabDetailModal>
   );
 };

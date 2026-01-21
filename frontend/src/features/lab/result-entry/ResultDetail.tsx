@@ -2,14 +2,19 @@
  * ResultDetailModal - Extended view for result entry
  * 
  * Provides a larger interface for entering test results with full parameter display.
+ * 
+ * Uses centralized components:
+ * - DetailGrid with sections config for consistent layout
+ * - SectionContainer for form section
+ * - CollectionInfoLine for sample metadata
  */
 
 import React, { useMemo, useState } from 'react';
-import { Badge, DetailField, Button, Icon } from '@/shared/ui';
+import { Badge, Button, Icon, SectionContainer } from '@/shared/ui';
 import { ResultForm } from './ResultForm';
-import { formatDate } from '@/utils';
-import { useUserDisplay } from '@/hooks';
-import { LabDetailModal, DetailSection, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
+import { ResultRejectionSection } from './ResultRejectionSection';
+import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../shared/LabDetailModal';
+import { CollectionInfoLine, RetestBadge, RecollectionAttemptBadge } from '../shared/StatusBadges';
 import type { Test, TestWithContext } from '@/types';
 
 interface ResultDetailModalProps {
@@ -42,8 +47,6 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
   onNext,
   onPrev,
 }) => {
-  const { getUserName } = useUserDisplay();
-
   // Local state for immediate UI feedback
   const [localResults, setLocalResults] = useState<Record<string, string>>(() => initialResults);
   const [localNotes, setLocalNotes] = useState<string>(() => initialTechnicianNotes);
@@ -61,6 +64,15 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
   const totalParams = testDef.parameters.length;
   const completionPercentage = totalParams > 0 ? Math.round((filledCount / totalParams) * 100) : 0;
   const turnaroundTime = testDef.turnaroundTime;
+  const remainingParams = totalParams - filledCount;
+
+  // Determine if this is a retest or recollection
+  const isRetest = test.isRetest === true;
+  const retestNumber = test.retestNumber || 0;
+  const rejectionHistory = test.resultRejectionHistory || [];
+  const hasRejectionHistory = rejectionHistory.length > 0;
+  const lastRejection = hasRejectionHistory ? rejectionHistory[rejectionHistory.length - 1] : null;
+  const isRecollection = lastRejection?.rejectionType === 're-collect';
 
   const handleLocalResultChange = (key: string, paramCode: string, value: string) => {
     setLocalResults(prev => ({ ...prev, [paramCode]: value }));
@@ -86,7 +98,10 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
     }
   };
 
-  // Progress bar for header
+  /**
+   * Progress bar component for header
+   * Shows completion percentage with color coding
+   */
   const progressBar = (
     <div className="flex items-center gap-2">
       <div className="w-32 bg-gray-200 rounded-full h-2">
@@ -102,6 +117,32 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
     </div>
   );
 
+  /**
+   * Extra header badges for parameter count, TAT, and retest/recollection status
+   */
+  const headerExtraBadges = (
+    <>
+      {isRetest && <RetestBadge retestNumber={retestNumber} />}
+      {isRecollection && !isRetest && <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} />}
+      <Badge size="sm" variant="default" className="text-gray-700">
+        {filledCount} / {totalParams} parameters
+      </Badge>
+      {turnaroundTime && (
+        <Badge size="sm" variant="default" className="text-gray-700 flex items-center gap-1.5">
+          <Icon name="clock" className="w-3 h-3 text-gray-600" />
+          {turnaroundTime}h TAT
+        </Badge>
+      )}
+    </>
+  );
+
+  /**
+   * Build rejection history title based on type
+   */
+  const rejectionHistoryTitle = isRetest 
+    ? `Previous Rejection${rejectionHistory.length > 1 ? ` (${rejectionHistory.length} attempts)` : ''}`
+    : `Recollection History (${rejectionHistory.length} attempt${rejectionHistory.length > 1 ? 's' : ''})`;
+
   return (
     <LabDetailModal
       isOpen={isOpen}
@@ -114,19 +155,7 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
           sampleType={test.sampleType}
           priority={test.priority}
           status={test.status}
-          extraBadges={
-            <>
-              <Badge size="sm" variant="default" className="text-gray-700">
-                {filledCount} / {totalParams} parameters
-              </Badge>
-              {turnaroundTime && (
-                <Badge size="sm" variant="default" className="text-gray-700 flex items-center gap-1.5">
-                  <Icon name="clock" className="w-3 h-3 text-gray-600" />
-                  {turnaroundTime}h TAT
-                </Badge>
-              )}
-            </>
-          }
+          extraBadges={headerExtraBadges}
         />
       }
       contextInfo={{
@@ -141,21 +170,22 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
         collectedBy: test.collectedBy,
       } : undefined}
       additionalContextInfo={
+        // Show collection info only if no sampleId (otherwise it's in sampleInfo)
         test.collectedAt && !test.sampleId && (
-          <div className="text-xs text-gray-500">
-            Collected <span className="font-medium text-gray-700">{formatDate(test.collectedAt)}</span>
-            {test.collectedBy && <span> by {getUserName(test.collectedBy)}</span>}
-          </div>
+          <CollectionInfoLine 
+            collectedAt={test.collectedAt} 
+            collectedBy={test.collectedBy} 
+          />
         )
       }
       footer={
         <ModalFooter
           statusIcon={isComplete 
-            ? <Icon name="checklist" className="w-4 h-4 text-green-500" />
-            : <Icon name="warning" className="w-4 h-4 text-yellow-500" />
+            ? <Icon name="check-circle" className="w-4 h-4 text-gray-400" />
+            : <Icon name="pen" className="w-4 h-4 text-gray-400" />
           }
           statusMessage={isComplete ? 'Ready to submit' : 'Complete all parameters to submit results'}
-          statusClassName={isComplete ? 'text-green-600 font-medium' : 'text-gray-600'}
+          statusClassName="text-gray-500"
         >
           <Button onClick={onClose} variant="cancel" size="md">Cancel</Button>
           <Button
@@ -177,8 +207,8 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
         </ModalFooter>
       }
     >
-      {/* Result Entry Form */}
-      <DetailSection title="Result Entry" headerRight={progressBar}>
+      {/* Result Entry Form Section */}
+      <SectionContainer title="Result Entry" headerRight={progressBar}>
         <ResultForm
           testDef={testDef}
           resultKey={resultKey}
@@ -191,40 +221,53 @@ export const ResultDetailModal: React.FC<ResultDetailModalProps> = ({
           isComplete={isComplete}
           isModal={true}
         />
-      </DetailSection>
+      </SectionContainer>
 
-      {/* Test Details */}
-      <DetailGrid>
-        <DetailSection title="Test Parameters">
-          <div className="space-y-2">
-            <DetailField label="Total Parameters" value={<span className="font-semibold">{totalParams}</span>} />
-            <DetailField
-              label="Filled"
-              value={<span className={filledCount === totalParams ? 'text-green-600' : 'text-yellow-600'}>{filledCount}</span>}
-            />
-            <DetailField
-              label="Remaining"
-              value={<span className={totalParams - filledCount === 0 ? 'text-green-600' : 'text-gray-600'}>{totalParams - filledCount}</span>}
-            />
-          </div>
-        </DetailSection>
+      {/* Previous Rejection History - show for both retests and recollections */}
+      {hasRejectionHistory && (
+        <ResultRejectionSection
+          title={rejectionHistoryTitle}
+          rejectionHistory={rejectionHistory}
+          showOnlyLatest={false}
+        />
+      )}
 
-        <DetailSection title="Test Information">
-          <div className="space-y-2">
-            <DetailField label="Test Code" value={test.testCode} />
-            {test.sampleType && (
-              <DetailField label="Sample Type" value={<span className="capitalize">{test.sampleType}</span>} />
-            )}
-            {test.sampleId && <DetailField label="Sample ID" value={test.sampleId} />}
-            {turnaroundTime && (
-              <DetailField
-                label="Turnaround Time"
-                value={<span className="flex items-center gap-1"><Icon name="clock" className="w-3.5 h-3.5" />{turnaroundTime} hours</span>}
-              />
-            )}
-          </div>
-        </DetailSection>
-      </DetailGrid>
+      {/* Test Details - using declarative sections config */}
+      <DetailGrid
+        sections={[
+          {
+            title: "Test Parameters",
+            fields: [
+              { label: "Total Parameters", value: <span className="font-semibold">{totalParams}</span> },
+              { 
+                label: "Filled", 
+                value: <span className={isComplete ? 'text-green-600' : 'text-yellow-600'}>{filledCount}</span> 
+              },
+              { 
+                label: "Remaining", 
+                value: <span className={remainingParams === 0 ? 'text-green-600' : 'text-gray-600'}>{remainingParams}</span> 
+              },
+            ]
+          },
+          {
+            title: "Test Information",
+            fields: [
+              { label: "Test Code", badge: { value: test.testCode, variant: "primary" } },
+              { label: "Sample Type", badge: test.sampleType ? { value: test.sampleType, variant: test.sampleType } : undefined },
+              { label: "Sample ID", badge: test.sampleId ? { value: test.sampleId, variant: "primary" } : undefined },
+              { 
+                label: "Turnaround Time", 
+                value: turnaroundTime ? (
+                  <span className="flex items-center gap-1">
+                    <Icon name="clock" className="w-3.5 h-3.5" />
+                    {turnaroundTime} hours
+                  </span>
+                ) : undefined
+              },
+            ]
+          }
+        ]}
+      />
     </LabDetailModal>
   );
 };
