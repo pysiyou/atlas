@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { Icon } from '@/shared/ui/Icon';
+import type { IconName } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import type { QuickFilterPreset } from './types';
 
@@ -58,7 +59,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
             )}
           >
             {preset.icon && (
-              <Icon name={preset.icon} className="w-3 h-3" />
+              <Icon name={preset.icon as IconName} className="w-3 h-3" />
             )}
             <span>{preset.label}</span>
           </button>

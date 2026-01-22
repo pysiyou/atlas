@@ -40,7 +40,7 @@ export const PatientDetail: React.FC = () => {
       <div className="flex items-center justify-between mb-4 shrink-0">
         <div className="flex items-center gap-2">
           <Avatar 
-            name={patient.fullName} 
+            primaryText={patient.fullName} 
             size="sm"
             className=""
           />
@@ -257,14 +257,15 @@ export const PatientDetail: React.FC = () => {
 
               return (
                 <table className="w-full text-left text-xs table-fixed">
+                  {/* Column widths: Order ID (15%), Date (12%), Tests (18%), Priority (12%), Status (15%), Amount (13%), Payment (15%) */}
                   <colgroup>
-                    <col style={{ width: '15%' }} /> {/* Order ID */}
-                    <col style={{ width: '12%' }} /> {/* Date */}
-                    <col style={{ width: '18%' }} /> {/* Tests */}
-                    <col style={{ width: '12%' }} /> {/* Priority */}
-                    <col style={{ width: '15%' }} /> {/* Status */}
-                    <col style={{ width: '13%' }} /> {/* Amount */}
-                    <col style={{ width: '15%' }} /> {/* Payment */}
+                    <col style={{ width: '15%' }} />
+                    <col style={{ width: '12%' }} />
+                    <col style={{ width: '18%' }} />
+                    <col style={{ width: '12%' }} />
+                    <col style={{ width: '15%' }} />
+                    <col style={{ width: '13%' }} />
+                    <col style={{ width: '15%' }} />
                   </colgroup>
                   <thead className="text-xs bg-gray-50 text-gray-500 uppercase sticky top-0 z-10 border-b border-gray-200 [&_th]:font-normal">
                     <tr>

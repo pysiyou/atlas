@@ -6,6 +6,7 @@
 import React from 'react';
 import { Popover } from '@/shared/ui/Popover';
 import { Icon } from '@/shared/ui/Icon';
+import type { IconName } from '@/shared/ui/Icon';
 import { Badge } from '@/shared/ui/Badge';
 import { cn } from '@/utils';
 import type { SingleSelectFilterControl } from '../types';
@@ -94,7 +95,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
         >
           {/* Icon */}
           {config.icon && (
-            <Icon name={config.icon} className="w-4 h-4 text-gray-400" />
+            <Icon name={config.icon as IconName} className="w-4 h-4 text-gray-400" />
           )}
 
           {/* Content */}

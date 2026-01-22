@@ -270,13 +270,14 @@ export const OrderDetail: React.FC = () => {
               />
             ) : (
               <table className="w-full text-left text-xs table-fixed">
+                {/* Column widths: Test Code (12%), Test Name (30%), Category (20%), Sample Type (15%), Status (15%), Price (8%) */}
                 <colgroup>
-                  <col style={{ width: '12%' }} /> {/* Test Code */}
-                  <col style={{ width: '30%' }} /> {/* Test Name */}
-                  <col style={{ width: '20%' }} /> {/* Category */}
-                  <col style={{ width: '15%' }} /> {/* Sample Type */}
-                  <col style={{ width: '15%' }} /> {/* Status */}
-                  <col style={{ width: '8%' }} /> {/* Price */}
+                  <col style={{ width: '12%' }} />
+                  <col style={{ width: '30%' }} />
+                  <col style={{ width: '20%' }} />
+                  <col style={{ width: '15%' }} />
+                  <col style={{ width: '15%' }} />
+                  <col style={{ width: '8%' }} />
                 </colgroup>
                 <thead className="bg-gray-50 text-gray-500 uppercase sticky top-0 z-10 [&_th]:font-normal">
                   <tr>

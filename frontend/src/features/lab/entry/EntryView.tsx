@@ -16,8 +16,10 @@ import { logger } from '@/utils/logger';
 import type { TestResult, TestWithContext } from '@/types';
 import { isCollectedSample } from '@/types';
 import { EntryCard } from './EntryCard';
+import { EntryMobileCard } from './EntryMobileCard';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
+import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { resultAPI } from '@/services/api';
 
 export const EntryView: React.FC = () => {
@@ -26,6 +28,8 @@ export const EntryView: React.FC = () => {
   const patientsContext = usePatients();
   const samplesContext = useSamples();
   const { openModal } = useModal();
+  const breakpoint = useBreakpoint();
+  const isMobile = isBreakpointAtMost(breakpoint, 'sm');
   const [results, setResults] = useState<Record<string, Record<string, string>>>({});
   const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
   const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
@@ -253,22 +257,23 @@ export const EntryView: React.FC = () => {
           ? areAllParametersFilled(resultKey, testDef.parameters.length)
           : false;
 
-        return (
-          <EntryCard
-            key={`${test.orderId}-${test.testCode}-${idx}`}
-            test={test}
-            testDef={testDef}
-            resultKey={resultKey}
-            results={results[resultKey] || {}}
-            technicianNotes={technicianNotes[resultKey] || ''}
-            isComplete={isComplete}
-            onResultsChange={handleResultChange}
-            onNotesChange={handleNotesChange}
-            onSave={(finalResults?: Record<string, string>, finalNotes?: string) =>
-              handleSaveResults(test.orderId, test.testCode, finalResults, finalNotes)
-            }
-            onClick={() => openTestModal(test, filteredTests as TestWithContext[])}
-          />
+        const cardProps = {
+          test,
+          testDef,
+          resultKey,
+          results: results[resultKey] || {},
+          technicianNotes: technicianNotes[resultKey] || '',
+          isComplete,
+          onResultsChange: handleResultChange,
+          onNotesChange: handleNotesChange,
+          onSave: () => handleSaveResults(test.orderId, test.testCode),
+          onClick: () => openTestModal(test, filteredTests as TestWithContext[]),
+        };
+
+        return isMobile ? (
+          <EntryMobileCard key={`${test.orderId}-${test.testCode}-${idx}`} {...cardProps} />
+        ) : (
+          <EntryCard key={`${test.orderId}-${test.testCode}-${idx}`} {...cardProps} />
         );
       }}
       getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}

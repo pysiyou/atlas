@@ -11,8 +11,10 @@ import { logger } from '@/utils/logger';
 import type { ContainerType, ContainerTopColor, SampleStatus, Patient, Test } from '@/types';
 import { calculateRequiredSamples, getCollectionRequirements } from '@/utils/sampleHelpers';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
-import { CollectionCard } from './CollectionCard';
 import { MultiSelectFilter, type FilterOption } from '@/shared/ui';
+import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
+import { CollectionCard } from './CollectionCard';
+import { CollectionMobileCard } from './CollectionMobileCard';
 import { LabWorkflowView } from '../components/LabWorkflowView';
 import type { SampleDisplay } from '../types';
 
@@ -65,6 +67,8 @@ export const CollectionView: React.FC = () => {
   const { samples, collectSample } = useSamples();
   const { getPatient, patients } = usePatients();
   const [statusFilters, setStatusFilters] = useState<SampleStatus[]>(['pending']);
+  const breakpoint = useBreakpoint();
+  const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
   // Build display objects for all samples
   const allSampleDisplays = useMemo(() => {
@@ -152,9 +156,13 @@ export const CollectionView: React.FC = () => {
       title="Sample Collection"
       items={filteredByStatus}
       filterFn={filterSample}
-      renderCard={(display) => (
-        <CollectionCard display={display} onCollect={handleCollect} />
-      )}
+      renderCard={(display) => 
+        isMobile ? (
+          <CollectionMobileCard display={display} onCollect={handleCollect} />
+        ) : (
+          <CollectionCard display={display} onCollect={handleCollect} />
+        )
+      }
       getItemKey={(display, idx) => 
         `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
       }

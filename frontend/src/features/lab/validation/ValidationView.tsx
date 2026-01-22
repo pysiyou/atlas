@@ -13,8 +13,10 @@ import { getPatientName, getTestName, getTestSampleType } from '@/utils/typeHelp
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import { ValidationCard } from './ValidationCard';
+import { ValidationMobileCard } from './ValidationMobileCard';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
+import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { TestWithContext, CollectedSample } from '@/types';
 import { resultAPI } from '@/services/api';
 import { orderHasValidatedTests } from '@/features/order/utils';
@@ -25,6 +27,8 @@ export const ValidationView: React.FC = () => {
   const patientsContext = usePatients();
   const samplesContext = useSamples();
   const { openModal } = useModal();
+  const breakpoint = useBreakpoint();
+  const isMobile = isBreakpointAtMost(breakpoint, 'sm');
   const [comments, setComments] = useState<Record<string, string>>({});
   const [isValidating, setIsValidating] = useState<Record<string, boolean>>({});
 
@@ -213,17 +217,22 @@ export const ValidationView: React.FC = () => {
         const order = ordersContext?.getOrder(test.orderId);
         const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
         
-        return (
-          <ValidationCard
-            test={test}
-            commentKey={commentKey}
-            comments={comments[commentKey] || ''}
-            onCommentsChange={handleCommentsChange}
-            onApprove={() => handleValidate(test.orderId, test.testCode, true)}
-            onReject={(reason, type) => handleValidate(test.orderId, test.testCode, false, reason, type)}
-            onClick={() => openValidationModal(test)}
-            orderHasValidatedTests={hasValidatedTests}
-          />
+        const cardProps = {
+          test,
+          commentKey,
+          comments: comments[commentKey] || '',
+          onCommentsChange: handleCommentsChange,
+          onApprove: () => handleValidate(test.orderId, test.testCode, true),
+          onReject: (reason?: string, type?: 're-test' | 're-collect') => 
+            handleValidate(test.orderId, test.testCode, false, reason, type),
+          onClick: () => openValidationModal(test),
+          orderHasValidatedTests: hasValidatedTests,
+        };
+        
+        return isMobile ? (
+          <ValidationMobileCard {...cardProps} />
+        ) : (
+          <ValidationCard {...cardProps} />
         );
       }}
       getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}

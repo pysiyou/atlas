@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { Pagination } from '../Pagination';
 import { TableHeader } from './TableHeader';
 import { TableRow } from './TableRow';
 import { TableSkeleton } from './TableSkeleton';
 import { TableEmpty } from './TableEmpty';
-import type { ColumnConfig, SortConfig, PaginationConfig, TableVariant, ReactNode } from './types';
+import type { ColumnConfig, SortConfig, PaginationConfig, TableVariant } from './types';
 import { useTableSort } from './hooks/useTableSort';
 import { useTablePagination } from './hooks/useTablePagination';
 import { DEFAULT_LOADING_ROWS } from './constants';

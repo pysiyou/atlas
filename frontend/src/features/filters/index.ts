@@ -14,7 +14,7 @@ export type {
   MultiSelectFilterControl,
   SingleSelectFilterControl,
   QuickFilterPreset,
-  FilterSection,
+  FilterSection as FilterSectionType,
   FilterConfig,
   FilterValues,
   ActiveFilterBadge,

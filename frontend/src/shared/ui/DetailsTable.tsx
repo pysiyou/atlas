@@ -59,7 +59,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
               >
                 {/* Label */}
                 <td className="px-4 py-2.5 align-top w-2/5 uppercase text-xs">
-                  <span className="block text-xs text-gray-500">
+                  <span className="block text-xxs text-gray-500">
                     {row.label}
                   </span>
                 </td>
