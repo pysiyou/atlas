@@ -22,4 +22,5 @@ export * from './EmptyState';
 export * from './MultiSelectFilter';
 export * from './Skeleton';
 export * from './DetailsTable';
+export * from './detailsTableUtils';
 export * from './BalancedDetailsLayout';

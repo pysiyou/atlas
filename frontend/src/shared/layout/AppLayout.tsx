@@ -21,10 +21,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   /**
-   * Close mobile sidebar when switching to desktop
+   * Close mobile sidebar when switching to desktop (breakpoint change).
+   * Syncs UI state to viewport; setState in effect is intentional here.
    */
   useEffect(() => {
     if (!isMobile && isMobileSidebarOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync close when viewport crosses to desktop
       setIsMobileSidebarOpen(false);
     }
   }, [isMobile, isMobileSidebarOpen]);

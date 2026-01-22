@@ -1,22 +1,17 @@
 /**
  * DetailsTable Component
  * Generic details table with consistent styling and automatic filtering of empty values
- * 
+ *
  * Displays key-value pairs in a clean two-column table format.
  * Automatically filters out placeholder/empty values unless pre-filtered rows are provided.
  */
 
 import React from 'react';
+import { filterDetailRows } from './detailsTableUtils';
+import type { DetailRow } from './detailsTableUtils';
 
-/**
- * Row type for table data
- */
-export interface DetailRow {
-  /** Label displayed on the left */
-  label: string;
-  /** Value displayed on the right - can be string or React node */
-  value: React.ReactNode;
-}
+/** Re-export for consumers */
+export type { DetailRow } from './detailsTableUtils';
 
 /**
  * Props for DetailsTable component
@@ -31,58 +26,6 @@ export interface DetailsTableProps {
   /** Additional CSS classes for the wrapper */
   className?: string;
 }
-
-/**
- * Placeholder values to filter out
- */
-const PLACEHOLDER_VALUES = new Set([
-  'n/a',
-  '-',
-  '—',
-  'none',
-  'null',
-  'undefined',
-  '',
-]);
-
-/**
- * Check if a value should be displayed
- * @param value - The value to check
- * @returns true if value should be displayed
- */
-const hasValue = (value: React.ReactNode): boolean => {
-  // React nodes (elements) always have value
-  if (React.isValidElement(value)) return true;
-  // Check string values against placeholders
-  if (typeof value === 'string') {
-    const trimmed = value.trim();
-    if (!trimmed) return false;
-    return !PLACEHOLDER_VALUES.has(trimmed.toLowerCase());
-  }
-  // Numbers and booleans have value
-  if (typeof value === 'number' || typeof value === 'boolean') return true;
-  // Arrays with content have value
-  if (Array.isArray(value)) return value.length > 0;
-  // Null/undefined don't have value
-  return value != null;
-};
-
-/**
- * Filter rows to only include those with valid values
- * @param rows - Rows to filter
- * @returns Filtered rows
- */
-export const filterDetailRows = (rows: DetailRow[] | undefined | null): DetailRow[] =>
-  Array.isArray(rows) ? rows.filter((r) => hasValue(r.value)) : [];
-
-/**
- * Calculate effective height of a table (number of visible rows)
- * @param rows - Rows to calculate height for
- * @returns Number of visible rows (minimum 1)
- */
-export const calculateEffectiveHeight = (rows: DetailRow[]): number => {
-  return Math.max(filterDetailRows(rows).length, 1);
-};
 
 /**
  * DetailsTable Component

@@ -8,7 +8,7 @@
  * - Handles loading, error, and success states
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Popover, IconButton, Icon, Alert, Button, ClaudeLoader } from '@/shared/ui';
 // Note: Icon is still used for Alert content and RejectionHistoryBanner
 import { PopoverForm, RadioCard } from './PopoverForm';
@@ -44,7 +44,8 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   orderHasValidatedTests = false,
 }) => {
   const [reason, setReason] = useState('');
-  const [selectedType, setSelectedType] = useState<ResultRejectionType>('re-test');
+  /** User override; when null, we use the derived default from options. */
+  const [userOverride, setUserOverride] = useState<ResultRejectionType | null>(null);
 
   const {
     options,
@@ -68,21 +69,18 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
    * 2. The order has validated tests (would create contradiction)
    */
   const isRecollectBlocked = orderHasValidatedTests || !isActionEnabled('re-collect');
-  const recollectBlockedReason = orderHasValidatedTests 
+  const recollectBlockedReason = orderHasValidatedTests
     ? 'Order has validated tests - sample cannot be rejected'
     : getDisabledReason('re-collect');
 
-  // Reset selection when options are loaded
-  useEffect(() => {
-    if (options) {
-      // Default to retest if available, otherwise recollect (if not blocked)
-      if (isActionEnabled('re-test')) {
-        setSelectedType('re-test');
-      } else if (!isRecollectBlocked) {
-        setSelectedType('re-collect');
-      }
-    }
-  }, [options, isActionEnabled, isRecollectBlocked]);
+  /** Default selection when options load: re-test if available, else re-collect if not blocked. */
+  const defaultType: ResultRejectionType =
+    options && isActionEnabled('re-test')
+      ? 're-test'
+      : !isRecollectBlocked
+        ? 're-collect'
+        : 're-test';
+  const selectedType = userOverride ?? defaultType;
 
   const handleConfirm = async () => {
     if (!reason.trim()) return;
@@ -189,7 +187,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
             <RadioCard
               name="rejection-type"
               selected={selectedType === 're-test'}
-              onClick={() => isActionEnabled('re-test') && setSelectedType('re-test')}
+              onClick={() => isActionEnabled('re-test') && setUserOverride('re-test')}
               label={`Re-test Sample${retestAttemptsRemaining > 0 ? ` (${retestAttemptsRemaining} remaining)` : ''}`}
               description="Perform the test again using the existing sample."
               variant="blue"
@@ -199,7 +197,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
             <RadioCard
               name="rejection-type"
               selected={selectedType === 're-collect'}
-              onClick={() => !isRecollectBlocked && setSelectedType('re-collect')}
+              onClick={() => !isRecollectBlocked && setUserOverride('re-collect')}
               label={`New Sample Required${!orderHasValidatedTests && recollectionAttemptsRemaining > 0 ? ` (${recollectionAttemptsRemaining} remaining)` : ''}`}
               description="Reject current sample and request new collection."
               variant="red"

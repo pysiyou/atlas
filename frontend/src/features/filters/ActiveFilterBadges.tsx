@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { Icon } from '@/shared/ui/Icon';
-import { Badge } from '@/shared/ui/Badge';
 import { cn } from '@/utils';
 import type { ActiveFilterBadge } from './types';
 import { format } from 'date-fns';

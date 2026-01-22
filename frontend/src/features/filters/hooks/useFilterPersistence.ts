@@ -159,23 +159,25 @@ export function useFilterPersistence(
   }, [filters, useUrlParams, searchParams, setSearchParams, serializeFilters]);
 
   /**
-   * Restore filters from URL on mount
+   * Restore filters from URL on mount only.
+   * Dependencies intentionally omitted to avoid re-running when callbacks/params change.
    */
   useEffect(() => {
     if (!useUrlParams) return;
-    
+
     const restored = deserializeFilters();
     if (Object.keys(restored).length > 0 && onRestore) {
       onRestore(restored);
     }
-  }, []); // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- restore from URL only on mount
+  }, []);
 
   /**
    * Sync filters to localStorage
    */
   useEffect(() => {
     if (!useLocalStorage || !storageKey) return;
-    
+
     try {
       const serialized = JSON.stringify(filters);
       localStorage.setItem(storageKey, serialized);
@@ -185,11 +187,12 @@ export function useFilterPersistence(
   }, [filters, useLocalStorage, storageKey]);
 
   /**
-   * Restore filters from localStorage on mount
+   * Restore filters from localStorage on mount only.
+   * Dependencies intentionally omitted to avoid re-running when callbacks change.
    */
   useEffect(() => {
     if (!useLocalStorage || !storageKey || !onRestore) return;
-    
+
     try {
       const stored = localStorage.getItem(storageKey);
       if (stored) {
@@ -216,5 +219,6 @@ export function useFilterPersistence(
     } catch (error) {
       logger.warn('Failed to restore filters from localStorage', { error, storageKey });
     }
-  }, []); // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- restore from localStorage only on mount
+  }, []);
 }

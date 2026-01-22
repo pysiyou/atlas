@@ -50,7 +50,6 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     setFilter,
     clearFilter,
     clearAll,
-    activeCount,
     isFilterActive,
   } = useFilterState({
     initialFilters: value,
@@ -58,7 +57,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   });
 
   // Quick filters
-  const { isPresetActive, applyPreset, activePresetId } = useQuickFilters({
+  const { applyPreset, activePresetId } = useQuickFilters({
     presets: config.quickFilters || [],
     filters,
     onApplyPreset: (preset) => {

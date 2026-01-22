@@ -4,7 +4,7 @@
  */
 
 import type { FilterConfig } from '@/features/filters';
-import type { PaymentStatus, PaymentMethod } from '@/types';
+import type { PaymentMethod } from '@/types';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 

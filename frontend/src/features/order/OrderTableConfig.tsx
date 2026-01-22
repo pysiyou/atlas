@@ -7,7 +7,7 @@
 
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
-import type { TableViewConfig, ColumnConfig } from '@/shared/ui/Table';
+import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, formatCurrency } from '@/utils';
 import type { Order } from '@/types';
 import { OrderTableCard } from './OrderTableCard';

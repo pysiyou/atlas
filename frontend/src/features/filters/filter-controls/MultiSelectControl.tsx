@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { MultiSelectFilter } from '@/shared/ui';
+import type { IconName } from '@/shared/ui/Icon';
 import type { MultiSelectFilterControl } from '../types';
 
 /**
@@ -42,7 +43,7 @@ export const MultiSelectControl: React.FC<MultiSelectControlProps> = ({
       onChange={onChange}
       placeholder={config.placeholder || `Select ${config.label.toLowerCase()}...`}
       selectAllLabel={config.selectAllLabel || `All ${config.label.toLowerCase()}`}
-      icon={config.icon as any}
+      icon={config.icon as IconName | undefined}
       className={className}
     />
   );
