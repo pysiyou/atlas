@@ -1,82 +1,94 @@
-import React from 'react';
-import { SearchBar, MultiSelectFilter } from '@/shared/ui';
+/**
+ * PaymentFilters Component
+ * 
+ * Provides comprehensive filtering controls for the payments list using the new filter architecture.
+ * Uses config-driven approach with FilterBar component.
+ * 
+ * @module features/payment
+ */
+
+import React, { useMemo } from 'react';
+import { FilterBar } from '@/features/filters';
+import { paymentFilterConfig } from './paymentFilterConfig';
 import type { PaymentStatus, PaymentMethod } from '@/types';
-import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
-import { createFilterOptions } from '@/utils/filtering';
+import type { FilterValues } from '@/features/filters';
 
-const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
-
-// Full list of payment methods (kept for reference)
-// const ALL_PAYMENT_METHOD_VALUES: PaymentMethod[] = ['cash', 'credit-card', 'debit-card', 'insurance', 'bank-transfer', 'mobile-money'];
-
-// Currently enabled payment methods - only Cash and Mobile Money are active
-// TODO: Enable other payment methods when backend support is ready
-const PAYMENT_METHOD_VALUES: PaymentMethod[] = ['cash', 'mobile-money'];
-
-const PAYMENT_METHOD_CONFIG: Record<PaymentMethod, { label: string; color: string }> = {
-  'cash': { label: 'Cash', color: 'cash' },
-  'credit-card': { label: 'Credit Card', color: 'credit-card' },
-  'debit-card': { label: 'Debit Card', color: 'debit-card' },
-  'insurance': { label: 'Insurance', color: 'insurance' },
-  'bank-transfer': { label: 'Bank Transfer', color: 'bank-transfer' },
-  'mobile-money': { label: 'Mobile Money', color: 'mobile-money' },
-};
-
-const paymentMethodOptions = createFilterOptions(PAYMENT_METHOD_VALUES, PAYMENT_METHOD_CONFIG);
-
-interface PaymentFiltersProps {
+/**
+ * Props interface for PaymentFilters component
+ */
+export interface PaymentFiltersProps {
+  /** Current search query string */
   searchQuery: string;
+  /** Callback fired when search query changes */
   onSearchChange: (value: string) => void;
+  /** Currently selected date range [start, end] or null */
+  dateRange: [Date, Date] | null;
+  /** Callback fired when date range changes */
+  onDateRangeChange: (range: [Date, Date] | null) => void;
+  /** Array of currently selected payment statuses */
   statusFilters: PaymentStatus[];
+  /** Callback fired when status filters change */
   onStatusFiltersChange: (values: PaymentStatus[]) => void;
+  /** Array of currently selected payment methods */
   methodFilters: PaymentMethod[];
+  /** Callback fired when method filters change */
   onMethodFiltersChange: (values: PaymentMethod[]) => void;
 }
 
+/**
+ * PaymentFilters Component
+ * 
+ * Composes FilterBar with payment-specific configuration.
+ * Maps between legacy prop interface and new filter value structure.
+ * 
+ * @component
+ */
 export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
   searchQuery,
   onSearchChange,
+  dateRange,
+  onDateRangeChange,
   statusFilters,
   onStatusFiltersChange,
   methodFilters,
   onMethodFiltersChange,
 }) => {
+  /**
+   * Convert props to filter values format
+   */
+  const filterValues = useMemo<FilterValues>(
+    () => ({
+      searchQuery,
+      dateRange,
+      status: statusFilters,
+      method: methodFilters,
+    }),
+    [searchQuery, dateRange, statusFilters, methodFilters]
+  );
+
+  /**
+   * Handle filter changes and map back to props
+   */
+  const handleFilterChange = (filters: FilterValues) => {
+    if (filters.searchQuery !== undefined) {
+      onSearchChange(filters.searchQuery as string);
+    }
+    if (filters.dateRange !== undefined) {
+      onDateRangeChange(filters.dateRange as [Date, Date] | null);
+    }
+    if (filters.status !== undefined) {
+      onStatusFiltersChange(filters.status as PaymentStatus[]);
+    }
+    if (filters.method !== undefined) {
+      onMethodFiltersChange(filters.method as PaymentMethod[]);
+    }
+  };
+
   return (
-    <div className="p-4 border-b border-gray-200 shrink-0 bg-gray-50/50">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <MultiSelectFilter
-            label="Status"
-            options={paymentStatusOptions}
-            selectedIds={statusFilters}
-            onChange={(ids) => onStatusFiltersChange(ids as PaymentStatus[])}
-            selectAllLabel="Select all"
-            icon="clock"
-            placeholder="Filter by Status"
-          />
-
-          <div className="h-6 w-px bg-gray-300 hidden md:block" />
-
-          <MultiSelectFilter
-            label="Method"
-            options={paymentMethodOptions}
-            selectedIds={methodFilters}
-            onChange={(ids) => onMethodFiltersChange(ids as PaymentMethod[])}
-            selectAllLabel="Select all"
-            icon="wallet"
-            placeholder="Filter by Method"
-          />
-        </div>
-
-        <div className="w-full md:w-72">
-          <SearchBar
-            placeholder="Search payments..."
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            size="sm"
-          />
-        </div>
-      </div>
-    </div>
+    <FilterBar
+      config={paymentFilterConfig}
+      value={filterValues}
+      onChange={handleFilterChange}
+    />
   );
 };

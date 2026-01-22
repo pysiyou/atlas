@@ -118,6 +118,8 @@ export type IconName =
   | "cart"
   | "close-circle"
   | "book"
+  | "age-0"
+  | "category"
   ;
 
 interface IconProps {

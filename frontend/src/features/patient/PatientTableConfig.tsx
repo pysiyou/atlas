@@ -1,0 +1,259 @@
+/**
+ * Patient Table Configuration
+ * 
+ * Multi-view table configuration for patient list.
+ * Defines separate column sets for different screen sizes:
+ * 
+ * - Card View (xs/sm ≤640px): Mobile card layout with PatientCard component
+ * - Compact Table (md 768px): Minimal columns - ID, Name, Contact, Actions
+ * - Medium Table (lg 1024px): Moderate columns - adds Gender, Tests
+ * - Full Table (xl+ ≥1280px): All columns including Affiliation, Registered
+ */
+
+import type { NavigateFunction } from 'react-router-dom';
+import { Badge, Avatar, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
+import type { TableViewConfig } from '@/shared/ui/Table';
+import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
+import type { Patient, Order } from '@/types';
+import { isAffiliationActive } from './usePatientForm';
+import { PatientCard } from './PatientCard';
+
+/**
+ * Create patient table configuration with full, compact, and card views
+ * 
+ * @param navigate - React Router navigate function
+ * @param getOrdersByPatient - Function to get orders for a patient
+ * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
+ */
+export const createPatientTableConfig = (
+  navigate: NavigateFunction,
+  getOrdersByPatient: (patientId: string) => Order[]
+): TableViewConfig<Patient> => {
+  // Shared render functions to avoid duplication
+  const renderId = (patient: Patient) => (
+    <span className="text-xs text-sky-600 font-medium font-mono truncate block">
+      {patient.id}
+    </span>
+  );
+
+  const renderName = (patient: Patient) => (
+    <Avatar 
+      primaryText={patient.fullName} 
+      secondaryText={`${calculateAge(patient.dateOfBirth)} years old`} 
+      size="sm" 
+    />
+  );
+
+  const renderGender = (patient: Patient) => (
+    <Badge
+      variant={
+        patient.gender === 'male' ? 'primary' : patient.gender === 'female' ? 'pink' : 'default'
+      }
+      size="sm"
+    >
+      {patient.gender.toUpperCase()}
+    </Badge>
+  );
+
+  const renderTests = (patient: Patient) => {
+    const patientOrders = getOrdersByPatient(patient.id);
+    const testCount = patientOrders.reduce((acc, order) => acc + (order.tests?.length || 0), 0);
+    
+    return (
+      <div className="min-w-0">
+        <div className="font-medium truncate">{testCount} test{testCount !== 1 ? 's' : ''}</div>
+        <div className="text-xs text-gray-500 truncate">
+          {patientOrders.length} order{patientOrders.length !== 1 ? 's' : ''}
+        </div>
+      </div>
+    );
+  };
+
+  const renderContact = (patient: Patient) => (
+    <div className="text-xs min-w-0">
+      <div className="truncate">{formatPhoneNumber(patient.phone)}</div>
+      {patient.email && <div className="text-xs text-gray-500 truncate">{patient.email}</div>}
+    </div>
+  );
+
+  const renderAffiliation = (patient: Patient) => {
+    if (!patient.affiliation) {
+      return <span className="text-xs text-gray-500 truncate block">No Affiliation</span>;
+    }
+    const isActive = isAffiliationActive(patient.affiliation);
+    return (
+      <div className="flex items-center gap-2 min-w-0">
+        <span className="text-xs text-gray-500 truncate">
+          {isActive ? 'Expires' : 'Expired'}: {formatDate(patient.affiliation.endDate)}
+        </span>
+      </div>
+    );
+  };
+
+  const renderRegistrationDate = (patient: Patient) => (
+    <div className="text-xs text-gray-500 truncate">{formatDate(patient.registrationDate)}</div>
+  );
+
+  const renderActions = (patient: Patient) => (
+    <TableActionMenu>
+      <TableActionItem
+        label="View Details"
+        icon={<Icon name="eye" className="w-4 h-4" />}
+        onClick={() => navigate(`/patients/${patient.id}`)}
+      />
+      <TableActionItem
+        label="Edit Patient"
+        icon={<Icon name="pen" className="w-4 h-4" />}
+        onClick={() => navigate(`/patients/${patient.id}/edit`)}
+      />
+      <TableActionItem
+        label="Create Order"
+        icon={<Icon name="document" className="w-4 h-4" />}
+        onClick={() => navigate(`/orders/new?patientId=${patient.id}`)}
+      />
+    </TableActionMenu>
+  );
+
+  return {
+    fullColumns: [
+      {
+        key: 'id',
+        header: 'Patient ID',
+        width: 'fill',
+        sortable: true,
+        render: renderId,
+      },
+      {
+        key: 'fullName',
+        header: 'Name',
+        width: 'fill',
+        sortable: true,
+        render: renderName,
+      },
+      {
+        key: 'gender',
+        header: 'Gender',
+        width: 'sm',
+        sortable: true,
+        render: renderGender,
+      },
+      {
+        key: 'tests',
+        header: 'Tests',
+        width: 'sm',
+        render: renderTests,
+      },
+      {
+        key: 'contact',
+        header: 'Contact',
+        width: 'fill',
+        render: renderContact,
+      },
+      {
+        key: 'affiliation',
+        header: 'Affiliation',
+        width: 'md',
+        sortable: true,
+        render: renderAffiliation,
+      },
+      {
+        key: 'registrationDate',
+        header: 'Registered',
+        width: 'md',
+        sortable: true,
+        render: renderRegistrationDate,
+      },
+      {
+        key: 'actions',
+        header: '',
+        width: 'xs',
+        sticky: 'right',
+        className: 'overflow-visible !px-1',
+        headerClassName: '!px-1',
+        render: renderActions,
+      },
+    ],
+    mediumColumns: [
+      {
+        key: 'id',
+        header: 'Patient ID',
+        width: 'fill', // 200px - matches full view
+        sortable: true,
+        render: renderId,
+      },
+      {
+        key: 'fullName',
+        header: 'Name',
+        width: 'fill', // Same as full view
+        sortable: true,
+        render: renderName,
+      },
+      {
+        key: 'gender',
+        header: 'Gender',
+        width: 'sm', // 100px - shown in medium view
+        sortable: true,
+        render: renderGender,
+      },
+      {
+        key: 'tests',
+        header: 'Tests',
+        width: 'sm', // 100px - shown in medium view
+        render: renderTests,
+      },
+      {
+        key: 'contact',
+        header: 'Contact',
+        // Spans: Contact(fill with base:0, grow:1) + Affiliation(150px) + Registered(150px)
+        // Total base needed: 0 + 150 + 150 = 300px, plus grow:1 for Contact's flex share
+        width: 'fill',
+        render: renderContact,
+      },
+      {
+        key: 'actions',
+        header: '',
+        width: 'xs',
+        sticky: 'right',
+        className: 'overflow-visible !px-1',
+        headerClassName: '!px-1',
+        render: renderActions,
+      },
+    ],
+    compactColumns: [
+      {
+        key: 'id',
+        header: 'ID',
+        width: 'lg', // 200px fixed - matches full view ID
+        sortable: true,
+        render: renderId,
+      },
+      {
+        key: 'fullName',
+        header: 'Name',
+        // Spans: Name(fill with base:0, grow:1) + Gender(100px) + Tests(100px)
+        // Total base needed: 0 + 100 + 100 = 200px, plus grow:1 for Name's flex share
+        width: { base: 200, min: 200, grow: 1, shrink: 1 },
+        sortable: true,
+        render: renderName,
+      },
+      {
+        key: 'contact',
+        header: 'Contact',
+        // Spans: Contact(fill with base:0, grow:1) + Affiliation(150px) + Registered(150px)
+        // Total base needed: 0 + 150 + 150 = 300px, plus grow:1 for Contact's flex share
+        width: { base: 300, min: 200, grow: 1, shrink: 1 },
+        render: renderContact,
+      },
+      {
+        key: 'actions',
+        header: '',
+        width: 'xs', // 60px fixed
+        sticky: 'right',
+        className: 'overflow-visible !px-1',
+        headerClassName: '!px-1',
+        render: renderActions,
+      },
+    ],
+    CardComponent: PatientCard,
+  };
+};

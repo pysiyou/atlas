@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTestCatalog } from '@/hooks/queries';
 import { ListView } from '@/shared/components';
 import { CatalogFilters } from './CatalogFilters';
-import { getCatalogTableColumns } from './CatalogTableColumns';
+import { createCatalogTableConfig } from './CatalogTableConfig';
 import type { Test, TestCategory } from '@/types';
 
 /**
@@ -40,6 +40,7 @@ export const CatalogList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilters, setCategoryFilters] = useState<TestCategory[]>([]);
   const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
 
   // Apply filters to tests
   const filteredTests = useMemo(() => {
@@ -73,13 +74,21 @@ export const CatalogList: React.FC = () => {
       filtered = filtered.filter((test) => sampleTypeFilters.includes(test.sampleType));
     }
 
+    // Apply price range filter
+    const [minPrice, maxPrice] = priceRange;
+    if (minPrice !== 0 || maxPrice !== 10000) {
+      filtered = filtered.filter((test) => {
+        return test.price >= minPrice && test.price <= maxPrice;
+      });
+    }
+
     // Sort by name by default
     return filtered.sort((a, b) => a.name.localeCompare(b.name));
-  }, [tests, searchQuery, categoryFilters, sampleTypeFilters]);
+  }, [tests, searchQuery, categoryFilters, sampleTypeFilters, priceRange]);
 
-  // Memoize columns to prevent recreation on every render
-  const columns = useMemo(
-    () => getCatalogTableColumns(navigate),
+  // Memoize table config to prevent recreation on every render
+  const catalogTableConfig = useMemo(
+    () => createCatalogTableConfig(navigate),
     [navigate]
   );
 
@@ -94,7 +103,7 @@ export const CatalogList: React.FC = () => {
     <ListView
       mode="table"
       items={filteredTests}
-      columns={columns}
+      viewConfig={catalogTableConfig}
       loading={isLoading}
       error={error}
       onRetry={refetch}
@@ -102,16 +111,18 @@ export const CatalogList: React.FC = () => {
       onRowClick={(test: Test) => navigate(`/catalog/${test.code}`)}
       title="Test Catalog"
       subtitle={`${filteredTests.length} tests available`}
-      filters={
-        <CatalogFilters
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          categoryFilters={categoryFilters}
-          onCategoryFiltersChange={setCategoryFilters}
-          sampleTypeFilters={sampleTypeFilters}
-          onSampleTypeFiltersChange={setSampleTypeFilters}
-        />
-      }
+        filters={
+          <CatalogFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            categoryFilters={categoryFilters}
+            onCategoryFiltersChange={setCategoryFilters}
+            sampleTypeFilters={sampleTypeFilters}
+            onSampleTypeFiltersChange={setSampleTypeFilters}
+            priceRange={priceRange}
+            onPriceRangeChange={setPriceRange}
+          />
+        }
       pagination={true}
       pageSize={20}
       pageSizeOptions={[10, 20, 50, 100]}

@@ -20,7 +20,7 @@ interface PaymentPopoverProps {
   /** Callback invoked on successful payment */
   onSuccess?: () => void;
   /** Button size for the trigger */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
 }
 
 /** Get enabled payment methods from the single source of truth */

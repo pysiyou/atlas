@@ -74,7 +74,7 @@ const ListItem: React.FC<{
       )}
     >
       {/* Checkbox */}
-      <div className="flex-shrink-0 mr-3">
+      <div className="shrink-0 mr-3">
         <input
           type="checkbox"
           checked={isSelected}
@@ -192,7 +192,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            "inline-flex items-center gap-2 px-3 py-1.5 bg-white border rounded cursor-pointer transition-colors w-[240px] h-[34px]",
+            "inline-flex items-center gap-2 px-3 py-1.5 bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] h-[34px]",
             isOpen
               ? "border-sky-500 ring-2 ring-sky-500/20"
               : "border-gray-300 hover:border-gray-400",
@@ -245,7 +245,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
           {showSelectAll && options.length > 0 && (
             <div className="border-t border-gray-100 mt-1 px-4 py-2.5">
               <label className="flex items-center w-full cursor-pointer group">
-                <div className="flex-shrink-0 mr-3">
+                <div className="shrink-0 mr-3">
                   <input
                     type="checkbox"
                     checked={allSelected}

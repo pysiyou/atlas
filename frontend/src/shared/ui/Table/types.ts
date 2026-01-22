@@ -7,7 +7,7 @@ export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /**
  * Responsive visibility configuration
- * Defines at which breakpoints a column should be visible
+ * @deprecated No longer used - visibility is handled via explicit viewConfig
  */
 export interface ResponsiveVisibility {
   xs?: boolean;   // < 640px (mobile)
@@ -59,13 +59,6 @@ export interface ColumnConfig<T> {
   /** Display header text */
   header: string;
 
-  // === Responsive Visibility ===
-  /**
-   * Responsive visibility configuration
-   * Can be a ResponsiveVisibility object or a preset name
-   */
-  visible?: ResponsiveVisibility | 'always' | 'desktop' | 'tablet' | 'wide';
-
   // === Column Sizing ===
   /**
    * Column width - can be a preset or custom configuration
@@ -91,8 +84,6 @@ export interface ColumnConfig<T> {
   // === Advanced Features ===
   /** Freeze column to left or right edge */
   sticky?: StickyPosition;
-  /** Priority for mobile card view (lower = more important, shown first) */
-  priority?: number;
 
   // === Styling ===
   /** Additional CSS classes for cells */
@@ -132,8 +123,8 @@ export type TableVariant = 'default' | 'compact' | 'comfortable';
 export interface TableProps<T> {
   /** Array of data items to display */
   data: T[];
-  /** Column definitions with responsive configuration */
-  columns: ColumnConfig<T>[];
+  /** Multi-view table configuration with separate column sets and card component */
+  viewConfig: TableViewConfig<T>;
 
   // === Pagination ===
   /** External pagination control (if not provided, internal pagination is used) */
@@ -154,12 +145,6 @@ export interface TableProps<T> {
   // === Responsive Behavior ===
   /** Override detected breakpoint (for testing) */
   breakpoint?: Breakpoint;
-  /** Enable card view on mobile (default: true) */
-  enableCardView?: boolean;
-  /** Breakpoint at which to switch to card view (default: 'sm') */
-  cardViewBreakpoint?: Breakpoint;
-  /** Number of priority fields to show in card view (default: 4) */
-  cardPriorityFields?: number;
 
   // === Visual Options ===
   /** Table density variant */
@@ -237,6 +222,7 @@ export interface TableCellProps {
 
 /**
  * Props for mobile card view
+ * @deprecated No longer used - replaced by custom CardComponent in viewConfig
  */
 export interface TableCardViewProps<T> {
   data: T[];
@@ -256,7 +242,7 @@ export interface TableSkeletonProps {
 }
 
 // ============================================
-// NEW: Multi-View Table Configuration
+// Multi-View Table Configuration
 // ============================================
 
 /**
@@ -273,66 +259,12 @@ export interface CardComponentProps<T> {
  * Defines separate views for different screen sizes
  */
 export interface TableViewConfig<T> {
-  /** Full table columns for large screens (lg+) */
+  /** Full table columns for extra large screens (xl+) */
   fullColumns: ColumnConfig<T>[];
+  /** Medium table columns for large screens (lg) */
+  mediumColumns: ColumnConfig<T>[];
   /** Compact table columns for medium screens (md) */
   compactColumns: ColumnConfig<T>[];
   /** Custom card component for small screens (sm and below) */
   CardComponent: React.ComponentType<CardComponentProps<T>>;
-}
-
-/**
- * Table props with multi-view configuration support
- * Supports both legacy columns prop and new viewConfig prop
- */
-export interface MultiViewTableProps<T> {
-  /** Array of data items to display */
-  data: T[];
-
-  /**
-   * Multi-view configuration with separate column sets and card component
-   * When provided, replaces the legacy columns/cardView behavior
-   */
-  viewConfig: TableViewConfig<T>;
-
-  // === Pagination ===
-  pagination?: PaginationConfig | boolean;
-  initialPageSize?: number;
-  pageSizeOptions?: number[];
-
-  // === Sorting ===
-  defaultSort?: SortConfig;
-  sort?: SortConfig | null;
-  onSortChange?: (sort: SortConfig | null) => void;
-
-  // === Responsive Behavior ===
-  /** Override detected breakpoint (for testing) */
-  breakpoint?: Breakpoint;
-  /** Breakpoint to switch to compact table (default: 'md') */
-  compactBreakpoint?: Breakpoint;
-  /** Breakpoint to switch to card view (default: 'sm') */
-  cardBreakpoint?: Breakpoint;
-
-  // === Visual Options ===
-  variant?: TableVariant;
-  striped?: boolean;
-  bordered?: boolean;
-  stickyHeader?: boolean;
-  maxHeight?: string;
-  embedded?: boolean;
-
-  // === Interactions ===
-  onRowClick?: (item: T, index: number) => void;
-  rowClassName?: (item: T, index: number) => string;
-  getRowKey?: (item: T, index: number) => string | number;
-
-  // === States ===
-  loading?: boolean;
-  loadingRows?: number;
-  emptyMessage?: ReactNode;
-  emptyIcon?: string;
-
-  // === Accessibility ===
-  caption?: string;
-  ariaLabel?: string;
 }

@@ -9,7 +9,7 @@ import { type ReactNode } from 'react';
 import { Table, EmptyState } from '@/shared/ui';
 import { LoadingState } from '../LoadingState';
 import { ErrorAlert } from '../ErrorAlert';
-import type { ColumnConfig } from '@/shared/ui/Table';
+import type { TableViewConfig } from '@/shared/ui/Table';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TableDataItem = Record<string, any>;
@@ -30,8 +30,8 @@ export interface ListViewProps<T extends TableDataItem> {
   mode?: ListViewMode;
   
   // Table mode configuration
-  /** Column definitions for table mode */
-  columns?: ColumnConfig<T>[];
+  /** Multi-view table configuration for table mode */
+  viewConfig: TableViewConfig<T>;
   /** Row click handler for table mode */
   onRowClick?: (item: T, index?: number) => void;
   
@@ -112,7 +112,7 @@ export function ListView<T extends TableDataItem>({
   loading = false,
   error = null,
   mode = 'table',
-  columns,
+  viewConfig,
   onRowClick,
   renderItem,
   gridColumns = 3,
@@ -134,7 +134,7 @@ export function ListView<T extends TableDataItem>({
   }
 
   return (
-    <div className={`h-full flex flex-col p-4 space-y-6 ${className}`}>
+    <div className={`min-h-0 flex-1 flex flex-col p-4 space-y-6 overflow-hidden ${className}`}>
       {/* Header */}
       {(title || headerActions) && (
         <div className="flex items-center justify-between shrink-0">
@@ -164,11 +164,11 @@ export function ListView<T extends TableDataItem>({
         {filters}
 
         {/* Content Area */}
-        <div className="flex-1 min-h-0">
-          {mode === 'table' && columns ? (
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          {mode === 'table' && viewConfig ? (
             <Table
               data={items}
-              columns={columns}
+              viewConfig={viewConfig}
               emptyMessage={
                 emptyState || (
                   <EmptyState

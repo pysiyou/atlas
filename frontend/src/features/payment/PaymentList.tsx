@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { PaymentFilters } from './PaymentFilters';
-import { getPaymentTableColumns } from './PaymentTableColumns';
+import { createPaymentTableConfig } from './PaymentTableConfig';
 import { PaymentDetailModal } from './PaymentDetailModal';
 import { useOrdersList, usePaymentsList } from '@/hooks/queries';
 import { createOrderPaymentDetailsList, type OrderPaymentDetails } from './types';
@@ -32,6 +32,7 @@ import type { PaymentStatus, PaymentMethod } from '@/types';
 export const PaymentList: React.FC = () => {
   const navigate = useNavigate();
   const [methodFilters, setMethodFilters] = useState<PaymentMethod[]>([]);
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
 
   // State for payment detail modal
   const [selectedOrder, setSelectedOrder] = useState<OrderPaymentDetails | null>(null);
@@ -72,17 +73,37 @@ export const PaymentList: React.FC = () => {
     defaultSort: { field: 'orderDate', direction: 'desc' }
   });
 
-  // Apply payment method filter
+  // Apply payment method and date range filters
   const filteredOrders = useMemo(() => {
-    if (methodFilters.length === 0) return preFilteredOrders;
-    return preFilteredOrders.filter(item => 
-      item.paymentMethod && methodFilters.includes(item.paymentMethod)
-    );
-  }, [preFilteredOrders, methodFilters]);
+    let filtered = preFilteredOrders;
+    
+    // Apply date range filter
+    if (dateRange) {
+      const [start, end] = dateRange;
+      const endDate = new Date(end);
+      endDate.setHours(23, 59, 59, 999);
+      const startDate = new Date(start);
+      startDate.setHours(0, 0, 0, 0);
+      
+      filtered = filtered.filter(item => {
+        const orderDate = new Date(item.orderDate);
+        return orderDate >= startDate && orderDate <= endDate;
+      });
+    }
+    
+    // Apply payment method filter
+    if (methodFilters.length > 0) {
+      filtered = filtered.filter(item => 
+        item.paymentMethod && methodFilters.includes(item.paymentMethod)
+      );
+    }
+    
+    return filtered;
+  }, [preFilteredOrders, dateRange, methodFilters]);
 
-  // Memoize columns to prevent recreation on every render
-  const columns = useMemo(
-    () => getPaymentTableColumns(navigate),
+  // Memoize table config to prevent recreation on every render
+  const paymentTableConfig = useMemo(
+    () => createPaymentTableConfig(navigate),
     [navigate]
   );
 
@@ -118,7 +139,7 @@ export const PaymentList: React.FC = () => {
       <ListView
         mode="table"
         items={filteredOrders}
-        columns={columns}
+        viewConfig={paymentTableConfig}
         loading={isLoading}
         error={error}
         onRetry={refetch}
@@ -129,6 +150,8 @@ export const PaymentList: React.FC = () => {
           <PaymentFilters
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
             statusFilters={statusFilters}
             onStatusFiltersChange={setStatusFilters}
             methodFilters={methodFilters}

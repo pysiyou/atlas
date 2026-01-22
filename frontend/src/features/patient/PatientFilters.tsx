@@ -1,22 +1,53 @@
-import React from 'react';
-import { AgeFilter } from './AgeFilter';
-import { SearchBar, MultiSelectFilter } from '@/shared/ui';
+/**
+ * PatientFilters Component
+ * 
+ * Provides comprehensive filtering controls for the patients list using the new filter architecture.
+ * Uses config-driven approach with FilterBar component.
+ * 
+ * @module features/patient
+ */
+
+import React, { useMemo } from 'react';
+import { FilterBar } from '@/features/filters';
+import { patientFilterConfig } from './patientFilterConfig';
 import type { Gender } from '@/types';
-import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
-import { AGE_RANGE_MIN, AGE_RANGE_MAX } from './constants';
-import { createFilterOptions } from '@/utils/filtering';
+import type { FilterValues } from '@/features/filters';
 
-const genderOptions = createFilterOptions(GENDER_VALUES, GENDER_CONFIG);
+/**
+ * Affiliation status type
+ */
+export type AffiliationStatus = 'active' | 'inactive';
 
-interface PatientFiltersProps {
+/**
+ * Props interface for PatientFilters component
+ */
+export interface PatientFiltersProps {
+  /** Current search query string */
   searchQuery: string;
+  /** Callback fired when search query changes */
   onSearchChange: (value: string) => void;
+  /** Currently selected age range [min, max] */
   ageRange: [number, number];
+  /** Callback fired when age range changes */
   onAgeRangeChange: (range: [number, number]) => void;
+  /** Array of currently selected genders/sexes */
   sexFilters: Gender[];
+  /** Callback fired when gender/sex filters change */
   onSexFiltersChange: (values: Gender[]) => void;
+  /** Array of currently selected affiliation statuses */
+  affiliationStatusFilters: AffiliationStatus[];
+  /** Callback fired when affiliation status filters change */
+  onAffiliationStatusFiltersChange: (values: AffiliationStatus[]) => void;
 }
 
+/**
+ * PatientFilters Component
+ * 
+ * Composes FilterBar with patient-specific configuration.
+ * Maps between legacy prop interface and new filter value structure.
+ * 
+ * @component
+ */
 export const PatientFilters: React.FC<PatientFiltersProps> = ({
   searchQuery,
   onSearchChange,
@@ -24,44 +55,45 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   onAgeRangeChange,
   sexFilters,
   onSexFiltersChange,
+  affiliationStatusFilters,
+  onAffiliationStatusFiltersChange,
 }) => {
+  /**
+   * Convert props to filter values format
+   */
+  const filterValues = useMemo<FilterValues>(
+    () => ({
+      searchQuery,
+      ageRange,
+      sex: sexFilters,
+      affiliationStatus: affiliationStatusFilters,
+    }),
+    [searchQuery, ageRange, sexFilters, affiliationStatusFilters]
+  );
+
+  /**
+   * Handle filter changes and map back to props
+   */
+  const handleFilterChange = (filters: FilterValues) => {
+    if (filters.searchQuery !== undefined) {
+      onSearchChange(filters.searchQuery as string);
+    }
+    if (filters.ageRange !== undefined) {
+      onAgeRangeChange(filters.ageRange as [number, number]);
+    }
+    if (filters.sex !== undefined) {
+      onSexFiltersChange(filters.sex as Gender[]);
+    }
+    if (filters.affiliationStatus !== undefined) {
+      onAffiliationStatusFiltersChange(filters.affiliationStatus as AffiliationStatus[]);
+    }
+  };
+
   return (
-    <div className="p-4 border-b border-gray-200 shrink-0 bg-gray-50/50">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="w-[240px]">
-            <AgeFilter
-              value={ageRange}
-              onChange={onAgeRangeChange}
-              min={AGE_RANGE_MIN}
-              max={AGE_RANGE_MAX}
-              placeholder="Filter by Age"
-              className="w-full"
-            />
-          </div>
-
-          <div className="h-6 w-px bg-gray-300 hidden md:block" />
-
-          <MultiSelectFilter
-            label="Sex"
-            options={genderOptions}
-            selectedIds={sexFilters}
-            onChange={(ids) => onSexFiltersChange(ids as Gender[])}
-            selectAllLabel="Select all"
-            icon="user-hands"
-            placeholder="Filter by Sex"
-          />
-        </div>
-
-        <div className="w-full md:w-72">
-          <SearchBar
-            placeholder="Search by name, ID, phone, or email..."
-            value={searchQuery}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
-            size="sm"
-          />
-        </div>
-      </div>
-    </div>
+    <FilterBar
+      config={patientFilterConfig}
+      value={filterValues}
+      onChange={handleFilterChange}
+    />
   );
 };

@@ -16,10 +16,10 @@ export function TableCell({
   // Determine alignment classes
   const alignClass =
     column.align === 'center'
-      ? 'text-center'
+      ? 'text-center justify-center'
       : column.align === 'right'
-      ? 'text-right'
-      : 'text-left';
+      ? 'text-right justify-end'
+      : 'text-left justify-start';
 
   // Handle sticky positioning
   const stickyClass =
@@ -39,6 +39,7 @@ export function TableCell({
         ${TEXT_SIZE[variant]}
         text-gray-900
         overflow-hidden
+        flex items-center
         ${alignClass}
         ${contentClass}
         ${stickyClass}
@@ -46,7 +47,9 @@ export function TableCell({
       `.trim()}
       style={style}
     >
-      {children}
+      <div className="min-w-0 flex-1">
+        {children}
+      </div>
     </div>
   );
 }

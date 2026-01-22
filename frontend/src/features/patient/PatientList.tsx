@@ -12,8 +12,8 @@ import { useOrders } from '../order/OrderContext';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
-import { PatientFilters } from './PatientFilters';
-import { getPatientTableColumns } from './PatientTableColumns';
+import { PatientFilters, type AffiliationStatus } from './PatientFilters';
+import { createPatientTableConfig } from './PatientTableConfig';
 import { calculateAge } from '@/utils';
 import type { Patient, Gender } from '@/types';
 import { EditPatientModal } from './EditPatientModal';
@@ -35,6 +35,7 @@ export const PatientList: React.FC = () => {
 
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
   const [ageRange, setAgeRange] = React.useState<[number, number]>([0, 150]);
+  const [affiliationStatusFilters, setAffiliationStatusFilters] = React.useState<AffiliationStatus[]>([]);
   
   // Use shared filtering hook
   const { 
@@ -54,20 +55,57 @@ export const PatientList: React.FC = () => {
     defaultSort: { field: 'registrationDate', direction: 'desc' }
   });
 
-  // Apply age filter
-  const filteredPatients = useMemo(() => {
-    const [minAge, maxAge] = ageRange;
-    if (minAge === 0 && maxAge === 150) return preFilteredPatients;
+  /**
+   * Check if a patient's affiliation is active
+   */
+  const isAffiliationActive = (patient: Patient): boolean => {
+    if (!patient.affiliation) return false;
     
-    return preFilteredPatients.filter(patient => {
-      const age = calculateAge(patient.dateOfBirth);
-      return age >= minAge && age <= maxAge;
-    });
-  }, [preFilteredPatients, ageRange]);
+    const now = new Date();
+    const startDate = new Date(patient.affiliation.startDate);
+    const endDate = new Date(patient.affiliation.endDate);
+    
+    return now >= startDate && now <= endDate;
+  };
 
-  // Memoize columns to prevent recreation on every render
-  const columns = useMemo(
-    () => getPatientTableColumns(navigate, getOrdersByPatient),
+  // Apply age and affiliation status filters
+  const filteredPatients = useMemo(() => {
+    let filtered = preFilteredPatients;
+    
+    // Apply age filter
+    const [minAge, maxAge] = ageRange;
+    if (minAge !== 0 || maxAge !== 150) {
+      filtered = filtered.filter(patient => {
+        const age = calculateAge(patient.dateOfBirth);
+        return age >= minAge && age <= maxAge;
+      });
+    }
+    
+    // Apply affiliation status filter
+    if (affiliationStatusFilters.length > 0) {
+      filtered = filtered.filter(patient => {
+        const isActive = isAffiliationActive(patient);
+        const hasInactive = !patient.affiliation || !isActive;
+        
+        if (affiliationStatusFilters.includes('active') && affiliationStatusFilters.includes('inactive')) {
+          return true; // Show all
+        }
+        if (affiliationStatusFilters.includes('active')) {
+          return isActive;
+        }
+        if (affiliationStatusFilters.includes('inactive')) {
+          return hasInactive;
+        }
+        return true;
+      });
+    }
+    
+    return filtered;
+  }, [preFilteredPatients, ageRange, affiliationStatusFilters]);
+
+  // Memoize table config to prevent recreation on every render
+  const patientTableConfig = useMemo(
+    () => createPatientTableConfig(navigate, getOrdersByPatient),
     [navigate, getOrdersByPatient]
   );
 
@@ -76,7 +114,7 @@ export const PatientList: React.FC = () => {
       <ListView
         mode="table"
         items={filteredPatients}
-        columns={columns}
+        viewConfig={patientTableConfig}
         loading={loading}
         error={error}
         onRetry={refreshPatients}
@@ -99,6 +137,8 @@ export const PatientList: React.FC = () => {
             onAgeRangeChange={setAgeRange}
             sexFilters={sexFilters}
             onSexFiltersChange={setSexFilters}
+            affiliationStatusFilters={affiliationStatusFilters}
+            onAffiliationStatusFiltersChange={setAffiliationStatusFilters}
           />
         }
         pagination={true}

@@ -1,37 +1,33 @@
 import { useMemo } from 'react';
-import { useBreakpoint } from '@/hooks/useBreakpoint';
+import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { Breakpoint } from '@/hooks/useBreakpoint';
 import { Pagination } from '../Pagination';
-import { TableHeader } from './TableHeader';
-import { TableRow } from './TableRow';
-import { TableSkeleton } from './TableSkeleton';
-import { TableEmpty } from './TableEmpty';
-import { TableCardView } from './TableCardView';
-import type { TableProps, ColumnConfig } from './types';
-import { useColumnVisibility } from './hooks/useColumnVisibility';
+import { CardGrid } from './CardGrid';
+import { TableCore } from './TableCore';
+import type { TableProps } from './types';
 import { useTableSort } from './hooks/useTableSort';
 import { useTablePagination } from './hooks/useTablePagination';
-import {
-  DEFAULT_LOADING_ROWS,
-  DEFAULT_CARD_VIEW_BREAKPOINT,
-  DEFAULT_CARD_PRIORITY_FIELDS,
-} from './constants';
-import { isBreakpointAtMost } from '@/hooks/useBreakpoint';
+import { DEFAULT_LOADING_ROWS } from './constants';
 
 /**
  * Main Table Component
  * 
  * A fully-featured table component with:
- * - Responsive column visibility
- * - Configurable column sizing
- * - Mobile card view fallback
+ * - Multi-view configuration (full/medium/compact/card)
+ * - Breakpoint-based view selection
  * - Sorting and pagination
  * - Loading and empty states
+ * 
+ * Uses viewConfig to define separate views for different screen sizes:
+ * - Card view (xs/sm): Custom CardComponent
+ * - Compact table (md): compactColumns
+ * - Medium table (lg): mediumColumns
+ * - Full table (xl+): fullColumns
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Table<T = any>({
   data,
-  columns,
+  viewConfig,
   pagination = true,
   initialPageSize,
   pageSizeOptions,
@@ -39,9 +35,6 @@ export function Table<T = any>({
   sort: controlledSort,
   onSortChange,
   breakpoint: overrideBreakpoint,
-  enableCardView = true,
-  cardViewBreakpoint = DEFAULT_CARD_VIEW_BREAKPOINT,
-  cardPriorityFields = DEFAULT_CARD_PRIORITY_FIELDS,
   variant = 'default',
   striped = false,
   stickyHeader = false,
@@ -61,15 +54,6 @@ export function Table<T = any>({
   const detectedBreakpoint = useBreakpoint();
   const breakpoint: Breakpoint = overrideBreakpoint || detectedBreakpoint;
 
-  // Filter columns based on breakpoint
-  const visibleColumns = useColumnVisibility(columns, breakpoint);
-
-  // Determine if we should show card view
-  const shouldShowCardView = useMemo(() => {
-    if (!enableCardView) return false;
-    return isBreakpointAtMost(breakpoint, cardViewBreakpoint);
-  }, [enableCardView, breakpoint, cardViewBreakpoint]);
-
   // Handle pagination config
   const paginationConfig = useMemo(() => {
     if (pagination === false) return undefined;
@@ -77,10 +61,10 @@ export function Table<T = any>({
     return undefined; // Internal pagination will be used
   }, [pagination]);
 
-  // Handle sorting
-  const { sortedData, sort, handleSort } = useTableSort({
+  // Handle sorting - use fullColumns for sort key lookup since it contains all possible sortable columns
+  const { sortedData } = useTableSort({
     data,
-    columns,
+    columns: viewConfig.fullColumns,
     defaultSort,
     controlledSort,
     onSortChange,
@@ -103,56 +87,29 @@ export function Table<T = any>({
     pageSizeOptions,
   });
 
-  // Loading state
-  if (loading) {
-    return (
-      <div
-        className={`flex flex-col h-full bg-white ${!embedded ? 'rounded border border-gray-200' : ''}`}
-      >
-        <div
-          className="flex-1 overflow-auto"
-          style={maxHeight ? { maxHeight } : undefined}
-        >
-          <TableHeader
-            columns={columns}
-            visibleColumns={visibleColumns}
-            sort={null}
-            onSort={() => {}}
-            variant={variant}
-            sticky={stickyHeader}
-          />
-          <TableSkeleton
-            columns={visibleColumns as ColumnConfig<unknown>[]}
-            rows={loadingRows}
-            variant={variant}
-          />
-        </div>
-      </div>
-    );
-  }
+  // Determine which view to show based on breakpoint
+  const shouldShowCard = useMemo(() => {
+    return isBreakpointAtMost(breakpoint, 'sm');
+  }, [breakpoint]);
 
-  // Empty state
-  if (data.length === 0) {
-    return (
-      <div
-        className={`flex flex-col h-full bg-white ${!embedded ? 'rounded border border-gray-200' : ''}`}
-      >
-        <TableEmpty message={emptyMessage} icon={emptyIcon} />
-      </div>
-    );
-  }
+  const shouldShowCompact = useMemo(() => {
+    return breakpoint === 'md';
+  }, [breakpoint]);
 
-  // Card view for mobile
-  if (shouldShowCardView) {
+  const shouldShowMedium = useMemo(() => {
+    return breakpoint === 'lg';
+  }, [breakpoint]);
+
+  // Card view for mobile (xs/sm)
+  if (shouldShowCard) {
     return (
       <div
         className={`flex flex-col h-full ${!embedded ? 'rounded border border-gray-200' : ''}`}
       >
         <div className="p-4">
-          <TableCardView<T>
+          <CardGrid<T>
             data={paginatedData as T[]}
-            columns={columns}
-            priorityFields={cardPriorityFields}
+            CardComponent={viewConfig.CardComponent}
             onRowClick={onRowClick}
             getRowKey={getRowKey}
           />
@@ -171,51 +128,37 @@ export function Table<T = any>({
     );
   }
 
-  // Standard table view
-  return (
-    <div
-      className={`flex flex-col h-full bg-white ${!embedded ? 'rounded border border-gray-200' : ''}`}
-      role="table"
-      aria-label={ariaLabel}
-      aria-rowcount={totalItems}
-    >
-      {caption && <caption className="sr-only">{caption}</caption>}
-      
-      {/* Scrollable table area */}
-      <div
-        className="flex-1 overflow-auto"
-        style={maxHeight ? { maxHeight } : undefined}
-      >
-        <TableHeader
-          columns={columns}
-          visibleColumns={visibleColumns}
-          sort={sort}
-          onSort={handleSort}
-          variant={variant}
-          sticky={stickyHeader}
-        />
-        <TableRow<T>
-          data={paginatedData as T[]}
-          visibleColumns={visibleColumns}
-          variant={variant}
-          striped={striped}
-          onRowClick={onRowClick}
-          rowClassName={rowClassName}
-          getRowKey={getRowKey}
-        />
-      </div>
+  // Table view (compact, medium, or full)
+  const activeColumns = shouldShowCompact 
+    ? viewConfig.compactColumns 
+    : shouldShowMedium
+    ? viewConfig.mediumColumns
+    : viewConfig.fullColumns;
 
-      {/* Pagination */}
-      {pagination && (
-        <Pagination
-          currentPage={currentPage}
-          totalItems={totalItems}
-          pageSize={pageSize}
-          onPageChange={setCurrentPage}
-          onPageSizeChange={setPageSize}
-          pageSizeOptions={effectivePageSizeOptions}
-        />
-      )}
-    </div>
+  return (
+    <TableCore<T>
+      data={paginatedData as T[]}
+      columns={activeColumns}
+      pagination={pagination}
+      initialPageSize={initialPageSize}
+      pageSizeOptions={pageSizeOptions}
+      defaultSort={defaultSort}
+      sort={controlledSort}
+      onSortChange={onSortChange}
+      variant={variant}
+      striped={striped}
+      stickyHeader={stickyHeader}
+      maxHeight={maxHeight}
+      embedded={embedded}
+      onRowClick={onRowClick}
+      rowClassName={rowClassName}
+      getRowKey={getRowKey}
+      loading={loading}
+      loadingRows={loadingRows}
+      emptyMessage={emptyMessage}
+      emptyIcon={emptyIcon}
+      caption={caption}
+      ariaLabel={ariaLabel}
+    />
   );
 }

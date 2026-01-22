@@ -1,25 +1,46 @@
+/**
+ * PriceRangeControl Component
+ * Price range slider for filters
+ */
+
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Popover } from '@/shared/ui/Popover';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
+import type { PriceRangeFilterControl } from '../types';
 
-interface AgeFilterProps {
+/**
+ * Props for PriceRangeControl component
+ */
+export interface PriceRangeControlProps {
+  /** Current price range value */
   value: [number, number];
+  /** Callback when price range changes */
   onChange: (value: [number, number]) => void;
-  min?: number;
-  max?: number;
-  placeholder?: string;
+  /** Filter control configuration */
+  config: PriceRangeFilterControl;
+  /** Custom className */
   className?: string;
 }
 
-export const AgeFilter: React.FC<AgeFilterProps> = ({
+/**
+ * PriceRangeControl Component
+ * 
+ * Provides a range slider for filtering by price range.
+ * Similar to AgeFilter but with price-specific formatting.
+ * 
+ * @component
+ */
+export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   value,
   onChange,
-  min = 0,
-  max = 100,
-  placeholder = 'Filter by Age',
-  className
+  config,
+  className,
 }) => {
+  const min = config.min ?? 0;
+  const max = config.max ?? 10000;
+  const currency = config.currency ?? '';
+  
   const [localValue, setLocalValue] = useState<[number, number]>(value);
   const sliderRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef<'min' | 'max' | null>(null);
@@ -40,8 +61,6 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
     const rawValue = percent * (max - min) + min;
     return Math.round(rawValue);
   }, [min, max]);
-
-
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging.current) return;
@@ -88,20 +107,26 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
     document.addEventListener('mouseup', mouseUpHandlerRef.current);
   };
 
-
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
     onChange([min, max]);
   };
 
+  /**
+   * Format price for display
+   */
+  const formatPrice = (price: number): string => {
+    return `${currency}${price.toLocaleString()}`;
+  };
+
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-gray-500">{placeholder}</span>;
+      return <span className="text-gray-500">{config.placeholder || 'Filter by price range'}</span>;
     }
     return (
       <span className="text-gray-700 font-medium">
-        {start} - {end}
+        {formatPrice(start)} - {formatPrice(end)}
       </span>
     );
   };
@@ -120,7 +145,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             className
           )}
         >
-          <Icon name="hourglass" className="w-4 h-4 text-gray-400" />
+          <Icon name="wallet" className="w-4 h-4 text-gray-400" />
           <div className="flex-1 text-xs truncate ml-1">{renderTriggerContent()}</div>
 
           <Icon
@@ -146,8 +171,8 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
       {() => (
         <div className="space-y-4">
           <div className="flex items-center justify-between text-sm text-gray-600 font-medium">
-            <span>{localValue[0]} yrs</span>
-            <span>{localValue[1]} yrs</span>
+            <span>{formatPrice(localValue[0])}</span>
+            <span>{formatPrice(localValue[1])}</span>
           </div>
           
           <div 
@@ -182,8 +207,8 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           </div>
 
           <div className="flex justify-between items-center text-xs text-gray-400">
-             <span>{min}</span>
-             <span>{max}</span>
+             <span>{formatPrice(min)}</span>
+             <span>{formatPrice(max)}</span>
           </div>
         </div>
       )}

@@ -1,24 +1,48 @@
-import React from 'react';
-import { DateFilter } from './DateFilter';
-import { SearchBar, MultiSelectFilter } from '@/shared/ui';
+/**
+ * OrderFilters Component
+ * 
+ * Provides comprehensive filtering controls for the orders list using the new filter architecture.
+ * Uses config-driven approach with FilterBar component.
+ * 
+ * @module features/order
+ */
+
+import React, { useMemo } from 'react';
+import { FilterBar } from '@/features/filters';
+import { orderFilterConfig } from './orderFilterConfig';
 import type { OrderStatus, PaymentStatus } from '@/types';
-import { ORDER_STATUS_VALUES, PAYMENT_STATUS_VALUES, ORDER_STATUS_CONFIG, PAYMENT_STATUS_CONFIG } from '@/types';
-import { createFilterOptions } from '@/utils/filtering';
+import type { FilterValues } from '@/features/filters';
 
-const orderStatusOptions = createFilterOptions(ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG);
-const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
-
-interface OrderFiltersProps {
+/**
+ * Props interface for OrderFilters component
+ */
+export interface OrderFiltersProps {
+  /** Current search query string */
   searchQuery: string;
+  /** Callback fired when search query changes */
   onSearchChange: (value: string) => void;
+  /** Currently selected date range [start, end] or null */
   dateRange: [Date, Date] | null;
+  /** Callback fired when date range changes */
   onDateRangeChange: (range: [Date, Date] | null) => void;
+  /** Array of currently selected order statuses */
   statusFilters: OrderStatus[];
+  /** Callback fired when order status filters change */
   onStatusFiltersChange: (values: OrderStatus[]) => void;
+  /** Array of currently selected payment statuses */
   paymentFilters: PaymentStatus[];
+  /** Callback fired when payment status filters change */
   onPaymentFiltersChange: (values: PaymentStatus[]) => void;
 }
 
+/**
+ * OrderFilters Component
+ * 
+ * Composes FilterBar with order-specific configuration.
+ * Maps between legacy prop interface and new filter value structure.
+ * 
+ * @component
+ */
 export const OrderFilters: React.FC<OrderFiltersProps> = ({
   searchQuery,
   onSearchChange,
@@ -29,53 +53,42 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
   paymentFilters,
   onPaymentFiltersChange,
 }) => {
+  /**
+   * Convert props to filter values format
+   */
+  const filterValues = useMemo<FilterValues>(
+    () => ({
+      searchQuery,
+      dateRange,
+      status: statusFilters,
+      payment: paymentFilters,
+    }),
+    [searchQuery, dateRange, statusFilters, paymentFilters]
+  );
+
+  /**
+   * Handle filter changes and map back to props
+   */
+  const handleFilterChange = (filters: FilterValues) => {
+    if (filters.searchQuery !== undefined) {
+      onSearchChange(filters.searchQuery as string);
+    }
+    if (filters.dateRange !== undefined) {
+      onDateRangeChange(filters.dateRange as [Date, Date] | null);
+    }
+    if (filters.status !== undefined) {
+      onStatusFiltersChange(filters.status as OrderStatus[]);
+    }
+    if (filters.payment !== undefined) {
+      onPaymentFiltersChange(filters.payment as PaymentStatus[]);
+    }
+  };
+
   return (
-    <div className="p-4 border-b border-gray-200 shrink-0 bg-gray-50/50">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="w-[240px]">
-            <DateFilter
-              value={dateRange}
-              onChange={onDateRangeChange}
-              placeholder="Filter by Date"
-              className="w-full"
-            />
-          </div>
-
-          <div className="h-6 w-px bg-gray-300 hidden md:block" />
-
-          <MultiSelectFilter
-            label="Status"
-            options={orderStatusOptions}
-            selectedIds={statusFilters}
-            onChange={(ids) => onStatusFiltersChange(ids as OrderStatus[])}
-            selectAllLabel="Select all"
-            icon="checklist"
-            placeholder="Filter by Status"
-          />
-
-          <div className="h-6 w-px bg-gray-300 hidden md:block" />
-
-          <MultiSelectFilter
-            label="Payment"
-            options={paymentStatusOptions}
-            selectedIds={paymentFilters}
-            onChange={(ids) => onPaymentFiltersChange(ids as PaymentStatus[])}
-            selectAllLabel="Select all"
-            icon="wallet"
-            placeholder="Filter by Payment"
-          />
-        </div>
-
-        <div className="w-full md:w-72">
-          <SearchBar
-            placeholder="Search orders..."
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            size="sm"
-          />
-        </div>
-      </div>
-    </div>
+    <FilterBar
+      config={orderFilterConfig}
+      value={filterValues}
+      onChange={handleFilterChange}
+    />
   );
 };

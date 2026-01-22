@@ -34,7 +34,7 @@ export function TableHeader<T>({
             key={column.key}
             className={`
               ${HEADER_PADDING[variant]} 
-              flex items-center gap-2 whitespace-nowrap
+              text-xxs flex items-center justify-start gap-2 whitespace-nowrap
               ${isSortable ? 'cursor-pointer hover:bg-gray-100 select-none' : ''}
               ${isActiveSort ? 'text-gray-900 bg-gray-100' : ''}
               ${column.headerClassName || ''}

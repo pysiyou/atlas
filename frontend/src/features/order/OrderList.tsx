@@ -13,7 +13,7 @@ import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
 import { OrderFilters } from './OrderFilters';
-import { getOrderTableColumns } from './OrderTableColumns';
+import { createOrderTableConfig } from './OrderTableConfig';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
 
 /**
@@ -95,9 +95,9 @@ export const OrderList: React.FC = () => {
     return filtered;
   }, [preFilteredOrders, patientIdFilter, dateRange, paymentFilters]);
 
-  // Memoize columns to prevent recreation on every render
-  const columns = useMemo(
-    () => getOrderTableColumns(navigate, getPatientName, getTestName),
+  // Memoize table config to prevent recreation on every render
+  const orderTableConfig = useMemo(
+    () => createOrderTableConfig(navigate, getPatientName, getTestName),
     [navigate, getPatientName, getTestName]
   );
 
@@ -109,7 +109,7 @@ export const OrderList: React.FC = () => {
     <ListView
       mode="table"
       items={filteredOrders}
-      columns={columns}
+      viewConfig={orderTableConfig}
       loading={loading}
       error={error}
       onRetry={refetch}

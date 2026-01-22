@@ -21,11 +21,34 @@ export const Avatar: React.FC<AvatarProps> = ({
   const [imageError, setImageError] = useState(false);
 
   const sizeClasses = {
-    xs: 'w-6 h-6 text-[8px]',
+    xs: 'w-7 h-7 text-[8px]',
     sm: 'w-8 h-8 text-xs',
     md: 'w-10 h-10 text-sm',
     lg: 'w-12 h-12 text-base',
     xl: 'w-14 h-14 text-lg'
+  };
+
+  const textSizeClasses = {
+    xs: {
+      primary: 'text-xs',
+      secondary: 'text-[10px]'
+    },
+    sm: {
+      primary: 'text-sm',
+      secondary: 'text-xs'
+    },
+    md: {
+      primary: 'text-base',
+      secondary: 'text-xs'
+    },
+    lg: {
+      primary: 'text-lg',
+      secondary: 'text-sm'
+    },
+    xl: {
+      primary: 'text-xl',
+      secondary: 'text-base'
+    }
   };
 
   const Container = onClick ? 'button' : 'div';
@@ -33,7 +56,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 
   return (
     <Container
-      className={`relative inline-flex items-center ${hasText ? 'gap-3 max-w-full' : 'justify-center'} ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      className={`relative flex items-center ${hasText ? 'gap-3 max-w-full' : 'justify-center'} ${onClick ? 'cursor-pointer' : ''} ${className}`}
       onClick={onClick}
     >
       {/* Avatar circle */}
@@ -55,11 +78,11 @@ export const Avatar: React.FC<AvatarProps> = ({
       {/* Primary and secondary text */}
       {hasText && (
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
-          <div className="font-medium text-gray-900 truncate">
+          <div className={`font-medium text-gray-900 truncate ${textSizeClasses[size].primary}`}>
             {primaryText}
           </div>
           {secondaryText && (
-            <div className="text-xs text-gray-500 truncate">
+            <div className={`text-gray-500 truncate ${textSizeClasses[size].secondary}`}>
               {secondaryText}
             </div>
           )}

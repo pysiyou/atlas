@@ -13,20 +13,9 @@ export const BREAKPOINT_VALUES = {
 } as const;
 
 /**
- * Visibility presets for common responsive patterns
+ * @deprecated VISIBILITY_PRESETS is no longer used.
+ * Column visibility is now handled via explicit viewConfig (fullColumns/compactColumns).
  */
-export const VISIBILITY_PRESETS: Record<string, ResponsiveVisibility> = {
-  /** Always visible on all screen sizes */
-  always: { xs: true, sm: true, md: true, lg: true, xl: true, '2xl': true },
-  /** Visible only on desktop and above (lg+) */
-  desktop: { xs: false, sm: false, md: false, lg: true, xl: true, '2xl': true },
-  /** Visible on tablet and above (md+) */
-  tablet: { xs: false, sm: false, md: true, lg: true, xl: true, '2xl': true },
-  /** Visible on large mobile and above (sm+) */
-  mobile: { xs: false, sm: true, md: true, lg: true, xl: true, '2xl': true },
-  /** Visible only on wide screens (xl+) */
-  wide: { xs: false, sm: false, md: false, lg: false, xl: true, '2xl': true },
-};
 
 /**
  * Size presets for common column types
@@ -45,7 +34,7 @@ export const SIZE_PRESETS: Record<string, ColumnWidth> = {
   /** Auto - content-sized, no flex */
   auto: { grow: 0, shrink: 0 },
   /** Fill - fills 100% of remaining table width */
-  fill: { min: 100, grow: 1, shrink: 1 },
+  fill: { base: 0, min: 100, grow: 1, shrink: 1 },
 };
 
 /**
@@ -94,9 +83,3 @@ export const DEFAULT_LOADING_ROWS = 5;
  */
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
-
-/**
- * Default card view settings
- */
-export const DEFAULT_CARD_PRIORITY_FIELDS = 4;
-export const DEFAULT_CARD_VIEW_BREAKPOINT = 'sm';

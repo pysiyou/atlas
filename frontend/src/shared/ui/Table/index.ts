@@ -1,6 +1,10 @@
 // Main component
 export { Table } from './Table';
 
+// Components
+export { CardGrid } from './CardGrid';
+export { TableCore } from './TableCore';
+
 // Types
 export type {
   ColumnConfig,
@@ -14,13 +18,14 @@ export type {
   TableProps,
   TableVariant,
   Breakpoint,
+  TableViewConfig,
+  CardComponentProps,
 } from './types';
 
 // Constants (for use in column definitions)
-export { VISIBILITY_PRESETS, SIZE_PRESETS } from './constants';
+export { SIZE_PRESETS } from './constants';
 
 // Hooks (for advanced use cases)
-export { useColumnVisibility, useCardViewColumns } from './hooks/useColumnVisibility';
 export { useColumnStyles, getColumnStyle } from './hooks/useColumnWidth';
 export { useTableSort } from './hooks/useTableSort';
 export { useTablePagination } from './hooks/useTablePagination';
