@@ -2,19 +2,21 @@ import React, { useState } from 'react';
 import { getInitials } from '@/utils';
 
 export interface AvatarProps {
-  name: string;
+  primaryText: string;
   src?: string;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   onClick?: () => void;
+  secondaryText?: string;
 }
 
 export const Avatar: React.FC<AvatarProps> = ({ 
-  name, 
+  primaryText, 
   src, 
   size = 'md', 
   className = '',
-  onClick
+  onClick,
+  secondaryText
 }) => {
   const [imageError, setImageError] = useState(false);
 
@@ -27,24 +29,40 @@ export const Avatar: React.FC<AvatarProps> = ({
   };
 
   const Container = onClick ? 'button' : 'div';
+  const hasText = primaryText;
 
   return (
     <Container
-      className={`relative inline-flex items-center justify-center ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      className={`relative inline-flex items-center ${hasText ? 'gap-3 max-w-full' : 'justify-center'} ${onClick ? 'cursor-pointer' : ''} ${className}`}
       onClick={onClick}
     >
+      {/* Avatar circle */}
       {src && !imageError ? (
         <img
           src={src}
-          alt={name}
-          className={`rounded object-cover block ${sizeClasses[size]}`}
+          alt={primaryText}
+          className={`rounded object-cover block shrink-0 ${sizeClasses[size]}`}
           onError={() => setImageError(true)}
         />
       ) : (
         <div
-          className={`rounded bg-sky-600 flex items-center justify-center text-white font-semibold ${sizeClasses[size]}`}
+          className={`rounded bg-sky-600 flex items-center justify-center text-white font-semibold shrink-0 ${sizeClasses[size]}`}
         >
-          {getInitials(name)}
+          {getInitials(primaryText)}
+        </div>
+      )}
+      
+      {/* Primary and secondary text */}
+      {hasText && (
+        <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
+          <div className="font-medium text-gray-900 truncate">
+            {primaryText}
+          </div>
+          {secondaryText && (
+            <div className="text-xs text-gray-500 truncate">
+              {secondaryText}
+            </div>
+          )}
         </div>
       )}
     </Container>

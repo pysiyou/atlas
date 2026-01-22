@@ -9,7 +9,7 @@ import { type ReactNode } from 'react';
 import { Table, EmptyState } from '@/shared/ui';
 import { LoadingState } from '../LoadingState';
 import { ErrorAlert } from '../ErrorAlert';
-import type { Column } from '@/shared/ui/Table';
+import type { ColumnConfig } from '@/shared/ui/Table';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TableDataItem = Record<string, any>;
@@ -31,9 +31,9 @@ export interface ListViewProps<T extends TableDataItem> {
   
   // Table mode configuration
   /** Column definitions for table mode */
-  columns?: Column<T>[];
+  columns?: ColumnConfig<T>[];
   /** Row click handler for table mode */
-  onRowClick?: (item: T) => void;
+  onRowClick?: (item: T, index?: number) => void;
   
   // Grid/List mode configuration
   /** Render function for card/list items */
@@ -178,10 +178,11 @@ export function ListView<T extends TableDataItem>({
                   />
                 )
               }
+              loading={loading}
               pagination={pagination}
               initialPageSize={pageSize}
               pageSizeOptions={pageSizeOptions}
-              onRowClick={onRowClick}
+              onRowClick={onRowClick ? (item, index) => onRowClick(item, index) : undefined}
               embedded={true}
             />
           ) : mode === 'grid' && renderItem ? (

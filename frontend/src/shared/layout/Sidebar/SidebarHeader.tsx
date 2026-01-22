@@ -11,6 +11,8 @@ interface SidebarHeaderProps {
   isCollapsed: boolean;
   /** Callback to toggle collapse state */
   onToggleCollapse: () => void;
+  /** Callback to close sidebar on mobile (optional) */
+  onMobileClose?: () => void;
 }
 
 /**
@@ -20,6 +22,7 @@ interface SidebarHeaderProps {
 export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   isCollapsed,
   onToggleCollapse,
+  onMobileClose,
 }) => {
   return (
     <div className="border-b border-gray-200 shrink-0 h-[73px] flex items-center">
@@ -40,7 +43,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
           </div>
         </div>
 
-        {/* Title and collapse button */}
+        {/* Title and collapse/close button */}
         <div
           className={`flex-1 flex items-center justify-between min-w-0 pr-4 transition-opacity duration-300 ${
             isCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'
@@ -52,12 +55,21 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
             </h1>
             <p className="text-xs text-gray-500">Version 2.4</p>
           </div>
-          <IconButton
-            variant="collapse"
-            size="sm"
-            onClick={onToggleCollapse}
-            title="Collapse Sidebar"
-          />
+          {onMobileClose ? (
+            <IconButton
+              variant="close"
+              size="sm"
+              onClick={onMobileClose}
+              title="Close Sidebar"
+            />
+          ) : (
+            <IconButton
+              variant="collapse"
+              size="sm"
+              onClick={onToggleCollapse}
+              title="Collapse Sidebar"
+            />
+          )}
         </div>
       </div>
     </div>

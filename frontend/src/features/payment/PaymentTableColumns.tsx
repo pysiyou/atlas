@@ -1,18 +1,28 @@
 /**
- * Payment Table Columns - Shows all orders with payment status and method
+ * Payment Table Column Definitions
+ * Column configuration for the payment list table
+ * 
+ * Follows the standard pattern used across all table column definitions:
+ * - Uses preset widths ('xs', 'sm', 'md', 'lg', 'fill')
+ * - Specifies visibility using presets ('always', 'tablet', 'desktop', 'wide')
+ * - Includes priority for mobile card view (lower = more important)
+ * - Action column is always visible with appropriate priority
  */
 import type { NavigateFunction } from 'react-router-dom';
 import { formatDate, formatCurrency } from '@/utils';
 import { Badge } from '@/shared/ui';
+import type { ColumnConfig } from '@/shared/ui';
 import { PaymentButton } from './PaymentButton';
 import type { OrderPaymentDetails } from './types';
 
-export const getPaymentTableColumns = (navigate: NavigateFunction) => [
+export const getPaymentTableColumns = (navigate: NavigateFunction): ColumnConfig<OrderPaymentDetails>[] => [
   {
     key: 'orderId',
     header: 'Order ID',
-    width: '14%',
+    width: 'sm',
     sortable: true,
+    visible: 'always',
+    priority: 1,
     render: (item: OrderPaymentDetails) => (
       <button
         onClick={(e) => {
@@ -28,8 +38,10 @@ export const getPaymentTableColumns = (navigate: NavigateFunction) => [
   {
     key: 'patientName',
     header: 'Patient',
-    width: '16%',
+    width: 'md',
     sortable: true,
+    visible: 'always',
+    priority: 2,
     render: (item: OrderPaymentDetails) => (
       <div className="min-w-0">
         <div className="font-semibold text-gray-900 truncate">{item.patientName || 'N/A'}</div>
@@ -40,8 +52,10 @@ export const getPaymentTableColumns = (navigate: NavigateFunction) => [
   {
     key: 'tests',
     header: 'Tests',
-    width: '16%',
+    width: 'md',
     sortable: true,
+    visible: 'tablet',
+    priority: 3,
     render: (item: OrderPaymentDetails) => (
       <div className="min-w-0">
         <div className="font-medium truncate">{item.tests?.length || 0} test{item.tests?.length !== 1 ? 's' : ''}</div>
@@ -55,8 +69,11 @@ export const getPaymentTableColumns = (navigate: NavigateFunction) => [
   {
     key: 'totalPrice',
     header: 'Amount',
-    width: '10%',
+    width: 'sm',
+    align: 'right',
     sortable: true,
+    visible: 'always',
+    priority: 4,
     render: (item: OrderPaymentDetails) => (
       <span className="font-medium text-sky-600 truncate block">
         {formatCurrency(item.totalPrice)}
@@ -66,8 +83,10 @@ export const getPaymentTableColumns = (navigate: NavigateFunction) => [
   {
     key: 'paymentStatus',
     header: 'Status',
-    width: '10%',
+    width: 'sm',
     sortable: true,
+    visible: 'always',
+    priority: 5,
     render: (item: OrderPaymentDetails) => (
       <Badge variant={item.paymentStatus} size="sm" />
     ),
@@ -75,8 +94,10 @@ export const getPaymentTableColumns = (navigate: NavigateFunction) => [
   {
     key: 'paymentMethod',
     header: 'Method',
-    width: '12%',
+    width: 'sm',
     sortable: true,
+    visible: 'desktop',
+    priority: 6,
     render: (item: OrderPaymentDetails) => {
       // If order has not been paid yet (unpaid status or no payment method), keep it empty
       if (!item.paymentMethod || item.paymentStatus === 'unpaid') {
@@ -89,16 +110,20 @@ export const getPaymentTableColumns = (navigate: NavigateFunction) => [
   {
     key: 'orderDate',
     header: 'Date',
-    width: '10%',
+    width: 'sm',
     sortable: true,
+    visible: 'desktop',
+    priority: 7,
     render: (item: OrderPaymentDetails) => (
       <span className="text-xs text-gray-500 truncate block">{formatDate(item.orderDate)}</span>
     ),
   },
   {
     key: 'action',
-    header: '',
-    width: '12%',
+    header: 'Action',
+    width: 'md',
+    visible: 'always',
+    priority: 999,
     render: (item: OrderPaymentDetails) => (
       <div onClick={(e) => e.stopPropagation()}>
         <PaymentButton 

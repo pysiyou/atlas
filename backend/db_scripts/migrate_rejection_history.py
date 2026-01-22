@@ -25,12 +25,12 @@ def migrate_rejection_data():
         try:
             # Find all rejected samples that have rejection data but no history
             result = conn.execute(text("""
-                SELECT "sampleId", "rejectedAt", "rejectedBy", "rejectionReasons", 
-                       "rejectionNotes", "recollectionRequired"
+                SELECT sample_id, rejected_at, rejected_by, rejection_reasons, 
+                       rejection_notes, recollection_required
                 FROM samples
                 WHERE status = 'REJECTED' 
-                AND "rejectedAt" IS NOT NULL
-                AND ("rejectionHistory" IS NULL OR "rejectionHistory" = '[]'::jsonb)
+                AND rejected_at IS NOT NULL
+                AND (rejection_history IS NULL OR rejection_history = '[]'::jsonb)
             """))
             
             rejected_samples = result.fetchall()
@@ -66,7 +66,7 @@ def migrate_rejection_data():
                 # Update the sample - use simple parameter binding
                 history_json = json.dumps(rejection_history)
                 conn.execute(
-                    text('UPDATE samples SET "rejectionHistory" = :history WHERE "sampleId" = :sample_id'),
+                    text('UPDATE samples SET rejection_history = :history WHERE sample_id = :sample_id'),
                     {"history": history_json, "sample_id": sample_id}
                 )
                 
@@ -94,12 +94,12 @@ def consolidate_recollection_samples(conn):
     
     # Find all samples that are recollections
     result = conn.execute(text("""
-        SELECT "sampleId", "originalSampleId", "rejectedAt", "rejectedBy", 
-               "rejectionReasons", "rejectionNotes", "recollectionRequired",
+        SELECT sample_id, original_sample_id, rejected_at, rejected_by, 
+               rejection_reasons, rejection_notes, recollection_required,
                status
         FROM samples
-        WHERE "isRecollection" = true 
-        AND "originalSampleId" IS NOT NULL
+        WHERE is_recollection = true 
+        AND original_sample_id IS NOT NULL
     """))
     
     recollection_samples = result.fetchall()
@@ -118,9 +118,9 @@ def consolidate_recollection_samples(conn):
         
         # Get the original sample
         original_result = conn.execute(text("""
-            SELECT "rejectionHistory"
+            SELECT rejection_history
             FROM samples
-            WHERE "sampleId" = :original_id
+            WHERE sample_id = :original_id
         """), {"original_id": original_id})
         
         original = original_result.fetchone()
@@ -153,7 +153,7 @@ def consolidate_recollection_samples(conn):
             # Update original sample with consolidated history
             history_json = json.dumps(existing_history)
             conn.execute(
-                text('UPDATE samples SET "rejectionHistory" = :history WHERE "sampleId" = :original_id'),
+                text('UPDATE samples SET rejection_history = :history WHERE sample_id = :original_id'),
                 {"history": history_json, "original_id": original_id}
             )
             

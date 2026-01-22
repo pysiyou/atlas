@@ -12,9 +12,9 @@ class User(Base):
 
     id = Column(String, primary_key=True, index=True)
     username = Column(String, unique=True, index=True, nullable=False)
-    hashedPassword = Column(String, nullable=False)
+    hashedPassword = Column("hashed_password", String, nullable=False)
     name = Column(String, nullable=False)
     role = Column(Enum(UserRole), nullable=False)
     email = Column(String, nullable=True)
     phone = Column(String, nullable=True)
-    createdAt = Column(DateTime(timezone=True), server_default=func.now())
+    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())

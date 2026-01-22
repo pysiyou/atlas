@@ -15,12 +15,12 @@ class LabOperationLog(Base):
     __tablename__ = "lab_operation_logs"
 
     id = Column(String, primary_key=True, index=True)
-    operationType = Column(Enum(LabOperationType), nullable=False, index=True)
-    entityType = Column(String(20), nullable=False, index=True)  # 'sample', 'test', 'order'
-    entityId = Column(String(50), nullable=False, index=True)
-    performedBy = Column(String(50), nullable=False, index=True)
-    performedAt = Column(DateTime(timezone=True), server_default=func.now(), index=True)
-    beforeState = Column(JSON, nullable=True)
-    afterState = Column(JSON, nullable=True)
-    operationData = Column(JSON, nullable=True)  # Additional context-specific data
-    createdAt = Column(DateTime(timezone=True), server_default=func.now())
+    operationType = Column("operation_type", Enum(LabOperationType), nullable=False, index=True)
+    entityType = Column("entity_type", String(20), nullable=False, index=True)  # 'sample', 'test', 'order'
+    entityId = Column("entity_id", String(50), nullable=False, index=True)
+    performedBy = Column("performed_by", String(50), nullable=False, index=True)
+    performedAt = Column("performed_at", DateTime(timezone=True), server_default=func.now(), index=True)
+    beforeState = Column("before_state", JSON, nullable=True)
+    afterState = Column("after_state", JSON, nullable=True)
+    operationData = Column("operation_data", JSON, nullable=True)  # Additional context-specific data
+    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())

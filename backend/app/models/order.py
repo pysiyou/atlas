@@ -11,30 +11,30 @@ from app.schemas.enums import OrderStatus, PaymentStatus, PriorityLevel, TestSta
 class Order(Base):
     __tablename__ = "orders"
 
-    orderId = Column(String, primary_key=True, index=True)  # ORD-YYYYMMDD-XXX
-    patientId = Column(String, ForeignKey("patients.id"), nullable=False, index=True)
-    orderDate = Column(DateTime(timezone=True), nullable=False)
+    orderId = Column("order_id", String, primary_key=True, index=True)  # ORD-YYYYMMDD-XXX
+    patientId = Column("patient_id", String, ForeignKey("patients.id"), nullable=False, index=True)
+    orderDate = Column("order_date", DateTime(timezone=True), nullable=False)
 
     # Pricing
-    totalPrice = Column(Float, nullable=False)
-    paymentStatus = Column(Enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
-    overallStatus = Column(Enum(OrderStatus), nullable=False, default=OrderStatus.ORDERED)
+    totalPrice = Column("total_price", Float, nullable=False)
+    paymentStatus = Column("payment_status", Enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
+    overallStatus = Column("overall_status", Enum(OrderStatus), nullable=False, default=OrderStatus.ORDERED)
 
     # Scheduling (optional - for future appointment integration)
-    appointmentId = Column(String, nullable=True)
-    scheduledCollectionTime = Column(DateTime(timezone=True), nullable=True)
+    appointmentId = Column("appointment_id", String, nullable=True)
+    scheduledCollectionTime = Column("scheduled_collection_time", DateTime(timezone=True), nullable=True)
 
     # Instructions
-    specialInstructions = Column(JSON, nullable=True)  # Array of strings
-    patientPrepInstructions = Column(String, nullable=True)
-    clinicalNotes = Column(String, nullable=True)
-    referringPhysician = Column(String, nullable=True)
+    specialInstructions = Column("special_instructions", JSON, nullable=True)  # Array of strings
+    patientPrepInstructions = Column("patient_prep_instructions", String, nullable=True)
+    clinicalNotes = Column("clinical_notes", String, nullable=True)
+    referringPhysician = Column("referring_physician", String, nullable=True)
     priority = Column(Enum(PriorityLevel), nullable=False, default=PriorityLevel.ROUTINE)
 
     # Metadata
-    createdBy = Column(String, nullable=False)
-    createdAt = Column(DateTime(timezone=True), server_default=func.now())
-    updatedAt = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    createdBy = Column("created_by", String, nullable=False)
+    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
+    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     # Relationships
     patient = relationship("Patient", foreign_keys=[patientId])
@@ -50,54 +50,54 @@ class OrderTest(Base):
     __tablename__ = "order_tests"
 
     id = Column(String, primary_key=True)  # Composite: orderId + testCode
-    orderId = Column(String, ForeignKey("orders.orderId"), nullable=False, index=True)
-    testCode = Column(String, ForeignKey("tests.code"), nullable=False, index=True)
+    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, index=True)
+    testCode = Column("test_code", String, ForeignKey("tests.code"), nullable=False, index=True)
 
     # Order-specific state
     status = Column(Enum(TestStatus), nullable=False, default=TestStatus.PENDING, index=True)
-    priceAtOrder = Column(Float, nullable=False)  # Snapshot for billing
+    priceAtOrder = Column("price_at_order", Float, nullable=False)  # Snapshot for billing
 
     # Sample linkage
-    sampleId = Column(String, nullable=True)  # Links to Sample
+    sampleId = Column("sample_id", String, nullable=True)  # Links to Sample
 
     # Results (JSON)
     results = Column(JSON, nullable=True)  # Record<string, TestResult>
-    resultEnteredAt = Column(DateTime(timezone=True), nullable=True)
-    enteredBy = Column(String, nullable=True)
+    resultEnteredAt = Column("result_entered_at", DateTime(timezone=True), nullable=True)
+    enteredBy = Column("entered_by", String, nullable=True)
 
     # Validation
-    resultValidatedAt = Column(DateTime(timezone=True), nullable=True)
-    validatedBy = Column(String, nullable=True)
-    validationNotes = Column(String, nullable=True)
+    resultValidatedAt = Column("result_validated_at", DateTime(timezone=True), nullable=True)
+    validatedBy = Column("validated_by", String, nullable=True)
+    validationNotes = Column("validation_notes", String, nullable=True)
 
     # Flags and notes
     flags = Column(JSON, nullable=True)  # Array of strings
-    technicianNotes = Column(String, nullable=True)
+    technicianNotes = Column("technician_notes", String, nullable=True)
 
     # Reflex/Repeat
-    isReflexTest = Column(Boolean, default=False)
-    triggeredBy = Column(String, nullable=True)
-    reflexRule = Column(String, nullable=True)
-    isRepeatTest = Column(Boolean, default=False)
-    repeatReason = Column(String, nullable=True)
-    originalTestId = Column(String, nullable=True)
-    repeatNumber = Column(Integer, nullable=True)
+    isReflexTest = Column("is_reflex_test", Boolean, default=False)
+    triggeredBy = Column("triggered_by", String, nullable=True)
+    reflexRule = Column("reflex_rule", String, nullable=True)
+    isRepeatTest = Column("is_repeat_test", Boolean, default=False)
+    repeatReason = Column("repeat_reason", String, nullable=True)
+    originalTestId = Column("original_test_id", String, nullable=True)
+    repeatNumber = Column("repeat_number", Integer, nullable=True)
 
     # Re-test tracking (for result validation rejection flow)
-    isRetest = Column(Boolean, default=False)
-    retestOfTestId = Column(String, nullable=True)  # Links to original OrderTest.id that was rejected
-    retestNumber = Column(Integer, default=0)  # 0 = original, 1 = 1st retest, etc.
-    retestOrderTestId = Column(String, nullable=True)  # Points to the new retest entry created after rejection
+    isRetest = Column("is_retest", Boolean, default=False)
+    retestOfTestId = Column("retest_of_test_id", String, nullable=True)  # Links to original OrderTest.id that was rejected
+    retestNumber = Column("retest_number", Integer, default=0)  # 0 = original, 1 = 1st retest, etc.
+    retestOrderTestId = Column("retest_order_test_id", String, nullable=True)  # Points to the new retest entry created after rejection
 
     # Result rejection history (for validation rejections)
-    resultRejectionHistory = Column(JSON, nullable=True, default=list)  # Array of ResultRejectionRecord
+    resultRejectionHistory = Column("result_rejection_history", JSON, nullable=True, default=list)  # Array of ResultRejectionRecord
 
     # Critical values
-    hasCriticalValues = Column(Boolean, default=False)
-    criticalNotificationSent = Column(Boolean, default=False)
-    criticalNotifiedAt = Column(DateTime(timezone=True), nullable=True)
-    criticalNotifiedTo = Column(String, nullable=True)
-    criticalAcknowledgedAt = Column(DateTime(timezone=True), nullable=True)
+    hasCriticalValues = Column("has_critical_values", Boolean, default=False)
+    criticalNotificationSent = Column("critical_notification_sent", Boolean, default=False)
+    criticalNotifiedAt = Column("critical_notified_at", DateTime(timezone=True), nullable=True)
+    criticalNotifiedTo = Column("critical_notified_to", String, nullable=True)
+    criticalAcknowledgedAt = Column("critical_acknowledged_at", DateTime(timezone=True), nullable=True)
 
     # Relationships
     order = relationship("Order", back_populates="tests")

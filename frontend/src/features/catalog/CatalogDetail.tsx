@@ -8,6 +8,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useTest } from '@/hooks/queries';
+import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { EmptyState, BalancedDetailsLayout } from '@/shared/ui';
 import { LoadingState } from '@/shared/components';
 import { formatCurrency } from '@/utils';
@@ -71,9 +72,27 @@ const capitalize = (str: string): string => {
  */
 export const CatalogDetail: React.FC = () => {
   const { testCode } = useParams<{ testCode: string }>();
+  const breakpoint = useBreakpoint();
 
   // Fetch test details using the query hook
   const { test, isLoading, isError } = useTest(testCode);
+
+  /**
+   * Calculate responsive column count based on screen size
+   * - Mobile (xs, sm): 1 column
+   * - Tablet (md): 2 columns
+   * - Desktop (lg, xl, 2xl): 3 columns
+   */
+  const getColumnCount = (): number => {
+    if (breakpoint === 'xs' || breakpoint === 'sm') {
+      return 1;
+    }
+    if (breakpoint === 'md') {
+      return 2;
+    }
+    // lg, xl, 2xl
+    return 3;
+  };
 
   // Show loading state
   if (isLoading) {
@@ -196,7 +215,7 @@ export const CatalogDetail: React.FC = () => {
       <div className="flex-1 overflow-y-auto min-h-0">
         <BalancedDetailsLayout
           tables={tables}
-          columns={3}
+          columns={getColumnCount()}
           className="pb-6"
         />
       </div>

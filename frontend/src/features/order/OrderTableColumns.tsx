@@ -1,10 +1,17 @@
 /**
  * Order Table Column Definitions
  * Column configuration for the order list table
+ * 
+ * Follows the standard pattern used across all table column definitions:
+ * - Uses preset widths ('xs', 'sm', 'md', 'lg', 'fill')
+ * - Specifies visibility using presets ('always', 'tablet', 'desktop', 'wide')
+ * - Includes priority for mobile card view (lower = more important)
+ * - Action column is sticky right, always visible, with highest priority number
  */
 
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
+import type { ColumnConfig } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
 import type { Order } from '@/types';
 
@@ -19,12 +26,14 @@ export const getOrderTableColumns = (
   navigate: NavigateFunction,
   getPatientNameFn: (patientId: string) => string,
   getTestNameFn: (testCode: string) => string
-) => [
+): ColumnConfig<Order>[] => [
   {
     key: 'orderId',
     header: 'Order ID',
-    width: '14%',
+    width: 'sm',
     sortable: true,
+    visible: 'always',
+    priority: 1,
     render: (order: Order) => (
       <span className="text-xs text-sky-600 font-medium font-mono truncate block">{order.orderId}</span>
     ),
@@ -32,8 +41,10 @@ export const getOrderTableColumns = (
   {
     key: 'patientName',
     header: 'Patient',
-    width: '17%',
+    width: 'md',
     sortable: true,
+    visible: 'always',
+    priority: 2,
     render: (order: Order) => (
       <div className="min-w-0">
         <div className="font-semibold text-gray-900 truncate">{getPatientNameFn(order.patientId)}</div>
@@ -44,7 +55,9 @@ export const getOrderTableColumns = (
   {
     key: 'tests',
     header: 'Tests',
-    width: '14%',
+    width: 'md',
+    visible: 'tablet',
+    priority: 3,
     render: (order: Order) => {
       // Filter out superseded tests - only count active tests
       const activeTests = order.tests.filter(t => t.status !== 'superseded');
@@ -64,8 +77,10 @@ export const getOrderTableColumns = (
   {
     key: 'priority',
     header: 'Priority',
-    width: '10%',
+    width: 'sm',
     sortable: true,
+    visible: 'tablet',
+    priority: 4,
     render: (order: Order) => (
       <Badge
         variant={order.priority}
@@ -77,8 +92,10 @@ export const getOrderTableColumns = (
   {
     key: 'overallStatus',
     header: 'Status',
-    width: '10%',
+    width: 'sm',
     sortable: true,
+    visible: 'always',
+    priority: 5,
     render: (order: Order) => (
       <Badge
         variant={order.overallStatus}
@@ -89,8 +106,11 @@ export const getOrderTableColumns = (
   {
     key: 'totalPrice',
     header: 'Amount',
-    width: '10%',
+    width: 'sm',
+    align: 'right',
     sortable: true,
+    visible: 'tablet',
+    priority: 6,
     render: (order: Order) => (
       <div className="font-medium text-sky-600 truncate">{formatCurrency(order.totalPrice)}</div>
     ),
@@ -98,8 +118,10 @@ export const getOrderTableColumns = (
   {
     key: 'paymentStatus',
     header: 'Payment',
-    width: '10%',
+    width: 'sm',
     sortable: true,
+    visible: 'desktop',
+    priority: 7,
     render: (order: Order) => (
       <Badge
         variant={order.paymentStatus}
@@ -110,8 +132,10 @@ export const getOrderTableColumns = (
   {
     key: 'orderDate',
     header: 'Date',
-    width: '10%',
+    width: 'sm',
     sortable: true,
+    visible: 'desktop',
+    priority: 8,
     render: (order: Order) => (
       <div className="text-xs text-gray-500 truncate">{formatDate(order.orderDate)}</div>
     ),
@@ -119,7 +143,10 @@ export const getOrderTableColumns = (
   {
     key: 'actions',
     header: '',
-    width: '3%',
+    width: 'xs',
+    visible: 'always',
+    sticky: 'right',
+    priority: 999,
     className: 'overflow-visible !px-1',
     headerClassName: '!px-1',
     render: (order: Order) => (

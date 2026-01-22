@@ -9,21 +9,21 @@ from app.database import Base
 class Report(Base):
     __tablename__ = "reports"
 
-    reportId = Column(String, primary_key=True, index=True)  # RPT-YYYYMMDD-XXX
-    orderId = Column(String, ForeignKey("orders.orderId"), nullable=False, unique=True, index=True)
-    patientId = Column(String, ForeignKey("patients.id"), nullable=False, index=True)
+    reportId = Column("report_id", String, primary_key=True, index=True)  # RPT-YYYYMMDD-XXX
+    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, unique=True, index=True)
+    patientId = Column("patient_id", String, ForeignKey("patients.id"), nullable=False, index=True)
 
     # Report generation
-    generatedAt = Column(DateTime(timezone=True), nullable=False)
-    generatedBy = Column(String, nullable=False)
+    generatedAt = Column("generated_at", DateTime(timezone=True), nullable=False)
+    generatedBy = Column("generated_by", String, nullable=False)
 
     # PDF storage
-    pdfPath = Column(String, nullable=True)  # Path to stored PDF file
+    pdfPath = Column("pdf_path", String, nullable=True)  # Path to stored PDF file
 
     # Approval workflow
     approved = Column(Boolean, default=False)
-    approvedAt = Column(DateTime(timezone=True), nullable=True)
-    approvedBy = Column(String, nullable=True)
+    approvedAt = Column("approved_at", DateTime(timezone=True), nullable=True)
+    approvedBy = Column("approved_by", String, nullable=True)
 
     # Metadata
-    createdAt = Column(DateTime(timezone=True), server_default=func.now())
+    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())

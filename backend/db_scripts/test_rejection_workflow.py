@@ -13,10 +13,10 @@ from sqlalchemy import text
 def show_sample_state(conn, sample_id):
     """Display current state of a sample"""
     result = conn.execute(text("""
-        SELECT "sampleId", status, "rejectionHistory", "rejectedAt", 
-               "recollectionAttempt", "collectedAt", "collectedVolume"
+        SELECT sample_id, status, rejection_history, rejected_at, 
+               recollection_attempt, collected_at, collected_volume
         FROM samples
-        WHERE "sampleId" = :sample_id
+        WHERE sample_id = :sample_id
     """), {"sample_id": sample_id})
     
     row = result.fetchone()
@@ -49,7 +49,7 @@ def main():
     with engine.connect() as conn:
         # Find a pending sample to test with
         result = conn.execute(text("""
-            SELECT "sampleId"
+            SELECT sample_id
             FROM samples
             WHERE status = 'PENDING'
             LIMIT 1
@@ -72,11 +72,11 @@ def main():
         print("\n\n2. CHECKING FOR SAMPLES WITH REJECTION HISTORY:")
         print("-" * 70)
         result = conn.execute(text("""
-            SELECT "sampleId", status, "rejectionHistory", "recollectionAttempt"
+            SELECT sample_id, status, rejection_history, recollection_attempt
             FROM samples
-            WHERE "rejectionHistory" IS NOT NULL 
-            AND "rejectionHistory"::text != '[]'
-            ORDER BY "updatedAt" DESC
+            WHERE rejection_history IS NOT NULL 
+            AND rejection_history::text != '[]'
+            ORDER BY updated_at DESC
             LIMIT 3
         """))
         

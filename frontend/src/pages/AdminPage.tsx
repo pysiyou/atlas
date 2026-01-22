@@ -3,14 +3,102 @@
  * Administration and system settings
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { usePatients } from '@/hooks';
 import { useOrders } from '@/features/order/OrderContext';
 import { useTests } from '@/features/test/TestsContext';
 import { useBilling } from '@/features/billing/BillingContext';
 import { Card, SectionContainer, Table, Icon } from '@/shared/ui';
+import type { ColumnConfig } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
+
+/**
+ * Admin Test Table Columns
+ * Simple column definition for admin page test overview
+ * Follows the standard pattern with visibility and priority
+ */
+const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
+  {
+    key: 'code',
+    header: 'Code',
+    width: 'sm',
+    sortable: true,
+    visible: 'always',
+    priority: 1,
+    render: (test: Test) => (
+      <span className="text-xs text-sky-600 font-medium font-mono truncate block">
+        {test.code}
+      </span>
+    ),
+  },
+  {
+    key: 'name',
+    header: 'Test Name',
+    width: 'fill',
+    sortable: true,
+    visible: 'always',
+    priority: 2,
+    render: (test: Test) => (
+      <div className="font-medium text-gray-900 truncate">{test.name}</div>
+    ),
+  },
+  {
+    key: 'category',
+    header: 'Category',
+    width: 'md',
+    sortable: true,
+    visible: 'tablet',
+    priority: 3,
+    render: (test: Test) => (
+      <span className="text-xs text-gray-600 uppercase truncate block">
+        {test.category}
+      </span>
+    ),
+  },
+  {
+    key: 'price',
+    header: 'Price',
+    width: 'sm',
+    align: 'right',
+    sortable: true,
+    visible: 'tablet',
+    priority: 4,
+    render: (test: Test) => (
+      <div className="font-medium text-sky-600 truncate">
+        {formatCurrency(test.price)}
+      </div>
+    ),
+  },
+  {
+    key: 'turnaroundTime',
+    header: 'TAT (hrs)',
+    width: 'sm',
+    sortable: true,
+    visible: 'desktop',
+    priority: 5,
+    render: (test: Test) => (
+      <div className="text-xs text-gray-500 truncate">{test.turnaroundTime}h</div>
+    ),
+  },
+];
+
+/**
+ * Admin Test Table Component
+ * Displays a simple table of active tests
+ */
+const AdminTestTable: React.FC<{ tests: Test[] }> = ({ tests }) => {
+  const columns = useMemo(() => getAdminTestTableColumns(), []);
+
+  return (
+    <Table<Test>
+      data={tests}
+      columns={columns}
+      emptyMessage="No tests available"
+      pagination={false}
+    />
+  );
+};
 
 export const Admin: React.FC = () => {
   const patientsContext = usePatients();
@@ -32,14 +120,6 @@ export const Admin: React.FC = () => {
     { label: 'Total Orders', value: orders.length, icon: <Icon name="document" className="w-6 h-6" />, color: 'green' },
     { label: 'Active Tests', value: tests.filter(t => t.isActive).length, icon: <Icon name="flask" className="w-6 h-6" />, color: 'purple' },
     { label: 'Total Revenue', value: formatCurrency(getTotalRevenue()), icon: <Icon name="dollar-sign" className="w-6 h-6" />, color: 'orange' },
-  ];
-  
-  const testColumns = [
-    { key: 'code', header: 'Code' },
-    { key: 'name', header: 'Test Name' },
-    { key: 'category', header: 'Category', render: (test: Test) => test.category.toUpperCase() },
-    { key: 'price', header: 'Price', render: (test: Test) => formatCurrency(test.price) },
-    { key: 'turnaroundTime', header: 'TAT (hrs)', render: (test: Test) => `${test.turnaroundTime}h` },
   ];
   
   return (
@@ -66,11 +146,7 @@ export const Admin: React.FC = () => {
       {/* Test Catalog */}
       <SectionContainer title="Test Catalog">
         <div className="text-sm text-gray-500 mb-3">{tests.length} total tests</div>
-        <Table
-          data={tests.filter(t => t.isActive).slice(0, 10)}
-          columns={testColumns}
-          emptyMessage="No tests available"
-        />
+        <AdminTestTable tests={tests.filter(t => t.isActive).slice(0, 10)} />
         {tests.length > 10 && (
           <div className="text-center py-3 text-sm text-gray-500">
             Showing 10 of {tests.length} tests

@@ -14,6 +14,8 @@ interface SidebarNavProps {
   settingsItems: SettingsItem[];
   /** Whether the sidebar is collapsed */
   isCollapsed: boolean;
+  /** Callback when navigation occurs (for mobile close) */
+  onNavigate?: () => void;
 }
 
 /**
@@ -24,7 +26,17 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   menuItems,
   settingsItems,
   isCollapsed,
+  onNavigate,
 }) => {
+  /**
+   * Handle navigation click (close mobile sidebar if needed)
+   */
+  const handleNavClick = () => {
+    if (onNavigate) {
+      onNavigate();
+    }
+  };
+
   return (
     <div className="flex-1 overflow-y-auto overflow-x-hidden py-4">
       {/* Main Menu Section */}
@@ -44,6 +56,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               key={item.path}
               to={item.path}
               title={isCollapsed ? item.label : undefined}
+              onClick={handleNavClick}
               className={({ isActive }) =>
                 `flex items-center min-w-0 py-2.5 transition-colors relative ${
                   isActive

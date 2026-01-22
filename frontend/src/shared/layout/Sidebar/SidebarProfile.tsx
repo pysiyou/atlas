@@ -65,7 +65,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
       >
         {/* User Avatar - Fixed Width w-16 */}
         <div className="w-16 flex items-center justify-center shrink-0">
-          <Avatar name={currentUser.name} src={defaultAvatar} size="md" />
+          <Avatar primaryText={currentUser.name} src={defaultAvatar} size="md" />
         </div>
 
         {/* User Info - Collapsible */}

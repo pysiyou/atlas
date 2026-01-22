@@ -4,7 +4,7 @@ export * from './CircularProgress';
 export * from './IconButton';
 export * from './Input';
 export * from './Badge';
-export * from './Table';
+export * from './Table/index';
 export * from './Modal';
 export * from './Icon';
 export * from './SearchBar';

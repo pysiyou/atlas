@@ -10,56 +10,56 @@ from app.schemas.enums import SampleStatus, SampleType, ContainerType, Container
 class Sample(Base):
     __tablename__ = "samples"
 
-    sampleId = Column(String, primary_key=True, index=True)  # SAM-YYYYMMDD-XXX
-    orderId = Column(String, ForeignKey("orders.orderId"), nullable=False, index=True)
-    sampleType = Column(Enum(SampleType), nullable=False)
+    sampleId = Column("sample_id", String, primary_key=True, index=True)  # SAM-YYYYMMDD-XXX
+    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, index=True)
+    sampleType = Column("sample_type", Enum(SampleType), nullable=False)
     status = Column(Enum(SampleStatus), nullable=False, default=SampleStatus.PENDING, index=True)
 
     # What this sample is for
-    testCodes = Column(JSON, nullable=False)  # Array of test codes
-    requiredVolume = Column(Float, nullable=False)
+    testCodes = Column("test_codes", JSON, nullable=False)  # Array of test codes
+    requiredVolume = Column("required_volume", Float, nullable=False)
     priority = Column(Enum(PriorityLevel), nullable=False)
 
     # Required specs
-    requiredContainerTypes = Column(JSON, nullable=False)  # Array of ContainerType
-    requiredContainerColors = Column(JSON, nullable=False)  # Array of ContainerTopColor
+    requiredContainerTypes = Column("required_container_types", JSON, nullable=False)  # Array of ContainerType
+    requiredContainerColors = Column("required_container_colors", JSON, nullable=False)  # Array of ContainerTopColor
 
     # Collection info (only when status = collected or rejected)
-    collectedAt = Column(DateTime(timezone=True), nullable=True)
-    collectedBy = Column(String, nullable=True)
-    collectedVolume = Column(Float, nullable=True)
+    collectedAt = Column("collected_at", DateTime(timezone=True), nullable=True)
+    collectedBy = Column("collected_by", String, nullable=True)
+    collectedVolume = Column("collected_volume", Float, nullable=True)
 
     # Actual container used (only when collected)
-    actualContainerType = Column(Enum(ContainerType), nullable=True)
-    actualContainerColor = Column(Enum(ContainerTopColor), nullable=True)
+    actualContainerType = Column("actual_container_type", Enum(ContainerType), nullable=True)
+    actualContainerColor = Column("actual_container_color", Enum(ContainerTopColor), nullable=True)
 
     # Optional collection fields
-    collectionNotes = Column(String, nullable=True)
-    remainingVolume = Column(Float, nullable=True)
+    collectionNotes = Column("collection_notes", String, nullable=True)
+    remainingVolume = Column("remaining_volume", Float, nullable=True)
 
     # Quality assessment
-    qualityIssues = Column(JSON, nullable=True)  # Array of RejectionReason
-    qualityNotes = Column(String, nullable=True)
+    qualityIssues = Column("quality_issues", JSON, nullable=True)  # Array of RejectionReason
+    qualityNotes = Column("quality_notes", String, nullable=True)
 
     # Rejection info (only when status = rejected)
-    rejectedAt = Column(DateTime(timezone=True), nullable=True)
-    rejectedBy = Column(String, nullable=True)
-    rejectionReasons = Column(JSON, nullable=True)  # Array of RejectionReason
-    rejectionNotes = Column(String, nullable=True)
-    rejectionHistory = Column(JSON, nullable=True, default=list)  # Array of rejection records
+    rejectedAt = Column("rejected_at", DateTime(timezone=True), nullable=True)
+    rejectedBy = Column("rejected_by", String, nullable=True)
+    rejectionReasons = Column("rejection_reasons", JSON, nullable=True)  # Array of RejectionReason
+    rejectionNotes = Column("rejection_notes", String, nullable=True)
+    rejectionHistory = Column("rejection_history", JSON, nullable=True, default=list)  # Array of rejection records
 
     # Recollection
-    recollectionRequired = Column(Boolean, default=False)
-    recollectionSampleId = Column(String, nullable=True)
+    recollectionRequired = Column("recollection_required", Boolean, default=False)
+    recollectionSampleId = Column("recollection_sample_id", String, nullable=True)
     
     # New fields for recollection tracking
-    isRecollection = Column(Boolean, default=False)
-    originalSampleId = Column(String, nullable=True)  # Pointer to the sample this replaced
-    recollectionReason = Column(String, nullable=True)
-    recollectionAttempt = Column(Integer, default=1)  # 1 = original/first collection, 2 = 1st recollection, etc.
+    isRecollection = Column("is_recollection", Boolean, default=False)
+    originalSampleId = Column("original_sample_id", String, nullable=True)  # Pointer to the sample this replaced
+    recollectionReason = Column("recollection_reason", String, nullable=True)
+    recollectionAttempt = Column("recollection_attempt", Integer, default=1)  # 1 = original/first collection, 2 = 1st recollection, etc.
 
     # Metadata
-    createdAt = Column(DateTime(timezone=True), server_default=func.now())
-    createdBy = Column(String, nullable=False)
-    updatedAt = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
-    updatedBy = Column(String, nullable=False)
+    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
+    createdBy = Column("created_by", String, nullable=False)
+    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    updatedBy = Column("updated_by", String, nullable=False)

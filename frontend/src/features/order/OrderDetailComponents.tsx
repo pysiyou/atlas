@@ -64,7 +64,7 @@ export const OrderMetadata: React.FC<OrderMetadataProps> = ({
 }) => {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      <Avatar name={patientName} size="sm" />
+      <Avatar primaryText={patientName} size="sm" />
       <div>
         <div className="font-medium text-gray-900">{patientName}</div>
         <div className="text-xs text-gray-500">

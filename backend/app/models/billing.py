@@ -11,10 +11,10 @@ from app.schemas.enums import PaymentStatus, PaymentMethod, ClaimStatus
 class Invoice(Base):
     __tablename__ = "invoices"
 
-    invoiceId = Column(String, primary_key=True, index=True)  # INV-YYYYMMDD-XXX
-    orderId = Column(String, ForeignKey("orders.orderId"), nullable=False, index=True)
-    patientId = Column(String, ForeignKey("patients.id"), nullable=False, index=True)
-    patientName = Column(String, nullable=False)
+    invoiceId = Column("invoice_id", String, primary_key=True, index=True)  # INV-YYYYMMDD-XXX
+    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, index=True)
+    patientId = Column("patient_id", String, ForeignKey("patients.id"), nullable=False, index=True)
+    patientName = Column("patient_name", String, nullable=False)
 
     # Items (JSON array)
     items = Column(JSON, nullable=False)  # Array of {testCode, testName, quantity, unitPrice, totalPrice}
@@ -26,28 +26,28 @@ class Invoice(Base):
     total = Column(Float, nullable=False)
 
     # Payment tracking
-    paymentStatus = Column(Enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
-    amountPaid = Column(Float, default=0.0)
-    amountDue = Column(Float, nullable=False)
+    paymentStatus = Column("payment_status", Enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
+    amountPaid = Column("amount_paid", Float, default=0.0)
+    amountDue = Column("amount_due", Float, nullable=False)
 
     # Dates
-    createdAt = Column(DateTime(timezone=True), server_default=func.now())
-    dueDate = Column(DateTime(timezone=True), nullable=True)
+    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
+    dueDate = Column("due_date", DateTime(timezone=True), nullable=True)
 
 
 class Payment(Base):
     __tablename__ = "payments"
 
-    paymentId = Column(String, primary_key=True, index=True)  # PAY-YYYYMMDD-XXX
-    orderId = Column(String, ForeignKey("orders.orderId"), nullable=False, index=True)
-    invoiceId = Column(String, ForeignKey("invoices.invoiceId"), nullable=True, index=True)
+    paymentId = Column("payment_id", String, primary_key=True, index=True)  # PAY-YYYYMMDD-XXX
+    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, index=True)
+    invoiceId = Column("invoice_id", String, ForeignKey("invoices.invoice_id"), nullable=True, index=True)
 
     amount = Column(Float, nullable=False)
-    paymentMethod = Column(Enum(PaymentMethod), nullable=False)
+    paymentMethod = Column("payment_method", Enum(PaymentMethod), nullable=False)
 
-    paidAt = Column(DateTime(timezone=True), nullable=False)
-    receivedBy = Column(String, nullable=False)
-    receiptGenerated = Column(Boolean, default=False)
+    paidAt = Column("paid_at", DateTime(timezone=True), nullable=False)
+    receivedBy = Column("received_by", String, nullable=False)
+    receiptGenerated = Column("receipt_generated", Boolean, default=False)
     notes = Column(String, nullable=True)
 
     # Relationship for eager loading
@@ -57,21 +57,21 @@ class Payment(Base):
 class InsuranceClaim(Base):
     __tablename__ = "insurance_claims"
 
-    claimId = Column(String, primary_key=True, index=True)  # CLM-YYYYMMDD-XXX
-    orderId = Column(String, ForeignKey("orders.orderId"), nullable=False, index=True)
-    invoiceId = Column(String, ForeignKey("invoices.invoiceId"), nullable=False, index=True)
-    patientId = Column(String, ForeignKey("patients.id"), nullable=False, index=True)
+    claimId = Column("claim_id", String, primary_key=True, index=True)  # CLM-YYYYMMDD-XXX
+    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, index=True)
+    invoiceId = Column("invoice_id", String, ForeignKey("invoices.invoice_id"), nullable=False, index=True)
+    patientId = Column("patient_id", String, ForeignKey("patients.id"), nullable=False, index=True)
 
-    insuranceProvider = Column(String, nullable=False)
-    insuranceNumber = Column(String, nullable=False)
+    insuranceProvider = Column("insurance_provider", String, nullable=False)
+    insuranceNumber = Column("insurance_number", String, nullable=False)
 
-    claimAmount = Column(Float, nullable=False)
-    approvedAmount = Column(Float, nullable=True)
+    claimAmount = Column("claim_amount", Float, nullable=False)
+    approvedAmount = Column("approved_amount", Float, nullable=True)
 
-    claimStatus = Column(Enum(ClaimStatus), nullable=False, default=ClaimStatus.SUBMITTED)
+    claimStatus = Column("claim_status", Enum(ClaimStatus), nullable=False, default=ClaimStatus.SUBMITTED)
 
-    submittedDate = Column(DateTime(timezone=True), nullable=False)
-    processedDate = Column(DateTime(timezone=True), nullable=True)
+    submittedDate = Column("submitted_date", DateTime(timezone=True), nullable=False)
+    processedDate = Column("processed_date", DateTime(timezone=True), nullable=True)
 
-    denialReason = Column(String, nullable=True)
+    denialReason = Column("denial_reason", String, nullable=True)
     notes = Column(String, nullable=True)

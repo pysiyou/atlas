@@ -51,9 +51,9 @@ def migrate_order_status():
             # First, check current status distribution
             print("\nCurrent order status distribution:")
             result = conn.execute(text("""
-                SELECT "overallStatus", COUNT(*) as count
+                SELECT overall_status, COUNT(*) as count
                 FROM orders
-                GROUP BY "overallStatus"
+                GROUP BY overall_status
                 ORDER BY count DESC
             """))
 
@@ -74,7 +74,7 @@ def migrate_order_status():
                     continue  # Skip if status is unchanged
 
                 result = conn.execute(
-                    text('UPDATE orders SET "overallStatus" = :new_status WHERE "overallStatus" = :old_status'),
+                    text('UPDATE orders SET overall_status = :new_status WHERE overall_status = :old_status'),
                     {"old_status": old_status, "new_status": new_status}
                 )
 
@@ -87,9 +87,9 @@ def migrate_order_status():
             # Verify final distribution
             print("\nFinal order status distribution:")
             result = conn.execute(text("""
-                SELECT "overallStatus", COUNT(*) as count
+                SELECT overall_status, COUNT(*) as count
                 FROM orders
-                GROUP BY "overallStatus"
+                GROUP BY overall_status
                 ORDER BY count DESC
             """))
 

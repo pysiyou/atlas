@@ -68,12 +68,29 @@ class PatientBase(BaseModel):
     @field_validator('email')
     @classmethod
     def validate_email(cls, v: str | None) -> str | None:
-        """Validate email format if provided."""
+        """Validate email format if provided. Allows Unicode characters in local part."""
         if v is None:
             return v
-        # Basic email validation
-        if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', v):
-            raise ValueError('Invalid email format')
+        # Email validation that allows Unicode characters in local part
+        # RFC 5322 allows Unicode characters in email addresses
+        # Pattern: local-part@domain where local-part can contain Unicode, domain is ASCII
+        # Using \S (non-whitespace) for local part to allow Unicode, but ensuring @ and domain structure
+        if '@' not in v:
+            raise ValueError('Invalid email format: missing @')
+        parts = v.split('@')
+        if len(parts) != 2:
+            raise ValueError('Invalid email format: multiple @ symbols')
+        local_part, domain = parts
+        if not local_part or len(local_part) > 64:  # RFC 5321 limit for local part
+            raise ValueError('Invalid email format: local part invalid')
+        if not domain or len(domain) > 255:  # RFC 5321 limit for domain
+            raise ValueError('Invalid email format: domain invalid')
+        # Validate domain format (ASCII only for domain)
+        if not re.match(r'^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', domain):
+            raise ValueError('Invalid email format: domain format invalid')
+        # Additional check: ensure total length is within RFC 5321 limit
+        if len(v) > 254:
+            raise ValueError('Email address too long')
         return v
 
 

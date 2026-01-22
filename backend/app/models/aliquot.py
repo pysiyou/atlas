@@ -10,41 +10,41 @@ from app.schemas.enums import AliquotStatus, ContainerType
 class Aliquot(Base):
     __tablename__ = "aliquots"
 
-    aliquotId = Column(String, primary_key=True, index=True)  # ALQ-YYYYMMDD-XXX
-    parentSampleId = Column(String, ForeignKey("samples.sampleId"), nullable=False, index=True)
-    orderId = Column(String, ForeignKey("orders.orderId"), nullable=False, index=True)
-    patientId = Column(String, ForeignKey("patients.id"), nullable=False)
+    aliquotId = Column("aliquot_id", String, primary_key=True, index=True)  # ALQ-YYYYMMDD-XXX
+    parentSampleId = Column("parent_sample_id", String, ForeignKey("samples.sample_id"), nullable=False, index=True)
+    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, index=True)
+    patientId = Column("patient_id", String, ForeignKey("patients.id"), nullable=False)
 
     # Aliquot details
-    aliquotNumber = Column(Float, nullable=False)  # 1, 2, 3, etc.
+    aliquotNumber = Column("aliquot_number", Float, nullable=False)  # 1, 2, 3, etc.
     volume = Column(Float, nullable=False)  # mL in this aliquot
-    remainingVolume = Column(Float, nullable=False)  # mL remaining after testing
+    remainingVolume = Column("remaining_volume", Float, nullable=False)  # mL remaining after testing
 
     # Purpose
-    linkedTestCodes = Column(JSON, nullable=False)  # Array of test codes
+    linkedTestCodes = Column("linked_test_codes", JSON, nullable=False)  # Array of test codes
     purpose = Column(String, nullable=True)  # e.g., "Sendout tests", "Chemistry panel"
 
     # Container
-    containerType = Column(Enum(ContainerType), nullable=False)
+    containerType = Column("container_type", Enum(ContainerType), nullable=False)
     barcode = Column(String, nullable=False, unique=True, index=True)
 
     # Status and location
     status = Column(Enum(AliquotStatus), nullable=False, default=AliquotStatus.AVAILABLE)
-    currentLocation = Column(String, nullable=False)
+    currentLocation = Column("current_location", String, nullable=False)
 
     # Usage tracking
-    usedForTests = Column(JSON, nullable=True)  # Array of test codes that have consumed this
-    consumedAt = Column(DateTime(timezone=True), nullable=True)
-    consumedBy = Column(String, nullable=True)
+    usedForTests = Column("used_for_tests", JSON, nullable=True)  # Array of test codes that have consumed this
+    consumedAt = Column("consumed_at", DateTime(timezone=True), nullable=True)
+    consumedBy = Column("consumed_by", String, nullable=True)
 
     # Storage
-    storageLocation = Column(String, nullable=True)
-    storageConditions = Column(String, nullable=True)
+    storageLocation = Column("storage_location", String, nullable=True)
+    storageConditions = Column("storage_conditions", String, nullable=True)
 
     # Disposal
-    disposedAt = Column(DateTime(timezone=True), nullable=True)
-    disposedBy = Column(String, nullable=True)
+    disposedAt = Column("disposed_at", DateTime(timezone=True), nullable=True)
+    disposedBy = Column("disposed_by", String, nullable=True)
 
     # Metadata
-    createdAt = Column(DateTime(timezone=True), server_default=func.now())
-    createdBy = Column(String, nullable=False)
+    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
+    createdBy = Column("created_by", String, nullable=False)
