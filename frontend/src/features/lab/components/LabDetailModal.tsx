@@ -139,35 +139,6 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 };
 
 /**
- * DetailSection - Wrapper for content sections in detail modals
- * 
- * @deprecated Use SectionContainer directly from '@/shared/ui' instead.
- * This wrapper is kept for backward compatibility with existing components.
- * 
- * @example
- * // Instead of:
- * <DetailSection title="Section">...</DetailSection>
- * 
- * // Use:
- * <SectionContainer title="Section" spacing="normal">...</SectionContainer>
- */
-interface DetailSectionProps {
-  title: string;
-  headerRight?: ReactNode;
-  children: ReactNode;
-}
-
-export const DetailSection: React.FC<DetailSectionProps> = ({
-  title,
-  headerRight,
-  children,
-}) => (
-  <SectionContainer title={title} headerRight={headerRight} spacing="normal">
-    {children}
-  </SectionContainer>
-);
-
-/**
  * Configuration for a section in the DetailGrid
  */
 export interface DetailGridSectionConfig {
@@ -183,7 +154,7 @@ export interface DetailGridSectionConfig {
  * DetailGrid - Two-column grid for detail sections
  * 
  * Can be used in two ways:
- * 1. With children (legacy): Pass DetailSection components as children
+ * 1. With children (legacy): Pass SectionContainer components as children
  * 2. With sections config (new): Pass array of section configurations
  * 
  * @example
@@ -209,8 +180,8 @@ export interface DetailGridSectionConfig {
  * @example
  * // Using children (legacy)
  * <DetailGrid>
- *   <DetailSection title="Section 1">...</DetailSection>
- *   <DetailSection title="Section 2">...</DetailSection>
+ *   <SectionContainer title="Section 1">...</SectionContainer>
+ *   <SectionContainer title="Section 2">...</SectionContainer>
  * </DetailGrid>
  */
 interface DetailGridProps {

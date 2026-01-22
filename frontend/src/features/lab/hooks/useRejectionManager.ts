@@ -10,6 +10,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { resultAPI } from '@/services/api/results';
+import { logger } from '@/utils/logger';
 import type {
   RejectionOptionsResponse,
   RejectionResult,
@@ -76,7 +77,10 @@ export function useRejectionManager({
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch rejection options';
       setError(message);
-      console.error('Failed to fetch rejection options:', err);
+      logger.error('Failed to fetch rejection options', err instanceof Error ? err : undefined, {
+        orderId,
+        testCode,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -104,7 +108,12 @@ export function useRejectionManager({
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to reject results';
         setError(message);
-        console.error('Failed to reject results:', err);
+        logger.error('Failed to reject results', err instanceof Error ? err : undefined, {
+          orderId,
+          testCode,
+          rejectionType,
+          reason,
+        });
         return null;
       } finally {
         setIsRejecting(false);

@@ -88,8 +88,7 @@ interface TableCoreProps<T> {
  * @param getRowKey - Row key extractor
  * @param ...rest - Additional table props
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function TableCore<T = any>({
+export function TableCore<T = Record<string, unknown>>({
   data,
   columns,
   pagination = true,

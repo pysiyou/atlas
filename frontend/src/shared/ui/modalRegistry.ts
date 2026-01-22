@@ -38,8 +38,7 @@ export interface ModalHelpers {
 
 // Type-safe registry - using generic ModalRegistryEntry to allow various modal prop types
 type ModalRegistry = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in ModalType]?: ModalRegistryEntry<any>;
+  [K in ModalType]?: ModalRegistryEntry<BaseModalProps>;
 };
 
 const registry: ModalRegistry = {};
@@ -56,8 +55,7 @@ export function registerModal<P extends BaseModalProps>(
     modalProps: Record<string, unknown>,
     baseProps: BaseModalProps,
     helpers: ModalHelpers
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ) => any
+  ) => P | null
 ): void {
   registry[type] = { component, getProps };
 }

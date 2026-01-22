@@ -10,7 +10,7 @@ import { Popover, Button, Icon } from '@/shared/ui';
 import { PopoverForm } from '../components/PopoverForm';
 import type { ContainerType } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS } from '@/types';
-import type { SampleRequirement } from '../../../utils/sampleHelpers';
+import type { SampleRequirement } from '@/utils/sampleHelpers';
 
 interface CollectionPopoverContentProps {
   requirement: SampleRequirement;

@@ -115,3 +115,28 @@ export function getInitials(name: string | undefined | null): string {
   
   return (firstInitial + lastInitial).toUpperCase();
 }
+
+/**
+ * Format turnaround time for display
+ * Converts hours to a human-readable format (hours, days, or weeks)
+ * @param hours - Number of hours
+ * @returns Formatted string (e.g., "24h", "3 days", "2 weeks")
+ * @example
+ * formatTurnaroundTime(12) // "12h"
+ * formatTurnaroundTime(24) // "1 day"
+ * formatTurnaroundTime(72) // "3 days"
+ * formatTurnaroundTime(336) // "2 weeks"
+ */
+export function formatTurnaroundTime(hours: number): string {
+  if (hours < 24) {
+    return `${hours}h`;
+  } else if (hours === 24) {
+    return '1 day';
+  } else if (hours < 168) {
+    const days = Math.round(hours / 24);
+    return `${days} day${days > 1 ? 's' : ''}`;
+  } else {
+    const weeks = Math.round(hours / 168);
+    return `${weeks} week${weeks > 1 ? 's' : ''}`;
+  }
+}

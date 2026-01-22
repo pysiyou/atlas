@@ -19,8 +19,7 @@ interface UseTableSortResult<T> {
  * Hook to manage table sorting
  * Supports both controlled and uncontrolled modes
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useTableSort = <T = any>({
+export const useTableSort = <T = Record<string, unknown>>({
   data,
   columns,
   defaultSort,
@@ -84,10 +83,8 @@ export const useTableSort = <T = any>({
       }
 
       // Default comparison
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const aValue = (a as any)[sort.key];
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const bValue = (b as any)[sort.key];
+      const aValue = (a as Record<string, unknown>)[sort.key];
+      const bValue = (b as Record<string, unknown>)[sort.key];
 
       // Handle null/undefined
       if (aValue === bValue) return 0;

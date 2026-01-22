@@ -11,12 +11,14 @@ import { LoadingState } from '../LoadingState';
 import { ErrorAlert } from '../ErrorAlert';
 import type { TableViewConfig } from '@/shared/ui/Table';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TableDataItem = Record<string, any>;
+// TableDataItem accepts any object-like type (interfaces, types, classes)
+// Using a union type to accept both Record types and regular object types
+type TableDataItem = Record<string, unknown> | object;
 
 export type ListViewMode = 'table' | 'grid' | 'list';
 
-export interface ListViewProps<T extends TableDataItem> {
+// Generic constraint accepts any object type without requiring index signatures
+export interface ListViewProps<T extends TableDataItem = TableDataItem> {
   // Data
   /** Items to display */
   items: T[];
@@ -107,7 +109,7 @@ const GRID_COLUMN_CLASSES = {
  * />
  * ```
  */
-export function ListView<T extends TableDataItem>({
+export function ListView<T extends TableDataItem = TableDataItem>({
   items,
   loading = false,
   error = null,

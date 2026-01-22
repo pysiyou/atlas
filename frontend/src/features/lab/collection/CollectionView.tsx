@@ -9,7 +9,7 @@ import { useOrders, useTests, useAuth, useSamples, usePatients } from '@/hooks';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import type { ContainerType, ContainerTopColor, SampleStatus, Patient, Test } from '@/types';
-import { calculateRequiredSamples, getCollectionRequirements } from '../../../utils/sampleHelpers';
+import { calculateRequiredSamples, getCollectionRequirements } from '@/utils/sampleHelpers';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { CollectionCard } from './CollectionCard';
 import { MultiSelectFilter, type FilterOption } from '@/shared/ui';

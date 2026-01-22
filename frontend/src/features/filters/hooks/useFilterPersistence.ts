@@ -5,6 +5,7 @@
 
 import { useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { logger } from '@/utils/logger';
 import type { FilterValues } from '../types';
 
 /**
@@ -179,7 +180,7 @@ export function useFilterPersistence(
       const serialized = JSON.stringify(filters);
       localStorage.setItem(storageKey, serialized);
     } catch (error) {
-      console.warn('Failed to persist filters to localStorage:', error);
+      logger.warn('Failed to persist filters to localStorage', { error, storageKey });
     }
   }, [filters, useLocalStorage, storageKey]);
 
@@ -213,7 +214,7 @@ export function useFilterPersistence(
         onRestore(restored);
       }
     } catch (error) {
-      console.warn('Failed to restore filters from localStorage:', error);
+      logger.warn('Failed to restore filters from localStorage', { error, storageKey });
     }
   }, []); // Only run on mount
 }

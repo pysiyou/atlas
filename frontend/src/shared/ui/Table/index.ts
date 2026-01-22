@@ -12,7 +12,6 @@ export type {
   ColumnSizePreset,
   ColumnAlign,
   StickyPosition,
-  ResponsiveVisibility,
   SortConfig,
   PaginationConfig,
   TableProps,

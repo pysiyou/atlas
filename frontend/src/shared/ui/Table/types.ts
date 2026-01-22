@@ -6,19 +6,6 @@ import type { ReactNode } from 'react';
 export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /**
- * Responsive visibility configuration
- * @deprecated No longer used - visibility is handled via explicit viewConfig
- */
-export interface ResponsiveVisibility {
-  xs?: boolean;   // < 640px (mobile)
-  sm?: boolean;   // >= 640px (large mobile)
-  md?: boolean;   // >= 768px (tablet)
-  lg?: boolean;   // >= 1024px (desktop)
-  xl?: boolean;   // >= 1280px (large desktop)
-  '2xl'?: boolean; // >= 1536px (extra large)
-}
-
-/**
  * Column width configuration
  * Supports fixed, flexible, and percentage-based widths
  */
@@ -218,18 +205,6 @@ export interface TableCellProps {
   children: ReactNode;
   variant: TableVariant;
   isHeader?: boolean;
-}
-
-/**
- * Props for mobile card view
- * @deprecated No longer used - replaced by custom CardComponent in viewConfig
- */
-export interface TableCardViewProps<T> {
-  data: T[];
-  columns: ColumnConfig<T>[];
-  priorityFields: number;
-  onRowClick?: (item: T, index: number) => void;
-  getRowKey?: (item: T, index: number) => string | number;
 }
 
 /**

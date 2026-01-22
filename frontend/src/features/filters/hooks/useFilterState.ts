@@ -53,7 +53,7 @@ export interface UseFilterStateReturn {
  *   isActive,
  * } = useFilterState({
  *   initialFilters: { searchQuery: '', status: [] },
- *   onChange: (filters) => console.log('Filters changed:', filters),
+ *   onChange: (filters) => logger.debug('Filters changed', { filters }),
  * });
  * ```
  */

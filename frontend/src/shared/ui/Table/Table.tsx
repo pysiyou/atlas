@@ -24,8 +24,7 @@ import { DEFAULT_LOADING_ROWS } from './constants';
  * - Medium table (lg): mediumColumns
  * - Full table (xl+): fullColumns
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function Table<T = any>({
+export function Table<T = Record<string, unknown>>({
   data,
   viewConfig,
   pagination = true,

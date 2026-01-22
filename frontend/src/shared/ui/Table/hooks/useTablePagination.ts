@@ -26,8 +26,7 @@ interface UseTablePaginationResult<T> {
  * Hook to manage table pagination
  * Supports both internal and external (server-side) pagination
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useTablePagination = <T = any>({
+export const useTablePagination = <T = Record<string, unknown>>({
   data,
   externalPagination,
   enabled = true,

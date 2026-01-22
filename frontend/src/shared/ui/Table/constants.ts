@@ -1,4 +1,4 @@
-import type { ResponsiveVisibility, ColumnWidth, TableVariant } from './types';
+import type { ColumnWidth, TableVariant } from './types';
 
 /**
  * Tailwind breakpoint values in pixels

@@ -8,26 +8,9 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
-import { formatCurrency } from '@/utils';
+import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { Test } from '@/types';
 import { CatalogCard } from './CatalogCard';
-
-/**
- * Format turnaround time for display
- */
-const formatTurnaroundTime = (hours: number): string => {
-  if (hours < 24) {
-    return `${hours}h`;
-  } else if (hours === 24) {
-    return '1 day';
-  } else if (hours < 168) {
-    const days = Math.round(hours / 24);
-    return `${days} day${days > 1 ? 's' : ''}`;
-  } else {
-    const weeks = Math.round(hours / 168);
-    return `${weeks} week${weeks > 1 ? 's' : ''}`;
-  }
-};
 
 /**
  * Create catalog table configuration with full, compact, and card views
