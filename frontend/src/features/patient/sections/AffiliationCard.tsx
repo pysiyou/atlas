@@ -46,12 +46,11 @@ export const AffiliationCard: React.FC<AffiliationCardProps> = ({
 
           {/* Header */}
           <div className="flex justify-between items-start relative z-10">
-            <div className="flex items-center gap-2">
-              <Icon name="shield" className="w-5 h-5 text-white/90" />
+            <div className="flex items-center">
               <h3 className="text-sm font-semibold tracking-wide text-white/90 uppercase">Lab Affiliation</h3>
             </div>
             
-            <div className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase backdrop-blur-sm border ${isActive ? 'bg-white/20 border-white/30 text-white' : 'bg-red-500/20 border-red-400/30 text-red-100'}`}>
+            <div className={`px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase backdrop-blur-sm border ${isActive ? 'bg-white/20 border-white/30 text-white' : 'bg-red-500/20 border-red-400/30 text-red-100'}`}>
               {isActive ? 'Active' : 'Expired'}
             </div>
           </div>
