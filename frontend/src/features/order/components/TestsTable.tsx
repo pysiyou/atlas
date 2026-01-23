@@ -7,11 +7,11 @@ import React from 'react';
 import { Badge, EmptyState } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import { getTestName, getTestSampleType, getTestCategory } from '@/utils/typeHelpers';
-import type { OrderTest } from '@/types';
+import type { OrderTest, Test } from '@/types';
 
 export interface TestsTableProps {
   tests: OrderTest[];
-  testCatalog: any[];
+  testCatalog: Test[];
   supersededCount?: number;
   variant?: 'simple' | 'detailed';
 }

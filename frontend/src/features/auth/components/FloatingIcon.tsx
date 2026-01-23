@@ -3,6 +3,8 @@
  * Renders an animated floating SVG icon for background decoration
  */
 
+/* eslint-disable react-refresh/only-export-components */
+
 import React from 'react';
 
 export interface FloatingIconConfig {

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Icon } from './Icon';
-import type { IconName } from './Icon';
+import { Icon, type IconName } from './Icon';
 
 interface EmptyStateProps {
   /** Name of the icon to display */

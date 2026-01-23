@@ -4,9 +4,8 @@
  */
 
 import React from 'react';
-import { useAuth } from '@/hooks';
+import { useAuth, usePatients } from '@/hooks';
 import { Card, SectionContainer, Badge, Icon } from '@/shared/ui';
-import { usePatients } from '@/hooks';
 import { useOrders } from '@/features/order/OrderContext';
 import { useAppointments } from '@/features/appointment/AppointmentsContext';
 import { useBilling } from '@/features/billing/BillingContext';

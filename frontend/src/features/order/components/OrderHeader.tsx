@@ -10,6 +10,7 @@ import type { Order } from '@/types';
 
 export interface OrderHeaderProps {
   order: Order;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   invoice: any | null;
   isLarge: boolean;
   onViewInvoice: () => void;

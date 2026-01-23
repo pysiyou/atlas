@@ -151,6 +151,7 @@ const SelectParameterInput: React.FC<{
 };
 
 /** Render input based on parameter type */
+// eslint-disable-next-line max-depth
 const ParameterInput: React.FC<{
   param: TestParameter;
   value: string;

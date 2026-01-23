@@ -1,5 +1,4 @@
-import { Icon } from '../Icon';
-import type { IconName } from '../Icon';
+import { Icon, type IconName } from '../Icon';
 
 interface TableEmptyProps {
   message?: React.ReactNode;

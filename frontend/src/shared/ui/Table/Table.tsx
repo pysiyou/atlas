@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
-import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import type { Breakpoint } from '@/hooks/useBreakpoint';
+import { useBreakpoint, isBreakpointAtMost, type Breakpoint } from '@/hooks/useBreakpoint';
 import { Pagination } from '../Pagination';
 import { CardGrid } from './CardGrid';
 import { TableCore } from './TableCore';

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { SectionContainer, IconButton } from '@/shared/ui';
-import type { Order, OrderTest, Patient } from '@/types';
+import type { Order, OrderTest, Patient, Test } from '@/types';
 import { OrderInfoSection } from './OrderInfoSection';
 import { PatientInfoSection } from './PatientInfoSection';
 import { TestsTable } from './TestsTable';
@@ -16,8 +16,9 @@ import { OrderTimeline } from '../OrderTimeline';
 interface LayoutProps {
   order: Order;
   patient: Patient | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   invoice: any | null;
-  testCatalog: any[];
+  testCatalog: Test[];
   activeTests: OrderTest[];
   supersededCount: number;
   onViewPatient: () => void;

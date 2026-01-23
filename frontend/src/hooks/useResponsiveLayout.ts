@@ -1,5 +1,4 @@
-import { useBreakpoint, isBreakpointAtLeast, isBreakpointAtMost } from './useBreakpoint';
-import type { Breakpoint } from './useBreakpoint';
+import { useBreakpoint, isBreakpointAtLeast, isBreakpointAtMost, type Breakpoint } from './useBreakpoint';
 
 export interface ResponsiveLayoutConfig {
   breakpoint: Breakpoint;

@@ -8,8 +8,7 @@ import { usePatients } from '@/hooks';
 import { useOrders } from '@/features/order/OrderContext';
 import { useTests } from '@/features/test/TestsContext';
 import { useBilling } from '@/features/billing/BillingContext';
-import { Card, SectionContainer, Table, Icon } from '@/shared/ui';
-import type { ColumnConfig } from '@/shared/ui';
+import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 

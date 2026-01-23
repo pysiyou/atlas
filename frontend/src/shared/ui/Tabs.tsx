@@ -134,7 +134,7 @@ export const TabsList: React.FC<TabsListProps> = ({
       window.removeEventListener('resize', handleResize);
       ro.disconnect();
     };
-  }, [updateIndicator, tabs.length]);
+  }, [updateIndicator, tabs.length, headerRef]);
 
   // Handle scroll on container
   useEffect(() => {

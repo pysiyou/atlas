@@ -5,8 +5,7 @@
  * Allows users to add tags by typing and pressing Enter, and remove tags by clicking the X button.
  */
 
-import React, { useState } from 'react';
-import type { KeyboardEvent, ChangeEvent } from 'react';
+import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { Icon } from './Icon';
 import { Badge } from './Badge';
 import { cn } from '@/utils';

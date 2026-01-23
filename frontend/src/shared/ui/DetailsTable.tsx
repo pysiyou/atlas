@@ -7,11 +7,10 @@
  */
 
 import React from 'react';
-import { filterDetailRows } from './detailsTableUtils';
-import type { DetailRow } from './detailsTableUtils';
+import { filterDetailRows, type DetailRow } from './detailsTableUtils';
 
 /** Re-export for consumers */
-export type { DetailRow } from './detailsTableUtils';
+export type { DetailRow };
 
 /**
  * Props for DetailsTable component

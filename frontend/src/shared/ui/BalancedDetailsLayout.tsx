@@ -8,8 +8,7 @@
  */
 
 import React from 'react';
-import { DetailsTable } from './DetailsTable';
-import type { DetailRow } from './DetailsTable';
+import { DetailsTable, type DetailRow } from './DetailsTable';
 import { filterDetailRows } from './detailsTableUtils';
 
 /**

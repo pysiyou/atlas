@@ -63,7 +63,8 @@ export default defineConfig([
       'object-shorthand': 'error',
       'prefer-template': 'error',
       'prefer-arrow-callback': 'error',
-      'no-duplicate-imports': 'error',
+      // Allow separate type and value imports from same source
+      'no-duplicate-imports': 'off',
     },
   },
 ])
