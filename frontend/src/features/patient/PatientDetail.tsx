@@ -52,31 +52,23 @@ export const PatientDetail: React.FC = () => {
       <div className="flex items-center justify-between mb-4 shrink-0 flex-wrap gap-3">
         <div className="flex items-center gap-2">
           <Avatar primaryText={patient.fullName} size="sm" className="" />
-
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-sm font-medium text-gray-900">
-                {patient.fullName}
-              </h1>
-              {isAffiliationActive(patient.affiliation) && (
-                <AffiliationPopover
-                  affiliation={patient.affiliation}
-                  trigger={
-                    <button
-                      className="focus:outline-none focus:ring-2 focus:ring-blue-500 rounded transition-all"
-                      aria-label="View affiliation details"
-                      title="View affiliation details"
-                    >
-                      <Icon
-                        name="verified"
-                        className="w-5 h-5 text-blue-500 hover:text-blue-600 transition-colors cursor-pointer"
-                      />
-                    </button>
-                  }
-                />
-              )}
-            </div>
-          </div>
+          {isAffiliationActive(patient.affiliation) && (
+            <AffiliationPopover
+              affiliation={patient.affiliation}
+              trigger={
+                <button
+                  className="focus:outline-none focus:ring-2 focus:ring-blue-500 rounded transition-all flex items-center"
+                  aria-label="View affiliation details"
+                  title="View affiliation details"
+                >
+                  <Icon
+                    name="verified"
+                    className="w-5 h-5 text-blue-500 hover:text-blue-600 transition-colors cursor-pointer"
+                  />
+                </button>
+              }
+            />
+          )}
         </div>
 
         {/* Responsive Action Buttons */}
