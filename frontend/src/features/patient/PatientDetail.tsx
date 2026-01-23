@@ -6,16 +6,16 @@ import { Button, Avatar, Badge, Icon, SectionContainer, IconButton, EmptyState }
 // import { MedicalHistoryCard } from './MedicalHistory';
 // import { OrderHistoryCard } from './OrderHistory';
 // import { PatientInfoCard } from './PatientCard';
-import { AffiliationCard } from './PatientDetailSections';
+
 import { EditPatientModal } from './EditPatientModal';
+import { AffiliationInfo } from './PatientDetailSections';
 import { isAffiliationActive } from './usePatientForm';
-import { OrderCard, AffiliationModal } from './components';
+import { AffiliationPopover } from './AffiliationPopover';
 
 export const PatientDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
-  const [isAffiliationModalOpen, setIsAffiliationModalOpen] = React.useState(false);
   const patientsContext = usePatients();
   const ordersContext = useOrders();
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
@@ -38,7 +38,7 @@ export const PatientDetail: React.FC = () => {
   }
 
   return (
-    <div className="h-full flex flex-col p-6">
+    <div className="h-full flex flex-col p-6 transition-all duration-300">
       {/* Responsive Header */}
       <div className="flex items-center justify-between mb-4 shrink-0 flex-wrap gap-3">
         <div className="flex items-center gap-2">
@@ -54,17 +54,21 @@ export const PatientDetail: React.FC = () => {
                 {patient.fullName}
               </h1>
               {isAffiliationActive(patient.affiliation) && (
-                <button
-                  onClick={() => setIsAffiliationModalOpen(true)}
-                  className="focus:outline-none focus:ring-2 focus:ring-blue-500 rounded transition-all"
-                  aria-label="View affiliation details"
-                  title="View affiliation details"
-                >
-                  <Icon 
-                    name="verified" 
-                    className="w-5 h-5 text-blue-500 hover:text-blue-600 transition-colors cursor-pointer" 
-                  />
-                </button>
+                <AffiliationPopover
+                  affiliation={patient.affiliation}
+                  trigger={
+                    <button
+                      className="focus:outline-none focus:ring-2 focus:ring-blue-500 rounded transition-all"
+                      aria-label="View affiliation details"
+                      title="View affiliation details"
+                    >
+                      <Icon 
+                        name="verified" 
+                        className="w-5 h-5 text-blue-500 hover:text-blue-600 transition-colors cursor-pointer" 
+                      />
+                    </button>
+                  }
+                />
               )}
             </div>
             
@@ -113,10 +117,14 @@ export const PatientDetail: React.FC = () => {
       {/* Responsive Main Content */}
       {isSmall ? (
         // Small screens: Single column stack
-        <div className="flex-1 flex flex-col gap-4 overflow-y-auto pb-4">
+        <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6">
           {/* General Info */}
-          <SectionContainer title="General Info" className="flex-shrink-0" contentClassName="overflow-visible">
-            <div className="flex flex-col gap-4">
+          <SectionContainer 
+            title="General Info" 
+            className="flex-shrink-0 bg-white" 
+            contentClassName="overflow-visible"
+          >
+            <div className="flex flex-col gap-5">
               {/* Gender */}
               <div className="flex gap-3 items-start">
                 <Icon name="user-hands" className="w-4 h-4 text-gray-400 mt-0.5" />
@@ -180,8 +188,12 @@ export const PatientDetail: React.FC = () => {
           </SectionContainer>
 
           {/* Medical History */}
-          <SectionContainer title="Medical History" className="flex-shrink-0" contentClassName="overflow-visible">
-            <div className="flex flex-col gap-4">
+          <SectionContainer 
+            title="Medical History" 
+            className="flex-shrink-0 bg-white" 
+            contentClassName="overflow-visible"
+          >
+            <div className="flex flex-col gap-5">
               {/* Chronic Conditions */}
               <div className="flex gap-3">
                 <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
@@ -286,14 +298,39 @@ export const PatientDetail: React.FC = () => {
               }
 
               return (
-                <div className="flex flex-col gap-3 p-4">
-                  {patientOrders.map((order) => (
-                    <OrderCard
-                      key={order.orderId}
-                      order={order}
-                      onClick={() => navigate(`/orders/${order.orderId}`)}
-                    />
-                  ))}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="text-xs bg-gray-50 text-gray-500 uppercase border-b border-gray-200">
+                      <tr>
+                        <th className="px-3 py-2 font-medium">Order ID</th>
+                        <th className="px-3 py-2 font-medium">Date</th>
+                        <th className="px-3 py-2 font-medium">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {patientOrders.map((order) => (
+                        <tr 
+                          key={order.orderId} 
+                          className="hover:bg-sky-50 transition-colors cursor-pointer"
+                          onClick={() => navigate(`/orders/${order.orderId}`)}
+                        >
+                          <td className="px-3 py-3 text-sky-600 font-medium font-mono">
+                            {order.orderId}
+                          </td>
+                          <td className="px-3 py-3 text-gray-600">
+                            {new Date(order.orderDate).toLocaleDateString('en-GB', { 
+                              day: 'numeric', 
+                              month: 'short', 
+                              year: 'numeric' 
+                            })}
+                          </td>
+                          <td className="px-3 py-3">
+                            <Badge variant={order.overallStatus} size="sm" />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               );
             })()}
@@ -310,7 +347,7 @@ export const PatientDetail: React.FC = () => {
               if (reportableOrders.length === 0) {
                 return (
                   <EmptyState
-                    icon="checklist"
+                    icon="document-medicine"
                     title="No Reports Available"
                     description="There are no validated reports for this patient yet."
                   />
@@ -348,7 +385,11 @@ export const PatientDetail: React.FC = () => {
         // Medium screens: 2x2 grid with 4 equal parts
         <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-4 min-h-0 h-full">
           {/* Top Left: General Info */}
-          <SectionContainer title="General Info" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto">
+          <SectionContainer 
+            title="General Info" 
+            className="h-full flex flex-col min-h-0 bg-white" 
+            contentClassName="flex-1 min-h-0 overflow-y-auto"
+          >
             <div className="flex flex-col gap-4">
               {/* Gender */}
               <div className="flex gap-3 items-start">
@@ -413,7 +454,11 @@ export const PatientDetail: React.FC = () => {
           </SectionContainer>
 
           {/* Top Right: Medical History */}
-          <SectionContainer title="Medical History" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto">
+          <SectionContainer 
+            title="Medical History" 
+            className="h-full flex flex-col min-h-0 bg-white" 
+            contentClassName="flex-1 min-h-0 overflow-y-auto"
+          >
             <div className="flex flex-col gap-4">
               {/* Chronic Conditions */}
               <div className="flex gap-3">
@@ -493,7 +538,7 @@ export const PatientDetail: React.FC = () => {
           {/* Bottom Left: Related Orders */}
           <SectionContainer
             title="Related Orders"
-            className="h-full flex flex-col min-h-0"
+            className="h-full flex flex-col min-h-0 bg-white"
             contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
             headerClassName="!py-1.5"
             headerRight={
@@ -511,7 +556,7 @@ export const PatientDetail: React.FC = () => {
               if (patientOrders.length === 0) {
                 return (
                   <EmptyState
-                    icon="document-medicine"
+                    icon="document"
                     title="No Orders Found"
                     description="This patient has no orders yet."
                   />
@@ -519,21 +564,50 @@ export const PatientDetail: React.FC = () => {
               }
 
               return (
-                <div className="flex flex-col gap-3 p-4">
-                  {patientOrders.map((order) => (
-                    <OrderCard
-                      key={order.orderId}
-                      order={order}
-                      onClick={() => navigate(`/orders/${order.orderId}`)}
-                    />
-                  ))}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="text-xs bg-gray-50 text-gray-500 uppercase border-b border-gray-200">
+                      <tr>
+                        <th className="px-3 py-2 font-medium">Order ID</th>
+                        <th className="px-3 py-2 font-medium">Date</th>
+                        <th className="px-3 py-2 font-medium">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {patientOrders.map((order) => (
+                        <tr 
+                          key={order.orderId} 
+                          className="hover:bg-sky-50 transition-colors cursor-pointer"
+                          onClick={() => navigate(`/orders/${order.orderId}`)}
+                        >
+                          <td className="px-3 py-3 text-sky-600 font-medium font-mono">
+                            {order.orderId}
+                          </td>
+                          <td className="px-3 py-3 text-gray-600">
+                            {new Date(order.orderDate).toLocaleDateString('en-GB', { 
+                              day: 'numeric', 
+                              month: 'short', 
+                              year: 'numeric' 
+                            })}
+                          </td>
+                          <td className="px-3 py-3">
+                            <Badge variant={order.overallStatus} size="sm" />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               );
             })()}
           </SectionContainer>
 
           {/* Bottom Right: Reports */}
-          <SectionContainer title="Reports" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col">
+          <SectionContainer 
+            title="Reports" 
+            className="h-full flex flex-col min-h-0 bg-white" 
+            contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
+          >
             {(() => {
               const patientOrders = ordersContext.getOrdersByPatient(patient.id);
               const reportableOrders = patientOrders.filter(order => 
@@ -543,7 +617,7 @@ export const PatientDetail: React.FC = () => {
               if (reportableOrders.length === 0) {
                 return (
                   <EmptyState
-                    icon="checklist"
+                    icon="document-medicine"
                     title="No Reports Available"
                     description="There are no validated reports for this patient yet."
                   />
@@ -746,7 +820,7 @@ export const PatientDetail: React.FC = () => {
               if (patientOrders.length === 0) {
                 return (
                   <EmptyState
-                    icon="document-medicine"
+                    icon="document"
                     title="No Orders Found"
                     description="This patient has no orders yet."
                   />
@@ -818,16 +892,19 @@ export const PatientDetail: React.FC = () => {
         </div>
 
         {/* Right Column Group */}
-        <div className="col-span-1 grid grid-rows-[2fr_3fr] gap-4 min-h-0 h-full">
-          <SectionContainer title="Lab Affiliation" className="h-full flex flex-col min-h-0" contentClassName="flex-1 flex flex-col min-h-0">
-            <div className="flex-1 flex items-center justify-center">
-              <AffiliationCard
-                holderName={patient.fullName}
-                affiliation={patient.affiliation}
-              />
-            </div>
-          </SectionContainer>
-          <SectionContainer title="Reports" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col">
+        <div className="col-span-1 h-full min-h-0 flex flex-col gap-4">
+          {/* Lab Affiliation - Only show if exists */}
+          {patient.affiliation && (
+            <SectionContainer 
+              title="Lab Affiliation" 
+              className="shrink-0"
+              contentClassName="p-4"
+            >
+              <AffiliationInfo affiliation={patient.affiliation} />
+            </SectionContainer>
+          )}
+
+          <SectionContainer title="Reports" className="flex-1 min-h-0 flex flex-col" contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col">
             {/* Reports based on Validated Orders */}
             {(() => {
               const patientOrders = ordersContext.getOrdersByPatient(patient.id);
@@ -835,10 +912,11 @@ export const PatientDetail: React.FC = () => {
                 order.tests.some(test => test.status === 'validated')
               );
 
+
               if (reportableOrders.length === 0) {
                 return (
                   <EmptyState
-                    icon="checklist"
+                    icon="document-medicine"
                     title="No Reports Available"
                     description="There are no validated reports for this patient yet."
                   />
@@ -883,14 +961,6 @@ export const PatientDetail: React.FC = () => {
           mode="edit"
         />
       )}
-
-      {/* Affiliation Modal */}
-      <AffiliationModal
-        isOpen={isAffiliationModalOpen}
-        onClose={() => setIsAffiliationModalOpen(false)}
-        holderName={patient.fullName}
-        affiliation={patient.affiliation}
-      />
     </div>
   );
 };
