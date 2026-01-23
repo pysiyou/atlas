@@ -28,21 +28,21 @@ export interface AppointmentsContextType {
   /** Add a new appointment */
   addAppointment: (appointment: Appointment) => void;
   /** Update an existing appointment */
-  updateAppointment: (id: string, updates: Partial<Appointment>) => void;
+  updateAppointment: (id: number | string, updates: Partial<Appointment>) => void;
   /** Delete an appointment */
-  deleteAppointment: (id: string) => void;
+  deleteAppointment: (id: number | string) => void;
   /** Get an appointment by ID */
-  getAppointment: (id: string) => Appointment | undefined;
+  getAppointment: (id: number | string) => Appointment | undefined;
   /** Get appointments for a specific date */
   getAppointmentsByDate: (date: string) => Appointment[];
   /** Get appointments by patient ID */
-  getAppointmentsByPatient: (patientId: string) => Appointment[];
+  getAppointmentsByPatient: (patientId: number | string) => Appointment[];
   /** Get upcoming appointments */
   getUpcomingAppointments: () => Appointment[];
   /** Get today's appointments */
   getTodayAppointments: () => Appointment[];
   /** Check in an appointment */
-  checkInAppointment: (id: string) => void;
+  checkInAppointment: (id: number | string) => void;
   /** Clear any error state */
   clearError: () => void;
 }

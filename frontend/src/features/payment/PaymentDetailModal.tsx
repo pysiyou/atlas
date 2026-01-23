@@ -14,6 +14,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Modal, SectionContainer, Icon, Badge, Button, Alert } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import { createPayment, type PaymentCreate } from '@/services/api/payments';
 import { getEnabledPaymentMethods, getDefaultPaymentMethod, type PaymentMethod } from '@/types/billing';
 import type { IconName } from '@/shared/ui/Icon';
@@ -83,7 +84,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
 
       // Build payment request
       const paymentData: PaymentCreate = {
-        orderId: order.orderId,
+        orderId: order.orderId, // number is fine, API will handle conversion
         amount: order.totalPrice,
         paymentMethod,
         notes: notes.trim() || undefined,
@@ -110,7 +111,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Payment Details"
-      subtitle={`${order.orderId}`}
+      subtitle={displayId.order(order.orderId)}
       size="xl"
       disableClose={submitting}
       closeOnBackdropClick={!submitting}
@@ -130,7 +131,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Patient ID</span>
                 <span className="text-sm text-gray-600">
-                  {order.patientId}
+                  {displayId.patient(order.patientId)}
                 </span>
               </div>
               <div className="flex justify-between items-center">

@@ -17,8 +17,8 @@ export type AppointmentStatus =
 export type ReminderPreference = 'sms' | 'email' | 'none';
 
 export interface Appointment {
-  id: string; // APT-YYYYMMDD-XXX
-  patientId: string;
+  id: number; // Integer ID, displayed as APT{id}
+  patientId: number;
   patientName: string;
   type: AppointmentType;
   date: string;
@@ -28,7 +28,7 @@ export interface Appointment {
   notes?: string;
   status: AppointmentStatus;
   reminderPreference: ReminderPreference;
-  createdBy: string;
+  createdBy: number;
   createdAt: string;
   checkedInAt?: string;
 }

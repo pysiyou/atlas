@@ -42,8 +42,8 @@ class RejectionRecord(BaseModel):
 
 
 class SampleResponse(SampleBase):
-    sampleId: str
-    orderId: str
+    sampleId: int
+    orderId: int
     collectedAt: datetime | None = None
     collectedBy: str | None = None
     collectedVolume: float | None = None
@@ -59,11 +59,11 @@ class SampleResponse(SampleBase):
     rejectionNotes: str | None = None
     rejectionHistory: list[RejectionRecord] | None = None
     recollectionRequired: bool = False
-    recollectionSampleId: str | None = None
-    
+    recollectionSampleId: int | None = None
+
     # Recollection Tracking
     isRecollection: bool = False
-    originalSampleId: str | None = None
+    originalSampleId: int | None = None
     recollectionReason: str | None = None
     recollectionAttempt: int = 1
     createdAt: datetime

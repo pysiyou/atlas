@@ -12,7 +12,7 @@ export { USER_ROLE_VALUES, USER_ROLE_CONFIG, USER_ROLE_OPTIONS, ALL_ROLES } from
 import type { UserRole } from './enums/user-role';
 
 export interface User {
-  id: string;
+  id: number;
   username: string;
   password: string;
   name: string;
@@ -23,7 +23,7 @@ export interface User {
 }
 
 export interface AuthUser {
-  id: string;
+  id: number;
   username: string;
   name: string;
   role: UserRole;

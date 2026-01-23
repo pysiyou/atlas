@@ -64,7 +64,7 @@ export interface MedicalHistory {
 }
 
 export interface Patient {
-  id: string; // PAT-YYYYMMDD-XXX
+  id: number; // Integer ID, displayed as PAT{id}
   fullName: string;
   dateOfBirth: string;
   gender: Gender;
@@ -76,8 +76,8 @@ export interface Patient {
   medicalHistory: MedicalHistory;
   vitalSigns?: VitalSigns;
   registrationDate: string;
-  createdBy: string;
+  createdBy: number;
   createdAt: string;
   updatedAt: string;
-  updatedBy: string;
+  updatedBy: number;
 }

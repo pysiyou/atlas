@@ -6,6 +6,7 @@ import { useBilling } from '@/features/billing/BillingContext';
 import { useTests } from '@/features/test/TestsContext';
 import { Button, Avatar, Badge, Icon, SectionContainer, IconButton, EmptyState } from '@/shared/ui';
 import { formatCurrency, calculateAge } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import { getTestName, getTestSampleType, getTestCategory } from '@/utils/typeHelpers';
 import type { OrderTest } from '@/types';
 import { OrderCircularProgress } from './OrderCircularProgress';
@@ -57,7 +58,7 @@ export const OrderDetail: React.FC = () => {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-sm font-bold text-gray-900">
-                {order.orderId}
+                {displayId.order(order.orderId)}
               </h1>
               <Badge variant={order.priority} size="sm" />
               <Badge variant={order.overallStatus} size="sm" />
@@ -100,7 +101,7 @@ export const OrderDetail: React.FC = () => {
                 <Icon name="hashtag" className="w-4 h-4 text-gray-400 mt-0.5" />
                 <div>
                   <p className="text-xs text-gray-500">Order ID</p>
-                  <p className="text-xs font-medium text-gray-900 mt-0.5">{order.orderId}</p>
+                  <p className="text-xs font-medium text-gray-900 mt-0.5">{displayId.order(order.orderId)}</p>
                 </div>
               </div>
 
@@ -182,7 +183,7 @@ export const OrderDetail: React.FC = () => {
                 <div className="flex gap-3 items-center">
                   <Avatar 
                     primaryText={patient.fullName} 
-                    secondaryText={patient.id}
+                    secondaryText={displayId.patient(patient.id)}
                     size="sm" 
                   />
                 </div>

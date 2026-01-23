@@ -71,9 +71,9 @@ export interface InvoiceItem {
 }
 
 export interface Invoice {
-  invoiceId: string; // INV-YYYYMMDD-XXX
-  orderId: string;
-  patientId: string;
+  invoiceId: number; // Integer ID, displayed as INV{id}
+  orderId: number;
+  patientId: number;
   patientName: string;
   items: InvoiceItem[];
   subtotal: number;
@@ -88,13 +88,13 @@ export interface Invoice {
 }
 
 export interface Payment {
-  paymentId: string; // PAY-YYYYMMDD-XXX
-  orderId: string;
-  invoiceId: string | null;
+  paymentId: number; // Integer ID, displayed as PAY{id}
+  orderId: number;
+  invoiceId: number | null;
   amount: number;
   paymentMethod: PaymentMethod;
   paidAt: string;
-  receivedBy: string;
+  receivedBy: number;
   receiptGenerated: boolean;
   notes?: string;
   // Computed fields from relationships
@@ -104,10 +104,10 @@ export interface Payment {
 }
 
 export interface InsuranceClaim {
-  claimId: string; // CLM-YYYYMMDD-XXX
-  orderId: string;
-  invoiceId: string;
-  patientId: string;
+  claimId: number; // Integer ID, displayed as CLM{id}
+  orderId: number;
+  invoiceId: number;
+  patientId: number;
   insuranceProvider: string;
   insuranceNumber: string;
   claimAmount: number;

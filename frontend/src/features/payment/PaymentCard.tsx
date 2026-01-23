@@ -1,6 +1,7 @@
 import { Badge, Avatar } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatCurrency, formatDate } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import type { OrderPaymentDetails } from './types';
 import { PaymentButton } from './PaymentButton';
 
@@ -25,7 +26,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
         {/* Avatar: Patient name + Order ID - positioned at top left */}
         <Avatar 
           primaryText={item.patientName || 'N/A'} 
-          secondaryText={item.orderId}
+          secondaryText={displayId.order(item.orderId)}
           size="xs"
         />
         {/* Total price on top right */}

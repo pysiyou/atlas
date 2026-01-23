@@ -34,10 +34,11 @@ export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ chil
   /**
    * Update an existing appointment
    */
-  const updateAppointment = useCallback((id: string, updates: Partial<Appointment>) => {
+  const updateAppointment = useCallback((id: number | string, updates: Partial<Appointment>) => {
+    const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
     setAppointments(prev => 
       prev.map(appointment => 
-        appointment.id === id ? { ...appointment, ...updates } : appointment
+        appointment.id === numericId ? { ...appointment, ...updates } : appointment
       )
     );
   }, [setAppointments]);
@@ -45,15 +46,18 @@ export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ chil
   /**
    * Delete an appointment
    */
-  const deleteAppointment = useCallback((id: string) => {
-    setAppointments(prev => prev.filter(appointment => appointment.id !== id));
+  const deleteAppointment = useCallback((id: number | string) => {
+    const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+    setAppointments(prev => prev.filter(appointment => appointment.id !== numericId));
   }, [setAppointments]);
 
   /**
    * Get an appointment by ID
    */
-  const getAppointment = useCallback((id: string): Appointment | undefined => {
-    return appointments.find(appointment => appointment.id === id);
+  const getAppointment = useCallback((id: number | string): Appointment | undefined => {
+    const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+    if (isNaN(numericId)) return undefined;
+    return appointments.find(appointment => appointment.id === numericId);
   }, [appointments]);
 
   /**
@@ -73,8 +77,10 @@ export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ chil
   /**
    * Get appointments by patient ID
    */
-  const getAppointmentsByPatient = useCallback((patientId: string): Appointment[] => {
-    return appointments.filter(appointment => appointment.patientId === patientId);
+  const getAppointmentsByPatient = useCallback((patientId: number | string): Appointment[] => {
+    const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
+    if (isNaN(numericId)) return [];
+    return appointments.filter(appointment => appointment.patientId === numericId);
   }, [appointments]);
 
   /**
@@ -107,7 +113,7 @@ export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ chil
   /**
    * Check in an appointment
    */
-  const checkInAppointment = useCallback((id: string) => {
+  const checkInAppointment = useCallback((id: number | string) => {
     updateAppointment(id, {
       status: 'confirmed',
       checkedInAt: new Date().toISOString(),

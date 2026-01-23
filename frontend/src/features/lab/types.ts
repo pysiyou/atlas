@@ -25,7 +25,7 @@ export interface SampleRequirement {
   /** Priority level of the sample */
   priority: 'routine' | 'urgent' | 'stat';
   /** Associated order ID */
-  orderId: string;
+  orderId: number;
 }
 
 /**

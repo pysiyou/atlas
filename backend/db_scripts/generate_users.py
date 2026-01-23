@@ -10,7 +10,6 @@ def generate_users(db):
     print("🌱 Generating users...")
     users_data = [
         {
-            "id": "USR-00000000-001",
             "username": "admin",
             "password": "admin123",
             "name": "System Administrator",
@@ -18,7 +17,6 @@ def generate_users(db):
             "email": "admin@atlas.local"
         },
         {
-            "id": "USR-00000000-002",
             "username": "receptionist",
             "password": "recept123",
             "name": "Sarah Johnson",
@@ -26,7 +24,6 @@ def generate_users(db):
             "email": "sarah@atlas.local"
         },
         {
-            "id": "USR-00000000-003",
             "username": "labtech",
             "password": "lab123",
             "name": "Mike Chen",
@@ -34,7 +31,6 @@ def generate_users(db):
             "email": "mike@atlas.local"
         },
         {
-            "id": "USR-00000000-004",
             "username": "validator",
             "password": "valid123",
             "name": "Dr. Emily Rodriguez",
@@ -47,7 +43,6 @@ def generate_users(db):
         existing = db.query(User).filter(User.username == user_data["username"]).first()
         if not existing:
             user = User(
-                id=user_data["id"],
                 username=user_data["username"],
                 hashedPassword=get_password_hash(user_data["password"]),
                 name=user_data["name"],
@@ -55,6 +50,7 @@ def generate_users(db):
                 email=user_data["email"]
             )
             db.add(user)
-            print(f"  ✓ Created user: {user_data['name']} ({user_data['username']})")
-    
+            db.flush()  # Get auto-generated ID
+            print(f"  ✓ Created user: {user_data['name']} ({user_data['username']}) - ID: {user.id}")
+
     db.commit()

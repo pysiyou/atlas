@@ -38,7 +38,7 @@ export interface ModalHelpers {
 
 // Type-safe registry - using generic ModalRegistryEntry to allow various modal prop types
 type ModalRegistry = {
-  [K in ModalType]?: ModalRegistryEntry<BaseModalProps>;
+  [K in ModalType]?: ModalRegistryEntry<any>;
 };
 
 const registry: ModalRegistry = {};
@@ -57,7 +57,7 @@ export function registerModal<P extends BaseModalProps>(
     helpers: ModalHelpers
   ) => P | null
 ): void {
-  registry[type] = { component, getProps };
+  registry[type] = { component: component as ComponentType<BaseModalProps>, getProps: getProps as (modalProps: Record<string, unknown>, baseProps: BaseModalProps, helpers: ModalHelpers) => BaseModalProps | null };
 }
 
 /**

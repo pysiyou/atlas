@@ -28,11 +28,11 @@ export interface PatientsContextType {
   /** Add a new patient */
   addPatient: (patient: Patient) => Promise<void>;
   /** Update an existing patient */
-  updatePatient: (id: string, updates: Partial<Patient>) => Promise<void>;
+  updatePatient: (id: number | string, updates: Partial<Patient>) => Promise<void>;
   /** Delete a patient */
-  deletePatient: (id: string) => Promise<void>;
-  /** Get a patient by ID */
-  getPatient: (id: string) => Patient | undefined;
+  deletePatient: (id: number | string) => Promise<void>;
+  /** Get a patient by ID (accepts number or string for URL compatibility) */
+  getPatient: (id: number | string) => Patient | undefined;
   /** Search patients by name, ID, or phone */
   searchPatients: (query: string) => Patient[];
   /** Refresh patients from backend */

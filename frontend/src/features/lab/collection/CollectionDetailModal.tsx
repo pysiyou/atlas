@@ -18,6 +18,7 @@ import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import { printCollectionLabel } from './CollectionLabel';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
@@ -70,7 +71,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   const isCollected = sample.status === 'collected';
   const rejectedSample = isRejected ? (sample as RejectedSample) : null;
 
-  const patientId = order?.patientId || 'Unknown';
+  const patientId = order?.patientId || 0;
   const patientName = order ? getPatientName(order.patientId, patients) : 'Unknown';
   const orderId = sample.orderId;
   const testNames = sample.testCodes ? getTestNames(sample.testCodes, tests) : [];
@@ -129,7 +130,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
       {isRejected && rejectedSample?.recollectionSampleId && (
         <Badge size="sm" variant="info" className="flex items-center gap-1">
           <Icon name="check-circle" className="w-3 h-3" />
-          Recollection: {rejectedSample.recollectionSampleId}
+          Recollection: {displayId.sample(rejectedSample.recollectionSampleId)}
         </Badge>
       )}
     </>
@@ -174,7 +175,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
     }
 
     // For collected samples - show print and reject buttons
-    if (isCollected && sample.sampleId && !sample.sampleId.includes('PENDING')) {
+    if (isCollected && sample.sampleId) {
       // Check if sample rejection should be blocked due to validated tests in the order
       const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
       const validatedCount = order ? getValidatedTestCount(order) : 0;
@@ -207,14 +208,14 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
             </Button>
           ) : (
             <CollectionRejectionPopover
-              sampleId={sample.sampleId}
+              sampleId={sample.sampleId.toString()}
               sampleType={sample.sampleType}
               patientName={patientName}
               isRecollection={sample.isRecollection || false}
               rejectionHistoryCount={sample.rejectionHistory?.length || 0}
               onReject={async (reasons, notes, requireRecollection) => {
                 try {
-                  await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
+                  await rejectSample(sample.sampleId.toString(), reasons, notes, requireRecollection);
                   toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
                   onClose();
                 } catch (error) {
@@ -339,9 +340,9 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
         title: "Audit Trail",
         fields: [
           { label: "Created", timestamp: sample.createdAt },
-          { label: "Created By", value: getUserName(sample.createdBy) },
+          { label: "Created By", value: getUserName(sample.createdBy.toString()) },
           { label: "Last Updated", timestamp: sample.updatedAt },
-          { label: "Updated By", value: sample.updatedBy ? getUserName(sample.updatedBy) : undefined },
+          { label: "Updated By", value: sample.updatedBy ? getUserName(sample.updatedBy.toString()) : undefined },
         ]
       });
     }
@@ -353,17 +354,17 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
     <LabDetailModal
       isOpen={isOpen}
       onClose={onClose}
-      title={sample.sampleId}
+      title={displayId.sample(sample.sampleId)}
       subtitle={`${patientName} - ${sample.sampleType.toUpperCase()}`}
       headerBadges={headerBadges}
-      contextInfo={{ patientName, patientId, orderId }}
+      contextInfo={{ patientName, patientId: patientId.toString(), orderId: orderId.toString() }}
       footer={footerContent}
       additionalContextInfo={
         <>
           {/* Barcode */}
-          {(isCollected || isRejected) && sample.sampleId && !sample.sampleId.includes('PENDING') && (
+          {(isCollected || isRejected) && sample.sampleId && (
             <div className="flex items-center justify-center bg-gray-50 rounded p-4 border border-gray-200 mt-2">
-              <Barcode value={sample.sampleId} height={40} displayValue={false} background="transparent" margin={0} />
+              <Barcode value={displayId.sample(sample.sampleId)} height={40} displayValue={false} background="transparent" margin={0} />
             </div>
           )}
           {/* Collection info - using centralized component */}

@@ -56,8 +56,8 @@ export const OrderList: React.FC = () => {
     setStatusFilters 
   } = useFiltering<Order, OrderStatus>(orders, {
     searchFields: (order) => [
-      order.orderId, 
-      order.patientId,
+      order.orderId.toString(), 
+      order.patientId.toString(),
       getPatientName(order.patientId)
     ],
     statusField: 'overallStatus',
@@ -70,7 +70,8 @@ export const OrderList: React.FC = () => {
     
     // Apply patientIdFilter
     if (patientIdFilter) {
-      filtered = filtered.filter(order => order.patientId === patientIdFilter);
+      const numericPatientId = typeof patientIdFilter === 'string' ? parseInt(patientIdFilter, 10) : patientIdFilter;
+      filtered = filtered.filter(order => order.patientId === numericPatientId);
     }
     
     // Apply date range

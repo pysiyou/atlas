@@ -6,11 +6,10 @@ from typing import List, Dict
 from sqlalchemy.orm import Session
 from app.models import Order, OrderTest, Test, Sample
 from app.schemas.enums import SampleStatus, PriorityLevel
-from app.services.id_generator import generate_id
 from datetime import datetime
 
 
-def generate_samples_for_order(orderId: str, db: Session, createdBy: str) -> List[Sample]:
+def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> List[Sample]:
     """
     Generate samples for an order based on its tests
     Groups tests by sample type and creates one sample per type
@@ -59,9 +58,7 @@ def generate_samples_for_order(orderId: str, db: Session, createdBy: str) -> Lis
                 container_colors_set.update(test.containerTopColors)
 
         # Create sample
-        sampleId = generate_id("sample", db)
         sample = Sample(
-            sampleId=sampleId,
             orderId=orderId,
             sampleType=sampleType,
             status=SampleStatus.PENDING,
@@ -74,8 +71,8 @@ def generate_samples_for_order(orderId: str, db: Session, createdBy: str) -> Lis
             isRecollection=False,
             recollectionAttempt=1,  # First collection is attempt 1
             rejectionHistory=[],  # Empty array for new samples
-            createdBy=createdBy,
-            updatedBy=createdBy,
+            createdBy=str(createdBy),  # Convert to string as per model requirement
+            updatedBy=str(createdBy),  # Convert to string as per model requirement
         )
 
         db.add(sample)

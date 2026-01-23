@@ -51,7 +51,8 @@ export function useOrdersList(filters?: OrdersFilters) {
     let orders = query.data ?? [];
     
     if (filters?.patientId) {
-      orders = orders.filter(o => o.patientId === filters.patientId);
+      const numericPatientId = typeof filters.patientId === 'string' ? parseInt(filters.patientId, 10) : filters.patientId;
+      orders = orders.filter(o => o.patientId === numericPatientId);
     }
     if (filters?.status) {
       orders = orders.filter(o => o.overallStatus === filters.status);
@@ -119,7 +120,9 @@ export function useOrdersByPatient(patientId: string | undefined) {
 
   const patientOrders = useMemo(() => {
     if (!patientId) return [];
-    return orders.filter(o => o.patientId === patientId);
+    const numericPatientId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
+    if (isNaN(numericPatientId)) return [];
+    return orders.filter(o => o.patientId === numericPatientId);
   }, [orders, patientId]);
 
   return {
@@ -162,7 +165,7 @@ export function useOrderSearch(searchQuery: string) {
     if (!searchQuery.trim()) return orders;
     const query = searchQuery.toLowerCase();
     return orders.filter(order =>
-      order.orderId.toLowerCase().includes(query)
+      order.orderId.toString().toLowerCase().includes(query)
     );
   }, [orders, searchQuery]);
 
@@ -182,13 +185,15 @@ export function useOrderLookup() {
   const { orders, isLoading } = useOrdersList();
 
   const ordersMap = useMemo(() => {
-    const map = new Map<string, Order>();
+    const map = new Map<number, Order>();
     orders.forEach(o => map.set(o.orderId, o));
     return map;
   }, [orders]);
 
-  const getOrder = useCallback((orderId: string): Order | undefined => {
-    return ordersMap.get(orderId);
+  const getOrder = useCallback((orderId: number | string): Order | undefined => {
+    const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+    if (isNaN(numericId)) return undefined;
+    return ordersMap.get(numericId);
   }, [ordersMap]);
 
   return {
@@ -232,21 +237,26 @@ export function useUpdateOrder() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ orderId, updates }: { orderId: string; updates: Partial<Order> }) =>
-      orderAPI.update(orderId, updates),
+    mutationFn: ({ orderId, updates }: { orderId: number | string; updates: Partial<Order> }) => {
+      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+      return orderAPI.update(orderIdStr, updates);
+    },
     onMutate: async ({ orderId, updates }) => {
+      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+      const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+      
       // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: queryKeys.orders.byId(orderId) });
+      await queryClient.cancelQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
       await queryClient.cancelQueries({ queryKey: queryKeys.orders.lists() });
 
       // Snapshot previous value for rollback
-      const previousOrder = queryClient.getQueryData<Order>(queryKeys.orders.byId(orderId));
+      const previousOrder = queryClient.getQueryData<Order>(queryKeys.orders.byId(orderIdStr));
       const previousOrders = queryClient.getQueryData<Order[]>(queryKeys.orders.list());
 
       // Optimistically update the order detail
       if (previousOrder) {
         queryClient.setQueryData<Order>(
-          queryKeys.orders.byId(orderId),
+          queryKeys.orders.byId(orderIdStr),
           { ...previousOrder, ...updates, updatedAt: new Date().toISOString() }
         );
       }
@@ -255,8 +265,8 @@ export function useUpdateOrder() {
       if (previousOrders) {
         queryClient.setQueryData<Order[]>(
           queryKeys.orders.list(),
-          previousOrders.map(o =>
-            o.orderId === orderId
+          previousOrders.map(o => 
+            o.orderId === numericOrderId
               ? { ...o, ...updates, updatedAt: new Date().toISOString() }
               : o
           )
@@ -267,9 +277,10 @@ export function useUpdateOrder() {
     },
     onError: (_, variables, context) => {
       // Rollback on error
+      const orderIdStr = typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
       if (context?.previousOrder) {
         queryClient.setQueryData(
-          queryKeys.orders.byId(variables.orderId),
+          queryKeys.orders.byId(orderIdStr),
           context.previousOrder
         );
       }
@@ -279,7 +290,8 @@ export function useUpdateOrder() {
     },
     onSettled: (_, __, variables) => {
       // Always refetch after mutation settles
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(variables.orderId) });
+      const orderIdStr = typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
     },
   });
@@ -294,7 +306,10 @@ export function useDeleteOrder() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (orderId: string) => orderAPI.delete(orderId),
+    mutationFn: (orderId: number | string) => {
+      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+      return orderAPI.delete(orderIdStr);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
     },
@@ -316,13 +331,17 @@ export function useUpdateTestStatus() {
       status,
       additionalData,
     }: {
-      orderId: string;
+      orderId: number | string;
       testCode: string;
       status: TestStatus;
       additionalData?: Record<string, unknown>;
-    }) => orderAPI.updateTestStatus(orderId, testCode, status, additionalData),
+    }) => {
+      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+      return orderAPI.updateTestStatus(orderIdStr, testCode, status, additionalData);
+    },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(variables.orderId) });
+      const orderIdStr = typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
     },
   });
@@ -342,12 +361,16 @@ export function useUpdatePaymentStatus() {
       paymentStatus,
       amountPaid,
     }: {
-      orderId: string;
+      orderId: number | string;
       paymentStatus: string;
       amountPaid?: number;
-    }) => orderAPI.updatePaymentStatus(orderId, paymentStatus, amountPaid),
+    }) => {
+      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+      return orderAPI.updatePaymentStatus(orderIdStr, paymentStatus, amountPaid);
+    },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(variables.orderId) });
+      const orderIdStr = typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.all });
     },
@@ -368,12 +391,16 @@ export function useMarkTestCritical() {
       testCode,
       notifiedTo,
     }: {
-      orderId: string;
+      orderId: number | string;
       testCode: string;
       notifiedTo: string;
-    }) => orderAPI.markTestCritical(orderId, testCode, notifiedTo),
+    }) => {
+      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+      return orderAPI.markTestCritical(orderIdStr, testCode, notifiedTo);
+    },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(variables.orderId) });
+      const orderIdStr = typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
     },
   });

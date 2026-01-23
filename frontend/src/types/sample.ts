@@ -38,8 +38,8 @@ export interface RejectionRecord {
  * Base sample fields - always present regardless of status
  */
 interface BaseSample {
-  sampleId: string;
-  orderId: string;                     // Links to Order (no patientId/patientName)
+  sampleId: number;                    // Integer ID, displayed as SAM{id}
+  orderId: number;                     // Links to Order (no patientId/patientName)
   sampleType: SampleType;
 
   // What this sample is for
@@ -50,21 +50,21 @@ interface BaseSample {
   // Required specs (what catalog says we need)
   requiredContainerTypes: ContainerType[];
   requiredContainerColors: ContainerTopColor[];
-  
+
   // Rejection history - tracks all rejection attempts
   rejectionHistory?: RejectionRecord[];
 
   // Recollection tracking (present if this sample is a recollection)
   isRecollection?: boolean;
-  originalSampleId?: string;           // The rejected sample this replaces
+  originalSampleId?: number;           // The rejected sample this replaces
   recollectionReason?: string;
   recollectionAttempt?: number;        // 1 = original, 2 = 1st recollection, etc.
 
   // Timestamps
   createdAt: string;
-  createdBy: string;
+  createdBy: number;
   updatedAt: string;
-  updatedBy: string;
+  updatedBy: number;
 }
 
 /**
@@ -120,7 +120,7 @@ export interface RejectedSample extends BaseSample {
 
   // If recollection ordered
   recollectionRequired: boolean;
-  recollectionSampleId?: string;
+  recollectionSampleId?: number;
 }
 
 /**

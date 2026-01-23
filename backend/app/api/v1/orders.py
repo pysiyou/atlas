@@ -15,7 +15,6 @@ from app.models.patient import Patient
 from app.models.sample import Sample
 from app.schemas.order import OrderCreate, OrderUpdate, OrderResponse
 from app.schemas.enums import OrderStatus, PaymentStatus, TestStatus, SampleStatus, UserRole
-from app.services.id_generator import generate_id
 from app.services.sample_generator import generate_samples_for_order
 from app.utils.db_helpers import get_or_404
 
@@ -24,7 +23,7 @@ router = APIRouter()
 
 @router.get("/orders", response_model=List[OrderResponse])
 def get_orders(
-    patientId: str | None = None,
+    patientId: int | None = None,
     status: OrderStatus | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -66,7 +65,7 @@ def get_orders(
 
 @router.get("/orders/{orderId}", response_model=OrderResponse)
 def get_order(
-    orderId: str,
+    orderId: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -99,10 +98,9 @@ def create_order(
             detail=f"Patient {order_data.patientId} not found"
         )
 
-    # Calculate total price and create order tests
+    # Calculate total price and validate tests
     total_price = 0.0
-    orderId = generate_id("order", db)
-    order_tests = []
+    test_entries = []
 
     for test_data in order_data.tests:
         # Get test from catalog
@@ -114,20 +112,10 @@ def create_order(
             )
 
         total_price += test.price
+        test_entries.append((test.code, test.price))
 
-        # Create OrderTest
-        order_test = OrderTest(
-            id=f"{orderId}_{test.code}",
-            orderId=orderId,
-            testCode=test.code,
-            status=TestStatus.PENDING,
-            priceAtOrder=test.price,
-        )
-        order_tests.append(order_test)
-
-    # Create order
+    # Create order first
     order = Order(
-        orderId=orderId,
         patientId=order_data.patientId,
         orderDate=datetime.now(timezone.utc),
         totalPrice=total_price,
@@ -139,15 +127,26 @@ def create_order(
         specialInstructions=order_data.specialInstructions,
         patientPrepInstructions=order_data.patientPrepInstructions,
         createdBy=current_user.id,
-        tests=order_tests,
     )
 
     try:
         db.add(order)
-        db.flush()  # Get order ID without committing
+        db.flush()  # Get auto-generated orderId
+
+        # Create OrderTests with the generated orderId
+        for test_code, price in test_entries:
+            order_test = OrderTest(
+                orderId=order.orderId,
+                testCode=test_code,
+                status=TestStatus.PENDING,
+                priceAtOrder=price,
+            )
+            db.add(order_test)
+
+        db.flush()  # Ensure OrderTests are created
 
         # Generate samples for this order
-        generate_samples_for_order(orderId, db, current_user.id)
+        generate_samples_for_order(order.orderId, db, current_user.id)
 
         db.commit()
         db.refresh(order)
@@ -160,7 +159,7 @@ def create_order(
 
 @router.put("/orders/{orderId}", response_model=OrderResponse)
 def update_order(
-    orderId: str,
+    orderId: int,
     order_data: OrderUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_receptionist)
@@ -187,7 +186,7 @@ def update_order(
 
 @router.post("/orders/{orderId}/report", status_code=status.HTTP_200_OK)
 def mark_as_reported(
-    orderId: str,
+    orderId: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_validator)
 ):

@@ -14,7 +14,6 @@ from app.models.order import Order, OrderTest
 from app.models.sample import Sample
 from app.schemas.patient import PatientCreate, PatientUpdate, PatientResponse
 from app.schemas.enums import SampleStatus, TestStatus, UserRole
-from app.services.id_generator import generate_id
 
 router = APIRouter()
 
@@ -67,7 +66,7 @@ def get_patients(
 
 @router.get("/patients/{patientId}")
 def get_patient(
-    patientId: str,
+    patientId: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -92,10 +91,7 @@ def create_patient(
     """
     Create a new patient
     """
-    patientId = generate_id("patient", db)
-
     patient = Patient(
-        id=patientId,
         fullName=patient_data.fullName,
         dateOfBirth=patient_data.dateOfBirth,
         gender=patient_data.gender,
@@ -119,7 +115,7 @@ def create_patient(
 
 @router.put("/patients/{patientId}")
 def update_patient(
-    patientId: str,
+    patientId: int,
     patient_data: PatientUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_receptionist)
@@ -154,7 +150,7 @@ def update_patient(
 
 @router.delete("/patients/{patientId}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_patient(
-    patientId: str,
+    patientId: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_receptionist)
 ):

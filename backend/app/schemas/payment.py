@@ -7,16 +7,16 @@ from app.schemas.enums import PaymentMethod
 
 
 class PaymentCreate(BaseModel):
-    orderId: str
+    orderId: int
     amount: float = Field(gt=0, description="Payment amount must be greater than 0")
     paymentMethod: PaymentMethod
     notes: str | None = None
 
 
 class PaymentResponse(BaseModel):
-    paymentId: str
-    orderId: str
-    invoiceId: str | None = None
+    paymentId: int
+    orderId: int
+    invoiceId: int | None = None
     amount: float
     paymentMethod: PaymentMethod
     paidAt: datetime

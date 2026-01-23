@@ -9,6 +9,7 @@ import { usePatients } from '@/hooks';
 import { useTests } from '@/features/test/TestsContext';
 import { SectionContainer, Badge, Button, EmptyState, Icon } from '@/shared/ui';
 import { formatDate } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import { getPatientName, getTestName } from '@/utils/typeHelpers';
 import toast from 'react-hot-toast';
 
@@ -28,8 +29,9 @@ export const Reports: React.FC = () => {
     order.tests.some(test => test.status === 'validated')
   );
   
-  const handleGenerateReport = (orderId: string) => {
-    toast.success(`Report generated for ${orderId} (PDF generation simulated)`);
+  const handleGenerateReport = (orderId: number | string) => {
+    const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+    toast.success(`Report generated for ${orderIdStr} (PDF generation simulated)`);
   };
   
   return (
@@ -47,7 +49,7 @@ export const Reports: React.FC = () => {
                 <div className="flex items-start gap-3">
                   <Icon name="document" className="w-6 h-6 text-sky-600 mt-1" />
                   <div>
-                    <div className="font-medium text-gray-900">{order.orderId}</div>
+                    <div className="font-medium text-gray-900">{displayId.order(order.orderId)}</div>
                     <div className="text-sm text-gray-600">{getPatientName(order.patientId, patients)}</div>
                     <div className="text-sm text-gray-500">
                       {formatDate(order.orderDate)} • {order.tests.length} test(s)

@@ -48,8 +48,8 @@ const createSampleFilter = (patients: Patient[], tests: Test[]) =>
       ? (sample.collectionNotes || '').toLowerCase() : '';
     
     return (
-      display.order.orderId.toLowerCase().includes(lowerQuery) ||
-      sample?.sampleId?.toLowerCase().includes(lowerQuery) ||
+      display.order.orderId.toString().toLowerCase().includes(lowerQuery) ||
+      sample?.sampleId?.toString().toLowerCase().includes(lowerQuery) ||
       patientName.toLowerCase().includes(lowerQuery) ||
       sampleType?.toLowerCase()?.includes(lowerQuery) ||
       (collectionType.toLowerCase().includes(lowerQuery) && collectionType !== sampleType) ||
@@ -137,7 +137,7 @@ export const CollectionView: React.FC = () => {
 
     try {
       await collectSample(
-        display.sample.sampleId,
+        display.sample.sampleId.toString(),
         volume,
         selectedContainerType,
         selectedColor as ContainerTopColor,

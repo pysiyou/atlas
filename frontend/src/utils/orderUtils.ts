@@ -72,15 +72,15 @@ export const createRepeatTest = (
   originalTest: OrderTest,
   repeatReason: string,
   existingRepeats: number,
-  sampleId?: string
+  sampleId?: number | string
 ): OrderTest => ({
   ...originalTest,
   status: sampleId ? 'sample-collected' : 'pending',
   isRepeatTest: true,
   repeatReason,
-  originalTestId: originalTest.testCode,
+  originalTestId: originalTest.id, // Use the test ID (number) instead of testCode
   repeatNumber: existingRepeats + 1,
-  sampleId,
+  sampleId: typeof sampleId === 'string' ? parseInt(sampleId, 10) : sampleId,
   results: null,
 });
 

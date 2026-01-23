@@ -168,7 +168,7 @@ export const getStepCompletionInfo = (
   switch (stepStatus) {
     case 'created':
       return {
-        completedBy: order.createdBy,
+        completedBy: order.createdBy.toString(),
         completedAt: order.orderDate,
       };
 
@@ -176,7 +176,7 @@ export const getStepCompletionInfo = (
       // Payment completion - use paidAt if available, otherwise fall back to updatedAt
       if (order.paymentStatus === 'paid') {
         return {
-          completedBy: order.createdBy,
+          completedBy: order.createdBy.toString(),
           completedAt: order.paidAt || order.updatedAt,
         };
       }
@@ -188,7 +188,7 @@ export const getStepCompletionInfo = (
         ['sample-collected', 'in-progress', 'resulted', 'validated', 'rejected'].includes(t.status)
       );
       return {
-        completedBy: order.createdBy,
+        completedBy: order.createdBy.toString(),
         completedAt: collectedTest ? order.updatedAt : undefined,
       };
     }

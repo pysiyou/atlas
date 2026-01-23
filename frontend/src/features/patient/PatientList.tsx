@@ -47,7 +47,7 @@ export const PatientList: React.FC = () => {
   } = useFiltering<Patient, Gender>(patients, {
     searchFields: (patient) => [
       patient.fullName, 
-      patient.id, 
+      patient.id.toString(), 
       patient.phone, 
       patient.email || ''
     ],

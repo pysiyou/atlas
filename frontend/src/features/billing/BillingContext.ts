@@ -32,21 +32,21 @@ export interface BillingContextType {
   /** Add a new invoice */
   addInvoice: (invoice: Invoice) => void;
   /** Update an existing invoice */
-  updateInvoice: (invoiceId: string, updates: Partial<Invoice>) => void;
+  updateInvoice: (invoiceId: number | string, updates: Partial<Invoice>) => void;
   /** Get an invoice by ID */
-  getInvoice: (invoiceId: string) => Invoice | undefined;
+  getInvoice: (invoiceId: number | string) => Invoice | undefined;
   /** Get invoice by order ID */
-  getInvoiceByOrderId: (orderId: string) => Invoice | undefined;
+  getInvoiceByOrderId: (orderId: number | string) => Invoice | undefined;
   /** Add a new payment */
   addPayment: (payment: Payment) => void;
   /** Get payments by invoice ID */
-  getPaymentsByInvoice: (invoiceId: string) => Payment[];
+  getPaymentsByInvoice: (invoiceId: number | string | null) => Payment[];
   /** Get payments by order ID */
-  getPaymentsByOrder: (orderId: string) => Payment[];
+  getPaymentsByOrder: (orderId: number | string) => Payment[];
   /** Add a new insurance claim */
   addClaim: (claim: InsuranceClaim) => void;
   /** Update an existing claim */
-  updateClaim: (claimId: string, updates: Partial<InsuranceClaim>) => void;
+  updateClaim: (claimId: number | string, updates: Partial<InsuranceClaim>) => void;
   /** Get outstanding invoices (not fully paid) */
   getOutstandingInvoices: () => Invoice[];
   /** Calculate total revenue for a date range */

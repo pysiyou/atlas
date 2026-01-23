@@ -1,7 +1,7 @@
 """
 Patient Model
 """
-from sqlalchemy import Column, String, DateTime, JSON, Enum
+from sqlalchemy import Column, String, Integer, DateTime, JSON, Enum
 from sqlalchemy.sql import func
 from app.database import Base
 from app.schemas.enums import Gender
@@ -10,7 +10,7 @@ from app.schemas.enums import Gender
 class Patient(Base):
     __tablename__ = "patients"
 
-    id = Column(String, primary_key=True, index=True)  # PAT-YYYYMMDD-XXX
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     fullName = Column("full_name", String, nullable=False, index=True)
     dateOfBirth = Column("date_of_birth", String, nullable=False)
     gender = Column(Enum(Gender), nullable=False)

@@ -8,6 +8,7 @@
 import React from 'react';
 import { Badge, Avatar, IconButton } from '@/shared/ui';
 import { formatVolume } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { usePatients, useTests } from '@/hooks';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
@@ -42,8 +43,8 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({ disp
     : undefined;
 
   const handleCardClick = () => {
-    if ((isCollected || isRejected) && sample.sampleId && !sample.sampleId.includes('PENDING')) {
-      openModal(ModalType.SAMPLE_DETAIL, { sampleId: sample.sampleId });
+    if ((isCollected || isRejected) && sample.sampleId) {
+      openModal(ModalType.SAMPLE_DETAIL, { sampleId: sample.sampleId.toString() });
     } else if (isPending) {
       openModal(ModalType.SAMPLE_DETAIL, { pendingSampleDisplay: display, onCollect });
     }
@@ -58,7 +59,7 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({ disp
       <div className="flex justify-between items-start mb-3 pb-3 border-b border-gray-100">
         <Avatar 
           primaryText={patientName} 
-          secondaryText={order.orderId}
+          secondaryText={displayId.order(order.orderId)}
           size="xs"
         />
         {isPending ? (

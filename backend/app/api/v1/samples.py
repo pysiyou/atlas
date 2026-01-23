@@ -39,7 +39,7 @@ class RejectAndRecollectResponse(BaseModel):
 
 @router.get("/samples", response_model=List[SampleResponse])
 def get_samples(
-    orderId: Optional[str] = None,
+    orderId: Optional[int] = None,
     sampleStatus: Optional[SampleStatus] = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -94,7 +94,7 @@ def get_pending_samples(
 
 @router.get("/samples/{sampleId}", response_model=SampleResponse)
 def get_sample(
-    sampleId: str,
+    sampleId: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -112,7 +112,7 @@ def get_sample(
 
 @router.patch("/samples/{sampleId}/collect", response_model=SampleResponse)
 def collect_sample(
-    sampleId: str,
+    sampleId: int,
     collect_data: SampleCollectRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech)
@@ -138,7 +138,7 @@ def collect_sample(
 
 @router.patch("/samples/{sampleId}/reject", response_model=SampleResponse)
 def reject_sample(
-    sampleId: str,
+    sampleId: int,
     reject_data: SampleRejectRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech)
@@ -163,7 +163,7 @@ def reject_sample(
 
 @router.post("/samples/{sampleId}/request-recollection", response_model=SampleResponse)
 def request_recollection(
-    sampleId: str,
+    sampleId: int,
     recollection_data: RecollectionRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech)
@@ -193,7 +193,7 @@ def request_recollection(
 
 @router.post("/samples/{sampleId}/reject-and-recollect", response_model=RejectAndRecollectResponse)
 def reject_and_recollect_sample(
-    sampleId: str,
+    sampleId: int,
     request_data: RejectAndRecollectRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech)

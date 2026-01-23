@@ -105,9 +105,10 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   /**
    * Update an existing order
    */
-  const updateOrder = useCallback(async (orderId: string, updates: Partial<Order>) => {
+  const updateOrder = useCallback(async (orderId: number | string, updates: Partial<Order>) => {
     try {
-      await updateOrderMutation.mutateAsync({ orderId, updates });
+      const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+      await updateOrderMutation.mutateAsync({ orderId: numericId, updates });
     } catch (err) {
       logger.error('Failed to update order', err instanceof Error ? err : undefined);
       throw err;
@@ -117,9 +118,10 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   /**
    * Delete an order
    */
-  const deleteOrder = useCallback(async (orderId: string) => {
+  const deleteOrder = useCallback(async (orderId: number | string) => {
     try {
-      await deleteOrderMutation.mutateAsync(orderId);
+      const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+      await deleteOrderMutation.mutateAsync(numericId);
     } catch (err) {
       logger.error('Failed to delete order', err instanceof Error ? err : undefined);
       throw err;
@@ -127,24 +129,27 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   }, [deleteOrderMutation]);
 
   /**
-   * Get an order by ID
+   * Get an order by ID (handles both number and string for URL compatibility)
    */
-  const getOrder = useCallback((orderId: string): Order | undefined => {
-    return orders.find(order => order.orderId === orderId);
+  const getOrder = useCallback((orderId: number | string): Order | undefined => {
+    const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+    if (isNaN(numericId)) return undefined;
+    return orders.find(order => order.orderId === numericId);
   }, [orders]);
 
   /**
    * Update status of a specific test within an order
    */
   const updateTestStatus = useCallback(async (
-    orderId: string,
+    orderId: number | string,
     testCode: string,
     status: TestStatus,
     additionalData?: Partial<TestStatusUpdateData>
   ) => {
     try {
+      const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
       await updateTestStatusMutation.mutateAsync({
-        orderId,
+        orderId: numericId,
         testCode,
         status,
         additionalData: additionalData as Record<string, unknown>,
@@ -158,16 +163,17 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   /**
    * Update overall order status
    */
-  const updateOrderStatus = useCallback((orderId: string, status: OrderStatus) => {
+  const updateOrderStatus = useCallback((orderId: number | string, status: OrderStatus) => {
     updateOrder(orderId, { overallStatus: status });
   }, [updateOrder]);
 
   /**
    * Update payment status
    */
-  const updatePaymentStatus = useCallback(async (orderId: string, paymentStatus: string, amountPaid?: number) => {
+  const updatePaymentStatus = useCallback(async (orderId: number | string, paymentStatus: string, amountPaid?: number) => {
     try {
-      await updatePaymentStatusMutation.mutateAsync({ orderId, paymentStatus, amountPaid });
+      const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+      await updatePaymentStatusMutation.mutateAsync({ orderId: numericId, paymentStatus, amountPaid });
     } catch (err) {
       logger.error('Failed to update payment status', err instanceof Error ? err : undefined);
       throw err;
@@ -184,20 +190,27 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   /**
    * Get orders by patient ID
    */
-  const getOrdersByPatient = useCallback((patientId: string): Order[] => {
-    return orders.filter(order => order.patientId === patientId);
+  const getOrdersByPatient = useCallback((patientId: number | string): Order[] => {
+    const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
+    if (isNaN(numericId)) return [];
+    return orders.filter(order => order.patientId === numericId);
   }, [orders]);
 
   /**
-   * Search orders by order ID
+   * Search orders by order ID (supports both display format and numeric)
    */
   const searchOrders = useCallback((query: string): Order[] => {
     if (!query.trim()) return orders;
 
     const lowerQuery = query.toLowerCase();
-    return orders.filter(order =>
-      order.orderId.toLowerCase().includes(lowerQuery)
-    );
+    // Try to parse as display ID (e.g., "ORD123") or numeric ID
+    const parsedId = parseInt(lowerQuery.replace(/^(pat|ord|sam|tst|alq|inv|pay|clm|rpt|usr|aud|apt)/i, ''), 10);
+    
+    return orders.filter(order => {
+      const orderIdStr = order.orderId.toString();
+      return orderIdStr.includes(parsedId.toString()) || 
+             orderIdStr.toLowerCase().includes(lowerQuery);
+    });
   }, [orders]);
 
   /**
@@ -205,28 +218,30 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
    * Note: Collection data is now stored in Sample entity, not OrderTest
    */
   const collectSampleForTests = useCallback((
-    orderId: string,
+    orderId: number | string,
     testCodes: string[],
-    sampleId: string,
+    sampleId: number | string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _collectionData: CollectionData
   ) => {
     // This is handled by the samples mutation now
     // For backward compatibility, we invalidate to refresh
-    const order = orders.find(o => o.orderId === orderId);
+    const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+    const order = orders.find(o => o.orderId === numericOrderId);
     if (order) {
+      const numericSampleId = typeof sampleId === 'string' ? parseInt(sampleId, 10) : sampleId;
       const updatedTests = order.tests.map(test => {
         if (testCodes.includes(test.testCode)) {
           return {
             ...test,
             status: 'sample-collected' as TestStatus,
-            sampleId,
+            sampleId: numericSampleId,
           };
         }
         return test;
       });
 
-      updateOrder(orderId, {
+      updateOrder(numericOrderId, {
         tests: updatedTests,
         overallStatus: 'in-progress',
         updatedAt: new Date().toISOString(),
@@ -238,16 +253,17 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
    * Add reflex test to an order
    */
   const addReflexTest = useCallback((
-    orderId: string,
+    orderId: number | string,
     reflexTest: OrderTest,
     triggeredByTestCode: string,
     reflexRule: string
   ) => {
-    const order = orders.find(o => o.orderId === orderId);
+    const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+    const order = orders.find(o => o.orderId === numericId);
     if (!order) return;
 
     const newTest = createReflexTest(reflexTest, triggeredByTestCode, reflexRule);
-    updateOrder(orderId, {
+    updateOrder(numericId, {
       tests: [...order.tests, newTest],
       totalPrice: order.totalPrice + reflexTest.priceAtOrder,
       updatedAt: new Date().toISOString(),
@@ -258,25 +274,28 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
    * Add repeat test
    */
   const addRepeatTest = useCallback((
-    orderId: string,
+    orderId: number | string,
     originalTestCode: string,
     repeatReason: string,
-    sampleId?: string
+    sampleId?: number | string
   ) => {
-    const order = orders.find(o => o.orderId === orderId);
+    const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+    const order = orders.find(o => o.orderId === numericOrderId);
     if (!order) return;
 
     const originalTest = order.tests.find(t => t.testCode === originalTestCode);
     if (!originalTest) return;
 
+    const originalTestId = originalTest.id;
     const existingRepeats = order.tests.filter(
-      t => t.originalTestId === originalTestCode ||
-           (t.testCode === originalTestCode && t.isRepeatTest)
+      t => (t.originalTestId === originalTestId && t.isRepeatTest) ||
+           (t.testCode === originalTestCode && t.isRepeatTest && !t.originalTestId)
     ).length;
 
-    const repeatTest = createRepeatTest(originalTest, repeatReason, existingRepeats, sampleId);
+    const numericSampleId = sampleId ? (typeof sampleId === 'string' ? parseInt(sampleId, 10) : sampleId) : undefined;
+    const repeatTest = createRepeatTest(originalTest, repeatReason, existingRepeats, numericSampleId);
 
-    updateOrder(orderId, {
+    updateOrder(numericOrderId, {
       tests: [...order.tests, repeatTest],
       updatedAt: new Date().toISOString(),
     });
@@ -286,12 +305,13 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
    * Mark test as having critical values
    */
   const markTestCritical = useCallback(async (
-    orderId: string,
+    orderId: number | string,
     testCode: string,
     notifiedTo: string
   ) => {
     try {
-      await markTestCriticalMutation.mutateAsync({ orderId, testCode, notifiedTo });
+      const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+      await markTestCriticalMutation.mutateAsync({ orderId: numericId, testCode, notifiedTo });
     } catch (err) {
       logger.error('Failed to mark test as critical', err instanceof Error ? err : undefined);
       throw err;
@@ -301,8 +321,9 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
   /**
    * Acknowledge critical result
    */
-  const acknowledgeCriticalResult = useCallback((orderId: string, testCode: string) => {
-    const order = orders.find(o => o.orderId === orderId);
+  const acknowledgeCriticalResult = useCallback((orderId: number | string, testCode: string) => {
+    const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+    const order = orders.find(o => o.orderId === numericId);
     if (!order) return;
 
     const now = new Date().toISOString();
@@ -316,7 +337,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
       return test;
     });
 
-    updateOrder(orderId, {
+    updateOrder(numericId, {
       tests: updatedTests,
       updatedAt: now,
     });

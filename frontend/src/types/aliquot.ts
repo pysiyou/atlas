@@ -10,10 +10,10 @@ export type AliquotStatus =
   | 'disposed';      // Properly disposed
 
 export interface Aliquot {
-  aliquotId: string;               // ALQ-YYYYMMDD-XXX
-  parentSampleId: string;          // Links to parent sample
-  orderId: string;
-  patientId: string;
+  aliquotId: number;               // Integer ID, displayed as ALQ{id}
+  parentSampleId: number;          // Links to parent sample
+  orderId: number;
+  patientId: number;
 
   // Aliquot details
   aliquotNumber: number;           // 1, 2, 3, etc. (Aliquot 1 of 3)
@@ -52,7 +52,7 @@ export interface Aliquot {
 
 // Aliquoting plan before creating aliquots
 export interface AliquotPlan {
-  sampleId: string;
+  sampleId: number;
   totalVolume: number;
   aliquots: {
     aliquotNumber: number;

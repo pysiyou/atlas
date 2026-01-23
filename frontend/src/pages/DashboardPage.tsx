@@ -11,6 +11,7 @@ import { useOrders } from '@/features/order/OrderContext';
 import { useAppointments } from '@/features/appointment/AppointmentsContext';
 import { useBilling } from '@/features/billing/BillingContext';
 import { formatCurrency, formatDate } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import { getPatientName } from '@/utils/typeHelpers';
 
 export const Dashboard: React.FC = () => {
@@ -119,7 +120,7 @@ export const Dashboard: React.FC = () => {
               >
                 <div>
                   <p className="font-medium text-gray-900">{getPatientName(order.patientId, patients)}</p>
-                  <p className="text-sm text-gray-500">{order.orderId} • {order.tests.length} test(s)</p>
+                  <p className="text-sm text-gray-500">{displayId.order(order.orderId)} • {order.tests.length} test(s)</p>
                 </div>
                 <Badge variant={
                   order.overallStatus === 'completed' ? 'success' :

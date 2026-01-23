@@ -8,7 +8,6 @@ from sqlalchemy.orm.attributes import flag_modified
 from app.models.sample import Sample
 from app.models.order import OrderTest
 from app.schemas.enums import SampleStatus, TestStatus, PriorityLevel
-from app.services.id_generator import generate_id
 from app.services.order_status_updater import update_order_status
 
 # Maximum recollection attempts before requiring supervisor escalation
@@ -27,7 +26,7 @@ def reject_sample_for_recollection(
     db: Session,
     sample: Sample,
     rejection_reason: str,
-    rejected_by: str,
+    rejected_by: int,
     rejection_reasons: list[str] | None = None
 ) -> None:
     """
@@ -46,7 +45,7 @@ def reject_sample_for_recollection(
     # Create sample rejection record
     sample_rejection_record = {
         "rejectedAt": datetime.now(timezone.utc).isoformat(),
-        "rejectedBy": rejected_by,
+        "rejectedBy": str(rejected_by),  # Convert to string as per schema requirement
         "rejectionReasons": rejection_reasons,
         "rejectionNotes": rejection_reason,
         "recollectionRequired": True
@@ -61,18 +60,18 @@ def reject_sample_for_recollection(
     # Update sample status to rejected
     sample.status = SampleStatus.REJECTED
     sample.rejectedAt = datetime.now(timezone.utc)
-    sample.rejectedBy = rejected_by
+    sample.rejectedBy = str(rejected_by)  # Convert to string as per schema requirement
     sample.rejectionReasons = rejection_reasons
     sample.rejectionNotes = rejection_reason
     sample.recollectionRequired = True
-    sample.updatedBy = rejected_by
+    sample.updatedBy = str(rejected_by)  # Convert to string as per model requirement
 
 
 def create_recollection_sample(
     db: Session,
     original_sample: Sample,
     recollection_reason: str,
-    created_by: str,
+    created_by: int,
     update_order_tests: bool = True
 ) -> Sample:
     """
@@ -107,15 +106,11 @@ def create_recollection_sample(
             f"Maximum recollection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. Please escalate to supervisor."
         )
     
-    # Generate new sample ID
-    new_sample_id = generate_id("sample", db)
-    
     # Calculate recollection attempt number
     recollection_attempt = len(original_sample.rejectionHistory or []) + 1
-    
-    # Create new sample inheriting from original
+
+    # Create new sample inheriting from original (ID is auto-generated)
     new_sample = Sample(
-        sampleId=new_sample_id,
         orderId=original_sample.orderId,
         sampleType=original_sample.sampleType,
         status=SampleStatus.PENDING,
@@ -136,17 +131,18 @@ def create_recollection_sample(
         
         # Metadata
         createdAt=datetime.now(timezone.utc),
-        createdBy=created_by,
-        updatedBy=created_by
+        createdBy=str(created_by),  # Convert to string as per model requirement
+        updatedBy=str(created_by)  # Convert to string as per model requirement
     )
-    
-    # Link original sample to new recollection sample
-    original_sample.recollectionSampleId = new_sample_id
-    original_sample.updatedBy = created_by
     
     # Add new sample to database
     db.add(new_sample)
-    
+    db.flush()  # Get auto-generated sampleId
+
+    # Link original sample to new recollection sample
+    original_sample.recollectionSampleId = new_sample.sampleId
+    original_sample.updatedBy = str(created_by)  # Convert to string as per model requirement
+
     # Update order tests to point to new sample if requested
     # IMPORTANT: Exclude SUPERSEDED tests - these were replaced by retests and should
     # not be revived. Only update active tests that need the new sample.
@@ -159,7 +155,7 @@ def create_recollection_sample(
         
         for test in order_tests:
             test.status = TestStatus.PENDING
-            test.sampleId = new_sample_id
+            test.sampleId = new_sample.sampleId
             test.results = None  # Clear previous results for re-testing
             test.resultEnteredAt = None
             test.enteredBy = None
@@ -176,7 +172,7 @@ def reject_and_request_recollection(
     db: Session,
     sample: Sample,
     rejection_reason: str,
-    user_id: str,
+    user_id: int,
     rejection_reasons: list[str] | None = None,
     update_order_tests: bool = True
 ) -> Sample:

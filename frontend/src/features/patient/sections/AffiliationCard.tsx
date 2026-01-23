@@ -1,5 +1,4 @@
 import React from 'react';
-import { Icon } from '@/shared/ui';
 import { isAffiliationActive } from '../usePatientForm';
 import type { Affiliation } from '@/types';
 

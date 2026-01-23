@@ -36,13 +36,13 @@ class OrderTestCreate(BaseModel):
 
 class OrderTestResponse(BaseModel):
     """Schema for test response data."""
-    id: str
+    id: int
     testCode: str
     testName: str  # From relationship
     sampleType: str  # From relationship
     status: TestStatus
     priceAtOrder: float
-    sampleId: str | None = None
+    sampleId: int | None = None
     results: dict | None = None
     resultEnteredAt: datetime | None = None
     enteredBy: str | None = None
@@ -51,12 +51,12 @@ class OrderTestResponse(BaseModel):
     validationNotes: str | None = None
     flags: list[str] | None = None
     technicianNotes: str | None = None
-    
+
     # Re-test tracking fields
     isRetest: bool = False
-    retestOfTestId: str | None = None  # Original test ID that was rejected
+    retestOfTestId: int | None = None  # Original test ID that was rejected
     retestNumber: int = 0  # 0 = original, 1 = 1st retest, etc.
-    retestOrderTestId: str | None = None  # New test ID created after rejection
+    retestOrderTestId: int | None = None  # New test ID created after rejection
     
     # Result rejection history
     resultRejectionHistory: list[ResultRejectionRecord] | None = None
@@ -67,7 +67,7 @@ class OrderTestResponse(BaseModel):
 
 class OrderCreate(BaseModel):
     """Schema for creating a new order."""
-    patientId: str = Field(..., min_length=1, description="Patient ID")
+    patientId: int = Field(..., gt=0, description="Patient ID")
     tests: list[OrderTestCreate] = Field(..., min_length=1, description="At least one test required")
     priority: PriorityLevel = PriorityLevel.ROUTINE
     referringPhysician: str | None = Field(None, max_length=200)
@@ -93,8 +93,8 @@ class OrderUpdate(BaseModel):
 
 
 class OrderResponse(BaseModel):
-    orderId: str
-    patientId: str
+    orderId: int
+    patientId: int
     patientName: str  # From relationship
     orderDate: datetime
     tests: list[OrderTestResponse]

@@ -10,7 +10,7 @@ import { CollectionDetailModal } from '@/features/lab/collection/CollectionDetai
 import { EntryDetailModal } from '@/features/lab/entry/EntryDetailModal';
 import { ValidationDetailModal } from '@/features/lab/validation/ValidationDetailModal';
 
-import type { ContainerType, SampleDisplay, Test, Patient } from '@/types';
+import type { ContainerType, SampleDisplay, Test, TestWithContext } from '@/types';
 
 // Register Collection Detail Modal (Sample Detail)
 registerModal(
@@ -48,22 +48,7 @@ registerModal(
       test, testDef, resultKey, results, technicianNotes, isComplete,
       onResultsChange, onNotesChange, onSave
     } = props as {
-      test: {
-        orderId: string;
-        patientId: string;
-        patientName: string;
-        testName: string;
-        testCode: string;
-        sampleType?: string;
-        sampleId?: string;
-        priority: string;
-        status: string;
-        collectedAt?: string;
-        collectedBy?: string;
-        referringPhysician?: string;
-        patient?: Patient;
-        [key: string]: unknown;
-      };
+      test: TestWithContext;
       testDef: Test | undefined;
       resultKey: string;
       results: Record<string, string>;
@@ -76,7 +61,7 @@ registerModal(
 
     return {
       ...baseProps,
-      test, testDef, resultKey, results, technicianNotes, isComplete,
+      test: test as TestWithContext, testDef, resultKey, results, technicianNotes, isComplete,
       onResultsChange, onNotesChange, onSave
     };
   }
@@ -90,34 +75,19 @@ registerModal(
     const {
       test, commentKey, comments, onCommentsChange, onApprove, onReject, orderHasValidatedTests
     } = props as {
-      test: {
-        orderId: string;
-        patientId: string;
-        patientName: string;
-        testName: string;
-        testCode: string;
-        priority: string;
-        status: string;
-        results?: Record<string, unknown>;
-        flags?: string[];
-        collectedAt?: string;
-        collectedBy?: string;
-        resultEnteredAt?: string;
-        enteredBy?: string;
-        [key: string]: unknown;
-      };
+      test: TestWithContext;
       commentKey: string;
       comments: string;
       onCommentsChange: (commentKey: string, comments: string) => void;
       onApprove: () => void;
-      onReject: (reason: string, type: 're-test' | 're-collect') => void;
+      onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
       /** When true, re-collect option is blocked due to validated tests in the order */
       orderHasValidatedTests?: boolean;
     };
 
     return {
       ...baseProps,
-      test, commentKey, comments, onCommentsChange, onApprove, onReject, orderHasValidatedTests
+      test: test as TestWithContext, commentKey, comments, onCommentsChange, onApprove, onReject, orderHasValidatedTests
     };
   }
 );

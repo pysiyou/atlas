@@ -52,26 +52,26 @@ export interface OrdersContextType {
   /** Add a new order */
   addOrder: (order: Order) => void;
   /** Update an existing order */
-  updateOrder: (orderId: string, updates: Partial<Order>) => void;
+  updateOrder: (orderId: number | string, updates: Partial<Order>) => void;
   /** Delete an order */
-  deleteOrder: (orderId: string) => void;
-  /** Get an order by ID */
-  getOrder: (orderId: string) => Order | undefined;
+  deleteOrder: (orderId: number | string) => void;
+  /** Get an order by ID (accepts number or string for URL compatibility) */
+  getOrder: (orderId: number | string) => Order | undefined;
   /** Update status of a specific test within an order */
   updateTestStatus: (
-    orderId: string,
+    orderId: number | string,
     testCode: string,
     status: TestStatus,
     additionalData?: Partial<TestStatusUpdateData>
   ) => void;
   /** Update overall order status */
-  updateOrderStatus: (orderId: string, status: OrderStatus) => void;
+  updateOrderStatus: (orderId: number | string, status: OrderStatus) => void;
   /** Update payment status */
-  updatePaymentStatus: (orderId: string, paymentStatus: string, amountPaid?: number) => Promise<void>;
+  updatePaymentStatus: (orderId: number | string, paymentStatus: string, amountPaid?: number) => Promise<void>;
   /** Get orders by status */
   getOrdersByStatus: (status: OrderStatus) => Order[];
   /** Get orders by patient ID */
-  getOrdersByPatient: (patientId: string) => Order[];
+  getOrdersByPatient: (patientId: number | string) => Order[];
   /** Search orders by order ID */
   searchOrders: (query: string) => Order[];
   /** Refresh orders from backend */
@@ -81,15 +81,15 @@ export interface OrdersContextType {
 
   // Sample-based collection
   collectSampleForTests: (
-    orderId: string,
+    orderId: number | string,
     testCodes: string[],
-    sampleId: string,
+    sampleId: number | string,
     collectionData: CollectionData
   ) => void;
 
   // Reflex testing
   addReflexTest: (
-    orderId: string,
+    orderId: number | string,
     reflexTest: OrderTest,
     triggeredByTestCode: string,
     reflexRule: string
@@ -97,20 +97,20 @@ export interface OrdersContextType {
 
   // Repeat testing
   addRepeatTest: (
-    orderId: string,
+    orderId: number | string,
     originalTestCode: string,
     repeatReason: string,
-    sampleId?: string
+    sampleId?: number | string
   ) => void;
 
   // Critical results
   markTestCritical: (
-    orderId: string,
+    orderId: number | string,
     testCode: string,
     notifiedTo: string
   ) => void;
 
-  acknowledgeCriticalResult: (orderId: string, testCode: string) => void;
+  acknowledgeCriticalResult: (orderId: number | string, testCode: string) => void;
 
   // Batch operations
   getOrdersForBatchCollection: (sampleType: string) => Order[];

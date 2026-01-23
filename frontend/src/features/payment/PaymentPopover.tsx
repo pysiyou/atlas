@@ -9,6 +9,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Popover, Button, Icon, Alert, Badge } from '@/shared/ui';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { formatCurrency } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
 import { getEnabledPaymentMethods, getDefaultPaymentMethod, type PaymentMethod } from '@/types/billing';
 import { createPayment, type PaymentCreate } from '@/services/api/payments';
@@ -71,7 +72,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       // Build payment request
       const paymentData: PaymentCreate = {
-        orderId: order.orderId,
+        orderId: order.orderId, // number is fine, API will handle conversion
         amount,
         paymentMethod,
         notes: notes.trim() || undefined,
@@ -108,7 +109,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   return (
     <PopoverForm
       title="Process Payment"
-      subtitle={`Order ${order.orderId}`}
+      subtitle={`Order ${displayId.order(order.orderId)}`}
       onCancel={onCancel}
       onConfirm={handleSubmit}
       confirmLabel="Process Payment"

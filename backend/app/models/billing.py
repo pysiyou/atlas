@@ -1,7 +1,7 @@
 """
 Billing Models - Invoice, Payment, InsuranceClaim - All fields use camelCase
 """
-from sqlalchemy import Column, String, Float, DateTime, JSON, Enum, ForeignKey, Boolean
+from sqlalchemy import Column, String, Integer, Float, DateTime, JSON, Enum, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
@@ -11,9 +11,9 @@ from app.schemas.enums import PaymentStatus, PaymentMethod, ClaimStatus
 class Invoice(Base):
     __tablename__ = "invoices"
 
-    invoiceId = Column("invoice_id", String, primary_key=True, index=True)  # INV-YYYYMMDD-XXX
-    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, index=True)
-    patientId = Column("patient_id", String, ForeignKey("patients.id"), nullable=False, index=True)
+    invoiceId = Column("invoice_id", Integer, primary_key=True, autoincrement=True, index=True)
+    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
+    patientId = Column("patient_id", Integer, ForeignKey("patients.id"), nullable=False, index=True)
     patientName = Column("patient_name", String, nullable=False)
 
     # Items (JSON array)
@@ -38,9 +38,9 @@ class Invoice(Base):
 class Payment(Base):
     __tablename__ = "payments"
 
-    paymentId = Column("payment_id", String, primary_key=True, index=True)  # PAY-YYYYMMDD-XXX
-    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, index=True)
-    invoiceId = Column("invoice_id", String, ForeignKey("invoices.invoice_id"), nullable=True, index=True)
+    paymentId = Column("payment_id", Integer, primary_key=True, autoincrement=True, index=True)
+    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
+    invoiceId = Column("invoice_id", Integer, ForeignKey("invoices.invoice_id"), nullable=True, index=True)
 
     amount = Column(Float, nullable=False)
     paymentMethod = Column("payment_method", Enum(PaymentMethod), nullable=False)
@@ -57,10 +57,10 @@ class Payment(Base):
 class InsuranceClaim(Base):
     __tablename__ = "insurance_claims"
 
-    claimId = Column("claim_id", String, primary_key=True, index=True)  # CLM-YYYYMMDD-XXX
-    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, index=True)
-    invoiceId = Column("invoice_id", String, ForeignKey("invoices.invoice_id"), nullable=False, index=True)
-    patientId = Column("patient_id", String, ForeignKey("patients.id"), nullable=False, index=True)
+    claimId = Column("claim_id", Integer, primary_key=True, autoincrement=True, index=True)
+    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
+    invoiceId = Column("invoice_id", Integer, ForeignKey("invoices.invoice_id"), nullable=False, index=True)
+    patientId = Column("patient_id", Integer, ForeignKey("patients.id"), nullable=False, index=True)
 
     insuranceProvider = Column("insurance_provider", String, nullable=False)
     insuranceNumber = Column("insurance_number", String, nullable=False)

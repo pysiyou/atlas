@@ -10,6 +10,7 @@
 import React from 'react';
 import { SectionContainer, Badge, Avatar } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import type { OrderTest, PaymentStatus } from '@/types';
 
 // ============================================================================
@@ -17,7 +18,7 @@ import type { OrderTest, PaymentStatus } from '@/types';
 // ============================================================================
 
 interface OrderHeaderProps {
-  orderId: string;
+  orderId: number;
   orderDate: string;
   priority: string;
   status: string;
@@ -34,7 +35,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
   return (
     <div className={className}>
       <div className="flex items-center gap-3 flex-wrap">
-        <h2 className="text-2xl font-bold text-gray-900">{orderId}</h2>
+        <h2 className="text-2xl font-bold text-gray-900">{displayId.order(orderId)}</h2>
         <Badge variant={priority} size="sm" />
         <Badge variant={status} size="sm" />
         <span className="text-sm text-gray-600">{formatDate(orderDate)}</span>
@@ -49,7 +50,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
 
 interface OrderMetadataProps {
   patientName: string;
-  patientId: string;
+  patientId: number;
   orderDate: string;
   referringPhysician?: string;
   className?: string;
@@ -68,7 +69,7 @@ export const OrderMetadata: React.FC<OrderMetadataProps> = ({
       <div>
         <div className="font-medium text-gray-900">{patientName}</div>
         <div className="text-xs text-gray-500">
-          {patientId} • {formatDate(orderDate)}
+          {displayId.patient(patientId)} • {formatDate(orderDate)}
           {referringPhysician && ` • ${referringPhysician}`}
         </div>
       </div>

@@ -23,7 +23,7 @@ export interface SampleRequirement {
   containerTypes: ContainerType[];
   containerTopColors: ContainerTopColor[];
   priority: 'routine' | 'urgent' | 'stat';
-  orderId: string;
+  orderId: number;
 }
 
 /**
@@ -91,7 +91,7 @@ export function calculateRequiredSamples(
   tests: OrderTest[],
   testCatalog: Test[],
   orderPriority: 'routine' | 'urgent' | 'stat',
-  orderId: string
+  orderId: number
 ): SampleRequirement[] {
   const grouped = groupTestsBySample(tests, testCatalog);
   const requiredSamples: SampleRequirement[] = [];
@@ -131,13 +131,12 @@ export function calculateRequiredSamples(
 }
 
 /**
- * Generate aliquot ID
+ * Generate aliquot display ID
+ * Note: Actual aliquot IDs are auto-generated integers by the backend
+ * This is only for display purposes when showing aliquot relationships
  */
-export function generateAliquotId(sampleId: string, aliquotNumber: number): string {
-  const random = Math.floor(Math.random() * 1000)
-    .toString()
-    .padStart(3, '0');
-  return `ALQ-${sampleId.split('-').slice(1).join('-')}-${aliquotNumber}-${random}`;
+export function formatAliquotDisplay(sampleId: number, aliquotNumber: number): string {
+  return `SAM${sampleId}-ALQ${aliquotNumber}`;
 }
 
 /**

@@ -1,7 +1,7 @@
 """
 Report Model - All fields use camelCase
 """
-from sqlalchemy import Column, String, DateTime, ForeignKey, Boolean
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Boolean
 from sqlalchemy.sql import func
 from app.database import Base
 
@@ -9,9 +9,9 @@ from app.database import Base
 class Report(Base):
     __tablename__ = "reports"
 
-    reportId = Column("report_id", String, primary_key=True, index=True)  # RPT-YYYYMMDD-XXX
-    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, unique=True, index=True)
-    patientId = Column("patient_id", String, ForeignKey("patients.id"), nullable=False, index=True)
+    reportId = Column("report_id", Integer, primary_key=True, autoincrement=True, index=True)
+    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, unique=True, index=True)
+    patientId = Column("patient_id", Integer, ForeignKey("patients.id"), nullable=False, index=True)
 
     # Report generation
     generatedAt = Column("generated_at", DateTime(timezone=True), nullable=False)

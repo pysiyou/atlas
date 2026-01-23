@@ -9,7 +9,6 @@ from app.core.dependencies import require_admin
 from app.core.security import get_password_hash
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate, UserResponse
-from app.services.id_generator import generate_id
 
 router = APIRouter()
 
@@ -28,7 +27,7 @@ def get_users(
 
 @router.get("/users/{user_id}", response_model=UserResponse)
 def get_user(
-    user_id: str,
+    user_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -61,12 +60,8 @@ def create_user(
             detail=f"Username {user_data.username} already exists"
         )
     
-    # Generate ID
-    user_id = generate_id("user", db)
-    
     # Create user
     user = User(
-        id=user_id,
         username=user_data.username,
         hashedPassword=get_password_hash(user_data.password),
         name=user_data.name,
@@ -84,7 +79,7 @@ def create_user(
 
 @router.put("/users/{user_id}", response_model=UserResponse)
 def update_user(
-    user_id: str,
+    user_id: int,
     user_data: UserUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
@@ -114,7 +109,7 @@ def update_user(
 
 @router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(
-    user_id: str,
+    user_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):

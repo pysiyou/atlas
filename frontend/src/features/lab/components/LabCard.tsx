@@ -6,6 +6,7 @@
 import React, { type ReactNode } from 'react';
 import { Card, Badge } from '@/shared/ui';
 import { formatDate } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import { useUsers } from '@/hooks';
 import {
   LAB_CARD_TYPOGRAPHY,
@@ -18,12 +19,12 @@ import {
 
 interface PatientContext {
   patientName?: string;
-  orderId: string;
+  orderId: number;
   referringPhysician?: string;
 }
 
 interface SampleInfo {
-  sampleId?: string;
+  sampleId?: number;
   collectedAt?: string;
   collectedBy?: string;
 }
@@ -100,7 +101,7 @@ export const LabCard: React.FC<LabCardProps> = ({
                   <span className={LAB_CARD_CONTEXT.separator}>|</span>
                 </>
               )}
-              <span>{context.orderId}</span>
+              <span>{displayId.order(context.orderId)}</span>
               {context.referringPhysician && (
                 <>
                   <span className={LAB_CARD_CONTEXT.separator}>|</span>
@@ -112,7 +113,7 @@ export const LabCard: React.FC<LabCardProps> = ({
             {/* Sample collection info */}
             {sampleInfo?.sampleId && sampleInfo?.collectedAt && (
               <span className={LAB_CARD_TYPOGRAPHY.metadata}>
-                Sample <span className={LAB_CARD_CONTEXT.patientName}>{sampleInfo.sampleId}</span> collected{' '}
+                Sample <span className={LAB_CARD_CONTEXT.patientName}>{displayId.sample(sampleInfo.sampleId)}</span> collected{' '}
                 <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>{formatDate(sampleInfo.collectedAt)}</span>
                 {sampleInfo.collectedBy && <span> by {getUserName(sampleInfo.collectedBy)}</span>}
               </span>

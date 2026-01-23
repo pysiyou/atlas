@@ -124,7 +124,7 @@ export function usePaymentMethodByOrder() {
   const { payments, isLoading } = usePaymentsList();
 
   const paymentMethodMap = useMemo(() => {
-    const map = new Map<string, PaymentMethod>();
+    const map = new Map<number, PaymentMethod>();
     
     // Sort payments by date descending to get most recent first
     const sortedPayments = [...payments].sort(
@@ -144,7 +144,11 @@ export function usePaymentMethodByOrder() {
   return {
     paymentMethodMap,
     isLoading,
-    getPaymentMethod: (orderId: string) => paymentMethodMap.get(orderId),
+    getPaymentMethod: (orderId: number | string) => {
+      const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+      if (isNaN(numericId)) return undefined;
+      return paymentMethodMap.get(numericId);
+    },
   };
 }
 

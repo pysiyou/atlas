@@ -85,22 +85,28 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
   /**
    * Get a sample by ID (local lookup)
    */
-  const getSample = useCallback((sampleId: string) => {
-    return samples.find((s) => s.sampleId === sampleId);
+  const getSample = useCallback((sampleId: number | string) => {
+    const numericId = typeof sampleId === 'string' ? parseInt(sampleId, 10) : sampleId;
+    if (isNaN(numericId)) return undefined;
+    return samples.find((s) => s.sampleId === numericId);
   }, [samples]);
 
   /**
    * Get samples by order ID (local filter)
    */
-  const getSamplesByOrder = useCallback((orderId: string) => {
-    return samples.filter((s) => s.orderId === orderId);
+  const getSamplesByOrder = useCallback((orderId: number | string) => {
+    const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+    if (isNaN(numericId)) return [];
+    return samples.filter((s) => s.orderId === numericId);
   }, [samples]);
 
   /**
    * Get samples by patient ID (local filter)
    */
-  const getSamplesByPatient = useCallback((patientId: string, orders: Array<{ orderId: string; patientId: string }>) => {
-    const orderIds = orders.filter((o) => o.patientId === patientId).map((o) => o.orderId);
+  const getSamplesByPatient = useCallback((patientId: number | string, orders: Array<{ orderId: number; patientId: number }>) => {
+    const numericPatientId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
+    if (isNaN(numericPatientId)) return [];
+    const orderIds = orders.filter((o) => o.patientId === numericPatientId).map((o) => o.orderId);
     return samples.filter((s) => orderIds.includes(s.orderId));
   }, [samples]);
 
@@ -122,15 +128,16 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
    * Collect a sample via backend API
    */
   const collectSample = useCallback(async (
-    sampleId: string,
+    sampleId: number | string,
     collectedVolume: number,
     actualContainerType: ContainerType,
     actualContainerColor: ContainerTopColor,
     collectionNotes?: string
   ) => {
     try {
+      const sampleIdStr = typeof sampleId === 'string' ? sampleId : sampleId.toString();
       await collectSampleMutation.mutateAsync({
-        sampleId,
+        sampleId: sampleIdStr,
         collectedVolume,
         actualContainerType,
         actualContainerColor,
@@ -146,14 +153,15 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
    * Reject a sample via backend API
    */
   const rejectSample = useCallback(async (
-    sampleId: string,
+    sampleId: number | string,
     reasons: RejectionReason[],
     notes?: string,
     requireRecollection: boolean = true
   ) => {
     try {
+      const sampleIdStr = typeof sampleId === 'string' ? sampleId : sampleId.toString();
       await rejectSampleMutation.mutateAsync({
-        sampleId,
+        sampleId: sampleIdStr,
         reasons,
         notes,
         requireRecollection,
@@ -168,11 +176,12 @@ export const SamplesProvider: React.FC<SamplesProviderProps> = ({ children }) =>
    * Request recollection for a rejected sample
    */
   const requestRecollection = useCallback(async (
-    sampleId: string,
+    sampleId: number | string,
     reason: string
   ) => {
     try {
-      await requestRecollectionMutation.mutateAsync({ sampleId, reason });
+      const sampleIdStr = typeof sampleId === 'string' ? sampleId : sampleId.toString();
+      await requestRecollectionMutation.mutateAsync({ sampleId: sampleIdStr, reason });
     } catch (err) {
       logger.error('Failed to request recollection', err instanceof Error ? err : undefined);
       throw err;

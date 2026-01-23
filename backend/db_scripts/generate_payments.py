@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session
 from app.models.billing import Payment
 from app.models.order import Order
 from app.schemas.enums import PaymentStatus, PaymentMethod
-from app.services.id_generator import generate_id
 
 
 def generate_payments_for_order(order: Order, db: Session) -> list[Payment]:
@@ -52,19 +51,18 @@ def generate_payments_for_order(order: Order, db: Session) -> list[Payment]:
     )
     
     payment = Payment(
-        paymentId=generate_id("payment", db),
         orderId=order.orderId,
         invoiceId=None,  # Can be linked later if invoices are generated
         amount=order.totalPrice,
         paymentMethod=payment_method,
         paidAt=payment_date,
-        receivedBy="system",
+        receivedBy=1,  # System/admin user ID (integer)
         receiptGenerated=True,
         notes=f"Full payment via {payment_method.value}"
     )
-    
+
     db.add(payment)
-    db.flush()  # Flush to make ID visible for next iteration
+    db.flush()  # Get auto-generated paymentId
     payments.append(payment)
     order.paymentStatus = PaymentStatus.PAID
     

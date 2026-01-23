@@ -6,6 +6,7 @@ import React from 'react';
 import { SectionContainer, Badge } from '@/shared/ui';
 import { User, Phone, Mail, MapPin, Shield, UserPlus, Calendar, Clock } from 'lucide-react';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import type { Patient } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_CONFIG } from '@/types';
 import { isAffiliationActive } from '../usePatientForm';
@@ -32,7 +33,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           <User className="text-gray-400 mt-1" size={20} />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Patient ID</div>
-            <div className="font-mono font-medium text-gray-900">{patient.id}</div>
+            <div className="font-mono font-medium text-gray-900">{displayId.patient(patient.id)}</div>
           </div>
         </div>
         

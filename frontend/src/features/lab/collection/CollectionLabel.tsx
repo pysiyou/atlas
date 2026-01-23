@@ -1,5 +1,6 @@
 import type { SampleDisplay } from '../types';
 import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
+import { displayId } from '@/utils/id-display';
 
 /**
  * Generates HTML content for printing a sample label
@@ -12,6 +13,8 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
   }
 
   const sampleId = sample.sampleId;
+  const sampleIdDisplay = displayId.sample(sampleId);
+  const patientIdDisplay = displayId.patient(order.patientId);
   const sampleType = sample.sampleType || 'unknown';
   const containerTopColor = sample.actualContainerColor;
   const containerType = sample.actualContainerType;
@@ -26,7 +29,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
     <!DOCTYPE html>
     <html>
       <head>
-        <title>Label - ${sampleId}</title>
+        <title>Label - ${sampleIdDisplay}</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
         <style>
@@ -74,7 +77,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
 
             <!-- Patient ID and Sample Type -->
             <div class="text-[10px] text-gray-600 text-center leading-tight">
-              ${order.patientId} | ${sampleType.toUpperCase()}
+              ${patientIdDisplay} | ${sampleType.toUpperCase()}
             </div>
 
             <!-- Container Info -->
@@ -89,7 +92,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
 
             <!-- Sample ID -->
             <div class="text-[10px] text-gray-600 text-center leading-tight">
-              ${sampleId}
+              ${sampleIdDisplay}
             </div>
 
             <!-- Date and Time -->
@@ -102,7 +105,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
         <script>
           (function() {
             try {
-              JsBarcode("#barcode", "${sampleId}", {
+              JsBarcode("#barcode", "${sampleIdDisplay}", {
                 format: "CODE128",
                 width: 1.2,
                 height: 35,

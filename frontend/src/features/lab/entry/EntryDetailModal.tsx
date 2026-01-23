@@ -11,6 +11,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { Badge, Button, Icon, SectionContainer, CircularProgress } from '@/shared/ui';
+import { displayId } from '@/utils/id-display';
 import { EntryForm } from './EntryForm';
 import { EntryRejectionSection } from './EntryRejectionSection';
 import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../components/LabDetailModal';
@@ -250,7 +251,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
             fields: [
               { label: "Test Code", badge: { value: test.testCode, variant: "primary" } },
               { label: "Sample Type", badge: test.sampleType ? { value: test.sampleType, variant: test.sampleType } : undefined },
-              { label: "Sample ID", badge: test.sampleId ? { value: test.sampleId, variant: "primary" } : undefined },
+              { label: "Sample ID", badge: test.sampleId ? { value: displayId.sample(test.sampleId), variant: "primary" } : undefined },
               { 
                 label: "Turnaround Time", 
                 value: turnaroundTime ? (

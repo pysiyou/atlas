@@ -16,7 +16,6 @@ import type { Test } from '@/types';
 /**
  * Admin Test Table Columns
  * Simple column definition for admin page test overview
- * Follows the standard pattern with visibility and priority
  */
 const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
   {
@@ -24,8 +23,6 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     header: 'Code',
     width: 'sm',
     sortable: true,
-    visible: 'always',
-    priority: 1,
     render: (test: Test) => (
       <span className="text-xs text-sky-600 font-medium font-mono truncate block">
         {test.code}
@@ -37,8 +34,6 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     header: 'Test Name',
     width: 'fill',
     sortable: true,
-    visible: 'always',
-    priority: 2,
     render: (test: Test) => (
       <div className="font-medium text-gray-900 truncate">{test.name}</div>
     ),
@@ -48,8 +43,6 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     header: 'Category',
     width: 'md',
     sortable: true,
-    visible: 'tablet',
-    priority: 3,
     render: (test: Test) => (
       <span className="text-xs text-gray-600 uppercase truncate block">
         {test.category}
@@ -62,8 +55,6 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     width: 'sm',
     align: 'right',
     sortable: true,
-    visible: 'tablet',
-    priority: 4,
     render: (test: Test) => (
       <div className="font-medium text-sky-600 truncate">
         {formatCurrency(test.price)}
@@ -75,8 +66,6 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     header: 'TAT (hrs)',
     width: 'sm',
     sortable: true,
-    visible: 'desktop',
-    priority: 5,
     render: (test: Test) => (
       <div className="text-xs text-gray-500 truncate">{test.turnaroundTime}h</div>
     ),
@@ -90,10 +79,23 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
 const AdminTestTable: React.FC<{ tests: Test[] }> = ({ tests }) => {
   const columns = useMemo(() => getAdminTestTableColumns(), []);
 
+  // Create a simple viewConfig for the Table component
+  const viewConfig = useMemo(() => ({
+    fullColumns: columns,
+    mediumColumns: columns,
+    compactColumns: columns.slice(0, 3), // Code, Name, Category
+    CardComponent: ({ item }: { item: Test }) => (
+      <div className="p-3 border rounded">
+        <div className="font-medium">{item.name}</div>
+        <div className="text-xs text-gray-500">{item.code}</div>
+      </div>
+    ),
+  }), [columns]);
+
   return (
     <Table<Test>
       data={tests}
-      columns={columns}
+      viewConfig={viewConfig}
       emptyMessage="No tests available"
       pagination={false}
     />

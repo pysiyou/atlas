@@ -4,11 +4,11 @@ import type { Order, PaymentMethod, PaymentStatus, Payment } from '@/types';
 
 export interface OrderPaymentDetails {
   // Order identity
-  orderId: string;
+  orderId: number;
   orderDate: string;
 
   // Patient info
-  patientId: string;
+  patientId: number;
   patientName: string;
 
   // Order details
@@ -21,7 +21,7 @@ export interface OrderPaymentDetails {
   paymentStatus: PaymentStatus;
   paymentMethod?: PaymentMethod;
   paymentDate?: string;
-  paymentId?: string;
+  paymentId?: number;
   paymentNotes?: string;
 
   // Original order reference (for full access if needed)
@@ -62,8 +62,8 @@ export function createOrderPaymentDetails(
   };
 }
 
-export function buildPaymentsByOrderMap(payments: Payment[]): Map<string, Payment> {
-  const map = new Map<string, Payment>();
+export function buildPaymentsByOrderMap(payments: Payment[]): Map<number, Payment> {
+  const map = new Map<number, Payment>();
   
   // Sort payments by date descending to get most recent first
   const sortedPayments = [...payments].sort(

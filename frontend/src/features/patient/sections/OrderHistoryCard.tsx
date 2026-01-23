@@ -6,13 +6,14 @@ import React from 'react';
 import { SectionContainer, Badge, Button } from '@/shared/ui';
 import { Plus, Eye, FileText } from 'lucide-react';
 import { formatDate, formatCurrency } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
 
 interface OrderHistoryCardProps {
   orders: Order[];
   onCreateOrder: () => void;
   onViewAllOrders: () => void;
-  onOrderClick: (orderId: string) => void;
+  onOrderClick: (orderId: number | string) => void;
 }
 
 export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
@@ -79,7 +80,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold text-gray-900 text-sm">{order.orderId}</span>
+                        <span className="font-semibold text-gray-900 text-sm">{displayId.order(order.orderId)}</span>
                         <Badge variant={order.overallStatus} size="sm" />
                       </div>
                       <div className="text-xs text-gray-600">

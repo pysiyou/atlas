@@ -53,12 +53,14 @@ export function getTestCategory(testCode: string, testCatalog: Test[]): TestCate
 
 /**
  * Get patient name from patient ID by looking up in patients array
- * @param patientId - The patient ID to look up
+ * @param patientId - The patient ID to look up (number or string for compatibility)
  * @param patients - Array of Patient entities
  * @returns The patient's full name, or 'Unknown Patient' if not found
  */
-export function getPatientName(patientId: string, patients: Patient[]): string {
-  const patient = patients.find((p) => p.id === patientId);
+export function getPatientName(patientId: number | string, patients: Patient[]): string {
+  const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
+  if (isNaN(numericId)) return 'Unknown Patient';
+  const patient = patients.find((p) => p.id === numericId);
   return patient?.fullName || 'Unknown Patient';
 }
 

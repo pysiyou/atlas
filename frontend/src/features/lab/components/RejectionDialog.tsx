@@ -17,7 +17,7 @@ import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
 
 interface RejectionDialogContentProps {
-  orderId: string;
+  orderId: string | number;
   testCode: string;
   testName?: string;
   patientName?: string;
@@ -231,7 +231,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
  * Props for the RejectionDialog popover wrapper
  */
 interface RejectionDialogProps {
-  orderId: string;
+  orderId: string | number;
   testCode: string;
   testName?: string;
   patientName?: string;

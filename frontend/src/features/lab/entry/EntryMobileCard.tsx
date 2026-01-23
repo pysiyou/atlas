@@ -8,6 +8,7 @@
 import React from 'react';
 import { Badge, IconButton } from '@/shared/ui';
 import { formatDate } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import { getPatientName } from '@/utils/typeHelpers';
 import { usePatients } from '@/hooks';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
@@ -48,8 +49,6 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
   if (!testDef?.parameters) return null;
 
   const patientName = getPatientName(test.patientId, patients);
-  const parameterCount = testDef.parameters.length;
-  const filledCount = Object.values(results).filter(v => v?.trim()).length;
   const isRetest = test.isRetest === true;
   const isSampleRecollection = test.sampleIsRecollection === true;
 
@@ -75,9 +74,9 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
           <div className="text-sm font-semibold text-gray-900 truncate">{test.testName}</div>
           <div className="flex items-center gap-2">
             <div className="text-xs text-sky-600 font-medium font-mono truncate">{test.testCode}</div>
-            {test.sampleId && !test.sampleId.includes('PENDING') && (
-              <div className="text-xs text-sky-600 font-medium font-mono truncate" title={test.sampleId}>
-                • {test.sampleId}
+            {test.sampleId && (
+              <div className="text-xs text-sky-600 font-medium font-mono truncate" title={displayId.sample(test.sampleId)}>
+                • {displayId.sample(test.sampleId)}
               </div>
             )}
           </div>
@@ -88,7 +87,7 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
       <div className="grow">
         <div className="space-y-1">
           <div className="text-xs text-gray-700 font-medium">{patientName}</div>
-          <div className="text-xs text-gray-500">{test.orderId}</div>
+          <div className="text-xs text-gray-500">{displayId.order(test.orderId)}</div>
           {test.collectedAt && (
             <div className="text-xs text-gray-500 mt-1">
               Collected: {formatDate(test.collectedAt)}

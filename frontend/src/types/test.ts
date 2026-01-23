@@ -187,13 +187,13 @@ import type { ResultRejectionRecord } from './order';
 import type { RejectionRecord } from './sample';
 
 export interface TestWithContext {
-  orderId: string;
-  patientId: string;
+  orderId: number;
+  patientId: number;
   patientName: string;
   testName: string;
   testCode: string;
   sampleType?: string;
-  sampleId?: string;
+  sampleId?: number;
   priority: string;
   status: string;
   collectedAt?: string;
@@ -211,13 +211,13 @@ export interface TestWithContext {
 
   // Retest tracking fields (for result validation re-test flow)
   isRetest?: boolean;
-  retestOfTestId?: string;
+  retestOfTestId?: number;
   retestNumber?: number;
   resultRejectionHistory?: ResultRejectionRecord[];
 
   // Sample recollection tracking fields (for sample re-collect flow)
   sampleIsRecollection?: boolean;
-  sampleOriginalSampleId?: string;
+  sampleOriginalSampleId?: number;
   sampleRecollectionReason?: string;
   sampleRecollectionAttempt?: number;
   sampleRejectionHistory?: RejectionRecord[];

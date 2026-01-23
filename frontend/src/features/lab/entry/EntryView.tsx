@@ -112,14 +112,15 @@ export const EntryView: React.FC = () => {
   }, [results]);
 
   const handleSaveResults = useCallback(async (
-    orderId: string,
+    orderId: number | string,
     testCode: string,
     finalResults?: Record<string, string>,
     finalNotes?: string
   ) => {
     if (!testsContext || !ordersContext) return;
 
-    const resultKey = `${orderId}-${testCode}`;
+    const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+    const resultKey = `${orderIdStr}-${testCode}`;
 
     // Prevent concurrent submissions
     if (isSaving[resultKey]) {
@@ -138,8 +139,9 @@ export const EntryView: React.FC = () => {
       return;
     }
 
+    const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
     const formattedResults: Record<string, TestResult> = {};
-    const testItem = allTests.find(t => t.orderId === orderId && t.testCode === testCode);
+    const testItem = allTests.find(t => t.orderId === numericOrderId && t.testCode === testCode);
     if (!testItem) {
       toast.error('Test not found in current list');
       return;
@@ -179,7 +181,8 @@ export const EntryView: React.FC = () => {
     setIsSaving(prev => ({ ...prev, [resultKey]: true }));
 
     try {
-      await resultAPI.enterResults(orderId, testCode, {
+      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+      await resultAPI.enterResults(orderIdStr, testCode, {
         results: formattedResults,
         technicianNotes: finalNotes || technicianNotes[resultKey] || undefined,
       });

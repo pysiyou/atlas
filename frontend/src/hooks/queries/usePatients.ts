@@ -100,7 +100,7 @@ export function usePatientSearch(searchQuery: string) {
     const query = searchQuery.toLowerCase();
     return patients.filter(patient =>
       patient.fullName.toLowerCase().includes(query) ||
-      patient.id.toLowerCase().includes(query) ||
+      patient.id.toString().toLowerCase().includes(query) ||
       patient.phone.includes(searchQuery)
     );
   }, [patients, searchQuery]);
@@ -128,18 +128,22 @@ export function usePatientNameLookup() {
   const { patients, isLoading } = usePatientsList();
 
   const patientsMap = useMemo(() => {
-    const map = new Map<string, Patient>();
+    const map = new Map<number, Patient>();
     patients.forEach(p => map.set(p.id, p));
     return map;
   }, [patients]);
 
-  const getPatientName = useCallback((patientId: string): string => {
-    const patient = patientsMap.get(patientId);
-    return patient?.fullName ?? patientId;
+  const getPatientName = useCallback((patientId: number | string): string => {
+    const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
+    if (isNaN(numericId)) return 'Unknown Patient';
+    const patient = patientsMap.get(numericId);
+    return patient?.fullName ?? 'Unknown Patient';
   }, [patientsMap]);
 
-  const getPatient = useCallback((patientId: string): Patient | undefined => {
-    return patientsMap.get(patientId);
+  const getPatient = useCallback((patientId: number | string): Patient | undefined => {
+    const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
+    if (isNaN(numericId)) return undefined;
+    return patientsMap.get(numericId);
   }, [patientsMap]);
 
   return {
@@ -189,11 +193,14 @@ export function useUpdatePatient() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<Patient> }) =>
-      patientAPI.update(id, updates),
+    mutationFn: ({ id, updates }: { id: number | string; updates: Partial<Patient> }) => {
+      const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+      return patientAPI.update(numericId.toString(), updates);
+    },
     onSuccess: (_, variables) => {
+      const idStr = typeof variables.id === 'string' ? variables.id : variables.id.toString();
       // Invalidate specific patient and list
-      queryClient.invalidateQueries({ queryKey: queryKeys.patients.byId(variables.id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.patients.byId(idStr) });
       queryClient.invalidateQueries({ queryKey: queryKeys.patients.lists() });
     },
   });
@@ -209,7 +216,10 @@ export function useDeletePatient() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => patientAPI.delete(id),
+    mutationFn: (id: number | string) => {
+      const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+      return patientAPI.delete(numericId.toString());
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.patients.all });
     },

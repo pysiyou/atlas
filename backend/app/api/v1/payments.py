@@ -13,7 +13,6 @@ from app.models.billing import Payment
 from app.models.order import Order
 from app.schemas.payment import PaymentCreate, PaymentResponse
 from app.schemas.enums import PaymentStatus, PaymentMethod
-from app.services.id_generator import generate_id
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +51,7 @@ def _enrich_payment(payment: Payment, order: Optional[Order]) -> dict:
 
 @router.get("/payments", response_model=List[PaymentResponse])
 def get_payments(
-    orderId: str | None = None,
+    orderId: int | None = None,
     paymentMethod: PaymentMethod | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -100,7 +99,7 @@ def get_payments(
 
 @router.get("/payments/{paymentId}", response_model=PaymentResponse)
 def get_payment(
-    paymentId: str,
+    paymentId: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -120,7 +119,7 @@ def get_payment(
 
 @router.get("/payments/order/{orderId}", response_model=List[PaymentResponse])
 def get_payments_by_order(
-    orderId: str,
+    orderId: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -187,9 +186,7 @@ def create_payment(
         )
     
     # Create payment
-    payment_id = generate_id("payment", db)
     payment = Payment(
-        paymentId=payment_id,
         orderId=payment_data.orderId,
         invoiceId=None,  # Can be linked to invoice later if needed
         amount=payment_data.amount,

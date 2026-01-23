@@ -35,15 +35,15 @@ export interface SamplesContextType {
   refreshSamples: () => Promise<void>;
 
   // Query operations
-  getSample: (sampleId: string) => Sample | undefined;
-  getSamplesByOrder: (orderId: string) => Sample[];
-  getSamplesByPatient: (patientId: string, orders: Array<{ orderId: string; patientId: string }>) => Sample[];
+  getSample: (sampleId: number | string) => Sample | undefined;
+  getSamplesByOrder: (orderId: number | string) => Sample[];
+  getSamplesByPatient: (patientId: number | string, orders: Array<{ orderId: number; patientId: number }>) => Sample[];
   getSamplesByStatus: (status: SampleStatus) => Sample[];
   getPendingSamples: () => Promise<Sample[]>;
 
   // Collection operations (async - call backend API)
   collectSample: (
-    sampleId: string,
+    sampleId: number | string,
     collectedVolume: number,
     actualContainerType: ContainerType,
     actualContainerColor: ContainerTopColor,
@@ -51,14 +51,14 @@ export interface SamplesContextType {
   ) => Promise<void>;
 
   rejectSample: (
-    sampleId: string,
+    sampleId: number | string,
     reasons: RejectionReason[],
     notes?: string,
     requireRecollection?: boolean
   ) => Promise<void>;
 
   requestRecollection: (
-    sampleId: string,
+    sampleId: number | string,
     reason: string
   ) => Promise<void>;
 

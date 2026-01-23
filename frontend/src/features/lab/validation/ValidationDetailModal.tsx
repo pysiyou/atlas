@@ -12,6 +12,7 @@
 
 import React from 'react';
 import { Button, Icon, Popover, SectionContainer } from '@/shared/ui';
+import { displayId } from '@/utils/id-display';
 import { ValidationForm } from './ValidationForm';
 import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../components/LabDetailModal';
 import { RejectionDialogContent } from '../components/RejectionDialog';
@@ -214,7 +215,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           {
             title: "Collection Information",
             fields: [
-              { label: "Sample ID", badge: test.sampleId ? { value: test.sampleId, variant: "primary" } : undefined },
+              { label: "Sample ID", badge: test.sampleId ? { value: displayId.sample(test.sampleId), variant: "primary" } : undefined },
               { label: "Collected", timestamp: test.collectedAt, user: test.collectedBy },
               { label: "Sample Type", badge: test.sampleType ? { value: test.sampleType, variant: test.sampleType } : undefined },
             ]
@@ -224,7 +225,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
             fields: [
               { label: "Entered", timestamp: test.resultEnteredAt, user: test.enteredBy },
               { label: "Test Code", badge: test.testCode ? { value: test.testCode, variant: "primary" } : undefined },
-              { label: "Order ID", badge: test.orderId ? { value: test.orderId, variant: "primary" } : undefined },
+              { label: "Order ID", badge: test.orderId ? { value: displayId.order(test.orderId), variant: "primary" } : undefined },
             ]
           }
         ]}

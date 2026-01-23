@@ -126,18 +126,18 @@ export function LabWorkflowView<T>({
  */
 // eslint-disable-next-line react-refresh/only-export-components
 export function createLabItemFilter<T extends {
-  orderId?: string;
+  orderId?: string | number;
   patientName?: string;
   testName?: string;
-  sampleId?: string;
+  sampleId?: string | number;
 }>(extraFields?: (item: T) => string[]): (item: T, query: string) => boolean {
   return (item: T, query: string): boolean => {
     const lowerQuery = query.toLowerCase();
     const baseFields = [
-      item.orderId,
+      item.orderId?.toString(),
       item.patientName,
       item.testName,
-      item.sampleId,
+      item.sampleId?.toString(),
     ].filter(Boolean) as string[];
 
     const extra = extraFields ? extraFields(item) : [];

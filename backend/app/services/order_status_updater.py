@@ -65,7 +65,7 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
     return OrderStatus.ORDERED
 
 
-def update_order_status(db: Session, order_id: str) -> None:
+def update_order_status(db: Session, order_id: int) -> None:
     """
     Update order status based on the status of its samples and tests.
 

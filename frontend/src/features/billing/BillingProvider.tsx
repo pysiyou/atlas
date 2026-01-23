@@ -35,10 +35,11 @@ export const BillingProvider: React.FC<BillingProviderProps> = ({ children }) =>
   /**
    * Update an existing invoice
    */
-  const updateInvoice = useCallback((invoiceId: string, updates: Partial<Invoice>) => {
+  const updateInvoice = useCallback((invoiceId: number | string, updates: Partial<Invoice>) => {
+    const numericId = typeof invoiceId === 'string' ? parseInt(invoiceId, 10) : invoiceId;
     setInvoices(prev => 
       prev.map(invoice => 
-        invoice.invoiceId === invoiceId ? { ...invoice, ...updates } : invoice
+        invoice.invoiceId === numericId ? { ...invoice, ...updates } : invoice
       )
     );
   }, [setInvoices]);
@@ -46,15 +47,19 @@ export const BillingProvider: React.FC<BillingProviderProps> = ({ children }) =>
   /**
    * Get an invoice by ID
    */
-  const getInvoice = useCallback((invoiceId: string): Invoice | undefined => {
-    return invoices.find(invoice => invoice.invoiceId === invoiceId);
+  const getInvoice = useCallback((invoiceId: number | string): Invoice | undefined => {
+    const numericId = typeof invoiceId === 'string' ? parseInt(invoiceId, 10) : invoiceId;
+    if (isNaN(numericId)) return undefined;
+    return invoices.find(invoice => invoice.invoiceId === numericId);
   }, [invoices]);
 
   /**
    * Get invoice by order ID
    */
-  const getInvoiceByOrderId = useCallback((orderId: string): Invoice | undefined => {
-    return invoices.find(invoice => invoice.orderId === orderId);
+  const getInvoiceByOrderId = useCallback((orderId: number | string): Invoice | undefined => {
+    const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+    if (isNaN(numericId)) return undefined;
+    return invoices.find(invoice => invoice.orderId === numericId);
   }, [invoices]);
 
   /**
@@ -88,15 +93,20 @@ export const BillingProvider: React.FC<BillingProviderProps> = ({ children }) =>
   /**
    * Get payments by invoice ID
    */
-  const getPaymentsByInvoice = useCallback((invoiceId: string): Payment[] => {
-    return payments.filter(payment => payment.invoiceId === invoiceId);
+  const getPaymentsByInvoice = useCallback((invoiceId: number | string | null): Payment[] => {
+    if (invoiceId === null) return [];
+    const numericId = typeof invoiceId === 'string' ? parseInt(invoiceId, 10) : invoiceId;
+    if (isNaN(numericId)) return [];
+    return payments.filter(payment => payment.invoiceId === numericId);
   }, [payments]);
 
   /**
    * Get payments by order ID
    */
-  const getPaymentsByOrder = useCallback((orderId: string): Payment[] => {
-    return payments.filter(payment => payment.orderId === orderId);
+  const getPaymentsByOrder = useCallback((orderId: number | string): Payment[] => {
+    const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+    if (isNaN(numericId)) return [];
+    return payments.filter(payment => payment.orderId === numericId);
   }, [payments]);
 
   /**
@@ -109,10 +119,11 @@ export const BillingProvider: React.FC<BillingProviderProps> = ({ children }) =>
   /**
    * Update an existing claim
    */
-  const updateClaim = useCallback((claimId: string, updates: Partial<InsuranceClaim>) => {
+  const updateClaim = useCallback((claimId: number | string, updates: Partial<InsuranceClaim>) => {
+    const numericId = typeof claimId === 'string' ? parseInt(claimId, 10) : claimId;
     setClaims(prev => 
       prev.map(claim => 
-        claim.claimId === claimId ? { ...claim, ...updates } : claim
+        claim.claimId === numericId ? { ...claim, ...updates } : claim
       )
     );
   }, [setClaims]);

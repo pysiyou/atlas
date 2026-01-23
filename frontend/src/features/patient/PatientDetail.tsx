@@ -11,6 +11,7 @@ import {
   IconButton,
   EmptyState,
 } from "@/shared/ui";
+import { displayId } from "@/utils/id-display";
 // import { MedicalHistoryCard } from './MedicalHistory';
 // import { OrderHistoryCard } from './OrderHistory';
 // import { PatientInfoCard } from './PatientCard';
@@ -340,7 +341,7 @@ export const PatientDetail: React.FC = () => {
                           onClick={() => navigate(`/orders/${order.orderId}`)}
                         >
                           <td className="px-3 py-3 text-sky-600 font-medium font-mono">
-                            {order.orderId}
+                            {displayId.order(order.orderId)}
                           </td>
                           <td className="px-3 py-3 text-gray-600">
                             {new Date(order.orderDate).toLocaleDateString(
@@ -404,7 +405,7 @@ export const PatientDetail: React.FC = () => {
                         </div>
                         <div className="min-w-0">
                           <p className="text-xs font-medium font-mono text-gray-900 truncate">
-                            Report_{order.orderId}.pdf
+                            Report_{displayId.order(order.orderId)}.pdf
                           </p>
                           <p className="text-xs text-gray-500 mt-0.5">
                             {new Date(order.orderDate).toLocaleDateString()} •
@@ -652,7 +653,7 @@ export const PatientDetail: React.FC = () => {
                           onClick={() => navigate(`/orders/${order.orderId}`)}
                         >
                           <td className="px-3 py-3 text-sky-600 font-medium font-mono">
-                            {order.orderId}
+                            {displayId.order(order.orderId)}
                           </td>
                           <td className="px-3 py-3 text-gray-600">
                             {new Date(order.orderDate).toLocaleDateString(
@@ -716,7 +717,7 @@ export const PatientDetail: React.FC = () => {
                         </div>
                         <div className="min-w-0">
                           <p className="text-xs font-medium font-mono text-gray-900 truncate">
-                            Report_{order.orderId}.pdf
+                            Report_{displayId.order(order.orderId)}.pdf
                           </p>
                           <p className="text-xs text-gray-500 mt-0.5">
                             {new Date(order.orderDate).toLocaleDateString()} •
@@ -989,7 +990,7 @@ export const PatientDetail: React.FC = () => {
                           >
                             <td className="px-2 py-3 text-xs text-sky-600 font-medium font-mono max-w-0">
                               <span className="block truncate">
-                                {order.orderId}
+                                {displayId.order(order.orderId)}
                               </span>
                             </td>
                             <td className="px-2 py-3 text-xs text-gray-500 max-w-0">
@@ -1103,7 +1104,7 @@ export const PatientDetail: React.FC = () => {
                           </div>
                           <div className="min-w-0">
                             <p className="text-xs font-medium font-mono text-gray-900 truncate">
-                              Report_{order.orderId}.pdf
+                              Report_{displayId.order(order.orderId)}.pdf
                             </p>
                             <p className="text-xs text-gray-500 mt-0.5">
                               {new Date(order.orderDate).toLocaleDateString()} •

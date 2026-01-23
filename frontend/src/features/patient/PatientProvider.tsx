@@ -87,9 +87,10 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
   /**
    * Update an existing patient
    */
-  const updatePatient = useCallback(async (id: string, updates: Partial<Patient>) => {
+  const updatePatient = useCallback(async (id: number | string, updates: Partial<Patient>) => {
     try {
-      await updatePatientMutation.mutateAsync({ id, updates });
+      const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+      await updatePatientMutation.mutateAsync({ id: numericId, updates });
     } catch (err) {
       logger.error('Failed to update patient', err instanceof Error ? err : undefined);
       throw err;
@@ -99,9 +100,10 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
   /**
    * Delete a patient
    */
-  const deletePatient = useCallback(async (id: string) => {
+  const deletePatient = useCallback(async (id: number | string) => {
     try {
-      await deletePatientMutation.mutateAsync(id);
+      const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+      await deletePatientMutation.mutateAsync(numericId);
     } catch (err) {
       logger.error('Failed to delete patient', err instanceof Error ? err : undefined);
       throw err;
@@ -109,10 +111,12 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
   }, [deletePatientMutation]);
 
   /**
-   * Get a patient by ID
+   * Get a patient by ID (handles both number and string for URL compatibility)
    */
-  const getPatient = useCallback((id: string): Patient | undefined => {
-    return patients.find(patient => patient.id === id);
+  const getPatient = useCallback((id: number | string): Patient | undefined => {
+    const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+    if (isNaN(numericId)) return undefined;
+    return patients.find(patient => patient.id === numericId);
   }, [patients]);
 
   /**
@@ -122,9 +126,12 @@ export const PatientsProvider: React.FC<PatientsProviderProps> = ({ children }) 
     if (!query.trim()) return patients;
     
     const lowerQuery = query.toLowerCase();
+    // Try to parse as display ID (e.g., "PAT123") or numeric ID
+    const parsedId = parseInt(lowerQuery.replace(/^(pat|ord|sam|tst|alq|inv|pay|clm|rpt|usr|aud|apt)/i, ''), 10);
+    
     return patients.filter(patient => 
       patient.fullName.toLowerCase().includes(lowerQuery) ||
-      patient.id.toLowerCase().includes(lowerQuery) ||
+      patient.id.toString().includes(parsedId.toString()) ||
       patient.phone.includes(query)
     );
   }, [patients]);

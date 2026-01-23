@@ -14,6 +14,7 @@ import type { NavigateFunction } from 'react-router-dom';
 import { Badge, Avatar, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import type { Patient, Order } from '@/types';
 import { isAffiliationActive } from './usePatientForm';
 import { PatientCard } from './PatientCard';
@@ -27,12 +28,12 @@ import { PatientCard } from './PatientCard';
  */
 export const createPatientTableConfig = (
   navigate: NavigateFunction,
-  getOrdersByPatient: (patientId: string) => Order[]
+  getOrdersByPatient: (patientId: number | string) => Order[]
 ): TableViewConfig<Patient> => {
   // Shared render functions to avoid duplication
   const renderId = (patient: Patient) => (
     <span className="text-xs text-sky-600 font-medium font-mono truncate block">
-      {patient.id}
+      {displayId.patient(patient.id)}
     </span>
   );
 
@@ -119,7 +120,7 @@ export const createPatientTableConfig = (
       {
         key: 'id',
         header: 'Patient ID',
-        width: 'fill',
+        width: 'sm',
         sortable: true,
         render: renderId,
       },
@@ -177,7 +178,7 @@ export const createPatientTableConfig = (
       {
         key: 'id',
         header: 'Patient ID',
-        width: 'fill', // 200px - matches full view
+        width: 'sm', // 200px - matches full view
         sortable: true,
         render: renderId,
       },
@@ -223,7 +224,7 @@ export const createPatientTableConfig = (
       {
         key: 'id',
         header: 'ID',
-        width: 'lg', // 200px fixed - matches full view ID
+        width: 'sm', // 200px fixed - matches full view ID
         sortable: true,
         render: renderId,
       },

@@ -9,6 +9,7 @@ import type { NavigateFunction } from 'react-router-dom';
 import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, formatCurrency } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
 import { OrderTableCard } from './OrderTableCard';
 
@@ -22,20 +23,20 @@ import { OrderTableCard } from './OrderTableCard';
  */
 export const createOrderTableConfig = (
   navigate: NavigateFunction,
-  getPatientNameFn: (patientId: string) => string,
+  getPatientNameFn: (patientId: number | string) => string,
   getTestNameFn: (testCode: string) => string
 ): TableViewConfig<Order> => {
   // Shared render functions
   const renderOrderId = (order: Order) => (
     <span className="text-xs text-sky-600 font-medium font-mono truncate block">
-      {order.orderId}
+      {displayId.order(order.orderId)}
     </span>
   );
 
   const renderPatientName = (order: Order) => (
     <div className="min-w-0">
       <div className="font-semibold text-gray-900 truncate">{getPatientNameFn(order.patientId)}</div>
-      <div className="text-xxs text-gray-500 truncate">{order.patientId}</div>
+      <div className="text-xxs text-gray-500 truncate">{displayId.patient(order.patientId)}</div>
     </div>
   );
 
@@ -109,7 +110,7 @@ export const createOrderTableConfig = (
       {
         key: 'orderId',
         header: 'Order ID',
-        width: 'fill',
+        width: 'sm',
         sortable: true,
         render: renderOrderId,
       },
@@ -175,7 +176,7 @@ export const createOrderTableConfig = (
       {
         key: 'orderId',
         header: 'Order ID',
-        width: 'fill',
+        width: 'sm',
         sortable: true,
         render: renderOrderId,
       },
@@ -227,7 +228,7 @@ export const createOrderTableConfig = (
       {
         key: 'orderId',
         header: 'Order ID',
-        width: 'fill',
+        width: 'sm',
         sortable: true,
         render: renderOrderId,
       },

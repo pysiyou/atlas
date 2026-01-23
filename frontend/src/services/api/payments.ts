@@ -5,7 +5,7 @@ import { apiClient } from './client';
 import type { Payment, PaymentMethod } from '@/types';
 
 export interface PaymentCreate {
-  orderId: string;
+  orderId: number | string;
   amount: number;
   paymentMethod: PaymentMethod;
   notes?: string;

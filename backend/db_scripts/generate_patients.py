@@ -477,20 +477,7 @@ def generate_african_name(gender: str) -> tuple[str, str]:
     return parts[0], "Doe"
 
 
-FIXED_PATIENT_IDS = [
-    "PAT-20260118-001",
-    "PAT-20260118-002",
-    "PAT-20260118-003",
-    "PAT-20260118-004",
-    "PAT-20260118-005",
-    "PAT-20260118-006",
-    "PAT-20260118-007",
-    "PAT-20260118-008",
-    "PAT-20260118-009",
-    "PAT-20260118-010"
-]
-
-def _create_single_patient_data(patient_id: str) -> dict:
+def _create_single_patient_data() -> dict:
     """Internal helper to generate realistic patient data"""
     
     # Random gender
@@ -618,7 +605,6 @@ def _create_single_patient_data(patient_id: str) -> dict:
     registrationDate = datetime.now() - timedelta(days=random.randint(0, 730))
 
     return {
-        'id': patient_id,
         'fullName': full_name,
         'dateOfBirth': date_of_birth,
         'gender': gender_enum,
@@ -630,20 +616,19 @@ def _create_single_patient_data(patient_id: str) -> dict:
         'vitalSigns': vitalSigns,
         'affiliation': affiliation,
         'registrationDate': registrationDate,
-        'createdBy': 'USR-00000000-001',  # admin user
+        'createdBy': 1,  # admin user ID (integer)
         'createdAt': registrationDate,
         'updatedAt': registrationDate,
-        'updatedBy': 'USR-00000000-001'
+        'updatedBy': 1  # admin user ID (integer)
     }
 
 def generate_dev_patients(db):
     """Generate specific developer example patients"""
     print("🌱 Generating developer example patients...")
-    
+
     # Create example patients
     patients_data = [
         {
-            "id": "PAT-20260117-001",
             "fullName": "John Smith",
             "dateOfBirth": "1985-03-15",
             "gender": Gender.MALE,
@@ -673,11 +658,10 @@ def generate_dev_patients(db):
                 "oxygenSaturation": 98
             },
             "registrationDate": datetime.now(timezone.utc),
-            "createdBy": "USR-00000000-001",
-            "updatedBy": "USR-00000000-001",
+            "createdBy": 1,  # admin user ID
+            "updatedBy": 1,
         },
         {
-            "id": "PAT-20260117-002",
             "fullName": "Maria Garcia",
             "dateOfBirth": "1992-07-22",
             "gender": Gender.FEMALE,
@@ -707,58 +691,51 @@ def generate_dev_patients(db):
                 "oxygenSaturation": 99
             },
             "registrationDate": datetime.now(timezone.utc),
-            "createdBy": "USR-00000000-002",
-            "updatedBy": "USR-00000000-002",
+            "createdBy": 2,  # receptionist user ID
+            "updatedBy": 2,
         },
     ]
 
     for patient_data in patients_data:
-        existing = db.query(Patient).filter(Patient.id == patient_data["id"]).first()
+        existing = db.query(Patient).filter(Patient.fullName == patient_data["fullName"]).first()
         if not existing:
             patient = Patient(**patient_data)
             db.add(patient)
-            print(f"  ✓ Created patient: {patient_data['fullName']} ({patient_data['id']})")
-    
+            db.flush()  # Get auto-generated ID
+            print(f"  ✓ Created patient: {patient_data['fullName']} - ID: {patient.id}")
+
     db.commit()
 
 
 def generate_patients(db, count: int = 10):
     """Generate and insert patients into the database"""
-    
-    # Ignore count parameter if using fixed list, or use it to limit the fixed list if needed.
-    # But user asked for THESE IDs specifically.
-    
-    try:
-        print(f"🌍 Generating patients from fixed list ({len(FIXED_PATIENT_IDS)})...")
-        
-        patients_created = 0
-        
-        for patient_id in FIXED_PATIENT_IDS:
-            # Check if patient exists to avoid duplicates if re-running
-            existing = db.query(Patient).filter(Patient.id == patient_id).first()
-            if existing:
-                print(f"  • Skipping existing patient: {patient_id}")
-                continue
 
-            patient_data = _create_single_patient_data(patient_id)
-            
+    try:
+        print(f"🌍 Generating {count} patients...")
+
+        patients_created = 0
+
+        for _ in range(count):
+            patient_data = _create_single_patient_data()
+
             # Create patient model
             patient = Patient(**patient_data)
-            
+
             db.add(patient)
+            db.flush()  # Get auto-generated ID
             patients_created += 1
-            print(f"  ✓ Created patient: {patient_data['fullName']} ({patient_id})")
-        
+            print(f"  ✓ Created patient: {patient_data['fullName']} - ID: {patient.id}")
+
         db.commit()
         print(f"\n✅ Successfully created {patients_created} patients!")
-        
+
         # Show some examples
-        print("\n📋 Sample patients create/found:")
-        sample_patients = db.query(Patient).filter(Patient.id.in_(FIXED_PATIENT_IDS)).all()
+        print("\n📋 Sample patients created:")
+        sample_patients = db.query(Patient).limit(5).all()
         for p in sample_patients:
             insurance = "✓" if p.affiliation else "✗"
-            print(f"  • {p.fullName} ({p.gender.value}) - ID: {p.id}")
-        
+            print(f"  • {p.fullName} ({p.gender.value}) - ID: PAT{p.id}")
+
     except Exception as e:
         print(f"\n❌ Error generating patients: {e}")
         raise

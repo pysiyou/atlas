@@ -8,13 +8,14 @@ import { useBilling } from '@/features/billing/BillingContext';
 import { useOrders } from '@/features/order/OrderContext';
 import { Card, SectionContainer, Badge, Button, Input, Select, Icon } from '@/shared/ui';
 import { formatCurrency, formatDate } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import toast from 'react-hot-toast';
-import type { PaymentMethod } from '@/types';
+import type { PaymentMethod, Payment } from '@/types';
 
 export const Billing: React.FC = () => {
   const billingContext = useBilling();
   const ordersContext = useOrders();
-  const [selectedInvoice, setSelectedInvoice] = useState<string | null>(null);
+  const [selectedInvoice, setSelectedInvoice] = useState<number | null>(null);
   const [paymentAmount, setPaymentAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
   
@@ -38,14 +39,14 @@ export const Billing: React.FC = () => {
       return;
     }
     
-    const payment = {
-      paymentId: `PAY-${new Date().toISOString().slice(0,10).replace(/-/g, '')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
+    const payment: Payment = {
+      paymentId: 0, // Temporary - backend will assign real ID
       orderId: invoice.orderId,
       invoiceId: invoice.invoiceId,
       amount,
       paymentMethod,
       paidAt: new Date().toISOString(),
-      receivedBy: 'current-user',
+      receivedBy: 0, // Should be current user ID (number)
       receiptGenerated: true,
     };
     
@@ -121,7 +122,7 @@ export const Billing: React.FC = () => {
               <div key={invoice.invoiceId} className="border border-gray-200 rounded p-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <div className="font-medium">{invoice.invoiceId}</div>
+                    <div className="font-medium">{displayId.invoice(invoice.invoiceId)}</div>
                     <div className="text-sm text-gray-600">{invoice.patientName}</div>
                     <div className="text-sm text-gray-500">
                       {formatDate(invoice.createdAt)} • {invoice.items.length} item(s)

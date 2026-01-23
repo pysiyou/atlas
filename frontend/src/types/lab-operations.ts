@@ -62,9 +62,9 @@ export interface RejectionResult {
   success: boolean;
   action: RejectionAction;
   message: string;
-  originalTestId: string;
-  newTestId?: string;
-  newSampleId?: string;
+  originalTestId: number;
+  newTestId?: number;
+  newSampleId?: number;
   escalationRequired: boolean;
 }
 
@@ -90,17 +90,17 @@ export interface RejectAndRecollectRequest {
  */
 export interface RejectAndRecollectResponse {
   rejectedSample: {
-    sampleId: string;
+    sampleId: number;
     status: string;
     rejectedAt: string | null;
-    recollectionSampleId: string | null;
+    recollectionSampleId: number | null;
   };
   newSample: {
-    sampleId: string;
+    sampleId: number;
     status: string;
     priority: string;
     isRecollection: boolean;
-    originalSampleId: string;
+    originalSampleId: number;
     recollectionAttempt: number;
   };
   recollectionAttempt: number;
@@ -111,11 +111,11 @@ export interface RejectAndRecollectResponse {
  * Audit log record for lab operations
  */
 export interface LabOperationRecord {
-  id: string;
+  id: number;
   operationType: LabOperationType;
   entityType: 'sample' | 'test' | 'order';
-  entityId: string;
-  performedBy: string;
+  entityId: number;
+  performedBy: number;
   performedAt: string;
   beforeState: Record<string, unknown>;
   afterState: Record<string, unknown>;

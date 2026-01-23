@@ -66,7 +66,7 @@ export const PaymentList: React.FC = () => {
     setStatusFilters
   } = useFiltering<OrderPaymentDetails, PaymentStatus>(orderPaymentDetailsList, {
     searchFields: (item) => [
-      item.orderId,
+      item.orderId.toString(),
       item.patientName || '',
     ],
     statusField: 'paymentStatus',

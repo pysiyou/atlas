@@ -106,7 +106,9 @@ export function useSamplesByOrder(orderId: string | undefined) {
 
   const orderSamples = useMemo(() => {
     if (!orderId) return [];
-    return samples.filter(s => s.orderId === orderId);
+    const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+    if (isNaN(numericOrderId)) return [];
+    return samples.filter(s => s.orderId === numericOrderId);
   }, [samples, orderId]);
 
   return {
@@ -172,17 +174,21 @@ export function useSampleLookup() {
   const { samples, isLoading } = useSamplesList();
 
   const samplesMap = useMemo(() => {
-    const map = new Map<string, Sample>();
+    const map = new Map<number, Sample>();
     samples.forEach(s => map.set(s.sampleId, s));
     return map;
   }, [samples]);
 
-  const getSample = useCallback((sampleId: string): Sample | undefined => {
-    return samplesMap.get(sampleId);
+  const getSample = useCallback((sampleId: number | string): Sample | undefined => {
+    const numericId = typeof sampleId === 'string' ? parseInt(sampleId, 10) : sampleId;
+    if (isNaN(numericId)) return undefined;
+    return samplesMap.get(numericId);
   }, [samplesMap]);
 
-  const getSamplesByOrder = useCallback((orderId: string): Sample[] => {
-    return samples.filter(s => s.orderId === orderId);
+  const getSamplesByOrder = useCallback((orderId: number | string): Sample[] => {
+    const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+    if (isNaN(numericOrderId)) return [];
+    return samples.filter(s => s.orderId === numericOrderId);
   }, [samples]);
 
   return {

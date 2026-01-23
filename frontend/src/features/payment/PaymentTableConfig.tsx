@@ -7,6 +7,7 @@
 
 import type { NavigateFunction } from 'react-router-dom';
 import { formatDate, formatCurrency } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { PaymentButton } from './PaymentButton';
@@ -31,14 +32,14 @@ export const createPaymentTableConfig = (
       }}
       className="text-xs text-sky-600 font-medium font-mono hover:underline truncate block max-w-full"
     >
-      {item.orderId}
+      {displayId.order(item.orderId)}
     </button>
   );
 
   const renderPatientName = (item: OrderPaymentDetails) => (
     <div className="min-w-0">
       <div className="font-semibold text-gray-900 truncate">{item.patientName || 'N/A'}</div>
-      <div className="text-xxs text-gray-500 truncate">{item.patientId}</div>
+      <div className="text-xxs text-gray-500 truncate">{displayId.patient(item.patientId)}</div>
     </div>
   );
 
@@ -94,7 +95,7 @@ export const createPaymentTableConfig = (
       {
         key: 'orderId',
         header: 'Order ID',
-        width: 'fill',
+        width: 'sm',
         sortable: true,
         render: renderOrderId,
       },
@@ -129,7 +130,7 @@ export const createPaymentTableConfig = (
       {
         key: 'paymentMethod',
         header: 'Method',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderPaymentMethod,
       },
@@ -151,7 +152,7 @@ export const createPaymentTableConfig = (
       {
         key: 'orderId',
         header: 'Order ID',
-        width: 'fill',
+        width: 'sm',
         sortable: true,
         render: renderOrderId,
       },
@@ -194,7 +195,7 @@ export const createPaymentTableConfig = (
       {
         key: 'orderId',
         header: 'Order ID',
-        width: 'fill',
+        width: 'sm',
         sortable: true,
         render: renderOrderId,
       },

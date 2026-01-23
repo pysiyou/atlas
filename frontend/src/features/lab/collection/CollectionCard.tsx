@@ -15,6 +15,7 @@ import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/shared/contexts/ModalContext';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import { LabCard, TestList } from '../components/LabCard';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
@@ -66,8 +67,8 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
       return;
     }
 
-    if ((isCollected || isRejected) && sample.sampleId && !sample.sampleId.includes('PENDING')) {
-      openModal(ModalType.SAMPLE_DETAIL, { sampleId: sample.sampleId });
+    if ((isCollected || isRejected) && sample.sampleId) {
+      openModal(ModalType.SAMPLE_DETAIL, { sampleId: sample.sampleId.toString() });
     } else if (isPending) {
       openModal(ModalType.SAMPLE_DETAIL, { pendingSampleDisplay: display, onCollect });
     }
@@ -97,9 +98,9 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
           {getCollectionRequirements(sample.sampleType).label}
         </Badge>
       )}
-      {isCollected && sample.sampleId && !sample.sampleId.includes('PENDING') && (
+      {isCollected && sample.sampleId && (
         <div className="flex items-center">
-          <Barcode value={sample.sampleId} height={15} displayValue={false} background="transparent" margin={0} />
+          <Barcode value={displayId.sample(sample.sampleId)} height={15} displayValue={false} background="transparent" margin={0} />
         </div>
       )}
     </>
@@ -124,7 +125,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
       ) : (
         <>
           <Badge size="sm" variant="collected" />
-          {sample.sampleId && !sample.sampleId.includes('PENDING') && (
+          {sample.sampleId && (
             <>
               {/* Block sample rejection if order has validated tests to prevent contradiction */}
               {hasValidatedTests ? (
@@ -136,14 +137,14 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
                 />
               ) : (
                 <CollectionRejectionPopover
-                  sampleId={sample.sampleId}
+                  sampleId={sample.sampleId.toString()}
                   sampleType={sample.sampleType}
                   patientName={patientName}
                   isRecollection={isRecollection}
                   rejectionHistoryCount={sample.rejectionHistory?.length || 0}
                   onReject={async (reasons, notes, requireRecollection) => {
                     try {
-                      await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
+                      await rejectSample(sample.sampleId.toString(), reasons, notes, requireRecollection);
                       toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
                     } catch (error) {
                       logger.error('Failed to reject sample', error instanceof Error ? error : undefined);

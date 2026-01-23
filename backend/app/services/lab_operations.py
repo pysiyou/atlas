@@ -18,7 +18,6 @@ from app.schemas.enums import (
 )
 from app.services.state_machine import SampleStateMachine, TestStateMachine, StateTransitionError
 from app.services.audit_service import AuditService
-from app.services.id_generator import generate_id
 from app.services.order_status_updater import update_order_status
 
 
@@ -60,9 +59,9 @@ class RejectionResult(BaseModel):
     success: bool
     action: RejectionAction
     message: str
-    originalTestId: str
-    newTestId: Optional[str] = None
-    newSampleId: Optional[str] = None
+    originalTestId: int
+    newTestId: Optional[int] = None
+    newSampleId: Optional[int] = None
     escalationRequired: bool = False
 
 
@@ -83,7 +82,7 @@ class LabOperationsService:
 
     # ==================== HELPER METHODS ====================
 
-    def _get_sample(self, sample_id: str) -> Sample:
+    def _get_sample(self, sample_id: int) -> Sample:
         """Get a sample by ID or raise an error"""
         sample = self.db.query(Sample).filter(Sample.sampleId == sample_id).first()
         if not sample:
@@ -92,7 +91,7 @@ class LabOperationsService:
 
     def _get_order_test(
         self,
-        order_id: str,
+        order_id: int,
         test_code: str,
         status: Optional[TestStatus] = None
     ) -> OrderTest:
@@ -138,7 +137,7 @@ class LabOperationsService:
 
     def get_rejection_options(
         self,
-        order_id: str,
+        order_id: int,
         test_code: str
     ) -> RejectionOptions:
         """
@@ -212,8 +211,8 @@ class LabOperationsService:
 
     def collect_sample(
         self,
-        sample_id: str,
-        user_id: str,
+        sample_id: int,
+        user_id: int,
         collected_volume: float,
         container_type: str,
         container_color: str,
@@ -242,13 +241,13 @@ class LabOperationsService:
         # Update sample
         sample.status = SampleStatus.COLLECTED
         sample.collectedAt = datetime.now(timezone.utc)
-        sample.collectedBy = user_id
+        sample.collectedBy = str(user_id)  # Convert to string as per model requirement
         sample.collectedVolume = collected_volume
         sample.actualContainerType = container_type
         sample.actualContainerColor = container_color
         sample.collectionNotes = collection_notes
         sample.remainingVolume = collected_volume
-        sample.updatedBy = user_id
+        sample.updatedBy = str(user_id)  # Convert to string as per model requirement
 
         # Update associated order tests
         # Exclude SUPERSEDED tests - they were replaced by retests and should not be modified
@@ -283,8 +282,8 @@ class LabOperationsService:
 
     def reject_sample(
         self,
-        sample_id: str,
-        user_id: str,
+        sample_id: int,
+        user_id: int,
         rejection_reasons: List[str],
         rejection_notes: Optional[str] = None,
         recollection_required: bool = True
@@ -313,7 +312,7 @@ class LabOperationsService:
         # Create rejection record
         rejection_record = {
             "rejectedAt": datetime.now(timezone.utc).isoformat(),
-            "rejectedBy": user_id,
+            "rejectedBy": str(user_id),  # Convert to string as per schema requirement
             "rejectionReasons": rejection_reasons,
             "rejectionNotes": rejection_notes,
             "recollectionRequired": recollection_required
@@ -328,11 +327,11 @@ class LabOperationsService:
         # Update sample
         sample.status = SampleStatus.REJECTED
         sample.rejectedAt = datetime.now(timezone.utc)
-        sample.rejectedBy = user_id
+        sample.rejectedBy = str(user_id)  # Convert to string as per schema requirement
         sample.rejectionReasons = rejection_reasons
         sample.rejectionNotes = rejection_notes
         sample.recollectionRequired = recollection_required
-        sample.updatedBy = user_id
+        sample.updatedBy = str(user_id)  # Convert to string as per model requirement
 
         # Update associated order tests
         # Exclude SUPERSEDED tests - they were replaced by retests and should not be modified
@@ -367,8 +366,8 @@ class LabOperationsService:
 
     def request_recollection(
         self,
-        sample_id: str,
-        user_id: str,
+        sample_id: int,
+        user_id: int,
         recollection_reason: str,
         update_order_tests: bool = True
     ) -> Sample:
@@ -406,15 +405,11 @@ class LabOperationsService:
                 f"Maximum recollection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. Please escalate to supervisor."
             )
 
-        # Generate new sample ID
-        new_sample_id = generate_id("sample", self.db)
-
         # Calculate recollection attempt number
         recollection_attempt = len(original_sample.rejectionHistory or []) + 1
 
         # Create new sample
         new_sample = Sample(
-            sampleId=new_sample_id,
             orderId=original_sample.orderId,
             sampleType=original_sample.sampleType,
             status=SampleStatus.PENDING,
@@ -429,15 +424,16 @@ class LabOperationsService:
             recollectionAttempt=recollection_attempt,
             rejectionHistory=original_sample.rejectionHistory or [],
             createdAt=datetime.now(timezone.utc),
-            createdBy=user_id,
-            updatedBy=user_id
+            createdBy=str(user_id),  # Convert to string as per model requirement
+            updatedBy=str(user_id)  # Convert to string as per model requirement
         )
 
-        # Link original sample to new recollection sample
-        original_sample.recollectionSampleId = new_sample_id
-        original_sample.updatedBy = user_id
-
         self.db.add(new_sample)
+        self.db.flush()  # Get auto-generated sampleId
+
+        # Link original sample to new recollection sample
+        original_sample.recollectionSampleId = new_sample.sampleId
+        original_sample.updatedBy = str(user_id)  # Convert to string as per model requirement
 
         # Update order tests to point to new sample
         # IMPORTANT: Exclude SUPERSEDED tests - these were replaced by retests and should
@@ -451,7 +447,7 @@ class LabOperationsService:
 
             for test in order_tests:
                 test.status = TestStatus.PENDING
-                test.sampleId = new_sample_id
+                test.sampleId = new_sample.sampleId
                 test.results = None
                 test.resultEnteredAt = None
                 test.enteredBy = None
@@ -463,7 +459,7 @@ class LabOperationsService:
         # Log audit
         self.audit.log_recollection_request(
             original_sample_id=original_sample.sampleId,
-            new_sample_id=new_sample_id,
+            new_sample_id=new_sample.sampleId,
             user_id=user_id,
             recollection_reason=recollection_reason,
             recollection_attempt=recollection_attempt
@@ -479,8 +475,8 @@ class LabOperationsService:
 
     def reject_and_recollect(
         self,
-        sample_id: str,
-        user_id: str,
+        sample_id: int,
+        user_id: int,
         rejection_reasons: List[str],
         rejection_notes: Optional[str] = None,
         recollection_reason: Optional[str] = None
@@ -541,9 +537,9 @@ class LabOperationsService:
 
     def enter_results(
         self,
-        order_id: str,
+        order_id: int,
         test_code: str,
-        user_id: str,
+        user_id: int,
         results: Dict[str, Any],
         technician_notes: Optional[str] = None
     ) -> OrderTest:
@@ -571,7 +567,7 @@ class LabOperationsService:
         # Update results
         order_test.results = results
         order_test.resultEnteredAt = datetime.now(timezone.utc)
-        order_test.enteredBy = user_id
+        order_test.enteredBy = str(user_id)  # Convert to string as per model requirement
         order_test.technicianNotes = technician_notes
         order_test.status = TestStatus.RESULTED
 
@@ -594,9 +590,9 @@ class LabOperationsService:
 
     def validate_results(
         self,
-        order_id: str,
+        order_id: int,
         test_code: str,
-        user_id: str,
+        user_id: int,
         validation_notes: Optional[str] = None
     ) -> OrderTest:
         """
@@ -620,7 +616,7 @@ class LabOperationsService:
 
         # Update validation
         order_test.resultValidatedAt = datetime.now(timezone.utc)
-        order_test.validatedBy = user_id
+        order_test.validatedBy = str(user_id)  # Convert to string as per model requirement
         order_test.validationNotes = validation_notes
         order_test.status = TestStatus.VALIDATED
 
@@ -643,9 +639,9 @@ class LabOperationsService:
 
     def reject_results(
         self,
-        order_id: str,
+        order_id: int,
         test_code: str,
-        user_id: str,
+        user_id: int,
         action: RejectionAction,
         rejection_reason: str
     ) -> RejectionResult:
@@ -691,9 +687,9 @@ class LabOperationsService:
 
     def _reject_with_retest(
         self,
-        order_id: str,
+        order_id: int,
         test_code: str,
-        user_id: str,
+        user_id: int,
         rejection_reason: str
     ) -> RejectionResult:
         """
@@ -709,7 +705,7 @@ class LabOperationsService:
         # Create rejection record
         rejection_record = {
             "rejectedAt": datetime.now(timezone.utc).isoformat(),
-            "rejectedBy": user_id,
+            "rejectedBy": str(user_id),  # Convert to string as per schema requirement
             "rejectionReason": rejection_reason,
             "rejectionType": "re-test"
         }
@@ -722,14 +718,11 @@ class LabOperationsService:
 
         # Update original test validation metadata
         original_test.resultValidatedAt = datetime.now(timezone.utc)
-        original_test.validatedBy = user_id
+        original_test.validatedBy = str(user_id)  # Convert to string as per model requirement
         original_test.validationNotes = rejection_reason
 
-        # Create new OrderTest for retest
-        new_test_id = f"{order_id}_{test_code}_RT{current_retest_number + 1}"
-
+        # Create new OrderTest for retest (ID is auto-generated)
         new_order_test = OrderTest(
-            id=new_test_id,
             orderId=order_id,
             testCode=test_code,
             status=TestStatus.SAMPLE_COLLECTED,
@@ -746,18 +739,19 @@ class LabOperationsService:
             reflexRule=original_test.reflexRule
         )
 
-        # Mark original as superseded
-        original_test.retestOrderTestId = new_test_id
-        original_test.status = TestStatus.SUPERSEDED
-
         self.db.add(new_order_test)
+        self.db.flush()  # Get auto-generated ID
+
+        # Mark original as superseded
+        original_test.retestOrderTestId = new_order_test.id
+        original_test.status = TestStatus.SUPERSEDED
 
         # Log audit
         self.audit.log_result_validation_reject_retest(
             order_id=order_id,
             test_code=test_code,
             original_test_id=original_test.id,
-            new_test_id=new_test_id,
+            new_test_id=new_order_test.id,
             user_id=user_id,
             rejection_reason=rejection_reason,
             retest_number=current_retest_number + 1
@@ -774,14 +768,14 @@ class LabOperationsService:
             action=RejectionAction.RETEST_SAME_SAMPLE,
             message=f"Retest created successfully. Test is ready for new result entry.",
             originalTestId=original_test.id,
-            newTestId=new_test_id
+            newTestId=new_order_test.id
         )
 
     def _reject_with_recollect(
         self,
-        order_id: str,
+        order_id: int,
         test_code: str,
-        user_id: str,
+        user_id: int,
         rejection_reason: str
     ) -> RejectionResult:
         """
@@ -804,7 +798,7 @@ class LabOperationsService:
         # Create rejection record for the test
         rejection_record = {
             "rejectedAt": datetime.now(timezone.utc).isoformat(),
-            "rejectedBy": user_id,
+            "rejectedBy": str(user_id),  # Convert to string as per schema requirement
             "rejectionReason": rejection_reason,
             "rejectionType": "re-collect"
         }
@@ -816,7 +810,7 @@ class LabOperationsService:
 
         # Update test validation metadata
         original_test.resultValidatedAt = datetime.now(timezone.utc)
-        original_test.validatedBy = user_id
+        original_test.validatedBy = str(user_id)  # Convert to string as per model requirement
         original_test.validationNotes = rejection_reason
 
         # Reject sample and create recollection

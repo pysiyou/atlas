@@ -19,7 +19,7 @@ import type {
 import type { ResultRejectionType } from '@/types';
 
 interface UseRejectionManagerProps {
-  orderId: string;
+  orderId: string | number;
   testCode: string;
   /** Automatically fetch options when the hook is initialized */
   autoFetch?: boolean;
@@ -72,7 +72,8 @@ export function useRejectionManager({
     setError(null);
 
     try {
-      const response = await resultAPI.getRejectionOptions(orderId, testCode);
+      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+      const response = await resultAPI.getRejectionOptions(orderIdStr, testCode);
       setOptions(response);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch rejection options';
@@ -100,7 +101,8 @@ export function useRejectionManager({
       setError(null);
 
       try {
-        const result = await resultAPI.rejectResults(orderId, testCode, {
+        const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+        const result = await resultAPI.rejectResults(orderIdStr, testCode, {
           rejectionReason: reason,
           rejectionType,
         });

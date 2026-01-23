@@ -18,7 +18,7 @@ import {
   calculateEndDate,
   isAffiliationActive,
 } from './usePatientForm';
-import { generatePatientId } from '@/utils';
+// ID generation removed - backend handles ID assignment
 import { Icon } from '@/shared/ui';
 
 /**
@@ -74,7 +74,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   mode,
 }) => {
   const { currentUser } = useAuth();
-  const { patients, addPatient, updatePatient } = usePatients();
+  const { addPatient, updatePatient } = usePatients();
   const [isRenewing, setIsRenewing] = useState(false);
 
   const {
@@ -192,14 +192,14 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
           alcohol: formData.alcohol,
         },
       },
-      updatedBy: currentUser?.id || 'unknown',
+      updatedBy: typeof currentUser?.id === 'string' ? parseInt(currentUser.id, 10) : (currentUser?.id || 0),
     };
   };
 
   /**
    * Builds a complete `Patient` object from the current form state for create operations.
    */
-  const buildNewPatient = (patientId: string): Patient => {
+  const buildNewPatient = (patientId: number): Patient => {
     const now = new Date().toISOString();
 
     return {
@@ -245,10 +245,10 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         },
       },
       registrationDate: now,
-      createdBy: currentUser?.id || 'unknown',
+      createdBy: typeof currentUser?.id === 'string' ? parseInt(currentUser.id, 10) : (currentUser?.id || 0),
       createdAt: now,
       updatedAt: now,
-      updatedBy: currentUser?.id || 'unknown',
+      updatedBy: typeof currentUser?.id === 'string' ? parseInt(currentUser.id, 10) : (currentUser?.id || 0),
     };
   };
 
@@ -284,11 +284,10 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
           toast.success('Patient updated successfully');
         }
       } else {
-        // Create new patient with generated ID
-        const patientId = generatePatientId(patients.map((p: Patient) => p.id));
-        const newPatient = buildNewPatient(patientId);
+        // Create new patient - backend will assign ID
+        const newPatient = buildNewPatient(0); // Temporary ID, backend will assign real ID
         await addPatient(newPatient);
-        toast.success(`Patient ${newPatient.fullName} registered successfully! ID: ${patientId}`);
+        toast.success(`Patient ${newPatient.fullName} registered successfully!`);
       }
 
       // Reset states

@@ -107,7 +107,7 @@ export const ValidationView: React.FC = () => {
    * RejectionDialog and we only need to refresh the data.
    */
   const handleValidate = useCallback(async (
-    orderId: string,
+    orderId: number | string,
     testCode: string,
     approve: boolean,
     rejectionNotes?: string,
@@ -115,7 +115,8 @@ export const ValidationView: React.FC = () => {
   ) => {
     if (!ordersContext) return;
 
-    const commentKey = `${orderId}-${testCode}`;
+    const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+    const commentKey = `${orderIdStr}-${testCode}`;
 
     // Prevent concurrent validations
     if (isValidating[commentKey]) {
@@ -127,7 +128,7 @@ export const ValidationView: React.FC = () => {
     try {
       if (approve) {
         // Use validate endpoint for approvals
-        await resultAPI.validateResults(orderId, testCode, {
+        await resultAPI.validateResults(orderIdStr, testCode, {
           decision: 'approved',
           validationNotes: comments[commentKey] || undefined,
         });
@@ -154,7 +155,7 @@ export const ValidationView: React.FC = () => {
           }
 
           const rejectType = rejectionType || 're-test';  // Default to re-test
-          await resultAPI.rejectResults(orderId, testCode, {
+          await resultAPI.rejectResults(orderIdStr, testCode, {
             rejectionReason: rejectionNotes || 'Rejected by validator',
             rejectionType: rejectType,
           });

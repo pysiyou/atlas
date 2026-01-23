@@ -11,8 +11,8 @@ from app.schemas.enums import OrderStatus, PaymentStatus, PriorityLevel, TestSta
 class Order(Base):
     __tablename__ = "orders"
 
-    orderId = Column("order_id", String, primary_key=True, index=True)  # ORD-YYYYMMDD-XXX
-    patientId = Column("patient_id", String, ForeignKey("patients.id"), nullable=False, index=True)
+    orderId = Column("order_id", Integer, primary_key=True, autoincrement=True, index=True)
+    patientId = Column("patient_id", Integer, ForeignKey("patients.id"), nullable=False, index=True)
     orderDate = Column("order_date", DateTime(timezone=True), nullable=False)
 
     # Pricing
@@ -21,7 +21,7 @@ class Order(Base):
     overallStatus = Column("overall_status", Enum(OrderStatus), nullable=False, default=OrderStatus.ORDERED)
 
     # Scheduling (optional - for future appointment integration)
-    appointmentId = Column("appointment_id", String, nullable=True)
+    appointmentId = Column("appointment_id", Integer, nullable=True)
     scheduledCollectionTime = Column("scheduled_collection_time", DateTime(timezone=True), nullable=True)
 
     # Instructions
@@ -49,8 +49,8 @@ class Order(Base):
 class OrderTest(Base):
     __tablename__ = "order_tests"
 
-    id = Column(String, primary_key=True)  # Composite: orderId + testCode
-    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
     testCode = Column("test_code", String, ForeignKey("tests.code"), nullable=False, index=True)
 
     # Order-specific state
@@ -58,7 +58,7 @@ class OrderTest(Base):
     priceAtOrder = Column("price_at_order", Float, nullable=False)  # Snapshot for billing
 
     # Sample linkage
-    sampleId = Column("sample_id", String, nullable=True)  # Links to Sample
+    sampleId = Column("sample_id", Integer, nullable=True)  # Links to Sample
 
     # Results (JSON)
     results = Column(JSON, nullable=True)  # Record<string, TestResult>
@@ -80,14 +80,14 @@ class OrderTest(Base):
     reflexRule = Column("reflex_rule", String, nullable=True)
     isRepeatTest = Column("is_repeat_test", Boolean, default=False)
     repeatReason = Column("repeat_reason", String, nullable=True)
-    originalTestId = Column("original_test_id", String, nullable=True)
+    originalTestId = Column("original_test_id", Integer, nullable=True)
     repeatNumber = Column("repeat_number", Integer, nullable=True)
 
     # Re-test tracking (for result validation rejection flow)
     isRetest = Column("is_retest", Boolean, default=False)
-    retestOfTestId = Column("retest_of_test_id", String, nullable=True)  # Links to original OrderTest.id that was rejected
+    retestOfTestId = Column("retest_of_test_id", Integer, nullable=True)  # Links to original OrderTest.id that was rejected
     retestNumber = Column("retest_number", Integer, default=0)  # 0 = original, 1 = 1st retest, etc.
-    retestOrderTestId = Column("retest_order_test_id", String, nullable=True)  # Points to the new retest entry created after rejection
+    retestOrderTestId = Column("retest_order_test_id", Integer, nullable=True)  # Points to the new retest entry created after rejection
 
     # Result rejection history (for validation rejections)
     resultRejectionHistory = Column("result_rejection_history", JSON, nullable=True, default=list)  # Array of ResultRejectionRecord

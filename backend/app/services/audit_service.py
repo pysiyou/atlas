@@ -9,7 +9,6 @@ from typing import Dict, Any, Optional
 from sqlalchemy.orm import Session
 from app.models.lab_audit import LabOperationLog
 from app.schemas.enums import LabOperationType
-from app.services.id_generator import generate_id
 
 
 class AuditService:
@@ -27,8 +26,8 @@ class AuditService:
         self,
         operation_type: LabOperationType,
         entity_type: str,
-        entity_id: str,
-        user_id: str,
+        entity_id: int,
+        user_id: int,
         before_state: Optional[Dict[str, Any]] = None,
         after_state: Optional[Dict[str, Any]] = None,
         metadata: Optional[Dict[str, Any]] = None
@@ -48,14 +47,11 @@ class AuditService:
         Returns:
             The created LabOperationLog record
         """
-        log_id = generate_id("audit", self.db)
-
         log_entry = LabOperationLog(
-            id=log_id,
             operationType=operation_type,
             entityType=entity_type,
             entityId=entity_id,
-            performedBy=user_id,
+            performedBy=str(user_id),
             performedAt=datetime.now(timezone.utc),
             beforeState=before_state,
             afterState=after_state,
@@ -67,8 +63,8 @@ class AuditService:
 
     def log_sample_collection(
         self,
-        sample_id: str,
-        user_id: str,
+        sample_id: int,
+        user_id: int,
         before_state: Dict[str, Any],
         after_state: Dict[str, Any],
         metadata: Optional[Dict[str, Any]] = None
@@ -86,8 +82,8 @@ class AuditService:
 
     def log_sample_rejection(
         self,
-        sample_id: str,
-        user_id: str,
+        sample_id: int,
+        user_id: int,
         before_state: Dict[str, Any],
         after_state: Dict[str, Any],
         rejection_reasons: list[str],
@@ -112,9 +108,9 @@ class AuditService:
 
     def log_recollection_request(
         self,
-        original_sample_id: str,
-        new_sample_id: str,
-        user_id: str,
+        original_sample_id: int,
+        new_sample_id: int,
+        user_id: int,
         recollection_reason: str,
         recollection_attempt: int,
         metadata: Optional[Dict[str, Any]] = None
@@ -139,10 +135,10 @@ class AuditService:
 
     def log_result_entry(
         self,
-        order_id: str,
+        order_id: int,
         test_code: str,
-        test_id: str,
-        user_id: str,
+        test_id: int,
+        user_id: int,
         results: Dict[str, Any],
         metadata: Optional[Dict[str, Any]] = None
     ) -> LabOperationLog:
@@ -164,10 +160,10 @@ class AuditService:
 
     def log_result_validation_approve(
         self,
-        order_id: str,
+        order_id: int,
         test_code: str,
-        test_id: str,
-        user_id: str,
+        test_id: int,
+        user_id: int,
         validation_notes: Optional[str] = None,
         metadata: Optional[Dict[str, Any]] = None
     ) -> LabOperationLog:
@@ -190,11 +186,11 @@ class AuditService:
 
     def log_result_validation_reject_retest(
         self,
-        order_id: str,
+        order_id: int,
         test_code: str,
-        original_test_id: str,
-        new_test_id: str,
-        user_id: str,
+        original_test_id: int,
+        new_test_id: int,
+        user_id: int,
         rejection_reason: str,
         retest_number: int,
         metadata: Optional[Dict[str, Any]] = None
@@ -222,12 +218,12 @@ class AuditService:
 
     def log_result_validation_reject_recollect(
         self,
-        order_id: str,
+        order_id: int,
         test_code: str,
-        test_id: str,
-        sample_id: str,
-        new_sample_id: str,
-        user_id: str,
+        test_id: int,
+        sample_id: int,
+        new_sample_id: int,
+        user_id: int,
         rejection_reason: str,
         recollection_attempt: int,
         metadata: Optional[Dict[str, Any]] = None
@@ -255,7 +251,7 @@ class AuditService:
     def get_entity_history(
         self,
         entity_type: str,
-        entity_id: str
+        entity_id: int
     ) -> list[LabOperationLog]:
         """
         Get the operation history for an entity.
@@ -274,7 +270,7 @@ class AuditService:
 
     def get_user_operations(
         self,
-        user_id: str,
+        user_id: int,
         operation_types: Optional[list[LabOperationType]] = None,
         limit: int = 100
     ) -> list[LabOperationLog]:

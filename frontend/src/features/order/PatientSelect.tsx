@@ -1,5 +1,6 @@
 import React from 'react';
 import { SectionContainer, Button, SearchBar } from '@/shared/ui';
+import { displayId } from '@/utils/id-display';
 import type { Patient } from '@/types';
 
 interface PatientSelectorProps {
@@ -28,7 +29,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
           <div>
             <div className="font-medium text-gray-900">{selectedPatient.fullName}</div>
             <div className="text-sm text-gray-600">
-              {selectedPatient.id} • {selectedPatient.phone}
+              {displayId.patient(selectedPatient.id)} • {selectedPatient.phone}
             </div>
           </div>
           <Button type="button" variant="secondary" size="sm" onClick={onClearSelection}>
@@ -56,7 +57,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                 >
                   <div className="font-medium text-gray-900">{patient.fullName}</div>
                   <div className="text-sm text-gray-600">
-                    {patient.id} • {patient.phone}
+                    {displayId.patient(patient.id)} • {patient.phone}
                   </div>
                 </button>
               ))}

@@ -13,17 +13,18 @@ import { Modal } from '@/shared/ui/Modal';
 import { Badge, SectionContainer, DetailFieldGroup } from '@/shared/ui';
 import type { DetailFieldConfig } from '@/shared/ui/DetailFieldGroup';
 import { formatDate } from '@/utils';
+import { displayId } from '@/utils/id-display';
 import { useUsers } from '@/hooks';
 
 interface ContextInfo {
   patientName: string;
-  patientId: string;
-  orderId: string;
+  patientId: string | number;
+  orderId: string | number;
   referringPhysician?: string;
 }
 
 interface SampleInfo {
-  sampleId: string;
+  sampleId: string | number;
   collectedAt?: string;
   collectedBy?: string;
 }
@@ -97,9 +98,9 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 <div className="flex items-center gap-2 text-sm text-gray-700 flex-wrap">
                   <span className="font-semibold text-gray-900">{contextInfo.patientName}</span>
                   <span className="text-gray-300">|</span>
-                  <span className="font-medium text-gray-900 text-xs">{contextInfo.patientId}</span>
+                  <span className="font-medium text-gray-900 text-xs">{typeof contextInfo.patientId === 'number' ? displayId.patient(contextInfo.patientId) : contextInfo.patientId}</span>
                   <span className="text-gray-300">|</span>
-                  <span className="font-medium text-gray-900 text-xs">{contextInfo.orderId}</span>
+                  <span className="font-medium text-gray-900 text-xs">{typeof contextInfo.orderId === 'number' ? displayId.order(contextInfo.orderId) : contextInfo.orderId}</span>
                   {contextInfo.referringPhysician && (
                     <>
                       <span className="text-gray-300">|</span>
@@ -111,7 +112,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 {/* Collection info */}
                 {sampleInfo && sampleInfo.collectedAt && (
                   <span className="text-xs text-gray-500">
-                    Sample <span className="font-medium text-gray-900">{sampleInfo.sampleId}</span> collected{' '}
+                    Sample <span className="font-medium text-gray-900">{typeof sampleInfo.sampleId === 'number' ? displayId.sample(sampleInfo.sampleId) : sampleInfo.sampleId}</span> collected{' '}
                     <span className="text-gray-700">{formatDate(sampleInfo.collectedAt)}</span>
                     {sampleInfo.collectedBy && <span> by {getUserName(sampleInfo.collectedBy)}</span>}
                   </span>

@@ -1,7 +1,7 @@
 """
 User Model - All fields use camelCase
 """
-from sqlalchemy import Column, String, DateTime, Enum
+from sqlalchemy import Column, String, Integer, DateTime, Enum
 from sqlalchemy.sql import func
 from app.database import Base
 from app.schemas.enums import UserRole
@@ -10,7 +10,7 @@ from app.schemas.enums import UserRole
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(String, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     username = Column(String, unique=True, index=True, nullable=False)
     hashedPassword = Column("hashed_password", String, nullable=False)
     name = Column(String, nullable=False)

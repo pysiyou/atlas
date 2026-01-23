@@ -55,7 +55,7 @@ export interface TestResult {
 
 export interface OrderTest {
   // Identity
-  id?: string;                         // Unique ID (orderId_testCode or orderId_testCode_RT1 for retests)
+  id?: number;                         // Integer ID, displayed as TST{id}
   testCode: string;                    // Links to Test catalog
   testName: string;                    // From API relationship
   sampleType: string;                  // From API relationship
@@ -65,7 +65,7 @@ export interface OrderTest {
   priceAtOrder: number;                // Snapshot for billing
 
   // Sample linkage
-  sampleId?: string;                   // Links to Sample (assigned after sample generation)
+  sampleId?: number;                   // Links to Sample (assigned after sample generation)
 
   // Results (order-specific)
   results: Record<string, TestResult> | null;
@@ -87,14 +87,14 @@ export interface OrderTest {
   reflexRule?: string;
   isRepeatTest?: boolean;
   repeatReason?: string;
-  originalTestId?: string;
+  originalTestId?: number;
   repeatNumber?: number;
 
   // Re-test tracking (for result validation rejection flow)
   isRetest?: boolean;                   // True if this is a retest of a rejected result
-  retestOfTestId?: string;              // Links to original OrderTest.id that was rejected
+  retestOfTestId?: number;              // Links to original OrderTest.id that was rejected
   retestNumber?: number;                // 0 = original, 1 = 1st retest, etc.
-  retestOrderTestId?: string;           // Points to the new retest entry created after rejection
+  retestOrderTestId?: number;           // Points to the new retest entry created after rejection
 
   // Result rejection history (for validation rejections)
   resultRejectionHistory?: ResultRejectionRecord[];
@@ -109,8 +109,8 @@ export interface OrderTest {
 
 export interface Order {
   // Identity
-  orderId: string;
-  patientId: string;                   // Links to Patient
+  orderId: number;                     // Integer ID, displayed as ORD{id}
+  patientId: number;                   // Links to Patient
   patientName: string;                 // From API relationship
   orderDate: string;
 
@@ -123,7 +123,7 @@ export interface Order {
   overallStatus: OrderStatus;
 
   // Scheduling
-  appointmentId?: string;              // Links to Appointment
+  appointmentId?: number;              // Links to Appointment
   scheduledCollectionTime?: string;
 
   // Instructions
@@ -143,7 +143,7 @@ export interface Order {
   paymentMethod?: string;              // How payment was made
 
   // Metadata
-  createdBy: string;
+  createdBy: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -161,7 +161,7 @@ export interface ValidationRecord {
 export interface BatchCollectionGroup {
   batchId: string;
   sampleType: string;
-  orderIds: string[];
+  orderIds: number[];
   patientCount: number;
   totalTests: number;
   priority: PriorityLevel;

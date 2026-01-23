@@ -65,9 +65,9 @@ class RejectionResultResponse(BaseModel):
     success: bool
     action: str
     message: str
-    originalTestId: str
-    newTestId: Optional[str] = None
-    newSampleId: Optional[str] = None
+    originalTestId: int
+    newTestId: Optional[int] = None
+    newSampleId: Optional[int] = None
     escalationRequired: bool = False
 
     class Config:
@@ -106,7 +106,7 @@ def get_pending_validation(
 
 @router.get("/results/{orderId}/tests/{testCode}/rejection-options", response_model=RejectionOptionsResponse)
 def get_rejection_options(
-    orderId: str,
+    orderId: int,
     testCode: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_validator)
@@ -144,7 +144,7 @@ def get_rejection_options(
 
 @router.post("/results/{orderId}/tests/{testCode}")
 def enter_results(
-    orderId: str,
+    orderId: int,
     testCode: str,
     result_data: ResultEntryRequest,
     db: Session = Depends(get_db),
@@ -170,7 +170,7 @@ def enter_results(
 
 @router.post("/results/{orderId}/tests/{testCode}/validate")
 def validate_results(
-    orderId: str,
+    orderId: int,
     testCode: str,
     validation_data: ResultValidationRequest,
     db: Session = Depends(get_db),
@@ -201,7 +201,7 @@ def validate_results(
 
 @router.post("/results/{orderId}/tests/{testCode}/reject", response_model=RejectionResultResponse)
 def reject_results(
-    orderId: str,
+    orderId: int,
     testCode: str,
     rejection_data: ResultRejectionRequest,
     db: Session = Depends(get_db),

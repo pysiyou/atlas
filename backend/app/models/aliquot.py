@@ -1,7 +1,7 @@
 """
 Aliquot Model - All fields use camelCase
 """
-from sqlalchemy import Column, String, Float, DateTime, JSON, Enum, ForeignKey
+from sqlalchemy import Column, String, Integer, Float, DateTime, JSON, Enum, ForeignKey
 from sqlalchemy.sql import func
 from app.database import Base
 from app.schemas.enums import AliquotStatus, ContainerType
@@ -10,10 +10,10 @@ from app.schemas.enums import AliquotStatus, ContainerType
 class Aliquot(Base):
     __tablename__ = "aliquots"
 
-    aliquotId = Column("aliquot_id", String, primary_key=True, index=True)  # ALQ-YYYYMMDD-XXX
-    parentSampleId = Column("parent_sample_id", String, ForeignKey("samples.sample_id"), nullable=False, index=True)
-    orderId = Column("order_id", String, ForeignKey("orders.order_id"), nullable=False, index=True)
-    patientId = Column("patient_id", String, ForeignKey("patients.id"), nullable=False)
+    aliquotId = Column("aliquot_id", Integer, primary_key=True, autoincrement=True, index=True)
+    parentSampleId = Column("parent_sample_id", Integer, ForeignKey("samples.sample_id"), nullable=False, index=True)
+    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
+    patientId = Column("patient_id", Integer, ForeignKey("patients.id"), nullable=False)
 
     # Aliquot details
     aliquotNumber = Column("aliquot_number", Float, nullable=False)  # 1, 2, 3, etc.

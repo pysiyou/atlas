@@ -124,7 +124,7 @@ class PatientUpdate(BaseModel):
 
 
 class PatientResponse(PatientBase):
-    id: str
+    id: int
     registrationDate: datetime
     createdBy: str
     createdAt: datetime

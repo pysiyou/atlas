@@ -26,7 +26,7 @@ class UserUpdate(BaseModel):
 
 
 class UserResponse(UserBase):
-    id: str
+    id: int
     createdAt: datetime
 
     class Config:
@@ -41,7 +41,7 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    user_id: str | None = None
+    user_id: int | None = None
 
 
 class LoginRequest(BaseModel):

@@ -4,7 +4,7 @@
 
 export * from './formatters';
 export * from './classnames';
-export * from './id-generator';
+export * from './id-display';
 export * from './validation';
 export * from './reference-ranges';
 export * from './statusHelpers';

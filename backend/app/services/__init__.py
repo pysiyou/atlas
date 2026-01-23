@@ -1,7 +1,6 @@
 """
 Services package for business logic
 """
-from app.services.id_generator import generate_id
 from app.services.sample_generator import generate_samples_for_order
 from app.services.order_status_updater import update_order_status
 from app.services.sample_recollection import (
@@ -27,8 +26,6 @@ from app.services.lab_operations import (
 )
 
 __all__ = [
-    # ID generation
-    "generate_id",
     # Sample operations
     "generate_samples_for_order",
     "create_recollection_sample",
