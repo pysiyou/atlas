@@ -248,4 +248,3 @@ Modal.displayName = "Modal";
 
 export { Modal };
 export type { ModalProps };
-export default Modal;

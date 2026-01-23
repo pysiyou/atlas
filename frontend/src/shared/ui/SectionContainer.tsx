@@ -109,4 +109,3 @@ export const SectionContainer: React.FC<SectionContainerProps> = ({
   );
 };
 
-export default SectionContainer;

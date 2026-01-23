@@ -11,7 +11,7 @@ import { formatVolume } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { usePatients, useTests } from '@/hooks';
-import { useModal, ModalType } from '@/shared/contexts/ModalContext';
+import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { ContainerType } from '@/types';
 import type { SampleDisplay } from '../types';
 import { CollectionPopover } from './CollectionPopover';

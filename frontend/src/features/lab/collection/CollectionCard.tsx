@@ -12,7 +12,7 @@ import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { usePatients, useTests, useSamples } from '@/hooks';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
-import { useModal, ModalType } from '@/shared/contexts/ModalContext';
+import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { getPatientName, getTestNames } from '@/utils/typeHelpers';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
 import { displayId } from '@/utils/id-display';

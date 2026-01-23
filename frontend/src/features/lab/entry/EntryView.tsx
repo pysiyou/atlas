@@ -18,7 +18,7 @@ import { isCollectedSample } from '@/types';
 import { EntryCard } from './EntryCard';
 import { EntryMobileCard } from './EntryMobileCard';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
-import { useModal, ModalType } from '@/shared/contexts/ModalContext';
+import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { resultAPI } from '@/services/api';
 

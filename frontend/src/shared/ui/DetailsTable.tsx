@@ -90,4 +90,3 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
   );
 };
 
-export default DetailsTable;

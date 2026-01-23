@@ -4,7 +4,7 @@
  * Import this file once at app startup
  */
 
-import { ModalType } from '@/shared/contexts/ModalContext';
+import { ModalType } from '@/shared/context/ModalContext';
 import { registerModal } from './modalRegistry';
 import { CollectionDetailModal } from '@/features/lab/collection/CollectionDetailModal';
 import { EntryDetailModal } from '@/features/lab/entry/EntryDetailModal';

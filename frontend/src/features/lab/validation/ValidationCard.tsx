@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { Badge, Icon, IconButton, Alert } from '@/shared/ui';
-import { useModal, ModalType } from '@/shared/contexts/ModalContext';
+import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { formatDate } from '@/utils';
 import { useUsers } from '@/hooks';
 import { LabCard, FlagsSection } from '../components/LabCard';

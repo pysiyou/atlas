@@ -5,7 +5,7 @@
  */
 
 import type { ComponentType } from 'react';
-import { ModalType } from '@/shared/contexts/ModalContext';
+import { ModalType } from '@/shared/context/ModalContext';
 
 /**
  * Base props that all modals receive

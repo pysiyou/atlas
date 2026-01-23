@@ -14,7 +14,7 @@ import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import { ValidationCard } from './ValidationCard';
 import { ValidationMobileCard } from './ValidationMobileCard';
-import { useModal, ModalType } from '@/shared/contexts/ModalContext';
+import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { TestWithContext, CollectedSample } from '@/types';

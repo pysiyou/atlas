@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Gender, AffiliationDuration, Affiliation, Patient, Relationship } from '@/types';
+import type { Gender, AffiliationDuration, Patient, Relationship } from '@/types';
 import {
   validateRequired,
   validateLength,
@@ -9,7 +9,15 @@ import {
 } from '@/utils';
 import { VALIDATION_MESSAGES, VALIDATION_RULES } from '@/config';
 
-interface PatientFormData {
+// Re-export affiliation utilities for backward compatibility
+export {
+  generateAssuranceNumber,
+  calculateEndDate,
+  isAffiliationActive,
+  getAffiliationStatus,
+} from './utils/affiliationUtils';
+
+export interface PatientFormData {
   fullName: string;
   dateOfBirth: string;
   gender: Gender;
@@ -21,7 +29,7 @@ interface PatientFormData {
   city: string;
   postalCode: string;
   hasAffiliation: boolean;
-  affiliationDuration: AffiliationDuration;  // Numeric: 1, 3, 6, 12, or 24 months
+  affiliationDuration: AffiliationDuration;
   emergencyContactFullName: string;
   emergencyContactRelationship: Relationship;
   emergencyContactPhone: string;
@@ -41,103 +49,107 @@ interface PatientFormData {
   oxygenSaturation: string;
 }
 
-// Helper: Generate unique assurance number
-export const generateAssuranceNumber = (): string => {
-  const now = new Date();
-  const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-  const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-  return `ASS-${dateStr}-${randomSuffix}`;
-};
+const createInitialFormData = (initialData?: Partial<Patient>): PatientFormData => {
+  if (initialData) {
+    return {
+      fullName: initialData.fullName || '',
+      dateOfBirth: initialData.dateOfBirth || '',
+      gender: initialData.gender || 'male',
+      phone: initialData.phone || '',
+      email: initialData.email || '',
+      height: initialData.height !== undefined ? String(initialData.height) : '',
+      weight: initialData.weight !== undefined ? String(initialData.weight) : '',
+      street: initialData.address?.street || '',
+      city: initialData.address?.city || '',
+      postalCode: initialData.address?.postalCode || '',
+      hasAffiliation: !!initialData.affiliation,
+      affiliationDuration: initialData.affiliation?.duration || 1,
+      emergencyContactFullName: initialData.emergencyContact?.fullName || '',
+      emergencyContactRelationship: initialData.emergencyContact?.relationship || 'spouse',
+      emergencyContactPhone: initialData.emergencyContact?.phone || '',
+      emergencyContactEmail: initialData.emergencyContact?.email || '',
+      chronicConditions: initialData.medicalHistory?.chronicConditions?.join('; ') || '',
+      currentMedications: initialData.medicalHistory?.currentMedications?.join('; ') || '',
+      allergies: initialData.medicalHistory?.allergies?.join('; ') || '',
+      previousSurgeries: initialData.medicalHistory?.previousSurgeries?.join('; ') || '',
+      familyHistory: initialData.medicalHistory?.familyHistory || '',
+      smoking: initialData.medicalHistory?.lifestyle?.smoking || false,
+      alcohol: initialData.medicalHistory?.lifestyle?.alcohol || false,
+      temperature: initialData.vitalSigns?.temperature !== undefined ? String(initialData.vitalSigns.temperature) : '',
+      heartRate: initialData.vitalSigns?.heartRate !== undefined ? String(initialData.vitalSigns.heartRate) : '',
+      systolicBP: initialData.vitalSigns?.systolicBP !== undefined ? String(initialData.vitalSigns.systolicBP) : '',
+      diastolicBP: initialData.vitalSigns?.diastolicBP !== undefined ? String(initialData.vitalSigns.diastolicBP) : '',
+      respiratoryRate: initialData.vitalSigns?.respiratoryRate !== undefined ? String(initialData.vitalSigns.respiratoryRate) : '',
+      oxygenSaturation: initialData.vitalSigns?.oxygenSaturation !== undefined ? String(initialData.vitalSigns.oxygenSaturation) : '',
+    };
+  }
 
-// Helper: Calculate end date based on duration (duration is now in months)
-export const calculateEndDate = (startDate: string, duration: AffiliationDuration): string => {
-  const start = new Date(startDate);
-  start.setMonth(start.getMonth() + duration);
-  return start.toISOString().slice(0, 10);
-};
-
-// Helper: Check if affiliation is active
-export const isAffiliationActive = (affiliation?: Affiliation): boolean => {
-  if (!affiliation) return false;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const endDate = new Date(affiliation.endDate);
-  endDate.setHours(0, 0, 0, 0);
-  return endDate >= today;
-};
-
-// Helper: Get affiliation status label
-export const getAffiliationStatus = (affiliation?: Affiliation): 'active' | 'expired' | 'none' => {
-  if (!affiliation) return 'none';
-  return isAffiliationActive(affiliation) ? 'active' : 'expired';
+  return {
+    fullName: '',
+    dateOfBirth: '',
+    gender: 'male',
+    phone: '',
+    email: '',
+    height: '',
+    weight: '',
+    street: '',
+    city: '',
+    postalCode: '',
+    hasAffiliation: false,
+    affiliationDuration: 1,
+    emergencyContactFullName: '',
+    emergencyContactRelationship: 'spouse',
+    emergencyContactPhone: '',
+    emergencyContactEmail: '',
+    chronicConditions: '',
+    currentMedications: '',
+    allergies: '',
+    previousSurgeries: '',
+    familyHistory: '',
+    smoking: false,
+    alcohol: false,
+    temperature: '',
+    heartRate: '',
+    systolicBP: '',
+    diastolicBP: '',
+    respiratoryRate: '',
+    oxygenSaturation: '',
+  };
 };
 
 export const usePatientForm = (initialData?: Partial<Patient>) => {
-  const [formData, setFormData] = useState<PatientFormData>(() => {
-    if (initialData) {
-      return {
-        fullName: initialData.fullName || '',
-        dateOfBirth: initialData.dateOfBirth || '',
-        gender: initialData.gender || 'male',
-        phone: initialData.phone || '',
-        email: initialData.email || '',
-        height: initialData.height !== undefined ? String(initialData.height) : '',
-        weight: initialData.weight !== undefined ? String(initialData.weight) : '',
-        street: initialData.address?.street || '',
-        city: initialData.address?.city || '',
-        postalCode: initialData.address?.postalCode || '',
-        hasAffiliation: !!initialData.affiliation,
-        affiliationDuration: initialData.affiliation?.duration || 1,
-        emergencyContactFullName: initialData.emergencyContact?.fullName || '',
-        emergencyContactRelationship: initialData.emergencyContact?.relationship || 'spouse',
-        emergencyContactPhone: initialData.emergencyContact?.phone || '',
-        emergencyContactEmail: initialData.emergencyContact?.email || '',
-        chronicConditions: initialData.medicalHistory?.chronicConditions?.join('; ') || '',
-        currentMedications: initialData.medicalHistory?.currentMedications?.join('; ') || '',
-        allergies: initialData.medicalHistory?.allergies?.join('; ') || '',
-        previousSurgeries: initialData.medicalHistory?.previousSurgeries?.join('; ') || '',
-        familyHistory: initialData.medicalHistory?.familyHistory || '',
-        smoking: initialData.medicalHistory?.lifestyle?.smoking || false,
-        alcohol: initialData.medicalHistory?.lifestyle?.alcohol || false,
-        temperature: initialData.vitalSigns?.temperature !== undefined ? String(initialData.vitalSigns.temperature) : '',
-        heartRate: initialData.vitalSigns?.heartRate !== undefined ? String(initialData.vitalSigns.heartRate) : '',
-        systolicBP: initialData.vitalSigns?.systolicBP !== undefined ? String(initialData.vitalSigns.systolicBP) : '',
-        diastolicBP: initialData.vitalSigns?.diastolicBP !== undefined ? String(initialData.vitalSigns.diastolicBP) : '',
-        respiratoryRate: initialData.vitalSigns?.respiratoryRate !== undefined ? String(initialData.vitalSigns.respiratoryRate) : '',
-        oxygenSaturation: initialData.vitalSigns?.oxygenSaturation !== undefined ? String(initialData.vitalSigns.oxygenSaturation) : '',
-      };
-    }
-    return {
-      fullName: '',
-      dateOfBirth: '',
-      gender: 'male',
-      phone: '',
-      email: '',
-      height: '',
-      weight: '',
-      street: '',
-      city: '',
-      postalCode: '',
-      hasAffiliation: false,
-      affiliationDuration: 1,
-      emergencyContactFullName: '',
-      emergencyContactRelationship: 'spouse',
-      emergencyContactPhone: '',
-      emergencyContactEmail: '',
-      chronicConditions: '',
-      currentMedications: '',
-      allergies: '',
-      previousSurgeries: '',
-      familyHistory: '',
-      smoking: false,
-      alcohol: false,
-      temperature: '',
-      heartRate: '',
-      systolicBP: '',
-      diastolicBP: '',
-      respiratoryRate: '',
-      oxygenSaturation: '',
-    };
+  const [formData, setFormData] = useState<PatientFormData>(() => createInitialFormData(initialData));
+
+  const getDefaultFormData = (): PatientFormData => ({
+    fullName: '',
+    dateOfBirth: '',
+    gender: 'male',
+    phone: '',
+    email: '',
+    height: '',
+    weight: '',
+    street: '',
+    city: '',
+    postalCode: '',
+    hasAffiliation: false,
+    affiliationDuration: 1,
+    emergencyContactFullName: '',
+    emergencyContactRelationship: 'spouse',
+    emergencyContactPhone: '',
+    emergencyContactEmail: '',
+    chronicConditions: '',
+    currentMedications: '',
+    allergies: '',
+    previousSurgeries: '',
+    familyHistory: '',
+    smoking: false,
+    alcohol: false,
+    temperature: '',
+    heartRate: '',
+    systolicBP: '',
+    diastolicBP: '',
+    respiratoryRate: '',
+    oxygenSaturation: '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -298,37 +310,7 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
   };
 
   const reset = () => {
-    setFormData({
-      fullName: '',
-      dateOfBirth: '',
-      gender: 'male',
-      phone: '',
-      email: '',
-      height: '',
-      weight: '',
-      street: '',
-      city: '',
-      postalCode: '',
-      hasAffiliation: false,
-      affiliationDuration: 1,
-      emergencyContactFullName: '',
-      emergencyContactRelationship: 'spouse',
-      emergencyContactPhone: '',
-      emergencyContactEmail: '',
-      chronicConditions: '',
-      currentMedications: '',
-      allergies: '',
-      previousSurgeries: '',
-      familyHistory: '',
-      smoking: false,
-      alcohol: false,
-      temperature: '',
-      heartRate: '',
-      systolicBP: '',
-      diastolicBP: '',
-      respiratoryRate: '',
-      oxygenSaturation: '',
-    });
+    setFormData(getDefaultFormData());
     setErrors({});
     setIsSubmitting(false);
   };

@@ -1,0 +1,54 @@
+/**
+ * ReportsList Component
+ * Displays a list of available patient reports
+ */
+
+import React from 'react';
+import { Icon, IconButton, EmptyState } from '@/shared/ui';
+import { displayId } from '@/utils/id-display';
+import type { Order } from '@/types/order';
+import { formatDetailDate, getReportableOrders } from '../utils/patientDetailUtils';
+
+export interface ReportsListProps {
+  orders: Order[];
+}
+
+export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
+  const reportableOrders = getReportableOrders(orders);
+
+  if (reportableOrders.length === 0) {
+    return (
+      <EmptyState
+        icon="document-medicine"
+        title="No Reports Available"
+        description="There are no validated reports for this patient yet."
+      />
+    );
+  }
+
+  return (
+    <div className="flex flex-col divide-y divide-gray-100">
+      {reportableOrders.map((order) => (
+        <div
+          key={order.orderId}
+          className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors group"
+        >
+          <div className="flex items-center gap-3 overflow-hidden">
+            <div className="w-8 h-8 flex items-center justify-center">
+              <Icon name="pdf" className="w-full h-full text-red-400" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-medium font-mono text-gray-900 truncate">
+                Report_{displayId.order(order.orderId)}.pdf
+              </p>
+              <p className="text-xs text-gray-500 mt-0.5">
+                {formatDetailDate(order.orderDate)} • 1.2 MB
+              </p>
+            </div>
+          </div>
+          <IconButton variant="download" size="sm" title="Download Report" />
+        </div>
+      ))}
+    </div>
+  );
+};

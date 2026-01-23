@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import { Input } from '@/shared/ui';
 import type { VitalSigns } from '@/types/patient';
 
 export interface VitalsSectionProps {
@@ -165,24 +164,6 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
         text: 'text-red-600',
         bg: 'bg-red-50',
       };
-  }
-};
-
-/**
- * Get alert message for vital sign status
- */
-const getStatusAlert = (status: 'normal' | 'borderline' | 'abnormal' | null, value: number | undefined, normalRangeText: string): string | null => {
-  if (!status || value === undefined || value === null || isNaN(value)) {
-    return null;
-  }
-
-  switch (status) {
-    case 'borderline':
-      return `Borderline - ${normalRangeText}`;
-    case 'abnormal':
-      return `Abnormal - ${normalRangeText}`;
-    default:
-      return null;
   }
 };
 

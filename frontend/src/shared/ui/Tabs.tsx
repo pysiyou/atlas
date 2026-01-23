@@ -184,7 +184,7 @@ export const TabsList: React.FC<TabsListProps> = ({
         return (
           <button
             key={tab.id}
-            ref={(el) => (tabsRef.current[tab.id] = el)}
+            ref={(el) => { tabsRef.current[tab.id] = el; }}
             onClick={() => onTabChange(tab.id)}
             className={buttonClass}
             type="button"

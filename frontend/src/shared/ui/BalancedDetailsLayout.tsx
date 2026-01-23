@@ -199,4 +199,3 @@ export const BalancedDetailsLayout: React.FC<BalancedDetailsLayoutProps> = ({
   );
 };
 
-export default BalancedDetailsLayout;

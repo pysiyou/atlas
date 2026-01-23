@@ -114,4 +114,3 @@ export const DetailFieldGroup: React.FC<DetailFieldGroupProps> = ({
   );
 };
 
-export default DetailFieldGroup;

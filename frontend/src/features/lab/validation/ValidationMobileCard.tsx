@@ -11,7 +11,7 @@ import { formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import { getPatientName } from '@/utils/typeHelpers';
 import { usePatients } from '@/hooks';
-import { useModal, ModalType } from '@/shared/contexts/ModalContext';
+import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { TestWithContext } from '@/types';
 import { RejectionDialog } from '../components';
 

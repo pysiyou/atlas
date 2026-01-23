@@ -18,7 +18,7 @@ import { TestsProvider } from '@/features/test/TestsProvider';
 import { SamplesProvider } from '@/features/lab/SamplesProvider';
 import { AppointmentsProvider } from '@/features/appointment/AppointmentsProvider';
 import { BillingProvider } from '@/features/billing/BillingProvider';
-import { ModalProvider } from '@/shared/contexts/ModalContext';
+import { ModalProvider } from '@/shared/context/ModalContext';
 
 interface AppProvidersProps {
   children: ReactNode;
