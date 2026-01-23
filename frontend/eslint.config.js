@@ -27,21 +27,21 @@ export default defineConfig([
         skipBlankLines: true 
       }],
       
-      // Function size enforcement
+      // Function size enforcement (increased for React components with JSX)
       'max-lines-per-function': ['warn', { 
-        max: 100, 
+        max: 150, 
         skipComments: true,
         skipBlankLines: true 
       }],
       
-      // Prevent deeply nested code
-      'max-depth': ['error', 4],
+      // Prevent deeply nested code (allow 5 for complex UI components)
+      'max-depth': ['error', 5],
       
       // Enforce early returns
       'no-else-return': ['error', { allowElseIf: false }],
       
-      // Prevent unnecessary complexity
-      'complexity': ['warn', 15],
+      // Prevent unnecessary complexity (adjusted for business logic in domain features)
+      'complexity': ['warn', 25],
       
       // TypeScript specific
       '@typescript-eslint/no-explicit-any': 'error',

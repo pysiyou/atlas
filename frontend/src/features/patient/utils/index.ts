@@ -5,3 +5,4 @@
 export * from './affiliationUtils';
 export * from './patientPayloadBuilder';
 export * from './formProgressCalculator';
+export * from './patientValidation';

@@ -26,6 +26,7 @@ class Logger {
    */
   debug(message: string, context?: LogContext): void {
     if (this.isDevelopment) {
+      // eslint-disable-next-line no-console
       console.log(`[${LogLevel.DEBUG}] ${message}`, context || '');
     }
   }
@@ -35,6 +36,7 @@ class Logger {
    */
   info(message: string, context?: LogContext): void {
     if (this.isDevelopment) {
+      // eslint-disable-next-line no-console
       console.info(`[${LogLevel.INFO}] ${message}`, context || '');
     }
     // In production, send to monitoring service

@@ -2,8 +2,6 @@
  * EntryForm - Form for entering test results
  */
 
-/* eslint-disable max-depth */
-
 import React, { useCallback } from 'react';
 import { Button, Textarea, Popover, Icon } from '@/shared/ui';
 import { cn } from '@/utils';
@@ -70,7 +68,6 @@ const RadioOption: React.FC<{
 /**
  * SelectParameterInput - Popover-based select input styled like MultiSelectFilter
  */
-// eslint-disable-next-line max-depth
 const SelectParameterInput: React.FC<{
   param: TestParameter;
   value: string;
@@ -131,7 +128,6 @@ const SelectParameterInput: React.FC<{
       )}
       className="min-w-[200px]"
     >
-      {/* eslint-disable-next-line max-depth */}
       {({ close }) => (
         <div className="flex flex-col py-1">
           {/* Options list */}
@@ -155,7 +151,6 @@ const SelectParameterInput: React.FC<{
 };
 
 /** Render input based on parameter type */
-// eslint-disable-next-line max-depth
 const ParameterInput: React.FC<{
   param: TestParameter;
   value: string;

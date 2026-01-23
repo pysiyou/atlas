@@ -1,10 +1,8 @@
 /**
- * Patient Detail Section Components
- * Re-export all section components for easy imports
+ * Centralized exports for patient detail sections
  */
 
-export { PatientInfoCard } from './PatientInfoCard';
-export { AffiliationCard } from './AffiliationCard';
-export { AffiliationInfo } from '../PatientDetailSections';
-export { MedicalHistoryCard } from './MedicalHistoryCard';
-export { OrderHistoryCard } from './OrderHistoryCard';
+export * from './PatientInfoSection';
+export * from './AffiliationInfoSection';
+export * from './MedicalHistorySection';
+export * from './OrderHistorySection';
