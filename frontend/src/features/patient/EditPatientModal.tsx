@@ -157,6 +157,8 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       gender: formData.gender,
       phone: formData.phone.trim(),
       email: formData.email.trim() || undefined,
+      height: formData.height ? parseFloat(formData.height) : undefined,
+      weight: formData.weight ? parseFloat(formData.weight) : undefined,
       address: {
         street: formData.street.trim(),
         city: formData.city.trim(),
@@ -209,6 +211,8 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       gender: formData.gender,
       phone: formData.phone.trim(),
       email: formData.email.trim() || undefined,
+      height: formData.height ? parseFloat(formData.height) : undefined,
+      weight: formData.weight ? parseFloat(formData.weight) : undefined,
       address: {
         street: formData.street.trim(),
         city: formData.city.trim(),

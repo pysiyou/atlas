@@ -15,6 +15,8 @@ interface PatientFormData {
   gender: Gender;
   phone: string;
   email: string;
+  height: string;
+  weight: string;
   street: string;
   city: string;
   postalCode: string;
@@ -73,6 +75,8 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
         gender: initialData.gender || 'male',
         phone: initialData.phone || '',
         email: initialData.email || '',
+        height: initialData.height ? String(initialData.height) : '',
+        weight: initialData.weight ? String(initialData.weight) : '',
         street: initialData.address?.street || '',
         city: initialData.address?.city || '',
         postalCode: initialData.address?.postalCode || '',
@@ -170,6 +174,22 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
       newErrors.email = VALIDATION_MESSAGES.INVALID.EMAIL;
     }
 
+    // Validate height (optional, but if provided must be valid)
+    if (formData.height) {
+      const heightNum = parseFloat(formData.height);
+      if (isNaN(heightNum) || heightNum < 30 || heightNum > 250) {
+        newErrors.height = 'Height must be between 30 and 250 cm';
+      }
+    }
+
+    // Validate weight (optional, but if provided must be valid)
+    if (formData.weight) {
+      const weightNum = parseFloat(formData.weight);
+      if (isNaN(weightNum) || weightNum < 1 || weightNum > 500) {
+        newErrors.weight = 'Weight must be between 1 and 500 kg';
+      }
+    }
+
     if (!validateRequired(formData.street)) {
       newErrors.street = VALIDATION_MESSAGES.REQUIRED.STREET;
     }
@@ -213,6 +233,8 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
       gender: 'male',
       phone: '',
       email: '',
+      height: '',
+      weight: '',
       street: '',
       city: '',
       postalCode: '',

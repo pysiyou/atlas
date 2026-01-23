@@ -1,7 +1,7 @@
 """
 Patient Model
 """
-from sqlalchemy import Column, String, Integer, DateTime, JSON, Enum
+from sqlalchemy import Column, String, Integer, DateTime, JSON, Enum, Float
 from sqlalchemy.sql import func
 from app.database import Base
 from app.schemas.enums import Gender
@@ -16,6 +16,10 @@ class Patient(Base):
     gender = Column(Enum(Gender), nullable=False)
     phone = Column(String, nullable=False)
     email = Column(String, nullable=True)
+    
+    # Physical measurements (optional)
+    height = Column(Float, nullable=True)  # Height in centimeters
+    weight = Column(Float, nullable=True)  # Weight in kilograms
 
     # Address (JSON)
     address = Column(JSON, nullable=False)  # {street, city, postalCode}

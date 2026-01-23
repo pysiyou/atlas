@@ -501,6 +501,30 @@ def _create_single_patient_data() -> dict:
     # Generate email (optional)
     email = f"{first_name.lower()}.{last_name.lower()}@example.com" if random.random() > 0.3 else None
     
+    # Generate height and weight (age-appropriate)
+    # Height ranges: infants (50-80cm), children (80-150cm), adults (150-200cm)
+    # Weight ranges: infants (2-15kg), children (15-60kg), adults (45-150kg)
+    if age < 2:
+        # Infants
+        height = round(random.uniform(50, 80), 1)
+        weight = round(random.uniform(2, 15), 1)
+    elif age < 18:
+        # Children and teenagers
+        height = round(random.uniform(80, 175), 1)
+        weight = round(random.uniform(15, 80), 1)
+    else:
+        # Adults
+        height = round(random.uniform(150, 200), 1)
+        weight = round(random.uniform(45, 120), 1)
+    
+    # 70% of patients have height/weight recorded
+    if random.random() > 0.3:
+        height = height
+        weight = weight
+    else:
+        height = None
+        weight = None
+    
     # Generate address
     city = 'Unknown'
     try:
@@ -610,6 +634,8 @@ def _create_single_patient_data() -> dict:
         'gender': gender_enum,
         'phone': phone,
         'email': email,
+        'height': height,
+        'weight': weight,
         'address': address,
         'emergencyContact': emergencyContact,
         'medicalHistory': medicalHistory,
@@ -634,6 +660,8 @@ def generate_dev_patients(db):
             "gender": Gender.MALE,
             "phone": "+1-555-0101",
             "email": "john.smith@email.com",
+            "height": 175.5,
+            "weight": 80.2,
             "address": {"street": "123 Main St", "city": "New York", "postalCode": "10001"},
             "emergencyContact": {
                 "fullName": "Jane Smith",
@@ -667,6 +695,8 @@ def generate_dev_patients(db):
             "gender": Gender.FEMALE,
             "phone": "+1-555-0201",
             "email": "maria.garcia@email.com",
+            "height": 165.0,
+            "weight": 62.5,
             "address": {"street": "456 Oak Ave", "city": "Los Angeles", "postalCode": "90001"},
             "emergencyContact": {
                 "fullName": "Carlos Garcia",

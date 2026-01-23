@@ -64,6 +64,8 @@ class PatientBase(BaseModel):
     gender: Gender
     phone: str = Field(..., min_length=10, max_length=20)
     email: str | None = Field(None, max_length=254)
+    height: float | None = Field(None, ge=30, le=250, description="Height in centimeters")
+    weight: float | None = Field(None, ge=1, le=500, description="Weight in kilograms")
     address: Address
     emergencyContact: EmergencyContact
     medicalHistory: MedicalHistory
@@ -116,6 +118,8 @@ class PatientUpdate(BaseModel):
     fullName: str | None = None
     phone: str | None = None
     email: str | None = None
+    height: float | None = None
+    weight: float | None = None
     address: Address | None = None
     emergencyContact: EmergencyContact | None = None
     medicalHistory: MedicalHistory | None = None

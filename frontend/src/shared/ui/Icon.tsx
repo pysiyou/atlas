@@ -120,6 +120,8 @@ export type IconName =
   | "book"
   | "age-0"
   | "category"
+  | "ruler"
+  | "weight"
   ;
 
 interface IconProps {

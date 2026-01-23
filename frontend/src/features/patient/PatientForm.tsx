@@ -21,6 +21,8 @@ interface PatientFormSectionsProps {
     gender: Gender;
     phone: string;
     email: string;
+    height: string;
+    weight: string;
     street: string;
     city: string;
     postalCode: string;
@@ -101,6 +103,30 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('email', e.target.value)}
         error={errors.email}
         placeholder="patient@email.com"
+      />
+      <Input
+        label="Height (cm)"
+        name="height"
+        type="number"
+        step="0.1"
+        min="30"
+        max="250"
+        value={formData.height}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('height', e.target.value)}
+        error={errors.height}
+        placeholder="175.5"
+      />
+      <Input
+        label="Weight (kg)"
+        name="weight"
+        type="number"
+        step="0.1"
+        min="1"
+        max="500"
+        value={formData.weight}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('weight', e.target.value)}
+        error={errors.weight}
+        placeholder="70.5"
       />
     </div>
   </div>

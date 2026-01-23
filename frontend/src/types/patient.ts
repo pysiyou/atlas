@@ -70,6 +70,8 @@ export interface Patient {
   gender: Gender;
   phone: string;
   email?: string;
+  height?: number;  // Height in centimeters
+  weight?: number;  // Weight in kilograms
   address: Address;
   affiliation?: Affiliation;
   emergencyContact: EmergencyContact;

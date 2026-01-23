@@ -97,6 +97,8 @@ def create_patient(
         gender=patient_data.gender,
         phone=patient_data.phone,
         email=patient_data.email,
+        height=patient_data.height,
+        weight=patient_data.weight,
         address=patient_data.address.model_dump(),
         emergencyContact=patient_data.emergencyContact.model_dump(),
         medicalHistory=patient_data.medicalHistory.model_dump(),
@@ -133,7 +135,7 @@ def update_patient(
     # Update only allowed fields - whitelist for security
     ALLOWED_UPDATE_FIELDS = {
         'fullName', 'dateOfBirth', 'gender', 'phone', 'email',
-        'address', 'emergencyContact', 'medicalHistory', 'affiliation'
+        'height', 'weight', 'address', 'emergencyContact', 'medicalHistory', 'affiliation'
     }
     update_data = patient_data.model_dump(exclude_unset=True)
     for field, value in update_data.items():
