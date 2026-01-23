@@ -738,10 +738,10 @@ export const PatientDetail: React.FC = () => {
           </SectionContainer>
         </div>
       ) : (
-        // Large screens: 3-column grid layout with matching bottom row heights
+        //I 3-column grid layout with matching bottom row heights
         <div className="flex-1 grid grid-cols-3 gap-4 min-h-0 h-full" style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}>
           {/* Left Column Group - 2x2 grid for consistent gaps */}
-          <div className="col-span-2 grid grid-cols-2 grid-rows-[1fr_1fr] gap-4 min-h-0" style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}>
+          <div className="col-span-2 grid grid-cols-2 grid-rows-[1fr_1fr] gap-4 min-h-0 h-full" style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}>
             {/* Row 1, Col 1: General Info */}
             <SectionContainer
               title="General Info"
@@ -963,23 +963,14 @@ export const PatientDetail: React.FC = () => {
                   <table className="w-full text-left text-xs table-fixed">
                     {/* Column widths: Order ID (15%), Date (12%), Tests (18%), Priority (12%), Status (15%), Amount (13%), Payment (15%) */}
                     <colgroup>
-                      <col style={{ width: "18%" }} />
+                      <col style={{ width: "10%" }} />
                       <col style={{ width: "15%" }} />
                       <col style={{ width: "25%" }} />
                       <col style={{ width: "15%" }} />
                       <col style={{ width: "15%" }} />
                       <col style={{ width: "13%" }} />
                     </colgroup>
-                    {/* <thead className="text-xxs bg-gray-50 text-gray-500 uppercase sticky top-0 z-10 border-b border-gray-200 [&_th]:font-normal">
-                    <tr>
-                      <th className="px-2 py-1">Order ID</th>
-                      <th className="px-2 py-1">Date</th>
-                      <th className="px-2 py-1">Tests</th>
-                      <th className="px-2 py-1">Status</th>
-                      <th className="px-2 py-1">Amount</th>
-                      <th className="px-2 py-1">Payment</th>
-                    </tr>
-                  </thead> */}
+                    
                     <tbody className="divide-y divide-gray-100">
                       {patientOrders.map((order) => {
                         return (
@@ -1046,24 +1037,30 @@ export const PatientDetail: React.FC = () => {
           </div>
 
           {/* Right Column Group - Grid layout matching left column structure */}
-          <div className="col-span-1 grid grid-rows-[1fr_1fr] gap-4 min-h-0" style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}>
-            {/* Row 1: Lab Affiliation (only show if exists, otherwise empty space) */}
-            {patient.affiliation ? (
+          {/* Using 2-row grid: top row contains both Section 1 and 2, bottom row is Reports */}
+          <div className="col-span-1 grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full" style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}>
+            {/* Top Row: Contains both Section 1 and Section 2 in a sub-grid */}
+            <div className="grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full">
+              {/* Section 1: First half of original row 1 (split from Lab Affiliation) */}
               <SectionContainer
-                title="Lab Affiliation"
+                title="Section 1"
                 className="h-full flex flex-col min-h-0"
-                contentClassName="flex-1 min-h-0 p-4 flex items-center justify-center bg-gray-50/50"
+                contentClassName="flex-1 min-h-0 overflow-y-auto"
               >
-                <AffiliationCard
-                  holderName={patient.fullName}
-                  affiliation={patient.affiliation}
-                />
+                <div className="text-sm text-gray-500">Content area 1</div>
               </SectionContainer>
-            ) : (
-              <div className="h-full min-h-0" />
-            )}
 
-            {/* Row 2: Reports - Same height as Related Orders on the left */}
+              {/* Section 2: Second half of original row 1 (split from Lab Affiliation) */}
+              <SectionContainer
+                title="Section 2"
+                className="h-full flex flex-col min-h-0"
+                contentClassName="flex-1 min-h-0 overflow-y-auto"
+              >
+                <div className="text-sm text-gray-500">Content area 2</div>
+              </SectionContainer>
+            </div>
+
+            {/* Row 3: Reports - Same height as Related Orders on the left */}
             <SectionContainer
               title="Reports"
               className="h-full flex flex-col min-h-0"
