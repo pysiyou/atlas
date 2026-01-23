@@ -4,6 +4,7 @@
  */
 
 export { PatientInfoCard } from './PatientInfoCard';
+export { AffiliationCard } from './AffiliationCard';
 export { AffiliationInfo } from '../PatientDetailSections';
 export { MedicalHistoryCard } from './MedicalHistoryCard';
 export { OrderHistoryCard } from './OrderHistoryCard';

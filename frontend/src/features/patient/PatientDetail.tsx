@@ -8,7 +8,8 @@ import { Button, Avatar, Badge, Icon, SectionContainer, IconButton, EmptyState }
 // import { PatientInfoCard } from './PatientCard';
 
 import { EditPatientModal } from './EditPatientModal';
-import { AffiliationInfo } from './PatientDetailSections';
+import { AffiliationCard } from './sections/AffiliationCard';
+
 import { isAffiliationActive } from './usePatientForm';
 import { AffiliationPopover } from './AffiliationPopover';
 
@@ -898,9 +899,12 @@ export const PatientDetail: React.FC = () => {
             <SectionContainer 
               title="Lab Affiliation" 
               className="shrink-0"
-              contentClassName="p-4"
+              contentClassName="p-4 flex items-center justify-center bg-gray-50/50"
             >
-              <AffiliationInfo affiliation={patient.affiliation} />
+              <AffiliationCard 
+                holderName={patient.fullName}
+                affiliation={patient.affiliation} 
+              />
             </SectionContainer>
           )}
 
