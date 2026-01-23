@@ -1,6 +1,6 @@
 /**
  * DetailView - Unified detail view component
- * 
+ *
  * Provides a consistent detail page layout with flexible section organization.
  * Used across all entity detail pages (Patient, Order, etc.).
  */
@@ -39,7 +39,7 @@ export interface DetailViewProps {
   badges?: ReactNode;
   /** Header action buttons */
   actions?: ReactNode;
-  
+
   // Layout
   /** Layout type */
   layout?: DetailViewLayout;
@@ -47,13 +47,13 @@ export interface DetailViewProps {
   sections: DetailSection[];
   /** Custom layout component (for 'custom' layout type) */
   customLayout?: ReactNode;
-  
+
   // Navigation
   /** Back button handler */
   onBack?: () => void;
   /** Breadcrumb items */
   breadcrumbs?: Array<{ label: string; onClick?: () => void }>;
-  
+
   // State
   /** Loading state */
   loading?: boolean;
@@ -63,7 +63,7 @@ export interface DetailViewProps {
   onRetry?: () => void;
   /** Error dismiss handler */
   onDismissError?: () => void;
-  
+
   // Additional props
   /** Additional CSS classes */
   className?: string;
@@ -71,7 +71,7 @@ export interface DetailViewProps {
 
 /**
  * DetailView component
- * 
+ *
  * @example
  * ```tsx
  * <DetailView
@@ -112,7 +112,8 @@ export const DetailView: React.FC<DetailViewProps> = ({
   const sortedSections = [...sections].sort((a, b) => (a.order || 0) - (b.order || 0));
 
   // Determine grid columns based on layout
-  const gridColumns = layout === 'single' ? 1 : layout === 'two-column' ? 2 : layout === 'three-column' ? 3 : 1;
+  const gridColumns =
+    layout === 'single' ? 1 : layout === 'two-column' ? 2 : layout === 'three-column' ? 3 : 1;
 
   return (
     <div className={`h-full flex flex-col p-6 ${className}`}>
@@ -122,10 +123,7 @@ export const DetailView: React.FC<DetailViewProps> = ({
           {breadcrumbs.map((crumb, index) => (
             <React.Fragment key={index}>
               {crumb.onClick ? (
-                <button
-                  onClick={crumb.onClick}
-                  className="hover:text-gray-900 transition-colors"
-                >
+                <button onClick={crumb.onClick} className="hover:text-gray-900 transition-colors">
                   {crumb.label}
                 </button>
               ) : (
@@ -147,7 +145,12 @@ export const DetailView: React.FC<DetailViewProps> = ({
               aria-label="Go back"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
           )}
@@ -159,21 +162,12 @@ export const DetailView: React.FC<DetailViewProps> = ({
             {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
           </div>
         </div>
-        {actions && (
-          <div className="flex items-center gap-3">
-            {actions}
-          </div>
-        )}
+        {actions && <div className="flex items-center gap-3">{actions}</div>}
       </div>
 
       {/* Error Alert */}
       {error && (
-        <ErrorAlert
-          error={error}
-          onDismiss={onDismissError}
-          onRetry={onRetry}
-          className="mb-4"
-        />
+        <ErrorAlert error={error} onDismiss={onDismissError} onRetry={onRetry} className="mb-4" />
       )}
 
       {/* Main Content */}
@@ -182,7 +176,7 @@ export const DetailView: React.FC<DetailViewProps> = ({
           customLayout
         ) : (
           <SectionGrid columns={gridColumns} gap="md">
-            {sortedSections.map((section) => (
+            {sortedSections.map(section => (
               <div
                 key={section.id}
                 className={section.span && section.span > 1 ? `col-span-${section.span}` : ''}

@@ -13,7 +13,11 @@ export function validateRequired(value: string | undefined | null): boolean {
 /**
  * Validate string length
  */
-export function validateLength(value: string | undefined | null, min: number, max?: number): boolean {
+export function validateLength(
+  value: string | undefined | null,
+  min: number,
+  max?: number
+): boolean {
   if (!value) return min === 0;
   const len = value.trim().length;
   if (max !== undefined) {

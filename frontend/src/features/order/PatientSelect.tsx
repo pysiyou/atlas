@@ -41,14 +41,14 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
           <SearchBar
             placeholder="Search by name, ID, or phone..."
             value={patientSearch}
-            onChange={(e) => onPatientSearchChange(e.target.value)}
+            onChange={e => onPatientSearchChange(e.target.value)}
           />
 
           {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
 
           {patientSearch && filteredPatients.length > 0 && (
             <div className="mt-2 border border-gray-200 rounded divide-y">
-              {filteredPatients.map((patient) => (
+              {filteredPatients.map(patient => (
                 <button
                   key={patient.id}
                   type="button"

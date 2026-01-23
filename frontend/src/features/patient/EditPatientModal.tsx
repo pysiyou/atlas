@@ -1,6 +1,6 @@
 /**
  * EditPatientModal - Reusable patient creation and editing modal
- * 
+ *
  * Refactored for better maintainability:
  * - Extracted payload building logic to utils/patientPayloadBuilder.ts
  * - Extracted form progress calculation to utils/formProgressCalculator.ts
@@ -110,8 +110,8 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       ? 'Saving...'
       : 'Creating...'
     : mode === 'edit'
-    ? 'Save Changes'
-    : 'Create Patient';
+      ? 'Save Changes'
+      : 'Create Patient';
 
   const tabs = useMemo(
     () => [

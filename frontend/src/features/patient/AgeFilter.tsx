@@ -18,7 +18,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   min = 0,
   max = 100,
   placeholder = 'Filter by Age',
-  className
+  className,
 }) => {
   const [localValue, setLocalValue] = useState<[number, number]>(value);
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -29,36 +29,42 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
     setLocalValue(value);
   }, [value]);
 
-  const getPercentage = useCallback((val: number) => {
-    return ((val - min) / (max - min)) * 100;
-  }, [min, max]);
+  const getPercentage = useCallback(
+    (val: number) => {
+      return ((val - min) / (max - min)) * 100;
+    },
+    [min, max]
+  );
 
-  const getValueFromPosition = useCallback((clientX: number) => {
-    if (!sliderRef.current) return 0;
-    const rect = sliderRef.current.getBoundingClientRect();
-    const percent = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
-    const rawValue = percent * (max - min) + min;
-    return Math.round(rawValue);
-  }, [min, max]);
+  const getValueFromPosition = useCallback(
+    (clientX: number) => {
+      if (!sliderRef.current) return 0;
+      const rect = sliderRef.current.getBoundingClientRect();
+      const percent = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
+      const rawValue = percent * (max - min) + min;
+      return Math.round(rawValue);
+    },
+    [min, max]
+  );
 
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isDragging.current) return;
 
+      const newValue = getValueFromPosition(e.clientX);
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isDragging.current) return;
-
-    const newValue = getValueFromPosition(e.clientX);
-    
-    setLocalValue(prev => {
-      const [currMin, currMax] = prev;
-      if (isDragging.current === 'min') {
-        const nextMin = Math.min(newValue, currMax);
-        return [nextMin, currMax];
-      } 
+      setLocalValue(prev => {
+        const [currMin, currMax] = prev;
+        if (isDragging.current === 'min') {
+          const nextMin = Math.min(newValue, currMax);
+          return [nextMin, currMax];
+        }
         const nextMax = Math.max(newValue, currMin);
         return [currMin, nextMax];
-      
-    });
-  }, [getValueFromPosition]);
+      });
+    },
+    [getValueFromPosition]
+  );
 
   // Use a ref to keep track of latest local value for the mouseup commit
   const latestValueRef = useRef(localValue);
@@ -68,7 +74,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
 
   // Use ref to store the mouseup handler to avoid circular dependency
   const mouseUpHandlerRef = useRef<() => void>(() => {});
-  
+
   // Update the handler ref whenever dependencies change
   useEffect(() => {
     mouseUpHandlerRef.current = () => {
@@ -87,7 +93,6 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', mouseUpHandlerRef.current);
   };
-
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -113,10 +118,10 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            "inline-flex items-center gap-2 px-3 py-1.5 bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] h-[34px]",
+            'inline-flex items-center gap-2 px-3 py-1.5 bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] h-[34px]',
             isOpen
-              ? "border-sky-500 ring-2 ring-sky-500/20"
-              : "border-gray-300 hover:border-gray-400",
+              ? 'border-sky-500 ring-2 ring-sky-500/20'
+              : 'border-gray-300 hover:border-gray-400',
             className
           )}
         >
@@ -126,8 +131,8 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           <Icon
             name="chevron-down"
             className={cn(
-              "w-4 h-4 text-gray-400 transition-transform flex-shrink-0",
-              isOpen && "rotate-180"
+              'w-4 h-4 text-gray-400 transition-transform flex-shrink-0',
+              isOpen && 'rotate-180'
             )}
           />
 
@@ -149,41 +154,38 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             <span>{localValue[0]} yrs</span>
             <span>{localValue[1]} yrs</span>
           </div>
-          
-          <div 
-            className="relative h-6 flex items-center select-none touch-none"
-            ref={sliderRef}
-          >
+
+          <div className="relative h-6 flex items-center select-none touch-none" ref={sliderRef}>
             {/* Track Background */}
             <div className="absolute w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                {/* Active Range */}
-                <div 
-                    className="absolute h-full bg-sky-500"
-                    style={{
-                        left: `${getPercentage(localValue[0])}%`,
-                        width: `${getPercentage(localValue[1]) - getPercentage(localValue[0])}%`
-                    }}
-                />
+              {/* Active Range */}
+              <div
+                className="absolute h-full bg-sky-500"
+                style={{
+                  left: `${getPercentage(localValue[0])}%`,
+                  width: `${getPercentage(localValue[1]) - getPercentage(localValue[0])}%`,
+                }}
+              />
             </div>
 
             {/* Min Handle */}
             <div
-                className="absolute w-5 h-5 bg-white border-2 border-sky-500 rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
-                style={{ left: `calc(${getPercentage(localValue[0])}% - 10px)` }}
-                onMouseDown={onMouseDown('min')}
+              className="absolute w-5 h-5 bg-white border-2 border-sky-500 rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
+              style={{ left: `calc(${getPercentage(localValue[0])}% - 10px)` }}
+              onMouseDown={onMouseDown('min')}
             />
 
             {/* Max Handle */}
             <div
-                className="absolute w-5 h-5 bg-white border-2 border-sky-500 rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
-                style={{ left: `calc(${getPercentage(localValue[1])}% - 10px)` }}
-                onMouseDown={onMouseDown('max')}
+              className="absolute w-5 h-5 bg-white border-2 border-sky-500 rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
+              style={{ left: `calc(${getPercentage(localValue[1])}% - 10px)` }}
+              onMouseDown={onMouseDown('max')}
             />
           </div>
 
           <div className="flex justify-between items-center text-xs text-gray-400">
-             <span>{min}</span>
-             <span>{max}</span>
+            <span>{min}</span>
+            <span>{max}</span>
           </div>
         </div>
       )}

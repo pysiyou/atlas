@@ -50,16 +50,11 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   queryClient?: QueryClient;
 }
 
-export const renderWithProviders = (
-  ui: ReactElement,
-  options?: CustomRenderOptions
-) => {
+export const renderWithProviders = (ui: ReactElement, options?: CustomRenderOptions) => {
   const { queryClient, ...renderOptions } = options || {};
 
   return render(ui, {
-    wrapper: ({ children }) => (
-      <AllProviders queryClient={queryClient}>{children}</AllProviders>
-    ),
+    wrapper: ({ children }) => <AllProviders queryClient={queryClient}>{children}</AllProviders>,
     ...renderOptions,
   });
 };

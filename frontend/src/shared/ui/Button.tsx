@@ -1,9 +1,9 @@
 /**
  * Button Component
- * 
+ *
  * Rectangular button with semantic variants that bundle icon + styling together.
  * Used for actions, form submissions, etc.
- * 
+ *
  * Usage:
  *   <Button variant="save">Save</Button>           // Shows save icon + primary style
  *   <Button variant="cancel">Cancel</Button>       // Shows cross icon + outline style
@@ -22,11 +22,29 @@ type BaseVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'outline' | 
 /**
  * Semantic action variants (bundled icon + style)
  */
-type SemanticVariant = 
-  | 'save' | 'cancel' | 'delete' | 'reject' | 'approve' 
-  | 'edit' | 'add' | 'create' | 'close' | 'next' | 'previous' 
-  | 'submit' | 'retry' | 'print' | 'view' | 'download' | 'filter'
-  | 'search' | 'refresh' | 'back' | 'logout' | 'remove';
+type SemanticVariant =
+  | 'save'
+  | 'cancel'
+  | 'delete'
+  | 'reject'
+  | 'approve'
+  | 'edit'
+  | 'add'
+  | 'create'
+  | 'close'
+  | 'next'
+  | 'previous'
+  | 'submit'
+  | 'retry'
+  | 'print'
+  | 'view'
+  | 'download'
+  | 'filter'
+  | 'search'
+  | 'refresh'
+  | 'back'
+  | 'logout'
+  | 'remove';
 
 /**
  * All available button variants
@@ -59,18 +77,18 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   add: { style: 'primary', icon: 'plus' },
   create: { style: 'primary', icon: 'plus' },
   edit: { style: 'primary', icon: 'pen' },
-  
+
   // Secondary/Navigation actions
   cancel: { style: 'danger', icon: 'cross' },
   close: { style: 'outline', icon: 'cross' },
   back: { style: 'outline', icon: 'arrow-left' },
   previous: { style: 'outline', icon: 'chevron-left' },
   next: { style: 'primary', icon: 'chevron-right' },
-  
+
   // Destructive actions
   delete: { style: 'danger', icon: 'trash' },
   reject: { style: 'danger', icon: 'trash' },
-  
+
   // Utility actions
   retry: { style: 'primary', icon: 'loading' },
   refresh: { style: 'secondary', icon: 'loading' },
@@ -79,10 +97,10 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   download: { style: 'secondary', icon: 'download' },
   filter: { style: 'outline', icon: 'filter' },
   search: { style: 'primary', icon: 'search' },
-  
+
   // User actions
   logout: { style: 'danger', icon: 'log-out' },
-  
+
   // Item actions
   remove: { style: 'danger', icon: 'cross' },
 };
@@ -96,7 +114,8 @@ const BASE_STYLES: Record<BaseVariant, string> = {
   danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
   success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500',
   warning: 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-500',
-  outline: 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:ring-gray-500',
+  outline:
+    'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:ring-gray-500',
 };
 
 /**
@@ -175,7 +194,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 /**
  * Button Component
- * 
+ *
  * Renders a button with semantic variants that bundle icon + styling.
  * Supports both base style variants and semantic action variants.
  */
@@ -194,15 +213,15 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   // Determine the actual style to apply
   const baseStyle = getBaseStyle(variant);
-  
+
   // Determine which icon to render (custom icon takes precedence)
   const defaultIconName = getDefaultIcon(variant);
   const shouldShowIcon = showIcon && (icon !== undefined || defaultIconName !== undefined);
-  
+
   // Render the icon element
   const renderIconElement = () => {
     if (!shouldShowIcon) return null;
-    
+
     // If custom icon provided, use it
     if (icon) {
       if (React.isValidElement(icon)) {
@@ -212,39 +231,40 @@ export const Button: React.FC<ButtonProps> = ({
       }
       return icon;
     }
-    
+
     // Otherwise use default icon from variant config
     if (defaultIconName) {
       return <Icon name={defaultIconName} className={ICON_SIZES[size]} />;
     }
-    
+
     return null;
   };
 
   // Base CSS classes
-  const baseClasses = 'font-medium rounded transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
+  const baseClasses =
+    'font-medium rounded transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
   const widthClass = fullWidth ? 'w-full' : '';
 
   // Build content based on loading state
   const content = isLoading ? (
     <span className="flex items-center justify-center gap-1.5">
-      <svg 
-        className={`animate-spin ${SPINNER_SIZES[size]}`} 
-        xmlns="http://www.w3.org/2000/svg" 
-        fill="none" 
+      <svg
+        className={`animate-spin ${SPINNER_SIZES[size]}`}
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
         viewBox="0 0 24 24"
       >
-        <circle 
-          className="opacity-25" 
-          cx="12" 
-          cy="12" 
-          r="10" 
-          stroke="currentColor" 
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
           strokeWidth="4"
         />
-        <path 
-          className="opacity-75" 
-          fill="currentColor" 
+        <path
+          className="opacity-75"
+          fill="currentColor"
           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
         />
       </svg>

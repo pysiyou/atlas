@@ -38,10 +38,10 @@ export interface UseFilterStateReturn {
 
 /**
  * Hook for managing filter state
- * 
+ *
  * @param options - Configuration options
  * @returns Filter state and control functions
- * 
+ *
  * @example
  * ```typescript
  * const {
@@ -57,9 +57,7 @@ export interface UseFilterStateReturn {
  * });
  * ```
  */
-export function useFilterState(
-  options: UseFilterStateOptions = {}
-): UseFilterStateReturn {
+export function useFilterState(options: UseFilterStateOptions = {}): UseFilterStateReturn {
   const { initialFilters = {}, onChange } = options;
 
   const [filters, setFilters] = useState<FilterValues>(initialFilters);
@@ -69,7 +67,7 @@ export function useFilterState(
    */
   const setFilter = useCallback(
     (key: string, value: unknown) => {
-      setFilters((prev) => {
+      setFilters(prev => {
         const updated = { ...prev, [key]: value };
         onChange?.(updated);
         return updated;
@@ -83,10 +81,10 @@ export function useFilterState(
    */
   const clearFilter = useCallback(
     (key: string) => {
-      setFilters((prev) => {
+      setFilters(prev => {
         const updated = { ...prev };
         const currentValue = updated[key];
-        
+
         // Determine default value based on current value type
         // Check for date range first (array with 2 Date objects)
         if (
@@ -131,7 +129,7 @@ export function useFilterState(
         else {
           updated[key] = null;
         }
-        
+
         onChange?.(updated);
         return updated;
       });
@@ -144,7 +142,7 @@ export function useFilterState(
    */
   const clearAll = useCallback(() => {
     const cleared: FilterValues = {};
-    Object.keys(filters).forEach((key) => {
+    Object.keys(filters).forEach(key => {
       const value = filters[key];
       // Check for date range (array with 2 Date objects)
       if (
@@ -204,9 +202,8 @@ export function useFilterState(
           const isPriceRange = key === 'priceRange' || (value[1] > 1000 && value[1] <= 100000);
           if (isPriceRange) {
             return !(value[0] === 0 && value[1] === 10000);
-          } 
-            return !(value[0] === 0 && value[1] === 150);
-          
+          }
+          return !(value[0] === 0 && value[1] === 150);
         }
       }
       return true;
@@ -235,9 +232,8 @@ export function useFilterState(
           const isPriceRange = key === 'priceRange' || (value[1] > 1000 && value[1] <= 100000);
           if (isPriceRange) {
             return !(value[0] === 0 && value[1] === 10000);
-          } 
-            return !(value[0] === 0 && value[1] === 150);
-          
+          }
+          return !(value[0] === 0 && value[1] === 150);
         }
       }
       return true;

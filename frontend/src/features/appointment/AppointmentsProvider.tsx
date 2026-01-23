@@ -1,12 +1,20 @@
 /**
  * Appointments Provider Component
+ *
+ * @deprecated This provider will be migrated to TanStack Query hooks.
+ * New components should plan to use TanStack Query hooks for appointment data.
+ *
  * Manages appointment scheduling and operations with proper error handling
  */
 
 import React, { type ReactNode, useCallback, useState } from 'react';
 import type { Appointment } from '@/types';
 import { parseISO, isAfter, isBefore, startOfDay, endOfDay } from 'date-fns';
-import { AppointmentsContext, type AppointmentsContextType, type AppointmentError } from './AppointmentsContext';
+import {
+  AppointmentsContext,
+  type AppointmentsContextType,
+  type AppointmentError,
+} from './AppointmentsContext';
 
 interface AppointmentsProviderProps {
   children: ReactNode;
@@ -27,61 +35,79 @@ export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ chil
   /**
    * Add a new appointment
    */
-  const addAppointment = useCallback((appointment: Appointment) => {
-    setAppointments(prev => [...prev, appointment]);
-  }, [setAppointments]);
+  const addAppointment = useCallback(
+    (appointment: Appointment) => {
+      setAppointments(prev => [...prev, appointment]);
+    },
+    [setAppointments]
+  );
 
   /**
    * Update an existing appointment
    */
-  const updateAppointment = useCallback((id: number | string, updates: Partial<Appointment>) => {
-    const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
-    setAppointments(prev => 
-      prev.map(appointment => 
-        appointment.id === numericId ? { ...appointment, ...updates } : appointment
-      )
-    );
-  }, [setAppointments]);
+  const updateAppointment = useCallback(
+    (id: number | string, updates: Partial<Appointment>) => {
+      const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+      setAppointments(prev =>
+        prev.map(appointment =>
+          appointment.id === numericId ? { ...appointment, ...updates } : appointment
+        )
+      );
+    },
+    [setAppointments]
+  );
 
   /**
    * Delete an appointment
    */
-  const deleteAppointment = useCallback((id: number | string) => {
-    const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
-    setAppointments(prev => prev.filter(appointment => appointment.id !== numericId));
-  }, [setAppointments]);
+  const deleteAppointment = useCallback(
+    (id: number | string) => {
+      const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+      setAppointments(prev => prev.filter(appointment => appointment.id !== numericId));
+    },
+    [setAppointments]
+  );
 
   /**
    * Get an appointment by ID
    */
-  const getAppointment = useCallback((id: number | string): Appointment | undefined => {
-    const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
-    if (isNaN(numericId)) return undefined;
-    return appointments.find(appointment => appointment.id === numericId);
-  }, [appointments]);
+  const getAppointment = useCallback(
+    (id: number | string): Appointment | undefined => {
+      const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+      if (isNaN(numericId)) return undefined;
+      return appointments.find(appointment => appointment.id === numericId);
+    },
+    [appointments]
+  );
 
   /**
    * Get appointments for a specific date
    */
-  const getAppointmentsByDate = useCallback((date: string): Appointment[] => {
-    const targetDate = parseISO(date);
-    const start = startOfDay(targetDate);
-    const end = endOfDay(targetDate);
-    
-    return appointments.filter(appointment => {
-      const appointmentDate = parseISO(appointment.date);
-      return isAfter(appointmentDate, start) && isBefore(appointmentDate, end);
-    });
-  }, [appointments]);
+  const getAppointmentsByDate = useCallback(
+    (date: string): Appointment[] => {
+      const targetDate = parseISO(date);
+      const start = startOfDay(targetDate);
+      const end = endOfDay(targetDate);
+
+      return appointments.filter(appointment => {
+        const appointmentDate = parseISO(appointment.date);
+        return isAfter(appointmentDate, start) && isBefore(appointmentDate, end);
+      });
+    },
+    [appointments]
+  );
 
   /**
    * Get appointments by patient ID
    */
-  const getAppointmentsByPatient = useCallback((patientId: number | string): Appointment[] => {
-    const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
-    if (isNaN(numericId)) return [];
-    return appointments.filter(appointment => appointment.patientId === numericId);
-  }, [appointments]);
+  const getAppointmentsByPatient = useCallback(
+    (patientId: number | string): Appointment[] => {
+      const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
+      if (isNaN(numericId)) return [];
+      return appointments.filter(appointment => appointment.patientId === numericId);
+    },
+    [appointments]
+  );
 
   /**
    * Get upcoming appointments
@@ -103,7 +129,7 @@ export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ chil
     const today = new Date();
     const start = startOfDay(today);
     const end = endOfDay(today);
-    
+
     return appointments.filter(appointment => {
       const appointmentDate = parseISO(appointment.date);
       return isAfter(appointmentDate, start) && isBefore(appointmentDate, end);
@@ -113,12 +139,15 @@ export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ chil
   /**
    * Check in an appointment
    */
-  const checkInAppointment = useCallback((id: number | string) => {
-    updateAppointment(id, {
-      status: 'confirmed',
-      checkedInAt: new Date().toISOString(),
-    });
-  }, [updateAppointment]);
+  const checkInAppointment = useCallback(
+    (id: number | string) => {
+      updateAppointment(id, {
+        status: 'confirmed',
+        checkedInAt: new Date().toISOString(),
+      });
+    },
+    [updateAppointment]
+  );
 
   const value: AppointmentsContextType = {
     appointments,

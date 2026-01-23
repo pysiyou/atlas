@@ -1,7 +1,7 @@
 /**
  * PaymentButton Component
  * Reusable button for processing payments on orders
- * 
+ *
  * Shows a check-circle icon when paid, or a payment popover when unpaid.
  */
 import React from 'react';
@@ -20,7 +20,7 @@ interface PaymentButtonProps {
 
 /**
  * PaymentButton - Displays payment action based on order status
- * 
+ *
  * When paid: Shows a green check-circle icon
  * When unpaid/partial: Shows the PaymentPopover trigger button
  */
@@ -35,20 +35,11 @@ export const PaymentButton: React.FC<PaymentButtonProps> = ({
   if (isPaid) {
     return (
       <div className="flex items-center justify-start">
-        <Icon 
-          name="check-circle" 
-          className="w-5 h-5 text-gray-300" 
-        />
+        <Icon name="check-circle" className="w-5 h-5 text-gray-300" />
       </div>
     );
   }
 
   // Show payment popover for unpaid orders
-  return (
-    <PaymentPopover
-      order={order}
-      onSuccess={onPaymentSuccess}
-      size={size}
-    />
-  );
+  return <PaymentPopover order={order} onSuccess={onPaymentSuccess} size={size} />;
 };

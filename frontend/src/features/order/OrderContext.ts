@@ -67,7 +67,11 @@ export interface OrdersContextType {
   /** Update overall order status */
   updateOrderStatus: (orderId: number | string, status: OrderStatus) => void;
   /** Update payment status */
-  updatePaymentStatus: (orderId: number | string, paymentStatus: string, amountPaid?: number) => Promise<void>;
+  updatePaymentStatus: (
+    orderId: number | string,
+    paymentStatus: string,
+    amountPaid?: number
+  ) => Promise<void>;
   /** Get orders by status */
   getOrdersByStatus: (status: OrderStatus) => Order[];
   /** Get orders by patient ID */
@@ -104,11 +108,7 @@ export interface OrdersContextType {
   ) => void;
 
   // Critical results
-  markTestCritical: (
-    orderId: number | string,
-    testCode: string,
-    notifiedTo: string
-  ) => void;
+  markTestCritical: (orderId: number | string, testCode: string, notifiedTo: string) => void;
 
   acknowledgeCriticalResult: (orderId: number | string, testCode: string) => void;
 

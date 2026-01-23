@@ -1,6 +1,6 @@
 /**
  * Shared Filter Components
- * 
+ *
  * Reusable filter components for consistent filtering across all list views.
  */
 

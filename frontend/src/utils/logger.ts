@@ -11,7 +11,7 @@ export const LogLevel = {
   ERROR: 'ERROR',
 } as const;
 
-export type LogLevel = typeof LogLevel[keyof typeof LogLevel];
+export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel];
 
 interface LogContext {
   [key: string]: unknown;
@@ -61,15 +61,18 @@ class Logger {
   error(message: string, error?: Error | unknown, context?: LogContext): void {
     const errorContext = {
       ...context,
-      error: error instanceof Error ? {
-        name: error.name,
-        message: error.message,
-        stack: error.stack,
-      } : error,
+      error:
+        error instanceof Error
+          ? {
+              name: error.name,
+              message: error.message,
+              stack: error.stack,
+            }
+          : error,
     };
 
     console.error(`[${LogLevel.ERROR}] ${message}`, errorContext);
-    
+
     if (this.isProduction) {
       this.sendToMonitoring(LogLevel.ERROR, message, errorContext);
     }
@@ -109,7 +112,7 @@ class Logger {
     //   level: level.toLowerCase(),
     //   extra: context,
     // });
-    
+
     // Prevent unused variable warnings until monitoring is integrated
     void level;
     void message;

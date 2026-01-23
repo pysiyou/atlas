@@ -1,15 +1,13 @@
 /**
  * Users Provider Component
- * 
- * MIGRATION NOTE: This provider now delegates to TanStack Query hooks.
- * It maintains backward compatibility for components still using the UsersContext.
- * 
- * New components should use the query hooks directly:
+ *
+ * @deprecated This provider delegates to TanStack Query hooks and is kept for backward compatibility.
+ * New components should use TanStack Query hooks directly from @/hooks/queries:
  * - useUsersList() for fetching users
  * - useUserLookup() for resolving user IDs to names
  * - useUsersMap() for the users map
- * 
- * This provider will be deprecated once all consumers are migrated.
+ *
+ * This provider will be removed once all consumers are migrated to TanStack Query hooks.
  */
 
 import React, { useMemo, useCallback, type ReactNode } from 'react';
@@ -22,7 +20,7 @@ interface UsersProviderProps {
 
 /**
  * UsersProvider - Backward compatible wrapper around TanStack Query
- * 
+ *
  * Delegates data fetching to useUsersList() hook which provides:
  * - Infinity caching (users rarely change)
  * - Request deduplication
@@ -52,14 +50,17 @@ export const UsersProvider: React.FC<UsersProviderProps> = ({ children }) => {
     await invalidate();
   }, [invalidate]);
 
-  const value: UsersContextType = useMemo(() => ({
-    usersMap,
-    getUserName,
-    getUserInfo,
-    isLoading,
-    error,
-    refresh,
-  }), [usersMap, getUserName, getUserInfo, isLoading, error, refresh]);
+  const value: UsersContextType = useMemo(
+    () => ({
+      usersMap,
+      getUserName,
+      getUserInfo,
+      isLoading,
+      error,
+      refresh,
+    }),
+    [usersMap, getUserName, getUserInfo, isLoading, error, refresh]
+  );
 
   return <UsersContext.Provider value={value}>{children}</UsersContext.Provider>;
 };

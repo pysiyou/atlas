@@ -5,10 +5,9 @@
 
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useOrders } from '@/features/order/OrderContext';
-import { usePatients, useResponsiveLayout } from '@/hooks';
-import { useBilling } from '@/features/billing/BillingContext';
-import { useTests } from '@/features/test/TestsContext';
+import { useResponsiveLayout } from '@/hooks';
+import { useOrder, usePatient, useTestCatalog, usePaymentsByOrder } from '@/hooks/queries';
+import type { Invoice } from '@/types';
 import {
   OrderHeader,
   SmallScreenLayout,
@@ -19,29 +18,31 @@ import {
 export const OrderDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const ordersContext = useOrders();
-  const patientsContext = usePatients();
-  const billingContext = useBilling();
-  const testsContext = useTests();
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
 
-  // Early returns for loading and error states
-  if (!ordersContext || !patientsContext || !billingContext) {
+  // Use TanStack Query hooks
+  const { order, isLoading: orderLoading } = useOrder(id);
+  const { patient: patientData, isLoading: patientLoading } = usePatient(
+    order?.patientId.toString()
+  );
+  const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();
+  const { isLoading: paymentsLoading } = usePaymentsByOrder(id);
+
+  // Normalize patient to Patient | null (not undefined)
+  const patient = patientData ?? null;
+
+  // Invoice data - currently not available from API
+  // TODO: Add invoice API endpoint when available
+  const invoice: Invoice | null = null;
+
+  // Loading state
+  if (orderLoading || patientLoading || testsLoading || paymentsLoading) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-gray-600">Loading...</div>
       </div>
     );
   }
-
-  const { getOrder } = ordersContext;
-  const { getPatient } = patientsContext;
-  const { getInvoiceByOrderId } = billingContext;
-  const testCatalog = testsContext?.tests || [];
-
-  const order = id ? getOrder(id) : null;
-  const patient = order ? (getPatient(order.patientId) ?? null) : null;
-  const invoice = order ? getInvoiceByOrderId(order.orderId) : null;
 
   if (!order) {
     return (
@@ -59,7 +60,10 @@ export const OrderDetail: React.FC = () => {
 
   // Event handlers
   const handleViewPatient = () => navigate(`/patients/${order.patientId}`);
-  const handleViewInvoice = () => invoice && navigate(`/billing/invoice/${invoice.invoiceId}`);
+  const handleViewInvoice = () => {
+    // Invoice functionality not yet available
+    // TODO: Implement when invoice API is ready
+  };
 
   // Render appropriate layout based on screen size
   const renderContent = () => {

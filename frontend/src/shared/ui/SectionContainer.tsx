@@ -42,14 +42,14 @@ export interface SectionContainerProps {
 
 /**
  * SectionContainer Component
- * 
+ *
  * A simple, flexible container component with a header and content area.
  * Features:
  * - Clean, minimal design with border and rounded corners
  * - Separate header and content areas with distinct backgrounds
  * - Flexible header with support for title and custom content
  * - Fully customizable with className props
- * 
+ *
  * @example
  * ```tsx
  * <SectionContainer title="Patient Information">
@@ -82,10 +82,10 @@ export const SectionContainer: React.FC<SectionContainerProps> = ({
 }) => {
   // Base styles for wrapper: border, background, rounded corners, overflow hidden to clip content
   const wrapperStyles = `w-full bg-white border border-gray-200 rounded-lg overflow-hidden ${className}`;
-  
+
   // Base styles for header: padding, border-bottom, uppercase text
   const headerStyles = `w-full px-4 py-3 border-b border-gray-200 text-xs text-gray-700 uppercase font-semibold tracking-wide flex items-center justify-between bg-gray-50 ${headerClassName}`;
-  
+
   // Base styles for content: padding, white background (inherits from wrapper)
   // Includes spacing class if specified
   const spacingClass = SPACING_CLASSES[spacing];
@@ -99,13 +99,10 @@ export const SectionContainer: React.FC<SectionContainerProps> = ({
             {headerLeft && <div>{headerLeft}</div>}
             {title && <p className="truncate">{title}</p>}
           </div>
-          {(headerRight || headerContent) && (
-            <div>{headerRight ?? headerContent}</div>
-          )}
+          {(headerRight || headerContent) && <div>{headerRight ?? headerContent}</div>}
         </div>
       )}
       <div className={contentStyles}>{children}</div>
     </section>
   );
 };
-

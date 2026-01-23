@@ -26,9 +26,9 @@ export interface SingleSelectControlProps {
 
 /**
  * SingleSelectControl Component
- * 
+ *
  * Provides a single-select dropdown similar to MultiSelectFilter but for single selection.
- * 
+ *
  * @component
  */
 export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
@@ -37,7 +37,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
   config,
   className,
 }) => {
-  const selectedOption = config.options.find((opt) => opt.id === value);
+  const selectedOption = config.options.find(opt => opt.id === value);
 
   /**
    * Handle option selection
@@ -93,9 +93,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
           )}
         >
           {/* Icon */}
-          {config.icon && (
-            <Icon name={config.icon as IconName} className="w-4 h-4 text-gray-400" />
-          )}
+          {config.icon && <Icon name={config.icon as IconName} className="w-4 h-4 text-gray-400" />}
 
           {/* Content */}
           <div className="flex-1 text-xs truncate ml-1">{renderTriggerContent()}</div>
@@ -126,7 +124,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
         <div className="flex flex-col py-1">
           {/* Options list */}
           <div className="max-h-[300px] overflow-y-auto">
-            {config.options.map((option) => {
+            {config.options.map(option => {
               const isSelected = value === option.id;
               return (
                 <button

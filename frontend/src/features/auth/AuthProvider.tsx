@@ -3,7 +3,7 @@
  * Manages user authentication and role-based access using backend API
  */
 
-import React, { useState, type ReactNode } from 'react';
+import React, { useState, useEffect, type ReactNode } from 'react';
 import type { AuthUser, UserRole } from '@/types';
 import { AuthContext, type AuthContextType } from './AuthContext';
 import { apiClient, type APIError } from '@/services/api/client';
@@ -18,12 +18,8 @@ export class AuthError extends Error {
   code: 'INVALID_CREDENTIALS' | 'NETWORK_ERROR' | 'SERVER_ERROR' | 'TIMEOUT' | 'UNKNOWN';
   /** HTTP status code if available */
   status?: number;
-  
-  constructor(
-    message: string, 
-    code: AuthError['code'], 
-    status?: number
-  ) {
+
+  constructor(message: string, code: AuthError['code'], status?: number) {
     super(message);
     this.name = 'AuthError';
     this.code = code;
@@ -36,22 +32,24 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // Initialize state from sessionStorage (for page refreshes)
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => {
-    const stored = sessionStorage.getItem('atlas_current_user');
-    const token = sessionStorage.getItem('atlas_access_token');
-    
-    // Only restore user if token also exists
-    if (stored && token) {
-      try {
-        return JSON.parse(stored);
-      } catch (e) {
-        logger.error('Failed to parse stored user', e instanceof Error ? e : undefined);
-        return null;
-      }
-    }
-    return null;
-  });
+  // Store tokens and user in memory only (no sessionStorage)
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  // Use a ref to store the current token so the getter always has the latest value
+  const tokenRef = React.useRef<string | null>(null);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    tokenRef.current = accessToken;
+  }, [accessToken]);
+
+  // Register token getter with API client on mount
+  // The getter reads from the ref to always get the current token value
+  // This must run before any API calls are made
+  useEffect(() => {
+    apiClient.setTokenGetter(() => tokenRef.current);
+  }, []);
 
   /**
    * Login function - authenticates with backend API
@@ -63,7 +61,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
       // Call backend login endpoint
-      const response = await apiClient.post<{ access_token: string; refresh_token: string; role: UserRole }>('/auth/login', {
+      const response = await apiClient.post<{
+        access_token: string;
+        refresh_token: string;
+        role: UserRole;
+      }>('/auth/login', {
         username,
         password,
       });
@@ -71,15 +73,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       logger.debug('Login response received');
 
       if (response.access_token) {
-        // Store tokens FIRST so they're available for the next request
-        sessionStorage.setItem('atlas_access_token', response.access_token);
-        sessionStorage.setItem('atlas_refresh_token', response.refresh_token);
-        logger.debug('Tokens stored in sessionStorage');
+        // Store tokens in memory only
+        // Update ref immediately so API client can use it synchronously
+        tokenRef.current = response.access_token;
+        setAccessToken(response.access_token);
+        logger.debug('Access token stored in memory', { tokenLength: response.access_token.length });
+        
+        // Verify token is available in ref before making API call
+        if (!tokenRef.current) {
+          logger.error('Token ref is null after setting');
+          throw new AuthError('Failed to store access token', 'SERVER_ERROR');
+        }
       } else {
         logger.error('No access_token in login response');
+        throw new AuthError('Invalid response from server', 'SERVER_ERROR');
       }
 
-      // Get user info (now with token in sessionStorage)
+      // Get user info (token is now in ref, API client will get it from context)
+      logger.debug('Fetching user info with token', { hasToken: !!tokenRef.current });
       const userInfo = await apiClient.get<AuthUser>('/auth/me');
 
       const authUser: AuthUser = {
@@ -88,23 +99,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       };
 
       setCurrentUser(authUser);
-      sessionStorage.setItem('atlas_current_user', JSON.stringify(authUser));
-      
+
       return true;
     } catch (error) {
       logger.error('Login failed', error instanceof Error ? error : undefined);
-      
+
       // Clear any tokens on error
-      sessionStorage.removeItem('atlas_access_token');
-      sessionStorage.removeItem('atlas_refresh_token');
-      
+      tokenRef.current = null;
+      setAccessToken(null);
+      setCurrentUser(null);
+
       // Determine error type and throw appropriate AuthError
       const apiError = error as APIError;
-      
+
       // Check if it's a network/connection error (no status means no HTTP response)
       if (!apiError.status) {
         const errorMessage = apiError.message?.toLowerCase() || '';
-        
+
         // Check for timeout errors
         if (errorMessage.includes('abort') || errorMessage.includes('timeout')) {
           throw new AuthError(
@@ -112,7 +123,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             'TIMEOUT'
           );
         }
-        
+
         // Check for network/connection errors
         if (
           errorMessage.includes('fetch') ||
@@ -128,23 +139,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             'NETWORK_ERROR'
           );
         }
-        
+
         // Generic error without status - likely network-related
         throw new AuthError(
           'Unable to connect to the server. Please try again later.',
           'NETWORK_ERROR'
         );
       }
-      
+
       // HTTP 401 - Invalid credentials
       if (apiError.status === 401) {
-        throw new AuthError(
-          'Invalid username or password',
-          'INVALID_CREDENTIALS',
-          401
-        );
+        throw new AuthError('Invalid username or password', 'INVALID_CREDENTIALS', 401);
       }
-      
+
       // HTTP 403 - Forbidden (account disabled, etc.)
       if (apiError.status === 403) {
         throw new AuthError(
@@ -153,7 +160,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           403
         );
       }
-      
+
       // HTTP 5xx - Server errors
       if (apiError.status && apiError.status >= 500) {
         throw new AuthError(
@@ -162,7 +169,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           apiError.status
         );
       }
-      
+
       // Other HTTP errors (400, 404, etc.)
       if (apiError.status && apiError.status >= 400) {
         throw new AuthError(
@@ -171,12 +178,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           apiError.status
         );
       }
-      
+
       // Fallback for unexpected errors
-      throw new AuthError(
-        'An unexpected error occurred. Please try again.',
-        'UNKNOWN'
-      );
+      throw new AuthError('An unexpected error occurred. Please try again.', 'UNKNOWN');
     }
   };
 
@@ -184,10 +188,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    * Logout function
    */
   const logout = () => {
+    tokenRef.current = null;
     setCurrentUser(null);
-    sessionStorage.removeItem('atlas_current_user');
-    sessionStorage.removeItem('atlas_access_token');
-    sessionStorage.removeItem('atlas_refresh_token');
+    setAccessToken(null);
   };
 
   /**
@@ -200,17 +203,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    */
   const hasRole = (roles: UserRole | UserRole[]): boolean => {
     if (!currentUser) return false;
-    
+
     if (Array.isArray(roles)) {
       return roles.includes(currentUser.role);
     }
-    
+
     return currentUser.role === roles;
   };
 
   const value: AuthContextType = {
     currentUser,
     users: [], // No longer needed with backend
+    accessToken,
     login,
     logout,
     isAuthenticated,
@@ -219,4 +223,3 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-

@@ -11,11 +11,9 @@ import { QueryProvider } from '@/lib/query';
 
 // Feature Providers
 import { AuthProvider } from '@/features/auth/AuthProvider';
-import { UsersProvider } from '@/features/user';
-import { PatientsProvider } from '@/features/patient/PatientProvider';
-import { OrdersProvider } from '@/features/order/OrderProvider';
-import { TestsProvider } from '@/features/test/TestsProvider';
-import { SamplesProvider } from '@/features/lab/SamplesProvider';
+// Note: UsersProvider, PatientsProvider, OrdersProvider, TestsProvider, SamplesProvider removed
+// - All consumers migrated to TanStack Query hooks
+// - See @/hooks/queries for replacement hooks
 import { AppointmentsProvider } from '@/features/appointment/AppointmentsProvider';
 import { BillingProvider } from '@/features/billing/BillingProvider';
 import { ModalProvider } from '@/shared/context/ModalContext';
@@ -31,26 +29,25 @@ function composeProviders(
   providers: Array<React.ComponentType<{ children: ReactNode }>>
 ): React.FC<{ children: ReactNode }> {
   return ({ children }) =>
-    providers.reduceRight(
-      (acc, Provider) => <Provider>{acc}</Provider>,
-      children
-    );
+    providers.reduceRight((acc, Provider) => <Provider>{acc}</Provider>, children);
 }
 
 /**
  * All feature providers in dependency order
  * Order matters: providers listed later can depend on those listed earlier
+ *
+ * NOTE: Most data providers have been removed as all consumers migrated to TanStack Query hooks.
+ * Remaining providers:
+ * - AuthProvider: Active - manages authentication state
+ * - AppointmentsProvider: Will be migrated to TanStack Query when API is ready
+ * - BillingProvider: Will be migrated to TanStack Query when API is ready
+ * - ModalProvider: Active - manages modal state
  */
 const featureProviders = [
-  AuthProvider,
-  UsersProvider, // Must come after AuthProvider (depends on authentication state)
-  PatientsProvider,
-  OrdersProvider,
-  TestsProvider,
-  SamplesProvider,
-  AppointmentsProvider,
-  BillingProvider,
-  ModalProvider,
+  AuthProvider, // Active - manages authentication state
+  AppointmentsProvider, // TODO: Migrate to TanStack Query when API is ready
+  BillingProvider, // TODO: Migrate to TanStack Query when API is ready
+  ModalProvider, // Active - manages modal state
 ];
 
 const ComposedProviders = composeProviders(featureProviders);
@@ -81,11 +78,6 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => (
 export {
   QueryProvider,
   AuthProvider,
-  UsersProvider,
-  PatientsProvider,
-  OrdersProvider,
-  TestsProvider,
-  SamplesProvider,
   AppointmentsProvider,
   BillingProvider,
   ModalProvider,

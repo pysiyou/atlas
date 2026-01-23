@@ -1,8 +1,7 @@
 import React, { type ReactNode } from 'react';
 import { Card } from '@/shared/ui';
 import { OrderHeader, OrderMetadata } from './OrderDetailComponents';
-import { usePatients } from '@/hooks';
-import { getPatientName } from '@/utils/typeHelpers';
+import { usePatientNameLookup } from '@/hooks/queries';
 import type { Order } from '@/types';
 
 interface OrderCardProps {
@@ -11,15 +10,9 @@ interface OrderCardProps {
   className?: string;
 }
 
-export const OrderCard: React.FC<OrderCardProps> = ({
-  order,
-  children,
-  className = '',
-}) => {
-  const patientsContext = usePatients();
-  const patientName = patientsContext
-    ? getPatientName(order.patientId, patientsContext.patients)
-    : 'Unknown Patient';
+export const OrderCard: React.FC<OrderCardProps> = ({ order, children, className = '' }) => {
+  const { getPatientName } = usePatientNameLookup();
+  const patientName = getPatientName(order.patientId);
 
   return (
     <Card className={className}>

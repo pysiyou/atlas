@@ -1,6 +1,6 @@
 /**
  * Shared Section Components
- * 
+ *
  * Reusable section components for consistent layouts in detail views.
  */
 

@@ -27,11 +27,18 @@ export const Appointments: React.FC = () => {
           {todayAppointments.length > 0 ? (
             <div className="space-y-3">
               {todayAppointments.map(appointment => (
-                <div key={appointment.id} className="flex items-start justify-between p-3 border border-gray-200 rounded">
+                <div
+                  key={appointment.id}
+                  className="flex items-start justify-between p-3 border border-gray-200 rounded"
+                >
                   <div>
                     <div className="font-medium">{appointment.patientName}</div>
-                    <div className="text-sm text-gray-600">{appointment.time} • {appointment.type}</div>
-                    {appointment.purpose && <div className="text-sm text-gray-500">{appointment.purpose}</div>}
+                    <div className="text-sm text-gray-600">
+                      {appointment.time} • {appointment.type}
+                    </div>
+                    {appointment.purpose && (
+                      <div className="text-sm text-gray-500">{appointment.purpose}</div>
+                    )}
                   </div>
                   <Badge variant={appointment.status} size="sm" />
                 </div>
@@ -49,10 +56,15 @@ export const Appointments: React.FC = () => {
           {upcomingAppointments.length > 0 ? (
             <div className="space-y-3">
               {upcomingAppointments.map(appointment => (
-                <div key={appointment.id} className="flex items-start justify-between p-3 border border-gray-200 rounded">
+                <div
+                  key={appointment.id}
+                  className="flex items-start justify-between p-3 border border-gray-200 rounded"
+                >
                   <div>
                     <div className="font-medium">{appointment.patientName}</div>
-                    <div className="text-sm text-gray-600">{formatDate(appointment.date)} • {appointment.time}</div>
+                    <div className="text-sm text-gray-600">
+                      {formatDate(appointment.date)} • {appointment.time}
+                    </div>
                     <div className="text-sm text-gray-500">{appointment.type}</div>
                   </div>
                   <Badge variant={appointment.status} size="sm" />

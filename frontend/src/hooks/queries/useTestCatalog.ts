@@ -1,10 +1,10 @@
 /**
  * Test Catalog Query Hook
- * 
+ *
  * Provides access to the test catalog with Infinity caching.
  * Test catalog data rarely changes (admin updates only), so we cache it
  * for the entire session without automatic refetching.
- * 
+ *
  * @module hooks/queries/useTestCatalog
  */
 
@@ -18,9 +18,9 @@ import type { Test, TestCategory } from '@/types';
  * Hook to fetch and cache all tests from the catalog.
  * Uses Infinity cache - data is fetched once per session.
  * Only fetches when user is authenticated to prevent race conditions on login.
- * 
+ *
  * @returns Query result containing tests array, loading state, and error
- * 
+ *
  * @example
  * ```tsx
  * const { tests, isLoading, error } = useTestCatalog();
@@ -50,10 +50,10 @@ export function useTestCatalog() {
  * Hook to fetch a single test by code.
  * Uses the cached test catalog to avoid additional API calls.
  * Only fetches when user is authenticated to prevent race conditions on login.
- * 
+ *
  * @param testCode - The unique test code (e.g., 'CBC', 'HEM001')
  * @returns The test object or undefined if not found
- * 
+ *
  * @example
  * ```tsx
  * const { test, isLoading } = useTest('HEM001');
@@ -80,10 +80,10 @@ export function useTest(testCode: string | undefined) {
 /**
  * Hook to search tests by query string.
  * Searches name, code, synonyms, LOINC codes, and panels.
- * 
+ *
  * @param query - Search query string
  * @returns Filtered array of tests matching the query
- * 
+ *
  * @example
  * ```tsx
  * const { results, isSearching } = useTestSearch('blood count');
@@ -115,10 +115,10 @@ export function useTestSearch(searchQuery: string) {
 
 /**
  * Hook to get tests filtered by category.
- * 
+ *
  * @param category - Test category to filter by
  * @returns Array of tests in the specified category
- * 
+ *
  * @example
  * ```tsx
  * const { tests } = useTestsByCategory('hematology');
@@ -139,7 +139,7 @@ export function useTestsByCategory(category: TestCategory | undefined) {
 
 /**
  * Hook to get only active tests.
- * 
+ *
  * @returns Array of active tests
  */
 export function useActiveTests() {
@@ -157,9 +157,9 @@ export function useActiveTests() {
 /**
  * Hook to get a test by its name (for display purposes).
  * Returns a lookup function that can be used to resolve test codes to names.
- * 
+ *
  * @returns Object with getTestName function
- * 
+ *
  * @example
  * ```tsx
  * const { getTestName } = useTestNameLookup();
@@ -188,7 +188,7 @@ export function useTestNameLookup() {
 /**
  * Hook to invalidate and refetch the test catalog.
  * Useful for admin actions that modify the catalog.
- * 
+ *
  * @returns Function to invalidate the test cache
  */
 export function useInvalidateTestCatalog() {

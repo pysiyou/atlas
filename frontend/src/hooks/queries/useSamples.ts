@@ -1,9 +1,9 @@
 /**
  * Samples Query Hook
- * 
+ *
  * Provides access to sample data with dynamic caching (30s stale time).
  * Samples change frequently during collection and processing.
- * 
+ *
  * @module hooks/queries/useSamples
  */
 
@@ -32,10 +32,10 @@ export interface SamplesFilters {
  * Hook to fetch and cache all samples.
  * Uses dynamic cache - data is considered fresh for 30 seconds.
  * Only fetches when user is authenticated to prevent race conditions on login.
- * 
+ *
  * @param filters - Optional filters to apply
  * @returns Query result containing samples array and loading state
- * 
+ *
  * @example
  * ```tsx
  * const { samples, isLoading, error } = useSamplesList();
@@ -65,10 +65,10 @@ export function useSamplesList(filters?: SamplesFilters) {
 /**
  * Hook to fetch a single sample by ID.
  * Only fetches when user is authenticated to prevent race conditions on login.
- * 
+ *
  * @param sampleId - The sample ID to fetch
  * @returns Query result with sample data
- * 
+ *
  * @example
  * ```tsx
  * const { sample, isLoading } = useSample('SMP-001');
@@ -97,7 +97,7 @@ export function useSample(sampleId: string | undefined) {
 /**
  * Hook to get samples by order ID.
  * Uses cached data for instant filtering.
- * 
+ *
  * @param orderId - The order ID to filter by
  * @returns Array of samples for the order
  */
@@ -120,7 +120,7 @@ export function useSamplesByOrder(orderId: string | undefined) {
 /**
  * Hook to get samples by status.
  * Uses cached data for instant filtering.
- * 
+ *
  * @param status - The sample status to filter by
  * @returns Array of samples with the specified status
  */
@@ -141,7 +141,7 @@ export function useSamplesByStatus(status: SampleStatus | undefined) {
 /**
  * Hook to get pending samples.
  * Only fetches when user is authenticated to prevent race conditions on login.
- * 
+ *
  * @returns Array of samples with pending status
  */
 export function usePendingSamples() {
@@ -167,7 +167,7 @@ export function usePendingSamples() {
 /**
  * Hook to get sample lookup function.
  * Returns functions to resolve sample IDs to samples.
- * 
+ *
  * @returns Object with getSample function
  */
 export function useSampleLookup() {
@@ -179,17 +179,23 @@ export function useSampleLookup() {
     return map;
   }, [samples]);
 
-  const getSample = useCallback((sampleId: number | string): Sample | undefined => {
-    const numericId = typeof sampleId === 'string' ? parseInt(sampleId, 10) : sampleId;
-    if (isNaN(numericId)) return undefined;
-    return samplesMap.get(numericId);
-  }, [samplesMap]);
+  const getSample = useCallback(
+    (sampleId: number | string): Sample | undefined => {
+      const numericId = typeof sampleId === 'string' ? parseInt(sampleId, 10) : sampleId;
+      if (isNaN(numericId)) return undefined;
+      return samplesMap.get(numericId);
+    },
+    [samplesMap]
+  );
 
-  const getSamplesByOrder = useCallback((orderId: number | string): Sample[] => {
-    const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
-    if (isNaN(numericOrderId)) return [];
-    return samples.filter(s => s.orderId === numericOrderId);
-  }, [samples]);
+  const getSamplesByOrder = useCallback(
+    (orderId: number | string): Sample[] => {
+      const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+      if (isNaN(numericOrderId)) return [];
+      return samples.filter(s => s.orderId === numericOrderId);
+    },
+    [samples]
+  );
 
   return {
     getSample,
@@ -212,9 +218,9 @@ interface CollectSampleData {
 /**
  * Mutation hook to collect a sample.
  * Invalidates relevant caches on success.
- * 
+ *
  * @returns Mutation result with mutate function
- * 
+ *
  * @example
  * ```tsx
  * const { mutate: collectSample, isPending } = useCollectSample();
@@ -259,7 +265,7 @@ interface RejectSampleData {
 /**
  * Mutation hook to reject a sample.
  * Invalidates relevant caches on success.
- * 
+ *
  * @returns Mutation result with mutate function
  */
 export function useRejectSample() {
@@ -295,7 +301,7 @@ export function useRejectSample() {
 
 /**
  * Mutation hook to request sample recollection.
- * 
+ *
  * @returns Mutation result with mutate function
  */
 export function useRequestRecollection() {
@@ -312,7 +318,7 @@ export function useRequestRecollection() {
 
 /**
  * Hook to invalidate sample caches.
- * 
+ *
  * @returns Object with invalidate functions
  */
 export function useInvalidateSamples() {

@@ -3,10 +3,10 @@ import { createContext, useContext } from 'react';
 /**
  * Factory function to create typed context and hook for a feature
  * Eliminates boilerplate and ensures type safety
- * 
+ *
  * @example
  * ```typescript
- * export const { Context: PatientsContext, useFeature: usePatients } = 
+ * export const { Context: PatientsContext, useFeature: usePatients } =
  *   createFeatureContext<PatientsContextType>('Patients');
  * ```
  */

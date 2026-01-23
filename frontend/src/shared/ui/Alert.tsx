@@ -46,9 +46,9 @@ export const Alert: React.FC<AlertProps> = ({
       icon: <Icon name="close-circle" className="w-5 h-5" />,
     },
   };
-  
+
   const { bg, border, text, icon } = variants[variant];
-  
+
   return (
     <div
       className={`${bg} ${border} ${text} border rounded p-4 flex items-start gap-3 ${className}`}

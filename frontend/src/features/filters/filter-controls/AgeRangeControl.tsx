@@ -23,9 +23,9 @@ export interface AgeRangeControlProps {
 
 /**
  * AgeRangeControl Component
- * 
+ *
  * Wraps the existing AgeFilter component with the new filter control interface.
- * 
+ *
  * @component
  */
 export const AgeRangeControl: React.FC<AgeRangeControlProps> = ({

@@ -12,6 +12,7 @@ import type { AuthUser, UserRole } from '@/types';
 export interface AuthContextType {
   currentUser: AuthUser | null;
   users: never[]; // Deprecated - kept for compatibility
+  accessToken: string | null; // In-memory token storage
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
@@ -22,4 +23,3 @@ export interface AuthContextType {
  * React Context for Authentication
  */
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
-

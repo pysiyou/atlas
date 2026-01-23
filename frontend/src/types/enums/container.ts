@@ -19,7 +19,7 @@ export const CONTAINER_TYPE_CONFIG: Record<ContainerType, { label: string }> = {
 };
 
 // 4. OPTIONS - For dropdowns/selects (uses `name` for backwards compatibility)
-export const CONTAINER_TYPE_OPTIONS = CONTAINER_TYPE_VALUES.map((value) => ({
+export const CONTAINER_TYPE_OPTIONS = CONTAINER_TYPE_VALUES.map(value => ({
   value,
   name: CONTAINER_TYPE_CONFIG[value].label,
 }));
@@ -92,7 +92,7 @@ export const CONTAINER_COLOR_CONFIG: Record<
 };
 
 // 4. OPTIONS - For dropdowns/selects (uses `name` for backwards compatibility)
-export const CONTAINER_COLOR_OPTIONS = CONTAINER_COLOR_VALUES.map((value) => ({
+export const CONTAINER_COLOR_OPTIONS = CONTAINER_COLOR_VALUES.map(value => ({
   value,
   name: CONTAINER_COLOR_CONFIG[value].label,
   colorClass: CONTAINER_COLOR_CONFIG[value].bgClass,

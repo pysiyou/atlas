@@ -28,7 +28,7 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
 
   return (
     <div className="flex flex-col divide-y divide-gray-100">
-      {reportableOrders.map((order) => (
+      {reportableOrders.map(order => (
         <div
           key={order.orderId}
           className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors group"

@@ -10,4 +10,8 @@ export { PaymentDetailModal } from './PaymentDetailModal';
 
 // Types
 export type { OrderPaymentDetails } from './types';
-export { createOrderPaymentDetails, createOrderPaymentDetailsList, buildPaymentsByOrderMap } from './types';
+export {
+  createOrderPaymentDetails,
+  createOrderPaymentDetailsList,
+  buildPaymentsByOrderMap,
+} from './types';

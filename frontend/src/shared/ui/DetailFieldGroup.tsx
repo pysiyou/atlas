@@ -52,10 +52,10 @@ const SPACING_CLASSES = {
 
 /**
  * DetailFieldGroup - Renders a vertical stack of DetailField components
- * 
+ *
  * Filters out fields with no displayable value (empty value, timestamp, or badge)
  * and fields marked as hidden.
- * 
+ *
  * @example
  * // Basic usage
  * <DetailFieldGroup
@@ -65,7 +65,7 @@ const SPACING_CLASSES = {
  *     { label: "Status", value: "Active" },
  *   ]}
  * />
- * 
+ *
  * @example
  * // With conditional fields
  * <DetailFieldGroup
@@ -84,12 +84,12 @@ export const DetailFieldGroup: React.FC<DetailFieldGroupProps> = ({
   const visibleFields = fields.filter(field => {
     // Skip hidden fields
     if (field.hidden) return false;
-    
+
     // Include if any display value is present
     const hasValue = field.value !== undefined && field.value !== null && field.value !== '';
     const hasTimestamp = field.timestamp !== undefined && field.timestamp !== '';
     const hasBadge = field.badge?.value !== undefined && field.badge?.value !== '';
-    
+
     return hasValue || hasTimestamp || hasBadge;
   });
 
@@ -100,7 +100,7 @@ export const DetailFieldGroup: React.FC<DetailFieldGroupProps> = ({
 
   return (
     <div className={`${SPACING_CLASSES[spacing]} ${className}`}>
-      {visibleFields.map((field) => (
+      {visibleFields.map(field => (
         <DetailField
           key={field.label}
           label={field.label}
@@ -113,4 +113,3 @@ export const DetailFieldGroup: React.FC<DetailFieldGroupProps> = ({
     </div>
   );
 };
-

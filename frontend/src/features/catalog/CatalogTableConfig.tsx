@@ -1,6 +1,6 @@
 /**
  * Catalog Table Configuration
- * 
+ *
  * Multi-view table configuration for test catalog list.
  * Defines separate column sets for full table, compact table, and mobile card view.
  */
@@ -14,18 +14,14 @@ import { CatalogCard } from './CatalogCard';
 
 /**
  * Create catalog table configuration with full, compact, and card views
- * 
+ *
  * @param navigate - React Router navigate function
  * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
  */
-export const createCatalogTableConfig = (
-  navigate: NavigateFunction
-): TableViewConfig<Test> => {
+export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewConfig<Test> => {
   // Shared render functions
   const renderCode = (test: Test) => (
-    <span className="text-xs text-sky-600 font-medium font-mono truncate block">
-      {test.code}
-    </span>
+    <span className="text-xs text-sky-600 font-medium font-mono truncate block">{test.code}</span>
   );
 
   const renderName = (test: Test) => (
@@ -41,19 +37,10 @@ export const createCatalogTableConfig = (
   );
 
   const renderCategory = (test: Test) => (
-    <Badge
-      variant={test.category}
-      size="sm"
-      className="border-none font-medium"
-    />
+    <Badge variant={test.category} size="sm" className="border-none font-medium" />
   );
 
-  const renderSampleType = (test: Test) => (
-    <Badge
-      variant={test.sampleType}
-      size="sm"
-    />
-  );
+  const renderSampleType = (test: Test) => <Badge variant={test.sampleType} size="sm" />;
 
   const renderTurnaroundTime = (test: Test) => (
     <div className="text-xs text-gray-700 truncate">
@@ -62,16 +49,11 @@ export const createCatalogTableConfig = (
   );
 
   const renderPrice = (test: Test) => (
-    <div className="font-medium text-sky-600 truncate">
-      {formatCurrency(test.price)}
-    </div>
+    <div className="font-medium text-sky-600 truncate">{formatCurrency(test.price)}</div>
   );
 
   const renderStatus = (test: Test) => (
-    <Badge
-      variant={test.isActive ? 'success' : 'default'}
-      size="sm"
-    >
+    <Badge variant={test.isActive ? 'success' : 'default'} size="sm">
       {test.isActive ? 'ACTIVE' : 'INACTIVE'}
     </Badge>
   );

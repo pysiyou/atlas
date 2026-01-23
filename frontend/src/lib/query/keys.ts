@@ -1,9 +1,9 @@
 /**
  * Query Key Factory
- * 
+ *
  * Centralized, type-safe query keys for TanStack Query.
  * Following the query key factory pattern for consistency and maintainability.
- * 
+ *
  * @see https://tkdodo.eu/blog/effective-react-query-keys
  */
 
@@ -12,7 +12,7 @@ import type { OrderStatus, PaymentStatus, SampleStatus, TestCategory } from '@/t
 /**
  * Query key factory for all application queries.
  * Hierarchical structure enables granular cache invalidation.
- * 
+ *
  * Usage:
  * - queryKeys.tests.all -> ['tests']
  * - queryKeys.tests.byCode('CBC') -> ['tests', 'detail', 'CBC']
@@ -49,8 +49,7 @@ export const queryKeys = {
   patients: {
     all: ['patients'] as const,
     lists: () => [...queryKeys.patients.all, 'list'] as const,
-    list: (filters?: { search?: string }) =>
-      [...queryKeys.patients.lists(), filters] as const,
+    list: (filters?: { search?: string }) => [...queryKeys.patients.lists(), filters] as const,
     details: () => [...queryKeys.patients.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.patients.details(), id] as const,
     search: (query: string) => [...queryKeys.patients.all, 'search', query] as const,
@@ -62,15 +61,11 @@ export const queryKeys = {
   orders: {
     all: ['orders'] as const,
     lists: () => [...queryKeys.orders.all, 'list'] as const,
-    list: (filters?: { 
-      patientId?: string; 
-      status?: OrderStatus;
-      paymentStatus?: PaymentStatus;
-    }) => [...queryKeys.orders.lists(), filters] as const,
+    list: (filters?: { patientId?: string; status?: OrderStatus; paymentStatus?: PaymentStatus }) =>
+      [...queryKeys.orders.lists(), filters] as const,
     details: () => [...queryKeys.orders.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.orders.details(), id] as const,
-    byPatient: (patientId: string) => 
-      [...queryKeys.orders.all, 'patient', patientId] as const,
+    byPatient: (patientId: string) => [...queryKeys.orders.all, 'patient', patientId] as const,
   },
 
   /**
@@ -115,12 +110,10 @@ export const queryKeys = {
   aliquots: {
     all: ['aliquots'] as const,
     lists: () => [...queryKeys.aliquots.all, 'list'] as const,
-    list: (filters?: { sampleId?: string }) =>
-      [...queryKeys.aliquots.lists(), filters] as const,
+    list: (filters?: { sampleId?: string }) => [...queryKeys.aliquots.lists(), filters] as const,
     details: () => [...queryKeys.aliquots.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.aliquots.details(), id] as const,
-    bySample: (sampleId: string) => 
-      [...queryKeys.aliquots.all, 'sample', sampleId] as const,
+    bySample: (sampleId: string) => [...queryKeys.aliquots.all, 'sample', sampleId] as const,
   },
 
   /**

@@ -4,16 +4,11 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
-import type {
-  SortDirection,
-  SortConfig,
-  UseFilteringOptions,
-  UseFilteringReturn,
-} from './types';
+import type { SortDirection, SortConfig, UseFilteringOptions, UseFilteringReturn } from './types';
 
 /**
  * Generic hook for filtering, searching, and sorting lists
- * 
+ *
  * @example
  * ```typescript
  * const {
@@ -41,9 +36,7 @@ export function useFiltering<T, S extends string = string>(
 
   const toggleStatusFilter = useCallback((status: S) => {
     setStatusFilters(prev =>
-      prev.includes(status)
-        ? prev.filter(s => s !== status)
-        : [...prev, status]
+      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
     );
   }, []);
 
@@ -122,7 +115,7 @@ export function useFiltering<T, S extends string = string>(
 /**
  * Simpler search-only filtering hook
  * For cases where you just need search functionality
- * 
+ *
  * @example
  * ```typescript
  * const { filteredItems, searchQuery, setSearchQuery } = useSearch(
@@ -131,10 +124,7 @@ export function useFiltering<T, S extends string = string>(
  * );
  * ```
  */
-export function useSearch<T>(
-  items: T[],
-  searchFn: (item: T, query: string) => boolean
-) {
+export function useSearch<T>(items: T[], searchFn: (item: T, query: string) => boolean) {
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredItems = useMemo(() => {
@@ -152,7 +142,7 @@ export function useSearch<T>(
 
 /**
  * Hook for managing multi-select filter state
- * 
+ *
  * @example
  * ```typescript
  * const { selected, toggle, clear, isSelected } = useMultiSelect<OrderStatus>(['pending']);
@@ -162,20 +152,19 @@ export function useMultiSelect<T extends string>(initialValues: T[] = []) {
   const [selected, setSelected] = useState<T[]>(initialValues);
 
   const toggle = useCallback((value: T) => {
-    setSelected(prev =>
-      prev.includes(value)
-        ? prev.filter(v => v !== value)
-        : [...prev, value]
-    );
+    setSelected(prev => (prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]));
   }, []);
 
   const clear = useCallback(() => {
     setSelected([]);
   }, []);
 
-  const isSelected = useCallback((value: T) => {
-    return selected.includes(value);
-  }, [selected]);
+  const isSelected = useCallback(
+    (value: T) => {
+      return selected.includes(value);
+    },
+    [selected]
+  );
 
   const selectAll = useCallback((values: T[]) => {
     setSelected(values);

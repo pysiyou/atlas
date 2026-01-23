@@ -1,6 +1,6 @@
 /**
  * Data Display Components
- * 
+ *
  * Reusable components for displaying data in lists, grids, and detail views.
  */
 

@@ -24,7 +24,7 @@ export function TableHeader<T>({
         ${sticky ? 'sticky top-0 z-10' : ''}
       `.trim()}
     >
-      {visibleColumns.map((column) => {
+      {visibleColumns.map(column => {
         const style = columnStyles.get(column.key) || {};
         const isSortable = column.sortable;
         const isActiveSort = sort?.key === column.key;
@@ -47,8 +47,8 @@ export function TableHeader<T>({
                   ? 'ascending'
                   : 'descending'
                 : isSortable
-                ? 'none'
-                : undefined
+                  ? 'none'
+                  : undefined
             }
           >
             <span>{column.header}</span>

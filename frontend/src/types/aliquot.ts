@@ -3,26 +3,26 @@
 import type { ContainerType } from './sample';
 
 export type AliquotStatus =
-  | 'available'      // Ready for use
-  | 'in-use'         // Currently being tested
-  | 'consumed'       // Fully used up
-  | 'stored'         // Archived for potential retest
-  | 'disposed';      // Properly disposed
+  | 'available' // Ready for use
+  | 'in-use' // Currently being tested
+  | 'consumed' // Fully used up
+  | 'stored' // Archived for potential retest
+  | 'disposed'; // Properly disposed
 
 export interface Aliquot {
-  aliquotId: number;               // Integer ID, displayed as ALQ{id}
-  parentSampleId: number;          // Links to parent sample
+  aliquotId: number; // Integer ID, displayed as ALQ{id}
+  parentSampleId: number; // Links to parent sample
   orderId: number;
   patientId: number;
 
   // Aliquot details
-  aliquotNumber: number;           // 1, 2, 3, etc. (Aliquot 1 of 3)
-  volume: number;                  // mL in this aliquot
-  remainingVolume: number;         // mL remaining after testing
+  aliquotNumber: number; // 1, 2, 3, etc. (Aliquot 1 of 3)
+  volume: number; // mL in this aliquot
+  remainingVolume: number; // mL remaining after testing
 
   // Purpose
-  linkedTestCodes: string[];       // Tests assigned to this aliquot
-  purpose?: string;                // e.g., "Sendout tests", "Chemistry panel"
+  linkedTestCodes: string[]; // Tests assigned to this aliquot
+  purpose?: string; // e.g., "Sendout tests", "Chemistry panel"
 
   // Container
   containerType: ContainerType;
@@ -37,7 +37,7 @@ export interface Aliquot {
   createdBy: string;
 
   // Usage tracking
-  usedForTests: string[];          // Tests that have consumed this aliquot
+  usedForTests: string[]; // Tests that have consumed this aliquot
   consumedAt: string | null;
   consumedBy: string | null;
 
@@ -58,11 +58,11 @@ export interface AliquotPlan {
     aliquotNumber: number;
     volume: number;
     testCodes: string[];
-    destination: string;           // Workstation or sendout lab
+    destination: string; // Workstation or sendout lab
     containerType: ContainerType;
   }[];
-  deadVolume: number;              // Volume lost in transfer
-  totalAliquotVolume: number;      // Sum of all aliquots + dead volume
-  isFeasible: boolean;             // Can we create these aliquots?
+  deadVolume: number; // Volume lost in transfer
+  totalAliquotVolume: number; // Sum of all aliquots + dead volume
+  isFeasible: boolean; // Can we create these aliquots?
   warnings: string[];
 }

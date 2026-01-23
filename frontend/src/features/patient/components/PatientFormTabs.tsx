@@ -53,7 +53,9 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
         <div className="space-y-4">
           <div>
             <div className="text-xs font-medium text-slate-500">Medical Background</div>
-            <div className="text-sm font-semibold text-slate-900">History, conditions, lifestyle</div>
+            <div className="text-sm font-semibold text-slate-900">
+              History, conditions, lifestyle
+            </div>
           </div>
           <MedicalHistorySection formData={formData} onFieldChange={onFieldChange} />
         </div>

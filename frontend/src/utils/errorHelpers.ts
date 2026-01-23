@@ -12,7 +12,7 @@
 export function getErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
-    
+
     // Check for specific error types and provide user-friendly messages
     if (message.includes('network') || message.includes('fetch')) {
       return 'Network error. Please check your connection and try again.';
@@ -35,13 +35,13 @@ export function getErrorMessage(error: unknown, fallback: string): string {
     if (message.includes('timeout')) {
       return 'The request timed out. Please try again.';
     }
-    
+
     // Return the original message if it's reasonably user-friendly
     if (error.message.length < 100 && !message.includes('error:')) {
       return error.message;
     }
   }
-  
+
   // Check for API error objects with message property
   if (typeof error === 'object' && error !== null && 'message' in error) {
     const apiError = error as { message: string };
@@ -49,7 +49,7 @@ export function getErrorMessage(error: unknown, fallback: string): string {
       return apiError.message;
     }
   }
-  
+
   return fallback;
 }
 
@@ -79,7 +79,7 @@ export function getErrorDetails(error: unknown): {
       stack: error.stack,
     };
   }
-  
+
   if (typeof error === 'object' && error !== null) {
     const obj = error as Record<string, unknown>;
     return {
@@ -88,7 +88,7 @@ export function getErrorDetails(error: unknown): {
       status: obj.status as number | undefined,
     };
   }
-  
+
   return {
     message: String(error),
   };

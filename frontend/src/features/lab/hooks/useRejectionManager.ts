@@ -88,10 +88,7 @@ export function useRejectionManager({
   }, [orderId, testCode]);
 
   const rejectWithAction = useCallback(
-    async (
-      rejectionType: ResultRejectionType,
-      reason: string
-    ): Promise<RejectionResult | null> => {
+    async (rejectionType: ResultRejectionType, reason: string): Promise<RejectionResult | null> => {
       if (!orderId || !testCode) {
         setError('Order ID and test code are required');
         return null;
@@ -133,9 +130,7 @@ export function useRejectionManager({
         're-collect': 'recollect_new_sample',
       };
 
-      return options.availableActions.find(
-        (a) => a.action === actionMap[actionType]
-      );
+      return options.availableActions.find(a => a.action === actionMap[actionType]);
     },
     [options]
   );

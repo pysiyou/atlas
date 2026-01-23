@@ -1,8 +1,8 @@
 /**
  * EntryDetailModal - Extended view for result entry
- * 
+ *
  * Provides a larger interface for entering test results with full parameter display.
- * 
+ *
  * Uses centralized components:
  * - DetailGrid with sections config for consistent layout
  * - SectionContainer for form section
@@ -14,8 +14,17 @@ import { Badge, Button, Icon, SectionContainer, CircularProgress } from '@/share
 import { displayId } from '@/utils/id-display';
 import { EntryForm } from './EntryForm';
 import { EntryRejectionSection } from './EntryRejectionSection';
-import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../components/LabDetailModal';
-import { CollectionInfoLine, RetestBadge, RecollectionAttemptBadge } from '../components/StatusBadges';
+import {
+  LabDetailModal,
+  DetailGrid,
+  ModalFooter,
+  StatusBadgeRow,
+} from '../components/LabDetailModal';
+import {
+  CollectionInfoLine,
+  RetestBadge,
+  RecollectionAttemptBadge,
+} from '../components/StatusBadges';
 import type { Test, TestWithContext } from '@/types';
 
 interface EntryDetailModalProps {
@@ -52,8 +61,10 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const [localResults, setLocalResults] = useState<Record<string, string>>(() => initialResults);
   const [localNotes, setLocalNotes] = useState<string>(() => initialTechnicianNotes);
 
-  const filledCount = useMemo(() => 
-    Object.values(localResults).filter(v => v?.trim()).length, [localResults]);
+  const filledCount = useMemo(
+    () => Object.values(localResults).filter(v => v?.trim()).length,
+    [localResults]
+  );
 
   const isComplete = useMemo(() => {
     if (!testDef?.parameters) return false;
@@ -120,7 +131,9 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const headerExtraBadges = (
     <>
       {isRetest && <RetestBadge retestNumber={retestNumber} />}
-      {isRecollection && !isRetest && <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} />}
+      {isRecollection && !isRetest && (
+        <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} />
+      )}
       <Badge size="sm" variant="default" className="text-gray-700">
         {filledCount} / {totalParams} parameters
       </Badge>
@@ -136,7 +149,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   /**
    * Build rejection history title based on type
    */
-  const rejectionHistoryTitle = isRetest 
+  const rejectionHistoryTitle = isRetest
     ? `Previous Rejection${rejectionHistory.length > 1 ? ` (${rejectionHistory.length} attempts)` : ''}`
     : `Recollection History (${rejectionHistory.length} attempt${rejectionHistory.length > 1 ? 's' : ''})`;
 
@@ -161,36 +174,40 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
         orderId: test.orderId,
         referringPhysician: test.referringPhysician,
       }}
-      sampleInfo={test.sampleId && test.collectedAt ? {
-        sampleId: test.sampleId,
-        collectedAt: test.collectedAt,
-        collectedBy: test.collectedBy,
-      } : undefined}
+      sampleInfo={
+        test.sampleId && test.collectedAt
+          ? {
+              sampleId: test.sampleId,
+              collectedAt: test.collectedAt,
+              collectedBy: test.collectedBy,
+            }
+          : undefined
+      }
       additionalContextInfo={
         // Show collection info only if no sampleId (otherwise it's in sampleInfo)
-        test.collectedAt && !test.sampleId && (
-          <CollectionInfoLine 
-            collectedAt={test.collectedAt} 
-            collectedBy={test.collectedBy} 
-          />
+        test.collectedAt &&
+        !test.sampleId && (
+          <CollectionInfoLine collectedAt={test.collectedAt} collectedBy={test.collectedBy} />
         )
       }
       footer={
         <ModalFooter
-          statusIcon={isComplete 
-            ? <Icon name="check-circle" className="w-4 h-4 text-gray-400" />
-            : <Icon name="pen" className="w-4 h-4 text-gray-400" />
+          statusIcon={
+            isComplete ? (
+              <Icon name="check-circle" className="w-4 h-4 text-gray-400" />
+            ) : (
+              <Icon name="pen" className="w-4 h-4 text-gray-400" />
+            )
           }
-          statusMessage={isComplete ? 'Ready to submit' : 'Complete all parameters to submit results'}
+          statusMessage={
+            isComplete ? 'Ready to submit' : 'Complete all parameters to submit results'
+          }
           statusClassName="text-gray-500"
         >
-          <Button onClick={onClose} variant="cancel" size="md">Cancel</Button>
-          <Button
-            onClick={handleSave}
-            variant="save"
-            size="md"
-            disabled={!isComplete}
-          >
+          <Button onClick={onClose} variant="cancel" size="md">
+            Cancel
+          </Button>
+          <Button onClick={handleSave} variant="save" size="md" disabled={!isComplete}>
             Save
           </Button>
           {onNext && (
@@ -199,7 +216,9 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
             </Button>
           )}
           {onPrev && (
-            <Button onClick={onPrev} variant="previous" size="md">Previous</Button>
+            <Button onClick={onPrev} variant="previous" size="md">
+              Previous
+            </Button>
           )}
         </ModalFooter>
       }
@@ -233,36 +252,57 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       <DetailGrid
         sections={[
           {
-            title: "Test Parameters",
+            title: 'Test Parameters',
             fields: [
-              { label: "Total Parameters", value: <span className="font-semibold">{totalParams}</span> },
-              { 
-                label: "Filled", 
-                value: <span className={isComplete ? 'text-green-600' : 'text-yellow-600'}>{filledCount}</span> 
+              {
+                label: 'Total Parameters',
+                value: <span className="font-semibold">{totalParams}</span>,
               },
-              { 
-                label: "Remaining", 
-                value: <span className={remainingParams === 0 ? 'text-green-600' : 'text-gray-600'}>{remainingParams}</span> 
+              {
+                label: 'Filled',
+                value: (
+                  <span className={isComplete ? 'text-green-600' : 'text-yellow-600'}>
+                    {filledCount}
+                  </span>
+                ),
               },
-            ]
+              {
+                label: 'Remaining',
+                value: (
+                  <span className={remainingParams === 0 ? 'text-green-600' : 'text-gray-600'}>
+                    {remainingParams}
+                  </span>
+                ),
+              },
+            ],
           },
           {
-            title: "Test Information",
+            title: 'Test Information',
             fields: [
-              { label: "Test Code", badge: { value: test.testCode, variant: "primary" } },
-              { label: "Sample Type", badge: test.sampleType ? { value: test.sampleType, variant: test.sampleType } : undefined },
-              { label: "Sample ID", badge: test.sampleId ? { value: displayId.sample(test.sampleId), variant: "primary" } : undefined },
-              { 
-                label: "Turnaround Time", 
+              { label: 'Test Code', badge: { value: test.testCode, variant: 'primary' } },
+              {
+                label: 'Sample Type',
+                badge: test.sampleType
+                  ? { value: test.sampleType, variant: test.sampleType }
+                  : undefined,
+              },
+              {
+                label: 'Sample ID',
+                badge: test.sampleId
+                  ? { value: displayId.sample(test.sampleId), variant: 'primary' }
+                  : undefined,
+              },
+              {
+                label: 'Turnaround Time',
                 value: turnaroundTime ? (
                   <span className="flex items-center gap-1">
                     <Icon name="clock" className="w-3.5 h-3.5" />
                     {turnaroundTime} hours
                   </span>
-                ) : undefined
+                ) : undefined,
               },
-            ]
-          }
+            ],
+          },
         ]}
       />
     </LabDetailModal>

@@ -41,7 +41,7 @@ const TEST_CATEGORY_VALUES: TestCategory[] = [
 /**
  * Transform category values into filter option format
  */
-const categoryFilterOptions = TEST_CATEGORY_VALUES.map((category) => ({
+const categoryFilterOptions = TEST_CATEGORY_VALUES.map(category => ({
   id: category,
   label: TEST_CATEGORY_CONFIG[category]?.label || category,
   color: TEST_CATEGORY_CONFIG[category]?.color,
@@ -84,7 +84,7 @@ const SAMPLE_TYPE_VALUES = [
 /**
  * Transform sample type values into filter option format
  */
-const sampleTypeFilterOptions = SAMPLE_TYPE_VALUES.map((sampleType) => ({
+const sampleTypeFilterOptions = SAMPLE_TYPE_VALUES.map(sampleType => ({
   id: sampleType,
   label: SAMPLE_TYPE_CONFIG[sampleType]?.label || sampleType,
   color: SAMPLE_TYPE_CONFIG[sampleType]?.color,

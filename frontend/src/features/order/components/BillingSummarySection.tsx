@@ -6,12 +6,11 @@
 import React from 'react';
 import { Badge, Button, Icon } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
-import type { Order } from '@/types';
+import type { Order, Invoice } from '@/types';
 
 export interface BillingSummarySectionProps {
   order: Order;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  invoice: any | null;
+  invoice: Invoice | null;
   onViewInvoice: () => void;
 }
 

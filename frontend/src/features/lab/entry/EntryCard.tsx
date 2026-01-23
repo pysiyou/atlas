@@ -1,6 +1,6 @@
 /**
  * EntryCard - Card component for result entry workflow
- * 
+ *
  * Displays test information with parameter completion progress.
  * Shows retest banners for tests that are retests of previously rejected results.
  */
@@ -51,16 +51,18 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   const isRetest = test.isRetest === true;
   const retestNumber = test.retestNumber || 0;
   const rejectionHistory = test.resultRejectionHistory || [];
-  const lastRejection = rejectionHistory.length > 0 ? rejectionHistory[rejectionHistory.length - 1] : null;
-  
+  const lastRejection =
+    rejectionHistory.length > 0 ? rejectionHistory[rejectionHistory.length - 1] : null;
+
   // Determine if this is a sample recollection (sample re-collect flow)
   const isSampleRecollection = test.sampleIsRecollection === true;
   const sampleRecollectionAttempt = test.sampleRecollectionAttempt || 1;
   const sampleRejectionHistory = test.sampleRejectionHistory || [];
-  const lastSampleRejection = sampleRejectionHistory.length > 0 
-    ? sampleRejectionHistory[sampleRejectionHistory.length - 1] 
-    : null;
-  
+  const lastSampleRejection =
+    sampleRejectionHistory.length > 0
+      ? sampleRejectionHistory[sampleRejectionHistory.length - 1]
+      : null;
+
   // Has any kind of rejection history (either from result validation or sample rejection)
   const hasAnyRejectionHistory = isRetest || isSampleRecollection;
 
@@ -70,8 +72,17 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       return;
     }
     openModal(ModalType.RESULT_DETAIL, {
-      test, testDef, resultKey, results, technicianNotes, isComplete,
-      onResultsChange, onNotesChange, onSave, onNext, onPrev,
+      test,
+      testDef,
+      resultKey,
+      results,
+      technicianNotes,
+      isComplete,
+      onResultsChange,
+      onNotesChange,
+      onSave,
+      onNext,
+      onPrev,
     });
   };
 
@@ -81,19 +92,26 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       <h3 className="text-sm font-medium text-gray-900">{test.testName}</h3>
       <Badge variant={test.priority} size="sm" />
       <Badge variant={test.sampleType} size="sm" />
-      <Badge size="sm" variant="default" className="text-gray-600">{test.testCode}</Badge>
+      <Badge size="sm" variant="default" className="text-gray-600">
+        {test.testCode}
+      </Badge>
     </>
   );
 
   // Parameter progress badge
   const actions = (
-    <ProgressBadge count={filledCount} total={parameterCount} label="PARAMS" isComplete={isComplete} />
+    <ProgressBadge
+      count={filledCount}
+      total={parameterCount}
+      label="PARAMS"
+      isComplete={isComplete}
+    />
   );
 
   // Parameter preview badges
   const content = (
     <div className="flex flex-wrap gap-1.5">
-      {testDef.parameters.slice(0, 5).map((param) => (
+      {testDef.parameters.slice(0, 5).map(param => (
         <Badge
           key={param.code}
           size="sm"
@@ -129,15 +147,14 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       return (
         <Alert variant="warning" className="py-2">
           <div className="space-y-0.5">
-            <p className="font-medium text-xs">
-              Sample Recollection #{sampleRecollectionAttempt}
-            </p>
+            <p className="font-medium text-xs">Sample Recollection #{sampleRecollectionAttempt}</p>
             <p className="text-xxs opacity-90 leading-tight">
               Previous sample rejected: {lastSampleRejection.rejectionNotes || 'See history'}
             </p>
             {sampleRejectionHistory.length > 1 && (
               <p className="text-xxs opacity-75">
-                ({sampleRejectionHistory.length} previous rejection{sampleRejectionHistory.length > 1 ? 's' : ''})
+                ({sampleRejectionHistory.length} previous rejection
+                {sampleRejectionHistory.length > 1 ? 's' : ''})
               </p>
             )}
           </div>

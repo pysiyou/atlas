@@ -2,8 +2,6 @@
  * Status Helper Utilities
  */
 
-// import type { OrderStatus, TestStatus, AppointmentStatus, PaymentStatus } from '../types'; // All unused now
-
 /**
  * Format status text for display
  */

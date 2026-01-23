@@ -40,9 +40,10 @@ function mapResultItemsToParameters(resultItems?: ResultItem[]): TestParameter[]
     // Build reference range string from catalogReferenceRange
     let referenceRange = '';
     if (item.reference_range) {
-      const range = item.reference_range.adult_general || 
-                    item.reference_range.adult_male || 
-                    item.reference_range.adult_female;
+      const range =
+        item.reference_range.adult_general ||
+        item.reference_range.adult_male ||
+        item.reference_range.adult_female;
       if (range) {
         if (range.low !== undefined && range.high !== undefined) {
           referenceRange = `${range.low} - ${range.high}`;
@@ -96,7 +97,7 @@ export const testAPI = {
     if (params?.activeOnly !== undefined) queryParams.activeOnly = String(params.activeOnly);
     if (params?.skip) queryParams.skip = String(params.skip);
     if (params?.limit) queryParams.limit = String(params.limit);
-    
+
     const apiTests = await apiClient.get<APITestResponse[]>('/tests', queryParams);
     return apiTests.map(transformAPITest);
   },

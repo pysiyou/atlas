@@ -1,37 +1,106 @@
 import React from 'react';
 import { cn } from '@/utils';
 
-export type BadgeVariant = 
+export type BadgeVariant =
   // Base variants
-  | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'error' | 'success' | 'warning' | 'info' | 'purple' | 'orange' | 'teal'
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'outline'
+  | 'ghost'
+  | 'danger'
+  | 'error'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'purple'
+  | 'orange'
+  | 'teal'
   // Order Statuses
-  | 'ordered' | 'in-progress' | 'completed' | 'cancelled' | 'validated' | 'rejected' | 'superseded'
+  | 'ordered'
+  | 'in-progress'
+  | 'completed'
+  | 'cancelled'
+  | 'validated'
+  | 'rejected'
+  | 'superseded'
   // Test Statuses (in addition to above)
   | 'resulted'
   // Rejection Types
-  | 're-test' | 're-collect'
+  | 're-test'
+  | 're-collect'
   // Sample Statuses
-  | 'pending' | 'collected' | 'received' | 'accessioned' | 'stored' | 'disposed' | 'sample-collected'
+  | 'pending'
+  | 'collected'
+  | 'received'
+  | 'accessioned'
+  | 'stored'
+  | 'disposed'
+  | 'sample-collected'
   // Appointment Statuses
-  | 'scheduled' | 'confirmed' | 'no-show'
+  | 'scheduled'
+  | 'confirmed'
+  | 'no-show'
   // Payment Statuses
-  | 'partial' | 'paid' | 'unpaid'
+  | 'partial'
+  | 'paid'
+  | 'unpaid'
   // Priorities
-  | 'routine' | 'urgent' | 'stat'
+  | 'routine'
+  | 'urgent'
+  | 'stat'
   // Test Categories
-  | 'hematology' | 'biochemistry' | 'microbiology' | 'serology' | 'urinalysis' | 'imaging' | 'immunology' | 'molecular' | 'toxicology' | 'coagulation' | 'chemistry'
+  | 'hematology'
+  | 'biochemistry'
+  | 'microbiology'
+  | 'serology'
+  | 'urinalysis'
+  | 'imaging'
+  | 'immunology'
+  | 'molecular'
+  | 'toxicology'
+  | 'coagulation'
+  | 'chemistry'
   // Sample Types
-  | 'blood' | 'urine' | 'stool' | 'swab' | 'tissue' | 'fluid' | 'csf' | 'sputum' | 'other' | 'plasma' | 'serum'
+  | 'blood'
+  | 'urine'
+  | 'stool'
+  | 'swab'
+  | 'tissue'
+  | 'fluid'
+  | 'csf'
+  | 'sputum'
+  | 'other'
+  | 'plasma'
+  | 'serum'
   // Sex/Gender
-  | 'male' | 'female'
+  | 'male'
+  | 'female'
   // Medical History
-  | 'chronic-condition' | 'medication' | 'allergy' | 'surgery'
+  | 'chronic-condition'
+  | 'medication'
+  | 'allergy'
+  | 'surgery'
   // Container Top Colors (for physical tube representation)
-  | 'container-red' | 'container-yellow' | 'container-purple' | 'container-blue' | 'container-green' | 'container-gray' | 'container-black'
+  | 'container-red'
+  | 'container-yellow'
+  | 'container-purple'
+  | 'container-blue'
+  | 'container-green'
+  | 'container-gray'
+  | 'container-black'
   // Payment Methods
-  | 'cash' | 'credit-card' | 'debit-card' | 'insurance' | 'bank-transfer' | 'mobile-money'
+  | 'cash'
+  | 'credit-card'
+  | 'debit-card'
+  | 'insurance'
+  | 'bank-transfer'
+  | 'mobile-money'
   // User Roles
-  | 'receptionist' | 'lab-technician' | 'pathologist' | 'administrator'
+  | 'receptionist'
+  | 'lab-technician'
+  | 'pathologist'
+  | 'administrator'
   // Arbitrary string fallback
   | (string & {});
 
@@ -60,81 +129,81 @@ const VARIANT_STYLES: Record<string, string> = {
   teal: 'bg-teal-100 text-teal-800 border-transparent',
 
   // Order Status Mappings
-  'ordered': 'bg-blue-100 text-blue-800 border-transparent',
+  ordered: 'bg-blue-100 text-blue-800 border-transparent',
   'in-progress': 'bg-yellow-100 text-yellow-800 border-transparent',
-  'completed': 'bg-green-100 text-green-800 border-transparent',
-  'cancelled': 'bg-red-100 text-red-800 border-transparent',
-  'validated': 'bg-green-100 text-green-800 border-transparent',
-  'rejected': 'bg-red-100 text-red-800 border-transparent',
-  'superseded': 'bg-slate-200 text-slate-600 border-transparent line-through',  // Grayed out, struck-through for replaced tests
+  completed: 'bg-green-100 text-green-800 border-transparent',
+  cancelled: 'bg-red-100 text-red-800 border-transparent',
+  validated: 'bg-green-100 text-green-800 border-transparent',
+  rejected: 'bg-red-100 text-red-800 border-transparent',
+  superseded: 'bg-slate-200 text-slate-600 border-transparent line-through', // Grayed out, struck-through for replaced tests
 
   // Test Status Mappings
-  'resulted': 'bg-purple-100 text-purple-800 border-transparent',  // Results entered, awaiting validation
+  resulted: 'bg-purple-100 text-purple-800 border-transparent', // Results entered, awaiting validation
 
   // Rejection Type Mappings
   're-test': 'bg-amber-100 text-amber-800 border-transparent',
   're-collect': 'bg-orange-100 text-orange-800 border-transparent',
 
   // Sample Status Mappings
-  'pending': 'bg-yellow-100 text-yellow-800 border-transparent',
-  'collected': 'bg-green-100 text-green-800 border-transparent',
-  'received': 'bg-blue-100 text-blue-800 border-transparent',
-  'accessioned': 'bg-indigo-100 text-indigo-800 border-transparent',
-  'stored': 'bg-gray-100 text-gray-800 border-transparent',
-  'disposed': 'bg-gray-200 text-gray-800 border-transparent',
+  pending: 'bg-yellow-100 text-yellow-800 border-transparent',
+  collected: 'bg-green-100 text-green-800 border-transparent',
+  received: 'bg-blue-100 text-blue-800 border-transparent',
+  accessioned: 'bg-indigo-100 text-indigo-800 border-transparent',
+  stored: 'bg-gray-100 text-gray-800 border-transparent',
+  disposed: 'bg-gray-200 text-gray-800 border-transparent',
   'sample-collected': 'bg-teal-100 text-teal-800 border-transparent',
 
   // Appointment Status Mappings
-  'scheduled': 'bg-blue-100 text-blue-800 border-transparent',
-  'confirmed': 'bg-green-100 text-green-800 border-transparent',
+  scheduled: 'bg-blue-100 text-blue-800 border-transparent',
+  confirmed: 'bg-green-100 text-green-800 border-transparent',
   'no-show': 'bg-orange-100 text-orange-800 border-transparent',
 
   // Payment Status Mappings
-  'partial': 'bg-orange-100 text-orange-800 border-transparent',
-  'paid': 'bg-green-100 text-green-800 border-transparent',
-  'unpaid': 'bg-red-100 text-red-800 border-transparent',
-  
+  partial: 'bg-orange-100 text-orange-800 border-transparent',
+  paid: 'bg-green-100 text-green-800 border-transparent',
+  unpaid: 'bg-red-100 text-red-800 border-transparent',
+
   // Priority Mappings
-  'routine': 'bg-blue-100 text-blue-800 border-transparent',
-  'urgent': 'bg-orange-100 text-orange-800 border-transparent',
-  'stat': 'bg-red-100 text-red-800 border-transparent font-bold',
+  routine: 'bg-blue-100 text-blue-800 border-transparent',
+  urgent: 'bg-orange-100 text-orange-800 border-transparent',
+  stat: 'bg-red-100 text-red-800 border-transparent font-bold',
 
   // Sample Type Mappings
-  'blood': 'bg-red-100 text-red-800 border-transparent',
-  'plasma': 'bg-emerald-100 text-emerald-800 border-transparent',
-  'serum': 'bg-amber-100 text-amber-800 border-transparent',
-  'urine': 'bg-yellow-100 text-yellow-800 border-transparent',
-  'stool': 'bg-orange-100 text-orange-800 border-transparent',
-  'swab': 'bg-teal-100 text-teal-800 border-transparent',
-  'tissue': 'bg-purple-100 text-purple-800 border-transparent',
-  'csf': 'bg-blue-100 text-blue-800 border-transparent',
-  'sputum': 'bg-gray-100 text-gray-800 border-transparent',
-  'fluid': 'bg-cyan-100 text-cyan-800 border-transparent',
-  'other': 'bg-gray-100 text-gray-800 border-transparent',
-  'unknown': 'bg-gray-100 text-gray-800 border-transparent',
+  blood: 'bg-red-100 text-red-800 border-transparent',
+  plasma: 'bg-emerald-100 text-emerald-800 border-transparent',
+  serum: 'bg-amber-100 text-amber-800 border-transparent',
+  urine: 'bg-yellow-100 text-yellow-800 border-transparent',
+  stool: 'bg-orange-100 text-orange-800 border-transparent',
+  swab: 'bg-teal-100 text-teal-800 border-transparent',
+  tissue: 'bg-purple-100 text-purple-800 border-transparent',
+  csf: 'bg-blue-100 text-blue-800 border-transparent',
+  sputum: 'bg-gray-100 text-gray-800 border-transparent',
+  fluid: 'bg-cyan-100 text-cyan-800 border-transparent',
+  other: 'bg-gray-100 text-gray-800 border-transparent',
+  unknown: 'bg-gray-100 text-gray-800 border-transparent',
 
   // Test Category Mappings
-  'hematology': 'bg-pink-100 text-pink-800 border-transparent',
-  'biochemistry': 'bg-blue-100 text-blue-800 border-transparent', 
-  'chemistry': 'bg-blue-100 text-blue-800 border-transparent',
-  'microbiology': 'bg-emerald-100 text-emerald-800 border-transparent',
-  'serology': 'bg-purple-100 text-purple-800 border-transparent',
-  'urinalysis': 'bg-yellow-100 text-yellow-800 border-transparent',
-  'imaging': 'bg-gray-100 text-gray-800 border-transparent',
-  'immunology': 'bg-indigo-100 text-indigo-800 border-transparent',
-  'molecular': 'bg-cyan-100 text-cyan-800 border-transparent',
-  'toxicology': 'bg-red-100 text-red-800 border-transparent',
-  'coagulation': 'bg-rose-100 text-rose-800 border-transparent',
+  hematology: 'bg-pink-100 text-pink-800 border-transparent',
+  biochemistry: 'bg-blue-100 text-blue-800 border-transparent',
+  chemistry: 'bg-blue-100 text-blue-800 border-transparent',
+  microbiology: 'bg-emerald-100 text-emerald-800 border-transparent',
+  serology: 'bg-purple-100 text-purple-800 border-transparent',
+  urinalysis: 'bg-yellow-100 text-yellow-800 border-transparent',
+  imaging: 'bg-gray-100 text-gray-800 border-transparent',
+  immunology: 'bg-indigo-100 text-indigo-800 border-transparent',
+  molecular: 'bg-cyan-100 text-cyan-800 border-transparent',
+  toxicology: 'bg-red-100 text-red-800 border-transparent',
+  coagulation: 'bg-rose-100 text-rose-800 border-transparent',
 
   // Sex Mappings
-  'male': 'bg-blue-50 text-blue-700 border-blue-200',
-  'female': 'bg-pink-50 text-pink-700 border-pink-200',
+  male: 'bg-blue-50 text-blue-700 border-blue-200',
+  female: 'bg-pink-50 text-pink-700 border-pink-200',
 
   // Medical History Mappings
   'chronic-condition': 'bg-blue-50 text-blue-700 border-transparent',
-  'medication': 'bg-green-50 text-green-700 border-transparent',
-  'allergy': 'bg-orange-50 text-orange-700 border-transparent',
-  'surgery': 'bg-purple-50 text-purple-700 border-transparent',
+  medication: 'bg-green-50 text-green-700 border-transparent',
+  allergy: 'bg-orange-50 text-orange-700 border-transparent',
+  surgery: 'bg-purple-50 text-purple-700 border-transparent',
 
   // Container Top Color Mappings (solid colors for physical tube representation)
   'container-red': 'bg-red-500 text-white border-transparent',
@@ -146,18 +215,18 @@ const VARIANT_STYLES: Record<string, string> = {
   'container-black': 'bg-black text-white border-transparent',
 
   // Payment Method Mappings
-  'cash': 'bg-emerald-100 text-emerald-800 border-transparent',
+  cash: 'bg-emerald-100 text-emerald-800 border-transparent',
   'credit-card': 'bg-sky-100 text-sky-800 border-transparent',
   'debit-card': 'bg-blue-100 text-blue-800 border-transparent',
-  'insurance': 'bg-purple-100 text-purple-800 border-transparent',
+  insurance: 'bg-purple-100 text-purple-800 border-transparent',
   'bank-transfer': 'bg-indigo-100 text-indigo-800 border-transparent',
   'mobile-money': 'bg-orange-100 text-orange-800 border-transparent',
 
   // User Role Mappings
-  'receptionist': 'bg-blue-100 text-blue-800 border-transparent',
+  receptionist: 'bg-blue-100 text-blue-800 border-transparent',
   'lab-technician': 'bg-green-100 text-green-800 border-transparent',
-  'pathologist': 'bg-purple-100 text-purple-800 border-transparent',
-  'administrator': 'bg-red-100 text-red-800 border-transparent',
+  pathologist: 'bg-purple-100 text-purple-800 border-transparent',
+  administrator: 'bg-red-100 text-red-800 border-transparent',
 };
 
 const SIZES = {
@@ -172,7 +241,7 @@ const VARIANT_LABELS: Record<string, string> = {
   'in-progress': 'IN PROGRESS',
   'no-show': 'NO SHOW',
   'chronic-condition': 'CHRONIC',
-  'superseded': 'SUPERSEDED',  // Test replaced by retest
+  superseded: 'SUPERSEDED', // Test replaced by retest
   // Payment method labels
   'credit-card': 'CREDIT CARD',
   'debit-card': 'DEBIT CARD',
@@ -185,7 +254,7 @@ const VARIANT_LABELS: Record<string, string> = {
 
 /**
  * Badge Component
- * 
+ *
  * Displays a small badge with color variants.
  * Uses a single `variant` prop to determine styling based on:
  * - Base colors (primary, danger, etc.)
@@ -193,33 +262,33 @@ const VARIANT_LABELS: Record<string, string> = {
  * - Priority (urgent, stat, etc.)
  * - Sample Type (blood, urine, etc.)
  * - Sex (male, female)
- * 
+ *
  * If `children` is omitted, it will try to format the `variant` string to display.
  */
-export const Badge: React.FC<BadgeProps> = ({ 
-  className, 
-  variant = 'default', 
-  size = 'md', 
+export const Badge: React.FC<BadgeProps> = ({
+  className,
+  variant = 'default',
+  size = 'md',
   strikethrough = false,
   children,
-  ...props 
+  ...props
 }) => {
   // Normalize variant to lowercase string for lookup
   const normalizedVariant = String(variant).toLowerCase();
-  
+
   // Lookup style or fallback to default
   const variantClass = VARIANT_STYLES[normalizedVariant] || VARIANT_STYLES['default'];
-  
+
   // Auto-generate content if children is missing (and it's not a generic variant like 'default')
   let content = children;
-  
+
   if (!content && variant !== 'default') {
     // Use custom label if available, otherwise format the variant string
     content = VARIANT_LABELS[normalizedVariant] || String(variant).replace(/-/g, ' ').toUpperCase();
   }
 
   return (
-    <div 
+    <div
       className={cn(
         'inline-flex items-center font-medium rounded-sm border transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
         variantClass,

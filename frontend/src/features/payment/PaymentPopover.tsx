@@ -1,7 +1,7 @@
 /**
  * PaymentPopover Component
  * Popover interface for processing payments on orders
- * 
+ *
  * Uses the shared PopoverForm component for consistent styling with other lab popovers.
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
@@ -11,7 +11,11 @@ import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
-import { getEnabledPaymentMethods, getDefaultPaymentMethod, type PaymentMethod } from '@/types/billing';
+import {
+  getEnabledPaymentMethods,
+  getDefaultPaymentMethod,
+  type PaymentMethod,
+} from '@/types/billing';
 import { createPayment, type PaymentCreate } from '@/services/api/payments';
 import type { IconName } from '@/shared/ui/Icon';
 
@@ -36,7 +40,7 @@ interface PaymentPopoverContentProps {
 
 /**
  * PaymentPopoverContent - Form content for payment processing
- * 
+ *
  * Handles amount entry, payment method selection, and cash tendering logic.
  */
 const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
@@ -141,16 +145,17 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
           Payment Method <span className="text-red-500">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
-          {PAYMENT_METHODS.map((method) => {
+          {PAYMENT_METHODS.map(method => {
             const isSelected = paymentMethod === method.value;
             return (
               <div
                 key={method.value}
                 className={`
                   relative flex items-center gap-2 p-3 rounded-lg border transition-all duration-200 cursor-pointer
-                  ${isSelected 
-                    ? 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
-                    : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                  ${
+                    isSelected
+                      ? 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
+                      : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                   }
                 `}
                 onClick={() => setPaymentMethod(method.value)}
@@ -162,7 +167,9 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                   onChange={() => setPaymentMethod(method.value)}
                   className="h-3.5 w-3.5 border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
-                <span className={`flex-1 text-xs font-medium ${isSelected ? 'text-blue-900' : 'text-gray-900'}`}>
+                <span
+                  className={`flex-1 text-xs font-medium ${isSelected ? 'text-blue-900' : 'text-gray-900'}`}
+                >
                   {method.label}
                 </span>
                 <Icon
@@ -182,7 +189,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
           rows={2}
           placeholder="Add optional notes..."
           value={notes}
-          onChange={(e) => setNotes(e.target.value)}
+          onChange={e => setNotes(e.target.value)}
           className="w-full px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
         />
       </div>
@@ -199,7 +206,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
 /**
  * PaymentPopover - Popover trigger and container for payment processing
- * 
+ *
  * Wraps PaymentPopoverContent with a Popover trigger button.
  */
 export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
@@ -211,17 +218,13 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
     placement="bottom-end"
     offsetValue={8}
     trigger={
-      <Button
-        size={size}
-        variant="primary"
-        icon={<Icon name="wallet" className="text-white" />}
-      >
+      <Button size={size} variant="primary" icon={<Icon name="wallet" className="text-white" />}>
         PAY
       </Button>
     }
   >
     {({ close }) => (
-      <div data-popover-content onClick={(e) => e.stopPropagation()}>
+      <div data-popover-content onClick={e => e.stopPropagation()}>
         <PaymentPopoverContent
           order={order}
           onConfirm={close}
@@ -232,4 +235,3 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
     )}
   </Popover>
 );
-

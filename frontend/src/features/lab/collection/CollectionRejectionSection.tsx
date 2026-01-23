@@ -1,6 +1,6 @@
 /**
  * CollectionRejectionSection - Rejection history display section with tabs
- * 
+ *
  * Displays sample rejection history with simple, professional layout.
  * Similar to EntryRejectionSection style.
  */
@@ -39,9 +39,9 @@ const RejectionRecordDisplay: React.FC<RejectionRecordDisplayProps> = ({
   getUserName,
 }) => {
   // Format reasons to readable labels
-  const reasonLabels = reasons?.map(
-    r => REJECTION_REASON_CONFIG[r as keyof typeof REJECTION_REASON_CONFIG]?.label || r
-  ).join(', ');
+  const reasonLabels = reasons
+    ?.map(r => REJECTION_REASON_CONFIG[r as keyof typeof REJECTION_REASON_CONFIG]?.label || r)
+    .join(', ');
 
   return (
     <div className="space-y-1.5 text-xs">
@@ -102,7 +102,7 @@ interface SingleRejectionProps {
 
 /**
  * CollectionRejectionSection - Component for displaying sample rejection history
- * 
+ *
  * Simple, professional layout showing rejection details.
  * Supports two modes:
  * 1. Single rejection: Pass individual props (reasons, notes, etc.)
@@ -120,8 +120,8 @@ export const CollectionRejectionSection: React.FC<SingleRejectionProps> = ({
   // Sort rejection history by date (oldest first for chronological tab numbering)
   const sortedHistory = React.useMemo(() => {
     if (!rejectionHistory || rejectionHistory.length === 0) return [];
-    return [...rejectionHistory].sort((a, b) => 
-      new Date(a.rejectedAt).getTime() - new Date(b.rejectedAt).getTime()
+    return [...rejectionHistory].sort(
+      (a, b) => new Date(a.rejectedAt).getTime() - new Date(b.rejectedAt).getTime()
     );
   }, [rejectionHistory]);
 
@@ -140,23 +140,24 @@ export const CollectionRejectionSection: React.FC<SingleRejectionProps> = ({
     const activeRecord = sortedHistory[activeIndex];
 
     // Simple tab buttons for multiple rejections
-    const TabNavigation = sortedHistory.length > 1 ? (
-      <div className="flex gap-1">
-        {sortedHistory.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setActiveIndex(index)}
-            className={`px-2 py-0.5 text-xs rounded ${
-              activeIndex === index
-                ? 'bg-gray-200 text-gray-800 font-medium'
-                : 'text-gray-500 hover:bg-gray-100'
-            }`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
-    ) : null;
+    const TabNavigation =
+      sortedHistory.length > 1 ? (
+        <div className="flex gap-1">
+          {sortedHistory.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveIndex(index)}
+              className={`px-2 py-0.5 text-xs rounded ${
+                activeIndex === index
+                  ? 'bg-gray-200 text-gray-800 font-medium'
+                  : 'text-gray-500 hover:bg-gray-100'
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+      ) : null;
 
     return (
       <SectionContainer title={title} headerRight={TabNavigation} spacing="normal">

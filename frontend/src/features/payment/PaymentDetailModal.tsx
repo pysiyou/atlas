@@ -1,13 +1,13 @@
 /**
  * PaymentDetailModal Component
- * 
+ *
  * Modal that displays complete order payment information including:
  * - Order details (ID, date, patient)
  * - List of ordered tests with prices
  * - Payment status and total amount
  * - Payment method selection (directly inside modal)
  * - Cancel and Pay buttons in footer
- * 
+ *
  * Uses the shared Modal and SectionContainer components for consistency.
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
@@ -16,7 +16,11 @@ import { Modal, SectionContainer, Icon, Badge, Button, Alert } from '@/shared/ui
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import { createPayment, type PaymentCreate } from '@/services/api/payments';
-import { getEnabledPaymentMethods, getDefaultPaymentMethod, type PaymentMethod } from '@/types/billing';
+import {
+  getEnabledPaymentMethods,
+  getDefaultPaymentMethod,
+  type PaymentMethod,
+} from '@/types/billing';
 import type { IconName } from '@/shared/ui/Icon';
 import type { OrderPaymentDetails } from './types';
 
@@ -36,7 +40,7 @@ const PAYMENT_METHODS = getEnabledPaymentMethods();
 
 /**
  * PaymentDetailModal - Full payment details with inline payment processing
- * 
+ *
  * Shows complete order information with test list and allows payment
  * method selection directly in the modal without popover.
  */
@@ -124,21 +128,15 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Patient</span>
-                <span className="text-sm text-gray-600">
-                  {order.patientName || 'N/A'}
-                </span>
+                <span className="text-sm text-gray-600">{order.patientName || 'N/A'}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Patient ID</span>
-                <span className="text-sm text-gray-600">
-                  {displayId.patient(order.patientId)}
-                </span>
+                <span className="text-sm text-gray-600">{displayId.patient(order.patientId)}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Order Date</span>
-                <span className="text-sm text-gray-600">
-                  {formatDate(order.orderDate)}
-                </span>
+                <span className="text-sm text-gray-600">{formatDate(order.orderDate)}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Status</span>
@@ -152,7 +150,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
           </SectionContainer>
 
           {/* Tests List Section */}
-          <SectionContainer 
+          <SectionContainer
             title={`Ordered Tests (${order.tests?.length || 0})`}
             contentClassName="p-0"
           >
@@ -168,9 +166,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                     <div className="text-xs font-medium text-gray-900 truncate">
                       {test.testName}
                     </div>
-                    <div className="text-xs text-gray-500">
-                      {test.testCode}
-                    </div>
+                    <div className="text-xs text-gray-500">{test.testCode}</div>
                   </div>
                   <div className="text-sm font-medium text-gray-900 text-right">
                     {formatCurrency(test.priceAtOrder)}
@@ -195,9 +191,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
               {order.paymentDate && (
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-500">Payment Date</span>
-                  <span className="text-sm text-gray-600">
-                    {formatDate(order.paymentDate)}
-                  </span>
+                  <span className="text-sm text-gray-600">{formatDate(order.paymentDate)}</span>
                 </div>
               )}
               {order.paymentMethod && (
@@ -219,7 +213,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
           {!isPaid && (
             <SectionContainer title="Select Payment Method">
               <div className="grid grid-cols-2 gap-3">
-                {PAYMENT_METHODS.map((method) => {
+                {PAYMENT_METHODS.map(method => {
                   const isSelected = paymentMethod === method.value;
                   return (
                     <button
@@ -228,26 +222,29 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                       disabled={submitting}
                       className={`
                         relative flex items-center gap-3 p-4 rounded border transition-all duration-200
-                        ${isSelected
-                          ? 'bg-sky-50 border-sky-300 ring-2 ring-sky-200'
-                          : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        ${
+                          isSelected
+                            ? 'bg-sky-50 border-sky-300 ring-2 ring-sky-200'
+                            : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                         }
                         ${submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                       `}
                       onClick={() => setPaymentMethod(method.value)}
                     >
-                      <div className={`
+                      <div
+                        className={`
                         w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0
                         ${isSelected ? 'border-sky-500' : 'border-gray-300'}
-                      `}>
-                        {isSelected && (
-                          <div className="w-2 h-2 rounded-full bg-sky-500" />
-                        )}
+                      `}
+                      >
+                        {isSelected && <div className="w-2 h-2 rounded-full bg-sky-500" />}
                       </div>
-                      <span className={`
+                      <span
+                        className={`
                         flex-1 text-sm font-medium text-left
                         ${isSelected ? 'text-sky-900' : 'text-gray-700'}
-                      `}>
+                      `}
+                      >
                         {method.label}
                       </span>
                       <Icon
@@ -268,7 +265,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                 rows={2}
                 placeholder="Add optional payment notes..."
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                onChange={e => setNotes(e.target.value)}
                 disabled={submitting}
                 className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent resize-none disabled:opacity-50 disabled:bg-gray-50"
               />
@@ -288,9 +285,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
               <Icon name="check-circle" className="w-6 h-6 text-green-600 shrink-0" />
               <div>
                 <p className="text-sm font-medium text-green-800">Payment Complete</p>
-                <p className="text-xs text-green-600 mt-0.5">
-                  This order has been fully paid.
-                </p>
+                <p className="text-xs text-green-600 mt-0.5">This order has been fully paid.</p>
               </div>
             </div>
           )}
@@ -307,7 +302,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
           >
             {isPaid ? 'Close' : 'Cancel'}
           </Button>
-          
+
           {!isPaid && (
             <Button
               variant="primary"

@@ -27,9 +27,7 @@ export const useTableSort = <T = Record<string, unknown>>({
   onSortChange,
 }: UseTableSortOptions<T>): UseTableSortResult<T> => {
   // Internal state for uncontrolled mode
-  const [internalSort, setInternalSort] = useState<SortConfig | null>(
-    defaultSort || null
-  );
+  const [internalSort, setInternalSort] = useState<SortConfig | null>(defaultSort || null);
 
   // Use controlled sort if provided, otherwise use internal
   const isControlled = controlledSort !== undefined;
@@ -42,7 +40,7 @@ export const useTableSort = <T = Record<string, unknown>>({
   const handleSort = useCallback(
     (columnKey: string) => {
       // Find the column to check if it's sortable
-      const column = columns.find((c) => c.key === columnKey);
+      const column = columns.find(c => c.key === columnKey);
       if (!column?.sortable) return;
 
       const newSort: SortConfig | null = (() => {
@@ -73,7 +71,7 @@ export const useTableSort = <T = Record<string, unknown>>({
   const sortedData = useMemo(() => {
     if (!sort) return data;
 
-    const column = columns.find((c) => c.key === sort.key);
+    const column = columns.find(c => c.key === sort.key);
 
     return [...data].sort((a, b) => {
       // Use custom sort function if provided

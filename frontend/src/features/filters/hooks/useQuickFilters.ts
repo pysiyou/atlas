@@ -32,10 +32,10 @@ export interface UseQuickFiltersReturn {
 
 /**
  * Hook for managing quick filter presets
- * 
+ *
  * @param options - Configuration options
  * @returns Quick filter functions
- * 
+ *
  * @example
  * ```typescript
  * const { isPresetActive, applyPreset, activePresetId } = useQuickFilters({
@@ -47,9 +47,7 @@ export interface UseQuickFiltersReturn {
  * });
  * ```
  */
-export function useQuickFilters(
-  options: UseQuickFiltersOptions
-): UseQuickFiltersReturn {
+export function useQuickFilters(options: UseQuickFiltersOptions): UseQuickFiltersReturn {
   const { presets, filters, onApplyPreset } = options;
 
   /**
@@ -57,7 +55,7 @@ export function useQuickFilters(
    */
   const isPresetActive = useCallback(
     (presetId: string) => {
-      const preset = presets.find((p) => p.id === presetId);
+      const preset = presets.find(p => p.id === presetId);
       if (!preset) return false;
 
       // Check if all preset values match current filters
@@ -93,7 +91,7 @@ export function useQuickFilters(
    */
   const applyPreset = useCallback(
     (presetId: string) => {
-      const preset = presets.find((p) => p.id === presetId);
+      const preset = presets.find(p => p.id === presetId);
       if (preset) {
         onApplyPreset(preset);
       }
@@ -104,8 +102,7 @@ export function useQuickFilters(
   /**
    * Find active preset ID
    */
-  const activePresetId =
-    presets.find((preset) => isPresetActive(preset.id))?.id || null;
+  const activePresetId = presets.find(preset => isPresetActive(preset.id))?.id || null;
 
   return {
     isPresetActive,

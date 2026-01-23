@@ -6,11 +6,7 @@ import { CELL_PADDING, TEXT_SIZE } from './constants';
  * Table Cell Component
  * Renders individual table cells with proper styling and alignment
  */
-export function TableCell({
-  column,
-  children,
-  variant,
-}: TableCellProps) {
+export function TableCell({ column, children, variant }: TableCellProps) {
   const style = getColumnStyle(column);
 
   // Determine alignment classes
@@ -18,16 +14,16 @@ export function TableCell({
     column.align === 'center'
       ? 'text-center justify-center'
       : column.align === 'right'
-      ? 'text-right justify-end'
-      : 'text-left justify-start';
+        ? 'text-right justify-end'
+        : 'text-left justify-start';
 
   // Handle sticky positioning
   const stickyClass =
     column.sticky === 'left'
       ? 'sticky left-0 bg-white z-[1]'
       : column.sticky === 'right'
-      ? 'sticky right-0 bg-white z-[1]'
-      : '';
+        ? 'sticky right-0 bg-white z-[1]'
+        : '';
 
   // Apply truncation if enabled
   const contentClass = column.truncate ? 'truncate' : '';
@@ -47,9 +43,7 @@ export function TableCell({
       `.trim()}
       style={style}
     >
-      <div className="min-w-0 flex-1">
-        {children}
-      </div>
+      <div className="min-w-0 flex-1">{children}</div>
     </div>
   );
 }

@@ -56,7 +56,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
         collapsed ? 'w-16' : 'w-64'
       } bg-white border-r border-gray-200 flex flex-col h-full transition-all duration-300 ease-in-out overflow-hidden`}
       style={{ padding: '0' }}
-      onClick={(e) => {
+      onClick={e => {
         e.stopPropagation();
       }}
     >
@@ -72,11 +72,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
         onNavigate={isMobile ? onMobileClose : undefined}
       />
       {currentUser && (
-        <SidebarProfile
-          currentUser={currentUser}
-          isCollapsed={collapsed}
-          onLogout={onLogout}
-        />
+        <SidebarProfile currentUser={currentUser} isCollapsed={collapsed} onLogout={onLogout} />
       )}
     </aside>
   );

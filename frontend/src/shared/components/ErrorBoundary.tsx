@@ -77,11 +77,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 />
               </svg>
             </div>
-            
+
             <h2 className="mt-4 text-xl font-semibold text-center text-gray-900">
               Something went wrong
             </h2>
-            
+
             <p className="mt-2 text-sm text-center text-gray-600">
               We're sorry, but something unexpected happened. Please try refreshing the page.
             </p>
@@ -91,24 +91,17 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 <p className="font-semibold mb-1">Error Details:</p>
                 <p>{this.state.error.message}</p>
                 {this.state.error.stack && (
-                  <pre className="mt-2 text-xs whitespace-pre-wrap">
-                    {this.state.error.stack}
-                  </pre>
+                  <pre className="mt-2 text-xs whitespace-pre-wrap">{this.state.error.stack}</pre>
                 )}
               </div>
             )}
 
             <div className="mt-6 flex gap-3">
-              <Button
-                onClick={this.handleReset}
-                variant="retry"
-                size="md"
-                className="flex-1"
-              >
+              <Button onClick={this.handleReset} variant="retry" size="md" className="flex-1">
                 Try Again
               </Button>
               <Button
-                onClick={() => window.location.href = '/'}
+                onClick={() => (window.location.href = '/')}
                 variant="back"
                 size="md"
                 className="flex-1"

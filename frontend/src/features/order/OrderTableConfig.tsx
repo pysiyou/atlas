@@ -1,6 +1,6 @@
 /**
  * Order Table Configuration
- * 
+ *
  * Multi-view table configuration for order list.
  * Defines separate column sets for full table, compact table, and mobile card view.
  */
@@ -15,7 +15,7 @@ import { OrderTableCard } from './OrderTableCard';
 
 /**
  * Create order table configuration with full, compact, and card views
- * 
+ *
  * @param navigate - React Router navigate function
  * @param getPatientNameFn - Function to get patient name from patientId
  * @param getTestNameFn - Function to get test name from testCode
@@ -35,7 +35,9 @@ export const createOrderTableConfig = (
 
   const renderPatientName = (order: Order) => (
     <div className="min-w-0">
-      <div className="font-semibold text-gray-900 truncate">{getPatientNameFn(order.patientId)}</div>
+      <div className="font-semibold text-gray-900 truncate">
+        {getPatientNameFn(order.patientId)}
+      </div>
       <div className="text-xxs text-gray-500 truncate">{displayId.patient(order.patientId)}</div>
     </div>
   );
@@ -44,12 +46,17 @@ export const createOrderTableConfig = (
     // Filter out superseded tests - only count active tests
     const activeTests = order.tests.filter(t => t.status !== 'superseded');
     const activeCount = activeTests.length;
-    
+
     return (
       <div className="min-w-0">
-        <div className="font-medium truncate">{activeCount} test{activeCount !== 1 ? 's' : ''}</div>
+        <div className="font-medium truncate">
+          {activeCount} test{activeCount !== 1 ? 's' : ''}
+        </div>
         <div className="text-xs text-gray-500 truncate">
-          {activeTests.slice(0, 2).map(t => getTestNameFn(t.testCode)).join(', ')}
+          {activeTests
+            .slice(0, 2)
+            .map(t => getTestNameFn(t.testCode))
+            .join(', ')}
           {activeCount > 2 && ` +${activeCount - 2} more`}
         </div>
       </div>
@@ -57,37 +64,19 @@ export const createOrderTableConfig = (
   };
 
   const renderPriority = (order: Order) => (
-    <Badge
-      variant={order.priority}
-      size="sm"
-      className="border-none font-medium"
-    />
+    <Badge variant={order.priority} size="sm" className="border-none font-medium" />
   );
 
-  const renderStatus = (order: Order) => (
-    <Badge
-      variant={order.overallStatus}
-      size="sm"
-    />
-  );
+  const renderStatus = (order: Order) => <Badge variant={order.overallStatus} size="sm" />;
 
   const renderTotalPrice = (order: Order) => (
-    <div className="font-medium text-sky-600 truncate">
-      {formatCurrency(order.totalPrice)}
-    </div>
+    <div className="font-medium text-sky-600 truncate">{formatCurrency(order.totalPrice)}</div>
   );
 
-  const renderPaymentStatus = (order: Order) => (
-    <Badge
-      variant={order.paymentStatus}
-      size="sm"
-    />
-  );
+  const renderPaymentStatus = (order: Order) => <Badge variant={order.paymentStatus} size="sm" />;
 
   const renderOrderDate = (order: Order) => (
-    <div className="text-xs text-gray-500 truncate">
-      {formatDate(order.orderDate)}
-    </div>
+    <div className="text-xs text-gray-500 truncate">{formatDate(order.orderDate)}</div>
   );
 
   const renderActions = (order: Order) => (

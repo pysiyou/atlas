@@ -1,9 +1,9 @@
 /**
  * PatientFilters Component
- * 
+ *
  * Provides comprehensive filtering controls for the patients list using the new filter architecture.
  * Uses config-driven approach with FilterBar component.
- * 
+ *
  * @module features/patient
  */
 
@@ -41,10 +41,10 @@ export interface PatientFiltersProps {
 
 /**
  * PatientFilters Component
- * 
+ *
  * Composes FilterBar with patient-specific configuration.
  * Maps between legacy prop interface and new filter value structure.
- * 
+ *
  * @component
  */
 export const PatientFilters: React.FC<PatientFiltersProps> = ({
@@ -89,10 +89,6 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   };
 
   return (
-    <FilterBar
-      config={patientFilterConfig}
-      value={filterValues}
-      onChange={handleFilterChange}
-    />
+    <FilterBar config={patientFilterConfig} value={filterValues} onChange={handleFilterChange} />
   );
 };

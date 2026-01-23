@@ -8,7 +8,10 @@ import type { Patient, Order } from '@/types';
 /**
  * Formats a date to a readable string
  */
-export const formatDetailDate = (date: string | Date, format: 'long' | 'short' = 'long'): string => {
+export const formatDetailDate = (
+  date: string | Date,
+  format: 'long' | 'short' = 'long'
+): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
 
   if (format === 'long') {
@@ -39,11 +42,9 @@ export const formatList = (items: string[] | undefined, fallback: string = 'None
  */
 export const formatAddress = (address: Patient['address']): string => {
   if (!address) return 'N/A';
-  const parts = [
-    address.street || 'N/A',
-    address.city || '',
-    address.postalCode || '',
-  ].filter(Boolean);
+  const parts = [address.street || 'N/A', address.city || '', address.postalCode || ''].filter(
+    Boolean
+  );
   return parts.join(', ') || 'N/A';
 };
 
@@ -51,9 +52,7 @@ export const formatAddress = (address: Patient['address']): string => {
  * Gets reportable orders (orders with validated tests)
  */
 export const getReportableOrders = (orders: Order[]): Order[] => {
-  return orders.filter((order) =>
-    order.tests.some((test) => test.status === 'validated'),
-  );
+  return orders.filter(order => order.tests.some(test => test.status === 'validated'));
 };
 
 /**

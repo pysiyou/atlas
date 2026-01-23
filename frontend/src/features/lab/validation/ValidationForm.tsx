@@ -27,13 +27,13 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   onCommentsChange,
   onApprove,
   // Props available for future use when rejection UI is implemented
-   
+
   onReject: _onReject,
-   
+
   testName: _testName,
-   
+
   testCode: _testCode,
-   
+
   patientName: _patientName,
 }) => {
   const hasResults = results && Object.keys(results).length > 0;
@@ -49,10 +49,15 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
               <div key={key} className="flex items-center justify-between py-2">
                 <span className="text-xs font-medium text-gray-600">{key}</span>
                 <div className="flex items-center gap-3">
-                  <span className={`text-xs ${
-                    result.status === 'high' || result.status === 'low' ? 'text-amber-600' :
-                    result.status === 'critical' ? 'text-red-600 font-bold' : 'text-gray-900'
-                  }`}>
+                  <span
+                    className={`text-xs ${
+                      result.status === 'high' || result.status === 'low'
+                        ? 'text-amber-600'
+                        : result.status === 'critical'
+                          ? 'text-red-600 font-bold'
+                          : 'text-gray-900'
+                    }`}
+                  >
                     {result.value}{' '}
                     <span className="text-xs text-gray-400 font-sans ml-0.5">{result.unit}</span>
                   </span>
@@ -95,8 +100,8 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
         <Textarea
           label="Validation Notes"
           value={comments}
-          onChange={(e) => onCommentsChange(e.target.value)}
-          onKeyDown={(e) => {
+          onChange={e => onCommentsChange(e.target.value)}
+          onKeyDown={e => {
             if (e.ctrlKey && e.key === 'Enter') {
               e.preventDefault();
               onApprove();
@@ -105,9 +110,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
           placeholder="Add validation notes..."
           rows={2}
         />
-        <span className="text-xs text-gray-400 hidden sm:inline-block">
-          Ctrl+Enter to approve
-        </span>
+        <span className="text-xs text-gray-400 hidden sm:inline-block">Ctrl+Enter to approve</span>
       </div>
     </div>
   );

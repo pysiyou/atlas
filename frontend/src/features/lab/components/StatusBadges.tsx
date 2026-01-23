@@ -1,6 +1,6 @@
 /**
  * StatusBadges - Reusable badge components for lab workflows
- * 
+ *
  * Provides consistent badge rendering across cards and modals.
  * Centralized components for:
  * - Container info display
@@ -12,7 +12,7 @@
 import React from 'react';
 import { Badge, Icon } from '@/shared/ui';
 import { formatDate, getContainerIconColor } from '@/utils';
-import { useUsers } from '@/hooks';
+import { useUserLookup } from '@/hooks/queries';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 
@@ -37,10 +37,7 @@ export const ContainerInfo: React.FC<ContainerInfoProps> = ({
   const iconSize = size === 'sm' ? 'w-6 h-6' : 'w-7 h-7';
 
   return (
-    <span
-      className="flex items-center"
-      title={`Container: ${containerType}, Color: ${colorName}`}
-    >
+    <span className="flex items-center" title={`Container: ${containerType}, Color: ${colorName}`}>
       <Icon
         name={containerType === 'cup' ? 'lab-cup' : 'lab-tube'}
         className={`${iconSize} ${containerColor ? getContainerIconColor(containerColor) : 'text-gray-400'}`}
@@ -65,7 +62,7 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
   collectedBy,
   className = 'text-xs text-gray-500',
 }) => {
-  const { getUserName } = useUsers();
+  const { getUserName } = useUserLookup();
 
   if (!collectedAt) return null;
 
@@ -180,10 +177,7 @@ export const ResultStatusBadge: React.FC<ResultStatusBadgeProps> = ({ status }) 
   if (status === 'normal') return null;
 
   return (
-    <Badge
-      size="xs"
-      variant={status === 'critical' ? 'danger' : 'warning'}
-    >
+    <Badge size="xs" variant={status === 'critical' ? 'danger' : 'warning'}>
       {status.toUpperCase()}
     </Badge>
   );
@@ -203,7 +197,7 @@ export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
   enteredBy,
   className = 'text-xs text-gray-500',
 }) => {
-  const { getUserName } = useUsers();
+  const { getUserName } = useUserLookup();
 
   if (!enteredAt) return null;
 

@@ -1,12 +1,12 @@
 /**
  * IconButton Component
- * 
+ *
  * Fully rounded button with icon only - used for close buttons, action icons, etc.
  * Supports semantic variants that bundle icon + styling together.
- * 
+ *
  * Usage:
  *   <IconButton variant="close" />           // Cross icon + danger style
- *   <IconButton variant="approve" />         // Check icon + success style  
+ *   <IconButton variant="approve" />         // Check icon + success style
  *   <IconButton variant="primary" icon={<Icon name="custom" />} />  // Custom icon + primary style
  */
 
@@ -21,11 +21,28 @@ type BaseVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'warning';
 /**
  * Semantic action variants (bundled icon + style)
  */
-type SemanticVariant = 
-  | 'close' | 'confirm' | 'approve' | 'delete' | 'reject' | 'remove'
-  | 'add' | 'edit' | 'print' | 'view' | 'download'
-  | 'next' | 'previous' | 'expand' | 'collapse' | 'menu'
-  | 'search' | 'filter' | 'refresh' | 'save' | 'logout';
+type SemanticVariant =
+  | 'close'
+  | 'confirm'
+  | 'approve'
+  | 'delete'
+  | 'reject'
+  | 'remove'
+  | 'add'
+  | 'edit'
+  | 'print'
+  | 'view'
+  | 'download'
+  | 'next'
+  | 'previous'
+  | 'expand'
+  | 'collapse'
+  | 'menu'
+  | 'search'
+  | 'filter'
+  | 'refresh'
+  | 'save'
+  | 'logout';
 
 /**
  * All available icon button variants
@@ -53,38 +70,38 @@ interface VariantConfig {
 const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   // Close/Cancel actions
   close: { style: 'danger', icon: 'cross' },
-  
+
   // Confirmation actions
   confirm: { style: 'success', icon: 'check' },
   approve: { style: 'success', icon: 'check' },
   save: { style: 'primary', icon: 'save' },
-  
+
   // Destructive actions
   delete: { style: 'danger', icon: 'trash' },
   reject: { style: 'danger', icon: 'trash' },
-  
+
   // CRUD actions
   add: { style: 'primary', icon: 'plus' },
   edit: { style: 'primary', icon: 'pen' },
   view: { style: 'secondary', icon: 'eye' },
-  
+
   // Utility actions
   print: { style: 'secondary', icon: 'printer' },
   download: { style: 'secondary', icon: 'download' },
   search: { style: 'primary', icon: 'search' },
   filter: { style: 'secondary', icon: 'filter' },
   refresh: { style: 'secondary', icon: 'loading' },
-  
+
   // Navigation actions
   next: { style: 'primary', icon: 'chevron-right' },
   previous: { style: 'secondary', icon: 'chevron-left' },
   expand: { style: 'secondary', icon: 'chevron-down' },
   collapse: { style: 'secondary', icon: 'chevron-left' },
   menu: { style: 'secondary', icon: 'more-vertical' },
-  
+
   // User actions
   logout: { style: 'danger', icon: 'log-out' },
-  
+
   // Item actions
   remove: { style: 'danger', icon: 'cross' },
 };
@@ -156,7 +173,7 @@ interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 
 
 /**
  * IconButton Component
- * 
+ *
  * Renders an icon-only button with semantic variants that bundle icon + styling.
  * For semantic variants, the icon is automatically provided.
  * For base variants, a custom icon must be provided via the icon prop.
@@ -166,22 +183,22 @@ export const IconButton = memo(
     ({ icon, variant = 'primary', size = 'md', className = '', disabled, ...props }, ref) => {
       // Determine the actual style to apply
       const baseStyle = getBaseStyle(variant);
-      
+
       // Determine which icon to render
       const defaultIconName = getDefaultIcon(variant);
-      
+
       // Render the icon element
       const renderIconElement = () => {
         // Custom icon takes precedence
         if (icon) {
           return icon;
         }
-        
+
         // Use default icon from variant config
         if (defaultIconName) {
           return <Icon name={defaultIconName} />;
         }
-        
+
         // No icon available (shouldn't happen with semantic variants)
         return null;
       };

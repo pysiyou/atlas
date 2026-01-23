@@ -1,10 +1,10 @@
 /**
  * PaymentList Component - Migrated to use ListView
- * 
+ *
  * Displays a list of orders with payment information.
  * Uses TanStack Query hooks for efficient data fetching and caching.
  * Now uses shared ListView component for consistent UX.
- * 
+ *
  * Row clicks open a PaymentDetailModal with full order/payment info.
  */
 
@@ -21,12 +21,12 @@ import type { PaymentStatus, PaymentMethod } from '@/types';
 
 /**
  * PaymentList Component
- * 
+ *
  * Benefits of ListView migration:
  * - Reduced code by ~60 lines
  * - Consistent UX with other list views
  * - Built-in loading/error/empty states
- * 
+ *
  * Row click opens PaymentDetailModal for full payment processing.
  */
 export const PaymentList: React.FC = () => {
@@ -39,21 +39,29 @@ export const PaymentList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Use shared query hooks - data is cached and shared across components
-  const { orders, isLoading: ordersLoading, isError: ordersError, error: ordersErrorObj, refetch } = useOrdersList();
+  const {
+    orders,
+    isLoading: ordersLoading,
+    isError: ordersError,
+    error: ordersErrorObj,
+    refetch,
+  } = useOrdersList();
   const { payments, isLoading: paymentsLoading } = usePaymentsList();
 
   // Combined loading state
   const isLoading = ordersLoading || paymentsLoading;
 
   // Format error for ErrorAlert component
-  const error = ordersError ? {
-    message: ordersErrorObj instanceof Error ? ordersErrorObj.message : 'Failed to load data',
-    operation: 'load' as const,
-  } : null;
+  const error = ordersError
+    ? {
+        message: ordersErrorObj instanceof Error ? ordersErrorObj.message : 'Failed to load data',
+        operation: 'load' as const,
+      }
+    : null;
 
   // Cross-reference orders with payment data using centralized helper
-  const orderPaymentDetailsList = useMemo(() => 
-    createOrderPaymentDetailsList(orders, payments),
+  const orderPaymentDetailsList = useMemo(
+    () => createOrderPaymentDetailsList(orders, payments),
     [orders, payments]
   );
 
@@ -63,20 +71,17 @@ export const PaymentList: React.FC = () => {
     searchQuery,
     setSearchQuery,
     statusFilters,
-    setStatusFilters
+    setStatusFilters,
   } = useFiltering<OrderPaymentDetails, PaymentStatus>(orderPaymentDetailsList, {
-    searchFields: (item) => [
-      item.orderId.toString(),
-      item.patientName || '',
-    ],
+    searchFields: item => [item.orderId.toString(), item.patientName || ''],
     statusField: 'paymentStatus',
-    defaultSort: { field: 'orderDate', direction: 'desc' }
+    defaultSort: { field: 'orderDate', direction: 'desc' },
   });
 
   // Apply payment method and date range filters
   const filteredOrders = useMemo(() => {
     let filtered = preFilteredOrders;
-    
+
     // Apply date range filter
     if (dateRange) {
       const [start, end] = dateRange;
@@ -84,28 +89,25 @@ export const PaymentList: React.FC = () => {
       endDate.setHours(23, 59, 59, 999);
       const startDate = new Date(start);
       startDate.setHours(0, 0, 0, 0);
-      
+
       filtered = filtered.filter(item => {
         const orderDate = new Date(item.orderDate);
         return orderDate >= startDate && orderDate <= endDate;
       });
     }
-    
+
     // Apply payment method filter
     if (methodFilters.length > 0) {
-      filtered = filtered.filter(item => 
-        item.paymentMethod && methodFilters.includes(item.paymentMethod)
+      filtered = filtered.filter(
+        item => item.paymentMethod && methodFilters.includes(item.paymentMethod)
       );
     }
-    
+
     return filtered;
   }, [preFilteredOrders, dateRange, methodFilters]);
 
   // Memoize table config to prevent recreation on every render
-  const paymentTableConfig = useMemo(
-    () => createPaymentTableConfig(navigate),
-    [navigate]
-  );
+  const paymentTableConfig = useMemo(() => createPaymentTableConfig(navigate), [navigate]);
 
   const handleDismissError = () => {
     // Error will be cleared on next successful fetch

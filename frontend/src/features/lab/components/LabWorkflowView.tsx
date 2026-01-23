@@ -1,6 +1,6 @@
 /**
  * LabWorkflowView - Shared layout for lab workflow pages
- * 
+ *
  * Provides consistent structure for SampleCollectionView, ResultEntryView, and ResultValidationView:
  * - Header with title and optional filters
  * - Search bar
@@ -38,7 +38,7 @@ interface LabWorkflowViewProps<T> {
 
 /**
  * LabWorkflowView provides the shared layout for all lab workflow pages
- * 
+ *
  * Structure:
  * - Header row: Title + Filters (left), Search (right)
  * - Content: Grid of cards or empty state
@@ -79,7 +79,7 @@ export function LabWorkflowView<T>({
           <div className="w-full md:w-72">
             <SearchBar
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               placeholder={searchPlaceholder}
               size="sm"
             />
@@ -88,20 +88,19 @@ export function LabWorkflowView<T>({
       </div>
 
       {/* Content */}
-      <div className={`flex-1 ${showEmptyState ? 'flex flex-col' : 'grid gap-4 content-start overflow-y-auto min-h-0'}`}>
-        {!showEmptyState && filteredItems.map((item, idx) => (
-          <React.Fragment key={getItemKey(item, idx)}>
-            {renderCard(item, idx, filteredItems)}
-          </React.Fragment>
-        ))}
+      <div
+        className={`flex-1 ${showEmptyState ? 'flex flex-col' : 'grid gap-4 content-start overflow-y-auto min-h-0'}`}
+      >
+        {!showEmptyState &&
+          filteredItems.map((item, idx) => (
+            <React.Fragment key={getItemKey(item, idx)}>
+              {renderCard(item, idx, filteredItems)}
+            </React.Fragment>
+          ))}
 
         {!hasItems && (
           <div className="flex-1">
-            <EmptyState
-              icon={emptyIcon}
-              title={emptyTitle}
-              description={emptyDescription}
-            />
+            <EmptyState icon={emptyIcon} title={emptyTitle} description={emptyDescription} />
           </div>
         )}
 
@@ -125,12 +124,14 @@ export function LabWorkflowView<T>({
  * Note: This utility function is intentionally co-located with LabWorkflowView
  */
 // eslint-disable-next-line react-refresh/only-export-components
-export function createLabItemFilter<T extends {
-  orderId?: string | number;
-  patientName?: string;
-  testName?: string;
-  sampleId?: string | number;
-}>(extraFields?: (item: T) => string[]): (item: T, query: string) => boolean {
+export function createLabItemFilter<
+  T extends {
+    orderId?: string | number;
+    patientName?: string;
+    testName?: string;
+    sampleId?: string | number;
+  },
+>(extraFields?: (item: T) => string[]): (item: T, query: string) => boolean {
   return (item: T, query: string): boolean => {
     const lowerQuery = query.toLowerCase();
     const baseFields = [

@@ -1,6 +1,6 @@
 /**
  * Shared Components
- * 
+ *
  * Centralized exports for all shared components.
  */
 

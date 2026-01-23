@@ -72,7 +72,7 @@ export const useLoginForm = () => {
     }
   };
 
-  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+  const togglePasswordVisibility = () => setShowPassword(prev => !prev);
 
   const clearError = () => {
     if (error) setError('');

@@ -1,6 +1,6 @@
 /**
  * SectionGrid - Responsive grid layout for sections
- * 
+ *
  * Provides a consistent grid layout for organizing section cards.
  * Automatically responsive based on screen size.
  */
@@ -33,7 +33,7 @@ const COLUMN_CLASSES = {
 
 /**
  * SectionGrid component
- * 
+ *
  * @example
  * ```tsx
  * <SectionGrid columns={2} gap="md">

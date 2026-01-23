@@ -5,8 +5,8 @@
 
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { usePatients, useResponsiveLayout } from '@/hooks';
-import { useOrders } from '@/features/order/OrderContext';
+import { useResponsiveLayout } from '@/hooks';
+import { usePatient, useOrdersByPatient } from '@/hooks/queries';
 import { EditPatientModal } from './EditPatientModal';
 import {
   PatientHeader,
@@ -19,21 +19,20 @@ export const PatientDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
-  const patientsContext = usePatients();
-  const ordersContext = useOrders();
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
 
-  // Early returns for loading and error states
-  if (!patientsContext || !ordersContext) {
+  // Use TanStack Query hooks
+  const { patient, isLoading: patientLoading } = usePatient(id);
+  const { orders: patientOrders, isLoading: ordersLoading } = useOrdersByPatient(id);
+
+  // Loading state
+  if (patientLoading || ordersLoading) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-gray-600">Loading...</div>
       </div>
     );
   }
-
-  const { getPatient } = patientsContext;
-  const patient = id ? getPatient(id) : null;
 
   if (!patient) {
     return (
@@ -44,9 +43,6 @@ export const PatientDetail: React.FC = () => {
       </div>
     );
   }
-
-  // Get patient orders
-  const patientOrders = ordersContext.getOrdersByPatient(patient.id);
 
   // Event handlers
   const handleEdit = () => setIsEditModalOpen(true);

@@ -9,16 +9,16 @@
  * Action to take when rejecting a result or sample
  */
 export type RejectionAction =
-  | 'retest_same_sample'      // Use existing sample, run test again
-  | 'recollect_new_sample'    // Get new sample from patient
-  | 'escalate';               // Limits exceeded, need supervisor
+  | 'retest_same_sample' // Use existing sample, run test again
+  | 'recollect_new_sample' // Get new sample from patient
+  | 'escalate'; // Limits exceeded, need supervisor
 
 /**
  * Source of the rejection
  */
 export type RejectionSource =
-  | 'sample_collection'   // Rejected during/after collection
-  | 'result_validation';  // Rejected during result validation
+  | 'sample_collection' // Rejected during/after collection
+  | 'result_validation'; // Rejected during result validation
 
 /**
  * Lab operation types for audit tracking

@@ -2,11 +2,11 @@
  * Billing and Financial Management Types
  */
 
-export type PaymentMethod = 
-  | 'cash' 
-  | 'credit-card' 
-  | 'debit-card' 
-  | 'insurance' 
+export type PaymentMethod =
+  | 'cash'
+  | 'credit-card'
+  | 'debit-card'
+  | 'insurance'
   | 'bank-transfer'
   | 'mobile-money';
 
@@ -28,7 +28,7 @@ export interface PaymentMethodOption {
 /**
  * All available payment methods with their configuration
  * Single source of truth - update this array to change payment options across the app
- * 
+ *
  * To enable/disable a payment method, change the `enabled` flag.
  */
 export const PAYMENT_METHOD_OPTIONS: PaymentMethodOption[] = [
@@ -55,12 +55,7 @@ export const getDefaultPaymentMethod = (): PaymentMethod => {
   return enabledMethods.length > 0 ? enabledMethods[0].value : 'cash';
 };
 
-export type ClaimStatus = 
-  | 'submitted' 
-  | 'processing' 
-  | 'approved' 
-  | 'denied' 
-  | 'paid';
+export type ClaimStatus = 'submitted' | 'processing' | 'approved' | 'denied' | 'paid';
 
 export interface InvoiceItem {
   testCode: string;

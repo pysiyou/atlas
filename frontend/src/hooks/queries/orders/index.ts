@@ -1,6 +1,6 @@
 /**
  * Centralized exports for order hooks
- * 
+ *
  * Organized into three categories:
  * - Queries: Data fetching hooks
  * - Mutations: Data modification hooks

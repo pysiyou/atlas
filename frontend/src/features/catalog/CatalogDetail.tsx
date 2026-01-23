@@ -1,6 +1,6 @@
 /**
  * CatalogDetail Component
- * 
+ *
  * Displays comprehensive details about a single test from the catalog.
  * Uses BalancedDetailsLayout for automatic table arrangement.
  */
@@ -146,7 +146,7 @@ export const CatalogDetail: React.FC = () => {
     tables.push({
       key: 'parameters',
       title: `Result Parameters (${test.parameters.length})`,
-      rows: test.parameters.map((param) => ({
+      rows: test.parameters.map(param => ({
         label: param.code,
         value: `${param.name}${param.unit ? ` (${param.unit})` : ''}${param.referenceRange ? ` — ${param.referenceRange}` : ''}`,
       })),
@@ -159,18 +159,25 @@ export const CatalogDetail: React.FC = () => {
       key: 'ranges',
       title: `Reference Ranges (${test.referenceRanges.length})`,
       rows: test.referenceRanges.map((range, idx) => {
-        const rangeStr = range.text || 
-          (range.min !== undefined && range.max !== undefined ? `${range.min} - ${range.max}` :
-           range.min !== undefined ? `≥ ${range.min}` :
-           range.max !== undefined ? `≤ ${range.max}` : 'N/A');
-        
+        const rangeStr =
+          range.text ||
+          (range.min !== undefined && range.max !== undefined
+            ? `${range.min} - ${range.max}`
+            : range.min !== undefined
+              ? `≥ ${range.min}`
+              : range.max !== undefined
+                ? `≤ ${range.max}`
+                : 'N/A');
+
         const genderStr = range.gender ? ` (${capitalize(range.gender)})` : '';
-        const ageStr = range.ageMin !== undefined || range.ageMax !== undefined
-          ? ` [${range.ageMin ?? 0}-${range.ageMax ?? '∞'} yrs]`
-          : '';
-        const criticalStr = range.criticalLow !== undefined || range.criticalHigh !== undefined
-          ? ` Critical: ${range.criticalLow !== undefined ? `<${range.criticalLow}` : ''}${range.criticalLow !== undefined && range.criticalHigh !== undefined ? ' / ' : ''}${range.criticalHigh !== undefined ? `>${range.criticalHigh}` : ''}`
-          : '';
+        const ageStr =
+          range.ageMin !== undefined || range.ageMax !== undefined
+            ? ` [${range.ageMin ?? 0}-${range.ageMax ?? '∞'} yrs]`
+            : '';
+        const criticalStr =
+          range.criticalLow !== undefined || range.criticalHigh !== undefined
+            ? ` Critical: ${range.criticalLow !== undefined ? `<${range.criticalLow}` : ''}${range.criticalLow !== undefined && range.criticalHigh !== undefined ? ' / ' : ''}${range.criticalHigh !== undefined ? `>${range.criticalHigh}` : ''}`
+            : '';
 
         return {
           label: `Range ${idx + 1}${genderStr}${ageStr}`,
@@ -194,11 +201,7 @@ export const CatalogDetail: React.FC = () => {
 
       {/* Main Content - Balanced Layout */}
       <div className="flex-1 overflow-y-auto min-h-0">
-        <BalancedDetailsLayout
-          tables={tables}
-          columns={getColumnCount()}
-          className="pb-6"
-        />
+        <BalancedDetailsLayout tables={tables} columns={getColumnCount()} className="pb-6" />
       </div>
     </div>
   );

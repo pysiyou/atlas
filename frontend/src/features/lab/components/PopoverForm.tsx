@@ -1,6 +1,6 @@
 /**
  * PopoverForm - Reusable popover form container
- * 
+ *
  * Provides a consistent structure for all lab workflow popovers:
  * - Header with title, subtitle, and close button
  * - Scrollable body area for form content
@@ -38,7 +38,7 @@ interface PopoverFormProps {
 
 /**
  * PopoverForm provides the shared structure for lab workflow popovers
- * 
+ *
  * Structure:
  * - Header: title, subtitle, close button
  * - Body: scrollable content area
@@ -65,27 +65,14 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
       <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-start justify-between">
         <div className="space-y-0.5">
           <h4 className="font-medium text-gray-900">{title}</h4>
-          {subtitle && (
-            <p className="text-xs text-gray-500">{subtitle}</p>
-          )}
-          {headerBadges && (
-            <div className="flex items-center gap-2 pt-1">
-              {headerBadges}
-            </div>
-          )}
+          {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
+          {headerBadges && <div className="flex items-center gap-2 pt-1">{headerBadges}</div>}
         </div>
-        <IconButton
-          onClick={onCancel}
-          variant="close"
-          size="sm"
-          title="Close"
-        />
+        <IconButton onClick={onCancel} variant="close" size="sm" title="Close" />
       </div>
 
       {/* Body - scrollable content area */}
-      <div className="p-4 space-y-4 overflow-y-auto flex-1">
-        {children}
-      </div>
+      <div className="p-4 space-y-4 overflow-y-auto flex-1">{children}</div>
 
       {/* Footer */}
       <div className="p-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-2 shrink-0">
@@ -155,25 +142,35 @@ export const RadioCard: React.FC<RadioCardProps> = ({
   disabled = false,
   disabledReason,
 }) => {
-  const selectedStyles = variant === 'red'
-    ? 'bg-red-50 border-red-200 ring-1 ring-red-200'
-    : 'bg-blue-50 border-blue-200 ring-1 ring-blue-200';
-  
+  const selectedStyles =
+    variant === 'red'
+      ? 'bg-red-50 border-red-200 ring-1 ring-red-200'
+      : 'bg-blue-50 border-blue-200 ring-1 ring-blue-200';
+
   const disabledStyles = 'bg-gray-100 border-gray-200 cursor-not-allowed opacity-60';
-  
+
   const labelColor = disabled
     ? 'text-gray-400'
     : variant === 'red'
-      ? (selected ? 'text-red-900' : 'text-gray-900')
-      : (selected ? 'text-blue-900' : 'text-gray-900');
-  
+      ? selected
+        ? 'text-red-900'
+        : 'text-gray-900'
+      : selected
+        ? 'text-blue-900'
+        : 'text-gray-900';
+
   const descColor = disabled
     ? 'text-gray-400'
     : variant === 'red'
-      ? (selected ? 'text-red-700' : 'text-gray-500')
-      : (selected ? 'text-blue-700' : 'text-gray-500');
+      ? selected
+        ? 'text-red-700'
+        : 'text-gray-500'
+      : selected
+        ? 'text-blue-700'
+        : 'text-gray-500';
 
-  const radioColor = variant === 'red' ? 'text-red-600 focus:ring-red-500' : 'text-blue-600 focus:ring-blue-500';
+  const radioColor =
+    variant === 'red' ? 'text-red-600 focus:ring-red-500' : 'text-blue-600 focus:ring-blue-500';
 
   const handleClick = () => {
     if (!disabled) {
@@ -185,11 +182,12 @@ export const RadioCard: React.FC<RadioCardProps> = ({
     <div
       className={`
         relative flex items-start p-3 rounded-lg border transition-all duration-200
-        ${disabled 
-          ? disabledStyles 
-          : selected 
-            ? selectedStyles 
-            : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50 cursor-pointer'
+        ${
+          disabled
+            ? disabledStyles
+            : selected
+              ? selectedStyles
+              : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50 cursor-pointer'
         }
       `}
       onClick={handleClick}
@@ -239,9 +237,10 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
   <div
     className={`
       relative flex items-start p-3 cursor-pointer rounded-lg border transition-all duration-200
-      ${checked
-        ? 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
-        : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+      ${
+        checked
+          ? 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
+          : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
       }
     `}
     onClick={onChange}

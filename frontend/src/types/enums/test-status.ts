@@ -1,7 +1,7 @@
 /**
  * Test Status - Single Source of Truth
  * Aligned with backend enum values
- * 
+ *
  * Note: Badge colors for test status are defined in the Badge component.
  * Use the status value directly as the Badge variant (e.g., variant="pending").
  */
@@ -11,10 +11,10 @@ export const TEST_STATUS_VALUES = [
   'pending',
   'sample-collected',
   'in-progress',
-  'resulted',     // Results entered, awaiting validation
+  'resulted', // Results entered, awaiting validation
   'validated',
   'rejected',
-  'superseded',   // Original test after retest is created during result validation rejection
+  'superseded', // Original test after retest is created during result validation rejection
 ] as const;
 
 // 2. TYPE - Derived from values
@@ -32,7 +32,7 @@ export const TEST_STATUS_CONFIG: Record<TestStatus, { label: string }> = {
 };
 
 // 4. OPTIONS - For dropdowns/selects
-export const TEST_STATUS_OPTIONS = TEST_STATUS_VALUES.map((value) => ({
+export const TEST_STATUS_OPTIONS = TEST_STATUS_VALUES.map(value => ({
   value,
   label: TEST_STATUS_CONFIG[value].label,
 }));

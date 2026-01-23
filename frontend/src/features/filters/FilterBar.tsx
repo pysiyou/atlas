@@ -5,7 +5,14 @@
 
 import React, { useMemo } from 'react';
 import { useFilterState, useQuickFilters } from './hooks';
-import { SearchControl, DateRangeControl, AgeRangeControl, PriceRangeControl, MultiSelectControl, SingleSelectControl } from './filter-controls';
+import {
+  SearchControl,
+  DateRangeControl,
+  AgeRangeControl,
+  PriceRangeControl,
+  MultiSelectControl,
+  SingleSelectControl,
+} from './filter-controls';
 import { ActiveFilterBadges } from './ActiveFilterBadges';
 import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
@@ -27,30 +34,19 @@ export interface FilterBarProps {
 
 /**
  * FilterBar Component
- * 
+ *
  * Main container component that provides:
  * - Search control (always visible)
  * - Quick filter presets
  * - Active filter badges
  * - Primary filter section
  * - Advanced filter section (collapsible)
- * 
+ *
  * @component
  */
-export const FilterBar: React.FC<FilterBarProps> = ({
-  config,
-  value,
-  onChange,
-  className,
-}) => {
+export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, className }) => {
   // Use filter state management
-  const {
-    filters,
-    setFilter,
-    clearFilter,
-    clearAll,
-    isFilterActive,
-  } = useFilterState({
+  const { filters, setFilter, clearFilter, clearAll, isFilterActive } = useFilterState({
     initialFilters: value,
     onChange,
   });
@@ -59,10 +55,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   const { applyPreset, activePresetId } = useQuickFilters({
     presets: config.quickFilters || [],
     filters,
-    onApplyPreset: (preset) => {
+    onApplyPreset: preset => {
       // Merge preset values with current filters
       const merged = { ...filters, ...preset.preset };
-      Object.keys(merged).forEach((key) => {
+      Object.keys(merged).forEach(key => {
         setFilter(key, merged[key]);
       });
     },
@@ -75,7 +71,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     const badges: ActiveFilterBadge[] = [];
 
     // Check primary filters
-    config.primaryFilters.controls.forEach((control) => {
+    config.primaryFilters.controls.forEach(control => {
       const filterValue = filters[control.key];
       if (isFilterActive(control.key) && filterValue !== undefined) {
         badges.push({
@@ -89,7 +85,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
     // Check advanced filters
     if (config.advancedFilters) {
-      config.advancedFilters.controls.forEach((control) => {
+      config.advancedFilters.controls.forEach(control => {
         const filterValue = filters[control.key];
         if (isFilterActive(control.key) && filterValue !== undefined) {
           badges.push({
@@ -109,13 +105,13 @@ export const FilterBar: React.FC<FilterBarProps> = ({
    * Count active filters in a section
    */
   const countActiveInSection = (controls: typeof config.primaryFilters.controls) => {
-    return controls.filter((control) => isFilterActive(control.key)).length;
+    return controls.filter(control => isFilterActive(control.key)).length;
   };
 
   /**
    * Render a filter control based on its type
    */
-  const renderControl = (control: typeof config.primaryFilters.controls[0]) => {
+  const renderControl = (control: (typeof config.primaryFilters.controls)[0]) => {
     const filterValue = filters[control.key];
 
     switch (control.type) {
@@ -124,7 +120,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <SearchControl
             key={control.key}
             value={(filterValue as string) || ''}
-            onChange={(val) => setFilter(control.key, val)}
+            onChange={val => setFilter(control.key, val)}
             placeholder={control.placeholder}
             debounceMs={control.debounceMs}
             className="w-full"
@@ -136,7 +132,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <DateRangeControl
             key={control.key}
             value={(filterValue as [Date, Date] | null) || null}
-            onChange={(val) => setFilter(control.key, val)}
+            onChange={val => setFilter(control.key, val)}
             config={control}
             className="w-full"
           />
@@ -147,7 +143,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <AgeRangeControl
             key={control.key}
             value={(filterValue as [number, number]) || [0, 150]}
-            onChange={(val) => setFilter(control.key, val)}
+            onChange={val => setFilter(control.key, val)}
             config={control}
             className="w-full"
           />
@@ -158,7 +154,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <PriceRangeControl
             key={control.key}
             value={(filterValue as [number, number]) || [control.min ?? 0, control.max ?? 10000]}
-            onChange={(val) => setFilter(control.key, val)}
+            onChange={val => setFilter(control.key, val)}
             config={control}
             className="w-full"
           />
@@ -169,7 +165,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <MultiSelectControl
             key={control.key}
             value={(filterValue as string[]) || []}
-            onChange={(val) => setFilter(control.key, val)}
+            onChange={val => setFilter(control.key, val)}
             config={control}
             className="w-full"
           />
@@ -180,7 +176,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <SingleSelectControl
             key={control.key}
             value={(filterValue as string | null) || null}
-            onChange={(val) => setFilter(control.key, val)}
+            onChange={val => setFilter(control.key, val)}
             config={control}
             className="w-full"
           />
@@ -192,12 +188,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   };
 
   // Get non-search controls
-  const nonSearchControls = config.primaryFilters.controls.filter(
-    (c) => c.type !== 'search'
-  );
-  const searchControl = config.primaryFilters.controls.find(
-    (c) => c.type === 'search'
-  );
+  const nonSearchControls = config.primaryFilters.controls.filter(c => c.type !== 'search');
+  const searchControl = config.primaryFilters.controls.find(c => c.type === 'search');
 
   return (
     <div className={`bg-white border-b border-gray-200 ${className || ''}`}>
@@ -225,7 +217,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {/* Primary filters - inline on desktop */}
           {nonSearchControls.length > 0 && (
             <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-              {nonSearchControls.map((control) => (
+              {nonSearchControls.map(control => (
                 <div key={control.key} className="w-full sm:w-auto sm:min-w-[200px]">
                   {renderControl(control)}
                 </div>
@@ -237,11 +229,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
       {/* Active filter badges - compact */}
       {activeBadges.length > 0 && (
-        <ActiveFilterBadges
-          badges={activeBadges}
-          onRemove={clearFilter}
-          onClearAll={clearAll}
-        />
+        <ActiveFilterBadges badges={activeBadges} onRemove={clearFilter} onClearAll={clearAll} />
       )}
 
       {/* Advanced filters section - collapsed by default */}
@@ -252,7 +240,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           defaultCollapsed={true}
           activeCount={countActiveInSection(config.advancedFilters.controls)}
         >
-          {config.advancedFilters.controls.map((control) => renderControl(control))}
+          {config.advancedFilters.controls.map(control => renderControl(control))}
         </FilterSection>
       )}
     </div>

@@ -7,11 +7,7 @@ import { ROW_HEIGHTS, CELL_PADDING, TEXT_SIZE } from './constants';
  * Table Skeleton Component
  * Shows loading skeleton for table rows
  */
-export function TableSkeleton({
-  columns,
-  rows,
-  variant,
-}: TableSkeletonProps) {
+export function TableSkeleton({ columns, rows, variant }: TableSkeletonProps) {
   const columnStyles = useColumnStyles(columns);
 
   return (
@@ -22,7 +18,7 @@ export function TableSkeleton({
           className="flex items-center border-b border-gray-100"
           style={{ height: `${ROW_HEIGHTS[variant]}px` }}
         >
-          {columns.map((column) => {
+          {columns.map(column => {
             const style = columnStyles.get(column.key) || {};
             // Vary skeleton width for visual interest
             const skeletonWidth = rowIndex % 3 === 0 ? '90%' : rowIndex % 3 === 1 ? '75%' : '85%';

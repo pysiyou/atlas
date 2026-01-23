@@ -11,20 +11,32 @@ import { Icon } from '@/shared/ui/Icon';
 
 export const Laboratory: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'collection' | 'entry' | 'validation'>('collection');
-  
+
   const tabs = [
-    { id: 'collection' as const, label: 'Sample Collection', icon: <Icon name="flask" className="w-4 h-4" /> },
-    { id: 'entry' as const, label: 'Result Entry', icon: <Icon name="notebook" className="w-4 h-4" /> },
-    { id: 'validation' as const, label: 'Validation', icon: <Icon name="shield-check" className="w-4 h-4" /> },
+    {
+      id: 'collection' as const,
+      label: 'Sample Collection',
+      icon: <Icon name="flask" className="w-4 h-4" />,
+    },
+    {
+      id: 'entry' as const,
+      label: 'Result Entry',
+      icon: <Icon name="notebook" className="w-4 h-4" />,
+    },
+    {
+      id: 'validation' as const,
+      label: 'Validation',
+      icon: <Icon name="shield-check" className="w-4 h-4" />,
+    },
   ];
-  
+
   return (
     <div className="h-full flex flex-col p-4 space-y-6">
       {/* Page Header */}
       <div className="shrink-0">
         <h1 className="text-2xl font-bold text-gray-900">Laboratory Operations</h1>
       </div>
-      
+
       {/* Main Content Card */}
       <div className="flex-1 flex flex-col bg-white rounded border border-gray-200 shadow-sm overflow-hidden min-h-0">
         {/* Tabs / Toolbar */}
@@ -38,13 +50,16 @@ export const Laboratory: React.FC = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`
                     relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200
-                    ${isActive 
-                      ? 'bg-white text-sky-700 shadow-sm shadow-gray-200 ring-1 ring-black/5' 
-                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'
+                    ${
+                      isActive
+                        ? 'bg-white text-sky-700 shadow-sm shadow-gray-200 ring-1 ring-black/5'
+                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'
                     }
                   `}
                 >
-                  <div className={`${isActive ? 'text-sky-600' : 'text-gray-400'} flex items-center`}>
+                  <div
+                    className={`${isActive ? 'text-sky-600' : 'text-gray-400'} flex items-center`}
+                  >
                     {tab.icon}
                   </div>
                   {tab.label}

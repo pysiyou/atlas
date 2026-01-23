@@ -1,6 +1,6 @@
 /**
  * Lab Utility Functions
- * 
+ *
  * Shared utility functions for lab workflow components.
  */
 

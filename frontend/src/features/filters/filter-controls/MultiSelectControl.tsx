@@ -24,9 +24,9 @@ export interface MultiSelectControlProps {
 
 /**
  * MultiSelectControl Component
- * 
+ *
  * Wraps the existing MultiSelectFilter component with the new filter control interface.
- * 
+ *
  * @component
  */
 export const MultiSelectControl: React.FC<MultiSelectControlProps> = ({

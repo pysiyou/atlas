@@ -3,8 +3,8 @@
  * Handles patient create and update operations with validation and error handling
  */
 
-import { useState } from 'react';
-import { usePatients, useAuth } from '@/hooks';
+import { useAuth } from '@/hooks';
+import { useCreatePatient, useUpdatePatient } from '@/hooks/queries';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import type { Patient } from '@/types';
@@ -18,8 +18,8 @@ export interface UsePatientMutationProps {
 
 export interface UsePatientMutationReturn {
   isSubmitting: boolean;
-  handleCreatePatient: (formData: PatientFormData) => Promise<void>;
-  handleUpdatePatient: (formData: PatientFormData, isRenewing: boolean) => Promise<void>;
+  handleCreatePatient: (formData: PatientFormData) => Promise<Patient>;
+  handleUpdatePatient: (formData: PatientFormData, isRenewing: boolean) => Promise<Patient>;
 }
 
 /**
@@ -30,8 +30,8 @@ export const usePatientMutation = ({
   onSuccess,
 }: UsePatientMutationProps): UsePatientMutationReturn => {
   const { currentUser } = useAuth();
-  const { addPatient, updatePatient } = usePatients();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const createPatientMutation = useCreatePatient();
+  const updatePatientMutation = useUpdatePatient();
 
   /**
    * Gets the current user ID as a number
@@ -45,20 +45,17 @@ export const usePatientMutation = ({
   /**
    * Handles patient creation
    */
-  const handleCreatePatient = async (formData: PatientFormData): Promise<void> => {
-    setIsSubmitting(true);
-
+  const handleCreatePatient = async (formData: PatientFormData): Promise<Patient> => {
     try {
       const newPatient = buildNewPatientPayload(formData, 0, getCurrentUserId());
-      await addPatient(newPatient);
+      const createdPatient = await createPatientMutation.mutateAsync(newPatient);
       toast.success(`Patient ${newPatient.fullName} registered successfully!`);
       onSuccess?.();
+      return createdPatient;
     } catch (error) {
       logger.error('Error creating patient', error instanceof Error ? error : undefined);
       toast.error('Failed to create patient');
       throw error;
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -68,13 +65,11 @@ export const usePatientMutation = ({
   const handleUpdatePatient = async (
     formData: PatientFormData,
     isRenewing: boolean
-  ): Promise<void> => {
+  ): Promise<Patient> => {
     if (!existingPatient) {
       toast.error('Missing patient data for edit');
-      return;
+      throw new Error('Missing patient data for edit');
     }
-
-    setIsSubmitting(true);
 
     try {
       const updatedPatient = buildUpdatedPatientPayload(
@@ -83,7 +78,10 @@ export const usePatientMutation = ({
         getCurrentUserId(),
         isRenewing
       );
-      await updatePatient(existingPatient.id, updatedPatient);
+      const result = await updatePatientMutation.mutateAsync({
+        id: existingPatient.id,
+        updates: updatedPatient,
+      });
 
       if (isRenewing) {
         toast.success('Affiliation renewed successfully');
@@ -91,17 +89,16 @@ export const usePatientMutation = ({
         toast.success('Patient updated successfully');
       }
       onSuccess?.();
+      return result;
     } catch (error) {
       logger.error('Error updating patient', error instanceof Error ? error : undefined);
       toast.error('Failed to update patient');
       throw error;
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   return {
-    isSubmitting,
+    isSubmitting: createPatientMutation.isPending || updatePatientMutation.isPending,
     handleCreatePatient,
     handleUpdatePatient,
   };

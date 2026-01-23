@@ -18,7 +18,7 @@ export const AFFILIATION_DURATION_CONFIG: Record<AffiliationDuration, { label: s
 };
 
 // 4. OPTIONS - For dropdowns/selects
-export const AFFILIATION_DURATION_OPTIONS = AFFILIATION_DURATION_VALUES.map((value) => ({
+export const AFFILIATION_DURATION_OPTIONS = AFFILIATION_DURATION_VALUES.map(value => ({
   value,
   label: AFFILIATION_DURATION_CONFIG[value].label,
 }));

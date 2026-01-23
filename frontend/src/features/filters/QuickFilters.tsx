@@ -24,10 +24,10 @@ export interface QuickFiltersProps {
 
 /**
  * QuickFilters Component
- * 
+ *
  * Displays pill-style buttons for quick filter presets.
  * Active preset is highlighted.
- * 
+ *
  * @component
  */
 export const QuickFilters: React.FC<QuickFiltersProps> = ({
@@ -42,9 +42,9 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
 
   return (
     <div className={cn('flex items-center gap-1.5 flex-wrap', className)}>
-      {presets.map((preset) => {
+      {presets.map(preset => {
         const isActive = activePresetId === preset.id;
-        
+
         return (
           <button
             key={preset.id}
@@ -57,9 +57,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
                 : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
             )}
           >
-            {preset.icon && (
-              <Icon name={preset.icon as IconName} className="w-3 h-3" />
-            )}
+            {preset.icon && <Icon name={preset.icon as IconName} className="w-3 h-3" />}
             <span>{preset.label}</span>
           </button>
         );

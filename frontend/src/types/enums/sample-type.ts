@@ -37,7 +37,7 @@ export const SAMPLE_TYPE_CONFIG: Record<
 };
 
 // 4. OPTIONS - For dropdowns/selects
-export const SAMPLE_TYPE_OPTIONS = SAMPLE_TYPE_VALUES.map((value) => ({
+export const SAMPLE_TYPE_OPTIONS = SAMPLE_TYPE_VALUES.map(value => ({
   value,
   label: SAMPLE_TYPE_CONFIG[value].label,
 }));
@@ -50,10 +50,10 @@ export const SAMPLE_TYPE_FILTER_OPTIONS = [
 
 // 6. Helper to get base sample types (non-derived)
 export const BASE_SAMPLE_TYPES = SAMPLE_TYPE_VALUES.filter(
-  (type) => !SAMPLE_TYPE_CONFIG[type].isDerived
+  type => !SAMPLE_TYPE_CONFIG[type].isDerived
 );
 
 // 7. Helper to get derived sample types
 export const DERIVED_SAMPLE_TYPES = SAMPLE_TYPE_VALUES.filter(
-  (type) => SAMPLE_TYPE_CONFIG[type].isDerived
+  type => SAMPLE_TYPE_CONFIG[type].isDerived
 );

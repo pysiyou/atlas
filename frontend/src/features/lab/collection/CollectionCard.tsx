@@ -1,6 +1,6 @@
 /**
  * CollectionCard - Card component for sample collection workflow
- * 
+ *
  * Displays sample information with collection/rejection actions.
  */
 
@@ -9,35 +9,49 @@ import { Badge, Icon, IconButton, Alert } from '@/shared/ui';
 import Barcode from 'react-barcode';
 import type { ContainerType, RejectedSample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
-import { usePatients, useTests, useSamples } from '@/hooks';
+import {
+  usePatientNameLookup,
+  useTestCatalog,
+  useRejectSample,
+} from '@/hooks/queries';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
-import { getPatientName, getTestNames } from '@/utils/typeHelpers';
+import { getTestNames } from '@/utils/typeHelpers';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import { LabCard, TestList } from '../components/LabCard';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
-import { handlePrintCollectionLabel, getEffectiveContainerType, formatRejectionReasons } from '../components/labUtils';
+import {
+  handlePrintCollectionLabel,
+  getEffectiveContainerType,
+  formatRejectionReasons,
+} from '../components/labUtils';
 import type { SampleDisplay } from '../types';
 import { orderHasValidatedTests } from '@/features/order/utils';
 
 interface CollectionCardProps {
   display: SampleDisplay;
-  onCollect: (display: SampleDisplay, volume: number, notes?: string, selectedColor?: string, containerType?: ContainerType) => void;
+  onCollect: (
+    display: SampleDisplay,
+    volume: number,
+    notes?: string,
+    selectedColor?: string,
+    containerType?: ContainerType
+  ) => void;
 }
 
 export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onCollect }) => {
   const { openModal } = useModal();
-  const { patients } = usePatients();
-  const { tests } = useTests();
-  const { rejectSample } = useSamples();
+  const { getPatientName } = usePatientNameLookup();
+  const { tests } = useTestCatalog();
+  const rejectSampleMutation = useRejectSample();
 
   const { sample, order, requirement } = display;
   if (!sample || !requirement) return null;
 
-  const patientName = getPatientName(order.patientId, patients);
+  const patientName = getPatientName(order.patientId);
   const testNames = requirement.testCodes ? getTestNames(requirement.testCodes, tests) : [];
 
   // Status flags
@@ -53,17 +67,26 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   const colorName = containerColor
     ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.name || 'N/A'
     : 'N/A';
-  const containerType = hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
+  const containerType =
+    hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
   const effectiveContainerType = getEffectiveContainerType(containerType, sample.sampleType);
 
   // Collection info
-  const collectedVolume = (isCollected || isRejected) && 'collectedVolume' in sample ? sample.collectedVolume : undefined;
-  const collectedAt = (isCollected || isRejected) && 'collectedAt' in sample ? sample.collectedAt : undefined;
-  const collectedBy = (isCollected || isRejected) && 'collectedBy' in sample ? sample.collectedBy : undefined;
+  const collectedVolume =
+    (isCollected || isRejected) && 'collectedVolume' in sample ? sample.collectedVolume : undefined;
+  const collectedAt =
+    (isCollected || isRejected) && 'collectedAt' in sample ? sample.collectedAt : undefined;
+  const collectedBy =
+    (isCollected || isRejected) && 'collectedBy' in sample ? sample.collectedBy : undefined;
 
   const handleCardClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    if (target.closest('button') || target.closest('input') || target.closest('form') || target.closest('[data-popover-content]')) {
+    if (
+      target.closest('button') ||
+      target.closest('input') ||
+      target.closest('form') ||
+      target.closest('[data-popover-content]')
+    ) {
       return;
     }
 
@@ -86,7 +109,10 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
           : `${formatVolume(collectedVolume!)} ${isRejected ? 'was collected' : 'collected'}`}
       </Badge>
       {(isCollected || isRejected) && containerColor && (
-        <span className="flex items-center" title={`Container: ${effectiveContainerType}, Color: ${colorName}`}>
+        <span
+          className="flex items-center"
+          title={`Container: ${effectiveContainerType}, Color: ${colorName}`}
+        >
           <Icon
             name={effectiveContainerType === 'cup' ? 'lab-cup' : 'lab-tube'}
             className={`w-6 h-6 ${getContainerIconColor(containerColor)}`}
@@ -100,7 +126,13 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
       )}
       {isCollected && sample.sampleId && (
         <div className="flex items-center">
-          <Barcode value={displayId.sample(sample.sampleId)} height={15} displayValue={false} background="transparent" margin={0} />
+          <Barcode
+            value={displayId.sample(sample.sampleId)}
+            height={15}
+            displayValue={false}
+            background="transparent"
+            margin={0}
+          />
         </div>
       )}
     </>
@@ -111,14 +143,18 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
 
   // Build actions
   const actions = (
-    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+    <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
       {isPending ? (
         <CollectionPopover
           requirement={requirement}
           patientName={patientName}
           testName={testNames.join(', ')}
-          isRecollection={isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)}
-          onConfirm={(volume, notes, color, containerType) => onCollect(display, volume, notes, color, containerType)}
+          isRecollection={
+            isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)
+          }
+          onConfirm={(volume, notes, color, containerType) =>
+            onCollect(display, volume, notes, color, containerType)
+          }
         />
       ) : isRejected ? (
         <Badge size="sm" variant="rejected" />
@@ -144,10 +180,22 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
                   rejectionHistoryCount={sample.rejectionHistory?.length || 0}
                   onReject={async (reasons, notes, requireRecollection) => {
                     try {
-                      await rejectSample(sample.sampleId.toString(), reasons, notes, requireRecollection);
-                      toast.success(requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected');
+                      await rejectSampleMutation.mutateAsync({
+                        sampleId: sample.sampleId.toString(),
+                        reasons,
+                        notes,
+                        requireRecollection,
+                      });
+                      toast.success(
+                        requireRecollection
+                          ? 'Sample rejected - recollection will be requested'
+                          : 'Sample rejected'
+                      );
                     } catch (error) {
-                      logger.error('Failed to reject sample', error instanceof Error ? error : undefined);
+                      logger.error(
+                        'Failed to reject sample',
+                        error instanceof Error ? error : undefined
+                      );
                       toast.error('Failed to reject sample');
                     }
                   }}
@@ -167,39 +215,45 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   );
 
   // Recollection banner (only for pending recollection samples)
-  const recollectionBanner = isPending && isRecollection ? (() => {
-    const rejectionCount = sample.rejectionHistory?.length || 0;
-    const lastRejection = sample.rejectionHistory?.[rejectionCount - 1];
-    const reasonsText = formatRejectionReasons(lastRejection?.rejectionReasons);
-    return (
-      <Alert variant="warning" className="py-2">
-        <div className="space-y-0.5">
-          <p className="font-medium text-xs">Recollection Required</p>
-          <p className="text-xxs opacity-90 leading-tight">
-            {reasonsText ? `Reason: ${reasonsText}.` : sample.recollectionReason || 'Previous sample was rejected.'}
-          </p>
-        </div>
-      </Alert>
-    );
-  })() : undefined;
+  const recollectionBanner =
+    isPending && isRecollection
+      ? (() => {
+          const rejectionCount = sample.rejectionHistory?.length || 0;
+          const lastRejection = sample.rejectionHistory?.[rejectionCount - 1];
+          const reasonsText = formatRejectionReasons(lastRejection?.rejectionReasons);
+          return (
+            <Alert variant="warning" className="py-2">
+              <div className="space-y-0.5">
+                <p className="font-medium text-xs">Recollection Required</p>
+                <p className="text-xxs opacity-90 leading-tight">
+                  {reasonsText
+                    ? `Reason: ${reasonsText}.`
+                    : sample.recollectionReason || 'Previous sample was rejected.'}
+                </p>
+              </div>
+            </Alert>
+          );
+        })()
+      : undefined;
 
   // Additional info for recollection samples
-  const additionalInfo = (isRecollection && sample.originalSampleId) || rejectedSample?.recollectionSampleId ? (
-    <div className="flex items-center gap-2 flex-wrap">
-      {isRecollection && sample.originalSampleId && (
-        <Badge size="sm" variant="warning" className="flex items-center gap-1">
-          <Icon name="alert-circle" className="w-3 h-3" />
-          Recollection of {sample.originalSampleId}
-        </Badge>
-      )}
-      {rejectedSample?.recollectionSampleId && (
-        <Badge size="sm" variant="info" className="flex items-center gap-1">
-          <Icon name="alert-circle" className="w-3 h-3" />
-          Recollection requested: {rejectedSample.recollectionSampleId}
-        </Badge>
-      )}
-    </div>
-  ) : undefined;
+  const additionalInfo =
+    (isRecollection && sample.originalSampleId) || rejectedSample?.recollectionSampleId ? (
+      <div className="flex items-center gap-2 flex-wrap">
+        {isRecollection && sample.originalSampleId && (
+          <Badge size="sm" variant="warning" className="flex items-center gap-1">
+            <Icon name="alert-circle" className="w-3 h-3" />
+            Recollection of {sample.originalSampleId}
+          </Badge>
+        )}
+        {rejectedSample?.recollectionSampleId && (
+          <Badge size="sm" variant="info" className="flex items-center gap-1">
+            <Icon name="alert-circle" className="w-3 h-3" />
+            Recollection requested: {rejectedSample.recollectionSampleId}
+          </Badge>
+        )}
+      </div>
+    ) : undefined;
 
   return (
     <LabCard
@@ -209,12 +263,20 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
         orderId: order.orderId,
         referringPhysician: order.referringPhysician,
       }}
-      sampleInfo={(isCollected || isRejected) && sample.sampleId ? { sampleId: sample.sampleId, collectedAt, collectedBy } : undefined}
+      sampleInfo={
+        (isCollected || isRejected) && sample.sampleId
+          ? { sampleId: sample.sampleId, collectedAt, collectedBy }
+          : undefined
+      }
       additionalInfo={additionalInfo}
       badges={badges}
       actions={actions}
       recollectionBanner={recollectionBanner}
-      content={<TestList tests={testNames.map((name, i) => ({ name, code: requirement.testCodes[i] || '' }))} />}
+      content={
+        <TestList
+          tests={testNames.map((name, i) => ({ name, code: requirement.testCodes[i] || '' }))}
+        />
+      }
       contentTitle="Required for"
     />
   );

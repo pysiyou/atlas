@@ -1,6 +1,5 @@
 import React, { useState, useRef, useLayoutEffect, useCallback, useEffect } from 'react';
 
-
 export interface TabItem {
   id: string;
   label: string;
@@ -20,11 +19,11 @@ export interface TabsProps {
 export const useTabs = (tabs: TabItem[], defaultTabId?: string) => {
   const [activeTabId, setActiveTabId] = useState(defaultTabId || tabs[0]?.id);
   const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0];
-  
+
   return {
     activeTabId,
     setActiveTabId,
-    activeTab
+    activeTab,
   };
 };
 
@@ -47,7 +46,7 @@ export const TabsList: React.FC<TabsListProps> = ({
   variant = 'underline',
   className = '',
   headerRef,
-  onIndicatorChange
+  onIndicatorChange,
 }) => {
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
   const tabsRef = useRef<{ [key: string]: HTMLButtonElement | null }>({});
@@ -61,7 +60,7 @@ export const TabsList: React.FC<TabsListProps> = ({
     const activeButton = tabsRef.current[activeTabId];
     // Use headerRef if provided (for TabbedSectionContainer), otherwise use containerRef
     const headerEl = headerRef?.current || containerRef.current;
-    
+
     if (!activeButton || !headerEl) {
       return;
     }
@@ -76,7 +75,7 @@ export const TabsList: React.FC<TabsListProps> = ({
     const newWidth = buttonRect.width;
 
     // Only update if values changed significantly to prevent jitter
-    setIndicator((prev) => {
+    setIndicator(prev => {
       const leftDiff = Math.abs(prev.left - newLeft);
       const widthDiff = Math.abs(prev.width - newWidth);
 
@@ -126,7 +125,7 @@ export const TabsList: React.FC<TabsListProps> = ({
       ro.observe(headerEl);
     }
 
-    Object.values(tabsRef.current).forEach((el) => {
+    Object.values(tabsRef.current).forEach(el => {
       if (el) ro.observe(el);
     });
 
@@ -152,7 +151,7 @@ export const TabsList: React.FC<TabsListProps> = ({
   }, [updateIndicator]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={`
         relative flex items-center overflow-x-auto no-scrollbar
@@ -162,15 +161,14 @@ export const TabsList: React.FC<TabsListProps> = ({
     >
       {tabs.map(tab => {
         const isActive = activeTabId === tab.id;
-        
-        let buttonClass = 'whitespace-nowrap flex items-center justify-center transition-all duration-200 font-medium text-xs cursor-pointer ';
-        
+
+        let buttonClass =
+          'whitespace-nowrap flex items-center justify-center transition-all duration-200 font-medium text-xs cursor-pointer ';
+
         if (variant === 'underline') {
           // Remove border-b-2 from buttons since we use sliding indicator
           buttonClass += `px-4 py-2 ${
-            isActive 
-              ? 'text-blue-600' 
-              : 'text-gray-500 hover:text-gray-700'
+            isActive ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'
           }`;
         } else {
           // Pills variant
@@ -184,25 +182,31 @@ export const TabsList: React.FC<TabsListProps> = ({
         return (
           <button
             key={tab.id}
-            ref={(el) => { tabsRef.current[tab.id] = el; }}
+            ref={el => {
+              tabsRef.current[tab.id] = el;
+            }}
             onClick={() => onTabChange(tab.id)}
             className={buttonClass}
             type="button"
           >
             {tab.label}
             {tab.count !== undefined && (
-              <span className={`ml-2 text-xs py-0.5 px-1.5 rounded-full ${
-                isActive 
-                  ? (variant === 'underline' ? 'bg-blue-100 text-blue-600' : 'bg-blue-200 text-blue-800')
-                  : 'bg-gray-100 text-gray-500'
-              }`}>
+              <span
+                className={`ml-2 text-xs py-0.5 px-1.5 rounded-full ${
+                  isActive
+                    ? variant === 'underline'
+                      ? 'bg-blue-100 text-blue-600'
+                      : 'bg-blue-200 text-blue-800'
+                    : 'bg-gray-100 text-gray-500'
+                }`}
+              >
                 {tab.count}
               </span>
             )}
           </button>
         );
       })}
-      
+
       {/* Sliding tab indicator - only for underline variant */}
       {/* Positioned at the absolute bottom to align with header border */}
       {/* If headerRef is provided, indicator is rendered in TabbedSectionContainer wrapper */}
@@ -212,9 +216,10 @@ export const TabsList: React.FC<TabsListProps> = ({
           style={{
             left: `${indicator.left}px`,
             width: `${indicator.width}px`,
-            transition: indicator.left > 0 || indicator.width > 0
-              ? 'left 280ms cubic-bezier(0.4, 0, 0.2, 1), width 280ms cubic-bezier(0.4, 0, 0.2, 1)'
-              : 'none',
+            transition:
+              indicator.left > 0 || indicator.width > 0
+                ? 'left 280ms cubic-bezier(0.4, 0, 0.2, 1), width 280ms cubic-bezier(0.4, 0, 0.2, 1)'
+                : 'none',
             transform: 'translateZ(0)',
             willChange: 'left, width',
           }}
@@ -225,11 +230,11 @@ export const TabsList: React.FC<TabsListProps> = ({
   );
 };
 
-export const Tabs: React.FC<TabsProps> = ({ 
-  tabs, 
-  defaultTabId, 
+export const Tabs: React.FC<TabsProps> = ({
+  tabs,
+  defaultTabId,
   className = '',
-  variant = 'underline'
+  variant = 'underline',
 }) => {
   const { activeTabId, setActiveTabId, activeTab } = useTabs(tabs, defaultTabId);
 
@@ -237,17 +242,15 @@ export const Tabs: React.FC<TabsProps> = ({
 
   return (
     <div className={`w-full ${className}`}>
-      <TabsList 
-        tabs={tabs} 
-        activeTabId={activeTabId} 
-        onTabChange={setActiveTabId} 
+      <TabsList
+        tabs={tabs}
+        activeTabId={activeTabId}
+        onTabChange={setActiveTabId}
         variant={variant}
       />
-      
+
       {/* Tab Content */}
-      <div className="mt-4 animate-in fade-in duration-200">
-        {activeTab.content}
-      </div>
+      <div className="mt-4 animate-in fade-in duration-200">{activeTab.content}</div>
     </div>
   );
 };

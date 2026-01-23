@@ -20,7 +20,7 @@ export const Input: React.FC<InputProps> = ({
   ...props
 }) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
-  
+
   return (
     <div className="w-full group">
       {label && (
@@ -46,12 +46,8 @@ export const Input: React.FC<InputProps> = ({
         `}
         {...props}
       />
-      {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
-      )}
-      {helperText && !error && (
-        <p className="mt-1 text-sm text-gray-500">{helperText}</p>
-      )}
+      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {helperText && !error && <p className="mt-1 text-sm text-gray-500">{helperText}</p>}
     </div>
   );
 };
@@ -74,7 +70,7 @@ export const Textarea: React.FC<TextareaProps> = ({
   ...props
 }) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
-  
+
   return (
     <div className="w-full group">
       {label && (
@@ -100,12 +96,8 @@ export const Textarea: React.FC<TextareaProps> = ({
         rows={4}
         {...props}
       />
-      {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
-      )}
-      {helperText && !error && (
-        <p className="mt-1 text-sm text-gray-500">{helperText}</p>
-      )}
+      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {helperText && !error && <p className="mt-1 text-sm text-gray-500">{helperText}</p>}
     </div>
   );
 };
@@ -130,7 +122,7 @@ export const Select: React.FC<SelectProps> = ({
   ...props
 }) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
-  
+
   return (
     <div className="w-full group">
       {label && (
@@ -155,18 +147,14 @@ export const Select: React.FC<SelectProps> = ({
         `}
         {...props}
       >
-        {options.map((option) => (
+        {options.map(option => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
       </select>
-      {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
-      )}
-      {helperText && !error && (
-        <p className="mt-1 text-sm text-gray-500">{helperText}</p>
-      )}
+      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {helperText && !error && <p className="mt-1 text-sm text-gray-500">{helperText}</p>}
     </div>
   );
 };

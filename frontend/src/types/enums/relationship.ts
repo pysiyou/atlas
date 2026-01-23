@@ -26,7 +26,7 @@ export const RELATIONSHIP_CONFIG: Record<Relationship, { label: string }> = {
 };
 
 // 4. OPTIONS - For dropdowns/selects
-export const RELATIONSHIP_OPTIONS = RELATIONSHIP_VALUES.map((value) => ({
+export const RELATIONSHIP_OPTIONS = RELATIONSHIP_VALUES.map(value => ({
   value,
   label: RELATIONSHIP_CONFIG[value].label,
 }));

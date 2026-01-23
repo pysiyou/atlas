@@ -1,6 +1,6 @@
 /**
  * ValidationMobileCard - Mobile-friendly card component for result validation
- * 
+ *
  * Simplified card layout for small screens, similar to PatientCard/PaymentCard style.
  * Shows essential information in a compact, touch-friendly format.
  */
@@ -9,8 +9,7 @@ import React from 'react';
 import { Badge, IconButton } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
-import { getPatientName } from '@/utils/typeHelpers';
-import { usePatients } from '@/hooks';
+import { usePatientNameLookup } from '@/hooks/queries';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { TestWithContext } from '@/types';
 import { RejectionDialog } from '../components';
@@ -37,11 +36,11 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
   orderHasValidatedTests = false,
 }) => {
   const { openModal } = useModal();
-  const { patients } = usePatients();
+  const { getPatientName } = usePatientNameLookup();
 
   if (!test.results) return null;
 
-  const patientName = getPatientName(test.patientId, patients);
+  const patientName = getPatientName(test.patientId);
   const resultCount = Object.keys(test.results).length;
   const hasFlags = test.flags && test.flags.length > 0;
   const isRetest = test.isRetest === true;
@@ -53,20 +52,29 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
       return;
     }
     openModal(ModalType.VALIDATION_DETAIL, {
-      test, commentKey, comments, onCommentsChange, onApprove, onReject, orderHasValidatedTests,
+      test,
+      commentKey,
+      comments,
+      onCommentsChange,
+      onApprove,
+      onReject,
+      orderHasValidatedTests,
     });
   };
 
   // Get first few result values for preview
-  const resultPreview = Object.entries(test.results).slice(0, 2).map(([key, value]) => {
-    const resultValue = typeof value === 'object' && value !== null && 'value' in value
-      ? (value as { value: unknown }).value
-      : value;
-    return { key, value: String(resultValue) };
-  });
+  const resultPreview = Object.entries(test.results)
+    .slice(0, 2)
+    .map(([key, value]) => {
+      const resultValue =
+        typeof value === 'object' && value !== null && 'value' in value
+          ? (value as { value: unknown }).value
+          : value;
+      return { key, value: String(resultValue) };
+    });
 
   return (
-    <div 
+    <div
       onClick={handleCardClick}
       className="bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow flex flex-col h-full"
     >
@@ -75,16 +83,21 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
         <div className="min-w-0 overflow-hidden">
           <div className="text-sm font-semibold text-gray-900 truncate">{test.testName}</div>
           <div className="flex items-center gap-2">
-            <div className="text-xs text-sky-600 font-medium font-mono truncate">{test.testCode}</div>
+            <div className="text-xs text-sky-600 font-medium font-mono truncate">
+              {test.testCode}
+            </div>
             {test.sampleId && (
-              <div className="text-xs text-sky-600 font-medium font-mono truncate" title={displayId.sample(test.sampleId)}>
+              <div
+                className="text-xs text-sky-600 font-medium font-mono truncate"
+                title={displayId.sample(test.sampleId)}
+              >
                 • {displayId.sample(test.sampleId)}
               </div>
             )}
           </div>
         </div>
       </div>
-      
+
       {/* Content: Patient, results preview, entry date */}
       <div className="grow">
         <div className="space-y-1">
@@ -97,9 +110,7 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
                   {key}: <span className="font-medium">{value}</span>
                 </div>
               ))}
-              {resultCount > 2 && (
-                <div className="text-gray-500">+{resultCount - 2} more</div>
-              )}
+              {resultCount > 2 && <div className="text-gray-500">+{resultCount - 2} more</div>}
             </div>
           )}
           {test.resultEnteredAt && (
@@ -121,11 +132,13 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
           {test.priority && <Badge variant={test.priority} size="xs" />}
           <Badge variant={test.sampleType} size="xs" />
           {(isRetest || hasRejectionHistory) && (
-            <Badge variant="warning" size="xs">RE-TEST</Badge>
+            <Badge variant="warning" size="xs">
+              RE-TEST
+            </Badge>
           )}
         </div>
         <div className="flex items-center gap-2">
-          <div onClick={(e) => e.stopPropagation()}>
+          <div onClick={e => e.stopPropagation()}>
             <RejectionDialog
               orderId={test.orderId}
               testCode={test.testCode}
@@ -137,11 +150,11 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
               }}
             />
           </div>
-          <IconButton 
-            variant="approve" 
+          <IconButton
+            variant="approve"
             size="sm"
             title="Approve Results"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               onApprove();
             }}

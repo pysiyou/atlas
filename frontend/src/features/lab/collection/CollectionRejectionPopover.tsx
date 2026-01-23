@@ -1,6 +1,6 @@
 /**
  * CollectionRejectionPopover - Popover for rejecting collected samples
- * 
+ *
  * Allows lab staff to reject samples with reasons, notes, and recollection options.
  */
 
@@ -12,11 +12,31 @@ import type { RejectionReason } from '@/types';
 /** Rejection reason options with labels and descriptions */
 const REJECTION_REASONS: { value: RejectionReason; label: string; description: string }[] = [
   { value: 'hemolyzed', label: 'Hemolyzed', description: 'Red blood cell breakdown detected' },
-  { value: 'clotted', label: 'Clotted', description: 'Sample clotted when anticoagulant was required' },
-  { value: 'qns', label: 'Quantity Not Sufficient (QNS)', description: 'Insufficient volume for testing' },
-  { value: 'wrong_container', label: 'Wrong Container', description: 'Collected in incorrect tube type' },
-  { value: 'labeling_error', label: 'Labeling Error', description: 'Missing or incorrect patient identification' },
-  { value: 'transport_delay', label: 'Transport Delay', description: 'Exceeded acceptable transport time' },
+  {
+    value: 'clotted',
+    label: 'Clotted',
+    description: 'Sample clotted when anticoagulant was required',
+  },
+  {
+    value: 'qns',
+    label: 'Quantity Not Sufficient (QNS)',
+    description: 'Insufficient volume for testing',
+  },
+  {
+    value: 'wrong_container',
+    label: 'Wrong Container',
+    description: 'Collected in incorrect tube type',
+  },
+  {
+    value: 'labeling_error',
+    label: 'Labeling Error',
+    description: 'Missing or incorrect patient identification',
+  },
+  {
+    value: 'transport_delay',
+    label: 'Transport Delay',
+    description: 'Exceeded acceptable transport time',
+  },
   { value: 'contaminated', label: 'Contaminated', description: 'Visible contamination present' },
   { value: 'lipemic', label: 'Lipemic', description: 'Lipemia interferes with testing' },
   { value: 'icteric', label: 'Icteric', description: 'Jaundice interferes with testing' },
@@ -58,9 +78,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
   }, [isValid, reasons, notes, requireRecollection, onConfirm]);
 
   const toggleReason = (value: RejectionReason) => {
-    setReasons(prev =>
-      prev.includes(value) ? prev.filter(r => r !== value) : [...prev, value]
-    );
+    setReasons(prev => (prev.includes(value) ? prev.filter(r => r !== value) : [...prev, value]));
   };
 
   // Keyboard shortcuts
@@ -81,7 +99,11 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
   // Header badges for recollection and rejection history
   const headerBadges = (
     <>
-      {isRecollection && <Badge size="sm" variant="warning">Recollection</Badge>}
+      {isRecollection && (
+        <Badge size="sm" variant="warning">
+          Recollection
+        </Badge>
+      )}
       {rejectionHistoryCount > 0 && (
         <Badge size="sm" variant="error">
           {rejectionHistoryCount} Previous Rejection{rejectionHistoryCount > 1 ? 's' : ''}
@@ -114,7 +136,8 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           <div className="space-y-0.5">
             <p className="font-medium text-xs">Multiple Rejections Detected</p>
             <p className="text-[10px] opacity-90 leading-tight">
-              This sample has been rejected {rejectionHistoryCount} times already. Consider escalating to supervisor.
+              This sample has been rejected {rejectionHistoryCount} times already. Consider
+              escalating to supervisor.
             </p>
           </div>
         </Alert>
@@ -123,7 +146,9 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           <div className="space-y-0.5">
             <p className="font-medium text-xs">Action Required</p>
             <p className="text-[10px] opacity-90 leading-tight">
-              {patientName ? `Sample for ${patientName} will be marked as rejected.` : 'The sample will be marked as rejected.'}
+              {patientName
+                ? `Sample for ${patientName} will be marked as rejected.`
+                : 'The sample will be marked as rejected.'}
             </p>
           </div>
         </Alert>
@@ -133,7 +158,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       <div className="space-y-2">
         <label className="block text-xs font-medium text-gray-700">Rejection Reasons</label>
         <div className="border border-gray-200 rounded-md max-h-[200px] overflow-y-auto">
-          {REJECTION_REASONS.map((r) => (
+          {REJECTION_REASONS.map(r => (
             <label
               key={r.value}
               className={`flex items-start p-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 transition-colors ${reasons.includes(r.value) ? 'bg-blue-50/50' : ''}`}
@@ -175,7 +200,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           rows={2}
           placeholder="Additional details..."
           value={notes}
-          onChange={(e) => setNotes(e.target.value)}
+          onChange={e => setNotes(e.target.value)}
           className="w-full px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
         />
         {reasons.includes('other') && !notes.trim() && (
@@ -198,7 +223,11 @@ interface CollectionRejectionPopoverProps {
   /** Number of previous rejections */
   rejectionHistoryCount?: number;
   /** Callback when rejection is confirmed */
-  onReject: (reasons: RejectionReason[], notes: string, requireRecollection: boolean) => Promise<void> | void;
+  onReject: (
+    reasons: RejectionReason[],
+    notes: string,
+    requireRecollection: boolean
+  ) => Promise<void> | void;
   /** Custom trigger element (uses default icon button if not provided) */
   trigger?: React.ReactNode;
 }
@@ -215,18 +244,10 @@ export const CollectionRejectionPopover: React.FC<CollectionRejectionPopoverProp
   <Popover
     placement="bottom-end"
     offsetValue={8}
-    trigger={
-      trigger || (
-        <IconButton
-          variant="delete"
-          size="sm"
-          title="Reject Sample"
-        />
-      )
-    }
+    trigger={trigger || <IconButton variant="delete" size="sm" title="Reject Sample" />}
   >
     {({ close }) => (
-      <div data-popover-content onClick={(e) => e.stopPropagation()}>
+      <div data-popover-content onClick={e => e.stopPropagation()}>
         <CollectionRejectionPopoverContent
           sampleId={sampleId}
           sampleType={sampleType}

@@ -37,7 +37,10 @@ export interface SamplesContextType {
   // Query operations
   getSample: (sampleId: number | string) => Sample | undefined;
   getSamplesByOrder: (orderId: number | string) => Sample[];
-  getSamplesByPatient: (patientId: number | string, orders: Array<{ orderId: number; patientId: number }>) => Sample[];
+  getSamplesByPatient: (
+    patientId: number | string,
+    orders: Array<{ orderId: number; patientId: number }>
+  ) => Sample[];
   getSamplesByStatus: (status: SampleStatus) => Sample[];
   getPendingSamples: () => Promise<Sample[]>;
 
@@ -57,10 +60,7 @@ export interface SamplesContextType {
     requireRecollection?: boolean
   ) => Promise<void>;
 
-  requestRecollection: (
-    sampleId: number | string,
-    reason: string
-  ) => Promise<void>;
+  requestRecollection: (sampleId: number | string, reason: string) => Promise<void>;
 
   /** Clear any error state */
   clearError: () => void;

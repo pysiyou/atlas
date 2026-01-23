@@ -1,68 +1,67 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-    --text-xxs: 10px;
+  --text-xxs: 10px;
 }
 
 body {
-    font-family: 'Nunito', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
 /* RSuite DateRangePicker Overrides */
 .rs-picker-toggle {
-    @apply !border-gray-300 !rounded !py-2 !px-3 !h-[42px] !flex !items-center;
+  @apply !border-gray-300 !rounded !py-2 !px-3 !h-[42px] !flex !items-center;
 }
 
 .rs-picker-toggle:hover {
-    @apply !border-sky-500;
+  @apply !border-sky-500;
 }
 
 .rs-picker-toggle.rs-btn-active {
-    @apply !border-sky-500 !shadow-none !ring-2 !ring-sky-500;
+  @apply !border-sky-500 !shadow-none !ring-2 !ring-sky-500;
 }
 
 .rs-picker-toggle {
-    @apply !py-2 !text-sm !h-[38px] !flex !items-center;
+  @apply !py-2 !text-sm !h-[38px] !flex !items-center;
 }
 
-
 .rs-picker-toggle-caret {
-    @apply !top-3;
+  @apply !top-3;
 }
 
 .rs-picker-toggle-clean {
-    @apply !top-3;
+  @apply !top-3;
 }
 
 .rs-calendar-table-cell-selected .rs-calendar-table-cell-content {
-    @apply !bg-sky-500 !border-sky-500;
+  @apply !bg-sky-500 !border-sky-500;
 }
 
 .rs-calendar-table-cell-in-range:before {
-    @apply !bg-sky-100;
+  @apply !bg-sky-100;
 }
 
 .rs-btn-primary {
-    @apply !bg-sky-500 !border-sky-500;
+  @apply !bg-sky-500 !border-sky-500;
 }
 
 .rs-picker-menu {
-    z-index: 1000 !important;
+  z-index: 1000 !important;
 }
 
 /* 3D Transform Utilities */
 .perspective-1000 {
-    perspective: 1000px;
+  perspective: 1000px;
 }
 
 .transform-style-3d {
-    transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
 
 .backface-hidden {
-    backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .rotate-y-180 {
-    transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }

@@ -2,7 +2,10 @@
 
 // Import types from enums for local use
 import type { SampleType as SampleTypeEnum } from './enums/sample-type';
-import type { ContainerType as ContainerTypeEnum, ContainerTopColor as ContainerTopColorEnum } from './enums/container';
+import type {
+  ContainerType as ContainerTypeEnum,
+  ContainerTopColor as ContainerTopColorEnum,
+} from './enums/container';
 import type { RejectionReason as RejectionReasonEnum } from './enums/rejection-reason';
 
 // Re-export types (Single Source of Truth)
@@ -38,12 +41,12 @@ export interface RejectionRecord {
  * Base sample fields - always present regardless of status
  */
 interface BaseSample {
-  sampleId: number;                    // Integer ID, displayed as SAM{id}
-  orderId: number;                     // Links to Order (no patientId/patientName)
+  sampleId: number; // Integer ID, displayed as SAM{id}
+  orderId: number; // Links to Order (no patientId/patientName)
   sampleType: SampleType;
 
   // What this sample is for
-  testCodes: string[];                 // Links to Test catalog (no testNames)
+  testCodes: string[]; // Links to Test catalog (no testNames)
   requiredVolume: number;
   priority: 'routine' | 'urgent' | 'stat';
 
@@ -56,9 +59,9 @@ interface BaseSample {
 
   // Recollection tracking (present if this sample is a recollection)
   isRecollection?: boolean;
-  originalSampleId?: number;           // The rejected sample this replaces
+  originalSampleId?: number; // The rejected sample this replaces
   recollectionReason?: string;
-  recollectionAttempt?: number;        // 1 = original, 2 = 1st recollection, etc.
+  recollectionAttempt?: number; // 1 = original, 2 = 1st recollection, etc.
 
   // Timestamps
   createdAt: string;

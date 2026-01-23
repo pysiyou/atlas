@@ -68,12 +68,30 @@ const createInitialFormData = (initialData?: Partial<Patient>): PatientFormData 
       familyHistory: initialData.medicalHistory?.familyHistory || '',
       smoking: initialData.medicalHistory?.lifestyle?.smoking || false,
       alcohol: initialData.medicalHistory?.lifestyle?.alcohol || false,
-      temperature: initialData.vitalSigns?.temperature !== undefined ? String(initialData.vitalSigns.temperature) : '',
-      heartRate: initialData.vitalSigns?.heartRate !== undefined ? String(initialData.vitalSigns.heartRate) : '',
-      systolicBP: initialData.vitalSigns?.systolicBP !== undefined ? String(initialData.vitalSigns.systolicBP) : '',
-      diastolicBP: initialData.vitalSigns?.diastolicBP !== undefined ? String(initialData.vitalSigns.diastolicBP) : '',
-      respiratoryRate: initialData.vitalSigns?.respiratoryRate !== undefined ? String(initialData.vitalSigns.respiratoryRate) : '',
-      oxygenSaturation: initialData.vitalSigns?.oxygenSaturation !== undefined ? String(initialData.vitalSigns.oxygenSaturation) : '',
+      temperature:
+        initialData.vitalSigns?.temperature !== undefined
+          ? String(initialData.vitalSigns.temperature)
+          : '',
+      heartRate:
+        initialData.vitalSigns?.heartRate !== undefined
+          ? String(initialData.vitalSigns.heartRate)
+          : '',
+      systolicBP:
+        initialData.vitalSigns?.systolicBP !== undefined
+          ? String(initialData.vitalSigns.systolicBP)
+          : '',
+      diastolicBP:
+        initialData.vitalSigns?.diastolicBP !== undefined
+          ? String(initialData.vitalSigns.diastolicBP)
+          : '',
+      respiratoryRate:
+        initialData.vitalSigns?.respiratoryRate !== undefined
+          ? String(initialData.vitalSigns.respiratoryRate)
+          : '',
+      oxygenSaturation:
+        initialData.vitalSigns?.oxygenSaturation !== undefined
+          ? String(initialData.vitalSigns.oxygenSaturation)
+          : '',
     };
   }
 
@@ -111,7 +129,9 @@ const createInitialFormData = (initialData?: Partial<Patient>): PatientFormData 
 };
 
 export const usePatientForm = (initialData?: Partial<Patient>) => {
-  const [formData, setFormData] = useState<PatientFormData>(() => createInitialFormData(initialData));
+  const [formData, setFormData] = useState<PatientFormData>(() =>
+    createInitialFormData(initialData)
+  );
 
   const getDefaultFormData = (): PatientFormData => ({
     fullName: '',
@@ -148,10 +168,7 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const updateField = <K extends keyof PatientFormData>(
-    field: K,
-    value: PatientFormData[K]
-  ) => {
+  const updateField = <K extends keyof PatientFormData>(field: K, value: PatientFormData[K]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => {

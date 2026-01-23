@@ -1,9 +1,9 @@
 /**
  * useBreakpoint Hook
- * 
+ *
  * Detects the current screen breakpoint using window resize listener.
  * Returns the current breakpoint name based on Tailwind CSS breakpoints.
- * 
+ *
  * Breakpoints:
  * - sm: 640px
  * - md: 768px
@@ -33,7 +33,7 @@ const getBreakpoint = (width: number): Breakpoint => {
 /**
  * Hook to detect current screen breakpoint
  * @returns Current breakpoint name
- * 
+ *
  * @example
  * ```tsx
  * const breakpoint = useBreakpoint();
@@ -80,7 +80,7 @@ export const useBreakpoint = (): Breakpoint => {
  * @param current - Current breakpoint
  * @param target - Target breakpoint to check
  * @returns true if current breakpoint is at or above target
- * 
+ *
  * @example
  * ```tsx
  * const breakpoint = useBreakpoint();

@@ -1,16 +1,20 @@
 /**
  * EntryView - Main view for result entry workflow
- * 
+ *
  * Displays tests awaiting result entry (status: sample-collected or in-progress).
  */
 
-import React, { useContext, useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { useOrders } from '@/features/order/OrderContext';
-import { TestsContext } from '@/features/test/TestsContext';
-import { useSamples } from '@/features/lab/SamplesContext';
-import { usePatients } from '@/hooks';
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import {
+  useOrdersList,
+  useInvalidateOrders,
+  useTestCatalog,
+  useTestNameLookup,
+  useSampleLookup,
+  usePatientNameLookup,
+} from '@/hooks/queries';
 import { checkReferenceRangeWithDemographics } from '@/utils';
-import { getPatientName, getTestName, getTestSampleType } from '@/utils/typeHelpers';
+import { getTestSampleType } from '@/utils/typeHelpers';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import type { TestResult, TestWithContext } from '@/types';
@@ -23,10 +27,12 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { resultAPI } from '@/services/api';
 
 export const EntryView: React.FC = () => {
-  const ordersContext = useOrders();
-  const testsContext = useContext(TestsContext);
-  const patientsContext = usePatients();
-  const samplesContext = useSamples();
+  const { orders, refetch: refreshOrders } = useOrdersList();
+  const { invalidateAll: invalidateOrders } = useInvalidateOrders();
+  const { tests: testCatalog } = useTestCatalog();
+  const { getTest } = useTestNameLookup();
+  const { getSample } = useSampleLookup();
+  const { getPatient, getPatientName } = usePatientNameLookup();
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
@@ -37,22 +43,23 @@ export const EntryView: React.FC = () => {
   // Build list of tests awaiting result entry
   // Excludes superseded tests (those replaced by retests)
   const allTests: TestWithContext[] = useMemo(() => {
-    if (!ordersContext || !testsContext || !patientsContext || !samplesContext) return [];
+    if (!orders || !testCatalog) return [];
 
-    return ordersContext.orders.flatMap(order => {
-      const patient = patientsContext.getPatient(order.patientId);
-      const patientName = getPatientName(order.patientId, patientsContext.patients);
+    return orders.flatMap(order => {
+      const patient = getPatient(order.patientId);
+      const patientName = getPatientName(order.patientId);
 
       return order.tests
-        .filter(test =>
-          // Filter for tests awaiting result entry (sample-collected or in-progress)
-          // Superseded tests are already excluded by status check
-          test.status === 'sample-collected' || test.status === 'in-progress'
+        .filter(
+          test =>
+            // Filter for tests awaiting result entry (sample-collected or in-progress)
+            // Superseded tests are already excluded by status check
+            test.status === 'sample-collected' || test.status === 'in-progress'
         )
         .map(test => {
-          const testName = getTestName(test.testCode, testsContext.tests);
-          const sampleType = getTestSampleType(test.testCode, testsContext.tests);
-          const sample = test.sampleId ? samplesContext.getSample(test.sampleId) : undefined;
+          const testName = getTest(test.testCode)?.name || test.testCode;
+          const sampleType = getTestSampleType(test.testCode, testCatalog);
+          const sample = test.sampleId ? getSample(test.sampleId) : undefined;
 
           let collectedAt: string | undefined;
           let collectedBy: string | undefined;
@@ -90,7 +97,7 @@ export const EntryView: React.FC = () => {
           };
         });
     });
-  }, [ordersContext, testsContext, patientsContext, samplesContext]);
+  }, [orders, testCatalog, getPatient, getPatientName, getSample, getTest]);
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
@@ -105,146 +112,184 @@ export const EntryView: React.FC = () => {
     setTechnicianNotes(prev => ({ ...prev, [resultKey]: notes ?? '' }));
   }, []);
 
-  const areAllParametersFilled = useCallback((resultKey: string, parameterCount: number): boolean => {
-    const testResults = results[resultKey];
-    if (!testResults) return false;
-    return Object.values(testResults).filter(v => v?.trim()).length === parameterCount;
-  }, [results]);
+  const areAllParametersFilled = useCallback(
+    (resultKey: string, parameterCount: number): boolean => {
+      const testResults = results[resultKey];
+      if (!testResults) return false;
+      return Object.values(testResults).filter(v => v?.trim()).length === parameterCount;
+    },
+    [results]
+  );
 
-  const handleSaveResults = useCallback(async (
-    orderId: number | string,
-    testCode: string,
-    finalResults?: Record<string, string>,
-    finalNotes?: string
-  ) => {
-    if (!testsContext || !ordersContext) return;
+  const handleSaveResults = useCallback(
+    async (
+      orderId: number | string,
+      testCode: string,
+      finalResults?: Record<string, string>,
+      finalNotes?: string
+    ) => {
+      if (!testCatalog || !orders) return;
 
-    const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-    const resultKey = `${orderIdStr}-${testCode}`;
+      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+      const resultKey = `${orderIdStr}-${testCode}`;
 
-    // Prevent concurrent submissions
-    if (isSaving[resultKey]) {
-      return;
-    }
-
-    const testResults = finalResults || results[resultKey];
-    if (!testResults || Object.keys(testResults).length === 0) {
-      toast.error('No results to save');
-      return;
-    }
-
-    const testDef = testsContext.getTest(testCode);
-    if (!testDef?.parameters) {
-      toast.error('Test parameters not found');
-      return;
-    }
-
-    const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
-    const formattedResults: Record<string, TestResult> = {};
-    const testItem = allTests.find(t => t.orderId === numericOrderId && t.testCode === testCode);
-    if (!testItem) {
-      toast.error('Test not found in current list');
-      return;
-    }
-    const patient = testItem.patient;
-
-    testDef.parameters.forEach(param => {
-      const value = testResults[param.code];
-      if (!value) return;
-
-      let status: TestResult['status'] = 'normal';
-      let processedValue: string | number = value;
-
-      if (param.valueType === 'NUMERIC' || param.type === 'numeric') {
-        const numValue = parseFloat(value);
-        if (!isNaN(numValue)) {
-          processedValue = numValue;
-          status = checkReferenceRangeWithDemographics(numValue, param, patient);
-          if (param.criticalLow !== undefined && numValue < param.criticalLow) status = 'critical';
-          else if (param.criticalHigh !== undefined && numValue > param.criticalHigh) status = 'critical';
-        }
-      } else if ((param.valueType === 'SELECT' || param.type === 'select') && param.allowedValues) {
-        if (!param.allowedValues.includes(value)) {
-          toast.error(`${param.name}: Invalid value. Must be one of: ${param.allowedValues.join(', ')}`);
-          return;
-        }
+      // Prevent concurrent submissions
+      if (isSaving[resultKey]) {
+        return;
       }
 
-      formattedResults[param.code] = {
-        value: processedValue,
-        unit: param.unit,
-        referenceRange: param.referenceRange,
-        status,
-      };
-    });
+      const testResults = finalResults || results[resultKey];
+      if (!testResults || Object.keys(testResults).length === 0) {
+        toast.error('No results to save');
+        return;
+      }
 
-    setIsSaving(prev => ({ ...prev, [resultKey]: true }));
+      const testDef = getTest(testCode);
+      if (!testDef?.parameters) {
+        toast.error('Test parameters not found');
+        return;
+      }
 
-    try {
-      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      await resultAPI.enterResults(orderIdStr, testCode, {
-        results: formattedResults,
-        technicianNotes: finalNotes || technicianNotes[resultKey] || undefined,
+      const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
+      const formattedResults: Record<string, TestResult> = {};
+      const testItem = allTests.find(t => t.orderId === numericOrderId && t.testCode === testCode);
+      if (!testItem) {
+        toast.error('Test not found in current list');
+        return;
+      }
+      const patient = testItem.patient;
+
+      testDef.parameters.forEach(param => {
+        const value = testResults[param.code];
+        if (!value) return;
+
+        let status: TestResult['status'] = 'normal';
+        let processedValue: string | number = value;
+
+        if (param.valueType === 'NUMERIC' || param.type === 'numeric') {
+          const numValue = parseFloat(value);
+          if (!isNaN(numValue)) {
+            processedValue = numValue;
+            status = checkReferenceRangeWithDemographics(numValue, param, patient);
+            if (param.criticalLow !== undefined && numValue < param.criticalLow)
+              status = 'critical';
+            else if (param.criticalHigh !== undefined && numValue > param.criticalHigh)
+              status = 'critical';
+          }
+        } else if (
+          (param.valueType === 'SELECT' || param.type === 'select') &&
+          param.allowedValues
+        ) {
+          if (!param.allowedValues.includes(value)) {
+            toast.error(
+              `${param.name}: Invalid value. Must be one of: ${param.allowedValues.join(', ')}`
+            );
+            return;
+          }
+        }
+
+        formattedResults[param.code] = {
+          value: processedValue,
+          unit: param.unit,
+          referenceRange: param.referenceRange,
+          status,
+        };
       });
-      await ordersContext.refreshOrders();
-      toast.success('Results saved successfully');
 
-      // Clear local state
-      setResults(prev => { const n = { ...prev }; delete n[resultKey]; return n; });
-      setTechnicianNotes(prev => { const n = { ...prev }; delete n[resultKey]; return n; });
-    } catch (error) {
-      logger.error('Error saving results', error instanceof Error ? error : undefined);
-      toast.error('Failed to save results. Please try again.');
-    } finally {
-      setIsSaving(prev => ({ ...prev, [resultKey]: false }));
-    }
-  }, [results, technicianNotes, allTests, testsContext, ordersContext, isSaving]);
+      setIsSaving(prev => ({ ...prev, [resultKey]: true }));
+
+      try {
+        const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+        await resultAPI.enterResults(orderIdStr, testCode, {
+          results: formattedResults,
+          technicianNotes: finalNotes || technicianNotes[resultKey] || undefined,
+        });
+        await invalidateOrders();
+        await refreshOrders();
+        toast.success('Results saved successfully');
+
+        // Clear local state
+        setResults(prev => {
+          const n = { ...prev };
+          delete n[resultKey];
+          return n;
+        });
+        setTechnicianNotes(prev => {
+          const n = { ...prev };
+          delete n[resultKey];
+          return n;
+        });
+      } catch (error) {
+        logger.error('Error saving results', error instanceof Error ? error : undefined);
+        toast.error('Failed to save results. Please try again.');
+      } finally {
+        setIsSaving(prev => ({ ...prev, [resultKey]: false }));
+      }
+    },
+    [results, technicianNotes, allTests, testCatalog, orders, isSaving, getTest, invalidateOrders, refreshOrders]
+  );
 
   // Use a ref to store the openTestModal function to avoid circular dependency
-  const openTestModalRef = useRef<(test: TestWithContext, filteredTests: TestWithContext[]) => void>(undefined);
+  const openTestModalRef =
+    useRef<(test: TestWithContext, filteredTests: TestWithContext[]) => void>(undefined);
 
-  const openTestModal = useCallback((test: TestWithContext, filteredTests: TestWithContext[]) => {
-    if (!testsContext) return;
+  const openTestModal = useCallback(
+    (test: TestWithContext, filteredTests: TestWithContext[]) => {
+      if (!testCatalog) return;
 
-    const testDef = testsContext.getTest(test.testCode);
-    const resultKey = `${test.orderId}-${test.testCode}`;
-    if (!testDef?.parameters) return;
+      const testDef = getTest(test.testCode);
+      const resultKey = `${test.orderId}-${test.testCode}`;
+      if (!testDef?.parameters) return;
 
-    const isComplete = areAllParametersFilled(resultKey, testDef.parameters.length);
-    const currentIndex = filteredTests.findIndex(
-      t => t.orderId === test.orderId && t.testCode === test.testCode
-    );
+      const isComplete = areAllParametersFilled(resultKey, testDef.parameters.length);
+      const currentIndex = filteredTests.findIndex(
+        t => t.orderId === test.orderId && t.testCode === test.testCode
+      );
 
-    // Use ref for recursive calls to avoid circular dependency warning
-    const onNext = currentIndex < filteredTests.length - 1
-      ? () => openTestModalRef.current?.(filteredTests[currentIndex + 1], filteredTests)
-      : undefined;
-    const onPrev = currentIndex > 0
-      ? () => openTestModalRef.current?.(filteredTests[currentIndex - 1], filteredTests)
-      : undefined;
+      // Use ref for recursive calls to avoid circular dependency warning
+      const onNext =
+        currentIndex < filteredTests.length - 1
+          ? () => openTestModalRef.current?.(filteredTests[currentIndex + 1], filteredTests)
+          : undefined;
+      const onPrev =
+        currentIndex > 0
+          ? () => openTestModalRef.current?.(filteredTests[currentIndex - 1], filteredTests)
+          : undefined;
 
-    openModal(ModalType.RESULT_DETAIL, {
-      test,
-      testDef,
-      resultKey,
-      results: results[resultKey] || {},
-      technicianNotes: technicianNotes[resultKey] || '',
-      isComplete,
-      onResultsChange: handleResultChange,
-      onNotesChange: handleNotesChange,
-      onSave: (finalResults?: Record<string, string>, finalNotes?: string) =>
-        handleSaveResults(test.orderId, test.testCode, finalResults, finalNotes),
-      onNext,
-      onPrev,
-    });
-  }, [testsContext, results, technicianNotes, areAllParametersFilled, handleResultChange, handleNotesChange, handleSaveResults, openModal]);
+      openModal(ModalType.RESULT_DETAIL, {
+        test,
+        testDef,
+        resultKey,
+        results: results[resultKey] || {},
+        technicianNotes: technicianNotes[resultKey] || '',
+        isComplete,
+        onResultsChange: handleResultChange,
+        onNotesChange: handleNotesChange,
+        onSave: (finalResults?: Record<string, string>, finalNotes?: string) =>
+          handleSaveResults(test.orderId, test.testCode, finalResults, finalNotes),
+        onNext,
+        onPrev,
+      });
+    },
+    [
+      testCatalog,
+      getTest,
+      results,
+      technicianNotes,
+      areAllParametersFilled,
+      handleResultChange,
+      handleNotesChange,
+      handleSaveResults,
+      openModal,
+    ]
+  );
 
   // Keep ref in sync with the callback
   useEffect(() => {
     openTestModalRef.current = openTestModal;
   }, [openTestModal]);
 
-  if (!ordersContext || !testsContext || !patientsContext || !samplesContext) {
+  if (!orders || !testCatalog) {
     return <div>Loading...</div>;
   }
 
@@ -254,7 +299,7 @@ export const EntryView: React.FC = () => {
       items={allTests}
       filterFn={filterTest}
       renderCard={(test, idx, filteredTests) => {
-        const testDef = testsContext.getTest(test.testCode);
+        const testDef = getTest(test.testCode);
         const resultKey = `${test.orderId}-${test.testCode}`;
         const isComplete = testDef?.parameters
           ? areAllParametersFilled(resultKey, testDef.parameters.length)

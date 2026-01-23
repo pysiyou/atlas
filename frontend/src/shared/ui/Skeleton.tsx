@@ -63,11 +63,7 @@ export const SkeletonText: React.FC<{
 }> = ({ lines = 1, className = '' }) => (
   <div className={`space-y-2 ${className}`}>
     {Array.from({ length: lines }).map((_, index) => (
-      <Skeleton
-        key={index}
-        height={16}
-        width={index === lines - 1 && lines > 1 ? '75%' : '100%'}
-      />
+      <Skeleton key={index} height={16} width={index === lines - 1 && lines > 1 ? '75%' : '100%'} />
     ))}
   </div>
 );
@@ -86,14 +82,7 @@ export const SkeletonAvatar: React.FC<{
     lg: 56,
   };
 
-  return (
-    <Skeleton
-      circle
-      width={sizes[size]}
-      height={sizes[size]}
-      className={className}
-    />
-  );
+  return <Skeleton circle width={sizes[size]} height={sizes[size]} className={className} />;
 };
 
 /**
@@ -167,14 +156,14 @@ export const SkeletonPage: React.FC<{
       <Skeleton height={32} width={200} />
       <Skeleton height={40} width={140} />
     </div>
-    
+
     {/* Filters */}
     <div className="flex gap-4">
       <Skeleton height={40} width={300} />
       <Skeleton height={40} width={150} />
       <Skeleton height={40} width={150} />
     </div>
-    
+
     {/* Table */}
     <div className="bg-white rounded-lg border border-gray-200">
       {/* Table header */}
@@ -185,7 +174,7 @@ export const SkeletonPage: React.FC<{
           </div>
         ))}
       </div>
-      
+
       {/* Table rows */}
       {Array.from({ length: 8 }).map((_, index) => (
         <SkeletonTableRow key={index} columns={6} />

@@ -1,6 +1,6 @@
 /**
  * InfoField - Label-value display component
- * 
+ *
  * Provides a consistent way to display label-value pairs in detail views.
  * Supports both horizontal and vertical orientations.
  */
@@ -24,7 +24,7 @@ export interface InfoFieldProps {
 
 /**
  * InfoField component
- * 
+ *
  * @example
  * ```tsx
  * <InfoField

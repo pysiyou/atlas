@@ -26,13 +26,13 @@ export interface SearchControlProps {
 
 /**
  * SearchControl Component
- * 
+ *
  * Provides a search input with:
  * - Debounced input (300ms default)
  * - Loading indicator during debounce
  * - Clear button
  * - Keyboard shortcut (Cmd+K / Ctrl+K to focus)
- * 
+ *
  * @component
  */
 export const SearchControl: React.FC<SearchControlProps> = ({
@@ -112,7 +112,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
         size="sm"
         className="w-full"
       />
-      
+
       {/* Loading indicator */}
       {isDebouncing && (
         <div className="absolute right-10 top-1/2 -translate-y-1/2">

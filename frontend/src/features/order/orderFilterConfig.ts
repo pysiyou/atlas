@@ -15,18 +15,12 @@ import {
 /**
  * Prepare filter options for order status
  */
-const orderStatusOptions = createFilterOptions(
-  ORDER_STATUS_VALUES,
-  ORDER_STATUS_CONFIG
-);
+const orderStatusOptions = createFilterOptions(ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG);
 
 /**
  * Prepare filter options for payment status
  */
-const paymentStatusOptions = createFilterOptions(
-  PAYMENT_STATUS_VALUES,
-  PAYMENT_STATUS_CONFIG
-);
+const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
 
 /**
  * Order filter configuration

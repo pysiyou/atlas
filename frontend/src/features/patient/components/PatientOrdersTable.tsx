@@ -35,7 +35,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
           <tbody className="divide-y divide-gray-100">
-            {orders.map((order) => (
+            {orders.map(order => (
               <tr
                 key={order.orderId}
                 className="hover:bg-sky-50 transition-colors cursor-pointer"
@@ -70,7 +70,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
         <col style={{ width: '13%' }} />
       </colgroup>
       <tbody className="divide-y divide-gray-100">
-        {orders.map((order) => (
+        {orders.map(order => (
           <tr
             key={order.orderId}
             className="hover:bg-gray-50 transition-colors cursor-pointer"
@@ -80,9 +80,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
               <span className="block truncate">{displayId.order(order.orderId)}</span>
             </td>
             <td className="px-2 py-3 text-xs text-gray-500 max-w-0">
-              <span className="block truncate">
-                {formatDetailDate(order.orderDate, 'short')}
-              </span>
+              <span className="block truncate">{formatDetailDate(order.orderDate, 'short')}</span>
             </td>
             <td className="px-2 py-3 max-w-0">
               <div className="min-w-0">
@@ -92,7 +90,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
                 <div className="text-xs text-gray-500 truncate">
                   {order.tests
                     .slice(0, 2)
-                    .map((t) => t.testName || t.testCode)
+                    .map(t => t.testName || t.testCode)
                     .join(', ')}
                   {order.tests.length > 2 && ` +${order.tests.length - 2} more`}
                 </div>
@@ -105,9 +103,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
               <Badge variant={order.paymentStatus} size="sm" />
             </td>
             <td className="px-2 py-3 font-medium text-sky-600 max-w-0">
-              <span className="block truncate">
-                {formatOrderPrice(order.totalPrice)}
-              </span>
+              <span className="block truncate">{formatOrderPrice(order.totalPrice)}</span>
             </td>
           </tr>
         ))}

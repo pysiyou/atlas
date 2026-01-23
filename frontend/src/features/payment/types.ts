@@ -1,6 +1,4 @@
-
 import type { Order, PaymentMethod, PaymentStatus, Payment } from '@/types';
-
 
 export interface OrderPaymentDetails {
   // Order identity
@@ -30,10 +28,7 @@ export interface OrderPaymentDetails {
   _payment?: Payment;
 }
 
-export function createOrderPaymentDetails(
-  order: Order,
-  payment?: Payment
-): OrderPaymentDetails {
+export function createOrderPaymentDetails(order: Order, payment?: Payment): OrderPaymentDetails {
   return {
     // Order identity
     orderId: order.orderId,
@@ -64,19 +59,19 @@ export function createOrderPaymentDetails(
 
 export function buildPaymentsByOrderMap(payments: Payment[]): Map<number, Payment> {
   const map = new Map<number, Payment>();
-  
+
   // Sort payments by date descending to get most recent first
   const sortedPayments = [...payments].sort(
     (a, b) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime()
   );
-  
+
   // Map each order to its most recent payment
   for (const payment of sortedPayments) {
     if (!map.has(payment.orderId)) {
       map.set(payment.orderId, payment);
     }
   }
-  
+
   return map;
 }
 
@@ -85,8 +80,6 @@ export function createOrderPaymentDetailsList(
   payments: Payment[]
 ): OrderPaymentDetails[] {
   const paymentMap = buildPaymentsByOrderMap(payments);
-  
-  return orders.map(order => 
-    createOrderPaymentDetails(order, paymentMap.get(order.orderId))
-  );
+
+  return orders.map(order => createOrderPaymentDetails(order, paymentMap.get(order.orderId)));
 }

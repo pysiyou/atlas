@@ -1,6 +1,6 @@
 /**
  * TanStack Query Client Configuration
- * 
+ *
  * Implements tiered caching strategy based on data characteristics:
  * - Static: Test catalog, users (rarely changes) - Infinity cache
  * - Semi-static: Patients (occasional changes) - 5 min stale time

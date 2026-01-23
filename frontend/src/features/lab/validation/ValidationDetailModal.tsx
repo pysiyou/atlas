@@ -1,9 +1,9 @@
 /**
  * ValidationDetailModal - Extended view for result validation
- * 
+ *
  * Provides a larger interface for validating test results with full review options.
  * Shows previous rejection history for retests.
- * 
+ *
  * Uses centralized components:
  * - DetailGrid with sections config for consistent layout
  * - RetestBadge, RecollectionAttemptBadge, FlagCountBadge for status indicators
@@ -14,15 +14,20 @@ import React from 'react';
 import { Button, Icon, Popover, SectionContainer } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
 import { ValidationForm } from './ValidationForm';
-import { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from '../components/LabDetailModal';
+import {
+  LabDetailModal,
+  DetailGrid,
+  ModalFooter,
+  StatusBadgeRow,
+} from '../components/LabDetailModal';
 import { RejectionDialogContent } from '../components/RejectionDialog';
 import { EntryRejectionSection } from '../entry/EntryRejectionSection';
-import { 
-  RetestBadge, 
-  RecollectionAttemptBadge, 
-  FlagCountBadge, 
+import {
+  RetestBadge,
+  RecollectionAttemptBadge,
+  FlagCountBadge,
   ReviewRequiredBadge,
-  EntryInfoLine 
+  EntryInfoLine,
 } from '../components/StatusBadges';
 import type { TestWithContext } from '@/types';
 
@@ -34,7 +39,7 @@ interface ValidationDetailModalProps {
   comments: string;
   onCommentsChange: (commentKey: string, value: string) => void;
   onApprove: () => void;
-  /** 
+  /**
    * Called when rejection is performed.
    * When RejectionDialogContent is used, it calls the API directly.
    * Passing undefined values signals that the API was already called and
@@ -43,7 +48,7 @@ interface ValidationDetailModalProps {
   onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
   /**
    * When true, the re-collect option is blocked because the order contains
-   * validated tests. This prevents contradictory actions where a sample 
+   * validated tests. This prevents contradictory actions where a sample
    * recollection would invalidate already-validated results.
    */
   orderHasValidatedTests?: boolean;
@@ -70,12 +75,12 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   // Flags and rejection state
   const hasFlags = test.flags && test.flags.length > 0;
   const flagCount = test.flags?.length || 0;
-  
+
   // Determine if this is a retest or recollection
   const isRetest = test.isRetest === true;
   const retestNumber = test.retestNumber || 0;
   const rejectionHistory = test.resultRejectionHistory || [];
-  
+
   // Check if this has any rejection history (covers both re-test and re-collect scenarios)
   const hasRejectionHistory = rejectionHistory.length > 0;
   // For re-collect, the last rejection type will be 're-collect'
@@ -88,7 +93,9 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   const headerExtraBadges = (
     <>
       {isRetest && <RetestBadge retestNumber={retestNumber} />}
-      {isRecollection && !isRetest && <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} />}
+      {isRecollection && !isRetest && (
+        <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} />
+      )}
       {hasFlags && <FlagCountBadge count={flagCount} />}
     </>
   );
@@ -99,7 +106,9 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   const validationSectionHeaderRight = (
     <>
       {isRetest && <RetestBadge retestNumber={retestNumber} className="mr-2" />}
-      {isRecollection && !isRetest && <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} className="mr-2" />}
+      {isRecollection && !isRetest && (
+        <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} className="mr-2" />
+      )}
       {hasFlags && <ReviewRequiredBadge />}
     </>
   );
@@ -107,7 +116,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   /**
    * Build rejection history title based on type
    */
-  const rejectionHistoryTitle = isRetest 
+  const rejectionHistoryTitle = isRetest
     ? `Previous Rejection${rejectionHistory.length > 1 ? ` (${rejectionHistory.length} attempts)` : ''}`
     : `Recollection History (${rejectionHistory.length} attempt${rejectionHistory.length > 1 ? 's' : ''})`;
 
@@ -130,35 +139,45 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
         patientId: test.patientId,
         orderId: test.orderId,
       }}
-      sampleInfo={test.sampleId && test.collectedAt ? {
-        sampleId: test.sampleId,
-        collectedAt: test.collectedAt,
-        collectedBy: test.collectedBy,
-      } : undefined}
+      sampleInfo={
+        test.sampleId && test.collectedAt
+          ? {
+              sampleId: test.sampleId,
+              collectedAt: test.collectedAt,
+              collectedBy: test.collectedBy,
+            }
+          : undefined
+      }
       additionalContextInfo={
-        <EntryInfoLine 
-          enteredAt={test.resultEnteredAt} 
-          enteredBy={test.enteredBy} 
-        />
+        <EntryInfoLine enteredAt={test.resultEnteredAt} enteredBy={test.enteredBy} />
       }
       footer={
         <ModalFooter
-          statusIcon={hasFlags 
-            ? <Icon name="warning" className="w-4 h-4 text-gray-400" />
-            : <Icon name="pen" className="w-4 h-4 text-gray-400" />
+          statusIcon={
+            hasFlags ? (
+              <Icon name="warning" className="w-4 h-4 text-gray-400" />
+            ) : (
+              <Icon name="pen" className="w-4 h-4 text-gray-400" />
+            )
           }
-          statusMessage={hasFlags ? 'Review flags carefully before approving' : 'Verify all results match expected values'}
+          statusMessage={
+            hasFlags
+              ? 'Review flags carefully before approving'
+              : 'Verify all results match expected values'
+          }
           statusClassName="text-gray-500"
         >
           <Popover
             placement="top-end"
             offsetValue={8}
             trigger={
-              <Button variant="reject" size="md">Reject</Button>
+              <Button variant="reject" size="md">
+                Reject
+              </Button>
             }
           >
             {({ close }) => (
-              <div data-popover-content onClick={(e) => e.stopPropagation()}>
+              <div data-popover-content onClick={e => e.stopPropagation()}>
                 <RejectionDialogContent
                   orderId={test.orderId}
                   testCode={test.testCode}
@@ -191,9 +210,12 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           flags={test.flags}
           technicianNotes={test.technicianNotes}
           comments={comments}
-          onCommentsChange={(value) => onCommentsChange(commentKey, value)}
+          onCommentsChange={value => onCommentsChange(commentKey, value)}
           onApprove={handleApprove}
-          onReject={(reason, type) => { onReject(reason, type); onClose(); }}
+          onReject={(reason, type) => {
+            onReject(reason, type);
+            onClose();
+          }}
           testName={test.testName}
           testCode={test.testCode}
           patientName={test.patientName}
@@ -213,21 +235,39 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       <DetailGrid
         sections={[
           {
-            title: "Collection Information",
+            title: 'Collection Information',
             fields: [
-              { label: "Sample ID", badge: test.sampleId ? { value: displayId.sample(test.sampleId), variant: "primary" } : undefined },
-              { label: "Collected", timestamp: test.collectedAt, user: test.collectedBy },
-              { label: "Sample Type", badge: test.sampleType ? { value: test.sampleType, variant: test.sampleType } : undefined },
-            ]
+              {
+                label: 'Sample ID',
+                badge: test.sampleId
+                  ? { value: displayId.sample(test.sampleId), variant: 'primary' }
+                  : undefined,
+              },
+              { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
+              {
+                label: 'Sample Type',
+                badge: test.sampleType
+                  ? { value: test.sampleType, variant: test.sampleType }
+                  : undefined,
+              },
+            ],
           },
           {
-            title: "Result Entry Information",
+            title: 'Result Entry Information',
             fields: [
-              { label: "Entered", timestamp: test.resultEnteredAt, user: test.enteredBy },
-              { label: "Test Code", badge: test.testCode ? { value: test.testCode, variant: "primary" } : undefined },
-              { label: "Order ID", badge: test.orderId ? { value: displayId.order(test.orderId), variant: "primary" } : undefined },
-            ]
-          }
+              { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
+              {
+                label: 'Test Code',
+                badge: test.testCode ? { value: test.testCode, variant: 'primary' } : undefined,
+              },
+              {
+                label: 'Order ID',
+                badge: test.orderId
+                  ? { value: displayId.order(test.orderId), variant: 'primary' }
+                  : undefined,
+              },
+            ],
+          },
         ]}
       />
     </LabDetailModal>

@@ -6,12 +6,11 @@
 import React from 'react';
 import { Badge, Button, Icon, IconButton } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
-import type { Order } from '@/types';
+import type { Order, Invoice } from '@/types';
 
 export interface OrderHeaderProps {
   order: Order;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  invoice: any | null;
+  invoice: Invoice | null;
   isLarge: boolean;
   onViewInvoice: () => void;
 }
@@ -25,20 +24,22 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
   return (
     <div className="flex items-center justify-between mb-4 shrink-0 flex-wrap gap-3">
       <div className="flex items-center gap-3 self-center">
-        <h1 className="text-sm font-bold text-gray-900">
-          {displayId.order(order.orderId)}
-        </h1>
+        <h1 className="text-sm font-bold text-gray-900">{displayId.order(order.orderId)}</h1>
         <Badge variant={order.priority} size="sm" />
         <Badge variant={order.overallStatus} size="sm" />
       </div>
 
-      <div className={`flex items-center gap-2 self-center ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}>
+      <div
+        className={`flex items-center gap-2 self-center ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}
+      >
         {isLarge ? (
           <>
             <Button
               variant="print"
               size="sm"
-              onClick={() => {/* Print functionality */}}
+              onClick={() => {
+                /* Print functionality */
+              }}
             >
               Print
             </Button>
@@ -59,7 +60,9 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
               variant="print"
               size="sm"
               title="Print"
-              onClick={() => {/* Print functionality */}}
+              onClick={() => {
+                /* Print functionality */
+              }}
             />
             {invoice && (
               <IconButton

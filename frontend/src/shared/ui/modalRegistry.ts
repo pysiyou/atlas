@@ -58,7 +58,14 @@ export function registerModal<P extends BaseModalProps>(
     helpers: ModalHelpers
   ) => P | null
 ): void {
-  registry[type] = { component: component as ComponentType<BaseModalProps>, getProps: getProps as (modalProps: Record<string, unknown>, baseProps: BaseModalProps, helpers: ModalHelpers) => BaseModalProps | null };
+  registry[type] = {
+    component: component as ComponentType<BaseModalProps>,
+    getProps: getProps as (
+      modalProps: Record<string, unknown>,
+      baseProps: BaseModalProps,
+      helpers: ModalHelpers
+    ) => BaseModalProps | null,
+  };
 }
 
 /**

@@ -45,7 +45,9 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
         )}
       </div>
 
-      <div className={`flex items-center gap-2 self-center ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}>
+      <div
+        className={`flex items-center gap-2 self-center ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}
+      >
         {isLarge ? (
           <>
             <Button variant="edit" size="sm" onClick={onEdit}>
@@ -57,12 +59,7 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
           </>
         ) : (
           <>
-            <IconButton
-              variant="edit"
-              size="sm"
-              title="Edit Patient"
-              onClick={onEdit}
-            />
+            <IconButton variant="edit" size="sm" title="Edit Patient" onClick={onEdit} />
             <IconButton variant="add" size="sm" title="New Order" onClick={onNewOrder} />
           </>
         )}

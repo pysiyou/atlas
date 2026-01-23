@@ -1,6 +1,6 @@
 /**
  * Design System Constants
- * 
+ *
  * Centralized design tokens for consistent styling across the application.
  */
 

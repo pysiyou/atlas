@@ -23,13 +23,11 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
   error,
 }) => {
   const headerContent = (
-    <div className="text-sm font-medium text-sky-600">
-      Total: {formatCurrency(totalPrice)}
-    </div>
+    <div className="text-sm font-medium text-sky-600">Total: {formatCurrency(totalPrice)}</div>
   );
 
   return (
-    <SectionContainer 
+    <SectionContainer
       title={`Test Selection (${selectedTests.length} selected)`}
       headerRight={headerContent}
     >
@@ -37,7 +35,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         <SearchBar
           placeholder="Search tests by name, code, or category..."
           value={testSearch}
-          onChange={(e) => onTestSearchChange(e.target.value)}
+          onChange={e => onTestSearchChange(e.target.value)}
         />
 
         {error && <p className="text-sm text-red-600">{error}</p>}
@@ -49,8 +47,8 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
               Selected Tests
             </div>
             <div className="space-y-2">
-              {selectedTests.map((testCode) => {
-                const test = filteredTests.find((t) => t.code === testCode);
+              {selectedTests.map(testCode => {
+                const test = filteredTests.find(t => t.code === testCode);
                 if (!test) return null;
                 return (
                   <div
@@ -89,7 +87,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         )}
 
         <div className="border border-gray-200 rounded divide-y max-h-96 overflow-y-auto">
-          {filteredTests.map((test) => {
+          {filteredTests.map(test => {
             const isSelected = selectedTests.includes(test.code);
             return (
               <button
@@ -117,7 +115,12 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                         {test.panels && test.panels.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-1">
                             {test.panels.map(panel => (
-                              <Badge key={panel} variant="default" size="sm" className="border-none font-medium">
+                              <Badge
+                                key={panel}
+                                variant="default"
+                                size="sm"
+                                className="border-none font-medium"
+                              >
                                 {panel}
                               </Badge>
                             ))}
@@ -125,7 +128,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                         )}
                       </div>
                     </div>
-                    
+
                     <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-gray-500">
                       <div className="flex items-center gap-1">
                         <Icon name="pour" className="w-3 h-3" />
@@ -145,26 +148,24 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                         </div>
                       )}
                     </div>
-                    
+
                     {test.fastingRequired && (
                       <div className="text-xs text-orange-600 mt-1 flex items-center gap-1">
                         <Icon name="alert-circle" className="w-3 h-3" />
                         Fasting required
                       </div>
                     )}
-                    
+
                     {test.collectionNotes && (
-                      <div className="text-xs text-blue-600 mt-1">
-                        📝 {test.collectionNotes}
-                      </div>
+                      <div className="text-xs text-blue-600 mt-1">📝 {test.collectionNotes}</div>
                     )}
-                    
+
                     {test.specialRequirements && !test.fastingRequired && (
                       <div className="text-xs text-orange-600 mt-1">
                         ⚠️ {test.specialRequirements}
                       </div>
                     )}
-                    
+
                     {test.loincCodes && test.loincCodes.length > 0 && (
                       <div className="text-xs text-gray-400 mt-1">
                         LOINC: {test.loincCodes.join(', ')}

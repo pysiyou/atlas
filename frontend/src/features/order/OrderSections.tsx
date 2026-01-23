@@ -38,8 +38,8 @@ export const OrderSections: React.FC<OrderSectionsProps> = ({ order, patient }) 
                 order.priority === 'stat'
                   ? 'danger'
                   : order.priority === 'urgent'
-                  ? 'warning'
-                  : 'info'
+                    ? 'warning'
+                    : 'info'
               }
               size="sm"
             >

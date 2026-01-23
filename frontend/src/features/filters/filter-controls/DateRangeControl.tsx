@@ -23,9 +23,9 @@ export interface DateRangeControlProps {
 
 /**
  * DateRangeControl Component
- * 
+ *
  * Wraps the existing DateFilter component with the new filter control interface.
- * 
+ *
  * @component
  */
 export const DateRangeControl: React.FC<DateRangeControlProps> = ({

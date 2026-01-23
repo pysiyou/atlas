@@ -87,9 +87,7 @@ export class FeatureErrorBoundary extends Component<
           <Alert variant="danger" className="max-w-2xl mx-auto">
             <div className="space-y-4">
               <div>
-                <h3 className="font-semibold text-lg">
-                  Error loading {featureName}
-                </h3>
+                <h3 className="font-semibold text-lg">Error loading {featureName}</h3>
                 <p className="text-sm mt-1 opacity-80">
                   Something went wrong while loading this section. Please try again.
                 </p>
@@ -104,16 +102,12 @@ export class FeatureErrorBoundary extends Component<
               )}
 
               <div className="flex gap-3">
-                <Button
-                  onClick={this.handleReset}
-                  variant="retry"
-                  size="sm"
-                >
+                <Button onClick={this.handleReset} variant="retry" size="sm">
                   Try Again
                 </Button>
                 {showHomeButton && (
                   <Button
-                    onClick={() => window.location.href = '/dashboard'}
+                    onClick={() => (window.location.href = '/dashboard')}
                     variant="back"
                     size="sm"
                   >

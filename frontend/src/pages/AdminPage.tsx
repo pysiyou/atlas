@@ -4,9 +4,11 @@
  */
 
 import React, { useMemo } from 'react';
-import { usePatients } from '@/hooks';
-import { useOrders } from '@/features/order/OrderContext';
-import { useTests } from '@/features/test/TestsContext';
+import {
+  usePatientsList,
+  useOrdersList,
+  useTestCatalog,
+} from '@/hooks/queries';
 import { useBilling } from '@/features/billing/BillingContext';
 import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
@@ -23,9 +25,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     width: 'sm',
     sortable: true,
     render: (test: Test) => (
-      <span className="text-xs text-sky-600 font-medium font-mono truncate block">
-        {test.code}
-      </span>
+      <span className="text-xs text-sky-600 font-medium font-mono truncate block">{test.code}</span>
     ),
   },
   {
@@ -33,9 +33,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     header: 'Test Name',
     width: 'fill',
     sortable: true,
-    render: (test: Test) => (
-      <div className="font-medium text-gray-900 truncate">{test.name}</div>
-    ),
+    render: (test: Test) => <div className="font-medium text-gray-900 truncate">{test.name}</div>,
   },
   {
     key: 'category',
@@ -43,9 +41,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     width: 'md',
     sortable: true,
     render: (test: Test) => (
-      <span className="text-xs text-gray-600 uppercase truncate block">
-        {test.category}
-      </span>
+      <span className="text-xs text-gray-600 uppercase truncate block">{test.category}</span>
     ),
   },
   {
@@ -55,9 +51,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     align: 'right',
     sortable: true,
     render: (test: Test) => (
-      <div className="font-medium text-sky-600 truncate">
-        {formatCurrency(test.price)}
-      </div>
+      <div className="font-medium text-sky-600 truncate">{formatCurrency(test.price)}</div>
     ),
   },
   {
@@ -79,17 +73,20 @@ const AdminTestTable: React.FC<{ tests: Test[] }> = ({ tests }) => {
   const columns = useMemo(() => getAdminTestTableColumns(), []);
 
   // Create a simple viewConfig for the Table component
-  const viewConfig = useMemo(() => ({
-    fullColumns: columns,
-    mediumColumns: columns,
-    compactColumns: columns.slice(0, 3), // Code, Name, Category
-    CardComponent: ({ item }: { item: Test }) => (
-      <div className="p-3 border rounded">
-        <div className="font-medium">{item.name}</div>
-        <div className="text-xs text-gray-500">{item.code}</div>
-      </div>
-    ),
-  }), [columns]);
+  const viewConfig = useMemo(
+    () => ({
+      fullColumns: columns,
+      mediumColumns: columns,
+      compactColumns: columns.slice(0, 3), // Code, Name, Category
+      CardComponent: ({ item }: { item: Test }) => (
+        <div className="p-3 border rounded">
+          <div className="font-medium">{item.name}</div>
+          <div className="text-xs text-gray-500">{item.code}</div>
+        </div>
+      ),
+    }),
+    [columns]
+  );
 
   return (
     <Table<Test>
@@ -102,31 +99,48 @@ const AdminTestTable: React.FC<{ tests: Test[] }> = ({ tests }) => {
 };
 
 export const Admin: React.FC = () => {
-  const patientsContext = usePatients();
-  const ordersContext = useOrders();
-  const testsContext = useTests();
+  const { patients, isLoading: patientsLoading } = usePatientsList();
+  const { orders, isLoading: ordersLoading } = useOrdersList();
+  const { tests, isLoading: testsLoading } = useTestCatalog();
   const billingContext = useBilling();
-  
-  if (!patientsContext || !ordersContext || !testsContext || !billingContext) {
+
+  if (patientsLoading || ordersLoading || testsLoading || !billingContext) {
     return <div>Loading...</div>;
   }
-  
-  const { patients } = patientsContext;
-  const { orders } = ordersContext;
-  const { tests } = testsContext;
+
   const { getTotalRevenue } = billingContext;
-  
+
   const stats = [
-    { label: 'Total Patients', value: patients.length, icon: <Icon name="users-group" className="w-6 h-6" />, color: 'sky' },
-    { label: 'Total Orders', value: orders.length, icon: <Icon name="document" className="w-6 h-6" />, color: 'green' },
-    { label: 'Active Tests', value: tests.filter(t => t.isActive).length, icon: <Icon name="flask" className="w-6 h-6" />, color: 'purple' },
-    { label: 'Total Revenue', value: formatCurrency(getTotalRevenue()), icon: <Icon name="dollar-sign" className="w-6 h-6" />, color: 'orange' },
+    {
+      label: 'Total Patients',
+      value: patients.length,
+      icon: <Icon name="users-group" className="w-6 h-6" />,
+      color: 'sky',
+    },
+    {
+      label: 'Total Orders',
+      value: orders.length,
+      icon: <Icon name="document" className="w-6 h-6" />,
+      color: 'green',
+    },
+    {
+      label: 'Active Tests',
+      value: tests.filter(t => t.isActive).length,
+      icon: <Icon name="flask" className="w-6 h-6" />,
+      color: 'purple',
+    },
+    {
+      label: 'Total Revenue',
+      value: formatCurrency(getTotalRevenue()),
+      icon: <Icon name="dollar-sign" className="w-6 h-6" />,
+      color: 'orange',
+    },
   ];
-  
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-900">Administration</h1>
-      
+
       {/* System Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {stats.map((stat, idx) => (
@@ -143,7 +157,7 @@ export const Admin: React.FC = () => {
           </Card>
         ))}
       </div>
-      
+
       {/* Test Catalog */}
       <SectionContainer title="Test Catalog">
         <div className="text-sm text-gray-500 mb-3">{tests.length} total tests</div>

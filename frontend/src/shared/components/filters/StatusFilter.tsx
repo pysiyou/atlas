@@ -1,6 +1,6 @@
 /**
  * StatusFilter - Multi-select status filter component
- * 
+ *
  * Provides a consistent multi-select filter for status-based filtering.
  * Supports custom badge rendering for visual feedback.
  */
@@ -26,7 +26,7 @@ export interface StatusFilterProps<T extends string> {
 
 /**
  * StatusFilter component
- * 
+ *
  * @example
  * ```tsx
  * <StatusFilter
@@ -47,7 +47,7 @@ export function StatusFilter<T extends string>({
 }: StatusFilterProps<T>) {
   const toggleStatus = (status: T) => {
     if (selected.includes(status)) {
-      onChange(selected.filter((s) => s !== status));
+      onChange(selected.filter(s => s !== status));
     } else {
       onChange([...selected, status]);
     }
@@ -90,17 +90,15 @@ export function StatusFilter<T extends string>({
 
       {/* Status options */}
       <div className="flex flex-wrap gap-2">
-        {options.map((status) => {
+        {options.map(status => {
           const isSelected = selected.includes(status);
-          
+
           return (
             <button
               key={status}
               onClick={() => toggleStatus(status)}
               className={`transition-all ${
-                isSelected
-                  ? 'opacity-100 scale-100'
-                  : 'opacity-50 scale-95 hover:opacity-75'
+                isSelected ? 'opacity-100 scale-100' : 'opacity-50 scale-95 hover:opacity-75'
               }`}
             >
               {renderBadge ? (

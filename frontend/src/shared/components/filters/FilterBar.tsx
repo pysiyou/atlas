@@ -1,6 +1,6 @@
 /**
  * FilterBar - Container component for filter controls
- * 
+ *
  * Provides a consistent layout and styling for filter sections.
  * Supports collapsible filters and result count display.
  */
@@ -25,7 +25,7 @@ export interface FilterBarProps {
 
 /**
  * FilterBar component
- * 
+ *
  * @example
  * ```tsx
  * <FilterBar resultCount={filteredItems.length} onReset={handleReset}>
@@ -75,21 +75,14 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
               aria-label={isExpanded ? 'Collapse filters' : 'Expand filters'}
             >
-              <Icon
-                name={isExpanded ? 'chevron-up' : 'chevron-down'}
-                className="w-4 h-4"
-              />
+              <Icon name={isExpanded ? 'chevron-up' : 'chevron-down'} className="w-4 h-4" />
             </button>
           )}
         </div>
       </div>
 
       {/* Filter content */}
-      {(!collapsible || isExpanded) && (
-        <div className="p-4 space-y-4">
-          {children}
-        </div>
-      )}
+      {(!collapsible || isExpanded) && <div className="p-4 space-y-4">{children}</div>}
     </div>
   );
 };

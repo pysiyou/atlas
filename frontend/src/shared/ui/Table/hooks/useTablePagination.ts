@@ -39,12 +39,8 @@ export const useTablePagination = <T = Record<string, unknown>>({
 
   const isExternallyControlled = !!externalPagination;
 
-  const pageSize = isExternallyControlled
-    ? externalPagination.pageSize
-    : internalPageSize;
-  const totalItems = isExternallyControlled
-    ? externalPagination.totalItems
-    : data.length;
+  const pageSize = isExternallyControlled ? externalPagination.pageSize : internalPageSize;
+  const totalItems = isExternallyControlled ? externalPagination.totalItems : data.length;
 
   const totalPages = Math.ceil(totalItems / pageSize) || 1;
 

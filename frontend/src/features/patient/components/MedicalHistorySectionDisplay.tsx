@@ -17,9 +17,8 @@ export const MedicalHistorySectionDisplay: React.FC<MedicalHistorySectionDisplay
   patient,
   layout = 'column',
 }) => {
-  const containerClass = layout === 'grid'
-    ? 'grid grid-cols-1 sm:grid-cols-2 gap-5'
-    : 'flex flex-col gap-4';
+  const containerClass =
+    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-5' : 'flex flex-col gap-4';
 
   return (
     <div className={containerClass}>

@@ -1,9 +1,9 @@
 /**
  * CatalogFilters Component
- * 
+ *
  * Provides comprehensive filtering controls for the test catalog using the new filter architecture.
  * Uses config-driven approach with FilterBar component.
- * 
+ *
  * @module features/catalog
  */
 
@@ -36,10 +36,10 @@ export interface CatalogFiltersProps {
 
 /**
  * CatalogFilters Component
- * 
+ *
  * Composes FilterBar with catalog-specific configuration.
  * Maps between legacy prop interface and new filter value structure.
- * 
+ *
  * @component
  */
 export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
@@ -84,10 +84,6 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
   };
 
   return (
-    <FilterBar
-      config={catalogFilterConfig}
-      value={filterValues}
-      onChange={handleFilterChange}
-    />
+    <FilterBar config={catalogFilterConfig} value={filterValues} onChange={handleFilterChange} />
   );
 };

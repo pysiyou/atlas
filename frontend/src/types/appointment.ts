@@ -2,17 +2,9 @@
  * Appointment Scheduling Types
  */
 
-export type AppointmentType = 
-  | 'sample-collection' 
-  | 'consultation' 
-  | 'result-discussion';
+export type AppointmentType = 'sample-collection' | 'consultation' | 'result-discussion';
 
-export type AppointmentStatus = 
-  | 'scheduled' 
-  | 'confirmed' 
-  | 'completed' 
-  | 'cancelled' 
-  | 'no-show';
+export type AppointmentStatus = 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no-show';
 
 export type ReminderPreference = 'sms' | 'email' | 'none';
 

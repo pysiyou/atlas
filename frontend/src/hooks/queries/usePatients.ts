@@ -1,9 +1,9 @@
 /**
  * Patients Query Hook
- * 
+ *
  * Provides access to patient data with semi-static caching (5 min stale time).
  * Patients change occasionally but not as frequently as orders.
- * 
+ *
  * @module hooks/queries/usePatients
  */
 
@@ -18,9 +18,9 @@ import type { Patient } from '@/types';
  * Hook to fetch and cache all patients.
  * Uses semi-static cache - data is considered fresh for 5 minutes.
  * Only fetches when user is authenticated to prevent race conditions on login.
- * 
+ *
  * @returns Query result containing patients array and loading state
- * 
+ *
  * @example
  * ```tsx
  * const { patients, isLoading, error } = usePatientsList();
@@ -50,10 +50,10 @@ export function usePatientsList() {
 /**
  * Hook to fetch a single patient by ID.
  * Only fetches when user is authenticated to prevent race conditions on login.
- * 
+ *
  * @param patientId - The patient ID to fetch
  * @returns Query result with patient data
- * 
+ *
  * @example
  * ```tsx
  * const { patient, isLoading } = usePatient('PAT-001');
@@ -80,10 +80,10 @@ export function usePatient(patientId: string | undefined) {
 /**
  * Hook to search patients by name, ID, or phone.
  * Uses client-side filtering on cached data for fast results.
- * 
+ *
  * @param searchQuery - Search query string
  * @returns Filtered array of patients
- * 
+ *
  * @example
  * ```tsx
  * const { results } = usePatientSearch('john');
@@ -98,10 +98,11 @@ export function usePatientSearch(searchQuery: string) {
     }
 
     const query = searchQuery.toLowerCase();
-    return patients.filter(patient =>
-      patient.fullName.toLowerCase().includes(query) ||
-      patient.id.toString().toLowerCase().includes(query) ||
-      patient.phone.includes(searchQuery)
+    return patients.filter(
+      patient =>
+        patient.fullName.toLowerCase().includes(query) ||
+        patient.id.toString().toLowerCase().includes(query) ||
+        patient.phone.includes(searchQuery)
     );
   }, [patients, searchQuery]);
 
@@ -115,9 +116,9 @@ export function usePatientSearch(searchQuery: string) {
 /**
  * Hook to get patient name lookup function.
  * Returns a function that resolves patient IDs to names.
- * 
+ *
  * @returns Object with getPatientName function
- * 
+ *
  * @example
  * ```tsx
  * const { getPatientName } = usePatientNameLookup();
@@ -133,18 +134,24 @@ export function usePatientNameLookup() {
     return map;
   }, [patients]);
 
-  const getPatientName = useCallback((patientId: number | string): string => {
-    const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
-    if (isNaN(numericId)) return 'Unknown Patient';
-    const patient = patientsMap.get(numericId);
-    return patient?.fullName ?? 'Unknown Patient';
-  }, [patientsMap]);
+  const getPatientName = useCallback(
+    (patientId: number | string): string => {
+      const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
+      if (isNaN(numericId)) return 'Unknown Patient';
+      const patient = patientsMap.get(numericId);
+      return patient?.fullName ?? 'Unknown Patient';
+    },
+    [patientsMap]
+  );
 
-  const getPatient = useCallback((patientId: number | string): Patient | undefined => {
-    const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
-    if (isNaN(numericId)) return undefined;
-    return patientsMap.get(numericId);
-  }, [patientsMap]);
+  const getPatient = useCallback(
+    (patientId: number | string): Patient | undefined => {
+      const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
+      if (isNaN(numericId)) return undefined;
+      return patientsMap.get(numericId);
+    },
+    [patientsMap]
+  );
 
   return {
     getPatientName,
@@ -156,9 +163,9 @@ export function usePatientNameLookup() {
 /**
  * Mutation hook to create a new patient.
  * Invalidates the patients list cache on success.
- * 
+ *
  * @returns Mutation result with mutate function
- * 
+ *
  * @example
  * ```tsx
  * const { mutate: createPatient, isPending } = useCreatePatient();
@@ -180,9 +187,9 @@ export function useCreatePatient() {
 /**
  * Mutation hook to update an existing patient.
  * Invalidates relevant caches on success.
- * 
+ *
  * @returns Mutation result with mutate function
- * 
+ *
  * @example
  * ```tsx
  * const { mutate: updatePatient } = useUpdatePatient();
@@ -209,7 +216,7 @@ export function useUpdatePatient() {
 /**
  * Mutation hook to delete a patient.
  * Invalidates the patients list cache on success.
- * 
+ *
  * @returns Mutation result with mutate function
  */
 export function useDeletePatient() {
@@ -228,7 +235,7 @@ export function useDeletePatient() {
 
 /**
  * Hook to invalidate patient caches.
- * 
+ *
  * @returns Object with invalidate functions
  */
 export function useInvalidatePatients() {

@@ -19,7 +19,8 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
   const containerTopColor = sample.actualContainerColor;
   const containerType = sample.actualContainerType;
 
-  const colorName = CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerTopColor)?.name || 'N/A';
+  const colorName =
+    CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerTopColor)?.name || 'N/A';
 
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString();

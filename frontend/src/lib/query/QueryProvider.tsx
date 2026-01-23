@@ -1,6 +1,6 @@
 /**
  * Query Provider Component
- * 
+ *
  * Wraps the application with TanStack Query's QueryClientProvider
  * and includes DevTools in development mode.
  */
@@ -16,10 +16,10 @@ interface QueryProviderProps {
 
 /**
  * QueryProvider Component
- * 
+ *
  * Provides TanStack Query context to the application.
  * Includes React Query DevTools in development mode for debugging.
- * 
+ *
  * @example
  * ```tsx
  * <QueryProvider>
@@ -35,10 +35,7 @@ export const QueryProvider: React.FC<QueryProviderProps> = ({ children }) => {
     <QueryClientProvider client={queryClient}>
       {children}
       {/* DevTools only visible in development */}
-      <ReactQueryDevtools 
-        initialIsOpen={false} 
-        buttonPosition="bottom-left"
-      />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
     </QueryClientProvider>
   );
 };

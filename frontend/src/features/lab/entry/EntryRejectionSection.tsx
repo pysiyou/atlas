@@ -1,13 +1,13 @@
 /**
  * EntryRejectionSection - Rejection history display section for result entry
- * 
+ *
  * Displays result rejection history with simple, professional layout.
  * Uses useUsers hook internally for user name resolution.
  */
 
 import React from 'react';
 import { formatDate } from '@/utils';
-import { useUsers } from '@/hooks';
+import { useUserLookup } from '@/hooks/queries';
 import { Badge, SectionContainer } from '@/shared/ui';
 import type { ResultRejectionRecord } from '@/types';
 
@@ -72,7 +72,7 @@ interface EntryRejectionSectionProps {
   title: string;
   /** Array of rejection records */
   rejectionHistory: ResultRejectionRecord[];
-  /** 
+  /**
    * Optional function to resolve user ID to display name.
    * If not provided, uses useUsers hook internally.
    * @deprecated Pass this prop only for backward compatibility. Will be removed in future.
@@ -84,7 +84,7 @@ interface EntryRejectionSectionProps {
 
 /**
  * EntryRejectionSection - Component for displaying result rejection history
- * 
+ *
  * Simple, professional layout showing rejection details.
  * Uses useUsers hook internally for user name resolution.
  */
@@ -94,14 +94,16 @@ export const EntryRejectionSection: React.FC<EntryRejectionSectionProps> = ({
   getUserName: getUserNameProp,
   showOnlyLatest = false,
 }) => {
-  const { getUserName: getUserNameFromHook } = useUsers();
+  const { getUserName: getUserNameFromHook } = useUserLookup();
   const getUserName = getUserNameProp || getUserNameFromHook;
-  
+
   // Sort by date (oldest first for chronological tab numbering)
-  const sortedHistory = React.useMemo(() => 
-    [...(rejectionHistory || [])].sort((a, b) => 
-      new Date(a.rejectedAt).getTime() - new Date(b.rejectedAt).getTime()
-    ), [rejectionHistory]
+  const sortedHistory = React.useMemo(
+    () =>
+      [...(rejectionHistory || [])].sort(
+        (a, b) => new Date(a.rejectedAt).getTime() - new Date(b.rejectedAt).getTime()
+      ),
+    [rejectionHistory]
   );
 
   // Default to showing the most recent (last) attempt
@@ -129,23 +131,24 @@ export const EntryRejectionSection: React.FC<EntryRejectionSectionProps> = ({
   const activeRecord = sortedHistory[activeIndex];
 
   // Simple tab buttons for multiple rejections
-  const TabNavigation = sortedHistory.length > 1 ? (
-    <div className="flex gap-1">
-      {sortedHistory.map((_, index) => (
-        <button
-          key={index}
-          onClick={() => setActiveIndex(index)}
-          className={`px-2 py-0.5 text-xs rounded ${
-            activeIndex === index
-              ? 'bg-gray-200 text-gray-800 font-medium'
-              : 'text-gray-500 hover:bg-gray-100'
-          }`}
-        >
-          {index + 1}
-        </button>
-      ))}
-    </div>
-  ) : null;
+  const TabNavigation =
+    sortedHistory.length > 1 ? (
+      <div className="flex gap-1">
+        {sortedHistory.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setActiveIndex(index)}
+            className={`px-2 py-0.5 text-xs rounded ${
+              activeIndex === index
+                ? 'bg-gray-200 text-gray-800 font-medium'
+                : 'text-gray-500 hover:bg-gray-100'
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+    ) : null;
 
   return (
     <SectionContainer title={title} headerRight={TabNavigation} spacing="normal">
@@ -173,7 +176,9 @@ export const ResultRejectionBanner: React.FC<ResultRejectionBannerProps> = ({
 
   return (
     <div className="text-xs text-gray-600">
-      <span className="font-medium">{typeLabel} #{retestNumber}</span>
+      <span className="font-medium">
+        {typeLabel} #{retestNumber}
+      </span>
       {rejection.rejectionReason && (
         <span className="text-gray-500"> · {rejection.rejectionReason}</span>
       )}

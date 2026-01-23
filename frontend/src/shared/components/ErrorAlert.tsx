@@ -32,12 +32,12 @@ interface ErrorAlertProps {
 /**
  * ErrorAlert Component
  * Displays context errors with optional retry functionality
- * 
+ *
  * @example
  * ```tsx
  * const { error, clearError, refreshPatients } = usePatients();
- * 
- * <ErrorAlert 
+ *
+ * <ErrorAlert
  *   error={error}
  *   onDismiss={clearError}
  *   onRetry={refreshPatients}
@@ -54,32 +54,18 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
   if (!error) return null;
 
   return (
-    <Alert 
-      variant="danger" 
-      onClose={onDismiss}
-      className={className}
-    >
+    <Alert variant="danger" onClose={onDismiss} className={className}>
       <div className="flex flex-col gap-2">
         <div>
           <p className="font-medium">{error.message}</p>
           {error.operation && (
-            <p className="text-sm opacity-80 mt-1">
-              Failed operation: {error.operation}
-            </p>
+            <p className="text-sm opacity-80 mt-1">Failed operation: {error.operation}</p>
           )}
-          {error.code && (
-            <p className="text-xs opacity-60 mt-1">
-              Error code: {error.code}
-            </p>
-          )}
+          {error.code && <p className="text-xs opacity-60 mt-1">Error code: {error.code}</p>}
         </div>
         {showRetry && onRetry && (
           <div className="flex gap-2 mt-2">
-            <Button
-              variant="retry"
-              size="sm"
-              onClick={onRetry}
-            >
+            <Button variant="retry" size="sm" onClick={onRetry}>
               Retry
             </Button>
           </div>
@@ -102,7 +88,7 @@ export const InlineError: React.FC<{
     <div className="text-red-600 text-sm flex items-center gap-2 p-2 bg-red-50 rounded">
       <span>{error.message}</span>
       {onDismiss && (
-        <button 
+        <button
           onClick={onDismiss}
           className="text-red-400 hover:text-red-600 cursor-pointer"
           aria-label="Dismiss error"

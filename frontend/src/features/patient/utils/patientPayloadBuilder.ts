@@ -5,11 +5,7 @@
 
 import type { Patient, Affiliation } from '@/types';
 import type { PatientFormData } from '../usePatientForm';
-import {
-  generateAssuranceNumber,
-  calculateEndDate,
-  isAffiliationActive,
-} from './affiliationUtils';
+import { generateAssuranceNumber, calculateEndDate, isAffiliationActive } from './affiliationUtils';
 
 /**
  * Creates affiliation data based on form state and existing patient data
@@ -71,11 +67,11 @@ export const buildVitalSigns = (
 ) => {
   const anyVitalProvided = Boolean(
     String(formData.temperature).trim() ||
-      String(formData.heartRate).trim() ||
-      String(formData.systolicBP).trim() ||
-      String(formData.diastolicBP).trim() ||
-      String(formData.respiratoryRate).trim() ||
-      String(formData.oxygenSaturation).trim()
+    String(formData.heartRate).trim() ||
+    String(formData.systolicBP).trim() ||
+    String(formData.diastolicBP).trim() ||
+    String(formData.respiratoryRate).trim() ||
+    String(formData.oxygenSaturation).trim()
   );
 
   if (!anyVitalProvided) {
@@ -86,27 +82,27 @@ export const buildVitalSigns = (
     temperature:
       formData.temperature.trim() !== ''
         ? parseFloat(formData.temperature)
-        : existingVitals?.temperature ?? 0,
+        : (existingVitals?.temperature ?? 0),
     heartRate:
       formData.heartRate.trim() !== ''
         ? parseInt(formData.heartRate, 10)
-        : existingVitals?.heartRate ?? 0,
+        : (existingVitals?.heartRate ?? 0),
     systolicBP:
       formData.systolicBP.trim() !== ''
         ? parseInt(formData.systolicBP, 10)
-        : existingVitals?.systolicBP ?? 0,
+        : (existingVitals?.systolicBP ?? 0),
     diastolicBP:
       formData.diastolicBP.trim() !== ''
         ? parseInt(formData.diastolicBP, 10)
-        : existingVitals?.diastolicBP ?? 0,
+        : (existingVitals?.diastolicBP ?? 0),
     respiratoryRate:
       formData.respiratoryRate.trim() !== ''
         ? parseInt(formData.respiratoryRate, 10)
-        : existingVitals?.respiratoryRate ?? 0,
+        : (existingVitals?.respiratoryRate ?? 0),
     oxygenSaturation:
       formData.oxygenSaturation.trim() !== ''
         ? parseInt(formData.oxygenSaturation, 10)
-        : existingVitals?.oxygenSaturation ?? 0,
+        : (existingVitals?.oxygenSaturation ?? 0),
   };
 };
 

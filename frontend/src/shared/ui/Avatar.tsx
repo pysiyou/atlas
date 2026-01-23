@@ -10,13 +10,13 @@ export interface AvatarProps {
   secondaryText?: string;
 }
 
-export const Avatar: React.FC<AvatarProps> = ({ 
-  primaryText, 
-  src, 
-  size = 'md', 
+export const Avatar: React.FC<AvatarProps> = ({
+  primaryText,
+  src,
+  size = 'md',
   className = '',
   onClick,
-  secondaryText
+  secondaryText,
 }) => {
   const [imageError, setImageError] = useState(false);
 
@@ -26,34 +26,34 @@ export const Avatar: React.FC<AvatarProps> = ({
     sm: 'w-8 h-8 text-xs',
     md: 'w-10 h-10 text-sm',
     lg: 'w-12 h-12 text-base',
-    xl: 'w-14 h-14 text-lg'
+    xl: 'w-14 h-14 text-lg',
   };
 
   const textSizeClasses = {
     xxs: {
       primary: 'text-xxs',
-      secondary: 'text-[10px]'
+      secondary: 'text-[10px]',
     },
     xs: {
       primary: 'text-xs',
-      secondary: 'text-[10px]'
+      secondary: 'text-[10px]',
     },
     sm: {
       primary: 'text-sm',
-      secondary: 'text-xxs'
+      secondary: 'text-xxs',
     },
     md: {
       primary: 'text-base',
-      secondary: 'text-xs'
+      secondary: 'text-xs',
     },
     lg: {
       primary: 'text-lg',
-      secondary: 'text-sm'
+      secondary: 'text-sm',
     },
     xl: {
       primary: 'text-xl',
-      secondary: 'text-base'
-    }
+      secondary: 'text-base',
+    },
   };
 
   const Container = onClick ? 'button' : 'div';
@@ -79,7 +79,7 @@ export const Avatar: React.FC<AvatarProps> = ({
           {getInitials(primaryText)}
         </div>
       )}
-      
+
       {/* Primary and secondary text */}
       {hasText && (
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">

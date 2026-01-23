@@ -26,14 +26,14 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
         <Input
           label="Referring Physician"
           value={referringPhysician}
-          onChange={(e) => onReferringPhysicianChange(e.target.value)}
+          onChange={e => onReferringPhysicianChange(e.target.value)}
           placeholder="Dr. Smith"
         />
 
         <Select
           label="Priority"
           value={priority}
-          onChange={(e) => onPriorityChange(e.target.value as PriorityLevel)}
+          onChange={e => onPriorityChange(e.target.value as PriorityLevel)}
           options={PRIORITY_LEVEL_OPTIONS}
           required
         />
@@ -41,7 +41,7 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
         <Textarea
           label="Clinical Notes"
           value={clinicalNotes}
-          onChange={(e) => onClinicalNotesChange(e.target.value)}
+          onChange={e => onClinicalNotesChange(e.target.value)}
           placeholder="Clinical indication or reason for testing..."
           helperText="Include relevant symptoms, diagnosis, or reason for testing"
         />

@@ -1,6 +1,6 @@
 /**
  * DateRangeFilter - Date range picker component
- * 
+ *
  * Provides a consistent date range selection interface.
  * Supports quick presets and custom range selection.
  */
@@ -29,7 +29,7 @@ const PRESETS = [
 
 /**
  * DateRangeFilter component
- * 
+ *
  * @example
  * ```tsx
  * <DateRangeFilter
@@ -45,12 +45,8 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
   label = 'Date Range',
   className = '',
 }) => {
-  const [startDate, setStartDate] = useState<string>(
-    value?.[0]?.toISOString().split('T')[0] || ''
-  );
-  const [endDate, setEndDate] = useState<string>(
-    value?.[1]?.toISOString().split('T')[0] || ''
-  );
+  const [startDate, setStartDate] = useState<string>(value?.[0]?.toISOString().split('T')[0] || '');
+  const [endDate, setEndDate] = useState<string>(value?.[1]?.toISOString().split('T')[0] || '');
 
   const applyPreset = (days: number) => {
     const end = new Date();
@@ -113,7 +109,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
 
       {/* Quick presets */}
       <div className="flex flex-wrap gap-2">
-        {PRESETS.map((preset) => (
+        {PRESETS.map(preset => (
           <button
             key={preset.label}
             onClick={() => applyPreset(preset.days)}
@@ -134,7 +130,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
           <input
             type="date"
             value={startDate}
-            onChange={(e) => handleStartChange(e.target.value)}
+            onChange={e => handleStartChange(e.target.value)}
             className="w-full pl-10 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             placeholder="Start date"
           />
@@ -147,7 +143,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
           <input
             type="date"
             value={endDate}
-            onChange={(e) => handleEndChange(e.target.value)}
+            onChange={e => handleEndChange(e.target.value)}
             className="w-full pl-10 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             placeholder="End date"
           />

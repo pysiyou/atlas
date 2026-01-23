@@ -24,7 +24,13 @@ type OrderStatus = OrderStatusType;
 type PriorityLevel = PriorityLevelType;
 type PaymentStatus = PaymentStatusType;
 
-export type ResultStatus = 'normal' | 'high' | 'low' | 'critical' | 'critical-high' | 'critical-low';
+export type ResultStatus =
+  | 'normal'
+  | 'high'
+  | 'low'
+  | 'critical'
+  | 'critical-high'
+  | 'critical-low';
 
 export type ValidationDecision = 'approved' | 'rejected' | 'repeat-required';
 
@@ -55,17 +61,17 @@ export interface TestResult {
 
 export interface OrderTest {
   // Identity
-  id?: number;                         // Integer ID, displayed as TST{id}
-  testCode: string;                    // Links to Test catalog
-  testName: string;                    // From API relationship
-  sampleType: string;                  // From API relationship
+  id?: number; // Integer ID, displayed as TST{id}
+  testCode: string; // Links to Test catalog
+  testName: string; // From API relationship
+  sampleType: string; // From API relationship
 
   // Order-specific state
   status: TestStatus;
-  priceAtOrder: number;                // Snapshot for billing
+  priceAtOrder: number; // Snapshot for billing
 
   // Sample linkage
-  sampleId?: number;                   // Links to Sample (assigned after sample generation)
+  sampleId?: number; // Links to Sample (assigned after sample generation)
 
   // Results (order-specific)
   results: Record<string, TestResult> | null;
@@ -91,10 +97,10 @@ export interface OrderTest {
   repeatNumber?: number;
 
   // Re-test tracking (for result validation rejection flow)
-  isRetest?: boolean;                   // True if this is a retest of a rejected result
-  retestOfTestId?: number;              // Links to original OrderTest.id that was rejected
-  retestNumber?: number;                // 0 = original, 1 = 1st retest, etc.
-  retestOrderTestId?: number;           // Points to the new retest entry created after rejection
+  isRetest?: boolean; // True if this is a retest of a rejected result
+  retestOfTestId?: number; // Links to original OrderTest.id that was rejected
+  retestNumber?: number; // 0 = original, 1 = 1st retest, etc.
+  retestOrderTestId?: number; // Points to the new retest entry created after rejection
 
   // Result rejection history (for validation rejections)
   resultRejectionHistory?: ResultRejectionRecord[];
@@ -109,9 +115,9 @@ export interface OrderTest {
 
 export interface Order {
   // Identity
-  orderId: number;                     // Integer ID, displayed as ORD{id}
-  patientId: number;                   // Links to Patient
-  patientName: string;                 // From API relationship
+  orderId: number; // Integer ID, displayed as ORD{id}
+  patientId: number; // Links to Patient
+  patientName: string; // From API relationship
   orderDate: string;
 
   // Tests
@@ -123,7 +129,7 @@ export interface Order {
   overallStatus: OrderStatus;
 
   // Scheduling
-  appointmentId?: number;              // Links to Appointment
+  appointmentId?: number; // Links to Appointment
   scheduledCollectionTime?: string;
 
   // Instructions
@@ -134,13 +140,13 @@ export interface Order {
   priority: PriorityLevel;
 
   // Delivery tracking (optional - for detailed timeline)
-  deliveredAt?: string;                // When results were delivered
-  deliveredBy?: string;                // User who delivered results
+  deliveredAt?: string; // When results were delivered
+  deliveredBy?: string; // User who delivered results
   deliveryMethod?: 'email' | 'portal' | 'print' | 'sms';
 
   // Payment tracking (optional - for detailed timeline)
-  paidAt?: string;                     // When payment was received
-  paymentMethod?: string;              // How payment was made
+  paidAt?: string; // When payment was received
+  paymentMethod?: string; // How payment was made
 
   // Metadata
   createdBy: number;

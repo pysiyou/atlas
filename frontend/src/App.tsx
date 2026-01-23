@@ -26,8 +26,12 @@ const Dashboard = lazy(() => import('@/pages/DashboardPage').then(m => ({ defaul
 const Patients = lazy(() => import('@/pages/PatientsPage').then(m => ({ default: m.Patients })));
 const Orders = lazy(() => import('@/pages/OrdersPage').then(m => ({ default: m.Orders })));
 const Catalog = lazy(() => import('@/pages/CatalogPage').then(m => ({ default: m.Catalog })));
-const Laboratory = lazy(() => import('@/pages/LaboratoryPage').then(m => ({ default: m.Laboratory })));
-const Appointments = lazy(() => import('@/pages/AppointmentsPage').then(m => ({ default: m.Appointments })));
+const Laboratory = lazy(() =>
+  import('@/pages/LaboratoryPage').then(m => ({ default: m.Laboratory }))
+);
+const Appointments = lazy(() =>
+  import('@/pages/AppointmentsPage').then(m => ({ default: m.Appointments }))
+);
 const Payments = lazy(() => import('@/pages/PaymentsPage').then(m => ({ default: m.Payments })));
 const Reports = lazy(() => import('@/pages/ReportsPage').then(m => ({ default: m.Reports })));
 const Admin = lazy(() => import('@/pages/AdminPage').then(m => ({ default: m.Admin })));
@@ -52,21 +56,16 @@ interface ProtectedFeatureRouteProps {
   featureName: string;
 }
 
-const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ 
-  children, 
-  featureName 
-}) => {
+const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children, featureName }) => {
   const { isAuthenticated } = useAuth();
-  
+
   if (!isAuthenticated) {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
-  
+
   return (
     <DashboardLayout>
-      <FeatureErrorBoundary featureName={featureName}>
-        {children}
-      </FeatureErrorBoundary>
+      <FeatureErrorBoundary featureName={featureName}>{children}</FeatureErrorBoundary>
     </DashboardLayout>
   );
 };

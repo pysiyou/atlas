@@ -20,7 +20,10 @@ export const REJECTION_REASON_VALUES = [
 export type RejectionReason = (typeof REJECTION_REASON_VALUES)[number];
 
 // 3. CONFIG - Metadata for each value
-export const REJECTION_REASON_CONFIG: Record<RejectionReason, { label: string; description: string }> = {
+export const REJECTION_REASON_CONFIG: Record<
+  RejectionReason,
+  { label: string; description: string }
+> = {
   hemolyzed: { label: 'Hemolyzed', description: 'Blood breakdown detected' },
   clotted: { label: 'Clotted', description: 'Sample clotted when it should not have' },
   qns: { label: 'QNS', description: 'Quantity Not Sufficient' },
@@ -34,7 +37,7 @@ export const REJECTION_REASON_CONFIG: Record<RejectionReason, { label: string; d
 };
 
 // 4. OPTIONS - For dropdowns/selects
-export const REJECTION_REASON_OPTIONS = REJECTION_REASON_VALUES.map((value) => ({
+export const REJECTION_REASON_OPTIONS = REJECTION_REASON_VALUES.map(value => ({
   value,
   label: REJECTION_REASON_CONFIG[value].label,
   description: REJECTION_REASON_CONFIG[value].description,

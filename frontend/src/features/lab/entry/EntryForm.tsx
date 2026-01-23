@@ -32,19 +32,14 @@ const RadioOption: React.FC<{
   return (
     <label
       className={cn(
-        "group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150",
-        "hover:bg-gray-50/80",
-        isSelected && "bg-sky-50/50"
+        'group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150',
+        'hover:bg-gray-50/80',
+        isSelected && 'bg-sky-50/50'
       )}
     >
       {/* Radio button */}
       <div className="flex-shrink-0 mr-3">
-        <input
-          type="radio"
-          checked={isSelected}
-          onChange={onSelect}
-          className="sr-only"
-        />
+        <input type="radio" checked={isSelected} onChange={onSelect} className="sr-only" />
         {isSelected ? (
           <div className="w-5 h-5 rounded-full flex items-center justify-center bg-sky-500 transition-all duration-150">
             <div className="w-2 h-2 rounded-full bg-white" />
@@ -55,10 +50,12 @@ const RadioOption: React.FC<{
       </div>
 
       {/* Option label */}
-      <span className={cn(
-        "text-sm transition-colors",
-        isSelected ? "text-gray-900 font-medium" : "text-gray-600 group-hover:text-gray-900"
-      )}>
+      <span
+        className={cn(
+          'text-sm transition-colors',
+          isSelected ? 'text-gray-900 font-medium' : 'text-gray-600 group-hover:text-gray-900'
+        )}
+      >
         {option}
       </span>
     </label>
@@ -91,10 +88,10 @@ const SelectParameterInput: React.FC<{
         <div
           id={inputId}
           className={cn(
-            "flex items-center gap-2 px-3 py-2 bg-white border rounded cursor-pointer transition-colors w-full h-[38px]",
+            'flex items-center gap-2 px-3 py-2 bg-white border rounded cursor-pointer transition-colors w-full h-[38px]',
             isOpen
-              ? "border-sky-500 ring-2 ring-sky-500/20"
-              : "border-gray-300 hover:border-gray-400"
+              ? 'border-sky-500 ring-2 ring-sky-500/20'
+              : 'border-gray-300 hover:border-gray-400'
           )}
         >
           {/* Content */}
@@ -110,8 +107,8 @@ const SelectParameterInput: React.FC<{
           <Icon
             name="chevron-down"
             className={cn(
-              "w-4 h-4 text-gray-400 transition-transform flex-shrink-0",
-              isOpen && "rotate-180"
+              'w-4 h-4 text-gray-400 transition-transform flex-shrink-0',
+              isOpen && 'rotate-180'
             )}
           />
 
@@ -132,7 +129,7 @@ const SelectParameterInput: React.FC<{
         <div className="flex flex-col py-1">
           {/* Options list */}
           <div className="max-h-[250px] overflow-y-auto">
-            {param.allowedValues?.map((option) => (
+            {param.allowedValues?.map(option => (
               <RadioOption
                 key={option}
                 option={option}
@@ -158,13 +155,16 @@ const ParameterInput: React.FC<{
   onKeyDown: (e: React.KeyboardEvent) => void;
   inputId: string;
 }> = ({ param, value, onChange, onKeyDown, inputId }) => {
-  const valueType = param.valueType || (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
+  const valueType =
+    param.valueType ||
+    (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
   const normalizedValue = value ?? '';
 
   const commonProps = {
     id: inputId,
     value: normalizedValue,
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => onChange(e.target.value),
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+      onChange(e.target.value),
     onKeyDown,
   };
 
@@ -232,7 +232,9 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 }) => {
   if (!testDef?.parameters) return null;
 
-  const gridCols = isModal ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2';
+  const gridCols = isModal
+    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+    : 'grid-cols-1 sm:grid-cols-2';
 
   return (
     <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
@@ -241,16 +243,23 @@ export const EntryForm: React.FC<EntryFormProps> = ({
           const value = results[param.code] ?? '';
           const refRange = getReferenceRangeDisplay(param, patient);
           const isCritical = checkCriticalStatus(param, value);
-          const valueType = param.valueType || (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
+          const valueType =
+            param.valueType ||
+            (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
 
           return (
             <div key={param.code} className="group">
               <div className="flex justify-between items-baseline mb-1 gap-2">
-                <label htmlFor={`result-${resultKey}-${param.code}`} className="text-[10px] font-medium text-gray-500 cursor-pointer truncate min-w-0">
+                <label
+                  htmlFor={`result-${resultKey}-${param.code}`}
+                  className="text-[10px] font-medium text-gray-500 cursor-pointer truncate min-w-0"
+                >
                   {param.name}
                 </label>
                 <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
-                  {isCritical && <Icon name="danger-square" className="w-3 h-3 text-red-500 shrink-0" />}
+                  {isCritical && (
+                    <Icon name="danger-square" className="w-3 h-3 text-red-500 shrink-0" />
+                  )}
                   <span className="text-[10px] text-gray-400 truncate">Ref: {refRange}</span>
                 </div>
               </div>
@@ -259,8 +268,8 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 <ParameterInput
                   param={param}
                   value={value}
-                  onChange={(newValue) => onResultsChange(resultKey, param.code, newValue ?? '')}
-                  onKeyDown={(e) => {
+                  onChange={newValue => onResultsChange(resultKey, param.code, newValue ?? '')}
+                  onKeyDown={e => {
                     if (e.key === 'Enter' && isComplete) {
                       e.preventDefault();
                       onSave();
@@ -270,7 +279,9 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 />
                 {valueType !== 'TEXT' && (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0 max-w-[40%]">
-                    <span className="text-xs text-gray-400 select-none truncate">{param.unit || ''}</span>
+                    <span className="text-xs text-gray-400 select-none truncate">
+                      {param.unit || ''}
+                    </span>
                   </div>
                 )}
                 {isCritical && (
@@ -286,13 +297,16 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
       {/* Technician Notes */}
       <div className="mt-4">
-        <label htmlFor={`notes-${resultKey}`} className="text-xs font-medium text-gray-500 mb-1 block">
+        <label
+          htmlFor={`notes-${resultKey}`}
+          className="text-xs font-medium text-gray-500 mb-1 block"
+        >
           Technician Notes (Optional)
         </label>
         <Textarea
           id={`notes-${resultKey}`}
           value={technicianNotes ?? ''}
-          onChange={(e) => onNotesChange(resultKey, e.target.value ?? '')}
+          onChange={e => onNotesChange(resultKey, e.target.value ?? '')}
           placeholder="Analysis notes..."
           rows={isModal ? 3 : 1}
         />
@@ -301,7 +315,12 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       {/* Submit button (card context only) */}
       {!isModal && (
         <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-gray-50 border-t border-gray-100 rounded-b flex items-center justify-end">
-          <Button onClick={onSave} disabled={!isComplete} variant="submit" className="shadow-sm text-xs">
+          <Button
+            onClick={onSave}
+            disabled={!isComplete}
+            variant="submit"
+            className="shadow-sm text-xs"
+          >
             Submit Results
           </Button>
         </div>

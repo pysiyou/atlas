@@ -1,6 +1,6 @@
 /**
  * Gender - Single Source of Truth
- * 
+ *
  * Note: Badge colors for gender are defined in the Badge component.
  * Use the gender value directly as the Badge variant (e.g., variant="male").
  */
@@ -18,7 +18,7 @@ export const GENDER_CONFIG: Record<Gender, { label: string }> = {
 };
 
 // 4. OPTIONS - For dropdowns/selects
-export const GENDER_OPTIONS = GENDER_VALUES.map((value) => ({
+export const GENDER_OPTIONS = GENDER_VALUES.map(value => ({
   value,
   label: GENDER_CONFIG[value].label,
 }));

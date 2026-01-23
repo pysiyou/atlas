@@ -49,4 +49,3 @@ export const patientAPI = {
     return apiClient.get<Patient[]>('/patients/search', { q: query });
   },
 };
-

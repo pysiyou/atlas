@@ -130,9 +130,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         medicalHistory.allergies.length === 0 &&
         medicalHistory.previousSurgeries.length === 0 &&
         !medicalHistory.familyHistory && (
-          <div className="text-center py-8 text-gray-400 text-sm">
-            No medical history recorded
-          </div>
+          <div className="text-center py-8 text-gray-400 text-sm">No medical history recorded</div>
         )}
     </SectionContainer>
   );

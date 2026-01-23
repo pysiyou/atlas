@@ -1,6 +1,6 @@
 /**
  * User Role - Single Source of Truth
- * 
+ *
  * Note: Badge colors for user roles are defined in the Badge component.
  * Use the role value directly as the Badge variant (e.g., variant="receptionist").
  */
@@ -17,10 +17,7 @@ export const USER_ROLE_VALUES = [
 export type UserRole = (typeof USER_ROLE_VALUES)[number];
 
 // 3. CONFIG - Metadata for each value (label and description only, colors handled by Badge)
-export const USER_ROLE_CONFIG: Record<
-  UserRole,
-  { label: string; description: string }
-> = {
+export const USER_ROLE_CONFIG: Record<UserRole, { label: string; description: string }> = {
   receptionist: {
     label: 'Receptionist',
     description: 'Front desk and patient registration',
@@ -40,7 +37,7 @@ export const USER_ROLE_CONFIG: Record<
 };
 
 // 4. OPTIONS - For dropdowns/selects
-export const USER_ROLE_OPTIONS = USER_ROLE_VALUES.map((value) => ({
+export const USER_ROLE_OPTIONS = USER_ROLE_VALUES.map(value => ({
   value,
   label: USER_ROLE_CONFIG[value].label,
 }));

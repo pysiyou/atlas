@@ -1,6 +1,6 @@
 /**
  * SectionCard - Standardized section container component
- * 
+ *
  * Provides a consistent card-based section layout with optional collapsible functionality.
  * Used in detail views for organizing related information.
  */
@@ -30,7 +30,7 @@ export interface SectionCardProps {
 
 /**
  * SectionCard component
- * 
+ *
  * @example
  * ```tsx
  * <SectionCard title="General Info" icon="user">
@@ -82,11 +82,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
       </div>
 
       {/* Content */}
-      {(!collapsible || isExpanded) && (
-        <div className={`p-4 ${contentClassName}`}>
-          {children}
-        </div>
-      )}
+      {(!collapsible || isExpanded) && <div className={`p-4 ${contentClassName}`}>{children}</div>}
     </div>
   );
 };

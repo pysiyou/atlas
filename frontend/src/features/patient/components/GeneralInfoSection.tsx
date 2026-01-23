@@ -17,9 +17,8 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
   patient,
   layout = 'column',
 }) => {
-  const containerClass = layout === 'grid'
-    ? 'grid grid-cols-1 sm:grid-cols-2 gap-5'
-    : 'flex flex-col gap-3';
+  const containerClass =
+    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-5' : 'flex flex-col gap-3';
 
   return (
     <div className={containerClass}>
@@ -41,9 +40,7 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
       <InfoField
         icon="mail"
         label="Email"
-        value={
-          <span className="line-clamp-2 break-all">{patient.email || 'N/A'}</span>
-        }
+        value={<span className="line-clamp-2 break-all">{patient.email || 'N/A'}</span>}
       />
       <InfoField
         icon="ruler"

@@ -35,9 +35,7 @@ export const TableActionMenu: React.FC<TableActionMenuProps> = ({ children }) =>
       <button
         onClick={toggleMenu}
         className={`w-8 h-8 flex items-center justify-center rounded transition-colors focus:outline-none cursor-pointer ${
-          isOpen 
-            ? 'bg-sky-50 text-sky-600' 
-            : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+          isOpen ? 'bg-sky-50 text-sky-600' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
         }`}
         title="Actions"
       >
@@ -45,9 +43,9 @@ export const TableActionMenu: React.FC<TableActionMenuProps> = ({ children }) =>
       </button>
 
       {isOpen && (
-        <div 
+        <div
           className="absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50 py-1 origin-top-right focus:outline-none"
-          onClick={(e) => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
         >
           {children}
         </div>
@@ -63,11 +61,11 @@ interface TableActionItemProps {
   variant?: 'default' | 'danger';
 }
 
-export const TableActionItem: React.FC<TableActionItemProps> = ({ 
-  onClick, 
-  icon, 
-  label, 
-  variant = 'default' 
+export const TableActionItem: React.FC<TableActionItemProps> = ({
+  onClick,
+  icon,
+  label,
+  variant = 'default',
 }) => {
   return (
     <button
@@ -75,14 +73,16 @@ export const TableActionItem: React.FC<TableActionItemProps> = ({
         onClick();
         // Menu closing is handled by the parent's click outside or navigation
         // But for direct actions we might want to close it manually if we had access to setIsOpen
-        // However, usually navigation or state change will happen. 
+        // However, usually navigation or state change will happen.
         // For now let's rely on standard flow.
       }}
       className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-50 transition-colors cursor-pointer ${
         variant === 'danger' ? 'text-red-600 hover:bg-red-50' : 'text-gray-700'
       }`}
     >
-      {icon && <span className={variant === 'danger' ? 'text-red-600' : 'text-gray-500'}>{icon}</span>}
+      {icon && (
+        <span className={variant === 'danger' ? 'text-red-600' : 'text-gray-500'}>{icon}</span>
+      )}
       <span>{label}</span>
     </button>
   );

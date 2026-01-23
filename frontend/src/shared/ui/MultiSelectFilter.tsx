@@ -12,16 +12,16 @@
  * - Shows count when multiple selected, badge when single selected
  */
 
-import React, { useCallback, useMemo } from "react";
-import { Minus } from "lucide-react";
-import { Popover } from "./Popover";
-import { cn } from "@/utils";
+import React, { useCallback, useMemo } from 'react';
+import { Minus } from 'lucide-react';
+import { Popover } from './Popover';
+import { cn } from '@/utils';
 
 /**
  * Option item for the filter
  */
-import { Badge } from "./Badge";
-import { Icon, type IconName } from "./Icon";
+import { Badge } from './Badge';
+import { Icon, type IconName } from './Icon';
 
 /**
  * Option item for the filter
@@ -68,19 +68,14 @@ const ListItem: React.FC<{
   return (
     <label
       className={cn(
-        "group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150",
-        "hover:bg-gray-50/80",
-        isSelected && "bg-sky-50/30"
+        'group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150',
+        'hover:bg-gray-50/80',
+        isSelected && 'bg-sky-50/30'
       )}
     >
       {/* Checkbox */}
       <div className="shrink-0 mr-3">
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={onToggle}
-          className="sr-only"
-        />
+        <input type="checkbox" checked={isSelected} onChange={onToggle} className="sr-only" />
         {isSelected ? (
           <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
             <Icon name="check" className="w-3.5 h-3.5 text-white" />
@@ -91,7 +86,7 @@ const ListItem: React.FC<{
       </div>
 
       {/* Badge */}
-      <Badge variant={option.color || "default"} size="sm">
+      <Badge variant={option.color || 'default'} size="sm">
         {option.label.toUpperCase()}
       </Badge>
     </label>
@@ -108,8 +103,8 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   onChange,
   placeholder,
   showSelectAll = true,
-  selectAllLabel = "Select all",
-  className = "",
+  selectAllLabel = 'Select all',
+  className = '',
   icon,
 }) => {
   // Check if all options are selected
@@ -128,7 +123,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   const handleToggle = useCallback(
     (id: string) => {
       const newSelected = selectedIds.includes(id)
-        ? selectedIds.filter((selectedId) => selectedId !== id)
+        ? selectedIds.filter(selectedId => selectedId !== id)
         : [...selectedIds, id];
       onChange(newSelected);
     },
@@ -140,7 +135,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
     if (allSelected) {
       onChange([]);
     } else {
-      onChange(options.map((opt) => opt.id));
+      onChange(options.map(opt => opt.id));
     }
   }, [allSelected, options, onChange]);
 
@@ -156,7 +151,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   // Get single selected option for display
   const singleSelectedOption = useMemo(() => {
     if (selectedIds.length === 1) {
-      return options.find((opt) => opt.id === selectedIds[0]);
+      return options.find(opt => opt.id === selectedIds[0]);
     }
     return null;
   }, [selectedIds, options]);
@@ -164,14 +159,16 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   // Render the trigger content
   const renderTriggerContent = () => {
     if (selectedIds.length === 0) {
-      return (
-        <span className="text-gray-500">{placeholder || `Select ${label}...`}</span>
-      );
+      return <span className="text-gray-500">{placeholder || `Select ${label}...`}</span>;
     }
 
     if (singleSelectedOption) {
       // Show badge for single selection
-      return <Badge variant={singleSelectedOption.color || "default"} size="xs">{singleSelectedOption.label.toUpperCase()}</Badge>;
+      return (
+        <Badge variant={singleSelectedOption.color || 'default'} size="xs">
+          {singleSelectedOption.label.toUpperCase()}
+        </Badge>
+      );
     }
 
     // Show count for multiple selections
@@ -192,10 +189,10 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            "inline-flex items-center gap-2 px-3 py-1.5 bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] h-[34px]",
+            'inline-flex items-center gap-2 px-3 py-1.5 bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] h-[34px]',
             isOpen
-              ? "border-sky-500 ring-2 ring-sky-500/20"
-              : "border-gray-300 hover:border-gray-400",
+              ? 'border-sky-500 ring-2 ring-sky-500/20'
+              : 'border-gray-300 hover:border-gray-400',
             className
           )}
         >
@@ -208,10 +205,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
           {/* Chevron */}
           <Icon
             name="chevron-down"
-            className={cn(
-              "w-4 h-4 text-gray-400 transition-transform",
-              isOpen && "rotate-180"
-            )}
+            className={cn('w-4 h-4 text-gray-400 transition-transform', isOpen && 'rotate-180')}
           />
 
           {/* Clear button */}
@@ -231,7 +225,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
         <div className="flex flex-col py-1">
           {/* Options list */}
           <div className="max-h-[300px] overflow-y-auto">
-            {options.map((option) => (
+            {options.map(option => (
               <ListItem
                 key={option.id}
                 option={option}

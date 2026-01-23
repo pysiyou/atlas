@@ -59,7 +59,9 @@ export const displayId = {
  * @example parseDisplayId('PAT0042') => { entityType: 'patient', id: 42 }
  * @example parseDisplayId('PAT42') => { entityType: 'patient', id: 42 } (also handles non-padded format)
  */
-export function parseDisplayId(displayIdStr: string): { entityType: EntityType; id: number } | null {
+export function parseDisplayId(
+  displayIdStr: string
+): { entityType: EntityType; id: number } | null {
   if (!displayIdStr) return null;
 
   const upperStr = displayIdStr.toUpperCase();

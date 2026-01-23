@@ -1,6 +1,6 @@
 /**
  * VitalsSection Component
- * 
+ *
  * Displays and allows editing of patient vital signs in a modern 3-column grid layout.
  * Includes normal range hints for each vital sign.
  */
@@ -104,13 +104,16 @@ const VITALS_CONFIG: VitalConfig[] = [
 /**
  * Determine vital sign status based on value and normal range
  */
-const getVitalStatus = (value: number | undefined, normalRange: { min: number; max: number }): 'normal' | 'borderline' | 'abnormal' | null => {
+const getVitalStatus = (
+  value: number | undefined,
+  normalRange: { min: number; max: number }
+): 'normal' | 'borderline' | 'abnormal' | null => {
   if (value === undefined || value === null || isNaN(value)) {
     return null;
   }
 
   const { min, max } = normalRange;
-  
+
   // Check if within normal range
   if (value >= min && value <= max) {
     return 'normal';
@@ -177,7 +180,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {VITALS_CONFIG.map((config) => {
+      {VITALS_CONFIG.map(config => {
         const fieldName = config.key;
         const value = vitalSigns[fieldName] || '';
         const error = errors[fieldName];
@@ -185,7 +188,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
         const status = getVitalStatus(numericValue, config.normalRange);
         const statusColors = getStatusColors(status);
         const isAbnormal = status === 'abnormal';
-        
+
         // Format reference range for display
         const refRange = `${config.normalRange.min}-${config.normalRange.max}`;
 
@@ -193,20 +196,18 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
           <div key={config.key} className="group">
             {/* Label and reference range row */}
             <div className="flex justify-between items-baseline mb-1 gap-2">
-              <label 
+              <label
                 htmlFor={`vital-${fieldName}`}
                 className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
               >
                 {config.label}
               </label>
-              
+
               <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
-                <span className="text-xs text-gray-400 truncate">
-                  Ref: {refRange}
-                </span>
+                <span className="text-xs text-gray-400 truncate">Ref: {refRange}</span>
               </div>
             </div>
-            
+
             {/* Input wrapper with relative positioning */}
             <div className="relative">
               <input
@@ -230,14 +231,12 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                   ${status ? statusColors.bg : ''}
                 `}
               />
-              
+
               {/* Unit display (absolute positioned) */}
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0 max-w-[40%]">
-                <span className="text-xs text-gray-400 select-none truncate">
-                  {config.unit}
-                </span>
+                <span className="text-xs text-gray-400 select-none truncate">{config.unit}</span>
               </div>
-              
+
               {/* Abnormal value alert (absolute positioned below input) */}
               {isAbnormal && (
                 <div className="absolute -bottom-5 left-0 text-xs text-red-600 font-medium">
@@ -245,11 +244,9 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                 </div>
               )}
             </div>
-            
+
             {/* Error message */}
-            {error && (
-              <p className="mt-1 text-sm text-red-600">{error}</p>
-            )}
+            {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
           </div>
         );
       })}

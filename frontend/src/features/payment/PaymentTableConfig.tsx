@@ -1,6 +1,6 @@
 /**
  * Payment Table Configuration
- * 
+ *
  * Multi-view table configuration for payment list.
  * Defines separate column sets for full table, compact table, and mobile card view.
  */
@@ -16,7 +16,7 @@ import { PaymentCard } from './PaymentCard';
 
 /**
  * Create payment table configuration with full, compact, and card views
- * 
+ *
  * @param navigate - React Router navigate function
  * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
  */
@@ -26,7 +26,7 @@ export const createPaymentTableConfig = (
   // Shared render functions
   const renderOrderId = (item: OrderPaymentDetails) => (
     <button
-      onClick={(e) => {
+      onClick={e => {
         e.stopPropagation();
         navigate(`/orders/${item.orderId}`);
       }}
@@ -45,9 +45,14 @@ export const createPaymentTableConfig = (
 
   const renderTests = (item: OrderPaymentDetails) => (
     <div className="min-w-0">
-      <div className="font-medium truncate">{item.tests?.length || 0} test{(item.tests?.length || 0) !== 1 ? 's' : ''}</div>
+      <div className="font-medium truncate">
+        {item.tests?.length || 0} test{(item.tests?.length || 0) !== 1 ? 's' : ''}
+      </div>
       <div className="text-xs text-gray-500 truncate">
-        {item.tests?.slice(0, 2).map(t => t.testName || t.testCode).join(', ')}
+        {item.tests
+          ?.slice(0, 2)
+          .map(t => t.testName || t.testCode)
+          .join(', ')}
         {(item.tests?.length || 0) > 2 && ` +${(item.tests?.length || 0) - 2} more`}
       </div>
     </div>
@@ -73,15 +78,13 @@ export const createPaymentTableConfig = (
   };
 
   const renderOrderDate = (item: OrderPaymentDetails) => (
-    <span className="text-xs text-gray-500 truncate block">
-      {formatDate(item.orderDate)}
-    </span>
+    <span className="text-xs text-gray-500 truncate block">{formatDate(item.orderDate)}</span>
   );
 
   const renderAction = (item: OrderPaymentDetails) => (
-    <div onClick={(e) => e.stopPropagation()}>
-      <PaymentButton 
-        order={item._order} 
+    <div onClick={e => e.stopPropagation()}>
+      <PaymentButton
+        order={item._order}
         onPaymentSuccess={() => {
           // Refresh the page or update the order status
           window.location.reload();

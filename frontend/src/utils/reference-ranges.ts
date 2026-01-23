@@ -4,13 +4,7 @@
  */
 
 import type { ResultStatus } from '../types';
-import type { 
-  CatalogReferenceRange, 
-  CriticalRange, 
-  TestParameter,
-  Patient,
-  Gender
-} from '@/types';
+import type { CatalogReferenceRange, CriticalRange, TestParameter, Patient, Gender } from '@/types';
 
 /**
  * Parse reference range string (e.g., "13.5-17.5", "<5.2", ">1.0")
@@ -26,28 +20,28 @@ const parseReferenceRange = (range: string): ParsedRange => {
   if (range.startsWith('<')) {
     return {
       max: parseFloat(range.slice(1)),
-      type: 'less-than'
+      type: 'less-than',
     };
   }
-  
+
   // Check for greater than (e.g., ">1.0")
   if (range.startsWith('>')) {
     return {
       min: parseFloat(range.slice(1)),
-      type: 'greater-than'
+      type: 'greater-than',
     };
   }
-  
+
   // Check for range (e.g., "13.5-17.5")
   if (range.includes('-')) {
     const [minStr, maxStr] = range.split('-');
     return {
       min: parseFloat(minStr),
       max: parseFloat(maxStr),
-      type: 'range'
+      type: 'range',
     };
   }
-  
+
   return { type: 'text' };
 };
 
@@ -57,29 +51,26 @@ const parseReferenceRange = (range: string): ParsedRange => {
  * @param referenceRange - The reference range string
  * @returns Status: 'normal', 'high', 'low', or 'critical'
  */
-export const checkReferenceRange = (
-  value: number,
-  referenceRange: string
-): ResultStatus => {
+export const checkReferenceRange = (value: number, referenceRange: string): ResultStatus => {
   const parsed = parseReferenceRange(referenceRange);
-  
+
   if (parsed.type === 'text') {
     return 'normal'; // Can't determine for text ranges
   }
-  
+
   if (parsed.type === 'less-than') {
     if (parsed.max === undefined) return 'normal';
     return value < parsed.max ? 'normal' : 'high';
   }
-  
+
   if (parsed.type === 'greater-than') {
     if (parsed.min === undefined) return 'normal';
     return value > parsed.min ? 'normal' : 'low';
   }
-  
+
   if (parsed.type === 'range') {
     if (parsed.min === undefined || parsed.max === undefined) return 'normal';
-    
+
     if (value < parsed.min) {
       // Check if critically low (less than 50% of minimum)
       if (value < parsed.min * 0.5) {
@@ -87,7 +78,7 @@ export const checkReferenceRange = (
       }
       return 'low';
     }
-    
+
     if (value > parsed.max) {
       // Check if critically high (more than 150% of maximum)
       if (value > parsed.max * 1.5) {
@@ -95,10 +86,10 @@ export const checkReferenceRange = (
       }
       return 'high';
     }
-    
+
     return 'normal';
   }
-  
+
   return 'normal';
 };
 
@@ -155,7 +146,7 @@ export function getPatientSpecificRange(
       age = calculateAge(patient.dateOfBirth);
     }
   }
-  
+
   // Check for gender-specific ranges first
   if (patient?.gender === 'male' && catalogRange.adult_male) {
     return {
@@ -163,14 +154,14 @@ export function getPatientSpecificRange(
       source: 'adult_male',
     };
   }
-  
+
   if (patient?.gender === 'female' && catalogRange.adult_female) {
     return {
       ...catalogRange.adult_female,
       source: 'adult_female',
     };
   }
-  
+
   // Check pediatric if age is available and patient is under 18
   if (age !== undefined && age < 18 && catalogRange.pediatric) {
     return {
@@ -178,7 +169,7 @@ export function getPatientSpecificRange(
       source: 'pediatric',
     };
   }
-  
+
   // Fall back to general adult range
   if (catalogRange.adult_general) {
     return {
@@ -186,27 +177,24 @@ export function getPatientSpecificRange(
       source: 'adult_general',
     };
   }
-  
+
   return { source: 'none' };
 }
 
 /**
  * Check if a numeric value is in critical range
  */
-export function isCriticalValue(
-  value: number,
-  criticalRange?: CriticalRange
-): boolean {
+export function isCriticalValue(value: number, criticalRange?: CriticalRange): boolean {
   if (!criticalRange) return false;
-  
+
   if (criticalRange.low !== undefined && value < criticalRange.low) {
     return true;
   }
-  
+
   if (criticalRange.high !== undefined && value > criticalRange.high) {
     return true;
   }
-  
+
   return false;
 }
 
@@ -222,15 +210,15 @@ export function checkReferenceRangeWithDemographics(
   if (parameter.criticalLow !== undefined && value < parameter.criticalLow) {
     return 'critical';
   }
-  
+
   if (parameter.criticalHigh !== undefined && value > parameter.criticalHigh) {
     return 'critical';
   }
-  
+
   // Check catalog reference range if available
   if (parameter.catalogReferenceRange) {
     const range = getPatientSpecificRange(parameter.catalogReferenceRange, patient);
-    
+
     if (range.low !== undefined && value < range.low) {
       // Check if critically low (less than 50% of minimum)
       if (parameter.criticalLow !== undefined && value < parameter.criticalLow) {
@@ -238,7 +226,7 @@ export function checkReferenceRangeWithDemographics(
       }
       return 'low';
     }
-    
+
     if (range.high !== undefined && value > range.high) {
       // Check if critically high (more than 150% of maximum)
       if (parameter.criticalHigh !== undefined && value > parameter.criticalHigh) {
@@ -246,10 +234,10 @@ export function checkReferenceRangeWithDemographics(
       }
       return 'high';
     }
-    
+
     return 'normal';
   }
-  
+
   // Fall back to legacy string-based range checking
   return checkReferenceRange(value, parameter.referenceRange);
 }
@@ -274,7 +262,7 @@ export function formatReferenceRange(
     }
     return 'N/A';
   }
-  
+
   // Handle CatalogReferenceRange (needs resolution)
   if ('adult_general' in range || 'adult_male' in range || 'adult_female' in range) {
     const resolved = getPatientSpecificRange(range as CatalogReferenceRange, demographics);
@@ -288,6 +276,6 @@ export function formatReferenceRange(
       return `<${resolved.high}`;
     }
   }
-  
+
   return 'N/A';
 }

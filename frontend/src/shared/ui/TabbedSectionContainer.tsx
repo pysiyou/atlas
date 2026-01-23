@@ -61,7 +61,7 @@ export const TabbedSectionContainer: React.FC<TabbedSectionContainerProps> = ({
   testId,
 }) => {
   // Filter disabled tabs to match CargoPlan behavior
-  const enabledTabs = tabs.filter((t) => t.enabled !== false);
+  const enabledTabs = tabs.filter(t => t.enabled !== false);
   const headerRef = useRef<HTMLDivElement | null>(null);
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
 
@@ -69,13 +69,13 @@ export const TabbedSectionContainer: React.FC<TabbedSectionContainerProps> = ({
     <SectionContainer
       testId={testId}
       headerLeft={
-        <div 
+        <div
           ref={headerRef}
           className="self-stretch flex items-center relative -mx-4 -my-3 px-4 py-3"
         >
           {headerLeft && <div className="mr-4">{headerLeft}</div>}
           <TabsList
-            tabs={enabledTabs.map((t) => ({
+            tabs={enabledTabs.map(t => ({
               id: t.id,
               label: t.label,
               count: t.count,
@@ -97,9 +97,10 @@ export const TabbedSectionContainer: React.FC<TabbedSectionContainerProps> = ({
               bottom: '-1px', // Overlap the 1px border to eliminate gap
               left: `${indicator.left}px`,
               width: `${indicator.width}px`,
-              transition: indicator.left > 0 || indicator.width > 0
-                ? 'left 280ms cubic-bezier(0.4, 0, 0.2, 1), width 280ms cubic-bezier(0.4, 0, 0.2, 1)'
-                : 'none',
+              transition:
+                indicator.left > 0 || indicator.width > 0
+                  ? 'left 280ms cubic-bezier(0.4, 0, 0.2, 1), width 280ms cubic-bezier(0.4, 0, 0.2, 1)'
+                  : 'none',
               transform: 'translateZ(0)',
               willChange: 'left, width',
             }}
@@ -117,4 +118,3 @@ export const TabbedSectionContainer: React.FC<TabbedSectionContainerProps> = ({
     </SectionContainer>
   );
 };
-

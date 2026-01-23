@@ -4,13 +4,7 @@
  */
 
 import React from 'react';
-import {
-  UserCog,
-  Settings,
-  Bell,
-  Box,
-  Shield,
-} from 'lucide-react';
+import { UserCog, Settings, Bell, Box, Shield } from 'lucide-react';
 import { ALL_ROLES } from '@/types';
 import { ROUTES } from '@/config';
 import { Icon } from '@/shared/ui/Icon';
@@ -102,5 +96,5 @@ export const settingsItems: SettingsItem[] = [
  */
 export const getFilteredMenuItems = (userRole: string | undefined): MenuItem[] => {
   if (!userRole) return [];
-  return menuItems.filter((item) => item.roles.includes(userRole));
+  return menuItems.filter(item => item.roles.includes(userRole));
 };

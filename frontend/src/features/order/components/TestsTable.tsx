@@ -22,13 +22,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
   variant = 'simple',
 }) => {
   if (tests.length === 0) {
-    return (
-      <EmptyState
-        icon="health"
-        title="No Tests"
-        description="This order has no tests."
-      />
-    );
+    return <EmptyState icon="health" title="No Tests" description="This order has no tests." />;
   }
 
   if (variant === 'simple') {
@@ -46,27 +40,33 @@ export const TestsTable: React.FC<TestsTableProps> = ({
                 <tr
                   key={test.id || index}
                   className={`transition-colors ${
-                    isSuperseded
-                      ? 'bg-gray-50/50 opacity-60'
-                      : 'hover:bg-gray-50'
+                    isSuperseded ? 'bg-gray-50/50 opacity-60' : 'hover:bg-gray-50'
                   }`}
                 >
                   <td className="px-3 py-3">
                     <div className="flex items-center gap-1">
-                      <span className={`font-mono ${
-                        isSuperseded ? 'text-gray-400 line-through' : 'text-sky-600'
-                      }`}>
+                      <span
+                        className={`font-mono ${
+                          isSuperseded ? 'text-gray-400 line-through' : 'text-sky-600'
+                        }`}
+                      >
                         {test.testCode}
                       </span>
                       {isRetest && retestNumber > 0 && (
-                        <Badge variant="default" size="xs" className="text-xs bg-blue-50 text-blue-600 border-blue-200">
+                        <Badge
+                          variant="default"
+                          size="xs"
+                          className="text-xs bg-blue-50 text-blue-600 border-blue-200"
+                        >
                           #{retestNumber}
                         </Badge>
                       )}
                     </div>
                   </td>
                   <td className="px-3 py-3">
-                    <span className={`${isSuperseded ? 'text-gray-400 line-through' : 'text-gray-900'}`}>
+                    <span
+                      className={`${isSuperseded ? 'text-gray-400 line-through' : 'text-gray-900'}`}
+                    >
                       {testName}
                     </span>
                   </td>
@@ -116,28 +116,34 @@ export const TestsTable: React.FC<TestsTableProps> = ({
             <tr
               key={test.id || index}
               className={`transition-colors ${
-                isSuperseded
-                  ? 'bg-gray-50/50 opacity-60'
-                  : 'hover:bg-gray-50'
+                isSuperseded ? 'bg-gray-50/50 opacity-60' : 'hover:bg-gray-50'
               }`}
             >
-              <td className={`px-4 py-3 font-mono truncate whitespace-nowrap ${
-                isSuperseded ? 'text-gray-400 line-through' : 'text-sky-600'
-              }`}>
+              <td
+                className={`px-4 py-3 font-mono truncate whitespace-nowrap ${
+                  isSuperseded ? 'text-gray-400 line-through' : 'text-sky-600'
+                }`}
+              >
                 {test.testCode}
               </td>
 
-              <td className={`px-4 py-3 whitespace-normal wrap-break-word ${
-                isSuperseded ? 'line-through' : ''
-              }`}>
+              <td
+                className={`px-4 py-3 whitespace-normal wrap-break-word ${
+                  isSuperseded ? 'line-through' : ''
+                }`}
+              >
                 <div className="flex items-center gap-1">
-                  <span className={`font-medium ${
-                    isSuperseded ? 'text-gray-400' : 'text-gray-900'
-                  }`}>
+                  <span
+                    className={`font-medium ${isSuperseded ? 'text-gray-400' : 'text-gray-900'}`}
+                  >
                     {testName}
                   </span>
                   {isRetest && retestNumber > 0 && (
-                    <Badge variant="default" size="xs" className="text-xs bg-blue-50 text-blue-600 border-blue-200">
+                    <Badge
+                      variant="default"
+                      size="xs"
+                      className="text-xs bg-blue-50 text-blue-600 border-blue-200"
+                    >
                       #{retestNumber}
                     </Badge>
                   )}
@@ -156,9 +162,11 @@ export const TestsTable: React.FC<TestsTableProps> = ({
                 <Badge variant={test.status} size="sm" strikethrough={isSuperseded} />
               </td>
 
-              <td className={`px-4 py-3 text-right font-medium whitespace-nowrap ${
-                isSuperseded ? 'text-gray-400 line-through' : 'text-sky-600'
-              }`}>
+              <td
+                className={`px-4 py-3 text-right font-medium whitespace-nowrap ${
+                  isSuperseded ? 'text-gray-400 line-through' : 'text-sky-600'
+                }`}
+              >
                 {formatCurrency(test.priceAtOrder)}
               </td>
             </tr>

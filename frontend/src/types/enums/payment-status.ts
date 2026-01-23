@@ -1,6 +1,6 @@
 /**
  * Payment Status - Single Source of Truth
- * 
+ *
  * Note: Badge colors for payment status are defined in the Badge component.
  * Use the status value directly as the Badge variant (e.g., variant="paid").
  */
@@ -18,7 +18,7 @@ export const PAYMENT_STATUS_CONFIG: Record<PaymentStatus, { label: string }> = {
 };
 
 // 4. OPTIONS - For dropdowns/selects
-export const PAYMENT_STATUS_OPTIONS = PAYMENT_STATUS_VALUES.map((value) => ({
+export const PAYMENT_STATUS_OPTIONS = PAYMENT_STATUS_VALUES.map(value => ({
   value,
   label: PAYMENT_STATUS_CONFIG[value].label,
 }));

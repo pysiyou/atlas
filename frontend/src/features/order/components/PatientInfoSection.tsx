@@ -22,9 +22,8 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
   onViewPatient,
   layout = 'column',
 }) => {
-  const containerClass = layout === 'grid'
-    ? 'grid grid-cols-1 sm:grid-cols-2 gap-5'
-    : 'flex flex-col gap-3';
+  const containerClass =
+    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-5' : 'flex flex-col gap-3';
 
   if (!patient) {
     return (
@@ -45,12 +44,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
           secondaryText={displayId.patient(patient.id)}
           size="sm"
         />
-        <IconButton
-          onClick={onViewPatient}
-          variant="view"
-          size="sm"
-          title="View Patient"
-        />
+        <IconButton onClick={onViewPatient} variant="view" size="sm" title="View Patient" />
       </div>
       <OrderInfoField
         icon="user-hands"
@@ -75,9 +69,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
         <OrderInfoField
           icon="mail"
           label="Email"
-          value={
-            <span className="line-clamp-2 break-all">{patient.email}</span>
-          }
+          value={<span className="line-clamp-2 break-all">{patient.email}</span>}
         />
       )}
     </div>

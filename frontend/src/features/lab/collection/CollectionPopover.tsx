@@ -1,6 +1,6 @@
 /**
  * CollectionPopover - Popover for collecting samples
- * 
+ *
  * Allows lab staff to record collection details: volume, container type, and color.
  */
 
@@ -16,7 +16,12 @@ interface CollectionPopoverContentProps {
   requirement: SampleRequirement;
   patientName?: string;
   testName?: string;
-  onConfirm: (volume: number, notes?: string, color?: string, containerType?: ContainerType) => void;
+  onConfirm: (
+    volume: number,
+    notes?: string,
+    color?: string,
+    containerType?: ContainerType
+  ) => void;
   onCancel: () => void;
 }
 
@@ -38,7 +43,8 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
     return sampleType === 'urine' || sampleType === 'stool' ? 'cup' : 'tube';
   }, [requirement.sampleType]);
 
-  const [selectedContainerType, setSelectedContainerType] = useState<ContainerType>(defaultContainerType);
+  const [selectedContainerType, setSelectedContainerType] =
+    useState<ContainerType>(defaultContainerType);
 
   const isValid = selectedColor && selectedContainerType && volume >= minimumVolume;
 
@@ -107,9 +113,13 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             type="text"
             inputMode="decimal"
             value={volume}
-            onChange={(e) => setVolume(Number(e.target.value))}
+            onChange={e => setVolume(Number(e.target.value))}
             className={`w-full pl-3 pr-8 py-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all placeholder-gray-400 ${
-              volume < minimumVolume ? 'border-red-500' : volume > 100 ? 'border-yellow-500' : 'border-gray-300'
+              volume < minimumVolume
+                ? 'border-red-500'
+                : volume > 100
+                  ? 'border-yellow-500'
+                  : 'border-gray-300'
             }`}
             placeholder="0.0"
           />
@@ -118,7 +128,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           </span>
         </div>
         <div className="h-6 mt-1.5">
-          <div className={`text-xs text-yellow-600 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100 transition-opacity duration-200 ${volume > 100 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          <div
+            className={`text-xs text-yellow-600 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100 transition-opacity duration-200 ${volume > 100 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          >
             <Icon name="alert-circle" className="w-3.5 h-3.5" />
             Unusually high volume - please verify
           </div>
@@ -131,7 +143,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           Container Type <span className="text-red-500">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
-          {CONTAINER_TYPE_OPTIONS.map((option) => {
+          {CONTAINER_TYPE_OPTIONS.map(option => {
             const isRequired = requirement.containerTypes.includes(option.value as ContainerType);
             const isSelected = selectedContainerType === option.value;
             const showWarning = isSelected && !isRequired;
@@ -140,11 +152,12 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                 key={option.value}
                 className={`
                   relative flex items-center gap-2 p-3 rounded-lg border transition-all duration-200 cursor-pointer
-                  ${isSelected 
-                    ? showWarning
-                      ? 'bg-yellow-50 border-yellow-200 ring-1 ring-yellow-200'
-                      : 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
-                    : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                  ${
+                    isSelected
+                      ? showWarning
+                        ? 'bg-yellow-50 border-yellow-200 ring-1 ring-yellow-200'
+                        : 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
+                      : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                   }
                 `}
                 onClick={() => setSelectedContainerType(option.value as ContainerType)}
@@ -157,7 +170,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   onChange={() => setSelectedContainerType(option.value as ContainerType)}
                   className={`h-3.5 w-3.5 border-gray-300 ${showWarning ? 'text-yellow-600 focus:ring-yellow-500' : 'text-blue-600 focus:ring-blue-500'}`}
                 />
-                <span className={`flex-1 text-xs font-medium ${isSelected ? (showWarning ? 'text-yellow-900' : 'text-blue-900') : 'text-gray-900'}`}>
+                <span
+                  className={`flex-1 text-xs font-medium ${isSelected ? (showWarning ? 'text-yellow-900' : 'text-blue-900') : 'text-gray-900'}`}
+                >
                   {option.name}
                 </span>
                 <Icon
@@ -169,7 +184,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           })}
         </div>
         <div className="h-6 mt-1.5">
-          <div className={`text-xs text-yellow-600 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100 transition-opacity duration-200 ${selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          <div
+            className={`text-xs text-yellow-600 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100 transition-opacity duration-200 ${selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          >
             <Icon name="alert-circle" className="w-3.5 h-3.5" />
             Warning: Selected container type not in requirements
           </div>
@@ -182,7 +199,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           Container Color <span className="text-red-500">*</span>
         </label>
         <div className="flex gap-3">
-          {CONTAINER_COLOR_OPTIONS.map((option) => {
+          {CONTAINER_COLOR_OPTIONS.map(option => {
             const isRequired = requirement.containerTopColors.includes(option.value);
             const isSelected = selectedColor === option.value;
             return (
@@ -193,8 +210,8 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   isSelected
                     ? 'scale-110 ring-2 ring-offset-2 ring-blue-400 shadow-md'
                     : isRequired
-                    ? 'opacity-100 hover:scale-105 hover:shadow-sm ring-2 ring-green-300'
-                    : 'opacity-60 hover:opacity-80 hover:scale-105 hover:shadow-sm'
+                      ? 'opacity-100 hover:scale-105 hover:shadow-sm ring-2 ring-green-300'
+                      : 'opacity-60 hover:opacity-80 hover:scale-105 hover:shadow-sm'
                 }`}
                 title={`${option.name}${isRequired ? ' (Required)' : ''}`}
               />
@@ -202,13 +219,15 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           })}
         </div>
         <div className="h-6 mt-1.5">
-          <div className={`text-xs flex items-center gap-1.5 p-1.5 rounded border transition-opacity duration-200 ${
-            !selectedColor 
-              ? 'opacity-100 text-orange-600 bg-orange-50 border-orange-100' 
-              : selectedColor && !requirement.containerTopColors.includes(selectedColor as never)
-                ? 'opacity-100 text-yellow-600 bg-yellow-50 border-yellow-100'
-                : 'opacity-0 pointer-events-none border-transparent'
-          }`}>
+          <div
+            className={`text-xs flex items-center gap-1.5 p-1.5 rounded border transition-opacity duration-200 ${
+              !selectedColor
+                ? 'opacity-100 text-orange-600 bg-orange-50 border-orange-100'
+                : selectedColor && !requirement.containerTopColors.includes(selectedColor as never)
+                  ? 'opacity-100 text-yellow-600 bg-yellow-50 border-yellow-100'
+                  : 'opacity-0 pointer-events-none border-transparent'
+            }`}
+          >
             <Icon name="alert-circle" className="w-3.5 h-3.5" />
             {!selectedColor ? 'Selection required' : 'Warning: Selected color not in requirements'}
           </div>
@@ -222,7 +241,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           rows={2}
           placeholder="Add optional notes..."
           value={notes}
-          onChange={(e) => setNotes(e.target.value)}
+          onChange={e => setNotes(e.target.value)}
           className="w-full px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
         />
       </div>
@@ -240,7 +259,12 @@ interface CollectionPopoverProps {
   /** Whether this is a recollection */
   isRecollection?: boolean;
   /** Callback when collection is confirmed */
-  onConfirm: (volume: number, notes?: string, color?: string, containerType?: ContainerType) => void;
+  onConfirm: (
+    volume: number,
+    notes?: string,
+    color?: string,
+    containerType?: ContainerType
+  ) => void;
   /** Custom trigger element (uses default button if not provided) */
   trigger?: React.ReactNode;
 }
@@ -265,7 +289,7 @@ export const CollectionPopover: React.FC<CollectionPopoverProps> = ({
     }
   >
     {({ close }) => (
-      <div data-popover-content onClick={(e) => e.stopPropagation()}>
+      <div data-popover-content onClick={e => e.stopPropagation()}>
         <CollectionPopoverContent
           requirement={requirement}
           patientName={patientName}

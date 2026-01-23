@@ -1,6 +1,6 @@
 /**
  * LabDetailModal - Shared modal structure for lab workflow detail views
- * 
+ *
  * Provides consistent structure for SampleDetail, ResultDetail, and ValidationDetail:
  * - Header with badges
  * - Patient/Order context section
@@ -14,7 +14,7 @@ import { Badge, SectionContainer, DetailFieldGroup } from '@/shared/ui';
 import type { DetailFieldConfig } from '@/shared/ui/DetailFieldGroup';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
-import { useUsers } from '@/hooks';
+import { useUserLookup } from '@/hooks/queries';
 
 interface ContextInfo {
   patientName: string;
@@ -70,7 +70,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
   children,
   footer,
 }) => {
-  const { getUserName } = useUsers();
+  const { getUserName } = useUserLookup();
 
   return (
     <Modal
@@ -88,9 +88,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
             <div className="flex flex-col gap-4">
               {/* Row 1: Badges */}
               <div className="flex items-center justify-between gap-3 flex-wrap">
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  {headerBadges}
-                </div>
+                <div className="flex items-center gap-2.5 flex-wrap">{headerBadges}</div>
               </div>
 
               {/* Row 2: Patient & Order context */}
@@ -98,9 +96,17 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 <div className="flex items-center gap-2 text-sm text-gray-700 flex-wrap">
                   <span className="font-semibold text-gray-900">{contextInfo.patientName}</span>
                   <span className="text-gray-300">|</span>
-                  <span className="font-medium text-gray-900 text-xs">{typeof contextInfo.patientId === 'number' ? displayId.patient(contextInfo.patientId) : contextInfo.patientId}</span>
+                  <span className="font-medium text-gray-900 text-xs">
+                    {typeof contextInfo.patientId === 'number'
+                      ? displayId.patient(contextInfo.patientId)
+                      : contextInfo.patientId}
+                  </span>
                   <span className="text-gray-300">|</span>
-                  <span className="font-medium text-gray-900 text-xs">{typeof contextInfo.orderId === 'number' ? displayId.order(contextInfo.orderId) : contextInfo.orderId}</span>
+                  <span className="font-medium text-gray-900 text-xs">
+                    {typeof contextInfo.orderId === 'number'
+                      ? displayId.order(contextInfo.orderId)
+                      : contextInfo.orderId}
+                  </span>
                   {contextInfo.referringPhysician && (
                     <>
                       <span className="text-gray-300">|</span>
@@ -112,9 +118,17 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 {/* Collection info */}
                 {sampleInfo && sampleInfo.collectedAt && (
                   <span className="text-xs text-gray-500">
-                    Sample <span className="font-medium text-gray-900">{typeof sampleInfo.sampleId === 'number' ? displayId.sample(sampleInfo.sampleId) : sampleInfo.sampleId}</span> collected{' '}
+                    Sample{' '}
+                    <span className="font-medium text-gray-900">
+                      {typeof sampleInfo.sampleId === 'number'
+                        ? displayId.sample(sampleInfo.sampleId)
+                        : sampleInfo.sampleId}
+                    </span>{' '}
+                    collected{' '}
                     <span className="text-gray-700">{formatDate(sampleInfo.collectedAt)}</span>
-                    {sampleInfo.collectedBy && <span> by {getUserName(sampleInfo.collectedBy)}</span>}
+                    {sampleInfo.collectedBy && (
+                      <span> by {getUserName(sampleInfo.collectedBy)}</span>
+                    )}
                   </span>
                 )}
 
@@ -130,9 +144,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 
         {/* Footer */}
         {footer && (
-          <div className="shrink-0 bg-white border-t border-gray-200 px-6 py-4">
-            {footer}
-          </div>
+          <div className="shrink-0 bg-white border-t border-gray-200 px-6 py-4">{footer}</div>
         )}
       </div>
     </Modal>
@@ -153,11 +165,11 @@ export interface DetailGridSectionConfig {
 
 /**
  * DetailGrid - Two-column grid for detail sections
- * 
+ *
  * Can be used in two ways:
  * 1. With children (legacy): Pass SectionContainer components as children
  * 2. With sections config (new): Pass array of section configurations
- * 
+ *
  * @example
  * // Using sections config (recommended)
  * <DetailGrid
@@ -177,7 +189,7 @@ export interface DetailGridSectionConfig {
  *     }
  *   ]}
  * />
- * 
+ *
  * @example
  * // Using children (legacy)
  * <DetailGrid>
@@ -212,9 +224,9 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
 
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {visibleSections.map((section) => (
-          <SectionContainer 
-            key={section.title} 
+        {visibleSections.map(section => (
+          <SectionContainer
+            key={section.title}
             title={section.title}
             headerRight={section.headerRight}
             spacing="normal"
@@ -227,11 +239,7 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
   }
 
   // Legacy: render children directly
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {children}
-    </div>
-  );
+  return <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{children}</div>;
 };
 
 /**
@@ -259,9 +267,7 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
       {statusIcon}
       <span>{statusMessage}</span>
     </div>
-    <div className="flex items-center gap-3">
-      {children}
-    </div>
+    <div className="flex items-center gap-3">{children}</div>
   </div>
 );
 

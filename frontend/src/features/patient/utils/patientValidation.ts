@@ -125,7 +125,7 @@ export const validatePatientForm = (formData: PatientFormData): Record<string, s
   };
 
   const anyVitalProvided = Object.values(vitals).some(v => String(v || '').trim().length > 0);
-  
+
   if (anyVitalProvided) {
     const missingKeys = Object.entries(vitals)
       .filter(([, v]) => String(v || '').trim().length === 0)
@@ -141,8 +141,22 @@ export const validatePatientForm = (formData: PatientFormData): Record<string, s
     validateVitalRange('heartRate', vitals.heartRate, 30, 250, r => parseInt(r, 10), newErrors);
     validateVitalRange('systolicBP', vitals.systolicBP, 50, 250, r => parseInt(r, 10), newErrors);
     validateVitalRange('diastolicBP', vitals.diastolicBP, 30, 150, r => parseInt(r, 10), newErrors);
-    validateVitalRange('respiratoryRate', vitals.respiratoryRate, 4, 60, r => parseInt(r, 10), newErrors);
-    validateVitalRange('oxygenSaturation', vitals.oxygenSaturation, 50, 100, r => parseInt(r, 10), newErrors);
+    validateVitalRange(
+      'respiratoryRate',
+      vitals.respiratoryRate,
+      4,
+      60,
+      r => parseInt(r, 10),
+      newErrors
+    );
+    validateVitalRange(
+      'oxygenSaturation',
+      vitals.oxygenSaturation,
+      50,
+      100,
+      r => parseInt(r, 10),
+      newErrors
+    );
   }
 
   return newErrors;
@@ -161,7 +175,7 @@ const validateVitalRange = (
 ): void => {
   const raw = String(value || '').trim();
   if (!raw) return; // missing handled elsewhere
-  
+
   const num = parse(raw);
   if (Number.isNaN(num) || num < min || num > max) {
     errors[key] = `Must be between ${min} and ${max}`;

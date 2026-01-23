@@ -5,10 +5,10 @@
  * Based on the cargoplan modal implementation.
  */
 
-import React, { memo, useCallback, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Portal } from "./Portal";
-import { IconButton } from "./IconButton";
+import React, { memo, useCallback, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Portal } from './Portal';
+import { IconButton } from './IconButton';
 
 /**
  * Backdrop component with blur and opacity effects
@@ -17,7 +17,7 @@ const Backdrop = ({
   onClick,
   zIndex = 40,
   opacity = 0.5,
-  className = "",
+  className = '',
 }: {
   onClick?: () => void;
   zIndex?: number;
@@ -27,7 +27,7 @@ const Backdrop = ({
   const inlineStyle: React.CSSProperties = {
     zIndex,
     backgroundColor: `rgba(0, 0, 0, ${opacity})`,
-    backdropFilter: "blur(2px)",
+    backdropFilter: 'blur(2px)',
   };
 
   return (
@@ -63,7 +63,7 @@ interface ModalProps {
 
 /**
  * Main Modal component
- * 
+ *
  * Features:
  * - Animated entrance/exit
  * - Backdrop with configurable opacity and blur
@@ -80,11 +80,11 @@ const Modal = memo(
     subtitle,
     children,
     confirmDisabled = false,
-    confirmText = "Confirm",
+    confirmText = 'Confirm',
     closeOnBackdropClick = true,
-    className = "",
+    className = '',
     disableClose = false,
-    maxWidth = "max-w-[600px]",
+    maxWidth = 'max-w-[600px]',
     backdropOpacity = 0.3,
     backdropZIndex = 40,
     size,
@@ -123,7 +123,7 @@ const Modal = memo(
      */
     const handleKeyDown = useCallback(
       (e: KeyboardEvent) => {
-        if (e.key === "Escape" && isOpen && !disableClose) {
+        if (e.key === 'Escape' && isOpen && !disableClose) {
           onClose();
         }
       },
@@ -133,8 +133,8 @@ const Modal = memo(
     // Register keyboard event listener
     useEffect(() => {
       if (isOpen) {
-        document.addEventListener("keydown", handleKeyDown);
-        return () => document.removeEventListener("keydown", handleKeyDown);
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
       }
     }, [isOpen, handleKeyDown]);
 
@@ -202,9 +202,7 @@ const Modal = memo(
                           {title}
                         </h2>
                         {subtitle && (
-                          <span className="text-sm text-gray-600 mt-0.5">
-                            {subtitle}
-                          </span>
+                          <span className="text-sm text-gray-600 mt-0.5">{subtitle}</span>
                         )}
                       </div>
                     </div>
@@ -244,7 +242,7 @@ const Modal = memo(
   }
 );
 
-Modal.displayName = "Modal";
+Modal.displayName = 'Modal';
 
 export { Modal };
 export type { ModalProps };

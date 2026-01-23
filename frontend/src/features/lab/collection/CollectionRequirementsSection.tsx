@@ -23,7 +23,9 @@ interface CollectionRequirementsSectionProps {
  * Requirements section with tabs for each test
  * Displays collection requirements, fasting info, and rejection criteria
  */
-export const CollectionRequirementsSection: React.FC<CollectionRequirementsSectionProps> = ({ testDetails }) => {
+export const CollectionRequirementsSection: React.FC<CollectionRequirementsSectionProps> = ({
+  testDetails,
+}) => {
   const [activeTestCode, setActiveTestCode] = React.useState(testDetails[0]?.code || '');
   const activeTest = testDetails.find(t => t.code === activeTestCode) || testDetails[0];
 
@@ -90,7 +92,9 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
               <div className="text-xs font-medium text-red-900 mb-1">Rejection Criteria</div>
               <ul className="list-disc list-inside space-y-0.5">
                 {activeTest.rejectionCriteria.map((criteria, idx) => (
-                  <li key={idx} className="text-xs text-red-700">{criteria}</li>
+                  <li key={idx} className="text-xs text-red-700">
+                    {criteria}
+                  </li>
                 ))}
               </ul>
             </div>

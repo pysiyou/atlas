@@ -4,7 +4,14 @@
  */
 
 import { faker } from '@faker-js/faker';
-import type { Patient, Address, EmergencyContact, MedicalHistory, VitalSigns, Affiliation } from '@/types';
+import type {
+  Patient,
+  Address,
+  EmergencyContact,
+  MedicalHistory,
+  VitalSigns,
+  Affiliation,
+} from '@/types';
 
 /**
  * Creates a mock Address object
@@ -19,9 +26,18 @@ export const createMockAddress = (overrides?: Partial<Address>): Address => ({
 /**
  * Creates a mock EmergencyContact object
  */
-export const createMockEmergencyContact = (overrides?: Partial<EmergencyContact>): EmergencyContact => ({
+export const createMockEmergencyContact = (
+  overrides?: Partial<EmergencyContact>
+): EmergencyContact => ({
   fullName: faker.person.fullName(),
-  relationship: faker.helpers.arrayElement(['spouse', 'parent', 'child', 'sibling', 'friend', 'other']),
+  relationship: faker.helpers.arrayElement([
+    'spouse',
+    'parent',
+    'child',
+    'sibling',
+    'friend',
+    'other',
+  ]),
   phone: faker.phone.number(),
   email: faker.internet.email(),
   ...overrides,
@@ -39,10 +55,10 @@ export const createMockMedicalHistory = (overrides?: Partial<MedicalHistory>): M
     ['Metformin', 'Lisinopril', 'Atorvastatin', 'Albuterol'],
     { min: 0, max: 2 }
   ),
-  allergies: faker.helpers.arrayElements(
-    ['Penicillin', 'Peanuts', 'Latex', 'Sulfa'],
-    { min: 0, max: 1 }
-  ),
+  allergies: faker.helpers.arrayElements(['Penicillin', 'Peanuts', 'Latex', 'Sulfa'], {
+    min: 0,
+    max: 1,
+  }),
   previousSurgeries: faker.helpers.arrayElements(
     ['Appendectomy', 'C-Section', 'Knee Replacement'],
     { min: 0, max: 1 }

@@ -1,9 +1,9 @@
 /**
  * OrderFilters Component
- * 
+ *
  * Provides comprehensive filtering controls for the orders list using the new filter architecture.
  * Uses config-driven approach with FilterBar component.
- * 
+ *
  * @module features/order
  */
 
@@ -36,10 +36,10 @@ export interface OrderFiltersProps {
 
 /**
  * OrderFilters Component
- * 
+ *
  * Composes FilterBar with order-specific configuration.
  * Maps between legacy prop interface and new filter value structure.
- * 
+ *
  * @component
  */
 export const OrderFilters: React.FC<OrderFiltersProps> = ({
@@ -84,10 +84,6 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
   };
 
   return (
-    <FilterBar
-      config={orderFilterConfig}
-      value={filterValues}
-      onChange={handleFilterChange}
-    />
+    <FilterBar config={orderFilterConfig} value={filterValues} onChange={handleFilterChange} />
   );
 };

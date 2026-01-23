@@ -1,16 +1,21 @@
 /**
  * Payments Query Hook
- * 
+ *
  * Provides access to payment data with dynamic caching (30s stale time).
  * Payments change frequently during billing operations.
- * 
+ *
  * @module hooks/queries/usePayments
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
-import { getPayments, getPayment, getPaymentsByOrder, createPayment } from '@/services/api/payments';
+import {
+  getPayments,
+  getPayment,
+  getPaymentsByOrder,
+  createPayment,
+} from '@/services/api/payments';
 import { useAuth } from '@/features/auth/useAuth';
 import type { PaymentMethod } from '@/types';
 
@@ -26,10 +31,10 @@ export interface PaymentsFilters {
  * Hook to fetch and cache all payments.
  * Uses dynamic cache - data is considered fresh for 30 seconds.
  * Only fetches when user is authenticated to prevent race conditions on login.
- * 
+ *
  * @param filters - Optional filters to apply
  * @returns Query result containing payments array and loading state
- * 
+ *
  * @example
  * ```tsx
  * const { payments, isLoading, error } = usePaymentsList();
@@ -59,10 +64,10 @@ export function usePaymentsList(filters?: PaymentsFilters) {
 /**
  * Hook to fetch a single payment by ID.
  * Only fetches when user is authenticated to prevent race conditions on login.
- * 
+ *
  * @param paymentId - The payment ID to fetch
  * @returns Query result with payment data
- * 
+ *
  * @example
  * ```tsx
  * const { payment, isLoading } = usePayment('PAY-001');
@@ -91,7 +96,7 @@ export function usePayment(paymentId: string | undefined) {
 /**
  * Hook to get payments by order ID.
  * Only fetches when user is authenticated to prevent race conditions on login.
- * 
+ *
  * @param orderId - The order ID to filter by
  * @returns Array of payments for the order
  */
@@ -117,7 +122,7 @@ export function usePaymentsByOrder(orderId: string | undefined) {
 /**
  * Hook to get a map of order ID to most recent payment method.
  * Useful for displaying payment methods in order lists.
- * 
+ *
  * @returns Map of orderId to PaymentMethod
  */
 export function usePaymentMethodByOrder() {
@@ -125,19 +130,19 @@ export function usePaymentMethodByOrder() {
 
   const paymentMethodMap = useMemo(() => {
     const map = new Map<number, PaymentMethod>();
-    
+
     // Sort payments by date descending to get most recent first
     const sortedPayments = [...payments].sort(
       (a, b) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime()
     );
-    
+
     // Map each order to its most recent payment method
     for (const payment of sortedPayments) {
       if (!map.has(payment.orderId)) {
         map.set(payment.orderId, payment.paymentMethod);
       }
     }
-    
+
     return map;
   }, [payments]);
 
@@ -165,9 +170,9 @@ export interface CreatePaymentData {
 /**
  * Mutation hook to create a new payment.
  * Invalidates relevant caches on success.
- * 
+ *
  * @returns Mutation result with mutate function
- * 
+ *
  * @example
  * ```tsx
  * const { mutate: addPayment, isPending } = useCreatePayment();
@@ -191,7 +196,7 @@ export function useCreatePayment() {
 
 /**
  * Hook to invalidate payment caches.
- * 
+ *
  * @returns Object with invalidate functions
  */
 export function useInvalidatePayments() {

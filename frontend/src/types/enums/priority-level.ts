@@ -1,6 +1,6 @@
 /**
  * Priority Level - Single Source of Truth
- * 
+ *
  * Note: Badge colors for priority levels are defined in the Badge component.
  * Use the priority value directly as the Badge variant (e.g., variant="urgent").
  */
@@ -12,17 +12,14 @@ export const PRIORITY_LEVEL_VALUES = ['routine', 'urgent', 'stat'] as const;
 export type PriorityLevel = (typeof PRIORITY_LEVEL_VALUES)[number];
 
 // 3. CONFIG - Metadata for each value (label only, colors handled by Badge; sortOrder for priority sorting)
-export const PRIORITY_LEVEL_CONFIG: Record<
-  PriorityLevel,
-  { label: string; sortOrder: number }
-> = {
+export const PRIORITY_LEVEL_CONFIG: Record<PriorityLevel, { label: string; sortOrder: number }> = {
   routine: { label: 'Routine', sortOrder: 2 },
   urgent: { label: 'Urgent', sortOrder: 1 },
   stat: { label: 'STAT', sortOrder: 0 },
 };
 
 // 4. OPTIONS - For dropdowns/selects
-export const PRIORITY_LEVEL_OPTIONS = PRIORITY_LEVEL_VALUES.map((value) => ({
+export const PRIORITY_LEVEL_OPTIONS = PRIORITY_LEVEL_VALUES.map(value => ({
   value,
   label: PRIORITY_LEVEL_CONFIG[value].label,
 }));

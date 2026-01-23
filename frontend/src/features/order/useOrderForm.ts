@@ -19,10 +19,7 @@ export const useOrderForm = (initialData?: Partial<OrderFormData>) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const updateField = <K extends keyof OrderFormData>(
-    field: K,
-    value: OrderFormData[K]
-  ) => {
+  const updateField = <K extends keyof OrderFormData>(field: K, value: OrderFormData[K]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => {
@@ -45,7 +42,7 @@ export const useOrderForm = (initialData?: Partial<OrderFormData>) => {
   };
 
   const setError = (field: string, message: string) => {
-    setErrors((prev) => ({ ...prev, [field]: message }));
+    setErrors(prev => ({ ...prev, [field]: message }));
   };
 
   const reset = () => {

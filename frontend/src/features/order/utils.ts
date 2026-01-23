@@ -25,7 +25,7 @@ export const STATUS_TIMELINE_STEPS = [
 const TEST_STATUS_THRESHOLDS: Record<string, string[]> = {
   'sample-collected': ['sample-collected', 'in-progress', 'resulted', 'validated', 'rejected'],
   'results-entered': ['resulted', 'validated'],
-  'completed': ['validated'],  // Order is completed when all tests are validated
+  completed: ['validated'], // Order is completed when all tests are validated
 };
 
 export interface StepProgress {
@@ -46,19 +46,19 @@ export interface StepProgress {
 /**
  * Calculate the progress of tests through a specific order step.
  * Returns the count and percentage of tests that have reached or passed this step.
- * 
+ *
  * @param order - The order to check progress for
  * @param stepStatus - The timeline step status to check
  * @returns StepProgress object with completion details
  */
 export const getOrderStepProgress = (order: Order, stepStatus: string): StepProgress => {
-  const emptyProgress: StepProgress = { 
-    completed: 0, 
-    total: 0, 
-    percentage: 0, 
-    isFullyComplete: false, 
-    isPartial: false, 
-    isStarted: false 
+  const emptyProgress: StepProgress = {
+    completed: 0,
+    total: 0,
+    percentage: 0,
+    isFullyComplete: false,
+    isPartial: false,
+    isStarted: false,
   };
 
   // Filter out superseded tests - only count active tests toward progress
@@ -72,13 +72,13 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
 
   // Step 1: Order Created - Always complete when order exists
   if (stepStatus === 'created') {
-    return { 
-      completed: total, 
-      total, 
-      percentage: 100, 
-      isFullyComplete: true, 
-      isPartial: false, 
-      isStarted: true 
+    return {
+      completed: total,
+      total,
+      percentage: 100,
+      isFullyComplete: true,
+      isPartial: false,
+      isStarted: true,
     };
   }
 
@@ -101,7 +101,7 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
     return emptyProgress;
   }
 
-  const completed = activeTests.filter((t) => validStatuses.includes(t.status)).length;
+  const completed = activeTests.filter(t => validStatuses.includes(t.status)).length;
   const percentage = Math.round((completed / total) * 100);
 
   return {
@@ -117,14 +117,14 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
 /**
  * Calculate the overall order progress as a weighted percentage based on all tests.
  * Each test contributes equally, and progress is based on how far each test has advanced.
- * 
+ *
  * The weighting accounts for the full workflow:
  * - pending: 0% (order created, awaiting payment/collection)
  * - sample-collected: 25% (sample obtained)
  * - in-progress: 50% (analysis started)
  * - completed: 75% (results entered, awaiting validation)
  * - validated: 100% (results validated and ready)
- * 
+ *
  * @param order - The order to calculate progress for
  * @returns Overall progress percentage (0-100)
  */
@@ -156,13 +156,13 @@ export const getOverallOrderProgress = (order: Order): number => {
 /**
  * Get completion information for a specific step in the order timeline.
  * Returns the user who completed the step and when.
- * 
+ *
  * @param order - The order to get completion info for
  * @param stepStatus - The timeline step to check
  * @returns Object with completedBy user ID and completedAt timestamp
  */
 export const getStepCompletionInfo = (
-  order: Order, 
+  order: Order,
   stepStatus: string
 ): { completedBy?: string; completedAt?: string } => {
   switch (stepStatus) {
@@ -184,7 +184,7 @@ export const getStepCompletionInfo = (
 
     case 'sample-collected': {
       // Find the first test that has been collected
-      const collectedTest = order.tests.find((t) =>
+      const collectedTest = order.tests.find(t =>
         ['sample-collected', 'in-progress', 'resulted', 'validated', 'rejected'].includes(t.status)
       );
       return {
@@ -195,9 +195,7 @@ export const getStepCompletionInfo = (
 
     case 'results-entered': {
       // Find the first test with results entered
-      const enteredTest = order.tests.find((t) =>
-        ['resulted', 'validated'].includes(t.status)
-      );
+      const enteredTest = order.tests.find(t => ['resulted', 'validated'].includes(t.status));
       return {
         completedBy: enteredTest?.enteredBy,
         completedAt: enteredTest?.resultEnteredAt,
@@ -206,7 +204,7 @@ export const getStepCompletionInfo = (
 
     case 'completed': {
       // Find the first validated test (order is completed when all tests validated)
-      const validatedTest = order.tests.find((t) => t.status === 'validated');
+      const validatedTest = order.tests.find(t => t.status === 'validated');
       return {
         completedBy: validatedTest?.validatedBy,
         completedAt: validatedTest?.resultValidatedAt,
@@ -221,7 +219,7 @@ export const getStepCompletionInfo = (
 /**
  * Check if a step is blocked by a previous incomplete step.
  * Used to show "locked" state for steps that can't proceed yet.
- * 
+ *
  * @param order - The order to check
  * @param stepStatus - The step to check if blocked
  * @returns True if the step is blocked by a previous incomplete step
@@ -243,14 +241,14 @@ export const getOrderStepStatus = (order: Order, stepStatus: string): boolean =>
 
 /**
  * Check if an order contains any validated tests.
- * 
+ *
  * This is used to prevent contradictory actions:
  * - Sample rejection when a test from the order is already validated
  * - Re-collect option during result validation when another test is validated
- * 
+ *
  * Once a test is validated, the sample cannot be rejected or recollected
  * because it would invalidate the already-validated results.
- * 
+ *
  * @param order - The order to check
  * @returns True if the order has at least one validated test
  */
@@ -264,7 +262,7 @@ export const orderHasValidatedTests = (order: Order): boolean => {
 /**
  * Get the count of validated tests in an order.
  * Useful for displaying more detailed blocking messages.
- * 
+ *
  * @param order - The order to check
  * @returns Number of validated tests
  */

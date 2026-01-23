@@ -64,8 +64,8 @@ export interface ReferenceRange {
   gender?: 'male' | 'female';
   ageMin?: number;
   ageMax?: number;
-  criticalLow?: number;     // Below this is critical
-  criticalHigh?: number;    // Above this is critical
+  criticalLow?: number; // Below this is critical
+  criticalHigh?: number; // Above this is critical
 }
 
 /**
@@ -131,9 +131,9 @@ export interface Test {
   price: number; // Editable - catalog provides default
   turnaroundTime: number; // in hours
   sampleType: SampleType;
-  sampleVolume: string;  // e.g., "3ml", "5-10ml"
-  minimumVolume?: number;  // Minimum mL needed
-  optimalVolume?: number;  // Optimal mL for best results
+  sampleVolume: string; // e.g., "3ml", "5-10ml"
+  minimumVolume?: number; // Minimum mL needed
+  optimalVolume?: number; // Optimal mL for best results
   specialRequirements?: string;
   referenceRanges: ReferenceRange[]; // Legacy format for backward compatibility
   parameters?: TestParameter[]; // For multi-parameter tests like CBC
@@ -142,9 +142,9 @@ export interface Test {
   updatedAt: string;
 
   // Container requirements
-  containerTypes: ContainerType[];  // Required container types (cup/tube)
+  containerTypes: ContainerType[]; // Required container types (cup/tube)
   containerTopColors: ContainerTopColor[]; // Required container top colors
-  numberOfContainers?: number;      // How many containers needed
+  numberOfContainers?: number; // How many containers needed
 
   // New fields from catalog
   panels?: string[]; // Related test panels
@@ -170,7 +170,7 @@ export interface TestParameter {
   criticalLow?: number;
   criticalHigh?: number;
   decimalPlaces?: number;
-  
+
   // New fields from catalog result_items
   valueType?: ValueType; // NUMERIC, SELECT, TEXT
   catalogReferenceRange?: CatalogReferenceRange; // Full demographic ranges

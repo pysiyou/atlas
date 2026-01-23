@@ -22,7 +22,7 @@ export const createMockTestResult = (overrides?: Partial<TestResult>): TestResul
  */
 export const createMockOrderTest = (overrides?: Partial<OrderTest>): OrderTest => {
   const hasResults = faker.datatype.boolean();
-  
+
   return {
     id: faker.number.int({ min: 1, max: 10000 }),
     testCode: `TST-${faker.string.numeric(3)}`,
@@ -34,13 +34,21 @@ export const createMockOrderTest = (overrides?: Partial<OrderTest>): OrderTest =
       'Liver Function Test',
     ]),
     sampleType: faker.helpers.arrayElement(['blood', 'urine', 'serum', 'plasma']),
-    status: faker.helpers.arrayElement(['pending', 'sample-collected', 'in-progress', 'resulted', 'validated']) as 'pending' | 'sample-collected' | 'in-progress' | 'resulted' | 'validated',
+    status: faker.helpers.arrayElement([
+      'pending',
+      'sample-collected',
+      'in-progress',
+      'resulted',
+      'validated',
+    ]) as 'pending' | 'sample-collected' | 'in-progress' | 'resulted' | 'validated',
     priceAtOrder: faker.number.float({ min: 10, max: 200, fractionDigits: 2 }),
     sampleId: faker.datatype.boolean() ? faker.number.int({ min: 1, max: 5000 }) : undefined,
-    results: hasResults ? {
-      glucose: createMockTestResult(),
-      cholesterol: createMockTestResult(),
-    } : null,
+    results: hasResults
+      ? {
+          glucose: createMockTestResult(),
+          cholesterol: createMockTestResult(),
+        }
+      : null,
     resultEnteredAt: hasResults ? faker.date.recent().toISOString() : undefined,
     enteredBy: hasResults ? faker.person.fullName() : undefined,
     technicianNotes: faker.datatype.boolean() ? faker.lorem.sentence() : undefined,
@@ -66,9 +74,14 @@ export const createMockOrder = (overrides?: Partial<Order>): Order => {
     tests,
     totalPrice,
     paymentStatus: faker.helpers.arrayElement(['unpaid', 'paid']) as 'unpaid' | 'paid',
-    overallStatus: faker.helpers.arrayElement(['ordered', 'in-progress', 'completed']) as 'ordered' | 'in-progress' | 'completed',
+    overallStatus: faker.helpers.arrayElement(['ordered', 'in-progress', 'completed']) as
+      | 'ordered'
+      | 'in-progress'
+      | 'completed',
     appointmentId: faker.datatype.boolean() ? faker.number.int({ min: 1, max: 3000 }) : undefined,
-    scheduledCollectionTime: faker.datatype.boolean() ? faker.date.future().toISOString() : undefined,
+    scheduledCollectionTime: faker.datatype.boolean()
+      ? faker.date.future().toISOString()
+      : undefined,
     specialInstructions: faker.datatype.boolean() ? [faker.lorem.sentence()] : undefined,
     patientPrepInstructions: faker.datatype.boolean() ? faker.lorem.sentence() : undefined,
     clinicalNotes: faker.datatype.boolean() ? faker.lorem.paragraph() : undefined,

@@ -1,9 +1,9 @@
 /**
  * PaymentFilters Component
- * 
+ *
  * Provides comprehensive filtering controls for the payments list using the new filter architecture.
  * Uses config-driven approach with FilterBar component.
- * 
+ *
  * @module features/payment
  */
 
@@ -36,10 +36,10 @@ export interface PaymentFiltersProps {
 
 /**
  * PaymentFilters Component
- * 
+ *
  * Composes FilterBar with payment-specific configuration.
  * Maps between legacy prop interface and new filter value structure.
- * 
+ *
  * @component
  */
 export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
@@ -84,10 +84,6 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
   };
 
   return (
-    <FilterBar
-      config={paymentFilterConfig}
-      value={filterValues}
-      onChange={handleFilterChange}
-    />
+    <FilterBar config={paymentFilterConfig} value={filterValues} onChange={handleFilterChange} />
   );
 };

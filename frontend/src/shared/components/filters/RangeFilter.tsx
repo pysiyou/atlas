@@ -1,6 +1,6 @@
 /**
  * RangeFilter - Numeric range filter component
- * 
+ *
  * Provides a dual-slider interface for filtering numeric ranges.
  * Used for age, price, and other numeric filters.
  */
@@ -28,7 +28,7 @@ export interface RangeFilterProps {
 
 /**
  * RangeFilter component
- * 
+ *
  * @example
  * ```tsx
  * <RangeFilter
@@ -101,7 +101,7 @@ export const RangeFilter: React.FC<RangeFilterProps> = ({
       <div className="relative pt-2 pb-1">
         {/* Track */}
         <div className="absolute top-1/2 left-0 right-0 h-2 bg-gray-200 rounded-full -translate-y-1/2" />
-        
+
         {/* Active range */}
         <div
           className="absolute top-1/2 h-2 bg-sky-500 rounded-full -translate-y-1/2"
@@ -118,7 +118,7 @@ export const RangeFilter: React.FC<RangeFilterProps> = ({
           max={max}
           step={step}
           value={minValue}
-          onChange={(e) => handleMinChange(Number(e.target.value))}
+          onChange={e => handleMinChange(Number(e.target.value))}
           className="absolute w-full h-2 opacity-0 cursor-pointer z-10"
           style={{ pointerEvents: 'auto' }}
         />
@@ -130,7 +130,7 @@ export const RangeFilter: React.FC<RangeFilterProps> = ({
           max={max}
           step={step}
           value={maxValue}
-          onChange={(e) => handleMaxChange(Number(e.target.value))}
+          onChange={e => handleMaxChange(Number(e.target.value))}
           className="absolute w-full h-2 opacity-0 cursor-pointer z-10"
           style={{ pointerEvents: 'auto' }}
         />

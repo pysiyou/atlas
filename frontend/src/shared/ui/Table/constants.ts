@@ -13,11 +13,6 @@ export const BREAKPOINT_VALUES = {
 } as const;
 
 /**
- * @deprecated VISIBILITY_PRESETS is no longer used.
- * Column visibility is now handled via explicit viewConfig (fullColumns/compactColumns).
- */
-
-/**
  * Size presets for common column types
  */
 export const SIZE_PRESETS: Record<string, ColumnWidth> = {

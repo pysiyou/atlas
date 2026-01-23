@@ -18,9 +18,7 @@ export function TableRow<T>({
   return (
     <>
       {data.map((item, index) => {
-        const rowKey = getRowKey
-          ? getRowKey(item, index)
-          : index;
+        const rowKey = getRowKey ? getRowKey(item, index) : index;
         const isClickable = !!onRowClick;
         const isStriped = striped && index % 2 === 0;
 
@@ -36,19 +34,19 @@ export function TableRow<T>({
             style={{ height: `${ROW_HEIGHTS[variant]}px` }}
             onClick={() => onRowClick?.(item, index)}
           >
-            {visibleColumns.map((column) => (
+            {visibleColumns.map(column => (
               <TableCell
                 key={column.key}
                 column={column as ColumnConfig<unknown>}
                 variant={variant}
               >
-                {column.render
-                  ? column.render(item, index)
-                  : (
-                      <span className={column.truncate ? 'block truncate' : ''}>
-                        {String((item as Record<string, unknown>)[column.key] ?? '')}
-                      </span>
-                    )}
+                {column.render ? (
+                  column.render(item, index)
+                ) : (
+                  <span className={column.truncate ? 'block truncate' : ''}>
+                    {String((item as Record<string, unknown>)[column.key] ?? '')}
+                  </span>
+                )}
               </TableCell>
             ))}
           </div>

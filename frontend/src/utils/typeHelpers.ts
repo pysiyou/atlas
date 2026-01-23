@@ -17,7 +17,7 @@ export function getTestProperty<K extends keyof Test>(
   property: K,
   testCatalog: Test[]
 ): Test[K] | undefined {
-  const test = testCatalog.find((t) => t.code === testCode);
+  const test = testCatalog.find(t => t.code === testCode);
   return test?.[property];
 }
 
@@ -60,7 +60,7 @@ export function getTestCategory(testCode: string, testCatalog: Test[]): TestCate
 export function getPatientName(patientId: number | string, patients: Patient[]): string {
   const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
   if (isNaN(numericId)) return 'Unknown Patient';
-  const patient = patients.find((p) => p.id === numericId);
+  const patient = patients.find(p => p.id === numericId);
   return patient?.fullName || 'Unknown Patient';
 }
 
@@ -74,16 +74,16 @@ export function getOrderCollectionStatus(samples: Sample[]): {
   firstCollectedAt?: string;
   lastCollectedAt?: string;
 } {
-  const collectedSamples = samples.filter(
-    (sample) => sample.status === 'collected'
-  ) as Array<Extract<Sample, { status: 'collected' }>>;
+  const collectedSamples = samples.filter(sample => sample.status === 'collected') as Array<
+    Extract<Sample, { status: 'collected' }>
+  >;
 
   if (collectedSamples.length === 0) {
     return { allCollected: false };
   }
 
   const collectedDates = collectedSamples
-    .map((s) => s.collectedAt)
+    .map(s => s.collectedAt)
     .filter((date): date is string => date !== undefined)
     .sort();
 
@@ -103,5 +103,5 @@ export function getOrderCollectionStatus(samples: Sample[]): {
  * @returns Array of test names in the same order as testCodes
  */
 export function getTestNames(testCodes: string[], testCatalog: Test[]): string[] {
-  return testCodes.map((code) => getTestName(code, testCatalog));
+  return testCodes.map(code => getTestName(code, testCatalog));
 }

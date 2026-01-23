@@ -94,8 +94,7 @@ export function useOrdersByPatient(patientId: string | undefined) {
 
   const patientOrders = useMemo(() => {
     if (!patientId) return [];
-    const numericPatientId =
-      typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
+    const numericPatientId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
     if (isNaN(numericPatientId)) return [];
     return orders.filter(o => o.patientId === numericPatientId);
   }, [orders, patientId]);

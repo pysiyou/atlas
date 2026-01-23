@@ -1,6 +1,6 @@
 /**
  * EntityCard - Generic base card component
- * 
+ *
  * Provides a consistent card structure that can be extended by feature-specific cards.
  * This is the foundation for PatientCard, OrderCard, LabCard, and PaymentCard.
  */
@@ -48,7 +48,7 @@ export interface EntityCardProps {
 
 /**
  * EntityCard - Base card component for all entity types
- * 
+ *
  * @example
  * ```tsx
  * <EntityCard
@@ -90,11 +90,7 @@ export const EntityCard: React.FC<EntityCardProps> = ({
               )}
               {badges}
             </div>
-            {actions && (
-              <div className="flex items-center gap-2 shrink-0">
-                {actions}
-              </div>
-            )}
+            {actions && <div className="flex items-center gap-2 shrink-0">{actions}</div>}
           </div>
 
           {/* Row 2: Context Information */}
@@ -103,9 +99,7 @@ export const EntityCard: React.FC<EntityCardProps> = ({
               {(context.primary || context.secondary || context.tertiary) && (
                 <div className="flex items-center gap-2 text-sm text-gray-700 flex-wrap">
                   {context.primary}
-                  {context.primary && context.secondary && (
-                    <span className="text-gray-300">|</span>
-                  )}
+                  {context.primary && context.secondary && <span className="text-gray-300">|</span>}
                   {context.secondary}
                   {context.secondary && context.tertiary && (
                     <span className="text-gray-300">|</span>
@@ -113,11 +107,7 @@ export const EntityCard: React.FC<EntityCardProps> = ({
                   {context.tertiary}
                 </div>
               )}
-              {metadata && (
-                <div className="text-xs text-gray-500">
-                  {metadata}
-                </div>
-              )}
+              {metadata && <div className="text-xs text-gray-500">{metadata}</div>}
             </div>
           )}
 

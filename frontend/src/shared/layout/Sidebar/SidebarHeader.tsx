@@ -50,18 +50,11 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
           }`}
         >
           <div className="min-w-0 overflow-hidden whitespace-nowrap">
-            <h1 className="text-xs font-bold text-gray-900 truncate">
-              Atlas Clinical Labs
-            </h1>
+            <h1 className="text-xs font-bold text-gray-900 truncate">Atlas Clinical Labs</h1>
             <p className="text-xs text-gray-500">Version 2.4</p>
           </div>
           {onMobileClose ? (
-            <IconButton
-              variant="close"
-              size="sm"
-              onClick={onMobileClose}
-              title="Close Sidebar"
-            />
+            <IconButton variant="close" size="sm" onClick={onMobileClose} title="Close Sidebar" />
           ) : (
             <IconButton
               variant="collapse"

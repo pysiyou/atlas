@@ -1,6 +1,6 @@
 /**
  * ListView - Unified list view component
- * 
+ *
  * Provides a consistent list/grid/table view with integrated filtering,
  * pagination, and state management. Used across all features.
  */
@@ -26,23 +26,23 @@ export interface ListViewProps<T extends TableDataItem = TableDataItem> {
   loading?: boolean;
   /** Error state */
   error?: { message: string; operation?: string } | null;
-  
+
   // Display mode
   /** View mode (table, grid, or list) */
   mode?: ListViewMode;
-  
+
   // Table mode configuration
   /** Multi-view table configuration for table mode */
   viewConfig: TableViewConfig<T>;
   /** Row click handler for table mode */
   onRowClick?: (item: T, index?: number) => void;
-  
+
   // Grid/List mode configuration
   /** Render function for card/list items */
   renderItem?: (item: T, index: number) => ReactNode;
   /** Number of columns for grid mode (1-4) */
   gridColumns?: 1 | 2 | 3 | 4;
-  
+
   // Header
   /** Page title */
   title?: string;
@@ -50,11 +50,11 @@ export interface ListViewProps<T extends TableDataItem = TableDataItem> {
   subtitle?: string;
   /** Header action buttons */
   headerActions?: ReactNode;
-  
+
   // Filters
   /** Filter components */
   filters?: ReactNode;
-  
+
   // Empty/Error states
   /** Custom empty state */
   emptyState?: ReactNode;
@@ -62,7 +62,7 @@ export interface ListViewProps<T extends TableDataItem = TableDataItem> {
   onRetry?: () => void;
   /** Error dismiss handler */
   onDismissError?: () => void;
-  
+
   // Pagination
   /** Enable pagination */
   pagination?: boolean;
@@ -70,7 +70,7 @@ export interface ListViewProps<T extends TableDataItem = TableDataItem> {
   pageSize?: number;
   /** Page size options */
   pageSizeOptions?: number[];
-  
+
   // Additional props
   /** Additional CSS classes */
   className?: string;
@@ -85,7 +85,7 @@ const GRID_COLUMN_CLASSES = {
 
 /**
  * ListView component
- * 
+ *
  * @example
  * ```tsx
  * // Table mode
@@ -98,7 +98,7 @@ const GRID_COLUMN_CLASSES = {
  *   headerActions={<Button>New Patient</Button>}
  *   filters={<PatientFilters />}
  * />
- * 
+ *
  * // Grid mode
  * <ListView
  *   mode="grid"

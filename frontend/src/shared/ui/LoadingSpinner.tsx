@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
-import { motion } from "framer-motion";
+import React, { useMemo } from 'react';
+import { motion } from 'framer-motion';
 
-export type ClaudeLoaderSize = "sm" | "md" | "lg";
+export type ClaudeLoaderSize = 'sm' | 'md' | 'lg';
 
 export interface ClaudeLoaderProps {
   size?: ClaudeLoaderSize;
@@ -31,8 +31,8 @@ function seededRandom(seed: number): () => number {
 const LOADER_SEED = 42;
 
 export const ClaudeLoader: React.FC<ClaudeLoaderProps> = ({
-  size = "md",
-  color = "#10b981", // emerald-500
+  size = 'md',
+  color = '#10b981', // emerald-500
   armCount = 12,
 }) => {
   const pixelSize = SIZE_MAP[size];

@@ -64,10 +64,7 @@ export const resultAPI = {
    * Use this before showing the rejection dialog to know what options
    * to enable/disable.
    */
-  async getRejectionOptions(
-    orderId: string,
-    testCode: string
-  ): Promise<RejectionOptionsResponse> {
+  async getRejectionOptions(orderId: string, testCode: string): Promise<RejectionOptionsResponse> {
     return apiClient.get<RejectionOptionsResponse>(
       `/results/${orderId}/tests/${testCode}/rejection-options`
     );
@@ -81,10 +78,7 @@ export const resultAPI = {
     testCode: string,
     data: ResultEntryRequest
   ): Promise<OrderTest> {
-    return apiClient.post<OrderTest>(
-      `/results/${orderId}/tests/${testCode}`,
-      data
-    );
+    return apiClient.post<OrderTest>(`/results/${orderId}/tests/${testCode}`, data);
   },
 
   /**
@@ -96,10 +90,7 @@ export const resultAPI = {
     testCode: string,
     data: ResultValidationRequest
   ): Promise<OrderTest> {
-    return apiClient.post<OrderTest>(
-      `/results/${orderId}/tests/${testCode}/validate`,
-      data
-    );
+    return apiClient.post<OrderTest>(`/results/${orderId}/tests/${testCode}/validate`, data);
   },
 
   /**
@@ -121,9 +112,6 @@ export const resultAPI = {
     testCode: string,
     data: ResultRejectionRequest
   ): Promise<RejectionResult> {
-    return apiClient.post<RejectionResult>(
-      `/results/${orderId}/tests/${testCode}/reject`,
-      data
-    );
+    return apiClient.post<RejectionResult>(`/results/${orderId}/tests/${testCode}/reject`, data);
   },
 };

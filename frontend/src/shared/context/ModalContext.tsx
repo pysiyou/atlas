@@ -1,6 +1,6 @@
 /**
  * Modal Context - Global modal state management
- * 
+ *
  * Provides a centralized way to open and close modals throughout the application.
  * Similar to the cargoplan modal system.
  */
@@ -12,21 +12,21 @@ import React, {
   useContext,
   useMemo,
   useState,
-} from "react";
+} from 'react';
 
 /**
  * Available modal types in the application
  */
 export const ModalType = {
-  SAMPLE_DETAIL: "SAMPLE_DETAIL",
-  PATIENT_DETAIL: "PATIENT_DETAIL",
-  ORDER_DETAIL: "ORDER_DETAIL",
-  CONFIRMATION: "CONFIRMATION",
-  RESULT_DETAIL: "RESULT_DETAIL",
-  VALIDATION_DETAIL: "VALIDATION_DETAIL",
+  SAMPLE_DETAIL: 'SAMPLE_DETAIL',
+  PATIENT_DETAIL: 'PATIENT_DETAIL',
+  ORDER_DETAIL: 'ORDER_DETAIL',
+  CONFIRMATION: 'CONFIRMATION',
+  RESULT_DETAIL: 'RESULT_DETAIL',
+  VALIDATION_DETAIL: 'VALIDATION_DETAIL',
 } as const;
 
-export type ModalType = typeof ModalType[keyof typeof ModalType];
+export type ModalType = (typeof ModalType)[keyof typeof ModalType];
 
 /**
  * Modal context interface
@@ -55,7 +55,7 @@ const ModalContext = createContext<ModalContextType>({
 export const useModal = () => {
   const context = useContext(ModalContext);
   if (!context) {
-    throw new Error("useModal must be used within a ModalProvider");
+    throw new Error('useModal must be used within a ModalProvider');
   }
   return context;
 };
@@ -72,20 +72,15 @@ interface ModalProviderProps {
  */
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [modalType, setModalType] = useState<ModalType | null>(null);
-  const [modalProps, setModalProps] = useState<Record<string, unknown> | null>(
-    null
-  );
+  const [modalProps, setModalProps] = useState<Record<string, unknown> | null>(null);
 
   /**
    * Open a modal with the specified type and props
    */
-  const openModal = useCallback(
-    (type: ModalType, props?: Record<string, unknown>) => {
-      setModalType(type);
-      setModalProps(props || null);
-    },
-    []
-  );
+  const openModal = useCallback((type: ModalType, props?: Record<string, unknown>) => {
+    setModalType(type);
+    setModalProps(props || null);
+  }, []);
 
   /**
    * Close the currently open modal
@@ -105,7 +100,5 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     [modalType, modalProps, openModal, closeModal]
   );
 
-  return (
-    <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
-  );
+  return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>;
 };

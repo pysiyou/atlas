@@ -15,13 +15,9 @@ export interface OrderInfoSectionProps {
   layout?: 'grid' | 'column';
 }
 
-export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({
-  order,
-  layout = 'column',
-}) => {
-  const containerClass = layout === 'grid'
-    ? 'grid grid-cols-1 sm:grid-cols-2 gap-5'
-    : 'flex flex-col gap-3';
+export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layout = 'column' }) => {
+  const containerClass =
+    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-5' : 'flex flex-col gap-3';
 
   return (
     <div className={containerClass}>
@@ -60,9 +56,7 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({
         <OrderInfoField
           icon="pen"
           label="Clinical Notes"
-          value={
-            <span className="line-clamp-3 wrap-break-word">{order.clinicalNotes}</span>
-          }
+          value={<span className="line-clamp-3 wrap-break-word">{order.clinicalNotes}</span>}
         />
       )}
     </div>

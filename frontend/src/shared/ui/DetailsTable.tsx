@@ -42,9 +42,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
     <div className={`bg-white border border-gray-200 rounded-lg overflow-hidden ${className}`}>
       {/* Header */}
       <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-        <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
-          {title}
-        </h3>
+        <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">{title}</h3>
       </div>
 
       {/* Content */}
@@ -52,21 +50,14 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
         <table className="w-full">
           <tbody>
             {filteredRows.map((row, idx) => (
-              <tr
-                key={`${row.label}-${idx}`}
-                className="border-b border-gray-100 last:border-b-0"
-              >
+              <tr key={`${row.label}-${idx}`} className="border-b border-gray-100 last:border-b-0">
                 {/* Label */}
                 <td className="px-4 py-2.5 align-top w-2/5 uppercase text-xs">
-                  <span className="block text-xxs text-gray-500">
-                    {row.label}
-                  </span>
+                  <span className="block text-xxs text-gray-500">{row.label}</span>
                 </td>
                 {/* Value */}
                 <td className="px-4 py-2.5 align-top w-3/5 text-sm">
-                  <div className="text-sm text-gray-900 break-words">
-                    {row.value}
-                  </div>
+                  <div className="text-sm text-gray-900 break-words">{row.value}</div>
                 </td>
               </tr>
             ))}
@@ -74,10 +65,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
             {/* Empty state */}
             {filteredRows.length === 0 && (
               <tr>
-                <td
-                  colSpan={2}
-                  className="px-4 py-6 text-center text-gray-400 text-sm"
-                >
+                <td colSpan={2} className="px-4 py-6 text-center text-gray-400 text-sm">
                   No data available
                 </td>
               </tr>
@@ -88,4 +76,3 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
     </div>
   );
 };
-

@@ -11,7 +11,9 @@ import type { Affiliation, AffiliationDuration } from '@/types';
 export const generateAssuranceNumber = (): string => {
   const now = new Date();
   const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-  const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+  const randomSuffix = Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, '0');
   return `ASS-${dateStr}-${randomSuffix}`;
 };
 

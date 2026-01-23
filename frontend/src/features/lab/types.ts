@@ -1,6 +1,6 @@
 /**
  * Lab Feature Types
- * 
+ *
  * Consolidated type definitions for the lab feature.
  * Common types shared across collection, entry, and validation workflows.
  */

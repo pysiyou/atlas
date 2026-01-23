@@ -50,11 +50,9 @@ interface PatientFormSectionsProps {
  * Demographics Section
  * Displays patient basic information fields
  */
-export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange'>> = ({
-  formData,
-  errors,
-  onFieldChange,
-}) => (
+export const DemographicsSection: React.FC<
+  Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange'>
+> = ({ formData, errors, onFieldChange }) => (
   <div className="space-y-4">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="md:col-span-2">
@@ -62,7 +60,9 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
           label="Full Name"
           name="fullName"
           value={formData.fullName}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('fullName', e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onFieldChange('fullName', e.target.value)
+          }
           error={errors.fullName}
           required
           placeholder="John Doe"
@@ -74,7 +74,9 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         name="dateOfBirth"
         type="date"
         value={formData.dateOfBirth}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('dateOfBirth', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onFieldChange('dateOfBirth', e.target.value)
+        }
         error={errors.dateOfBirth}
         required
         className="text-xs"
@@ -83,7 +85,9 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         label="Gender"
         name="gender"
         value={formData.gender}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onFieldChange('gender', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+          onFieldChange('gender', e.target.value)
+        }
         options={GENDER_OPTIONS}
         required
         className="text-xs"
@@ -93,7 +97,9 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         name="phone"
         type="tel"
         value={formData.phone}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('phone', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onFieldChange('phone', e.target.value)
+        }
         error={errors.phone}
         required
         placeholder="(555) 123-4567"
@@ -104,7 +110,9 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         name="email"
         type="email"
         value={formData.email}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('email', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onFieldChange('email', e.target.value)
+        }
         error={errors.email}
         placeholder="patient@email.com"
         className="text-xs"
@@ -117,7 +125,9 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         min="30"
         max="250"
         value={formData.height}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('height', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onFieldChange('height', e.target.value)
+        }
         error={errors.height}
         placeholder="175.5"
         className="text-xs"
@@ -130,7 +140,9 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         min="1"
         max="500"
         value={formData.weight}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('weight', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onFieldChange('weight', e.target.value)
+        }
         error={errors.weight}
         placeholder="70.5"
         className="text-xs"
@@ -143,11 +155,9 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
  * Address Section
  * Displays patient address fields
  */
-export const AddressSection: React.FC<Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange'>> = ({
-  formData,
-  errors,
-  onFieldChange,
-}) => (
+export const AddressSection: React.FC<
+  Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange'>
+> = ({ formData, errors, onFieldChange }) => (
   <div className="space-y-4">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="md:col-span-2">
@@ -155,7 +165,9 @@ export const AddressSection: React.FC<Pick<PatientFormSectionsProps, 'formData' 
           label="Street Address"
           name="street"
           value={formData.street}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('street', e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onFieldChange('street', e.target.value)
+          }
           error={errors.street}
           required
           placeholder="123 Main Street"
@@ -176,7 +188,9 @@ export const AddressSection: React.FC<Pick<PatientFormSectionsProps, 'formData' 
         label="Postal Code"
         name="postalCode"
         value={formData.postalCode}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('postalCode', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onFieldChange('postalCode', e.target.value)
+        }
         error={errors.postalCode}
         required
         placeholder="12345"
@@ -190,12 +204,9 @@ export const AddressSection: React.FC<Pick<PatientFormSectionsProps, 'formData' 
  * Affiliation Section
  * Displays lab affiliation/subscription fields
  */
-export const AffiliationSection: React.FC<Pick<PatientFormSectionsProps, 'formData' | 'onFieldChange' | 'existingAffiliation' | 'onRenew'>> = ({
-  formData,
-  onFieldChange,
-  existingAffiliation,
-  onRenew,
-}) => {
+export const AffiliationSection: React.FC<
+  Pick<PatientFormSectionsProps, 'formData' | 'onFieldChange' | 'existingAffiliation' | 'onRenew'>
+> = ({ formData, onFieldChange, existingAffiliation, onRenew }) => {
   const hasExistingAffiliation = !!existingAffiliation;
   const isActive = isAffiliationActive(existingAffiliation);
 
@@ -206,27 +217,30 @@ export const AffiliationSection: React.FC<Pick<PatientFormSectionsProps, 'formDa
         <div className="bg-gray-50 rounded-lg p-4 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-700">Current Status</span>
-            <Badge
-              variant={isActive ? 'success' : 'danger'}
-              size="sm"
-            >
+            <Badge variant={isActive ? 'success' : 'danger'} size="sm">
               {isActive ? 'Active' : 'Expired'}
             </Badge>
           </div>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <span className="text-gray-500">Assurance Number</span>
-              <p className="font-mono font-medium text-gray-900">{existingAffiliation.assuranceNumber}</p>
+              <p className="font-mono font-medium text-gray-900">
+                {existingAffiliation.assuranceNumber}
+              </p>
             </div>
             <div>
               <span className="text-gray-500">Duration</span>
               <p className="font-medium text-gray-900">
-                {AFFILIATION_DURATION_OPTIONS.find(opt => opt.value === existingAffiliation.duration)?.label || `${existingAffiliation.duration} Months`}
+                {AFFILIATION_DURATION_OPTIONS.find(
+                  opt => opt.value === existingAffiliation.duration
+                )?.label || `${existingAffiliation.duration} Months`}
               </p>
             </div>
             <div>
               <span className="text-gray-500">Start Date</span>
-              <p className="font-medium text-gray-900">{formatDate(existingAffiliation.startDate)}</p>
+              <p className="font-medium text-gray-900">
+                {formatDate(existingAffiliation.startDate)}
+              </p>
             </div>
             <div>
               <span className="text-gray-500">Expiry Date</span>
@@ -258,7 +272,7 @@ export const AffiliationSection: React.FC<Pick<PatientFormSectionsProps, 'formDa
             id="hasAffiliation"
             name="hasAffiliation"
             checked={formData.hasAffiliation}
-            onChange={(e) => onFieldChange('hasAffiliation', e.target.checked)}
+            onChange={e => onFieldChange('hasAffiliation', e.target.checked)}
             className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
           />
           <label htmlFor="hasAffiliation" className="text-xs font-medium text-gray-500">
@@ -274,8 +288,13 @@ export const AffiliationSection: React.FC<Pick<PatientFormSectionsProps, 'formDa
             label="Subscription Duration"
             name="affiliationDuration"
             value={String(formData.affiliationDuration)}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onFieldChange('affiliationDuration', Number(e.target.value))}
-            options={AFFILIATION_DURATION_OPTIONS.map(opt => ({ value: String(opt.value), label: opt.label }))}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              onFieldChange('affiliationDuration', Number(e.target.value))
+            }
+            options={AFFILIATION_DURATION_OPTIONS.map(opt => ({
+              value: String(opt.value),
+              label: opt.label,
+            }))}
             required
             className="text-xs"
           />
@@ -293,8 +312,13 @@ export const AffiliationSection: React.FC<Pick<PatientFormSectionsProps, 'formDa
             label="Extension Duration"
             name="affiliationDuration"
             value={String(formData.affiliationDuration)}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onFieldChange('affiliationDuration', Number(e.target.value))}
-            options={AFFILIATION_DURATION_OPTIONS.map(opt => ({ value: String(opt.value), label: opt.label }))}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              onFieldChange('affiliationDuration', Number(e.target.value))
+            }
+            options={AFFILIATION_DURATION_OPTIONS.map(opt => ({
+              value: String(opt.value),
+              label: opt.label,
+            }))}
             required
             className="text-xs"
           />
@@ -308,18 +332,18 @@ export const AffiliationSection: React.FC<Pick<PatientFormSectionsProps, 'formDa
  * Emergency Contact Section
  * Displays emergency contact fields
  */
-export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange'>> = ({
-  formData,
-  errors,
-  onFieldChange,
-}) => (
+export const EmergencyContactSection: React.FC<
+  Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange'>
+> = ({ formData, errors, onFieldChange }) => (
   <div className="space-y-4">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <Input
         label="Contact Full Name"
         name="emergencyContactFullName"
         value={formData.emergencyContactFullName}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('emergencyContactFullName', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onFieldChange('emergencyContactFullName', e.target.value)
+        }
         error={errors.emergencyContactFullName}
         required
         placeholder="Jane Doe"
@@ -329,7 +353,9 @@ export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'f
         label="Relationship"
         name="emergencyContactRelationship"
         value={formData.emergencyContactRelationship}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onFieldChange('emergencyContactRelationship', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+          onFieldChange('emergencyContactRelationship', e.target.value)
+        }
         options={RELATIONSHIP_OPTIONS}
         error={errors.emergencyContactRelationship}
         required
@@ -340,7 +366,9 @@ export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'f
         name="emergencyContactPhone"
         type="tel"
         value={formData.emergencyContactPhone}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('emergencyContactPhone', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onFieldChange('emergencyContactPhone', e.target.value)
+        }
         error={errors.emergencyContactPhone}
         required
         placeholder="(555) 987-6543"
@@ -351,7 +379,9 @@ export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'f
         name="emergencyContactEmail"
         type="email"
         value={formData.emergencyContactEmail}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('emergencyContactEmail', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onFieldChange('emergencyContactEmail', e.target.value)
+        }
         error={errors.emergencyContactEmail}
         placeholder="contact@email.com"
         className="text-xs"
@@ -364,22 +394,33 @@ export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'f
  * Medical History Section
  * Displays medical history fields with tag inputs for lists
  */
-export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'formData' | 'onFieldChange'>> = ({
-  formData,
-  onFieldChange,
-}) => {
+export const MedicalHistorySection: React.FC<
+  Pick<PatientFormSectionsProps, 'formData' | 'onFieldChange'>
+> = ({ formData, onFieldChange }) => {
   // Convert semicolon-separated strings to arrays for TagInput
   const chronicConditionsArray = formData.chronicConditions
-    ? formData.chronicConditions.split(';').map(s => s.trim()).filter(s => s.length > 0)
+    ? formData.chronicConditions
+        .split(';')
+        .map(s => s.trim())
+        .filter(s => s.length > 0)
     : [];
   const currentMedicationsArray = formData.currentMedications
-    ? formData.currentMedications.split(';').map(s => s.trim()).filter(s => s.length > 0)
+    ? formData.currentMedications
+        .split(';')
+        .map(s => s.trim())
+        .filter(s => s.length > 0)
     : [];
   const allergiesArray = formData.allergies
-    ? formData.allergies.split(';').map(s => s.trim()).filter(s => s.length > 0)
+    ? formData.allergies
+        .split(';')
+        .map(s => s.trim())
+        .filter(s => s.length > 0)
     : [];
   const previousSurgeriesArray = formData.previousSurgeries
-    ? formData.previousSurgeries.split(';').map(s => s.trim()).filter(s => s.length > 0)
+    ? formData.previousSurgeries
+        .split(';')
+        .map(s => s.trim())
+        .filter(s => s.length > 0)
     : [];
 
   // Convert arrays back to semicolon-separated strings
@@ -392,7 +433,7 @@ export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'for
       <TagInput
         label="Chronic Conditions"
         tags={chronicConditionsArray}
-        onChange={(tags) => handleTagsChange('chronicConditions', tags)}
+        onChange={tags => handleTagsChange('chronicConditions', tags)}
         placeholder="Type condition and press Enter"
         helperText="Enter chronic medical conditions"
         tagVariant="outline"
@@ -400,7 +441,7 @@ export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'for
       <TagInput
         label="Current Medications"
         tags={currentMedicationsArray}
-        onChange={(tags) => handleTagsChange('currentMedications', tags)}
+        onChange={tags => handleTagsChange('currentMedications', tags)}
         placeholder="Type medication and press Enter"
         helperText="Include dosage if known"
         tagVariant="outline"
@@ -408,7 +449,7 @@ export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'for
       <TagInput
         label="Known Allergies"
         tags={allergiesArray}
-        onChange={(tags) => handleTagsChange('allergies', tags)}
+        onChange={tags => handleTagsChange('allergies', tags)}
         placeholder="Type allergy and press Enter"
         helperText="Include drug and non-drug allergies"
         tagVariant="outline"
@@ -416,7 +457,7 @@ export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'for
       <TagInput
         label="Previous Surgeries"
         tags={previousSurgeriesArray}
-        onChange={(tags) => handleTagsChange('previousSurgeries', tags)}
+        onChange={tags => handleTagsChange('previousSurgeries', tags)}
         placeholder="Type surgery and press Enter"
         tagVariant="outline"
       />
@@ -424,7 +465,9 @@ export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'for
         label="Family Medical History"
         name="familyHistory"
         value={formData.familyHistory}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onFieldChange('familyHistory', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+          onFieldChange('familyHistory', e.target.value)
+        }
         placeholder="Notable family medical history"
         rows={3}
         className="text-xs"
@@ -436,7 +479,7 @@ export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'for
             id="smoking"
             name="smoking"
             checked={formData.smoking}
-            onChange={(e) => onFieldChange('smoking', e.target.checked)}
+            onChange={e => onFieldChange('smoking', e.target.checked)}
             className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
           />
           <label htmlFor="smoking" className="text-xs font-medium text-gray-500">
@@ -449,7 +492,7 @@ export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'for
             id="alcohol"
             name="alcohol"
             checked={formData.alcohol}
-            onChange={(e) => onFieldChange('alcohol', e.target.checked)}
+            onChange={e => onFieldChange('alcohol', e.target.checked)}
             className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
           />
           <label htmlFor="alcohol" className="text-xs font-medium text-gray-500">
@@ -494,7 +537,11 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
       </div>
       <div className="bg-white rounded p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Emergency Contact</h3>
-        <EmergencyContactSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
+        <EmergencyContactSection
+          formData={formData}
+          errors={errors}
+          onFieldChange={onFieldChange}
+        />
       </div>
       <div className="bg-white rounded p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Medical History</h3>

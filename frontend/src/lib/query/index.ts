@@ -1,16 +1,11 @@
 /**
  * Query Module Exports
- * 
+ *
  * Centralized exports for TanStack Query configuration and utilities.
  */
 
 // Query client and configuration
-export { 
-  getQueryClient, 
-  createQueryClient, 
-  resetQueryClient,
-  cacheConfig,
-} from './client';
+export { getQueryClient, createQueryClient, resetQueryClient, cacheConfig } from './client';
 
 // Query keys factory
 export { queryKeys } from './keys';

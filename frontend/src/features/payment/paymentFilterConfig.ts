@@ -11,10 +11,7 @@ import { createFilterOptions } from '@/utils/filtering';
 /**
  * Prepare filter options for payment status
  */
-const paymentStatusOptions = createFilterOptions(
-  PAYMENT_STATUS_VALUES,
-  PAYMENT_STATUS_CONFIG
-);
+const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
 
 /**
  * Currently enabled payment methods
@@ -39,10 +36,7 @@ const PAYMENT_METHOD_CONFIG: Record<PaymentMethod, { label: string; color: strin
 /**
  * Prepare filter options for payment method
  */
-const paymentMethodOptions = createFilterOptions(
-  PAYMENT_METHOD_VALUES,
-  PAYMENT_METHOD_CONFIG
-);
+const paymentMethodOptions = createFilterOptions(PAYMENT_METHOD_VALUES, PAYMENT_METHOD_CONFIG);
 
 /**
  * Payment filter configuration

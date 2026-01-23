@@ -7,7 +7,7 @@
 
 import React, { useMemo, createElement } from 'react';
 import { useModal } from '@/shared/context/ModalContext';
-import { useSamples } from '@/features/lab/SamplesContext';
+import { useSampleLookup } from '@/hooks/queries';
 import { getRegisteredModal } from './modalRegistry';
 import { initializeModalRegistry } from './registerModals';
 import { logger } from '@/utils/logger';
@@ -23,7 +23,7 @@ initializeModalRegistry();
  */
 export const ModalRenderer: React.FC = () => {
   const { modalType, modalProps, closeModal } = useModal();
-  const { getSample } = useSamples();
+  const { getSample } = useSampleLookup();
 
   const isOpen = modalType !== null && modalProps !== null;
 

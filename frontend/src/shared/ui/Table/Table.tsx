@@ -10,13 +10,13 @@ import { DEFAULT_LOADING_ROWS } from './constants';
 
 /**
  * Main Table Component
- * 
+ *
  * A fully-featured table component with:
  * - Multi-view configuration (full/medium/compact/card)
  * - Breakpoint-based view selection
  * - Sorting and pagination
  * - Loading and empty states
- * 
+ *
  * Uses viewConfig to define separate views for different screen sizes:
  * - Card view (xs/sm): Custom CardComponent
  * - Compact table (md): compactColumns
@@ -101,9 +101,7 @@ export function Table<T = Record<string, unknown>>({
   // Card view for mobile (xs/sm)
   if (shouldShowCard) {
     return (
-      <div
-        className={`flex flex-col h-full ${!embedded ? 'rounded border border-gray-200' : ''}`}
-      >
+      <div className={`flex flex-col h-full ${!embedded ? 'rounded border border-gray-200' : ''}`}>
         <div className="p-4">
           <CardGrid<T>
             data={paginatedData as T[]}
@@ -127,11 +125,11 @@ export function Table<T = Record<string, unknown>>({
   }
 
   // Table view (compact, medium, or full)
-  const activeColumns = shouldShowCompact 
-    ? viewConfig.compactColumns 
+  const activeColumns = shouldShowCompact
+    ? viewConfig.compactColumns
     : shouldShowMedium
-    ? viewConfig.mediumColumns
-    : viewConfig.fullColumns;
+      ? viewConfig.mediumColumns
+      : viewConfig.fullColumns;
 
   return (
     <TableCore<T>

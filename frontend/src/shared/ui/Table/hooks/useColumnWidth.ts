@@ -14,7 +14,7 @@ const toCssValue = (value: string | number | undefined): string | undefined => {
 /**
  * Resolve width configuration to a ColumnWidth object
  */
-const resolveWidth = <T,>(width: ColumnConfig<T>['width']): ColumnWidth => {
+const resolveWidth = <T>(width: ColumnConfig<T>['width']): ColumnWidth => {
   if (!width) {
     // Default: flexible column
     return { grow: 1, shrink: 1, min: 100 };
@@ -41,7 +41,7 @@ const resolveWidth = <T,>(width: ColumnConfig<T>['width']): ColumnWidth => {
 /**
  * Generate CSS styles for a column based on its width configuration
  */
-export const getColumnStyle = <T,>(column: ColumnConfig<T>): CSSProperties => {
+export const getColumnStyle = <T>(column: ColumnConfig<T>): CSSProperties => {
   const width = resolveWidth(column.width);
 
   const style: CSSProperties = {};
@@ -76,13 +76,11 @@ export const getColumnStyle = <T,>(column: ColumnConfig<T>): CSSProperties => {
 /**
  * Hook to compute column styles for all columns
  */
-export const useColumnStyles = <T>(
-  columns: ColumnConfig<T>[]
-): Map<string, CSSProperties> => {
+export const useColumnStyles = <T>(columns: ColumnConfig<T>[]): Map<string, CSSProperties> => {
   return useMemo(() => {
     const styleMap = new Map<string, CSSProperties>();
 
-    columns.forEach((column) => {
+    columns.forEach(column => {
       styleMap.set(column.key, getColumnStyle(column));
     });
 

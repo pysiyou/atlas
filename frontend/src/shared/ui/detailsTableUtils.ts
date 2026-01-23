@@ -19,15 +19,7 @@ export interface DetailRow {
 /**
  * Placeholder values to filter out
  */
-const PLACEHOLDER_VALUES = new Set([
-  'n/a',
-  '-',
-  '—',
-  'none',
-  'null',
-  'undefined',
-  '',
-]);
+const PLACEHOLDER_VALUES = new Set(['n/a', '-', '—', 'none', 'null', 'undefined', '']);
 
 /**
  * Check if a value should be displayed
@@ -52,7 +44,7 @@ const hasValue = (value: React.ReactNode): boolean => {
  * @returns Filtered rows
  */
 export const filterDetailRows = (rows: DetailRow[] | undefined | null): DetailRow[] =>
-  Array.isArray(rows) ? rows.filter((r) => hasValue(r.value)) : [];
+  Array.isArray(rows) ? rows.filter(r => hasValue(r.value)) : [];
 
 /**
  * Calculate effective height of a table (number of visible rows)

@@ -1,6 +1,6 @@
 /**
  * EntryMobileCard - Mobile-friendly card component for result entry
- * 
+ *
  * Simplified card layout for small screens, similar to PatientCard/PaymentCard style.
  * Shows essential information in a compact, touch-friendly format.
  */
@@ -9,8 +9,7 @@ import React from 'react';
 import { Badge, IconButton } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
-import { getPatientName } from '@/utils/typeHelpers';
-import { usePatients } from '@/hooks';
+import { usePatientNameLookup } from '@/hooks/queries';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { Test, TestWithContext } from '@/types';
 
@@ -44,11 +43,11 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
   onClick,
 }) => {
   const { openModal } = useModal();
-  const { patients } = usePatients();
+  const { getPatientName } = usePatientNameLookup();
 
   if (!testDef?.parameters) return null;
 
-  const patientName = getPatientName(test.patientId, patients);
+  const patientName = getPatientName(test.patientId);
   const isRetest = test.isRetest === true;
   const isSampleRecollection = test.sampleIsRecollection === true;
 
@@ -58,13 +57,22 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
       return;
     }
     openModal(ModalType.RESULT_DETAIL, {
-      test, testDef, resultKey, results, technicianNotes, isComplete,
-      onResultsChange, onNotesChange, onSave, onNext, onPrev,
+      test,
+      testDef,
+      resultKey,
+      results,
+      technicianNotes,
+      isComplete,
+      onResultsChange,
+      onNotesChange,
+      onSave,
+      onNext,
+      onPrev,
     });
   };
 
   return (
-    <div 
+    <div
       onClick={handleCardClick}
       className="bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow flex flex-col h-full"
     >
@@ -73,16 +81,21 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
         <div className="min-w-0 overflow-hidden">
           <div className="text-sm font-semibold text-gray-900 truncate">{test.testName}</div>
           <div className="flex items-center gap-2">
-            <div className="text-xs text-sky-600 font-medium font-mono truncate">{test.testCode}</div>
+            <div className="text-xs text-sky-600 font-medium font-mono truncate">
+              {test.testCode}
+            </div>
             {test.sampleId && (
-              <div className="text-xs text-sky-600 font-medium font-mono truncate" title={displayId.sample(test.sampleId)}>
+              <div
+                className="text-xs text-sky-600 font-medium font-mono truncate"
+                title={displayId.sample(test.sampleId)}
+              >
                 • {displayId.sample(test.sampleId)}
               </div>
             )}
           </div>
         </div>
       </div>
-      
+
       {/* Content: Patient, collection date */}
       <div className="grow">
         <div className="space-y-1">
@@ -107,11 +120,11 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
             </Badge>
           )}
         </div>
-        <IconButton 
-          variant="edit" 
+        <IconButton
+          variant="edit"
           size="sm"
           title="Enter Results"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             handleCardClick();
           }}

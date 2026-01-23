@@ -1,128 +1,127 @@
 /**
  * Icon Component
- * 
+ *
  * Loads and displays SVG icons dynamically from the public/icons directory.
  * Follows the same pattern as cargoplan software for consistency.
- * 
+ *
  * Usage:
  *   <Icon name="check" className="w-4 h-4" />
  *   <Icon name="alert-circle" className="w-5 h-5 text-red-500" />
  */
 
-import React, { useEffect, useState } from "react";
-import { logger } from "@/utils/logger";
+import React, { useEffect, useState } from 'react';
+import { logger } from '@/utils/logger';
 
 /**
  * Available icon names - add new icons here as SVG files are added
  */
 export type IconName =
-  | "logo"
-  | "app-logo"
-  | "alert-circle"
-  | "check"
-  | "x"
-  | "check-circle"
-  | "x-circle"
-  | "info-circle"
-  | "printer"
-  | "package"
-  | "user"
-  | "calendar"
-  | "search"
-  | "plus"
-  | "pen"
-  | "edit"
-  | "eye"
-  | "file-text"
-  | "arrow-left"
-  | "chevron-left"
-  | "chevron-right"
-  | "chevron-down"
-  | "chevron-up"
-  | "more-vertical"
-  | "arrow-up"
-  | "arrow-down"
-  | "shield"
-  | "phone"
-  | "mail"
-  | "map-pin"
-  | "dollar-sign"
-  | "trending-up"
-  | "credit-card"
-  | "shopping-cart"
-  | "clipboard-check"
-  | "beaker"
-  | "users"
-  | "download"
-  | "filter"
-  | "log-in"
-  | "log-out"
-  | "chevrons-left"
-  | "lab-tube"
-  | "lab-cup"
-  | "close"
-  | "gender"
-  | "map"
-  | "medicine"
-  | "health"
-  | "users-group"
-  | "pdf"
-  | "download"
-  | "document"
-  | "verified"
-  | "user-hands"
-  | "cash"
-  | "hourglass"
-  | "minus-circle"
-  | "wallet"
-  | "checklist"
-  | "pour"
-  | "notebook"
-  | "shield-check"
-  | "sample-collection"
-  | "loading"
-  | "stethoscope"
-  | "clock"
-  | "hashtag"
-  | "danger-square"
-  | "bill"
-  | "trash"
-  | "folder-open"
-  | "medical-kit"
-  | "document-medicine"
-  | "lock"
-  | "smartphone"
-  | "dna-landing-page"
-  | "atom-landing-page"
-  | "beaker-landing-page"
-  | "bond-molecule-landing-page"
-  | "drops-droplet-landing-page"
-  | "microscope-landing-page"
-  | "flask-chemical-landing-page"
-  | "flask-education-landing-page"
-  | "medicines-medicine-landing-page"
-  | "microscope-landing-page"
-  | "syringe-landing-page"
-  | "test-tube-landing-page"
-  | "thermometer-landing-page"
-  | "vial-landing-page"
-  | "flask"
-  | "dashboard"
-  | "warning"
-  | "close"
-  | "cross"
-  | "menu-dots"
-  | "plus-circle"
-  | "save"
-  | "cart-plus"
-  | "cart"
-  | "close-circle"
-  | "book"
-  | "age-0"
-  | "category"
-  | "ruler"
-  | "weight"
-  ;
+  | 'logo'
+  | 'app-logo'
+  | 'alert-circle'
+  | 'check'
+  | 'x'
+  | 'check-circle'
+  | 'x-circle'
+  | 'info-circle'
+  | 'printer'
+  | 'package'
+  | 'user'
+  | 'calendar'
+  | 'search'
+  | 'plus'
+  | 'pen'
+  | 'edit'
+  | 'eye'
+  | 'file-text'
+  | 'arrow-left'
+  | 'chevron-left'
+  | 'chevron-right'
+  | 'chevron-down'
+  | 'chevron-up'
+  | 'more-vertical'
+  | 'arrow-up'
+  | 'arrow-down'
+  | 'shield'
+  | 'phone'
+  | 'mail'
+  | 'map-pin'
+  | 'dollar-sign'
+  | 'trending-up'
+  | 'credit-card'
+  | 'shopping-cart'
+  | 'clipboard-check'
+  | 'beaker'
+  | 'users'
+  | 'download'
+  | 'filter'
+  | 'log-in'
+  | 'log-out'
+  | 'chevrons-left'
+  | 'lab-tube'
+  | 'lab-cup'
+  | 'close'
+  | 'gender'
+  | 'map'
+  | 'medicine'
+  | 'health'
+  | 'users-group'
+  | 'pdf'
+  | 'download'
+  | 'document'
+  | 'verified'
+  | 'user-hands'
+  | 'cash'
+  | 'hourglass'
+  | 'minus-circle'
+  | 'wallet'
+  | 'checklist'
+  | 'pour'
+  | 'notebook'
+  | 'shield-check'
+  | 'sample-collection'
+  | 'loading'
+  | 'stethoscope'
+  | 'clock'
+  | 'hashtag'
+  | 'danger-square'
+  | 'bill'
+  | 'trash'
+  | 'folder-open'
+  | 'medical-kit'
+  | 'document-medicine'
+  | 'lock'
+  | 'smartphone'
+  | 'dna-landing-page'
+  | 'atom-landing-page'
+  | 'beaker-landing-page'
+  | 'bond-molecule-landing-page'
+  | 'drops-droplet-landing-page'
+  | 'microscope-landing-page'
+  | 'flask-chemical-landing-page'
+  | 'flask-education-landing-page'
+  | 'medicines-medicine-landing-page'
+  | 'microscope-landing-page'
+  | 'syringe-landing-page'
+  | 'test-tube-landing-page'
+  | 'thermometer-landing-page'
+  | 'vial-landing-page'
+  | 'flask'
+  | 'dashboard'
+  | 'warning'
+  | 'close'
+  | 'cross'
+  | 'menu-dots'
+  | 'plus-circle'
+  | 'save'
+  | 'cart-plus'
+  | 'cart'
+  | 'close-circle'
+  | 'book'
+  | 'age-0'
+  | 'category'
+  | 'ruler'
+  | 'weight';
 
 interface IconProps {
   /** Name of the icon to display (must match SVG filename without .svg extension) */
@@ -148,16 +147,11 @@ const loadSvg = async (name: string): Promise<string> => {
 
 /**
  * Icon Component
- * 
+ *
  * Dynamically loads SVG icons and renders them inline.
  * Icons are loaded from /icons/{name}.svg
  */
-export const Icon: React.FC<IconProps> = ({
-  name,
-  className = "",
-  fallback,
-  size,
-}) => {
+export const Icon: React.FC<IconProps> = ({ name, className = '', fallback, size }) => {
   const [svgContent, setSvgContent] = useState<string | null>(null);
 
   useEffect(() => {
@@ -173,7 +167,10 @@ export const Icon: React.FC<IconProps> = ({
             const fallbackContent = await loadSvg(fallback);
             setSvgContent(fallbackContent);
           } catch (fallbackError) {
-            logger.error(`Failed to load fallback icon: ${fallback}`, fallbackError instanceof Error ? fallbackError : undefined);
+            logger.error(
+              `Failed to load fallback icon: ${fallback}`,
+              fallbackError instanceof Error ? fallbackError : undefined
+            );
             setSvgContent(null);
           }
         } else {
@@ -190,9 +187,7 @@ export const Icon: React.FC<IconProps> = ({
   }
 
   // Handle size prop - convert to Tailwind classes if number provided
-  const sizeClass = typeof size === 'number' 
-    ? `w-${size} h-${size}` 
-    : size || '';
+  const sizeClass = typeof size === 'number' ? `w-${size} h-${size}` : size || '';
 
   return (
     <span

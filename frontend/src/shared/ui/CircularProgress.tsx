@@ -29,7 +29,8 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
   const center = size / 2;
   const radius = center - strokeWidth;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (Math.min(100, Math.max(0, percentage)) / 100) * circumference;
+  const strokeDashoffset =
+    circumference - (Math.min(100, Math.max(0, percentage)) / 100) * circumference;
 
   return (
     <div className={`flex items-center gap-1 ${className}`}>
@@ -59,13 +60,9 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
           />
         </svg>
       </div>
-      
+
       {/* Label */}
-      {label && (
-        <span className="text-gray-400 text-xs normal-case font-light">
-          {label}
-        </span>
-      )}
+      {label && <span className="text-gray-400 text-xs normal-case font-light">{label}</span>}
     </div>
   );
 };

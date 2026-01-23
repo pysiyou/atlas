@@ -51,7 +51,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           </h3>
         </div>
         <nav className="space-y-1">
-          {menuItems.map((item) => (
+          {menuItems.map(item => (
             <NavLink
               key={item.path}
               to={item.path}
@@ -59,16 +59,12 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               onClick={handleNavClick}
               className={({ isActive }) =>
                 `flex items-center min-w-0 py-2.5 transition-colors relative ${
-                  isActive
-                    ? 'bg-sky-50 text-sky-700 font-medium'
-                    : 'text-gray-700 hover:bg-gray-50'
+                  isActive ? 'bg-sky-50 text-sky-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
                 }`
               }
             >
               {/* Fixed Width Icon Container */}
-              <div className="w-16 flex items-center justify-center shrink-0">
-                {item.icon}
-              </div>
+              <div className="w-16 flex items-center justify-center shrink-0">{item.icon}</div>
 
               {/* Text Content */}
               <span
@@ -102,9 +98,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               className="flex items-center min-w-0 py-2.5 w-full text-left text-gray-400 cursor-not-allowed opacity-60"
               title={isCollapsed ? item.label : 'Coming soon'}
             >
-              <div className="w-16 flex items-center justify-center shrink-0">
-                {item.icon}
-              </div>
+              <div className="w-16 flex items-center justify-center shrink-0">{item.icon}</div>
               <span
                 className={`text-sm whitespace-nowrap overflow-hidden transition-opacity duration-300 ${
                   isCollapsed ? 'opacity-0' : 'opacity-100'

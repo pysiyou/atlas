@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, type BadgeVariant } from './Badge';
 import { formatDate } from '@/utils';
-import { useUsers } from '@/hooks';
+import { useUserLookup } from '@/hooks/queries';
 
 /**
  * Badge configuration for DetailField
@@ -46,37 +46,37 @@ interface DetailFieldProps {
 
 /**
  * Reusable detail field component for displaying label-value pairs uniformly
- * 
+ *
  * Supports multiple patterns:
  * 1. Simple value: <DetailField label="Name" value="John" />
  * 2. Badge value: <DetailField label="Status" badge={{ value: "active", variant: "success" }} />
  * 3. Timestamp: <DetailField label="Created" timestamp="2024-01-01" />
  * 4. Timestamp + User: <DetailField label="Collected" timestamp="2024-01-01" user="user123" />
- * 
+ *
  * @example
  * // Simple value
  * <DetailField label="Patient Name" value="John Doe" />
- * 
+ *
  * @example
  * // Badge value
  * <DetailField label="Sample ID" badge={{ value: "SAM-001", variant: "primary" }} />
- * 
+ *
  * @example
  * // Timestamp with user (stacked layout)
  * <DetailField label="Collected" timestamp={sample.collectedAt} user={sample.collectedBy} />
  */
-export const DetailField: React.FC<DetailFieldProps> = ({ 
-  label, 
-  value, 
-  className = '', 
-  labelClassName = 'text-gray-600 text-xs', 
+export const DetailField: React.FC<DetailFieldProps> = ({
+  label,
+  value,
+  className = '',
+  labelClassName = 'text-gray-600 text-xs',
   valueClassName = 'font-medium text-gray-900 text-right text-xs',
   variant = 'default',
   timestamp,
   user,
   badge,
 }) => {
-  const { getUserName } = useUsers();
+  const { getUserName } = useUserLookup();
 
   /**
    * Renders the value portion of the field based on props priority:
@@ -88,10 +88,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
     // Badge rendering takes priority
     if (badge && badge.value) {
       return (
-        <Badge 
-          variant={badge.variant || 'primary'} 
-          size={badge.size || 'xs'}
-        >
+        <Badge variant={badge.variant || 'primary'} size={badge.size || 'xs'}>
           {badge.value.toUpperCase()}
         </Badge>
       );

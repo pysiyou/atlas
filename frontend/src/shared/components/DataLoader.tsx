@@ -4,12 +4,9 @@
  * Provides centralized data initialization for all features
  */
 
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { useAuth } from '@/features/auth/useAuth';
-import { usePatients } from '@/features/patient/PatientContext';
-import { useOrders } from '@/features/order/OrderContext';
-import { useTests } from '@/features/test/TestsContext';
-import { useSamples } from '@/features/lab/SamplesContext';
+import { usePatientsList, useOrdersList, useTestCatalog, useSamplesList } from '@/hooks/queries';
 import { SkeletonPage } from '@/shared/ui/Skeleton';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
@@ -24,52 +21,72 @@ interface DataLoaderProps {
  * DataLoader Component
  * Initializes all required data after authentication
  * Shows loading state and handles initialization errors
- * 
+ *
  * Note: Data loading is triggered by the individual providers on mount,
  * this component primarily handles the loading UI state
  */
-export const DataLoader: React.FC<DataLoaderProps> = ({ 
-  children,
-  showLoadingSkeleton = true,
-}) => {
+export const DataLoader: React.FC<DataLoaderProps> = ({ children, showLoadingSkeleton = true }) => {
   const { isAuthenticated } = useAuth();
-  const { loading: patientsLoading, error: patientsError, refreshPatients } = usePatients();
-  const { loading: ordersLoading, error: ordersError, refreshOrders } = useOrders();
-  const { loading: testsLoading, error: testsError, refreshTests } = useTests();
-  const { loading: samplesLoading, error: samplesError, refreshSamples } = useSamples();
 
-  // Track if initial load has been attempted
-  const hasLoadedRef = useRef(false);
-
-  // Trigger initial load when authenticated
-  // Using ref to prevent re-triggering on re-renders
-  useEffect(() => {
-    if (isAuthenticated && !hasLoadedRef.current) {
-      hasLoadedRef.current = true;
-      // Data is already being loaded by providers on mount
-      // This effect just marks that we've authenticated
-    }
-    
-    // Reset on logout
-    if (!isAuthenticated) {
-      hasLoadedRef.current = false;
-    }
-  }, [isAuthenticated]);
+  // Use TanStack Query hooks - they handle loading/error states automatically
+  const {
+    isLoading: patientsLoading,
+    isError: patientsError,
+    error: patientsErrorObj,
+    refetch: refetchPatients,
+  } = usePatientsList();
+  const {
+    isLoading: ordersLoading,
+    isError: ordersError,
+    error: ordersErrorObj,
+    refetch: refetchOrders,
+  } = useOrdersList();
+  const {
+    isLoading: testsLoading,
+    isError: testsError,
+    error: testsErrorObj,
+    refetch: refetchTests,
+  } = useTestCatalog();
+  const {
+    isLoading: samplesLoading,
+    isError: samplesError,
+    error: samplesErrorObj,
+    refetch: refetchSamples,
+  } = useSamplesList();
 
   // Check if any data is currently loading
   const isLoading = patientsLoading || ordersLoading || testsLoading || samplesLoading;
 
   // Collect all errors
-  const errors = [patientsError, ordersError, testsError, samplesError].filter(Boolean);
+  const errors = [
+    patientsError
+      ? {
+          message:
+            patientsErrorObj instanceof Error
+              ? patientsErrorObj.message
+              : 'Failed to load patients',
+        }
+      : null,
+    ordersError
+      ? {
+          message:
+            ordersErrorObj instanceof Error ? ordersErrorObj.message : 'Failed to load orders',
+        }
+      : null,
+    testsError
+      ? { message: testsErrorObj instanceof Error ? testsErrorObj.message : 'Failed to load tests' }
+      : null,
+    samplesError
+      ? {
+          message:
+            samplesErrorObj instanceof Error ? samplesErrorObj.message : 'Failed to load samples',
+        }
+      : null,
+  ].filter(Boolean);
 
   // Retry loading all data
   const handleRetry = async () => {
-    await Promise.all([
-      refreshPatients(),
-      refreshOrders(),
-      refreshTests(),
-      refreshSamples(),
-    ]);
+    await Promise.all([refetchPatients(), refetchOrders(), refetchTests(), refetchSamples()]);
   };
 
   // Show loading skeleton during initial load
@@ -96,10 +113,7 @@ export const DataLoader: React.FC<DataLoaderProps> = ({
                   <li key={index}>{err?.message || 'Unknown error'}</li>
                 ))}
               </ul>
-              <Button
-                onClick={handleRetry}
-                variant="retry"
-              >
+              <Button onClick={handleRetry} variant="retry">
                 Retry
               </Button>
             </div>

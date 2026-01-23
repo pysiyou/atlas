@@ -1,6 +1,6 @@
 /**
  * TagInput Component
- * 
+ *
  * A modern tag input component for managing lists of items (e.g., medications, allergies, conditions).
  * Allows users to add tags by typing and pressing Enter, and remove tags by clicking the X button.
  */
@@ -35,7 +35,7 @@ export interface TagInputProps {
 
 /**
  * TagInput - Component for managing a list of tags
- * 
+ *
  * Features:
  * - Add tags by typing and pressing Enter
  * - Remove tags by clicking the X button
@@ -61,7 +61,7 @@ export const TagInput: React.FC<TagInputProps> = ({
    */
   const handleAddTag = (value: string) => {
     const trimmedValue = value.trim();
-    
+
     // Don't add empty tags or duplicates
     if (!trimmedValue || tags.includes(trimmedValue)) {
       return;
@@ -108,10 +108,7 @@ export const TagInput: React.FC<TagInputProps> = ({
   return (
     <div className={cn('w-full', className)}>
       {label && (
-        <label
-          htmlFor={inputId}
-          className="block text-xs font-medium text-gray-500 mb-1.5"
-        >
+        <label htmlFor={inputId} className="block text-xs font-medium text-gray-500 mb-1.5">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -163,14 +160,10 @@ export const TagInput: React.FC<TagInputProps> = ({
       </div>
 
       {/* Error Message */}
-      {error && (
-        <p className="mt-1.5 text-xs text-red-600">{error}</p>
-      )}
+      {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
 
       {/* Helper Text */}
-      {helperText && !error && (
-        <p className="mt-1.5 text-xs text-gray-500">{helperText}</p>
-      )}
+      {helperText && !error && <p className="mt-1.5 text-xs text-gray-500">{helperText}</p>}
     </div>
   );
 };

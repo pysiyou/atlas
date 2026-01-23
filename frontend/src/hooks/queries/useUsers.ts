@@ -1,9 +1,9 @@
 /**
  * Users Query Hook
- * 
+ *
  * Provides access to user data with Infinity caching.
  * User list rarely changes, so we cache it for the entire session.
- * 
+ *
  * @module hooks/queries/useUsers
  */
 
@@ -38,9 +38,9 @@ export interface UserDisplayInfo {
 /**
  * Hook to fetch and cache all users.
  * Uses Infinity cache - data is fetched once per session.
- * 
+ *
  * @returns Query result containing users array and loading state
- * 
+ *
  * @example
  * ```tsx
  * const { users, isLoading } = useUsersList();
@@ -81,7 +81,7 @@ export function useUsersList() {
 /**
  * Hook to create a map of users for quick lookups.
  * Transforms the users array into a Map keyed by user ID.
- * 
+ *
  * @returns Map of user ID to UserDisplayInfo
  */
 export function useUsersMap(): Map<string, UserDisplayInfo> {
@@ -103,9 +103,9 @@ export function useUsersMap(): Map<string, UserDisplayInfo> {
 /**
  * Hook to get user name by ID with fallback.
  * Returns a lookup function that resolves user IDs to display names.
- * 
+ *
  * @returns Object with getUserName and getUserInfo functions
- * 
+ *
  * @example
  * ```tsx
  * const { getUserName, getUserInfo } = useUserLookup();
@@ -119,45 +119,51 @@ export function useUserLookup() {
   /**
    * Get user name by ID with fallback
    */
-  const getUserName = useCallback((userId: string): string => {
-    if (!userId) {
-      return 'Unknown';
-    }
+  const getUserName = useCallback(
+    (userId: string): string => {
+      if (!userId) {
+        return 'Unknown';
+      }
 
-    const user = usersMap.get(userId);
-    if (user) {
-      return user.name;
-    }
+      const user = usersMap.get(userId);
+      if (user) {
+        return user.name;
+      }
 
-    // Fallback: format the user ID
-    if (userId.startsWith('USR-')) {
-      return `User ${userId.slice(4)}`;
-    }
+      // Fallback: format the user ID
+      if (userId.startsWith('USR-')) {
+        return `User ${userId.slice(4)}`;
+      }
 
-    // Handle common system identifiers with more descriptive names
-    const systemUserNames: Record<string, string> = {
-      'system': 'System Admin',
-      'admin': 'System Admin',
-      'unknown': 'Unknown User',
-    };
+      // Handle common system identifiers with more descriptive names
+      const systemUserNames: Record<string, string> = {
+        system: 'System Admin',
+        admin: 'System Admin',
+        unknown: 'Unknown User',
+      };
 
-    const lowerUserId = userId.toLowerCase();
-    if (systemUserNames[lowerUserId]) {
-      return systemUserNames[lowerUserId];
-    }
+      const lowerUserId = userId.toLowerCase();
+      if (systemUserNames[lowerUserId]) {
+        return systemUserNames[lowerUserId];
+      }
 
-    return userId;
-  }, [usersMap]);
+      return userId;
+    },
+    [usersMap]
+  );
 
   /**
    * Get full user display info by ID
    */
-  const getUserInfo = useCallback((userId: string | undefined): UserDisplayInfo | undefined => {
-    if (!userId) {
-      return undefined;
-    }
-    return usersMap.get(userId);
-  }, [usersMap]);
+  const getUserInfo = useCallback(
+    (userId: string | undefined): UserDisplayInfo | undefined => {
+      if (!userId) {
+        return undefined;
+      }
+      return usersMap.get(userId);
+    },
+    [usersMap]
+  );
 
   return {
     getUserName,
@@ -169,7 +175,7 @@ export function useUserLookup() {
 
 /**
  * Hook to get a single user by ID.
- * 
+ *
  * @param userId - The user ID to look up
  * @returns The user display info or undefined
  */
@@ -187,7 +193,7 @@ export function useUser(userId: string | undefined) {
 
 /**
  * Hook to invalidate and refetch the users list.
- * 
+ *
  * @returns Function to invalidate the users cache
  */
 export function useInvalidateUsers() {

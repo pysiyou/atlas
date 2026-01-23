@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { SectionContainer, IconButton } from '@/shared/ui';
-import type { Order, OrderTest, Patient, Test } from '@/types';
+import type { Order, OrderTest, Patient, Test, Invoice } from '@/types';
 import { OrderInfoSection } from './OrderInfoSection';
 import { PatientInfoSection } from './PatientInfoSection';
 import { TestsTable } from './TestsTable';
@@ -16,8 +16,7 @@ import { OrderTimeline } from '../OrderTimeline';
 interface LayoutProps {
   order: Order;
   patient: Patient | null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  invoice: any | null;
+  invoice: Invoice | null;
   testCatalog: Test[];
   activeTests: OrderTest[];
   supersededCount: number;
@@ -54,12 +53,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         contentClassName="overflow-visible"
         headerRight={
           patient && (
-            <IconButton
-              onClick={onViewPatient}
-              variant="view"
-              size="sm"
-              title="View Patient"
-            />
+            <IconButton onClick={onViewPatient} variant="view" size="sm" title="View Patient" />
           )
         }
       >
@@ -77,9 +71,10 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
       </SectionContainer>
 
       <SectionContainer
-        title={supersededCount > 0
-          ? `Tests (${activeTests.length} active)`
-          : `Tests (${order.tests.length})`
+        title={
+          supersededCount > 0
+            ? `Tests (${activeTests.length} active)`
+            : `Tests (${order.tests.length})`
         }
         className="shrink-0"
         contentClassName="p-0 overflow-visible"
@@ -97,11 +92,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         className="shrink-0 bg-white"
         contentClassName="overflow-visible"
       >
-        <BillingSummarySection
-          order={order}
-          invoice={invoice}
-          onViewInvoice={onViewInvoice}
-        />
+        <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
       </SectionContainer>
     </div>
   );
@@ -137,12 +128,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         headerClassName="!py-1.5"
         headerRight={
           patient && (
-            <IconButton
-              onClick={onViewPatient}
-              variant="view"
-              size="sm"
-              title="View Patient"
-            />
+            <IconButton onClick={onViewPatient} variant="view" size="sm" title="View Patient" />
           )
         }
       >
@@ -164,17 +150,14 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         className="h-full flex flex-col min-h-0 bg-white"
         contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
       >
-        <BillingSummarySection
-          order={order}
-          invoice={invoice}
-          onViewInvoice={onViewInvoice}
-        />
+        <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
       </SectionContainer>
 
       <SectionContainer
-        title={supersededCount > 0
-          ? `Tests (${activeTests.length} active)`
-          : `Tests (${order.tests.length})`
+        title={
+          supersededCount > 0
+            ? `Tests (${activeTests.length} active)`
+            : `Tests (${order.tests.length})`
         }
         className="h-full flex flex-col min-h-0 bg-white col-span-2"
         contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
@@ -227,12 +210,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           headerClassName="!py-1.5"
           headerRight={
             patient && (
-              <IconButton
-                onClick={onViewPatient}
-                variant="view"
-                size="sm"
-                title="View Patient"
-              />
+              <IconButton onClick={onViewPatient} variant="view" size="sm" title="View Patient" />
             )
           }
         >
@@ -240,9 +218,10 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
         </SectionContainer>
 
         <SectionContainer
-          title={supersededCount > 0
-            ? `Tests (${activeTests.length} active)`
-            : `Tests (${order.tests.length})`
+          title={
+            supersededCount > 0
+              ? `Tests (${activeTests.length} active)`
+              : `Tests (${order.tests.length})`
           }
           className="h-full flex flex-col col-span-2 min-h-0"
           contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
@@ -275,11 +254,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           className="h-full flex flex-col min-h-0"
           contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
         >
-          <BillingSummarySection
-            order={order}
-            invoice={invoice}
-            onViewInvoice={onViewInvoice}
-          />
+          <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
         </SectionContainer>
       </div>
     </div>

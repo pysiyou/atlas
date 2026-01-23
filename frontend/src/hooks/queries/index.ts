@@ -1,6 +1,6 @@
 /**
  * Query Hooks Module
- * 
+ *
  * Centralized exports for all TanStack Query hooks.
  * Organized by data tier:
  * - Static: Tests, Users (Infinity cache)
@@ -24,13 +24,7 @@ export {
 } from './useTestCatalog';
 
 // Users
-export {
-  useUsersList,
-  useUsersMap,
-  useUserLookup,
-  useUser,
-  useInvalidateUsers,
-} from './useUsers';
+export { useUsersList, useUsersMap, useUserLookup, useUser, useInvalidateUsers } from './useUsers';
 export type { UserDisplayInfo } from './useUsers';
 
 // =============================================================================

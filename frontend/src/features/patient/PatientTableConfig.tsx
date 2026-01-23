@@ -1,9 +1,9 @@
 /**
  * Patient Table Configuration
- * 
+ *
  * Multi-view table configuration for patient list.
  * Defines separate column sets for different screen sizes:
- * 
+ *
  * - Card View (xs/sm ≤640px): Mobile card layout with PatientCard component
  * - Compact Table (md 768px): Minimal columns - ID, Name, Contact, Actions
  * - Medium Table (lg 1024px): Moderate columns - adds Gender, Tests
@@ -21,7 +21,7 @@ import { PatientCard } from './PatientCard';
 
 /**
  * Create patient table configuration with full, compact, and card views
- * 
+ *
  * @param navigate - React Router navigate function
  * @param getOrdersByPatient - Function to get orders for a patient
  * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
@@ -38,10 +38,10 @@ export const createPatientTableConfig = (
   );
 
   const renderName = (patient: Patient) => (
-    <Avatar 
-      primaryText={patient.fullName} 
-      secondaryText={`${calculateAge(patient.dateOfBirth)} years old`} 
-      size="sm" 
+    <Avatar
+      primaryText={patient.fullName}
+      secondaryText={`${calculateAge(patient.dateOfBirth)} years old`}
+      size="sm"
     />
   );
 
@@ -59,10 +59,12 @@ export const createPatientTableConfig = (
   const renderTests = (patient: Patient) => {
     const patientOrders = getOrdersByPatient(patient.id);
     const testCount = patientOrders.reduce((acc, order) => acc + (order.tests?.length || 0), 0);
-    
+
     return (
       <div className="min-w-0">
-        <div className="font-medium truncate">{testCount} test{testCount !== 1 ? 's' : ''}</div>
+        <div className="font-medium truncate">
+          {testCount} test{testCount !== 1 ? 's' : ''}
+        </div>
         <div className="text-xs text-gray-500 truncate">
           {patientOrders.length} order{patientOrders.length !== 1 ? 's' : ''}
         </div>

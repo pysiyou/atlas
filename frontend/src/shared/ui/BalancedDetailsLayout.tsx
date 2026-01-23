@@ -1,9 +1,9 @@
 /**
  * BalancedDetailsLayout Component
- * 
+ *
  * Automatically arranges multiple DetailsTable components across columns
  * using the LPT (Longest Processing Time) algorithm to minimize empty space.
- * 
+ *
  * Tables are distributed so columns have roughly equal heights.
  */
 
@@ -77,10 +77,7 @@ const preprocessTables = (tables: TableInput[]): TableSpec[] => {
 /**
  * Pick the column index with minimum height (tie-break using bias)
  */
-const pickColumnIndex = (
-  cols: ColumnBin[],
-  tieBreakBias: 'left' | 'right' = 'left'
-): number => {
+const pickColumnIndex = (cols: ColumnBin[], tieBreakBias: 'left' | 'right' = 'left'): number => {
   // Find minimum height
   let minHeight = Infinity;
   for (const c of cols) minHeight = Math.min(minHeight, c.height);
@@ -88,13 +85,11 @@ const pickColumnIndex = (
   // Gather all indices with minimum height
   const candidates = cols
     .map((c, idx) => ({ idx, h: c.height }))
-    .filter((x) => x.h === minHeight)
-    .map((x) => x.idx);
+    .filter(x => x.h === minHeight)
+    .map(x => x.idx);
 
   if (candidates.length === 1) return candidates[0];
-  return tieBreakBias === 'right'
-    ? candidates[candidates.length - 1]
-    : candidates[0];
+  return tieBreakBias === 'right' ? candidates[candidates.length - 1] : candidates[0];
 };
 
 /**
@@ -115,9 +110,7 @@ const balanceTablesAcrossColumns = (
   const specs = preprocessTables(tables);
 
   // Largest-Processing-Time (greedy): sort by height descending
-  const byHeightDesc = [...specs].sort(
-    (a, b) => b.effectiveHeight - a.effectiveHeight
-  );
+  const byHeightDesc = [...specs].sort((a, b) => b.effectiveHeight - a.effectiveHeight);
 
   // Prepare column bins
   const cols: ColumnBin[] = Array.from({ length: safeColumns }, () => ({
@@ -133,18 +126,16 @@ const balanceTablesAcrossColumns = (
   }
 
   // Preserve original order within each column for natural reading
-  cols.forEach((col) =>
-    col.items.sort((a, b) => a.originalIndex - b.originalIndex)
-  );
+  cols.forEach(col => col.items.sort((a, b) => a.originalIndex - b.originalIndex));
 
   return cols;
 };
 
 /**
  * BalancedDetailsLayout Component
- * 
+ *
  * Distributes tables across columns to minimize empty space using LPT algorithm.
- * 
+ *
  * @example
  * ```tsx
  * <BalancedDetailsLayout
@@ -170,11 +161,7 @@ export const BalancedDetailsLayout: React.FC<BalancedDetailsLayoutProps> = ({
   const safeColumns = Math.max(1, Math.floor(columns));
 
   // Balance tables across columns using LPT algorithm
-  const balancedColumns = balanceTablesAcrossColumns(
-    tables,
-    safeColumns,
-    tieBreakBias
-  );
+  const balancedColumns = balanceTablesAcrossColumns(tables, safeColumns, tieBreakBias);
 
   // Render as a responsive grid with dynamic column count
   return (
@@ -184,7 +171,7 @@ export const BalancedDetailsLayout: React.FC<BalancedDetailsLayoutProps> = ({
     >
       {balancedColumns.map((col, i) => (
         <div key={`col-${i}`} className="flex flex-col gap-4">
-          {col.items.map((spec) => (
+          {col.items.map(spec => (
             <DetailsTable
               key={spec.key}
               title={spec.title}
@@ -197,4 +184,3 @@ export const BalancedDetailsLayout: React.FC<BalancedDetailsLayoutProps> = ({
     </div>
   );
 };
-

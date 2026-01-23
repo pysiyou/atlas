@@ -6,7 +6,12 @@
 export type { UserRole } from './enums/user-role';
 
 // Re-export values for backwards compatibility
-export { USER_ROLE_VALUES, USER_ROLE_CONFIG, USER_ROLE_OPTIONS, ALL_ROLES } from './enums/user-role';
+export {
+  USER_ROLE_VALUES,
+  USER_ROLE_CONFIG,
+  USER_ROLE_OPTIONS,
+  ALL_ROLES,
+} from './enums/user-role';
 
 // Import for local use
 import type { UserRole } from './enums/user-role';

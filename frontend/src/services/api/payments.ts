@@ -23,15 +23,15 @@ export interface PaymentFilters {
  */
 export const getPayments = async (filters?: PaymentFilters): Promise<Payment[]> => {
   const params = new URLSearchParams();
-  
+
   if (filters?.orderId) params.append('orderId', filters.orderId);
   if (filters?.paymentMethod) params.append('paymentMethod', filters.paymentMethod);
   if (filters?.skip !== undefined) params.append('skip', filters.skip.toString());
   if (filters?.limit !== undefined) params.append('limit', filters.limit.toString());
-  
+
   const queryString = params.toString();
   const url = queryString ? `/payments?${queryString}` : '/payments';
-  
+
   return apiClient.get<Payment[]>(url);
 };
 

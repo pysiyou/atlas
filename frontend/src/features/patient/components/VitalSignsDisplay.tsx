@@ -139,7 +139,7 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      {VITAL_SIGNS_CONFIG.map((config) => {
+      {VITAL_SIGNS_CONFIG.map(config => {
         const value = vitalSigns[config.key];
         if (value === undefined) return null;
 
@@ -157,10 +157,7 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
             `}
           >
             <div className="flex items-center gap-2 mb-2 min-w-0">
-              <Icon
-                name={config.icon}
-                className={`w-4 h-4 ${colors.icon} shrink-0`}
-              />
+              <Icon name={config.icon} className={`w-4 h-4 ${colors.icon} shrink-0`} />
               <span className="text-xs font-medium text-gray-700 uppercase tracking-wide whitespace-nowrap truncate">
                 {config.label}
               </span>

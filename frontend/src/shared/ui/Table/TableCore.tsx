@@ -73,10 +73,10 @@ interface TableCoreProps<T> {
 
 /**
  * TableCore Component
- * 
+ *
  * Shared table rendering logic used by both full and compact views.
  * Handles sorting, pagination, loading/empty states, and renders the table structure.
- * 
+ *
  * @param data - Array of data items to display
  * @param columns - Column definitions for the table
  * @param pagination - Pagination configuration
@@ -151,10 +151,7 @@ export function TableCore<T = Record<string, unknown>>({
       <div
         className={`flex flex-col h-full bg-white ${!embedded ? 'rounded border border-gray-200' : ''}`}
       >
-        <div
-          className="flex-1 overflow-auto"
-          style={maxHeight ? { maxHeight } : undefined}
-        >
+        <div className="flex-1 overflow-auto" style={maxHeight ? { maxHeight } : undefined}>
           <TableHeader
             columns={columns}
             visibleColumns={columns}
@@ -193,12 +190,9 @@ export function TableCore<T = Record<string, unknown>>({
       aria-rowcount={totalItems}
     >
       {caption && <caption className="sr-only">{caption}</caption>}
-      
+
       {/* Scrollable table area */}
-      <div
-        className="flex-1 overflow-auto"
-        style={maxHeight ? { maxHeight } : undefined}
-      >
+      <div className="flex-1 overflow-auto" style={maxHeight ? { maxHeight } : undefined}>
         <TableHeader
           columns={columns}
           visibleColumns={columns}

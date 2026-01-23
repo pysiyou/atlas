@@ -23,8 +23,8 @@ interface RejectionDialogContentProps {
   patientName?: string;
   onConfirm: (result: RejectionResult) => void;
   onCancel: () => void;
-  /** 
-   * When true, the re-collect option is blocked because the order contains 
+  /**
+   * When true, the re-collect option is blocked because the order contains
    * validated tests. Rejecting the sample would invalidate those results.
    */
   orderHasValidatedTests?: boolean;
@@ -91,7 +91,11 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     }
   };
 
-  const subtitle = [testName, testCode ? `(${testCode})` : '', patientName ? `- ${patientName}` : '']
+  const subtitle = [
+    testName,
+    testCode ? `(${testCode})` : '',
+    patientName ? `- ${patientName}` : '',
+  ]
     .filter(Boolean)
     .join(' ');
 
@@ -117,7 +121,14 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
           <Button variant="cancel" size="sm" showIcon={false} onClick={onCancel}>
             Cancel
           </Button>
-          <Button variant="retry" size="sm" onClick={() => { clearError(); fetchOptions(); }}>
+          <Button
+            variant="retry"
+            size="sm"
+            onClick={() => {
+              clearError();
+              fetchOptions();
+            }}
+          >
             Retry
           </Button>
         </div>
@@ -129,7 +140,8 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   // 1. No reason provided
   // 2. Escalation is required (all options exhausted)
   // 3. Neither re-test nor re-collect is available (considering validated tests block)
-  const isConfirmDisabled = !reason.trim() || escalationRequired || (!isActionEnabled('re-test') && isRecollectBlocked);
+  const isConfirmDisabled =
+    !reason.trim() || escalationRequired || (!isActionEnabled('re-test') && isRecollectBlocked);
 
   return (
     <PopoverForm
@@ -218,7 +230,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
             rows={3}
             placeholder="Please explain why the results are being rejected..."
             value={reason}
-            onChange={(e) => setReason(e.target.value)}
+            onChange={e => setReason(e.target.value)}
             className="w-full px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
           />
         </div>
@@ -239,8 +251,8 @@ interface RejectionDialogProps {
   onReject: (result: RejectionResult) => void;
   /** Custom trigger element (defaults to IconButton) */
   trigger?: React.ReactNode;
-  /** 
-   * When true, the re-collect option is blocked because the order contains 
+  /**
+   * When true, the re-collect option is blocked because the order contains
    * validated tests. Rejecting the sample would invalidate those results.
    */
   orderHasValidatedTests?: boolean;
@@ -264,25 +276,17 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
   <Popover
     placement="bottom-end"
     offsetValue={8}
-    trigger={
-      trigger || (
-        <IconButton
-          variant="delete"
-          size="sm"
-          title="Reject Results"
-        />
-      )
-    }
+    trigger={trigger || <IconButton variant="delete" size="sm" title="Reject Results" />}
   >
     {({ close }) => (
-      <div data-popover-content onClick={(e) => e.stopPropagation()}>
+      <div data-popover-content onClick={e => e.stopPropagation()}>
         <RejectionDialogContent
           orderId={orderId}
           testCode={testCode}
           testName={testName}
           patientName={patientName}
           orderHasValidatedTests={orderHasValidatedTests}
-          onConfirm={(result) => {
+          onConfirm={result => {
             onReject(result);
             close();
           }}

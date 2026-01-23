@@ -1,6 +1,6 @@
 /**
  * Design System
- * 
+ *
  * Centralized design tokens and utilities.
  */
 

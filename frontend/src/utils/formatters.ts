@@ -11,9 +11,12 @@ import { format, parseISO, isValid } from 'date-fns';
  * @param formatStr - date-fns format string (default: 'MMM d, yyyy')
  * @returns Formatted date string or empty string if invalid
  */
-export function formatDate(date: string | Date | undefined | null, formatStr = 'MMM d, yyyy'): string {
+export function formatDate(
+  date: string | Date | undefined | null,
+  formatStr = 'MMM d, yyyy'
+): string {
   if (!date) return '';
-  
+
   try {
     const dateObj = typeof date === 'string' ? parseISO(date) : date;
     if (!isValid(dateObj)) return '';
@@ -43,15 +46,15 @@ export function formatCurrency(amount: number | undefined | null): string {
  */
 export function formatPhoneNumber(phone: string | undefined | null): string {
   if (!phone) return '';
-  
+
   // Remove all non-digits
   const digits = phone.replace(/\D/g, '');
-  
+
   // Format as (XXX) XXX-XXXX if 10 digits
   if (digits.length === 10) {
     return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
   }
-  
+
   // Return original if not 10 digits
   return phone;
 }
@@ -63,19 +66,19 @@ export function formatPhoneNumber(phone: string | undefined | null): string {
  */
 export function calculateAge(dateOfBirth: string | Date | undefined | null): number {
   if (!dateOfBirth) return 0;
-  
+
   try {
     const birthDate = typeof dateOfBirth === 'string' ? parseISO(dateOfBirth) : dateOfBirth;
     if (!isValid(birthDate)) return 0;
-    
+
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
+
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-    
+
     return age;
   } catch {
     return 0;
@@ -97,22 +100,22 @@ export function calculateAge(dateOfBirth: string | Date | undefined | null): num
 export function getInitials(name: string | undefined | null): string {
   // Handle empty or invalid input
   if (!name || typeof name !== 'string') return '??';
-  
+
   // Trim and split by whitespace, filtering out empty strings
   const parts = name.trim().split(/\s+/).filter(Boolean);
-  
+
   // Handle no valid parts
   if (parts.length === 0) return '??';
-  
+
   // Single name: return first letter only
   if (parts.length === 1) {
     return parts[0][0].toUpperCase();
   }
-  
+
   // Multiple names: return first letter of first and last parts
   const firstInitial = parts[0][0];
   const lastInitial = parts[parts.length - 1][0];
-  
+
   return (firstInitial + lastInitial).toUpperCase();
 }
 
@@ -130,13 +133,14 @@ export function getInitials(name: string | undefined | null): string {
 export function formatTurnaroundTime(hours: number): string {
   if (hours < 24) {
     return `${hours}h`;
-  } if (hours === 24) {
+  }
+  if (hours === 24) {
     return '1 day';
-  } if (hours < 168) {
+  }
+  if (hours < 168) {
     const days = Math.round(hours / 24);
     return `${days} day${days > 1 ? 's' : ''}`;
-  } 
-    const weeks = Math.round(hours / 168);
-    return `${weeks} week${weeks > 1 ? 's' : ''}`;
-  
+  }
+  const weeks = Math.round(hours / 168);
+  return `${weeks} week${weeks > 1 ? 's' : ''}`;
 }

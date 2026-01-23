@@ -26,24 +26,24 @@ export interface APIEndpoints {
   // Auth endpoints
   '/auth/login': { access_token: string; refresh_token: string; role: string };
   '/auth/me': AuthUser;
-  
+
   // Patient endpoints
   '/patients': Patient[];
   '/patients/:id': Patient;
-  
+
   // Order endpoints
   '/orders': Order[];
   '/orders/:id': Order;
-  
+
   // Sample endpoints
   '/samples': Sample[];
   '/samples/:id': Sample;
   '/samples/pending': Sample[];
-  
+
   // Test catalog endpoints
   '/tests': Test[];
   '/tests/:id': Test;
-  
+
   // Payment endpoints
   '/payments': Payment[];
   '/payments/:id': Payment;
@@ -102,10 +102,7 @@ async function withRetry<T>(
 
       // If we have retries left, wait with exponential backoff
       if (attempt < config.maxRetries) {
-        const delay = Math.min(
-          config.baseDelay * Math.pow(2, attempt),
-          config.maxDelay
-        );
+        const delay = Math.min(config.baseDelay * Math.pow(2, attempt), config.maxDelay);
         await new Promise(resolve => setTimeout(resolve, delay));
         logger.debug(`Retrying request (attempt ${attempt + 2}/${config.maxRetries + 1})`);
       }
@@ -119,6 +116,7 @@ export class APIClient {
   private baseURL: string;
   private timeout: number;
   private defaultHeaders: Record<string, string>;
+  private tokenGetter: (() => string | null) | null = null;
 
   constructor() {
     this.baseURL = API_CONFIG.baseURL;
@@ -127,10 +125,23 @@ export class APIClient {
   }
 
   /**
-   * Get authorization token from storage
+   * Set the token getter function (called from AuthProvider)
+   * This allows the API client to get tokens from AuthContext
+   */
+  setTokenGetter(getter: () => string | null): void {
+    this.tokenGetter = getter;
+    logger.debug('Token getter set on API client');
+  }
+
+  /**
+   * Get authorization token from the token getter
    */
   private getAuthToken(): string | null {
-    return sessionStorage.getItem('atlas_access_token');
+    if (!this.tokenGetter) {
+      return null;
+    }
+    
+    return this.tokenGetter();
   }
 
   /**
@@ -139,13 +150,11 @@ export class APIClient {
   private buildHeaders(customHeaders?: Record<string, string>): Record<string, string> {
     const headers = { ...this.defaultHeaders, ...customHeaders };
     const token = this.getAuthToken();
-    
+
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
-    } else {
-      logger.warn('No token found in storage for request');
     }
-    
+
     return headers;
   }
 
@@ -155,10 +164,9 @@ export class APIClient {
   private async handleErrorAsync(error: unknown): Promise<never> {
     if (error instanceof Response) {
       if (error.status === 401 || error.status === 403) {
-        // Clear token and redirect to login
-        sessionStorage.removeItem('atlas_access_token');
-        sessionStorage.removeItem('atlas_refresh_token');
-        sessionStorage.removeItem('atlas_current_user');
+        // Clear token getter and redirect to login
+        // The AuthProvider will handle clearing the token via logout
+        this.tokenGetter = null;
 
         if (!window.location.pathname.includes('/login')) {
           window.location.href = '/login';
@@ -203,7 +211,7 @@ export class APIClient {
       logger.error('API request failed', error, { status: error.status });
       throw apiError;
     }
-    
+
     if (error instanceof Error) {
       const apiError: APIError = {
         message: error.message,
@@ -211,7 +219,7 @@ export class APIClient {
       logger.error('API request failed', error);
       throw apiError;
     }
-    
+
     const apiError: APIError = {
       message: 'Unknown error occurred',
     };

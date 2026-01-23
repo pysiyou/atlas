@@ -23,10 +23,10 @@ type AffiliationDuration = AffiliationDurationType;
 type Relationship = RelationshipType;
 
 export interface Affiliation {
-  assuranceNumber: string;    // Auto-generated: ASS-YYYYMMDD-XXX
-  startDate: string;          // ISO date
-  endDate: string;            // ISO date (calculated from duration)
-  duration: AffiliationDuration;  // Duration in months
+  assuranceNumber: string; // Auto-generated: ASS-YYYYMMDD-XXX
+  startDate: string; // ISO date
+  endDate: string; // ISO date (calculated from duration)
+  duration: AffiliationDuration; // Duration in months
 }
 
 export interface EmergencyContact {
@@ -37,11 +37,11 @@ export interface EmergencyContact {
 }
 
 export interface VitalSigns {
-  temperature: number;      // Celsius, 30.0-45.0, Normal: 36.5-37.3
-  heartRate: number;        // BPM, 30-250, Normal: 60-100
-  systolicBP: number;       // mmHg, 50-250, Normal: <120
-  diastolicBP: number;      // mmHg, 30-150, Normal: <80
-  respiratoryRate: number;  // breaths/min, 4-60, Normal: 12-20
+  temperature: number; // Celsius, 30.0-45.0, Normal: 36.5-37.3
+  heartRate: number; // BPM, 30-250, Normal: 60-100
+  systolicBP: number; // mmHg, 50-250, Normal: <120
+  diastolicBP: number; // mmHg, 30-150, Normal: <80
+  respiratoryRate: number; // breaths/min, 4-60, Normal: 12-20
   oxygenSaturation: number; // SpO2 %, 50-100, Normal: 95-100
 }
 
@@ -70,8 +70,8 @@ export interface Patient {
   gender: Gender;
   phone: string;
   email?: string;
-  height?: number;  // Height in centimeters
-  weight?: number;  // Weight in kilograms
+  height?: number; // Height in centimeters
+  weight?: number; // Weight in kilograms
   address: Address;
   affiliation?: Affiliation;
   emergencyContact: EmergencyContact;

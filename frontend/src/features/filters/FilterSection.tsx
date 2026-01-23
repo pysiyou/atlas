@@ -27,10 +27,10 @@ export interface FilterSectionProps {
 
 /**
  * FilterSection Component
- * 
+ *
  * Provides a collapsible section wrapper for filter controls.
  * Shows active filter count and allows expanding/collapsing.
- * 
+ *
  * @component
  */
 export const FilterSection: React.FC<FilterSectionProps> = ({
@@ -48,7 +48,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
    */
   const toggleCollapse = () => {
     if (collapsible) {
-      setIsCollapsed((prev) => !prev);
+      setIsCollapsed(prev => !prev);
     }
   };
 
@@ -65,16 +65,14 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
         )}
       >
         <div className="flex items-center gap-1.5">
-          <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-            {title}
-          </h3>
+          <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{title}</h3>
           {activeCount > 0 && (
             <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full bg-sky-500 text-white text-[10px] font-medium">
               {activeCount}
             </span>
           )}
         </div>
-        
+
         {collapsible && (
           <Icon
             name="chevron-down"
@@ -89,9 +87,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
       {/* Section content - compact */}
       {(!collapsible || !isCollapsed) && (
         <div className="px-3 pb-2">
-          <div className="flex flex-wrap gap-2">
-            {children}
-          </div>
+          <div className="flex flex-wrap gap-2">{children}</div>
         </div>
       )}
     </div>

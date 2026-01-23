@@ -1,6 +1,6 @@
 /**
  * LoadingState - Standardized loading UI component
- * 
+ *
  * Provides a consistent loading indicator across the application.
  * Supports different sizes and full-screen mode.
  */
@@ -26,7 +26,7 @@ const SIZE_CLASSES = {
 
 /**
  * LoadingState component
- * 
+ *
  * @example
  * ```tsx
  * <LoadingState message="Loading patients..." size="md" />
@@ -50,9 +50,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
           role="status"
           aria-label="Loading"
         />
-        {message && (
-          <p className="mt-3 text-sm text-gray-600">{message}</p>
-        )}
+        {message && <p className="mt-3 text-sm text-gray-600">{message}</p>}
       </div>
     </div>
   );

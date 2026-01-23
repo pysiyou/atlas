@@ -35,9 +35,7 @@ export const updateOrderTestStatus = (
   additionalData?: Partial<OrderTest>
 ): Order => {
   const updatedTests = order.tests.map(test =>
-    test.testCode === testCode
-      ? { ...test, status, ...additionalData }
-      : test
+    test.testCode === testCode ? { ...test, status, ...additionalData } : test
   );
 
   const testStatuses = updatedTests.map(t => t.status);

@@ -1,6 +1,6 @@
 /**
  * ValidationCard - Card component for result validation workflow
- * 
+ *
  * Displays test results with approval/rejection actions.
  * Shows retest information and previous rejection history.
  */
@@ -9,7 +9,7 @@ import React from 'react';
 import { Badge, Icon, IconButton, Alert } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { formatDate } from '@/utils';
-import { useUsers } from '@/hooks';
+import { useUserLookup } from '@/hooks/queries';
 import { LabCard, FlagsSection } from '../components/LabCard';
 import { RejectionDialog } from '../components';
 import { ResultStatusBadge } from '../components/StatusBadges';
@@ -25,7 +25,7 @@ interface ValidationCardProps {
   onClick?: () => void;
   /**
    * When true, the re-collect option is blocked because the order contains
-   * validated tests. This prevents contradictory actions where a sample 
+   * validated tests. This prevents contradictory actions where a sample
    * recollection would invalidate already-validated results.
    */
   orderHasValidatedTests?: boolean;
@@ -42,7 +42,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   orderHasValidatedTests = false,
 }) => {
   const { openModal } = useModal();
-  const { getUserName } = useUsers();
+  const { getUserName } = useUserLookup();
 
   if (!test.results) return null;
 
@@ -53,8 +53,9 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   const isRetest = test.isRetest === true;
   const retestNumber = test.retestNumber || 0;
   const rejectionHistory = test.resultRejectionHistory || [];
-  const lastRejection = rejectionHistory.length > 0 ? rejectionHistory[rejectionHistory.length - 1] : null;
-  
+  const lastRejection =
+    rejectionHistory.length > 0 ? rejectionHistory[rejectionHistory.length - 1] : null;
+
   // Check if this has any rejection history (covers both re-test and re-collect scenarios)
   const hasRejectionHistory = rejectionHistory.length > 0;
   // For re-collect, the last rejection type will be 're-collect'
@@ -66,7 +67,13 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
       return;
     }
     openModal(ModalType.VALIDATION_DETAIL, {
-      test, commentKey, comments, onCommentsChange, onApprove, onReject, orderHasValidatedTests,
+      test,
+      commentKey,
+      comments,
+      onCommentsChange,
+      onApprove,
+      onReject,
+      orderHasValidatedTests,
     });
   };
 
@@ -82,18 +89,20 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
       )}
       <Badge variant={test.priority} size="sm" />
       <Badge variant={test.sampleType} size="sm" />
-      <Badge size="sm" variant="default" className="text-gray-600">{test.testCode}</Badge>
+      <Badge size="sm" variant="default" className="text-gray-600">
+        {test.testCode}
+      </Badge>
     </>
   );
 
   /**
    * Handle rejection result from the RejectionDialog.
-   * 
+   *
    * IMPORTANT: The RejectionDialog already calls the API via useRejectionManager.
    * We must NOT call onReject here as that would trigger a second API call.
    * Instead, we just trigger a data refresh by calling onReject with a special
    * flag or empty values to signal that the API call already happened.
-   * 
+   *
    * The result object contains:
    * - action: 'retest_same_sample' | 'recollect_new_sample'
    * - message: Success message from the API
@@ -109,7 +118,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
 
   // Approve/Reject actions
   const actions = (
-    <div className="flex items-center gap-2 z-10" onClick={(e) => e.stopPropagation()}>
+    <div className="flex items-center gap-2 z-10" onClick={e => e.stopPropagation()}>
       <RejectionDialog
         orderId={test.orderId}
         testCode={test.testCode}
@@ -119,7 +128,10 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
         onReject={handleRejectionResult}
       />
       <IconButton
-        onClick={(e) => { e.stopPropagation(); onApprove(); }}
+        onClick={e => {
+          e.stopPropagation();
+          onApprove();
+        }}
         variant="approve"
         size="sm"
         title="Approve Results"
@@ -139,34 +151,43 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   const content = (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-40">
       {Object.entries(test.results).map(([key, value]) => {
-        const resultValue = typeof value === 'object' && value !== null && 'value' in value
-          ? (value as { value: unknown }).value
-          : value;
-        const unit = typeof value === 'object' && value !== null && 'unit' in value
-          ? (value as { unit: string }).unit
-          : '';
-        const status = typeof value === 'object' && value !== null && 'status' in value
-          ? (value as { status: string }).status as 'normal' | 'high' | 'low' | 'critical'
-          : 'normal';
+        const resultValue =
+          typeof value === 'object' && value !== null && 'value' in value
+            ? (value as { value: unknown }).value
+            : value;
+        const unit =
+          typeof value === 'object' && value !== null && 'unit' in value
+            ? (value as { unit: string }).unit
+            : '';
+        const status =
+          typeof value === 'object' && value !== null && 'status' in value
+            ? ((value as { status: string }).status as 'normal' | 'high' | 'low' | 'critical')
+            : 'normal';
 
         return (
-          <div 
-            key={key} 
+          <div
+            key={key}
             className="grid grid-cols-[1fr_auto_auto] items-center gap-x-2 py-1.5 whitespace-nowrap"
           >
             {/* Parameter Name Column */}
-            <span className="text-xs text-gray-500" title={key}>{key}:</span>
-            
+            <span className="text-xs text-gray-500" title={key}>
+              {key}:
+            </span>
+
             {/* Value Column - left aligned */}
-            <span className={`text-sm font-medium text-left ${
-              status === 'critical' ? 'text-red-600 font-bold' :
-              status === 'high' || status === 'low' ? 'text-amber-600' :
-              'text-gray-900'
-            }`}>
+            <span
+              className={`text-sm font-medium text-left ${
+                status === 'critical'
+                  ? 'text-red-600 font-bold'
+                  : status === 'high' || status === 'low'
+                    ? 'text-amber-600'
+                    : 'text-gray-900'
+              }`}
+            >
               {String(resultValue)}
               {unit && <span className="text-xs text-gray-400 ml-1 font-normal">{unit}</span>}
             </span>
-            
+
             {/* Badge Column - fixed width for alignment */}
             <div className="w-16 flex justify-start">
               {status !== 'normal' ? (
@@ -185,26 +206,26 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   );
 
   // Rejection banner (shows previous rejection info for both re-test and re-collect)
-  const rejectionBanner = hasRejectionHistory && lastRejection ? (
-    <Alert variant="warning" className="py-2">
-      <div className="space-y-0.5">
-        <p className="font-medium text-xs">
-          {isRetest 
-            ? `Re-test #${retestNumber} - Previous Result Rejected`
-            : `Re-collect #${rejectionHistory.length} - Previous Sample Rejected`
-          }
-        </p>
-        <p className="text-xxs opacity-90 leading-tight">
-          Reason: {lastRejection.rejectionReason}
-        </p>
-        {rejectionHistory.length > 1 && (
-          <p className="text-xxs opacity-75">
-            ({rejectionHistory.length} previous rejection{rejectionHistory.length > 1 ? 's' : ''})
+  const rejectionBanner =
+    hasRejectionHistory && lastRejection ? (
+      <Alert variant="warning" className="py-2">
+        <div className="space-y-0.5">
+          <p className="font-medium text-xs">
+            {isRetest
+              ? `Re-test #${retestNumber} - Previous Result Rejected`
+              : `Re-collect #${rejectionHistory.length} - Previous Sample Rejected`}
           </p>
-        )}
-      </div>
-    </Alert>
-  ) : undefined;
+          <p className="text-xxs opacity-90 leading-tight">
+            Reason: {lastRejection.rejectionReason}
+          </p>
+          {rejectionHistory.length > 1 && (
+            <p className="text-xxs opacity-75">
+              ({rejectionHistory.length} previous rejection{rejectionHistory.length > 1 ? 's' : ''})
+            </p>
+          )}
+        </div>
+      </Alert>
+    ) : undefined;
 
   // Additional info for retest/recollection tracking
   const rejectionTrackingInfo = hasRejectionHistory ? (

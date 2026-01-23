@@ -1,7 +1,7 @@
 /**
  * DashboardLayout Component
  * Main layout wrapper with responsive sidebar
- * 
+ *
  * Features:
  * - Desktop: Fixed sidebar with collapse/expand
  * - Mobile: Overlay sidebar with hamburger menu button
@@ -35,7 +35,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
    * Toggle mobile sidebar
    */
   const handleToggleMobileSidebar = () => {
-    setIsMobileSidebarOpen((prev) => !prev);
+    setIsMobileSidebarOpen(prev => !prev);
   };
 
   /**
@@ -78,9 +78,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
       />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
-        {children}
-      </main>
+      <main className="flex-1 flex flex-col overflow-hidden">{children}</main>
     </div>
   );
 };

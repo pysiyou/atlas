@@ -1,6 +1,6 @@
 /**
  * OrderList Component - Migrated to use ListView
- * 
+ *
  * Displays a list of test orders with filtering and search capabilities.
  * Uses TanStack Query hooks for efficient data fetching and caching.
  * Now uses shared ListView component for consistent UX.
@@ -18,7 +18,7 @@ import type { Order, OrderStatus, PaymentStatus } from '@/types';
 
 /**
  * OrderList Component
- * 
+ *
  * Benefits of ListView migration:
  * - Reduced code by ~80 lines
  * - Consistent UX with other list views
@@ -39,41 +39,44 @@ export const OrderList: React.FC = () => {
   const loading = isLoading || patientsLoading || testsLoading;
 
   // Format error for ErrorAlert component
-  const error = isError ? {
-    message: queryError instanceof Error ? queryError.message : 'Failed to load orders',
-    operation: 'load' as const,
-  } : null;
+  const error = isError
+    ? {
+        message: queryError instanceof Error ? queryError.message : 'Failed to load orders',
+        operation: 'load' as const,
+      }
+    : null;
 
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
   const [paymentFilters, setPaymentFilters] = useState<PaymentStatus[]>([]);
-  
+
   // Use shared filtering hook for search and order status filters
-  const { 
-    filteredItems: preFilteredOrders, 
-    searchQuery, 
-    setSearchQuery, 
-    statusFilters, 
-    setStatusFilters 
+  const {
+    filteredItems: preFilteredOrders,
+    searchQuery,
+    setSearchQuery,
+    statusFilters,
+    setStatusFilters,
   } = useFiltering<Order, OrderStatus>(orders, {
-    searchFields: (order) => [
-      order.orderId.toString(), 
+    searchFields: order => [
+      order.orderId.toString(),
       order.patientId.toString(),
-      getPatientName(order.patientId)
+      getPatientName(order.patientId),
     ],
     statusField: 'overallStatus',
-    defaultSort: { field: 'orderDate', direction: 'desc' }
+    defaultSort: { field: 'orderDate', direction: 'desc' },
   });
 
   // Apply date range, patient filter, and payment filters separately
   const filteredOrders = useMemo(() => {
     let filtered = preFilteredOrders;
-    
+
     // Apply patientIdFilter
     if (patientIdFilter) {
-      const numericPatientId = typeof patientIdFilter === 'string' ? parseInt(patientIdFilter, 10) : patientIdFilter;
+      const numericPatientId =
+        typeof patientIdFilter === 'string' ? parseInt(patientIdFilter, 10) : patientIdFilter;
       filtered = filtered.filter(order => order.patientId === numericPatientId);
     }
-    
+
     // Apply date range
     if (dateRange) {
       const [start, end] = dateRange;
@@ -81,18 +84,18 @@ export const OrderList: React.FC = () => {
       endDate.setHours(23, 59, 59, 999);
       const startDate = new Date(start);
       startDate.setHours(0, 0, 0, 0);
-      
+
       filtered = filtered.filter(order => {
         const orderDate = new Date(order.orderDate);
         return orderDate >= startDate && orderDate <= endDate;
       });
     }
-    
+
     // Apply payment status filter
     if (paymentFilters.length > 0) {
       filtered = filtered.filter(order => paymentFilters.includes(order.paymentStatus));
     }
-    
+
     return filtered;
   }, [preFilteredOrders, patientIdFilter, dateRange, paymentFilters]);
 
@@ -118,10 +121,7 @@ export const OrderList: React.FC = () => {
       onRowClick={(order: Order) => navigate(`/orders/${order.orderId}`)}
       title="Orders"
       headerActions={
-        <Button
-          variant="add"
-          onClick={() => navigate('/orders/new')}
-        >
+        <Button variant="add" onClick={() => navigate('/orders/new')}>
           New Order
         </Button>
       }

@@ -1,6 +1,6 @@
 /**
  * Lab Shared Components Index
- * 
+ *
  * Exports all shared components for lab workflows.
  */
 
@@ -20,12 +20,7 @@ export { useRejectionManager } from '../hooks';
 export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
 
 // Detail modal
-export { 
-  LabDetailModal, 
-  DetailGrid, 
-  ModalFooter, 
-  StatusBadgeRow 
-} from './LabDetailModal';
+export { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from './LabDetailModal';
 export type { DetailGridSectionConfig } from './LabDetailModal';
 
 // Status badges

@@ -25,15 +25,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       props.onChange(e);
     }
   };
-  
-  const sizeClasses = size === 'sm' 
-    ? 'py-1.5 text-xs h-[34px]' 
-    : 'py-2 text-sm';
+
+  const sizeClasses = size === 'sm' ? 'py-1.5 text-xs h-[34px]' : 'py-2 text-sm';
 
   return (
     <div className={`relative ${className}`}>
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <Icon name="search" className={`text-gray-400 ${size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4'}`} />
+        <Icon
+          name="search"
+          className={`text-gray-400 ${size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4'}`}
+        />
       </div>
       <input
         type="text"

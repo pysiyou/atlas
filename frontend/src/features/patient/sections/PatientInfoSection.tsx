@@ -165,7 +165,9 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
             <Icon name="calendar" className="w-5 h-5 text-gray-400 mt-1" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Registration Date</div>
-              <div className="font-medium text-gray-900">{formatDate(patient.registrationDate)}</div>
+              <div className="font-medium text-gray-900">
+                {formatDate(patient.registrationDate)}
+              </div>
               <div className="text-xs text-gray-500 mt-1">Registered by: {patient.createdBy}</div>
             </div>
           </div>

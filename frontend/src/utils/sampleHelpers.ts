@@ -2,13 +2,7 @@
  * Helper utility functions for sample operations
  */
 
-import type {
-  SampleType,
-  ContainerType,
-  ContainerTopColor,
-  OrderTest,
-  Test,
-} from '@/types';
+import type { SampleType, ContainerType, ContainerTopColor, OrderTest, Test } from '@/types';
 import { CONTAINER_COLOR_CONFIG } from '@/types';
 import { getSampleDefinition } from './sample-definitions';
 
@@ -18,7 +12,7 @@ import { getSampleDefinition } from './sample-definitions';
 export interface SampleRequirement {
   sampleType: SampleType;
   testCodes: string[];
-  testNames?: string[];  // Optional - can be computed from testCodes when needed
+  testNames?: string[]; // Optional - can be computed from testCodes when needed
   totalVolume: number;
   containerTypes: ContainerType[];
   containerTopColors: ContainerTopColor[];
@@ -30,17 +24,17 @@ export interface SampleRequirement {
  * Get collection requirements for a sample type
  * Maps derived types (plasma, serum) to their collection type (blood)
  */
-export function getCollectionRequirements(sampleType: SampleType): { 
-  collectionType: SampleType; 
+export function getCollectionRequirements(sampleType: SampleType): {
+  collectionType: SampleType;
   isDerived: boolean;
-  label: string; 
+  label: string;
 } {
   const def = getSampleDefinition(sampleType);
-  
+
   return {
     collectionType: sampleType,
     isDerived: def.isDerived ?? false,
-    label: def.collectionInstruction || `Collect ${def.label}`
+    label: def.collectionInstruction || `Collect ${def.label}`,
   };
 }
 
@@ -53,11 +47,12 @@ export function groupTestsBySample(
 ): Map<string, OrderTest[]> {
   const grouped = new Map<string, OrderTest[]>();
 
-  tests.forEach((test) => {
-    const testDef = testCatalog.find((t) => t.code === test.testCode);
+  tests.forEach(test => {
+    const testDef = testCatalog.find(t => t.code === test.testCode);
     const sampleType = testDef?.sampleType || 'unknown';
 
-    const key = (typeof sampleType === 'string' ? sampleType.toLowerCase().trim() : 'unknown') || 'unknown';
+    const key =
+      (typeof sampleType === 'string' ? sampleType.toLowerCase().trim() : 'unknown') || 'unknown';
     const existing = grouped.get(key) || [];
     grouped.set(key, [...existing, test]);
   });
@@ -68,14 +63,11 @@ export function groupTestsBySample(
 /**
  * Calculate total volume needed for a sample type
  */
-export function calculateTotalVolume(
-  tests: OrderTest[],
-  testCatalog: Test[]
-): number {
+export function calculateTotalVolume(tests: OrderTest[], testCatalog: Test[]): number {
   let totalVolume = 0;
 
-  tests.forEach((orderTest) => {
-    const testDef = testCatalog.find((t) => t.code === orderTest.testCode);
+  tests.forEach(orderTest => {
+    const testDef = testCatalog.find(t => t.code === orderTest.testCode);
     if (testDef && testDef.minimumVolume) {
       totalVolume += testDef.minimumVolume;
     }
@@ -100,18 +92,18 @@ export function calculateRequiredSamples(
     const containerTypesSet = new Set<ContainerType>();
     const containerTopColorsSet = new Set<ContainerTopColor>();
 
-    sampleTests.forEach((orderTest) => {
-      const testDef = testCatalog.find((t) => t.code === orderTest.testCode);
+    sampleTests.forEach(orderTest => {
+      const testDef = testCatalog.find(t => t.code === orderTest.testCode);
       if (testDef) {
-        testDef.containerTypes?.forEach((ct) => containerTypesSet.add(ct));
-        testDef.containerTopColors?.forEach((color) => containerTopColorsSet.add(color));
+        testDef.containerTypes?.forEach(ct => containerTypesSet.add(ct));
+        testDef.containerTopColors?.forEach(color => containerTopColorsSet.add(color));
       }
     });
 
     const totalVolume = calculateTotalVolume(sampleTests, testCatalog);
-    const testCodes = sampleTests.map((t) => t.testCode);
+    const testCodes = sampleTests.map(t => t.testCode);
     const testNames = testCodes.map(code => {
-      const testDef = testCatalog.find((t) => t.code === code);
+      const testDef = testCatalog.find(t => t.code === code);
       return testDef?.name || code;
     });
 

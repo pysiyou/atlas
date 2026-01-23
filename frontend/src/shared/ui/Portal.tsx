@@ -1,6 +1,6 @@
 /**
  * Portal Component
- * 
+ *
  * Renders children into a DOM node that exists outside the parent component hierarchy.
  * Used for modals, tooltips, and other overlay elements.
  */
@@ -32,10 +32,7 @@ function useIsClient(): boolean {
  * Portal component that renders children in a separate DOM tree
  * Uses useSyncExternalStore to avoid hydration issues and comply with React rules
  */
-export const Portal: React.FC<PortalProps> = ({ 
-  children, 
-  container = document.body 
-}) => {
+export const Portal: React.FC<PortalProps> = ({ children, container = document.body }) => {
   const isClient = useIsClient();
 
   if (!isClient) return null;

@@ -36,15 +36,11 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
       {isCollapsed && showProfileMenu && (
         <div
           className="absolute bottom-full left-0 mb-2 w-48 bg-white rounded shadow-md border border-gray-100 py-1 z-50 ml-2"
-          onClick={(e) => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
         >
           <div className="px-4 py-2 border-b border-gray-100">
-            <p className="text-sm font-medium text-gray-900 truncate">
-              {currentUser.name}
-            </p>
-            <p className="text-xs text-gray-500 truncate">
-              {formatStatus(currentUser.role)}
-            </p>
+            <p className="text-sm font-medium text-gray-900 truncate">{currentUser.name}</p>
+            <p className="text-xs text-gray-500 truncate">{formatStatus(currentUser.role)}</p>
           </div>
           <Button
             variant="logout"
@@ -75,18 +71,14 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
           }`}
         >
           <div className="flex-1 min-w-0 overflow-hidden">
-            <p className="text-sm font-medium text-gray-900 truncate">
-              {currentUser.name}
-            </p>
-            <p className="text-xs text-gray-500 truncate">
-              {formatStatus(currentUser.role)}
-            </p>
+            <p className="text-sm font-medium text-gray-900 truncate">{currentUser.name}</p>
+            <p className="text-xs text-gray-500 truncate">{formatStatus(currentUser.role)}</p>
           </div>
 
           <IconButton
             variant="logout"
             size="sm"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               onLogout();
             }}

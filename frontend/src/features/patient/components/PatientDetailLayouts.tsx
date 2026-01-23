@@ -59,27 +59,12 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         className="shrink-0"
         contentClassName="p-0 overflow-visible"
         headerClassName="!py-1.5"
-        headerRight={
-          <IconButton
-            onClick={onNewOrder}
-            variant="add"
-            size="sm"
-            title="New Order"
-          />
-        }
+        headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
       >
-        <PatientOrdersTable
-          orders={orders}
-          onOrderClick={onOrderClick}
-          variant="simple"
-        />
+        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} variant="simple" />
       </SectionContainer>
 
-      <SectionContainer
-        title="Reports"
-        className=""
-        contentClassName="overflow-visible"
-      >
+      <SectionContainer title="Reports" className="" contentClassName="overflow-visible">
         <ReportsList orders={orders} />
       </SectionContainer>
     </div>
@@ -134,20 +119,9 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         className="h-full flex flex-col min-h-0 bg-white col-span-2"
         contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
         headerClassName="!py-1.5"
-        headerRight={
-          <IconButton
-            onClick={onNewOrder}
-            variant="add"
-            size="sm"
-            title="New Order"
-          />
-        }
+        headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
       >
-        <PatientOrdersTable
-          orders={orders}
-          onOrderClick={onOrderClick}
-          variant="detailed"
-        />
+        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} variant="detailed" />
       </SectionContainer>
     </div>
   );
@@ -193,19 +167,10 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
           headerClassName="!py-1.5"
           headerRight={
-            <IconButton
-              onClick={onNewOrder}
-              variant="add"
-              size="sm"
-              title="New Order"
-            />
+            <IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />
           }
         >
-          <PatientOrdersTable
-            orders={orders}
-            onOrderClick={onOrderClick}
-            variant="detailed"
-          />
+          <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} variant="detailed" />
         </SectionContainer>
       </div>
 

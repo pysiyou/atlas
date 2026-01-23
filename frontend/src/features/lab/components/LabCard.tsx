@@ -7,7 +7,7 @@ import React, { type ReactNode } from 'react';
 import { Card, Badge } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
-import { useUsers } from '@/hooks';
+import { useUserLookup } from '@/hooks/queries';
 import {
   LAB_CARD_TYPOGRAPHY,
   LAB_CARD_SPACING,
@@ -76,7 +76,7 @@ export const LabCard: React.FC<LabCardProps> = ({
   flags,
   className = '',
 }) => {
-  const { getUserName } = useUsers();
+  const { getUserName } = useUserLookup();
 
   return (
     <div className={`${LAB_CARD_CONTAINERS.cardWrapper} ${className}`} onClick={onClick}>
@@ -84,12 +84,8 @@ export const LabCard: React.FC<LabCardProps> = ({
         <div className={`flex flex-col ${LAB_CARD_SPACING.cardGap}`}>
           {/* Row 1: Badges and Actions */}
           <div className={LAB_CARD_HEADER.container}>
-            <div className={LAB_CARD_HEADER.badgeGroup}>
-              {badges}
-            </div>
-            <div className={LAB_CARD_HEADER.actionGroup}>
-              {actions}
-            </div>
+            <div className={LAB_CARD_HEADER.badgeGroup}>{badges}</div>
+            <div className={LAB_CARD_HEADER.actionGroup}>{actions}</div>
           </div>
 
           {/* Row 2: Patient & Order context */}
@@ -113,8 +109,14 @@ export const LabCard: React.FC<LabCardProps> = ({
             {/* Sample collection info */}
             {sampleInfo?.sampleId && sampleInfo?.collectedAt && (
               <span className={LAB_CARD_TYPOGRAPHY.metadata}>
-                Sample <span className={LAB_CARD_CONTEXT.patientName}>{displayId.sample(sampleInfo.sampleId)}</span> collected{' '}
-                <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>{formatDate(sampleInfo.collectedAt)}</span>
+                Sample{' '}
+                <span className={LAB_CARD_CONTEXT.patientName}>
+                  {displayId.sample(sampleInfo.sampleId)}
+                </span>{' '}
+                collected{' '}
+                <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
+                  {formatDate(sampleInfo.collectedAt)}
+                </span>
                 {sampleInfo.collectedBy && <span> by {getUserName(sampleInfo.collectedBy)}</span>}
               </span>
             )}
@@ -125,7 +127,9 @@ export const LabCard: React.FC<LabCardProps> = ({
 
           {/* Row 3: Content section */}
           <div className={LAB_CARD_CONTAINERS.contentSection}>
-            <div className={`${LAB_CARD_TYPOGRAPHY.sectionTitle} ${LAB_CARD_SPACING.sectionTitleMargin}`}>
+            <div
+              className={`${LAB_CARD_TYPOGRAPHY.sectionTitle} ${LAB_CARD_SPACING.sectionTitleMargin}`}
+            >
               {contentTitle}
             </div>
             {content}

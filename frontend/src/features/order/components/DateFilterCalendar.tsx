@@ -4,15 +4,7 @@
  */
 
 import React from 'react';
-import {
-  format,
-  isSameMonth,
-  isSameDay,
-  isBefore,
-  isAfter,
-  endOfMonth,
-  setYear,
-} from 'date-fns';
+import { format, isSameMonth, isSameDay, isBefore, isAfter, endOfMonth, setYear } from 'date-fns';
 import { cn } from '@/utils';
 import type { CalendarView } from '../hooks/useDateFilterState';
 import {
@@ -85,7 +77,11 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                     !inRange &&
                     !disabled &&
                     'text-gray-700 hover:bg-gray-100',
-                  isToday && !selected && !inRange && !disabled && 'font-bold text-sky-600 bg-sky-50',
+                  isToday &&
+                    !selected &&
+                    !inRange &&
+                    !disabled &&
+                    'font-bold text-sky-600 bg-sky-50',
                   inRange && !selected && 'bg-sky-50 text-sky-700 rounded-none',
                   value &&
                     isSameDay(day, value[0]) &&
@@ -125,9 +121,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
               className={cn(
                 'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
                 disabled && 'opacity-30 cursor-not-allowed',
-                !disabled &&
-                  isSameMonth(month, new Date()) &&
-                  'text-sky-600 font-bold bg-sky-50',
+                !disabled && isSameMonth(month, new Date()) && 'text-sky-600 font-bold bg-sky-50',
                 !disabled && isSameMonth(month, currentMonth)
                   ? 'bg-sky-100 text-sky-700'
                   : 'hover:bg-gray-100 text-gray-700',
