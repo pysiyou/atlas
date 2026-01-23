@@ -111,3 +111,12 @@ export {
   ALL_ROLES,
   type UserRole,
 } from './user-role';
+
+// Relationship (Emergency Contact)
+export {
+  RELATIONSHIP_VALUES,
+  RELATIONSHIP_CONFIG,
+  RELATIONSHIP_OPTIONS,
+  RELATIONSHIP_FILTER_OPTIONS,
+  type Relationship,
+} from './relationship';

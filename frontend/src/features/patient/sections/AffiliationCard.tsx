@@ -35,7 +35,7 @@ export const AffiliationCard: React.FC<AffiliationCardProps> = ({
       className={`relative w-full h-full flex items-center justify-center ${className}`}
       aria-label={`Affiliation card for ${holderName}`}
     >
-      <div className="w-full max-w-[300px] aspect-[1.586/1] rounded-xl shadow-lg relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
+      <div className="w-full max-w-sm aspect-[1.586/1] rounded-xl shadow-lg relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
         
         {/* Background & Content Wrapper */}
         <div className={`w-full h-full p-5 ${gradientClass} text-white flex flex-col justify-between`}>

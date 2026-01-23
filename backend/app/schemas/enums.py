@@ -18,6 +18,16 @@ class AffiliationDuration(int, enum.Enum):
     TWENTY_FOUR_MONTHS = 24
 
 
+class Relationship(str, enum.Enum):
+    """Relationship types for emergency contacts"""
+    SPOUSE = "spouse"
+    PARENT = "parent"
+    SIBLING = "sibling"
+    CHILD = "child"
+    FRIEND = "friend"
+    OTHER = "other"
+
+
 class UserRole(str, enum.Enum):
     ADMIN = "administrator"
     RECEPTIONIST = "receptionist"

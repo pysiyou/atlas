@@ -7,7 +7,7 @@ import { SectionContainer, Badge } from '@/shared/ui';
 import { User, Phone, Mail, MapPin, Shield, UserPlus, Calendar, Clock } from 'lucide-react';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import type { Patient } from '@/types';
-import { AFFILIATION_DURATION_OPTIONS } from '@/types';
+import { AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_CONFIG } from '@/types';
 import { isAffiliationActive } from '../usePatientForm';
 
 interface PatientInfoCardProps {
@@ -94,10 +94,18 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
             <UserPlus className="text-gray-400 mt-1" size={20} />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-2">Emergency Contact</div>
-              <div className="font-medium text-gray-900">{patient.emergencyContact.name}</div>
+              <div className="font-medium text-gray-900">{patient.emergencyContact.fullName}</div>
+              <div className="text-xs text-gray-500 mt-1">
+                {RELATIONSHIP_CONFIG[patient.emergencyContact.relationship]?.label || patient.emergencyContact.relationship}
+              </div>
               <div className="text-xs text-gray-500 mt-1">
                 {formatPhoneNumber(patient.emergencyContact.phone)}
               </div>
+              {patient.emergencyContact.email && (
+                <div className="text-xs text-gray-500 mt-1">
+                  {patient.emergencyContact.email}
+                </div>
+              )}
             </div>
           </div>
         </div>

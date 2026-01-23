@@ -11,7 +11,7 @@ import React from 'react';
 import { SectionContainer, Badge, Button, Icon } from '@/shared/ui';
 import { formatDate, calculateAge, formatPhoneNumber, formatCurrency } from '@/utils';
 import type { Patient, Order, Affiliation } from '@/types';
-import { AFFILIATION_DURATION_OPTIONS } from '@/types';
+import { AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_CONFIG } from '@/types';
 import { isAffiliationActive } from './usePatientForm';
 
 // ============================================================================
@@ -102,10 +102,18 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
             <Icon name="user-hands" className="w-5 h-5 text-gray-400 mt-1" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-2">Emergency Contact</div>
-              <div className="font-medium text-gray-900">{patient.emergencyContact.name}</div>
+              <div className="font-medium text-gray-900">{patient.emergencyContact.fullName}</div>
+              <div className="text-xs text-gray-500 mt-1">
+                {RELATIONSHIP_CONFIG[patient.emergencyContact.relationship]?.label || patient.emergencyContact.relationship}
+              </div>
               <div className="text-xs text-gray-500 mt-1">
                 {formatPhoneNumber(patient.emergencyContact.phone)}
               </div>
+              {patient.emergencyContact.email && (
+                <div className="text-xs text-gray-500 mt-1">
+                  {patient.emergencyContact.email}
+                </div>
+              )}
             </div>
           </div>
         </div>

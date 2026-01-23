@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Gender, AffiliationDuration, Affiliation, Patient } from '@/types';
+import type { Gender, AffiliationDuration, Affiliation, Patient, Relationship } from '@/types';
 import {
   validateRequired,
   validateLength,
@@ -20,8 +20,10 @@ interface PatientFormData {
   postalCode: string;
   hasAffiliation: boolean;
   affiliationDuration: AffiliationDuration;  // Numeric: 1, 3, 6, 12, or 24 months
-  emergencyContactName: string;
+  emergencyContactFullName: string;
+  emergencyContactRelationship: Relationship;
   emergencyContactPhone: string;
+  emergencyContactEmail: string;
   chronicConditions: string;
   currentMedications: string;
   allergies: string;
@@ -76,8 +78,10 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
         postalCode: initialData.address?.postalCode || '',
         hasAffiliation: !!initialData.affiliation,
         affiliationDuration: initialData.affiliation?.duration || 1,
-        emergencyContactName: initialData.emergencyContact?.name || '',
+        emergencyContactFullName: initialData.emergencyContact?.fullName || '',
+        emergencyContactRelationship: initialData.emergencyContact?.relationship || 'spouse',
         emergencyContactPhone: initialData.emergencyContact?.phone || '',
+        emergencyContactEmail: initialData.emergencyContact?.email || '',
         chronicConditions: initialData.medicalHistory?.chronicConditions?.join('; ') || '',
         currentMedications: initialData.medicalHistory?.currentMedications?.join('; ') || '',
         allergies: initialData.medicalHistory?.allergies?.join('; ') || '',
@@ -98,8 +102,10 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
       postalCode: '',
       hasAffiliation: false,
       affiliationDuration: 1,
-      emergencyContactName: '',
+      emergencyContactFullName: '',
+      emergencyContactRelationship: 'spouse',
       emergencyContactPhone: '',
+      emergencyContactEmail: '',
       chronicConditions: '',
       currentMedications: '',
       allergies: '',
@@ -178,14 +184,22 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
       newErrors.postalCode = VALIDATION_MESSAGES.INVALID.POSTAL_CODE;
     }
 
-    if (!validateRequired(formData.emergencyContactName)) {
-      newErrors.emergencyContactName = VALIDATION_MESSAGES.REQUIRED.EMERGENCY_CONTACT_NAME;
+    if (!validateRequired(formData.emergencyContactFullName)) {
+      newErrors.emergencyContactFullName = VALIDATION_MESSAGES.REQUIRED.EMERGENCY_CONTACT_NAME;
+    }
+
+    if (!formData.emergencyContactRelationship) {
+      newErrors.emergencyContactRelationship = 'Please select a relationship';
     }
 
     if (!validateRequired(formData.emergencyContactPhone)) {
       newErrors.emergencyContactPhone = VALIDATION_MESSAGES.REQUIRED.EMERGENCY_CONTACT_PHONE;
     } else if (!validatePhoneNumber(formData.emergencyContactPhone)) {
       newErrors.emergencyContactPhone = VALIDATION_MESSAGES.INVALID.PHONE;
+    }
+
+    if (formData.emergencyContactEmail && !validateEmail(formData.emergencyContactEmail)) {
+      newErrors.emergencyContactEmail = VALIDATION_MESSAGES.INVALID.EMAIL;
     }
 
     setErrors(newErrors);
@@ -204,8 +218,10 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
       postalCode: '',
       hasAffiliation: false,
       affiliationDuration: 1,
-      emergencyContactName: '',
+      emergencyContactFullName: '',
+      emergencyContactRelationship: 'spouse',
       emergencyContactPhone: '',
+      emergencyContactEmail: '',
       chronicConditions: '',
       currentMedications: '',
       allergies: '',

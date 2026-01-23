@@ -164,8 +164,10 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       },
       affiliation: buildAffiliation(patient?.affiliation),
       emergencyContact: {
-        name: formData.emergencyContactName.trim(),
+        fullName: formData.emergencyContactFullName.trim(),
+        relationship: formData.emergencyContactRelationship,
         phone: formData.emergencyContactPhone.trim(),
+        email: formData.emergencyContactEmail.trim() || undefined,
       },
       medicalHistory: {
         chronicConditions: formData.chronicConditions
@@ -214,8 +216,10 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       },
       affiliation: buildAffiliation(),
       emergencyContact: {
-        name: formData.emergencyContactName.trim(),
+        fullName: formData.emergencyContactFullName.trim(),
+        relationship: formData.emergencyContactRelationship,
         phone: formData.emergencyContactPhone.trim(),
+        email: formData.emergencyContactEmail.trim() || undefined,
       },
       medicalHistory: {
         chronicConditions: formData.chronicConditions

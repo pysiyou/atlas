@@ -21,13 +21,16 @@ class Patient(Base):
     address = Column(JSON, nullable=False)  # {street, city, postalCode}
 
     # Emergency Contact (JSON)
-    emergencyContact = Column("emergency_contact", JSON, nullable=False)  # {name, phone}
+    emergencyContact = Column("emergency_contact", JSON, nullable=False)  # {fullName, relationship, phone, email}
 
     # Medical History (JSON)
     medicalHistory = Column("medical_history", JSON, nullable=False)  # {chronicConditions, currentMedications, allergies, previousSurgeries, familyHistory, lifestyle}
 
     # Affiliation (JSON, optional)
     affiliation = Column(JSON, nullable=True)  # {assuranceNumber, startDate, endDate, duration}
+
+    # Vital Signs (JSON, optional)
+    vitalSigns = Column("vital_signs", JSON, nullable=True)  # {temperature, heartRate, systolicBP, diastolicBP, respiratoryRate, oxygenSaturation}
 
     # Metadata
     registrationDate = Column("registration_date", DateTime(timezone=True), nullable=False)

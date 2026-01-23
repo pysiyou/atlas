@@ -6,8 +6,8 @@
 
 import React from 'react';
 import { Input, Select, Textarea, Badge, Button } from '@/shared/ui';
-import type { Gender, AffiliationDuration, Affiliation } from '@/types';
-import { GENDER_OPTIONS, AFFILIATION_DURATION_OPTIONS } from '@/types';
+import type { Gender, AffiliationDuration, Affiliation, Relationship } from '@/types';
+import { GENDER_OPTIONS, AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
 import { isAffiliationActive } from './usePatientForm';
 
@@ -26,8 +26,10 @@ interface PatientFormSectionsProps {
     postalCode: string;
     hasAffiliation: boolean;
     affiliationDuration: AffiliationDuration;
-    emergencyContactName: string;
+    emergencyContactFullName: string;
+    emergencyContactRelationship: Relationship;
     emergencyContactPhone: string;
+    emergencyContactEmail: string;
     chronicConditions: string;
     currentMedications: string;
     allergies: string;
@@ -276,13 +278,22 @@ export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'f
   <div className="space-y-4">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <Input
-        label="Contact Name"
-        name="emergencyContactName"
-        value={formData.emergencyContactName}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('emergencyContactName', e.target.value)}
-        error={errors.emergencyContactName}
+        label="Contact Full Name"
+        name="emergencyContactFullName"
+        value={formData.emergencyContactFullName}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('emergencyContactFullName', e.target.value)}
+        error={errors.emergencyContactFullName}
         required
         placeholder="Jane Doe"
+      />
+      <Select
+        label="Relationship"
+        name="emergencyContactRelationship"
+        value={formData.emergencyContactRelationship}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onFieldChange('emergencyContactRelationship', e.target.value)}
+        options={RELATIONSHIP_OPTIONS}
+        error={errors.emergencyContactRelationship}
+        required
       />
       <Input
         label="Contact Phone"
@@ -293,6 +304,15 @@ export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'f
         error={errors.emergencyContactPhone}
         required
         placeholder="(555) 987-6543"
+      />
+      <Input
+        label="Contact Email"
+        name="emergencyContactEmail"
+        type="email"
+        value={formData.emergencyContactEmail}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('emergencyContactEmail', e.target.value)}
+        error={errors.emergencyContactEmail}
+        placeholder="contact@email.com"
       />
     </div>
   </div>

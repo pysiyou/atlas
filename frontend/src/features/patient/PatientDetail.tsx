@@ -181,7 +181,7 @@ export const PatientDetail: React.FC = () => {
                 <div>
                   <p className="text-xs text-gray-500">Emergency Contact</p>
                   <p className="text-sm font-medium text-gray-900 mt-0.5">
-                    {patient.emergencyContact?.name || 'N/A'} <span className="text-gray-400 font-normal">({patient.emergencyContact?.phone || 'N/A'})</span>
+                    {patient.emergencyContact?.fullName || 'N/A'} <span className="text-gray-400 font-normal">({patient.emergencyContact?.phone || 'N/A'})</span>
                   </p>
                 </div>
               </div>
@@ -301,13 +301,13 @@ export const PatientDetail: React.FC = () => {
               return (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="text-xs bg-gray-50 text-gray-500 uppercase border-b border-gray-200">
+                    {/* <thead className="text-xxs bg-gray-50 text-gray-500 uppercase border-b border-gray-200">
                       <tr>
-                        <th className="px-3 py-2 font-medium">Order ID</th>
-                        <th className="px-3 py-2 font-medium">Date</th>
-                        <th className="px-3 py-2 font-medium">Status</th>
+                        <th className="px-2 py-1 font-medium">Order ID</th>
+                        <th className="px-2 py-1 font-medium">Date</th>
+                        <th className="px-2 py-1 font-medium">Status</th>
                       </tr>
-                    </thead>
+                    </thead> */}
                     <tbody className="divide-y divide-gray-100">
                       {patientOrders.map((order) => (
                         <tr 
@@ -447,7 +447,7 @@ export const PatientDetail: React.FC = () => {
                 <div>
                   <p className="text-xs text-gray-500">Emergency Contact</p>
                   <p className="text-sm font-medium text-gray-900 mt-0.5">
-                    {patient.emergencyContact?.name || 'N/A'} <span className="text-gray-400 font-normal">({patient.emergencyContact?.phone || 'N/A'})</span>
+                    {patient.emergencyContact?.fullName || 'N/A'} <span className="text-gray-400 font-normal">({patient.emergencyContact?.phone || 'N/A'})</span>
                   </p>
                 </div>
               </div>
@@ -567,13 +567,13 @@ export const PatientDetail: React.FC = () => {
               return (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="text-xs bg-gray-50 text-gray-500 uppercase border-b border-gray-200">
+                    {/* <thead className="text-xxs bg-gray-50 text-gray-500 uppercase border-b border-gray-200">
                       <tr>
-                        <th className="px-3 py-2 font-medium">Order ID</th>
-                        <th className="px-3 py-2 font-medium">Date</th>
-                        <th className="px-3 py-2 font-medium">Status</th>
+                        <th className="px-2 py-1 font-medium">Order ID</th>
+                        <th className="px-2 py-1 font-medium">Date</th>
+                        <th className="px-2 py-1 font-medium">Status</th>
                       </tr>
-                    </thead>
+                    </thead> */}
                     <tbody className="divide-y divide-gray-100">
                       {patientOrders.map((order) => (
                         <tr 
@@ -715,7 +715,7 @@ export const PatientDetail: React.FC = () => {
                   <div>
                     <p className="text-xs text-gray-500">Emergency Contact</p>
                     <p className="text-sm font-medium text-gray-900 mt-0.5">
-                      {patient.emergencyContact?.name || 'N/A'} <span className="text-gray-400 font-normal">({patient.emergencyContact?.phone || 'N/A'})</span>
+                      {patient.emergencyContact?.fullName || 'N/A'} <span className="text-gray-400 font-normal">({patient.emergencyContact?.phone || 'N/A'})</span>
                     </p>
                   </div>
                 </div>
@@ -832,36 +832,35 @@ export const PatientDetail: React.FC = () => {
                 <table className="w-full text-left text-xs table-fixed">
                   {/* Column widths: Order ID (15%), Date (12%), Tests (18%), Priority (12%), Status (15%), Amount (13%), Payment (15%) */}
                   <colgroup>
-                    <col style={{ width: '15%' }} />
-                    <col style={{ width: '12%' }} />
                     <col style={{ width: '18%' }} />
-                    <col style={{ width: '12%' }} />
+                    <col style={{ width: '15%' }} />
+                    <col style={{ width: '25%' }} />
+                    <col style={{ width: '15%' }} />
                     <col style={{ width: '15%' }} />
                     <col style={{ width: '13%' }} />
-                    <col style={{ width: '15%' }} />
+
                   </colgroup>
-                  <thead className="text-xs bg-gray-50 text-gray-500 uppercase sticky top-0 z-10 border-b border-gray-200 [&_th]:font-normal">
+                  {/* <thead className="text-xxs bg-gray-50 text-gray-500 uppercase sticky top-0 z-10 border-b border-gray-200 [&_th]:font-normal">
                     <tr>
-                      <th className="px-4 py-2">Order ID</th>
-                      <th className="px-4 py-2">Date</th>
-                      <th className="px-4 py-2">Tests</th>
-                      <th className="px-4 py-2">Priority</th>
-                      <th className="px-4 py-2">Status</th>
-                      <th className="px-4 py-2">Amount</th>
-                      <th className="px-4 py-2">Payment</th>
+                      <th className="px-2 py-1">Order ID</th>
+                      <th className="px-2 py-1">Date</th>
+                      <th className="px-2 py-1">Tests</th>
+                      <th className="px-2 py-1">Status</th>
+                      <th className="px-2 py-1">Amount</th>
+                      <th className="px-2 py-1">Payment</th>
                     </tr>
-                  </thead>
+                  </thead> */}
                   <tbody className="divide-y divide-gray-100">
                     {patientOrders.map((order) => {
                       return (
                         <tr key={order.orderId} className="hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => navigate(`/orders/${order.orderId}`)}>
-                          <td className="px-4 py-3 text-xs text-sky-600 font-medium font-mono max-w-0">
+                          <td className="px-2 py-3 text-xs text-sky-600 font-medium font-mono max-w-0">
                             <span className="block truncate">{order.orderId}</span>
                           </td>
-                          <td className="px-4 py-3 text-xs text-gray-500 max-w-0">
+                          <td className="px-2 py-3 text-xs text-gray-500 max-w-0">
                             <span className="block truncate">{new Date(order.orderDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                           </td>
-                          <td className="px-4 py-3 max-w-0">
+                          <td className="px-2 py-3 max-w-0">
                             <div className="min-w-0">
                               <div className="font-medium truncate">{order.tests.length} test{order.tests.length !== 1 ? 's' : ''}</div>
                               <div className="text-xs text-gray-500 truncate">
@@ -870,17 +869,14 @@ export const PatientDetail: React.FC = () => {
                               </div>
                             </div>
                           </td>
-                          <td className="px-4 py-3">
-                            <Badge variant={order.priority} size="sm" />
-                          </td>
-                          <td className="px-4 py-3">
+                          <td className="px-2 py-3">
                             <Badge variant={order.overallStatus} size="sm" />
                           </td>
-                          <td className="px-4 py-3 font-medium text-sky-600 max-w-0">
-                            <span className="block truncate">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.totalPrice)}</span>
-                          </td>
-                          <td className="px-4 py-3">
+                          <td className="px-2 py-3">
                             <Badge variant={order.paymentStatus} size="sm" />
+                          </td>
+                          <td className="px-2 py-3 font-medium text-sky-600 max-w-0">
+                            <span className="block truncate">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.totalPrice)}</span>
                           </td>
                         </tr>
                       );

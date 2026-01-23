@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from faker import Faker
 import niafaker
 from app.models.patient import Patient
-from app.schemas.enums import Gender
+from app.schemas.enums import Gender, Relationship
 
 # Initialize Faker with standard locale (we'll use custom African names)
 fake = Faker('en_US')
@@ -542,10 +542,20 @@ def _create_single_patient_data(patient_id: str) -> dict:
         emergency_phone = niafaker.generate_phone_number()
     except:
         pass
-        
+
+    # Random relationship
+    relationship = random.choice([r.value for r in Relationship])
+
+    # Optional email for emergency contact (50% chance)
+    emergency_email = None
+    if random.random() > 0.5:
+        emergency_email = f"{emergency_first.lower()}.{emergency_last.lower()}@example.com"
+
     emergencyContact = {
-        'name': f"{emergency_first} {emergency_last}",
-        'phone': emergency_phone
+        'fullName': f"{emergency_first} {emergency_last}",
+        'relationship': relationship,
+        'phone': emergency_phone,
+        'email': emergency_email
     }
 
     # Medical history
@@ -578,6 +588,18 @@ def _create_single_patient_data(patient_id: str) -> dict:
         'lifestyle': lifestyle
     }
 
+    # Vital Signs - 60% of patients have recorded vital signs
+    vitalSigns = None
+    if random.random() < 0.6:
+        vitalSigns = {
+            'temperature': round(random.uniform(36.0, 38.5), 1),  # Celsius
+            'heartRate': random.randint(55, 110),                 # BPM
+            'systolicBP': random.randint(100, 150),               # mmHg
+            'diastolicBP': random.randint(60, 95),                # mmHg
+            'respiratoryRate': random.randint(12, 22),            # breaths/min
+            'oxygenSaturation': random.randint(94, 100)           # SpO2 %
+        }
+
     # Affiliation (insurance) - 70% have insurance
     affiliation = None
     if random.random() < 0.7:
@@ -605,6 +627,7 @@ def _create_single_patient_data(patient_id: str) -> dict:
         'address': address,
         'emergencyContact': emergencyContact,
         'medicalHistory': medicalHistory,
+        'vitalSigns': vitalSigns,
         'affiliation': affiliation,
         'registrationDate': registrationDate,
         'createdBy': 'USR-00000000-001',  # admin user
@@ -627,7 +650,12 @@ def generate_dev_patients(db):
             "phone": "+1-555-0101",
             "email": "john.smith@email.com",
             "address": {"street": "123 Main St", "city": "New York", "postalCode": "10001"},
-            "emergencyContact": {"name": "Jane Smith", "phone": "+1-555-0102"},
+            "emergencyContact": {
+                "fullName": "Jane Smith",
+                "relationship": Relationship.SPOUSE.value,
+                "phone": "+1-555-0102",
+                "email": "jane.smith@email.com"
+            },
             "medicalHistory": {
                 "chronicConditions": ["Hypertension"],
                 "currentMedications": ["Lisinopril 10mg"],
@@ -635,6 +663,14 @@ def generate_dev_patients(db):
                 "previousSurgeries": [],
                 "familyHistory": ["Father had diabetes"],
                 "lifestyle": {"smoking": False, "alcohol": False}
+            },
+            "vitalSigns": {
+                "temperature": 36.8,
+                "heartRate": 72,
+                "systolicBP": 128,
+                "diastolicBP": 82,
+                "respiratoryRate": 16,
+                "oxygenSaturation": 98
             },
             "registrationDate": datetime.now(timezone.utc),
             "createdBy": "USR-00000000-001",
@@ -648,7 +684,12 @@ def generate_dev_patients(db):
             "phone": "+1-555-0201",
             "email": "maria.garcia@email.com",
             "address": {"street": "456 Oak Ave", "city": "Los Angeles", "postalCode": "90001"},
-            "emergencyContact": {"name": "Carlos Garcia", "phone": "+1-555-0202"},
+            "emergencyContact": {
+                "fullName": "Carlos Garcia",
+                "relationship": Relationship.SIBLING.value,
+                "phone": "+1-555-0202",
+                "email": None
+            },
             "medicalHistory": {
                 "chronicConditions": [],
                 "currentMedications": [],
@@ -656,6 +697,14 @@ def generate_dev_patients(db):
                 "previousSurgeries": ["Appendectomy 2015"],
                 "familyHistory": ["None reported"],
                 "lifestyle": {"smoking": False, "alcohol": True}
+            },
+            "vitalSigns": {
+                "temperature": 36.5,
+                "heartRate": 68,
+                "systolicBP": 118,
+                "diastolicBP": 76,
+                "respiratoryRate": 14,
+                "oxygenSaturation": 99
             },
             "registrationDate": datetime.now(timezone.utc),
             "createdBy": "USR-00000000-002",
