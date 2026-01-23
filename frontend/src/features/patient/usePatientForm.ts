@@ -33,6 +33,12 @@ interface PatientFormData {
   familyHistory: string;
   smoking: boolean;
   alcohol: boolean;
+  temperature: string;
+  heartRate: string;
+  systolicBP: string;
+  diastolicBP: string;
+  respiratoryRate: string;
+  oxygenSaturation: string;
 }
 
 // Helper: Generate unique assurance number
@@ -75,8 +81,8 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
         gender: initialData.gender || 'male',
         phone: initialData.phone || '',
         email: initialData.email || '',
-        height: initialData.height ? String(initialData.height) : '',
-        weight: initialData.weight ? String(initialData.weight) : '',
+        height: initialData.height !== undefined ? String(initialData.height) : '',
+        weight: initialData.weight !== undefined ? String(initialData.weight) : '',
         street: initialData.address?.street || '',
         city: initialData.address?.city || '',
         postalCode: initialData.address?.postalCode || '',
@@ -93,6 +99,12 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
         familyHistory: initialData.medicalHistory?.familyHistory || '',
         smoking: initialData.medicalHistory?.lifestyle?.smoking || false,
         alcohol: initialData.medicalHistory?.lifestyle?.alcohol || false,
+        temperature: initialData.vitalSigns?.temperature !== undefined ? String(initialData.vitalSigns.temperature) : '',
+        heartRate: initialData.vitalSigns?.heartRate !== undefined ? String(initialData.vitalSigns.heartRate) : '',
+        systolicBP: initialData.vitalSigns?.systolicBP !== undefined ? String(initialData.vitalSigns.systolicBP) : '',
+        diastolicBP: initialData.vitalSigns?.diastolicBP !== undefined ? String(initialData.vitalSigns.diastolicBP) : '',
+        respiratoryRate: initialData.vitalSigns?.respiratoryRate !== undefined ? String(initialData.vitalSigns.respiratoryRate) : '',
+        oxygenSaturation: initialData.vitalSigns?.oxygenSaturation !== undefined ? String(initialData.vitalSigns.oxygenSaturation) : '',
       };
     }
     return {
@@ -101,6 +113,8 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
       gender: 'male',
       phone: '',
       email: '',
+      height: '',
+      weight: '',
       street: '',
       city: '',
       postalCode: '',
@@ -117,6 +131,12 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
       familyHistory: '',
       smoking: false,
       alcohol: false,
+      temperature: '',
+      heartRate: '',
+      systolicBP: '',
+      diastolicBP: '',
+      respiratoryRate: '',
+      oxygenSaturation: '',
     };
   });
 
@@ -222,6 +242,57 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
       newErrors.emergencyContactEmail = VALIDATION_MESSAGES.INVALID.EMAIL;
     }
 
+    /**
+     * Vital signs validation (all-or-none).
+     * Rationale:
+     * - Prevent accidental writes of partial vitals.
+     * - Avoid converting blanks to 0 in payload construction.
+     * - Enforce min/max constraints from `VitalSigns` interface comments.
+     */
+    const vitals = {
+      temperature: formData.temperature,
+      heartRate: formData.heartRate,
+      systolicBP: formData.systolicBP,
+      diastolicBP: formData.diastolicBP,
+      respiratoryRate: formData.respiratoryRate,
+      oxygenSaturation: formData.oxygenSaturation,
+    };
+
+    const anyVitalProvided = Object.values(vitals).some((v) => String(v || '').trim().length > 0);
+    if (anyVitalProvided) {
+      const missingKeys = Object.entries(vitals)
+        .filter(([, v]) => String(v || '').trim().length === 0)
+        .map(([k]) => k);
+
+      if (missingKeys.length > 0) {
+        // Mark all missing ones with a consistent message.
+        for (const k of missingKeys) {
+          newErrors[k] = 'Please complete all vital fields or leave all blank';
+        }
+      }
+
+      const validateNumberInRange = (
+        key: keyof typeof vitals,
+        min: number,
+        max: number,
+        parse: (raw: string) => number
+      ) => {
+        const raw = String(vitals[key] || '').trim();
+        if (!raw) return; // missing handled above
+        const num = parse(raw);
+        if (Number.isNaN(num) || num < min || num > max) {
+          newErrors[key] = `Must be between ${min} and ${max}`;
+        }
+      };
+
+      validateNumberInRange('temperature', 30.0, 45.0, (r) => parseFloat(r));
+      validateNumberInRange('heartRate', 30, 250, (r) => parseInt(r, 10));
+      validateNumberInRange('systolicBP', 50, 250, (r) => parseInt(r, 10));
+      validateNumberInRange('diastolicBP', 30, 150, (r) => parseInt(r, 10));
+      validateNumberInRange('respiratoryRate', 4, 60, (r) => parseInt(r, 10));
+      validateNumberInRange('oxygenSaturation', 50, 100, (r) => parseInt(r, 10));
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -251,6 +322,12 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
       familyHistory: '',
       smoking: false,
       alcohol: false,
+      temperature: '',
+      heartRate: '',
+      systolicBP: '',
+      diastolicBP: '',
+      respiratoryRate: '',
+      oxygenSaturation: '',
     });
     setErrors({});
     setIsSubmitting(false);

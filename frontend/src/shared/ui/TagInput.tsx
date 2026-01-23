@@ -1,0 +1,175 @@
+/**
+ * TagInput Component
+ * 
+ * A modern tag input component for managing lists of items (e.g., medications, allergies, conditions).
+ * Allows users to add tags by typing and pressing Enter, and remove tags by clicking the X button.
+ */
+
+import React, { useState } from 'react';
+import type { KeyboardEvent, ChangeEvent } from 'react';
+import { Icon } from './Icon';
+import { Badge } from './Badge';
+import { cn } from '@/utils';
+
+export interface TagInputProps {
+  /** Current tags as an array of strings */
+  tags: string[];
+  /** Callback when tags change */
+  onChange: (tags: string[]) => void;
+  /** Placeholder text for the input */
+  placeholder?: string;
+  /** Label for the input */
+  label?: string;
+  /** Error message to display */
+  error?: string;
+  /** Helper text to display */
+  helperText?: string;
+  /** Whether the input is required */
+  required?: boolean;
+  /** Additional CSS classes */
+  className?: string;
+  /** Maximum number of tags allowed */
+  maxTags?: number;
+  /** Variant for tag badges */
+  tagVariant?: 'default' | 'primary' | 'secondary' | 'outline';
+}
+
+/**
+ * TagInput - Component for managing a list of tags
+ * 
+ * Features:
+ * - Add tags by typing and pressing Enter
+ * - Remove tags by clicking the X button
+ * - Visual feedback with badges
+ * - Validation support
+ */
+export const TagInput: React.FC<TagInputProps> = ({
+  tags,
+  onChange,
+  placeholder = 'Type and press Enter to add',
+  label,
+  error,
+  helperText,
+  required = false,
+  className = '',
+  maxTags,
+  tagVariant = 'outline',
+}) => {
+  const [inputValue, setInputValue] = useState('');
+
+  /**
+   * Handles adding a new tag
+   */
+  const handleAddTag = (value: string) => {
+    const trimmedValue = value.trim();
+    
+    // Don't add empty tags or duplicates
+    if (!trimmedValue || tags.includes(trimmedValue)) {
+      return;
+    }
+
+    // Check max tags limit
+    if (maxTags && tags.length >= maxTags) {
+      return;
+    }
+
+    onChange([...tags, trimmedValue]);
+    setInputValue('');
+  };
+
+  /**
+   * Handles removing a tag
+   */
+  const handleRemoveTag = (tagToRemove: string) => {
+    onChange(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  /**
+   * Handles keyboard events in the input
+   */
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddTag(inputValue);
+    } else if (e.key === 'Backspace' && inputValue === '' && tags.length > 0) {
+      // Remove last tag when backspace is pressed on empty input
+      handleRemoveTag(tags[tags.length - 1]);
+    }
+  };
+
+  /**
+   * Handles input change
+   */
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const inputId = label?.toLowerCase().replace(/\s+/g, '-') || 'tag-input';
+
+  return (
+    <div className={cn('w-full', className)}>
+      {label && (
+        <label
+          htmlFor={inputId}
+          className="block text-xs font-medium text-gray-500 mb-1.5"
+        >
+          {label}
+          {required && <span className="text-red-500 ml-1">*</span>}
+        </label>
+      )}
+
+      {/* Tags Container */}
+      <div
+        className={cn(
+          'min-h-[42px] w-full px-3 py-2 border rounded-xl',
+          'bg-white transition-colors',
+          'focus-within:ring-2 focus-within:ring-sky-500 focus-within:border-transparent',
+          error ? 'border-red-300' : 'border-gray-200',
+          'flex flex-wrap gap-2 items-center'
+        )}
+      >
+        {/* Existing Tags */}
+        {tags.map((tag, index) => (
+          <Badge
+            key={`${tag}-${index}`}
+            variant={tagVariant}
+            size="sm"
+            className="flex items-center gap-1.5 pr-1"
+          >
+            <span className="text-xs">{tag}</span>
+            <button
+              type="button"
+              onClick={() => handleRemoveTag(tag)}
+              className="hover:bg-gray-200 rounded-full p-0.5 transition-colors"
+              aria-label={`Remove ${tag}`}
+            >
+              <Icon name="close-circle" className="w-3 h-3 text-gray-500" />
+            </button>
+          </Badge>
+        ))}
+
+        {/* Input Field */}
+        <input
+          id={inputId}
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          placeholder={tags.length === 0 ? placeholder : ''}
+          className="flex-1 min-w-[120px] outline-none text-sm text-gray-900 placeholder:text-gray-400 bg-transparent"
+          disabled={maxTags !== undefined && tags.length >= maxTags}
+        />
+      </div>
+
+      {/* Error Message */}
+      {error && (
+        <p className="mt-1.5 text-xs text-red-600">{error}</p>
+      )}
+
+      {/* Helper Text */}
+      {helperText && !error && (
+        <p className="mt-1.5 text-xs text-gray-500">{helperText}</p>
+      )}
+    </div>
+  );
+};

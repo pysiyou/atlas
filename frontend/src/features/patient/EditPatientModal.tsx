@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { Patient, Affiliation } from '@/types';
 import { usePatients } from '@/hooks';
-import { Button, Modal, SectionContainer } from '@/shared/ui';
+import { Button, Modal, TabbedSectionContainer } from '@/shared/ui';
 import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
@@ -19,7 +19,8 @@ import {
   isAffiliationActive,
 } from './usePatientForm';
 // ID generation removed - backend handles ID assignment
-import { Icon } from '@/shared/ui';
+import { displayId } from '@/utils/id-display';
+import { VitalsSection } from '@/features/patient/VitalsSection';
 
 /**
  * Props for EditPatientModal component.
@@ -35,30 +36,6 @@ interface EditPatientModalProps {
   /** Determines whether the modal is used for creating or editing a patient */
   mode: 'create' | 'edit';
 }
-
-/**
- * Section Icon Badge Component
- */
-interface SectionIconProps {
-  icon: React.ReactNode;
-  color: 'sky' | 'emerald' | 'violet' | 'amber' | 'rose';
-}
-
-const SectionIcon: React.FC<SectionIconProps> = ({ icon, color }) => {
-  const colorClasses = {
-    sky: 'bg-sky-100 text-sky-600',
-    emerald: 'bg-emerald-100 text-emerald-600',
-    violet: 'bg-violet-100 text-violet-600',
-    amber: 'bg-amber-100 text-amber-600',
-    rose: 'bg-rose-100 text-rose-600',
-  };
-
-  return (
-    <div className={`w-7 h-7 rounded ${colorClasses[color]} flex items-center justify-center shrink-0`}>
-      {icon}
-    </div>
-  );
-};
 
 /**
  * EditPatientModal
@@ -151,6 +128,54 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
    * Maps the current form state into a `Partial<Patient>` suitable for update operations.
    */
   const buildUpdatedPatientPayload = (): Partial<Patient> => {
+    /**
+     * Build vitalSigns only if at least one field has a value.
+     * Keeps payload clean and avoids sending an empty object.
+     */
+    const anyVitalProvided = Boolean(
+      String(formData.temperature).trim() ||
+        String(formData.heartRate).trim() ||
+        String(formData.systolicBP).trim() ||
+        String(formData.diastolicBP).trim() ||
+        String(formData.respiratoryRate).trim() ||
+        String(formData.oxygenSaturation).trim()
+    );
+
+    /**
+     * NOTE:
+     * Validation in `usePatientForm` enforces all-or-none vitals.
+     * If any are provided, we can safely construct a complete object.
+     * In edit mode, we also merge with existing values (defensive).
+     */
+    const vitalSigns = anyVitalProvided
+      ? {
+          temperature:
+            formData.temperature.trim() !== ''
+              ? parseFloat(formData.temperature)
+              : patient?.vitalSigns?.temperature ?? 0,
+          heartRate:
+            formData.heartRate.trim() !== ''
+              ? parseInt(formData.heartRate, 10)
+              : patient?.vitalSigns?.heartRate ?? 0,
+          systolicBP:
+            formData.systolicBP.trim() !== ''
+              ? parseInt(formData.systolicBP, 10)
+              : patient?.vitalSigns?.systolicBP ?? 0,
+          diastolicBP:
+            formData.diastolicBP.trim() !== ''
+              ? parseInt(formData.diastolicBP, 10)
+              : patient?.vitalSigns?.diastolicBP ?? 0,
+          respiratoryRate:
+            formData.respiratoryRate.trim() !== ''
+              ? parseInt(formData.respiratoryRate, 10)
+              : patient?.vitalSigns?.respiratoryRate ?? 0,
+          oxygenSaturation:
+            formData.oxygenSaturation.trim() !== ''
+              ? parseInt(formData.oxygenSaturation, 10)
+              : patient?.vitalSigns?.oxygenSaturation ?? 0,
+        }
+      : undefined;
+
     return {
       fullName: formData.fullName.trim(),
       dateOfBirth: formData.dateOfBirth,
@@ -194,6 +219,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
           alcohol: formData.alcohol,
         },
       },
+      vitalSigns,
       updatedBy: typeof currentUser?.id === 'string' ? parseInt(currentUser.id, 10) : (currentUser?.id || 0),
     };
   };
@@ -203,6 +229,25 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
    */
   const buildNewPatient = (patientId: number): Patient => {
     const now = new Date().toISOString();
+    const anyVitalProvided = Boolean(
+      String(formData.temperature).trim() ||
+        String(formData.heartRate).trim() ||
+        String(formData.systolicBP).trim() ||
+        String(formData.diastolicBP).trim() ||
+        String(formData.respiratoryRate).trim() ||
+        String(formData.oxygenSaturation).trim()
+    );
+
+    const vitalSigns = anyVitalProvided
+      ? {
+          temperature: parseFloat(formData.temperature),
+          heartRate: parseInt(formData.heartRate, 10),
+          systolicBP: parseInt(formData.systolicBP, 10),
+          diastolicBP: parseInt(formData.diastolicBP, 10),
+          respiratoryRate: parseInt(formData.respiratoryRate, 10),
+          oxygenSaturation: parseInt(formData.oxygenSaturation, 10),
+        }
+      : undefined;
 
     return {
       id: patientId,
@@ -248,6 +293,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
           alcohol: formData.alcohol,
         },
       },
+      vitalSigns,
       registrationDate: now,
       createdBy: typeof currentUser?.id === 'string' ? parseInt(currentUser.id, 10) : (currentUser?.id || 0),
       createdAt: now,
@@ -315,51 +361,78 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
     ? 'Save Changes'
     : 'Create Patient';
 
-  return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={modalTitle}
-      maxWidth="max-w-4xl"
-    >
-      <div className="h-full flex flex-col bg-gray-50">
-        {/* Scrollable content area */}
-        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin space-y-4">
-          <form
-            id="patient-upsert-form"
-            onSubmit={handleSubmit}
-            className="space-y-4 max-w-4xl mx-auto"
-          >
-            {/* Personal Information Section */}
-            <SectionContainer
-              title="Personal Information"
-              headerLeft={<SectionIcon icon={<Icon name="user" className="w-4 h-4" />} color="sky" />}
-            >
-              <div className="pl-4 space-y-6">
-                <DemographicsSection
-                  formData={formData}
-                  errors={errors}
-                  onFieldChange={handleFieldChange}
-                />
-                <AddressSection
-                  formData={formData}
-                  errors={errors}
-                  onFieldChange={handleFieldChange}
-                />
-                <EmergencyContactSection
-                  formData={formData}
-                  errors={errors}
-                  onFieldChange={handleFieldChange}
-                />
-              </div>
-            </SectionContainer>
+  const tabs = useMemo(
+    () => [
+      { id: 'general', label: 'General Info' },
+      { id: 'medical', label: 'Medical Background' },
+      { id: 'vitals', label: 'Vitals & Stats' },
+      { id: 'affiliation', label: 'Affiliation & Emergency' },
+    ],
+    []
+  );
 
-            {/* Lab Affiliation Section */}
-            <SectionContainer
-              title="Lab Affiliation"
-              headerLeft={<SectionIcon icon={<Icon name="shield" className="w-4 h-4" />} color="emerald" />}
-            >
-              <div className="pl-4">
+  const [activeTab, setActiveTab] = useState<string>('general');
+
+  /**
+   * Render active tab content (kept as a function to mirror CargoPlan’s TabbedSectionContainer usage).
+   */
+  const renderActiveTab = () => {
+    switch (activeTab) {
+      case 'general':
+        return (
+          <div className="space-y-6">
+            <div>
+              <div className="text-xs font-medium text-slate-500">General</div>
+              <div className="text-sm font-semibold text-slate-900">Identity & contact</div>
+            </div>
+            <DemographicsSection formData={formData} errors={errors} onFieldChange={handleFieldChange} />
+            <AddressSection formData={formData} errors={errors} onFieldChange={handleFieldChange} />
+          </div>
+        );
+      case 'medical':
+        return (
+          <div className="space-y-4">
+            <div>
+              <div className="text-xs font-medium text-slate-500">Medical Background</div>
+              <div className="text-sm font-semibold text-slate-900">History, conditions, lifestyle</div>
+            </div>
+            <MedicalHistorySection formData={formData} onFieldChange={handleFieldChange} />
+          </div>
+        );
+      case 'vitals':
+        return (
+          <div className="space-y-4">
+            <div>
+              <div className="text-xs font-medium text-slate-500">Vitals</div>
+              <div className="text-sm font-semibold text-slate-900">Measurements</div>
+              <div className="text-xs text-slate-500 mt-1">
+                Fill all vitals or leave all blank. Hints show typical ranges.
+              </div>
+            </div>
+            <VitalsSection
+              vitalSigns={{
+                temperature: formData.temperature,
+                heartRate: formData.heartRate,
+                systolicBP: formData.systolicBP,
+                diastolicBP: formData.diastolicBP,
+                respiratoryRate: formData.respiratoryRate,
+                oxygenSaturation: formData.oxygenSaturation,
+              }}
+              errors={errors}
+              onFieldChange={handleFieldChange}
+            />
+          </div>
+        );
+      case 'affiliation':
+        return (
+          <div className="space-y-8">
+            <div>
+              <div className="text-xs font-medium text-slate-500">Affiliation</div>
+              <div className="text-sm font-semibold text-slate-900">Auto-generated assurance</div>
+              <div className="text-xs text-slate-500 mt-1">
+                Assurance details are auto-generated for new affiliations.
+              </div>
+              <div className="mt-4">
                 <AffiliationSection
                   formData={formData}
                   onFieldChange={handleFieldChange}
@@ -367,20 +440,48 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                   onRenew={handleRenew}
                 />
               </div>
-            </SectionContainer>
+            </div>
 
-            {/* Medical History Section */}
-            <SectionContainer
-              title="Medical History"
-              headerLeft={<SectionIcon icon={<Icon name="stethoscope" className="w-4 h-4" />} color="rose" />}
-            >
-              <div className="pl-4">
-                <MedicalHistorySection
+            <div>
+              <div className="text-xs font-medium text-slate-500">Emergency Contact</div>
+              <div className="text-sm font-semibold text-slate-900">Primary contact</div>
+              <div className="mt-4">
+                <EmergencyContactSection
                   formData={formData}
+                  errors={errors}
                   onFieldChange={handleFieldChange}
                 />
               </div>
-            </SectionContainer>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={modalTitle}
+      maxWidth="max-w-4xl"
+    >
+      <div className="h-full flex flex-col bg-slate-50">
+        {/* Scrollable content area */}
+        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin">
+          <form id="patient-upsert-form" onSubmit={handleSubmit} className="max-w-4xl mx-auto">
+            <TabbedSectionContainer
+              title={mode === 'edit' && patient ? displayId.patient(patient.id) : 'New Patient'}
+              tabs={tabs}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              className="rounded-xl! shadow-none"
+              contentClassName="!p-6"
+              headerClassName="!px-6 !py-4"
+            >
+              {renderActiveTab()}
+            </TabbedSectionContainer>
           </form>
         </div>
 
@@ -389,13 +490,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
           <Button type="button" variant="cancel" showIcon={false} onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="save"
-            form="patient-upsert-form"
-            isLoading={isSubmitting}
-            disabled={isSubmitting}
-          >
+          <Button type="submit" variant="save" form="patient-upsert-form" isLoading={isSubmitting} disabled={isSubmitting}>
             {submitLabel}
           </Button>
         </div>

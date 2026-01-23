@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Input, Select, Textarea, Badge, Button } from '@/shared/ui';
+import { Input, Select, Textarea, Badge, Button, TagInput } from '@/shared/ui';
 import type { Gender, AffiliationDuration, Affiliation, Relationship } from '@/types';
 import { GENDER_OPTIONS, AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
@@ -346,44 +346,63 @@ export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'f
 
 /**
  * Medical History Section
- * Displays medical history fields
+ * Displays medical history fields with tag inputs for lists
  */
 export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'formData' | 'onFieldChange'>> = ({
   formData,
   onFieldChange,
-}) => (
-  <div className="space-y-4">
-    <div className="space-y-4">
-      <Textarea
+}) => {
+  // Convert semicolon-separated strings to arrays for TagInput
+  const chronicConditionsArray = formData.chronicConditions
+    ? formData.chronicConditions.split(';').map(s => s.trim()).filter(s => s.length > 0)
+    : [];
+  const currentMedicationsArray = formData.currentMedications
+    ? formData.currentMedications.split(';').map(s => s.trim()).filter(s => s.length > 0)
+    : [];
+  const allergiesArray = formData.allergies
+    ? formData.allergies.split(';').map(s => s.trim()).filter(s => s.length > 0)
+    : [];
+  const previousSurgeriesArray = formData.previousSurgeries
+    ? formData.previousSurgeries.split(';').map(s => s.trim()).filter(s => s.length > 0)
+    : [];
+
+  // Convert arrays back to semicolon-separated strings
+  const handleTagsChange = (field: string, tags: string[]) => {
+    onFieldChange(field, tags.join('; '));
+  };
+
+  return (
+    <div className="space-y-6">
+      <TagInput
         label="Chronic Conditions"
-        name="chronicConditions"
-        value={formData.chronicConditions}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onFieldChange('chronicConditions', e.target.value)}
-        placeholder="Separate multiple conditions with commas (e.g., Hypertension, Diabetes)"
+        tags={chronicConditionsArray}
+        onChange={(tags) => handleTagsChange('chronicConditions', tags)}
+        placeholder="Type condition and press Enter"
         helperText="Enter chronic medical conditions"
+        tagVariant="outline"
       />
-      <Textarea
+      <TagInput
         label="Current Medications"
-        name="currentMedications"
-        value={formData.currentMedications}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onFieldChange('currentMedications', e.target.value)}
-        placeholder="Separate multiple medications with commas (e.g., Lisinopril 10mg, Metformin 500mg)"
+        tags={currentMedicationsArray}
+        onChange={(tags) => handleTagsChange('currentMedications', tags)}
+        placeholder="Type medication and press Enter"
         helperText="Include dosage if known"
+        tagVariant="outline"
       />
-      <Textarea
+      <TagInput
         label="Known Allergies"
-        name="allergies"
-        value={formData.allergies}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onFieldChange('allergies', e.target.value)}
-        placeholder="Separate multiple allergies with commas (e.g., Penicillin, Latex)"
+        tags={allergiesArray}
+        onChange={(tags) => handleTagsChange('allergies', tags)}
+        placeholder="Type allergy and press Enter"
         helperText="Include drug and non-drug allergies"
+        tagVariant="outline"
       />
-      <Textarea
+      <TagInput
         label="Previous Surgeries"
-        name="previousSurgeries"
-        value={formData.previousSurgeries}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onFieldChange('previousSurgeries', e.target.value)}
-        placeholder="Separate multiple surgeries with commas (e.g., Appendectomy 2015, Knee Surgery 2018)"
+        tags={previousSurgeriesArray}
+        onChange={(tags) => handleTagsChange('previousSurgeries', tags)}
+        placeholder="Type surgery and press Enter"
+        tagVariant="outline"
       />
       <Textarea
         label="Family Medical History"
@@ -391,8 +410,9 @@ export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'for
         value={formData.familyHistory}
         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onFieldChange('familyHistory', e.target.value)}
         placeholder="Notable family medical history"
+        rows={3}
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
         <div className="flex items-center gap-3">
           <input
             type="checkbox"
@@ -421,8 +441,8 @@ export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'for
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 /**
  * Main PatientFormSections Component

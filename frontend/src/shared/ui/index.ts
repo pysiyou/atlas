@@ -24,3 +24,5 @@ export * from './Skeleton';
 export * from './DetailsTable';
 export * from './detailsTableUtils';
 export * from './BalancedDetailsLayout';
+export * from './TagInput';
+export * from './TabbedSectionContainer';
