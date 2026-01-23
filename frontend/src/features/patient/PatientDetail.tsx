@@ -16,7 +16,7 @@ import { displayId } from "@/utils/id-display";
 import { EditPatientModal } from "./EditPatientModal";
 import { isAffiliationActive } from "./usePatientForm";
 import { AffiliationPopover } from "./AffiliationPopover";
-import type { Patient } from "@/types/patient";
+import type { Patient, VitalSigns } from "@/types/patient";
 import type { Order } from "@/types/order";
 
 // ============================================================================
@@ -55,6 +55,10 @@ interface PatientHeaderProps {
   isLarge: boolean;
   onEdit: () => void;
   onNewOrder: () => void;
+}
+
+interface VitalSignsSectionProps {
+  vitalSigns?: VitalSigns;
 }
 
 // ============================================================================
@@ -345,6 +349,189 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
 };
 
 /**
+ * VitalSignsSection - Displays patient vital signs in a modern, card-based layout
+ * 
+ * Features:
+ * - Color-coded status indicators (normal, borderline, abnormal)
+ * - Icon-based visual representation
+ * - Responsive grid layout
+ * - Clean, modern design
+ */
+const VitalSignsSection: React.FC<VitalSignsSectionProps> = ({ vitalSigns }) => {
+  // If no vital signs data, show empty state
+  if (!vitalSigns) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[200px]">
+        <div className="text-center">
+          <Icon name="stethoscope" className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+          <p className="text-sm text-gray-500">No vital signs recorded</p>
+        </div>
+      </div>
+    );
+  }
+
+  /**
+   * Determines the status of a vital sign based on normal ranges
+   * Returns: 'normal' | 'borderline' | 'abnormal'
+   */
+  const getVitalStatus = (
+    value: number,
+    normalRange: { min: number; max: number },
+    criticalRange?: { min: number; max: number }
+  ): 'normal' | 'borderline' | 'abnormal' => {
+    if (criticalRange) {
+      if (value < criticalRange.min || value > criticalRange.max) {
+        return 'abnormal';
+      }
+    }
+    if (value >= normalRange.min && value <= normalRange.max) {
+      return 'normal';
+    }
+    return 'borderline';
+  };
+
+  /**
+   * Gets color classes based on vital sign status
+   */
+  const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal') => {
+    switch (status) {
+      case 'normal':
+        return {
+          bg: 'bg-emerald-50',
+          border: 'border-emerald-200',
+          icon: 'text-emerald-600',
+          value: 'text-emerald-700',
+          dot: 'bg-emerald-500',
+        };
+      case 'borderline':
+        return {
+          bg: 'bg-amber-50',
+          border: 'border-amber-200',
+          icon: 'text-amber-600',
+          value: 'text-amber-700',
+          dot: 'bg-amber-500',
+        };
+      case 'abnormal':
+        return {
+          bg: 'bg-red-50',
+          border: 'border-red-200',
+          icon: 'text-red-600',
+          value: 'text-red-700',
+          dot: 'bg-red-500',
+        };
+    }
+  };
+
+  // Define vital signs with their configurations
+  const vitalSignsConfig = [
+    {
+      key: 'temperature' as const,
+      label: 'Temperature',
+      value: vitalSigns.temperature,
+      unit: '°C',
+      icon: 'thermometer-landing-page' as IconName,
+      normalRange: { min: 36.5, max: 37.3 },
+      criticalRange: { min: 30.0, max: 45.0 },
+    },
+    {
+      key: 'heartRate' as const,
+      label: 'Heart Rate',
+      value: vitalSigns.heartRate,
+      unit: 'BPM',
+      icon: 'stethoscope' as IconName,
+      normalRange: { min: 60, max: 100 },
+      criticalRange: { min: 30, max: 250 },
+    },
+    {
+      key: 'systolicBP' as const,
+      label: 'Systolic BP',
+      value: vitalSigns.systolicBP,
+      unit: 'mmHg',
+      icon: 'medical-kit' as IconName,
+      normalRange: { min: 0, max: 119.9 }, // Normal: <120
+      criticalRange: { min: 50, max: 250 },
+    },
+    {
+      key: 'diastolicBP' as const,
+      label: 'Diastolic BP',
+      value: vitalSigns.diastolicBP,
+      unit: 'mmHg',
+      icon: 'medical-kit' as IconName,
+      normalRange: { min: 0, max: 79.9 }, // Normal: <80
+      criticalRange: { min: 30, max: 150 },
+    },
+    {
+      key: 'respiratoryRate' as const,
+      label: 'Respiratory Rate',
+      value: vitalSigns.respiratoryRate,
+      unit: '/min',
+      icon: 'health' as IconName,
+      normalRange: { min: 12, max: 20 },
+      criticalRange: { min: 4, max: 60 },
+    },
+    {
+      key: 'oxygenSaturation' as const,
+      label: 'O₂ Saturation',
+      value: vitalSigns.oxygenSaturation,
+      unit: '%',
+      icon: 'health' as IconName,
+      normalRange: { min: 95, max: 100 },
+      criticalRange: { min: 50, max: 100 },
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {vitalSignsConfig.map((config) => {
+        const status = getVitalStatus(
+          config.value,
+          config.normalRange,
+          config.criticalRange
+        );
+        const colors = getStatusColors(status);
+
+        return (
+          <div
+            key={config.key}
+            className={`
+              ${colors.bg} ${colors.border}
+              border rounded-lg p-3
+              transition-all duration-200
+              hover:shadow-sm
+            `}
+          >
+            {/* Icon and Label Row */}
+            <div className="flex items-center gap-2 mb-2 min-w-0">
+              <Icon
+                name={config.icon}
+                className={`w-4 h-4 ${colors.icon} shrink-0`}
+              />
+              <span className="text-xs font-medium text-gray-700 uppercase tracking-wide whitespace-nowrap truncate">
+                {config.label}
+              </span>
+            </div>
+
+            {/* Value and Status Row */}
+            <div className="flex items-baseline justify-between gap-2">
+              <div className="flex items-baseline gap-1 min-w-0">
+                <span className={`text-xl font-bold ${colors.value} leading-none`}>
+                  {config.value.toFixed(config.key === 'temperature' ? 1 : 0)}
+                </span>
+                <span className={`text-xs font-medium ${colors.value} opacity-70`}>
+                  {config.unit}
+                </span>
+              </div>
+              {/* Status indicator dot */}
+              <div className={`w-2 h-2 rounded-full ${colors.dot} shrink-0`} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+/**
  * ReportsList - Displays a list of available reports
  */
 const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
@@ -398,14 +585,14 @@ const PatientHeader: React.FC<PatientHeaderProps> = ({
 }) => {
   return (
     <div className="flex items-center justify-between mb-4 shrink-0 flex-wrap gap-3">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 self-center">
         <Avatar primaryText={patient.fullName} size="sm" />
         {isAffiliationActive(patient.affiliation) && (
           <AffiliationPopover
             affiliation={patient.affiliation}
             trigger={
               <button
-                className="focus:outline-none focus:ring-2 focus:ring-blue-500 rounded transition-all flex items-center"
+                className="focus:outline-none focus:ring-2 focus:ring-blue-500 rounded transition-all flex items-center justify-center"
                 aria-label="View affiliation details"
                 title="View affiliation details"
               >
@@ -419,7 +606,7 @@ const PatientHeader: React.FC<PatientHeaderProps> = ({
         )}
       </div>
 
-      <div className={`flex items-center gap-2 ${!isLarge ? "w-full justify-end" : ""}`}>
+      <div className={`flex items-center gap-2 self-center ${!isLarge ? "w-full sm:w-auto sm:justify-end justify-end" : ""}`}>
         {isLarge ? (
           <>
             <Button variant="edit" size="sm" onClick={onEdit}>
@@ -467,6 +654,14 @@ const SmallScreenLayout: React.FC<SmallScreenLayoutProps> = ({
 }) => {
   return (
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6">
+      <SectionContainer
+        title="Vital Signs"
+        className="shrink-0 bg-white"
+        contentClassName="overflow-visible"
+      >
+        <VitalSignsSection vitalSigns={patient.vitalSigns} />
+      </SectionContainer>
+
       <SectionContainer
         title="General Info"
         className="shrink-0 bg-white"
@@ -532,7 +727,25 @@ const MediumScreenLayout: React.FC<MediumScreenLayoutProps> = ({
   onNewOrder,
 }) => {
   return (
-    <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-4 min-h-0 h-full">
+    <div className="flex-1 grid grid-cols-2 grid-rows-3 gap-4 min-h-0 h-full">
+      {/* Row 1: Vital Signs and Reports */}
+      <SectionContainer
+        title="Vital Signs"
+        className="h-full flex flex-col min-h-0 bg-white"
+        contentClassName="flex-1 min-h-0 overflow-y-auto"
+      >
+        <VitalSignsSection vitalSigns={patient.vitalSigns} />
+      </SectionContainer>
+
+      <SectionContainer
+        title="Reports"
+        className="h-full flex flex-col min-h-0 bg-white"
+        contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
+      >
+        <ReportsList orders={orders} />
+      </SectionContainer>
+
+      {/* Row 2: General Info and Medical History */}
       <SectionContainer
         title="General Info"
         className="h-full flex flex-col min-h-0 bg-white"
@@ -549,9 +762,10 @@ const MediumScreenLayout: React.FC<MediumScreenLayoutProps> = ({
         <MedicalHistorySection patient={patient} layout="column" />
       </SectionContainer>
 
+      {/* Row 3: Related Orders (full width) */}
       <SectionContainer
         title="Related Orders"
-        className="h-full flex flex-col min-h-0 bg-white"
+        className="h-full flex flex-col min-h-0 bg-white col-span-2"
         contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
         headerClassName="!py-1.5"
         headerRight={
@@ -566,16 +780,8 @@ const MediumScreenLayout: React.FC<MediumScreenLayoutProps> = ({
         <OrdersTable
           orders={orders}
           onOrderClick={onOrderClick}
-          variant="simple"
+          variant="detailed"
         />
-      </SectionContainer>
-
-      <SectionContainer
-        title="Reports"
-        className="h-full flex flex-col min-h-0 bg-white"
-        contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
-      >
-        <ReportsList orders={orders} />
       </SectionContainer>
     </div>
   );
@@ -645,29 +851,18 @@ const LargeScreenLayout: React.FC<LargeScreenLayoutProps> = ({
         </SectionContainer>
       </div>
 
-      {/* Right Column Group - Grid layout matching left column structure */}
+      {/* Right Column Group - Vital Signs and Reports */}
       <div
         className="col-span-1 grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
         style={{ height: "100%", maxHeight: "100%", overflow: "hidden" }}
       >
-        {/* Top Row: Contains both Section 1 and Section 2 in a sub-grid */}
-        <div className="grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full">
-          <SectionContainer
-            title="Section 1"
-            className="h-full flex flex-col min-h-0"
-            contentClassName="flex-1 min-h-0 overflow-y-auto"
-          >
-            <div className="text-sm text-gray-500">Content area 1</div>
-          </SectionContainer>
-
-          <SectionContainer
-            title="Section 2"
-            className="h-full flex flex-col min-h-0"
-            contentClassName="flex-1 min-h-0 overflow-y-auto"
-          >
-            <div className="text-sm text-gray-500">Content area 2</div>
-          </SectionContainer>
-        </div>
+        <SectionContainer
+          title="Vital Signs"
+          className="h-full flex flex-col min-h-0"
+          contentClassName="flex-1 min-h-0 overflow-y-auto"
+        >
+          <VitalSignsSection vitalSigns={patient.vitalSigns} />
+        </SectionContainer>
 
         <SectionContainer
           title="Reports"
