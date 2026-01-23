@@ -101,8 +101,12 @@ export function getInitials(name: string | undefined | null): string {
   // Handle empty or invalid input
   if (!name || typeof name !== 'string') return '??';
 
+  // Handle special cases
+  const trimmedName = name.trim();
+  if (trimmedName === 'N/A') return 'NA';
+
   // Trim and split by whitespace, filtering out empty strings
-  const parts = name.trim().split(/\s+/).filter(Boolean);
+  const parts = trimmedName.split(/\s+/).filter(Boolean);
 
   // Handle no valid parts
   if (parts.length === 0) return '??';

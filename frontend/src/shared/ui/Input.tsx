@@ -37,8 +37,8 @@ export const Input: React.FC<InputProps> = ({
       <input
         id={inputId}
         className={`
-          block w-full px-3 py-2 border rounded bg-white
-          placeholder:text-gray-300 placeholder:text-xs transition-shadow
+          block w-full px-3 py-2 border rounded bg-white relative z-10
+          text-xs placeholder:text-gray-300 transition-shadow
           focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
           disabled:bg-gray-100 disabled:cursor-not-allowed
           ${error ? 'border-red-500' : 'border-gray-300'}
@@ -87,7 +87,8 @@ export const Textarea: React.FC<TextareaProps> = ({
       <textarea
         id={inputId}
         className={`
-          w-full px-3 py-2 border rounded bg-white placeholder:text-gray-300 placeholder:text-xs
+          w-full px-3 py-2 border rounded bg-white relative z-10
+          text-xs placeholder:text-gray-300 transition-shadow
           focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
           disabled:bg-gray-100 disabled:cursor-not-allowed
           ${error ? 'border-red-500' : 'border-gray-300'}
@@ -139,7 +140,8 @@ export const Select: React.FC<SelectProps> = ({
       <select
         id={inputId}
         className={`
-          block w-full px-3 py-2 border rounded cursor-pointer bg-white transition-shadow
+          block w-full px-3 py-2 border rounded cursor-pointer bg-white relative z-10
+          text-xs placeholder:text-gray-300 transition-shadow
           focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
           disabled:bg-gray-100 disabled:cursor-not-allowed
           ${error ? 'border-red-500' : 'border-gray-300'}

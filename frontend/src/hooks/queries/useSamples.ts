@@ -42,12 +42,12 @@ export interface SamplesFilters {
  * ```
  */
 export function useSamplesList(filters?: SamplesFilters) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.samples.list(filters),
     queryFn: () => sampleAPI.getAll(filters),
-    enabled: isAuthenticated, // Only fetch when authenticated
+    enabled: isAuthenticated && !isRestoring, // Only fetch when authenticated and not restoring
     ...cacheConfig.dynamic, // 30s stale, 5 min gc
   });
 
@@ -75,12 +75,12 @@ export function useSamplesList(filters?: SamplesFilters) {
  * ```
  */
 export function useSample(sampleId: string | undefined) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.samples.byId(sampleId ?? ''),
     queryFn: () => sampleAPI.getById(sampleId!),
-    enabled: isAuthenticated && !!sampleId, // Only fetch when authenticated
+    enabled: isAuthenticated && !isRestoring && !!sampleId, // Only fetch when authenticated and not restoring
     ...cacheConfig.dynamic,
   });
 
@@ -145,12 +145,12 @@ export function useSamplesByStatus(status: SampleStatus | undefined) {
  * @returns Array of samples with pending status
  */
 export function usePendingSamples() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.samples.pending(),
     queryFn: () => sampleAPI.getPending(),
-    enabled: isAuthenticated, // Only fetch when authenticated
+    enabled: isAuthenticated && !isRestoring, // Only fetch when authenticated and not restoring
     ...cacheConfig.dynamic,
   });
 

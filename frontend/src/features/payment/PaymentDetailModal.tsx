@@ -296,7 +296,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
           <Button
             variant={isPaid ? 'close' : 'cancel'}
             size="md"
-            showIcon={false}
+            showIcon={true}
             onClick={onClose}
             disabled={submitting}
           >

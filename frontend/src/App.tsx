@@ -57,8 +57,14 @@ interface ProtectedFeatureRouteProps {
 }
 
 const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children, featureName }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
+  // Show loading state while restoring auth from storage
+  if (isRestoring) {
+    return <PageLoadingFallback />;
+  }
+
+  // Redirect to login if not authenticated after restoration completes
   if (!isAuthenticated) {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }

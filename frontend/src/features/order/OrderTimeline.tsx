@@ -295,6 +295,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
                 <Avatar
                   primaryText={getUserName(completionInfo.completedBy)}
                   size="xxs"
+                  avatarOnly
                   className="ring-2 ring-white shadow-sm ml-2"
                 />
               )}

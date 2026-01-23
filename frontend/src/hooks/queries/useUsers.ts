@@ -47,7 +47,7 @@ export interface UserDisplayInfo {
  * ```
  */
 export function useUsersList() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.users.list(),
@@ -55,7 +55,7 @@ export function useUsersList() {
       const response = await apiClient.get<UserResponse[]>('/users');
       return response;
     },
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && !isRestoring,
     ...cacheConfig.static, // Infinity cache
     // Silently fail for permission issues - non-admin users won't have access
     retry: (failureCount, error) => {
@@ -130,11 +130,6 @@ export function useUserLookup() {
         return user.name;
       }
 
-      // Fallback: format the user ID
-      if (userId.startsWith('USR-')) {
-        return `User ${userId.slice(4)}`;
-      }
-
       // Handle common system identifiers with more descriptive names
       const systemUserNames: Record<string, string> = {
         system: 'System Admin',
@@ -147,7 +142,8 @@ export function useUserLookup() {
         return systemUserNames[lowerUserId];
       }
 
-      return userId;
+      // User not found - return placeholder
+      return 'N/A';
     },
     [usersMap]
   );

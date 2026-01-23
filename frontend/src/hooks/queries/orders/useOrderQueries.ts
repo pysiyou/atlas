@@ -23,12 +23,12 @@ export interface OrdersFilters {
  * Hook to fetch and cache all orders
  */
 export function useOrdersList(filters?: OrdersFilters) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.orders.list(filters),
     queryFn: () => orderAPI.getAll(),
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && !isRestoring,
     ...cacheConfig.dynamic,
   });
 
@@ -67,12 +67,12 @@ export function useOrdersList(filters?: OrdersFilters) {
  * Hook to fetch a single order by ID
  */
 export function useOrder(orderId: string | undefined) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.orders.byId(orderId ?? ''),
     queryFn: () => orderAPI.getById(orderId!),
-    enabled: isAuthenticated && !!orderId,
+    enabled: isAuthenticated && !isRestoring && !!orderId,
     ...cacheConfig.dynamic,
   });
 

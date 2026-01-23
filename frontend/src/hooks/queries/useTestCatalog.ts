@@ -27,12 +27,12 @@ import type { Test, TestCategory } from '@/types';
  * ```
  */
 export function useTestCatalog() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.tests.all,
     queryFn: () => testAPI.getAll(),
-    enabled: isAuthenticated, // Only fetch when authenticated
+    enabled: isAuthenticated && !isRestoring, // Only fetch when authenticated and not restoring
     ...cacheConfig.static, // Infinity cache - never refetch automatically
   });
 
@@ -60,12 +60,12 @@ export function useTestCatalog() {
  * ```
  */
 export function useTest(testCode: string | undefined) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.tests.byCode(testCode ?? ''),
     queryFn: () => testAPI.getByCode(testCode!),
-    enabled: isAuthenticated && !!testCode, // Only fetch when authenticated
+    enabled: isAuthenticated && !isRestoring && !!testCode, // Only fetch when authenticated and not restoring
     ...cacheConfig.static,
   });
 

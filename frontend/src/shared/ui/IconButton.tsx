@@ -83,7 +83,7 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   // CRUD actions
   add: { style: 'primary', icon: 'plus' },
   edit: { style: 'primary', icon: 'pen' },
-  view: { style: 'secondary', icon: 'eye' },
+  view: { style: 'primary', icon: 'eye' },
 
   // Utility actions
   print: { style: 'secondary', icon: 'printer' },

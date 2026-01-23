@@ -31,13 +31,37 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+// Storage keys for authentication persistence
+const STORAGE_KEYS = {
+  ACCESS_TOKEN: 'atlas_access_token',
+  REFRESH_TOKEN: 'atlas_refresh_token',
+  USER: 'atlas_user',
+} as const;
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // Store tokens and user in memory only (no sessionStorage)
+  // Don't initialize currentUser from storage - must validate token first
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  // Track if we're currently restoring auth state from storage
+  const [isRestoring, setIsRestoring] = useState<boolean>(() => {
+    // Check if there's a stored token that needs validation
+    try {
+      return !!sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+    } catch {
+      return false;
+    }
+  });
 
   // Use a ref to store the current token so the getter always has the latest value
-  const tokenRef = React.useRef<string | null>(null);
+  // Initialize with stored token if available
+  const getInitialToken = (): string | null => {
+    try {
+      return sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+    } catch {
+      return null;
+    }
+  };
+  const tokenRef = React.useRef<string | null>(getInitialToken());
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -50,6 +74,65 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     apiClient.setTokenGetter(() => tokenRef.current);
   }, []);
+
+  /**
+   * Restore authentication state from sessionStorage on mount
+   * Validates the stored token by fetching user info
+   */
+  useEffect(() => {
+    const restoreAuth = async () => {
+      const storedToken = sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+      
+      if (!storedToken) {
+        // No stored token, ensure clean state
+        tokenRef.current = null;
+        setAccessToken(null);
+        setCurrentUser(null);
+        setIsRestoring(false);
+        return;
+      }
+
+      // Set token in ref and state for API calls
+      tokenRef.current = storedToken;
+      setAccessToken(storedToken);
+
+      try {
+        // Validate token by fetching user info
+        const userInfo = await apiClient.get<AuthUser>('/auth/me');
+        
+        const authUser: AuthUser = {
+          ...userInfo,
+          loggedInAt: sessionStorage.getItem('atlas_logged_in_at') || new Date().toISOString(),
+        };
+
+        setCurrentUser(authUser);
+        
+        // Persist user info to sessionStorage (in case it was updated)
+        try {
+          sessionStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
+        } catch {
+          // Ignore storage errors
+        }
+        
+        logger.debug('Authentication state restored from sessionStorage');
+      } catch (error) {
+        // Token is invalid or expired, clear stored auth
+        logger.debug('Stored token is invalid, clearing auth state', error instanceof Error ? error : undefined);
+        sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+        sessionStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+        sessionStorage.removeItem(STORAGE_KEYS.USER);
+        sessionStorage.removeItem('atlas_logged_in_at');
+        tokenRef.current = null;
+        setAccessToken(null);
+        setCurrentUser(null);
+      } finally {
+        // Always mark restoration as complete
+        setIsRestoring(false);
+      }
+    };
+
+    restoreAuth();
+  }, []); // Only run on mount
 
   /**
    * Login function - authenticates with backend API
@@ -73,11 +156,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       logger.debug('Login response received');
 
       if (response.access_token) {
-        // Store tokens in memory only
+        // Store tokens in memory and sessionStorage for persistence
         // Update ref immediately so API client can use it synchronously
         tokenRef.current = response.access_token;
         setAccessToken(response.access_token);
-        logger.debug('Access token stored in memory', { tokenLength: response.access_token.length });
+        
+        // Persist tokens to sessionStorage
+        try {
+          sessionStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, response.access_token);
+          if (response.refresh_token) {
+            sessionStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, response.refresh_token);
+          }
+          const loginTime = new Date().toISOString();
+          sessionStorage.setItem('atlas_logged_in_at', loginTime);
+        } catch (storageError) {
+          logger.warn('Failed to store token in sessionStorage', storageError instanceof Error ? storageError : undefined);
+          // Continue even if storage fails (e.g., in private browsing mode)
+        }
+        
+        logger.debug('Access token stored in memory and sessionStorage', { tokenLength: response.access_token.length });
         
         // Verify token is available in ref before making API call
         if (!tokenRef.current) {
@@ -99,6 +196,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       };
 
       setCurrentUser(authUser);
+      
+      // Persist user info to sessionStorage
+      try {
+        sessionStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
+      } catch (storageError) {
+        logger.warn('Failed to store user info in sessionStorage', storageError instanceof Error ? storageError : undefined);
+      }
 
       return true;
     } catch (error) {
@@ -108,6 +212,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       tokenRef.current = null;
       setAccessToken(null);
       setCurrentUser(null);
+      
+      // Clear stored tokens from sessionStorage
+      try {
+        sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+        sessionStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+        sessionStorage.removeItem(STORAGE_KEYS.USER);
+        sessionStorage.removeItem('atlas_logged_in_at');
+      } catch {
+        // Ignore storage errors
+      }
 
       // Determine error type and throw appropriate AuthError
       const apiError = error as APIError;
@@ -186,11 +300,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   /**
    * Logout function
+   * Clears authentication state from memory and sessionStorage
    */
   const logout = () => {
     tokenRef.current = null;
     setCurrentUser(null);
     setAccessToken(null);
+    
+    // Clear stored tokens from sessionStorage
+    try {
+      sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+      sessionStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+      sessionStorage.removeItem(STORAGE_KEYS.USER);
+      sessionStorage.removeItem('atlas_logged_in_at');
+    } catch {
+      // Ignore storage errors
+    }
   };
 
   /**
@@ -218,6 +343,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     logout,
     isAuthenticated,
+    isRestoring,
     hasRole,
   };
 

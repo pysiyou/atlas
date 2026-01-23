@@ -84,12 +84,9 @@ export const TabsList: React.FC<TabsListProps> = ({
         return prev;
       }
 
-      const newIndicator = { left: newLeft, width: newWidth };
-      // Notify parent component of indicator change
-      onIndicatorChange?.(newIndicator);
-      return newIndicator;
+      return { left: newLeft, width: newWidth };
     });
-  }, [activeTabId, headerRef, onIndicatorChange]);
+  }, [activeTabId, headerRef]);
 
   // Update indicator on mount and when active tab changes
   useLayoutEffect(() => {
@@ -149,6 +146,14 @@ export const TabsList: React.FC<TabsListProps> = ({
       container.removeEventListener('scroll', handleScroll);
     };
   }, [updateIndicator]);
+
+  // Sync indicator state to parent component (for TabbedSectionContainer)
+  // This must be in a useEffect to avoid updating parent state during render
+  useEffect(() => {
+    if (onIndicatorChange) {
+      onIndicatorChange(indicator);
+    }
+  }, [indicator, onIndicatorChange]);
 
   return (
     <div

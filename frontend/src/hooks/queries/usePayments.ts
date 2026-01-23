@@ -41,12 +41,12 @@ export interface PaymentsFilters {
  * ```
  */
 export function usePaymentsList(filters?: PaymentsFilters) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.payments.list(filters),
     queryFn: () => getPayments(filters),
-    enabled: isAuthenticated, // Only fetch when authenticated
+    enabled: isAuthenticated && !isRestoring, // Only fetch when authenticated and not restoring
     ...cacheConfig.dynamic, // 30s stale, 5 min gc
   });
 
@@ -74,12 +74,12 @@ export function usePaymentsList(filters?: PaymentsFilters) {
  * ```
  */
 export function usePayment(paymentId: string | undefined) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.payments.byId(paymentId ?? ''),
     queryFn: () => getPayment(paymentId!),
-    enabled: isAuthenticated && !!paymentId, // Only fetch when authenticated
+    enabled: isAuthenticated && !isRestoring && !!paymentId, // Only fetch when authenticated and not restoring
     ...cacheConfig.dynamic,
   });
 
@@ -101,12 +101,12 @@ export function usePayment(paymentId: string | undefined) {
  * @returns Array of payments for the order
  */
 export function usePaymentsByOrder(orderId: string | undefined) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.payments.byOrder(orderId ?? ''),
     queryFn: () => getPaymentsByOrder(orderId!),
-    enabled: isAuthenticated && !!orderId, // Only fetch when authenticated
+    enabled: isAuthenticated && !isRestoring && !!orderId, // Only fetch when authenticated and not restoring
     ...cacheConfig.dynamic,
   });
 

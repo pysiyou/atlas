@@ -8,6 +8,8 @@ export interface AvatarProps {
   className?: string;
   onClick?: () => void;
   secondaryText?: string;
+  /** If true, only shows the avatar circle without text labels */
+  avatarOnly?: boolean;
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
@@ -17,6 +19,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   className = '',
   onClick,
   secondaryText,
+  avatarOnly = false,
 }) => {
   const [imageError, setImageError] = useState(false);
 
@@ -57,7 +60,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   };
 
   const Container = onClick ? 'button' : 'div';
-  const hasText = primaryText;
+  const hasText = primaryText && !avatarOnly;
 
   return (
     <Container

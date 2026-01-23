@@ -16,6 +16,7 @@ export interface AuthContextType {
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
+  isRestoring: boolean; // True while restoring auth state from storage
   hasRole: (roles: UserRole | UserRole[]) => boolean;
 }
 

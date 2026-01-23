@@ -66,7 +66,6 @@ export const DemographicsSection: React.FC<
           error={errors.fullName}
           required
           placeholder="John Doe"
-          className="text-xs"
         />
       </div>
       <Input
@@ -79,7 +78,6 @@ export const DemographicsSection: React.FC<
         }
         error={errors.dateOfBirth}
         required
-        className="text-xs"
       />
       <Select
         label="Gender"
@@ -90,7 +88,6 @@ export const DemographicsSection: React.FC<
         }
         options={GENDER_OPTIONS}
         required
-        className="text-xs"
       />
       <Input
         label="Phone Number"
@@ -103,7 +100,6 @@ export const DemographicsSection: React.FC<
         error={errors.phone}
         required
         placeholder="(555) 123-4567"
-        className="text-xs"
       />
       <Input
         label="Email Address"
@@ -115,7 +111,6 @@ export const DemographicsSection: React.FC<
         }
         error={errors.email}
         placeholder="patient@email.com"
-        className="text-xs"
       />
       <Input
         label="Height (cm)"
@@ -130,7 +125,6 @@ export const DemographicsSection: React.FC<
         }
         error={errors.height}
         placeholder="175.5"
-        className="text-xs"
       />
       <Input
         label="Weight (kg)"
@@ -145,7 +139,6 @@ export const DemographicsSection: React.FC<
         }
         error={errors.weight}
         placeholder="70.5"
-        className="text-xs"
       />
     </div>
   </div>
@@ -171,7 +164,6 @@ export const AddressSection: React.FC<
           error={errors.street}
           required
           placeholder="123 Main Street"
-          className="text-xs"
         />
       </div>
       <Input
@@ -182,7 +174,6 @@ export const AddressSection: React.FC<
         error={errors.city}
         required
         placeholder="Springfield"
-        className="text-xs"
       />
       <Input
         label="Postal Code"
@@ -194,7 +185,6 @@ export const AddressSection: React.FC<
         error={errors.postalCode}
         required
         placeholder="12345"
-        className="text-xs"
       />
     </div>
   </div>
@@ -296,7 +286,6 @@ export const AffiliationSection: React.FC<
               label: opt.label,
             }))}
             required
-            className="text-xs"
           />
           <p className="text-xs text-gray-500">
             An assurance number will be automatically generated upon registration.
@@ -320,7 +309,6 @@ export const AffiliationSection: React.FC<
               label: opt.label,
             }))}
             required
-            className="text-xs"
           />
         </div>
       )}
@@ -347,7 +335,6 @@ export const EmergencyContactSection: React.FC<
         error={errors.emergencyContactFullName}
         required
         placeholder="Jane Doe"
-        className="text-xs"
       />
       <Select
         label="Relationship"
@@ -359,7 +346,6 @@ export const EmergencyContactSection: React.FC<
         options={RELATIONSHIP_OPTIONS}
         error={errors.emergencyContactRelationship}
         required
-        className="text-xs"
       />
       <Input
         label="Contact Phone"
@@ -372,7 +358,6 @@ export const EmergencyContactSection: React.FC<
         error={errors.emergencyContactPhone}
         required
         placeholder="(555) 987-6543"
-        className="text-xs"
       />
       <Input
         label="Contact Email"
@@ -384,7 +369,6 @@ export const EmergencyContactSection: React.FC<
         }
         error={errors.emergencyContactEmail}
         placeholder="contact@email.com"
-        className="text-xs"
       />
     </div>
   </div>
@@ -470,7 +454,6 @@ export const MedicalHistorySection: React.FC<
         }
         placeholder="Notable family medical history"
         rows={3}
-        className="text-xs"
       />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
         <div className="flex items-center gap-3">

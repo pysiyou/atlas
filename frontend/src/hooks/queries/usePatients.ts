@@ -27,12 +27,12 @@ import type { Patient } from '@/types';
  * ```
  */
 export function usePatientsList() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.patients.list(),
     queryFn: () => patientAPI.getAll(),
-    enabled: isAuthenticated, // Only fetch when authenticated
+    enabled: isAuthenticated && !isRestoring, // Only fetch when authenticated and not restoring
     ...cacheConfig.semiStatic, // 5 min stale, 30 min gc
   });
 
@@ -60,12 +60,12 @@ export function usePatientsList() {
  * ```
  */
 export function usePatient(patientId: string | undefined) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isRestoring } = useAuth();
 
   const query = useQuery({
     queryKey: queryKeys.patients.byId(patientId ?? ''),
     queryFn: () => patientAPI.getById(patientId!),
-    enabled: isAuthenticated && !!patientId, // Only fetch when authenticated
+    enabled: isAuthenticated && !isRestoring && !!patientId, // Only fetch when authenticated and not restoring
     ...cacheConfig.semiStatic,
   });
 

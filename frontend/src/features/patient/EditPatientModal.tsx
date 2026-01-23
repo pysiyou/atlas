@@ -131,7 +131,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       onClose={onClose}
       title={modalTitle}
       subtitle={mode === 'edit' && patient ? displayId.patient(patient.id) : undefined}
-      maxWidth="max-w-4xl"
+      maxWidth="max-w-3xl"
     >
       <div className="h-full flex flex-col bg-slate-50">
         {/* Scrollable content area */}
@@ -171,7 +171,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
 
         {/* Fixed footer actions */}
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-white shrink-0">
-          <Button type="button" variant="cancel" showIcon={false} onClick={onClose}>
+          <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
             Cancel
           </Button>
           <Button

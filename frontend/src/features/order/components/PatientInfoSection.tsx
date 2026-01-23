@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Icon, Avatar, IconButton } from '@/shared/ui';
+import { Icon, Avatar } from '@/shared/ui';
 import { calculateAge } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Patient } from '@/types';
@@ -13,7 +13,7 @@ import { formatOrderDate } from '../utils/orderDetailUtils';
 
 export interface PatientInfoSectionProps {
   patient: Patient | null;
-  onViewPatient: () => void;
+  onViewPatient?: () => void;
   layout?: 'grid' | 'column';
 }
 
@@ -44,7 +44,6 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
           secondaryText={displayId.patient(patient.id)}
           size="sm"
         />
-        <IconButton onClick={onViewPatient} variant="view" size="sm" title="View Patient" />
       </div>
       <OrderInfoField
         icon="user-hands"
