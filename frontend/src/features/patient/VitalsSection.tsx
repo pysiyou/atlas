@@ -35,7 +35,8 @@ interface VitalConfig {
   min: number;
   max: number;
   step: number;
-  normalRange: string;
+  normalRange: { min: number; max: number };
+  normalRangeText: string;
 }
 
 const VITALS_CONFIG: VitalConfig[] = [
@@ -46,7 +47,8 @@ const VITALS_CONFIG: VitalConfig[] = [
     min: 30.0,
     max: 45.0,
     step: 0.1,
-    normalRange: 'Normal: 36.5-37.3°C',
+    normalRange: { min: 36.5, max: 37.3 },
+    normalRangeText: 'Normal: 36.5-37.3°C',
   },
   {
     key: 'heartRate',
@@ -55,7 +57,8 @@ const VITALS_CONFIG: VitalConfig[] = [
     min: 30,
     max: 250,
     step: 1,
-    normalRange: 'Normal: 60-100 BPM',
+    normalRange: { min: 60, max: 100 },
+    normalRangeText: 'Normal: 60-100 BPM',
   },
   {
     key: 'systolicBP',
@@ -64,7 +67,8 @@ const VITALS_CONFIG: VitalConfig[] = [
     min: 50,
     max: 250,
     step: 1,
-    normalRange: 'Normal: <120 mmHg',
+    normalRange: { min: 0, max: 119.9 }, // Normal: <120
+    normalRangeText: 'Normal: <120 mmHg',
   },
   {
     key: 'diastolicBP',
@@ -73,7 +77,8 @@ const VITALS_CONFIG: VitalConfig[] = [
     min: 30,
     max: 150,
     step: 1,
-    normalRange: 'Normal: <80 mmHg',
+    normalRange: { min: 0, max: 79.9 }, // Normal: <80
+    normalRangeText: 'Normal: <80 mmHg',
   },
   {
     key: 'respiratoryRate',
@@ -82,7 +87,8 @@ const VITALS_CONFIG: VitalConfig[] = [
     min: 4,
     max: 60,
     step: 1,
-    normalRange: 'Normal: 12-20 /min',
+    normalRange: { min: 12, max: 20 },
+    normalRangeText: 'Normal: 12-20 /min',
   },
   {
     key: 'oxygenSaturation',
@@ -91,12 +97,97 @@ const VITALS_CONFIG: VitalConfig[] = [
     min: 50,
     max: 100,
     step: 1,
-    normalRange: 'Normal: 95-100%',
+    normalRange: { min: 95, max: 100 },
+    normalRangeText: 'Normal: 95-100%',
   },
 ];
 
 /**
- * VitalsSection - Displays vital signs in a 3-column grid with normal range hints
+ * Determine vital sign status based on value and normal range
+ */
+const getVitalStatus = (value: number | undefined, normalRange: { min: number; max: number }): 'normal' | 'borderline' | 'abnormal' | null => {
+  if (value === undefined || value === null || isNaN(value)) {
+    return null;
+  }
+
+  const { min, max } = normalRange;
+  
+  // Check if within normal range
+  if (value >= min && value <= max) {
+    return 'normal';
+  }
+
+  // Calculate how far outside normal range (percentage)
+  let deviation = 0;
+  if (value < min) {
+    deviation = ((min - value) / min) * 100;
+  } else {
+    deviation = ((value - max) / max) * 100;
+  }
+
+  // Borderline: within 20% of normal range
+  // Abnormal: more than 20% outside normal range
+  if (deviation <= 20) {
+    return 'borderline';
+  }
+
+  return 'abnormal';
+};
+
+/**
+ * Get status colors for vital sign indicators
+ */
+const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) => {
+  if (!status) {
+    return {
+      border: 'border-gray-300',
+      text: 'text-gray-500',
+      bg: 'bg-transparent',
+    };
+  }
+
+  switch (status) {
+    case 'normal':
+      return {
+        border: 'border-emerald-300',
+        text: 'text-emerald-600',
+        bg: 'bg-emerald-50',
+      };
+    case 'borderline':
+      return {
+        border: 'border-amber-300',
+        text: 'text-amber-600',
+        bg: 'bg-amber-50',
+      };
+    case 'abnormal':
+      return {
+        border: 'border-red-300',
+        text: 'text-red-600',
+        bg: 'bg-red-50',
+      };
+  }
+};
+
+/**
+ * Get alert message for vital sign status
+ */
+const getStatusAlert = (status: 'normal' | 'borderline' | 'abnormal' | null, value: number | undefined, normalRangeText: string): string | null => {
+  if (!status || value === undefined || value === null || isNaN(value)) {
+    return null;
+  }
+
+  switch (status) {
+    case 'borderline':
+      return `Borderline - ${normalRangeText}`;
+    case 'abnormal':
+      return `Abnormal - ${normalRangeText}`;
+    default:
+      return null;
+  }
+};
+
+/**
+ * VitalsSection - Displays vital signs in a 3-column grid matching result entry form layout
  */
 export const VitalsSection: React.FC<VitalsSectionProps> = ({
   vitalSigns,
@@ -109,28 +200,75 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
         const fieldName = config.key;
         const value = vitalSigns[fieldName] || '';
         const error = errors[fieldName];
+        const numericValue = value ? parseFloat(value) : undefined;
+        const status = getVitalStatus(numericValue, config.normalRange);
+        const statusColors = getStatusColors(status);
+        const isAbnormal = status === 'abnormal';
+        
+        // Format reference range for display
+        const refRange = `${config.normalRange.min}-${config.normalRange.max}`;
 
         return (
-          <div key={config.key} className="space-y-1">
-            <Input
-              label={config.label}
-              name={fieldName}
-              type="number"
-              value={value}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onFieldChange(fieldName, e.target.value)
-              }
-              error={error}
-              min={config.min}
-              max={config.max}
-              step={config.step}
-              placeholder={`${config.min}-${config.max} ${config.unit}`}
-              className="w-full"
-            />
-            {/* Normal Range Hint */}
-            <p className="text-xxs text-gray-400 font-normal ml-0.5">
-              {config.normalRange}
-            </p>
+          <div key={config.key} className="group">
+            {/* Label and reference range row */}
+            <div className="flex justify-between items-baseline mb-1 gap-2">
+              <label 
+                htmlFor={`vital-${fieldName}`}
+                className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+              >
+                {config.label}
+              </label>
+              
+              <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
+                <span className="text-xs text-gray-400 truncate">
+                  Ref: {refRange}
+                </span>
+              </div>
+            </div>
+            
+            {/* Input wrapper with relative positioning */}
+            <div className="relative">
+              <input
+                id={`vital-${fieldName}`}
+                name={fieldName}
+                type="number"
+                value={value}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onFieldChange(fieldName, e.target.value)
+                }
+                min={config.min}
+                max={config.max}
+                step={config.step}
+                placeholder="--"
+                className={`
+                  block w-full pl-3 pr-12 py-2 border rounded bg-white relative z-10
+                  placeholder:text-gray-300 transition-shadow
+                  focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
+                  disabled:bg-gray-100 disabled:cursor-not-allowed
+                  ${error ? 'border-red-500' : status ? statusColors.border : 'border-gray-300'}
+                  ${status ? statusColors.bg : ''}
+                `}
+              />
+              
+              {/* Unit display (absolute positioned) */}
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0 max-w-[40%]">
+                <span className="text-xs text-gray-400 select-none truncate">
+                  {config.unit}
+                </span>
+              </div>
+              
+              {/* Abnormal value alert (absolute positioned below input) */}
+              {isAbnormal && (
+                <div className="absolute -bottom-5 left-0 text-xs text-red-600 font-medium">
+                  Abnormal value
+                </div>
+              )}
+            </div>
+            
+            {/* Error message */}
+            {error && (
+              <p className="mt-1 text-sm text-red-600">{error}</p>
+            )}
           </div>
         );
       })}

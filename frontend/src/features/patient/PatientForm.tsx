@@ -66,6 +66,7 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
           error={errors.fullName}
           required
           placeholder="John Doe"
+          className="text-xs"
         />
       </div>
       <Input
@@ -76,6 +77,7 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('dateOfBirth', e.target.value)}
         error={errors.dateOfBirth}
         required
+        className="text-xs"
       />
       <Select
         label="Gender"
@@ -84,6 +86,7 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onFieldChange('gender', e.target.value)}
         options={GENDER_OPTIONS}
         required
+        className="text-xs"
       />
       <Input
         label="Phone Number"
@@ -94,6 +97,7 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         error={errors.phone}
         required
         placeholder="(555) 123-4567"
+        className="text-xs"
       />
       <Input
         label="Email Address"
@@ -103,6 +107,7 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('email', e.target.value)}
         error={errors.email}
         placeholder="patient@email.com"
+        className="text-xs"
       />
       <Input
         label="Height (cm)"
@@ -115,6 +120,7 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('height', e.target.value)}
         error={errors.height}
         placeholder="175.5"
+        className="text-xs"
       />
       <Input
         label="Weight (kg)"
@@ -127,6 +133,7 @@ export const DemographicsSection: React.FC<Pick<PatientFormSectionsProps, 'formD
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('weight', e.target.value)}
         error={errors.weight}
         placeholder="70.5"
+        className="text-xs"
       />
     </div>
   </div>
@@ -152,6 +159,7 @@ export const AddressSection: React.FC<Pick<PatientFormSectionsProps, 'formData' 
           error={errors.street}
           required
           placeholder="123 Main Street"
+          className="text-xs"
         />
       </div>
       <Input
@@ -162,6 +170,7 @@ export const AddressSection: React.FC<Pick<PatientFormSectionsProps, 'formData' 
         error={errors.city}
         required
         placeholder="Springfield"
+        className="text-xs"
       />
       <Input
         label="Postal Code"
@@ -171,6 +180,7 @@ export const AddressSection: React.FC<Pick<PatientFormSectionsProps, 'formData' 
         error={errors.postalCode}
         required
         placeholder="12345"
+        className="text-xs"
       />
     </div>
   </div>
@@ -267,6 +277,7 @@ export const AffiliationSection: React.FC<Pick<PatientFormSectionsProps, 'formDa
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onFieldChange('affiliationDuration', Number(e.target.value))}
             options={AFFILIATION_DURATION_OPTIONS.map(opt => ({ value: String(opt.value), label: opt.label }))}
             required
+            className="text-xs"
           />
           <p className="text-xs text-gray-500">
             An assurance number will be automatically generated upon registration.
@@ -285,6 +296,7 @@ export const AffiliationSection: React.FC<Pick<PatientFormSectionsProps, 'formDa
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onFieldChange('affiliationDuration', Number(e.target.value))}
             options={AFFILIATION_DURATION_OPTIONS.map(opt => ({ value: String(opt.value), label: opt.label }))}
             required
+            className="text-xs"
           />
         </div>
       )}
@@ -311,6 +323,7 @@ export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'f
         error={errors.emergencyContactFullName}
         required
         placeholder="Jane Doe"
+        className="text-xs"
       />
       <Select
         label="Relationship"
@@ -320,6 +333,7 @@ export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'f
         options={RELATIONSHIP_OPTIONS}
         error={errors.emergencyContactRelationship}
         required
+        className="text-xs"
       />
       <Input
         label="Contact Phone"
@@ -330,6 +344,7 @@ export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'f
         error={errors.emergencyContactPhone}
         required
         placeholder="(555) 987-6543"
+        className="text-xs"
       />
       <Input
         label="Contact Email"
@@ -339,6 +354,7 @@ export const EmergencyContactSection: React.FC<Pick<PatientFormSectionsProps, 'f
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange('emergencyContactEmail', e.target.value)}
         error={errors.emergencyContactEmail}
         placeholder="contact@email.com"
+        className="text-xs"
       />
     </div>
   </div>
@@ -411,6 +427,7 @@ export const MedicalHistorySection: React.FC<Pick<PatientFormSectionsProps, 'for
         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onFieldChange('familyHistory', e.target.value)}
         placeholder="Notable family medical history"
         rows={3}
+        className="text-xs"
       />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
         <div className="flex items-center gap-3">

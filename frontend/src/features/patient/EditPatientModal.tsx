@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import type { Patient, Affiliation } from '@/types';
 import { usePatients } from '@/hooks';
-import { Button, Modal, TabbedSectionContainer } from '@/shared/ui';
+import { Button, Modal, TabbedSectionContainer, CircularProgress } from '@/shared/ui';
 import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
@@ -374,6 +374,49 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   const [activeTab, setActiveTab] = useState<string>('general');
 
   /**
+   * Calculate form completion progress based on filled parameters
+   */
+  const formProgress = useMemo(() => {
+    // Define all form parameters to track
+    const parameters = [
+      formData.fullName,
+      formData.dateOfBirth,
+      formData.gender,
+      formData.phone,
+      formData.email,
+      formData.height,
+      formData.weight,
+      formData.street,
+      formData.city,
+      formData.postalCode,
+      formData.emergencyContactFullName,
+      formData.emergencyContactRelationship,
+      formData.emergencyContactPhone,
+      formData.emergencyContactEmail,
+      formData.chronicConditions,
+      formData.currentMedications,
+      formData.allergies,
+      formData.previousSurgeries,
+      formData.familyHistory,
+      // Vitals - count as one parameter if any are filled, or all are empty
+      formData.temperature || formData.heartRate || formData.systolicBP || 
+      formData.diastolicBP || formData.respiratoryRate || formData.oxygenSaturation,
+    ];
+
+    // Count filled parameters (non-empty strings, non-false booleans)
+    const filled = parameters.filter((param) => {
+      if (typeof param === 'boolean') return param === true;
+      if (typeof param === 'string') return param.trim() !== '';
+      return param !== undefined && param !== null;
+    }).length;
+
+    const total = parameters.length;
+    const percentage = total > 0 ? Math.round((filled / total) * 100) : 0;
+
+    return { filled, total, percentage };
+  }, [formData]);
+
+  /**
    * Render active tab content (kept as a function to mirror CargoPlan’s TabbedSectionContainer usage).
    */
   const renderActiveTab = () => {
@@ -425,34 +468,27 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         );
       case 'affiliation':
         return (
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div>
               <div className="text-xs font-medium text-slate-500">Affiliation</div>
               <div className="text-sm font-semibold text-slate-900">Auto-generated assurance</div>
-              <div className="text-xs text-slate-500 mt-1">
-                Assurance details are auto-generated for new affiliations.
-              </div>
-              <div className="mt-4">
-                <AffiliationSection
-                  formData={formData}
-                  onFieldChange={handleFieldChange}
-                  existingAffiliation={patient?.affiliation}
-                  onRenew={handleRenew}
-                />
-              </div>
             </div>
+            <AffiliationSection
+              formData={formData}
+              onFieldChange={handleFieldChange}
+              existingAffiliation={patient?.affiliation}
+              onRenew={handleRenew}
+            />
 
             <div>
               <div className="text-xs font-medium text-slate-500">Emergency Contact</div>
               <div className="text-sm font-semibold text-slate-900">Primary contact</div>
-              <div className="mt-4">
-                <EmergencyContactSection
-                  formData={formData}
-                  errors={errors}
-                  onFieldChange={handleFieldChange}
-                />
-              </div>
             </div>
+            <EmergencyContactSection
+              formData={formData}
+              errors={errors}
+              onFieldChange={handleFieldChange}
+            />
           </div>
         );
       default:
@@ -465,6 +501,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={modalTitle}
+      subtitle={mode === 'edit' && patient ? displayId.patient(patient.id) : undefined}
       maxWidth="max-w-4xl"
     >
       <div className="h-full flex flex-col bg-slate-50">
@@ -472,10 +509,19 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         <div className="flex-1 overflow-y-auto p-6 scrollbar-thin">
           <form id="patient-upsert-form" onSubmit={handleSubmit} className="max-w-4xl mx-auto">
             <TabbedSectionContainer
-              title={mode === 'edit' && patient ? displayId.patient(patient.id) : 'New Patient'}
               tabs={tabs}
               activeTab={activeTab}
               onTabChange={setActiveTab}
+              headerRight={
+                <CircularProgress
+                  size={18}
+                  percentage={formProgress.percentage}
+                  trackColorClass="stroke-gray-200"
+                  progressColorClass={formProgress.percentage === 100 ? 'stroke-emerald-500' : 'stroke-blue-500'}
+                  label={`${formProgress.filled}/${formProgress.total}`}
+                  className="h-7"
+                />
+              }
               className="rounded-xl! shadow-none"
               contentClassName="!p-6"
               headerClassName="!px-6 !py-4"

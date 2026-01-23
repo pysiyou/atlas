@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useLayoutEffect, useCallback, useEffect } from 'react';
 
 
 export interface TabItem {
@@ -34,6 +34,10 @@ export interface TabsListProps {
   onTabChange: (id: string) => void;
   variant?: 'underline' | 'pills';
   className?: string;
+  /** Optional ref to the header container for indicator positioning */
+  headerRef?: React.RefObject<HTMLDivElement | null>;
+  /** Callback to receive indicator state (for external rendering) */
+  onIndicatorChange?: (indicator: { left: number; width: number }) => void;
 }
 
 export const TabsList: React.FC<TabsListProps> = ({
@@ -41,24 +45,132 @@ export const TabsList: React.FC<TabsListProps> = ({
   activeTabId,
   onTabChange,
   variant = 'underline',
-  className = ''
+  className = '',
+  headerRef,
+  onIndicatorChange
 }) => {
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+  const tabsRef = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  /**
+   * Update indicator position based on active tab button
+   * Similar to cargoplan: positions indicator relative to header container
+   */
+  const updateIndicator = useCallback(() => {
+    const activeButton = tabsRef.current[activeTabId];
+    // Use headerRef if provided (for TabbedSectionContainer), otherwise use containerRef
+    const headerEl = headerRef?.current || containerRef.current;
+    
+    if (!activeButton || !headerEl) {
+      return;
+    }
+
+    // Get button and header positions (matching cargoplan pattern)
+    const buttonRect = activeButton.getBoundingClientRect();
+    const headerRect = headerEl.getBoundingClientRect();
+
+    // Calculate position relative to header (where indicator is positioned)
+    // Button's viewport position - header's viewport position = position relative to header
+    const newLeft = buttonRect.left - headerRect.left;
+    const newWidth = buttonRect.width;
+
+    // Only update if values changed significantly to prevent jitter
+    setIndicator((prev) => {
+      const leftDiff = Math.abs(prev.left - newLeft);
+      const widthDiff = Math.abs(prev.width - newWidth);
+
+      // Only update if change is significant (prevents micro-updates during animation)
+      if (leftDiff < 1 && widthDiff < 1) {
+        return prev;
+      }
+
+      const newIndicator = { left: newLeft, width: newWidth };
+      // Notify parent component of indicator change
+      onIndicatorChange?.(newIndicator);
+      return newIndicator;
+    });
+  }, [activeTabId, headerRef, onIndicatorChange]);
+
+  // Update indicator on mount and when active tab changes
+  useLayoutEffect(() => {
+    // Use double RAF to ensure layout is complete before measuring
+    let raf2: number;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        updateIndicator();
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
+  }, [updateIndicator, activeTabId, tabs.length]);
+
+  // Handle resize and scroll events
+  useEffect(() => {
+    const handleResize = () => {
+      updateIndicator();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Set up ResizeObserver for header/container and tab buttons
+    const ro = new ResizeObserver(() => {
+      updateIndicator();
+    });
+
+    const headerEl = headerRef?.current || containerRef.current;
+    if (headerEl) {
+      ro.observe(headerEl);
+    }
+
+    Object.values(tabsRef.current).forEach((el) => {
+      if (el) ro.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      ro.disconnect();
+    };
+  }, [updateIndicator, tabs.length]);
+
+  // Handle scroll on container
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      updateIndicator();
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, [updateIndicator]);
+
   return (
-    <div className={`
-      flex items-center overflow-x-auto no-scrollbar
-      ${variant === 'underline' ? 'border-b border-gray-200' : 'gap-2'}
-      ${className}
-    `}>
+    <div 
+      ref={containerRef}
+      className={`
+        relative flex items-center overflow-x-auto no-scrollbar
+        ${variant === 'underline' ? 'h-full min-h-full' : 'gap-2'}
+        ${className}
+      `}
+    >
       {tabs.map(tab => {
         const isActive = activeTabId === tab.id;
         
         let buttonClass = 'whitespace-nowrap flex items-center justify-center transition-all duration-200 font-medium text-xs cursor-pointer ';
         
         if (variant === 'underline') {
-          buttonClass += `px-4 py-2 border-b-2 -mb-px ${
+          // Remove border-b-2 from buttons since we use sliding indicator
+          buttonClass += `px-4 py-2 ${
             isActive 
-              ? 'border-blue-600 text-blue-600' 
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              ? 'text-blue-600' 
+              : 'text-gray-500 hover:text-gray-700'
           }`;
         } else {
           // Pills variant
@@ -72,6 +184,7 @@ export const TabsList: React.FC<TabsListProps> = ({
         return (
           <button
             key={tab.id}
+            ref={(el) => (tabsRef.current[tab.id] = el)}
             onClick={() => onTabChange(tab.id)}
             className={buttonClass}
             type="button"
@@ -89,6 +202,25 @@ export const TabsList: React.FC<TabsListProps> = ({
           </button>
         );
       })}
+      
+      {/* Sliding tab indicator - only for underline variant */}
+      {/* Positioned at the absolute bottom to align with header border */}
+      {/* If headerRef is provided, indicator is rendered in TabbedSectionContainer wrapper */}
+      {variant === 'underline' && !headerRef && (
+        <div
+          className="absolute bottom-0 left-0 h-[2px] bg-blue-600 rounded-full pointer-events-none z-10"
+          style={{
+            left: `${indicator.left}px`,
+            width: `${indicator.width}px`,
+            transition: indicator.left > 0 || indicator.width > 0
+              ? 'left 280ms cubic-bezier(0.4, 0, 0.2, 1), width 280ms cubic-bezier(0.4, 0, 0.2, 1)'
+              : 'none',
+            transform: 'translateZ(0)',
+            willChange: 'left, width',
+          }}
+          aria-hidden="true"
+        />
+      )}
     </div>
   );
 };

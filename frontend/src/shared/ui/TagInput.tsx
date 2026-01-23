@@ -118,37 +118,39 @@ export const TagInput: React.FC<TagInputProps> = ({
         </label>
       )}
 
-      {/* Tags Container */}
+      {/* Tags Container - matches result entry input height exactly */}
       <div
         className={cn(
-          'min-h-[42px] w-full px-3 py-2 border rounded-xl',
+          'w-full px-3 py-2 border rounded',
           'bg-white transition-colors',
           'focus-within:ring-2 focus-within:ring-sky-500 focus-within:border-transparent',
-          error ? 'border-red-300' : 'border-gray-200',
-          'flex flex-wrap gap-2 items-center'
+          error ? 'border-red-500' : 'border-gray-300',
+          'flex flex-wrap gap-2 items-center',
+          // Ensure consistent height matching result entry inputs
+          tags.length === 0 ? 'h-[38px]' : 'min-h-[38px]'
         )}
       >
         {/* Existing Tags */}
         {tags.map((tag, index) => (
           <Badge
             key={`${tag}-${index}`}
-            variant={tagVariant}
+            variant={tagVariant === 'outline' ? 'primary' : tagVariant}
             size="sm"
-            className="flex items-center gap-1.5 pr-1"
+            className="flex items-center gap-1.5 px-2 py-0.5 h-6"
           >
-            <span className="text-xs">{tag}</span>
+            <span className="text-xs font-medium leading-tight">{tag}</span>
             <button
               type="button"
               onClick={() => handleRemoveTag(tag)}
-              className="hover:bg-gray-200 rounded-full p-0.5 transition-colors"
+              className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-black/10 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-gray-400"
               aria-label={`Remove ${tag}`}
             >
-              <Icon name="close-circle" className="w-3 h-3 text-gray-500" />
+              <Icon name="close-circle" className="w-3 h-3 text-gray-500 hover:text-gray-700" />
             </button>
           </Badge>
         ))}
 
-        {/* Input Field */}
+        {/* Input Field - matches result entry input styling exactly */}
         <input
           id={inputId}
           type="text"
@@ -156,7 +158,7 @@ export const TagInput: React.FC<TagInputProps> = ({
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={tags.length === 0 ? placeholder : ''}
-          className="flex-1 min-w-[120px] outline-none text-sm text-gray-900 placeholder:text-gray-400 bg-transparent"
+          className="flex-1 min-w-[120px] outline-none text-xs text-gray-900 placeholder:text-gray-400 placeholder:text-xs bg-transparent leading-[1.5]"
           disabled={maxTags !== undefined && tags.length >= maxTags}
         />
       </div>

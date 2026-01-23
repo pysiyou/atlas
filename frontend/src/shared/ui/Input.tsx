@@ -22,20 +22,23 @@ export const Input: React.FC<InputProps> = ({
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
   
   return (
-    <div className="w-full">
+    <div className="w-full group">
       {label && (
-        <label
-          htmlFor={inputId}
-          className="block text-xs font-medium text-gray-500 mb-1"
-        >
-          {label}
-          {props.required && <span className="text-red-500 ml-1">*</span>}
-        </label>
+        <div className="flex justify-between items-baseline mb-1 gap-2">
+          <label
+            htmlFor={inputId}
+            className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+          >
+            {label}
+            {props.required && <span className="text-red-500 ml-1">*</span>}
+          </label>
+        </div>
       )}
       <input
         id={inputId}
         className={`
-          w-full px-3 py-2 border rounded
+          block w-full px-3 py-2 border rounded bg-white
+          placeholder:text-gray-300 placeholder:text-xs transition-shadow
           focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
           disabled:bg-gray-100 disabled:cursor-not-allowed
           ${error ? 'border-red-500' : 'border-gray-300'}
@@ -73,15 +76,17 @@ export const Textarea: React.FC<TextareaProps> = ({
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
   
   return (
-    <div className="w-full">
+    <div className="w-full group">
       {label && (
-        <label
-          htmlFor={inputId}
-          className="block text-xs font-medium text-gray-500 mb-1"
-        >
-          {label}
-          {props.required && <span className="text-red-500 ml-1">*</span>}
-        </label>
+        <div className="flex justify-between items-baseline mb-1 gap-2">
+          <label
+            htmlFor={inputId}
+            className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+          >
+            {label}
+            {props.required && <span className="text-red-500 ml-1">*</span>}
+          </label>
+        </div>
       )}
       <textarea
         id={inputId}
@@ -127,20 +132,22 @@ export const Select: React.FC<SelectProps> = ({
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
   
   return (
-    <div className="w-full">
+    <div className="w-full group">
       {label && (
-        <label
-          htmlFor={inputId}
-          className="block text-xs font-medium text-gray-500 mb-1"
-        >
-          {label}
-          {props.required && <span className="text-red-500 ml-1">*</span>}
-        </label>
+        <div className="flex justify-between items-baseline mb-1 gap-2">
+          <label
+            htmlFor={inputId}
+            className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+          >
+            {label}
+            {props.required && <span className="text-red-500 ml-1">*</span>}
+          </label>
+        </div>
       )}
       <select
         id={inputId}
         className={`
-          w-full px-3 py-2 border rounded cursor-pointer
+          block w-full px-3 py-2 border rounded cursor-pointer bg-white transition-shadow
           focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
           disabled:bg-gray-100 disabled:cursor-not-allowed
           ${error ? 'border-red-500' : 'border-gray-300'}

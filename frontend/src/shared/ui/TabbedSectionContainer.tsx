@@ -9,7 +9,7 @@
  * - Designed for “section” usage: compact header, tabs on the right, content below.
  */
 
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { SectionContainer } from './SectionContainer';
 import { TabsList } from './Tabs';
 
@@ -23,8 +23,10 @@ export interface TabbedSectionTab {
 }
 
 export interface TabbedSectionContainerProps {
-  /** Optional title shown on the left side of the header */
+  /** Optional title shown on the right side of the header */
   title?: string;
+  /** Optional content shown on the right side of the header (overrides title if both provided) */
+  headerRight?: React.ReactNode;
   /** Tabs list (disabled tabs are filtered out) */
   tabs: TabbedSectionTab[];
   /** Currently selected tab id */
@@ -47,6 +49,7 @@ export interface TabbedSectionContainerProps {
 
 export const TabbedSectionContainer: React.FC<TabbedSectionContainerProps> = ({
   title,
+  headerRight,
   tabs,
   activeTab,
   onTabChange,
@@ -59,27 +62,52 @@ export const TabbedSectionContainer: React.FC<TabbedSectionContainerProps> = ({
 }) => {
   // Filter disabled tabs to match CargoPlan behavior
   const enabledTabs = tabs.filter((t) => t.enabled !== false);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
 
   return (
     <SectionContainer
       testId={testId}
-      title={title}
-      headerLeft={headerLeft}
-      headerRight={
-        <TabsList
-          tabs={enabledTabs.map((t) => ({
-            id: t.id,
-            label: t.label,
-            count: t.count,
-            // content is not used by TabsList; provide placeholder for type compatibility
-            content: null,
-          }))}
-          activeTabId={activeTab}
-          onTabChange={onTabChange}
-          variant="underline"
-          className="border-b-0"
-        />
+      headerLeft={
+        <div 
+          ref={headerRef}
+          className="self-stretch flex items-center relative -mx-4 -my-3 px-4 py-3"
+        >
+          {headerLeft && <div className="mr-4">{headerLeft}</div>}
+          <TabsList
+            tabs={enabledTabs.map((t) => ({
+              id: t.id,
+              label: t.label,
+              count: t.count,
+              // content is not used by TabsList; provide placeholder for type compatibility
+              content: null,
+            }))}
+            activeTabId={activeTab}
+            onTabChange={onTabChange}
+            variant="underline"
+            className="border-b-0"
+            headerRef={headerRef}
+            onIndicatorChange={setIndicator}
+          />
+          {/* Tab indicator positioned relative to header container (cargoplan pattern) */}
+          {/* Positioned at bottom: -1px to overlap the border and eliminate gap */}
+          <div
+            className="absolute left-0 h-[2px] bg-blue-600 rounded-full pointer-events-none z-10"
+            style={{
+              bottom: '-1px', // Overlap the 1px border to eliminate gap
+              left: `${indicator.left}px`,
+              width: `${indicator.width}px`,
+              transition: indicator.left > 0 || indicator.width > 0
+                ? 'left 280ms cubic-bezier(0.4, 0, 0.2, 1), width 280ms cubic-bezier(0.4, 0, 0.2, 1)'
+                : 'none',
+              transform: 'translateZ(0)',
+              willChange: 'left, width',
+            }}
+            aria-hidden="true"
+          />
+        </div>
       }
+      headerRight={headerRight ?? (title ? <p className="truncate">{title}</p> : undefined)}
       className={className}
       // Make header look like a “module header”: remove forced uppercase + tighten spacing
       headerClassName={`normal-case tracking-normal ${headerClassName}`}
