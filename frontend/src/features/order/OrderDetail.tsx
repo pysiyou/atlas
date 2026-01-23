@@ -180,11 +180,11 @@ export const OrderDetail: React.FC = () => {
               <div className="flex flex-col gap-5">
                 {/* Patient Name with Avatar */}
                 <div className="flex gap-3 items-center">
-                  <Avatar primaryText={patient.fullName} size="sm" className="" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{patient.fullName}</p>
-                    <p className="text-xs text-gray-500">{patient.id}</p>
-                  </div>
+                  <Avatar 
+                    primaryText={patient.fullName} 
+                    secondaryText={patient.id}
+                    size="sm" 
+                  />
                 </div>
 
                 {/* Age & Gender */}

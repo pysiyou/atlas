@@ -26,6 +26,14 @@ export { useFiltering, useSearch, useMultiSelect } from '@/utils/filtering';
 export { useAuth } from '@/features/auth/useAuth';
 
 // =============================================================================
+// Responsive Layout Hooks
+// =============================================================================
+export { useBreakpoint, isBreakpointAtLeast, isBreakpointAtMost } from './useBreakpoint';
+export type { Breakpoint } from './useBreakpoint';
+export { useResponsiveLayout } from './useResponsiveLayout';
+export type { ResponsiveLayoutConfig } from './useResponsiveLayout';
+
+// =============================================================================
 // Legacy Context Hooks (for backward compatibility)
 // These delegate to TanStack Query hooks internally but maintain the old API.
 // New components should use the query hooks directly.

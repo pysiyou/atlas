@@ -279,7 +279,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
 
               {/* Right: Avatar of operator */}
               {progress.isFullyComplete && completionInfo.completedBy && (
-                <Avatar primaryText={getUserName(completionInfo.completedBy)} size="xs" className="ring-2 ring-white shadow-sm ml-2" />
+                <Avatar primaryText={getUserName(completionInfo.completedBy)} size="xxs" className="ring-2 ring-white shadow-sm ml-2" />
               )}
             </div>
           </div>

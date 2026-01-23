@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { usePatients } from '@/hooks';
+import { usePatients, useResponsiveLayout } from '@/hooks';
 import { useOrders } from '@/features/order/OrderContext';
 import { Button, Avatar, Badge, Icon, SectionContainer, IconButton, EmptyState } from '@/shared/ui';
 // import { MedicalHistoryCard } from './MedicalHistory';
@@ -9,13 +9,16 @@ import { Button, Avatar, Badge, Icon, SectionContainer, IconButton, EmptyState }
 import { AffiliationCard } from './PatientDetailSections';
 import { EditPatientModal } from './EditPatientModal';
 import { isAffiliationActive } from './usePatientForm';
+import { OrderCard, AffiliationModal } from './components';
 
 export const PatientDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
+  const [isAffiliationModalOpen, setIsAffiliationModalOpen] = React.useState(false);
   const patientsContext = usePatients();
   const ordersContext = useOrders();
+  const { isSmall, isMedium, isLarge } = useResponsiveLayout();
   
   if (!patientsContext || !ordersContext) {
     return <div>Loading...</div>;
@@ -36,8 +39,8 @@ export const PatientDetail: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4 shrink-0">
+      {/* Responsive Header */}
+      <div className="flex items-center justify-between mb-4 shrink-0 flex-wrap gap-3">
         <div className="flex items-center gap-2">
           <Avatar 
             primaryText={patient.fullName} 
@@ -51,39 +54,534 @@ export const PatientDetail: React.FC = () => {
                 {patient.fullName}
               </h1>
               {isAffiliationActive(patient.affiliation) && (
-                <Icon 
-                  name="verified" 
-                  className="w-5 h-5 text-blue-500" 
-                  aria-label="Verified patient"
-                />
+                <button
+                  onClick={() => setIsAffiliationModalOpen(true)}
+                  className="focus:outline-none focus:ring-2 focus:ring-blue-500 rounded transition-all"
+                  aria-label="View affiliation details"
+                  title="View affiliation details"
+                >
+                  <Icon 
+                    name="verified" 
+                    className="w-5 h-5 text-blue-500 hover:text-blue-600 transition-colors cursor-pointer" 
+                  />
+                </button>
               )}
             </div>
             
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Button
-            variant="edit"
-            size="sm"
-            onClick={() => setIsEditModalOpen(true)}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="add"
-            size="sm"
-            onClick={() => navigate(`/orders/new?patientId=${patient.id}`)}
-          >
-            New Order
-          </Button>
+        {/* Responsive Action Buttons */}
+        <div className={`flex items-center gap-2 ${isSmall ? 'w-full justify-end' : ''}`}>
+          {isLarge ? (
+            <>
+              <Button
+                variant="edit"
+                size="sm"
+                onClick={() => setIsEditModalOpen(true)}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="add"
+                size="sm"
+                onClick={() => navigate(`/orders/new?patientId=${patient.id}`)}
+              >
+                New Order
+              </Button>
+            </>
+          ) : (
+            <>
+              <IconButton
+                variant="edit"
+                size="sm"
+                title="Edit Patient"
+                onClick={() => setIsEditModalOpen(true)}
+              />
+              <IconButton
+                variant="add"
+                size="sm"
+                title="New Order"
+                onClick={() => navigate(`/orders/new?patientId=${patient.id}`)}
+              />
+            </>
+          )}
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 grid grid-cols-3 gap-4 min-h-0 h-full">
-        {/* Left Column Group - Using flat 2x2 grid for consistent gaps */}
-        <div className="col-span-2 grid grid-cols-2 grid-rows-[3fr_2fr] gap-4 min-h-0 h-full">
+
+      {/* Responsive Main Content */}
+      {isSmall ? (
+        // Small screens: Single column stack
+        <div className="flex-1 flex flex-col gap-4 overflow-y-auto pb-4">
+          {/* General Info */}
+          <SectionContainer title="General Info" className="flex-shrink-0" contentClassName="overflow-visible">
+            <div className="flex flex-col gap-4">
+              {/* Gender */}
+              <div className="flex gap-3 items-start">
+                <Icon name="user-hands" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Gender</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5 capitalize">{patient.gender}</p>
+                </div>
+              </div>
+
+              {/* Birthday */}
+              <div className="flex gap-3 items-start">
+                <Icon name="calendar" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Birthday</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5">
+                    {new Date(patient.dateOfBirth).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div className="flex gap-3 items-start">
+                <Icon name="phone" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Phone Number</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5">{patient.phone}</p>
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex gap-3 items-start">
+                <Icon name="mail" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Email</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5 break-all">{patient.email || 'N/A'}</p>
+                </div>
+              </div>
+
+              {/* Address */}
+              <div className="flex gap-3 items-start">
+                <Icon name="map" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Address</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5">
+                    {patient.address?.street || 'N/A'}, {patient.address?.city || ''} {patient.address?.postalCode || ''}
+                  </p>
+                </div>
+              </div>
+
+              {/* Emergency Contact */}
+              <div className="flex gap-3 items-start">
+                <Icon name="phone" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Emergency Contact</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5">
+                    {patient.emergencyContact?.name || 'N/A'} <span className="text-gray-400 font-normal">({patient.emergencyContact?.phone || 'N/A'})</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </SectionContainer>
+
+          {/* Medical History */}
+          <SectionContainer title="Medical History" className="flex-shrink-0" contentClassName="overflow-visible">
+            <div className="flex flex-col gap-4">
+              {/* Chronic Conditions */}
+              <div className="flex gap-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                  <Icon name="info-circle" className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Chronic Disease</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                    {patient.medicalHistory?.chronicConditions?.length > 0
+                      ? patient.medicalHistory.chronicConditions.join(', ')
+                      : 'None'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Medications */}
+              <div className="flex gap-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                  <Icon name="medicine" className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Current Medications</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                    {patient.medicalHistory?.currentMedications?.length > 0
+                      ? patient.medicalHistory.currentMedications.join(', ')
+                      : 'None'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Surgery */}
+              <div className="flex gap-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                  <Icon name="health" className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Surgery</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                     {patient.medicalHistory?.previousSurgeries?.length > 0
+                      ? patient.medicalHistory.previousSurgeries.join(', ')
+                      : 'None'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Family Disease */}
+              <div className="flex gap-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                  <Icon name="users-group" className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Family Disease</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                     {patient.medicalHistory?.familyHistory || 'None'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Allergies */}
+              <div className="flex gap-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                  <Icon name="alert-circle" className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Allergies</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                     {patient.medicalHistory?.allergies?.length > 0
+                      ? patient.medicalHistory.allergies.join(', ')
+                      : 'None'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </SectionContainer>
+
+          {/* Related Orders */}
+          <SectionContainer
+            title="Related Orders"
+            className="flex-shrink-0"
+            contentClassName="p-0 overflow-visible"
+            headerClassName="!py-1.5"
+            headerRight={
+              <IconButton
+                onClick={() => navigate(`/orders/new?patientId=${patient.id}`)}
+                variant="add"
+                size="sm"
+                title="New Order"
+              />
+            }
+          >
+            {(() => {
+              const patientOrders = ordersContext.getOrdersByPatient(patient.id);
+
+              if (patientOrders.length === 0) {
+                return (
+                  <EmptyState
+                    icon="document-medicine"
+                    title="No Orders Found"
+                    description="This patient has no orders yet."
+                  />
+                );
+              }
+
+              return (
+                <div className="flex flex-col gap-3 p-4">
+                  {patientOrders.map((order) => (
+                    <OrderCard
+                      key={order.orderId}
+                      order={order}
+                      onClick={() => navigate(`/orders/${order.orderId}`)}
+                    />
+                  ))}
+                </div>
+              );
+            })()}
+          </SectionContainer>
+
+          {/* Reports */}
+          <SectionContainer title="Reports" className="flex-shrink-0" contentClassName="overflow-visible">
+            {(() => {
+              const patientOrders = ordersContext.getOrdersByPatient(patient.id);
+              const reportableOrders = patientOrders.filter(order => 
+                order.tests.some(test => test.status === 'validated')
+              );
+
+              if (reportableOrders.length === 0) {
+                return (
+                  <EmptyState
+                    icon="checklist"
+                    title="No Reports Available"
+                    description="There are no validated reports for this patient yet."
+                  />
+                );
+              }
+
+              return (
+                <div className="flex flex-col divide-y divide-gray-100">
+                  {reportableOrders.map((order, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors group">
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        <div className="w-8 h-8 flex items-center justify-center">
+                          <Icon name="pdf" className="w-full h-full text-red-400" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium font-mono text-gray-900 truncate">Report_{order.orderId}.pdf</p>
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            {new Date(order.orderDate).toLocaleDateString()} • 1.2 MB
+                          </p>
+                        </div>
+                      </div>
+                      <IconButton
+                        variant="download"
+                        size="sm"
+                        title="Download Report"
+                      />
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </SectionContainer>
+        </div>
+      ) : isMedium ? (
+        // Medium screens: 2x2 grid with 4 equal parts
+        <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-4 min-h-0 h-full">
+          {/* Top Left: General Info */}
+          <SectionContainer title="General Info" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto">
+            <div className="flex flex-col gap-4">
+              {/* Gender */}
+              <div className="flex gap-3 items-start">
+                <Icon name="user-hands" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Gender</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5 capitalize">{patient.gender}</p>
+                </div>
+              </div>
+
+              {/* Birthday */}
+              <div className="flex gap-3 items-start">
+                <Icon name="calendar" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Birthday</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5">
+                    {new Date(patient.dateOfBirth).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div className="flex gap-3 items-start">
+                <Icon name="phone" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Phone Number</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5">{patient.phone}</p>
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex gap-3 items-start">
+                <Icon name="mail" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Email</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5 break-all">{patient.email || 'N/A'}</p>
+                </div>
+              </div>
+
+              {/* Address */}
+              <div className="flex gap-3 items-start">
+                <Icon name="map" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Address</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5">
+                    {patient.address?.street || 'N/A'}, {patient.address?.city || ''} {patient.address?.postalCode || ''}
+                  </p>
+                </div>
+              </div>
+
+              {/* Emergency Contact */}
+              <div className="flex gap-3 items-start">
+                <Icon name="phone" className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-xs text-gray-500">Emergency Contact</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5">
+                    {patient.emergencyContact?.name || 'N/A'} <span className="text-gray-400 font-normal">({patient.emergencyContact?.phone || 'N/A'})</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </SectionContainer>
+
+          {/* Top Right: Medical History */}
+          <SectionContainer title="Medical History" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto">
+            <div className="flex flex-col gap-4">
+              {/* Chronic Conditions */}
+              <div className="flex gap-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                  <Icon name="info-circle" className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Chronic Disease</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                    {patient.medicalHistory?.chronicConditions?.length > 0
+                      ? patient.medicalHistory.chronicConditions.join(', ')
+                      : 'None'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Medications */}
+              <div className="flex gap-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                  <Icon name="medicine" className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Current Medications</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                    {patient.medicalHistory?.currentMedications?.length > 0
+                      ? patient.medicalHistory.currentMedications.join(', ')
+                      : 'None'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Surgery */}
+              <div className="flex gap-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                  <Icon name="health" className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Surgery</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                     {patient.medicalHistory?.previousSurgeries?.length > 0
+                      ? patient.medicalHistory.previousSurgeries.join(', ')
+                      : 'None'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Family Disease */}
+              <div className="flex gap-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                  <Icon name="users-group" className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Family Disease</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                     {patient.medicalHistory?.familyHistory || 'None'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Allergies */}
+              <div className="flex gap-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
+                  <Icon name="alert-circle" className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Allergies</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                     {patient.medicalHistory?.allergies?.length > 0
+                      ? patient.medicalHistory.allergies.join(', ')
+                      : 'None'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </SectionContainer>
+
+          {/* Bottom Left: Related Orders */}
+          <SectionContainer
+            title="Related Orders"
+            className="h-full flex flex-col min-h-0"
+            contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
+            headerClassName="!py-1.5"
+            headerRight={
+              <IconButton
+                onClick={() => navigate(`/orders/new?patientId=${patient.id}`)}
+                variant="add"
+                size="sm"
+                title="New Order"
+              />
+            }
+          >
+            {(() => {
+              const patientOrders = ordersContext.getOrdersByPatient(patient.id);
+
+              if (patientOrders.length === 0) {
+                return (
+                  <EmptyState
+                    icon="document-medicine"
+                    title="No Orders Found"
+                    description="This patient has no orders yet."
+                  />
+                );
+              }
+
+              return (
+                <div className="flex flex-col gap-3 p-4">
+                  {patientOrders.map((order) => (
+                    <OrderCard
+                      key={order.orderId}
+                      order={order}
+                      onClick={() => navigate(`/orders/${order.orderId}`)}
+                    />
+                  ))}
+                </div>
+              );
+            })()}
+          </SectionContainer>
+
+          {/* Bottom Right: Reports */}
+          <SectionContainer title="Reports" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col">
+            {(() => {
+              const patientOrders = ordersContext.getOrdersByPatient(patient.id);
+              const reportableOrders = patientOrders.filter(order => 
+                order.tests.some(test => test.status === 'validated')
+              );
+
+              if (reportableOrders.length === 0) {
+                return (
+                  <EmptyState
+                    icon="checklist"
+                    title="No Reports Available"
+                    description="There are no validated reports for this patient yet."
+                  />
+                );
+              }
+
+              return (
+                <div className="flex flex-col divide-y divide-gray-100">
+                  {reportableOrders.map((order, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors group">
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        <div className="w-8 h-8 flex items-center justify-center">
+                          <Icon name="pdf" className="w-full h-full text-red-400" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium font-mono text-gray-900 truncate">Report_{order.orderId}.pdf</p>
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            {new Date(order.orderDate).toLocaleDateString()} • 1.2 MB
+                          </p>
+                        </div>
+                      </div>
+                      <IconButton
+                        variant="download"
+                        size="sm"
+                        title="Download Report"
+                      />
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </SectionContainer>
+        </div>
+      ) : (
+        // Large screens: Original 3-column grid layout
+        <div className="flex-1 grid grid-cols-3 gap-4 min-h-0 h-full">
+          {/* Left Column Group - Using flat 2x2 grid for consistent gaps */}
+          <div className="col-span-2 grid grid-cols-2 grid-rows-[3fr_2fr] gap-4 min-h-0 h-full">
           {/* Row 1, Col 1: General Info */}
           <SectionContainer title="General Info" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto">
               <div className="flex flex-col gap-6">
@@ -375,6 +873,7 @@ export const PatientDetail: React.FC = () => {
           </SectionContainer>
         </div>
       </div>
+      )}
 
       {patient && (
         <EditPatientModal
@@ -384,6 +883,14 @@ export const PatientDetail: React.FC = () => {
           mode="edit"
         />
       )}
+
+      {/* Affiliation Modal */}
+      <AffiliationModal
+        isOpen={isAffiliationModalOpen}
+        onClose={() => setIsAffiliationModalOpen(false)}
+        holderName={patient.fullName}
+        affiliation={patient.affiliation}
+      />
     </div>
   );
 };
