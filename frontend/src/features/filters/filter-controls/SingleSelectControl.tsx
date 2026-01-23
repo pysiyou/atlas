@@ -5,8 +5,7 @@
 
 import React from 'react';
 import { Popover } from '@/shared/ui/Popover';
-import { Icon } from '@/shared/ui/Icon';
-import type { IconName } from '@/shared/ui/Icon';
+import { Icon, type IconName } from '@/shared/ui/Icon';
 import { Badge } from '@/shared/ui/Badge';
 import { cn } from '@/utils';
 import type { SingleSelectFilterControl } from '../types';

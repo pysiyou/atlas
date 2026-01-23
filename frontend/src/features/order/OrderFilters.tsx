@@ -8,10 +8,9 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar } from '@/features/filters';
+import { FilterBar, type FilterValues } from '@/features/filters';
 import { orderFilterConfig } from './orderFilterConfig';
 import type { OrderStatus, PaymentStatus } from '@/types';
-import type { FilterValues } from '@/features/filters';
 
 /**
  * Props interface for OrderFilters component

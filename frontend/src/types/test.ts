@@ -2,9 +2,9 @@
  * Test Catalog and Laboratory Types
  */
 
-import type { ContainerType, ContainerTopColor, SampleType } from './sample';
+import type { ContainerType, ContainerTopColor, SampleType, RejectionRecord } from './sample';
 import type { Patient } from './patient';
-import type { TestResult } from './order';
+import type { TestResult, ResultRejectionRecord } from './order';
 
 /**
  * Test category types - expanded to match catalog categories
@@ -182,10 +182,6 @@ export interface TestParameter {
  * Standardized interface for a test with its associated order and patient context.
  * Used in Result Entry and Validation lists.
  */
-// Import ResultRejectionRecord from order.ts
-import type { ResultRejectionRecord } from './order';
-import type { RejectionRecord } from './sample';
-
 export interface TestWithContext {
   orderId: number;
   patientId: number;

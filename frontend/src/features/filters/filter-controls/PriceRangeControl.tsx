@@ -72,10 +72,10 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
       if (isDragging.current === 'min') {
         const nextMin = Math.min(newValue, currMax);
         return [nextMin, currMax];
-      } else {
+      } 
         const nextMax = Math.max(newValue, currMin);
         return [currMin, nextMax];
-      }
+      
     });
   }, [getValueFromPosition]);
 

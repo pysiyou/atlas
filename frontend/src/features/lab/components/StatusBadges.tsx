@@ -11,11 +11,10 @@
 
 import React from 'react';
 import { Badge, Icon } from '@/shared/ui';
-import { formatDate } from '@/utils';
+import { formatDate, getContainerIconColor } from '@/utils';
 import { useUsers } from '@/hooks';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
-import { getContainerIconColor } from '@/utils';
 
 /**
  * ContainerInfo - Displays container type and color with icon

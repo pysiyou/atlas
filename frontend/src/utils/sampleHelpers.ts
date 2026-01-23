@@ -6,10 +6,10 @@ import type {
   SampleType,
   ContainerType,
   ContainerTopColor,
+  OrderTest,
+  Test,
 } from '@/types';
 import { CONTAINER_COLOR_CONFIG } from '@/types';
-import type { OrderTest } from '@/types';
-import type { Test } from '@/types';
 import { getSampleDefinition } from './sample-definitions';
 
 /**

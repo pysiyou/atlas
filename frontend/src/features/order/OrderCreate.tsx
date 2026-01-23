@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { usePatients } from '@/hooks';
+import { usePatients, useAuth } from '@/hooks';
 import { useOrders } from '@/features/order/OrderContext';
 import { useTests } from '@/features/test/TestsContext';
 import { useBilling } from '@/features/billing/BillingContext';
@@ -8,7 +8,6 @@ import { SectionContainer, Badge, Button } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Order, OrderTest } from '@/types';
-import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import { PatientSelect as PatientSelector } from './PatientSelect';

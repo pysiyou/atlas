@@ -4,8 +4,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { useFilterState } from './hooks';
-import { useQuickFilters } from './hooks';
+import { useFilterState, useQuickFilters } from './hooks';
 import { SearchControl, DateRangeControl, AgeRangeControl, PriceRangeControl, MultiSelectControl, SingleSelectControl } from './filter-controls';
 import { ActiveFilterBadges } from './ActiveFilterBadges';
 import { QuickFilters } from './QuickFilters';

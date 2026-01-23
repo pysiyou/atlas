@@ -54,11 +54,11 @@ function formatFilterValue(value: unknown, key?: string): string {
       if (isPriceRange) {
         if (min === 0 && max === 10000) return '';
         return `${min.toLocaleString()} - ${max.toLocaleString()}`;
-      } else {
+      } 
         // Age range
         if (min === 0 && max === 150) return '';
         return `${min} - ${max} yrs`;
-      }
+      
     }
     
     // Array of strings

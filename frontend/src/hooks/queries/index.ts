@@ -53,23 +53,26 @@ export {
 // Dynamic Data Hooks (30s Cache)
 // =============================================================================
 
-// Orders
+// Orders (refactored into focused modules)
 export {
+  // Queries
   useOrdersList,
   useOrder,
   useOrdersByPatient,
   useOrdersByStatus,
-  useOrderSearch,
-  useOrderLookup,
+  // Mutations
   useCreateOrder,
   useUpdateOrder,
   useDeleteOrder,
   useUpdateTestStatus,
   useUpdatePaymentStatus,
   useMarkTestCritical,
+  // Utils
+  useOrderSearch,
+  useOrderLookup,
   useInvalidateOrders,
-} from './useOrders';
-export type { OrdersFilters } from './useOrders';
+} from './orders';
+export type { OrdersFilters } from './orders';
 
 // Samples
 export {

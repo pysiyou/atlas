@@ -130,13 +130,13 @@ export function getInitials(name: string | undefined | null): string {
 export function formatTurnaroundTime(hours: number): string {
   if (hours < 24) {
     return `${hours}h`;
-  } else if (hours === 24) {
+  } if (hours === 24) {
     return '1 day';
-  } else if (hours < 168) {
+  } if (hours < 168) {
     const days = Math.round(hours / 24);
     return `${days} day${days > 1 ? 's' : ''}`;
-  } else {
+  } 
     const weeks = Math.round(hours / 168);
     return `${weeks} week${weeks > 1 ? 's' : ''}`;
-  }
+  
 }

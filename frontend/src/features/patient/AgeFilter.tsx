@@ -53,10 +53,10 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
       if (isDragging.current === 'min') {
         const nextMin = Math.min(newValue, currMax);
         return [nextMin, currMax];
-      } else {
+      } 
         const nextMax = Math.max(newValue, currMin);
         return [currMin, nextMax];
-      }
+      
     });
   }, [getValueFromPosition]);
 

@@ -204,9 +204,9 @@ export function useFilterState(
           const isPriceRange = key === 'priceRange' || (value[1] > 1000 && value[1] <= 100000);
           if (isPriceRange) {
             return !(value[0] === 0 && value[1] === 10000);
-          } else {
+          } 
             return !(value[0] === 0 && value[1] === 150);
-          }
+          
         }
       }
       return true;
@@ -235,9 +235,9 @@ export function useFilterState(
           const isPriceRange = key === 'priceRange' || (value[1] > 1000 && value[1] <= 100000);
           if (isPriceRange) {
             return !(value[0] === 0 && value[1] === 10000);
-          } else {
+          } 
             return !(value[0] === 0 && value[1] === 150);
-          }
+          
         }
       }
       return true;

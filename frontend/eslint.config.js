@@ -6,7 +6,7 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'node_modules', 'build', '.vite']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -16,8 +16,54 @@ export default defineConfig([
       reactRefresh.configs.vite,
     ],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2022,
       globals: globals.browser,
+    },
+    rules: {
+      // File size enforcement
+      'max-lines': ['warn', { 
+        max: 300, 
+        skipComments: true, 
+        skipBlankLines: true 
+      }],
+      
+      // Function size enforcement
+      'max-lines-per-function': ['warn', { 
+        max: 100, 
+        skipComments: true,
+        skipBlankLines: true 
+      }],
+      
+      // Prevent deeply nested code
+      'max-depth': ['error', 4],
+      
+      // Enforce early returns
+      'no-else-return': ['error', { allowElseIf: false }],
+      
+      // Prevent unnecessary complexity
+      'complexity': ['warn', 15],
+      
+      // TypeScript specific
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_' 
+      }],
+      
+      // React specific
+      'react-hooks/exhaustive-deps': 'error',
+      'react-hooks/rules-of-hooks': 'error',
+      
+      // Code quality
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'prefer-const': 'error',
+      'no-var': 'error',
+      'object-shorthand': 'error',
+      'prefer-template': 'error',
+      'prefer-arrow-callback': 'error',
+      'no-duplicate-imports': 'error',
     },
   },
 ])

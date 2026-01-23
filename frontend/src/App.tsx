@@ -1,9 +1,10 @@
 /**
  * Main App Component
  * Sets up routing and context providers with error boundaries
+ * Implements route-based code splitting for optimal performance
  */
 
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
@@ -12,28 +13,36 @@ import { AppProviders } from '@/shared/providers';
 import { DataLoader } from '@/shared/components/DataLoader';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { FeatureErrorBoundary } from '@/shared/components/FeatureErrorBoundary';
+import { LoadingState } from '@/shared/components/LoadingState';
 
-// Components
+// Eagerly loaded components (small, frequently accessed)
 import { LoginForm } from '@/features/auth/LoginForm';
 import { AppLayout as DashboardLayout } from '@/shared/layout';
 import { useAuth } from '@/features/auth/useAuth';
 import { ModalRenderer } from '@/shared/ui';
 
-// Pages
-import {
-  DashboardPage as Dashboard,
-  PatientsPage as Patients,
-  OrdersPage as Orders,
-  CatalogPage as Catalog,
-  LaboratoryPage as Laboratory,
-  AppointmentsPage as Appointments,
-  PaymentsPage as Payments,
-  ReportsPage as Reports,
-  AdminPage as Admin,
-} from '@/pages';
+// Lazy-loaded Pages (code-split by route)
+const Dashboard = lazy(() => import('@/pages/DashboardPage').then(m => ({ default: m.Dashboard })));
+const Patients = lazy(() => import('@/pages/PatientsPage').then(m => ({ default: m.Patients })));
+const Orders = lazy(() => import('@/pages/OrdersPage').then(m => ({ default: m.Orders })));
+const Catalog = lazy(() => import('@/pages/CatalogPage').then(m => ({ default: m.Catalog })));
+const Laboratory = lazy(() => import('@/pages/LaboratoryPage').then(m => ({ default: m.Laboratory })));
+const Appointments = lazy(() => import('@/pages/AppointmentsPage').then(m => ({ default: m.Appointments })));
+const Payments = lazy(() => import('@/pages/PaymentsPage').then(m => ({ default: m.Payments })));
+const Reports = lazy(() => import('@/pages/ReportsPage').then(m => ({ default: m.Reports })));
+const Admin = lazy(() => import('@/pages/AdminPage').then(m => ({ default: m.Admin })));
 
 // Utils & Config
 import { ROUTES } from '@/config';
+
+/**
+ * Loading fallback component for route transitions
+ */
+const PageLoadingFallback: React.FC = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <LoadingState message="Loading page..." />
+  </div>
+);
 
 /**
  * Wrapper component for protected routes with feature error boundary
@@ -64,6 +73,7 @@ const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({
 
 /**
  * App Routes Component (needs to be inside AuthProvider to use useAuth)
+ * All protected routes are wrapped with Suspense for code splitting
  */
 const AppRoutes: React.FC = () => {
   return (
@@ -71,77 +81,95 @@ const AppRoutes: React.FC = () => {
       {/* Public Routes */}
       <Route path={ROUTES.LOGIN} element={<LoginForm />} />
 
-      {/* Protected Routes with Feature Error Boundaries */}
+      {/* Protected Routes with Feature Error Boundaries and Code Splitting */}
       <Route
         path={ROUTES.DASHBOARD}
         element={
-          <ProtectedFeatureRoute featureName="Dashboard">
-            <Dashboard />
-          </ProtectedFeatureRoute>
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute featureName="Dashboard">
+              <Dashboard />
+            </ProtectedFeatureRoute>
+          </Suspense>
         }
       />
       <Route
         path={`${ROUTES.PATIENTS}/*`}
         element={
-          <ProtectedFeatureRoute featureName="Patients">
-            <Patients />
-          </ProtectedFeatureRoute>
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute featureName="Patients">
+              <Patients />
+            </ProtectedFeatureRoute>
+          </Suspense>
         }
       />
       <Route
         path={`${ROUTES.ORDERS}/*`}
         element={
-          <ProtectedFeatureRoute featureName="Orders">
-            <Orders />
-          </ProtectedFeatureRoute>
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute featureName="Orders">
+              <Orders />
+            </ProtectedFeatureRoute>
+          </Suspense>
         }
       />
       <Route
         path={`${ROUTES.CATALOG}/*`}
         element={
-          <ProtectedFeatureRoute featureName="Catalog">
-            <Catalog />
-          </ProtectedFeatureRoute>
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute featureName="Catalog">
+              <Catalog />
+            </ProtectedFeatureRoute>
+          </Suspense>
         }
       />
       <Route
         path={ROUTES.LABORATORY}
         element={
-          <ProtectedFeatureRoute featureName="Laboratory">
-            <Laboratory />
-          </ProtectedFeatureRoute>
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute featureName="Laboratory">
+              <Laboratory />
+            </ProtectedFeatureRoute>
+          </Suspense>
         }
       />
       <Route
         path={ROUTES.APPOINTMENTS}
         element={
-          <ProtectedFeatureRoute featureName="Appointments">
-            <Appointments />
-          </ProtectedFeatureRoute>
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute featureName="Appointments">
+              <Appointments />
+            </ProtectedFeatureRoute>
+          </Suspense>
         }
       />
       <Route
         path={ROUTES.PAYMENTS}
         element={
-          <ProtectedFeatureRoute featureName="Payments">
-            <Payments />
-          </ProtectedFeatureRoute>
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute featureName="Payments">
+              <Payments />
+            </ProtectedFeatureRoute>
+          </Suspense>
         }
       />
       <Route
         path={ROUTES.REPORTS}
         element={
-          <ProtectedFeatureRoute featureName="Reports">
-            <Reports />
-          </ProtectedFeatureRoute>
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute featureName="Reports">
+              <Reports />
+            </ProtectedFeatureRoute>
+          </Suspense>
         }
       />
       <Route
         path={ROUTES.ADMIN}
         element={
-          <ProtectedFeatureRoute featureName="Admin">
-            <Admin />
-          </ProtectedFeatureRoute>
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute featureName="Admin">
+              <Admin />
+            </ProtectedFeatureRoute>
+          </Suspense>
         }
       />
 

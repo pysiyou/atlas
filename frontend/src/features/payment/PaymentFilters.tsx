@@ -8,10 +8,9 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar } from '@/features/filters';
+import { FilterBar, type FilterValues } from '@/features/filters';
 import { paymentFilterConfig } from './paymentFilterConfig';
 import type { PaymentStatus, PaymentMethod } from '@/types';
-import type { FilterValues } from '@/features/filters';
 
 /**
  * Props interface for PaymentFilters component

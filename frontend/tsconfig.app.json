@@ -43,7 +43,9 @@
       "@/config/*": ["./src/config/*"],
       "@/services/*": ["./src/services/*"],
       "@/assets/*": ["./src/assets/*"],
-      "@/lib/*": ["./src/lib/*"]
+      "@/lib/*": ["./src/lib/*"],
+      "@/test": ["./src/test"],
+      "@/test/*": ["./src/test/*"]
     }
   },
   "include": ["src"]

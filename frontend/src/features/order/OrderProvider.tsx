@@ -221,7 +221,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
     orderId: number | string,
     testCodes: string[],
     sampleId: number | string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     _collectionData: CollectionData
   ) => {
     // This is handled by the samples mutation now
@@ -347,7 +347,7 @@ export const OrdersProvider: React.FC<OrdersProviderProps> = ({ children }) => {
    * Get orders that need collection for a specific sample type
    */
   const getOrdersForBatchCollection = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     (_sampleType: string): Order[] => getOrdersNeedingCollection(orders),
     [orders]
   );

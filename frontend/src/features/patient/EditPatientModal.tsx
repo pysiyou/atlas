@@ -1,26 +1,22 @@
+/**
+ * EditPatientModal - Reusable patient creation and editing modal
+ * 
+ * Refactored for better maintainability:
+ * - Extracted payload building logic to utils/patientPayloadBuilder.ts
+ * - Extracted form progress calculation to utils/formProgressCalculator.ts
+ * - Extracted tab rendering to components/PatientFormTabs.tsx
+ * - Extracted mutation logic to hooks/usePatientMutation.ts
+ */
+
 import React, { useMemo, useState } from 'react';
-import type { Patient, Affiliation } from '@/types';
-import { usePatients } from '@/hooks';
+import type { Patient } from '@/types';
 import { Button, Modal, TabbedSectionContainer, CircularProgress } from '@/shared/ui';
-import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
-import { logger } from '@/utils/logger';
-import {
-  DemographicsSection,
-  AddressSection,
-  EmergencyContactSection,
-  AffiliationSection,
-  MedicalHistorySection,
-} from './PatientForm';
-import {
-  usePatientForm,
-  generateAssuranceNumber,
-  calculateEndDate,
-  isAffiliationActive,
-} from './usePatientForm';
-// ID generation removed - backend handles ID assignment
+import { usePatientForm } from './usePatientForm';
 import { displayId } from '@/utils/id-display';
-import { VitalsSection } from '@/features/patient/VitalsSection';
+import { PatientFormTabs } from './components/PatientFormTabs';
+import { calculateFormProgress } from './utils/formProgressCalculator';
+import { usePatientMutation } from './hooks/usePatientMutation';
 
 /**
  * Props for EditPatientModal component.
@@ -50,22 +46,24 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   patient,
   mode,
 }) => {
-  const { currentUser } = useAuth();
-  const { addPatient, updatePatient } = usePatients();
   const [isRenewing, setIsRenewing] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>('general');
 
-  const {
-    formData,
-    errors,
-    isSubmitting,
-    setIsSubmitting,
-    updateField,
-    validate,
-    reset,
-  } = usePatientForm(mode === 'edit' && patient ? patient : undefined);
+  const { formData, errors, updateField, validate, reset } = usePatientForm(
+    mode === 'edit' && patient ? patient : undefined
+  );
+
+  const { isSubmitting, handleCreatePatient, handleUpdatePatient } = usePatientMutation({
+    existingPatient: patient,
+    onSuccess: () => {
+      setIsRenewing(false);
+      reset();
+      onClose();
+    },
+  });
 
   /**
-   * Handles field updates in a type-safe way, delegating to the shared form hook.
+   * Handles field updates in a type-safe way
    */
   const handleFieldChange = (field: string, value: string | boolean | number) => {
     updateField(field as keyof typeof formData, value as never);
@@ -80,275 +78,29 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   };
 
   /**
-   * Creates affiliation data based on form state and existing patient data
-   */
-  const buildAffiliation = (existingAffiliation?: Affiliation): Affiliation | undefined => {
-    // If user doesn't want affiliation, return undefined
-    if (!formData.hasAffiliation && !existingAffiliation) {
-      return undefined;
-    }
-
-    // If keeping existing affiliation without changes
-    if (existingAffiliation && !isRenewing && !formData.hasAffiliation) {
-      return existingAffiliation;
-    }
-
-    // If renewing or extending existing affiliation
-    if (existingAffiliation && (isRenewing || formData.hasAffiliation)) {
-      const isActive = isAffiliationActive(existingAffiliation);
-      // If active, extend from current end date. If expired, extend from today.
-      const startDate = isActive ? existingAffiliation.endDate : new Date().toISOString().slice(0, 10);
-      const endDate = calculateEndDate(startDate, formData.affiliationDuration);
-
-      return {
-        assuranceNumber: existingAffiliation.assuranceNumber,
-        startDate: existingAffiliation.startDate, // Keep original start date
-        endDate,
-        duration: formData.affiliationDuration,
-      };
-    }
-
-    // Creating new affiliation
-    if (formData.hasAffiliation) {
-      const startDate = new Date().toISOString().slice(0, 10);
-      const endDate = calculateEndDate(startDate, formData.affiliationDuration);
-
-      return {
-        assuranceNumber: generateAssuranceNumber(),
-        startDate,
-        endDate,
-        duration: formData.affiliationDuration,
-      };
-    }
-
-    return undefined;
-  };
-
-  /**
-   * Maps the current form state into a `Partial<Patient>` suitable for update operations.
-   */
-  const buildUpdatedPatientPayload = (): Partial<Patient> => {
-    /**
-     * Build vitalSigns only if at least one field has a value.
-     * Keeps payload clean and avoids sending an empty object.
-     */
-    const anyVitalProvided = Boolean(
-      String(formData.temperature).trim() ||
-        String(formData.heartRate).trim() ||
-        String(formData.systolicBP).trim() ||
-        String(formData.diastolicBP).trim() ||
-        String(formData.respiratoryRate).trim() ||
-        String(formData.oxygenSaturation).trim()
-    );
-
-    /**
-     * NOTE:
-     * Validation in `usePatientForm` enforces all-or-none vitals.
-     * If any are provided, we can safely construct a complete object.
-     * In edit mode, we also merge with existing values (defensive).
-     */
-    const vitalSigns = anyVitalProvided
-      ? {
-          temperature:
-            formData.temperature.trim() !== ''
-              ? parseFloat(formData.temperature)
-              : patient?.vitalSigns?.temperature ?? 0,
-          heartRate:
-            formData.heartRate.trim() !== ''
-              ? parseInt(formData.heartRate, 10)
-              : patient?.vitalSigns?.heartRate ?? 0,
-          systolicBP:
-            formData.systolicBP.trim() !== ''
-              ? parseInt(formData.systolicBP, 10)
-              : patient?.vitalSigns?.systolicBP ?? 0,
-          diastolicBP:
-            formData.diastolicBP.trim() !== ''
-              ? parseInt(formData.diastolicBP, 10)
-              : patient?.vitalSigns?.diastolicBP ?? 0,
-          respiratoryRate:
-            formData.respiratoryRate.trim() !== ''
-              ? parseInt(formData.respiratoryRate, 10)
-              : patient?.vitalSigns?.respiratoryRate ?? 0,
-          oxygenSaturation:
-            formData.oxygenSaturation.trim() !== ''
-              ? parseInt(formData.oxygenSaturation, 10)
-              : patient?.vitalSigns?.oxygenSaturation ?? 0,
-        }
-      : undefined;
-
-    return {
-      fullName: formData.fullName.trim(),
-      dateOfBirth: formData.dateOfBirth,
-      gender: formData.gender,
-      phone: formData.phone.trim(),
-      email: formData.email.trim() || undefined,
-      height: formData.height ? parseFloat(formData.height) : undefined,
-      weight: formData.weight ? parseFloat(formData.weight) : undefined,
-      address: {
-        street: formData.street.trim(),
-        city: formData.city.trim(),
-        postalCode: formData.postalCode.trim(),
-      },
-      affiliation: buildAffiliation(patient?.affiliation),
-      emergencyContact: {
-        fullName: formData.emergencyContactFullName.trim(),
-        relationship: formData.emergencyContactRelationship,
-        phone: formData.emergencyContactPhone.trim(),
-        email: formData.emergencyContactEmail.trim() || undefined,
-      },
-      medicalHistory: {
-        chronicConditions: formData.chronicConditions
-          .split(';')
-          .map((c: string) => c.trim())
-          .filter((c: string) => c.length > 0),
-        currentMedications: formData.currentMedications
-          .split(';')
-          .map((m: string) => m.trim())
-          .filter((m: string) => m.length > 0),
-        allergies: formData.allergies
-          .split(';')
-          .map((a: string) => a.trim())
-          .filter((a: string) => a.length > 0),
-        previousSurgeries: formData.previousSurgeries
-          .split(';')
-          .map((s: string) => s.trim())
-          .filter((s: string) => s.length > 0),
-        familyHistory: formData.familyHistory.trim(),
-        lifestyle: {
-          smoking: formData.smoking,
-          alcohol: formData.alcohol,
-        },
-      },
-      vitalSigns,
-      updatedBy: typeof currentUser?.id === 'string' ? parseInt(currentUser.id, 10) : (currentUser?.id || 0),
-    };
-  };
-
-  /**
-   * Builds a complete `Patient` object from the current form state for create operations.
-   */
-  const buildNewPatient = (patientId: number): Patient => {
-    const now = new Date().toISOString();
-    const anyVitalProvided = Boolean(
-      String(formData.temperature).trim() ||
-        String(formData.heartRate).trim() ||
-        String(formData.systolicBP).trim() ||
-        String(formData.diastolicBP).trim() ||
-        String(formData.respiratoryRate).trim() ||
-        String(formData.oxygenSaturation).trim()
-    );
-
-    const vitalSigns = anyVitalProvided
-      ? {
-          temperature: parseFloat(formData.temperature),
-          heartRate: parseInt(formData.heartRate, 10),
-          systolicBP: parseInt(formData.systolicBP, 10),
-          diastolicBP: parseInt(formData.diastolicBP, 10),
-          respiratoryRate: parseInt(formData.respiratoryRate, 10),
-          oxygenSaturation: parseInt(formData.oxygenSaturation, 10),
-        }
-      : undefined;
-
-    return {
-      id: patientId,
-      fullName: formData.fullName.trim(),
-      dateOfBirth: formData.dateOfBirth,
-      gender: formData.gender,
-      phone: formData.phone.trim(),
-      email: formData.email.trim() || undefined,
-      height: formData.height ? parseFloat(formData.height) : undefined,
-      weight: formData.weight ? parseFloat(formData.weight) : undefined,
-      address: {
-        street: formData.street.trim(),
-        city: formData.city.trim(),
-        postalCode: formData.postalCode.trim(),
-      },
-      affiliation: buildAffiliation(),
-      emergencyContact: {
-        fullName: formData.emergencyContactFullName.trim(),
-        relationship: formData.emergencyContactRelationship,
-        phone: formData.emergencyContactPhone.trim(),
-        email: formData.emergencyContactEmail.trim() || undefined,
-      },
-      medicalHistory: {
-        chronicConditions: formData.chronicConditions
-          .split(';')
-          .map((c) => c.trim())
-          .filter((c) => c.length > 0),
-        currentMedications: formData.currentMedications
-          .split(';')
-          .map((m) => m.trim())
-          .filter((m) => m.length > 0),
-        allergies: formData.allergies
-          .split(';')
-          .map((a) => a.trim())
-          .filter((a) => a.length > 0),
-        previousSurgeries: formData.previousSurgeries
-          .split(';')
-          .map((s) => s.trim())
-          .filter((s) => s.length > 0),
-        familyHistory: formData.familyHistory.trim(),
-        lifestyle: {
-          smoking: formData.smoking,
-          alcohol: formData.alcohol,
-        },
-      },
-      vitalSigns,
-      registrationDate: now,
-      createdBy: typeof currentUser?.id === 'string' ? parseInt(currentUser.id, 10) : (currentUser?.id || 0),
-      createdAt: now,
-      updatedAt: now,
-      updatedBy: typeof currentUser?.id === 'string' ? parseInt(currentUser.id, 10) : (currentUser?.id || 0),
-    };
-  };
-
-  /**
-   * Handles submit for both create and edit modes, with validation and error handling.
+   * Handles submit for both create and edit modes
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Synchronous validation first, with user feedback
     if (!validate()) {
       toast.error('Please fix the errors in the form');
       return;
     }
 
-    // In edit mode we must have an existing patient
     if (mode === 'edit' && !patient) {
       toast.error('Missing patient data for edit');
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
-      if (mode === 'edit' && patient) {
-        // Build and send partial update payload
-        const updatedPatient = buildUpdatedPatientPayload();
-        await updatePatient(patient.id, updatedPatient);
-
-        if (isRenewing) {
-          toast.success('Affiliation renewed successfully');
-        } else {
-          toast.success('Patient updated successfully');
-        }
+      if (mode === 'edit') {
+        await handleUpdatePatient(formData, isRenewing);
       } else {
-        // Create new patient - backend will assign ID
-        const newPatient = buildNewPatient(0); // Temporary ID, backend will assign real ID
-        await addPatient(newPatient);
-        toast.success(`Patient ${newPatient.fullName} registered successfully!`);
+        await handleCreatePatient(formData);
       }
-
-      // Reset states
-      setIsRenewing(false);
-      reset();
-      onClose();
-    } catch (error) {
-      logger.error('Error saving patient', error instanceof Error ? error : undefined);
-      toast.error('Failed to save patient');
-    } finally {
-      setIsSubmitting(false);
+    } catch {
+      // Error already handled in mutation hook
     }
   };
 
@@ -371,130 +123,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
     []
   );
 
-  const [activeTab, setActiveTab] = useState<string>('general');
-
-  /**
-   * Calculate form completion progress based on filled parameters
-   */
-  const formProgress = useMemo(() => {
-    // Define all form parameters to track
-    const parameters = [
-      formData.fullName,
-      formData.dateOfBirth,
-      formData.gender,
-      formData.phone,
-      formData.email,
-      formData.height,
-      formData.weight,
-      formData.street,
-      formData.city,
-      formData.postalCode,
-      formData.emergencyContactFullName,
-      formData.emergencyContactRelationship,
-      formData.emergencyContactPhone,
-      formData.emergencyContactEmail,
-      formData.chronicConditions,
-      formData.currentMedications,
-      formData.allergies,
-      formData.previousSurgeries,
-      formData.familyHistory,
-      // Vitals - count as one parameter if any are filled, or all are empty
-      formData.temperature || formData.heartRate || formData.systolicBP || 
-      formData.diastolicBP || formData.respiratoryRate || formData.oxygenSaturation,
-    ];
-
-    // Count filled parameters (non-empty strings, non-false booleans)
-    const filled = parameters.filter((param) => {
-      if (typeof param === 'boolean') return param === true;
-      if (typeof param === 'string') return param.trim() !== '';
-      return param !== undefined && param !== null;
-    }).length;
-
-    const total = parameters.length;
-    const percentage = total > 0 ? Math.round((filled / total) * 100) : 0;
-
-    return { filled, total, percentage };
-  }, [formData]);
-
-  /**
-   * Render active tab content (kept as a function to mirror CargoPlan’s TabbedSectionContainer usage).
-   */
-  const renderActiveTab = () => {
-    switch (activeTab) {
-      case 'general':
-        return (
-          <div className="space-y-6">
-            <div>
-              <div className="text-xs font-medium text-slate-500">General</div>
-              <div className="text-sm font-semibold text-slate-900">Identity & contact</div>
-            </div>
-            <DemographicsSection formData={formData} errors={errors} onFieldChange={handleFieldChange} />
-            <AddressSection formData={formData} errors={errors} onFieldChange={handleFieldChange} />
-          </div>
-        );
-      case 'medical':
-        return (
-          <div className="space-y-4">
-            <div>
-              <div className="text-xs font-medium text-slate-500">Medical Background</div>
-              <div className="text-sm font-semibold text-slate-900">History, conditions, lifestyle</div>
-            </div>
-            <MedicalHistorySection formData={formData} onFieldChange={handleFieldChange} />
-          </div>
-        );
-      case 'vitals':
-        return (
-          <div className="space-y-4">
-            <div>
-              <div className="text-xs font-medium text-slate-500">Vitals</div>
-              <div className="text-sm font-semibold text-slate-900">Measurements</div>
-              <div className="text-xs text-slate-500 mt-1">
-                Fill all vitals or leave all blank. Hints show typical ranges.
-              </div>
-            </div>
-            <VitalsSection
-              vitalSigns={{
-                temperature: formData.temperature,
-                heartRate: formData.heartRate,
-                systolicBP: formData.systolicBP,
-                diastolicBP: formData.diastolicBP,
-                respiratoryRate: formData.respiratoryRate,
-                oxygenSaturation: formData.oxygenSaturation,
-              }}
-              errors={errors}
-              onFieldChange={handleFieldChange}
-            />
-          </div>
-        );
-      case 'affiliation':
-        return (
-          <div className="space-y-6">
-            <div>
-              <div className="text-xs font-medium text-slate-500">Affiliation</div>
-              <div className="text-sm font-semibold text-slate-900">Auto-generated assurance</div>
-            </div>
-            <AffiliationSection
-              formData={formData}
-              onFieldChange={handleFieldChange}
-              existingAffiliation={patient?.affiliation}
-              onRenew={handleRenew}
-            />
-
-            <div>
-              <div className="text-xs font-medium text-slate-500">Emergency Contact</div>
-              <div className="text-sm font-semibold text-slate-900">Primary contact</div>
-            </div>
-            <EmergencyContactSection
-              formData={formData}
-              errors={errors}
-              onFieldChange={handleFieldChange}
-            />
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
+  const formProgress = useMemo(() => calculateFormProgress(formData), [formData]);
 
   return (
     <Modal
@@ -517,7 +146,9 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                   size={18}
                   percentage={formProgress.percentage}
                   trackColorClass="stroke-gray-200"
-                  progressColorClass={formProgress.percentage === 100 ? 'stroke-emerald-500' : 'stroke-blue-500'}
+                  progressColorClass={
+                    formProgress.percentage === 100 ? 'stroke-emerald-500' : 'stroke-blue-500'
+                  }
                   label={`${formProgress.filled}/${formProgress.total}`}
                   className="h-7"
                 />
@@ -526,7 +157,14 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
               contentClassName="!p-6"
               headerClassName="!px-6 !py-4"
             >
-              {renderActiveTab()}
+              <PatientFormTabs
+                activeTab={activeTab}
+                formData={formData}
+                errors={errors}
+                onFieldChange={handleFieldChange}
+                existingAffiliation={patient?.affiliation}
+                onRenew={handleRenew}
+              />
             </TabbedSectionContainer>
           </form>
         </div>
@@ -536,7 +174,13 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
           <Button type="button" variant="cancel" showIcon={false} onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit" variant="save" form="patient-upsert-form" isLoading={isSubmitting} disabled={isSubmitting}>
+          <Button
+            type="submit"
+            variant="save"
+            form="patient-upsert-form"
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
+          >
             {submitLabel}
           </Button>
         </div>

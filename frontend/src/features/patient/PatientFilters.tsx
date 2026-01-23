@@ -8,10 +8,9 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar } from '@/features/filters';
+import { FilterBar, type FilterValues } from '@/features/filters';
 import { patientFilterConfig } from './patientFilterConfig';
 import type { Gender } from '@/types';
-import type { FilterValues } from '@/features/filters';
 
 /**
  * Affiliation status type

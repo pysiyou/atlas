@@ -7,9 +7,10 @@ import type { ResultStatus } from '../types';
 import type { 
   CatalogReferenceRange, 
   CriticalRange, 
-  TestParameter 
+  TestParameter,
+  Patient,
+  Gender
 } from '@/types';
-import type { Patient, Gender } from '@/types';
 
 /**
  * Parse reference range string (e.g., "13.5-17.5", "<5.2", ">1.0")
