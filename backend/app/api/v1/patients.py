@@ -5,6 +5,7 @@ All fields use camelCase - no mapping needed
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
+from sqlalchemy.inspection import inspect
 from datetime import datetime, timezone
 from app.database import get_db
 from app.core.dependencies import get_current_user, require_receptionist
@@ -16,6 +17,32 @@ from app.schemas.patient import PatientCreate, PatientUpdate, PatientResponse
 from app.schemas.enums import SampleStatus, TestStatus, UserRole
 
 router = APIRouter()
+
+def _patient_to_response_dict(patient: Patient) -> dict:
+    """
+    Convert a SQLAlchemy Patient ORM object into a dict suitable for PatientResponse.
+    
+    This is intentionally stricter than returning the ORM object directly because
+    `PatientResponse.model_validate(patient)` can raise a ValidationError if legacy
+    data in JSON columns doesn't match the current schema (e.g. affiliation.duration).
+    
+    We normalize known legacy values here to ensure the endpoint never 500s for
+    data that exists in the database.
+    """
+    # Pull all mapped column attributes (not relationships) into a plain dict.
+    data = {attr.key: getattr(patient, attr.key) for attr in inspect(patient).mapper.column_attrs}
+
+    # Backward-compat: some seed/legacy records used a 3-month affiliation duration.
+    # Current supported durations are 6, 12, and 24 months.
+    affiliation = data.get("affiliation")
+    if isinstance(affiliation, dict):
+        raw_duration = affiliation.get("duration")
+        # Normalize only known bad legacy value(s) to a supported plan.
+        if raw_duration == 3:
+            affiliation = {**affiliation, "duration": 6}
+            data["affiliation"] = affiliation
+
+    return data
 
 
 @router.get("/patients")
@@ -61,7 +88,8 @@ def get_patients(
 
     query = query.order_by(Patient.createdAt.desc())
     patients = query.offset(skip).limit(limit).all()
-    return [PatientResponse.model_validate(p).model_dump() for p in patients]
+    # Normalize legacy JSON values before validating response schema.
+    return [PatientResponse.model_validate(_patient_to_response_dict(p)).model_dump() for p in patients]
 
 
 @router.get("/patients/{patientId}")
@@ -79,7 +107,8 @@ def get_patient(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Patient {patientId} not found"
         )
-    return PatientResponse.model_validate(patient).model_dump()
+    # Normalize legacy JSON values before validating response schema.
+    return PatientResponse.model_validate(_patient_to_response_dict(patient)).model_dump()
 
 
 @router.post("/patients", status_code=status.HTTP_201_CREATED)
@@ -112,7 +141,8 @@ def create_patient(
     db.commit()
     db.refresh(patient)
 
-    return PatientResponse.model_validate(patient).model_dump()
+    # Normalize legacy JSON values before validating response schema.
+    return PatientResponse.model_validate(_patient_to_response_dict(patient)).model_dump()
 
 
 @router.put("/patients/{patientId}")
@@ -148,7 +178,8 @@ def update_patient(
     db.commit()
     db.refresh(patient)
 
-    return PatientResponse.model_validate(patient).model_dump()
+    # Normalize legacy JSON values before validating response schema.
+    return PatientResponse.model_validate(_patient_to_response_dict(patient)).model_dump()
 
 
 @router.delete("/patients/{patientId}", status_code=status.HTTP_204_NO_CONTENT)

@@ -25,7 +25,7 @@ export const OrderCreateModal: React.FC<OrderCreateModalProps> = ({ isOpen, onCl
   }, [patientId]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="New Order" subtitle={subtitle} size="5xl">
+    <Modal isOpen={isOpen} onClose={onClose} title="New Order" subtitle={subtitle} size="2xl">
       <CreateOrder isModal={true} onClose={onClose} initialPatientId={patientId} />
     </Modal>
   );
