@@ -5,6 +5,7 @@
 
 import type { FilterConfig } from '@/features/filters';
 import type { TestCategory } from '@/types';
+import { PRICE_RANGE } from '@/shared/constants';
 
 /**
  * Test category configuration for filter display
@@ -129,8 +130,8 @@ export const catalogFilterConfig: FilterConfig = {
         key: 'priceRange',
         label: 'Price Range',
         placeholder: 'Filter by price range',
-        min: 0,
-        max: 10000,
+        min: PRICE_RANGE.MIN,
+        max: PRICE_RANGE.MAX,
         currency: '',
         icon: 'wallet',
       },

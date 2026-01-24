@@ -18,12 +18,14 @@ import { PaymentCard } from '../../components/cards/PaymentCard';
  * Create payment table configuration with full, compact, and card views
  *
  * @param navigate - React Router navigate function
+ * @param onPaymentSuccess - Callback to invoke after successful payment (for cache invalidation)
  * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
  */
 // Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
 // eslint-disable-next-line max-lines-per-function
 export const createPaymentTableConfig = (
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
+  onPaymentSuccess?: () => void
 ): TableViewConfig<OrderPaymentDetails> => {
   // Shared render functions
   const renderOrderId = (item: OrderPaymentDetails) => (
@@ -87,10 +89,7 @@ export const createPaymentTableConfig = (
     <div onClick={e => e.stopPropagation()}>
       <PaymentButton
         order={item._order}
-        onPaymentSuccess={() => {
-          // Refresh the page or update the order status
-          window.location.reload();
-        }}
+        onPaymentSuccess={onPaymentSuccess}
       />
     </div>
   );

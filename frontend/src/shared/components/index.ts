@@ -9,6 +9,9 @@ export { DataLoader } from './DataLoader';
 export { ErrorAlert } from './ErrorAlert';
 export { ErrorBoundary } from './ErrorBoundary';
 export { FeatureErrorBoundary } from './FeatureErrorBoundary';
+export { FormErrorBoundary } from './FormErrorBoundary';
+export { DataErrorBoundary } from './DataErrorBoundary';
+export { PaymentErrorBoundary } from './PaymentErrorBoundary';
 export { LoadingState } from './LoadingState';
 export type { LoadingStateProps } from './LoadingState';
 

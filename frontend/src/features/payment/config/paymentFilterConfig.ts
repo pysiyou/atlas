@@ -7,6 +7,7 @@ import type { FilterConfig } from '@/features/filters';
 import type { PaymentMethod } from '@/types';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
+import { getEnabledPaymentMethods } from '@/types/billing';
 
 /**
  * Prepare filter options for payment status
@@ -14,11 +15,10 @@ import { createFilterOptions } from '@/utils/filtering';
 const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
 
 /**
- * Currently enabled payment methods
- * Note: Only Cash and Mobile Money are active
- * TODO: Enable other payment methods when backend support is ready
+ * Get enabled payment methods from centralized config
+ * Uses the single source of truth instead of hardcoded values
  */
-const PAYMENT_METHOD_VALUES: PaymentMethod[] = ['cash', 'mobile-money'];
+const PAYMENT_METHOD_VALUES: PaymentMethod[] = getEnabledPaymentMethods().map(m => m.value);
 
 /**
  * Payment method configuration for filter display

@@ -17,6 +17,7 @@ import { displayId } from '@/utils/id-display';
 import { PatientFormTabs } from '../components/forms/PatientFormTabs';
 import { calculateFormProgress } from '../utils/formProgressCalculator';
 import { usePatientMutation } from '../hooks/usePatientMutation';
+import { FormErrorBoundary } from '@/shared/components';
 
 /**
  * Props for EditPatientModal component.
@@ -65,8 +66,11 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   /**
    * Handles field updates in a type-safe way
    */
-  const handleFieldChange = (field: string, value: string | boolean | number | undefined) => {
-    updateField(field as keyof typeof formData, value as never);
+  const handleFieldChange = <K extends keyof typeof formData>(
+    field: K,
+    value: typeof formData[K]
+  ) => {
+    updateField(field, value);
   };
 
   /**
@@ -126,7 +130,8 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   const formProgress = useMemo(() => calculateFormProgress(formData), [formData]);
 
   return (
-    <Modal
+    <FormErrorBoundary>
+      <Modal
       isOpen={isOpen}
       onClose={onClose}
       title={modalTitle}
@@ -186,5 +191,6 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         </div>
       </div>
     </Modal>
+    </FormErrorBoundary>
   );
 };

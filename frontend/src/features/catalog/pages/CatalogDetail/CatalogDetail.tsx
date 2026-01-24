@@ -13,32 +13,30 @@ import { EmptyState, BalancedDetailsLayout } from '@/shared/ui';
 import { LoadingState } from '@/shared/components';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { TableInput } from '@/shared/ui/BalancedDetailsLayout';
+import { formatArray, formatBoolean, formatDetailDate } from '@/shared/utils/data';
 
 /**
- * Format array to comma-separated string
+ * Format array to comma-separated string with fallback
  */
-const formatArray = (arr: string[] | undefined): string => {
-  if (!arr || arr.length === 0) return '-';
-  return arr.join(', ');
+const formatArrayWithFallback = (arr: string[] | undefined): string => {
+  const formatted = formatArray(arr);
+  return formatted || '-';
 };
 
 /**
- * Format boolean to Yes/No
+ * Format boolean to Yes/No with fallback
  */
-const formatBoolean = (val: boolean | undefined): string => {
+const formatBooleanWithFallback = (val: boolean | undefined): string => {
   if (val === undefined) return '-';
-  return val ? 'Yes' : 'No';
+  return formatBoolean(val);
 };
 
 /**
  * Format date for display
  */
-const formatDate = (dateStr: string): string => {
-  return new Date(dateStr).toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+const formatDate = (dateStr: string | undefined): string => {
+  if (!dateStr) return '-';
+  return formatDetailDate(dateStr);
 };
 
 /**
@@ -106,9 +104,9 @@ export const CatalogDetail: React.FC = () => {
         { label: 'Category', value: capitalize(test.category) },
         { label: 'Turnaround Time', value: formatTurnaroundTime(test.turnaroundTime) },
         { label: 'Methodology', value: test.methodology || '-' },
-        { label: 'Synonyms', value: formatArray(test.synonyms) },
-        { label: 'LOINC Codes', value: formatArray(test.loincCodes) },
-        { label: 'Panels', value: formatArray(test.panels) },
+        { label: 'Synonyms', value: formatArrayWithFallback(test.synonyms) },
+        { label: 'LOINC Codes', value: formatArrayWithFallback(test.loincCodes) },
+        { label: 'Panels', value: formatArrayWithFallback(test.panels) },
         { label: 'Notes', value: test.notes || '-' },
       ],
     },
@@ -118,14 +116,14 @@ export const CatalogDetail: React.FC = () => {
       rows: [
         { label: 'Sample Type', value: capitalize(test.sampleType) },
         { label: 'Container', value: test.containerDescription || '-' },
-        { label: 'Container Types', value: formatArray(test.containerTypes) },
-        { label: 'Container Colors', value: formatArray(test.containerTopColors) },
+        { label: 'Container Types', value: formatArrayWithFallback(test.containerTypes) },
+        { label: 'Container Colors', value: formatArrayWithFallback(test.containerTopColors) },
         { label: 'Sample Volume', value: test.sampleVolume },
         { label: 'Minimum Volume', value: test.minimumVolume ? `${test.minimumVolume} mL` : '-' },
-        { label: 'Fasting Required', value: formatBoolean(test.fastingRequired) },
+        { label: 'Fasting Required', value: formatBooleanWithFallback(test.fastingRequired) },
         { label: 'Collection Notes', value: test.collectionNotes || '-' },
         { label: 'Special Requirements', value: test.specialRequirements || '-' },
-        { label: 'Rejection Criteria', value: formatArray(test.rejectionCriteria) },
+        { label: 'Rejection Criteria', value: formatArrayWithFallback(test.rejectionCriteria) },
       ],
     },
     {

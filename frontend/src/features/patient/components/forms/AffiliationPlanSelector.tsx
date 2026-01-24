@@ -28,6 +28,8 @@ export interface AffiliationPlanSelectorProps {
   actionLabel?: string;
   /** Whether to show loading state */
   loading?: boolean;
+  /** Optional callback when action button is clicked */
+  onAction?: () => void;
 }
 
 /**
@@ -43,6 +45,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
   isActive = false,
   actionLabel = 'Continue',
   loading = false,
+  onAction,
 }) => {
   const [pricing, setPricing] = useState<AffiliationPricing[]>([]);
   const [isLoadingPricing, setIsLoadingPricing] = useState(true);
@@ -281,8 +284,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               variant="primary"
               size="lg"
               fullWidth
-              onClick={() => {}}
-              disabled={loading}
+              onClick={onAction || undefined}
+              disabled={loading || !onAction}
               className="font-semibold bg-orange-500 hover:bg-orange-600 text-white rounded-lg py-3 text-base shadow-sm"
             >
               {loading ? 'Processing...' : getActionText()}

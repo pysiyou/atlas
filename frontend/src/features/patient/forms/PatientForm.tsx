@@ -14,7 +14,7 @@ import { Input, Select, Textarea, Badge, Button, TagInput, DateInput, MultiSelec
 import type { Gender, AffiliationDuration, Affiliation, Relationship } from '@/types';
 import { GENDER_OPTIONS, AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
-import { isAffiliationActive } from '../hooks/usePatientForm';
+import { isAffiliationActive } from '../utils/affiliationUtils';
 import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
 import { AffiliationPlanSelector } from '../components/forms/AffiliationPlanSelector';
 
@@ -269,7 +269,7 @@ export const AffiliationSection: React.FC<
             onChange={e => {
               onFieldChange('hasAffiliation', e.target.checked);
               if (!e.target.checked) {
-                onFieldChange('affiliationDuration', undefined as never);
+                onFieldChange('affiliationDuration', undefined);
               }
             }}
             className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
@@ -351,11 +351,21 @@ export const EmergencyContactSection: React.FC<
   const handleRelationshipChange = (selectedIds: string[]) => {
     if (selectedIds.length === 0) {
       // Clear button clicked: actually clear the selection (show placeholder)
-      onFieldChange('emergencyContactRelationship', undefined as never);
+      onFieldChange('emergencyContactRelationship', undefined);
     } else {
       // Use the most recently selected item (last in array)
-      const newValue = selectedIds[selectedIds.length - 1] as Relationship;
-      onFieldChange('emergencyContactRelationship', newValue);
+      // Type guard to ensure valid Relationship value
+      const lastId = selectedIds[selectedIds.length - 1];
+      const validRelationships: Relationship[] = [
+        'spouse',
+        'parent',
+        'child',
+        'sibling',
+        'other',
+      ];
+      if (validRelationships.includes(lastId as Relationship)) {
+        onFieldChange('emergencyContactRelationship', lastId as Relationship);
+      }
     }
   };
 

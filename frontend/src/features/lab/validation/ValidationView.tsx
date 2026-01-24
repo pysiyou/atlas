@@ -21,6 +21,7 @@ import { ValidationCard } from './ValidationCard';
 import { ValidationMobileCard } from './ValidationMobileCard';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
+import { DataErrorBoundary } from '@/shared/components';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { TestWithContext, CollectedSample } from '@/types';
 import { resultAPI } from '@/services/api';
@@ -233,7 +234,8 @@ export const ValidationView: React.FC = () => {
   }
 
   return (
-    <LabWorkflowView
+    <DataErrorBoundary>
+      <LabWorkflowView
       title="Result Validation"
       items={allTests}
       filterFn={filterTest}
@@ -267,5 +269,6 @@ export const ValidationView: React.FC = () => {
       emptyDescription="There are no results waiting for validation."
       searchPlaceholder="Search tests..."
     />
+    </DataErrorBoundary>
   );
 };

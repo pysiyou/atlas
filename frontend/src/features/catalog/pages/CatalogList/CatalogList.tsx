@@ -13,6 +13,7 @@ import { ListView } from '@/shared/components';
 import { CatalogFilters } from '../../components/filters/CatalogFilters';
 import { createCatalogTableConfig } from './CatalogTableConfig';
 import type { Test, TestCategory } from '@/types';
+import { PRICE_RANGE } from '@/shared/constants';
 
 /**
  * CatalogList Component
@@ -42,7 +43,11 @@ export const CatalogList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilters, setCategoryFilters] = useState<TestCategory[]>([]);
   const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
+  // Use shared constants for price range
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    PRICE_RANGE.MIN,
+    PRICE_RANGE.MAX,
+  ]);
 
   // Apply filters to tests
   const filteredTests = useMemo(() => {

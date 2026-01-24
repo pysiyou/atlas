@@ -18,6 +18,7 @@ import { PaymentDetailModal } from '../../modals/PaymentDetailModal';
 import { useOrdersList, usePaymentsList } from '@/hooks/queries';
 import { createOrderPaymentDetailsList, type OrderPaymentDetails } from '../../types/types';
 import type { PaymentStatus, PaymentMethod } from '@/types';
+import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 
 /**
  * PaymentList Component
@@ -31,6 +32,7 @@ import type { PaymentStatus, PaymentMethod } from '@/types';
  */
 export const PaymentList: React.FC = () => {
   const navigate = useNavigate();
+  const { invalidateAll } = useInvalidatePayments();
   const [methodFilters, setMethodFilters] = useState<PaymentMethod[]>([]);
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
 
@@ -106,8 +108,19 @@ export const PaymentList: React.FC = () => {
     return filtered;
   }, [preFilteredOrders, dateRange, methodFilters]);
 
+  /**
+   * Handles successful payment - invalidates caches to refresh the data
+   */
+  const handleTablePaymentSuccess = useCallback(() => {
+    invalidateAll();
+    refetch();
+  }, [invalidateAll, refetch]);
+
   // Memoize table config to prevent recreation on every render
-  const paymentTableConfig = useMemo(() => createPaymentTableConfig(navigate), [navigate]);
+  const paymentTableConfig = useMemo(
+    () => createPaymentTableConfig(navigate, handleTablePaymentSuccess),
+    [navigate, handleTablePaymentSuccess]
+  );
 
   const handleDismissError = () => {
     // Error will be cleared on next successful fetch
@@ -130,11 +143,12 @@ export const PaymentList: React.FC = () => {
   }, []);
 
   /**
-   * Handles successful payment - refetches data to update the list
+   * Handles successful payment from modal - invalidates caches and refetches data
    */
   const handlePaymentSuccess = useCallback(() => {
+    invalidateAll();
     refetch();
-  }, [refetch]);
+  }, [invalidateAll, refetch]);
 
   return (
     <>

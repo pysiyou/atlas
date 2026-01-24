@@ -22,6 +22,7 @@ import { isCollectedSample } from '@/types';
 import { EntryCard } from './EntryCard';
 import { EntryMobileCard } from './EntryMobileCard';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
+import { DataErrorBoundary } from '@/shared/components';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { resultAPI } from '@/services/api';
@@ -296,7 +297,8 @@ export const EntryView: React.FC = () => {
   }
 
   return (
-    <LabWorkflowView
+    <DataErrorBoundary>
+      <LabWorkflowView
       title="Result Entry"
       items={allTests}
       filterFn={filterTest}
@@ -332,5 +334,6 @@ export const EntryView: React.FC = () => {
       emptyDescription="There are no samples waiting for result entry."
       searchPlaceholder="Search tests..."
     />
+    </DataErrorBoundary>
   );
 };

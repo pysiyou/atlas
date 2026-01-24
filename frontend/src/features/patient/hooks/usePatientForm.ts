@@ -2,14 +2,6 @@ import { useState } from 'react';
 import type { Gender, AffiliationDuration, Patient, Relationship } from '@/types';
 import { validatePatientForm } from '../utils/patientValidation';
 
-// Re-export affiliation utilities for backward compatibility
-export {
-  generateAssuranceNumber,
-  calculateEndDate,
-  isAffiliationActive,
-  getAffiliationStatus,
-} from '../utils/affiliationUtils';
-
 export interface PatientFormData {
   fullName: string;
   dateOfBirth: string;
@@ -53,6 +45,41 @@ const normalizeFamilyHistory = (value: unknown): string => {
   if (typeof value === 'string') return value;
   if (Array.isArray(value)) return value.map(String).filter(Boolean).join('; ');
   return String(value);
+};
+
+/**
+ * Default form data values
+ */
+const DEFAULT_FORM_DATA: PatientFormData = {
+  fullName: '',
+  dateOfBirth: '',
+  gender: 'male',
+  phone: '',
+  email: '',
+  height: '',
+  weight: '',
+  street: '',
+  city: '',
+  postalCode: '',
+  hasAffiliation: false,
+  affiliationDuration: 6,
+  emergencyContactFullName: '',
+  emergencyContactRelationship: 'spouse',
+  emergencyContactPhone: '',
+  emergencyContactEmail: '',
+  chronicConditions: '',
+  currentMedications: '',
+  allergies: '',
+  previousSurgeries: '',
+  familyHistory: '',
+  smoking: false,
+  alcohol: false,
+  temperature: '',
+  heartRate: '',
+  systolicBP: '',
+  diastolicBP: '',
+  respiratoryRate: '',
+  oxygenSaturation: '',
 };
 
 // High complexity is necessary to map all patient fields from API to form data
@@ -110,37 +137,7 @@ const createInitialFormData = (initialData?: Partial<Patient>): PatientFormData 
     };
   }
 
-  return {
-    fullName: '',
-    dateOfBirth: '',
-    gender: 'male',
-    phone: '',
-    email: '',
-    height: '',
-    weight: '',
-    street: '',
-    city: '',
-    postalCode: '',
-    hasAffiliation: false,
-    affiliationDuration: 6,
-    emergencyContactFullName: '',
-    emergencyContactRelationship: 'spouse',
-    emergencyContactPhone: '',
-    emergencyContactEmail: '',
-    chronicConditions: '',
-    currentMedications: '',
-    allergies: '',
-    previousSurgeries: '',
-    familyHistory: '',
-    smoking: false,
-    alcohol: false,
-    temperature: '',
-    heartRate: '',
-    systolicBP: '',
-    diastolicBP: '',
-    respiratoryRate: '',
-    oxygenSaturation: '',
-  };
+  return { ...DEFAULT_FORM_DATA };
 };
 
 export const usePatientForm = (initialData?: Partial<Patient>) => {
@@ -148,37 +145,7 @@ export const usePatientForm = (initialData?: Partial<Patient>) => {
     createInitialFormData(initialData)
   );
 
-  const getDefaultFormData = (): PatientFormData => ({
-    fullName: '',
-    dateOfBirth: '',
-    gender: 'male',
-    phone: '',
-    email: '',
-    height: '',
-    weight: '',
-    street: '',
-    city: '',
-    postalCode: '',
-    hasAffiliation: false,
-    affiliationDuration: 6,
-    emergencyContactFullName: '',
-    emergencyContactRelationship: 'spouse',
-    emergencyContactPhone: '',
-    emergencyContactEmail: '',
-    chronicConditions: '',
-    currentMedications: '',
-    allergies: '',
-    previousSurgeries: '',
-    familyHistory: '',
-    smoking: false,
-    alcohol: false,
-    temperature: '',
-    heartRate: '',
-    systolicBP: '',
-    diastolicBP: '',
-    respiratoryRate: '',
-    oxygenSaturation: '',
-  });
+  const getDefaultFormData = (): PatientFormData => ({ ...DEFAULT_FORM_DATA });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);

@@ -16,7 +16,7 @@ import {
   getDefaultPaymentMethod,
   type PaymentMethod,
 } from '@/types/billing';
-import { createPayment, type PaymentCreate } from '@/services/api/payments';
+import { useCreatePayment } from '@/hooks/queries/usePayments';
 import type { IconName } from '@/shared/ui/Icon';
 
 interface PaymentPopoverProps {
@@ -52,8 +52,10 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   // Form state - use default payment method from centralized config
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
   const [notes, setNotes] = useState<string>('');
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Use mutation hook for payment creation
+  const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
 
   // Amount is fixed to the order's total price
   const amount = order.totalPrice;
@@ -62,7 +64,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   /**
    * Handles form submission and payment creation
    */
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(() => {
     setError(null);
 
     // Validate amount
@@ -71,29 +73,27 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       return;
     }
 
-    try {
-      setSubmitting(true);
+    // Build payment request
+    const paymentData = {
+      orderId: order.orderId.toString(), // Convert to string as expected by hook
+      amount,
+      paymentMethod,
+      notes: notes.trim() || undefined,
+    };
 
-      // Build payment request
-      const paymentData: PaymentCreate = {
-        orderId: order.orderId, // number is fine, API will handle conversion
-        amount,
-        paymentMethod,
-        notes: notes.trim() || undefined,
-      };
-
-      await createPayment(paymentData);
-
-      // Invoke success callback and close popover
-      onSuccess?.();
-      onConfirm();
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to process payment';
-      setError(errorMessage);
-    } finally {
-      setSubmitting(false);
-    }
-  }, [amount, paymentMethod, notes, order.orderId, onSuccess, onConfirm]);
+    // Use mutation hook which handles cache invalidation automatically
+    createPaymentMutation(paymentData, {
+      onSuccess: () => {
+        // Invoke success callback and close popover
+        onSuccess?.();
+        onConfirm();
+      },
+      onError: (err: unknown) => {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to process payment';
+        setError(errorMessage);
+      },
+    });
+  }, [amount, paymentMethod, notes, order.orderId, createPaymentMutation, onSuccess, onConfirm]);
 
   // Keyboard shortcuts for submit (Enter) and cancel (Escape)
   useEffect(() => {

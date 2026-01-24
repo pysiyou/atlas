@@ -18,6 +18,7 @@ import { createPatientTableConfig } from './PatientTableConfig';
 import { calculateAge } from '@/utils';
 import type { Patient, Gender } from '@/types';
 import { EditPatientModal } from '../../modals/EditPatientModal';
+import { isAffiliationActive } from '../../utils/affiliationUtils';
 
 /**
  * PatientList component - Migrated to use ListView
@@ -67,18 +68,7 @@ export const PatientList: React.FC = () => {
     defaultSort: { field: 'registrationDate', direction: 'desc' },
   });
 
-  /**
-   * Check if a patient's affiliation is active
-   */
-  const isAffiliationActive = (patient: Patient): boolean => {
-    if (!patient.affiliation) return false;
-
-    const now = new Date();
-    const startDate = new Date(patient.affiliation.startDate);
-    const endDate = new Date(patient.affiliation.endDate);
-
-    return now >= startDate && now <= endDate;
-  };
+  // Use shared affiliation utility (no need for local function)
 
   // Apply age and affiliation status filters
   const filteredPatients = useMemo(() => {
@@ -96,7 +86,7 @@ export const PatientList: React.FC = () => {
     // Apply affiliation status filter
     if (affiliationStatusFilters.length > 0) {
       filtered = filtered.filter(patient => {
-        const isActive = isAffiliationActive(patient);
+        const isActive = isAffiliationActive(patient.affiliation);
         const hasInactive = !patient.affiliation || !isActive;
 
         if (

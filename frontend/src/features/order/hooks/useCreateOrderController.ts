@@ -264,7 +264,7 @@ export function useCreateOrderController({
     priority: formData.priority,
     clinicalNotes: formData.clinicalNotes,
     setReferringPhysician: (value: string) => updateField('referringPhysician', value),
-    setPriority: (value: Order['priority']) => updateField('priority', value as never),
+    setPriority: (value: Order['priority']) => updateField('priority', value),
     setClinicalNotes: (value: string) => updateField('clinicalNotes', value),
 
     // Errors

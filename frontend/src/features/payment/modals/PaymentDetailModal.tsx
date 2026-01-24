@@ -11,11 +11,12 @@
  * Uses the shared Modal and SectionContainer components for consistency.
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Modal, SectionContainer, Icon, Badge, Button, Alert } from '@/shared/ui';
+import { PaymentErrorBoundary } from '@/shared/components';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
-import { createPayment, type PaymentCreate } from '@/services/api/payments';
+import { useCreatePayment } from '@/hooks/queries/usePayments';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,
@@ -52,19 +53,24 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   order,
   onPaymentSuccess,
 }) => {
+  // Use mutation hook for payment creation
+  const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
+
   // Form state - use default payment method from centralized config
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
   const [notes, setNotes] = useState<string>('');
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Reset form state when modal opens/closes or order changes
-  useEffect(() => {
+  // Use mutation hook for payment creation
+  const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
+
+  // Reset form state when modal opens or order changes
+  // This is a common pattern for resetting form state when a modal opens
+  React.useEffect(() => {
     if (isOpen) {
       setPaymentMethod(getDefaultPaymentMethod());
       setNotes('');
       setError(null);
-      setSubmitting(false);
     }
   }, [isOpen, order?.orderId]);
 
@@ -74,7 +80,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   /**
    * Handles payment submission
    */
-  const handlePayment = useCallback(async () => {
+  const handlePayment = useCallback(() => {
     if (!order || isPaid) return;
 
     setError(null);
@@ -85,43 +91,42 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
       return;
     }
 
-    try {
-      setSubmitting(true);
+    // Build payment request
+    const paymentData = {
+      orderId: order.orderId.toString(), // Convert to string as expected by hook
+      amount: order.totalPrice,
+      paymentMethod,
+      notes: notes.trim() || undefined,
+    };
 
-      // Build payment request
-      const paymentData: PaymentCreate = {
-        orderId: order.orderId, // number is fine, API will handle conversion
-        amount: order.totalPrice,
-        paymentMethod,
-        notes: notes.trim() || undefined,
-      };
-
-      await createPayment(paymentData);
-
-      // Invoke success callback and close modal
-      onPaymentSuccess?.();
-      onClose();
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to process payment';
-      setError(errorMessage);
-    } finally {
-      setSubmitting(false);
-    }
-  }, [order, isPaid, paymentMethod, notes, onPaymentSuccess, onClose]);
+    // Use mutation hook which handles cache invalidation automatically
+    createPaymentMutation(paymentData, {
+      onSuccess: () => {
+        // Invoke success callback and close modal
+        onPaymentSuccess?.();
+        onClose();
+      },
+      onError: (err: unknown) => {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to process payment';
+        setError(errorMessage);
+      },
+    });
+  }, [order, isPaid, paymentMethod, notes, createPaymentMutation, onPaymentSuccess, onClose]);
 
   // Don't render if no order
   if (!order) return null;
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Payment Details"
-      subtitle={displayId.order(order.orderId)}
-      size="xl"
-      disableClose={submitting}
-      closeOnBackdropClick={!submitting}
-    >
+    <PaymentErrorBoundary>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Payment Details"
+        subtitle={displayId.order(order.orderId)}
+        size="xl"
+        disableClose={submitting}
+        closeOnBackdropClick={!submitting}
+      >
       <div className="flex flex-col h-full bg-gray-50">
         {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
@@ -320,5 +325,6 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         </div>
       </div>
     </Modal>
+    </PaymentErrorBoundary>
   );
 };

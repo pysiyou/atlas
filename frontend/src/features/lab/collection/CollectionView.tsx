@@ -24,6 +24,7 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';
 import { CollectionMobileCard } from './CollectionMobileCard';
 import { LabWorkflowView } from '../components/LabWorkflowView';
+import { DataErrorBoundary } from '@/shared/components';
 import type { SampleDisplay } from '../types';
 
 /** Sample status filter options */
@@ -179,7 +180,8 @@ export const CollectionView: React.FC = () => {
   };
 
   return (
-    <LabWorkflowView
+    <DataErrorBoundary>
+      <LabWorkflowView
       title="Sample Collection"
       items={filteredByStatus}
       filterFn={filterSample}
@@ -208,5 +210,6 @@ export const CollectionView: React.FC = () => {
         />
       }
     />
+    </DataErrorBoundary>
   );
 };

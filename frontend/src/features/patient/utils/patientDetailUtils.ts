@@ -4,37 +4,33 @@
  */
 
 import type { Patient, Order } from '@/types';
+import {
+  formatDetailDate as formatDetailDateShared,
+  formatArray,
+  formatOrderDate,
+} from '@/shared/utils/data';
 
 /**
  * Formats a date to a readable string
+ * Re-exports shared utility for backward compatibility
  */
 export const formatDetailDate = (
-  date: string | Date,
+  date: string | Date | undefined | null,
   format: 'long' | 'short' = 'long'
 ): string => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-
   if (format === 'long') {
-    return dateObj.toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
+    return formatDetailDateShared(date);
   }
-
-  return dateObj.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
+  // For short format, use the order date formatter
+  return formatOrderDate(date, 'short');
 };
 
 /**
  * Formats an array of strings into a comma-separated list or returns fallback
  */
 export const formatList = (items: string[] | undefined, fallback: string = 'None'): string => {
-  if (!items || items.length === 0) return fallback;
-  return items.join(', ');
+  const formatted = formatArray(items);
+  return formatted || fallback;
 };
 
 /**
@@ -69,10 +65,6 @@ export const getReportableOrders = (orders: Order[]): Order[] => {
 
 /**
  * Formats currency for display
+ * Re-exports shared utility for backward compatibility
  */
-export const formatOrderPrice = (price: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(price);
-};
+export { formatCurrency as formatOrderPrice } from '@/shared/utils/data/currencyFormatters';
