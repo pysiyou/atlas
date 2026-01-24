@@ -9,7 +9,6 @@ import {
   useOrdersList,
   useTestCatalog,
 } from '@/hooks/queries';
-import { useBilling } from '@/features/billing/BillingContext';
 import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
@@ -102,13 +101,15 @@ export const Admin: React.FC = () => {
   const { patients, isLoading: patientsLoading } = usePatientsList();
   const { orders, isLoading: ordersLoading } = useOrdersList();
   const { tests, isLoading: testsLoading } = useTestCatalog();
-  const billingContext = useBilling();
 
-  if (patientsLoading || ordersLoading || testsLoading || !billingContext) {
+  if (patientsLoading || ordersLoading || testsLoading) {
     return <div>Loading...</div>;
   }
 
-  const { getTotalRevenue } = billingContext;
+  // Calculate total revenue from orders (billing context removed)
+  const getTotalRevenue = () => {
+    return orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+  };
 
   const stats = [
     {

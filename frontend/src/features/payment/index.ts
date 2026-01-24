@@ -1,17 +1,9 @@
 /**
- * Payment Feature Exports
+ * Payment Feature - Main Exports
  */
-export { PaymentList } from './PaymentList';
-export { PaymentFilters } from './PaymentFilters';
-export { createPaymentTableConfig } from './PaymentTableConfig';
-export { PaymentPopover } from './PaymentPopover';
-export { PaymentButton } from './PaymentButton';
-export { PaymentDetailModal } from './PaymentDetailModal';
 
-// Types
-export type { OrderPaymentDetails } from './types';
-export {
-  createOrderPaymentDetails,
-  createOrderPaymentDetailsList,
-  buildPaymentsByOrderMap,
-} from './types';
+export * from './pages';
+export * from './components';
+export * from './modals';
+export * from './config';
+export * from './types';

@@ -2,6 +2,4 @@
  * User feature exports
  */
 
-export { UsersContext, type UsersContextType, type UserDisplayInfo } from './UsersContext';
-export { UsersProvider } from './UsersProvider';
-export { useUsers } from './useUsers';
+// Note: useUsers hook is deprecated, use useUsersList() from @/hooks/queries instead

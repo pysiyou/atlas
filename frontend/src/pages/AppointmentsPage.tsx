@@ -1,83 +1,28 @@
 /**
  * Appointments Page
  * Appointment scheduling and management
+ * 
+ * NOTE: Appointments context removed - will be migrated to TanStack Query when API is ready
  */
 
 import React from 'react';
-import { useAppointments } from '@/features/appointment/AppointmentsContext';
-import { SectionContainer, Badge, Icon } from '@/shared/ui';
-import { formatDate } from '@/utils';
+import { SectionContainer, Icon } from '@/shared/ui';
 
 export const Appointments: React.FC = () => {
-  const appointmentsContext = useAppointments();
-
-  if (!appointmentsContext) return <div>Loading...</div>;
-
-  const { getTodayAppointments, getUpcomingAppointments } = appointmentsContext;
-
-  const todayAppointments = getTodayAppointments();
-  const upcomingAppointments = getUpcomingAppointments().slice(0, 10);
-
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-900">Appointments</h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <SectionContainer title={`Today's Appointments (${todayAppointments.length})`}>
-          {todayAppointments.length > 0 ? (
-            <div className="space-y-3">
-              {todayAppointments.map(appointment => (
-                <div
-                  key={appointment.id}
-                  className="flex items-start justify-between p-3 border border-gray-200 rounded"
-                >
-                  <div>
-                    <div className="font-medium">{appointment.patientName}</div>
-                    <div className="text-sm text-gray-600">
-                      {appointment.time} • {appointment.type}
-                    </div>
-                    {appointment.purpose && (
-                      <div className="text-sm text-gray-500">{appointment.purpose}</div>
-                    )}
-                  </div>
-                  <Badge variant={appointment.status} size="sm" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-              <Icon name="calendar" className="w-8 h-8 mx-auto mb-2 opacity-50" />
-              <p>No appointments today</p>
-            </div>
-          )}
-        </SectionContainer>
-
-        <SectionContainer title="Upcoming Appointments">
-          {upcomingAppointments.length > 0 ? (
-            <div className="space-y-3">
-              {upcomingAppointments.map(appointment => (
-                <div
-                  key={appointment.id}
-                  className="flex items-start justify-between p-3 border border-gray-200 rounded"
-                >
-                  <div>
-                    <div className="font-medium">{appointment.patientName}</div>
-                    <div className="text-sm text-gray-600">
-                      {formatDate(appointment.date)} • {appointment.time}
-                    </div>
-                    <div className="text-sm text-gray-500">{appointment.type}</div>
-                  </div>
-                  <Badge variant={appointment.status} size="sm" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-              <p>No upcoming appointments</p>
-            </div>
-          )}
-        </SectionContainer>
-      </div>
+      <SectionContainer title="Coming Soon">
+        <div className="text-center py-12">
+          <Icon name="calendar" className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+          <p className="text-gray-600">
+            Appointment management will be available once the API is implemented.
+          </p>
+          <p className="text-sm text-gray-500 mt-2">
+            This feature will use TanStack Query hooks for data management.
+          </p>
+        </div>
+      </SectionContainer>
     </div>
   );
 };

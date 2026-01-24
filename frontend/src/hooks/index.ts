@@ -45,19 +45,3 @@ export type { ResponsiveLayoutConfig } from './useResponsiveLayout';
 //
 // These will be removed in a future version once all consumers are migrated.
 // =============================================================================
-/**
- * @deprecated Use useOrdersList() from @/hooks/queries instead
- */
-export { useOrders } from '@/features/order/OrderContext';
-/**
- * @deprecated Use useSamplesList() from @/hooks/queries instead
- */
-export { useSamples } from '@/features/lab/SamplesContext';
-/**
- * @deprecated Use useTestCatalog() from @/hooks/queries instead
- */
-export { useTests } from '@/features/test/TestsContext';
-/**
- * @deprecated Use useUsersList() from @/hooks/queries instead
- */
-export { useUsers } from '@/features/user';

@@ -5,8 +5,8 @@
 
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { CatalogList } from '@/features/catalog/CatalogList';
-import { CatalogDetail } from '@/features/catalog/CatalogDetail';
+import { CatalogList } from '@/features/catalog/pages/CatalogList/CatalogList';
+import { CatalogDetail } from '@/features/catalog/pages/CatalogDetail/CatalogDetail';
 
 /**
  * Catalog Page Component

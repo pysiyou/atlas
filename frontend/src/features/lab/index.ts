@@ -3,10 +3,6 @@
  * Re-exports all lab-related components and utilities
  */
 
-// Context & Provider
-export { SamplesContext } from './SamplesContext';
-export { SamplesProvider } from './SamplesProvider';
-
 // Types
 export * from './types';
 

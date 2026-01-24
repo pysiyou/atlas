@@ -9,7 +9,7 @@ import { registerModal } from './modalRegistry';
 import { CollectionDetailModal } from '@/features/lab/collection/CollectionDetailModal';
 import { EntryDetailModal } from '@/features/lab/entry/EntryDetailModal';
 import { ValidationDetailModal } from '@/features/lab/validation/ValidationDetailModal';
-import { OrderCreateModal } from '@/features/order/OrderCreateModal';
+import { OrderCreateModal } from '@/features/order/modals/OrderCreateModal';
 
 import type { ContainerType, SampleDisplay, Test, TestWithContext } from '@/types';
 
