@@ -127,7 +127,7 @@ export type IconName =
   | 'thermometer'
   | 'heart-pulse'
   | 'pulse'
-  | 'blood';
+  | 'blood'
 
 interface IconProps {
   /** Name of the icon to display (must match SVG filename without .svg extension) */

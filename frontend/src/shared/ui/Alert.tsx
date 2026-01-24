@@ -22,9 +22,9 @@ export const Alert: React.FC<AlertProps> = ({
   // Colors match Badge component for visual consistency
   const variants = {
     info: {
-      bg: 'bg-blue-100',
-      border: 'border-blue-200',
-      text: 'text-blue-800',
+      bg: 'bg-sky-100',
+      border: 'border-sky-200',
+      text: 'text-sky-800',
       icon: <Icon name="info-circle" className="w-5 h-5" />,
     },
     success: {

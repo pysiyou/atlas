@@ -158,7 +158,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                     isSelected
                       ? showWarning
                         ? 'bg-yellow-50 border-yellow-200 ring-1 ring-yellow-200'
-                        : 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
+                        : 'bg-sky-50 border-sky-200 ring-1 ring-sky-200'
                       : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                   }
                 `}
@@ -170,16 +170,16 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   name="container-type"
                   checked={isSelected}
                   onChange={() => setSelectedContainerType(option.value as ContainerType)}
-                  className={`h-3.5 w-3.5 border-gray-300 ${showWarning ? 'text-yellow-600 focus:ring-yellow-500' : 'text-blue-600 focus:ring-blue-500'}`}
+                  className={`h-3.5 w-3.5 border-gray-300 ${showWarning ? 'text-yellow-600 focus:ring-yellow-500' : 'text-sky-600 focus:ring-sky-500'}`}
                 />
                 <span
-                  className={`flex-1 text-xs font-medium ${isSelected ? (showWarning ? 'text-yellow-900' : 'text-blue-900') : 'text-gray-900'}`}
+                  className={`flex-1 text-xs font-medium ${isSelected ? (showWarning ? 'text-yellow-900' : 'text-sky-900') : 'text-gray-900'}`}
                 >
                   {option.name}
                 </span>
                 <Icon
                   name={option.value === 'cup' ? 'lab-cup' : 'lab-tube'}
-                  className={`w-5 h-5 ${isSelected ? (showWarning ? 'text-yellow-600' : 'text-blue-600') : 'text-gray-400'}`}
+                  className={`w-5 h-5 ${isSelected ? (showWarning ? 'text-yellow-600' : 'text-sky-600') : 'text-gray-400'}`}
                 />
               </div>
             );
@@ -210,7 +210,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                 onClick={() => setSelectedColor(option.value)}
                 className={`w-8 h-8 rounded-full transition-all duration-200 ${option.colorClass} ${
                   isSelected
-                    ? 'scale-110 ring-2 ring-offset-2 ring-blue-400 shadow-md'
+                    ? 'scale-110 ring-2 ring-offset-2 ring-sky-400 shadow-md'
                     : isRequired
                       ? 'opacity-100 hover:scale-105 hover:shadow-sm ring-2 ring-green-300'
                       : 'opacity-60 hover:opacity-80 hover:scale-105 hover:shadow-sm'

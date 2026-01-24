@@ -123,7 +123,7 @@ interface RadioCardProps {
   /** Description text below the label */
   description: string;
   /** Color variant when selected */
-  variant?: 'blue' | 'red';
+  variant?: 'sky' | 'red';
   /** Radio input name for grouping */
   name: string;
   /** Whether the option is disabled */
@@ -137,7 +137,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
   onClick,
   label,
   description,
-  variant = 'blue',
+  variant = 'sky',
   name,
   disabled = false,
   disabledReason,
@@ -145,7 +145,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
   const selectedStyles =
     variant === 'red'
       ? 'bg-red-50 border-red-200 ring-1 ring-red-200'
-      : 'bg-blue-50 border-blue-200 ring-1 ring-blue-200';
+      : 'bg-sky-50 border-sky-200 ring-1 ring-sky-200';
 
   const disabledStyles = 'bg-gray-100 border-gray-200 cursor-not-allowed opacity-60';
 
@@ -156,7 +156,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         ? 'text-red-900'
         : 'text-gray-900'
       : selected
-        ? 'text-blue-900'
+        ? 'text-sky-900'
         : 'text-gray-900';
 
   const descColor = disabled
@@ -166,11 +166,11 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         ? 'text-red-700'
         : 'text-gray-500'
       : selected
-        ? 'text-blue-700'
+        ? 'text-sky-700'
         : 'text-gray-500';
 
   const radioColor =
-    variant === 'red' ? 'text-red-600 focus:ring-red-500' : 'text-blue-600 focus:ring-blue-500';
+    variant === 'red' ? 'text-red-600 focus:ring-red-500' : 'text-sky-600 focus:ring-sky-500';
 
   const handleClick = () => {
     if (!disabled) {
@@ -239,7 +239,7 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
       relative flex items-start p-3 cursor-pointer rounded-lg border transition-all duration-200
       ${
         checked
-          ? 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
+          ? 'bg-sky-50 border-sky-200 ring-1 ring-sky-200'
           : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
       }
     `}
@@ -250,14 +250,14 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="h-3.5 w-3.5 text-blue-600 border-gray-300 focus:ring-blue-500 rounded"
+        className="h-3.5 w-3.5 text-sky-600 border-gray-300 focus:ring-sky-500 rounded"
       />
     </div>
     <div className="ml-2.5">
-      <span className={`block text-xs font-medium ${checked ? 'text-blue-900' : 'text-gray-900'}`}>
+      <span className={`block text-xs font-medium ${checked ? 'text-sky-900' : 'text-gray-900'}`}>
         {label}
       </span>
-      <span className={`block text-xxs mt-0.5 ${checked ? 'text-blue-700' : 'text-gray-500'}`}>
+      <span className={`block text-xxs mt-0.5 ${checked ? 'text-sky-700' : 'text-gray-500'}`}>
         {description}
       </span>
     </div>

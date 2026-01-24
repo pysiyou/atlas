@@ -152,7 +152,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                     percentage={formProgress.percentage}
                     trackColorClass="stroke-gray-200"
                     progressColorClass={
-                      formProgress.percentage === 100 ? 'stroke-emerald-500' : 'stroke-blue-500'
+                      formProgress.percentage === 100 ? 'stroke-emerald-500' : 'stroke-sky-500'
                     }
                     label={`${formProgress.filled}/${formProgress.total}`}
                     className="h-7"

@@ -71,7 +71,7 @@ export const LAB_CARD_CONTAINERS = {
 
   // Card base styling (applied via Card component)
   cardBase:
-    'border border-gray-200 hover:border hover:border-blue-100 hover:bg-blue-50 transition-all duration-200',
+    'border border-gray-200 hover:border hover:border-sky-100 hover:bg-sky-50 transition-all duration-200',
 
   // Content section (gray background)
   contentSection: 'bg-gray-50 rounded p-2 border border-gray-100',

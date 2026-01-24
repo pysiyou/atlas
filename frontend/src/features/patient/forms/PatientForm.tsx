@@ -341,7 +341,7 @@ export const EmergencyContactSection: React.FC<
         if (opt.value === 'spouse')
           color = 'primary'; // Spouse - sky blue
         else if (opt.value === 'parent')
-          color = 'info'; // Parent - blue
+          color = 'info'; // Parent - sky
         else if (opt.value === 'sibling')
           color = 'success'; // Sibling - green
         else if (opt.value === 'child')

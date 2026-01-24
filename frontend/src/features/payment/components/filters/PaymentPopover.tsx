@@ -82,7 +82,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => (
       <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
         Total
       </span>
-      <span className="text-sm font-bold text-blue-500 tabular-nums">
+      <span className="text-sm font-bold text-sky-500 tabular-nums">
         {formatCurrency(order.totalPrice)}
       </span>
     </div>

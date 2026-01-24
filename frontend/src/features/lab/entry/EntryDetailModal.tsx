@@ -123,7 +123,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       size={18}
       percentage={completionPercentage}
       trackColorClass="stroke-gray-200"
-      progressColorClass={completionPercentage === 100 ? 'stroke-emerald-500' : 'stroke-blue-500'}
+      progressColorClass={completionPercentage === 100 ? 'stroke-emerald-500' : 'stroke-sky-500'}
       label={`${filledCount}/${totalParams}`}
       className="h-7"
     />

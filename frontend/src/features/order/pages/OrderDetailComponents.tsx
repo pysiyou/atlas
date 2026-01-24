@@ -183,9 +183,9 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
               )}
 
               {test.validationNotes && (
-                <div className="mt-2 p-2 bg-blue-50 rounded text-sm">
-                  <span className="font-medium text-blue-900">Validation Notes: </span>
-                  <span className="text-blue-800">{test.validationNotes}</span>
+                <div className="mt-2 p-2 bg-sky-50 rounded text-sm">
+                  <span className="font-medium text-sky-900">Validation Notes: </span>
+                  <span className="text-sky-800">{test.validationNotes}</span>
                 </div>
               )}
             </div>

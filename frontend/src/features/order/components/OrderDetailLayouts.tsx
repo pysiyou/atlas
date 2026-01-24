@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { SectionContainer, IconButton } from '@/shared/ui';
+import { PaymentPopover } from '@/features/payment/components/filters';
 import type { Order, OrderTest, Patient, Test, Invoice } from '@/types';
 import { OrderInfoSection } from './display/OrderInfoSection';
 import { PatientInfoSection } from './display/PatientInfoSection';
@@ -22,6 +23,8 @@ interface LayoutProps {
   supersededCount: number;
   onViewPatient: () => void;
   onViewInvoice: () => void;
+  /** Callback invoked on successful payment */
+  onPaymentSuccess?: () => void;
 }
 
 /**
@@ -36,6 +39,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
   supersededCount,
   onViewPatient,
   onViewInvoice,
+  onPaymentSuccess,
 }) => {
   return (
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6">
@@ -91,6 +95,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         title="Billing Summary"
         className="shrink-0 bg-white"
         contentClassName="overflow-visible"
+        headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
       >
         <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
       </SectionContainer>
@@ -110,6 +115,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
   supersededCount,
   onViewPatient,
   onViewInvoice,
+  onPaymentSuccess,
 }) => {
   return (
     <div className="flex-1 grid grid-cols-2 grid-rows-3 gap-4 min-h-0 h-full">
@@ -149,6 +155,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         title="Billing Summary"
         className="h-full flex flex-col min-h-0 bg-white"
         contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
+        headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
       >
         <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
       </SectionContainer>
@@ -185,6 +192,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
   supersededCount,
   onViewPatient,
   onViewInvoice,
+  onPaymentSuccess,
 }) => {
   return (
     <div
@@ -253,6 +261,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           title="Billing Summary"
           className="h-full flex flex-col min-h-0"
           contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
+          headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
         >
           <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
         </SectionContainer>

@@ -25,6 +25,7 @@ export { useFilterState, useFilterPersistence, useQuickFilters } from './hooks';
 
 // Components
 export { FilterBar, type FilterBarProps } from './FilterBar';
+export { FilterModal, type FilterModalProps } from './FilterModal';
 export { FilterSection, type FilterSectionProps } from './FilterSection';
 export { ActiveFilterBadges, type ActiveFilterBadgesProps } from './ActiveFilterBadges';
 export { QuickFilters, type QuickFiltersProps } from './QuickFilters';

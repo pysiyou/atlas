@@ -125,13 +125,13 @@ const VARIANT_STYLES: Record<string, string> = {
   error: 'bg-red-100 text-red-800 border-transparent',
   success: 'bg-green-100 text-green-800 border-transparent',
   warning: 'bg-yellow-100 text-yellow-800 border-transparent',
-  info: 'bg-blue-100 text-blue-800 border-transparent',
+  info: 'bg-sky-100 text-sky-800 border-transparent',
   purple: 'bg-purple-100 text-purple-800 border-transparent',
   orange: 'bg-orange-100 text-orange-800 border-transparent',
   teal: 'bg-teal-100 text-teal-800 border-transparent',
 
   // Order Status Mappings
-  ordered: 'bg-blue-100 text-blue-800 border-transparent',
+  ordered: 'bg-sky-100 text-sky-800 border-transparent',
   'in-progress': 'bg-yellow-100 text-yellow-800 border-transparent',
   completed: 'bg-green-100 text-green-800 border-transparent',
   cancelled: 'bg-red-100 text-red-800 border-transparent',
@@ -149,14 +149,14 @@ const VARIANT_STYLES: Record<string, string> = {
   // Sample Status Mappings
   pending: 'bg-yellow-100 text-yellow-800 border-transparent',
   collected: 'bg-green-100 text-green-800 border-transparent',
-  received: 'bg-blue-100 text-blue-800 border-transparent',
+  received: 'bg-sky-100 text-sky-800 border-transparent',
   accessioned: 'bg-indigo-100 text-indigo-800 border-transparent',
   stored: 'bg-gray-100 text-gray-800 border-transparent',
   disposed: 'bg-gray-200 text-gray-800 border-transparent',
   'sample-collected': 'bg-teal-100 text-teal-800 border-transparent',
 
   // Appointment Status Mappings
-  scheduled: 'bg-blue-100 text-blue-800 border-transparent',
+  scheduled: 'bg-sky-100 text-sky-800 border-transparent',
   confirmed: 'bg-green-100 text-green-800 border-transparent',
   'no-show': 'bg-orange-100 text-orange-800 border-transparent',
 
@@ -166,7 +166,7 @@ const VARIANT_STYLES: Record<string, string> = {
   unpaid: 'bg-red-100 text-red-800 border-transparent',
 
   // Priority Mappings
-  routine: 'bg-blue-100 text-blue-800 border-transparent',
+  routine: 'bg-sky-100 text-sky-800 border-transparent',
   urgent: 'bg-orange-100 text-orange-800 border-transparent',
   stat: 'bg-red-100 text-red-800 border-transparent font-bold',
 
@@ -178,7 +178,7 @@ const VARIANT_STYLES: Record<string, string> = {
   stool: 'bg-orange-100 text-orange-800 border-transparent',
   swab: 'bg-teal-100 text-teal-800 border-transparent',
   tissue: 'bg-purple-100 text-purple-800 border-transparent',
-  csf: 'bg-blue-100 text-blue-800 border-transparent',
+  csf: 'bg-sky-100 text-sky-800 border-transparent',
   sputum: 'bg-gray-100 text-gray-800 border-transparent',
   fluid: 'bg-cyan-100 text-cyan-800 border-transparent',
   other: 'bg-gray-100 text-gray-800 border-transparent',
@@ -186,8 +186,8 @@ const VARIANT_STYLES: Record<string, string> = {
 
   // Test Category Mappings
   hematology: 'bg-pink-100 text-pink-800 border-transparent',
-  biochemistry: 'bg-blue-100 text-blue-800 border-transparent',
-  chemistry: 'bg-blue-100 text-blue-800 border-transparent',
+  biochemistry: 'bg-sky-100 text-sky-800 border-transparent',
+  chemistry: 'bg-sky-100 text-sky-800 border-transparent',
   microbiology: 'bg-emerald-100 text-emerald-800 border-transparent',
   serology: 'bg-purple-100 text-purple-800 border-transparent',
   urinalysis: 'bg-yellow-100 text-yellow-800 border-transparent',
@@ -198,11 +198,11 @@ const VARIANT_STYLES: Record<string, string> = {
   coagulation: 'bg-rose-100 text-rose-800 border-transparent',
 
   // Sex Mappings
-  male: 'bg-blue-50 text-blue-700 border-blue-200',
-  female: 'bg-pink-50 text-pink-700 border-pink-200',
+  male: 'bg-sky-50 text-sky-700 border-transparent',
+  female: 'bg-pink-50 text-pink-700 border-transparent',
 
   // Medical History Mappings
-  'chronic-condition': 'bg-blue-50 text-blue-700 border-transparent',
+  'chronic-condition': 'bg-sky-50 text-sky-700 border-transparent',
   medication: 'bg-green-50 text-green-700 border-transparent',
   allergy: 'bg-orange-50 text-orange-700 border-transparent',
   surgery: 'bg-purple-50 text-purple-700 border-transparent',
@@ -211,7 +211,7 @@ const VARIANT_STYLES: Record<string, string> = {
   'container-red': 'bg-red-500 text-white border-transparent',
   'container-yellow': 'bg-yellow-500 text-white border-transparent',
   'container-purple': 'bg-purple-500 text-white border-transparent',
-  'container-blue': 'bg-blue-500 text-white border-transparent',
+  'container-blue': 'bg-sky-500 text-white border-transparent',
   'container-green': 'bg-green-500 text-white border-transparent',
   'container-gray': 'bg-gray-500 text-white border-transparent',
   'container-black': 'bg-black text-white border-transparent',
@@ -219,13 +219,13 @@ const VARIANT_STYLES: Record<string, string> = {
   // Payment Method Mappings
   cash: 'bg-emerald-100 text-emerald-800 border-transparent',
   'credit-card': 'bg-sky-100 text-sky-800 border-transparent',
-  'debit-card': 'bg-blue-100 text-blue-800 border-transparent',
+  'debit-card': 'bg-sky-100 text-sky-800 border-transparent',
   insurance: 'bg-purple-100 text-purple-800 border-transparent',
   'bank-transfer': 'bg-indigo-100 text-indigo-800 border-transparent',
   'mobile-money': 'bg-orange-100 text-orange-800 border-transparent',
 
   // User Role Mappings
-  receptionist: 'bg-blue-100 text-blue-800 border-transparent',
+  receptionist: 'bg-sky-100 text-sky-800 border-transparent',
   'lab-technician': 'bg-green-100 text-green-800 border-transparent',
   pathologist: 'bg-purple-100 text-purple-800 border-transparent',
   administrator: 'bg-red-100 text-red-800 border-transparent',

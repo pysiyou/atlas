@@ -117,7 +117,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <Badge
           key={param.code}
           size="sm"
-          className={results[param.code] ? 'text-blue-800' : 'text-gray-500'}
+          className={results[param.code] ? 'text-sky-800' : 'text-gray-500'}
           variant={results[param.code] ? 'primary' : 'default'}
         >
           {param.name}

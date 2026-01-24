@@ -68,8 +68,8 @@ export const CONTAINER_COLOR_CONFIG: Record<
   blue: {
     label: 'Blue',
     meaning: 'Citrate (coagulation)',
-    bgClass: 'bg-blue-500',
-    textClass: 'text-blue-500',
+    bgClass: 'bg-sky-500',
+    textClass: 'text-sky-500',
   },
   green: {
     label: 'Green',

@@ -92,7 +92,7 @@ export const TabbedSectionContainer: React.FC<TabbedSectionContainerProps> = ({
           {/* Tab indicator positioned relative to header container (cargoplan pattern) */}
           {/* Positioned at bottom: -1px to overlap the border and eliminate gap */}
           <div
-            className="absolute left-0 h-[2px] bg-blue-600 rounded-full pointer-events-none z-10"
+            className="absolute left-0 h-[2px] bg-sky-600 rounded-full pointer-events-none z-10"
             style={{
               bottom: '-1px', // Overlap the 1px border to eliminate gap
               left: `${indicator.left}px`,

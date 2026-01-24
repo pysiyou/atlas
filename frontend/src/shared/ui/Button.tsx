@@ -95,7 +95,7 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   print: { style: 'secondary', icon: 'printer' },
   view: { style: 'secondary', icon: 'eye' },
   download: { style: 'secondary', icon: 'download' },
-  filter: { style: 'outline', icon: 'filter' },
+  filter: { style: 'primary', icon: 'filter' },
   search: { style: 'primary', icon: 'search' },
 
   // User actions
@@ -109,7 +109,7 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
  * Base style classes for each variant
  */
 const BASE_STYLES: Record<BaseVariant, string> = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
+  primary: 'bg-sky-600 text-white hover:bg-sky-700 focus:ring-sky-500',
   secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
   danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
   success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500',

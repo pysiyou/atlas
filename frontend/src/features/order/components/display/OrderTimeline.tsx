@@ -21,14 +21,14 @@ interface StepIndicatorProps {
 
 /**
  * StepIndicator - Visual indicator for each step in the timeline.
- * Shows different states: complete, in-progress (with pulsing blue dot), partial, blocked, or pending.
+ * Shows different states: complete, in-progress (with pulsing sky dot), partial, blocked, or pending.
  *
- * Any step that is started but not fully complete will show the pulsing blue dot indicator.
+ * Any step that is started but not fully complete will show the pulsing sky dot indicator.
  */
 const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) => {
   const { isFullyComplete, isStarted } = progress;
 
-  // Determine if this step should show the pulsing blue dot (started but not complete)
+  // Determine if this step should show the pulsing sky dot (started but not complete)
   const showPulsingDot = isStarted && !isFullyComplete;
 
   // Fully complete - green checkmark (no animation)
@@ -48,7 +48,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) =>
     );
   }
 
-  // Started but not complete - show pulsing blue dot indicator
+  // Started but not complete - show pulsing sky dot indicator
   // This applies to ALL incomplete steps that have started (payment, sample collection, etc.)
   if (showPulsingDot) {
     return (
@@ -114,8 +114,8 @@ const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
             key={index}
             className={`w-2 h-2 rounded-full transition-all duration-200 ${
               isCompleted
-                ? 'bg-blue-500 ring-2 ring-blue-500/30'
-                : 'bg-transparent ring-1 ring-blue-300'
+                ? 'bg-sky-500 ring-2 ring-sky-500/30'
+                : 'bg-transparent ring-1 ring-sky-300'
             }`}
           />
         );

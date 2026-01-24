@@ -1,9 +1,11 @@
 /**
  * FilterBar Component
  * Main container for all filter controls with modern UX patterns
+ * Supports responsive views: lg (full inline), md (partial inline + dropdown), sm (modal)
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useFilterState, useQuickFilters } from './hooks';
 import {
   SearchControl,
@@ -16,6 +18,10 @@ import {
 import { ActiveFilterBadges } from './ActiveFilterBadges';
 import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
+import { FilterModal } from './FilterModal';
+import { Popover } from '@/shared/ui/Popover';
+import { Button } from '@/shared/ui/Button';
+import { Badge } from '@/shared/ui/Badge';
 import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
 
 /**
@@ -41,12 +47,22 @@ export interface FilterBarProps {
  * - Active filter badges
  * - Primary filter section
  * - Advanced filter section (collapsible)
+ * - Responsive views: lg (full inline), md (partial inline + dropdown), sm (modal)
  *
  * @component
  */
-// Large component is necessary for comprehensive filter bar with multiple filter types, state management, and UI rendering
+// Large component is necessary for comprehensive filter bar with multiple filter types, state management, responsive views, and UI rendering
+/* eslint-disable max-lines */
 // eslint-disable-next-line max-lines-per-function
 export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, className }) => {
+  // Breakpoint detection for responsive views
+  const breakpoint = useBreakpoint();
+  const isMedium = breakpoint === 'md';
+  const isSmall = isBreakpointAtMost(breakpoint, 'sm');
+
+  // Modal state for small screens
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // Use filter state management
   const { filters, setFilter, clearFilter, clearAll, isFilterActive } = useFilterState({
     initialFilters: value,
@@ -193,21 +209,56 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
   const nonSearchControls = config.primaryFilters.controls.filter(c => c.type !== 'search');
   const searchControl = config.primaryFilters.controls.find(c => c.type === 'search');
 
-  return (
+  /**
+   * Determine which filters to show inline for medium view
+   * Priority: dateRange, status filters (multiSelect with common keys), then others
+   */
+  const getMediumViewFilters = () => {
+    const priorityKeys = ['dateRange', 'status', 'payment', 'method'];
+    const inlineControls: typeof nonSearchControls = [];
+    const dropdownControls: typeof nonSearchControls = [];
+
+    // Sort controls by priority
+    const sortedControls = [...nonSearchControls].sort((a, b) => {
+      const aPriority = priorityKeys.includes(a.key) ? 0 : 1;
+      const bPriority = priorityKeys.includes(b.key) ? 0 : 1;
+      return aPriority - bPriority;
+    });
+
+    // Show first 1-2 controls inline
+    sortedControls.forEach((control, index) => {
+      if (index < 2) {
+        inlineControls.push(control);
+      } else {
+        dropdownControls.push(control);
+      }
+    });
+
+    return { inlineControls, dropdownControls };
+  };
+
+  const { inlineControls: mediumInlineControls, dropdownControls: mediumDropdownControls } =
+    getMediumViewFilters();
+
+  /**
+   * Render Large View (lg+)
+   * All filters visible inline in horizontal layout with aligned controls
+   */
+  const renderLargeView = () => (
     <div className={`bg-white border-b border-gray-200 ${className || ''}`}>
-      {/* Compact filter row - search and filters in one row */}
-      <div className="px-3 py-2">
-        <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
-          {/* Search control */}
+      {/* Filter row - search and filters in one row, aligned for lg */}
+      <div className="px-4 py-2.5 lg:px-5 lg:py-3">
+        <div className="flex flex-row flex-wrap items-center gap-x-3 gap-y-2 lg:gap-x-4 lg:gap-y-2">
+          {/* Search control - fixed height slot for alignment */}
           {searchControl && (
-            <div className="flex-1 w-full sm:w-auto sm:min-w-[250px] min-w-0">
+            <div className="flex h-[34px] min-w-[250px] shrink-0 items-center lg:min-w-[260px]">
               {renderControl(searchControl)}
             </div>
           )}
 
-          {/* Quick filters */}
+          {/* Quick filters - match control height for vertical alignment */}
           {config.quickFilters && config.quickFilters.length > 0 && (
-            <div className="flex-shrink-0 w-full sm:w-auto">
+            <div className="flex min-h-[34px] shrink-0 items-center">
               <QuickFilters
                 presets={config.quickFilters}
                 activePresetId={activePresetId}
@@ -216,20 +267,19 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
             </div>
           )}
 
-          {/* Primary filters - inline on desktop */}
-          {nonSearchControls.length > 0 && (
-            <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-              {nonSearchControls.map(control => (
-                <div key={control.key} className="w-full sm:w-auto sm:min-w-[200px]">
-                  {renderControl(control)}
-                </div>
-              ))}
+          {/* Primary filters - inline, fixed height slots for alignment */}
+          {nonSearchControls.map(control => (
+            <div
+              key={control.key}
+              className="flex h-[34px] min-w-[200px] shrink-0 items-center lg:min-w-[220px]"
+            >
+              {renderControl(control)}
             </div>
-          )}
+          ))}
         </div>
       </div>
 
-      {/* Active filter badges - compact */}
+      {/* Active filter badges */}
       {activeBadges.length > 0 && (
         <ActiveFilterBadges badges={activeBadges} onRemove={clearFilter} onClearAll={clearAll} />
       )}
@@ -247,4 +297,187 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
       )}
     </div>
   );
+
+  /**
+   * Render Medium View (md)
+   * Search + 1-2 key filters inline, rest in dropdown
+   */
+  const renderMediumView = () => (
+    <div className={`bg-white border-b border-gray-200 ${className || ''}`}>
+      {/* Filter row */}
+      <div className="px-3 py-2">
+        <div className="flex flex-row gap-2 items-center">
+          {/* Search control */}
+          {searchControl && (
+            <div className="flex-1 min-w-[200px]">
+              {renderControl(searchControl)}
+            </div>
+          )}
+
+          {/* Inline filters (1-2 most important) */}
+          {mediumInlineControls.length > 0 && (
+            <div className="flex gap-2">
+              {mediumInlineControls.map(control => (
+                <div key={control.key} className="min-w-[180px]">
+                  {renderControl(control)}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* More Filters dropdown */}
+          {mediumDropdownControls.length > 0 && (
+            <Popover
+              placement="bottom-end"
+              offsetValue={8}
+              trigger={({ isOpen }) => {
+                const activeCount = mediumDropdownControls.filter(c => isFilterActive(c.key)).length;
+                return (
+                  <div className="relative inline-flex">
+                    <Button
+                      variant="filter"
+                      size="sm"
+                      className={isOpen ? 'ring-2 ring-sky-500/20' : ''}
+                    >
+                      More Filters
+                    </Button>
+                    {activeCount > 0 && (
+                      <Badge
+                        variant="primary"
+                        size="xs"
+                        className="absolute -top-1 -right-1 min-w-[18px] h-4 px-1 flex items-center justify-center"
+                      >
+                        {activeCount}
+                      </Badge>
+                    )}
+                  </div>
+                );
+              }}
+              className="p-3 min-w-[280px] max-h-[400px] overflow-y-auto"
+            >
+              {({ close }) => (
+                <div className="space-y-3">
+                  {/* Quick filters in dropdown if present */}
+                  {config.quickFilters && config.quickFilters.length > 0 && (
+                    <div>
+                      <div className="text-xs font-medium text-gray-700 mb-2">Quick Filters</div>
+                      <QuickFilters
+                        presets={config.quickFilters}
+                        activePresetId={activePresetId}
+                        onPresetClick={presetId => {
+                          applyPreset(presetId);
+                          close();
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {/* Dropdown filters */}
+                  {mediumDropdownControls.map(control => (
+                    <div key={control.key} className="w-full">
+                      {renderControl(control)}
+                    </div>
+                  ))}
+
+                  {/* Advanced filters in dropdown */}
+                  {config.advancedFilters && config.advancedFilters.controls.length > 0 && (
+                    <div className="pt-2 border-t border-gray-200">
+                      <div className="text-xs font-medium text-gray-700 mb-2">
+                        Advanced Filters
+                      </div>
+                      {config.advancedFilters.controls.map(control => (
+                        <div key={control.key} className="w-full mb-2 last:mb-0">
+                          {renderControl(control)}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </Popover>
+          )}
+        </div>
+      </div>
+
+      {/* Active filter badges */}
+      {activeBadges.length > 0 && (
+        <ActiveFilterBadges badges={activeBadges} onRemove={clearFilter} onClearAll={clearAll} />
+      )}
+    </div>
+  );
+
+  /**
+   * Render Small View (sm)
+   * Search visible, filters button opens modal
+   */
+  const renderSmallView = () => (
+    <div className={`bg-white border-b border-gray-200 ${className || ''}`}>
+      {/* Search and filter button row */}
+      <div className="px-3 py-2">
+        <div className="flex gap-2 items-center">
+          {/* Search control */}
+          {searchControl && (
+            <div className="flex-1 min-w-0">
+              {renderControl(searchControl)}
+            </div>
+          )}
+
+          {/* Filters button */}
+          {nonSearchControls.length > 0 && (
+            <div className="relative inline-flex shrink-0">
+              <Button
+                variant="filter"
+                size="sm"
+                onClick={() => setIsModalOpen(true)}
+              >
+                Filters
+              </Button>
+              {activeBadges.length > 0 && (
+                <Badge
+                  variant="primary"
+                  size="xs"
+                  className="absolute -top-1 -right-1 min-w-[18px] h-4 px-1 flex items-center justify-center"
+                >
+                  {activeBadges.length}
+                </Badge>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Active filter badges */}
+      {activeBadges.length > 0 && (
+        <ActiveFilterBadges badges={activeBadges} onRemove={clearFilter} onClearAll={clearAll} />
+      )}
+
+      {/* Filter Modal */}
+      <FilterModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        config={config}
+        filters={filters}
+        onFilterChange={setFilter}
+        activeBadges={activeBadges}
+        onRemoveBadge={clearFilter}
+        onClearAll={clearAll}
+        activePresetId={activePresetId}
+        onPresetClick={applyPreset}
+        renderControl={renderControl}
+        countActiveInSection={countActiveInSection}
+      />
+    </div>
+  );
+
+  // Render appropriate view based on breakpoint
+  if (isSmall) {
+    return renderSmallView();
+  }
+
+  if (isMedium) {
+    return renderMediumView();
+  }
+
+  // Large view (lg+)
+  return renderLargeView();
 };

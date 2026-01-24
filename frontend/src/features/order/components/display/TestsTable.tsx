@@ -56,7 +56,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
                         <Badge
                           variant="default"
                           size="xs"
-                          className="text-xs bg-blue-50 text-blue-600 border-blue-200"
+                          className="text-xs bg-sky-50 text-sky-600 border-sky-200"
                         >
                           #{retestNumber}
                         </Badge>
@@ -142,7 +142,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
                     <Badge
                       variant="default"
                       size="xs"
-                      className="text-xs bg-blue-50 text-blue-600 border-blue-200"
+                      className="text-xs bg-sky-50 text-sky-600 border-sky-200"
                     >
                       #{retestNumber}
                     </Badge>

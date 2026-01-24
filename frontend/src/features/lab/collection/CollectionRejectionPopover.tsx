@@ -161,14 +161,14 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           {REJECTION_REASONS.map(r => (
             <label
               key={r.value}
-              className={`flex items-start p-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 transition-colors ${reasons.includes(r.value) ? 'bg-blue-50/50' : ''}`}
+              className={`flex items-start p-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 transition-colors ${reasons.includes(r.value) ? 'bg-sky-50/50' : ''}`}
             >
               <div className="flex items-center h-5">
                 <input
                   type="checkbox"
                   checked={reasons.includes(r.value)}
                   onChange={() => toggleReason(r.value)}
-                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="h-4 w-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
                 />
               </div>
               <div className="ml-2 text-xs">

@@ -175,13 +175,13 @@ export const TabsList: React.FC<TabsListProps> = ({
         if (variant === 'underline') {
           // Remove border-b-2 from buttons since we use sliding indicator
           buttonClass += `px-4 py-2 ${
-            isActive ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'
+            isActive ? 'text-sky-600' : 'text-gray-500 hover:text-gray-700'
           }`;
         } else {
           // Pills variant
           buttonClass += `px-3 py-1.5 rounded-md ${
             isActive
-              ? 'bg-blue-100 text-blue-700'
+              ? 'bg-sky-100 text-sky-700'
               : 'bg-transparent text-gray-600 hover:bg-gray-100'
           }`;
         }
@@ -202,8 +202,8 @@ export const TabsList: React.FC<TabsListProps> = ({
                 className={`ml-2 text-xs py-0.5 px-1.5 rounded-full ${
                   isActive
                     ? variant === 'underline'
-                      ? 'bg-blue-100 text-blue-600'
-                      : 'bg-blue-200 text-blue-800'
+                      ? 'bg-sky-100 text-sky-600'
+                      : 'bg-sky-200 text-sky-800'
                     : 'bg-gray-100 text-gray-500'
                 }`}
               >
@@ -219,7 +219,7 @@ export const TabsList: React.FC<TabsListProps> = ({
       {/* If headerRef is provided, indicator is rendered in TabbedSectionContainer wrapper */}
       {variant === 'underline' && !headerRef && (
         <div
-          className="absolute bottom-0 left-0 h-[2px] bg-blue-600 rounded-full pointer-events-none z-10"
+          className="absolute bottom-0 left-0 h-[2px] bg-sky-600 rounded-full pointer-events-none z-10"
           style={{
             left: `${indicator.left}px`,
             width: `${indicator.width}px`,

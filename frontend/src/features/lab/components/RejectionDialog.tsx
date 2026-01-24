@@ -206,7 +206,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
               onClick={() => isActionEnabled('re-test') && setUserOverride('re-test')}
               label={`Re-test Sample${retestAttemptsRemaining > 0 ? ` (${retestAttemptsRemaining} remaining)` : ''}`}
               description="Perform the test again using the existing sample."
-              variant="blue"
+              variant="sky"
               disabled={!isActionEnabled('re-test')}
               disabledReason={getDisabledReason('re-test') || undefined}
             />
