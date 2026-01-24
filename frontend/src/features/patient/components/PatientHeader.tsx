@@ -6,8 +6,8 @@
 import React from 'react';
 import { Button, Avatar, Icon, IconButton } from '@/shared/ui';
 import type { Patient } from '@/types/patient';
-import { isAffiliationActive } from '../usePatientForm';
-import { AffiliationPopover } from '../AffiliationPopover';
+import { isAffiliationActive } from '../hooks/usePatientForm';
+import { AffiliationPopover } from './filters/AffiliationPopover';
 
 export interface PatientHeaderProps {
   patient: Patient;

@@ -11,7 +11,7 @@ import {
   validatePostalCode,
 } from '@/utils';
 import { VALIDATION_MESSAGES, VALIDATION_RULES } from '@/config';
-import type { PatientFormData } from '../usePatientForm';
+import type { PatientFormData } from '../hooks/usePatientForm';
 
 /**
  * Validates patient form data and returns error messages

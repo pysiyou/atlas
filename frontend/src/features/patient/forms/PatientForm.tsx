@@ -9,9 +9,9 @@ import { Input, Select, Textarea, Badge, Button, TagInput, DateInput, MultiSelec
 import type { Gender, AffiliationDuration, Affiliation, Relationship } from '@/types';
 import { GENDER_OPTIONS, AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
-import { isAffiliationActive } from './usePatientForm';
+import { isAffiliationActive } from '../hooks/usePatientForm';
 import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
-import { AffiliationPlanSelector } from './components/AffiliationPlanSelector';
+import { AffiliationPlanSelector } from '../components/forms/AffiliationPlanSelector';
 
 /**
  * Props for PatientFormSections component

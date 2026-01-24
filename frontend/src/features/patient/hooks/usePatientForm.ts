@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Gender, AffiliationDuration, Patient, Relationship } from '@/types';
-import { validatePatientForm } from './utils/patientValidation';
+import { validatePatientForm } from '../utils/patientValidation';
 
 // Re-export affiliation utilities for backward compatibility
 export {
@@ -8,7 +8,7 @@ export {
   calculateEndDate,
   isAffiliationActive,
   getAffiliationStatus,
-} from './utils/affiliationUtils';
+} from '../utils/affiliationUtils';
 
 export interface PatientFormData {
   fullName: string;

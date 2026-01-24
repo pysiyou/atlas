@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { AgeFilter } from '@/features/patient/AgeFilter';
+import { AgeFilter } from '@/features/patient/components/filters/AgeFilter';
 import type { AgeRangeFilterControl } from '../types';
 
 /**

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Popover } from '@/shared/ui';
 import type { Affiliation } from '@/types';
-import { AffiliationInfo } from './PatientDetailSections';
+import { AffiliationInfo } from '../../sections/AffiliationInfoSection';
 
 interface AffiliationPopoverProps {
   affiliation?: Affiliation;

@@ -4,7 +4,7 @@
  */
 
 import type { Patient, Affiliation } from '@/types';
-import type { PatientFormData } from '../usePatientForm';
+import type { PatientFormData } from '../hooks/usePatientForm';
 import { generateAssuranceNumber, calculateEndDate, isAffiliationActive } from './affiliationUtils';
 
 /**

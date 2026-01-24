@@ -8,13 +8,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks';
 import { usePatient, useOrdersByPatient } from '@/hooks/queries';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
-import { EditPatientModal } from './EditPatientModal';
+import { EditPatientModal } from '../../modals/EditPatientModal';
+import { PatientHeader } from '../../components/PatientHeader';
 import {
-  PatientHeader,
   SmallScreenLayout,
   MediumScreenLayout,
   LargeScreenLayout,
-} from './components';
+} from './PatientDetailLayouts';
 
 export const PatientDetail: React.FC = () => {
   const navigate = useNavigate();

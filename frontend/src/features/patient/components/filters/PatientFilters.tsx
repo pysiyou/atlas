@@ -9,7 +9,7 @@
 
 import React, { useMemo } from 'react';
 import { FilterBar, type FilterValues } from '@/features/filters';
-import { patientFilterConfig } from './patientFilterConfig';
+import { patientFilterConfig } from '../../config/patientFilterConfig';
 import type { Gender } from '@/types';
 
 /**

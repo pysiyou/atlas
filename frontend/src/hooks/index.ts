@@ -38,7 +38,6 @@ export type { ResponsiveLayoutConfig } from './useResponsiveLayout';
 // These delegate to TanStack Query hooks internally but maintain the old API.
 //
 // ⚠️ DEPRECATED: New components should use TanStack Query hooks directly:
-// - usePatientsList() instead of usePatients()
 // - useOrdersList() instead of useOrders()
 // - useSamplesList() instead of useSamples()
 // - useTestCatalog() instead of useTests()
@@ -46,10 +45,6 @@ export type { ResponsiveLayoutConfig } from './useResponsiveLayout';
 //
 // These will be removed in a future version once all consumers are migrated.
 // =============================================================================
-/**
- * @deprecated Use usePatientsList() from @/hooks/queries instead
- */
-export { usePatients } from '@/features/patient/PatientContext';
 /**
  * @deprecated Use useOrdersList() from @/hooks/queries instead
  */

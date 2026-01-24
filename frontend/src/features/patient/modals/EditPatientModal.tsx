@@ -12,11 +12,11 @@ import React, { useMemo, useState } from 'react';
 import type { Patient } from '@/types';
 import { Button, Modal, TabbedSectionContainer, CircularProgress } from '@/shared/ui';
 import toast from 'react-hot-toast';
-import { usePatientForm } from './usePatientForm';
+import { usePatientForm } from '../hooks/usePatientForm';
 import { displayId } from '@/utils/id-display';
-import { PatientFormTabs } from './components/PatientFormTabs';
-import { calculateFormProgress } from './utils/formProgressCalculator';
-import { usePatientMutation } from './hooks/usePatientMutation';
+import { PatientFormTabs } from '../components/forms/PatientFormTabs';
+import { calculateFormProgress } from '../utils/formProgressCalculator';
+import { usePatientMutation } from '../hooks/usePatientMutation';
 
 /**
  * Props for EditPatientModal component.

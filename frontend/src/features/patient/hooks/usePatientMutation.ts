@@ -8,7 +8,7 @@ import { useCreatePatient, useUpdatePatient } from '@/hooks/queries';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import type { Patient } from '@/types';
-import type { PatientFormData } from '../usePatientForm';
+import type { PatientFormData } from './usePatientForm';
 import { buildNewPatientPayload, buildUpdatedPatientPayload } from '../utils/patientPayloadBuilder';
 
 export interface UsePatientMutationProps {

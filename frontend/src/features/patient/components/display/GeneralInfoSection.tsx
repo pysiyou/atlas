@@ -6,7 +6,7 @@
 import React from 'react';
 import type { Patient } from '@/types';
 import { InfoField } from './InfoField';
-import { formatDetailDate, formatAddress } from '../utils/patientDetailUtils';
+import { formatDetailDate, formatAddress } from '../../utils/patientDetailUtils';
 
 export interface GeneralInfoSectionProps {
   patient: Patient;

@@ -12,4 +12,4 @@
  */
 
 /* eslint-disable react-refresh/only-export-components */
-export * from './sections';
+export * from '../sections';

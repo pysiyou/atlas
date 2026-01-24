@@ -9,7 +9,7 @@ import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Patient } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_CONFIG } from '@/types';
-import { isAffiliationActive } from '../usePatientForm';
+import { isAffiliationActive } from '../hooks/usePatientForm';
 
 interface PatientInfoCardProps {
   patient: Patient;

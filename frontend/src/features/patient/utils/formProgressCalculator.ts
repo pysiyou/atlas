@@ -3,7 +3,7 @@
  * Calculates completion percentage for patient forms
  */
 
-import type { PatientFormData } from '../usePatientForm';
+import type { PatientFormData } from '../hooks/usePatientForm';
 
 export interface FormProgress {
   filled: number;
