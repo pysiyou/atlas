@@ -118,7 +118,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       { id: 'general', label: 'General Info' },
       { id: 'medical', label: 'Medical Background' },
       { id: 'vitals', label: 'Vitals & Stats' },
-      { id: 'affiliation', label: 'Affiliation & Emergency' },
+      { id: 'affiliation', label: 'Affiliation' },
     ],
     []
   );

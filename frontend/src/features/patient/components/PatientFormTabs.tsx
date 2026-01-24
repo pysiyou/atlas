@@ -45,6 +45,16 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
           </div>
           <DemographicsSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
           <AddressSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
+
+          <div>
+            <div className="text-xs font-medium text-slate-500">Primary contact</div>
+            <div className="text-sm font-semibold text-slate-900">Emergency contact</div>
+          </div>
+          <EmergencyContactSection
+            formData={formData}
+            errors={errors}
+            onFieldChange={onFieldChange}
+          />
         </div>
       );
 
@@ -99,16 +109,6 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             onFieldChange={onFieldChange}
             existingAffiliation={existingAffiliation}
             onRenew={onRenew}
-          />
-
-          <div>
-            <div className="text-xs font-medium text-slate-500">Emergency Contact</div>
-            <div className="text-sm font-semibold text-slate-900">Primary contact</div>
-          </div>
-          <EmergencyContactSection
-            formData={formData}
-            errors={errors}
-            onFieldChange={onFieldChange}
           />
         </div>
       );
