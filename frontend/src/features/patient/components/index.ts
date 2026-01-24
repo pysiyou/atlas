@@ -11,3 +11,4 @@ export * from './MedicalHistorySectionDisplay';
 export * from './PatientOrdersTable';
 export * from './ReportsList';
 export * from './VitalSignsDisplay';
+export * from './AffiliationPlanSelector';

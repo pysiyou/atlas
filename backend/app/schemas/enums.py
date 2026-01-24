@@ -11,8 +11,7 @@ class Gender(str, enum.Enum):
 
 
 class AffiliationDuration(int, enum.Enum):
-    ONE_MONTH = 1
-    THREE_MONTHS = 3
+    """Affiliation duration in months - only 6, 12, and 24 month plans available"""
     SIX_MONTHS = 6
     TWELVE_MONTHS = 12
     TWENTY_FOUR_MONTHS = 24

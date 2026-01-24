@@ -1,17 +1,16 @@
 /**
  * Affiliation Duration - Single Source of Truth
+ * Only 6, 12, and 24 month plans are available
  */
 
 // 1. VALUES - The single source of truth (in months)
-export const AFFILIATION_DURATION_VALUES = [1, 3, 6, 12, 24] as const;
+export const AFFILIATION_DURATION_VALUES = [6, 12, 24] as const;
 
 // 2. TYPE - Derived from values
 export type AffiliationDuration = (typeof AFFILIATION_DURATION_VALUES)[number];
 
 // 3. CONFIG - Metadata for each value
 export const AFFILIATION_DURATION_CONFIG: Record<AffiliationDuration, { label: string }> = {
-  1: { label: '1 Month' },
-  3: { label: '3 Months' },
   6: { label: '6 Months' },
   12: { label: '1 Year' },
   24: { label: '2 Years' },

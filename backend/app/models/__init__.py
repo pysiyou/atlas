@@ -10,6 +10,7 @@ from app.models.aliquot import Aliquot
 from app.models.billing import Invoice, Payment, InsuranceClaim
 from app.models.report import Report
 from app.models.lab_audit import LabOperationLog
+from app.models.affiliation_pricing import AffiliationPricing
 
 __all__ = [
     "User",
@@ -24,4 +25,5 @@ __all__ = [
     "InsuranceClaim",
     "Report",
     "LabOperationLog",
+    "AffiliationPricing",
 ]

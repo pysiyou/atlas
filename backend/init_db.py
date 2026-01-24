@@ -4,6 +4,7 @@ from db_scripts.generate_patients import generate_patients
 from db_scripts.generate_tests import generate_tests
 from db_scripts.generate_orders import generate_orders
 from db_scripts.generate_payments import generate_payments
+from db_scripts.seed_affiliation_pricing import seed_affiliation_pricing
 
 def init_db():
     """Initialize database with fresh tables and data"""
@@ -22,6 +23,9 @@ def init_db():
     try:
         # Seed core configuration data
         generate_users(db)
+        
+        # Seed affiliation pricing
+        seed_affiliation_pricing(db)
         
         # 3. Generate Catalog Data
         generate_tests(db)

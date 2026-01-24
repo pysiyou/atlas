@@ -11,6 +11,7 @@ import { GENDER_OPTIONS, AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_OPTIONS } fr
 import { formatDate } from '@/utils';
 import { isAffiliationActive } from './usePatientForm';
 import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
+import { AffiliationPlanSelector } from './components/AffiliationPlanSelector';
 
 /**
  * Props for PatientFormSections component
@@ -192,7 +193,7 @@ export const AddressSection: React.FC<
 
 /**
  * Affiliation Section
- * Displays lab affiliation/subscription fields
+ * Displays lab affiliation/subscription fields with subscription-style plan selector
  */
 export const AffiliationSection: React.FC<
   Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange' | 'existingAffiliation' | 'onRenew'>
@@ -200,166 +201,107 @@ export const AffiliationSection: React.FC<
   const hasExistingAffiliation = !!existingAffiliation;
   const isActive = isAffiliationActive(existingAffiliation);
 
-  // Convert affiliation duration options to FilterOption format with colors
-  const affiliationDurationOptions: FilterOption[] = useMemo(
-    () =>
-      AFFILIATION_DURATION_OPTIONS.map(opt => {
-        // Assign colors based on duration: shorter = lighter, longer = more prominent
-        let color: string = 'default';
-        if (opt.value === 1) color = 'info'; // 1 Month - blue
-        else if (opt.value === 3) color = 'primary'; // 3 Months - sky blue
-        else if (opt.value === 6) color = 'success'; // 6 Months - green
-        else if (opt.value === 12) color = 'warning'; // 1 Year - yellow/orange
-        else if (opt.value === 24) color = 'purple'; // 2 Years - purple
-
-        return {
-          id: String(opt.value),
-          label: opt.label,
-          color,
-        };
-      }),
-    []
-  );
-
-  // Convert single value to array for MultiSelectFilter (single-select mode)
-  const selectedAffiliationDuration = useMemo(
-    () => (formData.affiliationDuration ? [String(formData.affiliationDuration)] : []),
-    [formData.affiliationDuration]
-  );
-
-  // Handle affiliation duration change (single-select: only allow one selection)
-  const handleAffiliationDurationChange = (selectedIds: string[]) => {
-    if (selectedIds.length === 0) {
-      // Clear button clicked: actually clear the selection (show placeholder)
-      onFieldChange('affiliationDuration', undefined as never);
-    } else {
-      // Use the most recently selected item (last in array)
-      const newValue = Number(selectedIds[selectedIds.length - 1]);
-      onFieldChange('affiliationDuration', newValue);
-    }
+  // Handle plan selection from AffiliationPlanSelector
+  const handlePlanSelect = (duration: AffiliationDuration) => {
+    onFieldChange('hasAffiliation', true);
+    onFieldChange('affiliationDuration', duration);
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Existing Affiliation Info */}
       {hasExistingAffiliation && (
-        <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Current Status</span>
-            <Badge variant={isActive ? 'success' : 'danger'} size="sm">
+        <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-4 shadow-sm">
+          <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+            <span className="text-sm font-semibold text-gray-900">Current Affiliation</span>
+            <Badge 
+              variant={isActive ? 'success' : 'danger'} 
+              size="sm"
+              className="font-medium"
+            >
               {isActive ? 'Active' : 'Expired'}
             </Badge>
           </div>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-gray-500">Assurance Number</span>
-              <p className="font-mono font-medium text-gray-900">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Assurance Number</span>
+              <p className="font-mono font-semibold text-gray-900 text-sm">
                 {existingAffiliation.assuranceNumber}
               </p>
             </div>
-            <div>
-              <span className="text-gray-500">Duration</span>
-              <p className="font-medium text-gray-900">
+            <div className="space-y-1">
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Duration</span>
+              <p className="font-semibold text-gray-900 text-sm">
                 {AFFILIATION_DURATION_OPTIONS.find(
                   opt => opt.value === existingAffiliation.duration
                 )?.label || `${existingAffiliation.duration} Months`}
               </p>
             </div>
-            <div>
-              <span className="text-gray-500">Start Date</span>
-              <p className="font-medium text-gray-900">
+            <div className="space-y-1">
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Start Date</span>
+              <p className="font-semibold text-gray-900 text-sm">
                 {formatDate(existingAffiliation.startDate)}
               </p>
             </div>
-            <div>
-              <span className="text-gray-500">Expiry Date</span>
-              <p className={`font-medium ${isActive ? 'text-gray-900' : 'text-red-600'}`}>
+            <div className="space-y-1">
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Expiry Date</span>
+              <p className={`font-semibold text-sm ${isActive ? 'text-gray-900' : 'text-red-600'}`}>
                 {formatDate(existingAffiliation.endDate)}
               </p>
             </div>
           </div>
-          {!isActive && onRenew && (
-            <Button
-              type="button"
-              onClick={onRenew}
-              variant="primary"
-              size="md"
-              fullWidth
-              className="mt-2"
-            >
-              Renew Affiliation
-            </Button>
-          )}
         </div>
       )}
 
       {/* New/Renewal Affiliation Toggle */}
       {!hasExistingAffiliation && (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
           <input
             type="checkbox"
             id="hasAffiliation"
             name="hasAffiliation"
             checked={formData.hasAffiliation}
-            onChange={e => onFieldChange('hasAffiliation', e.target.checked)}
-            className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
+            onChange={e => {
+              onFieldChange('hasAffiliation', e.target.checked);
+              if (!e.target.checked) {
+                onFieldChange('affiliationDuration', undefined as never);
+              }
+            }}
+            className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
           />
-          <label htmlFor="hasAffiliation" className="text-xs font-medium text-gray-500">
+          <label htmlFor="hasAffiliation" className="text-sm font-medium text-gray-700 cursor-pointer">
             Subscribe to lab affiliation
           </label>
         </div>
       )}
 
-      {/* Duration Selection (for new subscriptions) */}
-      {formData.hasAffiliation && !hasExistingAffiliation && (
-        <div className="grid grid-cols-1 gap-4">
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">
-              Subscription Duration <span className="text-red-500">*</span>
-            </label>
-            <MultiSelectFilter
-              label="Subscription Duration"
-              options={affiliationDurationOptions}
-              selectedIds={selectedAffiliationDuration}
-              onChange={handleAffiliationDurationChange}
-              placeholder="Select duration"
-              showSelectAll={false}
-              singleSelect={true}
-              className="w-full"
-            />
-            {errors?.affiliationDuration && (
-              <p className="mt-1 text-sm text-red-600">{errors.affiliationDuration}</p>
-            )}
-          </div>
-          <p className="text-xs text-gray-500">
-            An assurance number will be automatically generated upon registration.
-          </p>
+      {/* Plan Selector - Show when user wants affiliation (new or extending) */}
+      {(formData.hasAffiliation || (hasExistingAffiliation && !isActive)) && (
+        <div>
+          {errors?.affiliationDuration && (
+            <p className="mb-2 text-sm text-red-600">{errors.affiliationDuration}</p>
+          )}
+          <AffiliationPlanSelector
+            selectedDuration={formData.affiliationDuration}
+            onDurationSelect={handlePlanSelect}
+            hasExistingAffiliation={hasExistingAffiliation}
+            isActive={isActive}
+            actionLabel={hasExistingAffiliation ? (isActive ? 'Extend' : 'Renew') : 'Continue'}
+          />
         </div>
       )}
 
-      {/* Renewal Duration Selection */}
-      {hasExistingAffiliation && formData.hasAffiliation && (
-        <div className="border-t pt-4 mt-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">Extend Affiliation</h4>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">
-              Extension Duration <span className="text-red-500">*</span>
-            </label>
-            <MultiSelectFilter
-              label="Extension Duration"
-              options={affiliationDurationOptions}
-              selectedIds={selectedAffiliationDuration}
-              onChange={handleAffiliationDurationChange}
-              placeholder="Select duration"
-              showSelectAll={false}
-              singleSelect={true}
-              className="w-full"
-            />
-            {errors?.affiliationDuration && (
-              <p className="mt-1 text-sm text-red-600">{errors.affiliationDuration}</p>
-            )}
-          </div>
-        </div>
+      {/* Show renew button for expired affiliations if not already showing plan selector */}
+      {hasExistingAffiliation && !isActive && !formData.hasAffiliation && onRenew && (
+        <Button
+          type="button"
+          onClick={onRenew}
+          variant="primary"
+          size="md"
+          fullWidth
+        >
+          Renew Affiliation
+        </Button>
       )}
     </div>
   );

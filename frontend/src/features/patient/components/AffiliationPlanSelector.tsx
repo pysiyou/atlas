@@ -1,0 +1,295 @@
+/**
+ * Affiliation Plan Selector Component
+ * Subscription-style UI for selecting affiliation plans (6, 12, 24 months)
+ * Inspired by modern subscription plan selection patterns
+ */
+
+import React, { useEffect, useMemo, useState } from 'react';
+import { Button } from '@/shared/ui';
+import { ClaudeLoader } from '@/shared/ui/LoadingSpinner';
+import { affiliationAPI } from '@/services/api';
+import { formatCurrency } from '@/utils';
+import { AFFILIATION_DURATION_OPTIONS } from '@/types';
+import type { AffiliationPlan, AffiliationPricing } from '@/types/affiliation';
+import type { AffiliationDuration } from '@/types';
+import { Icon } from '@/shared/ui';
+
+export interface AffiliationPlanSelectorProps {
+  /** Currently selected duration */
+  selectedDuration?: AffiliationDuration;
+  /** Callback when duration is selected */
+  onDurationSelect: (duration: AffiliationDuration) => void;
+  /** Whether user has existing affiliation */
+  hasExistingAffiliation?: boolean;
+  /** Whether existing affiliation is active */
+  isActive?: boolean;
+  /** Action label for the button (e.g., "Continue", "Renew", "Extend") */
+  actionLabel?: string;
+  /** Whether to show loading state */
+  loading?: boolean;
+}
+
+/**
+ * Affiliation Plan Selector Component
+ * Displays subscription-style plan selection with pricing
+ */
+export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = ({
+  selectedDuration,
+  onDurationSelect,
+  hasExistingAffiliation = false,
+  isActive = false,
+  actionLabel = 'Continue',
+  loading = false,
+}) => {
+  const [pricing, setPricing] = useState<AffiliationPricing[]>([]);
+  const [isLoadingPricing, setIsLoadingPricing] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch pricing on mount
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        setIsLoadingPricing(true);
+        setError(null);
+        const data = await affiliationAPI.getPricing();
+        setPricing(data);
+      } catch (err) {
+        setError('Failed to load pricing. Please try again.');
+        console.error('Error fetching affiliation pricing:', err);
+      } finally {
+        setIsLoadingPricing(false);
+      }
+    };
+
+    fetchPricing();
+  }, []);
+
+  // Build plans with pricing information
+  const plans: AffiliationPlan[] = useMemo(() => {
+    return AFFILIATION_DURATION_OPTIONS.map(option => {
+      const pricingData = pricing.find(p => p.duration === option.value);
+      const price = pricingData?.price ?? 0;
+      const monthlyPrice = price / option.value;
+
+      // Mark 12 months as "Best Value"
+      const isBestValue = option.value === 12;
+
+      return {
+        duration: option.value,
+        label: option.label,
+        price,
+        monthlyPrice,
+        isBestValue,
+      };
+    });
+  }, [pricing]);
+
+  // Determine action text based on context
+  const getActionText = (): string => {
+    if (hasExistingAffiliation) {
+      return isActive ? 'Extend Affiliation' : 'Renew Affiliation';
+    }
+    return actionLabel;
+  };
+
+  // Handle plan selection
+  const handlePlanSelect = (duration: AffiliationDuration) => {
+    onDurationSelect(duration);
+  };
+
+  if (isLoadingPricing) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <ClaudeLoader size="md" />
+        <span className="ml-3 text-sm text-gray-600">Loading plans...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <p className="text-sm text-red-600">{error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Left Column - Text/Information */}
+      <div className="space-y-6">
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Lab Affiliation Benefits</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Choose a plan that fits your needs. All plans include priority services and discounted pricing for lab tests.
+            </p>
+          </div>
+
+          {/* Included Features */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-gray-900">What's Included</h4>
+            <div className="space-y-2.5">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center mt-0.5">
+                  <Icon name="check" className="w-3.5 h-3.5 text-red-600" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-gray-900">Priority Lab Services</span>
+                  <p className="text-xs text-gray-500 mt-0.5">Faster processing and results</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center mt-0.5">
+                  <Icon name="check" className="w-3.5 h-3.5 text-red-600" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-gray-900">Discounted Test Pricing</span>
+                  <p className="text-xs text-gray-500 mt-0.5">Save on all lab tests</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center mt-0.5">
+                  <Icon name="check" className="w-3.5 h-3.5 text-red-600" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-gray-900">Assurance Number</span>
+                  <p className="text-xs text-gray-500 mt-0.5">Auto-generated unique identifier</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center mt-0.5">
+                  <Icon name="check" className="w-3.5 h-3.5 text-red-600" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-gray-900">Extended Validity Period</span>
+                  <p className="text-xs text-gray-500 mt-0.5">Long-term access to services</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Info */}
+          <div className="pt-4 border-t border-gray-200">
+            <p className="text-xs text-gray-500 leading-relaxed">
+              {hasExistingAffiliation
+                ? 'Your affiliation will be extended from the current end date when you renew or extend.'
+                : 'An assurance number will be automatically generated upon registration. All plans include full lab services access.'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Column - Plan Cards */}
+      <div className="space-y-4">
+        <div className="space-y-3">
+          {plans.map(plan => {
+            const isSelected = selectedDuration === plan.duration;
+            const hasPrice = plan.price > 0;
+
+            return (
+              <div
+                key={plan.duration}
+                onClick={() => hasPrice && handlePlanSelect(plan.duration)}
+                className={`
+                  relative border-2 rounded-xl p-5 cursor-pointer transition-all duration-200
+                  ${isSelected 
+                    ? 'border-orange-400 bg-orange-50/50 shadow-sm' 
+                    : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-sm'
+                  }
+                  ${!hasPrice ? 'opacity-50 cursor-not-allowed' : ''}
+                `}
+              >
+                {/* Best Value Badge */}
+                {plan.isBestValue && (
+                  <div className="absolute -top-2 -right-2">
+                    <div className="bg-red-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md transform rotate-3 shadow-sm">
+                      Best Value
+                    </div>
+                  </div>
+                )}
+
+                {/* Radio Button and Plan Details */}
+                <div className="flex items-start gap-4">
+                  {/* Radio Button */}
+                  <div className="mt-0.5 flex-shrink-0">
+                    <div
+                      className={`
+                        w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all
+                        ${isSelected 
+                          ? 'border-orange-500 bg-orange-500' 
+                          : 'border-gray-300 bg-white'
+                        }
+                      `}
+                    >
+                      {isSelected && (
+                        <div className="w-2.5 h-2.5 rounded-full bg-white" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Plan Details */}
+                  <div className="flex-1 min-w-0">
+                    <div className="mb-2">
+                      <h5 className="font-semibold text-gray-900 text-base">{plan.label}</h5>
+                    </div>
+
+                    {/* Pricing */}
+                    {hasPrice ? (
+                      <div className="space-y-0.5">
+                        {plan.duration === 12 ? (
+                          <>
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-2xl font-bold text-gray-900">
+                                {formatCurrency(plan.monthlyPrice)}
+                              </span>
+                              <span className="text-sm text-gray-500 font-medium">/month</span>
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {formatCurrency(plan.price)} per year
+                            </div>
+                          </>
+                        ) : (
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-xl font-bold text-gray-900">
+                              {formatCurrency(plan.price)}
+                            </span>
+                            <span className="text-sm text-gray-500">
+                              /{plan.duration === 6 ? '6 months' : '2 years'}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-500">Price not available</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Action Button */}
+        {selectedDuration && (
+          <div className="pt-4">
+            <Button
+              type="button"
+              variant="primary"
+              size="lg"
+              fullWidth
+              onClick={() => {}}
+              disabled={loading}
+              className="font-semibold bg-orange-500 hover:bg-orange-600 text-white rounded-lg py-3 text-base shadow-sm"
+            >
+              {loading ? 'Processing...' : getActionText()}
+            </Button>
+            <p className="text-xs text-gray-500 text-center mt-2">
+              All subscription auto renews until canceled
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

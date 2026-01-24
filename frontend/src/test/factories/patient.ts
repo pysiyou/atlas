@@ -89,7 +89,7 @@ export const createMockVitalSigns = (overrides?: Partial<VitalSigns>): VitalSign
  */
 export const createMockAffiliation = (overrides?: Partial<Affiliation>): Affiliation => {
   const startDate = faker.date.recent().toISOString();
-  const duration = faker.helpers.arrayElement([6, 12, 24]) as 1 | 3 | 6 | 12 | 24;
+  const duration = faker.helpers.arrayElement([6, 12, 24]) as 6 | 12 | 24;
   const endDate = faker.date.future().toISOString();
 
   return {
