@@ -1,18 +1,19 @@
 /**
  * PaymentDetailModal Component
  *
- * Modal that displays complete order payment information including:
- * - Order details (ID, date, patient)
+ * Modal that displays complete order payment information in a receipt-style layout.
+ * Similar to PaymentPopover but larger - displays as a receipt with:
+ * - Order details (ID, date, patient) in receipt header
  * - List of ordered tests with prices
- * - Payment status and total amount
- * - Payment method selection (directly inside modal)
+ * - Total amount
+ * - Payment method selection (if not paid)
+ * - Notes field (if not paid)
  * - Cancel and Pay buttons in footer
  *
- * Uses the shared Modal and SectionContainer components for consistency.
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
 import React, { useState, useCallback } from 'react';
-import { Modal, SectionContainer, Icon, Badge, Button, Alert } from '@/shared/ui';
+import { Modal, Icon, Badge, Button, Alert } from '@/shared/ui';
 import { PaymentErrorBoundary } from '@/shared/components';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
@@ -40,10 +41,99 @@ interface PaymentDetailModalProps {
 const PAYMENT_METHODS = getEnabledPaymentMethods();
 
 /**
+ * PaymentReceipt - Large receipt-style order summary with item list
+ *
+ * Renders order ID, patient, date, line items (tests with prices), and total
+ * in a thermal-receipt inspired layout. Larger version for modal display.
+ */
+const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => (
+  <div className="rounded-lg border border-gray-200 overflow-hidden bg-white">
+    {/* Receipt Header */}
+    <div className="px-6 py-4 border-b border-dashed border-gray-300 bg-gray-50">
+      <div className="flex justify-between items-center mb-2">
+        {order.patientName ? (
+          <p className="text-sm font-semibold text-gray-700">{order.patientName}</p>
+        ) : (
+          <p className="text-sm text-gray-500 italic">No patient name</p>
+        )}
+        <div className="flex items-center gap-2">
+          <Badge variant={order.paymentStatus} size="sm" />
+          {order.paymentMethod && (
+            <Badge variant={order.paymentMethod} size="sm" />
+          )}
+        </div>
+      </div>
+      <div className="space-y-1.5">
+        <div className="flex items-center text-xs">
+          <span className="text-gray-500 w-28">Order Number:</span>
+          <span className="text-gray-700 font-medium">{displayId.order(order.orderId)}</span>
+        </div>
+        <div className="flex items-center text-xs">
+          <span className="text-gray-500 w-28">Patient Number:</span>
+          <span className="text-gray-700 font-medium">{displayId.patient(order.patientId)}</span>
+        </div>
+        <div className="flex items-center text-xs">
+          <span className="text-gray-500 w-28">Order Date:</span>
+          <span className="text-gray-700 font-medium">{formatDate(order.orderDate)}</span>
+        </div>
+        {order.paymentDate && (
+          <div className="flex items-center text-xs">
+            <span className="text-gray-500 w-28">Payment Date:</span>
+            <span className="text-gray-700 font-medium">{formatDate(order.paymentDate)}</span>
+          </div>
+        )}
+      </div>
+    </div>
+
+    {/* Items List */}
+    <div className="px-6 py-4 max-h-96 overflow-y-auto">
+      {order.tests && order.tests.length > 0 ? (
+        <ul className="space-y-2.5">
+          {order.tests.map((test, idx) => (
+            <li
+              key={test.testCode ? `${test.testCode}-${idx}` : `item-${idx}`}
+              className="flex justify-between gap-3 text-sm items-start"
+            >
+              <span className="flex items-start gap-2.5 min-w-0 flex-1">
+                <span className="w-1 h-1 rounded-full bg-gray-400 shrink-0 mt-1.5" />
+                <span className="flex flex-col min-w-0 flex-1">
+                  <span className="text-gray-700 truncate">
+                    {test.testName || test.testCode || 'Test'}
+                  </span>
+                  {test.testCode && test.testName !== test.testCode && (
+                    <span className="text-xs text-gray-500 mt-0.5">{test.testCode}</span>
+                  )}
+                </span>
+              </span>
+              <span className="font-medium text-gray-800 tabular-nums shrink-0">
+                {formatCurrency(test.priceAtOrder)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-sm text-gray-500 italic">No items</p>
+      )}
+    </div>
+
+    {/* Receipt Footer with Total */}
+    <div className="border-t border-dashed border-gray-300 mx-6" />
+    <div className="px-6 py-4 flex justify-between items-center bg-gray-50">
+      <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+        Total
+      </span>
+      <span className="text-lg font-bold text-blue-500 tabular-nums">
+        {formatCurrency(order.totalPrice)}
+      </span>
+    </div>
+  </div>
+);
+
+/**
  * PaymentDetailModal - Full payment details with inline payment processing
  *
- * Shows complete order information with test list and allows payment
- * method selection directly in the modal without popover.
+ * Shows complete order information with test list in receipt format and allows payment
+ * method selection directly in the modal. Larger version of the payment popover.
  */
 // Large component is necessary for comprehensive payment detail modal with order info, test list, payment method selection, and processing
 // eslint-disable-next-line max-lines-per-function
@@ -118,192 +208,78 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        title="Payment Details"
-        subtitle={displayId.order(order.orderId)}
+        title="Process Payment"
+        subtitle={`Order ${displayId.order(order.orderId)}`}
         size="xl"
         disableClose={submitting}
         closeOnBackdropClick={!submitting}
       >
         <div className="flex flex-col h-full bg-gray-50">
           {/* Scrollable content area */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
-            {/* Order Information Section */}
-            <SectionContainer title="Order Information">
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-gray-500">Patient</span>
-                  <span className="text-sm text-gray-600">{order.patientName || 'N/A'}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-gray-500">Patient ID</span>
-                  <span className="text-sm text-gray-600">
-                    {displayId.patient(order.patientId)}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-gray-500">Order Date</span>
-                  <span className="text-sm text-gray-600">{formatDate(order.orderDate)}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-gray-500">Status</span>
-                  <Badge variant={order.overallStatus} size="sm" />
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-gray-500">Priority</span>
-                  <Badge variant={order.priority} size="sm" />
-                </div>
-              </div>
-            </SectionContainer>
-
-            {/* Tests List Section - Receipt Style */}
-            <SectionContainer
-              title={`Ordered Tests (${order.tests?.length || 0})`}
-              contentClassName="p-0"
-            >
-              <div className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-                {/* Receipt Header */}
-                <div className="px-3 py-2.5 border-b border-dashed border-gray-300">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      Items
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {order.tests?.length || 0} {order.tests?.length === 1 ? 'item' : 'items'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Items List */}
-                <div className="px-3 py-2 max-h-48 overflow-y-auto">
-                  {order.tests && order.tests.length > 0 ? (
-                    <ul className="space-y-1.5">
-                      {order.tests.map((test, idx) => (
-                        <li
-                          key={test.testCode ? `${test.testCode}-${idx}` : `item-${idx}`}
-                          className="flex justify-between gap-2 text-xs items-center"
-                        >
-                          <span className="flex items-center gap-2 min-w-0 flex-1">
-                            <span className="w-1 h-1 rounded-full bg-gray-400 shrink-0" />
-                            <span className="text-gray-700 truncate">
-                              {test.testName || test.testCode || 'Test'}
-                              {test.testCode && test.testName !== test.testCode && (
-                                <span className="text-gray-500 ml-1">({test.testCode})</span>
-                              )}
-                            </span>
-                          </span>
-                          <span className="font-medium text-gray-800 tabular-nums shrink-0">
-                            {formatCurrency(test.priceAtOrder)}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-xs text-gray-500 italic">No items</p>
-                  )}
-                </div>
-
-                {/* Receipt Footer with Total */}
-                <div className="border-t border-dashed border-gray-300 mx-3" />
-                <div className="px-3 py-2.5 flex justify-between items-center">
-                  <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                    Subtotal
-                  </span>
-                  <span className="text-sm font-bold text-gray-900 tabular-nums">
-                    {formatCurrency(order.totalPrice)}
-                  </span>
-                </div>
-              </div>
-            </SectionContainer>
-
-            {/* Payment Summary Section */}
-            <SectionContainer title="Payment Summary">
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-gray-500">Payment Status</span>
-                  <Badge variant={order.paymentStatus} size="sm" />
-                </div>
-                {order.paymentDate && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">Payment Date</span>
-                    <span className="text-sm text-gray-600">{formatDate(order.paymentDate)}</span>
-                  </div>
-                )}
-                {order.paymentMethod && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">Payment Method</span>
-                    <Badge variant={order.paymentMethod} size="sm" />
-                  </div>
-                )}
-                <div className="flex justify-between items-center pt-2 border-t border-gray-200">
-                  <span className="text-sm font-semibold text-gray-700">Total Amount</span>
-                  <span className="text-lg font-bold text-sky-600">
-                    {formatCurrency(order.totalPrice)}
-                  </span>
-                </div>
-              </div>
-            </SectionContainer>
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            {/* Receipt-style Order Summary */}
+            <PaymentReceipt order={order} />
 
             {/* Payment Method Selection - Only show if not paid */}
             {!isPaid && (
-              <SectionContainer title="Select Payment Method">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Payment Method <span className="text-red-500">*</span>
+                </label>
                 <div className="grid grid-cols-2 gap-3">
                   {PAYMENT_METHODS.map(method => {
                     const isSelected = paymentMethod === method.value;
                     return (
-                      <button
+                      <div
                         key={method.value}
-                        type="button"
-                        disabled={submitting}
                         className={`
-                        relative flex items-center gap-3 p-4 rounded border transition-all duration-200
-                        ${
-                          isSelected
-                            ? 'bg-sky-50 border-sky-300 ring-2 ring-sky-200'
-                            : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                        }
-                        ${submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-                      `}
-                        onClick={() => setPaymentMethod(method.value)}
+                          relative flex items-center gap-3 p-4 rounded-lg border transition-colors cursor-pointer
+                          ${
+                            isSelected
+                              ? 'bg-gray-100 border-gray-400'
+                              : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          }
+                          ${submitting ? 'opacity-50 cursor-not-allowed' : ''}
+                        `}
+                        onClick={() => !submitting && setPaymentMethod(method.value)}
                       >
-                        <div
-                          className={`
-                        w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0
-                        ${isSelected ? 'border-sky-500' : 'border-gray-300'}
-                      `}
-                        >
-                          {isSelected && <div className="w-2 h-2 rounded-full bg-sky-500" />}
-                        </div>
+                        <input
+                          type="radio"
+                          name="payment-method"
+                          checked={isSelected}
+                          onChange={() => setPaymentMethod(method.value)}
+                          disabled={submitting}
+                          className="h-4 w-4 border-gray-400 text-gray-600 focus:ring-gray-400 focus:ring-offset-0"
+                        />
                         <span
-                          className={`
-                        flex-1 text-sm font-medium text-left
-                        ${isSelected ? 'text-sky-900' : 'text-gray-700'}
-                      `}
+                          className={`flex-1 text-sm font-medium ${isSelected ? 'text-gray-900' : 'text-gray-700'}`}
                         >
                           {method.label}
                         </span>
                         <Icon
                           name={method.icon as IconName}
-                          className={`w-5 h-5 ${isSelected ? 'text-sky-600' : 'text-gray-400'}`}
+                          className={`w-5 h-5 shrink-0 ${isSelected ? 'text-gray-600' : 'text-gray-400'}`}
                         />
-                      </button>
+                      </div>
                     );
                   })}
                 </div>
-              </SectionContainer>
+              </div>
             )}
 
             {/* Notes - Only show if not paid */}
             {!isPaid && (
-              <SectionContainer title="Notes (Optional)">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
                 <textarea
-                  rows={2}
-                  placeholder="Add optional payment notes..."
+                  rows={3}
+                  placeholder="Add optional notes..."
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
                   disabled={submitting}
-                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent resize-none disabled:opacity-50 disabled:bg-gray-50"
+                  className="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent resize-none disabled:opacity-50 disabled:bg-gray-50"
                 />
-              </SectionContainer>
+              </div>
             )}
 
             {/* Error Display */}
