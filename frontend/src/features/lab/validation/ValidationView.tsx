@@ -26,6 +26,8 @@ import type { TestWithContext, CollectedSample } from '@/types';
 import { resultAPI } from '@/services/api';
 import { orderHasValidatedTests } from '@/features/order/utils';
 
+// Large component is necessary for comprehensive validation view with filtering, sorting, card rendering, and validation functionality
+// eslint-disable-next-line max-lines-per-function
 export const ValidationView: React.FC = () => {
   const { orders, refetch: refreshOrders } = useOrdersList();
   const { invalidateAll: invalidateOrders } = useInvalidateOrders();

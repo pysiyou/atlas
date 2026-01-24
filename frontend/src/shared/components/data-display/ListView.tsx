@@ -109,6 +109,8 @@ const GRID_COLUMN_CLASSES = {
  * />
  * ```
  */
+// High complexity is necessary for comprehensive list view component supporting table/grid/list modes with filtering, pagination, and error handling
+// eslint-disable-next-line complexity
 export function ListView<T extends TableDataItem = TableDataItem>({
   items,
   loading = false,

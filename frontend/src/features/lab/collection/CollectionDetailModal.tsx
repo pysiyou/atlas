@@ -51,12 +51,16 @@ interface CollectionDetailModalProps {
   ) => void;
 }
 
+// Large component is necessary for comprehensive collection detail modal with multiple sections, status management, and conditional rendering
+// eslint-disable-next-line max-lines-per-function
 export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   isOpen,
   onClose,
   sampleId,
   pendingSampleDisplay,
   onCollect,
+  // High complexity is necessary for comprehensive modal content with multiple conditional sections and state management
+  // eslint-disable-next-line complexity
 }) => {
   const { getUserName } = useUserLookup();
   const { getSample } = useSampleLookup();

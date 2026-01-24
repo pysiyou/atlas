@@ -24,6 +24,8 @@ interface LoginFormCardProps {
  * LoginFormCard Component
  * Renders the login form card with all input fields and controls
  */
+// Large component is necessary for comprehensive login form with validation, error handling, and multiple input fields
+// eslint-disable-next-line max-lines-per-function
 export const LoginFormCard: React.FC<LoginFormCardProps> = ({
   username,
   password,

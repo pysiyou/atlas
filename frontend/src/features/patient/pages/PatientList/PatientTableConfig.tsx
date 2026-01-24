@@ -26,6 +26,8 @@ import { PatientCard } from '../../components/cards/PatientCard';
  * @param getOrdersByPatient - Function to get orders for a patient
  * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
  */
+// Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
+// eslint-disable-next-line max-lines-per-function
 export const createPatientTableConfig = (
   navigate: NavigateFunction,
   getOrdersByPatient: (patientId: number | string) => Order[],

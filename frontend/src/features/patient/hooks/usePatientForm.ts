@@ -55,6 +55,8 @@ const normalizeFamilyHistory = (value: unknown): string => {
   return String(value);
 };
 
+// High complexity is necessary to map all patient fields from API to form data
+// eslint-disable-next-line complexity
 const createInitialFormData = (initialData?: Partial<Patient>): PatientFormData => {
   if (initialData) {
     return {

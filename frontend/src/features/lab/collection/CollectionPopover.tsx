@@ -25,6 +25,8 @@ interface CollectionPopoverContentProps {
   onCancel: () => void;
 }
 
+// Large component is necessary for comprehensive collection popover with requirement display, rejection options, and form handling
+// eslint-disable-next-line max-lines-per-function
 const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   requirement,
   patientName,

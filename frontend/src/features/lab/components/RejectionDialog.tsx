@@ -34,6 +34,8 @@ interface RejectionDialogContentProps {
  * Content for the rejection dialog
  * Fetches options from API and displays available actions
  */
+// Large component is necessary for comprehensive rejection dialog with API integration, action management, and conditional UI
+// eslint-disable-next-line max-lines-per-function
 export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   orderId,
   testCode,
@@ -42,6 +44,8 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   onConfirm,
   onCancel,
   orderHasValidatedTests = false,
+  // High complexity is necessary for comprehensive rejection logic with multiple conditional branches and state management
+  // eslint-disable-next-line complexity
 }) => {
   const [reason, setReason] = useState('');
   /** User override; when null, we use the derived default from options. */

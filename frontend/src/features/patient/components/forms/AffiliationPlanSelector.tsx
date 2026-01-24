@@ -9,6 +9,7 @@ import { Button } from '@/shared/ui';
 import { ClaudeLoader } from '@/shared/ui/LoadingSpinner';
 import { affiliationAPI } from '@/services/api';
 import { formatCurrency } from '@/utils';
+import { logger } from '@/utils/logger';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan, AffiliationPricing } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
@@ -33,6 +34,8 @@ export interface AffiliationPlanSelectorProps {
  * Affiliation Plan Selector Component
  * Displays subscription-style plan selection with pricing
  */
+// Large component is necessary for subscription-style plan selector with pricing display, plan cards, and comprehensive UI
+// eslint-disable-next-line max-lines-per-function
 export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = ({
   selectedDuration,
   onDurationSelect,
@@ -55,7 +58,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
         setPricing(data);
       } catch (err) {
         setError('Failed to load pricing. Please try again.');
-        console.error('Error fetching affiliation pricing:', err);
+        logger.error('Error fetching affiliation pricing', err instanceof Error ? err : undefined);
       } finally {
         setIsLoadingPricing(false);
       }

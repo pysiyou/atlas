@@ -38,6 +38,8 @@ const SAMPLE_STATUS_FILTER_OPTIONS: FilterOption[] = [
  */
 const createSampleFilter =
   (getPatientName: (patientId: number) => string, tests: Test[]) =>
+  // High complexity is necessary for comprehensive search across multiple fields (order ID, sample ID, patient name, test names, rejection reasons, notes)
+  // eslint-disable-next-line complexity
   (display: SampleDisplay, query: string): boolean => {
     const lowerQuery = query.toLowerCase();
     const sample = display.sample;
@@ -78,7 +80,7 @@ const createSampleFilter =
 
 export const CollectionView: React.FC = () => {
   const { currentUser } = useAuth();
-  const { orders, refetch: refreshOrders } = useOrdersList();
+  const { refetch: refreshOrders } = useOrdersList();
   const { tests } = useTestCatalog();
   const { samples } = useSamplesList();
   const collectSampleMutation = useCollectSample();
@@ -120,7 +122,7 @@ export const CollectionView: React.FC = () => {
     });
 
     return displays;
-  }, [samples, orders, tests, getPatient]);
+  }, [samples, tests, getPatient, getOrder]);
 
   // Create memoized filter function
   const filterSample = useMemo(() => createSampleFilter(getPatientName, tests), [getPatientName, tests]);

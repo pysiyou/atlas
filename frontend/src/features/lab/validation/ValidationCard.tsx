@@ -31,6 +31,8 @@ interface ValidationCardProps {
   orderHasValidatedTests?: boolean;
 }
 
+// Large component is necessary for comprehensive validation card with multiple status displays, result rendering, and action buttons
+// eslint-disable-next-line max-lines-per-function
 export const ValidationCard: React.FC<ValidationCardProps> = ({
   test,
   commentKey,

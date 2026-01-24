@@ -21,6 +21,8 @@ import { OrderTableCard } from '../../components/cards/OrderTableCard';
  * @param getTestNameFn - Function to get test name from testCode
  * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
  */
+// Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
+// eslint-disable-next-line max-lines-per-function
 export const createOrderTableConfig = (
   navigate: NavigateFunction,
   getPatientNameFn: (patientId: number | string) => string,

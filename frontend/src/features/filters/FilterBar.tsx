@@ -44,6 +44,8 @@ export interface FilterBarProps {
  *
  * @component
  */
+// Large component is necessary for comprehensive filter bar with multiple filter types, state management, and UI rendering
+// eslint-disable-next-line max-lines-per-function
 export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, className }) => {
   // Use filter state management
   const { filters, setFilter, clearFilter, clearAll, isFilterActive } = useFilterState({

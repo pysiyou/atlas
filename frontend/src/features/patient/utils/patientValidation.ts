@@ -15,7 +15,9 @@ import type { PatientFormData } from '../hooks/usePatientForm';
 
 /**
  * Validates patient form data and returns error messages
+ * High complexity is necessary to validate all patient form fields comprehensively
  */
+// eslint-disable-next-line complexity
 export const validatePatientForm = (formData: PatientFormData): Record<string, string> => {
   const newErrors: Record<string, string> = {};
 

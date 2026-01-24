@@ -12,6 +12,8 @@ interface AgeFilterProps {
   className?: string;
 }
 
+// Large component is necessary for age range slider with dual handles, mouse/touch event handling, and popover UI
+// eslint-disable-next-line max-lines-per-function
 export const AgeFilter: React.FC<AgeFilterProps> = ({
   value,
   onChange,

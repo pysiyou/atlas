@@ -248,7 +248,8 @@ export function handleStorageError(operation: string, error: unknown): boolean {
     if (error.name === 'QuotaExceededError') {
       logger.warn(`Storage quota exceeded during ${operation}`);
       return true;
-    } else if (error.name === 'SecurityError') {
+    }
+    if (error.name === 'SecurityError') {
       logger.warn(`Storage security error during ${operation} (possibly private browsing mode)`);
       return true;
     }

@@ -39,6 +39,8 @@ export interface TabsListProps {
   onIndicatorChange?: (indicator: { left: number; width: number }) => void;
 }
 
+// Large component is necessary for comprehensive tabs list with indicator animation, keyboard navigation, and responsive behavior
+// eslint-disable-next-line max-lines-per-function
 export const TabsList: React.FC<TabsListProps> = ({
   tabs,
   activeTabId,

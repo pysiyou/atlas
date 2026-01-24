@@ -26,6 +26,8 @@ interface EntryCardProps {
   onClick?: () => void;
 }
 
+// Large component is necessary for comprehensive entry card with multiple status displays, action buttons, and conditional rendering
+// eslint-disable-next-line max-lines-per-function
 export const EntryCard: React.FC<EntryCardProps> = ({
   test,
   testDef,

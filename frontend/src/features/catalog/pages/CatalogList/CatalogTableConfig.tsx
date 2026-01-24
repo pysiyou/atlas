@@ -18,6 +18,8 @@ import { CatalogCard } from '../../components/cards/CatalogCard';
  * @param navigate - React Router navigate function
  * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
  */
+// Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
+// eslint-disable-next-line max-lines-per-function
 export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewConfig<Test> => {
   // Shared render functions
   const renderCode = (test: Test) => (

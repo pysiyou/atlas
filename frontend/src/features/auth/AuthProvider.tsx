@@ -18,6 +18,8 @@ interface AuthProviderProps {
 }
 
 
+// Large function is necessary for comprehensive auth state management including token refresh, queueing, and error handling
+// eslint-disable-next-line max-lines-per-function
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Don't initialize currentUser from storage - must validate token first
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);

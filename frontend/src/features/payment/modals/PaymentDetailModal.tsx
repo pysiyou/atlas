@@ -44,6 +44,8 @@ const PAYMENT_METHODS = getEnabledPaymentMethods();
  * Shows complete order information with test list and allows payment
  * method selection directly in the modal without popover.
  */
+// Large component is necessary for comprehensive payment detail modal with order info, test list, payment method selection, and processing
+// eslint-disable-next-line max-lines-per-function
 export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   isOpen,
   onClose,

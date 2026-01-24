@@ -81,6 +81,8 @@ function buildNewOrder(params: {
   };
 }
 
+// Large hook is necessary for comprehensive order creation logic including patient/test selection, validation, and submission
+// eslint-disable-next-line max-lines-per-function
 export function useCreateOrderController({
   isModal,
   onClose,

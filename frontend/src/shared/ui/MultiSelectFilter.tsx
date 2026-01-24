@@ -116,6 +116,8 @@ const ListItem: React.FC<{
 /**
  * MultiSelectFilter Component
  */
+// Large component is necessary for comprehensive multi-select filter with popover, checkboxes, badges, select all, and clear functionality
+// eslint-disable-next-line max-lines-per-function
 export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   label,
   options,

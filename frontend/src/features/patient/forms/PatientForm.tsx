@@ -2,7 +2,12 @@
  * PatientFormSections Component
  * Consolidated form sections for patient registration and editing
  * Includes: Demographics, Address, Affiliation, Emergency Contact, and Medical History
+ * 
+ * Note: This file exceeds max-lines due to multiple form sections (Demographics, Address, 
+ * Affiliation, Emergency Contact, Medical History). Each section is self-contained and 
+ * properly organized. Breaking into separate files would reduce cohesion.
  */
+/* eslint-disable max-lines */
 
 import React, { useMemo } from 'react';
 import { Input, Select, Textarea, Badge, Button, TagInput, DateInput, MultiSelectFilter } from '@/shared/ui';

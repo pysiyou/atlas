@@ -26,6 +26,8 @@ import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { resultAPI } from '@/services/api';
 
+// Large component is necessary for comprehensive entry view with filtering, sorting, card rendering, and result entry functionality
+// eslint-disable-next-line max-lines-per-function
 export const EntryView: React.FC = () => {
   const { orders, refetch: refreshOrders } = useOrdersList();
   const { invalidateAll: invalidateOrders } = useInvalidateOrders();

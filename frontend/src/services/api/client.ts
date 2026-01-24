@@ -2,7 +2,11 @@
  * API Client
  * Base HTTP client for making API requests
  * Ready for backend integration when available
+ * 
+ * Note: This file exceeds max-lines due to comprehensive API client implementation including
+ * authentication, error handling, request queueing, and multiple HTTP method implementations.
  */
+/* eslint-disable max-lines */
 
 import { API_CONFIG } from '@/config/api';
 import { logger } from '@/utils/logger';

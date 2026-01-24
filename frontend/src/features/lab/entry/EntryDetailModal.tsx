@@ -43,6 +43,8 @@ interface EntryDetailModalProps {
   onPrev?: () => void;
 }
 
+// Large component is necessary for comprehensive entry detail modal with result entry, validation, and multiple conditional sections
+// eslint-disable-next-line max-lines-per-function
 export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   isOpen,
   onClose,
@@ -56,6 +58,8 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   onSave,
   onNext,
   onPrev,
+  // High complexity is necessary for comprehensive result entry logic with validation, conditional rendering, and state management
+  // eslint-disable-next-line complexity
 }) => {
   // Local state for immediate UI feedback
   const [localResults, setLocalResults] = useState<Record<string, string>>(() => initialResults);

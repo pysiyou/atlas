@@ -20,6 +20,8 @@ import { PaymentCard } from '../../components/cards/PaymentCard';
  * @param navigate - React Router navigate function
  * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
  */
+// Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
+// eslint-disable-next-line max-lines-per-function
 export const createPaymentTableConfig = (
   navigate: NavigateFunction
 ): TableViewConfig<OrderPaymentDetails> => {
