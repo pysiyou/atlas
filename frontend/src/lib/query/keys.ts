@@ -10,6 +10,14 @@
 import type { OrderStatus, PaymentStatus, SampleStatus, TestCategory } from '@/types';
 
 /**
+ * Pagination parameters for paginated queries
+ */
+export interface PaginationParams {
+  page?: number;
+  pageSize?: number;
+}
+
+/**
  * Query key factory for all application queries.
  * Hierarchical structure enables granular cache invalidation.
  *
@@ -49,7 +57,10 @@ export const queryKeys = {
   patients: {
     all: ['patients'] as const,
     lists: () => [...queryKeys.patients.all, 'list'] as const,
-    list: (filters?: { search?: string }) => [...queryKeys.patients.lists(), filters] as const,
+    list: (filters?: { search?: string } & PaginationParams) =>
+      [...queryKeys.patients.lists(), filters] as const,
+    paginated: (params: { search?: string } & PaginationParams) =>
+      [...queryKeys.patients.all, 'paginated', params] as const,
     details: () => [...queryKeys.patients.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.patients.details(), id] as const,
     search: (query: string) => [...queryKeys.patients.all, 'search', query] as const,
@@ -61,8 +72,10 @@ export const queryKeys = {
   orders: {
     all: ['orders'] as const,
     lists: () => [...queryKeys.orders.all, 'list'] as const,
-    list: (filters?: { patientId?: string; status?: OrderStatus; paymentStatus?: PaymentStatus }) =>
+    list: (filters?: { patientId?: string; status?: OrderStatus; paymentStatus?: PaymentStatus } & PaginationParams) =>
       [...queryKeys.orders.lists(), filters] as const,
+    paginated: (params: { patientId?: string; status?: OrderStatus; paymentStatus?: PaymentStatus } & PaginationParams) =>
+      [...queryKeys.orders.all, 'paginated', params] as const,
     details: () => [...queryKeys.orders.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.orders.details(), id] as const,
     byPatient: (patientId: string) => [...queryKeys.orders.all, 'patient', patientId] as const,
@@ -74,8 +87,10 @@ export const queryKeys = {
   samples: {
     all: ['samples'] as const,
     lists: () => [...queryKeys.samples.all, 'list'] as const,
-    list: (filters?: { status?: SampleStatus; orderId?: string }) =>
+    list: (filters?: { status?: SampleStatus; orderId?: string } & PaginationParams) =>
       [...queryKeys.samples.lists(), filters] as const,
+    paginated: (params: { status?: SampleStatus; orderId?: string } & PaginationParams) =>
+      [...queryKeys.samples.all, 'paginated', params] as const,
     details: () => [...queryKeys.samples.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.samples.details(), id] as const,
     byOrder: (orderId: string) => [...queryKeys.samples.all, 'order', orderId] as const,

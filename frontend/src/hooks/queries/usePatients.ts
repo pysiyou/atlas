@@ -7,8 +7,8 @@
  * @module hooks/queries/usePatients
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { useCallback, useMemo, useState } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { patientAPI } from '@/services/api/patients';
 import { useAuth } from '@/features/auth/useAuth';
@@ -44,6 +44,68 @@ export function usePatientsList() {
     isError: query.isError,
     error: query.error,
     refetch: query.refetch,
+  };
+}
+
+/**
+ * Hook to fetch paginated patients with server-side filtering.
+ *
+ * Use this for large datasets where client-side filtering is not practical.
+ * Keeps previous data visible while fetching new page.
+ *
+ * @param search - Optional search query
+ * @param initialPage - Starting page (default: 1)
+ * @param pageSize - Items per page (default: 20)
+ */
+export function usePaginatedPatients(search?: string, initialPage = 1, pageSize = 20) {
+  const { isAuthenticated, isRestoring } = useAuth();
+  const [page, setPage] = useState(initialPage);
+
+  const query = useQuery({
+    queryKey: queryKeys.patients.paginated({ search, page, pageSize }),
+    queryFn: () => patientAPI.getPaginated({ search, page, pageSize }),
+    enabled: isAuthenticated && !isRestoring,
+    placeholderData: keepPreviousData,
+    ...cacheConfig.semiStatic,
+  });
+
+  const goToPage = useCallback((newPage: number) => {
+    setPage(newPage);
+  }, []);
+
+  const nextPage = useCallback(() => {
+    if (query.data?.pagination.hasNext) {
+      setPage((p) => p + 1);
+    }
+  }, [query.data?.pagination.hasNext]);
+
+  const prevPage = useCallback(() => {
+    if (query.data?.pagination.hasPrev) {
+      setPage((p) => p - 1);
+    }
+  }, [query.data?.pagination.hasPrev]);
+
+  return {
+    patients: query.data?.data ?? [],
+    pagination: query.data?.pagination ?? {
+      page: 1,
+      pageSize,
+      total: 0,
+      totalPages: 0,
+      hasNext: false,
+      hasPrev: false,
+    },
+    isLoading: query.isLoading,
+    isPending: query.isPending,
+    isFetching: query.isFetching,
+    isPlaceholderData: query.isPlaceholderData,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+    page,
+    goToPage,
+    nextPage,
+    prevPage,
   };
 }
 

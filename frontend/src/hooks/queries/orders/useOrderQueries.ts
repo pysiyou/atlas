@@ -3,12 +3,12 @@
  * Provides read-only access to order data with caching
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { useMemo, useState, useCallback } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
-import { orderAPI } from '@/services/api/orders';
+import { orderAPI, type PaginatedResponse } from '@/services/api/orders';
 import { useAuth } from '@/features/auth/useAuth';
-import type { OrderStatus, PaymentStatus } from '@/types';
+import type { Order, OrderStatus, PaymentStatus } from '@/types';
 
 /**
  * Filter options for orders list
@@ -17,6 +17,14 @@ export interface OrdersFilters {
   patientId?: string;
   status?: OrderStatus;
   paymentStatus?: PaymentStatus;
+}
+
+/**
+ * Pagination options
+ */
+export interface PaginationOptions {
+  page: number;
+  pageSize: number;
 }
 
 /**
@@ -119,5 +127,78 @@ export function useOrdersByStatus(status: OrderStatus | undefined) {
   return {
     orders: filteredOrders,
     isLoading,
+  };
+}
+
+/**
+ * Hook to fetch paginated orders with server-side filtering
+ *
+ * Use this for large datasets where client-side filtering is not practical.
+ * Keeps previous data visible while fetching new page.
+ */
+export function usePaginatedOrders(
+  filters?: OrdersFilters,
+  initialPage = 1,
+  pageSize = 20
+) {
+  const { isAuthenticated, isRestoring } = useAuth();
+  const [page, setPage] = useState(initialPage);
+
+  const query = useQuery({
+    queryKey: queryKeys.orders.paginated({
+      ...filters,
+      page,
+      pageSize,
+    }),
+    queryFn: () =>
+      orderAPI.getPaginated({
+        ...filters,
+        page,
+        pageSize,
+      }),
+    enabled: isAuthenticated && !isRestoring,
+    // Keep showing previous data while fetching new page
+    placeholderData: keepPreviousData,
+    ...cacheConfig.dynamic,
+  });
+
+  const goToPage = useCallback((newPage: number) => {
+    setPage(newPage);
+  }, []);
+
+  const nextPage = useCallback(() => {
+    if (query.data?.pagination.hasNext) {
+      setPage((p) => p + 1);
+    }
+  }, [query.data?.pagination.hasNext]);
+
+  const prevPage = useCallback(() => {
+    if (query.data?.pagination.hasPrev) {
+      setPage((p) => p - 1);
+    }
+  }, [query.data?.pagination.hasPrev]);
+
+  return {
+    orders: query.data?.data ?? [],
+    pagination: query.data?.pagination ?? {
+      page: 1,
+      pageSize,
+      total: 0,
+      totalPages: 0,
+      hasNext: false,
+      hasPrev: false,
+    },
+    isLoading: query.isLoading,
+    isPending: query.isPending,
+    isFetching: query.isFetching,
+    isPlaceholderData: query.isPlaceholderData,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+    // Pagination controls
+    page,
+    goToPage,
+    nextPage,
+    prevPage,
   };
 }

@@ -12,12 +12,25 @@ import type {
   RejectionReason,
 } from '@/types';
 import type { RejectAndRecollectResponse } from '@/types/lab-operations';
+import type { PaginatedResponse, PaginationMeta } from './orders';
+
+export type { PaginatedResponse, PaginationMeta };
 
 interface GetSamplesParams {
   orderId?: string;
   status?: SampleStatus;
   skip?: number;
   limit?: number;
+}
+
+/**
+ * Filter options for samples list with pagination
+ */
+export interface SamplesFilter {
+  orderId?: string;
+  status?: SampleStatus;
+  page?: number;
+  pageSize?: number;
 }
 
 interface CollectSampleRequest {
@@ -41,7 +54,7 @@ interface RejectAndRecollectRequest {
 
 export const sampleAPI = {
   /**
-   * Get all samples with optional filters
+   * Get all samples with optional filters (non-paginated for backward compatibility)
    */
   async getAll(params?: GetSamplesParams): Promise<Sample[]> {
     const queryParams: Record<string, string> = {};
@@ -50,6 +63,20 @@ export const sampleAPI = {
     if (params?.skip) queryParams.skip = String(params.skip);
     if (params?.limit) queryParams.limit = String(params.limit);
     return apiClient.get<Sample[]>('/samples', queryParams);
+  },
+
+  /**
+   * Get samples with pagination
+   */
+  async getPaginated(filters?: SamplesFilter): Promise<PaginatedResponse<Sample>> {
+    const params: Record<string, string> = { paginated: 'true' };
+
+    if (filters?.orderId) params.orderId = filters.orderId;
+    if (filters?.status) params.sampleStatus = filters.status;
+    if (filters?.page) params.skip = String((filters.page - 1) * (filters.pageSize || 20));
+    if (filters?.pageSize) params.limit = String(filters.pageSize);
+
+    return apiClient.get<PaginatedResponse<Sample>>('/samples', params);
   },
 
   /**

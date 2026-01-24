@@ -1,19 +1,41 @@
 """
 FastAPI Application Entry Point
 """
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base
+from app.core.cache import get_redis, close_redis
+from app.middleware import CacheHeadersMiddleware
 
 # Import routers
 from app.api.v1 import auth, patients, tests, orders, samples, results, users, payments, affiliations
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan events."""
+    # Startup
+    Base.metadata.create_all(bind=engine)
+    # Initialize Redis connection (optional - will fail gracefully if not available)
+    redis_client = get_redis()
+    if redis_client:
+        print("Redis cache connected")
+    else:
+        print("Redis cache not available - running without cache")
+
+    yield
+
+    # Shutdown
+    close_redis()
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # CORS middleware
@@ -25,10 +47,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Create database tables
-@app.on_event("startup")
-def startup():
-    Base.metadata.create_all(bind=engine)
+# HTTP caching headers middleware
+app.add_middleware(CacheHeadersMiddleware)
 
 # Health check
 @app.get("/health")

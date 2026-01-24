@@ -4,7 +4,7 @@ Order API Routes
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
-from typing import List
+from typing import List, Union
 from datetime import datetime, timezone
 from app.database import get_db
 from app.core.dependencies import get_current_user, require_receptionist, require_validator
@@ -15,24 +15,29 @@ from app.models.patient import Patient
 from app.models.sample import Sample
 from app.schemas.order import OrderCreate, OrderUpdate, OrderResponse
 from app.schemas.enums import OrderStatus, PaymentStatus, TestStatus, SampleStatus, UserRole
+from app.schemas.pagination import create_paginated_response, skip_to_page
 from app.services.sample_generator import generate_samples_for_order
 from app.utils.db_helpers import get_or_404
 
 router = APIRouter()
 
 
-@router.get("/orders", response_model=List[OrderResponse])
+@router.get("/orders")
 def get_orders(
     patientId: int | None = None,
     status: OrderStatus | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    paginated: bool = Query(False, description="Return paginated response with total count"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
     Get all orders with optional filters.
-    
+
+    Query params:
+    - paginated: If true, returns {data: [...], pagination: {...}} format
+
     Role-based filtering:
     - Admin/Receptionist: All orders
     - Lab Tech: Only orders with pending/collected samples
@@ -59,8 +64,19 @@ def get_orders(
     if status:
         query = query.filter(Order.overallStatus == status)
 
+    # Get total count for pagination (before offset/limit)
+    total = query.count() if paginated else 0
+
     orders = query.order_by(Order.createdAt.desc()).offset(skip).limit(limit).all()
-    return orders
+
+    # Serialize orders using response model to ensure relationships are included
+    serialized_orders = [OrderResponse.model_validate(o).model_dump(mode="json") for o in orders]
+
+    if paginated:
+        page = skip_to_page(skip, limit)
+        return create_paginated_response(serialized_orders, total, page, limit)
+
+    return serialized_orders
 
 
 @router.get("/orders/{orderId}", response_model=OrderResponse)

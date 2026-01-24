@@ -4,14 +4,60 @@
  */
 
 import { apiClient } from './client';
-import type { Order } from '@/types';
+import type { Order, OrderStatus, PaymentStatus } from '@/types';
+
+/**
+ * Pagination metadata from the API
+ */
+export interface PaginationMeta {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+/**
+ * Paginated response wrapper
+ */
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: PaginationMeta;
+}
+
+/**
+ * Filter options for orders list
+ */
+export interface OrdersFilter {
+  patientId?: string;
+  status?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+  page?: number;
+  pageSize?: number;
+}
 
 export const orderAPI = {
   /**
-   * Get all orders
+   * Get all orders (non-paginated for backward compatibility)
    */
   async getAll(): Promise<Order[]> {
     return apiClient.get<Order[]>('/orders');
+  },
+
+  /**
+   * Get orders with pagination
+   */
+  async getPaginated(filters?: OrdersFilter): Promise<PaginatedResponse<Order>> {
+    const params: Record<string, string> = { paginated: 'true' };
+
+    if (filters?.patientId) params.patientId = filters.patientId;
+    if (filters?.status) params.status = filters.status;
+    if (filters?.paymentStatus) params.paymentStatus = filters.paymentStatus;
+    if (filters?.page) params.skip = String((filters.page - 1) * (filters.pageSize || 20));
+    if (filters?.pageSize) params.limit = String(filters.pageSize);
+
+    return apiClient.get<PaginatedResponse<Order>>('/orders', params);
   },
 
   /**

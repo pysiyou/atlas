@@ -52,6 +52,11 @@ export const cacheConfig = {
 } as const;
 
 /**
+ * Minimum time since last fetch before refetching on window focus (1 minute)
+ */
+const SMART_REFETCH_THRESHOLD = 60 * 1000;
+
+/**
  * Create and configure the QueryClient instance
  * Uses sensible defaults that can be overridden per-query
  */
@@ -61,10 +66,27 @@ export function createQueryClient(): QueryClient {
       queries: {
         // Default to dynamic behavior - most queries are dynamic
         ...cacheConfig.dynamic,
-        // Prevent automatic refetching while window is in background
-        refetchOnWindowFocus: 'always',
+        // Smart window focus refetch - only if data is stale enough
+        refetchOnWindowFocus: (query) => {
+          // Skip refetch for static data
+          const queryKey = query.queryKey;
+          if (Array.isArray(queryKey) && typeof queryKey[0] === 'string') {
+            const firstKey = queryKey[0];
+            if (['tests', 'users', 'affiliations'].includes(firstKey)) {
+              return false;
+            }
+          }
+          // Only refetch if data is older than threshold
+          const lastFetch = query.state.dataUpdatedAt;
+          if (lastFetch && Date.now() - lastFetch < SMART_REFETCH_THRESHOLD) {
+            return false;
+          }
+          return true;
+        },
         // Network mode - fetch only when online
         networkMode: 'online',
+        // Use previous data as placeholder while refetching
+        placeholderData: (previousData: unknown) => previousData,
       },
       mutations: {
         // Retry mutations once on failure

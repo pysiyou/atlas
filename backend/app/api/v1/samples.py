@@ -14,6 +14,7 @@ from app.models.sample import Sample
 from app.models.order import Order, OrderTest
 from app.schemas.sample import SampleResponse, SampleCollectRequest, SampleRejectRequest, RecollectionRequest
 from app.schemas.enums import SampleStatus, TestStatus, UserRole, RejectionReason
+from app.schemas.pagination import create_paginated_response, skip_to_page
 from app.services.lab_operations import LabOperationsService, LabOperationError
 
 router = APIRouter()
@@ -37,17 +38,21 @@ class RejectAndRecollectResponse(BaseModel):
         from_attributes = True
 
 
-@router.get("/samples", response_model=List[SampleResponse])
+@router.get("/samples")
 def get_samples(
     orderId: Optional[int] = None,
     sampleStatus: Optional[SampleStatus] = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    paginated: bool = Query(False, description="Return paginated response with total count"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
     Get all samples with optional filters.
+
+    Query params:
+    - paginated: If true, returns {data: [...], pagination: {...}} format
 
     Role-based filtering:
     - Admin/Receptionist: All samples
@@ -76,8 +81,20 @@ def get_samples(
         query = query.filter(Sample.status == sampleStatus)
 
     query = query.order_by(Sample.createdAt.desc())
+
+    # Get total count for pagination (before offset/limit)
+    total = query.count() if paginated else 0
+
     samples = query.offset(skip).limit(limit).all()
-    return samples
+
+    # Serialize samples using response model
+    serialized_samples = [SampleResponse.model_validate(s).model_dump(mode="json") for s in samples]
+
+    if paginated:
+        page = skip_to_page(skip, limit)
+        return create_paginated_response(serialized_samples, total, page, limit)
+
+    return serialized_samples
 
 
 @router.get("/samples/pending", response_model=List[SampleResponse])

@@ -26,6 +26,13 @@ class Settings(BaseSettings):
     # File Storage
     REPORTS_DIR: str = "./storage/reports"
     UPLOADS_DIR: str = "./storage/uploads"
+
+    # Redis Cache
+    REDIS_URL: str = Field(default="redis://localhost:6379/0", description="Redis connection URL")
+    CACHE_ENABLED: bool = Field(default=True, description="Enable/disable Redis caching")
+    CACHE_TTL_STATIC: int = Field(default=3600, description="TTL for static data like tests (seconds)")
+    CACHE_TTL_SEMI_STATIC: int = Field(default=300, description="TTL for semi-static data like patients (seconds)")
+    CACHE_TTL_DYNAMIC: int = Field(default=60, description="TTL for dynamic data (seconds)")
     
     @property
     def cors_origins_list(self) -> List[str]:

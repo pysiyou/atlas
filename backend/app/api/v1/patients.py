@@ -15,6 +15,7 @@ from app.models.order import Order, OrderTest
 from app.models.sample import Sample
 from app.schemas.patient import PatientCreate, PatientUpdate, PatientResponse
 from app.schemas.enums import SampleStatus, TestStatus, UserRole
+from app.schemas.pagination import create_paginated_response, skip_to_page
 
 router = APIRouter()
 
@@ -50,12 +51,16 @@ def get_patients(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     search: str | None = Query(None, max_length=100),
+    paginated: bool = Query(False, description="Return paginated response with total count"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
     Get all patients with pagination and optional search.
-    
+
+    Query params:
+    - paginated: If true, returns {data: [...], pagination: {...}} format
+
     Role-based filtering:
     - Admin/Receptionist: All patients
     - Lab Tech: Only patients with pending/collected samples
@@ -87,9 +92,20 @@ def get_patients(
         )
 
     query = query.order_by(Patient.createdAt.desc())
+
+    # Get total count for pagination (before offset/limit)
+    total = query.count() if paginated else 0
+
     patients = query.offset(skip).limit(limit).all()
+
     # Normalize legacy JSON values before validating response schema.
-    return [PatientResponse.model_validate(_patient_to_response_dict(p)).model_dump() for p in patients]
+    data = [PatientResponse.model_validate(_patient_to_response_dict(p)).model_dump(mode="json") for p in patients]
+
+    if paginated:
+        page = skip_to_page(skip, limit)
+        return create_paginated_response(data, total, page, limit)
+
+    return data
 
 
 @router.get("/patients/{patientId}")
