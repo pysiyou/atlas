@@ -1,19 +1,42 @@
 /**
  * useLoginForm Hook
- * Handles login form state and submission logic
+ *
+ * Manages login form state, validation, and submission.
  */
-
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks';
 import { ROUTES } from '@/config';
-import { AuthError } from '../utils/authErrors';
+
+const getErrorMessage = (err: unknown): string => {
+  if (!(err instanceof Error)) {
+    return 'An unexpected error occurred';
+  }
+
+  const msg = err.message.toLowerCase();
+
+  // Network errors
+  if (msg.includes('fetch') || msg.includes('network') || msg === 'load failed') {
+    return 'Unable to connect to server. Please check your connection.';
+  }
+
+  // Timeout
+  if (msg.includes('abort') || msg.includes('timeout')) {
+    return 'Request timed out. Please try again.';
+  }
+
+  // Auth errors from API (401, 403)
+  if (msg.includes('invalid') || msg.includes('unauthorized')) {
+    return 'Invalid username or password';
+  }
+
+  return err.message || 'Login failed. Please try again.';
+};
 
 export const useLoginForm = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  // Form state
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -21,10 +44,8 @@ export const useLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Refs
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
-  // Initialize: trigger entrance animation and focus input
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     usernameInputRef.current?.focus();
@@ -43,56 +64,27 @@ export const useLoginForm = () => {
     setIsSubmitting(true);
 
     try {
-      const success = await login(username, password);
-      if (success) {
-        navigate(ROUTES.DASHBOARD);
-      }
+      await login(username, password);
+      navigate(ROUTES.DASHBOARD);
     } catch (err) {
-      if (err instanceof AuthError) {
-        setError(err.message);
-      } else if (err instanceof Error) {
-        const errorMessage = err.message?.toLowerCase() || '';
-        if (
-          errorMessage.includes('fetch') ||
-          errorMessage.includes('network') ||
-          errorMessage.includes('connection') ||
-          errorMessage === 'load failed'
-        ) {
-          setError('Unable to connect to the server. Please check if the server is running.');
-        } else if (errorMessage.includes('abort') || errorMessage.includes('timeout')) {
-          setError('Request timed out. Please check your connection and try again.');
-        } else {
-          setError('An error occurred during login. Please try again.');
-        }
-      } else {
-        setError('An unexpected error occurred. Please try again.');
-      }
+      setError(getErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const togglePasswordVisibility = () => setShowPassword(prev => !prev);
-
-  const clearError = () => {
-    if (error) setError('');
-  };
-
   return {
-    // State
     username,
     password,
     error,
     isSubmitting,
     showPassword,
     isVisible,
-    // Refs
     usernameInputRef,
-    // Actions
     setUsername,
     setPassword,
     handleSubmit,
-    togglePasswordVisibility,
-    clearError,
+    togglePasswordVisibility: () => setShowPassword(prev => !prev),
+    clearError: () => setError(''),
   };
 };

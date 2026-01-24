@@ -1,87 +1,94 @@
 """
-FastAPI dependencies for authentication and authorization
+FastAPI dependencies for authentication and authorization.
+
+Provides dependency injection for:
+- Current user extraction from JWT
+- Role-based access control (RBAC)
 """
-import logging
-from typing import Optional
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
+
 from app.database import get_db
-from app.core.security import decode_token
+from app.core.security import decode_token, TokenType
 from app.models.user import User
 from app.schemas.enums import UserRole
 
-logger = logging.getLogger(__name__)
 
-security = HTTPBearer(auto_error=False)
+# Bearer token extractor (auto_error=False for custom error handling)
+_bearer = HTTPBearer(auto_error=False)
+
+# Standard auth error
+_credentials_exception = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Invalid or expired token",
+    headers={"WWW-Authenticate": "Bearer"},
+)
 
 
 def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db)
+    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
+    db: Session = Depends(get_db),
 ) -> User:
-    """Get current authenticated user from JWT token"""
+    """
+    Extract and validate the current user from the JWT access token.
+
+    Raises:
+        HTTPException 401: Missing, invalid, or expired token
+        HTTPException 401: User not found
+    """
     if not credentials:
-        logger.debug("No credentials found in request")
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authenticated",
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    token = credentials.credentials
-    payload = decode_token(token)
-    
-    if payload is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    
-    user_id_str = payload.get("sub")
-    if user_id_str is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    # Decode and validate token type
+    payload = decode_token(credentials.credentials, expected_type=TokenType.ACCESS)
+    if not payload:
+        raise _credentials_exception
+
+    # Extract user ID
+    user_id = payload.get("sub")
+    if not user_id:
+        raise _credentials_exception
 
     try:
-        user_id = int(user_id_str)
+        user = db.query(User).filter(User.id == int(user_id)).first()
     except (ValueError, TypeError):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid user ID in token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise _credentials_exception
 
-    user = db.query(User).filter(User.id == user_id).first()
-    if user is None:
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found",
-            headers={"WWW-Authenticate": "Bearer"},
         )
-    
-    logger.info(f"User {user.username} authenticated")
+
     return user
 
 
 def require_role(*allowed_roles: UserRole):
-    """Dependency factory to check if user has required role"""
-    def role_checker(current_user: User = Depends(get_current_user)) -> User:
-        if current_user.role not in allowed_roles:
-            logger.warning(f"Access denied for user {current_user.username}")
+    """
+    Dependency factory for role-based access control.
+
+    Usage:
+        @router.get("/admin-only")
+        def admin_endpoint(user: User = Depends(require_role(UserRole.ADMIN))):
+            ...
+    """
+    def check_role(user: User = Depends(get_current_user)) -> User:
+        if user.role not in allowed_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Access denied. Required roles: {[role.value for role in allowed_roles]}"
+                detail=f"Requires role: {', '.join(r.value for r in allowed_roles)}",
             )
-        return current_user
-    return role_checker
+        return user
+
+    return check_role
 
 
-# Common role dependencies
+# Pre-built role dependencies for common access patterns
 require_admin = require_role(UserRole.ADMIN)
 require_receptionist = require_role(UserRole.ADMIN, UserRole.RECEPTIONIST)
 require_lab_tech = require_role(UserRole.ADMIN, UserRole.LAB_TECH)

@@ -17,7 +17,6 @@ import { LoadingState } from '@/shared/components/LoadingState';
 
 // Eagerly loaded components (small, frequently accessed)
 import { LoginForm } from '@/features/auth/LoginForm';
-import { AuthNavigationSetup } from '@/features/auth/components/AuthNavigationSetup';
 import { AppLayout as DashboardLayout } from '@/shared/layout';
 import { useAuth } from '@/features/auth/useAuth';
 import { ModalRenderer } from '@/shared/ui';
@@ -59,10 +58,10 @@ interface ProtectedFeatureRouteProps {
 }
 
 const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children, featureName }) => {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
 
   // Show loading state while restoring auth from storage
-  if (isRestoring) {
+  if (isLoading) {
     return <PageLoadingFallback />;
   }
 
@@ -84,11 +83,7 @@ const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children,
  */
 const AppRoutes: React.FC = () => {
   return (
-    <>
-      {/* Set up navigation callbacks for API client */}
-      <AuthNavigationSetup />
-
-      <Routes>
+    <Routes>
         {/* Public Routes */}
         <Route
           path={ROUTES.LOGIN}
@@ -195,7 +190,6 @@ const AppRoutes: React.FC = () => {
         <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.LOGIN} replace />} />
         <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
       </Routes>
-    </>
   );
 };
 

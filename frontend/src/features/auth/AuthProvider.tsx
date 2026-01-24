@@ -1,449 +1,234 @@
 /**
- * Authentication Provider Component
- * Manages user authentication and role-based access using backend API
- * Features token refresh, request queueing, and comprehensive error handling
+ * Authentication Provider
+ *
+ * Manages JWT-based authentication with automatic token refresh.
+ * Uses sessionStorage for persistence across page reloads.
  */
-
-import React, { useState, useEffect, useRef, useCallback, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, useRef, type ReactNode } from 'react';
 import type { AuthUser, UserRole } from '@/types';
 import { AuthContext, type AuthContextType } from './AuthContext';
 import { apiClient } from '@/services/api/client';
-import { logger } from '@/utils/logger';
-import { authStorage, STORAGE_KEYS } from './storage/authStorage';
-import { TokenRefreshQueue, isTokenExpired, getProactiveRefreshTime } from './utils/tokenRefresh';
-import { AuthError, toAuthError, handleStorageError, withAuthRetry } from './utils/authErrors';
 
-interface AuthProviderProps {
+// Storage keys
+const STORAGE_KEYS = {
+  ACCESS_TOKEN: 'atlas_access_token',
+  REFRESH_TOKEN: 'atlas_refresh_token',
+  USER: 'atlas_user',
+} as const;
+
+// Token utilities
+const storage = {
+  get: (key: string): string | null => {
+    try {
+      return sessionStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  set: (key: string, value: string): void => {
+    try {
+      sessionStorage.setItem(key, value);
+    } catch {
+      // Ignore storage errors (private browsing, quota exceeded)
+    }
+  },
+  remove: (key: string): void => {
+    try {
+      sessionStorage.removeItem(key);
+    } catch {
+      // Ignore
+    }
+  },
+  clear: (): void => {
+    Object.values(STORAGE_KEYS).forEach(storage.remove);
+  },
+};
+
+const decodeJwt = (token: string): { exp?: number; iat?: number } | null => {
+  try {
+    const [, payload] = token.split('.');
+    return JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+  } catch {
+    return null;
+  }
+};
+
+const isTokenExpired = (token: string | null, bufferSec = 60): boolean => {
+  if (!token) return true;
+  const decoded = decodeJwt(token);
+  if (!decoded?.exp) return true;
+  return decoded.exp * 1000 <= Date.now() + bufferSec * 1000;
+};
+
+interface Props {
   children: ReactNode;
 }
 
-// Large function is necessary for comprehensive auth state management including token refresh, queueing, and error handling
-// eslint-disable-next-line max-lines-per-function
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // Don't initialize currentUser from storage - must validate token first
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+export const AuthProvider = ({ children }: Props) => {
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [isLoading, setIsLoading] = useState(() => !!storage.get(STORAGE_KEYS.ACCESS_TOKEN));
 
-  // Track if we're currently restoring auth state from storage
-  const [isRestoring, setIsRestoring] = useState<boolean>(() => {
-    // Check if there's a stored token that needs validation
-    return !!authStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-  });
+  // Token ref for synchronous access by API client
+  const tokenRef = useRef<string | null>(storage.get(STORAGE_KEYS.ACCESS_TOKEN));
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const isRefreshingRef = useRef(false);
 
-  // Use a ref to store the current token so the getter always has the latest value
-  // Initialize with stored token if available
-  const getInitialToken = (): string | null => {
-    return authStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-  };
-  const tokenRef = useRef<string | null>(getInitialToken());
+  // Clear all auth state
+  const clearAuth = useCallback(() => {
+    tokenRef.current = null;
+    setUser(null);
+    storage.clear();
+    if (refreshTimerRef.current) {
+      clearTimeout(refreshTimerRef.current);
+    }
+  }, []);
 
-  // Token refresh queue for managing concurrent refresh attempts
-  const refreshQueueRef = useRef<TokenRefreshQueue>(new TokenRefreshQueue());
+  // Refresh access token
+  const refreshToken = useCallback(async (): Promise<string | null> => {
+    if (isRefreshingRef.current) return tokenRef.current;
 
-  // Proactive refresh timer
-  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const refreshTkn = storage.get(STORAGE_KEYS.REFRESH_TOKEN);
+    if (!refreshTkn) {
+      clearAuth();
+      return null;
+    }
 
-  // Keep ref in sync with state
-  useEffect(() => {
-    tokenRef.current = accessToken;
-  }, [accessToken]);
+    isRefreshingRef.current = true;
+    try {
+      const { access_token } = await apiClient.post<{ access_token: string }>(
+        '/auth/refresh',
+        { refresh_token: refreshTkn }
+      );
 
-  // Register token getter with API client on mount
-  // This must run before any API calls are made
-  // Navigation callbacks are set up by AuthNavigationSetup component
+      tokenRef.current = access_token;
+      storage.set(STORAGE_KEYS.ACCESS_TOKEN, access_token);
+      return access_token;
+    } catch {
+      clearAuth();
+      return null;
+    } finally {
+      isRefreshingRef.current = false;
+    }
+  }, [clearAuth]);
+
+  // Schedule proactive token refresh at 50% of lifetime
+  const scheduleRefresh = useCallback(
+    (token: string) => {
+      if (refreshTimerRef.current) {
+        clearTimeout(refreshTimerRef.current);
+      }
+
+      const decoded = decodeJwt(token);
+      if (!decoded?.exp || !decoded?.iat) return;
+
+      const lifetime = (decoded.exp - decoded.iat) * 1000;
+      const elapsed = Date.now() - decoded.iat * 1000;
+      const refreshIn = Math.max(lifetime / 2 - elapsed, 60000);
+
+      refreshTimerRef.current = setTimeout(async () => {
+        const newToken = await refreshToken();
+        if (newToken) scheduleRefresh(newToken);
+      }, refreshIn);
+    },
+    [refreshToken]
+  );
+
+  // Register token getter with API client
   useEffect(() => {
     apiClient.setTokenGetter(() => tokenRef.current);
-  }, []);
+    apiClient.setRefreshTokenHandler(refreshToken);
+  }, [refreshToken]);
 
-  /**
-   * Clear all authentication state and storage
-   */
-  const clearAuthState = useCallback(() => {
-    tokenRef.current = null;
-    setAccessToken(null);
-    setCurrentUser(null);
-
-    // Clear stored tokens
-    authStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-    authStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-    authStorage.removeItem(STORAGE_KEYS.USER);
-    authStorage.removeItem(STORAGE_KEYS.LOGGED_IN_AT);
-
-    // Clear refresh queue and timer
-    refreshQueueRef.current.clear();
-    if (refreshTimerRef.current) {
-      clearTimeout(refreshTimerRef.current);
-      refreshTimerRef.current = null;
-    }
-  }, []);
-
-  /**
-   * Refresh access token using refresh token
-   * @returns New access token
-   * @throws AuthError if refresh fails
-   */
-  const refreshAccessToken = useCallback(async (): Promise<string> => {
-    const refreshToken = authStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
-
-    if (!refreshToken) {
-      throw new AuthError('No refresh token available', 'INVALID_CREDENTIALS');
-    }
-
-    try {
-      // Call refresh endpoint (assuming it exists - adjust endpoint as needed)
-      const response = await apiClient.post<{
-        access_token: string;
-        refresh_token?: string;
-      }>('/auth/refresh', {
-        refresh_token: refreshToken,
-      });
-
-      if (!response.access_token) {
-        throw new AuthError('Invalid response from refresh endpoint', 'SERVER_ERROR');
-      }
-
-      // Update tokens
-      tokenRef.current = response.access_token;
-      setAccessToken(response.access_token);
-
-      // Persist new access token
-      authStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, response.access_token);
-
-      // Update refresh token if provided
-      if (response.refresh_token) {
-        authStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, response.refresh_token);
-      }
-
-      logger.debug('Token refreshed successfully');
-      return response.access_token;
-    } catch (error) {
-      logger.error('Token refresh failed', error instanceof Error ? error : undefined);
-
-      // Refresh failed - clear auth state
-      clearAuthState();
-
-      throw toAuthError(error);
-    }
-  }, [clearAuthState]);
-
-  /**
-   * Schedule proactive token refresh
-   * Refreshes token before it expires
-   */
-  const scheduleProactiveRefresh = useCallback(() => {
-    // Clear existing timer
-    if (refreshTimerRef.current) {
-      clearTimeout(refreshTimerRef.current);
-      refreshTimerRef.current = null;
-    }
-
-    const currentToken = tokenRef.current;
-    if (!currentToken) {
-      return;
-    }
-
-    const refreshTime = getProactiveRefreshTime(currentToken);
-    if (!refreshTime) {
-      return;
-    }
-
-    logger.debug(`Scheduling proactive token refresh in ${Math.round(refreshTime / 1000)}s`);
-
-    refreshTimerRef.current = setTimeout(async () => {
-      try {
-        await refreshQueueRef.current.startRefresh(refreshAccessToken);
-        // Schedule next refresh
-        scheduleProactiveRefresh();
-      } catch (error) {
-        logger.error('Proactive token refresh failed', error instanceof Error ? error : undefined);
-        // Don't clear auth state here - let the next API call trigger refresh
-      }
-    }, refreshTime);
-  }, [refreshAccessToken]);
-
-  /**
-   * Restore authentication state from storage on mount
-   * Validates the stored token by fetching user info
-   * Handles race conditions by using a flag
-   */
+  // Restore auth state on mount
   useEffect(() => {
-    let isMounted = true;
+    let mounted = true;
 
-    const restoreAuth = async () => {
-      const storedToken = authStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+    const restore = async () => {
+      const token = storage.get(STORAGE_KEYS.ACCESS_TOKEN);
 
-      if (!storedToken) {
-        // No stored token, ensure clean state
-        if (isMounted) {
-          clearAuthState();
-          setIsRestoring(false);
-        }
+      if (!token) {
+        setIsLoading(false);
         return;
       }
 
-      // Check if token is expired - try refresh if we have refresh token
-      if (isTokenExpired(storedToken)) {
-        const refreshToken = authStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
-        if (refreshToken) {
-          try {
-            logger.debug('Stored token expired, attempting refresh');
-            const newToken = await refreshQueueRef.current.startRefresh(refreshAccessToken);
-            if (isMounted) {
-              tokenRef.current = newToken;
-              setAccessToken(newToken);
-            }
-          } catch (error) {
-            logger.debug(
-              'Token refresh failed during restore',
-              error instanceof Error ? { error: error.message } : undefined
-            );
-            if (isMounted) {
-              clearAuthState();
-              setIsRestoring(false);
-            }
-            return;
-          }
-        } else {
-          // No refresh token, clear state
-          if (isMounted) {
-            clearAuthState();
-            setIsRestoring(false);
-          }
+      // Try to refresh if expired
+      let validToken = token;
+      if (isTokenExpired(token)) {
+        const refreshed = await refreshToken();
+        if (!refreshed) {
+          if (mounted) setIsLoading(false);
           return;
         }
-      } else {
-        // Token is valid, set it
-        if (isMounted) {
-          tokenRef.current = storedToken;
-          setAccessToken(storedToken);
-        }
+        validToken = refreshed;
       }
 
+      tokenRef.current = validToken;
+
       try {
-        // Validate token by fetching user info
         const userInfo = await apiClient.get<AuthUser>('/auth/me');
-
-        if (!isMounted) return;
-
-        const authUser: AuthUser = {
-          ...userInfo,
-          loggedInAt: authStorage.getItem(STORAGE_KEYS.LOGGED_IN_AT) || new Date().toISOString(),
-        };
-
-        setCurrentUser(authUser);
-
-        // Persist user info (in case it was updated)
-        authStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
-
-        // Schedule proactive refresh
-        scheduleProactiveRefresh();
-
-        logger.debug('Authentication state restored from storage');
-      } catch (error) {
-        if (!isMounted) return;
-
-        // Token is invalid or expired, try refresh if available
-        const refreshToken = authStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
-        if (refreshToken) {
-          try {
-            logger.debug('Token validation failed, attempting refresh');
-            const newToken = await refreshQueueRef.current.startRefresh(refreshAccessToken);
-            tokenRef.current = newToken;
-            setAccessToken(newToken);
-
-            // Retry user info fetch
-            const userInfo = await apiClient.get<AuthUser>('/auth/me');
-            const authUser: AuthUser = {
-              ...userInfo,
-              loggedInAt:
-                authStorage.getItem(STORAGE_KEYS.LOGGED_IN_AT) || new Date().toISOString(),
-            };
-            setCurrentUser(authUser);
-            authStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
-            scheduleProactiveRefresh();
-            return;
-          } catch (refreshError) {
-            logger.debug(
-              'Token refresh failed during restore',
-              refreshError instanceof Error ? { error: refreshError.message } : undefined
-            );
-          }
+        if (mounted) {
+          setUser(userInfo);
+          storage.set(STORAGE_KEYS.USER, JSON.stringify(userInfo));
+          scheduleRefresh(validToken);
         }
-
-        // Refresh failed or no refresh token - clear stored auth
-        logger.debug(
-          'Stored token is invalid, clearing auth state',
-          error instanceof Error ? { error: error.message } : undefined
-        );
-        clearAuthState();
+      } catch {
+        clearAuth();
       } finally {
-        if (isMounted) {
-          setIsRestoring(false);
-        }
+        if (mounted) setIsLoading(false);
       }
     };
 
-    restoreAuth();
-
+    restore();
     return () => {
-      isMounted = false;
+      mounted = false;
     };
-  }, [clearAuthState, refreshAccessToken, scheduleProactiveRefresh]);
+  }, [clearAuth, refreshToken, scheduleRefresh]);
 
-  /**
-   * Login function - authenticates with backend API
-   * @param username - User's username
-   * @param password - User's password
-   * @returns true if login succeeded
-   * @throws AuthError with specific error code for different failure types
-   */
-  const login = async (username: string, password: string): Promise<boolean> => {
-    return withAuthRetry(async () => {
-      try {
-        // Call backend login endpoint
-        const response = await apiClient.post<{
-          access_token: string;
-          refresh_token: string;
-          role: UserRole;
-        }>('/auth/login', {
-          username,
-          password,
-        });
+  // Login
+  const login = useCallback(
+    async (username: string, password: string): Promise<void> => {
+      const response = await apiClient.post<{
+        access_token: string;
+        refresh_token: string;
+        role: UserRole;
+      }>('/auth/login', { username, password });
 
-        logger.debug('Login response received');
+      tokenRef.current = response.access_token;
+      storage.set(STORAGE_KEYS.ACCESS_TOKEN, response.access_token);
+      storage.set(STORAGE_KEYS.REFRESH_TOKEN, response.refresh_token);
 
-        if (!response.access_token) {
-          logger.error('No access_token in login response');
-          throw new AuthError('Invalid response from server', 'SERVER_ERROR');
-        }
+      const userInfo = await apiClient.get<AuthUser>('/auth/me');
+      setUser(userInfo);
+      storage.set(STORAGE_KEYS.USER, JSON.stringify(userInfo));
+      scheduleRefresh(response.access_token);
+    },
+    [scheduleRefresh]
+  );
 
-        // Store tokens in memory and storage for persistence
-        // Update ref immediately so API client can use it synchronously
-        tokenRef.current = response.access_token;
-        setAccessToken(response.access_token);
+  // Logout
+  const logout = useCallback(() => {
+    apiClient.post('/auth/logout', {}).catch(() => {});
+    clearAuth();
+  }, [clearAuth]);
 
-        // Persist tokens to storage
-        try {
-          authStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, response.access_token);
-          if (response.refresh_token) {
-            authStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, response.refresh_token);
-          }
-          const loginTime = new Date().toISOString();
-          authStorage.setItem(STORAGE_KEYS.LOGGED_IN_AT, loginTime);
-        } catch (storageError) {
-          handleStorageError('login', storageError);
-          // Continue even if storage fails (e.g., in private browsing mode)
-        }
-
-        logger.debug('Access token stored in memory and storage', {
-          tokenLength: response.access_token.length,
-        });
-
-        // Verify token is available in ref before making API call
-        if (!tokenRef.current) {
-          logger.error('Token ref is null after setting');
-          throw new AuthError('Failed to store access token', 'SERVER_ERROR');
-        }
-
-        // Get user info (token is now in ref, API client will get it from context)
-        logger.debug('Fetching user info with token', { hasToken: !!tokenRef.current });
-        const userInfo = await apiClient.get<AuthUser>('/auth/me');
-
-        const authUser: AuthUser = {
-          ...userInfo,
-          loggedInAt: new Date().toISOString(),
-        };
-
-        setCurrentUser(authUser);
-
-        // Persist user info to storage
-        try {
-          authStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
-        } catch (storageError) {
-          handleStorageError('store user info', storageError);
-        }
-
-        // Schedule proactive token refresh
-        scheduleProactiveRefresh();
-
-        return true;
-      } catch (error) {
-        logger.error('Login failed', error instanceof Error ? error : undefined);
-
-        // Clear any tokens on error
-        clearAuthState();
-
-        // Re-throw as AuthError
-        throw toAuthError(error);
-      }
-    });
-  };
-
-  /**
-   * Refresh token method (exposed for API client use)
-   * @returns New access token
-   * @throws AuthError if refresh fails
-   */
-  const refreshToken = useCallback(async (): Promise<string> => {
-    return refreshQueueRef.current.startRefresh(refreshAccessToken);
-  }, [refreshAccessToken]);
-
-  /**
-   * Logout function
-   * Clears authentication state from memory and storage
-   * Optionally calls backend logout endpoint
-   */
-  const logout = useCallback(async () => {
-    // Call backend logout endpoint if token exists
-    const currentToken = tokenRef.current;
-    if (currentToken) {
-      try {
-        await apiClient.post('/auth/logout', {});
-      } catch (error) {
-        // Log but don't fail logout if backend call fails
-        logger.warn(
-          'Backend logout call failed',
-          error instanceof Error ? { error: error.message } : undefined
-        );
-      }
-    }
-
-    // Clear auth state
-    clearAuthState();
-  }, [clearAuthState]);
-
-  /**
-   * Check if user is authenticated
-   */
-  const isAuthenticated = currentUser !== null;
-
-  /**
-   * Check if user has required role(s)
-   */
-  const hasRole = (roles: UserRole | UserRole[]): boolean => {
-    if (!currentUser) return false;
-
-    if (Array.isArray(roles)) {
-      return roles.includes(currentUser.role);
-    }
-
-    return currentUser.role === roles;
-  };
-
-  // Expose refresh queue and token getter for API client
-  useEffect(() => {
-    apiClient.setRefreshTokenHandler(() => refreshToken());
-    apiClient.setRefreshQueue(refreshQueueRef.current);
-  }, [refreshToken]);
+  // Check role
+  const hasRole = useCallback(
+    (roles: UserRole | UserRole[]): boolean => {
+      if (!user) return false;
+      const roleList = Array.isArray(roles) ? roles : [roles];
+      return roleList.includes(user.role);
+    },
+    [user]
+  );
 
   const value: AuthContextType = {
-    currentUser,
-    users: [], // No longer needed with backend
-    accessToken,
+    user,
+    currentUser: user, // Backward compatibility
+    isAuthenticated: !!user,
+    isLoading,
+    isRestoring: isLoading, // Backward compatibility
     login,
     logout,
-    isAuthenticated,
-    isRestoring,
     hasRole,
   };
 
