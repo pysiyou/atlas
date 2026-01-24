@@ -69,8 +69,4 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => (
 /**
  * Re-export individual providers for cases where selective provision is needed
  */
-export {
-  QueryProvider,
-  AuthProvider,
-  ModalProvider,
-};
+export { QueryProvider, AuthProvider, ModalProvider };

@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { OrderList } from '@/features/order/pages/OrderList/OrderList';
+import { OrderList } from '@/features/order/pages/OrderList';
 import { CreateOrder } from '@/features/order/forms/OrderCreate';
-import { OrderDetail } from '@/features/order/pages/OrderDetail/OrderDetail';
+import { OrderDetail } from '@/features/order/pages/OrderDetail';
 
 export const Orders: React.FC = () => {
   return (

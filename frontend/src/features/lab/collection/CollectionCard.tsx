@@ -9,11 +9,7 @@ import { Badge, Icon, IconButton, Alert } from '@/shared/ui';
 import Barcode from 'react-barcode';
 import type { ContainerType, RejectedSample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
-import {
-  usePatientNameLookup,
-  useTestCatalog,
-  useRejectSample,
-} from '@/hooks/queries';
+import { usePatientNameLookup, useTestCatalog, useRejectSample } from '@/hooks/queries';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/shared/context/ModalContext';

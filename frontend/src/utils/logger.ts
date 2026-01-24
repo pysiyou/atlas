@@ -100,7 +100,9 @@ class Logger {
   }
 
   /**
-   * Send logs to monitoring service (placeholder for production integration)
+   * Send logs to monitoring service (placeholder for production integration).
+   * Planned: Sentry, LogRocket, or similar. TODO: Integrate when chosen.
+   *
    * @param level - Log level (DEBUG, INFO, WARN, ERROR)
    * @param message - Log message
    * @param context - Optional context data

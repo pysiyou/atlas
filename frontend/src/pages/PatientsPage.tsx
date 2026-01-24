@@ -5,8 +5,8 @@
 
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { PatientList } from '@/features/patient/pages/PatientList/PatientList';
-import { PatientDetail } from '@/features/patient/pages/PatientDetail/PatientDetail';
+import { PatientList } from '@/features/patient/pages/PatientList';
+import { PatientDetail } from '@/features/patient/pages/PatientDetail';
 
 export const Patients: React.FC = () => {
   return (

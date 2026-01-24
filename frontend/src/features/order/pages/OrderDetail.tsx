@@ -8,12 +8,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks';
 import { useOrder, usePatient, useTestCatalog, usePaymentsByOrder } from '@/hooks/queries';
 import type { Invoice } from '@/types';
-import { OrderHeader } from '../../components/display/OrderHeader';
+import { OrderHeader } from '../components/display/OrderHeader';
 import {
   SmallScreenLayout,
   MediumScreenLayout,
   LargeScreenLayout,
-} from '../../components/OrderDetailLayouts';
+} from '../components/OrderDetailLayouts';
 
 export const OrderDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -31,8 +31,7 @@ export const OrderDetail: React.FC = () => {
   // Normalize patient to Patient | null (not undefined)
   const patient = patientData ?? null;
 
-  // Invoice data - currently not available from API
-  // TODO: Add invoice API endpoint when available
+  // Invoice UI stubbed until backend API exists. TODO: Add invoice API endpoint when available.
   const invoice: Invoice | null = null;
 
   // Loading state
@@ -61,8 +60,7 @@ export const OrderDetail: React.FC = () => {
   // Event handlers
   const handleViewPatient = () => navigate(`/patients/${order.patientId}`);
   const handleViewInvoice = () => {
-    // Invoice functionality not yet available
-    // TODO: Implement when invoice API is ready
+    // Invoice functionality stubbed until API is ready. TODO: Implement when invoice API exists.
   };
 
   // Render appropriate layout based on screen size

@@ -56,9 +56,7 @@ export const Reports: React.FC = () => {
                     <div className="font-medium text-gray-900">
                       {displayId.order(order.orderId)}
                     </div>
-                    <div className="text-sm text-gray-600">
-                      {getPatientName(order.patientId)}
-                    </div>
+                    <div className="text-sm text-gray-600">{getPatientName(order.patientId)}</div>
                     <div className="text-sm text-gray-500">
                       {formatDate(order.orderDate)} • {order.tests.length} test(s)
                     </div>

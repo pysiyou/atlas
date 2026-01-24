@@ -82,11 +82,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
           <Badge variant={item.paymentMethod} size="xs" />
         ) : item.paymentStatus === 'unpaid' ? (
           <div onClick={e => e.stopPropagation()}>
-            <PaymentButton
-              order={item._order}
-              size="xs"
-              onPaymentSuccess={handlePaymentSuccess}
-            />
+            <PaymentButton order={item._order} size="xs" onPaymentSuccess={handlePaymentSuccess} />
           </div>
         ) : null}
       </div>

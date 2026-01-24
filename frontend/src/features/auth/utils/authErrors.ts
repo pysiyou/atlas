@@ -255,6 +255,9 @@ export function handleStorageError(operation: string, error: unknown): boolean {
     }
   }
 
-  logger.warn(`Storage error during ${operation}`, error instanceof Error ? { error: error.message } : undefined);
+  logger.warn(
+    `Storage error during ${operation}`,
+    error instanceof Error ? { error: error.message } : undefined
+  );
   return true;
 }

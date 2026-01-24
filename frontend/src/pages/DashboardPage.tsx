@@ -22,8 +22,7 @@ export const Dashboard: React.FC = () => {
   const { payments } = usePaymentsList();
   const { getPatientName } = usePatientNameLookup();
 
-  // Simplified - appointments and invoices would need their own hooks
-  // TODO: Add appointment and invoice hooks when APIs are available
+  // Stubbed until appointment/invoice APIs exist. TODO: Add hooks when available.
   const appointments: Array<{ date: string }> = [];
   const invoices: Array<{ paymentStatus: string }> = [];
 

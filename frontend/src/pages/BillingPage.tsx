@@ -1,7 +1,7 @@
 /**
  * Billing Page
  * Billing and payment management
- * 
+ *
  * NOTE: Billing context removed - will be migrated to TanStack Query when API is ready
  */
 

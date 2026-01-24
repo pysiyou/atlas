@@ -28,8 +28,7 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
   const priorityOptions: FilterOption[] = useMemo(
     () =>
       PRIORITY_LEVEL_OPTIONS.map(opt => {
-        const color =
-          opt.value === 'stat' ? 'danger' : opt.value === 'urgent' ? 'warning' : 'info';
+        const color = opt.value === 'stat' ? 'danger' : opt.value === 'urgent' ? 'warning' : 'info';
         return { id: opt.value, label: opt.label, color };
       }),
     []

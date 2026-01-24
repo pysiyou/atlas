@@ -35,7 +35,11 @@ interface CollectionDetailFooterProps {
     selectedColor?: string,
     containerType?: ContainerType
   ) => void;
-  onReject: (reasons: RejectionReason[], notes?: string, requireRecollection?: boolean) => Promise<void>;
+  onReject: (
+    reasons: RejectionReason[],
+    notes?: string,
+    requireRecollection?: boolean
+  ) => Promise<void>;
   onClose: () => void;
 }
 

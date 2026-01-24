@@ -1,7 +1,7 @@
 /**
  * Appointments Page
  * Appointment scheduling and management
- * 
+ *
  * NOTE: Appointments context removed - will be migrated to TanStack Query when API is ready
  */
 

@@ -63,7 +63,7 @@ export class TokenRefreshQueue {
 
         // Retry requests in parallel
         await Promise.allSettled(
-          requests.map(async (req) => {
+          requests.map(async req => {
             try {
               const result = await req.retry();
               req.resolve(result);
@@ -80,7 +80,7 @@ export class TokenRefreshQueue {
         // Reject all pending requests
         const requests = [...this.pendingRequests];
         this.pendingRequests = [];
-        requests.forEach((req) => {
+        requests.forEach(req => {
           req.reject(error);
         });
 
@@ -98,7 +98,7 @@ export class TokenRefreshQueue {
    * Clear the refresh queue and pending requests
    */
   clear(): void {
-    this.pendingRequests.forEach((req) => {
+    this.pendingRequests.forEach(req => {
       req.reject(new Error('Token refresh queue cleared'));
     });
     this.pendingRequests = [];
@@ -123,7 +123,10 @@ export function decodeJWT(token: string): { exp?: number; iat?: number } | null 
     const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
     return decoded;
   } catch (error) {
-    logger.warn('Failed to decode JWT token', error instanceof Error ? { error: error.message } : undefined);
+    logger.warn(
+      'Failed to decode JWT token',
+      error instanceof Error ? { error: error.message } : undefined
+    );
     return null;
   }
 }

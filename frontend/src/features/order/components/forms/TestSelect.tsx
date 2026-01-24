@@ -228,7 +228,9 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                         <span className="shrink-0 text-xs font-semibold font-mono px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 border border-gray-200">
                           {code}
                         </span>
-                        <span className="text-xs font-medium text-gray-900 truncate">{safeName}</span>
+                        <span className="text-xs font-medium text-gray-900 truncate">
+                          {safeName}
+                        </span>
                       </div>
                     </div>
 

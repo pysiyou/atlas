@@ -4,3 +4,5 @@
 
 export * from './OrderList';
 export * from './OrderDetail';
+export * from './OrderTableConfig';
+export * from './OrderDetailComponents';

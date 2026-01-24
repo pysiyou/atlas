@@ -156,7 +156,7 @@ export const ValidationView: React.FC = () => {
           if (alreadyRejected) {
             // Rejection was already performed by RejectionDialog - just refresh
             await invalidateOrders();
-          await refreshOrders();
+            await refreshOrders();
             toast.success('Results rejected');
           } else {
             // Legacy path: rejection not yet performed, we need to call the API
@@ -174,7 +174,7 @@ export const ValidationView: React.FC = () => {
               rejectionType: rejectType,
             });
             await invalidateOrders();
-          await refreshOrders();
+            await refreshOrders();
 
             const message =
               rejectType === 're-collect'
@@ -236,39 +236,39 @@ export const ValidationView: React.FC = () => {
   return (
     <DataErrorBoundary>
       <LabWorkflowView
-      title="Result Validation"
-      items={allTests}
-      filterFn={filterTest}
-      renderCard={test => {
-        const commentKey = `${test.orderId}-${test.testCode}`;
-        // Check if the order has validated tests to block re-collect option
-        const order = getOrder(test.orderId);
-        const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
+        title="Result Validation"
+        items={allTests}
+        filterFn={filterTest}
+        renderCard={test => {
+          const commentKey = `${test.orderId}-${test.testCode}`;
+          // Check if the order has validated tests to block re-collect option
+          const order = getOrder(test.orderId);
+          const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
 
-        const cardProps = {
-          test,
-          commentKey,
-          comments: comments[commentKey] || '',
-          onCommentsChange: handleCommentsChange,
-          onApprove: () => handleValidate(test.orderId, test.testCode, true),
-          onReject: (reason?: string, type?: 're-test' | 're-collect') =>
-            handleValidate(test.orderId, test.testCode, false, reason, type),
-          onClick: () => openValidationModal(test),
-          orderHasValidatedTests: hasValidatedTests,
-        };
+          const cardProps = {
+            test,
+            commentKey,
+            comments: comments[commentKey] || '',
+            onCommentsChange: handleCommentsChange,
+            onApprove: () => handleValidate(test.orderId, test.testCode, true),
+            onReject: (reason?: string, type?: 're-test' | 're-collect') =>
+              handleValidate(test.orderId, test.testCode, false, reason, type),
+            onClick: () => openValidationModal(test),
+            orderHasValidatedTests: hasValidatedTests,
+          };
 
-        return isMobile ? (
-          <ValidationMobileCard {...cardProps} />
-        ) : (
-          <ValidationCard {...cardProps} />
-        );
-      }}
-      getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
-      emptyIcon="shield-check"
-      emptyTitle="No Pending Validations"
-      emptyDescription="There are no results waiting for validation."
-      searchPlaceholder="Search tests..."
-    />
+          return isMobile ? (
+            <ValidationMobileCard {...cardProps} />
+          ) : (
+            <ValidationCard {...cardProps} />
+          );
+        }}
+        getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
+        emptyIcon="shield-check"
+        emptyTitle="No Pending Validations"
+        emptyDescription="There are no results waiting for validation."
+        searchPlaceholder="Search tests..."
+      />
     </DataErrorBoundary>
   );
 };

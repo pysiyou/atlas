@@ -21,13 +21,13 @@ export const AuthNavigationSetup: React.FC = () => {
   useEffect(() => {
     // Set up navigation callback for API client
     apiClient.setAuthCallbacks({
-      onAuthStateChange: (action) => {
+      onAuthStateChange: action => {
         if (action === 'logout') {
           logout();
         }
         // 'refresh' action is handled by AuthProvider automatically
       },
-      onNavigate: (path) => {
+      onNavigate: path => {
         navigate(path);
       },
     });

@@ -229,7 +229,17 @@ export const EntryView: React.FC = () => {
         setIsSaving(prev => ({ ...prev, [resultKey]: false }));
       }
     },
-    [results, technicianNotes, allTests, testCatalog, orders, isSaving, getTest, invalidateOrders, refreshOrders]
+    [
+      results,
+      technicianNotes,
+      allTests,
+      testCatalog,
+      orders,
+      isSaving,
+      getTest,
+      invalidateOrders,
+      refreshOrders,
+    ]
   );
 
   // Use a ref to store the openTestModal function to avoid circular dependency
@@ -299,41 +309,41 @@ export const EntryView: React.FC = () => {
   return (
     <DataErrorBoundary>
       <LabWorkflowView
-      title="Result Entry"
-      items={allTests}
-      filterFn={filterTest}
-      renderCard={(test, idx, filteredTests) => {
-        const testDef = getTest(test.testCode);
-        const resultKey = `${test.orderId}-${test.testCode}`;
-        const isComplete = testDef?.parameters
-          ? areAllParametersFilled(resultKey, testDef.parameters.length)
-          : false;
+        title="Result Entry"
+        items={allTests}
+        filterFn={filterTest}
+        renderCard={(test, idx, filteredTests) => {
+          const testDef = getTest(test.testCode);
+          const resultKey = `${test.orderId}-${test.testCode}`;
+          const isComplete = testDef?.parameters
+            ? areAllParametersFilled(resultKey, testDef.parameters.length)
+            : false;
 
-        const cardProps = {
-          test,
-          testDef,
-          resultKey,
-          results: results[resultKey] || {},
-          technicianNotes: technicianNotes[resultKey] || '',
-          isComplete,
-          onResultsChange: handleResultChange,
-          onNotesChange: handleNotesChange,
-          onSave: () => handleSaveResults(test.orderId, test.testCode),
-          onClick: () => openTestModal(test, filteredTests as TestWithContext[]),
-        };
+          const cardProps = {
+            test,
+            testDef,
+            resultKey,
+            results: results[resultKey] || {},
+            technicianNotes: technicianNotes[resultKey] || '',
+            isComplete,
+            onResultsChange: handleResultChange,
+            onNotesChange: handleNotesChange,
+            onSave: () => handleSaveResults(test.orderId, test.testCode),
+            onClick: () => openTestModal(test, filteredTests as TestWithContext[]),
+          };
 
-        return isMobile ? (
-          <EntryMobileCard key={`${test.orderId}-${test.testCode}-${idx}`} {...cardProps} />
-        ) : (
-          <EntryCard key={`${test.orderId}-${test.testCode}-${idx}`} {...cardProps} />
-        );
-      }}
-      getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
-      emptyIcon="checklist"
-      emptyTitle="No Pending Results"
-      emptyDescription="There are no samples waiting for result entry."
-      searchPlaceholder="Search tests..."
-    />
+          return isMobile ? (
+            <EntryMobileCard key={`${test.orderId}-${test.testCode}-${idx}`} {...cardProps} />
+          ) : (
+            <EntryCard key={`${test.orderId}-${test.testCode}-${idx}`} {...cardProps} />
+          );
+        }}
+        getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
+        emptyIcon="checklist"
+        emptyTitle="No Pending Results"
+        emptyDescription="There are no samples waiting for result entry."
+        searchPlaceholder="Search tests..."
+      />
     </DataErrorBoundary>
   );
 };

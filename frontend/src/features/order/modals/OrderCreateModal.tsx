@@ -18,7 +18,11 @@ export interface OrderCreateModalProps extends BaseModalProps {
   patientId?: string;
 }
 
-export const OrderCreateModal: React.FC<OrderCreateModalProps> = ({ isOpen, onClose, patientId }) => {
+export const OrderCreateModal: React.FC<OrderCreateModalProps> = ({
+  isOpen,
+  onClose,
+  patientId,
+}) => {
   const subtitle = useMemo(() => {
     if (!patientId) return 'Select a patient and choose tests to create a new order.';
     return `Creating an order for patient ${patientId}.`;
@@ -30,4 +34,3 @@ export const OrderCreateModal: React.FC<OrderCreateModalProps> = ({ isOpen, onCl
     </Modal>
   );
 };
-

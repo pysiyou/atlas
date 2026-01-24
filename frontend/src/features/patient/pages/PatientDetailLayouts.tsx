@@ -6,11 +6,11 @@
 import React from 'react';
 import { SectionContainer, IconButton } from '@/shared/ui';
 import type { Patient, Order } from '@/types';
-import { GeneralInfoSection } from '../../components/display/GeneralInfoSection';
-import { MedicalHistorySectionDisplay } from '../../components/display/MedicalHistorySectionDisplay';
-import { VitalSignsDisplay } from '../../components/display/VitalSignsDisplay';
-import { PatientOrdersTable } from '../../components/tables/PatientOrdersTable';
-import { ReportsList } from '../../components/display/ReportsList';
+import { GeneralInfoSection } from '../components/display/GeneralInfoSection';
+import { MedicalHistorySectionDisplay } from '../components/display/MedicalHistorySectionDisplay';
+import { VitalSignsDisplay } from '../components/display/VitalSignsDisplay';
+import { PatientOrdersTable } from '../components/tables/PatientOrdersTable';
+import { ReportsList } from '../components/display/ReportsList';
 
 interface LayoutProps {
   patient: Patient;

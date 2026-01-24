@@ -28,10 +28,10 @@ export const Input: React.FC<InputProps> = ({
   // Auto-detect icon based on input type or name if not provided
   const getDefaultIcon = (): IconName | undefined => {
     if (icon !== undefined) return icon;
-    
+
     const type = props.type;
     const name = props.name?.toLowerCase() || '';
-    
+
     if (type === 'email' || name.includes('email')) return 'mail';
     if (type === 'tel' || name.includes('phone')) return 'phone';
     if (name.includes('height')) return 'ruler';
@@ -40,7 +40,7 @@ export const Input: React.FC<InputProps> = ({
     if (name.includes('address') || name.includes('street')) return 'map';
     if (name.includes('city')) return 'city';
     if (name.includes('postal') || name.includes('zip')) return 'mail';
-    
+
     return undefined;
   };
 
@@ -108,13 +108,13 @@ export const Textarea: React.FC<TextareaProps> = ({
   // Auto-detect icon based on name if not provided
   const getDefaultIcon = (): IconName | undefined => {
     if (icon !== undefined) return icon;
-    
+
     const name = props.name?.toLowerCase() || '';
-    
+
     if (name.includes('note') || name.includes('comment')) return 'file-text';
     if (name.includes('history') || name.includes('medical')) return 'file-text';
     if (name.includes('description')) return 'file-text';
-    
+
     return 'file-text';
   };
 
@@ -185,13 +185,13 @@ export const Select: React.FC<SelectProps> = ({
   // Auto-detect icon based on name if not provided
   const getDefaultIcon = (): IconName | undefined => {
     if (icon !== undefined) return icon;
-    
+
     const name = props.name?.toLowerCase() || '';
-    
+
     if (name.includes('gender')) return 'user-hands';
     if (name.includes('relationship')) return 'link';
     if (name.includes('duration') || name.includes('affiliation')) return 'clock';
-    
+
     return 'info-circle';
   };
 

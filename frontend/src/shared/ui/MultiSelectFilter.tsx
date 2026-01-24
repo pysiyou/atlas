@@ -93,15 +93,13 @@ const ListItem: React.FC<{
           ) : (
             <div className="w-5 h-5 rounded-full border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
           )
+        ) : // Square checkbox style for multi-select
+        isSelected ? (
+          <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
+            <Icon name="check" className="w-3.5 h-3.5 text-white" />
+          </div>
         ) : (
-          // Square checkbox style for multi-select
-          isSelected ? (
-            <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
-              <Icon name="check" className="w-3.5 h-3.5 text-white" />
-            </div>
-          ) : (
-            <div className="w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
-          )
+          <div className="w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
         )}
       </div>
 

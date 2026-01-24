@@ -2,7 +2,7 @@
  * API Client
  * Base HTTP client for making API requests
  * Ready for backend integration when available
- * 
+ *
  * Note: This file exceeds max-lines due to comprehensive API client implementation including
  * authentication, error handling, request queueing, and multiple HTTP method implementations.
  */
@@ -132,7 +132,15 @@ export class APIClient {
   private defaultHeaders: Record<string, string>;
   private tokenGetter: (() => string | null) | null = null;
   private refreshTokenHandler: (() => Promise<string>) | null = null;
-  private refreshQueue: { isRefreshInProgress: () => boolean; queueRequest: (req: { resolve: (value: unknown) => void; reject: (error: unknown) => void; retry: () => Promise<unknown> }) => void; startRefresh: (fn: () => Promise<string>) => Promise<string> } | null = null;
+  private refreshQueue: {
+    isRefreshInProgress: () => boolean;
+    queueRequest: (req: {
+      resolve: (value: unknown) => void;
+      reject: (error: unknown) => void;
+      retry: () => Promise<unknown>;
+    }) => void;
+    startRefresh: (fn: () => Promise<string>) => Promise<string>;
+  } | null = null;
   private authCallbacks: AuthCallbacks | null = null;
 
   constructor() {
@@ -163,7 +171,15 @@ export class APIClient {
    * Set the refresh queue (called from AuthProvider)
    * This allows the API client to queue requests during token refresh
    */
-  setRefreshQueue(queue: { isRefreshInProgress: () => boolean; queueRequest: (req: { resolve: (value: unknown) => void; reject: (error: unknown) => void; retry: () => Promise<unknown> }) => void; startRefresh: (fn: () => Promise<string>) => Promise<string> }): void {
+  setRefreshQueue(queue: {
+    isRefreshInProgress: () => boolean;
+    queueRequest: (req: {
+      resolve: (value: unknown) => void;
+      reject: (error: unknown) => void;
+      retry: () => Promise<unknown>;
+    }) => void;
+    startRefresh: (fn: () => Promise<string>) => Promise<string>;
+  }): void {
     this.refreshQueue = queue;
     logger.debug('Refresh queue set on API client');
   }
@@ -184,7 +200,7 @@ export class APIClient {
     if (!this.tokenGetter) {
       return null;
     }
-    
+
     return this.tokenGetter();
   }
 
@@ -224,18 +240,21 @@ export class APIClient {
       try {
         logger.debug('401 error detected, attempting token refresh');
         await this.refreshQueue.startRefresh(this.refreshTokenHandler);
-        
+
         // Retry the original request with new token
         return await originalRequest();
       } catch (refreshError) {
-        logger.error('Token refresh failed', refreshError instanceof Error ? refreshError : undefined);
-        
+        logger.error(
+          'Token refresh failed',
+          refreshError instanceof Error ? refreshError : undefined
+        );
+
         // Refresh failed - trigger logout
         if (this.authCallbacks) {
           this.authCallbacks.onAuthStateChange('logout');
           this.authCallbacks.onNavigate('/login');
         }
-        
+
         throw refreshError;
       }
     }
@@ -257,7 +276,10 @@ export class APIClient {
    * Handle API errors - async to parse response body
    * Returns the result if 401 refresh succeeds, otherwise throws
    */
-  private async handleErrorAsync(error: unknown, retryRequest?: () => Promise<unknown>): Promise<unknown> {
+  private async handleErrorAsync(
+    error: unknown,
+    retryRequest?: () => Promise<unknown>
+  ): Promise<unknown> {
     if (error instanceof Response) {
       // Handle 401 errors with token refresh
       if (error.status === 401 && retryRequest) {
@@ -304,7 +326,10 @@ export class APIClient {
    * @param retryRequest - Function to retry the request
    * @returns Response or result if refresh succeeded
    */
-  private async handle401IfNeeded<T>(response: Response, retryRequest: () => Promise<T>): Promise<T> {
+  private async handle401IfNeeded<T>(
+    response: Response,
+    retryRequest: () => Promise<T>
+  ): Promise<T> {
     if (response.status === 401) {
       return await this.handle401Error(retryRequest);
     }

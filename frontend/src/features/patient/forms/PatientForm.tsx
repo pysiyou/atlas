@@ -2,15 +2,24 @@
  * PatientFormSections Component
  * Consolidated form sections for patient registration and editing
  * Includes: Demographics, Address, Affiliation, Emergency Contact, and Medical History
- * 
- * Note: This file exceeds max-lines due to multiple form sections (Demographics, Address, 
- * Affiliation, Emergency Contact, Medical History). Each section is self-contained and 
+ *
+ * Note: This file exceeds max-lines due to multiple form sections (Demographics, Address,
+ * Affiliation, Emergency Contact, Medical History). Each section is self-contained and
  * properly organized. Breaking into separate files would reduce cohesion.
  */
 /* eslint-disable max-lines */
 
 import React, { useMemo } from 'react';
-import { Input, Select, Textarea, Badge, Button, TagInput, DateInput, MultiSelectFilter } from '@/shared/ui';
+import {
+  Input,
+  Select,
+  Textarea,
+  Badge,
+  Button,
+  TagInput,
+  DateInput,
+  MultiSelectFilter,
+} from '@/shared/ui';
 import type { Gender, AffiliationDuration, Affiliation, Relationship } from '@/types';
 import { GENDER_OPTIONS, AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
@@ -201,7 +210,10 @@ export const AddressSection: React.FC<
  * Displays lab affiliation/subscription fields with subscription-style plan selector
  */
 export const AffiliationSection: React.FC<
-  Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange' | 'existingAffiliation' | 'onRenew'>
+  Pick<
+    PatientFormSectionsProps,
+    'formData' | 'errors' | 'onFieldChange' | 'existingAffiliation' | 'onRenew'
+  >
 > = ({ formData, errors, onFieldChange, existingAffiliation, onRenew }) => {
   const hasExistingAffiliation = !!existingAffiliation;
   const isActive = isAffiliationActive(existingAffiliation);
@@ -219,23 +231,23 @@ export const AffiliationSection: React.FC<
         <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-4 shadow-sm">
           <div className="flex items-center justify-between pb-3 border-b border-gray-100">
             <span className="text-sm font-semibold text-gray-900">Current Affiliation</span>
-            <Badge 
-              variant={isActive ? 'success' : 'danger'} 
-              size="sm"
-              className="font-medium"
-            >
+            <Badge variant={isActive ? 'success' : 'danger'} size="sm" className="font-medium">
               {isActive ? 'Active' : 'Expired'}
             </Badge>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Assurance Number</span>
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                Assurance Number
+              </span>
               <p className="font-mono font-semibold text-gray-900 text-sm">
                 {existingAffiliation.assuranceNumber}
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Duration</span>
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                Duration
+              </span>
               <p className="font-semibold text-gray-900 text-sm">
                 {AFFILIATION_DURATION_OPTIONS.find(
                   opt => opt.value === existingAffiliation.duration
@@ -243,13 +255,17 @@ export const AffiliationSection: React.FC<
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Start Date</span>
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                Start Date
+              </span>
               <p className="font-semibold text-gray-900 text-sm">
                 {formatDate(existingAffiliation.startDate)}
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Expiry Date</span>
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                Expiry Date
+              </span>
               <p className={`font-semibold text-sm ${isActive ? 'text-gray-900' : 'text-red-600'}`}>
                 {formatDate(existingAffiliation.endDate)}
               </p>
@@ -274,7 +290,10 @@ export const AffiliationSection: React.FC<
             }}
             className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
           />
-          <label htmlFor="hasAffiliation" className="text-sm font-medium text-gray-700 cursor-pointer">
+          <label
+            htmlFor="hasAffiliation"
+            className="text-sm font-medium text-gray-700 cursor-pointer"
+          >
             Subscribe to lab affiliation
           </label>
         </div>
@@ -298,13 +317,7 @@ export const AffiliationSection: React.FC<
 
       {/* Show renew button for expired affiliations if not already showing plan selector */}
       {hasExistingAffiliation && !isActive && !formData.hasAffiliation && onRenew && (
-        <Button
-          type="button"
-          onClick={onRenew}
-          variant="primary"
-          size="md"
-          fullWidth
-        >
+        <Button type="button" onClick={onRenew} variant="primary" size="md" fullWidth>
           Renew Affiliation
         </Button>
       )}
@@ -325,11 +338,16 @@ export const EmergencyContactSection: React.FC<
       RELATIONSHIP_OPTIONS.map(opt => {
         // Assign colors based on relationship type
         let color: string = 'default';
-        if (opt.value === 'spouse') color = 'primary'; // Spouse - sky blue
-        else if (opt.value === 'parent') color = 'info'; // Parent - blue
-        else if (opt.value === 'sibling') color = 'success'; // Sibling - green
-        else if (opt.value === 'child') color = 'warning'; // Child - yellow/orange
-        else if (opt.value === 'friend') color = 'purple'; // Friend - purple
+        if (opt.value === 'spouse')
+          color = 'primary'; // Spouse - sky blue
+        else if (opt.value === 'parent')
+          color = 'info'; // Parent - blue
+        else if (opt.value === 'sibling')
+          color = 'success'; // Sibling - green
+        else if (opt.value === 'child')
+          color = 'warning'; // Child - yellow/orange
+        else if (opt.value === 'friend')
+          color = 'purple'; // Friend - purple
         else if (opt.value === 'other') color = 'neutral'; // Other - neutral gray
 
         return {
@@ -356,13 +374,7 @@ export const EmergencyContactSection: React.FC<
       // Use the most recently selected item (last in array)
       // Type guard to ensure valid Relationship value
       const lastId = selectedIds[selectedIds.length - 1];
-      const validRelationships: Relationship[] = [
-        'spouse',
-        'parent',
-        'child',
-        'sibling',
-        'other',
-      ];
+      const validRelationships: Relationship[] = ['spouse', 'parent', 'child', 'sibling', 'other'];
       if (validRelationships.includes(lastId as Relationship)) {
         onFieldChange('emergencyContactRelationship', lastId as Relationship);
       }

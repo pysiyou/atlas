@@ -43,10 +43,10 @@ export const DateInput: React.FC<DateInputProps> = ({
   maxDate,
 }) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
-  
+
   // Parse value to Date or null
   const dateValue = value ? new Date(value) : null;
-  
+
   // Current month for calendar navigation
   const [currentMonth, setCurrentMonth] = useState<Date>(dateValue || new Date());
   const [view, setView] = useState<'days' | 'months' | 'years'>('days');
@@ -150,7 +150,10 @@ export const DateInput: React.FC<DateInputProps> = ({
                 className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer"
                 type="button"
               >
-                <Icon name="close-circle" className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
+                <Icon
+                  name="close-circle"
+                  className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600"
+                />
               </button>
             )}
           </div>

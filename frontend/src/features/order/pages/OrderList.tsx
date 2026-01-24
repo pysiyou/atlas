@@ -13,7 +13,7 @@ import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
-import { OrderFilters } from '../../components/filters/OrderFilters';
+import { OrderFilters } from '../components/filters/OrderFilters';
 import { createOrderTableConfig } from './OrderTableConfig';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
 

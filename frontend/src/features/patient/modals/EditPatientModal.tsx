@@ -68,7 +68,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
    */
   const handleFieldChange = <K extends keyof typeof formData>(
     field: K,
-    value: typeof formData[K]
+    value: (typeof formData)[K]
   ) => {
     updateField(field, value);
   };
@@ -132,65 +132,70 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   return (
     <FormErrorBoundary>
       <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={modalTitle}
-      subtitle={mode === 'edit' && patient ? displayId.patient(patient.id) : undefined}
-      maxWidth="max-w-3xl"
-    >
-      <div className="h-full flex flex-col bg-slate-50">
-        {/* Scrollable content area */}
-        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin">
-          <form id="patient-upsert-form" onSubmit={handleSubmit} className="max-w-4xl mx-auto">
-            <TabbedSectionContainer
-              tabs={tabs}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              headerRight={
-                <CircularProgress
-                  size={18}
-                  percentage={formProgress.percentage}
-                  trackColorClass="stroke-gray-200"
-                  progressColorClass={
-                    formProgress.percentage === 100 ? 'stroke-emerald-500' : 'stroke-blue-500'
-                  }
-                  label={`${formProgress.filled}/${formProgress.total}`}
-                  className="h-7"
-                />
-              }
-              className="rounded-xl! shadow-none"
-              contentClassName="!p-6"
-              headerClassName="!px-6 !py-4"
-            >
-              <PatientFormTabs
+        isOpen={isOpen}
+        onClose={onClose}
+        title={modalTitle}
+        subtitle={mode === 'edit' && patient ? displayId.patient(patient.id) : undefined}
+        maxWidth="max-w-3xl"
+      >
+        <div className="h-full flex flex-col bg-slate-50">
+          {/* Scrollable content area */}
+          <div className="flex-1 overflow-y-auto p-6 scrollbar-thin">
+            <form id="patient-upsert-form" onSubmit={handleSubmit} className="max-w-4xl mx-auto">
+              <TabbedSectionContainer
+                tabs={tabs}
                 activeTab={activeTab}
-                formData={formData}
-                errors={errors}
-                onFieldChange={handleFieldChange}
-                existingAffiliation={patient?.affiliation}
-                onRenew={handleRenew}
-              />
-            </TabbedSectionContainer>
-          </form>
-        </div>
+                onTabChange={setActiveTab}
+                headerRight={
+                  <CircularProgress
+                    size={18}
+                    percentage={formProgress.percentage}
+                    trackColorClass="stroke-gray-200"
+                    progressColorClass={
+                      formProgress.percentage === 100 ? 'stroke-emerald-500' : 'stroke-blue-500'
+                    }
+                    label={`${formProgress.filled}/${formProgress.total}`}
+                    className="h-7"
+                  />
+                }
+                className="rounded-xl! shadow-none"
+                contentClassName="!p-6"
+                headerClassName="!px-6 !py-4"
+              >
+                <PatientFormTabs
+                  activeTab={activeTab}
+                  formData={formData}
+                  errors={errors}
+                  onFieldChange={
+                    handleFieldChange as (
+                      field: string,
+                      value: string | number | boolean | undefined
+                    ) => void
+                  }
+                  existingAffiliation={patient?.affiliation}
+                  onRenew={handleRenew}
+                />
+              </TabbedSectionContainer>
+            </form>
+          </div>
 
-        {/* Fixed footer actions */}
-        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-white shrink-0">
-          <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="save"
-            form="patient-upsert-form"
-            isLoading={isSubmitting}
-            disabled={isSubmitting}
-          >
-            {submitLabel}
-          </Button>
+          {/* Fixed footer actions */}
+          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-white shrink-0">
+            <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="save"
+              form="patient-upsert-form"
+              isLoading={isSubmitting}
+              disabled={isSubmitting}
+            >
+              {submitLabel}
+            </Button>
+          </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
     </FormErrorBoundary>
   );
 };

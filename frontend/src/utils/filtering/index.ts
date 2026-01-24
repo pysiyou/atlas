@@ -11,7 +11,7 @@
  * import { createSearchFilter, combineFilters } from '@/utils/filtering';
  *
  * // Import utility functions
- * import { createFilterOptions, hasActiveFilters } from '@/utils/filtering';
+ * import { createFilterOptions } from '@/utils/filtering';
  *
  * // Import types
  * import type { FilterOption, SortConfig } from '@/utils/filtering';
@@ -42,9 +42,4 @@ export {
 } from './filters';
 
 // Utility functions
-export {
-  createFilterOptions,
-  createSimpleFilterOptions,
-  hasActiveFilters,
-  getFilterSummary,
-} from './utils';
+export { createFilterOptions } from './utils';

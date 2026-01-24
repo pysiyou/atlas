@@ -1,6 +1,6 @@
 /**
  * Patient Feature - Main Exports
- * 
+ *
  * This file provides backward-compatible exports for external consumers.
  * All exports are re-exported from their new locations.
  */

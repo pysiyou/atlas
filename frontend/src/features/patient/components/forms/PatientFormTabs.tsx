@@ -100,9 +100,13 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
       return (
         <div className="space-y-6">
           <div className="pb-2">
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Affiliation</div>
+            <div className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">
+              Affiliation
+            </div>
             <div className="text-base font-semibold text-slate-900">Select Your Plan</div>
-            <div className="text-xs text-slate-500 mt-1">Choose a duration and pricing that works for you</div>
+            <div className="text-xs text-slate-500 mt-1">
+              Choose a duration and pricing that works for you
+            </div>
           </div>
           <AffiliationSection
             formData={formData}

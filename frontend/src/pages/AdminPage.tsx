@@ -4,11 +4,7 @@
  */
 
 import React, { useMemo } from 'react';
-import {
-  usePatientsList,
-  useOrdersList,
-  useTestCatalog,
-} from '@/hooks/queries';
+import { usePatientsList, useOrdersList, useTestCatalog } from '@/hooks/queries';
 import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';

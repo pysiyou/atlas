@@ -75,10 +75,10 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
 
           {/* Form header */}
           <div className="mb-8">
-            <h2 className="font-display text-3xl sm:text-4xl text-[#e8eaed] mb-2">
-              Welcome back
-            </h2>
-            <p className="font-body text-[#8892a6] text-[15px]">Sign in to continue to your dashboard</p>
+            <h2 className="font-display text-3xl sm:text-4xl text-[#e8eaed] mb-2">Welcome back</h2>
+            <p className="font-body text-[#8892a6] text-[15px]">
+              Sign in to continue to your dashboard
+            </p>
           </div>
 
           {/* Error message display */}

@@ -5,7 +5,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button } from '@/shared/ui';
+import { Button, Icon } from '@/shared/ui';
 import { ClaudeLoader } from '@/shared/ui/LoadingSpinner';
 import { affiliationAPI } from '@/services/api';
 import { formatCurrency } from '@/utils';
@@ -13,7 +13,6 @@ import { logger } from '@/utils/logger';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan, AffiliationPricing } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
-import { Icon } from '@/shared/ui';
 
 export interface AffiliationPlanSelectorProps {
   /** Currently selected duration */
@@ -128,7 +127,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Lab Affiliation Benefits</h3>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Choose a plan that fits your needs. All plans include priority services and discounted pricing for lab tests.
+              Choose a plan that fits your needs. All plans include priority services and discounted
+              pricing for lab tests.
             </p>
           </div>
 
@@ -168,7 +168,9 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <Icon name="check" className="w-3.5 h-3.5 text-red-600" />
                 </div>
                 <div>
-                  <span className="text-sm font-medium text-gray-900">Extended Validity Period</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    Extended Validity Period
+                  </span>
                   <p className="text-xs text-gray-500 mt-0.5">Long-term access to services</p>
                 </div>
               </div>
@@ -199,9 +201,10 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 onClick={() => hasPrice && handlePlanSelect(plan.duration)}
                 className={`
                   relative border-2 rounded-xl p-5 cursor-pointer transition-all duration-200
-                  ${isSelected 
-                    ? 'border-orange-400 bg-orange-50/50 shadow-sm' 
-                    : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-sm'
+                  ${
+                    isSelected
+                      ? 'border-orange-400 bg-orange-50/50 shadow-sm'
+                      : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-sm'
                   }
                   ${!hasPrice ? 'opacity-50 cursor-not-allowed' : ''}
                 `}
@@ -222,15 +225,14 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                     <div
                       className={`
                         w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all
-                        ${isSelected 
-                          ? 'border-orange-500 bg-orange-500' 
-                          : 'border-gray-300 bg-white'
+                        ${
+                          isSelected
+                            ? 'border-orange-500 bg-orange-500'
+                            : 'border-gray-300 bg-white'
                         }
                       `}
                     >
-                      {isSelected && (
-                        <div className="w-2.5 h-2.5 rounded-full bg-white" />
-                      )}
+                      {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
                     </div>
                   </div>
 

@@ -10,7 +10,7 @@ import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { Test } from '@/types';
-import { CatalogCard } from '../../components/cards/CatalogCard';
+import { CatalogCard } from '../components/cards/CatalogCard';
 
 /**
  * Create catalog table configuration with full, compact, and card views

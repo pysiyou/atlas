@@ -1,43 +1,13 @@
 /**
  * Formatting Utilities
  * Common formatting functions for dates, currency, phone numbers, etc.
+ * formatDate and formatCurrency are consolidated in @/shared/utils/data; re-exported here for @/utils consumers.
  */
 
-import { format, parseISO, isValid } from 'date-fns';
+import { parseISO, isValid } from 'date-fns';
 
-/**
- * Format a date string or Date object to a human-readable format
- * @param date - ISO date string or Date object
- * @param formatStr - date-fns format string (default: 'MMM d, yyyy')
- * @returns Formatted date string or empty string if invalid
- */
-export function formatDate(
-  date: string | Date | undefined | null,
-  formatStr = 'MMM d, yyyy'
-): string {
-  if (!date) return '';
-
-  try {
-    const dateObj = typeof date === 'string' ? parseISO(date) : date;
-    if (!isValid(dateObj)) return '';
-    return format(dateObj, formatStr);
-  } catch {
-    return '';
-  }
-}
-
-/**
- * Format a number as currency (USD)
- * @param amount - Number to format
- * @returns Formatted currency string
- */
-export function formatCurrency(amount: number | undefined | null): string {
-  if (amount === undefined || amount === null) return '$0.00';
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(amount);
-}
+export { formatDate } from '@/shared/utils/data/dateFormatters';
+export { formatCurrency } from '@/shared/utils/data/currencyFormatters';
 
 /**
  * Format a phone number to (XXX) XXX-XXXX format

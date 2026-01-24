@@ -10,9 +10,9 @@ import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
-import { PaymentButton } from '../../components/display/PaymentButton';
-import type { OrderPaymentDetails } from '../../types/types';
-import { PaymentCard } from '../../components/cards/PaymentCard';
+import { PaymentButton } from '../components/display/PaymentButton';
+import type { OrderPaymentDetails } from '../types/types';
+import { PaymentCard } from '../components/cards/PaymentCard';
 
 /**
  * Create payment table configuration with full, compact, and card views
@@ -87,10 +87,7 @@ export const createPaymentTableConfig = (
 
   const renderAction = (item: OrderPaymentDetails) => (
     <div onClick={e => e.stopPropagation()}>
-      <PaymentButton
-        order={item._order}
-        onPaymentSuccess={onPaymentSuccess}
-      />
+      <PaymentButton order={item._order} onPaymentSuccess={onPaymentSuccess} />
     </div>
   );
 

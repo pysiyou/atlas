@@ -10,7 +10,7 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTestCatalog } from '@/hooks/queries';
 import { ListView } from '@/shared/components';
-import { CatalogFilters } from '../../components/filters/CatalogFilters';
+import { CatalogFilters } from '../components/filters/CatalogFilters';
 import { createCatalogTableConfig } from './CatalogTableConfig';
 import type { Test, TestCategory } from '@/types';
 import { PRICE_RANGE } from '@/shared/constants';

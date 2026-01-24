@@ -17,14 +17,13 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-
 // Large function is necessary for comprehensive auth state management including token refresh, queueing, and error handling
 // eslint-disable-next-line max-lines-per-function
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Don't initialize currentUser from storage - must validate token first
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  
+
   // Track if we're currently restoring auth state from storage
   const [isRestoring, setIsRestoring] = useState<boolean>(() => {
     // Check if there's a stored token that needs validation
@@ -43,7 +42,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Proactive refresh timer
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -64,7 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     tokenRef.current = null;
     setAccessToken(null);
     setCurrentUser(null);
-    
+
     // Clear stored tokens
     authStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     authStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
@@ -86,7 +84,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    */
   const refreshAccessToken = useCallback(async (): Promise<string> => {
     const refreshToken = authStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
-    
+
     if (!refreshToken) {
       throw new AuthError('No refresh token available', 'INVALID_CREDENTIALS');
     }
@@ -107,10 +105,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Update tokens
       tokenRef.current = response.access_token;
       setAccessToken(response.access_token);
-      
+
       // Persist new access token
       authStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, response.access_token);
-      
+
       // Update refresh token if provided
       if (response.refresh_token) {
         authStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, response.refresh_token);
@@ -120,10 +118,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return response.access_token;
     } catch (error) {
       logger.error('Token refresh failed', error instanceof Error ? error : undefined);
-      
+
       // Refresh failed - clear auth state
       clearAuthState();
-      
+
       throw toAuthError(error);
     }
   }, [clearAuthState]);
@@ -173,7 +171,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const restoreAuth = async () => {
       const storedToken = authStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-      
+
       if (!storedToken) {
         // No stored token, ensure clean state
         if (isMounted) {
@@ -195,7 +193,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               setAccessToken(newToken);
             }
           } catch (error) {
-            logger.debug('Token refresh failed during restore', error instanceof Error ? { error: error.message } : undefined);
+            logger.debug(
+              'Token refresh failed during restore',
+              error instanceof Error ? { error: error.message } : undefined
+            );
             if (isMounted) {
               clearAuthState();
               setIsRestoring(false);
@@ -221,7 +222,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         // Validate token by fetching user info
         const userInfo = await apiClient.get<AuthUser>('/auth/me');
-        
+
         if (!isMounted) return;
 
         const authUser: AuthUser = {
@@ -230,13 +231,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
 
         setCurrentUser(authUser);
-        
+
         // Persist user info (in case it was updated)
         authStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
-        
+
         // Schedule proactive refresh
         scheduleProactiveRefresh();
-        
+
         logger.debug('Authentication state restored from storage');
       } catch (error) {
         if (!isMounted) return;
@@ -249,24 +250,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const newToken = await refreshQueueRef.current.startRefresh(refreshAccessToken);
             tokenRef.current = newToken;
             setAccessToken(newToken);
-            
+
             // Retry user info fetch
             const userInfo = await apiClient.get<AuthUser>('/auth/me');
             const authUser: AuthUser = {
               ...userInfo,
-              loggedInAt: authStorage.getItem(STORAGE_KEYS.LOGGED_IN_AT) || new Date().toISOString(),
+              loggedInAt:
+                authStorage.getItem(STORAGE_KEYS.LOGGED_IN_AT) || new Date().toISOString(),
             };
             setCurrentUser(authUser);
             authStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
             scheduleProactiveRefresh();
             return;
           } catch (refreshError) {
-            logger.debug('Token refresh failed during restore', refreshError instanceof Error ? { error: refreshError.message } : undefined);
+            logger.debug(
+              'Token refresh failed during restore',
+              refreshError instanceof Error ? { error: refreshError.message } : undefined
+            );
           }
         }
 
         // Refresh failed or no refresh token - clear stored auth
-        logger.debug('Stored token is invalid, clearing auth state', error instanceof Error ? { error: error.message } : undefined);
+        logger.debug(
+          'Stored token is invalid, clearing auth state',
+          error instanceof Error ? { error: error.message } : undefined
+        );
         clearAuthState();
       } finally {
         if (isMounted) {
@@ -313,7 +321,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // Update ref immediately so API client can use it synchronously
         tokenRef.current = response.access_token;
         setAccessToken(response.access_token);
-        
+
         // Persist tokens to storage
         try {
           authStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, response.access_token);
@@ -326,9 +334,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           handleStorageError('login', storageError);
           // Continue even if storage fails (e.g., in private browsing mode)
         }
-        
-        logger.debug('Access token stored in memory and storage', { tokenLength: response.access_token.length });
-        
+
+        logger.debug('Access token stored in memory and storage', {
+          tokenLength: response.access_token.length,
+        });
+
         // Verify token is available in ref before making API call
         if (!tokenRef.current) {
           logger.error('Token ref is null after setting');
@@ -345,7 +355,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
 
         setCurrentUser(authUser);
-        
+
         // Persist user info to storage
         try {
           authStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
@@ -391,7 +401,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         await apiClient.post('/auth/logout', {});
       } catch (error) {
         // Log but don't fail logout if backend call fails
-        logger.warn('Backend logout call failed', error instanceof Error ? { error: error.message } : undefined);
+        logger.warn(
+          'Backend logout call failed',
+          error instanceof Error ? { error: error.message } : undefined
+        );
       }
     }
 

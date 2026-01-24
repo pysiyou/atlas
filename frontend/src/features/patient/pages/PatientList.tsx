@@ -13,12 +13,12 @@ import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
-import { PatientFilters, type AffiliationStatus } from '../../components/filters/PatientFilters';
+import { PatientFilters, type AffiliationStatus } from '../components/filters/PatientFilters';
 import { createPatientTableConfig } from './PatientTableConfig';
 import { calculateAge } from '@/utils';
 import type { Patient, Gender } from '@/types';
-import { EditPatientModal } from '../../modals/EditPatientModal';
-import { isAffiliationActive } from '../../utils/affiliationUtils';
+import { EditPatientModal } from '../modals/EditPatientModal';
+import { isAffiliationActive } from '../utils/affiliationUtils';
 
 /**
  * PatientList component - Migrated to use ListView

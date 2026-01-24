@@ -103,9 +103,7 @@ export const buildCollectionDetailGridSections = ({
       fields: [
         {
           label: 'Priority',
-          badge: sample.priority
-            ? { value: sample.priority, variant: sample.priority }
-            : undefined,
+          badge: sample.priority ? { value: sample.priority, variant: sample.priority } : undefined,
         },
         {
           label: 'Required Container Types',

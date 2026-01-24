@@ -3,3 +3,4 @@
  */
 
 export * from './PaymentList';
+export * from './PaymentTableConfig';

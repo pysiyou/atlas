@@ -18,8 +18,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
   const features = [
     {
       title: 'Intelligent Patient Management',
-      description:
-        'Unified records, appointments, and complete medical history at your fingertips',
+      description: 'Unified records, appointments, and complete medical history at your fingertips',
     },
     {
       title: 'Streamlined Lab Workflows',

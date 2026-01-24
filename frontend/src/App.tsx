@@ -87,7 +87,7 @@ const AppRoutes: React.FC = () => {
     <>
       {/* Set up navigation callbacks for API client */}
       <AuthNavigationSetup />
-      
+
       <Routes>
         {/* Public Routes */}
         <Route
@@ -99,97 +99,97 @@ const AppRoutes: React.FC = () => {
           }
         />
 
-      {/* Protected Routes with Feature Error Boundaries and Code Splitting */}
-      <Route
-        path={ROUTES.DASHBOARD}
-        element={
-          <Suspense fallback={<PageLoadingFallback />}>
-            <ProtectedFeatureRoute featureName="Dashboard">
-              <Dashboard />
-            </ProtectedFeatureRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path={`${ROUTES.PATIENTS}/*`}
-        element={
-          <Suspense fallback={<PageLoadingFallback />}>
-            <ProtectedFeatureRoute featureName="Patients">
-              <Patients />
-            </ProtectedFeatureRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path={`${ROUTES.ORDERS}/*`}
-        element={
-          <Suspense fallback={<PageLoadingFallback />}>
-            <ProtectedFeatureRoute featureName="Orders">
-              <Orders />
-            </ProtectedFeatureRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path={`${ROUTES.CATALOG}/*`}
-        element={
-          <Suspense fallback={<PageLoadingFallback />}>
-            <ProtectedFeatureRoute featureName="Catalog">
-              <Catalog />
-            </ProtectedFeatureRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.LABORATORY}
-        element={
-          <Suspense fallback={<PageLoadingFallback />}>
-            <ProtectedFeatureRoute featureName="Laboratory">
-              <Laboratory />
-            </ProtectedFeatureRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.APPOINTMENTS}
-        element={
-          <Suspense fallback={<PageLoadingFallback />}>
-            <ProtectedFeatureRoute featureName="Appointments">
-              <Appointments />
-            </ProtectedFeatureRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.PAYMENTS}
-        element={
-          <Suspense fallback={<PageLoadingFallback />}>
-            <ProtectedFeatureRoute featureName="Payments">
-              <Payments />
-            </ProtectedFeatureRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.REPORTS}
-        element={
-          <Suspense fallback={<PageLoadingFallback />}>
-            <ProtectedFeatureRoute featureName="Reports">
-              <Reports />
-            </ProtectedFeatureRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.ADMIN}
-        element={
-          <Suspense fallback={<PageLoadingFallback />}>
-            <ProtectedFeatureRoute featureName="Admin">
-              <Admin />
-            </ProtectedFeatureRoute>
-          </Suspense>
-        }
-      />
+        {/* Protected Routes with Feature Error Boundaries and Code Splitting */}
+        <Route
+          path={ROUTES.DASHBOARD}
+          element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <ProtectedFeatureRoute featureName="Dashboard">
+                <Dashboard />
+              </ProtectedFeatureRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path={`${ROUTES.PATIENTS}/*`}
+          element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <ProtectedFeatureRoute featureName="Patients">
+                <Patients />
+              </ProtectedFeatureRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path={`${ROUTES.ORDERS}/*`}
+          element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <ProtectedFeatureRoute featureName="Orders">
+                <Orders />
+              </ProtectedFeatureRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path={`${ROUTES.CATALOG}/*`}
+          element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <ProtectedFeatureRoute featureName="Catalog">
+                <Catalog />
+              </ProtectedFeatureRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.LABORATORY}
+          element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <ProtectedFeatureRoute featureName="Laboratory">
+                <Laboratory />
+              </ProtectedFeatureRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.APPOINTMENTS}
+          element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <ProtectedFeatureRoute featureName="Appointments">
+                <Appointments />
+              </ProtectedFeatureRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.PAYMENTS}
+          element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <ProtectedFeatureRoute featureName="Payments">
+                <Payments />
+              </ProtectedFeatureRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.REPORTS}
+          element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <ProtectedFeatureRoute featureName="Reports">
+                <Reports />
+              </ProtectedFeatureRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.ADMIN}
+          element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <ProtectedFeatureRoute featureName="Admin">
+                <Admin />
+              </ProtectedFeatureRoute>
+            </Suspense>
+          }
+        />
 
         {/* Default redirect */}
         <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.LOGIN} replace />} />

@@ -32,14 +32,6 @@ const formatBooleanWithFallback = (val: boolean | undefined): string => {
 };
 
 /**
- * Format date for display
- */
-const formatDate = (dateStr: string | undefined): string => {
-  if (!dateStr) return '-';
-  return formatDetailDate(dateStr);
-};
-
-/**
  * Capitalize first letter
  */
 const capitalize = (str: string): string => {
@@ -133,8 +125,8 @@ export const CatalogDetail: React.FC = () => {
         { label: 'Price', value: formatCurrency(test.price) },
         { label: 'Status', value: test.isActive ? 'Active' : 'Inactive' },
         { label: 'Confidence Level', value: test.confidence || '-' },
-        { label: 'Created', value: formatDate(test.createdAt) },
-        { label: 'Last Updated', value: formatDate(test.updatedAt) },
+        { label: 'Created', value: formatDetailDate(test.createdAt) || '-' },
+        { label: 'Last Updated', value: formatDetailDate(test.updatedAt) || '-' },
       ],
     },
   ];

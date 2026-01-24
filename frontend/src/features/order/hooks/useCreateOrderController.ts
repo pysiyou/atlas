@@ -115,7 +115,9 @@ export function useCreateOrderController({
     useOrderForm();
 
   const paymentMethods: PaymentMethodOption[] = useMemo(() => getEnabledPaymentMethods(), []);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(() => getDefaultPaymentMethod());
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(() =>
+    getDefaultPaymentMethod()
+  );
   const [paymentNotes, setPaymentNotes] = useState<string>('');
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
@@ -124,10 +126,14 @@ export function useCreateOrderController({
       ? parseInt(selectedPatientId, 10)
       : selectedPatientId
     : null;
-  const selectedPatient = numericPatientId ? patients.find(p => p.id === numericPatientId) : undefined;
+  const selectedPatient = numericPatientId
+    ? patients.find(p => p.id === numericPatientId)
+    : undefined;
 
   const filteredPatients = patientSearch ? filteredPatientsFromSearch.slice(0, 5) : [];
-  const filteredTests = testSearch ? filteredTestsFromSearch.slice(0, 10) : activeTests.slice(0, 10);
+  const filteredTests = testSearch
+    ? filteredTestsFromSearch.slice(0, 10)
+    : activeTests.slice(0, 10);
 
   const totalPrice = formData.selectedTests.reduce((sum, testCode) => {
     const test = activeTests.find(t => t.code === testCode);
@@ -283,4 +289,3 @@ export function useCreateOrderController({
     totalPrice,
   };
 }
-

@@ -126,7 +126,10 @@ export const CollectionView: React.FC = () => {
   }, [samples, tests, getPatient, getOrder]);
 
   // Create memoized filter function
-  const filterSample = useMemo(() => createSampleFilter(getPatientName, tests), [getPatientName, tests]);
+  const filterSample = useMemo(
+    () => createSampleFilter(getPatientName, tests),
+    [getPatientName, tests]
+  );
 
   // Apply status filter to displays
   const filteredByStatus = useMemo(() => {
@@ -182,34 +185,34 @@ export const CollectionView: React.FC = () => {
   return (
     <DataErrorBoundary>
       <LabWorkflowView
-      title="Sample Collection"
-      items={filteredByStatus}
-      filterFn={filterSample}
-      renderCard={display =>
-        isMobile ? (
-          <CollectionMobileCard display={display} onCollect={handleCollect} />
-        ) : (
-          <CollectionCard display={display} onCollect={handleCollect} />
-        )
-      }
-      getItemKey={(display, idx) =>
-        `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
-      }
-      emptyIcon="sample-collection"
-      emptyTitle="No Pending Collections"
-      emptyDescription="There are no samples waiting to be collected."
-      searchPlaceholder="Search samples..."
-      filters={
-        <MultiSelectFilter
-          label="Status"
-          options={SAMPLE_STATUS_FILTER_OPTIONS}
-          selectedIds={statusFilters}
-          onChange={ids => setStatusFilters(ids as SampleStatus[])}
-          selectAllLabel="Select all"
-          icon="checklist"
-        />
-      }
-    />
+        title="Sample Collection"
+        items={filteredByStatus}
+        filterFn={filterSample}
+        renderCard={display =>
+          isMobile ? (
+            <CollectionMobileCard display={display} onCollect={handleCollect} />
+          ) : (
+            <CollectionCard display={display} onCollect={handleCollect} />
+          )
+        }
+        getItemKey={(display, idx) =>
+          `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
+        }
+        emptyIcon="sample-collection"
+        emptyTitle="No Pending Collections"
+        emptyDescription="There are no samples waiting to be collected."
+        searchPlaceholder="Search samples..."
+        filters={
+          <MultiSelectFilter
+            label="Status"
+            options={SAMPLE_STATUS_FILTER_OPTIONS}
+            selectedIds={statusFilters}
+            onChange={ids => setStatusFilters(ids as SampleStatus[])}
+            selectAllLabel="Select all"
+            icon="checklist"
+          />
+        }
+      />
     </DataErrorBoundary>
   );
 };
