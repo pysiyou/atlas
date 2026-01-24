@@ -28,7 +28,8 @@ import { PatientCard } from './PatientCard';
  */
 export const createPatientTableConfig = (
   navigate: NavigateFunction,
-  getOrdersByPatient: (patientId: number | string) => Order[]
+  getOrdersByPatient: (patientId: number | string) => Order[],
+  openNewOrderModal: (patientId?: string) => void
 ): TableViewConfig<Patient> => {
   // Shared render functions to avoid duplication
   const renderId = (patient: Patient) => (
@@ -112,7 +113,7 @@ export const createPatientTableConfig = (
       <TableActionItem
         label="Create Order"
         icon={<Icon name="document" className="w-4 h-4" />}
-        onClick={() => navigate(`/orders/new?patientId=${patient.id}`)}
+        onClick={() => openNewOrderModal(patient.id.toString())}
       />
     </TableActionMenu>
   );

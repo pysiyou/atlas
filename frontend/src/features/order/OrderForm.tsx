@@ -1,7 +1,8 @@
-import React from 'react';
-import { SectionContainer, Input, Select, Textarea } from '@/shared/ui';
+import React, { useMemo } from 'react';
+import { Input, MultiSelectFilter, Textarea } from '@/shared/ui';
 import type { PriorityLevel } from '@/types';
 import { PRIORITY_LEVEL_OPTIONS } from '@/types';
+import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
 
 interface OrderDetailsFormProps {
   referringPhysician: string;
@@ -20,32 +21,64 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
   onPriorityChange,
   onClinicalNotesChange,
 }) => {
+  /**
+   * Priority options styled like other single-select "multi select" controls in the app.
+   * We use `MultiSelectFilter` with `singleSelect` enabled.
+   */
+  const priorityOptions: FilterOption[] = useMemo(
+    () =>
+      PRIORITY_LEVEL_OPTIONS.map(opt => {
+        const color =
+          opt.value === 'stat' ? 'danger' : opt.value === 'urgent' ? 'warning' : 'info';
+        return { id: opt.value, label: opt.label, color };
+      }),
+    []
+  );
+
+  const selectedPriorityIds = useMemo(() => [priority], [priority]);
+
+  const handlePriorityChange = (selectedIds: string[]) => {
+    // Single-select mode: use the most recent selection.
+    // If cleared, keep a safe default (routine) since priority is required.
+    const next = (selectedIds[selectedIds.length - 1] as PriorityLevel | undefined) || 'routine';
+    onPriorityChange(next);
+  };
+
   return (
-    <SectionContainer title="Order Details">
-      <div className="space-y-4">
-        <Input
-          label="Referring Physician"
-          value={referringPhysician}
-          onChange={e => onReferringPhysicianChange(e.target.value)}
-          placeholder="Dr. Smith"
-        />
+    <div className="space-y-4">
+      <Input
+        label="Referring physician"
+        name="referringPhysician"
+        icon="stethoscope"
+        value={referringPhysician}
+        onChange={e => onReferringPhysicianChange(e.target.value)}
+        placeholder="e.g. Dr. Smith"
+      />
 
-        <Select
+      <div>
+        <label className="block text-xs font-medium text-gray-500 mb-1.5">
+          Priority <span className="text-red-500">*</span>
+        </label>
+        <MultiSelectFilter
           label="Priority"
-          value={priority}
-          onChange={e => onPriorityChange(e.target.value as PriorityLevel)}
-          options={PRIORITY_LEVEL_OPTIONS}
-          required
-        />
-
-        <Textarea
-          label="Clinical Notes"
-          value={clinicalNotes}
-          onChange={e => onClinicalNotesChange(e.target.value)}
-          placeholder="Clinical indication or reason for testing..."
-          helperText="Include relevant symptoms, diagnosis, or reason for testing"
+          options={priorityOptions}
+          selectedIds={selectedPriorityIds}
+          onChange={handlePriorityChange}
+          placeholder="Select priority"
+          showSelectAll={false}
+          singleSelect={true}
+          className="w-full sm:w-full"
+          icon="warning"
         />
       </div>
-    </SectionContainer>
+
+      <Textarea
+        label="Clinical notes"
+        value={clinicalNotes}
+        onChange={e => onClinicalNotesChange(e.target.value)}
+        placeholder="Clinical indication or reason for testing..."
+        helperText="Include relevant symptoms, diagnosis, or reason for testing"
+      />
+    </div>
   );
 };

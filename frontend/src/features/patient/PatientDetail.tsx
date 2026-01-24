@@ -7,6 +7,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks';
 import { usePatient, useOrdersByPatient } from '@/hooks/queries';
+import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { EditPatientModal } from './EditPatientModal';
 import {
   PatientHeader,
@@ -20,6 +21,7 @@ export const PatientDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
+  const { openModal } = useModal();
 
   // Use TanStack Query hooks
   const { patient, isLoading: patientLoading } = usePatient(id);
@@ -47,7 +49,7 @@ export const PatientDetail: React.FC = () => {
   // Event handlers
   const handleEdit = () => setIsEditModalOpen(true);
   const handleCloseEdit = () => setIsEditModalOpen(false);
-  const handleNewOrder = () => navigate(`/orders/new?patientId=${patient.id}`);
+  const handleNewOrder = () => openModal(ModalType.NEW_ORDER, { patientId: patient.id.toString() });
   const handleOrderClick = (orderId: string) => navigate(`/orders/${orderId}`);
 
   // Render appropriate layout based on screen size

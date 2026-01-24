@@ -12,6 +12,7 @@ import { useOrdersList, usePatientNameLookup, useTestNameLookup } from '@/hooks/
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
+import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { OrderFilters } from './OrderFilters';
 import { createOrderTableConfig } from './OrderTableConfig';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
@@ -27,6 +28,7 @@ import type { Order, OrderStatus, PaymentStatus } from '@/types';
  */
 export const OrderList: React.FC = () => {
   const navigate = useNavigate();
+  const { openModal } = useModal();
   const [searchParams] = useSearchParams();
   const patientIdFilter = searchParams.get('patientId');
 
@@ -121,7 +123,12 @@ export const OrderList: React.FC = () => {
       onRowClick={(order: Order) => navigate(`/orders/${order.orderId}`)}
       title="Orders"
       headerActions={
-        <Button variant="add" onClick={() => navigate('/orders/new')}>
+        <Button
+          variant="add"
+          onClick={() => {
+            openModal(ModalType.NEW_ORDER, {});
+          }}
+        >
           New Order
         </Button>
       }

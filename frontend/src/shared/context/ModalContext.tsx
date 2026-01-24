@@ -24,6 +24,7 @@ export const ModalType = {
   CONFIRMATION: 'CONFIRMATION',
   RESULT_DETAIL: 'RESULT_DETAIL',
   VALIDATION_DETAIL: 'VALIDATION_DETAIL',
+  NEW_ORDER: 'NEW_ORDER',
 } as const;
 
 export type ModalType = (typeof ModalType)[keyof typeof ModalType];

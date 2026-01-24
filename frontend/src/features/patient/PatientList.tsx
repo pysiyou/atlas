@@ -12,6 +12,7 @@ import type { Order } from '@/types';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
+import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { PatientFilters, type AffiliationStatus } from './PatientFilters';
 import { createPatientTableConfig } from './PatientTableConfig';
 import { calculateAge } from '@/utils';
@@ -30,6 +31,7 @@ import { EditPatientModal } from './EditPatientModal';
  */
 export const PatientList: React.FC = () => {
   const navigate = useNavigate();
+  const { openModal } = useModal();
   const { patients, isLoading, isError, error: queryError, refetch } = usePatientsList();
   const { orders } = useOrdersList();
 
@@ -123,8 +125,9 @@ export const PatientList: React.FC = () => {
       const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
       return orders.filter(o => o.patientId === numericId);
     };
-    return createPatientTableConfig(navigate, getOrdersByPatient);
-  }, [navigate, orders]);
+    const openNewOrderModal = (patientId?: string) => openModal(ModalType.NEW_ORDER, { patientId });
+    return createPatientTableConfig(navigate, getOrdersByPatient, openNewOrderModal);
+  }, [navigate, orders, openModal]);
 
   return (
     <>

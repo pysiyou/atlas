@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { Badge, Avatar, IconButton } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { calculateAge, formatPhoneNumber } from '@/utils';
@@ -15,11 +15,11 @@ import type { Patient } from '@/types';
  * @param onClick - Optional click handler
  */
 export function PatientCard({ item: patient, onClick }: CardComponentProps<Patient>) {
-  const navigate = useNavigate();
+  const { openModal } = useModal();
 
   const handleAddOrder = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/orders/new?patientId=${patient.id}`);
+    openModal(ModalType.NEW_ORDER, { patientId: patient.id.toString() });
   };
 
   return (
@@ -47,7 +47,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
       </div>
 
       {/* Contact info: Phone + email + address */}
-      <div className="flex-grow">
+      <div className="grow">
         <div className="space-y-1">
           <div className="text-xs text-gray-700">{formatPhoneNumber(patient.phone)}</div>
           {patient.email && <div className="text-xs text-gray-500 truncate">{patient.email}</div>}

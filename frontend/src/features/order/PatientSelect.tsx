@@ -1,5 +1,5 @@
-import React from 'react';
-import { SectionContainer, Button, SearchBar } from '@/shared/ui';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Badge, Icon } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
 import type { Patient } from '@/types';
 
@@ -13,6 +13,90 @@ interface PatientSelectorProps {
   error?: string;
 }
 
+/**
+ * PatientSearchTagInput
+ *
+ * Mirrors the "tag in input" UX used for test selection:
+ * - Selected patient is rendered as a single tag: `PATIENT_ID - FULL_NAME`
+ * - User can type to search and change selection
+ * - Clicking the X clears selection
+ */
+const PatientSearchTagInput: React.FC<{
+  selectedPatient: Patient | null;
+  value: string;
+  onValueChange: (value: string) => void;
+  onClearSelection: () => void;
+  error?: string;
+}> = ({ selectedPatient, value, onValueChange, onClearSelection, error }) => {
+  const selectedLabel = useMemo(() => {
+    if (!selectedPatient) return null;
+    return `${displayId.patient(selectedPatient.id)} - ${selectedPatient.fullName}`;
+  }, [selectedPatient]);
+
+  return (
+    <div className="w-full">
+      <div className="flex justify-between items-baseline mb-1 gap-2">
+        <label
+          htmlFor="order-patient-search"
+          className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+        >
+          Patient
+        </label>
+      </div>
+
+      <div
+        className={[
+          'relative',
+          'w-full pl-10 pr-3 py-2.5 border rounded',
+          'bg-white transition-colors',
+          'focus-within:ring-2 focus-within:ring-sky-500 focus-within:border-transparent',
+          error ? 'border-red-500' : 'border-gray-300',
+          'flex flex-wrap gap-2 items-center',
+          'min-h-[42px]',
+        ].join(' ')}
+      >
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Icon name="user" className="w-4 h-4 text-gray-400" />
+        </div>
+
+        {selectedLabel && (
+          <Badge
+            variant="primary"
+            size="sm"
+            className="flex items-center gap-1.5 px-2 py-0.5 h-6 max-w-full"
+          >
+            <span className="text-xs font-medium leading-tight truncate min-w-0">
+              {selectedLabel}
+            </span>
+            <button
+              type="button"
+              onClick={onClearSelection}
+              className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-black/10 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-gray-400"
+              aria-label="Clear selected patient"
+            >
+              <Icon name="close-circle" className="w-3 h-3 text-gray-500 hover:text-gray-700" />
+            </button>
+          </Badge>
+        )}
+
+        <input
+          id="order-patient-search"
+          name="patientSearch"
+          type="text"
+          value={value}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
+          onFocus={() => onValueChange(value)}
+          placeholder={selectedPatient ? 'Search to change…' : 'Search by name, ID, or phone…'}
+          className="flex-1 min-w-[140px] outline-none text-xs text-gray-900 placeholder:text-gray-300 bg-transparent leading-normal"
+          autoComplete="off"
+        />
+      </div>
+
+      {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
+    </div>
+  );
+};
+
 export const PatientSelect: React.FC<PatientSelectorProps> = ({
   selectedPatient,
   patientSearch,
@@ -22,53 +106,112 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
   onClearSelection,
   error,
 }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  const hasSearch = patientSearch.trim().length > 0;
+  const visiblePatients = hasSearch ? filteredPatients : [];
+
+  // Close popover on outside click and Escape.
+  useEffect(() => {
+    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node | null;
+      const container = containerRef.current;
+      if (!container || !target) return;
+      if (!container.contains(target)) setIsPopoverOpen(false);
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsPopoverOpen(false);
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('touchstart', handlePointerDown, { passive: true });
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('touchstart', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
-    <SectionContainer title="Patient Selection">
-      {selectedPatient ? (
-        <div className="flex items-center justify-between p-4 bg-sky-50 rounded">
-          <div>
-            <div className="font-medium text-gray-900">{selectedPatient.fullName}</div>
-            <div className="text-sm text-gray-600">
-              {displayId.patient(selectedPatient.id)} • {selectedPatient.phone}
+    <div ref={containerRef} className="relative">
+      <PatientSearchTagInput
+        selectedPatient={selectedPatient}
+        value={patientSearch}
+        onValueChange={value => {
+          onPatientSearchChange(value);
+          setIsPopoverOpen(value.trim().length > 0);
+        }}
+        onClearSelection={() => {
+          onClearSelection();
+          // Keep popover closed when clearing via tag; user can type to reopen.
+          setIsPopoverOpen(false);
+        }}
+        error={error}
+      />
+
+      {/* "Popover" results shown directly under the input */}
+      {isPopoverOpen && hasSearch && (
+        <div
+          className={[
+            'mt-1',
+            'border border-gray-200/80',
+            'rounded-xl',
+            'bg-white',
+            'shadow-lg shadow-gray-900/10',
+            'ring-1 ring-black/5',
+          ].join(' ')}
+        >
+          {visiblePatients.length === 0 ? (
+            <div className="px-4 py-3 text-xs text-gray-500">No patients found</div>
+          ) : (
+            <div className="max-h-[320px] overflow-y-auto p-2">
+              <div className="space-y-1">
+                {visiblePatients.map(patient => {
+                  const isSelected = selectedPatient?.id === patient.id;
+                  return (
+                    <button
+                      key={patient.id}
+                      type="button"
+                      onClick={() => {
+                        onSelectPatient(patient);
+                        setIsPopoverOpen(false);
+                      }}
+                      className={[
+                        'w-full text-left',
+                        'px-3 py-2',
+                        'rounded-lg',
+                        'transition-colors',
+                        'flex items-center justify-between gap-3',
+                        'hover:bg-gray-50',
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30',
+                        isSelected ? 'bg-emerald-50/50' : 'bg-white',
+                      ].join(' ')}
+                    >
+                      <div className="min-w-0 flex items-center gap-2">
+                        <span className="shrink-0 text-[11px] font-semibold font-mono px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 border border-gray-200">
+                          {displayId.patient(patient.id)}
+                        </span>
+                        <span className="text-xs font-medium text-gray-900 truncate">
+                          {patient.fullName}
+                        </span>
+                      </div>
+
+                      <div className="shrink-0">
+                        {isSelected && (
+                          <Icon name="check-circle" className="w-5 h-5 text-emerald-600" />
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-          <Button type="button" variant="secondary" size="sm" onClick={onClearSelection}>
-            Change Patient
-          </Button>
-        </div>
-      ) : (
-        <div>
-          <SearchBar
-            placeholder="Search by name, ID, or phone..."
-            value={patientSearch}
-            onChange={e => onPatientSearchChange(e.target.value)}
-          />
-
-          {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
-
-          {patientSearch && filteredPatients.length > 0 && (
-            <div className="mt-2 border border-gray-200 rounded divide-y">
-              {filteredPatients.map(patient => (
-                <button
-                  key={patient.id}
-                  type="button"
-                  onClick={() => onSelectPatient(patient)}
-                  className="w-full text-left p-3 hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                  <div className="font-medium text-gray-900">{patient.fullName}</div>
-                  <div className="text-sm text-gray-600">
-                    {displayId.patient(patient.id)} • {patient.phone}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {patientSearch && filteredPatients.length === 0 && (
-            <p className="text-sm text-gray-500 mt-2">No patients found</p>
           )}
         </div>
       )}
-    </SectionContainer>
+    </div>
   );
 };
