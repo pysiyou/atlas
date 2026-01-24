@@ -135,7 +135,8 @@ def update_patient(
     # Update only allowed fields - whitelist for security
     ALLOWED_UPDATE_FIELDS = {
         'fullName', 'dateOfBirth', 'gender', 'phone', 'email',
-        'height', 'weight', 'address', 'emergencyContact', 'medicalHistory', 'affiliation'
+        'height', 'weight', 'address', 'emergencyContact', 'medicalHistory', 'affiliation',
+        'vitalSigns',
     }
     update_data = patient_data.model_dump(exclude_unset=True)
     for field, value in update_data.items():

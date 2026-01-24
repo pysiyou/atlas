@@ -115,7 +115,11 @@ class PatientCreate(PatientBase):
 
 
 class PatientUpdate(BaseModel):
+    """Schema for updating a patient. All fields optional; only provided fields are updated."""
+
     fullName: str | None = None
+    dateOfBirth: str | None = None
+    gender: Gender | None = None
     phone: str | None = None
     email: str | None = None
     height: float | None = None

@@ -66,50 +66,30 @@ export const buildAffiliation = (
 };
 
 /**
- * Builds vital signs object from form data, only if any vital is provided
+ * Builds vital signs object from form data.
+ * Only returns vitals when ALL six fields are provided; otherwise undefined.
+ * Backend VitalSigns schema requires all fields with strict ranges (no 0 fallbacks).
  */
-export const buildVitalSigns = (
-  formData: PatientFormData,
-  existingVitals?: Patient['vitalSigns']
-) => {
-  const anyVitalProvided = Boolean(
-    String(formData.temperature).trim() ||
-    String(formData.heartRate).trim() ||
-    String(formData.systolicBP).trim() ||
-    String(formData.diastolicBP).trim() ||
-    String(formData.respiratoryRate).trim() ||
-    String(formData.oxygenSaturation).trim()
-  );
+export const buildVitalSigns = (formData: PatientFormData) => {
+  const t = String(formData.temperature ?? '').trim();
+  const hr = String(formData.heartRate ?? '').trim();
+  const sbp = String(formData.systolicBP ?? '').trim();
+  const dbp = String(formData.diastolicBP ?? '').trim();
+  const rr = String(formData.respiratoryRate ?? '').trim();
+  const spo2 = String(formData.oxygenSaturation ?? '').trim();
 
-  if (!anyVitalProvided) {
+  const allProvided = Boolean(t && hr && sbp && dbp && rr && spo2);
+  if (!allProvided) {
     return undefined;
   }
 
   return {
-    temperature:
-      formData.temperature.trim() !== ''
-        ? parseFloat(formData.temperature)
-        : (existingVitals?.temperature ?? 0),
-    heartRate:
-      formData.heartRate.trim() !== ''
-        ? parseInt(formData.heartRate, 10)
-        : (existingVitals?.heartRate ?? 0),
-    systolicBP:
-      formData.systolicBP.trim() !== ''
-        ? parseInt(formData.systolicBP, 10)
-        : (existingVitals?.systolicBP ?? 0),
-    diastolicBP:
-      formData.diastolicBP.trim() !== ''
-        ? parseInt(formData.diastolicBP, 10)
-        : (existingVitals?.diastolicBP ?? 0),
-    respiratoryRate:
-      formData.respiratoryRate.trim() !== ''
-        ? parseInt(formData.respiratoryRate, 10)
-        : (existingVitals?.respiratoryRate ?? 0),
-    oxygenSaturation:
-      formData.oxygenSaturation.trim() !== ''
-        ? parseInt(formData.oxygenSaturation, 10)
-        : (existingVitals?.oxygenSaturation ?? 0),
+    temperature: parseFloat(t),
+    heartRate: parseInt(hr, 10),
+    systolicBP: parseInt(sbp, 10),
+    diastolicBP: parseInt(dbp, 10),
+    respiratoryRate: parseInt(rr, 10),
+    oxygenSaturation: parseInt(spo2, 10),
   };
 };
 
@@ -123,15 +103,28 @@ const parseDelimitedString = (value: string): string[] =>
     .filter(item => item.length > 0);
 
 /**
- * Maps the current form state into a Partial<Patient> suitable for update operations
+ * Ensures a value is a string before calling .trim().
+ * Handles null, undefined, arrays (joined with '; '), and other types.
+ * Used for fields like familyHistory that may come from API as array or non-string.
+ */
+const ensureString = (value: unknown): string => {
+  if (value == null) return '';
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) return value.map(String).filter(Boolean).join('; ');
+  return String(value);
+};
+
+/**
+ * Maps the current form state into a payload for PUT /patients/:id.
+ * Includes all editable patient data; backend sets updatedBy from current user.
  */
 export const buildUpdatedPatientPayload = (
   formData: PatientFormData,
   existingPatient: Patient,
-  currentUserId: number,
+  _currentUserId: number,
   isRenewing: boolean
 ): Partial<Patient> => {
-  return {
+  const payload: Partial<Patient> = {
     fullName: formData.fullName.trim(),
     dateOfBirth: formData.dateOfBirth,
     gender: formData.gender,
@@ -144,7 +137,6 @@ export const buildUpdatedPatientPayload = (
       city: formData.city.trim(),
       postalCode: formData.postalCode.trim(),
     },
-    affiliation: buildAffiliation(formData, existingPatient.affiliation, isRenewing),
     emergencyContact: {
       fullName: formData.emergencyContactFullName.trim(),
       relationship: formData.emergencyContactRelationship!,
@@ -152,19 +144,23 @@ export const buildUpdatedPatientPayload = (
       email: formData.emergencyContactEmail.trim() || undefined,
     },
     medicalHistory: {
-      chronicConditions: parseDelimitedString(formData.chronicConditions),
-      currentMedications: parseDelimitedString(formData.currentMedications),
-      allergies: parseDelimitedString(formData.allergies),
-      previousSurgeries: parseDelimitedString(formData.previousSurgeries),
-      familyHistory: formData.familyHistory.trim(),
+      chronicConditions: parseDelimitedString(ensureString(formData.chronicConditions)),
+      currentMedications: parseDelimitedString(ensureString(formData.currentMedications)),
+      allergies: parseDelimitedString(ensureString(formData.allergies)),
+      previousSurgeries: parseDelimitedString(ensureString(formData.previousSurgeries)),
+      familyHistory: parseDelimitedString(ensureString(formData.familyHistory)),
       lifestyle: {
         smoking: formData.smoking,
         alcohol: formData.alcohol,
       },
     },
-    vitalSigns: buildVitalSigns(formData, existingPatient.vitalSigns),
-    updatedBy: currentUserId,
+    affiliation: buildAffiliation(formData, existingPatient.affiliation, isRenewing),
   };
+
+  const vitalSigns = buildVitalSigns(formData);
+  if (vitalSigns) payload.vitalSigns = vitalSigns;
+
+  return payload;
 };
 
 /**
@@ -199,11 +195,12 @@ export const buildNewPatientPayload = (
       email: formData.emergencyContactEmail.trim() || undefined,
     },
     medicalHistory: {
-      chronicConditions: parseDelimitedString(formData.chronicConditions),
-      currentMedications: parseDelimitedString(formData.currentMedications),
-      allergies: parseDelimitedString(formData.allergies),
-      previousSurgeries: parseDelimitedString(formData.previousSurgeries),
-      familyHistory: formData.familyHistory.trim(),
+      chronicConditions: parseDelimitedString(ensureString(formData.chronicConditions)),
+      currentMedications: parseDelimitedString(ensureString(formData.currentMedications)),
+      allergies: parseDelimitedString(ensureString(formData.allergies)),
+      previousSurgeries: parseDelimitedString(ensureString(formData.previousSurgeries)),
+      /** Backend expects list[str]; form stores semicolon-delimited, send as array */
+      familyHistory: parseDelimitedString(ensureString(formData.familyHistory)),
       lifestyle: {
         smoking: formData.smoking,
         alcohol: formData.alcohol,

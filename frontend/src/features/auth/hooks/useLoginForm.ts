@@ -7,7 +7,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks';
 import { ROUTES } from '@/config';
-import { AuthError } from '../AuthProvider';
+import { AuthError } from '../utils/authErrors';
 
 export const useLoginForm = () => {
   const navigate = useNavigate();

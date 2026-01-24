@@ -44,6 +44,17 @@ export interface PatientFormData {
   oxygenSaturation: string;
 }
 
+/**
+ * Ensures familyHistory is always a string when hydrating from API.
+ * Handles null/undefined, arrays (e.g. API returns string[]), and other types.
+ */
+const normalizeFamilyHistory = (value: unknown): string => {
+  if (value == null) return '';
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) return value.map(String).filter(Boolean).join('; ');
+  return String(value);
+};
+
 const createInitialFormData = (initialData?: Partial<Patient>): PatientFormData => {
   if (initialData) {
     return {
@@ -67,7 +78,7 @@ const createInitialFormData = (initialData?: Partial<Patient>): PatientFormData 
       currentMedications: initialData.medicalHistory?.currentMedications?.join('; ') || '',
       allergies: initialData.medicalHistory?.allergies?.join('; ') || '',
       previousSurgeries: initialData.medicalHistory?.previousSurgeries?.join('; ') || '',
-      familyHistory: initialData.medicalHistory?.familyHistory || '',
+      familyHistory: normalizeFamilyHistory(initialData.medicalHistory?.familyHistory),
       smoking: initialData.medicalHistory?.lifestyle?.smoking || false,
       alcohol: initialData.medicalHistory?.lifestyle?.alcohol || false,
       temperature:

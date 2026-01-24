@@ -17,9 +17,11 @@ import { LoadingState } from '@/shared/components/LoadingState';
 
 // Eagerly loaded components (small, frequently accessed)
 import { LoginForm } from '@/features/auth/LoginForm';
+import { AuthNavigationSetup } from '@/features/auth/components/AuthNavigationSetup';
 import { AppLayout as DashboardLayout } from '@/shared/layout';
 import { useAuth } from '@/features/auth/useAuth';
 import { ModalRenderer } from '@/shared/ui';
+import { PublicRoute } from '@/shared/routes/PublicRoute';
 
 // Lazy-loaded Pages (code-split by route)
 const Dashboard = lazy(() => import('@/pages/DashboardPage').then(m => ({ default: m.Dashboard })));
@@ -82,9 +84,20 @@ const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children,
  */
 const AppRoutes: React.FC = () => {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path={ROUTES.LOGIN} element={<LoginForm />} />
+    <>
+      {/* Set up navigation callbacks for API client */}
+      <AuthNavigationSetup />
+      
+      <Routes>
+        {/* Public Routes */}
+        <Route
+          path={ROUTES.LOGIN}
+          element={
+            <PublicRoute>
+              <LoginForm />
+            </PublicRoute>
+          }
+        />
 
       {/* Protected Routes with Feature Error Boundaries and Code Splitting */}
       <Route
@@ -178,10 +191,11 @@ const AppRoutes: React.FC = () => {
         }
       />
 
-      {/* Default redirect */}
-      <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.LOGIN} replace />} />
-      <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
-    </Routes>
+        {/* Default redirect */}
+        <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.LOGIN} replace />} />
+        <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
+      </Routes>
+    </>
   );
 };
 

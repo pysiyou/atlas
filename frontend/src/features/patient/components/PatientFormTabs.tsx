@@ -19,7 +19,7 @@ export interface PatientFormTabsProps {
   activeTab: string;
   formData: PatientFormData;
   errors: Record<string, string>;
-  onFieldChange: (field: string, value: string | boolean | number) => void;
+  onFieldChange: (field: string, value: string | boolean | number | undefined) => void;
   existingAffiliation?: Patient['affiliation'];
   onRenew?: () => void;
 }

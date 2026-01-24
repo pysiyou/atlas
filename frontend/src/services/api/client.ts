@@ -25,6 +25,8 @@ export interface APIError {
 export interface APIEndpoints {
   // Auth endpoints
   '/auth/login': { access_token: string; refresh_token: string; role: string };
+  '/auth/refresh': { access_token: string; refresh_token?: string };
+  '/auth/logout': void;
   '/auth/me': AuthUser;
 
   // Patient endpoints
@@ -112,11 +114,22 @@ async function withRetry<T>(
   throw lastError;
 }
 
+/**
+ * Auth callbacks interface for API client
+ */
+export interface AuthCallbacks {
+  onAuthStateChange: (action: 'logout' | 'refresh') => void;
+  onNavigate: (path: string) => void;
+}
+
 export class APIClient {
   private baseURL: string;
   private timeout: number;
   private defaultHeaders: Record<string, string>;
   private tokenGetter: (() => string | null) | null = null;
+  private refreshTokenHandler: (() => Promise<string>) | null = null;
+  private refreshQueue: { isRefreshInProgress: () => boolean; queueRequest: (req: { resolve: (value: unknown) => void; reject: (error: unknown) => void; retry: () => Promise<unknown> }) => void; startRefresh: (fn: () => Promise<string>) => Promise<string> } | null = null;
+  private authCallbacks: AuthCallbacks | null = null;
 
   constructor() {
     this.baseURL = API_CONFIG.baseURL;
@@ -131,6 +144,33 @@ export class APIClient {
   setTokenGetter(getter: () => string | null): void {
     this.tokenGetter = getter;
     logger.debug('Token getter set on API client');
+  }
+
+  /**
+   * Set the refresh token handler (called from AuthProvider)
+   * This allows the API client to refresh tokens when they expire
+   */
+  setRefreshTokenHandler(handler: () => Promise<string>): void {
+    this.refreshTokenHandler = handler;
+    logger.debug('Refresh token handler set on API client');
+  }
+
+  /**
+   * Set the refresh queue (called from AuthProvider)
+   * This allows the API client to queue requests during token refresh
+   */
+  setRefreshQueue(queue: { isRefreshInProgress: () => boolean; queueRequest: (req: { resolve: (value: unknown) => void; reject: (error: unknown) => void; retry: () => Promise<unknown> }) => void; startRefresh: (fn: () => Promise<string>) => Promise<string> }): void {
+    this.refreshQueue = queue;
+    logger.debug('Refresh queue set on API client');
+  }
+
+  /**
+   * Set auth callbacks (called from AuthProvider)
+   * This allows the API client to trigger auth state changes and navigation
+   */
+  setAuthCallbacks(callbacks: AuthCallbacks): void {
+    this.authCallbacks = callbacks;
+    logger.debug('Auth callbacks set on API client');
   }
 
   /**
@@ -159,17 +199,73 @@ export class APIClient {
   }
 
   /**
-   * Handle API errors - async to parse response body
+   * Handle 401 errors by attempting token refresh
+   * @param originalRequest - Function to retry the original request
+   * @returns Result of retried request
    */
-  private async handleErrorAsync(error: unknown): Promise<never> {
-    if (error instanceof Response) {
-      if (error.status === 401 || error.status === 403) {
-        // Clear token getter and redirect to login
-        // The AuthProvider will handle clearing the token via logout
-        this.tokenGetter = null;
+  private async handle401Error<T>(originalRequest: () => Promise<T>): Promise<T> {
+    // If refresh is already in progress, queue this request
+    if (this.refreshQueue?.isRefreshInProgress()) {
+      return new Promise<T>((resolve, reject) => {
+        this.refreshQueue?.queueRequest({
+          resolve: resolve as (value: unknown) => void,
+          reject: reject as (error: unknown) => void,
+          retry: originalRequest as () => Promise<unknown>,
+        });
+      });
+    }
 
-        if (!window.location.pathname.includes('/login')) {
-          window.location.href = '/login';
+    // If we have a refresh handler, try to refresh
+    if (this.refreshTokenHandler && this.refreshQueue) {
+      try {
+        logger.debug('401 error detected, attempting token refresh');
+        await this.refreshQueue.startRefresh(this.refreshTokenHandler);
+        
+        // Retry the original request with new token
+        return await originalRequest();
+      } catch (refreshError) {
+        logger.error('Token refresh failed', refreshError instanceof Error ? refreshError : undefined);
+        
+        // Refresh failed - trigger logout
+        if (this.authCallbacks) {
+          this.authCallbacks.onAuthStateChange('logout');
+          this.authCallbacks.onNavigate('/login');
+        }
+        
+        throw refreshError;
+      }
+    }
+
+    // No refresh handler - trigger logout
+    if (this.authCallbacks) {
+      this.authCallbacks.onAuthStateChange('logout');
+      this.authCallbacks.onNavigate('/login');
+    }
+
+    const apiError: APIError = {
+      message: 'Authentication failed. Please log in again.',
+      status: 401,
+    };
+    throw apiError;
+  }
+
+  /**
+   * Handle API errors - async to parse response body
+   * Returns the result if 401 refresh succeeds, otherwise throws
+   */
+  private async handleErrorAsync(error: unknown, retryRequest?: () => Promise<unknown>): Promise<unknown> {
+    if (error instanceof Response) {
+      // Handle 401 errors with token refresh
+      if (error.status === 401 && retryRequest) {
+        // handle401Error will either return the result or throw
+        return await this.handle401Error(retryRequest);
+      }
+
+      // Handle 403 errors - trigger logout
+      if (error.status === 403) {
+        if (this.authCallbacks) {
+          this.authCallbacks.onAuthStateChange('logout');
+          this.authCallbacks.onNavigate('/login');
         }
       }
 
@@ -196,6 +292,21 @@ export class APIClient {
 
     // Fallback for non-Response errors
     return this.handleError(error);
+  }
+
+  /**
+   * Check if response is a 401 and handle refresh if needed
+   * @param response - Response to check
+   * @param retryRequest - Function to retry the request
+   * @returns Response or result if refresh succeeded
+   */
+  private async handle401IfNeeded<T>(response: Response, retryRequest: () => Promise<T>): Promise<T> {
+    if (response.status === 401) {
+      return await this.handle401Error(retryRequest);
+    }
+    // Not a 401, throw to be handled by handleErrorAsync
+    await this.handleErrorAsync(response);
+    throw new Error('Unreachable'); // TypeScript guard
   }
 
   /**
@@ -238,7 +349,7 @@ export class APIClient {
    * Internal GET implementation
    */
   private async _get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
-    try {
+    const makeRequest = async (): Promise<T> => {
       const url = new URL(`${this.baseURL}${endpoint}`);
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
@@ -258,10 +369,19 @@ export class APIClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
+        // Handle 401 with token refresh
+        if (response.status === 401) {
+          return await this.handle401IfNeeded(response, makeRequest);
+        }
+        // Other errors
         await this.handleErrorAsync(response);
       }
 
       return await response.json();
+    };
+
+    try {
+      return await makeRequest();
     } catch (error) {
       return this.handleError(error);
     }
@@ -271,7 +391,7 @@ export class APIClient {
    * Generic POST request
    */
   async post<T, D = unknown>(endpoint: string, data?: D): Promise<T> {
-    try {
+    const makeRequest = async (): Promise<T> => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
@@ -285,10 +405,19 @@ export class APIClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
+        // Handle 401 with token refresh
+        if (response.status === 401) {
+          return await this.handle401IfNeeded(response, makeRequest);
+        }
+        // Other errors
         await this.handleErrorAsync(response);
       }
 
       return await response.json();
+    };
+
+    try {
+      return await makeRequest();
     } catch (error) {
       return this.handleError(error);
     }
@@ -298,7 +427,7 @@ export class APIClient {
    * Generic PUT request
    */
   async put<T, D = unknown>(endpoint: string, data?: D): Promise<T> {
-    try {
+    const makeRequest = async (): Promise<T> => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
@@ -312,10 +441,19 @@ export class APIClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
+        // Handle 401 with token refresh
+        if (response.status === 401) {
+          return await this.handle401IfNeeded(response, makeRequest);
+        }
+        // Other errors
         await this.handleErrorAsync(response);
       }
 
       return await response.json();
+    };
+
+    try {
+      return await makeRequest();
     } catch (error) {
       return this.handleError(error);
     }
@@ -325,7 +463,7 @@ export class APIClient {
    * Generic DELETE request
    */
   async delete<T>(endpoint: string): Promise<T> {
-    try {
+    const makeRequest = async (): Promise<T> => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
@@ -338,12 +476,21 @@ export class APIClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
+        // Handle 401 with token refresh
+        if (response.status === 401) {
+          return await this.handle401IfNeeded(response, makeRequest);
+        }
+        // Other errors
         await this.handleErrorAsync(response);
       }
 
       // DELETE may return empty response
       const text = await response.text();
       return text ? JSON.parse(text) : ({} as T);
+    };
+
+    try {
+      return await makeRequest();
     } catch (error) {
       return this.handleError(error);
     }
@@ -353,7 +500,7 @@ export class APIClient {
    * Generic PATCH request
    */
   async patch<T, D = unknown>(endpoint: string, data?: D): Promise<T> {
-    try {
+    const makeRequest = async (): Promise<T> => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
@@ -367,10 +514,19 @@ export class APIClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
+        // Handle 401 with token refresh
+        if (response.status === 401) {
+          return await this.handle401IfNeeded(response, makeRequest);
+        }
+        // Other errors
         await this.handleErrorAsync(response);
       }
 
       return await response.json();
+    };
+
+    try {
+      return await makeRequest();
     } catch (error) {
       return this.handleError(error);
     }

@@ -19,7 +19,7 @@ export interface PatientInfoSectionProps {
 
 export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
   patient,
-  onViewPatient,
+  onViewPatient: _onViewPatient,
   layout = 'column',
 }) => {
   const containerClass =

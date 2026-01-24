@@ -51,13 +51,17 @@ export const DateInput: React.FC<DateInputProps> = ({
   const [currentMonth, setCurrentMonth] = useState<Date>(dateValue || new Date());
   const [view, setView] = useState<'days' | 'months' | 'years'>('days');
 
+  // Provide default dates if not specified (100 years ago to 100 years in future)
+  const defaultMinDate = minDate || new Date(1900, 0, 1);
+  const defaultMaxDate = maxDate || new Date(2100, 11, 31);
+
   const navigation = useDateFilterNavigation({
     currentMonth,
     setCurrentMonth,
     view,
     setView,
-    minDate,
-    maxDate,
+    minDate: defaultMinDate,
+    maxDate: defaultMaxDate,
   });
 
   /**
@@ -171,8 +175,8 @@ export const DateInput: React.FC<DateInputProps> = ({
               view={view}
               setView={setView}
               value={dateValue ? [dateValue, dateValue] : null}
-              minDate={minDate}
-              maxDate={maxDate}
+              minDate={defaultMinDate}
+              maxDate={defaultMaxDate}
               isDateDisabled={isDateDisabled}
               handleDateClick={handleDateClick}
               isSelected={isSelected}

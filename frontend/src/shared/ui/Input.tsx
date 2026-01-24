@@ -111,11 +111,11 @@ export const Textarea: React.FC<TextareaProps> = ({
     
     const name = props.name?.toLowerCase() || '';
     
-    if (name.includes('note') || name.includes('comment')) return 'note';
-    if (name.includes('history') || name.includes('medical')) return 'document';
-    if (name.includes('description')) return 'note';
+    if (name.includes('note') || name.includes('comment')) return 'file-text';
+    if (name.includes('history') || name.includes('medical')) return 'file-text';
+    if (name.includes('description')) return 'file-text';
     
-    return 'note';
+    return 'file-text';
   };
 
   const displayIcon = getDefaultIcon();

@@ -6,7 +6,7 @@
 import React from 'react';
 import type { Patient } from '@/types';
 import { InfoField } from './InfoField';
-import { formatList } from '../utils/patientDetailUtils';
+import { formatList, formatFamilyHistory } from '../utils/patientDetailUtils';
 
 export interface MedicalHistorySectionDisplayProps {
   patient: Patient;
@@ -40,7 +40,7 @@ export const MedicalHistorySectionDisplay: React.FC<MedicalHistorySectionDisplay
       <InfoField
         icon="users-group"
         label="Family Disease"
-        value={patient.medicalHistory?.familyHistory || 'None'}
+        value={formatFamilyHistory(patient.medicalHistory?.familyHistory)}
       />
       <InfoField
         icon="alert-circle"

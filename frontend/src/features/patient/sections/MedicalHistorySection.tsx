@@ -6,6 +6,7 @@
 import React from 'react';
 import { SectionContainer, Badge, Icon } from '@/shared/ui';
 import type { Patient } from '@/types';
+import { formatFamilyHistory } from '../utils/patientDetailUtils';
 
 interface MedicalHistoryCardProps {
   patient: Patient;
@@ -92,12 +93,14 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
       )}
 
       {/* Family History */}
-      {medicalHistory.familyHistory && (
+      {formatFamilyHistory(medicalHistory.familyHistory) !== 'None' && (
         <div className="flex items-start gap-3">
           <Icon name="users-group" className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Family History</div>
-            <div className="text-sm text-gray-900">{medicalHistory.familyHistory}</div>
+            <div className="text-sm text-gray-900">
+              {formatFamilyHistory(medicalHistory.familyHistory)}
+            </div>
           </div>
         </div>
       )}
@@ -129,7 +132,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         medicalHistory.currentMedications.length === 0 &&
         medicalHistory.allergies.length === 0 &&
         medicalHistory.previousSurgeries.length === 0 &&
-        !medicalHistory.familyHistory && (
+        formatFamilyHistory(medicalHistory.familyHistory) === 'None' && (
           <div className="text-center py-8 text-gray-400 text-sm">No medical history recorded</div>
         )}
     </SectionContainer>

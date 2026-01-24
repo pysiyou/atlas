@@ -1,67 +1,47 @@
 /**
  * Authentication Provider Component
  * Manages user authentication and role-based access using backend API
+ * Features token refresh, request queueing, and comprehensive error handling
  */
 
-import React, { useState, useEffect, type ReactNode } from 'react';
+import React, { useState, useEffect, useRef, useCallback, type ReactNode } from 'react';
 import type { AuthUser, UserRole } from '@/types';
 import { AuthContext, type AuthContextType } from './AuthContext';
-import { apiClient, type APIError } from '@/services/api/client';
+import { apiClient } from '@/services/api/client';
 import { logger } from '@/utils/logger';
-
-/**
- * Custom error class for authentication failures
- * Provides specific error codes for different failure scenarios
- */
-export class AuthError extends Error {
-  /** Error code for categorizing the error type */
-  code: 'INVALID_CREDENTIALS' | 'NETWORK_ERROR' | 'SERVER_ERROR' | 'TIMEOUT' | 'UNKNOWN';
-  /** HTTP status code if available */
-  status?: number;
-
-  constructor(message: string, code: AuthError['code'], status?: number) {
-    super(message);
-    this.name = 'AuthError';
-    this.code = code;
-    this.status = status;
-  }
-}
+import { authStorage, STORAGE_KEYS } from './storage/authStorage';
+import { TokenRefreshQueue, isTokenExpired, getProactiveRefreshTime } from './utils/tokenRefresh';
+import { AuthError, toAuthError, handleStorageError, withAuthRetry } from './utils/authErrors';
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Storage keys for authentication persistence
-const STORAGE_KEYS = {
-  ACCESS_TOKEN: 'atlas_access_token',
-  REFRESH_TOKEN: 'atlas_refresh_token',
-  USER: 'atlas_user',
-} as const;
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Don't initialize currentUser from storage - must validate token first
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  
   // Track if we're currently restoring auth state from storage
   const [isRestoring, setIsRestoring] = useState<boolean>(() => {
     // Check if there's a stored token that needs validation
-    try {
-      return !!sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-    } catch {
-      return false;
-    }
+    return !!authStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
   });
 
   // Use a ref to store the current token so the getter always has the latest value
   // Initialize with stored token if available
   const getInitialToken = (): string | null => {
-    try {
-      return sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-    } catch {
-      return null;
-    }
+    return authStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
   };
-  const tokenRef = React.useRef<string | null>(getInitialToken());
+  const tokenRef = useRef<string | null>(getInitialToken());
+
+  // Token refresh queue for managing concurrent refresh attempts
+  const refreshQueueRef = useRef<TokenRefreshQueue>(new TokenRefreshQueue());
+
+  // Proactive refresh timer
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -69,70 +49,236 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [accessToken]);
 
   // Register token getter with API client on mount
-  // The getter reads from the ref to always get the current token value
   // This must run before any API calls are made
+  // Navigation callbacks are set up by AuthNavigationSetup component
   useEffect(() => {
     apiClient.setTokenGetter(() => tokenRef.current);
   }, []);
 
   /**
-   * Restore authentication state from sessionStorage on mount
+   * Clear all authentication state and storage
+   */
+  const clearAuthState = useCallback(() => {
+    tokenRef.current = null;
+    setAccessToken(null);
+    setCurrentUser(null);
+    
+    // Clear stored tokens
+    authStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+    authStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+    authStorage.removeItem(STORAGE_KEYS.USER);
+    authStorage.removeItem(STORAGE_KEYS.LOGGED_IN_AT);
+
+    // Clear refresh queue and timer
+    refreshQueueRef.current.clear();
+    if (refreshTimerRef.current) {
+      clearTimeout(refreshTimerRef.current);
+      refreshTimerRef.current = null;
+    }
+  }, []);
+
+  /**
+   * Refresh access token using refresh token
+   * @returns New access token
+   * @throws AuthError if refresh fails
+   */
+  const refreshAccessToken = useCallback(async (): Promise<string> => {
+    const refreshToken = authStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+    
+    if (!refreshToken) {
+      throw new AuthError('No refresh token available', 'INVALID_CREDENTIALS');
+    }
+
+    try {
+      // Call refresh endpoint (assuming it exists - adjust endpoint as needed)
+      const response = await apiClient.post<{
+        access_token: string;
+        refresh_token?: string;
+      }>('/auth/refresh', {
+        refresh_token: refreshToken,
+      });
+
+      if (!response.access_token) {
+        throw new AuthError('Invalid response from refresh endpoint', 'SERVER_ERROR');
+      }
+
+      // Update tokens
+      tokenRef.current = response.access_token;
+      setAccessToken(response.access_token);
+      
+      // Persist new access token
+      authStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, response.access_token);
+      
+      // Update refresh token if provided
+      if (response.refresh_token) {
+        authStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, response.refresh_token);
+      }
+
+      logger.debug('Token refreshed successfully');
+      return response.access_token;
+    } catch (error) {
+      logger.error('Token refresh failed', error instanceof Error ? error : undefined);
+      
+      // Refresh failed - clear auth state
+      clearAuthState();
+      
+      throw toAuthError(error);
+    }
+  }, [clearAuthState]);
+
+  /**
+   * Schedule proactive token refresh
+   * Refreshes token before it expires
+   */
+  const scheduleProactiveRefresh = useCallback(() => {
+    // Clear existing timer
+    if (refreshTimerRef.current) {
+      clearTimeout(refreshTimerRef.current);
+      refreshTimerRef.current = null;
+    }
+
+    const currentToken = tokenRef.current;
+    if (!currentToken) {
+      return;
+    }
+
+    const refreshTime = getProactiveRefreshTime(currentToken);
+    if (!refreshTime) {
+      return;
+    }
+
+    logger.debug(`Scheduling proactive token refresh in ${Math.round(refreshTime / 1000)}s`);
+
+    refreshTimerRef.current = setTimeout(async () => {
+      try {
+        await refreshQueueRef.current.startRefresh(refreshAccessToken);
+        // Schedule next refresh
+        scheduleProactiveRefresh();
+      } catch (error) {
+        logger.error('Proactive token refresh failed', error instanceof Error ? error : undefined);
+        // Don't clear auth state here - let the next API call trigger refresh
+      }
+    }, refreshTime);
+  }, [refreshAccessToken]);
+
+  /**
+   * Restore authentication state from storage on mount
    * Validates the stored token by fetching user info
+   * Handles race conditions by using a flag
    */
   useEffect(() => {
+    let isMounted = true;
+
     const restoreAuth = async () => {
-      const storedToken = sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+      const storedToken = authStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
       
       if (!storedToken) {
         // No stored token, ensure clean state
-        tokenRef.current = null;
-        setAccessToken(null);
-        setCurrentUser(null);
-        setIsRestoring(false);
+        if (isMounted) {
+          clearAuthState();
+          setIsRestoring(false);
+        }
         return;
       }
 
-      // Set token in ref and state for API calls
-      tokenRef.current = storedToken;
-      setAccessToken(storedToken);
+      // Check if token is expired - try refresh if we have refresh token
+      if (isTokenExpired(storedToken)) {
+        const refreshToken = authStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+        if (refreshToken) {
+          try {
+            logger.debug('Stored token expired, attempting refresh');
+            const newToken = await refreshQueueRef.current.startRefresh(refreshAccessToken);
+            if (isMounted) {
+              tokenRef.current = newToken;
+              setAccessToken(newToken);
+            }
+          } catch (error) {
+            logger.debug('Token refresh failed during restore', error instanceof Error ? { error: error.message } : undefined);
+            if (isMounted) {
+              clearAuthState();
+              setIsRestoring(false);
+            }
+            return;
+          }
+        } else {
+          // No refresh token, clear state
+          if (isMounted) {
+            clearAuthState();
+            setIsRestoring(false);
+          }
+          return;
+        }
+      } else {
+        // Token is valid, set it
+        if (isMounted) {
+          tokenRef.current = storedToken;
+          setAccessToken(storedToken);
+        }
+      }
 
       try {
         // Validate token by fetching user info
         const userInfo = await apiClient.get<AuthUser>('/auth/me');
         
+        if (!isMounted) return;
+
         const authUser: AuthUser = {
           ...userInfo,
-          loggedInAt: sessionStorage.getItem('atlas_logged_in_at') || new Date().toISOString(),
+          loggedInAt: authStorage.getItem(STORAGE_KEYS.LOGGED_IN_AT) || new Date().toISOString(),
         };
 
         setCurrentUser(authUser);
         
-        // Persist user info to sessionStorage (in case it was updated)
-        try {
-          sessionStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
-        } catch {
-          // Ignore storage errors
-        }
+        // Persist user info (in case it was updated)
+        authStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
         
-        logger.debug('Authentication state restored from sessionStorage');
+        // Schedule proactive refresh
+        scheduleProactiveRefresh();
+        
+        logger.debug('Authentication state restored from storage');
       } catch (error) {
-        // Token is invalid or expired, clear stored auth
-        logger.debug('Stored token is invalid, clearing auth state', error instanceof Error ? error : undefined);
-        sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-        sessionStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-        sessionStorage.removeItem(STORAGE_KEYS.USER);
-        sessionStorage.removeItem('atlas_logged_in_at');
-        tokenRef.current = null;
-        setAccessToken(null);
-        setCurrentUser(null);
+        if (!isMounted) return;
+
+        // Token is invalid or expired, try refresh if available
+        const refreshToken = authStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+        if (refreshToken) {
+          try {
+            logger.debug('Token validation failed, attempting refresh');
+            const newToken = await refreshQueueRef.current.startRefresh(refreshAccessToken);
+            tokenRef.current = newToken;
+            setAccessToken(newToken);
+            
+            // Retry user info fetch
+            const userInfo = await apiClient.get<AuthUser>('/auth/me');
+            const authUser: AuthUser = {
+              ...userInfo,
+              loggedInAt: authStorage.getItem(STORAGE_KEYS.LOGGED_IN_AT) || new Date().toISOString(),
+            };
+            setCurrentUser(authUser);
+            authStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
+            scheduleProactiveRefresh();
+            return;
+          } catch (refreshError) {
+            logger.debug('Token refresh failed during restore', refreshError instanceof Error ? { error: refreshError.message } : undefined);
+          }
+        }
+
+        // Refresh failed or no refresh token - clear stored auth
+        logger.debug('Stored token is invalid, clearing auth state', error instanceof Error ? { error: error.message } : undefined);
+        clearAuthState();
       } finally {
-        // Always mark restoration as complete
-        setIsRestoring(false);
+        if (isMounted) {
+          setIsRestoring(false);
+        }
       }
     };
 
     restoreAuth();
-  }, []); // Only run on mount
+
+    return () => {
+      isMounted = false;
+    };
+  }, [clearAuthState, refreshAccessToken, scheduleProactiveRefresh]);
 
   /**
    * Login function - authenticates with backend API
@@ -142,181 +288,114 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    * @throws AuthError with specific error code for different failure types
    */
   const login = async (username: string, password: string): Promise<boolean> => {
-    try {
-      // Call backend login endpoint
-      const response = await apiClient.post<{
-        access_token: string;
-        refresh_token: string;
-        role: UserRole;
-      }>('/auth/login', {
-        username,
-        password,
-      });
+    return withAuthRetry(async () => {
+      try {
+        // Call backend login endpoint
+        const response = await apiClient.post<{
+          access_token: string;
+          refresh_token: string;
+          role: UserRole;
+        }>('/auth/login', {
+          username,
+          password,
+        });
 
-      logger.debug('Login response received');
+        logger.debug('Login response received');
 
-      if (response.access_token) {
-        // Store tokens in memory and sessionStorage for persistence
+        if (!response.access_token) {
+          logger.error('No access_token in login response');
+          throw new AuthError('Invalid response from server', 'SERVER_ERROR');
+        }
+
+        // Store tokens in memory and storage for persistence
         // Update ref immediately so API client can use it synchronously
         tokenRef.current = response.access_token;
         setAccessToken(response.access_token);
         
-        // Persist tokens to sessionStorage
+        // Persist tokens to storage
         try {
-          sessionStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, response.access_token);
+          authStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, response.access_token);
           if (response.refresh_token) {
-            sessionStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, response.refresh_token);
+            authStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, response.refresh_token);
           }
           const loginTime = new Date().toISOString();
-          sessionStorage.setItem('atlas_logged_in_at', loginTime);
+          authStorage.setItem(STORAGE_KEYS.LOGGED_IN_AT, loginTime);
         } catch (storageError) {
-          logger.warn('Failed to store token in sessionStorage', storageError instanceof Error ? storageError : undefined);
+          handleStorageError('login', storageError);
           // Continue even if storage fails (e.g., in private browsing mode)
         }
         
-        logger.debug('Access token stored in memory and sessionStorage', { tokenLength: response.access_token.length });
+        logger.debug('Access token stored in memory and storage', { tokenLength: response.access_token.length });
         
         // Verify token is available in ref before making API call
         if (!tokenRef.current) {
           logger.error('Token ref is null after setting');
           throw new AuthError('Failed to store access token', 'SERVER_ERROR');
         }
-      } else {
-        logger.error('No access_token in login response');
-        throw new AuthError('Invalid response from server', 'SERVER_ERROR');
-      }
 
-      // Get user info (token is now in ref, API client will get it from context)
-      logger.debug('Fetching user info with token', { hasToken: !!tokenRef.current });
-      const userInfo = await apiClient.get<AuthUser>('/auth/me');
+        // Get user info (token is now in ref, API client will get it from context)
+        logger.debug('Fetching user info with token', { hasToken: !!tokenRef.current });
+        const userInfo = await apiClient.get<AuthUser>('/auth/me');
 
-      const authUser: AuthUser = {
-        ...userInfo,
-        loggedInAt: new Date().toISOString(),
-      };
+        const authUser: AuthUser = {
+          ...userInfo,
+          loggedInAt: new Date().toISOString(),
+        };
 
-      setCurrentUser(authUser);
-      
-      // Persist user info to sessionStorage
-      try {
-        sessionStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
-      } catch (storageError) {
-        logger.warn('Failed to store user info in sessionStorage', storageError instanceof Error ? storageError : undefined);
-      }
-
-      return true;
-    } catch (error) {
-      logger.error('Login failed', error instanceof Error ? error : undefined);
-
-      // Clear any tokens on error
-      tokenRef.current = null;
-      setAccessToken(null);
-      setCurrentUser(null);
-      
-      // Clear stored tokens from sessionStorage
-      try {
-        sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-        sessionStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-        sessionStorage.removeItem(STORAGE_KEYS.USER);
-        sessionStorage.removeItem('atlas_logged_in_at');
-      } catch {
-        // Ignore storage errors
-      }
-
-      // Determine error type and throw appropriate AuthError
-      const apiError = error as APIError;
-
-      // Check if it's a network/connection error (no status means no HTTP response)
-      if (!apiError.status) {
-        const errorMessage = apiError.message?.toLowerCase() || '';
-
-        // Check for timeout errors
-        if (errorMessage.includes('abort') || errorMessage.includes('timeout')) {
-          throw new AuthError(
-            'Request timed out. Please check your connection and try again.',
-            'TIMEOUT'
-          );
+        setCurrentUser(authUser);
+        
+        // Persist user info to storage
+        try {
+          authStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authUser));
+        } catch (storageError) {
+          handleStorageError('store user info', storageError);
         }
 
-        // Check for network/connection errors
-        if (
-          errorMessage.includes('fetch') ||
-          errorMessage.includes('network') ||
-          errorMessage.includes('failed to fetch') ||
-          errorMessage.includes('connection') ||
-          errorMessage.includes('econnrefused') ||
-          errorMessage === 'load failed' ||
-          errorMessage === 'networkerror when attempting to fetch resource'
-        ) {
-          throw new AuthError(
-            'Unable to connect to the server. Please check if the server is running.',
-            'NETWORK_ERROR'
-          );
-        }
+        // Schedule proactive token refresh
+        scheduleProactiveRefresh();
 
-        // Generic error without status - likely network-related
-        throw new AuthError(
-          'Unable to connect to the server. Please try again later.',
-          'NETWORK_ERROR'
-        );
+        return true;
+      } catch (error) {
+        logger.error('Login failed', error instanceof Error ? error : undefined);
+
+        // Clear any tokens on error
+        clearAuthState();
+
+        // Re-throw as AuthError
+        throw toAuthError(error);
       }
-
-      // HTTP 401 - Invalid credentials
-      if (apiError.status === 401) {
-        throw new AuthError('Invalid username or password', 'INVALID_CREDENTIALS', 401);
-      }
-
-      // HTTP 403 - Forbidden (account disabled, etc.)
-      if (apiError.status === 403) {
-        throw new AuthError(
-          apiError.message || 'Access denied. Your account may be disabled.',
-          'INVALID_CREDENTIALS',
-          403
-        );
-      }
-
-      // HTTP 5xx - Server errors
-      if (apiError.status && apiError.status >= 500) {
-        throw new AuthError(
-          'Server error occurred. Please try again later.',
-          'SERVER_ERROR',
-          apiError.status
-        );
-      }
-
-      // Other HTTP errors (400, 404, etc.)
-      if (apiError.status && apiError.status >= 400) {
-        throw new AuthError(
-          apiError.message || 'Login request failed. Please try again.',
-          'UNKNOWN',
-          apiError.status
-        );
-      }
-
-      // Fallback for unexpected errors
-      throw new AuthError('An unexpected error occurred. Please try again.', 'UNKNOWN');
-    }
+    });
   };
 
   /**
-   * Logout function
-   * Clears authentication state from memory and sessionStorage
+   * Refresh token method (exposed for API client use)
+   * @returns New access token
+   * @throws AuthError if refresh fails
    */
-  const logout = () => {
-    tokenRef.current = null;
-    setCurrentUser(null);
-    setAccessToken(null);
-    
-    // Clear stored tokens from sessionStorage
-    try {
-      sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-      sessionStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-      sessionStorage.removeItem(STORAGE_KEYS.USER);
-      sessionStorage.removeItem('atlas_logged_in_at');
-    } catch {
-      // Ignore storage errors
+  const refreshToken = useCallback(async (): Promise<string> => {
+    return refreshQueueRef.current.startRefresh(refreshAccessToken);
+  }, [refreshAccessToken]);
+
+  /**
+   * Logout function
+   * Clears authentication state from memory and storage
+   * Optionally calls backend logout endpoint
+   */
+  const logout = useCallback(async () => {
+    // Call backend logout endpoint if token exists
+    const currentToken = tokenRef.current;
+    if (currentToken) {
+      try {
+        await apiClient.post('/auth/logout', {});
+      } catch (error) {
+        // Log but don't fail logout if backend call fails
+        logger.warn('Backend logout call failed', error instanceof Error ? { error: error.message } : undefined);
+      }
     }
-  };
+
+    // Clear auth state
+    clearAuthState();
+  }, [clearAuthState]);
 
   /**
    * Check if user is authenticated
@@ -335,6 +414,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     return currentUser.role === roles;
   };
+
+  // Expose refresh queue and token getter for API client
+  useEffect(() => {
+    apiClient.setRefreshTokenHandler(() => refreshToken());
+    apiClient.setRefreshQueue(refreshQueueRef.current);
+  }, [refreshToken]);
 
   const value: AuthContextType = {
     currentUser,

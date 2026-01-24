@@ -38,6 +38,18 @@ export const formatList = (items: string[] | undefined, fallback: string = 'None
 };
 
 /**
+ * Formats familyHistory (string or string[] from API) for display
+ */
+export const formatFamilyHistory = (
+  value: string | string[] | undefined,
+  fallback: string = 'None'
+): string => {
+  if (value == null) return fallback;
+  if (Array.isArray(value)) return formatList(value, fallback);
+  return String(value).trim() || fallback;
+};
+
+/**
  * Formats an address into a single string
  */
 export const formatAddress = (address: Patient['address']): string => {

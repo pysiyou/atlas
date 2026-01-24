@@ -56,7 +56,8 @@ export interface MedicalHistory {
   currentMedications: string[];
   allergies: string[];
   previousSurgeries: string[];
-  familyHistory: string;
+  /** Backend uses list[str]; we send array, store as string in form (semicolon-delimited) */
+  familyHistory: string | string[];
   lifestyle: {
     smoking: boolean;
     alcohol: boolean;
