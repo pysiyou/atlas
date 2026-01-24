@@ -65,7 +65,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   /**
    * Handles field updates in a type-safe way
    */
-  const handleFieldChange = (field: string, value: string | boolean | number) => {
+  const handleFieldChange = (field: string, value: string | boolean | number | undefined) => {
     updateField(field as keyof typeof formData, value as never);
   };
 

@@ -95,6 +95,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
           </div>
           <AffiliationSection
             formData={formData}
+            errors={errors}
             onFieldChange={onFieldChange}
             existingAffiliation={existingAffiliation}
             onRenew={onRenew}

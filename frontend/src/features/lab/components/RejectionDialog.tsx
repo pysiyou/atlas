@@ -115,7 +115,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       <div className="w-90 md:w-96 bg-white rounded-lg shadow-xl border border-gray-200 p-4">
         <Alert variant="danger" className="mb-4">
           <p className="font-medium text-xs">Failed to load options</p>
-          <p className="text-[10px] mt-1">{error}</p>
+          <p className="text-xxs mt-1">{error}</p>
         </Alert>
         <div className="flex justify-end gap-2">
           <Button variant="cancel" size="sm" showIcon={false} onClick={onCancel}>
@@ -172,7 +172,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
         <Alert variant="danger" className="py-2">
           <div className="space-y-0.5">
             <p className="font-medium text-xs">Escalation Required</p>
-            <p className="text-[10px] opacity-90 leading-tight">
+            <p className="text-xxs opacity-90 leading-tight">
               All rejection options have been exhausted. Please escalate to your supervisor.
             </p>
           </div>
@@ -184,7 +184,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
         <Alert variant="warning" className="py-2">
           <div className="space-y-0.5">
             <p className="font-medium text-xs">Action Required</p>
-            <p className="text-[10px] opacity-90 leading-tight">
+            <p className="text-xxs opacity-90 leading-tight">
               You are rejecting results. Please specify the required follow-up action.
             </p>
           </div>
@@ -342,10 +342,10 @@ export const RejectionHistoryBanner: React.FC<RejectionHistoryBannerProps> = ({
     <div className="mt-2 px-2 py-1.5 bg-amber-50 border border-amber-200 rounded text-amber-800">
       <div className="flex items-center gap-1.5">
         <Icon name="loading" className="w-3 h-3" />
-        <span className="text-[10px] font-medium">{message}</span>
+        <span className="text-xxs font-medium">{message}</span>
       </div>
       {rejectionReason && (
-        <p className="text-[10px] mt-0.5 opacity-80 line-clamp-2">
+        <p className="text-xxs mt-0.5 opacity-80 line-clamp-2">
           Previous rejection: {rejectionReason}
         </p>
       )}

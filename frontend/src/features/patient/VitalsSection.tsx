@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { Icon, type IconName } from '@/shared/ui';
 import type { VitalSigns } from '@/types/patient';
 
 export interface VitalsSectionProps {
@@ -31,6 +32,7 @@ interface VitalConfig {
   key: keyof VitalSigns;
   label: string;
   unit: string;
+  icon: IconName;
   min: number;
   max: number;
   step: number;
@@ -43,6 +45,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     key: 'temperature',
     label: 'Temperature',
     unit: '°C',
+    icon: 'thermometer',
     min: 30.0,
     max: 45.0,
     step: 0.1,
@@ -53,6 +56,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     key: 'heartRate',
     label: 'Heart Rate',
     unit: 'BPM',
+    icon: 'stethoscope',
     min: 30,
     max: 250,
     step: 1,
@@ -63,6 +67,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     key: 'systolicBP',
     label: 'Systolic BP',
     unit: 'mmHg',
+    icon: 'heart-pulse',
     min: 50,
     max: 250,
     step: 1,
@@ -73,6 +78,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     key: 'diastolicBP',
     label: 'Diastolic BP',
     unit: 'mmHg',
+    icon: 'heart-pulse',
     min: 30,
     max: 150,
     step: 1,
@@ -83,6 +89,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     key: 'respiratoryRate',
     label: 'Respiratory Rate',
     unit: '/min',
+    icon: 'pulse',
     min: 4,
     max: 60,
     step: 1,
@@ -93,6 +100,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     key: 'oxygenSaturation',
     label: 'O₂ Saturation',
     unit: '%',
+    icon: 'blood',
     min: 50,
     max: 100,
     step: 1,
@@ -198,18 +206,26 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="flex justify-between items-baseline mb-1 gap-2">
               <label
                 htmlFor={`vital-${fieldName}`}
-                className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+                className="text-xxs font-medium text-gray-500 cursor-pointer truncate min-w-0"
               >
                 {config.label}
               </label>
 
               <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
-                <span className="text-xs text-gray-400 truncate">Ref: {refRange}</span>
+                {isAbnormal && (
+                  <Icon name="danger-square" className="w-3 h-3 text-red-500 shrink-0" />
+                )}
+                <span className="text-xxs text-gray-400 truncate">Ref: {refRange}</span>
               </div>
             </div>
 
             {/* Input wrapper with relative positioning */}
             <div className="relative">
+              {/* Icon (left, matches shared Input pattern; z-10 so it stacks above input) */}
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                <Icon name={config.icon} className="w-4 h-4 text-gray-400 shrink-0" />
+              </div>
+
               <input
                 id={`vital-${fieldName}`}
                 name={fieldName}
@@ -223,8 +239,11 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                 step={config.step}
                 placeholder="--"
                 className={`
-                  block w-full pl-3 pr-12 py-2 border rounded bg-white relative z-10
+                  block w-full pl-10 pr-12 py-2.5 border rounded bg-white
                   text-xs placeholder:text-gray-300 transition-shadow
+                  [appearance:textfield]
+                  [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0
+                  [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0
                   focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
                   disabled:bg-gray-100 disabled:cursor-not-allowed
                   ${error ? 'border-red-500' : status ? statusColors.border : 'border-gray-300'}
@@ -233,13 +252,13 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
               />
 
               {/* Unit display (absolute positioned) */}
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0 max-w-[40%]">
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
                 <span className="text-xs text-gray-400 select-none truncate">{config.unit}</span>
               </div>
 
               {/* Abnormal value alert (absolute positioned below input) */}
               {isAbnormal && (
-                <div className="absolute -bottom-5 left-0 text-xs text-red-600 font-medium">
+                <div className="absolute -bottom-5 left-0 text-xxs text-red-600 font-medium">
                   Abnormal value
                 </div>
               )}

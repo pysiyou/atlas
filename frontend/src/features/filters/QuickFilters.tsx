@@ -50,7 +50,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
             key={preset.id}
             onClick={() => onPresetClick(preset.id)}
             className={cn(
-              'inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-medium transition-colors',
+              'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xxs font-medium transition-colors',
               'border',
               isActive
                 ? 'bg-sky-50 border-sky-300 text-sky-700'

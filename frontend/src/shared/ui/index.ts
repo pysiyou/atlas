@@ -26,3 +26,4 @@ export * from './detailsTableUtils';
 export * from './BalancedDetailsLayout';
 export * from './TagInput';
 export * from './TabbedSectionContainer';
+export * from './DateInput';

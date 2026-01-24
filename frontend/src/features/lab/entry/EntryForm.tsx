@@ -88,14 +88,14 @@ const SelectParameterInput: React.FC<{
         <div
           id={inputId}
           className={cn(
-            'flex items-center gap-2 px-3 py-2 bg-white border rounded cursor-pointer transition-colors w-full h-[38px]',
+            'flex items-center gap-2 px-3 py-2.5 bg-white border rounded cursor-pointer transition-colors w-full min-h-[42px]',
             isOpen
               ? 'border-sky-500 ring-2 ring-sky-500/20'
               : 'border-gray-300 hover:border-gray-400'
           )}
         >
           {/* Content */}
-          <div className="flex-1 text-sm truncate">
+          <div className="flex-1 text-xs truncate">
             {value ? (
               <span className="text-gray-900">{value}</span>
             ) : (
@@ -185,7 +185,7 @@ const ParameterInput: React.FC<{
       <input
         {...commonProps}
         type="text"
-        className="block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed placeholder:text-gray-300 placeholder:text-xs transition-shadow bg-white"
+        className="block w-full px-3 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-xs placeholder:text-gray-300 transition-shadow bg-white"
         placeholder="Enter text result..."
       />
     );
@@ -196,7 +196,7 @@ const ParameterInput: React.FC<{
       {...commonProps}
       type="text"
       inputMode="decimal"
-      className="block w-full pl-3 pr-12 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed placeholder:text-gray-300 transition-shadow relative z-10 bg-white"
+      className="block w-full pl-3 pr-12 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-xs placeholder:text-gray-300 transition-shadow relative z-10 bg-white"
       placeholder="--"
     />
   );
@@ -232,13 +232,9 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 }) => {
   if (!testDef?.parameters) return null;
 
-  const gridCols = isModal
-    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-    : 'grid-cols-1 sm:grid-cols-2';
-
   return (
     <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
-      <div className={`grid ${gridCols} gap-4`}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {testDef.parameters.map(param => {
           const value = results[param.code] ?? '';
           const refRange = getReferenceRangeDisplay(param, patient);
@@ -252,7 +248,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
               <div className="flex justify-between items-baseline mb-1 gap-2">
                 <label
                   htmlFor={`result-${resultKey}-${param.code}`}
-                  className="text-[10px] font-medium text-gray-500 cursor-pointer truncate min-w-0"
+                  className="text-xxs font-medium text-gray-500 cursor-pointer truncate min-w-0"
                 >
                   {param.name}
                 </label>
@@ -260,7 +256,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   {isCritical && (
                     <Icon name="danger-square" className="w-3 h-3 text-red-500 shrink-0" />
                   )}
-                  <span className="text-[10px] text-gray-400 truncate">Ref: {refRange}</span>
+                  <span className="text-xxs text-gray-400 truncate">Ref: {refRange}</span>
                 </div>
               </div>
 
@@ -285,7 +281,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   </div>
                 )}
                 {isCritical && (
-                  <div className="absolute -bottom-5 left-0 text-[10px] text-red-600 font-medium">
+                  <div className="absolute -bottom-5 left-0 text-xxs text-red-600 font-medium">
                     Critical value
                   </div>
                 )}

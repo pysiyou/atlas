@@ -108,7 +108,7 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
         className
       )}
     >
-      <div className="flex items-center gap-1 text-[10px] font-medium text-gray-500">
+      <div className="flex items-center gap-1 text-xxs font-medium text-gray-500">
         <Icon name="filter" className="w-3 h-3" />
         <span>Active:</span>
       </div>
@@ -120,7 +120,7 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
           return (
             <div
               key={badge.key}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-white border border-gray-300 rounded text-[10px]"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-white border border-gray-300 rounded text-xxs"
             >
               <span className="font-medium text-gray-700">{badge.label}:</span>
               <span className="text-gray-600">{displayValue}</span>
@@ -142,7 +142,7 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
       {validBadges.length > 1 && onClearAll && (
         <button
           onClick={onClearAll}
-          className="ml-auto text-[10px] font-medium text-sky-600 hover:text-sky-700 transition-colors"
+          className="ml-auto text-xxs font-medium text-sky-600 hover:text-sky-700 transition-colors"
         >
           Clear all
         </button>

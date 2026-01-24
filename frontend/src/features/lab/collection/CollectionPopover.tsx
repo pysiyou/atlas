@@ -102,7 +102,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             Volume Collected <span className="text-red-500">*</span>
           </label>
           {minimumVolume > 0 && (
-            <div className="text-[10px] text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100 flex items-center gap-1">
+            <div className="text-xxs text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100 flex items-center gap-1">
               <Icon name="alert-circle" className="w-3 h-3" />
               Min: {minimumVolume} mL
             </div>

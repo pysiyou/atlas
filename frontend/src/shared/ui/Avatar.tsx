@@ -35,11 +35,11 @@ export const Avatar: React.FC<AvatarProps> = ({
   const textSizeClasses = {
     xxs: {
       primary: 'text-xxs',
-      secondary: 'text-[10px]',
+      secondary: 'text-xxs',
     },
     xs: {
       primary: 'text-xs',
-      secondary: 'text-[10px]',
+      secondary: 'text-xxs',
     },
     sm: {
       primary: 'text-sm',

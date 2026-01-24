@@ -9,7 +9,7 @@ export const LAB_CARD_TYPOGRAPHY = {
   title: 'text-sm font-medium text-gray-900',
 
   // Section Headers (small caps style)
-  sectionTitle: 'text-[10px] font-medium text-gray-500 uppercase tracking-wide',
+  sectionTitle: 'text-xxs font-medium text-gray-500 uppercase tracking-wide',
 
   // Patient Names (medium emphasis within text-xs context)
   patientName: 'font-medium text-gray-900',
@@ -28,7 +28,7 @@ export const LAB_CARD_TYPOGRAPHY = {
 
   // Flags Text (in red context)
   flagText: 'text-xs text-red-700',
-  flagTitle: 'text-[10px] font-medium text-red-700 uppercase tracking-wide',
+  flagTitle: 'text-xxs font-medium text-red-700 uppercase tracking-wide',
 } as const;
 
 // Spacing Tokens

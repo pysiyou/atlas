@@ -135,7 +135,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
         <Alert variant="danger" className="py-2">
           <div className="space-y-0.5">
             <p className="font-medium text-xs">Multiple Rejections Detected</p>
-            <p className="text-[10px] opacity-90 leading-tight">
+            <p className="text-xxs opacity-90 leading-tight">
               This sample has been rejected {rejectionHistoryCount} times already. Consider
               escalating to supervisor.
             </p>
@@ -145,7 +145,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
         <Alert variant="warning" className="py-2">
           <div className="space-y-0.5">
             <p className="font-medium text-xs">Action Required</p>
-            <p className="text-[10px] opacity-90 leading-tight">
+            <p className="text-xxs opacity-90 leading-tight">
               {patientName
                 ? `Sample for ${patientName} will be marked as rejected.`
                 : 'The sample will be marked as rejected.'}

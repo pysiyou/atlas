@@ -4,12 +4,13 @@
  * Includes: Demographics, Address, Affiliation, Emergency Contact, and Medical History
  */
 
-import React from 'react';
-import { Input, Select, Textarea, Badge, Button, TagInput } from '@/shared/ui';
+import React, { useMemo } from 'react';
+import { Input, Select, Textarea, Badge, Button, TagInput, DateInput, MultiSelectFilter } from '@/shared/ui';
 import type { Gender, AffiliationDuration, Affiliation, Relationship } from '@/types';
 import { GENDER_OPTIONS, AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
 import { isAffiliationActive } from './usePatientForm';
+import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
 
 /**
  * Props for PatientFormSections component
@@ -27,9 +28,9 @@ interface PatientFormSectionsProps {
     city: string;
     postalCode: string;
     hasAffiliation: boolean;
-    affiliationDuration: AffiliationDuration;
+    affiliationDuration?: AffiliationDuration;
     emergencyContactFullName: string;
-    emergencyContactRelationship: Relationship;
+    emergencyContactRelationship?: Relationship;
     emergencyContactPhone: string;
     emergencyContactEmail: string;
     chronicConditions: string;
@@ -41,7 +42,7 @@ interface PatientFormSectionsProps {
     alcohol: boolean;
   };
   errors: Record<string, string>;
-  onFieldChange: (field: string, value: string | boolean | number) => void;
+  onFieldChange: (field: string, value: string | boolean | number | undefined) => void;
   existingAffiliation?: Affiliation;
   onRenew?: () => void;
 }
@@ -68,16 +69,15 @@ export const DemographicsSection: React.FC<
           placeholder="John Doe"
         />
       </div>
-      <Input
+      <DateInput
         label="Date of Birth"
         name="dateOfBirth"
-        type="date"
         value={formData.dateOfBirth}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onFieldChange('dateOfBirth', e.target.value)
-        }
+        onChange={(value: string) => onFieldChange('dateOfBirth', value)}
         error={errors.dateOfBirth}
         required
+        placeholder="Select date of birth"
+        maxDate={new Date()}
       />
       <Select
         label="Gender"
@@ -195,10 +195,49 @@ export const AddressSection: React.FC<
  * Displays lab affiliation/subscription fields
  */
 export const AffiliationSection: React.FC<
-  Pick<PatientFormSectionsProps, 'formData' | 'onFieldChange' | 'existingAffiliation' | 'onRenew'>
-> = ({ formData, onFieldChange, existingAffiliation, onRenew }) => {
+  Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange' | 'existingAffiliation' | 'onRenew'>
+> = ({ formData, errors, onFieldChange, existingAffiliation, onRenew }) => {
   const hasExistingAffiliation = !!existingAffiliation;
   const isActive = isAffiliationActive(existingAffiliation);
+
+  // Convert affiliation duration options to FilterOption format with colors
+  const affiliationDurationOptions: FilterOption[] = useMemo(
+    () =>
+      AFFILIATION_DURATION_OPTIONS.map(opt => {
+        // Assign colors based on duration: shorter = lighter, longer = more prominent
+        let color: string = 'default';
+        if (opt.value === 1) color = 'info'; // 1 Month - blue
+        else if (opt.value === 3) color = 'primary'; // 3 Months - sky blue
+        else if (opt.value === 6) color = 'success'; // 6 Months - green
+        else if (opt.value === 12) color = 'warning'; // 1 Year - yellow/orange
+        else if (opt.value === 24) color = 'purple'; // 2 Years - purple
+
+        return {
+          id: String(opt.value),
+          label: opt.label,
+          color,
+        };
+      }),
+    []
+  );
+
+  // Convert single value to array for MultiSelectFilter (single-select mode)
+  const selectedAffiliationDuration = useMemo(
+    () => (formData.affiliationDuration ? [String(formData.affiliationDuration)] : []),
+    [formData.affiliationDuration]
+  );
+
+  // Handle affiliation duration change (single-select: only allow one selection)
+  const handleAffiliationDurationChange = (selectedIds: string[]) => {
+    if (selectedIds.length === 0) {
+      // Clear button clicked: actually clear the selection (show placeholder)
+      onFieldChange('affiliationDuration', undefined as never);
+    } else {
+      // Use the most recently selected item (last in array)
+      const newValue = Number(selectedIds[selectedIds.length - 1]);
+      onFieldChange('affiliationDuration', newValue);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -274,19 +313,24 @@ export const AffiliationSection: React.FC<
       {/* Duration Selection (for new subscriptions) */}
       {formData.hasAffiliation && !hasExistingAffiliation && (
         <div className="grid grid-cols-1 gap-4">
-          <Select
-            label="Subscription Duration"
-            name="affiliationDuration"
-            value={String(formData.affiliationDuration)}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              onFieldChange('affiliationDuration', Number(e.target.value))
-            }
-            options={AFFILIATION_DURATION_OPTIONS.map(opt => ({
-              value: String(opt.value),
-              label: opt.label,
-            }))}
-            required
-          />
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1.5">
+              Subscription Duration <span className="text-red-500">*</span>
+            </label>
+            <MultiSelectFilter
+              label="Subscription Duration"
+              options={affiliationDurationOptions}
+              selectedIds={selectedAffiliationDuration}
+              onChange={handleAffiliationDurationChange}
+              placeholder="Select duration"
+              showSelectAll={false}
+              singleSelect={true}
+              className="w-full"
+            />
+            {errors?.affiliationDuration && (
+              <p className="mt-1 text-sm text-red-600">{errors.affiliationDuration}</p>
+            )}
+          </div>
           <p className="text-xs text-gray-500">
             An assurance number will be automatically generated upon registration.
           </p>
@@ -297,19 +341,24 @@ export const AffiliationSection: React.FC<
       {hasExistingAffiliation && formData.hasAffiliation && (
         <div className="border-t pt-4 mt-4">
           <h4 className="text-sm font-medium text-gray-700 mb-3">Extend Affiliation</h4>
-          <Select
-            label="Extension Duration"
-            name="affiliationDuration"
-            value={String(formData.affiliationDuration)}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              onFieldChange('affiliationDuration', Number(e.target.value))
-            }
-            options={AFFILIATION_DURATION_OPTIONS.map(opt => ({
-              value: String(opt.value),
-              label: opt.label,
-            }))}
-            required
-          />
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1.5">
+              Extension Duration <span className="text-red-500">*</span>
+            </label>
+            <MultiSelectFilter
+              label="Extension Duration"
+              options={affiliationDurationOptions}
+              selectedIds={selectedAffiliationDuration}
+              onChange={handleAffiliationDurationChange}
+              placeholder="Select duration"
+              showSelectAll={false}
+              singleSelect={true}
+              className="w-full"
+            />
+            {errors?.affiliationDuration && (
+              <p className="mt-1 text-sm text-red-600">{errors.affiliationDuration}</p>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -322,57 +371,106 @@ export const AffiliationSection: React.FC<
  */
 export const EmergencyContactSection: React.FC<
   Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange'>
-> = ({ formData, errors, onFieldChange }) => (
-  <div className="space-y-4">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <Input
-        label="Contact Full Name"
-        name="emergencyContactFullName"
-        value={formData.emergencyContactFullName}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onFieldChange('emergencyContactFullName', e.target.value)
-        }
-        error={errors.emergencyContactFullName}
-        required
-        placeholder="Jane Doe"
-      />
-      <Select
-        label="Relationship"
-        name="emergencyContactRelationship"
-        value={formData.emergencyContactRelationship}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          onFieldChange('emergencyContactRelationship', e.target.value)
-        }
-        options={RELATIONSHIP_OPTIONS}
-        error={errors.emergencyContactRelationship}
-        required
-      />
-      <Input
-        label="Contact Phone"
-        name="emergencyContactPhone"
-        type="tel"
-        value={formData.emergencyContactPhone}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onFieldChange('emergencyContactPhone', e.target.value)
-        }
-        error={errors.emergencyContactPhone}
-        required
-        placeholder="(555) 987-6543"
-      />
-      <Input
-        label="Contact Email"
-        name="emergencyContactEmail"
-        type="email"
-        value={formData.emergencyContactEmail}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onFieldChange('emergencyContactEmail', e.target.value)
-        }
-        error={errors.emergencyContactEmail}
-        placeholder="contact@email.com"
-      />
+> = ({ formData, errors, onFieldChange }) => {
+  // Convert relationship options to FilterOption format with colors
+  const relationshipOptions: FilterOption[] = useMemo(
+    () =>
+      RELATIONSHIP_OPTIONS.map(opt => {
+        // Assign colors based on relationship type
+        let color: string = 'default';
+        if (opt.value === 'spouse') color = 'primary'; // Spouse - sky blue
+        else if (opt.value === 'parent') color = 'info'; // Parent - blue
+        else if (opt.value === 'sibling') color = 'success'; // Sibling - green
+        else if (opt.value === 'child') color = 'warning'; // Child - yellow/orange
+        else if (opt.value === 'friend') color = 'purple'; // Friend - purple
+        else if (opt.value === 'other') color = 'neutral'; // Other - neutral gray
+
+        return {
+          id: opt.value,
+          label: opt.label,
+          color,
+        };
+      }),
+    []
+  );
+
+  // Convert single value to array for MultiSelectFilter (single-select mode)
+  const selectedRelationship = useMemo(
+    () => (formData.emergencyContactRelationship ? [formData.emergencyContactRelationship] : []),
+    [formData.emergencyContactRelationship]
+  );
+
+  // Handle relationship change (single-select: only allow one selection)
+  const handleRelationshipChange = (selectedIds: string[]) => {
+    if (selectedIds.length === 0) {
+      // Clear button clicked: actually clear the selection (show placeholder)
+      onFieldChange('emergencyContactRelationship', undefined as never);
+    } else {
+      // Use the most recently selected item (last in array)
+      const newValue = selectedIds[selectedIds.length - 1] as Relationship;
+      onFieldChange('emergencyContactRelationship', newValue);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Input
+          label="Contact Full Name"
+          name="emergencyContactFullName"
+          value={formData.emergencyContactFullName}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onFieldChange('emergencyContactFullName', e.target.value)
+          }
+          error={errors.emergencyContactFullName}
+          required
+          placeholder="Jane Doe"
+        />
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            Relationship <span className="text-red-500">*</span>
+          </label>
+          <MultiSelectFilter
+            label="Relationship"
+            options={relationshipOptions}
+            selectedIds={selectedRelationship}
+            onChange={handleRelationshipChange}
+            placeholder="Select relationship"
+            showSelectAll={false}
+            singleSelect={true}
+            className="w-full"
+          />
+          {errors.emergencyContactRelationship && (
+            <p className="mt-1 text-sm text-red-600">{errors.emergencyContactRelationship}</p>
+          )}
+        </div>
+        <Input
+          label="Contact Phone"
+          name="emergencyContactPhone"
+          type="tel"
+          value={formData.emergencyContactPhone}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onFieldChange('emergencyContactPhone', e.target.value)
+          }
+          error={errors.emergencyContactPhone}
+          required
+          placeholder="(555) 987-6543"
+        />
+        <Input
+          label="Contact Email"
+          name="emergencyContactEmail"
+          type="email"
+          value={formData.emergencyContactEmail}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onFieldChange('emergencyContactEmail', e.target.value)
+          }
+          error={errors.emergencyContactEmail}
+          placeholder="contact@email.com"
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 /**
  * Medical History Section
@@ -513,6 +611,7 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Lab Affiliation</h3>
         <AffiliationSection
           formData={formData}
+          errors={errors}
           onFieldChange={onFieldChange}
           existingAffiliation={existingAffiliation}
           onRenew={onRenew}

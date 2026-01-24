@@ -95,6 +95,11 @@ export const validatePatientForm = (formData: PatientFormData): Record<string, s
     newErrors.postalCode = VALIDATION_MESSAGES.INVALID.POSTAL_CODE;
   }
 
+  // Affiliation duration required when user opts in to affiliation
+  if (formData.hasAffiliation && !formData.affiliationDuration) {
+    newErrors.affiliationDuration = 'Please select a duration';
+  }
+
   // Emergency Contact validation
   if (!validateRequired(formData.emergencyContactFullName)) {
     newErrors.emergencyContactFullName = VALIDATION_MESSAGES.REQUIRED.EMERGENCY_CONTACT_NAME;

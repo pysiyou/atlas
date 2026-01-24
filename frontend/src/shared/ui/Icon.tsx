@@ -121,7 +121,13 @@ export type IconName =
   | 'age-0'
   | 'category'
   | 'ruler'
-  | 'weight';
+  | 'weight'
+  | 'city'
+  | 'link'
+  | 'thermometer'
+  | 'heart-pulse'
+  | 'pulse'
+  | 'blood';
 
 interface IconProps {
   /** Name of the icon to display (must match SVG filename without .svg extension) */

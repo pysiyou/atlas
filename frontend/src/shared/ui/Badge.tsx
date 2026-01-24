@@ -8,6 +8,7 @@ export type BadgeVariant =
   | 'secondary'
   | 'outline'
   | 'ghost'
+  | 'neutral'
   | 'danger'
   | 'error'
   | 'success'
@@ -119,6 +120,7 @@ const VARIANT_STYLES: Record<string, string> = {
   secondary: 'bg-gray-100 text-gray-800 border-transparent', // Same as default for now
   outline: 'text-gray-800 border-gray-200 bg-transparent',
   ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 border-transparent',
+  neutral: 'bg-slate-100 text-slate-700 border-slate-200',
   danger: 'bg-red-100 text-red-800 border-transparent',
   error: 'bg-red-100 text-red-800 border-transparent',
   success: 'bg-green-100 text-green-800 border-transparent',
@@ -230,7 +232,7 @@ const VARIANT_STYLES: Record<string, string> = {
 };
 
 const SIZES = {
-  xs: 'px-1.5 py-0.5 text-[10px]',
+  xs: 'px-1.5 py-0.5 text-xxs',
   sm: 'px-2 py-0.5 text-xs',
   md: 'px-2.5 py-0.5 text-sm',
 };

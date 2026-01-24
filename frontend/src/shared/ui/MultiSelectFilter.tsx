@@ -55,6 +55,8 @@ export interface MultiSelectFilterProps {
   className?: string;
   /** Optional icon to display before the label */
   icon?: IconName;
+  /** Whether to use single-select mode (circular checkboxes/radio buttons) */
+  singleSelect?: boolean;
 }
 
 /**
@@ -64,7 +66,8 @@ const ListItem: React.FC<{
   option: FilterOption;
   isSelected: boolean;
   onToggle: () => void;
-}> = ({ option, isSelected, onToggle }) => {
+  singleSelect?: boolean;
+}> = ({ option, isSelected, onToggle, singleSelect = false }) => {
   return (
     <label
       className={cn(
@@ -73,15 +76,32 @@ const ListItem: React.FC<{
         isSelected && 'bg-sky-50/30'
       )}
     >
-      {/* Checkbox */}
+      {/* Checkbox/Radio */}
       <div className="shrink-0 mr-3">
-        <input type="checkbox" checked={isSelected} onChange={onToggle} className="sr-only" />
-        {isSelected ? (
-          <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
-            <Icon name="check" className="w-3.5 h-3.5 text-white" />
-          </div>
+        <input
+          type={singleSelect ? 'radio' : 'checkbox'}
+          checked={isSelected}
+          onChange={onToggle}
+          className="sr-only"
+        />
+        {singleSelect ? (
+          // Circular radio button style for single-select
+          isSelected ? (
+            <div className="w-5 h-5 rounded-full flex items-center justify-center bg-sky-500 transition-all duration-150 border-2 border-sky-500">
+              <div className="w-2 h-2 rounded-full bg-white" />
+            </div>
+          ) : (
+            <div className="w-5 h-5 rounded-full border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
+          )
         ) : (
-          <div className="w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
+          // Square checkbox style for multi-select
+          isSelected ? (
+            <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
+              <Icon name="check" className="w-3.5 h-3.5 text-white" />
+            </div>
+          ) : (
+            <div className="w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
+          )
         )}
       </div>
 
@@ -106,6 +126,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   selectAllLabel = 'Select all',
   className = '',
   icon,
+  singleSelect = false,
 }) => {
   // Check if all options are selected
   const allSelected = useMemo(
@@ -122,12 +143,20 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   // Handle toggling a single option
   const handleToggle = useCallback(
     (id: string) => {
-      const newSelected = selectedIds.includes(id)
-        ? selectedIds.filter(selectedId => selectedId !== id)
-        : [...selectedIds, id];
-      onChange(newSelected);
+      if (singleSelect) {
+        // For single-select: replace selection with the clicked option
+        // If clicking the same option, deselect it (allow clearing)
+        const newSelected = selectedIds.includes(id) ? [] : [id];
+        onChange(newSelected);
+      } else {
+        // For multi-select: toggle the option
+        const newSelected = selectedIds.includes(id)
+          ? selectedIds.filter(selectedId => selectedId !== id)
+          : [...selectedIds, id];
+        onChange(newSelected);
+      }
     },
-    [selectedIds, onChange]
+    [selectedIds, onChange, singleSelect]
   );
 
   // Handle select all / deselect all
@@ -211,8 +240,19 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
           {/* Clear button */}
           {selectedIds.length > 0 && (
             <button
-              onClick={handleClear}
-              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer"
+              type="button"
+              onClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleClear(e);
+              }}
+              onMouseDown={e => {
+                // Prevent popover from opening when clicking clear button
+                // But don't prevent default on the button itself to allow onClick to fire
+                e.stopPropagation();
+              }}
+              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer shrink-0"
+              aria-label="Clear selection"
             >
               <Icon name="close-circle" className="w-4 h-4 text-gray-400 hover:text-gray-600" />
             </button>
@@ -231,39 +271,60 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
                 option={option}
                 isSelected={selectedIds.includes(option.id)}
                 onToggle={() => handleToggle(option.id)}
+                singleSelect={singleSelect}
               />
             ))}
           </div>
 
-          {/* Select all footer */}
-          {showSelectAll && options.length > 0 && (
-            <div className="border-t border-gray-100 mt-1 px-4 py-2.5">
-              <label className="flex items-center w-full cursor-pointer group">
-                <div className="shrink-0 mr-3">
-                  <input
-                    type="checkbox"
-                    checked={allSelected}
-                    onChange={handleSelectAll}
-                    className="sr-only"
-                  />
-                  {allSelected || someSelected ? (
-                    <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
-                      {allSelected ? (
-                        <Icon name="check" className="w-3.5 h-3.5 text-white" />
+          {/* Footer actions - Select all (multi-select) and Clear */}
+          {(showSelectAll && !singleSelect && options.length > 0) || selectedIds.length > 0 ? (
+            <div className="border-t border-gray-100 mt-1">
+              {/* Select all - only show for multi-select */}
+              {showSelectAll && !singleSelect && options.length > 0 && (
+                <div className="px-4 py-2.5">
+                  <label className="flex items-center w-full cursor-pointer group">
+                    <div className="shrink-0 mr-3">
+                      <input
+                        type="checkbox"
+                        checked={allSelected}
+                        onChange={handleSelectAll}
+                        className="sr-only"
+                      />
+                      {allSelected || someSelected ? (
+                        <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
+                          {allSelected ? (
+                            <Icon name="check" className="w-3.5 h-3.5 text-white" />
+                          ) : (
+                            <Minus className="w-3.5 h-3.5 text-white" />
+                          )}
+                        </div>
                       ) : (
-                        <Minus className="w-3.5 h-3.5 text-white" />
+                        <div className="w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
                       )}
                     </div>
-                  ) : (
-                    <div className="w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
-                  )}
+                    <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+                      {selectAllLabel}
+                    </span>
+                  </label>
                 </div>
-                <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
-                  {selectAllLabel}
-                </span>
-              </label>
+              )}
+
+              {/* Clear button - show when there are selections */}
+              {selectedIds.length > 0 && (
+                <button
+                  type="button"
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleClear(e);
+                  }}
+                  className="w-full px-4 py-2.5 text-left text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50/80 transition-colors flex items-center gap-2"
+                >
+                  <Icon name="close-circle" className="w-4 h-4 text-gray-400" />
+                  <span>Clear selection</span>
+                </button>
+              )}
             </div>
-          )}
+          ) : null}
         </div>
       )}
     </Popover>

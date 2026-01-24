@@ -20,6 +20,11 @@ export const buildAffiliation = (
     return undefined;
   }
 
+  // Guard: duration required when hasAffiliation (validation should catch before submit)
+  if (formData.hasAffiliation && formData.affiliationDuration == null) {
+    return undefined;
+  }
+
   // If keeping existing affiliation without changes
   if (existingAffiliation && !isRenewing && !formData.hasAffiliation) {
     return existingAffiliation;
@@ -27,31 +32,33 @@ export const buildAffiliation = (
 
   // If renewing or extending existing affiliation
   if (existingAffiliation && (isRenewing || formData.hasAffiliation)) {
+    const duration = formData.affiliationDuration!;
     const isActive = isAffiliationActive(existingAffiliation);
     // If active, extend from current end date. If expired, extend from today.
     const startDate = isActive
       ? existingAffiliation.endDate
       : new Date().toISOString().slice(0, 10);
-    const endDate = calculateEndDate(startDate, formData.affiliationDuration);
+    const endDate = calculateEndDate(startDate, duration);
 
     return {
       assuranceNumber: existingAffiliation.assuranceNumber,
       startDate: existingAffiliation.startDate, // Keep original start date
       endDate,
-      duration: formData.affiliationDuration,
+      duration,
     };
   }
 
   // Creating new affiliation
   if (formData.hasAffiliation) {
+    const duration = formData.affiliationDuration!;
     const startDate = new Date().toISOString().slice(0, 10);
-    const endDate = calculateEndDate(startDate, formData.affiliationDuration);
+    const endDate = calculateEndDate(startDate, duration);
 
     return {
       assuranceNumber: generateAssuranceNumber(),
       startDate,
       endDate,
-      duration: formData.affiliationDuration,
+      duration,
     };
   }
 
@@ -140,7 +147,7 @@ export const buildUpdatedPatientPayload = (
     affiliation: buildAffiliation(formData, existingPatient.affiliation, isRenewing),
     emergencyContact: {
       fullName: formData.emergencyContactFullName.trim(),
-      relationship: formData.emergencyContactRelationship,
+      relationship: formData.emergencyContactRelationship!,
       phone: formData.emergencyContactPhone.trim(),
       email: formData.emergencyContactEmail.trim() || undefined,
     },
@@ -187,7 +194,7 @@ export const buildNewPatientPayload = (
     affiliation: buildAffiliation(formData),
     emergencyContact: {
       fullName: formData.emergencyContactFullName.trim(),
-      relationship: formData.emergencyContactRelationship,
+      relationship: formData.emergencyContactRelationship!,
       phone: formData.emergencyContactPhone.trim(),
       email: formData.emergencyContactEmail.trim() || undefined,
     },

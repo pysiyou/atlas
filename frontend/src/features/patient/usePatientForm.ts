@@ -22,9 +22,11 @@ export interface PatientFormData {
   city: string;
   postalCode: string;
   hasAffiliation: boolean;
-  affiliationDuration: AffiliationDuration;
+  /** Optional when cleared via MultiSelectFilter; required when hasAffiliation is true */
+  affiliationDuration?: AffiliationDuration;
   emergencyContactFullName: string;
-  emergencyContactRelationship: Relationship;
+  /** Optional when cleared via MultiSelectFilter; required for submit */
+  emergencyContactRelationship?: Relationship;
   emergencyContactPhone: string;
   emergencyContactEmail: string;
   chronicConditions: string;

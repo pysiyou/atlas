@@ -205,9 +205,9 @@ export const RadioCard: React.FC<RadioCardProps> = ({
       </div>
       <div className="ml-2.5">
         <span className={`block text-xs font-medium ${labelColor}`}>{label}</span>
-        <span className={`block text-[10px] mt-0.5 ${descColor}`}>{description}</span>
+        <span className={`block text-xxs mt-0.5 ${descColor}`}>{description}</span>
         {disabled && disabledReason && (
-          <span className="block text-[10px] mt-1 text-red-500 font-medium">{disabledReason}</span>
+          <span className="block text-xxs mt-1 text-red-500 font-medium">{disabledReason}</span>
         )}
       </div>
     </div>
@@ -257,7 +257,7 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
       <span className={`block text-xs font-medium ${checked ? 'text-blue-900' : 'text-gray-900'}`}>
         {label}
       </span>
-      <span className={`block text-[10px] mt-0.5 ${checked ? 'text-blue-700' : 'text-gray-500'}`}>
+      <span className={`block text-xxs mt-0.5 ${checked ? 'text-blue-700' : 'text-gray-500'}`}>
         {description}
       </span>
     </div>

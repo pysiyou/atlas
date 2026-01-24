@@ -77,12 +77,12 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
             </div>
 
             <!-- Patient ID and Sample Type -->
-            <div class="text-[10px] text-gray-600 text-center leading-tight">
+            <div class="text-xxs text-gray-600 text-center leading-tight">
               ${patientIdDisplay} | ${sampleType.toUpperCase()}
             </div>
 
             <!-- Container Info -->
-            <div class="w-full text-[10px] font-bold text-center text-gray-800 bg-gray-100 rounded px-2 py-1 print:py-0.5">
+            <div class="w-full text-xxs font-bold text-center text-gray-800 bg-gray-100 rounded px-2 py-1 print:py-0.5">
               ${containerType.toUpperCase()}: ${colorName.toUpperCase()}
             </div>
 
@@ -92,7 +92,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
             </div>
 
             <!-- Sample ID -->
-            <div class="text-[10px] text-gray-600 text-center leading-tight">
+            <div class="text-xxs text-gray-600 text-center leading-tight">
               ${sampleIdDisplay}
             </div>
 
