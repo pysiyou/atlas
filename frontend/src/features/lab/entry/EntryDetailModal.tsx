@@ -21,6 +21,7 @@ import {
   StatusBadgeRow,
 } from '../components/LabDetailModal';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 import {
   CollectionInfoLine,
   RetestBadge,
@@ -266,7 +267,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Filled',
                 value: (
-                  <span className={isComplete ? 'text-green-600' : 'text-yellow-600'}>
+                  <span className={isComplete ? semanticColors.success.icon : semanticColors.warning.valueHigh}>
                     {filledCount}
                   </span>
                 ),
@@ -274,7 +275,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Remaining',
                 value: (
-                  <span className={remainingParams === 0 ? 'text-green-600' : 'text-gray-600'}>
+                  <span className={remainingParams === 0 ? semanticColors.success.icon : 'text-gray-600'}>
                     {remainingParams}
                   </span>
                 ),

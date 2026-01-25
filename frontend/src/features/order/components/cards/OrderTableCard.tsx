@@ -3,6 +3,7 @@ import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * OrderTableCard Component
@@ -33,7 +34,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
           size="xs"
         />
         {/* Total price on top right */}
-        <div className="font-medium text-sky-600 text-lg">{formatCurrency(order.totalPrice)}</div>
+        <div className={`font-medium ${brandColors.primary.icon} text-lg`}>{formatCurrency(order.totalPrice)}</div>
       </div>
 
       {/* Tests list: Show at most 2 tests, third line shows remaining count */}
