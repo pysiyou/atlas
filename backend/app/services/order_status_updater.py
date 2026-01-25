@@ -38,8 +38,8 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
     if not tests:
         return order.overallStatus
 
-    # Filter out superseded tests - only count active tests
-    active_tests = [t for t in tests if t.status != TestStatus.SUPERSEDED]
+    # Filter out superseded and removed tests - only count active tests
+    active_tests = [t for t in tests if t.status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED}]
     if not active_tests:
         return order.overallStatus
 
@@ -92,10 +92,11 @@ def update_order_status(db: Session, order_id: int) -> None:
     # Handle regression from COMPLETED to earlier states
     # This can legitimately happen when a test is rejected and a retest is created
     if current_status == OrderStatus.COMPLETED and new_status == OrderStatus.ORDERED:
-        # Check if there are active tests that need work (not VALIDATED or SUPERSEDED)
+        # Check if there are active tests that need work (not VALIDATED, SUPERSEDED, or REMOVED)
         active_tests = [t for t in order.tests if t.status not in {
             TestStatus.VALIDATED,
-            TestStatus.SUPERSEDED
+            TestStatus.SUPERSEDED,
+            TestStatus.REMOVED
         }]
         has_pending_work = any(
             t.status in {

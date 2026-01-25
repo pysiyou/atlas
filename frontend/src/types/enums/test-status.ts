@@ -15,6 +15,7 @@ export const TEST_STATUS_VALUES = [
   'validated',
   'rejected',
   'superseded', // Original test after retest is created during result validation rejection
+  'removed', // Test removed from order during edit (hidden from UI but preserved for audit)
 ] as const;
 
 // 2. TYPE - Derived from values
@@ -29,6 +30,7 @@ export const TEST_STATUS_CONFIG: Record<TestStatus, { label: string }> = {
   validated: { label: 'Validated' },
   rejected: { label: 'Rejected' },
   superseded: { label: 'Superseded' },
+  removed: { label: 'Removed' },
 };
 
 // 4. OPTIONS - For dropdowns/selects

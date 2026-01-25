@@ -49,8 +49,8 @@ export const createOrderTableConfig = (
   );
 
   const renderTests = (order: Order) => {
-    // Filter out superseded tests - only count active tests
-    const activeTests = order.tests.filter(t => t.status !== 'superseded');
+    // Filter out superseded and removed tests - only count active tests
+    const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
     const activeCount = activeTests.length;
 
     return (

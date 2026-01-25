@@ -37,59 +37,71 @@ const PAYMENT_METHODS = getEnabledPaymentMethods();
  * PaymentReceipt - Receipt-style order summary with item list
  *
  * Renders order ID, patient, line items (tests with prices), and total
- * in a thermal-receipt inspired layout.
+ * in a thermal-receipt inspired layout. Excludes superseded and removed
+ * tests; only active tests are shown and included in the total.
  */
-const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => (
-  <div className="rounded border border-gray-200 overflow-hidden">
-    <div className="px-3 py-2.5 border-b border-dashed border-gray-300">
-      <div className="flex justify-between items-center">
-        <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-          Order {displayId.order(order.orderId)}
-        </span>
-        <Badge variant={order.paymentStatus} size="xs" />
+const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
+  const activeTests =
+    order.tests?.filter(
+      t => t.status !== 'superseded' && t.status !== 'removed'
+    ) ?? [];
+  const activeTotal = activeTests.reduce(
+    (sum, t) => sum + (typeof t.priceAtOrder === 'number' ? t.priceAtOrder : 0),
+    0
+  );
+
+  return (
+    <div className="rounded border border-gray-200 overflow-hidden">
+      <div className="px-3 py-2.5 border-b border-dashed border-gray-300">
+        <div className="flex justify-between items-center">
+          <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+            Order {displayId.order(order.orderId)}
+          </span>
+          <Badge variant={order.paymentStatus} size="xs" />
+        </div>
+        {order.patientName && (
+          <p className="text-[11px] text-gray-500 mt-0.5 truncate">{order.patientName}</p>
+        )}
       </div>
-      {order.patientName && (
-        <p className="text-[11px] text-gray-500 mt-0.5 truncate">{order.patientName}</p>
-      )}
-    </div>
-    <div className="px-3 py-2 max-h-32 overflow-y-auto">
-      {order.tests && order.tests.length > 0 ? (
-        <ul className="space-y-1.5">
-          {order.tests.map((test, idx) => (
-            <li
-              key={test.testCode ? `${test.testCode}-${idx}` : `item-${idx}`}
-              className="flex justify-between gap-2 text-xs items-center"
-            >
-              <span className="flex items-center gap-2 min-w-0 flex-1">
-                <span className="w-1 h-1 rounded-full bg-gray-400 shrink-0" />
-                <span className="text-gray-700 truncate">
-                  {test.testName || test.testCode || 'Test'}
-                  {test.testCode && test.testName !== test.testCode && (
-                    <span className="text-gray-500 ml-1">({test.testCode})</span>
-                  )}
+      <div className="px-3 py-2 max-h-32 overflow-y-auto">
+        {activeTests.length > 0 ? (
+          <ul className="space-y-1.5">
+            {activeTests.map((test, idx) => (
+              <li
+                key={test.testCode ? `${test.testCode}-${idx}` : `item-${idx}`}
+                className="flex justify-between gap-2 text-xs items-center"
+              >
+                <span className="flex items-center gap-2 min-w-0 flex-1">
+                  <span className="w-1 h-1 rounded-full bg-gray-400 shrink-0" />
+                  <span className="text-gray-700 truncate">
+                    {test.testName || test.testCode || 'Test'}
+                    {test.testCode && test.testName !== test.testCode && (
+                      <span className="text-gray-500 ml-1">({test.testCode})</span>
+                    )}
+                  </span>
                 </span>
-              </span>
-              <span className="font-medium text-gray-800 tabular-nums shrink-0">
-                {formatCurrency(test.priceAtOrder)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-xs text-gray-500 italic">No items</p>
-      )}
+                <span className="font-medium text-gray-800 tabular-nums shrink-0">
+                  {formatCurrency(test.priceAtOrder)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-xs text-gray-500 italic">No items</p>
+        )}
+      </div>
+      <div className="border-t border-dashed border-gray-300 mx-3" />
+      <div className="px-3 py-2.5 flex justify-between items-center">
+        <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+          Total
+        </span>
+        <span className="text-sm font-bold text-sky-500 tabular-nums">
+          {formatCurrency(activeTotal)}
+        </span>
+      </div>
     </div>
-    <div className="border-t border-dashed border-gray-300 mx-3" />
-    <div className="px-3 py-2.5 flex justify-between items-center">
-      <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-        Total
-      </span>
-      <span className="text-sm font-bold text-sky-500 tabular-nums">
-        {formatCurrency(order.totalPrice)}
-      </span>
-    </div>
-  </div>
-);
+  );
+};
 
 interface PaymentPopoverContentProps {
   order: Order;

@@ -56,7 +56,7 @@ export const OrderDetail: React.FC = () => {
   }
 
   // Calculate active vs superseded test counts for display
-  const activeTests = order.tests.filter(t => t.status !== 'superseded');
+  const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
   const supersededCount = order.tests.length - activeTests.length;
 
   // Event handlers

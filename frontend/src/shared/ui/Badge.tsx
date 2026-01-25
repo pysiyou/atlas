@@ -138,6 +138,7 @@ const VARIANT_STYLES: Record<string, string> = {
   validated: 'bg-green-100 text-green-800 border-transparent',
   rejected: 'bg-red-100 text-red-800 border-transparent',
   superseded: 'bg-slate-200 text-slate-600 border-transparent line-through', // Grayed out, struck-through for replaced tests
+  removed: 'bg-gray-100 text-gray-500 border-transparent line-through', // Grayed out, struck-through for removed tests
 
   // Test Status Mappings
   resulted: 'bg-purple-100 text-purple-800 border-transparent', // Results entered, awaiting validation
@@ -244,6 +245,7 @@ const VARIANT_LABELS: Record<string, string> = {
   'no-show': 'NO SHOW',
   'chronic-condition': 'CHRONIC',
   superseded: 'SUPERSEDED', // Test replaced by retest
+  removed: 'REMOVED', // Test removed from order
   // Payment method labels
   'credit-card': 'CREDIT CARD',
   'debit-card': 'DEBIT CARD',

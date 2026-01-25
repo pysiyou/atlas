@@ -4,12 +4,12 @@ import type { OrderFormData } from '../types/orderForm';
 
 /**
  * Creates initial form data from an existing order
- * Filters out superseded tests when initializing
+ * Filters out superseded and removed tests when initializing
  */
 const createInitialFormDataFromOrder = (order?: Partial<Order>): OrderFormData => {
   if (order) {
-    // Only include active tests (not superseded)
-    const activeTests = order.tests?.filter(t => t.status !== 'superseded') || [];
+    // Only include active tests (not superseded or removed)
+    const activeTests = order.tests?.filter(t => t.status !== 'superseded' && t.status !== 'removed') || [];
     return {
       referringPhysician: order.referringPhysician || '',
       priority: order.priority || 'routine',

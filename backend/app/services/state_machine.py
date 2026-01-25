@@ -109,16 +109,20 @@ class TestStateMachine:
     - COMPLETED -> SUPERSEDED (when retest is created)
     - SAMPLE_COLLECTED/IN_PROGRESS -> REJECTED (sample rejection)
     - REJECTED -> PENDING (when recollection sample is linked)
+    
+    Removal path:
+    - PENDING -> REMOVED (when test is removed from order during edit)
     """
 
     TRANSITIONS: Dict[TestStatus, Set[TestStatus]] = {
-        TestStatus.PENDING: {TestStatus.SAMPLE_COLLECTED, TestStatus.REJECTED},
+        TestStatus.PENDING: {TestStatus.SAMPLE_COLLECTED, TestStatus.REJECTED, TestStatus.REMOVED},
         TestStatus.SAMPLE_COLLECTED: {TestStatus.IN_PROGRESS, TestStatus.RESULTED, TestStatus.REJECTED},
         TestStatus.IN_PROGRESS: {TestStatus.RESULTED, TestStatus.REJECTED},
         TestStatus.RESULTED: {TestStatus.VALIDATED, TestStatus.SUPERSEDED},
         TestStatus.VALIDATED: set(),  # Terminal
         TestStatus.REJECTED: {TestStatus.PENDING},  # Can transition to pending when recollection is ready
         TestStatus.SUPERSEDED: set(),  # Terminal - replaced by retest
+        TestStatus.REMOVED: set(),  # Terminal - removed from order during edit
     }
 
     # States from which results can be entered
@@ -173,6 +177,8 @@ class TestStateMachine:
             return False, "Test has already been validated"
         if status == TestStatus.SUPERSEDED:
             return False, "This test has been superseded by a retest"
+        if status == TestStatus.REMOVED:
+            return False, "This test has been removed from the order"
         return False, f"Cannot enter results for test with status '{status.value}'"
 
     @classmethod
@@ -193,6 +199,8 @@ class TestStateMachine:
             return False, "Test has already been validated"
         if status == TestStatus.SUPERSEDED:
             return False, "This test has been superseded by a retest"
+        if status == TestStatus.REMOVED:
+            return False, "This test has been removed from the order"
         return False, f"Cannot validate test with status '{status.value}'"
 
     @classmethod
@@ -202,5 +210,5 @@ class TestStateMachine:
 
     @classmethod
     def is_active(cls, status: TestStatus) -> bool:
-        """Check if a test is active (not superseded or rejected permanently)"""
-        return status not in {TestStatus.SUPERSEDED, TestStatus.VALIDATED}
+        """Check if a test is active (not superseded, removed, or validated)"""
+        return status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED}

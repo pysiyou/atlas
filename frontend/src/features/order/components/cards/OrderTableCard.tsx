@@ -15,8 +15,8 @@ import type { Order } from '@/types';
  * @param onClick - Optional click handler
  */
 export function OrderTableCard({ item: order, onClick }: CardComponentProps<Order>) {
-  // Filter out superseded tests - only show active tests
-  const activeTests = order.tests.filter(t => t.status !== 'superseded');
+  // Filter out superseded and removed tests - only show active tests
+  const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
 
   return (
     <div

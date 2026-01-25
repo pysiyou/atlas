@@ -61,9 +61,9 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
     isStarted: false,
   };
 
-  // Filter out superseded tests - only count active tests toward progress
-  // Superseded tests have been replaced by retests and should not be counted
-  const activeTests = order.tests.filter(t => t.status !== 'superseded');
+  // Filter out superseded and removed tests - only count active tests toward progress
+  // Superseded tests have been replaced by retests and removed tests have been removed from order
+  const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
   const total = activeTests.length;
 
   if (total === 0) {
@@ -142,8 +142,8 @@ export const getOverallOrderProgress = (order: Order): number => {
     superseded: 0, // Superseded tests don't count toward progress
   };
 
-  // Filter out superseded tests from progress calculation
-  const activeTests = order.tests.filter(t => t.status !== 'superseded');
+  // Filter out superseded and removed tests from progress calculation
+  const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
   if (activeTests.length === 0) return 0;
 
   const totalWeight = activeTests.reduce((sum, test) => {

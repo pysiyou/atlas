@@ -231,13 +231,13 @@ def update_order(
         # Calculate price for tests that will remain (before removing)
         existing_tests_price = sum(
             ot.priceAtOrder for ot in order.tests
-            if ot.testCode not in tests_to_remove and ot.status != TestStatus.SUPERSEDED
+            if ot.testCode not in tests_to_remove and ot.status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED}
         )
         
-        # Remove tests (mark as superseded for audit trail)
+        # Remove tests (mark as removed for audit trail)
         for ot in order.tests:
             if ot.testCode in tests_to_remove:
-                ot.status = TestStatus.SUPERSEDED
+                ot.status = TestStatus.REMOVED
         
         # Add new tests and calculate price adjustment
         total_price_adjustment = 0.0

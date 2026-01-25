@@ -106,6 +106,7 @@ class TestStatus(str, enum.Enum):
     VALIDATED = "validated"
     REJECTED = "rejected"
     SUPERSEDED = "superseded"  # Original test after retest is created during result validation rejection
+    REMOVED = "removed"        # Test removed from order during edit (hidden from UI but preserved for audit)
 
 
 class OrderStatus(str, enum.Enum):

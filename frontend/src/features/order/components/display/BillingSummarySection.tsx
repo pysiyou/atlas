@@ -20,12 +20,24 @@ export interface BillingSummarySectionProps {
  *
  * Renders order ID, patient, line items (tests with prices), and total
  * in a thermal-receipt inspired layout consistent with the payment popover.
+ * Excludes superseded and removed tests from the list and total; only active
+ * tests are billed.
  */
 export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
   order,
   invoice,
   onViewInvoice,
 }) => {
+  // Exclude superseded and removed tests - only active tests count toward billing
+  const activeTests =
+    order.tests?.filter(
+      t => t.status !== 'superseded' && t.status !== 'removed'
+    ) ?? [];
+  const activeTotal = activeTests.reduce(
+    (sum, t) => sum + (typeof t.priceAtOrder === 'number' ? t.priceAtOrder : 0),
+    0
+  );
+
   return (
     <div className="flex flex-col justify-between h-full">
       {/* Receipt-style order summary matching PaymentPopover */}
@@ -43,11 +55,11 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
           )}
         </div>
 
-        {/* Items List - Scrollable */}
+        {/* Items List - Scrollable (active tests only) */}
         <div className="px-3 py-2 flex-1 min-h-0 overflow-y-auto">
-          {order.tests && order.tests.length > 0 ? (
+          {activeTests.length > 0 ? (
             <ul className="space-y-1.5">
-              {order.tests.map((test, idx) => (
+              {activeTests.map((test, idx) => (
                 <li
                   key={test.testCode ? `${test.testCode}-${idx}` : `item-${idx}`}
                   className="flex justify-between gap-2 text-xs items-center"
@@ -72,14 +84,14 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
           )}
         </div>
 
-        {/* Total Footer */}
+        {/* Total Footer (sum of active tests only) */}
         <div className="border-t border-dashed border-gray-300 mx-3" />
         <div className="px-3 py-2.5 flex justify-between items-center">
           <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
             Total
           </span>
           <span className="text-sm font-bold text-sky-500 tabular-nums">
-            {formatCurrency(order.totalPrice)}
+            {formatCurrency(activeTotal)}
           </span>
         </div>
       </div>

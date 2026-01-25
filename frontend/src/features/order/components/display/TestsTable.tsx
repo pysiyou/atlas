@@ -21,7 +21,10 @@ export const TestsTable: React.FC<TestsTableProps> = ({
   testCatalog,
   variant = 'simple',
 }) => {
-  if (tests.length === 0) {
+  // Filter out removed tests - they should be hidden from UI
+  const visibleTests = tests.filter(t => t.status !== 'removed');
+  
+  if (visibleTests.length === 0) {
     return <EmptyState icon="health" title="No Tests" description="This order has no tests." />;
   }
 
@@ -30,7 +33,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
           <tbody className="divide-y divide-gray-100">
-            {tests.map((test: OrderTest, index: number) => {
+            {visibleTests.map((test: OrderTest, index: number) => {
               const testName = getTestName(test.testCode, testCatalog);
               const isSuperseded = test.status === 'superseded';
               const isRetest = test.isRetest || false;
@@ -104,7 +107,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-100">
-        {tests.map((test: OrderTest, index: number) => {
+        {visibleTests.map((test: OrderTest, index: number) => {
           const testName = getTestName(test.testCode, testCatalog);
           const sampleType = getTestSampleType(test.testCode, testCatalog);
           const category = getTestCategory(test.testCode, testCatalog);

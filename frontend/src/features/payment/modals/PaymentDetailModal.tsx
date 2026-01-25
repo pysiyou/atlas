@@ -45,89 +45,102 @@ const PAYMENT_METHODS = getEnabledPaymentMethods();
  *
  * Renders order ID, patient, date, line items (tests with prices), and total
  * in a thermal-receipt inspired layout. Larger version for modal display.
+ * Excludes superseded and removed tests; only active tests are shown and
+ * included in the total.
  */
-const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => (
-  <div className="rounded-lg border border-gray-200 overflow-hidden bg-white">
-    {/* Receipt Header */}
-    <div className="px-6 py-4 border-b border-dashed border-gray-300 bg-gray-50">
-      <div className="flex justify-between items-center mb-2">
-        {order.patientName ? (
-          <p className="text-sm font-semibold text-gray-700">{order.patientName}</p>
-        ) : (
-          <p className="text-sm text-gray-500 italic">No patient name</p>
-        )}
-        <div className="flex items-center gap-2">
-          <Badge variant={order.paymentStatus} size="sm" />
-          {order.paymentMethod && (
-            <Badge variant={order.paymentMethod} size="sm" />
+const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => {
+  const activeTests =
+    order.tests?.filter(
+      t => t.status !== 'superseded' && t.status !== 'removed'
+    ) ?? [];
+  const activeTotal = activeTests.reduce(
+    (sum, t) => sum + (typeof t.priceAtOrder === 'number' ? t.priceAtOrder : 0),
+    0
+  );
+
+  return (
+    <div className="rounded-lg border border-gray-200 overflow-hidden bg-white">
+      {/* Receipt Header */}
+      <div className="px-6 py-4 border-b border-dashed border-gray-300 bg-gray-50">
+        <div className="flex justify-between items-center mb-2">
+          {order.patientName ? (
+            <p className="text-sm font-semibold text-gray-700">{order.patientName}</p>
+          ) : (
+            <p className="text-sm text-gray-500 italic">No patient name</p>
+          )}
+          <div className="flex items-center gap-2">
+            <Badge variant={order.paymentStatus} size="sm" />
+            {order.paymentMethod && (
+              <Badge variant={order.paymentMethod} size="sm" />
+            )}
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <div className="flex items-center text-xs">
+            <span className="text-gray-500 w-28">Order Number:</span>
+            <span className="text-gray-700 font-medium">{displayId.order(order.orderId)}</span>
+          </div>
+          <div className="flex items-center text-xs">
+            <span className="text-gray-500 w-28">Patient Number:</span>
+            <span className="text-gray-700 font-medium">{displayId.patient(order.patientId)}</span>
+          </div>
+          <div className="flex items-center text-xs">
+            <span className="text-gray-500 w-28">Order Date:</span>
+            <span className="text-gray-700 font-medium">{formatDate(order.orderDate)}</span>
+          </div>
+          {order.paymentDate && (
+            <div className="flex items-center text-xs">
+              <span className="text-gray-500 w-28">Payment Date:</span>
+              <span className="text-gray-700 font-medium">{formatDate(order.paymentDate)}</span>
+            </div>
           )}
         </div>
       </div>
-      <div className="space-y-1.5">
-        <div className="flex items-center text-xs">
-          <span className="text-gray-500 w-28">Order Number:</span>
-          <span className="text-gray-700 font-medium">{displayId.order(order.orderId)}</span>
-        </div>
-        <div className="flex items-center text-xs">
-          <span className="text-gray-500 w-28">Patient Number:</span>
-          <span className="text-gray-700 font-medium">{displayId.patient(order.patientId)}</span>
-        </div>
-        <div className="flex items-center text-xs">
-          <span className="text-gray-500 w-28">Order Date:</span>
-          <span className="text-gray-700 font-medium">{formatDate(order.orderDate)}</span>
-        </div>
-        {order.paymentDate && (
-          <div className="flex items-center text-xs">
-            <span className="text-gray-500 w-28">Payment Date:</span>
-            <span className="text-gray-700 font-medium">{formatDate(order.paymentDate)}</span>
-          </div>
+
+      {/* Items List (active tests only) */}
+      <div className="px-6 py-4 max-h-96 overflow-y-auto">
+        {activeTests.length > 0 ? (
+          <ul className="space-y-2.5">
+            {activeTests.map((test, idx) => (
+              <li
+                key={test.testCode ? `${test.testCode}-${idx}` : `item-${idx}`}
+                className="flex justify-between gap-3 text-sm items-start"
+              >
+                <span className="flex items-start gap-2.5 min-w-0 flex-1">
+                  <span className="w-1 h-1 rounded-full bg-gray-400 shrink-0 mt-1.5" />
+                  <span className="flex flex-col min-w-0 flex-1">
+                    <span className="text-gray-700 truncate">
+                      {test.testName || test.testCode || 'Test'}
+                    </span>
+                    {test.testCode && test.testName !== test.testCode && (
+                      <span className="text-xs text-gray-500 mt-0.5">{test.testCode}</span>
+                    )}
+                  </span>
+                </span>
+                <span className="font-medium text-gray-800 tabular-nums shrink-0">
+                  {formatCurrency(test.priceAtOrder)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-gray-500 italic">No items</p>
         )}
       </div>
-    </div>
 
-    {/* Items List */}
-    <div className="px-6 py-4 max-h-96 overflow-y-auto">
-      {order.tests && order.tests.length > 0 ? (
-        <ul className="space-y-2.5">
-          {order.tests.map((test, idx) => (
-            <li
-              key={test.testCode ? `${test.testCode}-${idx}` : `item-${idx}`}
-              className="flex justify-between gap-3 text-sm items-start"
-            >
-              <span className="flex items-start gap-2.5 min-w-0 flex-1">
-                <span className="w-1 h-1 rounded-full bg-gray-400 shrink-0 mt-1.5" />
-                <span className="flex flex-col min-w-0 flex-1">
-                  <span className="text-gray-700 truncate">
-                    {test.testName || test.testCode || 'Test'}
-                  </span>
-                  {test.testCode && test.testName !== test.testCode && (
-                    <span className="text-xs text-gray-500 mt-0.5">{test.testCode}</span>
-                  )}
-                </span>
-              </span>
-              <span className="font-medium text-gray-800 tabular-nums shrink-0">
-                {formatCurrency(test.priceAtOrder)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-sm text-gray-500 italic">No items</p>
-      )}
+      {/* Receipt Footer with Total (sum of active tests only) */}
+      <div className="border-t border-dashed border-gray-300 mx-6" />
+      <div className="px-6 py-4 flex justify-between items-center bg-gray-50">
+        <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+          Total
+        </span>
+        <span className="text-lg font-bold text-sky-500 tabular-nums">
+          {formatCurrency(activeTotal)}
+        </span>
+      </div>
     </div>
-
-    {/* Receipt Footer with Total */}
-    <div className="border-t border-dashed border-gray-300 mx-6" />
-    <div className="px-6 py-4 flex justify-between items-center bg-gray-50">
-      <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
-        Total
-      </span>
-      <span className="text-lg font-bold text-sky-500 tabular-nums">
-        {formatCurrency(order.totalPrice)}
-      </span>
-    </div>
-  </div>
-);
+  );
+};
 
 /**
  * PaymentDetailModal - Full payment details with inline payment processing
