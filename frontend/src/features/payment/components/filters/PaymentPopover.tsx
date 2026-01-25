@@ -24,8 +24,10 @@ interface PaymentPopoverProps {
   order: Order;
   /** Callback invoked on successful payment */
   onSuccess?: () => void;
-  /** Button size for the trigger */
+  /** Button size for the trigger (used only when trigger is not provided) */
   size?: 'xs' | 'sm' | 'md' | 'lg';
+  /** Optional custom trigger element; when provided, used instead of the default PAY button */
+  trigger?: React.ReactNode;
 }
 
 /** Get enabled payment methods from the single source of truth */
@@ -189,42 +191,52 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Payment Method Selection */}
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">
+        <label className="block text-xs font-medium text-gray-500 mb-2">
           Payment Method <span className="text-red-500">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
           {PAYMENT_METHODS.map(method => {
             const isSelected = paymentMethod === method.value;
             return (
-              <div
+              <button
                 key={method.value}
+                type="button"
+                onClick={() => setPaymentMethod(method.value)}
                 className={`
-                  relative flex items-center gap-2 p-2.5 rounded border transition-colors cursor-pointer
+                  relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                   ${
                     isSelected
-                      ? 'bg-gray-100 border-gray-400'
-                      : 'bg-gray-50 border-gray-200 hover:border-gray-300 hover:bg-gray-100/80'
+                      ? 'bg-white border-sky-500 border-2'
+                      : 'bg-white border-gray-200 hover:border-gray-300'
                   }
                 `}
-                onClick={() => setPaymentMethod(method.value)}
               >
-                <input
-                  type="radio"
-                  name="payment-method"
-                  checked={isSelected}
-                  onChange={() => setPaymentMethod(method.value)}
-                  className="h-3 w-3 border-gray-400 text-gray-600 focus:ring-gray-400 focus:ring-offset-0"
+                {/* Brand icon on the left */}
+                <Icon
+                  name={method.icon as IconName}
+                  className={`w-7 h-7 shrink-0 ${isSelected ? 'text-sky-600' : 'text-gray-400'}`}
                 />
+                {/* Brand label */}
                 <span
-                  className={`flex-1 text-xs font-medium ${isSelected ? 'text-gray-900' : 'text-gray-700'}`}
+                  className={`flex-1 text-xs font-medium text-left ${
+                    isSelected ? 'text-gray-900' : 'text-gray-700'
+                  }`}
                 >
                   {method.label}
                 </span>
-                <Icon
-                  name={method.icon as IconName}
-                  className={`w-4 h-4 shrink-0 ${isSelected ? 'text-gray-600' : 'text-gray-400'}`}
-                />
-              </div>
+                {/* Checkmark indicator in top-right */}
+                <div
+                  className={`
+                    absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
+                    ${isSelected ? 'bg-green-500' : 'bg-transparent border-2 border-gray-300'}
+                  `}
+                >
+                  <Icon
+                    name="check"
+                    className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-gray-300'}`}
+                  />
+                </div>
+              </button>
             );
           })}
         </div>
@@ -257,19 +269,22 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
  *
  * Wraps PaymentPopoverContent with a Popover trigger button.
  */
+const DEFAULT_TRIGGER = (size: 'xs' | 'sm' | 'md' | 'lg') => (
+  <Button size={size} variant="primary" icon={<Icon name="wallet" className="text-white" />}>
+    PAY
+  </Button>
+);
+
 export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
   order,
   onSuccess,
   size = 'sm',
+  trigger,
 }) => (
   <Popover
     placement="bottom-end"
     offsetValue={8}
-    trigger={
-      <Button size={size} variant="primary" icon={<Icon name="wallet" className="text-white" />}>
-        PAY
-      </Button>
-    }
+    trigger={trigger ?? DEFAULT_TRIGGER(size)}
   >
     {({ close }) => (
       <div data-popover-content onClick={e => e.stopPropagation()}>

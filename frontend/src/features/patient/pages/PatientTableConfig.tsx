@@ -49,14 +49,7 @@ export const createPatientTableConfig = (
   );
 
   const renderGender = (patient: Patient) => (
-    <Badge
-      variant={
-        patient.gender === 'male' ? 'primary' : patient.gender === 'female' ? 'pink' : 'default'
-      }
-      size="sm"
-    >
-      {patient.gender.toUpperCase()}
-    </Badge>
+    <Badge variant={patient.gender} size="sm" />
   );
 
   const renderTests = (patient: Patient) => {

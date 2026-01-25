@@ -12,6 +12,7 @@ import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
 import { OrderTableCard } from '../components/cards/OrderTableCard';
+import { PaymentPopover } from '@/features/payment/components/filters';
 
 /**
  * Create order table configuration with full, compact, and card views
@@ -93,6 +94,25 @@ export const createOrderTableConfig = (
         icon={<Icon name="user" className="w-4 h-4" />}
         onClick={() => navigate(`/patients/${order.patientId}`)}
       />
+      {order.paymentStatus === 'unpaid' && (
+        /* Stop propagation so menu stays open when opening payment popover */
+        <div onClick={e => e.stopPropagation()} className="w-full">
+          <PaymentPopover
+            order={order}
+            trigger={
+              <button
+                type="button"
+                className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-50 transition-colors cursor-pointer text-gray-700"
+              >
+                <span className="inline-flex w-5 h-5 shrink-0 items-center justify-center text-gray-500">
+                  <Icon name="wallet" className="w-4 h-4" />
+                </span>
+                <span className="flex-1 min-w-0">Payment</span>
+              </button>
+            }
+          />
+        </div>
+      )}
     </TableActionMenu>
   );
 
@@ -149,7 +169,7 @@ export const createOrderTableConfig = (
       {
         key: 'orderDate',
         header: 'Date',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderOrderDate,
       },
@@ -229,6 +249,12 @@ export const createOrderTableConfig = (
         width: 'fill',
         sortable: true,
         render: renderPatientName,
+      },
+      {
+        key: 'tests',
+        header: 'Tests',
+        width: 'fill',
+        render: renderTests,
       },
       {
         key: 'overallStatus',

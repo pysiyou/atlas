@@ -36,14 +36,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
           size="xs"
         />
         {/* Gender badge on top right */}
-        <Badge
-          variant={
-            patient.gender === 'male' ? 'primary' : patient.gender === 'female' ? 'pink' : 'default'
-          }
-          size="xs"
-        >
-          {patient.gender.toUpperCase()}
-        </Badge>
+        <Badge variant={patient.gender} size="xs" />
       </div>
 
       {/* Contact info: Phone + email + address */}

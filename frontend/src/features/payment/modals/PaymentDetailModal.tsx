@@ -226,41 +226,51 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   Payment Method <span className="text-red-500">*</span>
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2">
                   {PAYMENT_METHODS.map(method => {
                     const isSelected = paymentMethod === method.value;
                     return (
-                      <div
+                      <button
                         key={method.value}
+                        type="button"
+                        disabled={submitting}
+                        onClick={() => !submitting && setPaymentMethod(method.value)}
                         className={`
-                          relative flex items-center gap-3 p-4 rounded-lg border transition-colors cursor-pointer
+                          relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                           ${
                             isSelected
-                              ? 'bg-gray-100 border-gray-400'
-                              : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                              ? 'bg-white border-sky-500 border-2'
+                              : 'bg-white border-gray-200 hover:border-gray-300'
                           }
-                          ${submitting ? 'opacity-50 cursor-not-allowed' : ''}
+                          ${submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                         `}
-                        onClick={() => !submitting && setPaymentMethod(method.value)}
                       >
-                        <input
-                          type="radio"
-                          name="payment-method"
-                          checked={isSelected}
-                          onChange={() => setPaymentMethod(method.value)}
-                          disabled={submitting}
-                          className="h-4 w-4 border-gray-400 text-gray-600 focus:ring-gray-400 focus:ring-offset-0"
+                        {/* Brand icon on the left */}
+                        <Icon
+                          name={method.icon as IconName}
+                          className={`w-7 h-7 shrink-0 ${isSelected ? 'text-sky-600' : 'text-gray-400'}`}
                         />
+                        {/* Brand label */}
                         <span
-                          className={`flex-1 text-sm font-medium ${isSelected ? 'text-gray-900' : 'text-gray-700'}`}
+                          className={`flex-1 text-xs font-medium text-left ${
+                            isSelected ? 'text-gray-900' : 'text-gray-700'
+                          }`}
                         >
                           {method.label}
                         </span>
-                        <Icon
-                          name={method.icon as IconName}
-                          className={`w-5 h-5 shrink-0 ${isSelected ? 'text-gray-600' : 'text-gray-400'}`}
-                        />
-                      </div>
+                        {/* Checkmark indicator in top-right */}
+                        <div
+                          className={`
+                            absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
+                            ${isSelected ? 'bg-green-500' : 'bg-transparent border-2 border-gray-300'}
+                          `}
+                        >
+                          <Icon
+                            name="check"
+                            className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-gray-300'}`}
+                          />
+                        </div>
+                      </button>
                     );
                   })}
                 </div>

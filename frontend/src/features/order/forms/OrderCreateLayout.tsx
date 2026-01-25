@@ -32,7 +32,7 @@ const PaymentSection: React.FC<PaymentSectionProps> = ({
     <div className="space-y-3">
       <div className="text-xs font-medium text-gray-500">Payment method</div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-2">
         {paymentMethods.map(method => {
           const isSelected = paymentMethod === method.value;
           return (
@@ -41,36 +41,41 @@ const PaymentSection: React.FC<PaymentSectionProps> = ({
               type="button"
               disabled={disabled}
               className={`
-                relative flex items-center gap-3 p-4 rounded border transition-all duration-200
+                relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                 ${
                   isSelected
-                    ? 'bg-sky-50 border-sky-300 ring-2 ring-sky-200'
-                    : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    ? 'bg-white border-sky-500 border-2'
+                    : 'bg-white border-gray-200 hover:border-gray-300'
                 }
                 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
               `}
               onClick={() => onPaymentMethodChange(method.value)}
             >
-              <div
-                className={`
-                  w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0
-                  ${isSelected ? 'border-sky-500' : 'border-gray-300'}
-                `}
-              >
-                {isSelected && <div className="w-2 h-2 rounded-full bg-sky-500" />}
-              </div>
+              {/* Brand icon on the left */}
+              <Icon
+                name={method.icon as IconName}
+                className={`w-7 h-7 shrink-0 ${isSelected ? 'text-sky-600' : 'text-gray-400'}`}
+              />
+              {/* Brand label */}
               <span
-                className={`
-                  flex-1 text-sm font-medium text-left
-                  ${isSelected ? 'text-sky-900' : 'text-gray-700'}
-                `}
+                className={`flex-1 text-xs font-medium text-left ${
+                  isSelected ? 'text-gray-900' : 'text-gray-700'
+                }`}
               >
                 {method.label}
               </span>
-              <Icon
-                name={method.icon as IconName}
-                className={`w-5 h-5 ${isSelected ? 'text-sky-600' : 'text-gray-400'}`}
-              />
+              {/* Checkmark indicator in top-right */}
+              <div
+                className={`
+                  absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
+                  ${isSelected ? 'bg-green-500' : 'bg-transparent border-2 border-gray-300'}
+                `}
+              >
+                <Icon
+                  name="check"
+                  className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-gray-300'}`}
+                />
+              </div>
             </button>
           );
         })}
