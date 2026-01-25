@@ -35,7 +35,7 @@ export const OrderCardHeader: React.FC<OrderCardHeaderProps> = ({
   return (
     <div className={className}>
       <div className="flex items-center gap-3 flex-wrap">
-        <h2 className="text-2xl font-bold text-gray-900">{displayId.order(orderId)}</h2>
+        <h2 className="text-2xl font-bold text-gray-900 font-mono">{displayId.order(orderId)}</h2>
         <Badge variant={priority} size="sm" />
         <Badge variant={status} size="sm" />
         <span className="text-sm text-gray-600">{formatDate(orderDate)}</span>
@@ -69,7 +69,7 @@ export const OrderMetadata: React.FC<OrderMetadataProps> = ({
       <div>
         <div className="font-medium text-gray-900">{patientName}</div>
         <div className="text-xs text-gray-500">
-          {displayId.patient(patientId)} • {formatDate(orderDate)}
+          <span className="font-mono">{displayId.patient(patientId)}</span> • {formatDate(orderDate)}
           {referringPhysician && ` • ${referringPhysician}`}
         </div>
       </div>

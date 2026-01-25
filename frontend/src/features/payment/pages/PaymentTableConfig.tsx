@@ -43,7 +43,7 @@ export const createPaymentTableConfig = (
   const renderPatientName = (item: OrderPaymentDetails) => (
     <div className="min-w-0">
       <div className="font-semibold text-gray-900 truncate">{item.patientName || 'N/A'}</div>
-      <div className="text-xxs text-gray-500 truncate">{displayId.patient(item.patientId)}</div>
+      <div className="text-xxs text-gray-500 truncate font-mono">{displayId.patient(item.patientId)}</div>
     </div>
   );
 

@@ -13,6 +13,8 @@ interface BadgeConfig {
   variant?: BadgeVariant;
   /** Badge size */
   size?: 'xs' | 'sm' | 'md';
+  /** Optional className for the badge */
+  className?: string;
 }
 
 /**
@@ -88,7 +90,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
     // Badge rendering takes priority
     if (badge && badge.value) {
       return (
-        <Badge variant={badge.variant || 'primary'} size={badge.size || 'xs'}>
+        <Badge variant={badge.variant || 'primary'} size={badge.size || 'xs'} className={badge.className}>
           {badge.value.toUpperCase()}
         </Badge>
       );

@@ -68,6 +68,7 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
         <Avatar
           primaryText={patientName}
           secondaryText={displayId.order(order.orderId)}
+          secondaryTextClassName="font-mono"
           size="xs"
         />
         {isPending ? (

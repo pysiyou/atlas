@@ -193,7 +193,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
     <LabDetailModal
       isOpen={isOpen}
       onClose={onClose}
-      title={displayId.sample(sample.sampleId)}
+      title={<span className="font-mono">{displayId.sample(sample.sampleId)}</span>}
       subtitle={`${patientName} - ${sample.sampleType.toUpperCase()}`}
       headerBadges={headerBadges}
       contextInfo={{ patientName, patientId: patientId.toString(), orderId: orderId.toString() }}

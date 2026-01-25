@@ -55,7 +55,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
       <div className="px-3 py-2.5 border-b border-dashed border-gray-300">
         <div className="flex justify-between items-center">
           <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-            Order {displayId.order(order.orderId)}
+            Order <span className="font-mono">{displayId.order(order.orderId)}</span>
           </span>
           <Badge variant={order.paymentStatus} size="xs" />
         </div>
@@ -185,7 +185,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   return (
     <PopoverForm
       title="Process Payment"
-      subtitle={`Order ${displayId.order(order.orderId)}`}
+      subtitle={<span>Order <span className="font-mono">{displayId.order(order.orderId)}</span></span>}
       onCancel={onCancel}
       onConfirm={handleSubmit}
       confirmLabel="Process Payment"

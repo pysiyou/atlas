@@ -37,9 +37,9 @@ interface LabDetailModalProps {
   /** Close handler */
   onClose: () => void;
   /** Modal title (e.g., sample ID or test name) */
-  title: string;
+  title: string | React.ReactNode;
   /** Modal subtitle (e.g., patient name - sample type) */
-  subtitle: string;
+  subtitle: string | React.ReactNode;
   /** React key for forcing re-render on item change */
   modalKey?: string;
   /** Badge elements for the header section */
@@ -98,7 +98,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 <div className="flex items-center gap-2 text-sm text-gray-700 flex-wrap">
                   <span className="font-semibold text-gray-900">{contextInfo.patientName}</span>
                   <span className="text-gray-300">|</span>
-                  <span className="font-medium text-gray-900 text-xs">
+                  <span className="font-medium text-gray-900 text-xs font-mono">
                     {typeof contextInfo.patientId === 'number'
                       ? displayId.patient(contextInfo.patientId)
                       : contextInfo.patientId}
@@ -112,7 +112,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                     </>
                   )}
                   <span className="text-gray-300">|</span>
-                  <span className="font-medium text-gray-900 text-xs">
+                  <span className="font-medium text-gray-900 text-xs font-mono">
                     {typeof contextInfo.orderId === 'number'
                       ? displayId.order(contextInfo.orderId)
                       : contextInfo.orderId}
@@ -129,7 +129,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 {sampleInfo && sampleInfo.collectedAt && (
                   <span className="text-xs text-gray-500">
                     Sample{' '}
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-gray-900 font-mono">
                       {typeof sampleInfo.sampleId === 'number'
                         ? displayId.sample(sampleInfo.sampleId)
                         : sampleInfo.sampleId}

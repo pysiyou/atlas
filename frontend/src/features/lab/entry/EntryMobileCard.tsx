@@ -100,7 +100,7 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
       <div className="grow">
         <div className="space-y-1">
           <div className="text-xs text-gray-700 font-medium">{patientName}</div>
-          <div className="text-xs text-gray-500">{displayId.order(test.orderId)}</div>
+          <div className="text-xs text-gray-500 font-mono">{displayId.order(test.orderId)}</div>
           {test.collectedAt && (
             <div className="text-xs text-gray-500 mt-1">
               Collected: {formatDate(test.collectedAt)}

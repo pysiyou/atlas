@@ -8,6 +8,8 @@ export interface AvatarProps {
   className?: string;
   onClick?: () => void;
   secondaryText?: string;
+  /** Optional className for secondary text */
+  secondaryTextClassName?: string;
   /** If true, only shows the avatar circle without text labels */
   avatarOnly?: boolean;
 }
@@ -19,6 +21,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   className = '',
   onClick,
   secondaryText,
+  secondaryTextClassName = '',
   avatarOnly = false,
 }) => {
   const [imageError, setImageError] = useState(false);
@@ -90,7 +93,7 @@ export const Avatar: React.FC<AvatarProps> = ({
             {primaryText}
           </div>
           {secondaryText && (
-            <div className={`text-gray-500 truncate ${textSizeClasses[size].secondary}`}>
+            <div className={`text-gray-500 truncate ${textSizeClasses[size].secondary} ${secondaryTextClassName}`}>
               {secondaryText}
             </div>
           )}

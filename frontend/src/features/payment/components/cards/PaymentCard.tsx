@@ -35,6 +35,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
         <Avatar
           primaryText={item.patientName || 'N/A'}
           secondaryText={displayId.order(item.orderId)}
+          secondaryTextClassName="font-mono"
           size="xs"
         />
         {/* Total price on top right */}

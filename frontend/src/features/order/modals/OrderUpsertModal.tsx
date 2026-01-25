@@ -30,9 +30,13 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
   patientId,
 }) => {
   const modalTitle = mode === 'edit' ? 'Edit Order' : 'New Order';
-  const subtitle = useMemo(() => {
+  const subtitle = useMemo((): React.ReactNode => {
     if (mode === 'edit' && order) {
-      return `Editing order ${displayId.order(order.orderId)}`;
+      return (
+        <span>
+          Editing order <span className="font-mono">{displayId.order(order.orderId)}</span>
+        </span>
+      );
     }
     if (patientId) {
       return `Creating an order for patient ${patientId}.`;

@@ -126,7 +126,7 @@ export const Dashboard: React.FC = () => {
                   <div>
                     <p className="font-medium text-gray-900">{getPatientName(order.patientId)}</p>
                     <p className="text-sm text-gray-500">
-                      {displayId.order(order.orderId)} • {order.tests.length} test(s)
+                      <span className="font-mono">{displayId.order(order.orderId)}</span> • {order.tests.length} test(s)
                     </p>
                   </div>
                   <Badge

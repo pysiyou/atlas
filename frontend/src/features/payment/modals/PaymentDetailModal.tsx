@@ -78,11 +78,11 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
         <div className="space-y-1.5">
           <div className="flex items-center text-xs">
             <span className="text-gray-500 w-28">Order Number:</span>
-            <span className="text-gray-700 font-medium">{displayId.order(order.orderId)}</span>
+            <span className="text-gray-700 font-medium font-mono">{displayId.order(order.orderId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-gray-500 w-28">Patient Number:</span>
-            <span className="text-gray-700 font-medium">{displayId.patient(order.patientId)}</span>
+            <span className="text-gray-700 font-medium font-mono">{displayId.patient(order.patientId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-gray-500 w-28">Order Date:</span>
@@ -222,7 +222,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         title="Process Payment"
-        subtitle={`Order ${displayId.order(order.orderId)}`}
+        subtitle={<span>Order <span className="font-mono">{displayId.order(order.orderId)}</span></span>}
         size="xl"
         disableClose={submitting}
         closeOnBackdropClick={!submitting}

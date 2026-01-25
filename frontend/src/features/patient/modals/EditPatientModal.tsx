@@ -135,7 +135,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         title={modalTitle}
-        subtitle={mode === 'edit' && patient ? displayId.patient(patient.id) : undefined}
+        subtitle={mode === 'edit' && patient ? <span className="font-mono">{displayId.patient(patient.id)}</span> : undefined}
         maxWidth="max-w-3xl"
       >
         <div className="h-full flex flex-col bg-slate-50">

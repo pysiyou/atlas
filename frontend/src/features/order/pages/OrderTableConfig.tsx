@@ -44,7 +44,7 @@ export const createOrderTableConfig = (
       <div className="font-semibold text-gray-900 truncate">
         {getPatientNameFn(order.patientId)}
       </div>
-      <div className="text-xxs text-gray-500 truncate">{displayId.patient(order.patientId)}</div>
+      <div className="text-xxs text-gray-500 truncate font-mono">{displayId.patient(order.patientId)}</div>
     </div>
   );
 

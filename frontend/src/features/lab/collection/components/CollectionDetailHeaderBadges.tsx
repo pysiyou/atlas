@@ -66,7 +66,7 @@ export const CollectionDetailHeaderBadges: React.FC<CollectionDetailHeaderBadges
       {isRejected && rejectedSample?.recollectionSampleId && (
         <Badge size="sm" variant="info" className="flex items-center gap-1">
           <Icon name="check-circle" className="w-3 h-3" />
-          Recollection: {displayId.sample(rejectedSample.recollectionSampleId)}
+          Recollection: <span className="font-mono">{displayId.sample(rejectedSample.recollectionSampleId)}</span>
         </Badge>
       )}
     </>

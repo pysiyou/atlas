@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useInvalidateOrders } from '@/hooks/queries';
@@ -100,12 +100,20 @@ export function useOrderController({
 
   const isLoading = patient.isLoading || testSelection.isLoading;
 
-  const headerSubtitle = useMemo(() => {
+  const headerSubtitle = useMemo((): React.ReactNode => {
     if (isEditMode && existingOrder) {
-      return `Editing order ${displayId.order(existingOrder.orderId)}`;
+      return (
+        <span>
+          Editing order <span className="font-mono">{displayId.order(existingOrder.orderId)}</span>
+        </span>
+      );
     }
     if (patient.selectedPatient) {
-      return `For ${patient.selectedPatient.fullName} (${displayId.patient(patient.selectedPatient.id)})`;
+      return (
+        <span>
+          For {patient.selectedPatient.fullName} (<span className="font-mono">{displayId.patient(patient.selectedPatient.id)}</span>)
+        </span>
+      );
     }
     return 'Select a patient and choose tests to create a new order.';
   }, [isEditMode, existingOrder, patient.selectedPatient]);

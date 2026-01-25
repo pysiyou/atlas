@@ -76,7 +76,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold text-gray-900 text-sm">
+                      <span className="font-semibold text-gray-900 text-sm font-mono">
                         {displayId.order(order.orderId)}
                       </span>
                       <Badge variant={order.overallStatus} size="sm" />

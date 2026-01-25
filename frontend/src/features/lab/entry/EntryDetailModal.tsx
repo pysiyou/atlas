@@ -293,7 +293,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Sample ID',
                 badge: test.sampleId
-                  ? { value: displayId.sample(test.sampleId), variant: 'primary' }
+                  ? { value: displayId.sample(test.sampleId), variant: 'primary', className: 'font-mono' }
                   : undefined,
               },
               {

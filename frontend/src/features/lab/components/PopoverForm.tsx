@@ -15,7 +15,7 @@ interface PopoverFormProps {
   /** Main title displayed in the header */
   title: string;
   /** Optional subtitle displayed below the title */
-  subtitle?: string;
+  subtitle?: string | ReactNode;
   /** Cancel handler - closes the popover */
   onCancel: () => void;
   /** Confirm handler - submits the form */

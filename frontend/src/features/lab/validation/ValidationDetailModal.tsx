@@ -244,7 +244,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               {
                 label: 'Sample ID',
                 badge: test.sampleId
-                  ? { value: displayId.sample(test.sampleId), variant: 'primary' }
+                  ? { value: displayId.sample(test.sampleId), variant: 'primary', className: 'font-mono' }
                   : undefined,
               },
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
@@ -267,7 +267,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               {
                 label: 'Order ID',
                 badge: test.orderId
-                  ? { value: displayId.order(test.orderId), variant: 'primary' }
+                  ? { value: displayId.order(test.orderId), variant: 'primary', className: 'font-mono' }
                   : undefined,
               },
             ],

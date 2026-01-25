@@ -55,7 +55,7 @@ export interface OrderUpsertLayoutProps {
   /** Loading state (patients/tests). */
   isLoading: boolean;
   /** Header subtitle when not modal. */
-  headerSubtitle?: string;
+  headerSubtitle?: React.ReactNode;
   /** Form wiring */
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;

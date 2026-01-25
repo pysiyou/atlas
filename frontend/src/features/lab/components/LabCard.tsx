@@ -97,7 +97,7 @@ export const LabCard: React.FC<LabCardProps> = ({
                   <span className={LAB_CARD_CONTEXT.separator}>|</span>
                 </>
               )}
-              <span>{displayId.order(context.orderId)}</span>
+              <span className="font-mono">{displayId.order(context.orderId)}</span>
               {context.referringPhysician && (
                 <>
                   <span className={LAB_CARD_CONTEXT.separator}>|</span>
@@ -110,7 +110,7 @@ export const LabCard: React.FC<LabCardProps> = ({
             {sampleInfo?.sampleId && sampleInfo?.collectedAt && (
               <span className={LAB_CARD_TYPOGRAPHY.metadata}>
                 Sample{' '}
-                <span className={LAB_CARD_CONTEXT.patientName}>
+                <span className={`${LAB_CARD_CONTEXT.patientName} font-mono`}>
                   {displayId.sample(sampleInfo.sampleId)}
                 </span>{' '}
                 collected{' '}

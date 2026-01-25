@@ -29,6 +29,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
         <Avatar
           primaryText={order.patientName || 'N/A'}
           secondaryText={displayId.order(order.orderId)}
+          secondaryTextClassName="font-mono"
           size="xs"
         />
         {/* Total price on top right */}

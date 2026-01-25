@@ -12,6 +12,8 @@ interface FieldBadgeConfig {
   variant?: BadgeVariant;
   /** Badge size */
   size?: 'xs' | 'sm' | 'md';
+  /** Optional className for the badge */
+  className?: string;
 }
 
 /**

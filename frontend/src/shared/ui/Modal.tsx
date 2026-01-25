@@ -47,8 +47,8 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm?: () => void;
-  title: string;
-  subtitle?: string;
+  title: string | React.ReactNode;
+  subtitle?: string | React.ReactNode;
   children: React.ReactNode;
   confirmDisabled?: boolean;
   confirmText?: string;
@@ -197,7 +197,7 @@ const Modal = memo(
                         <h2
                           id="modal-title"
                           className="text-lg font-semibold text-gray-900 truncate"
-                          title={title}
+                          title={typeof title === 'string' ? title : undefined}
                         >
                           {title}
                         </h2>

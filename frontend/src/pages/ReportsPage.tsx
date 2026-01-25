@@ -54,7 +54,7 @@ export const Reports: React.FC = () => {
                   <Icon name="document" className="w-6 h-6 text-sky-600 mt-1" />
                   <div>
                     <div className="font-medium text-gray-900">
-                      {displayId.order(order.orderId)}
+                      <span className="font-mono">{displayId.order(order.orderId)}</span>
                     </div>
                     <div className="text-sm text-gray-600">{getPatientName(order.patientId)}</div>
                     <div className="text-sm text-gray-500">
