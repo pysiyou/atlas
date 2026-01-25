@@ -50,6 +50,7 @@ export const TEST_STATUS_LABELS: Record<TestStatus, string> = {
   validated: 'Validated',
   rejected: 'Rejected',
   superseded: 'Superseded',
+  removed: 'Removed',
 };
 
 /**

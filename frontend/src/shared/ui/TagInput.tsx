@@ -10,7 +10,7 @@ import { Icon } from './Icon';
 import { Badge } from './Badge';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
-import { label, requiredIndicator, errorMessage, helperText, inputBorder, inputPadding, inputFocus } from '@/shared/design-system/tokens/components/input';
+import { label as labelTokens, requiredIndicator, errorMessage, helperText as helperTextTokens, inputBorder, inputPadding, inputFocus } from '@/shared/design-system/tokens/components/input';
 
 export interface TagInputProps {
   /** Current tags as an array of strings */
@@ -113,7 +113,7 @@ export const TagInput: React.FC<TagInputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className={`${label.sm} cursor-pointer truncate min-w-0`}
+            className={`${labelTokens.sm} cursor-pointer truncate min-w-0`}
           >
             {label}
             {required && <span className={requiredIndicator.base}>*</span>}
@@ -170,7 +170,7 @@ export const TagInput: React.FC<TagInputProps> = ({
       {error && <p className={errorMessage.small}>{error}</p>}
 
       {/* Helper Text */}
-      {helperText && !error && <p className={helperText.base}>{helperText}</p>}
+      {helperText && !error && <p className={helperTextTokens.base}>{helperText}</p>}
     </div>
   );
 };

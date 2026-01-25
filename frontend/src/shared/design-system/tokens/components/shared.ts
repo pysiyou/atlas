@@ -30,7 +30,7 @@ export const loadingState = {
  * Inline Error Styles
  */
 export const inlineError = {
-  container: `${semanticColors.danger.errorText} ${fontSize.sm} flex items-center gap-2 ${padding.all.sm} ${semanticColors.danger.backgroundLight} ${radius.md}`,
+  container: `${semanticColors.danger.errorText} ${fontSize.sm} flex items-center gap-2 ${padding.card.sm} ${semanticColors.danger.backgroundLight} ${radius.md}`,
   dismissButton: `${semanticColors.danger.iconLight} hover:${semanticColors.danger.icon} cursor-pointer`,
 } as const;
 

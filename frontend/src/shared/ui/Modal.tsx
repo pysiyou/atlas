@@ -9,7 +9,7 @@ import React, { memo, useCallback, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Portal } from './Portal';
 import { IconButton } from './IconButton';
-import { modalBase, modalSizes, modalPadding, modalHeader, modalHeight, getModalClasses } from '@/shared/design-system/tokens/components/modal';
+import { modalBase, modalPadding, modalHeader, getModalClasses } from '@/shared/design-system/tokens/components/modal';
 
 /**
  * Backdrop component with blur and opacity effects

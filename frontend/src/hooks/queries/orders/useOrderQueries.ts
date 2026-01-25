@@ -6,9 +6,9 @@
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { useMemo, useState, useCallback } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
-import { orderAPI, type PaginatedResponse } from '@/services/api/orders';
+import { orderAPI } from '@/services/api/orders';
 import { useAuth } from '@/features/auth/useAuth';
-import type { Order, OrderStatus, PaymentStatus } from '@/types';
+import type { OrderStatus, PaymentStatus } from '@/types';
 
 /**
  * Filter options for orders list

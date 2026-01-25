@@ -9,6 +9,7 @@ import { EntryView } from '@/features/lab/entry/EntryView';
 import { ValidationView } from '@/features/lab/validation/ValidationView';
 import { Icon } from '@/shared/ui/Icon';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors, neutralColors } from '@/shared/design-system/tokens/colors';
 
 export const Laboratory: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'collection' | 'entry' | 'validation'>('collection');

@@ -4,7 +4,8 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { cardBase, padding as cardPadding } from '@/shared/design-system/tokens/components/card';
+import { cardBase } from '@/shared/design-system/tokens/components/card';
+import { padding } from '@/shared/design-system/tokens/spacing';
 import { border } from '@/shared/design-system/tokens/borders';
 import { heading, body } from '@/shared/design-system/tokens/typography';
 
@@ -23,9 +24,9 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   const paddingClasses = {
     none: '',
-    sm: cardPadding.card.sm,
-    md: cardPadding.card.md,
-    lg: cardPadding.card.lg,
+    sm: padding.card.sm,
+    md: padding.card.md,
+    lg: padding.card.lg,
   };
 
   const hoverClass = hover ? cardBase.hover : '';

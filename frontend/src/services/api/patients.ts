@@ -50,14 +50,14 @@ export const patientAPI = {
    * Create new patient
    */
   async create(patient: Patient): Promise<Patient> {
-    return apiClient.post<Patient, Patient>('/patients', patient);
+    return apiClient.post<Patient>('/patients', patient);
   },
 
   /**
    * Update patient
    */
   async update(id: string, updates: Partial<Patient>): Promise<Patient> {
-    return apiClient.put<Patient, Partial<Patient>>(`/patients/${id}`, updates);
+    return apiClient.put<Patient>(`/patients/${id}`, updates);
   },
 
   /**

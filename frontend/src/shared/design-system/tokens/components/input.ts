@@ -5,10 +5,9 @@
  * (Input, Textarea, Select, DateInput, TagInput, SearchBar) use identical styles.
  */
 
-import { semanticColors, neutralColors } from '../colors';
+import { semanticColors } from '../colors';
 import { padding } from '../spacing';
 import { radius, border } from '../borders';
-import { typography } from '../typography';
 
 /**
  * Input Base Styles
@@ -66,6 +65,7 @@ export const inputFocus = {
  */
 export const label = {
   base: 'block text-xs font-medium text-gray-500 mb-1',
+  sm: 'text-xxs font-medium text-gray-500',
   required: 'block text-xs font-medium text-gray-500 mb-1',
   error: 'block text-xs font-medium text-red-600 mb-1',
 } as const;

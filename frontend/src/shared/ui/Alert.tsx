@@ -6,7 +6,7 @@
 import React, { type ReactNode } from 'react';
 import { Icon } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
-import { getAlertClasses, alertVariants } from '@/shared/design-system/tokens/components/alert';
+import { getAlertClasses } from '@/shared/design-system/tokens/components/alert';
 
 interface AlertProps {
   children: ReactNode;
@@ -22,7 +22,6 @@ export const Alert: React.FC<AlertProps> = ({
   className = '',
 }) => {
   // Colors match Badge component for visual consistency - uses design tokens
-  const variantConfig = alertVariants[variant];
   const icons = {
     info: <Icon name={ICONS.actions.infoCircle} className="w-5 h-5" />,
     success: <Icon name={ICONS.actions.checkCircle} className="w-5 h-5" />,

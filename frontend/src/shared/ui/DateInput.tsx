@@ -12,7 +12,7 @@ import { ICONS } from '@/utils/icon-mappings';
 import { DateFilterCalendar } from '@/features/order/components/DateFilterCalendar';
 import { DateFilterHeader } from '@/features/order/components/DateFilterHeader';
 import { useDateFilterNavigation } from '@/features/order/hooks/useDateFilterNavigation';
-import { label, requiredIndicator, errorMessage, inputBorder, inputPadding } from '@/shared/design-system/tokens/components/input';
+import { label as labelTokens, requiredIndicator, errorMessage, inputBorder, inputPadding } from '@/shared/design-system/tokens/components/input';
 
 interface DateInputProps {
   label?: string;
@@ -106,7 +106,7 @@ export const DateInput: React.FC<DateInputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className={`${label.sm} cursor-pointer truncate min-w-0`}
+            className={`${labelTokens.sm} cursor-pointer truncate min-w-0`}
           >
             {label}
             {required && <span className={requiredIndicator.base}>*</span>}

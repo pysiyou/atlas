@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: Props) => {
 
   // Token ref for synchronous access by API client
   const tokenRef = useRef<string | null>(storage.get(STORAGE_KEYS.ACCESS_TOKEN));
-  const refreshTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const isRefreshingRef = useRef(false);
 
   // Clear all auth state

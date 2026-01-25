@@ -4,10 +4,10 @@
  * Unified tabs styling tokens ensuring consistent tab appearance.
  */
 
-import { brandColors, neutralColors } from '../colors';
+import { brandColors } from '../colors';
 import { padding } from '../spacing';
 import { radius } from '../borders';
-import { fontSize, fontWeight } from '../typography';
+import { fontSize } from '../typography';
 
 /**
  * Tabs Base Styles

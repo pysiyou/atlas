@@ -9,6 +9,7 @@ import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/shared
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * Admin Test Table Columns

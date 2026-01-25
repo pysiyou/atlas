@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { Textarea } from '@/shared/ui';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
+import { semanticColors, neutralColors } from '@/shared/design-system/tokens/colors';
 
 type ResultStatus =
   | 'normal'

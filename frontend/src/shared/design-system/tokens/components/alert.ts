@@ -6,9 +6,7 @@
  */
 
 import { semanticColors } from '../colors';
-import { padding } from '../spacing';
-import { radius, border } from '../borders';
-import { gap } from '../spacing';
+import { padding, gap } from '../spacing';
 
 /**
  * Alert Base Styles

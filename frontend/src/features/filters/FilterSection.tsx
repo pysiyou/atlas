@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * Props for FilterSection component

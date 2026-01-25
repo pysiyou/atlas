@@ -6,9 +6,9 @@
  */
 
 import React from 'react';
-import { filterComponents, brandColors } from '@/shared/design-system/tokens/components/shared';
+import { filterComponents } from '@/shared/design-system/tokens/components/shared';
 import { fontSize } from '@/shared/design-system/tokens/typography';
-import { neutralColors } from '@/shared/design-system/tokens/colors';
+import { neutralColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 export interface RangeFilterProps {
   /** Filter label */

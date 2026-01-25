@@ -78,14 +78,14 @@ export const orderAPI = {
    * Create new order
    */
   async create(order: Partial<Order>): Promise<Order> {
-    return apiClient.post<Order, Partial<Order>>('/orders', order);
+    return apiClient.post<Order>('/orders', order);
   },
 
   /**
    * Update order
    */
   async update(orderId: string, updates: Partial<Order>): Promise<Order> {
-    return apiClient.put<Order, Partial<Order>>(`/orders/${orderId}`, updates);
+    return apiClient.put<Order>(`/orders/${orderId}`, updates);
   },
 
   /**
@@ -104,7 +104,7 @@ export const orderAPI = {
     status: string,
     additionalData?: Record<string, unknown>
   ): Promise<Order> {
-    return apiClient.patch<Order, Record<string, unknown>>(`/orders/${orderId}/tests/${testCode}`, {
+    return apiClient.patch<Order>(`/orders/${orderId}/tests/${testCode}`, {
       status,
       ...additionalData,
     });
@@ -114,7 +114,7 @@ export const orderAPI = {
    * Mark test as having critical values
    */
   async markTestCritical(orderId: string, testCode: string, notifiedTo: string): Promise<Order> {
-    return apiClient.post<Order, Record<string, string>>(
+    return apiClient.post<Order>(
       `/orders/${orderId}/tests/${testCode}/critical`,
       { notifiedTo }
     );
@@ -128,7 +128,7 @@ export const orderAPI = {
     paymentStatus: string,
     amountPaid?: number
   ): Promise<Order> {
-    return apiClient.patch<Order, Record<string, unknown>>(`/orders/${orderId}/payment`, {
+    return apiClient.patch<Order>(`/orders/${orderId}/payment`, {
       paymentStatus,
       amountPaid,
     });

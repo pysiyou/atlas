@@ -8,7 +8,6 @@
 import { semanticColors, brandColors } from '../colors';
 import { padding } from '../spacing';
 import { radius } from '../borders';
-import { shadow } from '../shadows';
 
 /**
  * Button Base Styles

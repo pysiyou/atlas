@@ -6,7 +6,6 @@ import React from 'react';
 import { semanticColors } from '@/shared/design-system/tokens/colors';
 import { Icon, SectionContainer } from '@/shared/ui';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 /** Test detail for requirements display */
 export interface TestDetail {

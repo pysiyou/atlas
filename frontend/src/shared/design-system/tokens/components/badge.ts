@@ -6,8 +6,6 @@
  */
 
 import { semanticColors } from '../colors';
-import { padding } from '../spacing';
-import { radius } from '../borders';
 
 /**
  * Badge Base Styles
@@ -244,12 +242,17 @@ export const userRoleVariants = {
 /**
  * Complete Badge Variant Map
  * Combines all variant categories for easy lookup
+ * Normalizes semantic variants (which have .base property) to strings
  */
 export const badgeVariants = {
   // Base variants
   ...baseVariants,
-  // Semantic variants (must match Alert)
-  ...semanticVariants,
+  // Semantic variants (must match Alert) - extract .base property
+  success: semanticVariants.success.base,
+  danger: semanticVariants.danger.base,
+  error: semanticVariants.error.base,
+  warning: semanticVariants.warning.base,
+  info: semanticVariants.info.base,
   // Domain-specific variants
   ...orderStatusVariants,
   ...testStatusVariants,
