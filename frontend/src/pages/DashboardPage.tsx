@@ -62,8 +62,8 @@ export const Dashboard: React.FC = () => {
     {
       label: 'Appointments Today',
       value: todayAppointments,
-      icon: <Icon name={ICONS.dataFields.date} className="w-8 h-8 text-purple-600" />,
-      color: 'bg-purple-50',
+      icon: <Icon name={ICONS.dataFields.date} className="w-8 h-8 text-purple-600" />, // Keep purple for appointments (domain-specific)
+      color: 'bg-purple-50', // Keep purple for appointments (domain-specific)
     },
     {
       label: 'Revenue Today',
@@ -95,7 +95,7 @@ export const Dashboard: React.FC = () => {
                   <p className="text-sm text-gray-600 mb-1">{stat.label}</p>
                   <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
                   {stat.today !== undefined && (
-                    <p className="text-sm text-green-600 mt-1">+{stat.today} today</p>
+                    <p className={`${body.small} ${semanticColors.success.icon} mt-1`}>+{stat.today} today</p>
                   )}
                 </div>
                 <div className={`p-3 rounded ${stat.color}`}>{stat.icon}</div>

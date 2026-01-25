@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 import { Popover } from '@/shared/ui/Popover';
 import { Icon, type IconName } from '@/shared/ui/Icon';
 import { Badge } from '@/shared/ui/Badge';
@@ -142,7 +143,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   {/* Check indicator */}
                   <div className="shrink-0 mr-3">
                     {isSelected ? (
-                      <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
+                      <div className={`w-5 h-5 rounded-md flex items-center justify-center ${brandColors.primary.background.replace('bg-sky-600', 'bg-sky-500')} transition-all duration-150`}>
                         <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-white" />
                       </div>
                     ) : (
