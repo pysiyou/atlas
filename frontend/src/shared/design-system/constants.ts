@@ -61,6 +61,9 @@ export const TYPOGRAPHY = {
 
 /**
  * Color palette for status, priority, and semantic colors
+ * 
+ * NOTE: This file exists but is NOT being used (0 imports found).
+ * Will be enhanced and migrated to new token system.
  */
 export const COLORS = {
   status: {

@@ -19,6 +19,7 @@ import { displayId } from '@/utils/id-display';
 import { LabCard, TestList } from '../components/LabCard';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
+import { labCard } from '@/shared/design-system/tokens/components/card';
 import {
   handlePrintCollectionLabel,
   getEffectiveContainerType,
@@ -257,7 +258,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   return (
     <LabCard
       onClick={handleCardClick}
-      className={isRejected ? 'border-l-4 border-l-gray-500' : ''}
+      className={isRejected ? labCard.rejectionBorder : ''}
       context={{
         orderId: order.orderId,
         referringPhysician: order.referringPhysician,

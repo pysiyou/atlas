@@ -14,6 +14,7 @@
 import React, { type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
+import { getButtonVariant, getButtonSize, buttonBase } from '@/shared/design-system/tokens/components/button';
 
 /**
  * Base style variants (no default icon)
@@ -108,25 +109,26 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
 
 /**
  * Base style classes for each variant
+ * Uses design tokens to ensure consistency with IconButton
  */
 const BASE_STYLES: Record<BaseVariant, string> = {
-  primary: 'bg-sky-600 text-white hover:bg-sky-700 focus:ring-sky-500',
-  secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
-  danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-  success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500',
-  warning: 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-500',
-  outline:
-    'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:ring-gray-500',
+  primary: getButtonVariant('primary'),
+  secondary: getButtonVariant('secondary'),
+  danger: getButtonVariant('danger'),
+  success: getButtonVariant('success'),
+  warning: getButtonVariant('warning'),
+  outline: getButtonVariant('outline'),
 };
 
 /**
  * Size-specific padding and text classes
+ * Uses design tokens to ensure consistency with IconButton
  */
 const SIZE_STYLES: Record<ButtonSize, string> = {
-  xs: 'px-2 py-1 text-xs',
-  sm: 'px-3 py-1.5 text-xs',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-base',
+  xs: getButtonSize('xs'),
+  sm: getButtonSize('sm'),
+  md: getButtonSize('md'),
+  lg: getButtonSize('lg'),
 };
 
 /**
@@ -241,9 +243,8 @@ export const Button: React.FC<ButtonProps> = ({
     return null;
   };
 
-  // Base CSS classes
-  const baseClasses =
-    'font-medium rounded transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
+  // Base CSS classes - uses design tokens
+  const baseClasses = buttonBase.base;
   const widthClass = fullWidth ? 'w-full' : '';
 
   // Build content based on loading state

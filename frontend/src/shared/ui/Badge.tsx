@@ -2,6 +2,7 @@ import React from 'react';
 import { cn } from '@/utils';
 import { Icon } from './Icon';
 import type { IconName } from './Icon';
+import { getBadgeVariant, getBadgeSize, badgeBase } from '@/shared/design-system/tokens/components/badge';
 
 export type BadgeVariant =
   // Base variants
@@ -248,10 +249,11 @@ const VARIANT_STYLES: Record<string, string> = {
   administrator: 'bg-red-100 text-red-800 border-transparent',
 };
 
+// Size classes - uses design tokens
 const SIZES = {
-  xs: 'px-1.5 py-0.5 text-xxs',
-  sm: 'px-2 py-0.5 text-xs',
-  md: 'px-2.5 py-0.5 text-sm',
+  xs: getBadgeSize('xs'),
+  sm: getBadgeSize('sm'),
+  md: getBadgeSize('md'),
 };
 
 // Custom display labels for variants (shorter/abbreviated versions)
@@ -306,8 +308,8 @@ export const Badge: React.FC<BadgeProps> = ({
   // Normalize variant to lowercase string for lookup
   const normalizedVariant = String(variant).toLowerCase();
 
-  // Lookup style or fallback to default
-  const variantClass = VARIANT_STYLES[normalizedVariant] || VARIANT_STYLES['default'];
+  // Lookup style or fallback to default - uses design tokens
+  const variantClass = getBadgeVariant(normalizedVariant);
 
   // Auto-generate content if children is missing (and it's not a generic variant like 'default')
   let content = children;
@@ -348,7 +350,8 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <div
       className={cn(
-        'inline-flex items-center font-medium rounded-sm border transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+        badgeBase.base,
+        badgeBase.rounded,
         variantClass,
         SIZES[size],
         strikethrough && 'line-through',

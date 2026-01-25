@@ -6,6 +6,7 @@
 import React, { type ReactNode } from 'react';
 import { Icon } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
+import { getAlertClasses, alertVariants } from '@/shared/design-system/tokens/components/alert';
 
 interface AlertProps {
   children: ReactNode;
@@ -20,39 +21,19 @@ export const Alert: React.FC<AlertProps> = ({
   onClose,
   className = '',
 }) => {
-  // Colors match Badge component for visual consistency
-  const variants = {
-    info: {
-      bg: 'bg-sky-100',
-      border: 'border-sky-200',
-      text: 'text-sky-800',
-      icon: <Icon name={ICONS.actions.infoCircle} className="w-5 h-5" />,
-    },
-    success: {
-      bg: 'bg-green-100',
-      border: 'border-green-200',
-      text: 'text-green-800',
-      icon: <Icon name={ICONS.actions.checkCircle} className="w-5 h-5" />,
-    },
-    warning: {
-      bg: 'bg-yellow-100',
-      border: 'border-yellow-200',
-      text: 'text-yellow-800',
-      icon: <Icon name={ICONS.actions.warning} className="w-5 h-5" />,
-    },
-    danger: {
-      bg: 'bg-red-100',
-      border: 'border-red-200',
-      text: 'text-red-800',
-      icon: <Icon name={ICONS.actions.closeCircle} className="w-5 h-5" />,
-    },
+  // Colors match Badge component for visual consistency - uses design tokens
+  const variantConfig = alertVariants[variant];
+  const icons = {
+    info: <Icon name={ICONS.actions.infoCircle} className="w-5 h-5" />,
+    success: <Icon name={ICONS.actions.checkCircle} className="w-5 h-5" />,
+    warning: <Icon name={ICONS.actions.warning} className="w-5 h-5" />,
+    danger: <Icon name={ICONS.actions.closeCircle} className="w-5 h-5" />,
   };
-
-  const { bg, border, text, icon } = variants[variant];
+  const icon = icons[variant];
 
   return (
     <div
-      className={`${bg} ${border} ${text} border rounded p-4 flex items-start gap-3 ${className}`}
+      className={`${getAlertClasses(variant)} ${className}`}
       role="alert"
     >
       <div className="flex-shrink-0 mt-0.5">{icon}</div>

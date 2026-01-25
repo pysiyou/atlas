@@ -12,6 +12,7 @@ import { displayId } from '@/utils/id-display';
 import { usePatientNameLookup } from '@/hooks/queries';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { Test, TestWithContext } from '@/types';
+import { mobileCard } from '@/shared/design-system/tokens/components/card';
 
 interface EntryMobileCardProps {
   test: TestWithContext;
@@ -74,12 +75,12 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className="bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow flex flex-col h-full"
+      className={mobileCard.base}
     >
       {/* Header: Test name + Sample ID */}
-      <div className="mb-3 pb-3 border-b border-gray-100">
+      <div className={mobileCard.header.container}>
         <div className="min-w-0 overflow-hidden">
-          <div className="text-sm font-semibold text-gray-900 truncate">{test.testName}</div>
+          <div className={mobileCard.header.title}>{test.testName}</div>
           <div className="flex items-center gap-2">
             <div className="text-xs text-sky-600 font-medium font-mono truncate">
               {test.testCode}
@@ -97,12 +98,12 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
       </div>
 
       {/* Content: Patient, collection date */}
-      <div className="grow">
+      <div className={mobileCard.content.container}>
         <div className="space-y-1">
-          <div className="text-xs text-gray-700 font-medium">{patientName}</div>
-          <div className="text-xs text-gray-500 font-mono">{displayId.order(test.orderId)}</div>
+          <div className={`${mobileCard.content.text} font-medium`}>{patientName}</div>
+          <div className={`${mobileCard.content.textSecondary} font-mono`}>{displayId.order(test.orderId)}</div>
           {test.collectedAt && (
-            <div className="text-xs text-gray-500 mt-1">
+            <div className={`${mobileCard.content.textSecondary} mt-1`}>
               Collected: {formatDate(test.collectedAt)}
             </div>
           )}
@@ -110,7 +111,7 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
       </div>
 
       {/* Bottom section: Badges (left) + Enter Results button (right) */}
-      <div className="flex justify-between items-center mt-auto pt-3">
+      <div className={mobileCard.footer.container}>
         <div className="flex items-center gap-2">
           {test.priority && <Badge variant={test.priority} size="xs" />}
           <Badge variant={test.sampleType} size="xs" />

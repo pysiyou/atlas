@@ -13,6 +13,7 @@
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
+import { getButtonVariant, iconButtonVariants } from '@/shared/design-system/tokens/components/button';
 
 /**
  * Base style variants (require custom icon)
@@ -109,13 +110,14 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
 
 /**
  * Base style classes for each variant
+ * Uses design tokens to ensure consistency with Button component
  */
 const BASE_STYLES: Record<BaseVariant, string> = {
-  primary: 'bg-sky-600 hover:bg-sky-700 text-white',
-  secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-700',
-  danger: 'bg-red-600 hover:bg-red-700 text-white',
-  success: 'bg-green-600 hover:bg-green-700 text-white',
-  warning: 'bg-yellow-500 hover:bg-yellow-600 text-white',
+  primary: getButtonVariant('primary'),
+  secondary: getButtonVariant('secondary'),
+  danger: getButtonVariant('danger'),
+  success: getButtonVariant('success'),
+  warning: getButtonVariant('warning'),
 };
 
 /**
@@ -184,6 +186,16 @@ export const IconButton = memo(
     ({ icon, variant = 'primary', size = 'md', className = '', disabled, ...props }, ref) => {
       // Determine the actual style to apply
       const baseStyle = getBaseStyle(variant);
+      
+      // Check if this is an IconButton-specific variant (approve, delete, edit, view, print, add)
+      const isIconButtonSpecificVariant = 
+        variant === 'approve' || variant === 'delete' || variant === 'edit' || 
+        variant === 'view' || variant === 'print' || variant === 'add';
+      
+      // Use IconButton-specific variant tokens if applicable
+      const variantStyle = isIconButtonSpecificVariant && variant in iconButtonVariants
+        ? iconButtonVariants[variant as keyof typeof iconButtonVariants].base
+        : BASE_STYLES[baseStyle];
 
       // Determine which icon to render
       const defaultIconName = getDefaultIcon(variant);
@@ -209,7 +221,7 @@ export const IconButton = memo(
           ref={ref}
           disabled={disabled}
           className={`
-            ${BASE_STYLES[baseStyle]}
+            ${variantStyle}
             ${SIZE_STYLES[size]}
             ${ICON_SIZE_STYLES[size]}
             rounded-full

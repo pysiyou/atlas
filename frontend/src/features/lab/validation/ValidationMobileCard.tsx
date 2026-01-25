@@ -13,6 +13,7 @@ import { usePatientNameLookup } from '@/hooks/queries';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { TestWithContext } from '@/types';
 import { RejectionDialog } from '../components';
+import { mobileCard } from '@/shared/design-system/tokens/components/card';
 
 type ResultStatus =
   | 'normal'
@@ -177,12 +178,12 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className="bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow flex flex-col h-full"
+      className={mobileCard.base}
     >
       {/* Header: Test name + Patient name, Test code, Sample ID */}
-      <div className="mb-3 pb-3 border-b border-gray-100">
+      <div className={mobileCard.header.container}>
         <div className="min-w-0 overflow-hidden">
-          <div className="text-sm font-semibold text-gray-900 truncate">{test.testName}</div>
+          <div className={mobileCard.header.title}>{test.testName}</div>
           <div className="flex items-center gap-2 flex-wrap">
             <div className="text-xs text-gray-700 font-medium truncate">{patientName}</div>
             <div className="text-xxs text-gray-400">•</div>
@@ -205,13 +206,13 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
       </div>
 
       {/* Content: Results, entry date */}
-      <div className="grow">
+      <div className={mobileCard.content.container}>
         <div className="space-y-1">
           <div className="mt-2">
             <ResultGrid results={test.results} flagStatusMap={flagStatusMap} />
           </div>
           {test.resultEnteredAt && (
-            <div className="text-xs text-gray-500 mt-1">
+            <div className={mobileCard.content.textSecondary}>
               Entered: {formatDate(test.resultEnteredAt)}
             </div>
           )}
@@ -219,7 +220,7 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
       </div>
 
       {/* Bottom section: Badges (left) + Approve/Reject buttons (right) */}
-      <div className="flex justify-between items-center gap-2 mt-auto pt-3">
+      <div className={mobileCard.footer.container}>
         <div className="flex items-center gap-2">
           {hasFlags && (
             <Badge variant="danger" size="xs">

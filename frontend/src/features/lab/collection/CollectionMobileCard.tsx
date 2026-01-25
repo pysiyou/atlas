@@ -15,6 +15,7 @@ import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { ContainerType } from '@/types';
 import type { SampleDisplay } from '../types';
 import { CollectionPopover } from './CollectionPopover';
+import { mobileCard } from '@/shared/design-system/tokens/components/card';
 
 interface CollectionMobileCardProps {
   display: SampleDisplay;
@@ -61,10 +62,10 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className="bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow flex flex-col h-full"
+      className={mobileCard.base}
     >
       {/* Header: Avatar (top left) + Status badge (top right) */}
-      <div className="flex justify-between items-start mb-3 pb-3 border-b border-gray-100">
+      <div className={mobileCard.header.container}>
         <Avatar
           primaryText={patientName}
           secondaryText={displayId.order(order.orderId)}
@@ -87,16 +88,16 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
       </div>
 
       {/* Content: Volume, tests */}
-      <div className="grow">
+      <div className={mobileCard.content.container}>
         <div className="space-y-1">
-          <div className="text-xs text-gray-700">
+          <div className={mobileCard.content.text}>
             {isPending
               ? `${formatVolume(requirement.totalVolume)} required`
               : collectedVolume !== undefined
                 ? `${formatVolume(collectedVolume)} ${isRejected ? 'was collected' : 'collected'}`
                 : null}
           </div>
-          <div className="text-xs text-gray-500">
+          <div className={mobileCard.content.textSecondary}>
             {testCount} test{testCount !== 1 ? 's' : ''}: {testNames.slice(0, 2).join(', ')}
             {testCount > 2 && ` +${testCount - 2} more`}
           </div>
@@ -104,7 +105,7 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
       </div>
 
       {/* Bottom section: Badges (left) + Action button (right) */}
-      <div className="flex justify-between items-center mt-auto pt-3">
+      <div className={mobileCard.footer.container}>
         <div className="flex items-center gap-2">
           <Badge variant={sample.sampleType} size="xs" />
           {sample.priority && <Badge variant={sample.priority} size="xs" />}
