@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 import { Badge, IconButton } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
@@ -82,12 +83,12 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
         <div className="min-w-0 overflow-hidden">
           <div className={mobileCard.header.title}>{test.testName}</div>
           <div className="flex items-center gap-2">
-            <div className="text-xs text-sky-600 font-medium font-mono truncate">
+            <div className={`text-xs ${brandColors.primary.icon} font-medium font-mono truncate`}>
               {test.testCode}
             </div>
             {test.sampleId && (
               <div
-                className="text-xs text-sky-600 font-medium font-mono truncate"
+                className={`text-xs ${brandColors.primary.icon} font-medium font-mono truncate`}
                 title={displayId.sample(test.sampleId)}
               >
                 • {displayId.sample(test.sampleId)}

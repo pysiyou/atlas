@@ -92,7 +92,7 @@ function ResultGrid({
         const abnormal = status !== 'normal';
         const valueColor = abnormal
           ? isCritical(status)
-            ? 'text-red-600'
+            ? semanticColors.danger.icon
             : semanticColors.warning.valueHigh
           : 'text-gray-900';
 

@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 import { Badge, Alert, Icon } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabCard, ProgressBadge } from '../components/LabCard';
@@ -119,7 +120,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <Badge
           key={param.code}
           size="sm"
-          className={results[param.code] ? 'text-sky-800' : 'text-gray-500'}
+          className={results[param.code] ? brandColors.primary.textOnLight : 'text-gray-500'}
           variant={results[param.code] ? 'primary' : 'default'}
         >
           {param.name}

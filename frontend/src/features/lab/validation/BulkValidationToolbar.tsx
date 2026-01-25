@@ -11,7 +11,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Button, Icon } from '@/shared/ui';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
+import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 interface BulkValidationItem {
   id: number;
@@ -98,7 +98,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
             type="checkbox"
             checked={false}
             onChange={handleToggleAll}
-            className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
+            className={`w-4 h-4 ${brandColors.primary.icon} border-gray-300 rounded ${brandColors.primary.focusRing}`}
           />
           <span>Select all {totalCount} items</span>
         </label>
@@ -122,7 +122,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
               }
             }}
             onChange={handleToggleAll}
-            className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
+            className={`w-4 h-4 ${brandColors.primary.icon} border-gray-300 rounded ${brandColors.primary.focusRing}`}
           />
           <span className="text-sm text-gray-600">
             {allSelected ? 'Deselect all' : 'Select all'}

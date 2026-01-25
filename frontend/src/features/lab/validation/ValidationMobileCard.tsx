@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 import { Badge, IconButton } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
@@ -188,14 +189,14 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
           <div className="flex items-center gap-2 flex-wrap">
             <div className="text-xs text-gray-700 font-medium truncate">{patientName}</div>
             <div className="text-xxs text-gray-400">•</div>
-            <div className="text-xxs text-sky-600 font-medium font-mono truncate">
+            <div className={`text-xxs ${brandColors.primary.icon} font-medium font-mono truncate`}>
               {test.testCode}
             </div>
             {test.sampleId && (
               <>
                 <div className="text-xs text-gray-400">•</div>
                 <div
-                  className="text-xxs text-sky-600 font-medium font-mono truncate"
+                  className={`text-xxs ${brandColors.primary.icon} font-medium font-mono truncate`}
                   title={displayId.sample(test.sampleId)}
                 >
                   {displayId.sample(test.sampleId)}

@@ -144,7 +144,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
       {(hasFlags || technicianNotes) && (
         <div className="mb-6 space-y-2 bg-gray-50/50 rounded-md p-3 border border-gray-100">
           {hasFlags && (
-            <div className="flex items-start text-xs text-red-600">
+            <div className={`flex items-start text-xs ${semanticColors.danger.icon}`}>
               <div className="font-medium">{flags.join(', ')}</div>
             </div>
           )}
