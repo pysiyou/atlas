@@ -8,6 +8,7 @@ import { Badge, Button, Icon } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Order, Invoice } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface BillingSummarySectionProps {
   order: Order;
@@ -102,7 +103,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
           variant="secondary"
           size="sm"
           className="w-full mt-4"
-          icon={<Icon name="bill" className="w-4 h-4" />}
+          icon={<Icon name={ICONS.dataFields.bill} className="w-4 h-4" />}
           onClick={onViewInvoice}
         >
           View Invoice

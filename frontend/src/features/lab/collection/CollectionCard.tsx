@@ -26,6 +26,7 @@ import {
 } from '../components/labUtils';
 import type { SampleDisplay } from '../types';
 import { orderHasValidatedTests } from '@/features/order/utils';
+import { ICONS, getContainerIcon } from '@/utils/icon-mappings';
 
 interface CollectionCardProps {
   display: SampleDisplay;
@@ -112,7 +113,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
           title={`Container: ${effectiveContainerType}, Color: ${colorName}`}
         >
           <Icon
-            name={effectiveContainerType === 'cup' ? 'lab-cup' : 'lab-tube'}
+            name={getContainerIcon(effectiveContainerType)}
             className={`w-6 h-6 ${getContainerIconColor(containerColor)}`}
           />
         </span>
@@ -240,13 +241,13 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
       <div className="flex items-center gap-2 flex-wrap">
         {isRecollection && sample.originalSampleId && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
-            <Icon name="alert-circle" className="w-3 h-3" />
+            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Recollection of {sample.originalSampleId}
           </Badge>
         )}
         {rejectedSample?.recollectionSampleId && (
           <Badge size="sm" variant="info" className="flex items-center gap-1">
-            <Icon name="alert-circle" className="w-3 h-3" />
+            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Recollection requested: {rejectedSample.recollectionSampleId}
           </Badge>
         )}

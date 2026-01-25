@@ -13,6 +13,7 @@ import { format, isSameDay } from 'date-fns';
 import { Icon } from '@/shared/ui/Icon';
 import { Popover } from '@/shared/ui/Popover';
 import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
 import { useDateFilterState } from '../../hooks/useDateFilterState';
 import { useDateFilterNavigation } from '../../hooks/useDateFilterNavigation';
 import { DateFilterCalendar } from '../DateFilterCalendar';
@@ -99,11 +100,11 @@ export const DateFilter: React.FC<DateFilterProps> = ({
             className
           )}
         >
-          <Icon name="calendar" className="w-4 h-4 text-gray-400 shrink-0" />
+          <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-gray-400 shrink-0" />
           <div className="flex-1 min-w-0 text-xs truncate ml-1">{renderTriggerContent()}</div>
 
           <Icon
-            name="chevron-down"
+            name={ICONS.actions.chevronDown}
             className={cn(
               'w-4 h-4 text-gray-400 transition-transform shrink-0',
               isOpen && 'rotate-180'
@@ -115,7 +116,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
               onClick={handleClear}
               className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer shrink-0"
             >
-              <Icon name="close-circle" className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
+              <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
             </button>
           )}
         </div>

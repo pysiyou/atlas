@@ -10,6 +10,7 @@ import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 import { CatalogCard } from '../components/cards/CatalogCard';
 
 /**
@@ -69,7 +70,7 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
     <TableActionMenu>
       <TableActionItem
         label="View Details"
-        icon={<Icon name="eye" className="w-4 h-4" />}
+        icon={<Icon name={ICONS.actions.view} className="w-4 h-4" />}
         onClick={() => navigate(`/catalog/${test.code}`)}
       />
     </TableActionMenu>

@@ -15,6 +15,7 @@ import { PopoverForm, RadioCard } from './PopoverForm';
 import { useRejectionManager } from '../hooks/useRejectionManager';
 import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface RejectionDialogContentProps {
   orderId: string | number;
@@ -159,7 +160,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       disabled={isConfirmDisabled}
       footerInfo={
         <>
-          <Icon name="alert-circle" className="w-3.5 h-3.5" />
+          <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
           <span>Rejecting results</span>
         </>
       }
@@ -345,7 +346,7 @@ export const RejectionHistoryBanner: React.FC<RejectionHistoryBannerProps> = ({
   return (
     <div className="mt-2 px-2 py-1.5 bg-amber-50 border border-amber-200 rounded text-amber-800">
       <div className="flex items-center gap-1.5">
-        <Icon name="loading" className="w-3 h-3" />
+        <Icon name={ICONS.actions.loading} className="w-3 h-3" />
         <span className="text-xxs font-medium">{message}</span>
       </div>
       {rejectionReason && (

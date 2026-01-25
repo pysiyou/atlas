@@ -5,6 +5,7 @@
 
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from './Icon';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface SearchBarProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   onSearch?: (value: string) => void;
@@ -32,7 +33,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     <div className={`relative ${className}`}>
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <Icon
-          name="search"
+          name={ICONS.actions.search}
           className={`text-gray-400 ${size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4'}`}
         />
       </div>

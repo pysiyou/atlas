@@ -14,6 +14,7 @@ import { LoadingState } from '@/shared/components';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { TableInput } from '@/shared/ui/BalancedDetailsLayout';
 import { formatArray, formatBoolean, formatDetailDate } from '@/shared/utils/data';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Format array to comma-separated string with fallback
@@ -76,7 +77,7 @@ export const CatalogDetail: React.FC = () => {
       <div className="h-full flex flex-col p-6">
         <div className="flex-1 flex items-center justify-center">
           <EmptyState
-            icon="alert-circle"
+            icon={ICONS.actions.alertCircle}
             title="Test Not Found"
             description={`The test with code "${testCode}" could not be found in the catalog.`}
           />

@@ -10,6 +10,7 @@ import { displayId } from '@/utils/id-display';
 import type { Patient } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_CONFIG } from '@/types';
 import { isAffiliationActive } from '../utils/affiliationUtils';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface PatientInfoCardProps {
   patient: Patient;
@@ -35,7 +36,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
     >
       {/* Patient ID Section */}
       <div className="flex items-start gap-3 pb-3 border-b border-gray-100">
-        <Icon name="user" className="w-5 h-5 text-gray-400 mt-1" />
+        <Icon name={ICONS.dataFields.user} className="w-5 h-5 text-gray-400 mt-1" />
         <div className="flex-1">
           <div className="text-xs text-gray-600 mb-1">Patient ID</div>
           <div className="font-mono font-medium text-gray-900">{displayId.patient(patient.id)}</div>
@@ -45,7 +46,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
       {/* Demographics Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex items-start gap-3">
-          <Icon name="user" className="w-5 h-5 text-gray-400 mt-1" />
+          <Icon name={ICONS.dataFields.user} className="w-5 h-5 text-gray-400 mt-1" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Full Name</div>
             <div className="font-medium text-gray-900">{patient.fullName}</div>
@@ -53,7 +54,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
         </div>
 
         <div className="flex items-start gap-3">
-          <Icon name="user" className="w-5 h-5 text-gray-400 mt-1" />
+          <Icon name={ICONS.dataFields.userHands} className="w-5 h-5 text-gray-400 mt-1" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Age & Gender</div>
             <div className="font-medium text-gray-900">
@@ -65,7 +66,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
         </div>
 
         <div className="flex items-start gap-3">
-          <Icon name="phone" className="w-5 h-5 text-gray-400 mt-1" />
+          <Icon name={ICONS.dataFields.phone} className="w-5 h-5 text-gray-400 mt-1" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Phone</div>
             <div className="font-medium text-gray-900">{formatPhoneNumber(patient.phone)}</div>
@@ -73,7 +74,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
         </div>
 
         <div className="flex items-start gap-3">
-          <Icon name="mail" className="w-5 h-5 text-gray-400 mt-1" />
+          <Icon name={ICONS.dataFields.email} className="w-5 h-5 text-gray-400 mt-1" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Email</div>
             <div className="font-medium text-gray-900">{patient.email || 'Not provided'}</div>
@@ -81,7 +82,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
         </div>
 
         <div className="flex items-start gap-3 md:col-span-2">
-          <Icon name="map-pin" className="w-5 h-5 text-gray-400 mt-1" />
+          <Icon name={ICONS.dataFields.mapPin} className="w-5 h-5 text-gray-400 mt-1" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Address</div>
             <div className="font-medium text-gray-900">{patient.address.street}</div>
@@ -95,7 +96,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
       {/* Emergency Contact Section */}
       <div className="mt-4 pt-4 border-t border-gray-200">
         <div className="flex items-start gap-3">
-          <Icon name="user-hands" className="w-5 h-5 text-gray-400 mt-1" />
+          <Icon name={ICONS.dataFields.userHands} className="w-5 h-5 text-gray-400 mt-1" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-2">Emergency Contact</div>
             <div className="font-medium text-gray-900">{patient.emergencyContact.fullName}</div>
@@ -116,7 +117,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
       {/* Lab Affiliation Section */}
       <div className="mt-4 pt-4 border-t border-gray-200">
         <div className="flex items-start gap-3">
-          <Icon name="shield" className="w-5 h-5 text-gray-400 mt-1" />
+          <Icon name={ICONS.ui.shield} className="w-5 h-5 text-gray-400 mt-1" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-2">Lab Affiliation</div>
             {!patient.affiliation ? (
@@ -162,7 +163,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
       <div className="mt-4 pt-4 border-t border-gray-200">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-start gap-3">
-            <Icon name="calendar" className="w-5 h-5 text-gray-400 mt-1" />
+            <Icon name={ICONS.dataFields.date} className="w-5 h-5 text-gray-400 mt-1" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Registration Date</div>
               <div className="font-medium text-gray-900">
@@ -173,7 +174,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           </div>
 
           <div className="flex items-start gap-3">
-            <Icon name="clock" className="w-5 h-5 text-gray-400 mt-1" />
+            <Icon name={ICONS.dataFields.time} className="w-5 h-5 text-gray-400 mt-1" />
             <div className="flex-1">
               <div className="text-xs text-gray-600 mb-1">Last Updated</div>
               <div className="font-medium text-gray-900">{formatDate(patient.updatedAt)}</div>

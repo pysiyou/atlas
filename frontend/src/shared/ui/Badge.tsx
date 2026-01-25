@@ -1,5 +1,7 @@
 import React from 'react';
 import { cn } from '@/utils';
+import { Icon } from './Icon';
+import type { IconName } from './Icon';
 
 export type BadgeVariant =
   // Base variants
@@ -112,6 +114,10 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   strikethrough?: boolean;
   /** Enable pulsing animation for critical values */
   pulse?: boolean;
+  /** Optional icon to display before the badge text */
+  icon?: IconName | React.ReactNode;
+  /** Whether to auto-detect icon based on variant (for priority, status, sample type) */
+  showIcon?: boolean;
 }
 
 // Maps specific domain keys (status, priority, etc.) to base visual styles
@@ -292,6 +298,8 @@ export const Badge: React.FC<BadgeProps> = ({
   size = 'md',
   strikethrough = false,
   pulse,
+  icon,
+  showIcon = false,
   children,
   ...props
 }) => {
@@ -312,6 +320,31 @@ export const Badge: React.FC<BadgeProps> = ({
   // Determine if should pulse (explicit prop or critical variant)
   const shouldPulse = pulse ?? CRITICAL_VARIANTS.has(normalizedVariant);
 
+  // Determine icon size based on badge size
+  const iconSizeClass = size === 'xs' ? 'w-3 h-3' : size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4';
+
+  // Render icon if provided or if showIcon is true (auto-detect from variant)
+  const renderIcon = () => {
+    if (icon) {
+      // If icon is a ReactNode, render it directly
+      if (React.isValidElement(icon)) {
+        return icon;
+      }
+      // If icon is an IconName string, render Icon component
+      return <Icon name={icon as IconName} className={iconSizeClass} />;
+    }
+
+    if (showIcon) {
+      // Auto-detect icon based on variant using icon helpers
+      // This is optional and can be enhanced later
+      return null;
+    }
+
+    return null;
+  };
+
+  const iconElement = renderIcon();
+
   return (
     <div
       className={cn(
@@ -324,6 +357,7 @@ export const Badge: React.FC<BadgeProps> = ({
       )}
       {...props}
     >
+      {iconElement && <span className="mr-1 shrink-0">{iconElement}</span>}
       {content}
     </div>
   );

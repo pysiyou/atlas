@@ -8,6 +8,7 @@ import { PatientSelect as PatientSelector } from '../components/forms/PatientSel
 import { TestSelect as TestSelector } from '../components/forms/TestSelect';
 import { OrderForm as OrderDetailsForm } from '../components/forms/OrderForm';
 import { PaymentSection } from '../components/forms/PaymentSection';
+import { ICONS } from '@/utils/icon-mappings';
 
 /** Grouped props for patient selection section */
 export interface OrderUpsertLayoutPatientProps {
@@ -173,7 +174,7 @@ export const OrderUpsertLayout: React.FC<OrderUpsertLayoutProps> = ({
             form="order-upsert-form"
             isLoading={isSubmitting}
             disabled={isSubmitting}
-            icon={!isSubmitting && !isEditMode ? <Icon name="wallet" /> : undefined}
+            icon={!isSubmitting && !isEditMode ? <Icon name={ICONS.dataFields.wallet} /> : undefined}
           >
             {isSubmitting
               ? isEditMode

@@ -7,6 +7,7 @@
 import type { FilterConfig } from '@/features/filters';
 import type { FilterOption } from '@/utils/filtering';
 import { LAB_SAMPLE_TYPE_OPTIONS } from './labFilterConstants';
+import { ICONS } from '@/utils/icon-mappings';
 
 /** Sample status for collection: pending, collected, rejected */
 const COLLECTION_STATUS_OPTIONS: FilterOption[] = [
@@ -36,7 +37,7 @@ export const collectionFilterConfig: FilterConfig = {
         key: 'dateRange',
         label: 'Date Range',
         placeholder: 'Filter by date range',
-        icon: 'calendar',
+        icon: ICONS.dataFields.date,
       },
       {
         type: 'multiSelect',
@@ -44,7 +45,7 @@ export const collectionFilterConfig: FilterConfig = {
         label: 'Sample Type',
         options: LAB_SAMPLE_TYPE_OPTIONS,
         selectAllLabel: 'All sample types',
-        icon: 'sample-collection',
+        icon: ICONS.dataFields.sampleCollection,
         placeholder: 'Select sample type',
       },
       {
@@ -53,7 +54,7 @@ export const collectionFilterConfig: FilterConfig = {
         label: 'Status',
         options: COLLECTION_STATUS_OPTIONS,
         selectAllLabel: 'All statuses',
-        icon: 'checklist',
+        icon: ICONS.sampleStatus,
         placeholder: 'Select status',
       },
     ],

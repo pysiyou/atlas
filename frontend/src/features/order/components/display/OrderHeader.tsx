@@ -7,6 +7,7 @@ import React from 'react';
 import { Badge, Button, Icon, IconButton } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
 import type { Order, Invoice } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface OrderHeaderProps {
   order: Order;
@@ -71,7 +72,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
                 variant="view"
                 size="sm"
                 title="Edit Order"
-                icon={<Icon name="edit" className="w-4 h-4" />}
+                icon={<Icon name={ICONS.actions.edit} className="w-4 h-4" />}
                 onClick={onEdit}
               />
             )}
@@ -88,7 +89,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
                 variant="primary"
                 size="sm"
                 title="View Invoice"
-                icon={<Icon name="bill" className="w-4 h-4" />}
+                icon={<Icon name={ICONS.dataFields.bill} className="w-4 h-4" />}
                 onClick={onViewInvoice}
               />
             )}

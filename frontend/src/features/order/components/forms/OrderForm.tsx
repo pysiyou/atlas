@@ -3,6 +3,7 @@ import { Input, MultiSelectFilter, Textarea } from '@/shared/ui';
 import type { PriorityLevel } from '@/types';
 import { PRIORITY_LEVEL_OPTIONS } from '@/types';
 import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface OrderDetailsFormProps {
   referringPhysician: string;
@@ -48,7 +49,7 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
       <Input
         label="Referring physician"
         name="referringPhysician"
-        icon="stethoscope"
+        icon={ICONS.dataFields.stethoscope}
         value={referringPhysician}
         onChange={e => onReferringPhysicianChange(e.target.value)}
         placeholder="e.g. Dr. Smith"
@@ -67,7 +68,7 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
           showSelectAll={false}
           singleSelect={true}
           className="w-full sm:w-full"
-          icon="warning"
+          icon={ICONS.actions.warning}
         />
       </div>
 
@@ -77,7 +78,7 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
         onChange={e => onClinicalNotesChange(e.target.value)}
         placeholder="Clinical indication or reason for testing..."
         helperText="Include relevant symptoms, diagnosis, or reason for testing"
-        icon="pen"
+        icon={ICONS.dataFields.clinicalNotes}
       />
     </div>
   );

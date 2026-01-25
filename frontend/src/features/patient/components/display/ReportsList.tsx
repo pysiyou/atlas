@@ -8,6 +8,7 @@ import { Icon, IconButton, EmptyState } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types/order';
 import { formatDetailDate, getReportableOrders } from '../../utils/patientDetailUtils';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface ReportsListProps {
   orders: Order[];
@@ -19,7 +20,7 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
   if (reportableOrders.length === 0) {
     return (
       <EmptyState
-        icon="document-medicine"
+        icon={ICONS.dataFields.documentMedicine}
         title="No Reports Available"
         description="There are no validated reports for this patient yet."
       />
@@ -35,7 +36,7 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
         >
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="w-8 h-8 flex items-center justify-center">
-              <Icon name="pdf" className="w-full h-full text-red-400" />
+              <Icon name={ICONS.dataFields.pdf} className="w-full h-full text-red-400" />
             </div>
             <div className="min-w-0">
               <p className="text-xs font-medium font-mono text-gray-900 truncate">

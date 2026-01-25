@@ -8,6 +8,7 @@ import { Badge, EmptyState } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import { getTestName, getTestSampleType, getTestCategory } from '@/utils/typeHelpers';
 import type { OrderTest, Test } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface TestsTableProps {
   tests: OrderTest[];
@@ -25,7 +26,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
   const visibleTests = tests.filter(t => t.status !== 'removed');
   
   if (visibleTests.length === 0) {
-    return <EmptyState icon="health" title="No Tests" description="This order has no tests." />;
+    return <EmptyState icon={ICONS.dataFields.health} title="No Tests" description="This order has no tests." />;
   }
 
   if (variant === 'simple') {

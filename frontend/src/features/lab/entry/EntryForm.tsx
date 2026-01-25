@@ -8,6 +8,7 @@ import { cn } from '@/utils';
 import type { Test, TestParameter, Patient } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '@/utils/reference-ranges';
 import { validatePhysiologicValue, getPhysiologicLimit } from '@/utils/physiologic-limits';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface EntryFormProps {
   testDef: Test;
@@ -106,7 +107,7 @@ const SelectParameterInput: React.FC<{
 
           {/* Chevron */}
           <Icon
-            name="chevron-down"
+            name={ICONS.actions.chevronDown}
             className={cn(
               'w-4 h-4 text-gray-400 transition-transform flex-shrink-0',
               isOpen && 'rotate-180'
@@ -119,7 +120,7 @@ const SelectParameterInput: React.FC<{
               onClick={handleClear}
               className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer flex-shrink-0"
             >
-              <Icon name="close-circle" className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+              <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-gray-400 hover:text-gray-600" />
             </button>
           )}
         </div>
@@ -302,7 +303,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 </label>
                 <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
                   {isCritical && (
-                    <Icon name="danger-square" className="w-3 h-3 text-red-500 shrink-0" />
+                    <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-red-500 shrink-0" />
                   )}
                   <span className="text-xxs text-gray-400 truncate">Ref: {refRange}</span>
                 </div>

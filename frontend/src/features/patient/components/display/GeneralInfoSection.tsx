@@ -7,6 +7,7 @@ import React from 'react';
 import type { Patient } from '@/types';
 import { InfoField } from './InfoField';
 import { formatDetailDate, formatAddress } from '../../utils/patientDetailUtils';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface GeneralInfoSectionProps {
   patient: Patient;
@@ -23,12 +24,12 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
   return (
     <div className={containerClass}>
       <InfoField
-        icon="user-hands"
+        icon={ICONS.dataFields.gender}
         label="Gender"
         value={<span className="capitalize">{patient.gender}</span>}
       />
       <InfoField
-        icon="calendar"
+        icon={ICONS.dataFields.birthday}
         label="Birthday"
         value={
           <span className="whitespace-nowrap truncate">
@@ -36,25 +37,25 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
           </span>
         }
       />
-      <InfoField icon="phone" label="Phone Number" value={patient.phone} />
+      <InfoField icon={ICONS.dataFields.phone} label="Phone Number" value={patient.phone} />
       <InfoField
-        icon="mail"
+        icon={ICONS.dataFields.email}
         label="Email"
         value={<span className="line-clamp-2 break-all">{patient.email || 'N/A'}</span>}
       />
       <InfoField
-        icon="ruler"
+        icon={ICONS.dataFields.height}
         label="Height"
         value={patient.height ? `${patient.height} cm` : 'N/A'}
       />
       <InfoField
-        icon="weight"
+        icon={ICONS.dataFields.weight}
         label="Weight"
         value={patient.weight ? `${patient.weight} kg` : 'N/A'}
       />
-      <InfoField icon="map" label="Address" value={formatAddress(patient.address)} />
+      <InfoField icon={ICONS.dataFields.address} label="Address" value={formatAddress(patient.address)} />
       <InfoField
-        icon="phone"
+        icon={ICONS.dataFields.phone}
         label="Emergency Contact"
         value={
           <>

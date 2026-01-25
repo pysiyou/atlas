@@ -7,6 +7,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
 import type { CalendarView } from '../hooks/useDateFilterState';
 import { generateCalendarYears } from '../utils/dateFilterHelpers';
 
@@ -49,7 +50,7 @@ export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
         disabled={isPrevDisabled}
         className="p-1 hover:bg-gray-100 rounded text-gray-500 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
       >
-        <Icon name="chevron-left" className="w-4 h-4" />
+        <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
       </button>
 
       <button
@@ -67,7 +68,7 @@ export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
         disabled={isNextDisabled}
         className="p-1 hover:bg-gray-100 rounded text-gray-500 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
       >
-        <Icon name="chevron-right" className="w-4 h-4" />
+        <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
       </button>
     </div>
   );

@@ -7,6 +7,7 @@ import React from 'react';
 import type { Patient } from '@/types';
 import { InfoField } from './InfoField';
 import { formatList, formatFamilyHistory } from '../../utils/patientDetailUtils';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface MedicalHistorySectionDisplayProps {
   patient: Patient;
@@ -23,27 +24,27 @@ export const MedicalHistorySectionDisplay: React.FC<MedicalHistorySectionDisplay
   return (
     <div className={containerClass}>
       <InfoField
-        icon="info-circle"
+        icon={ICONS.medicalHistory.chronicCondition}
         label="Chronic Disease"
         value={formatList(patient.medicalHistory?.chronicConditions)}
       />
       <InfoField
-        icon="medicine"
+        icon={ICONS.medicalHistory.medication}
         label="Current Medications"
         value={formatList(patient.medicalHistory?.currentMedications)}
       />
       <InfoField
-        icon="health"
+        icon={ICONS.medicalHistory.surgery}
         label="Surgery"
         value={formatList(patient.medicalHistory?.previousSurgeries)}
       />
       <InfoField
-        icon="users-group"
+        icon={ICONS.medicalHistory.familyHistory}
         label="Family Disease"
         value={formatFamilyHistory(patient.medicalHistory?.familyHistory)}
       />
       <InfoField
-        icon="alert-circle"
+        icon={ICONS.medicalHistory.allergy}
         label="Allergies"
         value={formatList(patient.medicalHistory?.allergies)}
       />

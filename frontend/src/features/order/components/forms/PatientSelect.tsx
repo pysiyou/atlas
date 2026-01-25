@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, Icon } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
 import type { Patient } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface PatientSelectorProps {
   selectedPatient: Patient | null;
@@ -55,7 +56,7 @@ const PatientSearchTagInput: React.FC<{
         ].join(' ')}
       >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon name="user" className="w-4 h-4 text-gray-400" />
+          <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-gray-400" />
         </div>
 
         {selectedPatient && (
@@ -83,7 +84,7 @@ const PatientSearchTagInput: React.FC<{
                 className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-sky-100 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-sky-400 shrink-0"
                 aria-label="Clear selected patient"
               >
-                <Icon name="close-circle" className="w-3 h-3 text-gray-500 hover:text-gray-700" />
+                <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-gray-500 hover:text-gray-700" />
               </button>
             )}
           </div>
@@ -228,7 +229,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         </span>
                         {/* Check icon if selected */}
                         {isSelected && (
-                          <Icon name="check-circle" className="w-5 h-5 text-emerald-600" />
+                          <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-emerald-600" />
                         )}
                       </div>
                     </button>

@@ -6,6 +6,7 @@
 import type { FilterConfig } from '@/features/filters';
 import type { TestCategory } from '@/types';
 import { PRICE_RANGE } from '@/shared/constants';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Test category configuration for filter display
@@ -113,7 +114,7 @@ export const catalogFilterConfig: FilterConfig = {
         label: 'Test Category',
         options: categoryFilterOptions,
         selectAllLabel: 'All categories',
-        icon: 'category',
+        icon: ICONS.ui.category,
         placeholder: 'Select test categories',
       },
       {
@@ -133,7 +134,7 @@ export const catalogFilterConfig: FilterConfig = {
         min: PRICE_RANGE.MIN,
         max: PRICE_RANGE.MAX,
         currency: '',
-        icon: 'wallet',
+        icon: ICONS.dataFields.wallet,
       },
     ],
   },

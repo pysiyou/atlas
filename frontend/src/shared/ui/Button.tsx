@@ -13,6 +13,7 @@
 
 import React, { type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from './Icon';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Base style variants (no default icon)
@@ -71,38 +72,38 @@ interface VariantConfig {
  */
 const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   // Primary actions
-  save: { style: 'primary', icon: 'save' },
-  submit: { style: 'primary', icon: 'check' },
-  approve: { style: 'success', icon: 'check' },
-  add: { style: 'primary', icon: 'plus' },
-  create: { style: 'primary', icon: 'plus' },
-  edit: { style: 'primary', icon: 'pen' },
+  save: { style: 'primary', icon: ICONS.actions.save },
+  submit: { style: 'primary', icon: ICONS.actions.check },
+  approve: { style: 'success', icon: ICONS.actions.check },
+  add: { style: 'primary', icon: ICONS.actions.add },
+  create: { style: 'primary', icon: ICONS.actions.add },
+  edit: { style: 'primary', icon: ICONS.actions.edit },
 
   // Secondary/Navigation actions
-  cancel: { style: 'danger', icon: 'cross' },
-  close: { style: 'outline', icon: 'cross' },
-  back: { style: 'outline', icon: 'arrow-left' },
-  previous: { style: 'outline', icon: 'chevron-left' },
-  next: { style: 'primary', icon: 'chevron-right' },
+  cancel: { style: 'danger', icon: ICONS.actions.cross },
+  close: { style: 'outline', icon: ICONS.actions.cross },
+  back: { style: 'outline', icon: ICONS.actions.arrowLeft },
+  previous: { style: 'outline', icon: ICONS.actions.chevronLeft },
+  next: { style: 'primary', icon: ICONS.actions.chevronRight },
 
   // Destructive actions
-  delete: { style: 'danger', icon: 'trash' },
-  reject: { style: 'danger', icon: 'trash' },
+  delete: { style: 'danger', icon: ICONS.actions.delete },
+  reject: { style: 'danger', icon: ICONS.actions.delete },
 
   // Utility actions
-  retry: { style: 'primary', icon: 'loading' },
-  refresh: { style: 'secondary', icon: 'loading' },
-  print: { style: 'secondary', icon: 'printer' },
-  view: { style: 'secondary', icon: 'eye' },
-  download: { style: 'secondary', icon: 'download' },
-  filter: { style: 'primary', icon: 'filter' },
-  search: { style: 'primary', icon: 'search' },
+  retry: { style: 'primary', icon: ICONS.actions.loading },
+  refresh: { style: 'secondary', icon: ICONS.actions.loading },
+  print: { style: 'secondary', icon: ICONS.actions.printer },
+  view: { style: 'secondary', icon: ICONS.actions.view },
+  download: { style: 'secondary', icon: ICONS.actions.download },
+  filter: { style: 'primary', icon: ICONS.actions.filter },
+  search: { style: 'primary', icon: ICONS.actions.search },
 
   // User actions
-  logout: { style: 'danger', icon: 'log-out' },
+  logout: { style: 'danger', icon: ICONS.actions.logout },
 
   // Item actions
-  remove: { style: 'danger', icon: 'cross' },
+  remove: { style: 'danger', icon: ICONS.actions.cross },
 };
 
 /**

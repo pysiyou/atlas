@@ -6,6 +6,7 @@
 import React from 'react';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
 import type { ActiveFilterBadge } from './types';
 import { format } from 'date-fns';
 
@@ -109,7 +110,7 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
       )}
     >
       <div className="flex items-center gap-1 text-xxs font-medium text-gray-500">
-        <Icon name="filter" className="w-3 h-3" />
+        <Icon name={ICONS.actions.filter} className="w-3 h-3" />
         <span>Active:</span>
       </div>
 
@@ -130,7 +131,7 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
                 aria-label={`Remove ${badge.label} filter`}
               >
                 <Icon
-                  name="close-circle"
+                  name={ICONS.actions.closeCircle}
                   className="w-2.5 h-2.5 text-gray-400 hover:text-gray-600"
                 />
               </button>

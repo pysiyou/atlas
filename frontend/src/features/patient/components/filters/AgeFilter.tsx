@@ -9,6 +9,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Popover } from '@/shared/ui/Popover';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface AgeFilterProps {
   value: [number, number];
@@ -161,7 +162,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           )}
         >
           <Icon
-            name="hourglass"
+            name={ICONS.dataFields.hourglass}
             className={cn(
               'w-4 h-4 transition-colors duration-200 shrink-0',
               isOpen ? 'text-sky-500' : 'text-gray-400 group-hover:text-sky-400'
@@ -170,7 +171,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           <div className="flex-1 min-w-0 text-xs truncate font-medium">{renderTriggerContent()}</div>
 
           <Icon
-            name="chevron-down"
+            name={ICONS.actions.chevronDown}
             className={cn(
               'w-4 h-4 text-gray-400 transition-all duration-200 shrink-0',
               isOpen && 'rotate-180 text-sky-500'
@@ -184,7 +185,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               aria-label="Clear age filter"
             >
               <Icon 
-                name="close-circle" 
+                name={ICONS.actions.closeCircle} 
                 className="w-4 h-4 text-gray-400 group-hover/clear:text-sky-600 transition-colors duration-200" 
               />
             </button>

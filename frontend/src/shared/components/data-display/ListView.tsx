@@ -10,6 +10,7 @@ import { Table, EmptyState } from '@/shared/ui';
 import { LoadingState } from '../LoadingState';
 import { ErrorAlert } from '../ErrorAlert';
 import type { TableViewConfig } from '@/shared/ui/Table';
+import { ICONS } from '@/utils/icon-mappings';
 
 // TableDataItem accepts any object-like type (interfaces, types, classes)
 // Using a union type to accept both Record types and regular object types
@@ -176,7 +177,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
               emptyMessage={
                 emptyState || (
                   <EmptyState
-                    icon="search"
+                    icon={ICONS.actions.search}
                     title={`No ${title || 'Items'} Found`}
                     description="Try adjusting your search or filters to find what you're looking for."
                   />
@@ -194,7 +195,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
               <div className="h-full flex items-center justify-center">
                 {emptyState || (
                   <EmptyState
-                    icon="search"
+                    icon={ICONS.actions.search}
                     title={`No ${title || 'Items'} Found`}
                     description="Try adjusting your search or filters to find what you're looking for."
                   />
@@ -214,7 +215,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
               <div className="h-full flex items-center justify-center">
                 {emptyState || (
                   <EmptyState
-                    icon="search"
+                    icon={ICONS.actions.search}
                     title={`No ${title || 'Items'} Found`}
                     description="Try adjusting your search or filters to find what you're looking for."
                   />
@@ -230,7 +231,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
           ) : (
             <div className="h-full flex items-center justify-center">
               <EmptyState
-                icon="alert-circle"
+                icon={ICONS.actions.alertCircle}
                 title="Configuration Error"
                 description="Invalid ListView configuration. Please check your props."
               />

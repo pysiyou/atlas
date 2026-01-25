@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { SectionContainer, Icon } from '@/shared/ui';
+import { ICONS } from '@/utils/icon-mappings';
 
 export const Appointments: React.FC = () => {
   return (
@@ -14,7 +15,7 @@ export const Appointments: React.FC = () => {
       <h1 className="text-2xl font-bold text-gray-900">Appointments</h1>
       <SectionContainer title="Coming Soon">
         <div className="text-center py-12">
-          <Icon name="calendar" className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+          <Icon name={ICONS.dataFields.date} className="w-16 h-16 mx-auto mb-4 text-gray-400" />
           <p className="text-gray-600">
             Appointment management will be available once the API is implemented.
           </p>

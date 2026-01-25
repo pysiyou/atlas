@@ -15,6 +15,7 @@ import { formatDate, getContainerIconColor } from '@/utils';
 import { useUserLookup } from '@/hooks/queries';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
+import { getContainerIcon, ICONS } from '@/utils/icon-mappings';
 
 /**
  * ContainerInfo - Displays container type and color with icon
@@ -39,7 +40,7 @@ export const ContainerInfo: React.FC<ContainerInfoProps> = ({
   return (
     <span className="flex items-center" title={`Container: ${containerType}, Color: ${colorName}`}>
       <Icon
-        name={containerType === 'cup' ? 'lab-cup' : 'lab-tube'}
+        name={getContainerIcon(containerType)}
         className={`${iconSize} ${containerColor ? getContainerIconColor(containerColor) : 'text-gray-400'}`}
       />
     </span>
@@ -133,13 +134,13 @@ export const RecollectionBadge: React.FC<RecollectionBadgeProps> = ({
     <div className="flex items-center gap-2 flex-wrap">
       {originalSampleId && (
         <Badge size="sm" variant="warning" className="flex items-center gap-1">
-          <Icon name="alert-circle" className="w-3 h-3" />
+          <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
           Recollection of {originalSampleId}
         </Badge>
       )}
       {recollectionSampleId && (
         <Badge size="sm" variant="info" className="flex items-center gap-1">
-          <Icon name="alert-circle" className="w-3 h-3" />
+          <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
           Recollection requested: {recollectionSampleId}
         </Badge>
       )}
@@ -258,7 +259,7 @@ export const RecollectionAttemptBadge: React.FC<RecollectionAttemptBadgeProps> =
   showIcon = false,
 }) => (
   <Badge size={size} variant="warning" className={`flex items-center gap-1 ${className}`}>
-    {showIcon && <Icon name="loading" className="w-3 h-3" />}
+    {showIcon && <Icon name={ICONS.actions.loading} className="w-3 h-3" />}
     RE-COLLECT #{attemptNumber}
   </Badge>
 );
@@ -288,7 +289,7 @@ export const FlagCountBadge: React.FC<FlagCountBadgeProps> = ({
 
   return (
     <Badge size={size} variant="danger" className={`flex items-center gap-1.5 ${className}`}>
-      {showIcon && <Icon name="warning" className="w-3 h-3 text-red-600" />}
+      {showIcon && <Icon name={ICONS.actions.warning} className="w-3 h-3 text-red-600" />}
       {count} flag{count !== 1 ? 's' : ''}
     </Badge>
   );
@@ -312,7 +313,7 @@ export const ReviewRequiredBadge: React.FC<ReviewRequiredBadgeProps> = ({
   showIcon = true,
 }) => (
   <Badge size={size} variant="danger" className={`flex items-center gap-1 ${className}`}>
-    {showIcon && <Icon name="warning" className="w-3 h-3" />}
+    {showIcon && <Icon name={ICONS.actions.warning} className="w-3 h-3" />}
     Review Required
   </Badge>
 );

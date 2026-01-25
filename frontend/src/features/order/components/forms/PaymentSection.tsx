@@ -9,6 +9,7 @@ import React from 'react';
 import { Alert, Icon } from '@/shared/ui';
 import type { PaymentMethodOption, PaymentMethod } from '@/types/billing';
 import type { IconName } from '@/shared/ui/Icon';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface PaymentSectionProps {
   paymentMethods: PaymentMethodOption[];
@@ -66,7 +67,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
                 `}
               >
                 <Icon
-                  name="check"
+                  name={ICONS.actions.check}
                   className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-gray-300'}`}
                 />
               </div>

@@ -6,6 +6,7 @@
 
 import React, { Component, type ReactNode } from 'react';
 import { Alert, Button, Icon } from '@/shared/ui';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Props supported by all factory-created error boundaries.
@@ -99,7 +100,7 @@ export function createErrorBoundary(options: CreateErrorBoundaryOptions) {
         <div className="p-6">
           <Alert variant="danger" className="mb-4">
             <div className="flex items-start gap-3">
-              <Icon name="alert-circle" className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+              <Icon name={ICONS.actions.alertCircle} className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <h3 className="font-semibold text-red-900 mb-1">{name}</h3>
                 <p className="text-sm text-red-700 mb-3">
@@ -118,7 +119,7 @@ export function createErrorBoundary(options: CreateErrorBoundaryOptions) {
                     variant="primary"
                     size="sm"
                     onClick={this.handleReset}
-                    icon={<Icon name="loading" />}
+                    icon={<Icon name={ICONS.actions.loading} />}
                   >
                     {retryButtonLabel}
                   </Button>
@@ -127,7 +128,7 @@ export function createErrorBoundary(options: CreateErrorBoundaryOptions) {
                       variant="cancel"
                       size="sm"
                       onClick={() => window.location.reload()}
-                      icon={<Icon name="close" />}
+                      icon={<Icon name={ICONS.actions.close} />}
                     >
                       Reload Page
                     </Button>

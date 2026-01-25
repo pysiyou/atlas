@@ -13,6 +13,7 @@ import { logger } from '@/utils/logger';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan, AffiliationPricing } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface AffiliationPlanSelectorProps {
   /** Currently selected duration */
@@ -138,7 +139,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
             <div className="space-y-2.5">
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center mt-0.5">
-                  <Icon name="check" className="w-3.5 h-3.5 text-red-600" />
+                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-red-600" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-gray-900">Priority Lab Services</span>
@@ -147,7 +148,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               </div>
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center mt-0.5">
-                  <Icon name="check" className="w-3.5 h-3.5 text-red-600" />
+                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-red-600" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-gray-900">Discounted Test Pricing</span>
@@ -156,7 +157,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               </div>
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center mt-0.5">
-                  <Icon name="check" className="w-3.5 h-3.5 text-red-600" />
+                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-red-600" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-gray-900">Assurance Number</span>
@@ -165,7 +166,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               </div>
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center mt-0.5">
-                  <Icon name="check" className="w-3.5 h-3.5 text-red-600" />
+                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-red-600" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-gray-900">

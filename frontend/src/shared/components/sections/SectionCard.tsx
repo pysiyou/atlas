@@ -8,6 +8,7 @@
 import React, { useState } from 'react';
 import { Icon } from '@/shared/ui';
 import type { IconName } from '@/shared/ui/Icon';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface SectionCardProps {
   /** Section title */
@@ -74,7 +75,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
           {headerRight}
           {collapsible && (
             <Icon
-              name={isExpanded ? 'chevron-up' : 'chevron-down'}
+              name={isExpanded ? ICONS.actions.chevronUp : ICONS.actions.chevronDown}
               className="w-4 h-4 text-gray-400"
             />
           )}

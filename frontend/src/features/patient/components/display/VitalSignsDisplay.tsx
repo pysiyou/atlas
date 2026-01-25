@@ -7,6 +7,7 @@ import React from 'react';
 import { Icon } from '@/shared/ui';
 import type { IconName } from '@/shared/ui/Icon';
 import type { VitalSigns } from '@/types/patient';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface VitalSignsDisplayProps {
   vitalSigns?: VitalSigns;
@@ -28,7 +29,7 @@ const VITAL_SIGNS_CONFIG: VitalSignConfig[] = [
     key: 'temperature',
     label: 'Temperature',
     unit: '°C',
-    icon: 'thermometer-landing-page',
+    icon: ICONS.landing.thermometer,
     normalRange: { min: 36.5, max: 37.3 },
     criticalRange: { min: 30.0, max: 45.0 },
   },
@@ -36,7 +37,7 @@ const VITAL_SIGNS_CONFIG: VitalSignConfig[] = [
     key: 'heartRate',
     label: 'Heart Rate',
     unit: 'BPM',
-    icon: 'stethoscope',
+    icon: ICONS.dataFields.stethoscope,
     normalRange: { min: 60, max: 100 },
     criticalRange: { min: 30, max: 250 },
   },
@@ -44,7 +45,7 @@ const VITAL_SIGNS_CONFIG: VitalSignConfig[] = [
     key: 'systolicBP',
     label: 'Systolic BP',
     unit: 'mmHg',
-    icon: 'medical-kit',
+    icon: ICONS.dataFields.medicalKit,
     normalRange: { min: 0, max: 119.9 },
     criticalRange: { min: 50, max: 250 },
   },
@@ -52,7 +53,7 @@ const VITAL_SIGNS_CONFIG: VitalSignConfig[] = [
     key: 'diastolicBP',
     label: 'Diastolic BP',
     unit: 'mmHg',
-    icon: 'medical-kit',
+    icon: ICONS.dataFields.medicalKit,
     normalRange: { min: 0, max: 79.9 },
     criticalRange: { min: 30, max: 150 },
   },
@@ -60,7 +61,7 @@ const VITAL_SIGNS_CONFIG: VitalSignConfig[] = [
     key: 'respiratoryRate',
     label: 'Respiratory Rate',
     unit: '/min',
-    icon: 'health',
+    icon: ICONS.dataFields.health,
     normalRange: { min: 12, max: 20 },
     criticalRange: { min: 4, max: 60 },
   },
@@ -68,7 +69,7 @@ const VITAL_SIGNS_CONFIG: VitalSignConfig[] = [
     key: 'oxygenSaturation',
     label: 'O₂ Saturation',
     unit: '%',
-    icon: 'health',
+    icon: ICONS.dataFields.health,
     normalRange: { min: 95, max: 100 },
     criticalRange: { min: 50, max: 100 },
   },
@@ -130,7 +131,7 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
     return (
       <div className="flex items-center justify-center h-full min-h-[200px]">
         <div className="text-center">
-          <Icon name="stethoscope" className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+          <Icon name={ICONS.dataFields.stethoscope} className="w-12 h-12 text-gray-300 mx-auto mb-2" />
           <p className="text-sm text-gray-500">No vital signs recorded</p>
         </div>
       </div>

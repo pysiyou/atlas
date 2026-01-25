@@ -7,6 +7,7 @@
 
 import React, { useState } from 'react';
 import { Icon } from '@/shared/ui';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface DateRangeFilterProps {
   /** Current date range value */
@@ -124,7 +125,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
       <div className="grid grid-cols-2 gap-2">
         <div className="relative">
           <Icon
-            name="calendar"
+            name={ICONS.dataFields.date}
             className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
           />
           <input
@@ -137,7 +138,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
         </div>
         <div className="relative">
           <Icon
-            name="calendar"
+            name={ICONS.dataFields.date}
             className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
           />
           <input

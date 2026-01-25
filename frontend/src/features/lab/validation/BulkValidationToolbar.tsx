@@ -10,6 +10,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { Button, Icon } from '@/shared/ui';
 import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface BulkValidationItem {
   id: number;
@@ -140,7 +141,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
       <div className="flex items-center gap-3">
         {criticalSelectedCount > 0 && selectedCount > 0 && (
           <span className="text-xs text-amber-600 flex items-center gap-1">
-            <Icon name="warning" className="w-3.5 h-3.5" />
+            <Icon name={ICONS.actions.warning} className="w-3.5 h-3.5" />
             {criticalSelectedCount} critical value(s) will be skipped
           </span>
         )}
@@ -154,7 +155,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
         >
           {isProcessing ? (
             <>
-              <Icon name="loading" className="w-4 h-4 mr-2 animate-spin" />
+              <Icon name={ICONS.actions.loading} className="w-4 h-4 mr-2 animate-spin" />
               Processing...
             </>
           ) : (

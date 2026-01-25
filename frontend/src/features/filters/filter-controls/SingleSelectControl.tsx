@@ -9,6 +9,7 @@ import { Icon, type IconName } from '@/shared/ui/Icon';
 import { Badge } from '@/shared/ui/Badge';
 import { cn } from '@/utils';
 import type { SingleSelectFilterControl } from '../types';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Props for SingleSelectControl component
@@ -102,7 +103,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
 
           {/* Chevron */}
           <Icon
-            name="chevron-down"
+            name={ICONS.actions.chevronDown}
             className={cn(
               'w-4 h-4 text-gray-400 transition-transform shrink-0',
               isOpen && 'rotate-180'
@@ -115,7 +116,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
               onClick={handleClear}
               className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer shrink-0"
             >
-              <Icon name="close-circle" className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
+              <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
             </button>
           )}
         </div>
@@ -142,7 +143,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   <div className="shrink-0 mr-3">
                     {isSelected ? (
                       <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
-                        <Icon name="check" className="w-3.5 h-3.5 text-white" />
+                        <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-white" />
                       </div>
                     ) : (
                       <div className="w-5 h-5 rounded-md border-2 border-gray-300" />

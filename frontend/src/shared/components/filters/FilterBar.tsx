@@ -7,6 +7,7 @@
 
 import React, { useState } from 'react';
 import { Icon } from '@/shared/ui';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface FilterBarProps {
   /** Filter components to display */
@@ -75,7 +76,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
               aria-label={isExpanded ? 'Collapse filters' : 'Expand filters'}
             >
-              <Icon name={isExpanded ? 'chevron-up' : 'chevron-down'} className="w-4 h-4" />
+              <Icon name={isExpanded ? ICONS.actions.chevronUp : ICONS.actions.chevronDown} className="w-4 h-4" />
             </button>
           )}
         </div>

@@ -10,6 +10,7 @@ import { Badge, Alert, Icon } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabCard, ProgressBadge } from '../components/LabCard';
 import type { Test, TestWithContext } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface EntryCardProps {
   test: TestWithContext;
@@ -172,7 +173,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       return (
         <div className="flex items-center gap-2 flex-wrap">
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
-            <Icon name="alert-circle" className="w-3 h-3" />
+            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Re-test of {test.retestOfTestId}
           </Badge>
         </div>
@@ -182,7 +183,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       return (
         <div className="flex items-center gap-2 flex-wrap">
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
-            <Icon name="alert-circle" className="w-3 h-3" />
+            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Recollection of {test.sampleOriginalSampleId}
           </Badge>
         </div>

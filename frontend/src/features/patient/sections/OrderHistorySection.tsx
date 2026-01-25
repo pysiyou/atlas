@@ -8,6 +8,7 @@ import { SectionContainer, Badge, Button, Icon } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface OrderHistoryCardProps {
   orders: Order[];
@@ -34,11 +35,11 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
         onClick={onViewAllOrders}
         className="flex items-center gap-2 text-xs"
       >
-        <Icon name="eye" className="w-3.5 h-3.5" />
+        <Icon name={ICONS.actions.view} className="w-3.5 h-3.5" />
         View All
       </Button>
       <Button size="sm" onClick={onCreateOrder} className="flex items-center gap-2 text-xs">
-        <Icon name="plus" className="w-3.5 h-3.5" />
+        <Icon name={ICONS.actions.add} className="w-3.5 h-3.5" />
         New Order
       </Button>
     </div>
@@ -58,7 +59,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
       <div className="flex-1 overflow-y-auto min-h-0">
         {orders.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Icon name="document" className="w-12 h-12 text-gray-300 mb-4" />
+            <Icon name={ICONS.dataFields.document} className="w-12 h-12 text-gray-300 mb-4" />
             <p className="text-gray-600 font-medium mb-2">No orders found</p>
             <p className="text-sm text-gray-500 mb-4">Create a new order for this patient</p>
             <Button size="sm" variant="create" onClick={onCreateOrder}>

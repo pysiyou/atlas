@@ -14,6 +14,7 @@ import type { Order } from '@/types';
 import { OrderTableCard } from '../components/cards/OrderTableCard';
 import { PaymentPopover } from '@/features/payment/components/filters';
 import { ModalType } from '@/shared/context/ModalContext';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Create order table configuration with full, compact, and card views
@@ -93,19 +94,19 @@ export const createOrderTableConfig = (
       <TableActionMenu>
         <TableActionItem
           label="View Details"
-          icon={<Icon name="eye" className="w-4 h-4" />}
+          icon={<Icon name={ICONS.actions.view} className="w-4 h-4" />}
           onClick={() => navigate(`/orders/${order.orderId}`)}
         />
         {canEdit && openModalFn && (
           <TableActionItem
             label="Edit Order"
-            icon={<Icon name="edit" className="w-4 h-4" />}
+            icon={<Icon name={ICONS.actions.edit} className="w-4 h-4" />}
             onClick={() => openModalFn(ModalType.NEW_ORDER, { order, mode: 'edit' })}
           />
         )}
         <TableActionItem
           label="View Patient"
-          icon={<Icon name="user" className="w-4 h-4" />}
+          icon={<Icon name={ICONS.dataFields.user} className="w-4 h-4" />}
           onClick={() => navigate(`/patients/${order.patientId}`)}
         />
         {order.paymentStatus === 'unpaid' && (
@@ -119,7 +120,7 @@ export const createOrderTableConfig = (
                   className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-50 transition-colors cursor-pointer text-gray-700"
                 >
                   <span className="inline-flex w-5 h-5 shrink-0 items-center justify-center text-gray-500">
-                    <Icon name="wallet" className="w-4 h-4" />
+                    <Icon name={ICONS.dataFields.wallet} className="w-4 h-4" />
                   </span>
                   <span className="flex-1 min-w-0">Payment</span>
                 </button>

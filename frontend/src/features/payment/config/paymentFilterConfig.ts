@@ -8,6 +8,7 @@ import type { PaymentMethod } from '@/types';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { getEnabledPaymentMethods } from '@/types/billing';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Prepare filter options for payment status
@@ -59,7 +60,7 @@ export const paymentFilterConfig: FilterConfig = {
         key: 'dateRange',
         label: 'Date Range',
         placeholder: 'Filter by date range',
-        icon: 'calendar',
+        icon: ICONS.dataFields.date,
       },
       {
         type: 'multiSelect',
@@ -67,7 +68,7 @@ export const paymentFilterConfig: FilterConfig = {
         label: 'Payment Status',
         options: paymentStatusOptions,
         selectAllLabel: 'All statuses',
-        icon: 'info-circle',
+        icon: ICONS.actions.infoCircle,
         placeholder: 'Select payment status',
       },
       {
@@ -76,7 +77,7 @@ export const paymentFilterConfig: FilterConfig = {
         label: 'Payment Method',
         options: paymentMethodOptions,
         selectAllLabel: 'All methods',
-        icon: 'wallet',
+        icon: ICONS.dataFields.wallet,
         placeholder: 'Select payment method',
       },
     ],

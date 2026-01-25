@@ -9,6 +9,7 @@ import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
 import { OrderInfoField } from './OrderInfoField';
 import { formatOrderDate } from '../../utils/orderDetailUtils';
+import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/utils/icon-helpers';
 
 export interface OrderInfoSectionProps {
   order: Order;
@@ -22,12 +23,12 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layou
   return (
     <div className={containerClass}>
       <OrderInfoField
-        icon="hashtag"
+        icon={getDataFieldIcon('orderId')}
         label="Order ID"
         value={<span className="font-mono">{displayId.order(order.orderId)}</span>}
       />
       <OrderInfoField
-        icon="calendar"
+        icon={getDataFieldIcon('orderDate')}
         label="Order Date"
         value={
           <span className="whitespace-nowrap truncate">
@@ -36,25 +37,25 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layou
         }
       />
       <OrderInfoField
-        icon="danger-square"
+        icon={getPriorityIcon(order.priority)}
         label="Priority"
         value={<Badge variant={order.priority} size="sm" />}
       />
       <OrderInfoField
-        icon="clock"
+        icon={getOrderStatusIcon(order.overallStatus)}
         label="Status"
         value={<Badge variant={order.overallStatus} size="sm" />}
       />
       {order.referringPhysician && (
         <OrderInfoField
-          icon="stethoscope"
+          icon={getDataFieldIcon('referringPhysician')}
           label="Referring Physician"
           value={order.referringPhysician}
         />
       )}
       {order.clinicalNotes && (
         <OrderInfoField
-          icon="pen"
+          icon={getDataFieldIcon('clinicalNotes')}
           label="Clinical Notes"
           value={<span className="line-clamp-3 wrap-break-word">{order.clinicalNotes}</span>}
         />

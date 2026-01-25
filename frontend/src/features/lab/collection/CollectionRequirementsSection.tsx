@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { Icon, SectionContainer } from '@/shared/ui';
+import { ICONS } from '@/utils/icon-mappings';
 
 /** Test detail for requirements display */
 export interface TestDetail {
@@ -87,7 +88,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
 
         {activeTest.rejectionCriteria && activeTest.rejectionCriteria.length > 0 && (
           <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-200 rounded">
-            <Icon name="alert-circle" className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
+            <Icon name={ICONS.actions.alertCircle} className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
             <div className="flex-1">
               <div className="text-xs font-medium text-red-900 mb-1">Rejection Criteria</div>
               <ul className="list-disc list-inside space-y-0.5">

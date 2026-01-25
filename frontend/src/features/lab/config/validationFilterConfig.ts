@@ -13,6 +13,7 @@ import {
   PRIORITY_LEVEL_CONFIG,
   type PriorityLevel,
 } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 const priorityOptions = createFilterOptions(PRIORITY_LEVEL_VALUES, {
   routine: { label: PRIORITY_LEVEL_CONFIG.routine.label },
@@ -41,7 +42,7 @@ export const validationFilterConfig: FilterConfig = {
         key: 'dateRange',
         label: 'Date Range',
         placeholder: 'Filter by date range',
-        icon: 'calendar',
+        icon: ICONS.dataFields.date,
       },
       {
         type: 'multiSelect',
@@ -49,7 +50,7 @@ export const validationFilterConfig: FilterConfig = {
         label: 'Sample Type',
         options: LAB_SAMPLE_TYPE_OPTIONS,
         selectAllLabel: 'All sample types',
-        icon: 'sample-collection',
+        icon: ICONS.dataFields.sampleCollection,
         placeholder: 'Select sample type',
       },
       {
@@ -58,7 +59,7 @@ export const validationFilterConfig: FilterConfig = {
         label: 'Status',
         options: priorityOptions,
         selectAllLabel: 'All statuses',
-        icon: 'checklist',
+        icon: ICONS.priority,
         placeholder: 'Select status',
       },
     ],

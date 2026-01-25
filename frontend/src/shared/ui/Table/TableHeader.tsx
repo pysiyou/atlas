@@ -2,6 +2,7 @@ import { Icon } from '../Icon';
 import type { TableHeaderProps } from './types';
 import { useColumnStyles } from './hooks/useColumnWidth';
 import { HEADER_PADDING, TEXT_SIZE } from './constants';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Table Header Component
@@ -54,7 +55,7 @@ export function TableHeader<T>({
             <span>{column.header}</span>
             {isActiveSort && (
               <Icon
-                name={sort.direction === 'asc' ? 'arrow-up' : 'arrow-down'}
+                name={sort.direction === 'asc' ? ICONS.actions.arrowUp : ICONS.actions.arrowDown}
                 className="w-3.5 h-3.5"
               />
             )}

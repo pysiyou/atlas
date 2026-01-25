@@ -15,3 +15,5 @@ export * from './orderUtils';
 export * from './typeHelpers';
 export * from './filtering';
 export * from './errorHelpers';
+export * from './icon-mappings';
+export * from './icon-helpers';

@@ -6,6 +6,7 @@
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from './Icon';
 import type { IconName } from './Icon';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -188,11 +189,11 @@ export const Select: React.FC<SelectProps> = ({
 
     const name = props.name?.toLowerCase() || '';
 
-    if (name.includes('gender')) return 'user-hands';
-    if (name.includes('relationship')) return 'link';
-    if (name.includes('duration') || name.includes('affiliation')) return 'clock';
+    if (name.includes('gender')) return ICONS.dataFields.userHands;
+    if (name.includes('relationship')) return ICONS.ui.link;
+    if (name.includes('duration') || name.includes('affiliation')) return ICONS.dataFields.time;
 
-    return 'info-circle';
+    return ICONS.actions.infoCircle;
   };
 
   const displayIcon = getDefaultIcon();

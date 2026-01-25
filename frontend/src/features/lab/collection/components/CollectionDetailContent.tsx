@@ -12,6 +12,7 @@ import { CollectionRequirementsSection } from '../CollectionRequirementsSection'
 import { CollectionRejectionSection } from '../CollectionRejectionSection';
 import { CollectionInfoLine } from '../../components/StatusBadges';
 import { DetailGrid, type DetailGridSectionConfig } from '../../components/LabDetailModal';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface CollectionDetailContentProps {
   sample: Sample;
@@ -87,7 +88,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
                 <span className="text-gray-500 mr-2">{testCode}</span>
                 {test?.turnaroundTime && (
                   <span className="text-gray-400 flex items-center gap-1">
-                    <Icon name="clock" className="w-2.5 h-2.5" />
+                    <Icon name={ICONS.dataFields.time} className="w-2.5 h-2.5" />
                     {test.turnaroundTime}h
                   </span>
                 )}

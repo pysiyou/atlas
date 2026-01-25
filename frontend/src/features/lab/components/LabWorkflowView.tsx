@@ -10,6 +10,7 @@
 import React, { type ReactNode } from 'react';
 import { SearchBar, EmptyState } from '@/shared/ui';
 import { useSearch } from '@/utils/filtering';
+import { ICONS } from '@/utils/icon-mappings';
 
 type IconName = 'search' | 'sample-collection' | 'checklist' | 'shield-check';
 
@@ -124,7 +125,7 @@ export function LabWorkflowView<T>({
         {showNoMatches && (
           <div className="flex-1">
             <EmptyState
-              icon="search"
+              icon={ICONS.actions.search}
               title="No Matches Found"
               description={
                 useFilterRow

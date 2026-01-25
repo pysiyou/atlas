@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { Icon } from '@/shared/ui';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface LoginBrandingPanelProps {
   isVisible: boolean;
@@ -46,7 +47,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
               style={{ animation: 'pulse-ring 3s ease-in-out infinite' }}
             />
             <div className="relative w-16 h-16 bg-[#3d5a66] rounded-lg flex items-center justify-center shadow-lg shadow-black/20 transform hover:scale-105 transition-transform duration-300">
-              <Icon name="app-logo" className="w-9 h-9" />
+              <Icon name={ICONS.ui.appLogo} className="w-9 h-9" />
             </div>
           </div>
           <div>
@@ -76,7 +77,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
           >
             {/* Feature icon */}
             <div className="w-10 h-10 rounded-lg bg-[#2d4550] border border-[#3d5a66] flex items-center justify-center flex-shrink-0 group-hover:bg-[#3a5663] transition-colors duration-300">
-              <Icon name="check-circle" className="w-5 h-5 text-[#7a9ba8]" />
+              <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-[#7a9ba8]" />
             </div>
             <div>
               <h3 className="font-body font-semibold text-[#e8eaed] text-[15px] leading-tight">
@@ -99,7 +100,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
                 key={i}
                 className="w-8 h-8 rounded-full bg-[#3a4556] border-2 border-[#1a1f2e] flex items-center justify-center"
               >
-                <Icon name="user" className="w-4 h-4 text-[#8892a6]" />
+                <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-[#8892a6]" />
               </div>
             ))}
           </div>

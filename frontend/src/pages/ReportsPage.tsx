@@ -15,6 +15,7 @@ import { SectionContainer, Badge, Button, EmptyState, Icon } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import toast from 'react-hot-toast';
+import { ICONS } from '@/utils/icon-mappings';
 
 export const Reports: React.FC = () => {
   const { orders, isLoading: ordersLoading } = useOrdersList();
@@ -51,7 +52,7 @@ export const Reports: React.FC = () => {
                 className="flex items-start justify-between p-4 border border-gray-200 rounded"
               >
                 <div className="flex items-start gap-3">
-                  <Icon name="document" className="w-6 h-6 text-sky-600 mt-1" />
+                  <Icon name={ICONS.dataFields.document} className="w-6 h-6 text-sky-600 mt-1" />
                   <div>
                     <div className="font-medium text-gray-900">
                       <span className="font-mono">{displayId.order(order.orderId)}</span>
@@ -92,7 +93,7 @@ export const Reports: React.FC = () => {
           </div>
         ) : (
           <EmptyState
-            icon="pdf"
+            icon={ICONS.dataFields.pdf}
             title="No Validated Orders"
             description="Orders must be validated before reports can be generated."
           />

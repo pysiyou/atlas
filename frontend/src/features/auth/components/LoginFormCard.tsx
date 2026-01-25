@@ -5,6 +5,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { Icon } from '@/shared/ui';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface LoginFormCardProps {
   username: string;
@@ -63,7 +64,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
           {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-3 mb-8">
             <div className="w-11 h-11 bg-[#3d5a66] rounded flex items-center justify-center shadow-md shadow-black/20">
-              <Icon name="app-logo" className="w-6 h-6 text-white" />
+              <Icon name={ICONS.ui.appLogo} className="w-6 h-6 text-white" />
             </div>
             <div>
               <h1 className="font-display text-2xl text-[#e8eaed]">Atlas</h1>
@@ -86,7 +87,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <div className="mb-6 p-4 bg-[#3d2a2e] border border-[#5a3a40] rounded-lg animate-[shake_0.5s_ease-in-out]">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-[#4a3035] flex items-center justify-center flex-shrink-0">
-                  <Icon name="alert-circle" className="h-4 w-4 text-[#c9787e]" />
+                  <Icon name={ICONS.actions.alertCircle} className="h-4 w-4 text-[#c9787e]" />
                 </div>
                 <p className="font-body text-sm text-[#d4989d]">{error}</p>
               </div>
@@ -106,7 +107,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
                   <Icon
-                    name="user"
+                    name={ICONS.dataFields.user}
                     className="h-5 w-5 text-[#6b7280] group-focus-within:text-[#7a9ba8] transition-colors duration-200"
                   />
                 </div>
@@ -137,7 +138,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
                   <Icon
-                    name="lock"
+                    name={ICONS.ui.lock}
                     className="h-5 w-5 text-[#6b7280] group-focus-within:text-[#7a9ba8] transition-colors duration-200"
                   />
                 </div>
@@ -159,7 +160,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                   className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#6b7280] hover:text-[#7a9ba8] transition-colors duration-200 z-10 cursor-pointer"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  <Icon name="eye" className="h-5 w-5" />
+                  <Icon name={ICONS.actions.view} className="h-5 w-5" />
                 </button>
               </div>
             </div>
@@ -175,7 +176,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
               <span className="relative flex items-center justify-center">
                 {isSubmitting ? (
                   <>
-                    <Icon name="loading" className="animate-spin -ml-1 mr-3 h-5 w-5" />
+                    <Icon name={ICONS.actions.loading} className="animate-spin -ml-1 mr-3 h-5 w-5" />
                     Signing in...
                   </>
                 ) : (

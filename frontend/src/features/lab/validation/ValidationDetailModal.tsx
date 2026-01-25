@@ -14,6 +14,7 @@ import React from 'react';
 import { Button, Icon, Popover, SectionContainer } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
 import { ValidationForm } from './ValidationForm';
+import { ICONS } from '@/utils/icon-mappings';
 import {
   LabDetailModal,
   DetailGrid,
@@ -159,9 +160,9 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
         <ModalFooter
           statusIcon={
             hasFlags ? (
-              <Icon name="warning" className="w-4 h-4 text-gray-400" />
+              <Icon name={ICONS.actions.warning} className="w-4 h-4 text-gray-400" />
             ) : (
-              <Icon name="pen" className="w-4 h-4 text-gray-400" />
+              <Icon name={ICONS.dataFields.clinicalNotes} className="w-4 h-4 text-gray-400" />
             )
           }
           statusMessage={

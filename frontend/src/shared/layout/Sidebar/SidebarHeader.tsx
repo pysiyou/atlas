@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { Icon, IconButton } from '@/shared/ui';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface SidebarHeaderProps {
   /** Whether the sidebar is collapsed */
@@ -38,7 +39,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
             onClick={() => isCollapsed && onToggleCollapse()}
           >
             <div className="w-8 h-8 flex items-center justify-center">
-              <Icon name="app-logo" className="w-full h-full text-sky-600" />
+              <Icon name={ICONS.ui.appLogo} className="w-full h-full text-sky-600" />
             </div>
           </div>
         </div>

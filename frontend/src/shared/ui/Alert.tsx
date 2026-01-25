@@ -5,6 +5,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Icon } from './Icon';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface AlertProps {
   children: ReactNode;
@@ -25,25 +26,25 @@ export const Alert: React.FC<AlertProps> = ({
       bg: 'bg-sky-100',
       border: 'border-sky-200',
       text: 'text-sky-800',
-      icon: <Icon name="info-circle" className="w-5 h-5" />,
+      icon: <Icon name={ICONS.actions.infoCircle} className="w-5 h-5" />,
     },
     success: {
       bg: 'bg-green-100',
       border: 'border-green-200',
       text: 'text-green-800',
-      icon: <Icon name="check-circle" className="w-5 h-5" />,
+      icon: <Icon name={ICONS.actions.checkCircle} className="w-5 h-5" />,
     },
     warning: {
       bg: 'bg-yellow-100',
       border: 'border-yellow-200',
       text: 'text-yellow-800',
-      icon: <Icon name="warning" className="w-5 h-5" />,
+      icon: <Icon name={ICONS.actions.warning} className="w-5 h-5" />,
     },
     danger: {
       bg: 'bg-red-100',
       border: 'border-red-200',
       text: 'text-red-800',
-      icon: <Icon name="close-circle" className="w-5 h-5" />,
+      icon: <Icon name={ICONS.actions.closeCircle} className="w-5 h-5" />,
     },
   };
 
@@ -62,7 +63,7 @@ export const Alert: React.FC<AlertProps> = ({
           className="flex-shrink-0 hover:opacity-70 transition-opacity cursor-pointer"
           aria-label="Close alert"
         >
-          <Icon name="cross" className="w-5 h-5" />
+          <Icon name={ICONS.actions.cross} className="w-5 h-5" />
         </button>
       )}
     </div>

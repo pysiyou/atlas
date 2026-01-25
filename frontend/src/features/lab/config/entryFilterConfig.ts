@@ -8,6 +8,7 @@ import type { FilterConfig } from '@/features/filters';
 import { createFilterOptions } from '@/utils/filtering';
 import { LAB_SAMPLE_TYPE_OPTIONS } from './labFilterConstants';
 import { TEST_STATUS_CONFIG } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 /** Entry workflow: sample-collected, in-progress only */
 const ENTRY_STATUS_VALUES = ['sample-collected', 'in-progress'] as const;
@@ -37,7 +38,7 @@ export const entryFilterConfig: FilterConfig = {
         key: 'dateRange',
         label: 'Date Range',
         placeholder: 'Filter by date range',
-        icon: 'calendar',
+        icon: ICONS.dataFields.date,
       },
       {
         type: 'multiSelect',
@@ -45,7 +46,7 @@ export const entryFilterConfig: FilterConfig = {
         label: 'Sample Type',
         options: LAB_SAMPLE_TYPE_OPTIONS,
         selectAllLabel: 'All sample types',
-        icon: 'sample-collection',
+        icon: ICONS.dataFields.sampleCollection,
         placeholder: 'Select sample type',
       },
       {
@@ -54,7 +55,7 @@ export const entryFilterConfig: FilterConfig = {
         label: 'Status',
         options: entryStatusOptions,
         selectAllLabel: 'All statuses',
-        icon: 'checklist',
+        icon: ICONS.testStatus,
         placeholder: 'Select status',
       },
     ],

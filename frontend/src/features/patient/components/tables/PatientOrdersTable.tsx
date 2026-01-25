@@ -8,6 +8,7 @@ import { Badge, EmptyState } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types/order';
 import { formatDetailDate, formatOrderPrice } from '../../utils/patientDetailUtils';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface PatientOrdersTableProps {
   orders: Order[];
@@ -23,7 +24,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
   if (orders.length === 0) {
     return (
       <EmptyState
-        icon="document"
+        icon={ICONS.dataFields.document}
         title="No Orders Found"
         description="This patient has no orders yet."
       />

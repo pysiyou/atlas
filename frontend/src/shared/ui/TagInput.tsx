@@ -9,6 +9,7 @@ import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { Icon } from './Icon';
 import { Badge } from './Badge';
 import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface TagInputProps {
   /** Current tags as an array of strings */
@@ -146,7 +147,7 @@ export const TagInput: React.FC<TagInputProps> = ({
               className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-black/10 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-gray-400"
               aria-label={`Remove ${tag}`}
             >
-              <Icon name="close-circle" className="w-3 h-3 text-gray-500 hover:text-gray-700" />
+              <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-gray-500 hover:text-gray-700" />
             </button>
           </Badge>
         ))}

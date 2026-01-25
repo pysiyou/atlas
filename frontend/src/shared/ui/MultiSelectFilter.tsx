@@ -16,6 +16,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Minus } from 'lucide-react';
 import { Popover } from './Popover';
 import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Option item for the filter
@@ -96,7 +97,7 @@ const ListItem: React.FC<{
         ) : // Square checkbox style for multi-select
         isSelected ? (
           <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
-            <Icon name="check" className="w-3.5 h-3.5 text-white" />
+            <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-white" />
           </div>
         ) : (
           <div className="w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
@@ -235,7 +236,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
 
           {/* Chevron */}
           <Icon
-            name="chevron-down"
+            name={ICONS.actions.chevronDown}
             className={cn('w-4 h-4 text-gray-400 transition-transform shrink-0', isOpen && 'rotate-180')}
           />
 
@@ -256,7 +257,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
               className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer shrink-0"
               aria-label="Clear selection"
             >
-              <Icon name="close-circle" className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+              <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-gray-400 hover:text-gray-600" />
             </button>
           )}
         </div>
@@ -295,7 +296,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
                       {allSelected || someSelected ? (
                         <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
                           {allSelected ? (
-                            <Icon name="check" className="w-3.5 h-3.5 text-white" />
+                            <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-white" />
                           ) : (
                             <Minus className="w-3.5 h-3.5 text-white" />
                           )}
@@ -321,7 +322,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
                   }}
                   className="w-full px-4 py-2.5 text-left text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50/80 transition-colors flex items-center gap-2"
                 >
-                  <Icon name="close-circle" className="w-4 h-4 text-gray-400" />
+                  <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-gray-400" />
                   <span>Clear selection</span>
                 </button>
               )}

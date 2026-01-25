@@ -8,6 +8,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Popover, IconButton, Icon, Alert, Badge } from '@/shared/ui';
 import { PopoverForm, CheckboxCard } from '../components/PopoverForm';
 import type { RejectionReason } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 /** Rejection reason options with labels and descriptions */
 const REJECTION_REASONS: { value: RejectionReason; label: string; description: string }[] = [
@@ -125,7 +126,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       disabled={!isValid}
       footerInfo={
         <>
-          <Icon name="alert-circle" className="w-3.5 h-3.5" />
+          <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
           <span>Rejecting sample</span>
         </>
       }

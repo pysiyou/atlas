@@ -8,6 +8,7 @@ import React from 'react';
 import { Icon } from '@/shared/ui';
 import { PaymentPopover } from '../filters/PaymentPopover';
 import type { Order } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface PaymentButtonProps {
   /** Order to display payment action for */
@@ -35,7 +36,7 @@ export const PaymentButton: React.FC<PaymentButtonProps> = ({
   if (isPaid) {
     return (
       <div className="flex items-center justify-start">
-        <Icon name="check-circle" className="w-5 h-5 text-gray-300" />
+        <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-gray-300" />
       </div>
     );
   }

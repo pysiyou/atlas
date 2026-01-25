@@ -17,6 +17,8 @@ import { CollectionPopover } from '../CollectionPopover';
 import { CollectionRejectionPopover } from '../CollectionRejectionPopover';
 import { ModalFooter } from '../../components/LabDetailModal';
 import { orderHasValidatedTests, getValidatedTestCount } from '@/features/order/utils';
+import { getSampleStatusIcon } from '@/utils/icon-helpers';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface CollectionDetailFooterProps {
   sample: Sample;
@@ -67,7 +69,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
       sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0);
     return (
       <ModalFooter
-        statusIcon={<Icon name="flask" className="w-4 h-4 text-gray-400" />}
+        statusIcon={<Icon name={getSampleStatusIcon('pending')} className="w-4 h-4 text-gray-400" />}
         statusMessage="Sample pending collection"
         statusClassName="text-gray-500"
       >
@@ -81,7 +83,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
             onClose();
           }}
           trigger={
-            <Button variant="primary" size="md" icon={<Icon name="flask" />}>
+            <Button variant="primary" size="md" icon={<Icon name={ICONS.dataFields.flask} />}>
               {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
             </Button>
           }
@@ -97,7 +99,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
 
     return (
       <ModalFooter
-        statusIcon={<Icon name="check-circle" className="w-4 h-4 text-gray-400" />}
+        statusIcon={<Icon name={getSampleStatusIcon('collected')} className="w-4 h-4 text-gray-400" />}
         statusMessage={
           hasValidatedTests
             ? `Cannot reject - ${validatedCount} test${validatedCount > 1 ? 's' : ''} already validated`
@@ -138,7 +140,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
   if (isRejected) {
     return (
       <ModalFooter
-        statusIcon={<Icon name="close-circle" className="w-4 h-4 text-gray-400" />}
+        statusIcon={<Icon name={getSampleStatusIcon('rejected')} className="w-4 h-4 text-gray-400" />}
         statusMessage={
           rejectedSample?.recollectionRequired
             ? 'Sample rejected - recollection requested'

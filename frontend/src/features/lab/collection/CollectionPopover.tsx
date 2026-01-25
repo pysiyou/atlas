@@ -11,6 +11,7 @@ import { PopoverForm } from '../components/PopoverForm';
 import type { ContainerType } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS } from '@/types';
 import type { SampleRequirement } from '@/utils/sampleHelpers';
+import { ICONS, getContainerIcon } from '@/utils/icon-mappings';
 
 interface CollectionPopoverContentProps {
   requirement: SampleRequirement;
@@ -92,7 +93,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       disabled={!isValid}
       footerInfo={
         <div className="flex items-center gap-1.5">
-          <Icon name="alert-circle" className="w-3.5 h-3.5" />
+          <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
           <span>Collecting sample</span>
         </div>
       }
@@ -105,7 +106,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           </label>
           {minimumVolume > 0 && (
             <div className="text-xxs text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100 flex items-center gap-1">
-              <Icon name="alert-circle" className="w-3 h-3" />
+              <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
               Min: {minimumVolume} mL
             </div>
           )}
@@ -133,7 +134,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           <div
             className={`text-xs text-yellow-600 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100 transition-opacity duration-200 ${volume > 100 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           >
-            <Icon name="alert-circle" className="w-3.5 h-3.5" />
+            <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
             Unusually high volume - please verify
           </div>
         </div>
@@ -178,7 +179,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   {option.name}
                 </span>
                 <Icon
-                  name={option.value === 'cup' ? 'lab-cup' : 'lab-tube'}
+                  name={getContainerIcon(option.value)}
                   className={`w-5 h-5 ${isSelected ? (showWarning ? 'text-yellow-600' : 'text-sky-600') : 'text-gray-400'}`}
                 />
               </div>
@@ -189,7 +190,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           <div
             className={`text-xs text-yellow-600 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100 transition-opacity duration-200 ${selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           >
-            <Icon name="alert-circle" className="w-3.5 h-3.5" />
+            <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
             Warning: Selected container type not in requirements
           </div>
         </div>
@@ -230,7 +231,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   : 'opacity-0 pointer-events-none border-transparent'
             }`}
           >
-            <Icon name="alert-circle" className="w-3.5 h-3.5" />
+            <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
             {!selectedColor ? 'Selection required' : 'Warning: Selected color not in requirements'}
           </div>
         </div>
@@ -284,7 +285,7 @@ export const CollectionPopover: React.FC<CollectionPopoverProps> = ({
     offsetValue={8}
     trigger={
       trigger || (
-        <Button variant="primary" size="xs" icon={<Icon name="flask" className="text-white" />}>
+        <Button variant="primary" size="xs" icon={<Icon name={ICONS.dataFields.flask} className="text-white" />}>
           {isRecollection ? 'RECOLLECT' : 'COLLECT'}
         </Button>
       )

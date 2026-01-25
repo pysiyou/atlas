@@ -7,6 +7,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { SearchBar } from '@/shared/ui';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Props for SearchControl component
@@ -127,7 +128,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
           className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded transition-colors"
           aria-label="Clear search"
         >
-          <Icon name="close-circle" className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-gray-400 hover:text-gray-600" />
         </button>
       )}
     </div>

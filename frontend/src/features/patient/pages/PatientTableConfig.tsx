@@ -18,6 +18,7 @@ import { displayId } from '@/utils/id-display';
 import type { Patient, Order } from '@/types';
 import { isAffiliationActive } from '../utils/affiliationUtils';
 import { PatientCard } from '../components/cards/PatientCard';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Create patient table configuration with full, compact, and card views
@@ -97,17 +98,17 @@ export const createPatientTableConfig = (
     <TableActionMenu>
       <TableActionItem
         label="View Details"
-        icon={<Icon name="eye" className="w-4 h-4" />}
+        icon={<Icon name={ICONS.actions.view} className="w-4 h-4" />}
         onClick={() => navigate(`/patients/${patient.id}`)}
       />
       <TableActionItem
         label="Edit Patient"
-        icon={<Icon name="pen" className="w-4 h-4" />}
+        icon={<Icon name={ICONS.actions.edit} className="w-4 h-4" />}
         onClick={() => navigate(`/patients/${patient.id}/edit`)}
       />
       <TableActionItem
         label="Create Order"
-        icon={<Icon name="document" className="w-4 h-4" />}
+        icon={<Icon name={ICONS.dataFields.document} className="w-4 h-4" />}
         onClick={() => openNewOrderModal(patient.id.toString())}
       />
     </TableActionMenu>

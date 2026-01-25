@@ -14,6 +14,7 @@ import {
 import { Card, SectionContainer, Badge, Icon } from '@/shared/ui';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
+import { ICONS } from '@/utils/icon-mappings';
 
 export const Dashboard: React.FC = () => {
   const { currentUser } = useAuth();
@@ -44,26 +45,26 @@ export const Dashboard: React.FC = () => {
       label: 'Total Patients',
       value: patients.length,
       today: todayPatients,
-      icon: <Icon name="users-group" className="w-8 h-8 text-sky-600" />,
+      icon: <Icon name={ICONS.ui.usersGroup} className="w-8 h-8 text-sky-600" />,
       color: 'bg-sky-50',
     },
     {
       label: 'Total Orders',
       value: orders.length,
       today: todayOrders,
-      icon: <Icon name="document" className="w-8 h-8 text-green-600" />,
+      icon: <Icon name={ICONS.dataFields.document} className="w-8 h-8 text-green-600" />,
       color: 'bg-green-50',
     },
     {
       label: 'Appointments Today',
       value: todayAppointments,
-      icon: <Icon name="calendar" className="w-8 h-8 text-purple-600" />,
+      icon: <Icon name={ICONS.dataFields.date} className="w-8 h-8 text-purple-600" />,
       color: 'bg-purple-50',
     },
     {
       label: 'Revenue Today',
       value: formatCurrency(todayRevenue),
-      icon: <Icon name="dollar-sign" className="w-8 h-8 text-orange-600" />,
+      icon: <Icon name={ICONS.dataFields.dollarSign} className="w-8 h-8 text-orange-600" />,
       color: 'bg-orange-50',
     },
   ];
@@ -103,7 +104,7 @@ export const Dashboard: React.FC = () => {
         {pendingOrders > 0 && (
           <Card padding="md">
             <div className="flex items-center gap-3">
-              <Icon name="trending-up" className="w-6 h-6 text-yellow-600" />
+              <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-yellow-600" />
               <div>
                 <p className="font-medium text-gray-900">Pending Actions</p>
                 <p className="text-sm text-gray-600">

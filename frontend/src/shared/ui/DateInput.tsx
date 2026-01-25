@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import { Icon } from './Icon';
 import { Popover } from './Popover';
 import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
 import { DateFilterCalendar } from '@/features/order/components/DateFilterCalendar';
 import { DateFilterHeader } from '@/features/order/components/DateFilterHeader';
 import { useDateFilterNavigation } from '@/features/order/hooks/useDateFilterNavigation';
@@ -127,7 +128,7 @@ export const DateInput: React.FC<DateInputProps> = ({
               disabled && 'bg-gray-100 cursor-not-allowed'
             )}
           >
-            <Icon name="calendar" className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-gray-400 flex-shrink-0" />
             <div className="flex-1 text-xs truncate">
               {dateValue ? (
                 <span className="text-gray-900">{format(dateValue, 'dd MMM yyyy')}</span>
@@ -137,7 +138,7 @@ export const DateInput: React.FC<DateInputProps> = ({
             </div>
 
             <Icon
-              name="chevron-down"
+              name={ICONS.actions.chevronDown}
               className={cn(
                 'w-4 h-4 text-gray-400 transition-transform flex-shrink-0',
                 isOpen && 'rotate-180'
@@ -151,7 +152,7 @@ export const DateInput: React.FC<DateInputProps> = ({
                 type="button"
               >
                 <Icon
-                  name="close-circle"
+                  name={ICONS.actions.closeCircle}
                   className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600"
                 />
               </button>

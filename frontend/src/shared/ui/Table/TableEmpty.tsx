@@ -1,4 +1,5 @@
 import { Icon, type IconName } from '../Icon';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface TableEmptyProps {
   message?: React.ReactNode;
@@ -9,7 +10,7 @@ interface TableEmptyProps {
  * Table Empty Component
  * Displays empty state when no data is available
  */
-export function TableEmpty({ message = 'No data available', icon = 'inbox' }: TableEmptyProps) {
+export function TableEmpty({ message = 'No data available', icon = ICONS.dataFields.document }: TableEmptyProps) {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
       {icon && <Icon name={icon as IconName} className="w-12 h-12 text-gray-400 mb-4" />}

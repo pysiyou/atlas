@@ -8,6 +8,7 @@ import { CollectionView } from '@/features/lab/collection/CollectionView';
 import { EntryView } from '@/features/lab/entry/EntryView';
 import { ValidationView } from '@/features/lab/validation/ValidationView';
 import { Icon } from '@/shared/ui/Icon';
+import { ICONS } from '@/utils/icon-mappings';
 
 export const Laboratory: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'collection' | 'entry' | 'validation'>('collection');
@@ -16,17 +17,17 @@ export const Laboratory: React.FC = () => {
     {
       id: 'collection' as const,
       label: 'Sample Collection',
-      icon: <Icon name="flask" className="w-4 h-4" />,
+      icon: <Icon name={ICONS.dataFields.flask} className="w-4 h-4" />,
     },
     {
       id: 'entry' as const,
       label: 'Result Entry',
-      icon: <Icon name="notebook" className="w-4 h-4" />,
+      icon: <Icon name={ICONS.dataFields.notebook} className="w-4 h-4" />,
     },
     {
       id: 'validation' as const,
       label: 'Result Validation',
-      icon: <Icon name="shield-check" className="w-4 h-4" />,
+      icon: <Icon name={ICONS.ui.shieldCheck} className="w-4 h-4" />,
     },
   ];
 

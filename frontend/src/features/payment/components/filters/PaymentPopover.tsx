@@ -18,6 +18,7 @@ import {
 } from '@/types/billing';
 import { useCreatePayment } from '@/hooks/queries/usePayments';
 import type { IconName } from '@/shared/ui/Icon';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface PaymentPopoverProps {
   /** Order to process payment for */
@@ -194,7 +195,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       disabled={!isValid}
       footerInfo={
         <div className="flex items-center gap-1.5">
-          <Icon name="wallet" className="w-3.5 h-3.5" />
+          <Icon name={ICONS.dataFields.wallet} className="w-3.5 h-3.5" />
           <span>Processing payment</span>
         </div>
       }
@@ -244,7 +245,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                   `}
                 >
                   <Icon
-                    name="check"
+                    name={ICONS.actions.check}
                     className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-gray-300'}`}
                   />
                 </div>
@@ -282,7 +283,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
  * Wraps PaymentPopoverContent with a Popover trigger button.
  */
 const DEFAULT_TRIGGER = (size: 'xs' | 'sm' | 'md' | 'lg') => (
-  <Button size={size} variant="primary" icon={<Icon name="wallet" className="text-white" />}>
+  <Button size={size} variant="primary" icon={<Icon name={ICONS.dataFields.wallet} className="text-white" />}>
     PAY
   </Button>
 );

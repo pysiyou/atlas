@@ -25,6 +25,7 @@ import {
 } from '@/types/billing';
 import type { IconName } from '@/shared/ui/Icon';
 import type { OrderPaymentDetails } from '../types/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface PaymentDetailModalProps {
   /** Whether the modal is open */
@@ -279,7 +280,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                           `}
                         >
                           <Icon
-                            name="check"
+                            name={ICONS.actions.check}
                             className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-gray-300'}`}
                           />
                         </div>
@@ -315,7 +316,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             {/* Paid Success Message */}
             {isPaid && (
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
-                <Icon name="check-circle" className="w-6 h-6 text-green-600 shrink-0" />
+                <Icon name={ICONS.actions.checkCircle} className="w-6 h-6 text-green-600 shrink-0" />
                 <div>
                   <p className="text-sm font-medium text-green-800">Payment Complete</p>
                   <p className="text-xs text-green-600 mt-0.5">This order has been fully paid.</p>
@@ -343,7 +344,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                 onClick={handlePayment}
                 disabled={submitting}
                 isLoading={submitting}
-                icon={!submitting ? <Icon name="wallet" /> : undefined}
+                icon={!submitting ? <Icon name={ICONS.dataFields.wallet} /> : undefined}
               >
                 {submitting ? 'Processing...' : `Pay ${formatCurrency(order.totalPrice)}`}
               </Button>

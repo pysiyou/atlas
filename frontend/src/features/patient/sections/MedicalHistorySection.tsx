@@ -7,6 +7,7 @@ import React from 'react';
 import { SectionContainer, Badge, Icon } from '@/shared/ui';
 import type { Patient } from '@/types';
 import { formatFamilyHistory } from '../utils/patientDetailUtils';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface MedicalHistoryCardProps {
   patient: Patient;
@@ -27,7 +28,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
       {/* Chronic Conditions */}
       {medicalHistory.chronicConditions.length > 0 && (
         <div className="flex items-start gap-3">
-          <Icon name="health" className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
+          <Icon name={ICONS.dataFields.health} className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Chronic Conditions</div>
             <div className="flex flex-wrap gap-2">
@@ -44,7 +45,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
       {/* Current Medications */}
       {medicalHistory.currentMedications.length > 0 && (
         <div className="flex items-start gap-3">
-          <Icon name="medicine" className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
+          <Icon name={ICONS.dataFields.medicine} className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Current Medications</div>
             <div className="flex flex-wrap gap-2">
@@ -61,7 +62,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
       {/* Allergies */}
       {medicalHistory.allergies.length > 0 && (
         <div className="flex items-start gap-3">
-          <Icon name="warning" className="w-5 h-5 text-orange-400 mt-1 shrink-0" />
+          <Icon name={ICONS.actions.warning} className="w-5 h-5 text-orange-400 mt-1 shrink-0" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Allergies</div>
             <div className="flex flex-wrap gap-2">
@@ -78,7 +79,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
       {/* Previous Surgeries */}
       {medicalHistory.previousSurgeries.length > 0 && (
         <div className="flex items-start gap-3">
-          <Icon name="medical-kit" className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
+          <Icon name={ICONS.dataFields.medicalKit} className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Previous Surgeries</div>
             <div className="flex flex-wrap gap-2">
@@ -95,7 +96,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
       {/* Family History */}
       {formatFamilyHistory(medicalHistory.familyHistory) !== 'None' && (
         <div className="flex items-start gap-3">
-          <Icon name="users-group" className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
+          <Icon name={ICONS.ui.usersGroup} className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
           <div className="flex-1">
             <div className="text-xs text-gray-600 mb-1">Family History</div>
             <div className="text-sm text-gray-900">
@@ -112,13 +113,13 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
           <div className="text-xs text-gray-600 mb-2">Lifestyle</div>
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
-              <Icon name="health" className="w-4 h-4 text-gray-400" />
+              <Icon name={ICONS.dataFields.health} className="w-4 h-4 text-gray-400" />
               <span className="text-xs text-gray-700">
                 Smoking: {medicalHistory.lifestyle.smoking ? 'Yes' : 'No'}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Icon name="health" className="w-4 h-4 text-gray-400" />
+              <Icon name={ICONS.dataFields.health} className="w-4 h-4 text-gray-400" />
               <span className="text-xs text-gray-700">
                 Alcohol: {medicalHistory.lifestyle.alcohol ? 'Yes' : 'No'}
               </span>

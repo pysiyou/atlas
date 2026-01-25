@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from './Icon';
+import { ICONS } from '@/utils/icon-mappings';
 interface PaginationProps {
   currentPage: number;
   totalItems: number;
@@ -79,7 +80,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           disabled={currentPage === 1}
           className="p-1 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
         >
-          <Icon name="chevron-left" className="w-5 h-5 text-gray-500" />
+          <Icon name={ICONS.actions.chevronLeft} className="w-5 h-5 text-gray-500" />
         </button>
 
         <div className="flex items-center gap-1">
@@ -108,7 +109,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           disabled={currentPage === totalPages}
           className="p-1 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
         >
-          <Icon name="chevron-right" className="w-5 h-5 text-gray-500" />
+          <Icon name={ICONS.actions.chevronRight} className="w-5 h-5 text-gray-500" />
         </button>
       </div>
     </div>

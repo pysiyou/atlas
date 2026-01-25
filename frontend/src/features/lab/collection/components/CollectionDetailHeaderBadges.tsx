@@ -9,6 +9,7 @@ import type { ContainerType, ContainerTopColor, Sample, RejectedSample } from '@
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import { StatusBadgeRow } from '../../components/LabDetailModal';
+import { getContainerIcon, ICONS } from '@/utils/icon-mappings';
 
 interface CollectionDetailHeaderBadgesProps {
   sample: Sample;
@@ -43,7 +44,7 @@ export const CollectionDetailHeaderBadges: React.FC<CollectionDetailHeaderBadges
           title={`Container: ${effectiveContainerType}, Color: ${colorName}`}
         >
           <Icon
-            name={effectiveContainerType === 'cup' ? 'lab-cup' : 'lab-tube'}
+            name={getContainerIcon(effectiveContainerType)}
             className={`w-7 h-7 ${getContainerIconColor(containerColor as ContainerTopColor)}`}
           />
         </span>
@@ -65,7 +66,7 @@ export const CollectionDetailHeaderBadges: React.FC<CollectionDetailHeaderBadges
       <Badge variant={isPending ? 'pending' : isRejected ? 'rejected' : 'collected'} size="sm" />
       {isRejected && rejectedSample?.recollectionSampleId && (
         <Badge size="sm" variant="info" className="flex items-center gap-1">
-          <Icon name="check-circle" className="w-3 h-3" />
+          <Icon name={ICONS.actions.checkCircle} className="w-3 h-3" />
           Recollection: <span className="font-mono">{displayId.sample(rejectedSample.recollectionSampleId)}</span>
         </Badge>
       )}

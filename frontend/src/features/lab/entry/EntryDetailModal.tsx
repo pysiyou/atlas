@@ -20,6 +20,7 @@ import {
   ModalFooter,
   StatusBadgeRow,
 } from '../components/LabDetailModal';
+import { ICONS } from '@/utils/icon-mappings';
 import {
   CollectionInfoLine,
   RetestBadge,
@@ -143,7 +144,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       </Badge>
       {turnaroundTime && (
         <Badge size="sm" variant="default" className="text-gray-700 flex items-center gap-1.5">
-          <Icon name="clock" className="w-3 h-3 text-gray-600" />
+          <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-gray-600" />
           {turnaroundTime}h TAT
         </Badge>
       )}
@@ -198,9 +199,9 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
         <ModalFooter
           statusIcon={
             isComplete ? (
-              <Icon name="check-circle" className="w-4 h-4 text-gray-400" />
+              <Icon name={ICONS.actions.checkCircle} className="w-4 h-4 text-gray-400" />
             ) : (
-              <Icon name="pen" className="w-4 h-4 text-gray-400" />
+              <Icon name={ICONS.dataFields.clinicalNotes} className="w-4 h-4 text-gray-400" />
             )
           }
           statusMessage={
@@ -300,7 +301,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
                 label: 'Turnaround Time',
                 value: turnaroundTime ? (
                   <span className="flex items-center gap-1">
-                    <Icon name="clock" className="w-3.5 h-3.5" />
+                    <Icon name={ICONS.dataFields.time} className="w-3.5 h-3.5" />
                     {turnaroundTime} hours
                   </span>
                 ) : undefined,

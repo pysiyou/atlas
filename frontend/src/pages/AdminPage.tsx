@@ -8,6 +8,7 @@ import { usePatientsList, useOrdersList, useTestCatalog } from '@/hooks/queries'
 import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Admin Test Table Columns
@@ -111,25 +112,25 @@ export const Admin: React.FC = () => {
     {
       label: 'Total Patients',
       value: patients.length,
-      icon: <Icon name="users-group" className="w-6 h-6" />,
+      icon: <Icon name={ICONS.ui.usersGroup} className="w-6 h-6" />,
       color: 'sky',
     },
     {
       label: 'Total Orders',
       value: orders.length,
-      icon: <Icon name="document" className="w-6 h-6" />,
+      icon: <Icon name={ICONS.dataFields.document} className="w-6 h-6" />,
       color: 'green',
     },
     {
       label: 'Active Tests',
       value: tests.filter(t => t.isActive).length,
-      icon: <Icon name="flask" className="w-6 h-6" />,
+      icon: <Icon name={ICONS.dataFields.flask} className="w-6 h-6" />,
       color: 'purple',
     },
     {
       label: 'Total Revenue',
       value: formatCurrency(getTotalRevenue()),
-      icon: <Icon name="dollar-sign" className="w-6 h-6" />,
+      icon: <Icon name={ICONS.dataFields.dollarSign} className="w-6 h-6" />,
       color: 'orange',
     },
   ];

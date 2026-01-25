@@ -10,6 +10,7 @@ import { displayId } from '@/utils/id-display';
 import type { Patient } from '@/types';
 import { OrderInfoField } from './OrderInfoField';
 import { formatOrderDate } from '../../utils/orderDetailUtils';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface PatientInfoSectionProps {
   patient: Patient | null;
@@ -29,7 +30,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
     return (
       <div className="flex items-center justify-center h-full min-h-[200px]">
         <div className="text-center">
-          <Icon name="user" className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+          <Icon name={ICONS.dataFields.user} className="w-12 h-12 text-gray-300 mx-auto mb-2" />
           <p className="text-sm text-gray-500">Patient Not Found</p>
         </div>
       </div>
@@ -47,7 +48,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
         />
       </div>
       <OrderInfoField
-        icon="user-hands"
+        icon={ICONS.dataFields.userHands}
         label="Age & Gender"
         value={
           <span className="capitalize">
@@ -56,7 +57,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
         }
       />
       <OrderInfoField
-        icon="calendar"
+        icon={ICONS.dataFields.dateOfBirth}
         label="Date of Birth"
         value={
           <span className="whitespace-nowrap truncate">
@@ -64,10 +65,10 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
           </span>
         }
       />
-      <OrderInfoField icon="phone" label="Phone" value={patient.phone} />
+      <OrderInfoField icon={ICONS.dataFields.phone} label="Phone" value={patient.phone} />
       {patient.email && (
         <OrderInfoField
-          icon="mail"
+          icon={ICONS.dataFields.email}
           label="Email"
           value={<span className="line-clamp-2 break-all">{patient.email}</span>}
         />

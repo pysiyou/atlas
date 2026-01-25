@@ -12,6 +12,7 @@
 
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from './Icon';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Base style variants (require custom icon)
@@ -69,41 +70,41 @@ interface VariantConfig {
  */
 const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   // Close/Cancel actions
-  close: { style: 'danger', icon: 'cross' },
+  close: { style: 'danger', icon: ICONS.actions.cross },
 
   // Confirmation actions
-  confirm: { style: 'success', icon: 'check' },
-  approve: { style: 'success', icon: 'check' },
-  save: { style: 'primary', icon: 'save' },
+  confirm: { style: 'success', icon: ICONS.actions.check },
+  approve: { style: 'success', icon: ICONS.actions.check },
+  save: { style: 'primary', icon: ICONS.actions.save },
 
   // Destructive actions
-  delete: { style: 'danger', icon: 'trash' },
-  reject: { style: 'danger', icon: 'trash' },
+  delete: { style: 'danger', icon: ICONS.actions.delete },
+  reject: { style: 'danger', icon: ICONS.actions.delete },
 
   // CRUD actions
-  add: { style: 'primary', icon: 'plus' },
-  edit: { style: 'primary', icon: 'pen' },
-  view: { style: 'primary', icon: 'eye' },
+  add: { style: 'primary', icon: ICONS.actions.add },
+  edit: { style: 'primary', icon: ICONS.actions.edit },
+  view: { style: 'primary', icon: ICONS.actions.view },
 
   // Utility actions
-  print: { style: 'secondary', icon: 'printer' },
-  download: { style: 'secondary', icon: 'download' },
-  search: { style: 'primary', icon: 'search' },
-  filter: { style: 'secondary', icon: 'filter' },
-  refresh: { style: 'secondary', icon: 'loading' },
+  print: { style: 'secondary', icon: ICONS.actions.printer },
+  download: { style: 'secondary', icon: ICONS.actions.download },
+  search: { style: 'primary', icon: ICONS.actions.search },
+  filter: { style: 'secondary', icon: ICONS.actions.filter },
+  refresh: { style: 'secondary', icon: ICONS.actions.loading },
 
   // Navigation actions
-  next: { style: 'primary', icon: 'chevron-right' },
-  previous: { style: 'secondary', icon: 'chevron-left' },
-  expand: { style: 'secondary', icon: 'chevron-down' },
-  collapse: { style: 'secondary', icon: 'chevron-left' },
-  menu: { style: 'primary', icon: 'menu-dots' },
+  next: { style: 'primary', icon: ICONS.actions.chevronRight },
+  previous: { style: 'secondary', icon: ICONS.actions.chevronLeft },
+  expand: { style: 'secondary', icon: ICONS.actions.chevronDown },
+  collapse: { style: 'secondary', icon: ICONS.actions.chevronLeft },
+  menu: { style: 'primary', icon: ICONS.actions.menuDots },
 
   // User actions
-  logout: { style: 'danger', icon: 'log-out' },
+  logout: { style: 'danger', icon: ICONS.actions.logout },
 
   // Item actions
-  remove: { style: 'danger', icon: 'cross' },
+  remove: { style: 'danger', icon: ICONS.actions.cross },
 };
 
 /**

@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Props for FilterSection component
@@ -75,7 +76,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
 
         {collapsible && (
           <Icon
-            name="chevron-down"
+            name={ICONS.actions.chevronDown}
             className={cn(
               'w-3.5 h-3.5 text-gray-400 transition-transform',
               isCollapsed && 'rotate-180'

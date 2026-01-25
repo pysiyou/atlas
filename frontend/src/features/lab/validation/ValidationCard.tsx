@@ -11,6 +11,7 @@ import { useUserLookup } from '@/hooks/queries';
 import { LabCard } from '../components/LabCard';
 import { RejectionDialog } from '../components';
 import type { TestWithContext } from '@/types';
+import { ICONS } from '@/utils/icon-mappings';
 
 type ResultStatus =
   | 'normal'
@@ -240,13 +241,13 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
       <div className="flex items-center gap-2 flex-wrap">
         {showRetestBadge && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
-            <Icon name="alert-circle" className="w-3 h-3" />
+            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Re-test of {test.retestOfTestId}
           </Badge>
         )}
         {showRecollectionBadge && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
-            <Icon name="alert-circle" className="w-3 h-3" />
+            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Recollection attempt #{rejectionHistory.length}
           </Badge>
         )}

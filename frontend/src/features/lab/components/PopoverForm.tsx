@@ -10,6 +10,7 @@
 import React, { type ReactNode } from 'react';
 import { Button, Icon, IconButton } from '@/shared/ui';
 import { useAuth } from '@/hooks';
+import { ICONS } from '@/utils/icon-mappings';
 
 interface PopoverFormProps {
   /** Main title displayed in the header */
@@ -79,7 +80,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
         <div className="text-xs text-gray-500 flex items-center gap-1.5">
           {footerInfo || (
             <>
-              <Icon name="alert-circle" className="w-3.5 h-3.5" />
+              <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
               <span>Acting as {currentUser?.name || 'Lab Staff'}</span>
             </>
           )}

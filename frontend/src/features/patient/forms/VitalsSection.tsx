@@ -8,6 +8,7 @@
 import React from 'react';
 import { Icon, type IconName } from '@/shared/ui';
 import type { VitalSigns } from '@/types/patient';
+import { ICONS } from '@/utils/icon-mappings';
 
 export interface VitalsSectionProps {
   /** Current vital signs data */
@@ -45,7 +46,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     key: 'temperature',
     label: 'Temperature',
     unit: '°C',
-    icon: 'thermometer',
+    icon: ICONS.dataFields.thermometer,
     min: 30.0,
     max: 45.0,
     step: 0.1,
@@ -67,7 +68,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     key: 'systolicBP',
     label: 'Systolic BP',
     unit: 'mmHg',
-    icon: 'heart-pulse',
+    icon: ICONS.dataFields.heartPulse,
     min: 50,
     max: 250,
     step: 1,
@@ -78,7 +79,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     key: 'diastolicBP',
     label: 'Diastolic BP',
     unit: 'mmHg',
-    icon: 'heart-pulse',
+    icon: ICONS.dataFields.heartPulse,
     min: 30,
     max: 150,
     step: 1,
@@ -89,7 +90,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     key: 'respiratoryRate',
     label: 'Respiratory Rate',
     unit: '/min',
-    icon: 'pulse',
+    icon: ICONS.dataFields.pulse,
     min: 4,
     max: 60,
     step: 1,
@@ -100,7 +101,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     key: 'oxygenSaturation',
     label: 'O₂ Saturation',
     unit: '%',
-    icon: 'blood',
+    icon: ICONS.dataFields.blood,
     min: 50,
     max: 100,
     step: 1,
@@ -213,7 +214,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
                 {isAbnormal && (
-                  <Icon name="danger-square" className="w-3 h-3 text-red-500 shrink-0" />
+                  <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-red-500 shrink-0" />
                 )}
                 <span className="text-xxs text-gray-400 truncate">Ref: {refRange}</span>
               </div>
