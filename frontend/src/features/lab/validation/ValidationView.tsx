@@ -24,9 +24,10 @@ import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { DataErrorBoundary } from '@/shared/components';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import type { TestWithContext, CollectedSample } from '@/types';
+import type { PriorityLevel, TestWithContext, CollectedSample } from '@/types';
 import { resultAPI } from '@/services/api';
 import { orderHasValidatedTests } from '@/features/order/utils';
+import { ValidationFilters } from '../components/filters';
 
 // Large component is necessary for comprehensive validation view with filtering, sorting, card rendering, and validation functionality
 // eslint-disable-next-line max-lines-per-function
@@ -41,6 +42,10 @@ export const ValidationView: React.FC = () => {
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
+  const [statusFilters, setStatusFilters] = useState<PriorityLevel[]>([]);
   const [comments, setComments] = useState<Record<string, string>>({});
   const [isValidating, setIsValidating] = useState<Record<string, boolean>>({});
   const [isBulkProcessing, setIsBulkProcessing] = useState(false);
@@ -80,6 +85,7 @@ export const ValidationView: React.FC = () => {
           return {
             ...test,
             orderId: order.orderId,
+            orderDate: order.orderDate,
             patientId: order.patientId,
             patientName,
             patientDob,
@@ -109,13 +115,60 @@ export const ValidationView: React.FC = () => {
     });
   }, [orders, testCatalog, getPatientName, getPatient, getTest, getSample]);
 
-  // Bulk selection state
+  const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
+
+  const filteredTests = useMemo(() => {
+    let out = allTests;
+
+    if (dateRange) {
+      const [start, end] = dateRange;
+      const startDate = new Date(start);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(end);
+      endDate.setHours(23, 59, 59, 999);
+      out = out.filter(t => {
+        const d = (t as { orderDate?: string }).orderDate;
+        if (!d) return false;
+        const orderDate = new Date(d);
+        return orderDate >= startDate && orderDate <= endDate;
+      });
+    }
+
+    if (sampleTypeFilters.length > 0) {
+      out = out.filter(
+        t => t.sampleType && sampleTypeFilters.includes(t.sampleType)
+      );
+    }
+
+    if (statusFilters.length > 0) {
+      out = out.filter(
+        t => t.priority && statusFilters.includes(t.priority as PriorityLevel)
+      );
+    }
+
+    if (searchQuery.trim()) {
+      out = out.filter(t => filterTest(t, searchQuery));
+    }
+
+    return out;
+  }, [allTests, dateRange, sampleTypeFilters, statusFilters, searchQuery, filterTest]);
+
+  /** Filtered tests with numeric id (for bulk selection) */
+  const filteredTestsWithId = useMemo(
+    () =>
+      filteredTests.filter(
+        (t): t is typeof t & { id: number } => typeof t.id === 'number'
+      ),
+    [filteredTests]
+  );
+
+  // Bulk selection state (over visible/filtered items with id)
   const {
     selectedIds,
     setSelectedIds,
     toggleItem,
     isSelected,
-  } = useBulkSelection(allTests);
+  } = useBulkSelection(filteredTestsWithId);
 
   /**
    * Handle bulk approval of selected tests
@@ -168,8 +221,6 @@ export const ValidationView: React.FC = () => {
       setIsBulkProcessing(false);
     }
   }, [allTests, invalidateOrders, refreshOrders, setSelectedIds]);
-
-  const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
   const handleCommentsChange = useCallback((commentKey: string, value: string) => {
     setComments(prev => ({ ...prev, [commentKey]: value }));
@@ -304,18 +355,22 @@ export const ValidationView: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  // Prepare items for bulk validation toolbar
-  const bulkItems = allTests.map(test => ({
-    id: test.id,
-    orderId: test.orderId,
-    testCode: test.testCode,
-    hasCriticalValues: test.hasCriticalValues,
-  }));
+  // Prepare items for bulk validation toolbar (visible/filtered items with id only)
+  const bulkItems = useMemo(
+    () =>
+      filteredTestsWithId.map(test => ({
+        id: test.id,
+        orderId: test.orderId,
+        testCode: test.testCode,
+        hasCriticalValues: test.hasCriticalValues,
+      })),
+    [filteredTestsWithId]
+  );
 
   return (
     <DataErrorBoundary>
       {/* Bulk Validation Toolbar */}
-      {!isMobile && allTests.length > 0 && (
+      {!isMobile && filteredTestsWithId.length > 0 && (
         <div className="px-4 pt-4">
           <BulkValidationToolbar
             items={bulkItems}
@@ -328,8 +383,7 @@ export const ValidationView: React.FC = () => {
       )}
 
       <LabWorkflowView
-        items={allTests}
-        filterFn={filterTest}
+        items={filteredTests}
         renderCard={test => {
           const commentKey = `${test.orderId}-${test.testCode}`;
           // Check if the order has validated tests to block re-collect option
@@ -348,8 +402,12 @@ export const ValidationView: React.FC = () => {
             orderHasValidatedTests: hasValidatedTests,
           };
 
-          // Wrap card with checkbox for bulk selection (desktop only)
-          if (!isMobile) {
+          if (isMobile) {
+            return <ValidationMobileCard {...cardProps} />;
+          }
+
+          // Desktop: checkbox + card when id present, else card only
+          if (typeof test.id === 'number') {
             return (
               <div className="flex items-start gap-3">
                 <div className="pt-4">
@@ -367,13 +425,24 @@ export const ValidationView: React.FC = () => {
             );
           }
 
-          return <ValidationMobileCard {...cardProps} />;
+          return <ValidationCard {...cardProps} />;
         }}
         getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
         emptyIcon="shield-check"
         emptyTitle="No Pending Validations"
         emptyDescription="There are no results waiting for validation."
-        searchPlaceholder="Search tests..."
+        filterRow={
+          <ValidationFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+            sampleTypeFilters={sampleTypeFilters}
+            onSampleTypeFiltersChange={setSampleTypeFilters}
+            statusFilters={statusFilters}
+            onStatusFiltersChange={setStatusFilters}
+          />
+        }
       />
     </DataErrorBoundary>
   );

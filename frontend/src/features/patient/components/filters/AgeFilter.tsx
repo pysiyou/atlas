@@ -152,7 +152,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'group inline-flex items-center gap-2.5 px-4 py-2.5 bg-white border rounded-lg cursor-pointer transition-all duration-200 w-full sm:w-[260px] h-[38px]',
+            'group inline-flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-all duration-200 w-full sm:w-[240px] overflow-hidden',
             'hover:border-sky-400 hover:shadow-sm',
             isOpen
               ? 'border-sky-500 ring-2 ring-sky-500/20 shadow-md'
@@ -160,14 +160,14 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             className
           )}
         >
-          <Icon 
-            name="hourglass" 
+          <Icon
+            name="hourglass"
             className={cn(
-              'w-4 h-4 transition-colors duration-200',
+              'w-4 h-4 transition-colors duration-200 shrink-0',
               isOpen ? 'text-sky-500' : 'text-gray-400 group-hover:text-sky-400'
-            )} 
+            )}
           />
-          <div className="flex-1 text-sm truncate font-medium">{renderTriggerContent()}</div>
+          <div className="flex-1 min-w-0 text-xs truncate font-medium">{renderTriggerContent()}</div>
 
           <Icon
             name="chevron-down"
@@ -180,7 +180,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           {value && (value[0] !== min || value[1] !== max) && (
             <button
               onClick={handleClear}
-              className="p-1 -mr-1 hover:bg-sky-50 rounded-md transition-all duration-200 flex items-center justify-center cursor-pointer group/clear"
+              className="p-0.5 -mr-1 hover:bg-sky-50 rounded transition-all duration-200 flex items-center justify-center cursor-pointer shrink-0 group/clear"
               aria-label="Clear age filter"
             >
               <Icon 

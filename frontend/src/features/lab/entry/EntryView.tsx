@@ -17,9 +17,10 @@ import { checkReferenceRangeWithDemographics } from '@/utils';
 import { getTestSampleType } from '@/utils/typeHelpers';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
-import type { TestResult, TestWithContext } from '@/types';
+import type { TestResult, TestStatus, TestWithContext } from '@/types';
 import { isCollectedSample } from '@/types';
 import { EntryCard } from './EntryCard';
+import { EntryFilters } from '../components/filters';
 import { EntryMobileCard } from './EntryMobileCard';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { DataErrorBoundary } from '@/shared/components';
@@ -39,6 +40,10 @@ export const EntryView: React.FC = () => {
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
+  const [statusFilters, setStatusFilters] = useState<TestStatus[]>([]);
   const [results, setResults] = useState<Record<string, Record<string, string>>>({});
   const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
   const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
@@ -74,6 +79,7 @@ export const EntryView: React.FC = () => {
           return {
             ...test,
             orderId: order.orderId,
+            orderDate: order.orderDate,
             patientId: order.patientId,
             patientName,
             testName,
@@ -103,6 +109,42 @@ export const EntryView: React.FC = () => {
   }, [orders, testCatalog, getPatient, getPatientName, getSample, getTest]);
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
+
+  const filteredTests = useMemo(() => {
+    let out = allTests;
+
+    if (dateRange) {
+      const [start, end] = dateRange;
+      const startDate = new Date(start);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(end);
+      endDate.setHours(23, 59, 59, 999);
+      out = out.filter(t => {
+        const d = (t as { orderDate?: string }).orderDate;
+        if (!d) return false;
+        const orderDate = new Date(d);
+        return orderDate >= startDate && orderDate <= endDate;
+      });
+    }
+
+    if (sampleTypeFilters.length > 0) {
+      out = out.filter(
+        t => t.sampleType && sampleTypeFilters.includes(t.sampleType)
+      );
+    }
+
+    if (statusFilters.length > 0) {
+      out = out.filter(
+        t => t.status && statusFilters.includes(t.status as TestStatus)
+      );
+    }
+
+    if (searchQuery.trim()) {
+      out = out.filter(t => filterTest(t, searchQuery));
+    }
+
+    return out;
+  }, [allTests, dateRange, sampleTypeFilters, statusFilters, searchQuery, filterTest]);
 
   const handleResultChange = useCallback((resultKey: string, paramCode: string, value: string) => {
     setResults(prev => ({
@@ -309,9 +351,8 @@ export const EntryView: React.FC = () => {
   return (
     <DataErrorBoundary>
       <LabWorkflowView
-        items={allTests}
-        filterFn={filterTest}
-        renderCard={(test, idx, filteredTests) => {
+        items={filteredTests}
+        renderCard={(test, idx, filtered) => {
           const testDef = getTest(test.testCode);
           const resultKey = `${test.orderId}-${test.testCode}`;
           const isComplete = testDef?.parameters
@@ -328,7 +369,7 @@ export const EntryView: React.FC = () => {
             onResultsChange: handleResultChange,
             onNotesChange: handleNotesChange,
             onSave: () => handleSaveResults(test.orderId, test.testCode),
-            onClick: () => openTestModal(test, filteredTests as TestWithContext[]),
+            onClick: () => openTestModal(test, filtered as TestWithContext[]),
           };
 
           return isMobile ? (
@@ -341,7 +382,18 @@ export const EntryView: React.FC = () => {
         emptyIcon="checklist"
         emptyTitle="No Pending Results"
         emptyDescription="There are no samples waiting for result entry."
-        searchPlaceholder="Search tests..."
+        filterRow={
+          <EntryFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+            sampleTypeFilters={sampleTypeFilters}
+            onSampleTypeFiltersChange={setSampleTypeFilters}
+            statusFilters={statusFilters}
+            onStatusFiltersChange={setStatusFilters}
+          />
+        }
       />
     </DataErrorBoundary>
   );

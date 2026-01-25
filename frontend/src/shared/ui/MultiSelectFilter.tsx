@@ -200,13 +200,13 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       );
     }
 
-    // Show count for multiple selections
+    // Show count for multiple selections – single line so truncate works
     return (
-      <span className="flex items-center gap-1.5">
-        <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-sky-500 text-white text-xs font-medium">
+      <span className="text-gray-700 truncate block">
+        <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full bg-sky-500 text-white text-xxs font-medium align-middle mr-1">
           {selectedIds.length}
         </span>
-        <span className="text-gray-700">selected</span>
+        selected
       </span>
     );
   };
@@ -218,7 +218,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'inline-flex items-center gap-2 px-3 py-2.5 bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px]',
+            'inline-flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] overflow-hidden',
             isOpen
               ? 'border-sky-500 ring-2 ring-sky-500/20'
               : 'border-gray-300 hover:border-gray-400',
@@ -226,15 +226,17 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
           )}
         >
           {/* Icon */}
-          {icon && <Icon name={icon} className="w-4 h-4 text-gray-400" />}
+          {icon && <Icon name={icon} className="w-4 h-4 text-gray-400 shrink-0" />}
 
-          {/* Content */}
-          <div className="flex-1 text-xs truncate ml-1">{renderTriggerContent()}</div>
+          {/* Content: min-w-0 + truncate so it doesn't grow row when has values */}
+          <div className="flex-1 min-w-0 text-xs truncate ml-1">
+            {renderTriggerContent()}
+          </div>
 
           {/* Chevron */}
           <Icon
             name="chevron-down"
-            className={cn('w-4 h-4 text-gray-400 transition-transform', isOpen && 'rotate-180')}
+            className={cn('w-4 h-4 text-gray-400 transition-transform shrink-0', isOpen && 'rotate-180')}
           />
 
           {/* Clear button */}

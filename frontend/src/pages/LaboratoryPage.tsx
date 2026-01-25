@@ -25,7 +25,7 @@ export const Laboratory: React.FC = () => {
     },
     {
       id: 'validation' as const,
-      label: 'Validation',
+      label: 'Result Validation',
       icon: <Icon name="shield-check" className="w-4 h-4" />,
     },
   ];
@@ -72,8 +72,8 @@ export const Laboratory: React.FC = () => {
           </div>
         </div>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-y-auto min-h-0 bg-gray-50 p-6">
+        {/* Content Area: flex column, no scroll – filter + grid handle layout like ListView */}
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-gray-50">
           {activeTab === 'collection' && <CollectionView />}
           {activeTab === 'entry' && <EntryView />}
           {activeTab === 'validation' && <ValidationView />}

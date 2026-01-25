@@ -214,7 +214,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
    * Priority: dateRange, status filters (multiSelect with common keys), then others
    */
   const getMediumViewFilters = () => {
-    const priorityKeys = ['dateRange', 'status', 'payment', 'method'];
+    const priorityKeys = ['dateRange', 'status', 'payment', 'method', 'sampleType'];
     const inlineControls: typeof nonSearchControls = [];
     const dropdownControls: typeof nonSearchControls = [];
 
@@ -251,14 +251,14 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
         <div className="flex flex-row flex-wrap items-center gap-x-3 gap-y-2 lg:gap-x-4 lg:gap-y-2">
           {/* Search control - fixed height slot for alignment */}
           {searchControl && (
-            <div className="flex h-[34px] min-w-[250px] shrink-0 items-center lg:min-w-[260px]">
+            <div className="flex h-[34px] min-h-[34px] max-h-[34px] min-w-[250px] shrink-0 items-center overflow-hidden lg:min-w-[260px]">
               {renderControl(searchControl)}
             </div>
           )}
 
           {/* Quick filters - match control height for vertical alignment */}
           {config.quickFilters && config.quickFilters.length > 0 && (
-            <div className="flex min-h-[34px] shrink-0 items-center">
+            <div className="flex h-[34px] min-h-[34px] max-h-[34px] shrink-0 items-center overflow-hidden">
               <QuickFilters
                 presets={config.quickFilters}
                 activePresetId={activePresetId}
@@ -267,11 +267,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
             </div>
           )}
 
-          {/* Primary filters - inline, fixed height slots for alignment */}
+          {/* Primary filters - fixed size; height unchanged when values present */}
           {nonSearchControls.map(control => (
             <div
               key={control.key}
-              className="flex h-[34px] min-w-[200px] shrink-0 items-center lg:min-w-[220px]"
+              className="flex h-[34px] min-h-[34px] max-h-[34px] min-w-[200px] shrink-0 items-center overflow-hidden lg:min-w-[220px]"
             >
               {renderControl(control)}
             </div>
@@ -309,16 +309,19 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
         <div className="flex flex-row gap-2 items-center">
           {/* Search control */}
           {searchControl && (
-            <div className="flex-1 min-w-[200px]">
+            <div className="flex h-[34px] min-h-[34px] max-h-[34px] min-w-[200px] flex-1 items-center overflow-hidden">
               {renderControl(searchControl)}
             </div>
           )}
 
-          {/* Inline filters (1-2 most important) */}
+          {/* Inline filters (1-2 most important) – same fixed height as large view */}
           {mediumInlineControls.length > 0 && (
             <div className="flex gap-2">
               {mediumInlineControls.map(control => (
-                <div key={control.key} className="min-w-[180px]">
+                <div
+                  key={control.key}
+                  className="flex h-[34px] min-h-[34px] max-h-[34px] min-w-[180px] shrink-0 items-center overflow-hidden"
+                >
                   {renderControl(control)}
                 </div>
               ))}

@@ -16,10 +16,10 @@ type IconName = 'search' | 'sample-collection' | 'checklist' | 'shield-check';
 interface LabWorkflowViewProps<T> {
   /** Optional title in header; omit when page title already reflects tab (e.g. lab tabs) */
   title?: string;
-  /** All items before filtering */
+  /** All items (pre-filtered when using filterRow) */
   items: T[];
-  /** Filter function for search */
-  filterFn: (item: T, query: string) => boolean;
+  /** Filter function for search; required in legacy mode, ignored when filterRow is provided */
+  filterFn?: (item: T, query: string) => boolean;
   /** Render function for each item card (receives item, index, and full filtered list) */
   renderCard: (item: T, index: number, filteredItems: T[]) => ReactNode;
   /** Generate a unique key for each item */
@@ -30,18 +30,20 @@ interface LabWorkflowViewProps<T> {
   emptyTitle: string;
   /** Description to show when no items exist */
   emptyDescription: string;
-  /** Optional filters to display in the header */
+  /** Optional filters to display in the header (legacy mode only) */
   filters?: ReactNode;
-  /** Search placeholder text */
+  /** Search placeholder text (legacy mode only) */
   searchPlaceholder?: string;
+  /** Filter row (e.g. FilterBar). When provided, replaces header+search; parent filters items. */
+  filterRow?: ReactNode;
 }
 
 /**
  * LabWorkflowView provides the shared layout for all lab workflow pages
  *
  * Structure:
- * - Header row: Title + Filters (left), Search (right)
- * - Content: Grid of cards or empty state
+ * - Filter row mode: filterRow (FilterBar) then grid
+ * - Legacy mode: Header (title + filters + SearchBar) then grid
  */
 export function LabWorkflowView<T>({
   title,
@@ -54,46 +56,57 @@ export function LabWorkflowView<T>({
   emptyDescription,
   filters,
   searchPlaceholder = 'Search...',
+  filterRow,
 }: LabWorkflowViewProps<T>): React.ReactElement {
-  const { filteredItems, searchQuery, setSearchQuery, isEmpty } = useSearch(items, filterFn);
+  const useFilterRow = filterRow != null;
+  const searchFilterFn = filterFn ?? (() => true);
+  const { filteredItems, searchQuery, setSearchQuery, isEmpty } = useSearch(
+    items,
+    searchFilterFn
+  );
 
   const hasItems = items.length > 0;
   const showEmptyState = !hasItems || isEmpty;
-  const showSearchEmpty = hasItems && isEmpty;
+  const showNoMatches = hasItems && isEmpty;
 
   return (
-    <div className="h-full flex flex-col space-y-4">
-      {/* Header: title only when provided (tab content uses page title instead) */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">
-        <div className="flex items-center gap-4 flex-wrap">
-          {title != null && title !== '' && (
-            <h3 className="text-base font-medium text-gray-900">{title}</h3>
-          )}
-          {hasItems && filters && (
-            <>
-              {title != null && title !== '' && (
-                <div className="h-6 w-px bg-gray-300 hidden md:block" />
-              )}
-              {filters}
-            </>
+    <div className="h-full flex flex-col min-h-0">
+      {useFilterRow ? (
+        /* Filter row mode: FilterBar full width, same as ListView – no extra wrapper padding */
+        <div className="shrink-0">{filterRow}</div>
+      ) : (
+        /* Legacy mode: title + filters + SearchBar */
+        <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">
+          <div className="flex items-center gap-4 flex-wrap">
+            {title != null && title !== '' && (
+              <h3 className="text-base font-medium text-gray-900">{title}</h3>
+            )}
+            {hasItems && filters && (
+              <>
+                {title != null && title !== '' && (
+                  <div className="h-6 w-px bg-gray-300 hidden md:block" />
+                )}
+                {filters}
+              </>
+            )}
+          </div>
+
+          {hasItems && (
+            <div className="w-full md:w-72">
+              <SearchBar
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder={searchPlaceholder}
+                size="sm"
+              />
+            </div>
           )}
         </div>
+      )}
 
-        {hasItems && (
-          <div className="w-full md:w-72">
-            <SearchBar
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder={searchPlaceholder}
-              size="sm"
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Content */}
+      {/* Content: padded scrollable area like ListView table */}
       <div
-        className={`flex-1 ${showEmptyState ? 'flex flex-col' : 'grid gap-4 content-start overflow-y-auto min-h-0'}`}
+        className={`flex-1 min-h-0 overflow-y-auto p-6 ${showEmptyState ? 'flex flex-col' : 'grid gap-4 content-start'}`}
       >
         {!showEmptyState &&
           filteredItems.map((item, idx) => (
@@ -108,12 +121,16 @@ export function LabWorkflowView<T>({
           </div>
         )}
 
-        {showSearchEmpty && (
+        {showNoMatches && (
           <div className="flex-1">
             <EmptyState
               icon="search"
               title="No Matches Found"
-              description={`No items found matching "${searchQuery}"`}
+              description={
+                useFilterRow
+                  ? 'Try adjusting your search or filters.'
+                  : `No items found matching "${searchQuery}"`
+              }
             />
           </div>
         )}

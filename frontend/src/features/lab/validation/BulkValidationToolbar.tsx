@@ -137,7 +137,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
         >
           {isProcessing ? (
             <>
-              <Icon name="spinner" className="w-4 h-4 mr-2 animate-spin" />
+              <Icon name="loading" className="w-4 h-4 mr-2 animate-spin" />
               Processing...
             </>
           ) : (

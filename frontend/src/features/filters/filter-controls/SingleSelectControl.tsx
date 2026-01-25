@@ -85,7 +85,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'inline-flex items-center gap-2 px-3 py-1.5 bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] h-[34px]',
+            'inline-flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] overflow-hidden',
             isOpen
               ? 'border-sky-500 ring-2 ring-sky-500/20'
               : 'border-gray-300 hover:border-gray-400',
@@ -93,16 +93,18 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
           )}
         >
           {/* Icon */}
-          {config.icon && <Icon name={config.icon as IconName} className="w-4 h-4 text-gray-400" />}
+          {config.icon && (
+            <Icon name={config.icon as IconName} className="w-4 h-4 text-gray-400 shrink-0" />
+          )}
 
           {/* Content */}
-          <div className="flex-1 text-xs truncate ml-1">{renderTriggerContent()}</div>
+          <div className="flex-1 min-w-0 text-xs truncate ml-1">{renderTriggerContent()}</div>
 
           {/* Chevron */}
           <Icon
             name="chevron-down"
             className={cn(
-              'w-4 h-4 text-gray-400 transition-transform flex-shrink-0',
+              'w-4 h-4 text-gray-400 transition-transform shrink-0',
               isOpen && 'rotate-180'
             )}
           />
@@ -111,7 +113,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
           {value && (
             <button
               onClick={handleClear}
-              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer"
+              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer shrink-0"
             >
               <Icon name="close-circle" className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
             </button>

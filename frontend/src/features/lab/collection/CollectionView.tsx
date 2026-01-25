@@ -19,20 +19,13 @@ import { logger } from '@/utils/logger';
 import type { ContainerType, ContainerTopColor, SampleStatus, Test } from '@/types';
 import { calculateRequiredSamples, getCollectionRequirements } from '@/utils/sampleHelpers';
 import { getTestNames } from '@/utils/typeHelpers';
-import { MultiSelectFilter, type FilterOption } from '@/shared/ui';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';
 import { CollectionMobileCard } from './CollectionMobileCard';
 import { LabWorkflowView } from '../components/LabWorkflowView';
+import { CollectionFilters } from '../components/filters';
 import { DataErrorBoundary } from '@/shared/components';
 import type { SampleDisplay } from '../types';
-
-/** Sample status filter options */
-const SAMPLE_STATUS_FILTER_OPTIONS: FilterOption[] = [
-  { id: 'pending', label: 'PENDING', color: 'warning' },
-  { id: 'collected', label: 'COLLECTED', color: 'success' },
-  { id: 'rejected', label: 'REJECTED', color: 'error' },
-];
 
 /**
  * Creates a filter function for samples that searches across multiple fields
@@ -87,6 +80,9 @@ export const CollectionView: React.FC = () => {
   const collectSampleMutation = useCollectSample();
   const { getPatient, getPatientName } = usePatientNameLookup();
   const { getOrder } = useOrderLookup();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
   const [statusFilters, setStatusFilters] = useState<SampleStatus[]>(['pending']);
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
@@ -131,13 +127,39 @@ export const CollectionView: React.FC = () => {
     [getPatientName, tests]
   );
 
-  // Apply status filter to displays
-  const filteredByStatus = useMemo(() => {
-    if (statusFilters.length === 0) return allSampleDisplays;
-    return allSampleDisplays.filter(
-      d => d.sample?.status && statusFilters.includes(d.sample.status)
-    );
-  }, [allSampleDisplays, statusFilters]);
+  // Apply date range, sample type, status, then search (same order as Order filters)
+  const filteredDisplays = useMemo(() => {
+    let out = allSampleDisplays;
+
+    if (dateRange) {
+      const [start, end] = dateRange;
+      const startDate = new Date(start);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(end);
+      endDate.setHours(23, 59, 59, 999);
+      out = out.filter(d => {
+        const orderDate = new Date(d.order.orderDate);
+        return orderDate >= startDate && orderDate <= endDate;
+      });
+    }
+
+    if (sampleTypeFilters.length > 0) {
+      out = out.filter(d => {
+        const st = d.requirement?.sampleType ?? d.sample?.sampleType;
+        return st && sampleTypeFilters.includes(st);
+      });
+    }
+
+    if (statusFilters.length > 0) {
+      out = out.filter(d => d.sample?.status && statusFilters.includes(d.sample.status));
+    }
+
+    if (searchQuery.trim()) {
+      out = out.filter(d => filterSample(d, searchQuery));
+    }
+
+    return out;
+  }, [allSampleDisplays, dateRange, sampleTypeFilters, statusFilters, searchQuery, filterSample]);
 
   /**
    * Handle sample collection
@@ -185,8 +207,7 @@ export const CollectionView: React.FC = () => {
   return (
     <DataErrorBoundary>
       <LabWorkflowView
-        items={filteredByStatus}
-        filterFn={filterSample}
+        items={filteredDisplays}
         renderCard={display =>
           isMobile ? (
             <CollectionMobileCard display={display} onCollect={handleCollect} />
@@ -200,15 +221,16 @@ export const CollectionView: React.FC = () => {
         emptyIcon="sample-collection"
         emptyTitle="No Pending Collections"
         emptyDescription="There are no samples waiting to be collected."
-        searchPlaceholder="Search samples..."
-        filters={
-          <MultiSelectFilter
-            label="Status"
-            options={SAMPLE_STATUS_FILTER_OPTIONS}
-            selectedIds={statusFilters}
-            onChange={ids => setStatusFilters(ids as SampleStatus[])}
-            selectAllLabel="Select all"
-            icon="checklist"
+        filterRow={
+          <CollectionFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+            sampleTypeFilters={sampleTypeFilters}
+            onSampleTypeFiltersChange={setSampleTypeFilters}
+            statusFilters={statusFilters}
+            onStatusFiltersChange={setStatusFilters}
           />
         }
       />

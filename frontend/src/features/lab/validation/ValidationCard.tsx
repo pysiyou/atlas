@@ -79,7 +79,7 @@ function ResultGrid({
   flagStatusMap: Record<string, ResultStatus>;
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-40">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,max-content))] gap-x-8 gap-y-1">
       {Object.entries(results).map(([key, value]) => {
         const { resultValue, unit, status } = parseResultEntry(
           key,
@@ -96,9 +96,9 @@ function ResultGrid({
         return (
           <div
             key={key}
-            className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 py-1.5 whitespace-nowrap"
+            className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 py-1 whitespace-nowrap"
           >
-            <span className="text-xs text-gray-500" title={key}>
+            <span className="text-xs text-gray-500 text-right" title={key}>
               {key}:
             </span>
             <span className={`text-sm font-medium text-left ${valueColor}`}>
