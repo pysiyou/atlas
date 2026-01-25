@@ -29,7 +29,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
       className={mobileCard.base}
     >
       {/* Header: Avatar (top left) + Gender badge (top right) */}
-      <div className={mobileCard.header.container}>
+      <div className={`${mobileCard.header.container} flex justify-between items-center`}>
         {/* Avatar: Patient name + Age - positioned at top left */}
         <Avatar
           primaryText={patient.fullName}
@@ -53,6 +53,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
 
       {/* Bottom section: Add Order button - positioned at bottom right */}
       <div className={mobileCard.footer.container}>
+        <div></div>
         <IconButton variant="add" size="sm" title="Add Order" onClick={handleAddOrder} />
       </div>
     </div>

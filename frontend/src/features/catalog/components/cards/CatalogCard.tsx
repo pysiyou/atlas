@@ -22,7 +22,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
       className={mobileCard.base}
     >
       {/* Header: Test code (left) + Price (right) */}
-      <div className={mobileCard.header.container}>
+      <div className={`${mobileCard.header.container} flex justify-between items-center`}>
         <span className={`text-xs ${brandColors.primary.icon} font-medium leading-none`}>{test.code}</span>
         <div className={`font-medium ${brandColors.primary.icon} text-lg leading-none`}>
           {formatCurrency(test.price)}

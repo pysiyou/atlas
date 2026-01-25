@@ -32,7 +32,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
       className={mobileCard.base}
     >
       {/* Header: Avatar (top left) + Total Price (top right) */}
-      <div className={mobileCard.header.container}>
+      <div className={`${mobileCard.header.container} flex justify-between items-center`}>
         {/* Avatar: Patient name + Order ID - positioned at top left */}
         <Avatar
           primaryText={item.patientName || 'N/A'}

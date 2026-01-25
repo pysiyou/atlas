@@ -65,7 +65,7 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
       className={mobileCard.base}
     >
       {/* Header: Avatar (top left) + Status badge (top right) */}
-      <div className={mobileCard.header.container}>
+      <div className={`${mobileCard.header.container} flex justify-between items-center`}>
         <Avatar
           primaryText={patientName}
           secondaryText={displayId.order(order.orderId)}
