@@ -30,7 +30,7 @@ export const createOrderTableConfig = (
   navigate: NavigateFunction,
   getPatientNameFn: (patientId: number | string) => string,
   getTestNameFn: (testCode: string) => string,
-  openModalFn?: (type: string, props?: Record<string, unknown>) => void
+  openModalFn?: (type: ModalType, props?: Record<string, unknown>) => void
 ): TableViewConfig<Order> => {
   // Shared render functions
   const renderOrderId = (order: Order) => (

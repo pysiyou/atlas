@@ -86,10 +86,10 @@ export const LAB_CARD_LIST_ITEMS = {
   testItem: 'flex items-center text-xs text-gray-700',
 
   // List bullet (gray)
-  bullet: 'w-1.5 h-1.5 rounded-full bg-gray-400 mr-2',
+  bullet: 'w-1 h-1 rounded-full bg-gray-400 mr-2',
 
   // List bullet (red for flags)
-  bulletRed: 'w-1.5 h-1.5 rounded-full bg-red-500 mr-2',
+  bulletRed: 'w-1 h-1 rounded-full bg-red-500 mr-2',
 
   // Test name in list
   testName: 'font-medium mr-1',
