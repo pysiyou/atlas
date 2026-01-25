@@ -9,6 +9,7 @@ import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types/order';
 import { formatDetailDate, formatOrderPrice } from '../../utils/patientDetailUtils';
 import { ICONS } from '@/utils/icon-mappings';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 
 export interface PatientOrdersTableProps {
   orders: Order[];
@@ -39,10 +40,10 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
             {orders.map(order => (
               <tr
                 key={order.orderId}
-                className="hover:bg-sky-50 transition-colors cursor-pointer"
+                className={`hover:${brandColors.primary.backgroundLight} transition-colors cursor-pointer`}
                 onClick={() => onOrderClick(String(order.orderId))}
               >
-                <td className="px-3 py-3 text-sky-600 font-medium font-mono">
+                <td className={`px-3 py-3 ${brandColors.primary.icon} font-medium font-mono`}>
                   {displayId.order(order.orderId)}
                 </td>
                 <td className="px-3 py-3 text-gray-600">
@@ -77,7 +78,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
             className="hover:bg-gray-50 transition-colors cursor-pointer"
             onClick={() => onOrderClick(String(order.orderId))}
           >
-            <td className="px-2 py-3 text-xs text-sky-600 font-medium font-mono max-w-0">
+            <td className={`px-2 py-3 text-xs ${brandColors.primary.icon} font-medium font-mono max-w-0`}>
               <span className="block truncate">{displayId.order(order.orderId)}</span>
             </td>
             <td className="px-2 py-3 text-xs text-gray-500 max-w-0">
@@ -103,7 +104,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
             <td className="px-2 py-3">
               <Badge variant={order.paymentStatus} size="sm" />
             </td>
-            <td className="px-2 py-3 font-medium text-sky-600 max-w-0">
+            <td className={`px-2 py-3 font-medium ${brandColors.primary.icon} max-w-0`}>
               <span className="block truncate">{formatOrderPrice(order.totalPrice)}</span>
             </td>
           </tr>

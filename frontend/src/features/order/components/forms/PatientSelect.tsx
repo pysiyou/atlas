@@ -3,6 +3,7 @@ import { Avatar, Icon } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
 import type { Patient } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 interface PatientSelectorProps {
   selectedPatient: Patient | null;
@@ -50,7 +51,7 @@ const PatientSearchTagInput: React.FC<{
           'bg-white transition-colors',
           disabled ? 'bg-gray-50 opacity-60 cursor-not-allowed' : '',
           !disabled && 'focus-within:ring-2 focus-within:ring-sky-500 focus-within:border-transparent',
-          error ? 'border-red-500' : 'border-gray-300',
+          error ? semanticColors.danger.inputBorder : 'border-gray-300',
           'flex flex-wrap gap-2 items-center',
           'min-h-[42px]',
         ].join(' ')}
@@ -60,7 +61,7 @@ const PatientSearchTagInput: React.FC<{
         </div>
 
         {selectedPatient && (
-          <div className="flex items-center gap-2 px-2 py-1 rounded bg-sky-50 border border-sky-200 max-w-full shrink-0">
+          <div className={`flex items-center gap-2 px-2 py-1 rounded ${brandColors.primary.backgroundLight} border ${brandColors.primary.border} max-w-full shrink-0`}>
             {/* Small avatar with initial */}
             <Avatar
               primaryText={selectedPatient.fullName}
@@ -104,7 +105,7 @@ const PatientSearchTagInput: React.FC<{
         />
       </div>
 
-      {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
+      {error && <p className={`mt-1.5 text-xs ${semanticColors.danger.errorText}`}>{error}</p>}
     </div>
   );
 };

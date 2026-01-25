@@ -10,6 +10,7 @@ import { Alert, Icon } from '@/shared/ui';
 import type { PaymentMethodOption, PaymentMethod } from '@/types/billing';
 import type { IconName } from '@/shared/ui/Icon';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 export interface PaymentSectionProps {
   paymentMethods: PaymentMethodOption[];
@@ -42,7 +43,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
                 relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                 ${
                   isSelected
-                    ? 'bg-white border-sky-500 border-2'
+                    ? `bg-white ${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} border-2`
                     : 'bg-white border-gray-200 hover:border-gray-300'
                 }
                 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
@@ -63,7 +64,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
               <div
                 className={`
                   absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                  ${isSelected ? 'bg-green-500' : 'bg-transparent border-2 border-gray-300'}
+                  ${isSelected ? semanticColors.success.background.replace('bg-green-600', 'bg-green-500') : 'bg-transparent border-2 border-gray-300'}
                 `}
               >
                 <Icon
