@@ -120,9 +120,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             onChange={e => setVolume(Number(e.target.value))}
             className={`w-full pl-3 pr-8 py-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all placeholder-gray-400 ${
               volume < minimumVolume
-                ? 'border-red-500'
+                ? semanticColors.danger.inputBorder
                 : volume > 100
-                  ? 'border-yellow-500'
+                  ? semanticColors.warning.borderLight
                   : 'border-gray-300'
             }`}
             placeholder="0.0"
@@ -159,8 +159,8 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   ${
                     isSelected
                       ? showWarning
-                        ? 'bg-yellow-50 border-yellow-200 ring-1 ring-yellow-200'
-                        : 'bg-sky-50 border-sky-200 ring-1 ring-sky-200'
+                        ? `${semanticColors.warning.backgroundLight} ${semanticColors.warning.border} ring-1 ring-yellow-200`
+                        : `${brandColors.primary.backgroundLight} ${brandColors.primary.border} ring-1 ring-sky-200`
                       : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                   }
                 `}
@@ -189,7 +189,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
         </div>
         <div className="h-6 mt-1.5">
           <div
-            className={`text-xs text-yellow-600 flex items-center gap-1.5 bg-yellow-50 p-1.5 rounded border border-yellow-100 transition-opacity duration-200 ${selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            className={`text-xs ${semanticColors.warning.valueHigh} flex items-center gap-1.5 ${semanticColors.warning.backgroundLight} p-1.5 rounded border ${semanticColors.warning.border} transition-opacity duration-200 ${selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           >
             <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
             Warning: Selected container type not in requirements

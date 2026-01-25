@@ -106,7 +106,7 @@ const getStatusColors = (status: VitalStatus) => {
         border: semanticColors.success.border, // border-green-200
         icon: semanticColors.success.icon, // text-green-600
         value: semanticColors.success.textOnLight, // text-green-800
-        dot: 'bg-green-500', // Keep specific dot color
+        dot: semanticColors.success.background, // bg-green-600 for dot
       };
     case 'borderline':
       return {
@@ -114,7 +114,7 @@ const getStatusColors = (status: VitalStatus) => {
         border: semanticColors.warning.border, // border-yellow-200
         icon: semanticColors.warning.icon, // text-yellow-600
         value: semanticColors.warning.textOnLight, // text-yellow-700
-        dot: 'bg-yellow-500', // Keep specific dot color
+        dot: semanticColors.warning.background, // bg-yellow-500 for dot
       };
     case 'abnormal':
       return {
@@ -122,7 +122,7 @@ const getStatusColors = (status: VitalStatus) => {
         border: semanticColors.danger.border, // border-red-200
         icon: semanticColors.danger.icon, // text-red-600
         value: semanticColors.danger.textOnLight, // text-red-700
-        dot: 'bg-red-500', // Keep specific dot color
+        dot: semanticColors.danger.background, // bg-red-600 for dot
       };
   }
 };

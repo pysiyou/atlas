@@ -215,7 +215,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
                 {isAbnormal && (
-                  <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-red-500 shrink-0" />
+                  <Icon name={ICONS.actions.dangerSquare} className={`w-3 h-3 ${semanticColors.danger.requiredIndicator} shrink-0`} />
                 )}
                 <span className="text-xxs text-gray-400 truncate">Ref: {refRange}</span>
               </div>
@@ -248,7 +248,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                   [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0
                   focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
                   disabled:bg-gray-100 disabled:cursor-not-allowed
-                  ${error ? 'border-red-500' : status ? statusColors.border : 'border-gray-300'}
+                  ${error ? semanticColors.danger.inputBorder : status ? statusColors.border : 'border-gray-300'}
                   ${status ? statusColors.bg : ''}
                 `}
               />
@@ -260,14 +260,14 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               {/* Abnormal value alert (absolute positioned below input) */}
               {isAbnormal && (
-                <div className="absolute -bottom-5 left-0 text-xxs text-red-600 font-medium">
+                <div className={`absolute -bottom-5 left-0 text-xxs ${semanticColors.danger.icon} font-medium`}>
                   Abnormal value
                 </div>
               )}
             </div>
 
             {/* Error message */}
-            {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+            {error && <p className={`mt-1 text-sm ${semanticColors.danger.errorText}`}>{error}</p>}
           </div>
         );
       })}
