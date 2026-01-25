@@ -11,6 +11,7 @@ import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 import { CatalogCard } from '../components/cards/CatalogCard';
 
 /**
@@ -57,7 +58,7 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
   };
 
   const renderPrice = (test: Test) => (
-    <div className="font-medium text-sky-600 truncate">{formatCurrency(test.price)}</div>
+    <div className={`font-medium ${brandColors.primary.icon} truncate`}>{formatCurrency(test.price)}</div>
   );
 
   const renderStatus = (test: Test) => (

@@ -13,6 +13,7 @@ import type { TableViewConfig } from '@/shared/ui/Table';
 import { PaymentButton } from '../components/display/PaymentButton';
 import type { OrderPaymentDetails } from '../types/types';
 import { PaymentCard } from '../components/cards/PaymentCard';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * Create payment table configuration with full, compact, and card views
@@ -34,7 +35,7 @@ export const createPaymentTableConfig = (
         e.stopPropagation();
         navigate(`/orders/${item.orderId}`);
       }}
-      className="text-xs text-sky-600 font-medium font-mono hover:underline truncate block max-w-full"
+      className={`text-xs ${brandColors.primary.icon} font-medium font-mono hover:underline truncate block max-w-full`}
     >
       {displayId.order(item.orderId)}
     </button>
@@ -63,7 +64,7 @@ export const createPaymentTableConfig = (
   );
 
   const renderTotalPrice = (item: OrderPaymentDetails) => (
-    <span className="font-medium text-sky-600 truncate block">
+    <span className={`font-medium ${brandColors.primary.icon} truncate block`}>
       {formatCurrency(item.totalPrice)}
     </span>
   );
