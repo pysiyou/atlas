@@ -21,7 +21,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     width: 'sm',
     sortable: true,
     render: (test: Test) => (
-      <span className="text-xs text-sky-600 font-medium font-mono truncate block">{test.code}</span>
+      <span className={`text-xs ${semanticColors.info.icon} font-medium font-mono truncate block`}>{test.code}</span>
     ),
   },
   {
@@ -47,7 +47,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     align: 'right',
     sortable: true,
     render: (test: Test) => (
-      <div className="font-medium text-sky-600 truncate">{formatCurrency(test.price)}</div>
+      <div className={`font-medium ${semanticColors.info.icon} truncate`}>{formatCurrency(test.price)}</div>
     ),
   },
   {

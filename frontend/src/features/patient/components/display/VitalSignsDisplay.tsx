@@ -102,27 +102,27 @@ const getStatusColors = (status: VitalStatus) => {
   switch (status) {
     case 'normal':
       return {
-        bg: 'bg-emerald-50',
-        border: 'border-emerald-200',
-        icon: 'text-emerald-600',
-        value: 'text-emerald-700',
-        dot: 'bg-emerald-500',
+        bg: semanticColors.success.backgroundLight, // bg-green-100 (using success for normal)
+        border: semanticColors.success.border, // border-green-200
+        icon: semanticColors.success.icon, // text-green-600
+        value: semanticColors.success.textOnLight, // text-green-800
+        dot: 'bg-green-500', // Keep specific dot color
       };
     case 'borderline':
       return {
-        bg: 'bg-amber-50',
-        border: 'border-amber-200',
-        icon: semanticColors.warning.icon,
-        value: 'text-amber-700',
-        dot: 'bg-amber-500',
+        bg: semanticColors.warning.backgroundLight, // bg-yellow-50
+        border: semanticColors.warning.border, // border-yellow-200
+        icon: semanticColors.warning.icon, // text-yellow-600
+        value: semanticColors.warning.textOnLight, // text-yellow-700
+        dot: 'bg-yellow-500', // Keep specific dot color
       };
     case 'abnormal':
       return {
-        bg: 'bg-red-50',
-        border: 'border-red-200',
-        icon: 'text-red-600',
-        value: 'text-red-700',
-        dot: 'bg-red-500',
+        bg: semanticColors.danger.backgroundLight, // bg-red-50
+        border: semanticColors.danger.border, // border-red-200
+        icon: semanticColors.danger.icon, // text-red-600
+        value: semanticColors.danger.textOnLight, // text-red-700
+        dot: 'bg-red-500', // Keep specific dot color
       };
   }
 };

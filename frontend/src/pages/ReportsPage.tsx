@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 import {
   useOrdersList,
   usePatientsList,
@@ -52,7 +53,7 @@ export const Reports: React.FC = () => {
                 className="flex items-start justify-between p-4 border border-gray-200 rounded"
               >
                 <div className="flex items-start gap-3">
-                  <Icon name={ICONS.dataFields.document} className="w-6 h-6 text-sky-600 mt-1" />
+                  <Icon name={ICONS.dataFields.document} className={`w-6 h-6 ${semanticColors.info.icon} mt-1`} />
                   <div>
                     <div className="font-medium text-gray-900">
                       <span className="font-mono">{displayId.order(order.orderId)}</span>

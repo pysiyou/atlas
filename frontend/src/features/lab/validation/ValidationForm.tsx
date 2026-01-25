@@ -117,9 +117,9 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
               const abnormal = status !== 'normal';
               const valueColor = abnormal
                 ? isCritical(status)
-                  ? 'text-red-600'
+                  ? semanticColors.danger.icon // text-red-600
                   : semanticColors.warning.valueHigh
-                : 'text-gray-900';
+                : neutralColors.text.primary; // text-gray-900
               
               return (
                 <div

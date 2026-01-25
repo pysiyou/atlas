@@ -225,13 +225,13 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
         // Determine connecting line color
         const getLineColor = () => {
           if (progress.isFullyComplete && nextProgress?.isStarted) {
-            return 'bg-emerald-400';
+            return 'bg-green-400'; // Using success color for completed (specific shade for timeline)
           }
           if (progress.isFullyComplete) {
             return 'bg-gray-300';
           }
           if (blocked) {
-            return 'bg-amber-200';
+            return 'bg-yellow-200'; // Warning color for blocked
           }
           return 'bg-gray-200';
         };
@@ -253,7 +253,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
         const getStatusColor = () => {
           if (step.status === 'paid' && !progress.isFullyComplete) return semanticColors.warning.valueHigh;
           if (blocked) return semanticColors.warning.valueHigh;
-          return 'text-sky-600';
+          return semanticColors.info.icon; // text-sky-600
         };
 
         return (

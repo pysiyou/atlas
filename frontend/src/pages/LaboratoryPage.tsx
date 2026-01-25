@@ -56,7 +56,7 @@ export const Laboratory: React.FC = () => {
                 `}
               >
                 <div
-                  className={`${isActive ? 'text-sky-600' : 'text-gray-400'} flex items-center`}
+                  className={`${isActive ? semanticColors.info.icon : neutralColors.text.disabled} flex items-center`}
                 >
                   {tab.icon}
                 </div>

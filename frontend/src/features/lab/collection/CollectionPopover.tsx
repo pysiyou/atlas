@@ -228,7 +228,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
               !selectedColor
                 ? `opacity-100 ${semanticColors.warning.valueHigh} ${semanticColors.warning.backgroundLight} ${semanticColors.warning.border}`
                 : selectedColor && !requirement.containerTopColors.includes(selectedColor as never)
-                  ? 'opacity-100 text-yellow-600 bg-yellow-50 border-yellow-100'
+                  ? `opacity-100 ${semanticColors.warning.valueHigh} ${semanticColors.warning.backgroundLight} ${semanticColors.warning.border}`
                   : 'opacity-0 pointer-events-none border-transparent'
             }`}
           >
