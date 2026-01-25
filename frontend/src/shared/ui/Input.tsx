@@ -17,15 +17,15 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input: React.FC<InputProps> = ({
-  label,
+  label: labelProp,
   error,
-  helperText,
+  helperText: helperTextProp,
   className = '',
   id,
   icon,
   ...props
 }) => {
-  const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
+  const inputId = id || labelProp?.toLowerCase().replace(/\s+/g, '-');
 
   // Auto-detect icon based on input type or name if not provided
   const getDefaultIcon = (): IconName | undefined => {
@@ -90,15 +90,15 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 }
 
 export const Textarea: React.FC<TextareaProps> = ({
-  label,
+  label: labelProp,
   error,
-  helperText,
+  helperText: helperTextProp,
   className = '',
   id,
   icon,
   ...props
 }) => {
-  const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
+  const inputId = id || labelProp?.toLowerCase().replace(/\s+/g, '-');
 
   // Auto-detect icon based on name if not provided
   const getDefaultIcon = (): IconName | undefined => {
@@ -117,13 +117,13 @@ export const Textarea: React.FC<TextareaProps> = ({
 
   return (
     <div className="w-full group">
-      {label && (
+      {labelProp && (
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
             className={`${labelTokens.base} cursor-pointer truncate min-w-0`}
           >
-            {label}
+            {labelProp}
             {props.required && <span className={requiredIndicator.base}>*</span>}
           </label>
         </div>
@@ -142,7 +142,7 @@ export const Textarea: React.FC<TextareaProps> = ({
         />
       </div>
       {error && <p className={errorMessage.base}>{error}</p>}
-      {helperText && !error && <p className={helperTextTokens.base}>{helperText}</p>}
+      {helperTextProp && !error && <p className={helperTextTokens.base}>{helperTextProp}</p>}
     </div>
   );
 };
@@ -159,16 +159,16 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 export const Select: React.FC<SelectProps> = ({
-  label,
+  label: labelProp,
   error,
-  helperText,
+  helperText: helperTextProp,
   options,
   className = '',
   id,
   icon,
   ...props
 }) => {
-  const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
+  const inputId = id || labelProp?.toLowerCase().replace(/\s+/g, '-');
 
   // Auto-detect icon based on name if not provided
   const getDefaultIcon = (): IconName | undefined => {
@@ -187,13 +187,13 @@ export const Select: React.FC<SelectProps> = ({
 
   return (
     <div className="w-full group">
-      {label && (
+      {labelProp && (
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
             className={`${labelTokens.base} cursor-pointer truncate min-w-0`}
           >
-            {label}
+            {labelProp}
             {props.required && <span className={requiredIndicator.base}>*</span>}
           </label>
         </div>
@@ -217,7 +217,7 @@ export const Select: React.FC<SelectProps> = ({
         </select>
       </div>
       {error && <p className={errorMessage.base}>{error}</p>}
-      {helperText && !error && <p className={helperTextTokens.base}>{helperText}</p>}
+      {helperTextProp && !error && <p className={helperTextTokens.base}>{helperTextProp}</p>}
     </div>
   );
 };
