@@ -95,32 +95,32 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 
               {/* Row 2: Patient & Order context */}
               <div className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-2 text-sm text-gray-700 flex-wrap">
+                <div className="flex items-center gap-3 text-sm text-gray-700 flex-wrap">
                   <span className="font-semibold text-gray-900">{contextInfo.patientName}</span>
-                  <span className="text-gray-300">|</span>
-                  <span className="font-medium text-gray-900 text-xs font-mono">
+                  <span className="text-gray-300 select-none">|</span>
+                  <span className="font-medium text-gray-900 text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.patientId === 'number'
                       ? displayId.patient(contextInfo.patientId)
                       : contextInfo.patientId}
                   </span>
                   {contextInfo.patientDob && (
                     <>
-                      <span className="text-gray-300">|</span>
-                      <span className="text-xs text-gray-600">
+                      <span className="text-gray-300 select-none">|</span>
+                      <span className="text-xs text-gray-600 whitespace-nowrap">
                         DOB: {formatDate(contextInfo.patientDob)}
                       </span>
                     </>
                   )}
-                  <span className="text-gray-300">|</span>
-                  <span className="font-medium text-gray-900 text-xs font-mono">
+                  <span className="text-gray-300 select-none">|</span>
+                  <span className="font-medium text-gray-900 text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.orderId === 'number'
                       ? displayId.order(contextInfo.orderId)
                       : contextInfo.orderId}
                   </span>
                   {contextInfo.referringPhysician && (
                     <>
-                      <span className="text-gray-300">|</span>
-                      <span className="text-gray-600">{contextInfo.referringPhysician}</span>
+                      <span className="text-gray-300 select-none">|</span>
+                      <span className="text-gray-600 whitespace-nowrap">{contextInfo.referringPhysician}</span>
                     </>
                   )}
                 </div>
@@ -129,7 +129,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 {sampleInfo && sampleInfo.collectedAt && (
                   <span className="text-xs text-gray-500">
                     Sample{' '}
-                    <span className="font-medium text-gray-900 font-mono">
+                    <span className="font-medium text-gray-900 text-sm font-mono tracking-wide">
                       {typeof sampleInfo.sampleId === 'number'
                         ? displayId.sample(sampleInfo.sampleId)
                         : sampleInfo.sampleId}

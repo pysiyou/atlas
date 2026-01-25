@@ -45,34 +45,39 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
       {hasResults && (
         <div className="mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2">
-            {Object.entries(results).map(([key, result]) => (
-              <div key={key} className="flex items-center justify-between py-2">
-                <span className="text-xs font-medium text-gray-600">{key}</span>
-                <div className="flex items-center gap-3">
-                  <span
-                    className={`text-xs ${
-                      result.status === 'high' || result.status === 'low'
-                        ? 'text-amber-600'
-                        : result.status === 'critical'
-                          ? 'text-red-600 font-bold'
-                          : 'text-gray-900'
-                    }`}
-                  >
-                    {result.value}{' '}
-                    <span className="text-xs text-gray-400 font-sans ml-0.5">{result.unit}</span>
-                  </span>
-                  {result.status !== 'normal' && (
-                    <Badge
-                      size="sm"
-                      variant={result.status === 'critical' ? 'danger' : 'warning'}
-                      className="border-none font-medium"
+            {Object.entries(results).map(([key, result]) => {
+              // Safely get status with default to 'normal' if undefined
+              const status = result.status ?? 'normal';
+              
+              return (
+                <div key={key} className="flex items-center justify-between py-2">
+                  <span className="text-xs font-medium text-gray-600">{key}</span>
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`text-xs ${
+                        status === 'high' || status === 'low'
+                          ? 'text-amber-600'
+                          : status === 'critical' || status === 'critical-high' || status === 'critical-low'
+                            ? 'text-red-600 font-bold'
+                            : 'text-gray-900'
+                      }`}
                     >
-                      {result.status.toUpperCase()}
-                    </Badge>
-                  )}
+                      {result.value}{' '}
+                      <span className="text-xs text-gray-400 font-sans ml-0.5">{result.unit}</span>
+                    </span>
+                    {status !== 'normal' && status && (
+                      <Badge
+                        size="sm"
+                        variant={status === 'critical' || status === 'critical-high' || status === 'critical-low' ? 'danger' : 'warning'}
+                        className="border-none font-medium"
+                      >
+                        {status.toUpperCase()}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

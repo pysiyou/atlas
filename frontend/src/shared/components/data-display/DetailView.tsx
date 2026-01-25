@@ -123,7 +123,7 @@ export const DetailView: React.FC<DetailViewProps> = ({
           {breadcrumbs.map((crumb, index) => (
             <React.Fragment key={index}>
               {crumb.onClick ? (
-                <button onClick={crumb.onClick} className="hover:text-gray-900 transition-colors">
+                <button onClick={crumb.onClick} className="hover:text-gray-900 transition-colors cursor-pointer">
                   {crumb.label}
                 </button>
               ) : (
@@ -141,7 +141,7 @@ export const DetailView: React.FC<DetailViewProps> = ({
           {onBack && (
             <button
               onClick={onBack}
-              className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-md transition-colors cursor-pointer"
               aria-label="Go back"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

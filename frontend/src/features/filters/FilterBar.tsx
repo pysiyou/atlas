@@ -15,7 +15,6 @@ import {
   MultiSelectControl,
   SingleSelectControl,
 } from './filter-controls';
-import { ActiveFilterBadges } from './ActiveFilterBadges';
 import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
 import { FilterModal } from './FilterModal';
@@ -44,7 +43,6 @@ export interface FilterBarProps {
  * Main container component that provides:
  * - Search control (always visible)
  * - Quick filter presets
- * - Active filter badges
  * - Primary filter section
  * - Advanced filter section (collapsible)
  * - Responsive views: lg (full inline), md (partial inline + dropdown), sm (modal)
@@ -64,7 +62,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Use filter state management
-  const { filters, setFilter, clearFilter, clearAll, isFilterActive } = useFilterState({
+  const { filters, setFilter, clearAll, isFilterActive } = useFilterState({
     initialFilters: value,
     onChange,
   });
@@ -279,11 +277,6 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
         </div>
       </div>
 
-      {/* Active filter badges */}
-      {activeBadges.length > 0 && (
-        <ActiveFilterBadges badges={activeBadges} onRemove={clearFilter} onClearAll={clearAll} />
-      )}
-
       {/* Advanced filters section - collapsed by default */}
       {config.advancedFilters && config.advancedFilters.controls.length > 0 && (
         <FilterSection
@@ -401,11 +394,6 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
           )}
         </div>
       </div>
-
-      {/* Active filter badges */}
-      {activeBadges.length > 0 && (
-        <ActiveFilterBadges badges={activeBadges} onRemove={clearFilter} onClearAll={clearAll} />
-      )}
     </div>
   );
 
@@ -449,20 +437,12 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
         </div>
       </div>
 
-      {/* Active filter badges */}
-      {activeBadges.length > 0 && (
-        <ActiveFilterBadges badges={activeBadges} onRemove={clearFilter} onClearAll={clearAll} />
-      )}
-
       {/* Filter Modal */}
       <FilterModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         config={config}
-        filters={filters}
-        onFilterChange={setFilter}
         activeBadges={activeBadges}
-        onRemoveBadge={clearFilter}
         onClearAll={clearAll}
         activePresetId={activePresetId}
         onPresetClick={applyPreset}

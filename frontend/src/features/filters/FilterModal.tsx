@@ -3,16 +3,15 @@
  * Modal interface for filters on small screens
  *
  * Displays all filter controls in a modal dialog for small screen devices.
- * Provides a clean, scrollable interface with all filters, active badges, and quick filters.
+ * Provides a clean, scrollable interface with all filters and quick filters.
  */
 
 import React from 'react';
 import { Modal } from '@/shared/ui/Modal';
 import { Button } from '@/shared/ui/Button';
-import { ActiveFilterBadges } from './ActiveFilterBadges';
 import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
-import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
+import type { FilterConfig, ActiveFilterBadge } from './types';
 
 /**
  * Props for FilterModal component
@@ -24,14 +23,8 @@ export interface FilterModalProps {
   onClose: () => void;
   /** Filter configuration */
   config: FilterConfig;
-  /** Current filter values */
-  filters: FilterValues;
-  /** Callback when a filter value changes */
-  onFilterChange: (key: string, value: unknown) => void;
-  /** Active filter badges */
+  /** Active filter badges (used for Clear All visibility) */
   activeBadges: ActiveFilterBadge[];
-  /** Callback when a badge is removed */
-  onRemoveBadge: (key: string) => void;
   /** Callback to clear all filters */
   onClearAll: () => void;
   /** Currently active quick filter preset ID */
@@ -42,7 +35,9 @@ export interface FilterModalProps {
   renderControl: (control: FilterConfig['primaryFilters']['controls'][number]) => React.ReactNode;
   /** Function to count active filters in a section */
   countActiveInSection: (
-    controls: FilterConfig['primaryFilters']['controls'] | FilterConfig['advancedFilters']['controls']
+    controls:
+      | FilterConfig['primaryFilters']['controls']
+      | NonNullable<FilterConfig['advancedFilters']>['controls']
   ) => number;
 }
 
@@ -51,9 +46,8 @@ export interface FilterModalProps {
  *
  * Provides a modal interface for filters on small screens with:
  * - All filter controls in a vertical stack
- * - Active filter badges
  * - Quick filters (if any)
- * - Clear/Apply actions
+ * - Close / Clear all actions
  *
  * @component
  */
@@ -61,10 +55,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
   isOpen,
   onClose,
   config,
-  filters,
-  onFilterChange,
   activeBadges,
-  onRemoveBadge,
   onClearAll,
   activePresetId,
   onPresetClick,
@@ -99,17 +90,6 @@ export const FilterModal: React.FC<FilterModalProps> = ({
               presets={config.quickFilters}
               activePresetId={activePresetId}
               onPresetClick={onPresetClick}
-            />
-          </div>
-        )}
-
-        {/* Active Filter Badges */}
-        {activeBadges.length > 0 && (
-          <div className="px-4 py-2 border-b border-gray-200">
-            <ActiveFilterBadges
-              badges={activeBadges}
-              onRemove={onRemoveBadge}
-              onClearAll={handleClearAll}
             />
           </div>
         )}

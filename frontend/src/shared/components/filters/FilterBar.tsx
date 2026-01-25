@@ -65,7 +65,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {onReset && (
             <button
               onClick={onReset}
-              className="text-xs text-sky-600 hover:text-sky-700 font-medium transition-colors"
+              className="text-xs text-sky-600 hover:text-sky-700 font-medium transition-colors cursor-pointer"
             >
               Reset All
             </button>
@@ -73,7 +73,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {collapsible && (
             <button
               onClick={toggleExpanded}
-              className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
+              className="p-1 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
               aria-label={isExpanded ? 'Collapse filters' : 'Expand filters'}
             >
               <Icon name={isExpanded ? ICONS.actions.chevronUp : ICONS.actions.chevronDown} className="w-4 h-4" />

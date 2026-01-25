@@ -58,7 +58,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               title={isCollapsed ? item.label : undefined}
               onClick={handleNavClick}
               className={({ isActive }) =>
-                `flex items-center min-w-0 py-2.5 transition-colors relative ${
+                `flex items-center min-w-0 py-2.5 transition-colors relative cursor-pointer ${
                   isActive ? 'bg-sky-50 text-sky-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
                 }`
               }

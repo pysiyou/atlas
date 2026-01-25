@@ -47,7 +47,7 @@ export const Laboratory: React.FC = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`
-                  relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200
+                  relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 cursor-pointer
                   ${
                     isActive
                       ? 'bg-white text-sky-700 shadow-sm shadow-gray-200 ring-1 ring-black/5'

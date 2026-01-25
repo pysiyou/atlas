@@ -37,6 +37,8 @@ interface LabWorkflowViewProps<T> {
   searchPlaceholder?: string;
   /** Filter row (e.g. FilterBar). When provided, replaces header+search; parent filters items. */
   filterRow?: ReactNode;
+  /** Content to render after filter row but before the grid (e.g. bulk action toolbar) */
+  afterFilterRow?: ReactNode;
 }
 
 /**
@@ -58,6 +60,7 @@ export function LabWorkflowView<T>({
   filters,
   searchPlaceholder = 'Search...',
   filterRow,
+  afterFilterRow,
 }: LabWorkflowViewProps<T>): React.ReactElement {
   const useFilterRow = filterRow != null;
   const searchFilterFn = filterFn ?? (() => true);
@@ -74,7 +77,10 @@ export function LabWorkflowView<T>({
     <div className="h-full flex flex-col min-h-0">
       {useFilterRow ? (
         /* Filter row mode: FilterBar full width, same as ListView – no extra wrapper padding */
-        <div className="shrink-0">{filterRow}</div>
+        <>
+          <div className="shrink-0">{filterRow}</div>
+          {afterFilterRow && <div className="shrink-0 px-6 pt-4">{afterFilterRow}</div>}
+        </>
       ) : (
         /* Legacy mode: title + filters + SearchBar */
         <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">

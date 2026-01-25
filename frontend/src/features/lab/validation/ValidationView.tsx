@@ -29,6 +29,12 @@ import { resultAPI } from '@/services/api';
 import { orderHasValidatedTests } from '@/features/order/utils';
 import { ValidationFilters } from '../components/filters';
 
+/**
+ * Feature flag to enable/disable bulk validation (select all) feature
+ * Set to false to disable the select all checkbox and bulk validation toolbar
+ */
+const ENABLE_BULK_VALIDATION = false;
+
 // Large component is necessary for comprehensive validation view with filtering, sorting, card rendering, and validation functionality
 // eslint-disable-next-line max-lines-per-function
 export const ValidationView: React.FC = () => {
@@ -163,12 +169,13 @@ export const ValidationView: React.FC = () => {
   );
 
   // Bulk selection state (over visible/filtered items with id)
+  // Only initialize if bulk validation is enabled
   const {
     selectedIds,
     setSelectedIds,
     toggleItem,
     isSelected,
-  } = useBulkSelection(filteredTestsWithId);
+  } = useBulkSelection(ENABLE_BULK_VALIDATION ? filteredTestsWithId : []);
 
   /**
    * Handle bulk approval of selected tests
@@ -369,19 +376,6 @@ export const ValidationView: React.FC = () => {
 
   return (
     <DataErrorBoundary>
-      {/* Bulk Validation Toolbar */}
-      {!isMobile && filteredTestsWithId.length > 0 && (
-        <div className="px-4 pt-4">
-          <BulkValidationToolbar
-            items={bulkItems}
-            selectedIds={selectedIds}
-            onSelectionChange={setSelectedIds}
-            onBulkApprove={handleBulkApprove}
-            isProcessing={isBulkProcessing}
-          />
-        </div>
-      )}
-
       <LabWorkflowView
         items={filteredTests}
         renderCard={test => {
@@ -407,7 +401,8 @@ export const ValidationView: React.FC = () => {
           }
 
           // Desktop: checkbox + card when id present, else card only
-          if (typeof test.id === 'number') {
+          // Only show checkbox if bulk validation is enabled
+          if (typeof test.id === 'number' && ENABLE_BULK_VALIDATION) {
             return (
               <div className="flex items-start gap-3">
                 <div className="pt-4">
@@ -442,6 +437,18 @@ export const ValidationView: React.FC = () => {
             statusFilters={statusFilters}
             onStatusFiltersChange={setStatusFilters}
           />
+        }
+        afterFilterRow={
+          ENABLE_BULK_VALIDATION && !isMobile && filteredTestsWithId.length > 0 ? (
+            <BulkValidationToolbar
+              items={bulkItems}
+              selectedIds={selectedIds}
+              onSelectionChange={setSelectedIds}
+              onBulkApprove={handleBulkApprove}
+              isProcessing={isBulkProcessing}
+              enabled={ENABLE_BULK_VALIDATION}
+            />
+          ) : undefined
         }
       />
     </DataErrorBoundary>

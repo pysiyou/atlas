@@ -127,7 +127,7 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
               <span className="text-gray-600">{displayValue}</span>
               <button
                 onClick={() => onRemove(badge.key)}
-                className="ml-0.5 p-0.5 hover:bg-gray-100 rounded transition-colors"
+                className="ml-0.5 p-0.5 hover:bg-gray-100 rounded transition-colors cursor-pointer"
                 aria-label={`Remove ${badge.label} filter`}
               >
                 <Icon
@@ -143,7 +143,7 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
       {validBadges.length > 1 && onClearAll && (
         <button
           onClick={onClearAll}
-          className="ml-auto text-xxs font-medium text-sky-600 hover:text-sky-700 transition-colors"
+          className="ml-auto text-xxs font-medium text-sky-600 hover:text-sky-700 transition-colors cursor-pointer"
         >
           Clear all
         </button>

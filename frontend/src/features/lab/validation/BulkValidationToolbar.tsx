@@ -25,6 +25,8 @@ interface BulkValidationToolbarProps {
   onSelectionChange: (ids: Set<number>) => void;
   onBulkApprove: (ids: number[]) => Promise<void>;
   isProcessing?: boolean;
+  /** Enable/disable the bulk validation feature */
+  enabled?: boolean;
 }
 
 export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
@@ -33,6 +35,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
   onSelectionChange,
   onBulkApprove,
   isProcessing = false,
+  enabled = true,
 }) => {
   const selectedCount = selectedIds.size;
   const totalCount = items.length;
@@ -41,25 +44,27 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
 
   // Filter out items with critical values for bulk approve
   const approvableSelected = useMemo(() => {
+    if (!enabled) return [];
     return items.filter(
       item => selectedIds.has(item.id) && !item.hasCriticalValues
     );
-  }, [items, selectedIds]);
+  }, [items, selectedIds, enabled]);
 
   const criticalSelectedCount = selectedCount - approvableSelected.length;
 
   /** Toggle all items */
   const handleToggleAll = useCallback(() => {
+    if (!enabled) return;
     if (allSelected) {
       onSelectionChange(new Set());
     } else {
       onSelectionChange(new Set(items.map(item => item.id)));
     }
-  }, [allSelected, items, onSelectionChange]);
+  }, [allSelected, items, onSelectionChange, enabled]);
 
   /** Handle bulk approve */
   const handleBulkApprove = useCallback(async () => {
-    if (approvableSelected.length === 0) return;
+    if (!enabled || approvableSelected.length === 0) return;
 
     const confirmMessage = criticalSelectedCount > 0
       ? `Are you sure you want to approve ${approvableSelected.length} result(s)?\n\nNote: ${criticalSelectedCount} item(s) with critical values will be skipped.`
@@ -70,39 +75,41 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
     if (confirmed) {
       await onBulkApprove(approvableSelected.map(item => item.id));
     }
-  }, [approvableSelected, criticalSelectedCount, onBulkApprove]);
+  }, [approvableSelected, criticalSelectedCount, onBulkApprove, enabled]);
 
   /** Clear selection */
   const handleClearSelection = useCallback(() => {
+    if (!enabled) return;
     onSelectionChange(new Set());
-  }, [onSelectionChange]);
+  }, [onSelectionChange, enabled]);
 
-  if (totalCount === 0) {
+  // Return null if feature is disabled or no items
+  if (!enabled || totalCount === 0) {
     return null;
   }
 
-  // Show compact "Select All" checkbox when nothing is selected
+  // Show simple "Select All" checkbox when nothing is selected
   if (selectedCount === 0) {
     return (
-      <div className="mb-4">
-        <label className="inline-flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-gray-900">
+      <div className="mb-3">
+        <label className="inline-flex items-center gap-2 cursor-pointer text-sm text-gray-600">
           <input
             type="checkbox"
             checked={false}
             onChange={handleToggleAll}
             className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
           />
-          <span>Select All ({totalCount})</span>
+          <span>Select all {totalCount} items</span>
         </label>
       </div>
     );
   }
 
-  // Show full toolbar when items are selected
+  // Show simple toolbar when items are selected
   return (
-    <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 mb-4">
+    <div className="flex items-center justify-between mb-3">
       {/* Left side: Selection controls */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {/* Select all checkbox */}
         <label className="flex items-center gap-2 cursor-pointer">
           <input
@@ -116,33 +123,30 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
             onChange={handleToggleAll}
             className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
           />
-          <span className="text-sm text-gray-700">
-            {allSelected ? 'Deselect All' : 'Select All'}
+          <span className="text-sm text-gray-600">
+            {allSelected ? 'Deselect all' : 'Select all'}
           </span>
         </label>
 
         {/* Selection count */}
-        {selectedCount > 0 && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-gray-900">
-              {selectedCount} of {totalCount} selected
-            </span>
-            <button
-              onClick={handleClearSelection}
-              className="text-xs text-gray-500 hover:text-gray-700 underline"
-            >
-              Clear
-            </button>
-          </div>
-        )}
+        <span className="text-sm text-gray-500">
+          {selectedCount} selected
+        </span>
+
+        {/* Clear button */}
+        <button
+          onClick={handleClearSelection}
+          className="text-sm text-gray-500 hover:text-gray-700"
+        >
+          Clear
+        </button>
       </div>
 
       {/* Right side: Actions */}
       <div className="flex items-center gap-3">
         {criticalSelectedCount > 0 && selectedCount > 0 && (
-          <span className="text-xs text-amber-600 flex items-center gap-1">
-            <Icon name={ICONS.actions.warning} className="w-3.5 h-3.5" />
-            {criticalSelectedCount} critical value(s) will be skipped
+          <span className="text-xs text-amber-600">
+            {criticalSelectedCount} critical skipped
           </span>
         )}
 
@@ -151,7 +155,6 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
           disabled={approvableSelected.length === 0 || isProcessing}
           variant="approve"
           size="sm"
-          className="min-w-[140px]"
         >
           {isProcessing ? (
             <>
@@ -159,9 +162,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
               Processing...
             </>
           ) : (
-            <>
-              Approve Selected ({approvableSelected.length})
-            </>
+            `Approve (${approvableSelected.length})`
           )}
         </Button>
       </div>
