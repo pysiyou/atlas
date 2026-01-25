@@ -35,43 +35,39 @@ export const Laboratory: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col p-4 space-y-6">
-      {/* Page Header: uses tab label as title */}
-      <div className="shrink-0">
+      {/* Page Header: title with tabs on the right */}
+      <div className="shrink-0 flex items-center justify-between gap-4 flex-wrap">
         <h1 className="text-2xl font-bold text-gray-900">{pageTitle}</h1>
+        <div className="bg-gray-200/60 p-1 rounded flex items-center gap-1">
+          {tabs.map(tab => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`
+                  relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200
+                  ${
+                    isActive
+                      ? 'bg-white text-sky-700 shadow-sm shadow-gray-200 ring-1 ring-black/5'
+                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'
+                  }
+                `}
+              >
+                <div
+                  className={`${isActive ? 'text-sky-600' : 'text-gray-400'} flex items-center`}
+                >
+                  {tab.icon}
+                </div>
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Main Content Card */}
       <div className="flex-1 flex flex-col bg-white rounded border border-gray-200 shadow-sm overflow-hidden min-h-0">
-        {/* Tabs / Toolbar */}
-        <div className="p-3 border-b border-gray-200 bg-gray-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
-          <div className="bg-gray-200/60 p-1 rounded flex items-center gap-1 self-start md:self-auto">
-            {tabs.map(tab => {
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`
-                    relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200
-                    ${
-                      isActive
-                        ? 'bg-white text-sky-700 shadow-sm shadow-gray-200 ring-1 ring-black/5'
-                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'
-                    }
-                  `}
-                >
-                  <div
-                    className={`${isActive ? 'text-sky-600' : 'text-gray-400'} flex items-center`}
-                  >
-                    {tab.icon}
-                  </div>
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Content Area: flex column, no scroll – filter + grid handle layout like ListView */}
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-gray-50">
           {activeTab === 'collection' && <CollectionView />}

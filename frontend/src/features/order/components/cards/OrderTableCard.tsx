@@ -46,7 +46,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
                 className="flex items-center justify-between text-xs text-gray-700"
               >
                 <div className="flex items-center flex-1 min-w-0">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2 flex-shrink-0" />
+                  <span className="w-1 h-1 rounded-full bg-gray-400 mr-2 flex-shrink-0" />
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
                   <span className="text-gray-500 truncate">{test.testCode}</span>
                 </div>
