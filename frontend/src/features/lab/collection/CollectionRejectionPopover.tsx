@@ -9,6 +9,7 @@ import { Popover, IconButton, Icon, Alert, Badge } from '@/shared/ui';
 import { PopoverForm, CheckboxCard } from '../components/PopoverForm';
 import type { RejectionReason } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 /** Rejection reason options with labels and descriptions */
 const REJECTION_REASONS: { value: RejectionReason; label: string; description: string }[] = [
@@ -162,14 +163,14 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           {REJECTION_REASONS.map(r => (
             <label
               key={r.value}
-              className={`flex items-start p-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 transition-colors ${reasons.includes(r.value) ? 'bg-sky-50/50' : ''}`}
+              className={`flex items-start p-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 transition-colors ${reasons.includes(r.value) ? `${brandColors.primary.backgroundLight}/50` : ''}`}
             >
               <div className="flex items-center h-5">
                 <input
                   type="checkbox"
                   checked={reasons.includes(r.value)}
                   onChange={() => toggleReason(r.value)}
-                  className="h-4 w-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
+                  className={`h-4 w-4 ${brandColors.primary.icon} border-gray-300 rounded focus:ring-sky-500`}
                 />
               </div>
               <div className="ml-2 text-xs">
@@ -195,7 +196,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       {/* Notes */}
       <div>
         <label className="block text-xs font-medium text-gray-700 mb-1">
-          Notes {reasons.includes('other') && <span className="text-red-500">*</span>}
+          Notes {reasons.includes('other') && <span className={semanticColors.danger.requiredIndicator}>*</span>}
         </label>
         <textarea
           rows={2}
@@ -205,7 +206,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           className="w-full px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
         />
         {reasons.includes('other') && !notes.trim() && (
-          <p className="text-xs text-red-500 mt-1">Required when "Other" is selected</p>
+          <p className={`text-xs ${semanticColors.danger.requiredIndicator} mt-1`}>Required when "Other" is selected</p>
         )}
       </div>
     </PopoverForm>
