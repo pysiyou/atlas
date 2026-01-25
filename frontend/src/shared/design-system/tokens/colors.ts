@@ -155,6 +155,7 @@ export const brandColors = {
     textOnLight: 'text-sky-800',
     backgroundLightBg: 'bg-sky-100',
     textLight: 'text-sky-800',
+    textLightMedium: 'text-sky-700',
     border: 'border-sky-200',
     borderMedium: 'border-sky-500',
     borderLight: 'border-sky-400',
