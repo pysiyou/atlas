@@ -23,20 +23,20 @@ export const tableBase = {
  */
 export const tableVariants = {
   compact: {
-    cellPadding: padding.horizontal.md + ' ' + padding.vertical.sm, // px-3 py-2
-    headerPadding: padding.horizontal.md + ' ' + padding.vertical.sm, // px-3 py-2
+    cellPadding: `${padding.horizontal.md} ${padding.vertical.sm}`, // px-3 py-2
+    headerPadding: `${padding.horizontal.md} ${padding.vertical.sm}`, // px-3 py-2
     textSize: fontSize.xs, // text-xs
     rowHeight: 44,
   },
   default: {
-    cellPadding: padding.horizontal.lg + ' ' + padding.vertical.md, // px-4 py-3
-    headerPadding: padding.horizontal.lg + ' ' + padding.vertical.md, // px-4 py-3
+    cellPadding: `${padding.horizontal.lg} ${padding.vertical.md}`, // px-4 py-3
+    headerPadding: `${padding.horizontal.lg} ${padding.vertical.md}`, // px-4 py-3
     textSize: fontSize.sm, // text-sm
     rowHeight: 56,
   },
   comfortable: {
-    cellPadding: padding.horizontal.xl + ' ' + padding.vertical.lg, // px-6 py-4
-    headerPadding: padding.horizontal.xl + ' ' + padding.vertical.lg, // px-6 py-4
+    cellPadding: `${padding.horizontal.xl} ${padding.vertical.lg}`, // px-6 py-4
+    headerPadding: `${padding.horizontal.xl} ${padding.vertical.lg}`, // px-6 py-4
     textSize: fontSize.sm, // text-sm
     rowHeight: 68,
   },
@@ -46,7 +46,7 @@ export const tableVariants = {
  * Table Header Styles
  */
 export const tableHeader = {
-  container: `bg-gray-50 ${border.default} sticky top-0 z-10`,
+  container: `bg-gray-50 border-b border-gray-200 sticky top-0 z-10`,
   row: 'flex items-center',
   cell: (variant: keyof typeof tableVariants) => `${tableVariants[variant].headerPadding} ${tableVariants[variant].textSize} font-semibold text-gray-700`,
 } as const;
@@ -55,7 +55,7 @@ export const tableHeader = {
  * Table Row Styles
  */
 export const tableRow = {
-  base: `flex items-center ${border.default} transition-colors`,
+  base: `flex items-center ${border.divider} transition-colors`,
   hover: 'hover:bg-gray-50',
   striped: 'bg-gray-50',
   clickable: 'cursor-pointer',
@@ -84,7 +84,7 @@ export const tableEmpty = {
  * Table Skeleton Styles
  */
 export const tableSkeleton = {
-  row: `flex items-center ${border.default}`,
+  row: `flex items-center ${border.divider}`,
 } as const;
 
 /**

@@ -21,16 +21,17 @@ export const iconSizes = {
 
 /**
  * Filter Control Sizing
- * Consistent heights and widths for filter bar controls
+ * Consistent heights for filter bar controls
+ * Widths are not constrained to allow flexible sizing
  */
 export const filterControlSizing = {
   height: 'h-[34px] min-h-[34px] max-h-[34px]',
   heightLg: 'h-[38px] min-h-[38px] max-h-[38px]',
   minWidth: {
-    search: 'min-w-[250px] lg:min-w-[260px]',
-    filter: 'min-w-[200px] lg:min-w-[220px]',
-    filterMedium: 'min-w-[180px]',
-    filterSmall: 'min-w-[150px]',
+    search: '',
+    filter: '',
+    filterMedium: '',
+    filterSmall: '',
   },
 } as const;
 

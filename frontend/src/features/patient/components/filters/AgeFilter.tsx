@@ -154,7 +154,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'group inline-flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-all duration-200 w-full sm:w-[240px] overflow-hidden',
+            'group flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-all duration-200 w-full overflow-hidden',
             `hover:${brandColors.primary.borderLight} hover:shadow-sm`,
             isOpen
               ? `${brandColors.primary.borderMedium} ring-2 ${brandColors.primary.ring20} shadow-md`

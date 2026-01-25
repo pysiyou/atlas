@@ -205,7 +205,7 @@ export const Popover: React.FC<PopoverProps> = ({
   return (
     <>
       <style>{hideScrollbarStyle}</style>
-      <div ref={refs.setReference} {...getReferenceProps()}>
+      <div ref={refs.setReference} {...getReferenceProps()} className="w-full">
         {typeof trigger === 'function' ? trigger({ isOpen }) : trigger}
       </div>
 

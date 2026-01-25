@@ -43,7 +43,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </div>
       <input
         type="text"
-        className={`${getInputClasses(false, true, 'left', size === 'sm' ? 'sm' : 'md', false)} pl-9 pr-4 ${sizeClasses} font-medium focus:border-sky-500 placeholder:${neutralColors.text.muted} placeholder:font-normal`}
+        className={`${getInputClasses(false, true, 'left', size === 'sm' ? 'sm' : 'md', false)} pl-9 pr-4 ${sizeClasses} font-medium placeholder:${neutralColors.text.muted} placeholder:font-normal`}
         {...props}
         onChange={handleChange}
       />

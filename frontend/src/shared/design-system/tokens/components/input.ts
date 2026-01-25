@@ -55,8 +55,8 @@ export const inputText = {
  * Input Focus Ring
  */
 export const inputFocus = {
-  default: `${semanticColors.info.focusRing} focus:border-transparent`,
-  error: `${semanticColors.danger.focusRing} focus:border-transparent`,
+  default: `focus:ring-2 ${semanticColors.info.focusRing} focus:ring-sky-500/20 focus:border-sky-500`,
+  error: `focus:ring-2 ${semanticColors.danger.focusRing} focus:ring-red-500/20 focus:border-red-500`,
 } as const;
 
 /**
