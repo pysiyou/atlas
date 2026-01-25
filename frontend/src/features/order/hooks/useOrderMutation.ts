@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
-import type { OrderFormData } from '../utils/orderPayloadBuilder';
+import type { OrderFormData } from '../types/orderForm';
 import { buildNewOrderPayload, buildUpdatedOrderPayload } from '../utils/orderPayloadBuilder';
 import type { Patient, Test } from '@/types';
 
@@ -93,7 +93,7 @@ export const useOrderMutation = ({
       const updatedOrder = buildUpdatedOrderPayload(formData, existingOrder, activeTests);
       const result = await updateOrderMutation.mutateAsync({
         orderId: existingOrder.orderId,
-        updates: updatedOrder,
+        updates: updatedOrder as Partial<Order>,
       });
 
       toast.success(`Order ${displayId.order(existingOrder.orderId)} updated successfully`);

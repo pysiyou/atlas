@@ -9,9 +9,8 @@ import { registerModal } from './modalRegistry';
 import { CollectionDetailModal } from '@/features/lab/collection/CollectionDetailModal';
 import { EntryDetailModal } from '@/features/lab/entry/EntryDetailModal';
 import { ValidationDetailModal } from '@/features/lab/validation/ValidationDetailModal';
-import { EditOrderModal } from '@/features/order/modals/EditOrderModal';
-
-import type { ContainerType, SampleDisplay, Test, TestWithContext } from '@/types';
+import { OrderUpsertModal } from '@/features/order/modals/OrderUpsertModal';
+import type { ContainerType, Order, SampleDisplay, Test, TestWithContext } from '@/types';
 
 // Register Collection Detail Modal (Sample Detail)
 registerModal(ModalType.SAMPLE_DETAIL, CollectionDetailModal, (props, baseProps, helpers) => {
@@ -111,18 +110,18 @@ registerModal(ModalType.VALIDATION_DETAIL, ValidationDetailModal, (props, basePr
   };
 });
 
-// Register New Order / Edit Order Modal
-registerModal(ModalType.NEW_ORDER, EditOrderModal, (props, baseProps) => {
+// Register New Order / Edit Order Modal (OrderUpsertModal)
+registerModal(ModalType.NEW_ORDER, OrderUpsertModal, (props, baseProps) => {
   const { patientId, order, mode } = props as {
     patientId?: string;
-    order?: unknown;
+    order?: Order;
     mode?: 'create' | 'edit';
   };
   return {
     ...baseProps,
     patientId,
-    order: order as typeof order,
-    mode: mode || (order ? 'edit' : 'create'),
+    order,
+    mode: mode ?? (order ? 'edit' : 'create'),
   };
 });
 

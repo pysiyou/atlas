@@ -4,7 +4,35 @@
  */
 
 import type { Order, OrderTest, Patient, Test } from '@/types';
-import type { OrderFormData } from '../hooks/useOrderForm';
+import type { OrderFormData } from '../types/orderForm';
+
+/**
+ * Computes total order price from selected tests.
+ * - Create mode (no existingOrder): use current catalog price for each test.
+ * - Edit mode (existingOrder): keep priceAtOrder for existing tests, use current price for new tests.
+ */
+export function computeOrderTotalPrice(
+  selectedTests: string[],
+  activeTests: Test[],
+  existingOrder?: Order
+): number {
+  if (existingOrder) {
+    const existingTestCodes = new Set(existingOrder.tests.map(t => t.testCode));
+    const existingTestsPrice = existingOrder.tests
+      .filter(t => selectedTests.includes(t.testCode))
+      .reduce((sum, test) => sum + test.priceAtOrder, 0);
+    const newTestCodes = selectedTests.filter(code => !existingTestCodes.has(code));
+    const newTestsPrice = newTestCodes.reduce((sum, testCode) => {
+      const test = activeTests.find(t => t.code === testCode);
+      return sum + (test?.price ?? 0);
+    }, 0);
+    return existingTestsPrice + newTestsPrice;
+  }
+  return selectedTests.reduce((sum, testCode) => {
+    const test = activeTests.find(t => t.code === testCode);
+    return sum + (test?.price ?? 0);
+  }, 0);
+}
 
 /**
  * Builds validated order tests payload from selected test codes.
@@ -59,6 +87,13 @@ export function buildNewOrderPayload(
 }
 
 /**
+ * Update payload shape: backend expects tests as { testCode }[] for add/remove logic.
+ */
+export type OrderUpdatePayload = Omit<Partial<Order>, 'tests'> & {
+  tests?: Array<{ testCode: string }>;
+};
+
+/**
  * Builds an updated order payload for PUT /orders/:id.
  * Includes editable order data; backend sets updatedBy from current user.
  */
@@ -66,33 +101,21 @@ export function buildUpdatedOrderPayload(
   formData: OrderFormData,
   existingOrder: Order,
   activeTests: Test[]
-): Partial<Order> & { tests?: Array<{ testCode: string }> } {
-  // Calculate new total price:
-  // - Keep price for existing tests (use their priceAtOrder)
-  // - Add current price for new tests
-  const existingTestCodes = new Set(existingOrder.tests.map(t => t.testCode));
-  const newTestCodes = formData.selectedTests.filter(code => !existingTestCodes.has(code));
-  
-  const existingTestsPrice = existingOrder.tests
-    .filter(t => formData.selectedTests.includes(t.testCode))
-    .reduce((sum, test) => sum + test.priceAtOrder, 0);
-  
-  const newTestsPrice = newTestCodes.reduce((sum, testCode) => {
-    const test = activeTests.find(t => t.code === testCode);
-    return sum + (test?.price || 0);
-  }, 0);
-  
-  const totalPrice = existingTestsPrice + newTestsPrice;
+): OrderUpdatePayload {
+  const totalPrice = computeOrderTotalPrice(
+    formData.selectedTests,
+    activeTests,
+    existingOrder
+  );
 
-  // Build tests array for backend (list of test codes)
   const tests = formData.selectedTests.map(testCode => ({ testCode }));
 
-  const payload: Partial<Order> & { tests?: Array<{ testCode: string }> } = {
+  const payload: OrderUpdatePayload = {
     referringPhysician: formData.referringPhysician.trim() || undefined,
     priority: formData.priority,
     clinicalNotes: formData.clinicalNotes.trim() || undefined,
     totalPrice,
-    tests, // Send tests array to backend for add/remove logic
+    tests,
   };
 
   return payload;

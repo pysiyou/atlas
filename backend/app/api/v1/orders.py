@@ -203,7 +203,8 @@ def update_order(
     if tests_to_update is not None:
         # Get existing test codes
         existing_test_codes = {ot.testCode for ot in order.tests}
-        new_test_codes = {t.testCode for t in tests_to_update}
+        # tests_to_update is a list of dicts from model_dump(), so use bracket notation
+        new_test_codes = {t['testCode'] for t in tests_to_update}
         
         # Find tests to remove (existing tests not in new list)
         tests_to_remove = existing_test_codes - new_test_codes
@@ -241,13 +242,15 @@ def update_order(
         # Add new tests and calculate price adjustment
         total_price_adjustment = 0.0
         for test_data in tests_to_update:
-            if test_data.testCode in tests_to_add:
+            # test_data is a dict from model_dump(), so use bracket notation
+            test_code = test_data['testCode']
+            if test_code in tests_to_add:
                 # Get test from catalog
-                test = db.query(Test).filter(Test.code == test_data.testCode).first()
+                test = db.query(Test).filter(Test.code == test_code).first()
                 if not test:
                     raise HTTPException(
                         status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f"Test {test_data.testCode} not found"
+                        detail=f"Test {test_code} not found"
                     )
                 
                 # Create new OrderTest

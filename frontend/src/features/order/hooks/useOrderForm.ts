@@ -1,12 +1,6 @@
 import { useState, useMemo } from 'react';
-import type { PriorityLevel, Order } from '@/types';
-
-export interface OrderFormData {
-  referringPhysician: string;
-  priority: PriorityLevel;
-  clinicalNotes: string;
-  selectedTests: string[];
-}
+import type { Order } from '@/types';
+import type { OrderFormData } from '../types/orderForm';
 
 /**
  * Creates initial form data from an existing order

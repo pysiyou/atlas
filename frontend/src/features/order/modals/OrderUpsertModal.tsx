@@ -1,39 +1,28 @@
 /**
- * EditOrderModal - Reusable order creation and editing modal
+ * OrderUpsertModal
  *
- * Similar to EditPatientModal, this modal supports both:
- * - Creating a new order when `mode === 'create'`
- * - Editing an existing order when `mode === 'edit'` and `order` is provided
+ * Modal for creating a new order or editing an existing one.
+ * - Create: mode === 'create', optional patientId to preselect.
+ * - Edit: mode === 'edit', order required.
  */
 
 import React, { useMemo } from 'react';
 import type { Order } from '@/types';
 import { Modal } from '@/shared/ui';
 import type { BaseModalProps } from '@/shared/ui/modalRegistry';
-import { CreateOrder } from '../forms/OrderCreate';
+import { OrderUpsertForm } from '../forms/OrderUpsertForm';
 import { displayId } from '@/utils/id-display';
 
-/**
- * Props for EditOrderModal component.
- * This modal now supports both creating a new order and editing an existing one.
- */
-export interface EditOrderModalProps extends BaseModalProps {
-  /** Existing order data when editing (required for edit mode) */
+export interface OrderUpsertModalProps extends BaseModalProps {
+  /** Existing order when editing. */
   order?: Order;
-  /** Determines whether the modal is used for creating or editing an order */
+  /** 'create' | 'edit' */
   mode: 'create' | 'edit';
-  /** Optional preselected patientId (string or number-like string) for create mode */
+  /** Preselected patient ID for create mode. */
   patientId?: string;
 }
 
-/**
- * EditOrderModal
- *
- * Reusable order upsert modal that can:
- * - Create a new order when `mode === 'create'`
- * - Edit an existing order when `mode === 'edit'` and `order` is provided
- */
-export const EditOrderModal: React.FC<EditOrderModalProps> = ({
+export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
   isOpen,
   onClose,
   order,
@@ -53,7 +42,7 @@ export const EditOrderModal: React.FC<EditOrderModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={modalTitle} subtitle={subtitle} size="2xl">
-      <CreateOrder
+      <OrderUpsertForm
         isModal={true}
         onClose={onClose}
         initialPatientId={patientId}

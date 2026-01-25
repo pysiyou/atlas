@@ -38,9 +38,8 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
           <>
             {onEdit && (
               <Button
-                variant="secondary"
+                variant="edit"
                 size="sm"
-                icon={<Icon name="edit" className="w-4 h-4" />}
                 onClick={onEdit}
               >
                 Edit
@@ -57,9 +56,8 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
             </Button>
             {invoice && (
               <Button
-                variant="secondary"
+                variant="print"
                 size="sm"
-                icon={<Icon name="bill" className="w-4 h-4" />}
                 onClick={onViewInvoice}
               >
                 Invoice
@@ -70,7 +68,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
           <>
             {onEdit && (
               <IconButton
-                variant="secondary"
+                variant="view"
                 size="sm"
                 title="Edit Order"
                 icon={<Icon name="edit" className="w-4 h-4" />}
@@ -87,7 +85,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
             />
             {invoice && (
               <IconButton
-                variant="secondary"
+                variant="primary"
                 size="sm"
                 title="View Invoice"
                 icon={<Icon name="bill" className="w-4 h-4" />}
