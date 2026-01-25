@@ -51,7 +51,7 @@ export const Laboratory: React.FC = () => {
                   relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 cursor-pointer
                   ${
                     isActive
-                      ? 'bg-white text-sky-700 shadow-sm shadow-gray-200 ring-1 ring-black/5'
+                      ? `bg-white ${brandColors.primary.textLightMedium} shadow-sm shadow-gray-200 ring-1 ring-black/5`
                       : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'
                   }
                 `}
