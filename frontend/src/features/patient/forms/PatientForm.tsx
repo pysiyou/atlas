@@ -26,6 +26,7 @@ import { formatDate } from '@/utils';
 import { isAffiliationActive } from '../utils/affiliationUtils';
 import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
 import { AffiliationPlanSelector } from '../components/forms/AffiliationPlanSelector';
+import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * Props for PatientFormSections component
@@ -266,7 +267,7 @@ export const AffiliationSection: React.FC<
               <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Expiry Date
               </span>
-              <p className={`font-semibold text-sm ${isActive ? 'text-gray-900' : 'text-red-600'}`}>
+              <p className={`font-semibold text-sm ${isActive ? 'text-gray-900' : semanticColors.danger.icon}`}>
                 {formatDate(existingAffiliation.endDate)}
               </p>
             </div>
@@ -303,7 +304,7 @@ export const AffiliationSection: React.FC<
       {(formData.hasAffiliation || (hasExistingAffiliation && !isActive)) && (
         <div>
           {errors?.affiliationDuration && (
-            <p className="mb-2 text-sm text-red-600">{errors.affiliationDuration}</p>
+            <p className={`mb-2 text-sm ${semanticColors.danger.errorText}`}>{errors.affiliationDuration}</p>
           )}
           <AffiliationPlanSelector
             selectedDuration={formData.affiliationDuration}
@@ -397,7 +398,7 @@ export const EmergencyContactSection: React.FC<
         />
         <div>
           <label className="block text-xs font-medium text-gray-700 mb-1.5">
-            Relationship <span className="text-red-500">*</span>
+            Relationship <span className={semanticColors.danger.requiredIndicator}>*</span>
           </label>
           <MultiSelectFilter
             label="Relationship"
@@ -410,7 +411,7 @@ export const EmergencyContactSection: React.FC<
             className="w-full"
           />
           {errors.emergencyContactRelationship && (
-            <p className="mt-1 text-sm text-red-600">{errors.emergencyContactRelationship}</p>
+            <p className={`mt-1 text-sm ${semanticColors.danger.errorText}`}>{errors.emergencyContactRelationship}</p>
           )}
         </div>
         <Input
@@ -530,7 +531,7 @@ export const MedicalHistorySection: React.FC<
             name="smoking"
             checked={formData.smoking}
             onChange={e => onFieldChange('smoking', e.target.checked)}
-            className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
+            className={`w-4 h-4 ${brandColors.primary.icon} border-gray-300 rounded focus:ring-sky-500`}
           />
           <label htmlFor="smoking" className="text-xs font-medium text-gray-500">
             Smoking
@@ -543,7 +544,7 @@ export const MedicalHistorySection: React.FC<
             name="alcohol"
             checked={formData.alcohol}
             onChange={e => onFieldChange('alcohol', e.target.checked)}
-            className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
+            className={`w-4 h-4 ${brandColors.primary.icon} border-gray-300 rounded focus:ring-sky-500`}
           />
           <label htmlFor="alcohol" className="text-xs font-medium text-gray-500">
             Alcohol Use

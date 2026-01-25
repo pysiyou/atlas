@@ -11,6 +11,7 @@ import React, { type ReactNode } from 'react';
 import { Button, Icon, IconButton } from '@/shared/ui';
 import { useAuth } from '@/hooks';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 interface PopoverFormProps {
   /** Main title displayed in the header */
@@ -145,8 +146,8 @@ export const RadioCard: React.FC<RadioCardProps> = ({
 }) => {
   const selectedStyles =
     variant === 'red'
-      ? 'bg-red-50 border-red-200 ring-1 ring-red-200'
-      : 'bg-sky-50 border-sky-200 ring-1 ring-sky-200';
+      ? `${semanticColors.danger.backgroundLight} ${semanticColors.danger.border} ring-1 ring-red-200`
+      : `${brandColors.primary.backgroundLight} ${brandColors.primary.border} ring-1 ring-sky-200`;
 
   const disabledStyles = 'bg-gray-100 border-gray-200 cursor-not-allowed opacity-60';
 
@@ -154,24 +155,24 @@ export const RadioCard: React.FC<RadioCardProps> = ({
     ? 'text-gray-400'
     : variant === 'red'
       ? selected
-        ? 'text-red-900'
+        ? semanticColors.danger.textLight.replace('text-red-800', 'text-red-900')
         : 'text-gray-900'
       : selected
-        ? 'text-sky-900'
+        ? brandColors.primary.textOnLight
         : 'text-gray-900';
 
   const descColor = disabled
     ? 'text-gray-400'
     : variant === 'red'
       ? selected
-        ? 'text-red-700'
+        ? semanticColors.danger.textOnLight.replace('text-red-800', 'text-red-700')
         : 'text-gray-500'
       : selected
-        ? 'text-sky-700'
+        ? brandColors.primary.textLight.replace('text-sky-800', 'text-sky-700')
         : 'text-gray-500';
 
   const radioColor =
-    variant === 'red' ? 'text-red-600 focus:ring-red-500' : 'text-sky-600 focus:ring-sky-500';
+    variant === 'red' ? `${semanticColors.danger.icon} focus:ring-red-500` : `${brandColors.primary.icon} focus:ring-sky-500`;
 
   const handleClick = () => {
     if (!disabled) {
@@ -208,7 +209,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         <span className={`block text-xs font-medium ${labelColor}`}>{label}</span>
         <span className={`block text-xxs mt-0.5 ${descColor}`}>{description}</span>
         {disabled && disabledReason && (
-          <span className="block text-xxs mt-1 text-red-500 font-medium">{disabledReason}</span>
+          <span className={`block text-xxs mt-1 ${semanticColors.danger.requiredIndicator} font-medium`}>{disabledReason}</span>
         )}
       </div>
     </div>
@@ -240,7 +241,7 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
       relative flex items-start p-3 cursor-pointer rounded-lg border transition-all duration-200
       ${
         checked
-          ? 'bg-sky-50 border-sky-200 ring-1 ring-sky-200'
+          ? `${brandColors.primary.backgroundLight} ${brandColors.primary.border} ring-1 ring-sky-200`
           : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
       }
     `}
@@ -251,14 +252,14 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="h-3.5 w-3.5 text-sky-600 border-gray-300 focus:ring-sky-500 rounded"
+        className={`h-3.5 w-3.5 ${brandColors.primary.icon} border-gray-300 focus:ring-sky-500 rounded`}
       />
     </div>
     <div className="ml-2.5">
-      <span className={`block text-xs font-medium ${checked ? 'text-sky-900' : 'text-gray-900'}`}>
+      <span className={`block text-xs font-medium ${checked ? brandColors.primary.textOnLight : 'text-gray-900'}`}>
         {label}
       </span>
-      <span className={`block text-xxs mt-0.5 ${checked ? 'text-sky-700' : 'text-gray-500'}`}>
+      <span className={`block text-xxs mt-0.5 ${checked ? brandColors.primary.textLight.replace('text-sky-800', 'text-sky-700') : 'text-gray-500'}`}>
         {description}
       </span>
     </div>
