@@ -11,6 +11,7 @@ import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabCard, ProgressBadge } from '../components/LabCard';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
+import { labCard } from '@/shared/design-system/tokens/components/card';
 
 interface EntryCardProps {
   test: TestWithContext;
@@ -195,7 +196,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasAnyRejectionHistory ? 'border-l-4 border-l-yellow-400' : ''}
+      className={hasAnyRejectionHistory ? labCard.rejectionBorder : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,

@@ -13,6 +13,7 @@ import { RejectionDialog } from '../components';
 import type { TestWithContext } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
 import { semanticColors } from '@/shared/design-system/tokens/colors';
+import { labCard } from '@/shared/design-system/tokens/components/card';
 
 type ResultStatus =
   | 'normal'
@@ -258,7 +259,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasRejectionHistory ? 'border-l-4 border-l-yellow-400' : ''}
+      className={hasRejectionHistory ? labCard.rejectionBorder : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,
