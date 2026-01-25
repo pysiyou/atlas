@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
+import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 import { Icon, SectionContainer } from '@/shared/ui';
 import { ICONS } from '@/utils/icon-mappings';
 
@@ -44,7 +44,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
               onClick={() => setActiveTestCode(test.code)}
               className={`px-2 py-1 text-xs rounded transition-colors ${
                 activeTestCode === test.code
-                  ? 'bg-sky-100 text-sky-700 font-medium'
+                  ? `${brandColors.primary.backgroundLight.replace('bg-sky-50', 'bg-sky-100')} ${brandColors.primary.textLight.replace('text-sky-800', 'text-sky-700')} font-medium`
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >

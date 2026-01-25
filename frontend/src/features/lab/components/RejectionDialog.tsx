@@ -230,7 +230,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       {!escalationRequired && (
         <div>
           <label className="block text-xs font-medium text-gray-700 mb-1">
-            Rejection Reason <span className="text-red-500">*</span>
+            Rejection Reason <span className={semanticColors.danger.requiredIndicator}>*</span>
           </label>
           <textarea
             rows={3}

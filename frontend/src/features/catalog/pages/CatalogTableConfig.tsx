@@ -25,7 +25,7 @@ import { CatalogCard } from '../components/cards/CatalogCard';
 export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewConfig<Test> => {
   // Shared render functions
   const renderCode = (test: Test) => (
-    <span className="text-xs text-sky-600 font-medium font-mono truncate block">{test.code}</span>
+    <span className={`text-xs ${brandColors.primary.icon} font-medium font-mono truncate block`}>{test.code}</span>
   );
 
   const renderName = (test: Test) => (

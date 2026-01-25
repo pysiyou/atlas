@@ -147,7 +147,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
                     <Badge
                       variant="default"
                       size="xs"
-                      className="text-xs bg-sky-50 text-sky-600 border-sky-200"
+                      className={`text-xs ${brandColors.primary.backgroundLight} ${brandColors.primary.icon} ${brandColors.primary.border}`}
                     >
                       #{retestNumber}
                     </Badge>
