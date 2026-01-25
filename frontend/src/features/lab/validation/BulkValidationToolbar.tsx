@@ -198,7 +198,7 @@ export const ValidationCheckbox: React.FC<ValidationCheckboxProps> = ({
       onChange={handleChange}
       disabled={disabled}
       className={cn(
-        'w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500',
+        `w-4 h-4 ${brandColors.primary.icon} border-gray-300 rounded ${brandColors.primary.focusRing}`,
         disabled && 'opacity-50 cursor-not-allowed'
       )}
       onClick={e => e.stopPropagation()}

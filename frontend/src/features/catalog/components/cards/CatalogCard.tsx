@@ -3,6 +3,7 @@ import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { Test } from '@/types';
 import { mobileCard } from '@/shared/design-system/tokens/components/card';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * CatalogCard Component
@@ -22,8 +23,8 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
     >
       {/* Header: Test code (left) + Price (right) */}
       <div className={mobileCard.header.container}>
-        <span className="text-xs text-sky-600 font-medium leading-none">{test.code}</span>
-        <div className="font-medium text-sky-600 text-lg leading-none">
+        <span className={`text-xs ${brandColors.primary.icon} font-medium leading-none`}>{test.code}</span>
+        <div className={`font-medium ${brandColors.primary.icon} text-lg leading-none`}>
           {formatCurrency(test.price)}
         </div>
       </div>
