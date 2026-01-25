@@ -9,6 +9,7 @@ import { Button, IconButton } from '@/shared/ui';
 import { formatStatus } from '@/utils/statusHelpers';
 import type { AuthUser } from '@/types';
 import defaultAvatar from '@/assets/images/default-avatar.jpg';
+import { sidebarProfile } from '@/shared/design-system/tokens/components/layout';
 
 interface SidebarProfileProps {
   /** Current authenticated user */
@@ -31,16 +32,16 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   return (
-    <div className="border-t border-gray-200 bg-gray-50 relative shrink-0">
+    <div className={sidebarProfile.container}>
       {/* Profile Popover for Collapsed Mode */}
       {isCollapsed && showProfileMenu && (
         <div
-          className="absolute bottom-full left-0 mb-2 w-48 bg-white rounded shadow-md border border-gray-100 py-1 z-50 ml-2"
+          className={sidebarProfile.popover}
           onClick={e => e.stopPropagation()}
         >
-          <div className="px-4 py-2 border-b border-gray-100">
-            <p className="text-sm font-medium text-gray-900 truncate">{currentUser.name}</p>
-            <p className="text-xs text-gray-500 truncate">{formatStatus(currentUser.role)}</p>
+          <div className={sidebarProfile.popoverHeader}>
+            <p className={sidebarProfile.popoverName}>{currentUser.name}</p>
+            <p className={sidebarProfile.popoverRole}>{formatStatus(currentUser.role)}</p>
           </div>
           <Button
             variant="logout"
@@ -55,24 +56,20 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
       )}
 
       <div
-        className="flex items-center cursor-pointer min-w-0 w-full py-4"
+        className={sidebarProfile.profileContainer}
         onClick={() => isCollapsed && setShowProfileMenu(!showProfileMenu)}
         title={isCollapsed ? 'Click for options' : undefined}
       >
         {/* User Avatar - Fixed Width w-16 */}
-        <div className="w-16 flex items-center justify-center shrink-0">
+        <div className={sidebarProfile.avatarContainer}>
           <Avatar primaryText={currentUser.name} src={defaultAvatar} size="md" />
         </div>
 
         {/* User Info - Collapsible */}
-        <div
-          className={`flex-1 min-w-0 flex items-center pr-4 transition-opacity duration-300 ${
-            isCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'
-          }`}
-        >
+        <div className={sidebarProfile.userInfo(isCollapsed)}>
           <div className="flex-1 min-w-0 overflow-hidden">
-            <p className="text-sm font-medium text-gray-900 truncate">{currentUser.name}</p>
-            <p className="text-xs text-gray-500 truncate">{formatStatus(currentUser.role)}</p>
+            <p className={sidebarProfile.userName}>{currentUser.name}</p>
+            <p className={sidebarProfile.userRole}>{formatStatus(currentUser.role)}</p>
           </div>
 
           <IconButton
@@ -91,7 +88,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
       {/* Invisible backdrop to close popover */}
       {showProfileMenu && (
         <div
-          className="fixed inset-0 z-40"
+          className={sidebarProfile.backdrop}
           style={{ pointerEvents: 'auto', background: 'transparent' }}
           onClick={() => setShowProfileMenu(false)}
         />

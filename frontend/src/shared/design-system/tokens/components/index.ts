@@ -11,3 +11,4 @@ export * from './alert';
 export * from './card';
 export * from './modal';
 export * from './tabs';
+export * from './layout';

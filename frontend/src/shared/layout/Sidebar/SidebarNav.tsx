@@ -6,6 +6,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import type { MenuItem, SettingsItem } from './types';
+import { sidebarNav } from '@/shared/design-system/tokens/components/layout';
 
 interface SidebarNavProps {
   /** Menu items to display */
@@ -38,40 +39,28 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden py-4">
+    <div className={sidebarNav.container}>
       {/* Main Menu Section */}
-      <div className="mb-6">
-        <div
-          className={`overflow-hidden transition-all duration-300 ${
-            isCollapsed ? 'h-0 opacity-0' : 'h-auto opacity-100'
-          }`}
-        >
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-6 whitespace-nowrap">
+      <div className={sidebarNav.section}>
+        <div className={sidebarNav.sectionHeader(isCollapsed)}>
+          <h3 className={sidebarNav.sectionTitle}>
             Main Menu
           </h3>
         </div>
-        <nav className="space-y-1">
+        <nav className={sidebarNav.nav}>
           {menuItems.map(item => (
             <NavLink
               key={item.path}
               to={item.path}
               title={isCollapsed ? item.label : undefined}
               onClick={handleNavClick}
-              className={({ isActive }) =>
-                `flex items-center min-w-0 py-2.5 transition-colors relative cursor-pointer ${
-                  isActive ? 'bg-sky-50 text-sky-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
-                }`
-              }
+              className={({ isActive }) => sidebarNav.navLink(isActive)}
             >
               {/* Fixed Width Icon Container */}
-              <div className="w-16 flex items-center justify-center shrink-0">{item.icon}</div>
+              <div className={sidebarNav.navIcon}>{item.icon}</div>
 
               {/* Text Content */}
-              <span
-                className={`text-sm whitespace-nowrap overflow-hidden transition-opacity duration-300 ${
-                  isCollapsed ? 'opacity-0' : 'opacity-100'
-                }`}
-              >
+              <span className={sidebarNav.navText(isCollapsed)}>
                 {item.label}
               </span>
             </NavLink>
@@ -81,29 +70,21 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
       {/* Settings Section */}
       <div>
-        <div
-          className={`overflow-hidden transition-all duration-300 ${
-            isCollapsed ? 'h-0 opacity-0' : 'h-auto opacity-100'
-          }`}
-        >
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-6 whitespace-nowrap">
+        <div className={sidebarNav.sectionHeader(isCollapsed)}>
+          <h3 className={sidebarNav.sectionTitle}>
             Settings
           </h3>
         </div>
-        <div className="space-y-1">
+        <div className={sidebarNav.nav}>
           {settingsItems.map((item, index) => (
             <button
               key={index}
               disabled
-              className="flex items-center min-w-0 py-2.5 w-full text-left text-gray-400 cursor-not-allowed opacity-60"
+              className={sidebarNav.settingsButton}
               title={isCollapsed ? item.label : 'Coming soon'}
             >
-              <div className="w-16 flex items-center justify-center shrink-0">{item.icon}</div>
-              <span
-                className={`text-sm whitespace-nowrap overflow-hidden transition-opacity duration-300 ${
-                  isCollapsed ? 'opacity-0' : 'opacity-100'
-                }`}
-              >
+              <div className={sidebarNav.navIcon}>{item.icon}</div>
+              <span className={sidebarNav.navText(isCollapsed)}>
                 {item.label}
               </span>
             </button>

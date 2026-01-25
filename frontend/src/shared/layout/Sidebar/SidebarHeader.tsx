@@ -6,6 +6,7 @@
 import React from 'react';
 import { Icon, IconButton } from '@/shared/ui';
 import { ICONS } from '@/utils/icon-mappings';
+import { sidebarHeader } from '@/shared/design-system/tokens/components/layout';
 
 interface SidebarHeaderProps {
   /** Whether the sidebar is collapsed */
@@ -26,11 +27,11 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   onMobileClose,
 }) => {
   return (
-    <div className="border-b border-gray-200 shrink-0 h-[73px] flex items-center">
+    <div className={sidebarHeader.container}>
       <div className="flex items-center w-full h-full">
         {/* Logo */}
         <div
-          className="w-16 flex items-center justify-center shrink-0 h-full cursor-pointer"
+          className={sidebarHeader.logoContainer}
           onClick={() => isCollapsed && onToggleCollapse()}
           title={isCollapsed ? 'Expand Sidebar' : undefined}
         >
@@ -38,21 +39,17 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
             className="transition-cursor flex items-center justify-center"
             onClick={() => isCollapsed && onToggleCollapse()}
           >
-            <div className="w-8 h-8 flex items-center justify-center">
-              <Icon name={ICONS.ui.appLogo} className="w-full h-full text-sky-600" />
+            <div className={sidebarHeader.logoIcon}>
+              <Icon name={ICONS.ui.appLogo} className="w-full h-full" />
             </div>
           </div>
         </div>
 
         {/* Title and collapse/close button */}
-        <div
-          className={`flex-1 flex items-center justify-between min-w-0 pr-4 transition-opacity duration-300 ${
-            isCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'
-          }`}
-        >
+        <div className={sidebarHeader.titleContainer(isCollapsed)}>
           <div className="min-w-0 overflow-hidden whitespace-nowrap">
-            <h1 className="text-xs font-bold text-gray-900 truncate">Atlas Clinical Labs</h1>
-            <p className="text-xs text-gray-500">Version 2.4</p>
+            <h1 className={sidebarHeader.title}>Atlas Clinical Labs</h1>
+            <p className={sidebarHeader.subtitle}>Version 2.4</p>
           </div>
           {onMobileClose ? (
             <IconButton variant="close" size="sm" onClick={onMobileClose} title="Close Sidebar" />
