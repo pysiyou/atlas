@@ -2,6 +2,7 @@ import { Skeleton } from '../Skeleton';
 import type { TableSkeletonProps } from './types';
 import { useColumnStyles } from './hooks/useColumnWidth';
 import { ROW_HEIGHTS, CELL_PADDING, TEXT_SIZE } from './constants';
+import { tableSkeleton } from '@/shared/design-system/tokens/components/table';
 
 /**
  * Table Skeleton Component
@@ -15,7 +16,7 @@ export function TableSkeleton({ columns, rows, variant }: TableSkeletonProps) {
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={rowIndex}
-          className="flex items-center border-b border-gray-100"
+          className={tableSkeleton.row}
           style={{ height: `${ROW_HEIGHTS[variant]}px` }}
         >
           {columns.map(column => {

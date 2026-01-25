@@ -1,4 +1,5 @@
 import type { CardComponentProps } from './types';
+import { cardGrid } from '@/shared/design-system/tokens/components/table';
 
 /**
  * Props for CardGrid component
@@ -27,7 +28,7 @@ interface CardGridProps<T> {
  */
 export function CardGrid<T>({ data, CardComponent, onRowClick, getRowKey }: CardGridProps<T>) {
   return (
-    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
+    <div className={cardGrid.container}>
       {data.map((item, index) => {
         const rowKey = getRowKey ? getRowKey(item, index) : index;
         return (
