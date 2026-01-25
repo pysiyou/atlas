@@ -9,6 +9,7 @@ import type { Patient } from '@/types/patient';
 import { isAffiliationActive } from '../utils/affiliationUtils';
 import { AffiliationPopover } from './filters/AffiliationPopover';
 import { ICONS } from '@/utils/icon-mappings';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 
 export interface PatientHeaderProps {
   patient: Patient;
@@ -38,7 +39,7 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
               >
                 <Icon
                   name={ICONS.ui.verified}
-                  className="w-5 h-5 text-sky-500 hover:text-sky-600 transition-colors cursor-pointer"
+                  className={`w-5 h-5 ${brandColors.primary.icon.replace('text-sky-600', 'text-sky-500')} hover:${brandColors.primary.icon} transition-colors cursor-pointer`}
                 />
               </button>
             }

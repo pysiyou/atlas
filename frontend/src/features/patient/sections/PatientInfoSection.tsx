@@ -11,6 +11,7 @@ import type { Patient } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_CONFIG } from '@/types';
 import { isAffiliationActive } from '../utils/affiliationUtils';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 interface PatientInfoCardProps {
   patient: Patient;
@@ -148,7 +149,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
                 <div className="text-xs text-gray-500">
                   Expires:{' '}
                   <span
-                    className={`font-medium ${isAffiliationActive(patient.affiliation) ? 'text-gray-900' : 'text-red-600'}`}
+                    className={`font-medium ${isAffiliationActive(patient.affiliation) ? 'text-gray-900' : semanticColors.danger.icon}`}
                   >
                     {formatDate(patient.affiliation.endDate)}
                   </span>
