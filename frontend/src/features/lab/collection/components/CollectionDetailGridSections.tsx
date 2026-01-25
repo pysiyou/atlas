@@ -7,6 +7,7 @@ import { Badge } from '@/shared/ui';
 import type { ContainerType, Sample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { formatVolume } from '@/utils';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 import type { DetailGridSectionConfig } from '../../components/LabDetailModal';
 
 interface CollectionDetailGridSectionsProps {
@@ -88,7 +89,7 @@ export const buildCollectionDetailGridSections = ({
         label: 'Remaining',
         value:
           remainingVolume !== undefined ? (
-            <span className={remainingVolume < sample.requiredVolume * 0.2 ? 'text-red-600' : ''}>
+            <span className={remainingVolume < sample.requiredVolume * 0.2 ? semanticColors.danger.icon : ''}>
               {formatVolume(remainingVolume)}
             </span>
           ) : undefined,
