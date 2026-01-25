@@ -2,12 +2,70 @@
  * ValidationForm - Form for reviewing and approving/rejecting test results
  */
 
-import React from 'react';
-import { Badge, Textarea } from '@/shared/ui';
-import type { TestResult } from '@/types';
+import React, { useMemo } from 'react';
+import { Textarea } from '@/shared/ui';
+
+type ResultStatus =
+  | 'normal'
+  | 'high'
+  | 'low'
+  | 'critical'
+  | 'critical-high'
+  | 'critical-low';
+
+const ABNORMAL_STATUSES: ResultStatus[] = [
+  'high',
+  'low',
+  'critical',
+  'critical-high',
+  'critical-low',
+];
+
+/**
+ * Build result key -> status from test.flags.
+ * Backend stores "itemCode:status" (e.g. "K:critical-high", "Na:low").
+ */
+function statusMapFromFlags(
+  flags: string[] | undefined
+): Record<string, ResultStatus> {
+  const map: Record<string, ResultStatus> = {};
+  if (!flags?.length) return map;
+  const valid = new Set(ABNORMAL_STATUSES);
+  for (const f of flags) {
+    const i = f.indexOf(':');
+    if (i === -1) continue;
+    const key = f.slice(0, i).trim();
+    const status = f.slice(i + 1).trim().toLowerCase() as ResultStatus;
+    if (key && valid.has(status)) map[key] = status;
+  }
+  return map;
+}
+
+/**
+ * Parse a single result entry (value may be raw or { value, unit?, status? }).
+ */
+function parseResultEntry(
+  key: string,
+  raw: unknown,
+  flagStatusMap: Record<string, ResultStatus>
+): { resultValue: string; unit: string; status: ResultStatus } {
+  const obj =
+    typeof raw === 'object' && raw !== null && 'value' in (raw as object)
+      ? (raw as { value: unknown; unit?: string; status?: string })
+      : null;
+  const resultValue = obj ? String(obj.value) : String(raw);
+  const unit = obj?.unit ?? '';
+  const statusFromResult = obj?.status as ResultStatus | undefined;
+  const status = flagStatusMap[key] ?? statusFromResult ?? 'normal';
+  return { resultValue, unit, status };
+}
+
+function isCritical(s: ResultStatus): boolean {
+  return s === 'critical' || s === 'critical-high' || s === 'critical-low';
+}
 
 interface ValidationFormProps {
-  results: Record<string, TestResult>;
+  results: Record<string, unknown>;
   flags?: string[];
   technicianNotes?: string;
   comments: string;
@@ -39,42 +97,41 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   const hasResults = results && Object.keys(results).length > 0;
   const hasFlags = flags && flags.length > 0;
 
+  // Build flag status map for result parsing
+  const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
+
   return (
     <div className="bg-gray-50 rounded border border-gray-200 p-4">
       {/* Results Grid */}
       {hasResults && (
         <div className="mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2">
-            {Object.entries(results).map(([key, result]) => {
-              // Safely get status with default to 'normal' if undefined
-              const status = result.status ?? 'normal';
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,max-content))] gap-x-12 gap-y-1">
+            {Object.entries(results).map(([key, rawValue]) => {
+              // Parse the result entry to handle different formats
+              const { resultValue, unit, status } = parseResultEntry(
+                key,
+                rawValue,
+                flagStatusMap
+              );
+              const abnormal = status !== 'normal';
+              const valueColor = abnormal
+                ? isCritical(status)
+                  ? 'text-red-600'
+                  : 'text-amber-600'
+                : 'text-gray-900';
               
               return (
-                <div key={key} className="flex items-center justify-between py-2">
-                  <span className="text-xs font-medium text-gray-600">{key}</span>
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`text-xs ${
-                        status === 'high' || status === 'low'
-                          ? 'text-amber-600'
-                          : status === 'critical' || status === 'critical-high' || status === 'critical-low'
-                            ? 'text-red-600 font-bold'
-                            : 'text-gray-900'
-                      }`}
-                    >
-                      {result.value}{' '}
-                      <span className="text-xs text-gray-400 font-sans ml-0.5">{result.unit}</span>
-                    </span>
-                    {status !== 'normal' && status && (
-                      <Badge
-                        size="sm"
-                        variant={status === 'critical' || status === 'critical-high' || status === 'critical-low' ? 'danger' : 'warning'}
-                        className="border-none font-medium"
-                      >
-                        {status.toUpperCase()}
-                      </Badge>
-                    )}
-                  </div>
+                <div
+                  key={key}
+                  className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
+                >
+                  <span className="text-xs text-gray-500 text-left" title={key}>
+                    {key}:
+                  </span>
+                  <span className={`text-sm font-medium text-left ${valueColor}`}>
+                    {resultValue}
+                    {unit && <span className="text-gray-500 font-normal ml-1">{unit}</span>}
+                  </span>
                 </div>
               );
             })}
@@ -86,14 +143,12 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
       {(hasFlags || technicianNotes) && (
         <div className="mb-6 space-y-2 bg-gray-50/50 rounded-md p-3 border border-gray-100">
           {hasFlags && (
-            <div className="flex items-start gap-2 text-xs text-red-600">
-              <span>⚠️</span>
+            <div className="flex items-start text-xs text-red-600">
               <div className="font-medium">{flags.join(', ')}</div>
             </div>
           )}
           {technicianNotes && (
-            <div className="flex items-start gap-2 text-xs text-gray-500">
-              <span>📝</span>
+            <div className="flex items-start text-xs text-gray-500">
               <div className="italic">{technicianNotes}</div>
             </div>
           )}

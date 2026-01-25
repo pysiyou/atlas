@@ -11,7 +11,7 @@
 
 import React, { useRef, useState } from 'react';
 import { SectionContainer } from './SectionContainer';
-import { TabsList } from './Tabs';
+import { TabsList, TAB_INDICATOR_TRANSITION } from './Tabs';
 
 export interface TabbedSectionTab {
   id: string;
@@ -98,9 +98,7 @@ export const TabbedSectionContainer: React.FC<TabbedSectionContainerProps> = ({
               left: `${indicator.left}px`,
               width: `${indicator.width}px`,
               transition:
-                indicator.left > 0 || indicator.width > 0
-                  ? 'left 280ms cubic-bezier(0.4, 0, 0.2, 1), width 280ms cubic-bezier(0.4, 0, 0.2, 1)'
-                  : 'none',
+                indicator.left > 0 || indicator.width > 0 ? TAB_INDICATOR_TRANSITION : 'none',
               transform: 'translateZ(0)',
               willChange: 'left, width',
             }}

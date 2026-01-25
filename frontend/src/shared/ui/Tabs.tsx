@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 
 export interface TabItem {
   id: string;
@@ -38,6 +38,10 @@ export interface TabsListProps {
   /** Callback to receive indicator state (for external rendering) */
   onIndicatorChange?: (indicator: { left: number; width: number }) => void;
 }
+
+/** Shared sliding transition for tab indicator (left + width). Used by TabsList and TabbedSectionContainer. */
+export const TAB_INDICATOR_TRANSITION =
+  'left 320ms cubic-bezier(0.32, 0.72, 0, 1), width 320ms cubic-bezier(0.32, 0.72, 0, 1)';
 
 // Large component is necessary for comprehensive tabs list with indicator animation, keyboard navigation, and responsive behavior
 // eslint-disable-next-line max-lines-per-function
@@ -90,20 +94,18 @@ export const TabsList: React.FC<TabsListProps> = ({
     });
   }, [activeTabId, headerRef]);
 
-  // Update indicator on mount and when active tab changes
-  useLayoutEffect(() => {
-    // Use double RAF to ensure layout is complete before measuring
-    let raf2: number;
-    const raf1 = requestAnimationFrame(() => {
-      raf2 = requestAnimationFrame(() => {
-        updateIndicator();
-      });
+  /**
+   * Update indicator on mount and when active tab changes.
+   * Use useEffect (not useLayoutEffect) so we run *after* paint. That ensures we first paint
+   * "new tab active, indicator still at previous position", then update to new position.
+   * The CSS transition then animates from previous → next (sliding indicator).
+   * RAF defers measurement to next frame so layout is settled.
+   */
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      updateIndicator();
     });
-
-    return () => {
-      cancelAnimationFrame(raf1);
-      cancelAnimationFrame(raf2);
-    };
+    return () => cancelAnimationFrame(raf);
   }, [updateIndicator, activeTabId, tabs.length]);
 
   // Handle resize and scroll events
@@ -224,9 +226,7 @@ export const TabsList: React.FC<TabsListProps> = ({
             left: `${indicator.left}px`,
             width: `${indicator.width}px`,
             transition:
-              indicator.left > 0 || indicator.width > 0
-                ? 'left 280ms cubic-bezier(0.4, 0, 0.2, 1), width 280ms cubic-bezier(0.4, 0, 0.2, 1)'
-                : 'none',
+              indicator.left > 0 || indicator.width > 0 ? TAB_INDICATOR_TRANSITION : 'none',
             transform: 'translateZ(0)',
             willChange: 'left, width',
           }}
