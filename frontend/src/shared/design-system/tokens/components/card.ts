@@ -33,13 +33,13 @@ export const labCard = {
     actionGroup: 'flex items-center gap-2 shrink-0',
   },
   context: {
-    container: 'flex items-center gap-2 text-xs text-gray-600',
-    patientName: 'font-medium text-gray-900',
-    separator: 'text-gray-400',
+    container: `flex items-center gap-2 text-xs ${neutralColors.text.tertiary}`,
+    patientName: `font-medium ${neutralColors.text.primary}`,
+    separator: `${neutralColors.text.disabled}`,
   },
   contentSection: {
-    base: 'bg-gray-50 rounded p-3',
-    title: 'text-xs font-medium text-gray-700 mb-2',
+    base: `bg-gray-50 rounded p-3`,
+    title: `text-xs font-medium ${neutralColors.text.secondary} mb-2`,
   },
   rejectionBorder: stateColors.rejection.borderLeft, // border-l-4 border-l-yellow-400
 } as const;
@@ -54,13 +54,13 @@ export const labCard = {
 export const mobileCard = {
   base: `${neutralColors.white} ${border.card} ${radius.card} ${padding.card.md} ${cardBase.cursor} ${cardBase.hover} ${shadowTransition.default} flex flex-col h-full`,
   header: {
-    container: 'mb-3 pb-3 border-b border-gray-100',
-    title: 'text-sm font-semibold text-gray-900 truncate',
+    container: `mb-3 pb-3 border-b ${neutralColors.border.default}`,
+    title: `text-sm font-semibold ${neutralColors.text.primary} truncate`,
   },
   content: {
     container: 'grow',
-    text: 'text-xs text-gray-700',
-    textSecondary: 'text-xs text-gray-500',
+    text: `text-xs ${neutralColors.text.secondary}`,
+    textSecondary: `text-xs ${neutralColors.text.muted}`,
   },
   footer: {
     container: 'flex justify-between items-center mt-auto pt-3',
@@ -82,8 +82,37 @@ export const entityCard = {
   },
   context: {
     container: 'flex flex-col gap-1.5',
-    primary: 'text-sm font-medium text-gray-900',
-    secondary: 'text-xs text-gray-600',
+    primary: `text-sm font-medium ${neutralColors.text.primary}`,
+    secondary: `text-xs ${neutralColors.text.tertiary}`,
+  },
+} as const;
+
+/**
+ * Empty State Card Styles
+ * Used by: EmptyState component
+ */
+export const emptyStateCard = {
+  container: 'h-full flex flex-col items-center justify-center text-center p-4',
+  iconContainer: 'w-12 h-12 flex items-center justify-center mb-3',
+  icon: `w-full h-full ${neutralColors.text.disabled}`,
+  title: `text-sm font-medium ${neutralColors.text.muted}`,
+  description: `text-xs ${neutralColors.text.muted} mt-1`,
+  action: 'mt-4',
+} as const;
+
+/**
+ * List View Card Styles
+ * Used by: ListView component
+ */
+export const listViewCard = {
+  container: `flex-1 flex flex-col bg-white rounded ${neutralColors.border.default} overflow-hidden min-h-0`,
+  header: {
+    title: `text-2xl font-bold ${neutralColors.text.primary}`,
+    description: `text-sm ${neutralColors.text.muted} mt-1`,
+  },
+  content: 'p-4 overflow-y-auto h-full',
+  grid: {
+    container: 'p-4 overflow-y-auto h-full space-y-2',
   },
 } as const;
 

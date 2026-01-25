@@ -4,13 +4,14 @@
  */
 
 import React from 'react';
-import { brandColors } from '@/shared/design-system/tokens/colors';
+import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
 import { Popover } from '@/shared/ui/Popover';
 import { Icon, type IconName } from '@/shared/ui/Icon';
 import { Badge } from '@/shared/ui/Badge';
 import { cn } from '@/utils';
 import type { SingleSelectFilterControl } from '../types';
 import { ICONS } from '@/utils/icon-mappings';
+import { dropdown, dropdownContent, dropdownItem } from '@/shared/design-system/tokens/components/dropdown';
 
 /**
  * Props for SingleSelectControl component
@@ -67,7 +68,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
   const renderTriggerContent = () => {
     if (!selectedOption) {
       return (
-        <span className="text-gray-500">
+        <span className={neutralColors.text.muted}>
           {config.placeholder || `Select ${config.label.toLowerCase()}...`}
         </span>
       );
@@ -87,37 +88,32 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-colors w-full overflow-hidden',
-            isOpen
-              ? `${brandColors.primary.borderMedium} ring-2 ${brandColors.primary.ring20}`
-              : 'border-gray-300 hover:border-gray-400',
+            dropdown.trigger.base,
+            isOpen ? dropdown.trigger.open : dropdown.trigger.default,
             className
           )}
         >
           {/* Icon */}
           {config.icon && (
-            <Icon name={config.icon as IconName} className="w-4 h-4 text-gray-400 shrink-0" />
+            <Icon name={config.icon as IconName} className={dropdown.icon} />
           )}
 
           {/* Content */}
-          <div className="flex-1 min-w-0 text-xs truncate ml-1">{renderTriggerContent()}</div>
+          <div className={dropdown.content}>{renderTriggerContent()}</div>
 
           {/* Chevron */}
           <Icon
             name={ICONS.actions.chevronDown}
-            className={cn(
-              'w-4 h-4 text-gray-400 transition-transform shrink-0',
-              isOpen && 'rotate-180'
-            )}
+            className={cn(dropdown.chevron, isOpen && 'rotate-180')}
           />
 
           {/* Clear button */}
           {value && (
             <button
               onClick={handleClear}
-              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer shrink-0"
+              className={dropdown.clearButton}
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
+              <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
             </button>
           )}
         </div>
@@ -125,9 +121,9 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       className=""
     >
       {() => (
-        <div className="flex flex-col py-1">
+        <div className={dropdownContent.container}>
           {/* Options list */}
-          <div className="max-h-[300px] overflow-y-auto">
+          <div className={dropdownContent.optionsList}>
             {config.options.map(option => {
               const isSelected = value === option.id;
               return (
@@ -135,19 +131,20 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   key={option.id}
                   onClick={() => handleSelect(option.id)}
                   className={cn(
-                    'w-full flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150 text-left',
-                    'hover:bg-gray-50/80',
-                    isSelected && `${brandColors.primary.backgroundLight}/30`
+                    dropdownItem.base,
+                    dropdownItem.hover,
+                    isSelected && dropdownItem.selected,
+                    'text-left'
                   )}
                 >
                   {/* Check indicator */}
-                  <div className="shrink-0 mr-3">
+                  <div className={dropdownItem.checkbox.container}>
                     {isSelected ? (
-                      <div className={`w-5 h-5 rounded-md flex items-center justify-center ${brandColors.primary.backgroundMedium} transition-all duration-150`}>
-                        <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-white" />
+                      <div className={cn(dropdownItem.checkbox.checked, 'transition-all duration-150')}>
+                        <Icon name={ICONS.actions.check} className={dropdownItem.checkbox.icon} />
                       </div>
                     ) : (
-                      <div className="w-5 h-5 rounded-md border-2 border-gray-300" />
+                      <div className={dropdownItem.checkbox.unchecked} />
                     )}
                   </div>
 

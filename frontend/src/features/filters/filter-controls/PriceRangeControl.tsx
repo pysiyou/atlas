@@ -9,7 +9,8 @@ import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import type { PriceRangeFilterControl } from '../types';
 import { ICONS } from '@/utils/icon-mappings';
-import { brandColors } from '@/shared/design-system/tokens/colors';
+import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
+import { dropdown, filterControl } from '@/shared/design-system/tokens/components';
 
 /**
  * Props for PriceRangeControl component
@@ -134,10 +135,10 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-gray-500">{config.placeholder || 'Filter by price range'}</span>;
+      return <span className={neutralColors.text.muted}>{config.placeholder || 'Filter by price range'}</span>;
     }
     return (
-      <span className="text-gray-700 font-medium">
+      <span className={cn(neutralColors.text.secondary, 'font-medium')}>
         {formatPrice(start)} - {formatPrice(end)}
       </span>
     );
@@ -150,30 +151,25 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-colors w-full overflow-hidden',
-            isOpen
-              ? `${brandColors.primary.borderMedium} ring-2 ${brandColors.primary.ring20}`
-              : 'border-gray-300 hover:border-gray-400',
+            dropdown.trigger.base,
+            isOpen ? dropdown.trigger.open : dropdown.trigger.default,
             className
           )}
         >
-          <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-gray-400 shrink-0" />
-          <div className="flex-1 min-w-0 text-xs truncate ml-1">{renderTriggerContent()}</div>
+          <Icon name={ICONS.dataFields.wallet} className={dropdown.icon} />
+          <div className={dropdown.content}>{renderTriggerContent()}</div>
 
           <Icon
             name={ICONS.actions.chevronDown}
-            className={cn(
-              'w-4 h-4 text-gray-400 transition-transform shrink-0',
-              isOpen && 'rotate-180'
-            )}
+            className={cn(dropdown.chevron, isOpen && 'rotate-180')}
           />
 
           {value && (value[0] !== min || value[1] !== max) && (
             <button
               onClick={handleClear}
-              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer shrink-0"
+              className={dropdown.clearButton}
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
+              <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
             </button>
           )}
         </div>
@@ -182,7 +178,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
     >
       {() => (
         <div className="space-y-4">
-          <div className="flex items-center justify-between text-sm text-gray-600 font-medium">
+          <div className={cn('flex items-center justify-between text-sm font-medium', neutralColors.text.tertiary)}>
             <span>{formatPrice(localValue[0])}</span>
             <span>{formatPrice(localValue[1])}</span>
           </div>
@@ -215,7 +211,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
             />
           </div>
 
-          <div className="flex justify-between items-center text-xs text-gray-400">
+          <div className={cn('flex justify-between items-center text-xs', neutralColors.text.disabled)}>
             <span>{formatPrice(min)}</span>
             <span>{formatPrice(max)}</span>
           </div>

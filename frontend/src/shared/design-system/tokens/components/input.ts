@@ -5,7 +5,7 @@
  * (Input, Textarea, Select, DateInput, TagInput, SearchBar) use identical styles.
  */
 
-import { semanticColors } from '../colors';
+import { semanticColors, brandColors, neutralColors } from '../colors';
 import { padding } from '../spacing';
 import { radius, border } from '../borders';
 
@@ -14,7 +14,7 @@ import { radius, border } from '../borders';
  * Applied to all input types
  */
 export const inputBase = {
-  base: 'block w-full bg-white transition-shadow duration-200 focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed',
+  base: `block w-full bg-white transition-shadow duration-200 focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed`,
   rounded: radius.input,
 } as const;
 
@@ -38,24 +38,24 @@ export const inputBorder = {
   default: border.input, // border border-gray-300
   focus: border.inputFocus, // border-2 border-sky-500 border-transparent
   error: border.inputError, // border border-red-500
-  disabled: 'border border-gray-300',
+  disabled: `border ${neutralColors.border.medium}`,
 } as const;
 
 /**
  * Input Text Styles
  */
 export const inputText = {
-  default: 'text-xs placeholder:text-gray-300',
-  sm: 'text-xs placeholder:text-gray-300',
-  md: 'text-sm placeholder:text-gray-300',
-  lg: 'text-base placeholder:text-gray-300',
+  default: `text-xs placeholder:${neutralColors.text.disabled}`,
+  sm: `text-xs placeholder:${neutralColors.text.disabled}`,
+  md: `text-sm placeholder:${neutralColors.text.disabled}`,
+  lg: `text-base placeholder:${neutralColors.text.disabled}`,
 } as const;
 
 /**
  * Input Focus Ring
  */
 export const inputFocus = {
-  default: `focus:ring-2 ${semanticColors.info.focusRing} focus:ring-sky-500/20 focus:border-sky-500`,
+  default: `focus:ring-2 ${brandColors.primary.focusRing} ${brandColors.primary.ring20} focus:${brandColors.primary.borderMedium}`,
   error: `focus:ring-2 ${semanticColors.danger.focusRing} focus:ring-red-500/20 focus:border-red-500`,
 } as const;
 
@@ -64,10 +64,10 @@ export const inputFocus = {
  * Consistent label styling across all forms
  */
 export const label = {
-  base: 'block text-xs font-medium text-gray-500 mb-1',
-  sm: 'text-xxs font-medium text-gray-500',
-  required: 'block text-xs font-medium text-gray-500 mb-1',
-  error: 'block text-xs font-medium text-red-600 mb-1',
+  base: `block text-xs font-medium ${neutralColors.text.muted} mb-1`,
+  sm: `text-xxs font-medium ${neutralColors.text.muted}`,
+  required: `block text-xs font-medium ${neutralColors.text.muted} mb-1`,
+  error: `block text-xs font-medium ${semanticColors.danger.errorText} mb-1`,
 } as const;
 
 /**
@@ -90,8 +90,8 @@ export const requiredIndicator = {
  * Helper Text Styles
  */
 export const helperText = {
-  base: 'mt-1 text-xs text-gray-500',
-  error: 'mt-1 text-xs text-red-600',
+  base: `mt-1 text-xs ${neutralColors.text.muted}`,
+  error: `mt-1 text-xs ${semanticColors.danger.errorText}`,
 } as const;
 
 /**

@@ -17,6 +17,8 @@ import { Minus } from 'lucide-react';
 import { Popover } from './Popover';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
+import { dropdown, dropdownContent, dropdownItem, dropdownSeparator, dropdownFooter } from '@/shared/design-system/tokens/components/dropdown';
+import { neutralColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * Option item for the filter
@@ -72,13 +74,13 @@ const ListItem: React.FC<{
   return (
     <label
       className={cn(
-        'group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150',
-        'hover:bg-gray-50/80',
-        isSelected && 'bg-sky-50/30'
+        dropdownItem.base,
+        dropdownItem.hover,
+        isSelected && dropdownItem.selected
       )}
     >
       {/* Checkbox/Radio */}
-      <div className="shrink-0 mr-3">
+      <div className={dropdownItem.checkbox.container}>
         <input
           type={singleSelect ? 'radio' : 'checkbox'}
           checked={isSelected}
@@ -88,19 +90,19 @@ const ListItem: React.FC<{
         {singleSelect ? (
           // Circular radio button style for single-select
           isSelected ? (
-            <div className="w-5 h-5 rounded-full flex items-center justify-center bg-sky-500 transition-all duration-150 border-2 border-sky-500">
-              <div className="w-2 h-2 rounded-full bg-white" />
+            <div className={cn(dropdownItem.checkbox.radio.checked)}>
+              <div className={dropdownItem.checkbox.radio.inner} />
             </div>
           ) : (
-            <div className="w-5 h-5 rounded-full border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
+            <div className={dropdownItem.checkbox.radio.unchecked} />
           )
         ) : // Square checkbox style for multi-select
         isSelected ? (
-          <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
-            <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-white" />
+          <div className={cn(dropdownItem.checkbox.checked, 'transition-all duration-150')}>
+            <Icon name={ICONS.actions.check} className={dropdownItem.checkbox.icon} />
           </div>
         ) : (
-          <div className="w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
+          <div className={cn(dropdownItem.checkbox.unchecked, 'transition-all duration-150')} />
         )}
       </div>
 
@@ -189,7 +191,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   // Render the trigger content
   const renderTriggerContent = () => {
     if (selectedIds.length === 0) {
-      return <span className="text-gray-500">{placeholder || `Select ${label}...`}</span>;
+      return <span className={neutralColors.text.muted}>{placeholder || `Select ${label}...`}</span>;
     }
 
     if (singleSelectedOption) {
@@ -203,8 +205,8 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
 
     // Show count for multiple selections – single line so truncate works
     return (
-      <span className="text-gray-700 truncate block">
-        <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full bg-sky-500 text-white text-xxs font-medium align-middle mr-1">
+      <span className={cn(neutralColors.text.secondary, 'truncate block')}>
+        <span className={cn('inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full text-white text-xxs font-medium align-middle mr-1', brandColors.primary.backgroundMedium)}>
           {selectedIds.length}
         </span>
         selected
@@ -219,25 +221,23 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-colors w-full overflow-hidden',
-            isOpen
-              ? 'border-sky-500 ring-2 ring-sky-500/20'
-              : 'border-gray-300 hover:border-gray-400',
+            dropdown.trigger.base,
+            isOpen ? dropdown.trigger.open : dropdown.trigger.default,
             className
           )}
         >
           {/* Icon */}
-          {icon && <Icon name={icon} className="w-4 h-4 text-gray-400 shrink-0" />}
+          {icon && <Icon name={icon} className={dropdown.icon} />}
 
           {/* Content: min-w-0 + truncate so it doesn't grow row when has values */}
-          <div className="flex-1 min-w-0 text-xs truncate ml-1">
+          <div className={dropdown.content}>
             {renderTriggerContent()}
           </div>
 
           {/* Chevron */}
           <Icon
             name={ICONS.actions.chevronDown}
-            className={cn('w-4 h-4 text-gray-400 transition-transform shrink-0', isOpen && 'rotate-180')}
+            className={cn(dropdown.chevron, isOpen && 'rotate-180')}
           />
 
           {/* Clear button */}
@@ -254,20 +254,20 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
                 // But don't prevent default on the button itself to allow onClick to fire
                 e.stopPropagation();
               }}
-              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer shrink-0"
+              className={dropdown.clearButton}
               aria-label="Clear selection"
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+              <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
             </button>
           )}
         </div>
       )}
-      className="min-w-[280px]"
+      className={dropdownContent.minWidth}
     >
       {() => (
-        <div className="flex flex-col py-1">
+        <div className={dropdownContent.container}>
           {/* Options list */}
-          <div className="max-h-[300px] overflow-y-auto">
+          <div className={dropdownContent.optionsList}>
             {options.map(option => (
               <ListItem
                 key={option.id}
@@ -281,12 +281,12 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
 
           {/* Footer actions - Select all (multi-select) and Clear */}
           {(showSelectAll && !singleSelect && options.length > 0) || selectedIds.length > 0 ? (
-            <div className="border-t border-gray-100 mt-1">
+            <div className={dropdownSeparator.base}>
               {/* Select all - only show for multi-select */}
               {showSelectAll && !singleSelect && options.length > 0 && (
-                <div className="px-4 py-2.5">
-                  <label className="flex items-center w-full cursor-pointer group">
-                    <div className="shrink-0 mr-3">
+                <div className={dropdownFooter.container}>
+                  <label className={dropdownFooter.selectAll.container}>
+                    <div className={dropdownItem.checkbox.container}>
                       <input
                         type="checkbox"
                         checked={allSelected}
@@ -294,18 +294,18 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
                         className="sr-only"
                       />
                       {allSelected || someSelected ? (
-                        <div className="w-5 h-5 rounded-md flex items-center justify-center bg-sky-500 transition-all duration-150">
+                        <div className={cn(dropdownItem.checkbox.checked, 'transition-all duration-150')}>
                           {allSelected ? (
-                            <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-white" />
+                            <Icon name={ICONS.actions.check} className={dropdownItem.checkbox.icon} />
                           ) : (
-                            <Minus className="w-3.5 h-3.5 text-white" />
+                            <Minus className={dropdownItem.checkbox.icon} />
                           )}
                         </div>
                       ) : (
-                        <div className="w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
+                        <div className={cn(dropdownItem.checkbox.unchecked, 'transition-all duration-150')} />
                       )}
                     </div>
-                    <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+                    <span className={dropdownFooter.selectAll.label}>
                       {selectAllLabel}
                     </span>
                   </label>
@@ -320,9 +320,9 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
                     e.stopPropagation();
                     handleClear(e);
                   }}
-                  className="w-full px-4 py-2.5 text-left text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50/80 transition-colors flex items-center gap-2"
+                  className={dropdownFooter.clearButton.base}
                 >
-                  <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-gray-400" />
+                  <Icon name={ICONS.actions.closeCircle} className={dropdownFooter.clearButton.icon} />
                   <span>Clear selection</span>
                 </button>
               )}

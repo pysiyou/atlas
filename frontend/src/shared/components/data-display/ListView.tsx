@@ -11,6 +11,7 @@ import { LoadingState } from '../LoadingState';
 import { ErrorAlert } from '../ErrorAlert';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { ICONS } from '@/utils/icon-mappings';
+import { listViewCard } from '@/shared/design-system/tokens/components/card';
 
 // TableDataItem accepts any object-like type (interfaces, types, classes)
 // Using a union type to accept both Record types and regular object types
@@ -145,8 +146,8 @@ export function ListView<T extends TableDataItem = TableDataItem>({
         <div className="flex items-center justify-between shrink-0">
           {title && (
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-              {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+              <h1 className={listViewCard.header.title}>{title}</h1>
+              {subtitle && <p className={listViewCard.header.description}>{subtitle}</p>}
             </div>
           )}
           {headerActions}
@@ -164,7 +165,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col bg-white rounded border border-gray-200 overflow-hidden min-h-0">
+      <div className={listViewCard.container}>
         {/* Filters */}
         {filters}
 
@@ -202,7 +203,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
                 )}
               </div>
             ) : (
-              <div className="p-4 overflow-y-auto h-full">
+              <div className={listViewCard.grid.container}>
                 <div className={`grid ${GRID_COLUMN_CLASSES[gridColumns]} gap-4`}>
                   {items.map((item, index) => (
                     <div key={index}>{renderItem(item, index)}</div>
@@ -222,7 +223,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
                 )}
               </div>
             ) : (
-              <div className="p-4 overflow-y-auto h-full space-y-2">
+              <div className={listViewCard.content}>
                 {items.map((item, index) => (
                   <div key={index}>{renderItem(item, index)}</div>
                 ))}

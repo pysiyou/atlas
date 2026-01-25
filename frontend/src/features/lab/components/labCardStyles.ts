@@ -2,30 +2,30 @@
  * Lab Card Style Tokens
  * Unified style system for all lab workflow cards
  */
-import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
+import { semanticColors, brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
 
 // Typography Tokens
 export const LAB_CARD_TYPOGRAPHY = {
   // Test/Item Names (primary emphasis)
-  title: 'text-sm font-medium text-gray-900',
+  title: `text-sm font-medium ${neutralColors.text.primary}`,
 
   // Section Headers (small caps style)
-  sectionTitle: 'text-xxs font-medium text-gray-500 uppercase tracking-wide',
+  sectionTitle: `text-xxs font-medium ${neutralColors.text.muted} uppercase tracking-wide`,
 
   // Patient Names (medium emphasis within text-xs context)
-  patientName: 'font-medium text-gray-900',
+  patientName: `font-medium ${neutralColors.text.primary}`,
 
   // Standard Body Text
-  bodyText: 'text-xs text-gray-700',
+  bodyText: `text-xs ${neutralColors.text.secondary}`,
 
   // Metadata/Secondary Text
-  metadata: 'text-xs text-gray-500',
+  metadata: `text-xs ${neutralColors.text.muted}`,
 
   // Separator/Divider Text
-  separator: 'text-gray-300',
+  separator: `${neutralColors.text.disabled}`,
 
   // Emphasized Inline Text
-  emphasizedInline: 'text-gray-700',
+  emphasizedInline: `${neutralColors.text.secondary}`,
 
   // Flags Text (in red context)
   flagText: `text-xs ${semanticColors.danger.textLightMedium}`,
@@ -72,10 +72,10 @@ export const LAB_CARD_CONTAINERS = {
 
   // Card base styling (applied via Card component)
   cardBase:
-    `border border-gray-200 hover:border hover:${brandColors.primary.borderLighter} hover:${brandColors.primary.backgroundLightBg} transition-all duration-200`,
+    `border ${neutralColors.border.default} hover:border hover:${brandColors.primary.borderLighter} hover:${brandColors.primary.backgroundLightBg} transition-all duration-200`,
 
   // Content section (gray background)
-  contentSection: 'bg-gray-50 rounded p-2 border border-gray-100',
+  contentSection: `bg-gray-50 rounded p-2 border ${neutralColors.border.default}`,
 
   // Flags section (red background)
   flagsSection: `${semanticColors.danger.backgroundLight} rounded p-2 border ${semanticColors.danger.border}`,
@@ -84,7 +84,7 @@ export const LAB_CARD_CONTAINERS = {
 // List Item Tokens
 export const LAB_CARD_LIST_ITEMS = {
   // Test list item
-  testItem: 'flex items-center text-xs text-gray-700',
+  testItem: `flex items-center text-xs ${neutralColors.text.secondary}`,
 
   // List bullet (gray)
   bullet: 'w-1 h-1 rounded-full bg-gray-400 mr-2',
@@ -96,19 +96,19 @@ export const LAB_CARD_LIST_ITEMS = {
   testName: 'font-medium mr-1',
 
   // Test code in list
-  testCode: 'text-gray-500',
+  testCode: `${neutralColors.text.muted}`,
 } as const;
 
 // Context Row Tokens (Patient/Order info)
 export const LAB_CARD_CONTEXT = {
   // Container for context row
-  container: 'flex items-center gap-2 text-xs text-gray-500 flex-wrap',
+  container: `flex items-center gap-2 text-xs ${neutralColors.text.muted} flex-wrap`,
 
   // Patient name styling
-  patientName: 'font-medium text-gray-900',
+  patientName: `font-medium ${neutralColors.text.primary}`,
 
   // Separator between items
-  separator: 'text-gray-300',
+  separator: `${neutralColors.text.disabled}`,
 } as const;
 
 // Header Row Tokens (Badges & Actions)

@@ -16,3 +16,4 @@ export * from './table';
 export * from './shared';
 export * from './pagination';
 export * from './filter';
+export * from './dropdown';
