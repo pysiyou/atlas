@@ -10,6 +10,7 @@ import { Popover } from '@/shared/ui/Popover';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 
 interface AgeFilterProps {
   value: [number, number];
@@ -165,7 +166,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             name={ICONS.dataFields.hourglass}
             className={cn(
               'w-4 h-4 transition-colors duration-200 shrink-0',
-              isOpen ? 'text-sky-500' : 'text-gray-400 group-hover:text-sky-400'
+              isOpen ? brandColors.primary.icon : 'text-gray-400 group-hover:text-sky-400'
             )}
           />
           <div className="flex-1 min-w-0 text-xs truncate font-medium">{renderTriggerContent()}</div>
@@ -174,7 +175,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             name={ICONS.actions.chevronDown}
             className={cn(
               'w-4 h-4 text-gray-400 transition-all duration-200 shrink-0',
-              isOpen && 'rotate-180 text-sky-500'
+              isOpen && `rotate-180 ${brandColors.primary.icon}`
             )}
           />
 
@@ -274,7 +275,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           <div className="flex justify-between items-center text-xs font-medium mt-1">
             <span className={cn(
               'transition-colors duration-200',
-              localValue[0] === min ? 'text-sky-500' : 'text-gray-500'
+              localValue[0] === min ? brandColors.primary.icon : 'text-gray-500'
             )}>
               {min}
             </span>
