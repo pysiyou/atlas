@@ -31,6 +31,7 @@ export type IconName =
   | 'eye'
   | 'file-text'
   | 'arrow-left'
+  | 'arrow-right'
   | 'chevron-left'
   | 'chevron-right'
   | 'chevron-down'

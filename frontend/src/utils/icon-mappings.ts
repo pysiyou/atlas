@@ -106,7 +106,7 @@ export const ICONS = {
     eye: 'eye' as IconName,
 
     // Edit/Write
-    edit: 'edit' as IconName,
+    edit: 'pen' as IconName,
     pen: 'pen' as IconName,
     save: 'save' as IconName,
 
