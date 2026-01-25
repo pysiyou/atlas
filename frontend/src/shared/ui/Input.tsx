@@ -50,13 +50,13 @@ export const Input: React.FC<InputProps> = ({
 
   return (
     <div className="w-full group">
-      {label && (
+      {labelProp && (
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
             className={`${labelTokens.base} cursor-pointer truncate min-w-0`}
           >
-            {label}
+            {labelProp}
             {props.required && <span className={requiredIndicator.base}>*</span>}
           </label>
         </div>
@@ -74,7 +74,7 @@ export const Input: React.FC<InputProps> = ({
         />
       </div>
       {error && <p className={errorMessage.base}>{error}</p>}
-      {helperText && !error && <p className={helperTextTokens.base}>{helperText}</p>}
+      {helperTextProp && !error && <p className={helperTextTokens.base}>{helperTextProp}</p>}
     </div>
   );
 };
