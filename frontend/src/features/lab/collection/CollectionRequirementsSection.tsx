@@ -89,13 +89,13 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
         )}
 
         {activeTest.rejectionCriteria && activeTest.rejectionCriteria.length > 0 && (
-          <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-200 rounded">
-            <Icon name={ICONS.actions.alertCircle} className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
+          <div className={`flex items-start gap-2 p-2 ${semanticColors.danger.backgroundLight} ${semanticColors.danger.border} rounded`}>
+            <Icon name={ICONS.actions.alertCircle} className={`w-4 h-4 ${semanticColors.danger.icon} mt-0.5 shrink-0`} />
             <div className="flex-1">
-              <div className="text-xs font-medium text-red-900 mb-1">Rejection Criteria</div>
+              <div className={`text-xs font-medium ${semanticColors.danger.textOnLight} mb-1`}>Rejection Criteria</div>
               <ul className="list-disc list-inside space-y-0.5">
                 {activeTest.rejectionCriteria.map((criteria, idx) => (
-                  <li key={idx} className="text-xs text-red-700">
+                  <li key={idx} className={`text-xs ${semanticColors.danger.textLight}`}>
                     {criteria}
                   </li>
                 ))}

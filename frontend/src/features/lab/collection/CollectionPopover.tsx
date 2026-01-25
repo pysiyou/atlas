@@ -12,7 +12,7 @@ import type { ContainerType } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS } from '@/types';
 import type { SampleRequirement } from '@/utils/sampleHelpers';
 import { ICONS, getContainerIcon } from '@/utils/icon-mappings';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
+import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 interface CollectionPopoverContentProps {
   requirement: SampleRequirement;
