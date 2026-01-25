@@ -12,6 +12,7 @@ from pydantic import BaseModel
 
 from app.models.sample import Sample
 from app.models.order import Order, OrderTest
+from app.models.test import Test
 from app.schemas.enums import (
     SampleStatus, TestStatus, PriorityLevel,
     RejectionAction, LabOperationType
@@ -19,6 +20,9 @@ from app.schemas.enums import (
 from app.services.state_machine import SampleStateMachine, TestStateMachine, StateTransitionError
 from app.services.audit_service import AuditService
 from app.services.order_status_updater import update_order_status
+from app.services.result_validator import ResultValidatorService
+from app.services.flag_calculator import FlagCalculatorService
+from app.services.critical_notification_service import CriticalNotificationService
 
 
 # Constants for limits
@@ -79,6 +83,9 @@ class LabOperationsService:
     def __init__(self, db: Session):
         self.db = db
         self.audit = AuditService(db)
+        self.result_validator = ResultValidatorService()
+        self.flag_calculator = FlagCalculatorService()
+        self.critical_notification = CriticalNotificationService(db)
 
     # ==================== HELPER METHODS ====================
 
@@ -541,7 +548,8 @@ class LabOperationsService:
         test_code: str,
         user_id: int,
         results: Dict[str, Any],
-        technician_notes: Optional[str] = None
+        technician_notes: Optional[str] = None,
+        skip_validation: bool = False
     ) -> OrderTest:
         """
         Enter results for a test.
@@ -552,9 +560,13 @@ class LabOperationsService:
             user_id: The user entering results
             results: The test results
             technician_notes: Optional notes
+            skip_validation: Skip physiologic validation (for testing only)
 
         Returns:
             The updated order test
+
+        Raises:
+            LabOperationError: If validation fails or state transition not allowed
         """
         order_test = self._get_order_test(order_id, test_code, status=TestStatus.SAMPLE_COLLECTED)
         before_state = self._serialize_test_state(order_test)
@@ -564,12 +576,59 @@ class LabOperationsService:
         if not can_enter:
             raise LabOperationError(reason)
 
+        # Get test definition for validation and flag calculation
+        test_def = self.db.query(Test).filter(Test.code == test_code).first()
+        result_items = test_def.resultItems if test_def else []
+
+        # Validate results against physiologic limits
+        if not skip_validation and result_items:
+            validation_errors = self.result_validator.validate_results(results, result_items)
+            if self.result_validator.has_blocking_errors(validation_errors):
+                error_msg = self.result_validator.format_error_message(validation_errors)
+                raise LabOperationError(error_msg, status_code=400, error_code="VALIDATION_ERROR")
+
+        # Get patient info for demographic-specific ranges
+        order = self.db.query(Order).filter(Order.orderId == order_id).first()
+        patient = order.patient if order else None
+        patient_gender = patient.gender.value if patient and patient.gender else None
+        patient_dob = patient.dateOfBirth if patient else None
+
+        # Calculate flags based on reference ranges
+        flags = []
+        if result_items:
+            flags = self.flag_calculator.calculate_flags(
+                results=results,
+                result_items=result_items,
+                patient_gender=patient_gender,
+                patient_dob=patient_dob
+            )
+
         # Update results
         order_test.results = results
         order_test.resultEnteredAt = datetime.now(timezone.utc)
         order_test.enteredBy = str(user_id)  # Convert to string as per model requirement
         order_test.technicianNotes = technician_notes
         order_test.status = TestStatus.RESULTED
+
+        # Update flags
+        if flags:
+            order_test.flags = self.flag_calculator.flags_to_string_list(flags)
+            flag_modified(order_test, 'flags')
+
+        # Check for critical values
+        has_critical = self.flag_calculator.has_critical_values(flags)
+        order_test.hasCriticalValues = has_critical
+
+        # Log critical value detection if found
+        if has_critical:
+            critical_flags = self.flag_calculator.get_critical_flags(flags)
+            self.audit.log_critical_value_detected(
+                order_id=order_id,
+                test_id=order_test.id,
+                test_code=test_code,
+                user_id=user_id,
+                critical_values=self.flag_calculator.flags_to_json(critical_flags)
+            )
 
         # Log audit
         self.audit.log_result_entry(

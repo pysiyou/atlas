@@ -185,7 +185,6 @@ export const CollectionView: React.FC = () => {
   return (
     <DataErrorBoundary>
       <LabWorkflowView
-        title="Sample Collection"
         items={filteredByStatus}
         filterFn={filterSample}
         renderCard={display =>

@@ -6,7 +6,7 @@ Uses the unified LabOperationsService for all operations.
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 from app.database import get_db
 from app.core.dependencies import get_current_user, require_lab_tech, require_validator
 from app.models.user import User
@@ -72,6 +72,34 @@ class RejectionResultResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class BulkValidationItem(BaseModel):
+    """Single item in bulk validation request"""
+    orderId: int
+    testCode: str
+
+
+class BulkValidationRequest(BaseModel):
+    """Request body for bulk validation"""
+    items: List[BulkValidationItem] = Field(..., min_items=1, description="List of tests to validate")
+    validationNotes: Optional[str] = None
+
+
+class BulkValidationResult(BaseModel):
+    """Result for a single validation in bulk operation"""
+    orderId: int
+    testCode: str
+    success: bool
+    error: Optional[str] = None
+    testId: Optional[int] = None
+
+
+class BulkValidationResponse(BaseModel):
+    """Response for bulk validation operation"""
+    results: List[BulkValidationResult]
+    successCount: int
+    failureCount: int
 
 
 @router.get("/results/pending-entry")
@@ -258,3 +286,74 @@ def reject_results(
         )
     except LabOperationError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
+
+
+@router.post("/results/validate-bulk", response_model=BulkValidationResponse)
+def validate_bulk(
+    request: BulkValidationRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_validator)
+):
+    """
+    Validate multiple test results in a single transaction.
+    
+    Processes all validations in a single database transaction for consistency.
+    Partial failures are reported but do not roll back successful validations.
+    
+    Note: Tests with critical values should be excluded from bulk validation
+    and handled individually to ensure proper notification workflow.
+    """
+    service = LabOperationsService(db)
+    results = []
+    success_count = 0
+    failure_count = 0
+
+    # Process all validations in a single transaction
+    for item in request.items:
+        try:
+            order_test = service.validate_results(
+                order_id=item.orderId,
+                test_code=item.testCode,
+                user_id=current_user.id,
+                validation_notes=request.validationNotes
+            )
+            results.append(BulkValidationResult(
+                orderId=item.orderId,
+                testCode=item.testCode,
+                success=True,
+                testId=order_test.id
+            ))
+            success_count += 1
+        except LabOperationError as e:
+            results.append(BulkValidationResult(
+                orderId=item.orderId,
+                testCode=item.testCode,
+                success=False,
+                error=e.message
+            ))
+            failure_count += 1
+        except Exception as e:
+            # Catch any unexpected errors
+            results.append(BulkValidationResult(
+                orderId=item.orderId,
+                testCode=item.testCode,
+                success=False,
+                error=f"Unexpected error: {str(e)}"
+            ))
+            failure_count += 1
+
+    # Commit all successful validations
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to commit bulk validation: {str(e)}"
+        )
+
+    return BulkValidationResponse(
+        results=results,
+        successCount=success_count,
+        failureCount=failure_count
+    )

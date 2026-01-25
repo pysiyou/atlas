@@ -17,6 +17,7 @@ from app.schemas.order import OrderCreate, OrderUpdate, OrderResponse
 from app.schemas.enums import OrderStatus, PaymentStatus, TestStatus, SampleStatus, UserRole
 from app.schemas.pagination import create_paginated_response, skip_to_page
 from app.services.sample_generator import generate_samples_for_order
+from app.services.audit_service import AuditService
 from app.utils.db_helpers import get_or_404
 
 router = APIRouter()
@@ -234,10 +235,22 @@ def update_order(
             if ot.testCode not in tests_to_remove and ot.status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED}
         )
         
+        # Initialize audit service for logging changes
+        audit_service = AuditService(db)
+
         # Remove tests (mark as removed for audit trail)
         for ot in order.tests:
             if ot.testCode in tests_to_remove:
+                old_status = ot.status.value if ot.status else "unknown"
                 ot.status = TestStatus.REMOVED
+                # Log the test removal for audit compliance
+                audit_service.log_test_removed(
+                    order_id=order.orderId,
+                    test_id=ot.id,
+                    test_code=ot.testCode,
+                    user_id=current_user.id,
+                    old_status=old_status
+                )
         
         # Add new tests and calculate price adjustment
         total_price_adjustment = 0.0
@@ -261,7 +274,15 @@ def update_order(
                     priceAtOrder=test.price,
                 )
                 db.add(order_test)
+                db.flush()  # Get the ID for audit logging
                 total_price_adjustment += test.price
+                # Log the test addition for audit compliance
+                audit_service.log_test_added(
+                    order_id=order.orderId,
+                    test_id=order_test.id,
+                    test_code=test.code,
+                    user_id=current_user.id
+                )
         
         # Recalculate total price
         # Keep price for existing tests that remain, add price for new tests

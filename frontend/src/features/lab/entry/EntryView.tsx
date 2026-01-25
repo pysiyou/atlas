@@ -309,7 +309,6 @@ export const EntryView: React.FC = () => {
   return (
     <DataErrorBoundary>
       <LabWorkflowView
-        title="Result Entry"
         items={allTests}
         filterFn={filterTest}
         renderCard={(test, idx, filteredTests) => {

@@ -4,10 +4,12 @@ Calculates and updates order status based on test and sample statuses.
 """
 import logging
 from datetime import datetime, timezone
+from typing import Optional
 from sqlalchemy.orm import Session
 from app.models.order import Order, OrderTest
 from app.models.sample import Sample
-from app.schemas.enums import OrderStatus, TestStatus, SampleStatus
+from app.schemas.enums import OrderStatus, TestStatus, SampleStatus, LabOperationType
+from app.models.lab_audit import LabOperationLog
 
 logger = logging.getLogger(__name__)
 
@@ -122,7 +124,23 @@ def update_order_status(db: Session, order_id: int) -> None:
             return
     
     if order.overallStatus != new_status:
+        old_status = order.overallStatus
         order.overallStatus = new_status
         order.updatedAt = datetime.now(timezone.utc)
+
+        # Log the status change for audit trail
+        log_entry = LabOperationLog(
+            operationType=LabOperationType.ORDER_STATUS_CHANGE,
+            entityType="order",
+            entityId=order_id,
+            performedBy="system",
+            performedAt=datetime.now(timezone.utc),
+            beforeState={"status": old_status.value if old_status else None},
+            afterState={"status": new_status.value},
+            operationData={"trigger": "automatic"}
+        )
+        db.add(log_entry)
+
         db.add(order)
         db.commit()
+        logger.info(f"Order {order_id} status changed from {old_status} to {new_status}")

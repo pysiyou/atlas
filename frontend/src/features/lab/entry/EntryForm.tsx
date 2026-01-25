@@ -2,11 +2,12 @@
  * EntryForm - Form for entering test results
  */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Button, Textarea, Popover, Icon } from '@/shared/ui';
 import { cn } from '@/utils';
 import type { Test, TestParameter, Patient } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '@/utils/reference-ranges';
+import { validatePhysiologicValue, getPhysiologicLimit } from '@/utils/physiologic-limits';
 
 interface EntryFormProps {
   testDef: Test;
@@ -154,18 +155,41 @@ const ParameterInput: React.FC<{
   onChange: (value: string) => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
   inputId: string;
-}> = ({ param, value, onChange, onKeyDown, inputId }) => {
+  validationError?: string;
+  onValidationChange?: (error: string | undefined) => void;
+}> = ({ param, value, onChange, onKeyDown, inputId, validationError, onValidationChange }) => {
   const valueType =
     param.valueType ||
     (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
   const normalizedValue = value ?? '';
 
+  // Get physiologic limits for numeric inputs
+  const limit = valueType === 'NUMERIC' ? getPhysiologicLimit(param.code) : undefined;
+
+  /** Validate value on blur */
+  const handleBlur = useCallback(() => {
+    if (valueType !== 'NUMERIC' || !normalizedValue) {
+      onValidationChange?.(undefined);
+      return;
+    }
+    const result = validatePhysiologicValue(param.code, normalizedValue);
+    onValidationChange?.(result.error);
+  }, [param.code, normalizedValue, valueType, onValidationChange]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    onChange(e.target.value);
+    // Clear validation error when user starts typing
+    if (validationError) {
+      onValidationChange?.(undefined);
+    }
+  };
+
   const commonProps = {
     id: inputId,
     value: normalizedValue,
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-      onChange(e.target.value),
+    onChange: handleChange,
     onKeyDown,
+    onBlur: handleBlur,
   };
 
   // Use the new popover-based select for SELECT type
@@ -191,12 +215,22 @@ const ParameterInput: React.FC<{
     );
   }
 
+  // Numeric input with validation
+  const hasError = !!validationError;
   return (
     <input
       {...commonProps}
-      type="text"
+      type="number"
+      step="any"
+      min={limit?.min}
+      max={limit?.max}
       inputMode="decimal"
-      className="block w-full pl-3 pr-12 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-xs placeholder:text-gray-300 transition-shadow relative z-10 bg-white"
+      className={cn(
+        "block w-full pl-3 pr-12 py-2.5 border rounded focus:outline-none focus:ring-2 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-xs placeholder:text-gray-300 transition-shadow relative z-10 bg-white",
+        hasError
+          ? "border-red-500 focus:ring-red-500/20"
+          : "border-gray-300 focus:ring-sky-500"
+      )}
       placeholder="--"
     />
   );
@@ -230,6 +264,20 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   isComplete,
   isModal = false,
 }) => {
+  // Track validation errors for each parameter
+  const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
+
+  /** Update validation error for a specific parameter */
+  const handleValidationChange = useCallback((paramCode: string, error: string | undefined) => {
+    setValidationErrors(prev => ({ ...prev, [paramCode]: error }));
+  }, []);
+
+  /** Check if form has any validation errors */
+  const hasValidationErrors = Object.values(validationErrors).some(error => !!error);
+
+  /** Check if form can be submitted */
+  const canSubmit = isComplete && !hasValidationErrors;
+
   if (!testDef?.parameters) return null;
 
   return (
@@ -266,12 +314,14 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   value={value}
                   onChange={newValue => onResultsChange(resultKey, param.code, newValue ?? '')}
                   onKeyDown={e => {
-                    if (e.key === 'Enter' && isComplete) {
+                    if (e.key === 'Enter' && canSubmit) {
                       e.preventDefault();
                       onSave();
                     }
                   }}
                   inputId={`result-${resultKey}-${param.code}`}
+                  validationError={validationErrors[param.code]}
+                  onValidationChange={(error) => handleValidationChange(param.code, error)}
                 />
                 {valueType !== 'TEXT' && (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0 max-w-[40%]">
@@ -280,7 +330,12 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                     </span>
                   </div>
                 )}
-                {isCritical && (
+                {validationErrors[param.code] && (
+                  <div className="absolute -bottom-5 left-0 text-xxs text-red-600 font-medium truncate max-w-full" title={validationErrors[param.code]}>
+                    Invalid value
+                  </div>
+                )}
+                {!validationErrors[param.code] && isCritical && (
                   <div className="absolute -bottom-5 left-0 text-xxs text-red-600 font-medium">
                     Critical value
                   </div>
@@ -310,12 +365,17 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
       {/* Submit button (card context only) */}
       {!isModal && (
-        <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-gray-50 border-t border-gray-100 rounded-b flex items-center justify-end">
+        <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-gray-50 border-t border-gray-100 rounded-b flex items-center justify-between">
+          {hasValidationErrors && (
+            <span className="text-xxs text-red-600">
+              Please correct invalid values before submitting
+            </span>
+          )}
           <Button
             onClick={onSave}
-            disabled={!isComplete}
+            disabled={!canSubmit}
             variant="submit"
-            className="shadow-sm text-xs"
+            className="shadow-sm text-xs ml-auto"
           >
             Submit Results
           </Button>

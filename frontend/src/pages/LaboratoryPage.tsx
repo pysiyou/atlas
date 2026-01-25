@@ -30,11 +30,14 @@ export const Laboratory: React.FC = () => {
     },
   ];
 
+  const activeTabConfig = tabs.find(t => t.id === activeTab);
+  const pageTitle = activeTabConfig?.label ?? 'Laboratory';
+
   return (
     <div className="h-full flex flex-col p-4 space-y-6">
-      {/* Page Header */}
+      {/* Page Header: uses tab label as title */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-bold text-gray-900">Laboratory Operations</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{pageTitle}</h1>
       </div>
 
       {/* Main Content Card */}

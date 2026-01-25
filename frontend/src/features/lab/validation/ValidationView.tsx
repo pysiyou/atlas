@@ -19,6 +19,7 @@ import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import { ValidationCard } from './ValidationCard';
 import { ValidationMobileCard } from './ValidationMobileCard';
+import { BulkValidationToolbar, useBulkSelection, ValidationCheckbox } from './BulkValidationToolbar';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { DataErrorBoundary } from '@/shared/components';
@@ -36,20 +37,23 @@ export const ValidationView: React.FC = () => {
   const { tests: testCatalog } = useTestCatalog();
   const { getTest } = useTestNameLookup();
   const { getSample } = useSampleLookup();
-  const { getPatientName } = usePatientNameLookup();
+  const { getPatientName, getPatient } = usePatientNameLookup();
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
   const [comments, setComments] = useState<Record<string, string>>({});
   const [isValidating, setIsValidating] = useState<Record<string, boolean>>({});
+  const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
   // Build list of tests awaiting validation
   // Excludes superseded tests (those replaced by retests)
-  const allTests: TestWithContext[] = useMemo(() => {
+  const allTests: (TestWithContext & { hasCriticalValues?: boolean })[] = useMemo(() => {
     if (!orders || !testCatalog) return [];
 
     return orders.flatMap(order => {
       const patientName = getPatientName(order.patientId);
+      const patient = getPatient(order.patientId);
+      const patientDob = patient?.dateOfBirth;
 
       return order.tests
         .filter(
@@ -68,11 +72,17 @@ export const ValidationView: React.FC = () => {
           const collectedBy =
             sample?.status === 'collected' ? (sample as CollectedSample).collectedBy : undefined;
 
+          // Check for critical values from flags
+          const hasCriticalValues = test.flags?.some(
+            (f: string) => f.includes('critical') || f.includes('CRITICAL')
+          ) || test.hasCriticalValues;
+
           return {
             ...test,
             orderId: order.orderId,
             patientId: order.patientId,
             patientName,
+            patientDob,
             testName,
             sampleType,
             priority: order.priority,
@@ -82,6 +92,7 @@ export const ValidationView: React.FC = () => {
             resultEnteredAt: test.resultEnteredAt ?? undefined,
             resultValidatedAt: test.resultValidatedAt ?? undefined,
             results: test.results ?? undefined,
+            hasCriticalValues,
             // Include retest tracking info
             isRetest: test.isRetest,
             retestOfTestId: test.retestOfTestId,
@@ -96,7 +107,67 @@ export const ValidationView: React.FC = () => {
           };
         });
     });
-  }, [orders, testCatalog, getPatientName, getTest, getSample]);
+  }, [orders, testCatalog, getPatientName, getPatient, getTest, getSample]);
+
+  // Bulk selection state
+  const {
+    selectedIds,
+    setSelectedIds,
+    toggleItem,
+    isSelected,
+  } = useBulkSelection(allTests);
+
+  /**
+   * Handle bulk approval of selected tests
+   * Uses the bulk validation endpoint for efficient processing
+   */
+  const handleBulkApprove = useCallback(async (testIds: number[]) => {
+    if (testIds.length === 0) return;
+
+    setIsBulkProcessing(true);
+
+    try {
+      // Map test IDs to bulk validation items
+      const items = testIds
+        .map(testId => {
+          const test = allTests.find(t => t.id === testId);
+          return test ? { orderId: test.orderId, testCode: test.testCode } : null;
+        })
+        .filter((item): item is { orderId: number; testCode: string } => item !== null);
+
+      if (items.length === 0) {
+        toast.error('No valid tests selected');
+        return;
+      }
+
+      // Call bulk validation endpoint
+      const response = await resultAPI.validateBulk(items, 'Bulk approved');
+
+      await invalidateOrders();
+      await refreshOrders();
+
+      if (response.failureCount === 0) {
+        toast.success(`Successfully approved ${response.successCount} result(s)`);
+      } else {
+        // Show detailed error for failed items
+        const failedItems = response.results
+          .filter(r => !r.success)
+          .map(r => `${r.testCode} (Order ${r.orderId})`)
+          .join(', ');
+        toast.error(
+          `Approved ${response.successCount}, failed ${response.failureCount}${failedItems ? `: ${failedItems}` : ''}`
+        );
+      }
+
+      // Clear selection
+      setSelectedIds(new Set());
+    } catch (error) {
+      logger.error('Error in bulk validation', error instanceof Error ? error : undefined);
+      toast.error('Failed to approve results. Please try again.');
+    } finally {
+      setIsBulkProcessing(false);
+    }
+  }, [allTests, invalidateOrders, refreshOrders, setSelectedIds]);
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
@@ -233,10 +304,30 @@ export const ValidationView: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  // Prepare items for bulk validation toolbar
+  const bulkItems = allTests.map(test => ({
+    id: test.id,
+    orderId: test.orderId,
+    testCode: test.testCode,
+    hasCriticalValues: test.hasCriticalValues,
+  }));
+
   return (
     <DataErrorBoundary>
+      {/* Bulk Validation Toolbar */}
+      {!isMobile && allTests.length > 0 && (
+        <div className="px-4 pt-4">
+          <BulkValidationToolbar
+            items={bulkItems}
+            selectedIds={selectedIds}
+            onSelectionChange={setSelectedIds}
+            onBulkApprove={handleBulkApprove}
+            isProcessing={isBulkProcessing}
+          />
+        </div>
+      )}
+
       <LabWorkflowView
-        title="Result Validation"
         items={allTests}
         filterFn={filterTest}
         renderCard={test => {
@@ -257,11 +348,26 @@ export const ValidationView: React.FC = () => {
             orderHasValidatedTests: hasValidatedTests,
           };
 
-          return isMobile ? (
-            <ValidationMobileCard {...cardProps} />
-          ) : (
-            <ValidationCard {...cardProps} />
-          );
+          // Wrap card with checkbox for bulk selection (desktop only)
+          if (!isMobile) {
+            return (
+              <div className="flex items-start gap-3">
+                <div className="pt-4">
+                  <ValidationCheckbox
+                    id={test.id}
+                    isSelected={isSelected(test.id)}
+                    onToggle={toggleItem}
+                    disabled={isBulkProcessing}
+                  />
+                </div>
+                <div className="flex-1">
+                  <ValidationCard {...cardProps} />
+                </div>
+              </div>
+            );
+          }
+
+          return <ValidationMobileCard {...cardProps} />;
         }}
         getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
         emptyIcon="shield-check"

@@ -168,17 +168,21 @@ export const ParameterProgressBadge: React.FC<ParameterProgressBadgeProps> = ({
 
 /**
  * ResultStatusBadge - Badge for result value status (normal, high, low, critical)
+ * Critical values pulse to draw attention
  */
 interface ResultStatusBadgeProps {
-  status: 'normal' | 'high' | 'low' | 'critical';
+  status: 'normal' | 'high' | 'low' | 'critical' | 'critical-high' | 'critical-low';
 }
 
 export const ResultStatusBadge: React.FC<ResultStatusBadgeProps> = ({ status }) => {
   if (status === 'normal') return null;
 
+  const isCritical = status === 'critical' || status === 'critical-high' || status === 'critical-low';
+  const variant = isCritical ? 'critical' : status === 'high' || status === 'low' ? 'warning' : 'default';
+
   return (
-    <Badge size="xs" variant={status === 'critical' ? 'danger' : 'warning'}>
-      {status.toUpperCase()}
+    <Badge size="xs" variant={variant} pulse={isCritical}>
+      {status.toUpperCase().replace('-', ' ')}
     </Badge>
   );
 };

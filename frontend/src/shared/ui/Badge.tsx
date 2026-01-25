@@ -110,6 +110,8 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'xs' | 'sm' | 'md';
   /** Apply strikethrough styling to the badge content */
   strikethrough?: boolean;
+  /** Enable pulsing animation for critical values */
+  pulse?: boolean;
 }
 
 // Maps specific domain keys (status, priority, etc.) to base visual styles
@@ -142,6 +144,14 @@ const VARIANT_STYLES: Record<string, string> = {
 
   // Test Status Mappings
   resulted: 'bg-purple-100 text-purple-800 border-transparent', // Results entered, awaiting validation
+
+  // Critical Value Mappings (for result flags)
+  critical: 'bg-red-600 text-white border-transparent font-bold',
+  'critical-high': 'bg-red-600 text-white border-transparent font-bold',
+  'critical-low': 'bg-red-600 text-white border-transparent font-bold',
+  high: 'bg-orange-100 text-orange-800 border-transparent',
+  low: 'bg-blue-100 text-blue-800 border-transparent',
+  normal: 'bg-green-100 text-green-800 border-transparent',
 
   // Rejection Type Mappings
   're-test': 'bg-amber-100 text-amber-800 border-transparent',
@@ -269,11 +279,19 @@ const VARIANT_LABELS: Record<string, string> = {
  *
  * If `children` is omitted, it will try to format the `variant` string to display.
  */
+// Critical value variants that should pulse by default
+const CRITICAL_VARIANTS = new Set([
+  'critical',
+  'critical-high',
+  'critical-low',
+]);
+
 export const Badge: React.FC<BadgeProps> = ({
   className,
   variant = 'default',
   size = 'md',
   strikethrough = false,
+  pulse,
   children,
   ...props
 }) => {
@@ -291,6 +309,9 @@ export const Badge: React.FC<BadgeProps> = ({
     content = VARIANT_LABELS[normalizedVariant] || String(variant).replace(/-/g, ' ').toUpperCase();
   }
 
+  // Determine if should pulse (explicit prop or critical variant)
+  const shouldPulse = pulse ?? CRITICAL_VARIANTS.has(normalizedVariant);
+
   return (
     <div
       className={cn(
@@ -298,6 +319,7 @@ export const Badge: React.FC<BadgeProps> = ({
         variantClass,
         SIZES[size],
         strikethrough && 'line-through',
+        shouldPulse && 'animate-pulse',
         className
       )}
       {...props}

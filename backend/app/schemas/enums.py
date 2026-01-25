@@ -180,6 +180,16 @@ class LabOperationType(str, enum.Enum):
     RESULT_VALIDATION_REJECT_RETEST = "result_validation_reject_retest"
     RESULT_VALIDATION_REJECT_RECOLLECT = "result_validation_reject_recollect"
 
+    # Order Operations
+    ORDER_STATUS_CHANGE = "order_status_change"
+    TEST_REMOVED = "test_removed"
+    TEST_ADDED = "test_added"
+
+    # Critical Value Operations
+    CRITICAL_VALUE_DETECTED = "critical_value_detected"
+    CRITICAL_VALUE_NOTIFIED = "critical_value_notified"
+    CRITICAL_VALUE_ACKNOWLEDGED = "critical_value_acknowledged"
+
 
 class RejectionAction(str, enum.Enum):
     """Action to take when rejecting a result or sample"""

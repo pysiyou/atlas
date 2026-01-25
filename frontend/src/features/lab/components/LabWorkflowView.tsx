@@ -14,8 +14,8 @@ import { useSearch } from '@/utils/filtering';
 type IconName = 'search' | 'sample-collection' | 'checklist' | 'shield-check';
 
 interface LabWorkflowViewProps<T> {
-  /** Page title displayed in the header */
-  title: string;
+  /** Optional title in header; omit when page title already reflects tab (e.g. lab tabs) */
+  title?: string;
   /** All items before filtering */
   items: T[];
   /** Filter function for search */
@@ -63,13 +63,17 @@ export function LabWorkflowView<T>({
 
   return (
     <div className="h-full flex flex-col space-y-4">
-      {/* Header */}
+      {/* Header: title only when provided (tab content uses page title instead) */}
       <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">
         <div className="flex items-center gap-4 flex-wrap">
-          <h3 className="text-base font-medium text-gray-900">{title}</h3>
+          {title != null && title !== '' && (
+            <h3 className="text-base font-medium text-gray-900">{title}</h3>
+          )}
           {hasItems && filters && (
             <>
-              <div className="h-6 w-px bg-gray-300 hidden md:block" />
+              {title != null && title !== '' && (
+                <div className="h-6 w-px bg-gray-300 hidden md:block" />
+              )}
               {filters}
             </>
           )}

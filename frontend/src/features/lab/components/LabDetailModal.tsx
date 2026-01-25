@@ -21,6 +21,8 @@ interface ContextInfo {
   patientId: string | number;
   orderId: string | number;
   referringPhysician?: string;
+  /** Patient date of birth for additional identification */
+  patientDob?: string;
 }
 
 interface SampleInfo {
@@ -101,6 +103,14 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                       ? displayId.patient(contextInfo.patientId)
                       : contextInfo.patientId}
                   </span>
+                  {contextInfo.patientDob && (
+                    <>
+                      <span className="text-gray-300">|</span>
+                      <span className="text-xs text-gray-600">
+                        DOB: {formatDate(contextInfo.patientDob)}
+                      </span>
+                    </>
+                  )}
                   <span className="text-gray-300">|</span>
                   <span className="font-medium text-gray-900 text-xs">
                     {typeof contextInfo.orderId === 'number'

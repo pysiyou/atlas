@@ -114,4 +114,33 @@ export const resultAPI = {
   ): Promise<RejectionResult> {
     return apiClient.post<RejectionResult>(`/results/${orderId}/tests/${testCode}/reject`, data);
   },
+
+  /**
+   * Bulk validate multiple test results in a single transaction.
+   *
+   * Processes all validations atomically. Partial failures are reported
+   * but do not roll back successful validations.
+   *
+   * Note: Tests with critical values should be excluded from bulk validation
+   * and handled individually to ensure proper notification workflow.
+   */
+  async validateBulk(
+    items: Array<{ orderId: number; testCode: string }>,
+    validationNotes?: string
+  ): Promise<{
+    results: Array<{
+      orderId: number;
+      testCode: string;
+      success: boolean;
+      error?: string;
+      testId?: number;
+    }>;
+    successCount: number;
+    failureCount: number;
+  }> {
+    return apiClient.post('/results/validate-bulk', {
+      items,
+      validationNotes,
+    });
+  },
 };

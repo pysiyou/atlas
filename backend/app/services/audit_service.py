@@ -293,3 +293,159 @@ class AuditService:
             query = query.filter(LabOperationLog.operationType.in_(operation_types))
 
         return query.order_by(LabOperationLog.performedAt.desc()).limit(limit).all()
+
+    # ==================== ORDER OPERATIONS ====================
+
+    def log_order_status_change(
+        self,
+        order_id: int,
+        old_status: str,
+        new_status: str,
+        user_id: Optional[int] = None,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> LabOperationLog:
+        """Log an order status change"""
+        full_metadata = {
+            "trigger": "automatic",
+            **(metadata or {})
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.ORDER_STATUS_CHANGE,
+            entity_type="order",
+            entity_id=order_id,
+            user_id=user_id or 0,  # 0 for system-triggered changes
+            before_state={"status": old_status},
+            after_state={"status": new_status},
+            metadata=full_metadata
+        )
+
+    def log_test_removed(
+        self,
+        order_id: int,
+        test_id: int,
+        test_code: str,
+        user_id: int,
+        old_status: str,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> LabOperationLog:
+        """Log a test being removed from an order"""
+        full_metadata = {
+            "orderId": order_id,
+            "testCode": test_code,
+            **(metadata or {})
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.TEST_REMOVED,
+            entity_type="order_test",
+            entity_id=test_id,
+            user_id=user_id,
+            before_state={"status": old_status},
+            after_state={"status": "removed"},
+            metadata=full_metadata
+        )
+
+    def log_test_added(
+        self,
+        order_id: int,
+        test_id: int,
+        test_code: str,
+        user_id: int,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> LabOperationLog:
+        """Log a test being added to an order"""
+        full_metadata = {
+            "orderId": order_id,
+            "testCode": test_code,
+            **(metadata or {})
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.TEST_ADDED,
+            entity_type="order_test",
+            entity_id=test_id,
+            user_id=user_id,
+            before_state=None,
+            after_state={"status": "pending"},
+            metadata=full_metadata
+        )
+
+    # ==================== CRITICAL VALUE OPERATIONS ====================
+
+    def log_critical_value_detected(
+        self,
+        order_id: int,
+        test_id: int,
+        test_code: str,
+        user_id: int,
+        critical_values: list,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> LabOperationLog:
+        """Log detection of critical values"""
+        full_metadata = {
+            "orderId": order_id,
+            "testCode": test_code,
+            "criticalValues": critical_values,
+            **(metadata or {})
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.CRITICAL_VALUE_DETECTED,
+            entity_type="order_test",
+            entity_id=test_id,
+            user_id=user_id,
+            before_state={"hasCriticalValues": False},
+            after_state={"hasCriticalValues": True},
+            metadata=full_metadata
+        )
+
+    def log_critical_value_notified(
+        self,
+        order_id: int,
+        test_id: int,
+        test_code: str,
+        user_id: int,
+        notified_to: str,
+        notification_method: str,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> LabOperationLog:
+        """Log notification of critical values"""
+        full_metadata = {
+            "orderId": order_id,
+            "testCode": test_code,
+            "notifiedTo": notified_to,
+            "notificationMethod": notification_method,
+            **(metadata or {})
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.CRITICAL_VALUE_NOTIFIED,
+            entity_type="order_test",
+            entity_id=test_id,
+            user_id=user_id,
+            before_state={"criticalNotificationSent": False},
+            after_state={"criticalNotificationSent": True, "criticalNotifiedTo": notified_to},
+            metadata=full_metadata
+        )
+
+    def log_critical_value_acknowledged(
+        self,
+        order_id: int,
+        test_id: int,
+        test_code: str,
+        acknowledged_by: str,
+        user_id: int,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> LabOperationLog:
+        """Log acknowledgment of critical values"""
+        full_metadata = {
+            "orderId": order_id,
+            "testCode": test_code,
+            "acknowledgedBy": acknowledged_by,
+            **(metadata or {})
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.CRITICAL_VALUE_ACKNOWLEDGED,
+            entity_type="order_test",
+            entity_id=test_id,
+            user_id=user_id,
+            before_state={"criticalAcknowledgedAt": None},
+            after_state={"criticalAcknowledged": True},
+            metadata=full_metadata
+        )
