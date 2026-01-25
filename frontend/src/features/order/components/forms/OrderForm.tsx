@@ -4,6 +4,7 @@ import type { PriorityLevel } from '@/types';
 import { PRIORITY_LEVEL_OPTIONS } from '@/types';
 import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 interface OrderDetailsFormProps {
   referringPhysician: string;
@@ -57,7 +58,7 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
 
       <div>
         <label className="block text-xs font-medium text-gray-500 mb-1.5">
-          Priority <span className="text-red-500">*</span>
+          Priority <span className={semanticColors.danger.requiredIndicator}>*</span>
         </label>
         <MultiSelectFilter
           label="Priority"
