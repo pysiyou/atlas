@@ -115,7 +115,7 @@ const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
             key={index}
             className={`w-2 h-2 rounded-full transition-all duration-200 ${
               isCompleted
-                ? `${brandColors.primary.background} ring-2 ring-sky-500/30`
+                ? `${brandColors.primary.background} ring-2 ${brandColors.primary.ring30}`
                 : `bg-transparent ring-1 ${brandColors.primary.border}`
             }`}
           />

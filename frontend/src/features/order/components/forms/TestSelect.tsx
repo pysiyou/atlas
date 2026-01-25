@@ -220,8 +220,8 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                       'w-full text-left px-4 py-3',
                       'transition-colors',
                       'flex items-center justify-between gap-4',
-                      'hover:bg-sky-50/40',
-                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30 focus-visible:bg-sky-50/40',
+                      `hover:${brandColors.primary.backgroundLight}/40`,
+                      `focus:outline-none focus-visible:ring-2 ${brandColors.primary.ring30.replace('ring-sky-500/30', 'focus-visible:ring-sky-500/30')} focus-visible:${brandColors.primary.backgroundLight}/40`,
                       isSelected ? 'bg-emerald-50/30' : 'bg-white',
                     ].join(' ')}
                   >

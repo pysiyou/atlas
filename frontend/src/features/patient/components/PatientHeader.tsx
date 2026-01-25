@@ -33,7 +33,7 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
             affiliation={patient.affiliation}
             trigger={
               <button
-                className="focus:outline-none focus:ring-2 focus:ring-sky-500 rounded transition-all flex items-center justify-center"
+                className={`focus:outline-none focus:ring-2 ${brandColors.primary.focusRing} rounded transition-all flex items-center justify-center`}
                 aria-label="View affiliation details"
                 title="View affiliation details"
               >

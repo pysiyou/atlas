@@ -82,7 +82,7 @@ const PatientSearchTagInput: React.FC<{
               <button
                 type="button"
                 onClick={onClearSelection}
-                className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-sky-100 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-sky-400 shrink-0"
+                className={`flex items-center justify-center ml-0.5 -mr-0.5 hover:${brandColors.primary.backgroundLight.replace('bg-sky-100', 'bg-sky-100')} rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:${brandColors.primary.focusRing.replace('focus:ring-sky-500', 'focus:ring-sky-400')} shrink-0`}
                 aria-label="Clear selected patient"
               >
                 <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-gray-500 hover:text-gray-700" />
@@ -205,7 +205,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         'transition-colors',
                         'flex items-center justify-between gap-3',
                         'hover:bg-gray-50',
-                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30',
+                        `focus:outline-none focus-visible:ring-2 ${brandColors.primary.ring30.replace('ring-sky-500/30', 'focus-visible:ring-sky-500/30')}`,
                         isSelected ? 'bg-emerald-50/50' : 'bg-white',
                       ].join(' ')}
                     >

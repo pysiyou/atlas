@@ -18,6 +18,7 @@ import {
 import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
 import { FilterModal } from './FilterModal';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 import { Popover } from '@/shared/ui/Popover';
 import { Button } from '@/shared/ui/Button';
 import { Badge } from '@/shared/ui/Badge';
@@ -333,7 +334,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
                     <Button
                       variant="filter"
                       size="sm"
-                      className={isOpen ? 'ring-2 ring-sky-500/20' : ''}
+                      className={isOpen ? `ring-2 ${brandColors.primary.ring20}` : ''}
                     >
                       More Filters
                     </Button>

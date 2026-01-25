@@ -96,7 +96,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
           className={cn(
             'inline-flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] overflow-hidden',
             isOpen
-              ? `${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} ring-2 ring-sky-500/20`
+              ? `${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} ring-2 ${brandColors.primary.ring20}`
               : 'border-gray-300 hover:border-gray-400',
             className
           )}

@@ -152,7 +152,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
           className={cn(
             'inline-flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] overflow-hidden',
             isOpen
-              ? `${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} ring-2 ring-sky-500/20`
+              ? `${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} ring-2 ${brandColors.primary.ring20}`
               : 'border-gray-300 hover:border-gray-400',
             className
           )}
@@ -202,14 +202,14 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
 
             {/* Min Handle */}
             <div
-              className={`absolute w-5 h-5 bg-white border-2 ${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-sky-500/30`}
+              className={`absolute w-5 h-5 bg-white border-2 ${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
               style={{ left: `calc(${getPercentage(localValue[0])}% - 10px)` }}
               onMouseDown={onMouseDown('min')}
             />
 
             {/* Max Handle */}
             <div
-              className={`absolute w-5 h-5 bg-white border-2 ${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-sky-500/30`}
+              className={`absolute w-5 h-5 bg-white border-2 ${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
               style={{ left: `calc(${getPercentage(localValue[1])}% - 10px)` }}
               onMouseDown={onMouseDown('max')}
             />

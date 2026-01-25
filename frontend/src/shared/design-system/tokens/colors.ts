@@ -51,6 +51,7 @@ export const semanticColors = {
     // For icons, accents
     icon: 'text-red-600',
     iconLight: 'text-red-500',
+    iconLighter: 'text-red-400',
     
     // Error states (inputs, validation)
     inputBorder: 'border-red-500',
@@ -79,6 +80,7 @@ export const semanticColors = {
     // For icons, accents, high/low values
     icon: 'text-yellow-600',
     iconLight: 'text-yellow-500',
+    iconLighter: 'text-yellow-400',
     valueHigh: 'text-yellow-600', // Replaces amber-600 and orange-600
     valueLow: 'text-yellow-600',   // Replaces amber-600 and orange-600
     
@@ -150,6 +152,8 @@ export const brandColors = {
     border: 'border-sky-200',
     icon: 'text-sky-600',
     focusRing: 'focus:ring-sky-500',
+    ring20: 'ring-sky-500/20',
+    ring30: 'ring-sky-500/30',
   },
   
   secondary: {

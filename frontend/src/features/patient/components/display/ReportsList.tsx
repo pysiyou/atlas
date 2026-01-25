@@ -9,6 +9,7 @@ import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types/order';
 import { formatDetailDate, getReportableOrders } from '../../utils/patientDetailUtils';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 export interface ReportsListProps {
   orders: Order[];
@@ -36,7 +37,7 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
         >
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="w-8 h-8 flex items-center justify-center">
-              <Icon name={ICONS.dataFields.pdf} className="w-full h-full text-red-400" />
+              <Icon name={ICONS.dataFields.pdf} className={`w-full h-full ${semanticColors.danger.iconLighter}`} />
             </div>
             <div className="min-w-0">
               <p className="text-xs font-medium font-mono text-gray-900 truncate">
