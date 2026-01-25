@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { tabsBase, getTabButtonClasses, getTabCountBadgeClasses, tabIndicator } from '@/shared/design-system/tokens/components/tabs';
 
 export interface TabItem {
   id: string;
@@ -162,31 +163,10 @@ export const TabsList: React.FC<TabsListProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`
-        relative flex items-center overflow-x-auto no-scrollbar
-        ${variant === 'underline' ? 'h-full min-h-full' : 'gap-2'}
-        ${className}
-      `}
+      className={`${tabsBase.container} ${variant === 'underline' ? tabsBase.underline : tabsBase.pills} ${className}`}
     >
       {tabs.map(tab => {
         const isActive = activeTabId === tab.id;
-
-        let buttonClass =
-          'whitespace-nowrap flex items-center justify-center transition-all duration-200 font-medium text-xs cursor-pointer ';
-
-        if (variant === 'underline') {
-          // Remove border-b-2 from buttons since we use sliding indicator
-          buttonClass += `px-4 py-2 ${
-            isActive ? 'text-sky-600' : 'text-gray-500 hover:text-gray-700'
-          }`;
-        } else {
-          // Pills variant
-          buttonClass += `px-3 py-1.5 rounded-md ${
-            isActive
-              ? 'bg-sky-100 text-sky-700'
-              : 'bg-transparent text-gray-600 hover:bg-gray-100'
-          }`;
-        }
 
         return (
           <button
@@ -195,20 +175,12 @@ export const TabsList: React.FC<TabsListProps> = ({
               tabsRef.current[tab.id] = el;
             }}
             onClick={() => onTabChange(tab.id)}
-            className={buttonClass}
+            className={getTabButtonClasses(variant, isActive)}
             type="button"
           >
             {tab.label}
             {tab.count !== undefined && (
-              <span
-                className={`ml-2 text-xs py-0.5 px-1.5 rounded-full ${
-                  isActive
-                    ? variant === 'underline'
-                      ? 'bg-sky-100 text-sky-600'
-                      : 'bg-sky-200 text-sky-800'
-                    : 'bg-gray-100 text-gray-500'
-                }`}
-              >
+              <span className={getTabCountBadgeClasses(variant, isActive)}>
                 {tab.count}
               </span>
             )}
@@ -221,7 +193,7 @@ export const TabsList: React.FC<TabsListProps> = ({
       {/* If headerRef is provided, indicator is rendered in TabbedSectionContainer wrapper */}
       {variant === 'underline' && !headerRef && (
         <div
-          className="absolute bottom-0 left-0 h-[2px] bg-sky-600 rounded-full pointer-events-none z-10"
+          className={`${tabIndicator.base} ${tabIndicator.color}`}
           style={{
             left: `${indicator.left}px`,
             width: `${indicator.width}px`,

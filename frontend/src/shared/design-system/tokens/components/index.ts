@@ -9,3 +9,5 @@ export * from './input';
 export * from './badge';
 export * from './alert';
 export * from './card';
+export * from './modal';
+export * from './tabs';

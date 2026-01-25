@@ -4,6 +4,9 @@
  */
 
 import React, { type ReactNode } from 'react';
+import { cardBase, padding as cardPadding } from '@/shared/design-system/tokens/components/card';
+import { border } from '@/shared/design-system/tokens/borders';
+import { heading, body } from '@/shared/design-system/tokens/typography';
 
 interface CardProps {
   children: ReactNode;
@@ -15,20 +18,20 @@ interface CardProps {
 export const Card: React.FC<CardProps> = ({
   children,
   className = '',
-  padding = 'md',
+  padding: paddingProp = 'md',
   hover = false,
 }) => {
   const paddingClasses = {
     none: '',
-    sm: 'p-3',
-    md: 'p-4',
-    lg: 'p-6',
+    sm: cardPadding.card.sm,
+    md: cardPadding.card.md,
+    lg: cardPadding.card.lg,
   };
 
-  const hoverClass = hover ? 'transition-all' : '';
+  const hoverClass = hover ? cardBase.hover : '';
 
   return (
-    <div className={`bg-white rounded ${paddingClasses[padding]} ${hoverClass} ${className}`}>
+    <div className={`${cardBase.base} ${paddingClasses[paddingProp]} ${hoverClass} ${className}`}>
       {children}
     </div>
   );
@@ -45,10 +48,10 @@ interface CardHeaderProps {
 
 export const CardHeader: React.FC<CardHeaderProps> = ({ title, subtitle, action }) => {
   return (
-    <div className="flex items-start justify-between mb-4 pb-4 border-b border-gray-200">
+    <div className={`flex items-start justify-between mb-4 pb-4 ${border.divider}`}>
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+        <h3 className={`${heading.h3}`}>{title}</h3>
+        {subtitle && <p className={`${body.muted} mt-1`}>{subtitle}</p>}
       </div>
       {action && <div>{action}</div>}
     </div>

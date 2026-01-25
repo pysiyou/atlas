@@ -9,6 +9,7 @@ import React, { memo, useCallback, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Portal } from './Portal';
 import { IconButton } from './IconButton';
+import { modalBase, modalSizes, modalPadding, modalHeader, modalHeight, getModalClasses } from '@/shared/design-system/tokens/components/modal';
 
 /**
  * Backdrop component with blur and opacity effects
@@ -149,7 +150,7 @@ const Modal = memo(
                 zIndex={backdropZIndex}
               />
 
-              <div className="fixed inset-0 z-50 flex items-start justify-center lg:justify-end p-2 md:p-6">
+              <div className={`${modalBase.container} ${modalPadding.container}`}>
                 <motion.div
                   role="dialog"
                   aria-modal="true"
@@ -176,38 +177,27 @@ const Modal = memo(
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className={`
-                    bg-white
-                    border border-gray-200
-                    shadow-xl rounded
-                    ${maxWidthClass}
-                    w-full
-                    h-[calc(100vh-16px)] md:h-[calc(100vh-48px)]
-                    flex flex-col
-                    origin-top lg:origin-top-right
-                    relative
-                    ${className}
-                  `}
+                  className={`${getModalClasses(size)} ${maxWidthClass} ${className}`}
                   onClick={handleModalClick}
                 >
                   {/* Header */}
-                  <div className="px-6 py-4 border-b border-gray-200 bg-white flex items-center justify-between shrink-0">
-                    <div className="flex items-start gap-3 min-w-0">
+                  <div className={modalHeader.container}>
+                    <div className={modalHeader.titleContainer}>
                       <div className="flex flex-col min-w-0">
                         <h2
                           id="modal-title"
-                          className="text-lg font-semibold text-gray-900 truncate"
+                          className={modalHeader.title}
                           title={typeof title === 'string' ? title : undefined}
                         >
                           {title}
                         </h2>
                         {subtitle && (
-                          <span className="text-sm text-gray-600 mt-0.5">{subtitle}</span>
+                          <span className={modalHeader.subtitle}>{subtitle}</span>
                         )}
                       </div>
                     </div>
 
-                    <div className="flex gap-2 shrink-0">
+                    <div className={modalHeader.actions}>
                       <IconButton
                         onClick={onClose}
                         variant="close"
@@ -229,7 +219,7 @@ const Modal = memo(
                   </div>
 
                   {/* Content */}
-                  <div className="grow overflow-hidden relative flex flex-col min-h-0">
+                  <div className={modalPadding.content}>
                     {children}
                   </div>
                 </motion.div>
