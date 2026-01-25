@@ -13,6 +13,7 @@ import { Badge, Icon } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 interface TestSelectorProps {
   selectedTests: string[];
@@ -54,7 +55,7 @@ const TestSearchTagInput: React.FC<{
           'w-full pl-10 pr-3 py-2.5 border rounded',
           'bg-white transition-colors',
           'focus-within:ring-2 focus-within:ring-sky-500 focus-within:border-transparent',
-          error ? 'border-red-500' : 'border-gray-300',
+          error ? semanticColors.danger.inputBorder : 'border-gray-300',
           'flex flex-wrap gap-2 items-center',
           'min-h-[42px]',
         ].join(' ')}
@@ -95,7 +96,7 @@ const TestSearchTagInput: React.FC<{
         />
       </div>
 
-      {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
+      {error && <p className={`mt-1.5 text-xs ${semanticColors.danger.errorText}`}>{error}</p>}
     </div>
   );
 };
@@ -175,7 +176,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         </div>
 
         <div className="shrink-0 pb-[2px]">
-          <div className="h-[34px] inline-flex items-center px-3 rounded border border-sky-100 bg-sky-50 text-sky-700 text-xs font-semibold">
+          <div className={`h-[34px] inline-flex items-center px-3 rounded border ${brandColors.primary.border} ${brandColors.primary.backgroundLight} ${brandColors.primary.textOnLight} text-xs font-semibold`}>
             Total: {formatCurrency(totalPrice)}
           </div>
         </div>
@@ -219,14 +220,14 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                       'w-full text-left px-4 py-3',
                       'transition-colors',
                       'flex items-center justify-between gap-4',
-                      'hover:bg-sky-50/40',
-                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30 focus-visible:bg-sky-50/40',
+                      `hover:${brandColors.primary.backgroundLight}/40`,
+                      `focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30 focus-visible:${brandColors.primary.backgroundLight}/40`,
                       isSelected ? 'bg-emerald-50/30' : 'bg-white',
                     ].join(' ')}
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="shrink-0 text-xs font-semibold font-mono px-2 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-200">
+                        <span className={`shrink-0 text-xs font-semibold font-mono px-2 py-0.5 rounded ${brandColors.primary.backgroundLight} ${brandColors.primary.textLight} border ${brandColors.primary.border}`}>
                           {code}
                         </span>
                         <span className="shrink-0 text-xs font-medium px-2 py-0.5 rounded truncate">
@@ -236,7 +237,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                     </div>
 
                     <div className="shrink-0 flex items-center gap-2">
-                      <div className="text-xs font-semibold px-2 py-1 rounded bg-sky-50 text-sky-700 border border-sky-100">
+                      <div className={`text-xs font-semibold px-2 py-1 rounded ${brandColors.primary.backgroundLight} ${brandColors.primary.textOnLight} border ${brandColors.primary.border}`}>
                         {formatCurrency(price)}
                       </div>
                       {isSelected && (
