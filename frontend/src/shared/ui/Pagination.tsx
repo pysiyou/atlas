@@ -1,6 +1,15 @@
 import React from 'react';
 import { Icon } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
+import {
+  paginationContainer,
+  paginationSelect,
+  paginationPageButton,
+  paginationNavButton,
+  paginationText,
+  getPageButtonClasses,
+} from '@/shared/design-system/tokens/components/pagination';
+
 interface PaginationProps {
   currentPage: number;
   totalItems: number;
@@ -53,14 +62,14 @@ export const Pagination: React.FC<PaginationProps> = ({
   const pageNumbers = getPageNumbers();
 
   return (
-    <div className="flex items-center justify-between px-4 py-4 bg-white border-t border-gray-200">
+    <div className={paginationContainer.base}>
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500 whitespace-nowrap">Rows per page:</span>
+          <span className={paginationText.label}>Rows per page:</span>
           <select
             value={pageSize}
             onChange={e => onPageSizeChange(Number(e.target.value))}
-            className="block w-full py-1 pl-3 pr-8 text-xs border border-gray-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 rounded cursor-pointer"
+            className={paginationSelect.combined}
           >
             {pageSizeOptions.map(option => (
               <option key={option} value={option} className="text-xs">
@@ -69,7 +78,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             ))}
           </select>
         </div>
-        <span className="text-xs text-gray-500">
+        <span className={paginationText.info}>
           {startItem}-{endItem} of {totalItems}
         </span>
       </div>
@@ -78,24 +87,20 @@ export const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-1 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+          className={paginationNavButton.base}
         >
-          <Icon name={ICONS.actions.chevronLeft} className="w-5 h-5 text-gray-500" />
+          <Icon name={ICONS.actions.chevronLeft} className={paginationNavButton.icon} />
         </button>
 
         <div className="flex items-center gap-1">
           {pageNumbers.map((page, index) => (
             <React.Fragment key={index}>
               {page === '...' ? (
-                <span className="px-2 text-gray-500 text-xs">...</span>
+                <span className={paginationText.ellipsis}>...</span>
               ) : (
                 <button
                   onClick={() => onPageChange(page as number)}
-                  className={`px-3 py-1 text-xs rounded cursor-pointer ${
-                    page === currentPage
-                      ? 'bg-sky-600 text-white font-medium'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                  className={getPageButtonClasses(page === currentPage)}
                 >
                   {page}
                 </button>
@@ -107,9 +112,9 @@ export const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="p-1 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+          className={paginationNavButton.base}
         >
-          <Icon name={ICONS.actions.chevronRight} className="w-5 h-5 text-gray-500" />
+          <Icon name={ICONS.actions.chevronRight} className={paginationNavButton.icon} />
         </button>
       </div>
     </div>

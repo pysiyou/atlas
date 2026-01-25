@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getInitials } from '@/utils';
+import { brandColors, neutralColors } from '@/shared/design-system/tokens';
 
 export interface AvatarProps {
   primaryText: string;
@@ -80,7 +81,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         />
       ) : (
         <div
-          className={`rounded bg-sky-600 flex items-center justify-center text-white font-semibold shrink-0 ${sizeClasses[size]}`}
+          className={`rounded ${brandColors.primary.background} flex items-center justify-center text-white font-semibold shrink-0 ${sizeClasses[size]}`}
         >
           {getInitials(primaryText)}
         </div>
@@ -89,11 +90,11 @@ export const Avatar: React.FC<AvatarProps> = ({
       {/* Primary and secondary text */}
       {hasText && (
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
-          <div className={`font-medium text-gray-900 truncate ${textSizeClasses[size].primary}`}>
+          <div className={`font-medium ${neutralColors.text.primary} truncate ${textSizeClasses[size].primary}`}>
             {primaryText}
           </div>
           {secondaryText && (
-            <div className={`text-gray-500 truncate ${textSizeClasses[size].secondary} ${secondaryTextClassName}`}>
+            <div className={`${neutralColors.text.muted} truncate ${textSizeClasses[size].secondary} ${secondaryTextClassName}`}>
               {secondaryText}
             </div>
           )}

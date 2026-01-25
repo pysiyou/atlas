@@ -4,6 +4,8 @@
  */
 
 import React from 'react';
+import { loadingColors } from '@/shared/design-system/tokens/animations';
+import { radius, border } from '@/shared/design-system/tokens/borders';
 
 interface SkeletonProps {
   /** Width of the skeleton (CSS value) */
@@ -35,8 +37,8 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   };
 
   const baseClasses = `
-    animate-pulse bg-gray-200 
-    ${circle ? 'rounded-full' : 'rounded'}
+    animate-pulse ${loadingColors.skeleton.background}
+    ${circle ? 'rounded-full' : radius.md}
     ${className}
   `.trim();
 
@@ -93,7 +95,7 @@ export const SkeletonTableRow: React.FC<{
   columns?: number;
   className?: string;
 }> = ({ columns = 5, className = '' }) => (
-  <div className={`flex items-center gap-4 py-4 px-6 border-b border-gray-100 ${className}`}>
+  <div className={`flex items-center gap-4 py-4 px-6 ${border.divider} ${className}`}>
     {Array.from({ length: columns }).map((_, index) => (
       <div key={index} className="flex-1">
         <Skeleton height={16} width={index === 0 ? '60%' : '80%'} />
@@ -111,7 +113,7 @@ export const SkeletonCard: React.FC<{
   showAvatar?: boolean;
   lines?: number;
 }> = ({ className = '', showAvatar = true, lines = 3 }) => (
-  <div className={`bg-white rounded-lg border border-gray-200 p-4 ${className}`}>
+  <div className={`bg-white ${radius.lg} ${border.card} p-4 ${className}`}>
     <div className="flex items-start gap-4">
       {showAvatar && <SkeletonAvatar size="md" />}
       <div className="flex-1">
@@ -165,9 +167,9 @@ export const SkeletonPage: React.FC<{
     </div>
 
     {/* Table */}
-    <div className="bg-white rounded-lg border border-gray-200">
+    <div className={`bg-white ${radius.lg} ${border.card}`}>
       {/* Table header */}
-      <div className="flex items-center gap-4 py-3 px-6 border-b border-gray-200 bg-gray-50">
+      <div className={`flex items-center gap-4 py-3 px-6 ${border.default} border-b bg-gray-50`}>
         {Array.from({ length: 6 }).map((_, index) => (
           <div key={index} className="flex-1">
             <Skeleton height={12} width="60%" />

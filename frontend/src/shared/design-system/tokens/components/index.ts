@@ -1,6 +1,6 @@
 /**
  * Component Design Tokens - Main Export
- * 
+ *
  * Component-specific tokens ensuring consistency across component types.
  */
 
@@ -14,3 +14,5 @@ export * from './tabs';
 export * from './layout';
 export * from './table';
 export * from './shared';
+export * from './pagination';
+export * from './filter';

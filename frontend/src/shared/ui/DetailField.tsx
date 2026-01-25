@@ -2,6 +2,8 @@ import React from 'react';
 import { Badge, type BadgeVariant } from './Badge';
 import { formatDate } from '@/utils';
 import { useUserLookup } from '@/hooks/queries';
+import { neutralColors } from '@/shared/design-system/tokens/colors';
+import { fontSize } from '@/shared/design-system/tokens/typography';
 
 /**
  * Badge configuration for DetailField
@@ -71,8 +73,8 @@ export const DetailField: React.FC<DetailFieldProps> = ({
   label,
   value,
   className = '',
-  labelClassName = 'text-gray-600 text-xs',
-  valueClassName = 'font-medium text-gray-900 text-right text-xs',
+  labelClassName = `${neutralColors.text.tertiary} ${fontSize.xs}`,
+  valueClassName = `font-medium ${neutralColors.text.primary} text-right ${fontSize.xs}`,
   variant = 'default',
   timestamp,
   user,
@@ -104,15 +106,15 @@ export const DetailField: React.FC<DetailFieldProps> = ({
       // Stacked layout: date on top, user below
       if (userName) {
         return (
-          <div className="text-right text-xs">
-            <div className="text-xs text-gray-900">{formattedDate}</div>
-            <div className="text-xs text-gray-500">by {userName}</div>
+          <div className={`text-right ${fontSize.xs}`}>
+            <div className={`${fontSize.xs} ${neutralColors.text.primary}`}>{formattedDate}</div>
+            <div className={`${fontSize.xs} ${neutralColors.text.muted}`}>by {userName}</div>
           </div>
         );
       }
 
       // Simple timestamp without user
-      return <span className="text-xs text-gray-900">{formattedDate}</span>;
+      return <span className={`${fontSize.xs} ${neutralColors.text.primary}`}>{formattedDate}</span>;
     }
 
     // Default: render value as-is

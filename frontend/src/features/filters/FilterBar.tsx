@@ -18,11 +18,22 @@ import {
 import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
 import { FilterModal } from './FilterModal';
-import { brandColors } from '@/shared/design-system/tokens/colors';
+import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
+import { filterControl, filterContainer } from '@/shared/design-system/tokens/components/filter';
+import { border } from '@/shared/design-system/tokens/borders';
+import { fontSize, fontWeight } from '@/shared/design-system/tokens/typography';
 import { Popover } from '@/shared/ui/Popover';
 import { Button } from '@/shared/ui/Button';
 import { Badge } from '@/shared/ui/Badge';
 import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
+
+// Token-based style constants for consistent styling
+const filterStyles = {
+  controlHeight: filterControl.height,
+  container: `bg-white border-b ${border.default}`,
+  dropdownLabel: `${fontSize.xs} ${fontWeight.medium} ${neutralColors.text.secondary} mb-2`,
+  dropdownDivider: `pt-2 border-t ${border.default}`,
+} as const;
 
 /**
  * Props for FilterBar component
@@ -244,20 +255,20 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
    * All filters visible inline in horizontal layout with aligned controls
    */
   const renderLargeView = () => (
-    <div className={`bg-white border-b border-gray-200 ${className || ''}`}>
+    <div className={`${filterStyles.container} ${className || ''}`}>
       {/* Filter row - search and filters in one row, aligned for lg */}
       <div className="px-4 py-2.5 lg:px-5 lg:py-3">
         <div className="flex flex-row flex-wrap items-center gap-x-3 gap-y-2 lg:gap-x-4 lg:gap-y-2">
           {/* Search control - fixed height slot for alignment */}
           {searchControl && (
-            <div className="flex h-[34px] min-h-[34px] max-h-[34px] min-w-[250px] shrink-0 items-center overflow-hidden lg:min-w-[260px]">
+            <div className={`flex ${filterStyles.controlHeight} ${filterControl.minWidth.search} shrink-0 items-center overflow-hidden`}>
               {renderControl(searchControl)}
             </div>
           )}
 
           {/* Quick filters - match control height for vertical alignment */}
           {config.quickFilters && config.quickFilters.length > 0 && (
-            <div className="flex h-[34px] min-h-[34px] max-h-[34px] shrink-0 items-center overflow-hidden">
+            <div className={`flex ${filterStyles.controlHeight} shrink-0 items-center overflow-hidden`}>
               <QuickFilters
                 presets={config.quickFilters}
                 activePresetId={activePresetId}
@@ -270,7 +281,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
           {nonSearchControls.map(control => (
             <div
               key={control.key}
-              className="flex h-[34px] min-h-[34px] max-h-[34px] min-w-[200px] shrink-0 items-center overflow-hidden lg:min-w-[220px]"
+              className={`flex ${filterStyles.controlHeight} ${filterControl.minWidth.filter} shrink-0 items-center overflow-hidden`}
             >
               {renderControl(control)}
             </div>
@@ -297,13 +308,13 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
    * Search + 1-2 key filters inline, rest in dropdown
    */
   const renderMediumView = () => (
-    <div className={`bg-white border-b border-gray-200 ${className || ''}`}>
+    <div className={`${filterStyles.container} ${className || ''}`}>
       {/* Filter row */}
       <div className="px-3 py-2">
         <div className="flex flex-row gap-2 items-center">
           {/* Search control */}
           {searchControl && (
-            <div className="flex h-[34px] min-h-[34px] max-h-[34px] min-w-[200px] flex-1 items-center overflow-hidden">
+            <div className={`flex ${filterStyles.controlHeight} min-w-[200px] flex-1 items-center overflow-hidden`}>
               {renderControl(searchControl)}
             </div>
           )}
@@ -314,7 +325,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
               {mediumInlineControls.map(control => (
                 <div
                   key={control.key}
-                  className="flex h-[34px] min-h-[34px] max-h-[34px] min-w-[180px] shrink-0 items-center overflow-hidden"
+                  className={`flex ${filterStyles.controlHeight} ${filterControl.minWidth.filterMedium} shrink-0 items-center overflow-hidden`}
                 >
                   {renderControl(control)}
                 </div>
@@ -357,7 +368,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
                   {/* Quick filters in dropdown if present */}
                   {config.quickFilters && config.quickFilters.length > 0 && (
                     <div>
-                      <div className="text-xs font-medium text-gray-700 mb-2">Quick Filters</div>
+                      <div className={filterStyles.dropdownLabel}>Quick Filters</div>
                       <QuickFilters
                         presets={config.quickFilters}
                         activePresetId={activePresetId}
@@ -378,8 +389,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
 
                   {/* Advanced filters in dropdown */}
                   {config.advancedFilters && config.advancedFilters.controls.length > 0 && (
-                    <div className="pt-2 border-t border-gray-200">
-                      <div className="text-xs font-medium text-gray-700 mb-2">
+                    <div className={filterStyles.dropdownDivider}>
+                      <div className={filterStyles.dropdownLabel}>
                         Advanced Filters
                       </div>
                       {config.advancedFilters.controls.map(control => (
@@ -403,7 +414,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
    * Search visible, filters button opens modal
    */
   const renderSmallView = () => (
-    <div className={`bg-white border-b border-gray-200 ${className || ''}`}>
+    <div className={`${filterStyles.container} ${className || ''}`}>
       {/* Search and filter button row */}
       <div className="px-3 py-2">
         <div className="flex gap-2 items-center">
