@@ -7,6 +7,7 @@ import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from './Icon';
 import type { IconName } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
+import { getInputClasses, label as labelTokens, errorMessage, helperText as helperTextTokens, requiredIndicator } from '@/shared/design-system/tokens/components/input';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -53,10 +54,10 @@ export const Input: React.FC<InputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+            className={`${labelTokens.base} cursor-pointer truncate min-w-0`}
           >
             {label}
-            {props.required && <span className="text-red-500 ml-1">*</span>}
+            {props.required && <span className={requiredIndicator.base}>*</span>}
           </label>
         </div>
       )}
@@ -68,19 +69,12 @@ export const Input: React.FC<InputProps> = ({
         )}
         <input
           id={inputId}
-          className={`
-            block w-full ${displayIcon ? 'pl-10' : 'pl-3'} pr-3 py-2.5 border rounded bg-white
-            text-xs placeholder:text-gray-300 transition-shadow
-            focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
-            disabled:bg-gray-100 disabled:cursor-not-allowed
-            ${error ? 'border-red-500' : 'border-gray-300'}
-            ${className}
-          `}
+          className={`${getInputClasses(!!error, !!displayIcon, 'left', 'md', props.disabled)} ${className}`}
           {...props}
         />
       </div>
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-      {helperText && !error && <p className="mt-1 text-sm text-gray-500">{helperText}</p>}
+      {error && <p className={errorMessage.base}>{error}</p>}
+      {helperText && !error && <p className={helperTextTokens.base}>{helperText}</p>}
     </div>
   );
 };
@@ -127,10 +121,10 @@ export const Textarea: React.FC<TextareaProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+            className={`${labelTokens.base} cursor-pointer truncate min-w-0`}
           >
             {label}
-            {props.required && <span className="text-red-500 ml-1">*</span>}
+            {props.required && <span className={requiredIndicator.base}>*</span>}
           </label>
         </div>
       )}
@@ -142,20 +136,13 @@ export const Textarea: React.FC<TextareaProps> = ({
         )}
         <textarea
           id={inputId}
-          className={`
-            w-full ${displayIcon ? 'pl-10' : 'pl-3'} pr-3 py-2.5 border rounded bg-white
-            text-xs placeholder:text-gray-300 transition-shadow
-            focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
-            disabled:bg-gray-100 disabled:cursor-not-allowed
-            ${error ? 'border-red-500' : 'border-gray-300'}
-            ${className}
-          `}
+          className={`${getInputClasses(!!error, !!displayIcon, 'left', 'md', props.disabled)} ${className}`}
           rows={4}
           {...props}
         />
       </div>
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-      {helperText && !error && <p className="mt-1 text-sm text-gray-500">{helperText}</p>}
+      {error && <p className={errorMessage.base}>{error}</p>}
+      {helperText && !error && <p className={helperTextTokens.base}>{helperText}</p>}
     </div>
   );
 };
@@ -204,10 +191,10 @@ export const Select: React.FC<SelectProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+            className={`${labelTokens.base} cursor-pointer truncate min-w-0`}
           >
             {label}
-            {props.required && <span className="text-red-500 ml-1">*</span>}
+            {props.required && <span className={requiredIndicator.base}>*</span>}
           </label>
         </div>
       )}
@@ -219,14 +206,7 @@ export const Select: React.FC<SelectProps> = ({
         )}
         <select
           id={inputId}
-          className={`
-            block w-full ${displayIcon ? 'pl-10' : 'pl-3'} pr-3 py-2.5 border rounded cursor-pointer bg-white
-            text-xs transition-shadow
-            focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
-            disabled:bg-gray-100 disabled:cursor-not-allowed
-            ${error ? 'border-red-500' : 'border-gray-300'}
-            ${className}
-          `}
+          className={`${getInputClasses(!!error, !!displayIcon, 'left', 'md', props.disabled)} cursor-pointer ${className}`}
           {...props}
         >
           {options.map(option => (
@@ -236,8 +216,8 @@ export const Select: React.FC<SelectProps> = ({
           ))}
         </select>
       </div>
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-      {helperText && !error && <p className="mt-1 text-sm text-gray-500">{helperText}</p>}
+      {error && <p className={errorMessage.base}>{error}</p>}
+      {helperText && !error && <p className={helperTextTokens.base}>{helperText}</p>}
     </div>
   );
 };

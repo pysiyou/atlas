@@ -4,6 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { Textarea } from '@/shared/ui';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 type ResultStatus =
   | 'normal'
@@ -117,7 +118,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
               const valueColor = abnormal
                 ? isCritical(status)
                   ? 'text-red-600'
-                  : 'text-amber-600'
+                  : semanticColors.warning.valueHigh
                 : 'text-gray-900';
               
               return (

@@ -5,6 +5,7 @@
 import React from 'react';
 import { Icon, SectionContainer } from '@/shared/ui';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 /** Test detail for requirements display */
 export interface TestDetail {
@@ -55,11 +56,11 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
     >
       <div className="space-y-3 pt-2 animate-in fade-in duration-200">
         {activeTest.fastingRequired && (
-          <div className="flex items-start gap-2 p-2 bg-orange-50 border border-orange-200 rounded">
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 shrink-0" />
+          <div className={`flex items-start gap-2 p-2 ${semanticColors.warning.backgroundLight} border ${semanticColors.warning.border} rounded`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${semanticColors.warning.background} mt-1.5 shrink-0`} />
             <div className="flex-1">
-              <div className="text-xs font-medium text-orange-900">Fasting Required</div>
-              <div className="text-xs text-orange-700 mt-0.5">
+              <div className={`text-xs font-medium ${semanticColors.warning.textLight}`}>Fasting Required</div>
+              <div className={`text-xs ${semanticColors.warning.textLight} mt-0.5`}>
                 Patient must fast before sample collection. Verify fasting status before proceeding.
               </div>
             </div>

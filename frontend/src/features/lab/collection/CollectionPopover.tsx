@@ -12,6 +12,7 @@ import type { ContainerType } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS } from '@/types';
 import type { SampleRequirement } from '@/utils/sampleHelpers';
 import { ICONS, getContainerIcon } from '@/utils/icon-mappings';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 interface CollectionPopoverContentProps {
   requirement: SampleRequirement;
@@ -105,7 +106,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             Volume Collected <span className="text-red-500">*</span>
           </label>
           {minimumVolume > 0 && (
-            <div className="text-xxs text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100 flex items-center gap-1">
+            <div className={`text-xxs ${semanticColors.warning.valueHigh} ${semanticColors.warning.backgroundLight} px-2 py-0.5 rounded border ${semanticColors.warning.border} flex items-center gap-1`}>
               <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
               Min: {minimumVolume} mL
             </div>
@@ -225,7 +226,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           <div
             className={`text-xs flex items-center gap-1.5 p-1.5 rounded border transition-opacity duration-200 ${
               !selectedColor
-                ? 'opacity-100 text-orange-600 bg-orange-50 border-orange-100'
+                ? `opacity-100 ${semanticColors.warning.valueHigh} ${semanticColors.warning.backgroundLight} ${semanticColors.warning.border}`
                 : selectedColor && !requirement.containerTopColors.includes(selectedColor as never)
                   ? 'opacity-100 text-yellow-600 bg-yellow-50 border-yellow-100'
                   : 'opacity-0 pointer-events-none border-transparent'

@@ -9,6 +9,7 @@ import React from 'react';
 import { Icon, type IconName } from '@/shared/ui';
 import type { VitalSigns } from '@/types/patient';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 export interface VitalsSectionProps {
   /** Current vital signs data */
@@ -167,7 +168,7 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
     case 'borderline':
       return {
         border: 'border-amber-300',
-        text: 'text-amber-600',
+        text: semanticColors.warning.valueHigh,
         bg: 'bg-amber-50',
       };
     case 'abnormal':

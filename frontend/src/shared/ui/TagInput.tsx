@@ -10,6 +10,7 @@ import { Icon } from './Icon';
 import { Badge } from './Badge';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
+import { label, requiredIndicator, errorMessage, helperText, inputBorder, inputPadding, inputFocus } from '@/shared/design-system/tokens/components/input';
 
 export interface TagInputProps {
   /** Current tags as an array of strings */
@@ -112,10 +113,10 @@ export const TagInput: React.FC<TagInputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xxs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+            className={`${label.sm} cursor-pointer truncate min-w-0`}
           >
             {label}
-            {required && <span className="text-red-500 ml-1">*</span>}
+            {required && <span className={requiredIndicator.base}>*</span>}
           </label>
         </div>
       )}
@@ -123,10 +124,10 @@ export const TagInput: React.FC<TagInputProps> = ({
       {/* Tags Container - matches result entry input height exactly */}
       <div
         className={cn(
-          'w-full px-3 py-2.5 border rounded',
+          `w-full ${inputPadding.default} border rounded`,
           'bg-white transition-colors',
-          'focus-within:ring-2 focus-within:ring-sky-500 focus-within:border-transparent',
-          error ? 'border-red-500' : 'border-gray-300',
+          inputFocus.default.replace('focus:', 'focus-within:'),
+          error ? inputBorder.error : inputBorder.default,
           'flex flex-wrap gap-2 items-center',
           // Ensure consistent height matching result entry inputs
           tags.length === 0 ? 'min-h-[42px]' : 'min-h-[42px]'
@@ -166,10 +167,10 @@ export const TagInput: React.FC<TagInputProps> = ({
       </div>
 
       {/* Error Message */}
-      {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
+      {error && <p className={errorMessage.small}>{error}</p>}
 
       {/* Helper Text */}
-      {helperText && !error && <p className="mt-1.5 text-xs text-gray-500">{helperText}</p>}
+      {helperText && !error && <p className={helperText.base}>{helperText}</p>}
     </div>
   );
 };

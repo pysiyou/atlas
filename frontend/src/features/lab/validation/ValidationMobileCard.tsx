@@ -14,6 +14,7 @@ import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { TestWithContext } from '@/types';
 import { RejectionDialog } from '../components';
 import { mobileCard } from '@/shared/design-system/tokens/components/card';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 type ResultStatus =
   | 'normal'
@@ -99,7 +100,7 @@ function ResultGrid({
         const valueColor = abnormal
           ? isCritical(status)
             ? 'text-red-600'
-            : 'text-amber-600'
+            : semanticColors.warning.valueHigh
           : 'text-gray-900';
 
         return (

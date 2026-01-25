@@ -11,6 +11,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Button, Icon } from '@/shared/ui';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 interface BulkValidationItem {
   id: number;
@@ -145,7 +146,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
       {/* Right side: Actions */}
       <div className="flex items-center gap-3">
         {criticalSelectedCount > 0 && selectedCount > 0 && (
-          <span className="text-xs text-amber-600">
+          <span className={`text-xs ${semanticColors.warning.valueHigh}`}>
             {criticalSelectedCount} critical skipped
           </span>
         )}

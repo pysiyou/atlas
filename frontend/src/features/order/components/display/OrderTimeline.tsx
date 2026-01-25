@@ -9,6 +9,7 @@ import {
   type StepProgress,
 } from '../../utils/orderTimelineUtils';
 import type { Order } from '@/types';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 interface OrderTimelineProps {
   order: Order;
@@ -250,8 +251,8 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
 
         // Determine status message color
         const getStatusColor = () => {
-          if (step.status === 'paid' && !progress.isFullyComplete) return 'text-amber-600';
-          if (blocked) return 'text-amber-600';
+          if (step.status === 'paid' && !progress.isFullyComplete) return semanticColors.warning.valueHigh;
+          if (blocked) return semanticColors.warning.valueHigh;
           return 'text-sky-600';
         };
 

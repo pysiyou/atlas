@@ -18,6 +18,7 @@ import { CollectionRejectionPopover } from '../CollectionRejectionPopover';
 import { ModalFooter } from '../../components/LabDetailModal';
 import { orderHasValidatedTests, getValidatedTestCount } from '@/features/order/utils';
 import { getSampleStatusIcon } from '@/utils/icon-helpers';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 import { ICONS } from '@/utils/icon-mappings';
 
 interface CollectionDetailFooterProps {
@@ -105,7 +106,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
             ? `Cannot reject - ${validatedCount} test${validatedCount > 1 ? 's' : ''} already validated`
             : 'Sample collected successfully'
         }
-        statusClassName={hasValidatedTests ? 'text-amber-600' : 'text-gray-500'}
+        statusClassName={hasValidatedTests ? semanticColors.warning.valueHigh : 'text-gray-500'}
       >
         {/* Print button - functionality handled by parent component */}
         {hasValidatedTests ? (

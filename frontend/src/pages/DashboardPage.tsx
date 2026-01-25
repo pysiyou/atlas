@@ -15,6 +15,7 @@ import { Card, SectionContainer, Badge, Icon } from '@/shared/ui';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 export const Dashboard: React.FC = () => {
   const { currentUser } = useAuth();
@@ -64,8 +65,8 @@ export const Dashboard: React.FC = () => {
     {
       label: 'Revenue Today',
       value: formatCurrency(todayRevenue),
-      icon: <Icon name={ICONS.dataFields.dollarSign} className="w-8 h-8 text-orange-600" />,
-      color: 'bg-orange-50',
+      icon: <Icon name={ICONS.dataFields.dollarSign} className={`w-8 h-8 ${semanticColors.warning.icon}`} />,
+      color: semanticColors.warning.backgroundLight,
     },
   ];
 

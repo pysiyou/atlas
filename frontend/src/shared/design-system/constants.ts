@@ -4,6 +4,8 @@
  * Centralized design tokens for consistent styling across the application.
  */
 
+import { semanticColors } from './tokens/colors';
+
 /**
  * Spacing constants for consistent gaps and padding
  */
@@ -75,7 +77,7 @@ export const COLORS = {
   },
   priority: {
     urgent: 'text-red-600 bg-red-50',
-    stat: 'text-orange-600 bg-orange-50',
+    stat: `${semanticColors.warning.valueHigh} ${semanticColors.warning.backgroundLight}`,
     routine: 'text-gray-600 bg-gray-50',
   },
   interactive: {

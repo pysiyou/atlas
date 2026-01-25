@@ -8,6 +8,7 @@ import { Icon } from '@/shared/ui';
 import type { IconName } from '@/shared/ui/Icon';
 import type { VitalSigns } from '@/types/patient';
 import { ICONS } from '@/utils/icon-mappings';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 export interface VitalSignsDisplayProps {
   vitalSigns?: VitalSigns;
@@ -111,7 +112,7 @@ const getStatusColors = (status: VitalStatus) => {
       return {
         bg: 'bg-amber-50',
         border: 'border-amber-200',
-        icon: 'text-amber-600',
+        icon: semanticColors.warning.icon,
         value: 'text-amber-700',
         dot: 'bg-amber-500',
       };

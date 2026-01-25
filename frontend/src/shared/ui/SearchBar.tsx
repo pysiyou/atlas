@@ -6,6 +6,7 @@
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
+import { getInputClasses } from '@/shared/design-system/tokens/components/input';
 
 interface SearchBarProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   onSearch?: (value: string) => void;
@@ -39,7 +40,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </div>
       <input
         type="text"
-        className={`w-full pl-9 pr-4 ${sizeClasses} bg-white text-gray-700 font-medium border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 placeholder:text-gray-500 placeholder:font-normal`}
+        className={`${getInputClasses(false, true, 'left', size === 'sm' ? 'sm' : 'md', false)} pl-9 pr-4 ${sizeClasses} font-medium focus:border-sky-500 placeholder:text-gray-500 placeholder:font-normal`}
         {...props}
         onChange={handleChange}
       />

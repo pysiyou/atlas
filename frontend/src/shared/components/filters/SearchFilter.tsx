@@ -9,6 +9,7 @@ import React from 'react';
 import { Icon } from '@/shared/ui';
 import type { IconName } from '@/shared/ui/Icon';
 import { ICONS } from '@/utils/icon-mappings';
+import { getInputClasses } from '@/shared/design-system/tokens/components/input';
 
 export interface SearchFilterProps {
   /** Current search value */
@@ -57,7 +58,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full pl-10 pr-10 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+        className={`${getInputClasses(false, true, 'left', 'md', false)} pl-10 pr-10 transition-all`}
       />
       {value && (
         <button

@@ -12,6 +12,7 @@ import { SectionContainer, Badge, Avatar } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { OrderTest, PaymentStatus } from '@/types';
+import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 // ============================================================================
 // OrderCardHeader Component (Simple header for OrderCard)
@@ -163,7 +164,7 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
                         <span
                           className={`font-medium ${
                             result.status === 'high' || result.status === 'low'
-                              ? 'text-orange-600'
+                              ? semanticColors.warning.valueHigh
                               : result.status === 'critical'
                                 ? 'text-red-600'
                                 : 'text-gray-900'
