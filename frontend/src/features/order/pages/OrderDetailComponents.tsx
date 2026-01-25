@@ -12,7 +12,7 @@ import { SectionContainer, Badge, Avatar } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { OrderTest, PaymentStatus } from '@/types';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
+import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 // ============================================================================
 // OrderCardHeader Component (Simple header for OrderCard)
@@ -100,7 +100,7 @@ export const BillingSummaryCard: React.FC<BillingSummaryCardProps> = ({
         </div>
         <div className="border-t pt-2 flex justify-between">
           <span className="font-semibold text-gray-900">Total:</span>
-          <span className="font-bold text-xl text-sky-600">{formatCurrency(totalPrice)}</span>
+          <span className={`font-bold text-xl ${brandColors.primary.icon}`}>{formatCurrency(totalPrice)}</span>
         </div>
         <div className="flex justify-between items-center pt-2">
           <span className="text-sm text-gray-600">Payment Status:</span>
@@ -147,7 +147,7 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-medium text-sky-600">
+                  <div className={`font-medium ${brandColors.primary.icon}`}>
                     {formatCurrency(test.priceAtOrder)}
                   </div>
                   <Badge variant={test.status} size="sm" />
@@ -166,7 +166,7 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
                             result.status === 'high' || result.status === 'low'
                               ? semanticColors.warning.valueHigh
                               : result.status === 'critical'
-                                ? 'text-red-600'
+                                ? semanticColors.danger.icon
                                 : 'text-gray-900'
                           }`}
                         >
@@ -184,9 +184,9 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
               )}
 
               {test.validationNotes && (
-                <div className="mt-2 p-2 bg-sky-50 rounded text-sm">
-                  <span className="font-medium text-sky-900">Validation Notes: </span>
-                  <span className="text-sky-800">{test.validationNotes}</span>
+                <div className={`mt-2 p-2 ${brandColors.primary.backgroundLight} rounded text-sm`}>
+                  <span className={`font-medium ${brandColors.primary.textOnLight}`}>Validation Notes: </span>
+                  <span className={brandColors.primary.textLight}>{test.validationNotes}</span>
                 </div>
               )}
             </div>

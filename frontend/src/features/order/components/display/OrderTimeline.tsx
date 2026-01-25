@@ -9,7 +9,7 @@ import {
   type StepProgress,
 } from '../../utils/orderTimelineUtils';
 import type { Order } from '@/types';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
+import { semanticColors, brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
 
 interface OrderTimelineProps {
   order: Order;
@@ -35,9 +35,9 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) =>
   // Fully complete - green checkmark (no animation)
   if (isFullyComplete) {
     return (
-      <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+      <div className={`w-5 h-5 rounded-full ${semanticColors.success.background} flex items-center justify-center`}>
         <svg
-          className="w-3 h-3 text-white"
+          className={`w-3 h-3 ${semanticColors.success.text}`}
           fill="none"
           stroke="currentColor"
           strokeWidth="2.5"
@@ -53,8 +53,8 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) =>
   // This applies to ALL incomplete steps that have started (payment, sample collection, etc.)
   if (showPulsingDot) {
     return (
-      <div className="w-5 h-5 rounded-full border-2 border-sky-500 bg-sky-50 flex items-center justify-center">
-        <div className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
+      <div className={`w-5 h-5 rounded-full border-2 ${brandColors.primary.border} ${brandColors.primary.backgroundLight} flex items-center justify-center`}>
+        <div className={`w-2 h-2 rounded-full ${brandColors.primary.background} animate-pulse`} />
       </div>
     );
   }
@@ -62,8 +62,8 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) =>
   // Blocked state (not started) - lock icon (payment required)
   if (isBlocked) {
     return (
-      <div className="w-5 h-5 rounded-full border-2 border-amber-300 bg-amber-50 flex items-center justify-center">
-        <svg className="w-2.5 h-2.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+      <div className={`w-5 h-5 rounded-full border-2 ${semanticColors.warning.borderLight} ${semanticColors.warning.backgroundLight} flex items-center justify-center`}>
+        <svg className={`w-2.5 h-2.5 ${semanticColors.warning.icon}`} fill="currentColor" viewBox="0 0 20 20">
           <path
             fillRule="evenodd"
             d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
@@ -75,7 +75,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) =>
   }
 
   // Not started - empty circle
-  return <div className="w-5 h-5 rounded-full border-2 border-gray-300 bg-white" />;
+  return <div className={`w-5 h-5 rounded-full border-2 ${neutralColors.border.default} ${neutralColors.white}`} />;
 };
 
 interface TestDotsProps {
@@ -115,8 +115,8 @@ const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
             key={index}
             className={`w-2 h-2 rounded-full transition-all duration-200 ${
               isCompleted
-                ? 'bg-sky-500 ring-2 ring-sky-500/30'
-                : 'bg-transparent ring-1 ring-sky-300'
+                ? `${brandColors.primary.background} ring-2 ring-sky-500/30`
+                : `bg-transparent ring-1 ${brandColors.primary.border}`
             }`}
           />
         );
@@ -225,15 +225,15 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
         // Determine connecting line color
         const getLineColor = () => {
           if (progress.isFullyComplete && nextProgress?.isStarted) {
-            return 'bg-green-400'; // Using success color for completed (specific shade for timeline)
+            return semanticColors.success.background; // Using success color for completed
           }
           if (progress.isFullyComplete) {
-            return 'bg-gray-300';
+            return neutralColors.border.default;
           }
           if (blocked) {
-            return 'bg-yellow-200'; // Warning color for blocked
+            return semanticColors.warning.backgroundLight; // Warning color for blocked
           }
-          return 'bg-gray-200';
+          return neutralColors.border.default;
         };
 
         // Show test dots for test-based steps (not for order-level steps like created, paid, delivered)

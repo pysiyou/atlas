@@ -6,6 +6,7 @@ import type { OrderPaymentDetails } from '../../types/types';
 import { PaymentButton } from '../display/PaymentButton';
 import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 import { mobileCard } from '@/shared/design-system/tokens/components/card';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * PaymentCard Component
@@ -40,7 +41,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
           size="xs"
         />
         {/* Total price on top right */}
-        <div className="font-medium text-sky-600 text-lg">{formatCurrency(item.totalPrice)}</div>
+        <div className={`font-medium ${brandColors.primary.icon} text-lg`}>{formatCurrency(item.totalPrice)}</div>
       </div>
 
       {/* Tests list: Show at most 2 tests, third line shows remaining count */}
