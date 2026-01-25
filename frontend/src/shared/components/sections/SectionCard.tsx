@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { Icon } from '@/shared/ui';
 import type { IconName } from '@/shared/ui/Icon';
 import { ICONS } from '@/utils/icon-mappings';
+import { sectionCard } from '@/shared/design-system/tokens/components/shared';
 
 export interface SectionCardProps {
   /** Section title */
@@ -59,17 +60,15 @@ export const SectionCard: React.FC<SectionCardProps> = ({
   };
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${className}`}>
+    <div className={`${sectionCard.container} ${className}`}>
       {/* Header */}
       <div
-        className={`flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50 ${
-          collapsible ? 'cursor-pointer hover:bg-gray-100 transition-colors' : ''
-        }`}
+        className={`${sectionCard.header} ${collapsible ? sectionCard.headerCollapsible : ''}`}
         onClick={toggleExpanded}
       >
         <div className="flex items-center gap-2">
-          {icon && <Icon name={icon} className="w-4 h-4 text-gray-500" />}
-          <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+          {icon && <Icon name={icon} className={sectionCard.icon} />}
+          <h3 className={sectionCard.title}>{title}</h3>
         </div>
         <div className="flex items-center gap-2">
           {headerRight}
@@ -83,7 +82,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
       </div>
 
       {/* Content */}
-      {(!collapsible || isExpanded) && <div className={`p-4 ${contentClassName}`}>{children}</div>}
+      {(!collapsible || isExpanded) && <div className={`${sectionCard.content} ${contentClassName}`}>{children}</div>}
     </div>
   );
 };

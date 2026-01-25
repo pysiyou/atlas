@@ -13,3 +13,4 @@ export * from './modal';
 export * from './tabs';
 export * from './layout';
 export * from './table';
+export * from './shared';

@@ -6,6 +6,9 @@
  */
 
 import React from 'react';
+import { filterComponents, brandColors } from '@/shared/design-system/tokens/components/shared';
+import { fontSize } from '@/shared/design-system/tokens/typography';
+import { neutralColors } from '@/shared/design-system/tokens/colors';
 
 export interface RangeFilterProps {
   /** Filter label */
@@ -75,11 +78,11 @@ export const RangeFilter: React.FC<RangeFilterProps> = ({
     <div className={`space-y-3 ${className}`}>
       {/* Header with label and reset */}
       <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-gray-700">{label}</label>
+        <label className={filterComponents.label}>{label}</label>
         {!isDefault && (
           <button
             onClick={handleReset}
-            className="text-xs text-sky-600 hover:text-sky-700 transition-colors cursor-pointer"
+            className={`${fontSize.xs} ${brandColors.primary.icon} hover:${brandColors.primary.textOnLight} transition-colors cursor-pointer`}
           >
             Reset
           </button>
@@ -87,7 +90,7 @@ export const RangeFilter: React.FC<RangeFilterProps> = ({
       </div>
 
       {/* Value display */}
-      <div className="flex items-center justify-between text-sm text-gray-900">
+      <div className={`flex items-center justify-between ${fontSize.sm} ${neutralColors.text.primary}`}>
         <span className="font-medium">
           {minValue} {unit}
         </span>

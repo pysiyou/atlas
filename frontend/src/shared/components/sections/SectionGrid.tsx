@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { sectionGrid } from '@/shared/design-system/tokens/components/shared';
 
 export interface SectionGridProps {
   /** Number of columns (1-4) */
@@ -18,18 +19,8 @@ export interface SectionGridProps {
   className?: string;
 }
 
-const GAP_CLASSES = {
-  sm: 'gap-2',
-  md: 'gap-4',
-  lg: 'gap-6',
-} as const;
-
-const COLUMN_CLASSES = {
-  1: 'grid-cols-1',
-  2: 'grid-cols-1 md:grid-cols-2',
-  3: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-  4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
-} as const;
+const GAP_CLASSES = sectionGrid.gap;
+const COLUMN_CLASSES = sectionGrid.columns;
 
 /**
  * SectionGrid component

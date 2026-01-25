@@ -8,6 +8,7 @@
 import React from 'react';
 import { Badge } from '@/shared/ui';
 import type { BadgeVariant } from '@/shared/ui/Badge';
+import { filterComponents } from '@/shared/design-system/tokens/components/shared';
 
 export interface StatusFilterProps<T extends string> {
   /** Filter label */
@@ -68,20 +69,20 @@ export function StatusFilter<T extends string>({
     <div className={`space-y-2 ${className}`}>
       {/* Header with label and actions */}
       <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-gray-700">{label}</label>
+        <label className={filterComponents.label}>{label}</label>
         <div className="flex items-center gap-2">
           <button
             onClick={selectAll}
             disabled={allSelected}
-            className="text-xs text-sky-600 hover:text-sky-700 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+            className={filterComponents.link}
           >
             All
           </button>
-          <span className="text-gray-300">|</span>
+          <span className={filterComponents.separator}>|</span>
           <button
             onClick={clearAll}
             disabled={noneSelected}
-            className="text-xs text-sky-600 hover:text-sky-700 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+            className={filterComponents.link}
           >
             None
           </button>
@@ -115,7 +116,7 @@ export function StatusFilter<T extends string>({
 
       {/* Selection count */}
       {!noneSelected && (
-        <div className="text-xs text-gray-500">
+        <div className={filterComponents.resultCount}>
           {selected.length} of {options.length} selected
         </div>
       )}

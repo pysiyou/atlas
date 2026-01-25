@@ -8,6 +8,7 @@
 import React, { useState } from 'react';
 import { Icon } from '@/shared/ui';
 import { ICONS } from '@/utils/icon-mappings';
+import { filterComponents } from '@/shared/design-system/tokens/components/shared';
 
 export interface FilterBarProps {
   /** Filter components to display */
@@ -50,13 +51,13 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   };
 
   return (
-    <div className={`border-b border-gray-200 bg-white ${className}`}>
+    <div className={`${filterComponents.bar.container} ${className}`}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+      <div className={filterComponents.bar.header}>
         <div className="flex items-center gap-3">
-          <h3 className="text-sm font-medium text-gray-900">Filters</h3>
+          <h3 className={filterComponents.bar.title}>Filters</h3>
           {resultCount !== undefined && (
-            <span className="text-xs text-gray-500">
+            <span className={filterComponents.resultCount}>
               {resultCount.toLocaleString()} result{resultCount !== 1 ? 's' : ''}
             </span>
           )}
@@ -65,7 +66,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {onReset && (
             <button
               onClick={onReset}
-              className="text-xs text-sky-600 hover:text-sky-700 font-medium transition-colors cursor-pointer"
+              className={filterComponents.bar.resetButton}
             >
               Reset All
             </button>
@@ -73,7 +74,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {collapsible && (
             <button
               onClick={toggleExpanded}
-              className="p-1 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+              className={filterComponents.bar.toggleButton}
               aria-label={isExpanded ? 'Collapse filters' : 'Expand filters'}
             >
               <Icon name={isExpanded ? ICONS.actions.chevronUp : ICONS.actions.chevronDown} className="w-4 h-4" />
@@ -83,7 +84,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       </div>
 
       {/* Filter content */}
-      {(!collapsible || isExpanded) && <div className="p-4 space-y-4">{children}</div>}
+      {(!collapsible || isExpanded) && <div className={filterComponents.bar.content}>{children}</div>}
     </div>
   );
 };
