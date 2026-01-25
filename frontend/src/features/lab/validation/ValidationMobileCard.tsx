@@ -106,10 +106,10 @@ function ResultGrid({
             key={key}
             className="grid grid-cols-[1fr_auto] items-baseline whitespace-nowrap"
           >
-            <span className="text-[10px] text-gray-500" title={key}>
+            <span className="text-xs text-gray-500" title={key}>
               {key}:
             </span>
-            <span className={`text-[10px] font-medium text-left ${valueColor}`}>
+            <span className={`text-xs font-medium text-left ${valueColor}`}>
               {resultValue}
               {unit && <span className="text-gray-500 font-normal ml-0.5 text-[9px]">{unit}</span>}
             </span>
@@ -117,7 +117,7 @@ function ResultGrid({
         );
       })}
       {remainingCount > 0 && (
-        <div className="text-[10px] text-gray-500 col-span-full pt-0.5">
+        <div className="text-xs text-gray-500 col-span-full pt-0.5">
           +{remainingCount} more
         </div>
       )}
@@ -152,7 +152,6 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
   if (!test.results) return null;
 
   const patientName = getPatientName(test.patientId);
-  const resultCount = Object.keys(test.results).length;
   const hasFlags = test.flags && test.flags.length > 0;
   const isRetest = test.isRetest === true;
   const hasRejectionHistory = test.resultRejectionHistory && test.resultRejectionHistory.length > 0;
