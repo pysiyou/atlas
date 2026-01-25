@@ -6,6 +6,7 @@
 import React from 'react';
 import { Icon } from '@/shared/ui';
 import { ICONS } from '@/utils/icon-mappings';
+import { authColors } from '@/shared/design-system/tokens/colors';
 
 interface LoginBrandingPanelProps {
   isVisible: boolean;
@@ -43,23 +44,23 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
           {/* Logo container with matte finish */}
           <div className="relative">
             <div
-              className="absolute inset-0 rounded-lg bg-[#4a6670] blur-xl opacity-30"
+              className={`absolute inset-0 rounded-lg ${authColors.accentBlur} blur-xl opacity-30`}
               style={{ animation: 'pulse-ring 3s ease-in-out infinite' }}
             />
-            <div className="relative w-16 h-16 bg-[#3d5a66] rounded-lg flex items-center justify-center shadow-lg shadow-black/20 transform hover:scale-105 transition-transform duration-300">
+            <div className={`relative w-16 h-16 ${authColors.accent} rounded-lg flex items-center justify-center shadow-lg shadow-black/20 transform hover:scale-105 transition-transform duration-300`}>
               <Icon name={ICONS.ui.appLogo} className="w-9 h-9" />
             </div>
           </div>
           <div>
-            <h1 className="font-display text-5xl text-[#e8eaed] tracking-tight">Atlas</h1>
-            <p className="font-body text-[#7a9ba8] text-sm tracking-widest uppercase mt-1">
+            <h1 className={`font-display text-5xl ${authColors.text.primary} tracking-tight`}>Atlas</h1>
+            <p className={`font-body ${authColors.text.light} text-sm tracking-widest uppercase mt-1`}>
               Clinical Labs
             </p>
           </div>
         </div>
 
         {/* Tagline */}
-        <p className="font-body text-xl text-[#9ca3af] leading-relaxed max-w-md">
+        <p className={`font-body text-xl ${authColors.text.tagline} leading-relaxed max-w-md`}>
           Next-generation laboratory information system built for precision, speed, and seamless
           clinical workflows.
         </p>
@@ -70,20 +71,20 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
         {features.map((feature, index) => (
           <div
             key={feature.title}
-            className={`group flex items-start gap-4 p-4 rounded-xl bg-[#232938] border border-[#2d3548] hover:bg-[#283040] hover:border-[#3d4760] transition-all duration-300 ${
+            className={`group flex items-start gap-4 p-4 rounded-xl ${authColors.featureCard.background} ${authColors.featureCard.border} ${authColors.featureCard.backgroundHover} ${authColors.featureCard.borderHover} transition-all duration-300 ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
             }`}
             style={{ transitionDelay: `${400 + index * 100}ms` }}
           >
             {/* Feature icon */}
-            <div className="w-10 h-10 rounded-lg bg-[#2d4550] border border-[#3d5a66] flex items-center justify-center flex-shrink-0 group-hover:bg-[#3a5663] transition-colors duration-300">
-              <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-[#7a9ba8]" />
+            <div className={`w-10 h-10 rounded-lg ${authColors.featureCard.iconBackground} ${authColors.featureCard.iconBorder} flex items-center justify-center flex-shrink-0 ${authColors.featureCard.iconBackgroundHover} transition-colors duration-300`}>
+              <Icon name={ICONS.actions.checkCircle} className={`w-5 h-5 ${authColors.text.light}`} />
             </div>
             <div>
-              <h3 className="font-body font-semibold text-[#e8eaed] text-[15px] leading-tight">
+              <h3 className={`font-body font-semibold ${authColors.text.primary} text-[15px] leading-tight`}>
                 {feature.title}
               </h3>
-              <p className="font-body text-sm text-[#8892a6] mt-1 leading-relaxed">
+              <p className={`font-body text-sm ${authColors.text.tertiary} mt-1 leading-relaxed`}>
                 {feature.description}
               </p>
             </div>
@@ -92,20 +93,20 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
       </div>
 
       {/* Trust indicators */}
-      <div className="pt-6 border-t border-[#2d3548] w-full">
+      <div className={`pt-6 border-t ${authColors.border.default} w-full`}>
         <div className="flex items-center gap-3">
           <div className="flex -space-x-2">
             {[1, 2, 3].map(i => (
               <div
                 key={i}
-                className="w-8 h-8 rounded-full bg-[#3a4556] border-2 border-[#1a1f2e] flex items-center justify-center"
+                className={`w-8 h-8 rounded-full ${authColors.userBadge.background} ${authColors.userBadge.border} flex items-center justify-center`}
               >
-                <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-[#8892a6]" />
+                <Icon name={ICONS.dataFields.user} className={`w-4 h-4 ${authColors.userBadge.icon}`} />
               </div>
             ))}
           </div>
-          <p className="font-body text-sm text-[#8892a6]">
-            Trusted by <span className="text-[#7a9ba8] font-semibold">500+</span> healthcare
+          <p className={`font-body text-sm ${authColors.text.tertiary}`}>
+            Trusted by <span className={`${authColors.text.light} font-semibold`}>500+</span> healthcare
             professionals
           </p>
         </div>

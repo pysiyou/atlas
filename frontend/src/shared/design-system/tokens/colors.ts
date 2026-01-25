@@ -193,22 +193,76 @@ export const neutralColors = {
 
 /**
  * Auth Theme Colors - For authentication pages
- * Replaces hardcoded hex colors in LoginFormCard and LoginBrandingPanel
+ * Replaces all hardcoded hex colors in auth components
+ * Covers: LoginForm, LoginFormCard, LoginBrandingPanel, LoginBackground
  */
 export const authColors = {
+  // Background colors
   background: 'bg-[#1a1f2e]',
   backgroundSecondary: 'bg-[#232938]',
+  backgroundTertiary: 'bg-[#1e242f]',
+  backgroundHover: 'hover:bg-[#283040]',
+  
+  // Accent colors
   accent: 'bg-[#3d5a66]',
-  accentHover: 'hover:bg-[#4a6b7a]',
+  accentHover: 'hover:bg-[#4a6b78]',
+  accentMedium: 'bg-[#4a6670]',
+  accentLight: 'bg-[#7a9ba8]',
+  accentBlur: 'bg-[#4a6670]', // For blur effects
+  
+  // Text colors
   text: {
     primary: 'text-[#e8eaed]',
-    secondary: 'text-[#b8bcc4]',
-    muted: 'text-[#8a8f9a]',
+    secondary: 'text-[#b0b8c8]',
+    tertiary: 'text-[#8892a6]',
+    muted: 'text-[#6b7280]',
+    light: 'text-[#7a9ba8]',
+    dark: 'text-[#5c6478]',
+    placeholder: 'placeholder-[#5c6478]',
+    tagline: 'text-[#9ca3af]',
   },
+  
+  // Border colors
   border: {
     default: 'border-[#2d3548]',
     light: 'border-[#3a4455]',
+    hover: 'hover:border-[#3d4760]',
+    focus: 'focus:border-[#4a6670]',
+    accent: 'border-[#3d5a66]',
+    accentLight: 'border-[#2d4550]',
+    accentHover: 'border-[#3a5663]',
   },
+  
+  // Error state colors (for login errors)
+  error: {
+    background: 'bg-[#3d2a2e]',
+    backgroundLight: 'bg-[#4a3035]',
+    border: 'border-[#5a3a40]',
+    text: 'text-[#d4989d]',
+    icon: 'text-[#c9787e]',
+  },
+  
+  // Feature card colors
+  featureCard: {
+    background: 'bg-[#232938]',
+    backgroundHover: 'hover:bg-[#283040]',
+    border: 'border-[#2d3548]',
+    borderHover: 'hover:border-[#3d4760]',
+    iconBackground: 'bg-[#2d4550]',
+    iconBackgroundHover: 'hover:bg-[#3a5663]',
+    iconBorder: 'border-[#3d5a66]',
+  },
+  
+  // User badge colors
+  userBadge: {
+    background: 'bg-[#3a4556]',
+    border: 'border-2 border-[#1a1f2e]',
+    icon: 'text-[#8892a6]',
+  },
+  
+  // Focus ring colors
+  focusRing: 'focus:ring-[#4a6670]/50',
+  focusRingOffset: 'focus:ring-offset-[#232938]',
 } as const;
 
 /**
