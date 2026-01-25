@@ -9,6 +9,7 @@ import { formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Order, Invoice } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
+import { brandColors } from '@/shared/design-system/tokens/colors';
 
 export interface BillingSummarySectionProps {
   order: Order;
@@ -91,7 +92,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
           <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
             Total
           </span>
-          <span className="text-sm font-bold text-sky-500 tabular-nums">
+          <span className={`text-sm font-bold ${brandColors.primary.icon} tabular-nums`}>
             {formatCurrency(activeTotal)}
           </span>
         </div>
