@@ -52,7 +52,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
             >
               <Icon
                 name={method.icon as IconName}
-                className={`w-7 h-7 shrink-0 ${isSelected ? 'text-sky-600' : 'text-gray-400'}`}
+                className={`w-7 h-7 shrink-0 ${isSelected ? brandColors.primary.icon : 'text-gray-400'}`}
               />
               <span
                 className={`flex-1 text-xs font-medium text-left ${
