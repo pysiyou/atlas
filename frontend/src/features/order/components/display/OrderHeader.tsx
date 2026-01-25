@@ -13,6 +13,7 @@ export interface OrderHeaderProps {
   invoice: Invoice | null;
   isLarge: boolean;
   onViewInvoice: () => void;
+  onEdit?: () => void;
 }
 
 export const OrderHeader: React.FC<OrderHeaderProps> = ({
@@ -20,6 +21,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
   invoice,
   isLarge,
   onViewInvoice,
+  onEdit,
 }) => {
   return (
     <div className="flex items-center justify-between mb-4 shrink-0 flex-wrap gap-3">
@@ -34,6 +36,16 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
       >
         {isLarge ? (
           <>
+            {onEdit && (
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<Icon name="edit" className="w-4 h-4" />}
+                onClick={onEdit}
+              >
+                Edit
+              </Button>
+            )}
             <Button
               variant="print"
               size="sm"
@@ -56,6 +68,15 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
           </>
         ) : (
           <>
+            {onEdit && (
+              <IconButton
+                variant="secondary"
+                size="sm"
+                title="Edit Order"
+                icon={<Icon name="edit" className="w-4 h-4" />}
+                onClick={onEdit}
+              />
+            )}
             <IconButton
               variant="print"
               size="sm"

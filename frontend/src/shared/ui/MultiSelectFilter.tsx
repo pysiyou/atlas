@@ -218,7 +218,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'inline-flex items-center gap-2 px-3 py-1.5 bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] h-[34px]',
+            'inline-flex items-center gap-2 px-3 py-2.5 bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px]',
             isOpen
               ? 'border-sky-500 ring-2 ring-sky-500/20'
               : 'border-gray-300 hover:border-gray-400',

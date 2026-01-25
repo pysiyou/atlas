@@ -77,6 +77,7 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
         onChange={e => onClinicalNotesChange(e.target.value)}
         placeholder="Clinical indication or reason for testing..."
         helperText="Include relevant symptoms, diagnosis, or reason for testing"
+        icon="pen"
       />
     </div>
   );

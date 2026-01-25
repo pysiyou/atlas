@@ -13,6 +13,7 @@ import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
 import { OrderTableCard } from '../components/cards/OrderTableCard';
 import { PaymentPopover } from '@/features/payment/components/filters';
+import { ModalType } from '@/shared/context/ModalContext';
 
 /**
  * Create order table configuration with full, compact, and card views
@@ -20,6 +21,7 @@ import { PaymentPopover } from '@/features/payment/components/filters';
  * @param navigate - React Router navigate function
  * @param getPatientNameFn - Function to get patient name from patientId
  * @param getTestNameFn - Function to get test name from testCode
+ * @param openModalFn - Function to open modal (optional, for edit action)
  * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
  */
 // Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
@@ -27,7 +29,8 @@ import { PaymentPopover } from '@/features/payment/components/filters';
 export const createOrderTableConfig = (
   navigate: NavigateFunction,
   getPatientNameFn: (patientId: number | string) => string,
-  getTestNameFn: (testCode: string) => string
+  getTestNameFn: (testCode: string) => string,
+  openModalFn?: (type: string, props?: Record<string, unknown>) => void
 ): TableViewConfig<Order> => {
   // Shared render functions
   const renderOrderId = (order: Order) => (
@@ -82,39 +85,51 @@ export const createOrderTableConfig = (
     <div className="text-xs text-gray-500 truncate">{formatDate(order.orderDate)}</div>
   );
 
-  const renderActions = (order: Order) => (
-    <TableActionMenu>
-      <TableActionItem
-        label="View Details"
-        icon={<Icon name="eye" className="w-4 h-4" />}
-        onClick={() => navigate(`/orders/${order.orderId}`)}
-      />
-      <TableActionItem
-        label="View Patient"
-        icon={<Icon name="user" className="w-4 h-4" />}
-        onClick={() => navigate(`/patients/${order.patientId}`)}
-      />
-      {order.paymentStatus === 'unpaid' && (
-        /* Stop propagation so menu stays open when opening payment popover */
-        <div onClick={e => e.stopPropagation()} className="w-full">
-          <PaymentPopover
-            order={order}
-            trigger={
-              <button
-                type="button"
-                className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-50 transition-colors cursor-pointer text-gray-700"
-              >
-                <span className="inline-flex w-5 h-5 shrink-0 items-center justify-center text-gray-500">
-                  <Icon name="wallet" className="w-4 h-4" />
-                </span>
-                <span className="flex-1 min-w-0">Payment</span>
-              </button>
-            }
+  const renderActions = (order: Order) => {
+    // Orders can be edited if they are in 'ordered' status (not yet in progress)
+    const canEdit = order.overallStatus === 'ordered';
+    
+    return (
+      <TableActionMenu>
+        <TableActionItem
+          label="View Details"
+          icon={<Icon name="eye" className="w-4 h-4" />}
+          onClick={() => navigate(`/orders/${order.orderId}`)}
+        />
+        {canEdit && openModalFn && (
+          <TableActionItem
+            label="Edit Order"
+            icon={<Icon name="edit" className="w-4 h-4" />}
+            onClick={() => openModalFn(ModalType.NEW_ORDER, { order, mode: 'edit' })}
           />
-        </div>
-      )}
-    </TableActionMenu>
-  );
+        )}
+        <TableActionItem
+          label="View Patient"
+          icon={<Icon name="user" className="w-4 h-4" />}
+          onClick={() => navigate(`/patients/${order.patientId}`)}
+        />
+        {order.paymentStatus === 'unpaid' && (
+          /* Stop propagation so menu stays open when opening payment popover */
+          <div onClick={e => e.stopPropagation()} className="w-full">
+            <PaymentPopover
+              order={order}
+              trigger={
+                <button
+                  type="button"
+                  className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-50 transition-colors cursor-pointer text-gray-700"
+                >
+                  <span className="inline-flex w-5 h-5 shrink-0 items-center justify-center text-gray-500">
+                    <Icon name="wallet" className="w-4 h-4" />
+                  </span>
+                  <span className="flex-1 min-w-0">Payment</span>
+                </button>
+              }
+            />
+          </div>
+        )}
+      </TableActionMenu>
+    );
+  };
 
   return {
     fullColumns: [

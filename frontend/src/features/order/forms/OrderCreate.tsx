@@ -1,11 +1,12 @@
 import { OrderCreateLayout } from './OrderCreateLayout';
 import React from 'react';
-import { useCreateOrderController } from '../hooks/useCreateOrderController';
+import { useOrderController } from '../hooks/useOrderController';
+import type { Order } from '@/types';
 
 /**
  * CreateOrder
  *
- * Order creation screen for `/orders/new`.
+ * Order creation/editing screen for `/orders/new` or modal.
  * Styled to match the patient form layout conventions:
  * - Slate background content area
  * - Padded, scrollable main region
@@ -23,14 +24,20 @@ export interface CreateOrderProps {
   onClose?: () => void;
   /** Optional patient ID to preselect (overrides URL search param when provided). */
   initialPatientId?: string;
+  /** Mode: 'create' for new orders, 'edit' for existing orders */
+  mode?: 'create' | 'edit';
+  /** Existing order data when editing */
+  order?: Order;
 }
 
 export const CreateOrder: React.FC<CreateOrderProps> = ({
   isModal = false,
   onClose,
   initialPatientId,
+  mode = 'create',
+  order,
 }) => {
-  const c = useCreateOrderController({ isModal, onClose, initialPatientId });
+  const c = useOrderController({ isModal, onClose, initialPatientId, mode, existingOrder: order });
 
   return (
     <OrderCreateLayout
@@ -66,6 +73,8 @@ export const CreateOrder: React.FC<CreateOrderProps> = ({
       onReferringPhysicianChange={c.setReferringPhysician}
       onPriorityChange={c.setPriority}
       onClinicalNotesChange={c.setClinicalNotes}
+      mode={mode}
+      patientReadOnly={c.patientReadOnly}
     />
   );
 };

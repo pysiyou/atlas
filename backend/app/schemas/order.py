@@ -86,10 +86,11 @@ class OrderCreate(BaseModel):
 
 
 class OrderUpdate(BaseModel):
-    priority: PriorityLevel | None = None
-    referringPhysician: str | None = None
-    clinicalNotes: str | None = None
-    specialInstructions: list[str] | None = None
+  priority: PriorityLevel | None = None
+  referringPhysician: str | None = None
+  clinicalNotes: str | None = None
+  specialInstructions: list[str] | None = None
+  tests: list[OrderTestCreate] | None = None  # Optional list of tests to update (add/remove)
 
 
 class OrderResponse(BaseModel):

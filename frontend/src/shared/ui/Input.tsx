@@ -52,7 +52,7 @@ export const Input: React.FC<InputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xxs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+            className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
           >
             {label}
             {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -126,7 +126,7 @@ export const Textarea: React.FC<TextareaProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xxs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+            className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
           >
             {label}
             {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -203,7 +203,7 @@ export const Select: React.FC<SelectProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xxs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+            className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
           >
             {label}
             {props.required && <span className="text-red-500 ml-1">*</span>}

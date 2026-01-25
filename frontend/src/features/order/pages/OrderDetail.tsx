@@ -7,6 +7,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks';
 import { useOrder, usePatient, useTestCatalog, usePaymentsByOrder } from '@/hooks/queries';
+import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { Invoice } from '@/types';
 import { OrderHeader } from '../components/display/OrderHeader';
 import {
@@ -19,6 +20,7 @@ export const OrderDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
+  const { openModal } = useModal();
 
   // Use TanStack Query hooks
   const { order, isLoading: orderLoading } = useOrder(id);
@@ -62,6 +64,12 @@ export const OrderDetail: React.FC = () => {
   const handleViewInvoice = () => {
     // Invoice functionality stubbed until API is ready. TODO: Implement when invoice API exists.
   };
+  const handleEdit = () => {
+    // Only allow editing orders in 'ordered' status
+    if (order.overallStatus === 'ordered') {
+      openModal(ModalType.NEW_ORDER, { order, mode: 'edit' });
+    }
+  };
 
   // Render appropriate layout based on screen size
   const renderContent = () => {
@@ -94,6 +102,7 @@ export const OrderDetail: React.FC = () => {
         invoice={invoice}
         isLarge={isLarge}
         onViewInvoice={handleViewInvoice}
+        onEdit={order.overallStatus === 'ordered' ? handleEdit : undefined}
       />
 
       {renderContent()}

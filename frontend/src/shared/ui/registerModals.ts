@@ -9,7 +9,7 @@ import { registerModal } from './modalRegistry';
 import { CollectionDetailModal } from '@/features/lab/collection/CollectionDetailModal';
 import { EntryDetailModal } from '@/features/lab/entry/EntryDetailModal';
 import { ValidationDetailModal } from '@/features/lab/validation/ValidationDetailModal';
-import { OrderCreateModal } from '@/features/order/modals/OrderCreateModal';
+import { EditOrderModal } from '@/features/order/modals/EditOrderModal';
 
 import type { ContainerType, SampleDisplay, Test, TestWithContext } from '@/types';
 
@@ -111,10 +111,19 @@ registerModal(ModalType.VALIDATION_DETAIL, ValidationDetailModal, (props, basePr
   };
 });
 
-// Register New Order (Create Order) Modal
-registerModal(ModalType.NEW_ORDER, OrderCreateModal, (props, baseProps) => {
-  const { patientId } = props as { patientId?: string };
-  return { ...baseProps, patientId };
+// Register New Order / Edit Order Modal
+registerModal(ModalType.NEW_ORDER, EditOrderModal, (props, baseProps) => {
+  const { patientId, order, mode } = props as {
+    patientId?: string;
+    order?: unknown;
+    mode?: 'create' | 'edit';
+  };
+  return {
+    ...baseProps,
+    patientId,
+    order: order as typeof order,
+    mode: mode || (order ? 'edit' : 'create'),
+  };
 });
 
 // Export a function to ensure this file is imported

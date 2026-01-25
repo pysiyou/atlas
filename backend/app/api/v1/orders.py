@@ -181,7 +181,13 @@ def update_order(
     current_user: User = Depends(require_receptionist)
 ):
     """
-    Update order information
+    Update order information, including tests.
+    
+    When tests are provided:
+    - New tests are added (creates OrderTest entries)
+    - Tests not in the list are removed (only if they have no results)
+    - Existing tests are kept
+    - Total price is recalculated
     """
     order = db.query(Order).filter(Order.orderId == orderId).first()
     if not order:
@@ -191,8 +197,87 @@ def update_order(
         )
 
     update_data = order_data.model_dump(exclude_unset=True)
+    tests_to_update = update_data.pop('tests', None)
+
+    # Handle test updates if provided
+    if tests_to_update is not None:
+        # Get existing test codes
+        existing_test_codes = {ot.testCode for ot in order.tests}
+        new_test_codes = {t.testCode for t in tests_to_update}
+        
+        # Find tests to remove (existing tests not in new list)
+        tests_to_remove = existing_test_codes - new_test_codes
+        
+        # Find tests to add (new tests not in existing list)
+        tests_to_add = new_test_codes - existing_test_codes
+        
+        # Validate: Can't remove tests that have results or are in progress
+        for ot in order.tests:
+            if ot.testCode in tests_to_remove:
+                # Check if test has results
+                if ot.results is not None:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"Cannot remove test {ot.testCode} - it has results entered"
+                    )
+                # Only allow removing tests that are still pending
+                if ot.status != TestStatus.PENDING:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"Cannot remove test {ot.testCode} - it is in progress (status: {ot.status})"
+                    )
+        
+        # Calculate price for tests that will remain (before removing)
+        existing_tests_price = sum(
+            ot.priceAtOrder for ot in order.tests
+            if ot.testCode not in tests_to_remove and ot.status != TestStatus.SUPERSEDED
+        )
+        
+        # Remove tests (mark as superseded for audit trail)
+        for ot in order.tests:
+            if ot.testCode in tests_to_remove:
+                ot.status = TestStatus.SUPERSEDED
+        
+        # Add new tests and calculate price adjustment
+        total_price_adjustment = 0.0
+        for test_data in tests_to_update:
+            if test_data.testCode in tests_to_add:
+                # Get test from catalog
+                test = db.query(Test).filter(Test.code == test_data.testCode).first()
+                if not test:
+                    raise HTTPException(
+                        status_code=status.HTTP_404_NOT_FOUND,
+                        detail=f"Test {test_data.testCode} not found"
+                    )
+                
+                # Create new OrderTest
+                order_test = OrderTest(
+                    orderId=order.orderId,
+                    testCode=test.code,
+                    status=TestStatus.PENDING,
+                    priceAtOrder=test.price,
+                )
+                db.add(order_test)
+                total_price_adjustment += test.price
+        
+        # Recalculate total price
+        # Keep price for existing tests that remain, add price for new tests
+        order.totalPrice = existing_tests_price + total_price_adjustment
+        
+        # Generate samples for newly added tests
+        from app.services.sample_generator import generate_samples_for_order
+        # Only generate samples for new tests
+        new_order_tests = [ot for ot in order.tests if ot.testCode in tests_to_add]
+        if new_order_tests:
+            # Generate samples for the order (will handle only tests without samples)
+            generate_samples_for_order(order.orderId, db, current_user.id)
+
+    # Update other fields
     for field, value in update_data.items():
         setattr(order, field, value)
+
+    # Update timestamp
+    order.updatedAt = datetime.now(timezone.utc)
 
     db.commit()
     db.refresh(order)

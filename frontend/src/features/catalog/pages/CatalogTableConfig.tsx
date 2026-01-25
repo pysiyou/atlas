@@ -8,7 +8,7 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
-import { formatCurrency, formatTurnaroundTime } from '@/utils';
+import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { CatalogCard } from '../components/cards/CatalogCard';
 
@@ -44,11 +44,16 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
 
   const renderSampleType = (test: Test) => <Badge variant={test.sampleType} size="sm" />;
 
-  const renderTurnaroundTime = (test: Test) => (
-    <div className="text-xs text-gray-700 truncate">
-      {formatTurnaroundTime(test.turnaroundTime)}
-    </div>
-  );
+  const renderLoincCodes = (test: Test) => {
+    if (!test.loincCodes || test.loincCodes.length === 0) {
+      return <div className="text-xs text-gray-400 truncate">-</div>;
+    }
+    return (
+      <div className="text-xs text-gray-700 truncate font-mono">
+        {test.loincCodes.join(', ')}
+      </div>
+    );
+  };
 
   const renderPrice = (test: Test) => (
     <div className="font-medium text-sky-600 truncate">{formatCurrency(test.price)}</div>
@@ -88,6 +93,13 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         render: renderName,
       },
       {
+        key: 'loincCodes',
+        header: 'LOINC',
+        width: 'sm',
+        sortable: false,
+        render: renderLoincCodes,
+      },
+      {
         key: 'category',
         header: 'Category',
         width: 'md',
@@ -100,13 +112,6 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         width: 'sm',
         sortable: true,
         render: renderSampleType,
-      },
-      {
-        key: 'turnaroundTime',
-        header: 'TAT',
-        width: 'xs',
-        sortable: true,
-        render: renderTurnaroundTime,
       },
       {
         key: 'price',
@@ -161,6 +166,13 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         width: 'sm',
         sortable: true,
         render: renderSampleType,
+      },
+      {
+        key: 'loincCodes',
+        header: 'LOINC Codes',
+        width: 'md',
+        sortable: false,
+        render: renderLoincCodes,
       },
       {
         key: 'price',

@@ -174,7 +174,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         </div>
 
         <div className="shrink-0 pb-[2px]">
-          <div className="h-[34px] inline-flex items-center px-3 rounded-md border border-sky-100 bg-sky-50 text-sky-700 text-xs font-semibold">
+          <div className="h-[34px] inline-flex items-center px-3 rounded border border-sky-100 bg-sky-50 text-sky-700 text-xs font-semibold">
             Total: {formatCurrency(totalPrice)}
           </div>
         </div>
@@ -186,7 +186,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
           className={[
             'mt-1',
             'border border-gray-200/80',
-            'rounded-xl',
+            'rounded',
             'overflow-hidden',
             'bg-white',
             'shadow-lg shadow-gray-900/10',
@@ -225,17 +225,17 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="shrink-0 text-xs font-semibold font-mono px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 border border-gray-200">
+                        <span className="shrink-0 text-xs font-semibold font-mono px-2 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-200">
                           {code}
                         </span>
-                        <span className="text-xs font-medium text-gray-900 truncate">
+                        <span className="shrink-0 text-xs font-medium px-2 py-0.5 rounded truncate">
                           {safeName}
                         </span>
                       </div>
                     </div>
 
                     <div className="shrink-0 flex items-center gap-2">
-                      <div className="text-xs font-semibold px-2 py-1 rounded-md bg-sky-50 text-sky-700 border border-sky-100">
+                      <div className="text-xs font-semibold px-2 py-1 rounded bg-sky-50 text-sky-700 border border-sky-100">
                         {formatCurrency(price)}
                       </div>
                       {isSelected && (

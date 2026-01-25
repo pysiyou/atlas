@@ -2,4 +2,5 @@
  * Order modal components exports
  */
 
-export * from './OrderCreateModal';
+export * from './EditOrderModal';
+export * from './OrderCreateModal'; // Keep for backward compatibility during migration

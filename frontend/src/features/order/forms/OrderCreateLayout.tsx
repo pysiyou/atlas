@@ -13,8 +13,6 @@ interface PaymentSectionProps {
   paymentMethods: PaymentMethodOption[];
   paymentMethod: PaymentMethod;
   onPaymentMethodChange: (method: PaymentMethod) => void;
-  paymentNotes: string;
-  onPaymentNotesChange: (value: string) => void;
   paymentError?: string | null;
   disabled?: boolean;
 }
@@ -23,8 +21,6 @@ const PaymentSection: React.FC<PaymentSectionProps> = ({
   paymentMethods,
   paymentMethod,
   onPaymentMethodChange,
-  paymentNotes,
-  onPaymentNotesChange,
   paymentError,
   disabled = false,
 }) => {
@@ -81,18 +77,6 @@ const PaymentSection: React.FC<PaymentSectionProps> = ({
         })}
       </div>
 
-      <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1.5">Notes (optional)</label>
-        <textarea
-          rows={2}
-          placeholder="Add payment notes..."
-          value={paymentNotes}
-          onChange={e => onPaymentNotesChange(e.target.value)}
-          disabled={disabled}
-          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent resize-none disabled:opacity-50 disabled:bg-gray-50"
-        />
-      </div>
-
       {paymentError && (
         <Alert variant="danger" className="py-3">
           <p className="text-sm">{paymentError}</p>
@@ -117,6 +101,9 @@ export interface OrderCreateLayoutProps {
   onCancel: () => void;
   isSubmitting: boolean;
 
+  /** Mode: 'create' or 'edit' */
+  mode?: 'create' | 'edit';
+
   /** Patient selector */
   selectedPatient: Patient | null;
   patientSearch: string;
@@ -125,6 +112,7 @@ export interface OrderCreateLayoutProps {
   onSelectPatient: (patient: Patient) => void;
   onClearPatient: () => void;
   patientError?: string;
+  patientReadOnly?: boolean;
 
   /** Test selector */
   selectedTests: string[];
@@ -146,8 +134,6 @@ export interface OrderCreateLayoutProps {
   paymentMethods: PaymentMethodOption[];
   paymentMethod: PaymentMethod;
   onPaymentMethodChange: (method: PaymentMethod) => void;
-  paymentNotes: string;
-  onPaymentNotesChange: (value: string) => void;
   paymentError?: string | null;
 
   /** Totals */
@@ -161,6 +147,7 @@ export const OrderCreateLayout: React.FC<OrderCreateLayoutProps> = ({
   onSubmit,
   onCancel,
   isSubmitting,
+  mode = 'create',
   selectedPatient,
   patientSearch,
   onPatientSearchChange,
@@ -168,6 +155,7 @@ export const OrderCreateLayout: React.FC<OrderCreateLayoutProps> = ({
   onSelectPatient,
   onClearPatient,
   patientError,
+  patientReadOnly = false,
   selectedTests,
   testSearch,
   onTestSearchChange,
@@ -184,10 +172,9 @@ export const OrderCreateLayout: React.FC<OrderCreateLayoutProps> = ({
   paymentMethods,
   paymentMethod,
   onPaymentMethodChange,
-  paymentNotes,
-  onPaymentNotesChange,
   paymentError,
 }) => {
+  const isEditMode = mode === 'edit';
   if (isLoading) {
     return (
       <div className="h-full flex flex-col bg-slate-50">
@@ -208,7 +195,9 @@ export const OrderCreateLayout: React.FC<OrderCreateLayoutProps> = ({
           {!isModal && (
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <h1 className="text-2xl font-bold text-gray-900">New Order</h1>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {isEditMode ? 'Edit Order' : 'New Order'}
+                </h1>
                 {headerSubtitle && <p className="text-sm text-gray-500 mt-1">{headerSubtitle}</p>}
               </div>
             </div>
@@ -223,6 +212,7 @@ export const OrderCreateLayout: React.FC<OrderCreateLayoutProps> = ({
               onSelectPatient={onSelectPatient}
               onClearSelection={onClearPatient}
               error={patientError}
+              disabled={patientReadOnly}
             />
 
             <TestSelector
@@ -243,15 +233,15 @@ export const OrderCreateLayout: React.FC<OrderCreateLayoutProps> = ({
               onPriorityChange={onPriorityChange}
               onClinicalNotesChange={onClinicalNotesChange}
             />
-            <PaymentSection
-              paymentMethods={paymentMethods}
-              paymentMethod={paymentMethod}
-              onPaymentMethodChange={onPaymentMethodChange}
-              paymentNotes={paymentNotes}
-              onPaymentNotesChange={onPaymentNotesChange}
-              paymentError={paymentError}
-              disabled={isSubmitting}
-            />
+            {!isEditMode && (
+              <PaymentSection
+                paymentMethods={paymentMethods}
+                paymentMethod={paymentMethod}
+                onPaymentMethodChange={onPaymentMethodChange}
+                paymentError={paymentError}
+                disabled={isSubmitting}
+              />
+            )}
           </form>
         </div>
       </div>
@@ -268,14 +258,20 @@ export const OrderCreateLayout: React.FC<OrderCreateLayoutProps> = ({
           </Button>
           <Button
             type="submit"
-            variant="primary"
+            variant={isEditMode ? 'save' : 'primary'}
             size="md"
             form="order-create-form"
             isLoading={isSubmitting}
             disabled={isSubmitting}
-            icon={!isSubmitting ? <Icon name="wallet" /> : undefined}
+            icon={!isSubmitting && !isEditMode ? <Icon name="wallet" /> : undefined}
           >
-            {isSubmitting ? 'Processing...' : `Pay ${formatCurrency(totalPrice)}`}
+            {isSubmitting
+              ? isEditMode
+                ? 'Saving...'
+                : 'Processing...'
+              : isEditMode
+                ? 'Save Changes'
+                : `Pay ${formatCurrency(totalPrice)}`}
           </Button>
         </div>
       </div>

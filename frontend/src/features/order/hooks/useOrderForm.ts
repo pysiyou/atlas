@@ -1,20 +1,43 @@
-import { useState } from 'react';
-import type { PriorityLevel } from '@/types';
+import { useState, useMemo } from 'react';
+import type { PriorityLevel, Order } from '@/types';
 
-interface OrderFormData {
+export interface OrderFormData {
   referringPhysician: string;
   priority: PriorityLevel;
   clinicalNotes: string;
   selectedTests: string[];
 }
 
-export const useOrderForm = (initialData?: Partial<OrderFormData>) => {
-  const [formData, setFormData] = useState<OrderFormData>({
-    referringPhysician: initialData?.referringPhysician || '',
-    priority: initialData?.priority || 'routine',
-    clinicalNotes: initialData?.clinicalNotes || '',
-    selectedTests: initialData?.selectedTests || [],
-  });
+/**
+ * Creates initial form data from an existing order
+ * Filters out superseded tests when initializing
+ */
+const createInitialFormDataFromOrder = (order?: Partial<Order>): OrderFormData => {
+  if (order) {
+    // Only include active tests (not superseded)
+    const activeTests = order.tests?.filter(t => t.status !== 'superseded') || [];
+    return {
+      referringPhysician: order.referringPhysician || '',
+      priority: order.priority || 'routine',
+      clinicalNotes: order.clinicalNotes || '',
+      selectedTests: activeTests.map(t => t.testCode),
+    };
+  }
+  return {
+    referringPhysician: '',
+    priority: 'routine',
+    clinicalNotes: '',
+    selectedTests: [],
+  };
+};
+
+export const useOrderForm = (initialData?: Partial<Order>) => {
+  const initialFormData = useMemo(
+    () => createInitialFormDataFromOrder(initialData),
+    [initialData]
+  );
+
+  const [formData, setFormData] = useState<OrderFormData>(initialFormData);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
