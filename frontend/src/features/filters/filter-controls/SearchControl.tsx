@@ -118,7 +118,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
       {/* Loading indicator */}
       {isDebouncing && (
         <div className="absolute right-10 top-1/2 -translate-y-1/2">
-          <div className={`w-4 h-4 border-2 ${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} border-t-transparent rounded-full animate-spin`} />
+          <div className={`w-4 h-4 border-2 ${brandColors.primary.borderMedium} border-t-transparent rounded-full animate-spin`} />
         </div>
       )}
 

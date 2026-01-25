@@ -253,7 +253,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
         const getStatusColor = () => {
           if (step.status === 'paid' && !progress.isFullyComplete) return semanticColors.warning.valueHigh;
           if (blocked) return semanticColors.warning.valueHigh;
-          return semanticColors.info.icon; // text-sky-600
+          return semanticColors.info.icon;
         };
 
         return (

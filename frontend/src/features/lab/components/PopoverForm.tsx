@@ -155,7 +155,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
     ? 'text-gray-400'
     : variant === 'red'
       ? selected
-        ? semanticColors.danger.textLight.replace('text-red-800', 'text-red-900')
+        ? semanticColors.danger.textLightDarker
         : 'text-gray-900'
       : selected
         ? brandColors.primary.textOnLight
@@ -165,10 +165,10 @@ export const RadioCard: React.FC<RadioCardProps> = ({
     ? 'text-gray-400'
     : variant === 'red'
       ? selected
-        ? semanticColors.danger.textOnLight.replace('text-red-800', 'text-red-700')
+        ? semanticColors.danger.textLightMedium
         : 'text-gray-500'
       : selected
-        ? brandColors.primary.textLight.replace('text-sky-800', 'text-sky-700')
+        ? brandColors.primary.textLightMedium
         : 'text-gray-500';
 
   const radioColor =
@@ -259,7 +259,7 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
       <span className={`block text-xs font-medium ${checked ? brandColors.primary.textOnLight : 'text-gray-900'}`}>
         {label}
       </span>
-      <span className={`block text-xxs mt-0.5 ${checked ? brandColors.primary.textLight.replace('text-sky-800', 'text-sky-700') : 'text-gray-500'}`}>
+      <span className={`block text-xxs mt-0.5 ${checked ? brandColors.primary.textLightMedium : 'text-gray-500'}`}>
         {description}
       </span>
     </div>

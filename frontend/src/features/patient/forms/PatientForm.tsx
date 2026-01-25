@@ -26,7 +26,7 @@ import { formatDate } from '@/utils';
 import { isAffiliationActive } from '../utils/affiliationUtils';
 import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
 import { AffiliationPlanSelector } from '../components/forms/AffiliationPlanSelector';
-import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
+import { semanticColors, brandColors, brandingColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * Props for PatientFormSections component
@@ -289,7 +289,7 @@ export const AffiliationSection: React.FC<
                 onFieldChange('affiliationDuration', undefined);
               }
             }}
-            className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+            className={`w-4 h-4 ${brandingColors.affiliation.icon} border-gray-300 rounded ${brandingColors.affiliation.focusRing} focus:ring-2`}
           />
           <label
             htmlFor="hasAffiliation"

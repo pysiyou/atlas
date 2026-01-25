@@ -28,8 +28,8 @@ export const LAB_CARD_TYPOGRAPHY = {
   emphasizedInline: 'text-gray-700',
 
   // Flags Text (in red context)
-  flagText: `text-xs ${semanticColors.danger.textLight.replace('text-red-800', 'text-red-700')}`,
-  flagTitle: `text-xxs font-medium ${semanticColors.danger.textLight.replace('text-red-800', 'text-red-700')} uppercase tracking-wide`,
+  flagText: `text-xs ${semanticColors.danger.textLightMedium}`,
+  flagTitle: `text-xxs font-medium ${semanticColors.danger.textLightMedium} uppercase tracking-wide`,
 } as const;
 
 // Spacing Tokens
@@ -72,7 +72,7 @@ export const LAB_CARD_CONTAINERS = {
 
   // Card base styling (applied via Card component)
   cardBase:
-    `border border-gray-200 hover:border hover:${brandColors.primary.border.replace('border-sky-200', 'border-sky-100')} hover:${brandColors.primary.backgroundLight} transition-all duration-200`,
+    `border border-gray-200 hover:border hover:${brandColors.primary.borderLighter} hover:${brandColors.primary.backgroundLightBg} transition-all duration-200`,
 
   // Content section (gray background)
   contentSection: 'bg-gray-50 rounded p-2 border border-gray-100',
@@ -90,7 +90,7 @@ export const LAB_CARD_LIST_ITEMS = {
   bullet: 'w-1 h-1 rounded-full bg-gray-400 mr-2',
 
   // List bullet (red for flags)
-  bulletRed: `w-1 h-1 rounded-full ${semanticColors.danger.background.replace('bg-red-600', 'bg-red-500')} mr-2`,
+  bulletRed: `w-1 h-1 rounded-full ${semanticColors.danger.backgroundMedium} mr-2`,
 
   // Test name in list
   testName: 'font-medium mr-1',

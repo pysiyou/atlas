@@ -73,7 +73,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
               <div
                 key={order.orderId}
                 onClick={() => onOrderClick(order.orderId)}
-                className={`border border-gray-200 rounded-lg p-4 hover:${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} hover:${brandColors.primary.backgroundLight}/50 transition-colors cursor-pointer`}
+                className={`border border-gray-200 rounded-lg p-4 hover:${brandColors.primary.borderMedium} hover:${brandColors.primary.backgroundLightBg}/50 transition-colors cursor-pointer`}
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">

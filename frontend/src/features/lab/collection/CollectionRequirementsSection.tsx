@@ -44,7 +44,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
               onClick={() => setActiveTestCode(test.code)}
               className={`px-2 py-1 text-xs rounded transition-colors ${
                 activeTestCode === test.code
-                  ? `${brandColors.primary.backgroundLight.replace('bg-sky-50', 'bg-sky-100')} ${brandColors.primary.textLight.replace('text-sky-800', 'text-sky-700')} font-medium`
+                  ? `${brandColors.primary.backgroundLightBg} ${brandColors.primary.textLightMedium} font-medium`
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >

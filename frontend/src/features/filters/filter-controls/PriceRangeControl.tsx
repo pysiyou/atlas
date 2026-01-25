@@ -192,7 +192,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
             <div className="absolute w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
               {/* Active Range */}
               <div
-                className={`absolute h-full ${brandColors.primary.background.replace('bg-sky-600', 'bg-sky-500')}`}
+                className={`absolute h-full ${brandColors.primary.backgroundMedium}`}
                 style={{
                   left: `${getPercentage(localValue[0])}%`,
                   width: `${getPercentage(localValue[1]) - getPercentage(localValue[0])}%`,
@@ -202,14 +202,14 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
 
             {/* Min Handle */}
             <div
-              className={`absolute w-5 h-5 bg-white border-2 ${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
+              className={`absolute w-5 h-5 bg-white border-2 ${brandColors.primary.borderMedium} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
               style={{ left: `calc(${getPercentage(localValue[0])}% - 10px)` }}
               onMouseDown={onMouseDown('min')}
             />
 
             {/* Max Handle */}
             <div
-              className={`absolute w-5 h-5 bg-white border-2 ${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
+              className={`absolute w-5 h-5 bg-white border-2 ${brandColors.primary.borderMedium} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
               style={{ left: `calc(${getPercentage(localValue[1])}% - 10px)` }}
               onMouseDown={onMouseDown('max')}
             />

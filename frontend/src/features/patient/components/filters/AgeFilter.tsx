@@ -155,9 +155,9 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
         <div
           className={cn(
             'group inline-flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-all duration-200 w-full sm:w-[240px] overflow-hidden',
-            `hover:${brandColors.primary.border.replace('border-sky-200', 'border-sky-400')} hover:shadow-sm`,
+            `hover:${brandColors.primary.borderLight} hover:shadow-sm`,
             isOpen
-              ? `${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} ring-2 ${brandColors.primary.ring20} shadow-md`
+              ? `${brandColors.primary.borderMedium} ring-2 ${brandColors.primary.ring20} shadow-md`
               : 'border-gray-300',
             className
           )}
@@ -166,7 +166,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             name={ICONS.dataFields.hourglass}
             className={cn(
               'w-4 h-4 transition-colors duration-200 shrink-0',
-              isOpen ? brandColors.primary.icon : `text-gray-400 group-hover:${brandColors.primary.icon.replace('text-sky-600', 'text-sky-400')}`
+              isOpen ? brandColors.primary.icon : `text-gray-400 group-hover:${brandColors.primary.iconLight}`
             )}
           />
           <div className="flex-1 min-w-0 text-xs truncate font-medium">{renderTriggerContent()}</div>
@@ -182,7 +182,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           {value && (value[0] !== min || value[1] !== max) && (
             <button
               onClick={handleClear}
-              className={`p-0.5 -mr-1 hover:${brandColors.primary.backgroundLight} rounded transition-all duration-200 flex items-center justify-center cursor-pointer shrink-0 group/clear`}
+              className={`p-0.5 -mr-1 hover:${brandColors.primary.backgroundLightBg} rounded transition-all duration-200 flex items-center justify-center cursor-pointer shrink-0 group/clear`}
               aria-label="Clear age filter"
             >
               <Icon 
@@ -228,8 +228,8 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
                 'absolute w-4 h-4 rounded-full cursor-grab active:cursor-grabbing z-10 transition-all duration-200',
                 'hover:scale-125',
                 isDraggingHandle === 'min'
-                  ? `${brandColors.primary.background.replace('bg-sky-600', 'bg-sky-500')} scale-125 shadow-lg`
-                  : `${brandColors.primary.background.replace('bg-sky-600', 'bg-sky-400')} hover:${brandColors.primary.background.replace('bg-sky-600', 'bg-sky-500')}`
+                  ? `${brandColors.primary.backgroundMedium} scale-125 shadow-lg`
+                  : `${brandColors.primary.backgroundLight} hover:${brandColors.primary.backgroundMedium}`
               )}
               style={{ left: `calc(${minPercent}% - 8px)` }}
               onMouseDown={onMouseDown('min')}
@@ -242,7 +242,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             >
               {/* Dotted outline when dragging */}
               {isDraggingHandle === 'min' && (
-                <div className={`absolute inset-0 rounded-full border-2 border-dashed ${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} -m-1 animate-pulse`} />
+                <div className={`absolute inset-0 rounded-full border-2 border-dashed ${brandColors.primary.borderMedium} -m-1 animate-pulse`} />
               )}
             </div>
 

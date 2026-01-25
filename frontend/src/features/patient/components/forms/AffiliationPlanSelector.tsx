@@ -14,7 +14,7 @@ import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan, AffiliationPricing } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
+import { semanticColors, brandingColors } from '@/shared/design-system/tokens/colors';
 
 export interface AffiliationPlanSelectorProps {
   /** Currently selected duration */
@@ -139,7 +139,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
             <h4 className="text-sm font-semibold text-gray-900">What's Included</h4>
             <div className="space-y-2.5">
               <div className="flex items-start gap-3">
-                <div className={`flex-shrink-0 w-5 h-5 rounded-full ${semanticColors.success.background.replace('bg-green-600', 'bg-green-500')}/10 flex items-center justify-center mt-0.5`}>
+                <div className={`flex-shrink-0 w-5 h-5 rounded-full ${semanticColors.success.backgroundMedium}/10 flex items-center justify-center mt-0.5`}>
                   <Icon name={ICONS.actions.check} className={`w-3.5 h-3.5 ${semanticColors.success.icon}`} />
                 </div>
                 <div>
@@ -148,7 +148,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className={`flex-shrink-0 w-5 h-5 rounded-full ${semanticColors.success.background.replace('bg-green-600', 'bg-green-500')}/10 flex items-center justify-center mt-0.5`}>
+                <div className={`flex-shrink-0 w-5 h-5 rounded-full ${semanticColors.success.backgroundMedium}/10 flex items-center justify-center mt-0.5`}>
                   <Icon name={ICONS.actions.check} className={`w-3.5 h-3.5 ${semanticColors.success.icon}`} />
                 </div>
                 <div>
@@ -157,7 +157,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className={`flex-shrink-0 w-5 h-5 rounded-full ${semanticColors.success.background.replace('bg-green-600', 'bg-green-500')}/10 flex items-center justify-center mt-0.5`}>
+                <div className={`flex-shrink-0 w-5 h-5 rounded-full ${semanticColors.success.backgroundMedium}/10 flex items-center justify-center mt-0.5`}>
                   <Icon name={ICONS.actions.check} className={`w-3.5 h-3.5 ${semanticColors.success.icon}`} />
                 </div>
                 <div>
@@ -166,7 +166,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className={`flex-shrink-0 w-5 h-5 rounded-full ${semanticColors.success.background.replace('bg-green-600', 'bg-green-500')}/10 flex items-center justify-center mt-0.5`}>
+                <div className={`flex-shrink-0 w-5 h-5 rounded-full ${semanticColors.success.backgroundMedium}/10 flex items-center justify-center mt-0.5`}>
                   <Icon name={ICONS.actions.check} className={`w-3.5 h-3.5 ${semanticColors.success.icon}`} />
                 </div>
                 <div>
@@ -205,7 +205,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   relative border-2 rounded-xl p-5 cursor-pointer transition-all duration-200
                   ${
                     isSelected
-                      ? 'border-orange-400 bg-orange-50/50 shadow-sm'
+                      ? `${brandingColors.affiliation.borderLight} ${brandingColors.affiliation.backgroundLightOpacity} shadow-sm`
                       : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-sm'
                   }
                   ${!hasPrice ? 'opacity-50 cursor-not-allowed' : ''}
@@ -229,7 +229,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                         w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all
                         ${
                           isSelected
-                            ? 'border-orange-500 bg-orange-500'
+                            ? `${brandingColors.affiliation.border} ${brandingColors.affiliation.background}`
                             : 'border-gray-300 bg-white'
                         }
                       `}
@@ -290,7 +290,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               fullWidth
               onClick={onAction || undefined}
               disabled={loading || !onAction}
-              className="font-semibold bg-orange-500 hover:bg-orange-600 text-white rounded-lg py-3 text-base shadow-sm"
+              className={`font-semibold ${brandingColors.affiliation.background} ${brandingColors.affiliation.backgroundHover} ${brandingColors.affiliation.text} rounded-lg py-3 text-base shadow-sm`}
             >
               {loading ? 'Processing...' : getActionText()}
             </Button>

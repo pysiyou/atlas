@@ -13,6 +13,7 @@ export const semanticColors = {
   success: {
     // For buttons, solid backgrounds
     background: 'bg-green-600',
+    backgroundMedium: 'bg-green-500',
     backgroundHover: 'hover:bg-green-700',
     backgroundActive: 'active:bg-green-800',
     text: 'text-white',
@@ -45,6 +46,8 @@ export const semanticColors = {
     backgroundLight: 'bg-red-100',
     backgroundLightHover: 'hover:bg-red-200',
     textLight: 'text-red-800',
+    textLightMedium: 'text-red-700',
+    textLightDarker: 'text-red-900',
     border: 'border-red-200',
     borderLight: 'border-red-300',
     
@@ -52,6 +55,7 @@ export const semanticColors = {
     icon: 'text-red-600',
     iconLight: 'text-red-500',
     iconLighter: 'text-red-400',
+    backgroundMedium: 'bg-red-500',
     
     // Error states (inputs, validation)
     inputBorder: 'border-red-500',
@@ -143,15 +147,22 @@ export const stateColors = {
 export const brandColors = {
   primary: {
     background: 'bg-sky-600',
+    backgroundMedium: 'bg-sky-500',
+    backgroundLight: 'bg-sky-400',
     backgroundHover: 'hover:bg-sky-700',
     backgroundActive: 'active:bg-sky-800',
     text: 'text-white',
     textOnLight: 'text-sky-800',
-    backgroundLight: 'bg-sky-100',
+    backgroundLightBg: 'bg-sky-100',
     textLight: 'text-sky-800',
     border: 'border-sky-200',
+    borderMedium: 'border-sky-500',
+    borderLight: 'border-sky-400',
+    borderLighter: 'border-sky-100',
     icon: 'text-sky-600',
+    iconLight: 'text-sky-400',
     focusRing: 'focus:ring-sky-500',
+    focusRingLight: 'focus:ring-sky-400',
     ring20: 'ring-sky-500/20',
     ring30: 'ring-sky-500/30',
   },
@@ -167,6 +178,25 @@ export const brandColors = {
     border: 'border-gray-300',
     icon: 'text-gray-600',
     focusRing: 'focus:ring-gray-500',
+  },
+} as const;
+
+/**
+ * Branding Colors - For specific brand elements (e.g., affiliation plans)
+ * These are intentional brand colors that differ from semantic colors
+ */
+export const brandingColors = {
+  affiliation: {
+    // Orange branding for affiliation plans
+    background: 'bg-orange-500',
+    backgroundHover: 'hover:bg-orange-600',
+    backgroundLight: 'bg-orange-50',
+    backgroundLightOpacity: 'bg-orange-50/50',
+    border: 'border-orange-500',
+    borderLight: 'border-orange-400',
+    text: 'text-white',
+    icon: 'text-orange-500',
+    focusRing: 'focus:ring-orange-500',
   },
 } as const;
 

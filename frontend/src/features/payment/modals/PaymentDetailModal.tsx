@@ -136,7 +136,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
         <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
           Total
         </span>
-        <span className={`text-lg font-bold ${brandColors.primary.icon.replace('text-sky-600', 'text-sky-500')} tabular-nums`}>
+        <span className={`text-lg font-bold ${brandColors.primary.iconLight} tabular-nums`}>
           {formatCurrency(activeTotal)}
         </span>
       </div>
@@ -254,7 +254,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                           relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                           ${
                             isSelected
-                              ? `bg-white ${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} border-2`
+                              ? `bg-white ${brandColors.primary.borderMedium} border-2`
                               : 'bg-white border-gray-200 hover:border-gray-300'
                           }
                           ${submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
@@ -277,7 +277,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                         <div
                           className={`
                             absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                            ${isSelected ? semanticColors.success.background.replace('bg-green-600', 'bg-green-500') : 'bg-transparent border-2 border-gray-300'}
+                            ${isSelected ? semanticColors.success.backgroundMedium : 'bg-transparent border-2 border-gray-300'}
                           `}
                         >
                           <Icon

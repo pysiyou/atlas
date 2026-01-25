@@ -89,7 +89,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
           className={cn(
             'inline-flex items-center gap-2 px-3 py-1.5 h-[34px] min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer transition-colors w-full sm:w-[240px] overflow-hidden',
             isOpen
-              ? `${brandColors.primary.border.replace('border-sky-200', 'border-sky-500')} ring-2 ${brandColors.primary.ring20}`
+              ? `${brandColors.primary.borderMedium} ring-2 ${brandColors.primary.ring20}`
               : 'border-gray-300 hover:border-gray-400',
             className
           )}
@@ -143,7 +143,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   {/* Check indicator */}
                   <div className="shrink-0 mr-3">
                     {isSelected ? (
-                      <div className={`w-5 h-5 rounded-md flex items-center justify-center ${brandColors.primary.background.replace('bg-sky-600', 'bg-sky-500')} transition-all duration-150`}>
+                      <div className={`w-5 h-5 rounded-md flex items-center justify-center ${brandColors.primary.backgroundMedium} transition-all duration-150`}>
                         <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-white" />
                       </div>
                     ) : (

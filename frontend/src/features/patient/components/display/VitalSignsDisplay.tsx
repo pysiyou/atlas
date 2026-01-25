@@ -102,27 +102,27 @@ const getStatusColors = (status: VitalStatus) => {
   switch (status) {
     case 'normal':
       return {
-        bg: semanticColors.success.backgroundLight, // bg-green-100 (using success for normal)
-        border: semanticColors.success.border, // border-green-200
-        icon: semanticColors.success.icon, // text-green-600
-        value: semanticColors.success.textOnLight, // text-green-800
-        dot: semanticColors.success.background, // bg-green-600 for dot
+        bg: semanticColors.success.backgroundLight,
+        border: semanticColors.success.border,
+        icon: semanticColors.success.icon,
+        value: semanticColors.success.textOnLight,
+        dot: semanticColors.success.background,
       };
     case 'borderline':
       return {
-        bg: semanticColors.warning.backgroundLight, // bg-yellow-50
-        border: semanticColors.warning.border, // border-yellow-200
-        icon: semanticColors.warning.icon, // text-yellow-600
-        value: semanticColors.warning.textOnLight, // text-yellow-700
-        dot: semanticColors.warning.background, // bg-yellow-500 for dot
+        bg: semanticColors.warning.backgroundLight,
+        border: semanticColors.warning.border,
+        icon: semanticColors.warning.icon,
+        value: semanticColors.warning.textOnLight,
+        dot: semanticColors.warning.background,
       };
     case 'abnormal':
       return {
-        bg: semanticColors.danger.backgroundLight, // bg-red-50
-        border: semanticColors.danger.border, // border-red-200
-        icon: semanticColors.danger.icon, // text-red-600
-        value: semanticColors.danger.textOnLight, // text-red-700
-        dot: semanticColors.danger.background, // bg-red-600 for dot
+        bg: semanticColors.danger.backgroundLight,
+        border: semanticColors.danger.border,
+        icon: semanticColors.danger.icon,
+        value: semanticColors.danger.textOnLight,
+        dot: semanticColors.danger.background,
       };
   }
 };

@@ -39,7 +39,7 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
               >
                 <Icon
                   name={ICONS.ui.verified}
-                  className={`w-5 h-5 ${brandColors.primary.icon.replace('text-sky-600', 'text-sky-500')} hover:${brandColors.primary.icon} transition-colors cursor-pointer`}
+                  className={`w-5 h-5 ${brandColors.primary.iconLight} hover:${brandColors.primary.icon} transition-colors cursor-pointer`}
                 />
               </button>
             }

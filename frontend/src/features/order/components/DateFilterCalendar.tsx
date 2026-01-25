@@ -83,7 +83,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                     !inRange &&
                     !disabled &&
                     `font-bold ${brandColors.primary.icon} ${brandColors.primary.backgroundLight}`,
-                  inRange && !selected && `${brandColors.primary.backgroundLight} ${brandColors.primary.textLight.replace('text-sky-800', 'text-sky-700')} rounded-none`,
+                  inRange && !selected && `${brandColors.primary.backgroundLightBg} ${brandColors.primary.textLightMedium} rounded-none`,
                   value &&
                     isSameDay(day, value[0]) &&
                     !isSameDay(value[0], value[1]) &&
@@ -92,7 +92,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                     isSameDay(day, value[1]) &&
                     !isSameDay(value[0], value[1]) &&
                     'rounded-r-full rounded-l-none',
-                  selected && `${brandColors.primary.background.replace('bg-sky-600', 'bg-sky-500')} text-white hover:${brandColors.primary.backgroundHover} z-10`
+                  selected && `${brandColors.primary.backgroundMedium} text-white hover:${brandColors.primary.backgroundHover} z-10`
                 )}
               >
                 {format(day, 'd')}
@@ -124,7 +124,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                 disabled && 'opacity-30 cursor-not-allowed',
                 !disabled && isSameMonth(month, new Date()) && `${brandColors.primary.icon} font-bold ${brandColors.primary.backgroundLight}`,
                 !disabled && isSameMonth(month, currentMonth)
-                  ? `${brandColors.primary.backgroundLight.replace('bg-sky-100', 'bg-sky-100')} ${brandColors.primary.textLight.replace('text-sky-800', 'text-sky-700')}`
+                  ? `${brandColors.primary.backgroundLightBg} ${brandColors.primary.textLightMedium}`
                   : 'hover:bg-gray-100 text-gray-700',
                 !disabled && 'hover:bg-gray-100'
               )}
@@ -158,7 +158,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                 year.getFullYear() === new Date().getFullYear() &&
                 `${brandColors.primary.icon} font-bold ${brandColors.primary.backgroundLight}`,
               !disabled && year.getFullYear() === currentMonth.getFullYear()
-                ? `${brandColors.primary.backgroundLight.replace('bg-sky-50', 'bg-sky-100')} ${brandColors.primary.textLight.replace('text-sky-800', 'text-sky-700')}`
+                ? `${brandColors.primary.backgroundLightBg} ${brandColors.primary.textLightMedium}`
                 : 'hover:bg-gray-100 text-gray-700',
               !disabled && 'hover:bg-gray-100'
             )}

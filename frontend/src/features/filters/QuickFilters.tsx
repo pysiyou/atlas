@@ -54,7 +54,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
               'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xxs font-medium transition-colors cursor-pointer',
               'border',
               isActive
-                ? `${brandColors.primary.backgroundLight} ${brandColors.primary.border.replace('border-sky-200', 'border-sky-300')} ${brandColors.primary.textLight.replace('text-sky-800', 'text-sky-700')}`
+                ? `${brandColors.primary.backgroundLightBg} ${brandColors.primary.border} ${brandColors.primary.textLight}`
                 : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
             )}
           >

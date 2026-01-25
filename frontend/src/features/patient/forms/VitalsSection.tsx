@@ -161,21 +161,21 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
   switch (status) {
     case 'normal':
       return {
-        border: semanticColors.success.borderLight, // border-green-300
-        text: semanticColors.success.icon, // text-green-600
-        bg: semanticColors.success.backgroundLight, // bg-green-50
+        border: semanticColors.success.borderLight,
+        text: semanticColors.success.icon,
+        bg: semanticColors.success.backgroundLight,
       };
     case 'borderline':
       return {
-        border: semanticColors.warning.borderLight, // border-yellow-300
-        text: semanticColors.warning.valueHigh, // text-yellow-600
-        bg: semanticColors.warning.backgroundLight, // bg-yellow-50
+        border: semanticColors.warning.borderLight,
+        text: semanticColors.warning.valueHigh,
+        bg: semanticColors.warning.backgroundLight,
       };
     case 'abnormal':
       return {
-        border: semanticColors.danger.borderLight, // border-red-300
-        text: semanticColors.danger.icon, // text-red-600
-        bg: semanticColors.danger.backgroundLight, // bg-red-50
+        border: semanticColors.danger.borderLight,
+        text: semanticColors.danger.icon,
+        bg: semanticColors.danger.backgroundLight,
       };
   }
 };
