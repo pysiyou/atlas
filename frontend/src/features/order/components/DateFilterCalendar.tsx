@@ -158,7 +158,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                 year.getFullYear() === new Date().getFullYear() &&
                 `${brandColors.primary.icon} font-bold ${brandColors.primary.backgroundLight}`,
               !disabled && year.getFullYear() === currentMonth.getFullYear()
-                ? 'bg-sky-100 text-sky-700'
+                ? `${brandColors.primary.backgroundLight.replace('bg-sky-50', 'bg-sky-100')} ${brandColors.primary.textLight.replace('text-sky-800', 'text-sky-700')}`
                 : 'hover:bg-gray-100 text-gray-700',
               !disabled && 'hover:bg-gray-100'
             )}
