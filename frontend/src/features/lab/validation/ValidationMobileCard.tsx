@@ -14,6 +14,117 @@ import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { TestWithContext } from '@/types';
 import { RejectionDialog } from '../components';
 
+type ResultStatus =
+  | 'normal'
+  | 'high'
+  | 'low'
+  | 'critical'
+  | 'critical-high'
+  | 'critical-low';
+
+const ABNORMAL_STATUSES: ResultStatus[] = [
+  'high',
+  'low',
+  'critical',
+  'critical-high',
+  'critical-low',
+];
+
+function isCritical(s: ResultStatus): boolean {
+  return s === 'critical' || s === 'critical-high' || s === 'critical-low';
+}
+
+/**
+ * Build result key -> status from test.flags.
+ * Backend stores "itemCode:status" (e.g. "K:critical-high", "Na:low").
+ */
+function statusMapFromFlags(
+  flags: string[] | undefined
+): Record<string, ResultStatus> {
+  const map: Record<string, ResultStatus> = {};
+  if (!flags?.length) return map;
+  const valid = new Set(ABNORMAL_STATUSES);
+  for (const f of flags) {
+    const i = f.indexOf(':');
+    if (i === -1) continue;
+    const key = f.slice(0, i).trim();
+    const status = f.slice(i + 1).trim().toLowerCase() as ResultStatus;
+    if (key && valid.has(status)) map[key] = status;
+  }
+  return map;
+}
+
+/**
+ * Parse a single result entry (value may be raw or { value, unit?, status? }).
+ */
+function parseResultEntry(
+  key: string,
+  raw: unknown,
+  flagStatusMap: Record<string, ResultStatus>
+): { resultValue: string; unit: string; status: ResultStatus } {
+  const obj =
+    typeof raw === 'object' && raw !== null && 'value' in (raw as object)
+      ? (raw as { value: unknown; unit?: string; status?: string })
+      : null;
+  const resultValue = obj ? String(obj.value) : String(raw);
+  const unit = obj?.unit ?? '';
+  const statusFromResult = obj?.status as ResultStatus | undefined;
+  const status = flagStatusMap[key] ?? statusFromResult ?? 'normal';
+  return { resultValue, unit, status };
+}
+
+function ResultGrid({
+  results,
+  flagStatusMap,
+}: {
+  results: Record<string, unknown>;
+  flagStatusMap: Record<string, ResultStatus>;
+}) {
+  const entries = Object.entries(results);
+  // Show up to 8 items (4 per row x 2 rows) for compact display
+  const maxVisible = 8;
+  const visibleEntries = entries.slice(0, maxVisible);
+  const remainingCount = entries.length - maxVisible;
+
+  return (
+    <div className="grid grid-cols-4 grid-rows-2 gap-x-3 gap-y-0.5">
+      {visibleEntries.map(([key, value]) => {
+        const { resultValue, unit, status } = parseResultEntry(
+          key,
+          value,
+          flagStatusMap
+        );
+        const abnormal = status !== 'normal';
+        const valueColor = abnormal
+          ? isCritical(status)
+            ? 'text-red-600'
+            : 'text-amber-600'
+          : 'text-gray-900';
+
+        return (
+          <div
+            key={key}
+            className="grid grid-cols-[1fr_auto] items-baseline whitespace-nowrap"
+          >
+            <span className="text-[10px] text-gray-500" title={key}>
+              {key}:
+            </span>
+            <span className={`text-[10px] font-medium text-left ${valueColor}`}>
+              {resultValue}
+              {unit && <span className="text-gray-500 font-normal ml-0.5 text-[9px]">{unit}</span>}
+            </span>
+          </div>
+        );
+      })}
+      {remainingCount > 0 && (
+        <div className="text-[10px] text-gray-500 col-span-full pt-0.5">
+          +{remainingCount} more
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface ValidationMobileCardProps {
   test: TestWithContext;
   commentKey: string;
@@ -62,57 +173,44 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
     });
   };
 
-  // Get first few result values for preview
-  const resultPreview = Object.entries(test.results)
-    .slice(0, 2)
-    .map(([key, value]) => {
-      const resultValue =
-        typeof value === 'object' && value !== null && 'value' in value
-          ? (value as { value: unknown }).value
-          : value;
-      return { key, value: String(resultValue) };
-    });
+  const flagStatusMap = statusMapFromFlags(test.flags);
 
   return (
     <div
       onClick={handleCardClick}
       className="bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow flex flex-col h-full"
     >
-      {/* Header: Test name + Sample ID */}
+      {/* Header: Test name + Patient name, Test code, Sample ID */}
       <div className="mb-3 pb-3 border-b border-gray-100">
         <div className="min-w-0 overflow-hidden">
           <div className="text-sm font-semibold text-gray-900 truncate">{test.testName}</div>
-          <div className="flex items-center gap-2">
-            <div className="text-xs text-sky-600 font-medium font-mono truncate">
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="text-xs text-gray-700 font-medium truncate">{patientName}</div>
+            <div className="text-xxs text-gray-400">•</div>
+            <div className="text-xxs text-sky-600 font-medium font-mono truncate">
               {test.testCode}
             </div>
             {test.sampleId && (
-              <div
-                className="text-xs text-sky-600 font-medium font-mono truncate"
-                title={displayId.sample(test.sampleId)}
-              >
-                • {displayId.sample(test.sampleId)}
-              </div>
+              <>
+                <div className="text-xs text-gray-400">•</div>
+                <div
+                  className="text-xxs text-sky-600 font-medium font-mono truncate"
+                  title={displayId.sample(test.sampleId)}
+                >
+                  {displayId.sample(test.sampleId)}
+                </div>
+              </>
             )}
           </div>
         </div>
       </div>
 
-      {/* Content: Patient, results preview, entry date */}
+      {/* Content: Results, entry date */}
       <div className="grow">
         <div className="space-y-1">
-          <div className="text-xs text-gray-700 font-medium">{patientName}</div>
-          <div className="text-xs text-gray-500">{displayId.order(test.orderId)}</div>
-          {resultPreview.length > 0 && (
-            <div className="text-xs text-gray-600 mt-2 space-y-0.5">
-              {resultPreview.map(({ key, value }) => (
-                <div key={key} className="truncate">
-                  {key}: <span className="font-medium">{value}</span>
-                </div>
-              ))}
-              {resultCount > 2 && <div className="text-gray-500">+{resultCount - 2} more</div>}
-            </div>
-          )}
+          <div className="mt-2">
+            <ResultGrid results={test.results} flagStatusMap={flagStatusMap} />
+          </div>
           {test.resultEnteredAt && (
             <div className="text-xs text-gray-500 mt-1">
               Entered: {formatDate(test.resultEnteredAt)}

@@ -60,12 +60,11 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
   const handleBulkApprove = useCallback(async () => {
     if (approvableSelected.length === 0) return;
 
-    const confirmed = window.confirm(
-      `Are you sure you want to approve ${approvableSelected.length} result(s)?` +
-        (criticalSelectedCount > 0
-          ? `\n\nNote: ${criticalSelectedCount} item(s) with critical values will be skipped.`
-          : '')
-    );
+    const confirmMessage = criticalSelectedCount > 0
+      ? `Are you sure you want to approve ${approvableSelected.length} result(s)?\n\nNote: ${criticalSelectedCount} item(s) with critical values will be skipped.`
+      : `Are you sure you want to approve ${approvableSelected.length} result(s)?`;
+
+    const confirmed = window.confirm(confirmMessage);
 
     if (confirmed) {
       await onBulkApprove(approvableSelected.map(item => item.id));
@@ -81,6 +80,24 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
     return null;
   }
 
+  // Show compact "Select All" checkbox when nothing is selected
+  if (selectedCount === 0) {
+    return (
+      <div className="mb-4">
+        <label className="inline-flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-gray-900">
+          <input
+            type="checkbox"
+            checked={false}
+            onChange={handleToggleAll}
+            className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
+          />
+          <span>Select All ({totalCount})</span>
+        </label>
+      </div>
+    );
+  }
+
+  // Show full toolbar when items are selected
   return (
     <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 mb-4">
       {/* Left side: Selection controls */}
@@ -131,7 +148,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
         <Button
           onClick={handleBulkApprove}
           disabled={approvableSelected.length === 0 || isProcessing}
-          variant="submit"
+          variant="approve"
           size="sm"
           className="min-w-[140px]"
         >
@@ -142,7 +159,6 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
             </>
           ) : (
             <>
-              <Icon name="check" className="w-4 h-4 mr-2" />
               Approve Selected ({approvableSelected.length})
             </>
           )}

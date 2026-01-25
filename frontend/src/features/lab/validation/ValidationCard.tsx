@@ -96,7 +96,7 @@ function ResultGrid({
         return (
           <div
             key={key}
-            className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 py-1 whitespace-nowrap"
+            className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
           >
             <span className="text-xs text-gray-500 text-right" title={key}>
               {key}:
