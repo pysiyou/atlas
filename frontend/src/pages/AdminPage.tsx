@@ -9,7 +9,6 @@ import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/shared
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * Admin Test Table Columns
@@ -22,7 +21,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     width: 'sm',
     sortable: true,
     render: (test: Test) => (
-      <span className={`text-xs ${semanticColors.info.icon} font-medium font-mono truncate block`}>{test.code}</span>
+      <span className="text-xs text-brand font-medium font-mono truncate block">{test.code}</span>
     ),
   },
   {
@@ -48,7 +47,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     align: 'right',
     sortable: true,
     render: (test: Test) => (
-      <div className={`font-medium ${semanticColors.info.icon} truncate`}>{formatCurrency(test.price)}</div>
+      <div className="font-medium text-brand truncate">{formatCurrency(test.price)}</div>
     ),
   },
   {

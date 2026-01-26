@@ -9,7 +9,6 @@ import { EntryView } from '@/features/lab/entry/EntryView';
 import { ValidationView } from '@/features/lab/validation/ValidationView';
 import { Icon } from '@/shared/ui/Icon';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors, neutralColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 export const Laboratory: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'collection' | 'entry' | 'validation'>('collection');
@@ -51,13 +50,13 @@ export const Laboratory: React.FC = () => {
                   relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 cursor-pointer
                   ${
                     isActive
-                      ? `bg-surface ${brandColors.primary.textLightMedium} shadow-sm shadow-gray-200 ring-1 ring-black/5`
+                      ? 'bg-surface text-brand shadow-sm shadow-gray-200 ring-1 ring-black/5'
                       : 'text-text-muted hover:text-text-primary hover:bg-neutral-200/50'
                   }
                 `}
               >
                 <div
-                  className={`${isActive ? semanticColors.info.icon : neutralColors.text.disabled} flex items-center`}
+                  className={`${isActive ? 'text-brand' : 'text-text-disabled'} flex items-center`}
                 >
                   {tab.icon}
                 </div>
