@@ -149,6 +149,77 @@ const SearchInput: React.FC<{
 };
 
 /**
+ * CheckboxList - Inline checkbox list for filter options
+ */
+const CheckboxList: React.FC<{
+  options: { id: string; label: string; color?: string }[];
+  selectedIds: string[];
+  onChange: (selectedIds: string[]) => void;
+}> = ({ options, selectedIds, onChange }) => {
+  const handleToggle = (id: string) => {
+    const newSelected = selectedIds.includes(id)
+      ? selectedIds.filter(selectedId => selectedId !== id)
+      : [...selectedIds, id];
+    onChange(newSelected);
+  };
+
+  return (
+    <div className="space-y-2">
+      {options.map(option => {
+        const isSelected = selectedIds.includes(option.id);
+        return (
+          <label
+            key={option.id}
+            className={cn(
+              'flex items-center gap-3 cursor-pointer group py-1',
+              transitions.colors
+            )}
+          >
+            {/* Checkbox */}
+            <div className="relative flex items-center justify-center shrink-0">
+              <input
+                type="checkbox"
+                checked={isSelected}
+                onChange={() => handleToggle(option.id)}
+                className="sr-only"
+              />
+              <div
+                className={cn(
+                  'w-5 h-5 rounded border-2 flex items-center justify-center',
+                  transitions.colors,
+                  isSelected
+                    ? 'bg-brand border-brand'
+                    : cn('border-border-strong', 'group-hover:border-brand/50')
+                )}
+              >
+                {isSelected && (
+                  <Icon
+                    name={ICONS.actions.check}
+                    className="w-3 h-3 text-white"
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Label */}
+            <span
+              className={cn(
+                'text-sm',
+                isSelected ? neutralColors.text.primary : neutralColors.text.secondary,
+                'group-hover:text-text-primary',
+                transitions.colors
+              )}
+            >
+              {option.label}
+            </span>
+          </label>
+        );
+      })}
+    </div>
+  );
+};
+
+/**
  * PatientFilters - Responsive filter layout
  * - lg+: 4-column grid (search + age + sex + affiliation)
  * - md: 2-column grid
@@ -315,15 +386,10 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                 <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
                   Sex
                 </label>
-                <MultiSelectFilter
-                  label="Sex"
+                <CheckboxList
                   options={genderOptions}
                   selectedIds={sexFilters}
                   onChange={values => onSexFiltersChange(values as Gender[])}
-                  placeholder="Select sex/gender"
-                  selectAllLabel="All genders"
-                  icon={ICONS.dataFields.userHands}
-                  className="w-full"
                 />
               </div>
 
@@ -332,15 +398,10 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                 <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
                   Affiliation Status
                 </label>
-                <MultiSelectFilter
-                  label="Affiliation Status"
+                <CheckboxList
                   options={affiliationStatusOptions}
                   selectedIds={affiliationStatusFilters}
                   onChange={values => onAffiliationStatusFiltersChange(values as AffiliationStatus[])}
-                  placeholder="Select affiliation status"
-                  selectAllLabel="All statuses"
-                  icon={ICONS.actions.infoCircle}
-                  className="w-full"
                 />
               </div>
             </div>
