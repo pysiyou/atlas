@@ -273,87 +273,81 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
           onClose={() => setIsModalOpen(false)}
           title="Filters"
           size="lg"
-          className="pb-0"
         >
-          <div className="flex flex-col h-full">
-            {/* Scrollable content area */}
-            <div className="flex-1 overflow-y-auto -mx-6 px-6 space-y-6">
-              {/* Search Section */}
-              <div className="space-y-3">
-                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                  Search
-                </label>
-                <SearchInput
-                  value={searchQuery}
-                  onChange={onSearchChange}
-                  placeholder="Search orders by ID, patient name, or details..."
-                />
-              </div>
-
-              {/* Date Range Section */}
-              <div className="space-y-3">
-                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                  Date Range
-                </label>
-                <DateFilter
-                  value={dateRange}
-                  onChange={onDateRangeChange}
-                  placeholder="Filter by date range"
-                  className="w-full"
-                />
-              </div>
-
-              {/* Order Status Section */}
-              <div className="space-y-3">
-                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                  Order Status
-                </label>
-                <CheckboxList
-                  options={orderStatusOptions}
-                  selectedIds={statusFilters}
-                  onChange={values => onStatusFiltersChange(values as OrderStatus[])}
-                />
-              </div>
-
-              {/* Payment Status Section */}
-              <div className="space-y-3">
-                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                  Payment Status
-                </label>
-                <CheckboxList
-                  options={paymentStatusOptions}
-                  selectedIds={paymentFilters}
-                  onChange={values => onPaymentFiltersChange(values as PaymentStatus[])}
-                />
-              </div>
+          <div className="space-y-6">
+            {/* Search Section */}
+            <div className="space-y-3">
+              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                Search
+              </label>
+              <SearchInput
+                value={searchQuery}
+                onChange={onSearchChange}
+                placeholder="Search orders by ID, patient name, or details..."
+              />
             </div>
 
-            {/* Fixed bottom action buttons */}
-            <div className={cn('sticky bottom-0 -mx-6 px-6 py-4 bg-surface border-t', neutralColors.border.default, 'mt-6')}>
-              <div className="flex gap-3">
-                {activeFilterCount > 0 && (
-                  <Button
-                    variant="outline"
-                    size="md"
-                    onClick={() => {
-                      onDateRangeChange(null);
-                      onStatusFiltersChange([]);
-                      onPaymentFiltersChange([]);
-                    }}
-                    className="flex-1"
-                  >
-                    Clear All
-                  </Button>
-                )}
+            {/* Date Range Section */}
+            <div className="space-y-3">
+              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                Date Range
+              </label>
+              <DateFilter
+                value={dateRange}
+                onChange={onDateRangeChange}
+                placeholder="Filter by date range"
+                className="w-full"
+              />
+            </div>
+
+            {/* Order Status Section */}
+            <div className="space-y-3">
+              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                Order Status
+              </label>
+              <CheckboxList
+                options={orderStatusOptions}
+                selectedIds={statusFilters}
+                onChange={values => onStatusFiltersChange(values as OrderStatus[])}
+              />
+            </div>
+
+            {/* Payment Status Section */}
+            <div className="space-y-3">
+              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                Payment Status
+              </label>
+              <CheckboxList
+                options={paymentStatusOptions}
+                selectedIds={paymentFilters}
+                onChange={values => onPaymentFiltersChange(values as PaymentStatus[])}
+              />
+            </div>
+
+            {/* Action buttons */}
+            <div className={cn('flex gap-3 pt-4 border-t', neutralColors.border.default)}>
+              {activeFilterCount > 0 && (
                 <Button
-                  variant="primary"
+                  variant="outline"
                   size="md"
-                  onClick={() => setIsModalOpen(false)}
-                  className={cn('flex-1', !activeFilterCount && 'w-full')}
+                  onClick={() => {
+                    onDateRangeChange(null);
+                    onStatusFiltersChange([]);
+                    onPaymentFiltersChange([]);
+                  }}
+                  className="flex-1"
                 >
-                  Apply Filters
+                  Clear All
                 </Button>
-              </div>
+              )}
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => setIsModalOpen(false)}
+                className={cn('flex-1', !activeFilterCount && 'w-full')}
+              >
+                Apply Filters
+              </Button>
             </div>
           </div>
         </Modal>

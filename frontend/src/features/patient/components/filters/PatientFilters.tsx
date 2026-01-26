@@ -279,89 +279,83 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
           onClose={() => setIsModalOpen(false)}
           title="Filters"
           size="lg"
-          className="pb-0"
         >
-          <div className="flex flex-col h-full">
-            {/* Scrollable content area */}
-            <div className="flex-1 overflow-y-auto -mx-6 px-6 space-y-6">
-              {/* Search Section */}
-              <div className="space-y-3">
-                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                  Search
-                </label>
-                <SearchInput
-                  value={searchQuery}
-                  onChange={onSearchChange}
-                  placeholder="Search patients by name, ID, phone, or email..."
-                />
-              </div>
-
-              {/* Age Range Section */}
-              <div className="space-y-3">
-                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                  Age Range
-                </label>
-                <AgeFilter
-                  value={ageRange}
-                  onChange={onAgeRangeChange}
-                  min={AGE_RANGE_MIN}
-                  max={AGE_RANGE_MAX}
-                  placeholder="Filter by age range"
-                  className="w-full"
-                />
-              </div>
-
-              {/* Sex Section */}
-              <div className="space-y-3">
-                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                  Sex
-                </label>
-                <CheckboxList
-                  options={genderOptions}
-                  selectedIds={sexFilters}
-                  onChange={values => onSexFiltersChange(values as Gender[])}
-                />
-              </div>
-
-              {/* Affiliation Status Section */}
-              <div className="space-y-3">
-                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                  Affiliation Status
-                </label>
-                <CheckboxList
-                  options={affiliationStatusOptions}
-                  selectedIds={affiliationStatusFilters}
-                  onChange={values => onAffiliationStatusFiltersChange(values as AffiliationStatus[])}
-                />
-              </div>
+          <div className="space-y-6">
+            {/* Search Section */}
+            <div className="space-y-3">
+              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                Search
+              </label>
+              <SearchInput
+                value={searchQuery}
+                onChange={onSearchChange}
+                placeholder="Search patients by name, ID, phone, or email..."
+              />
             </div>
 
-            {/* Fixed bottom action buttons */}
-            <div className={cn('sticky bottom-0 -mx-6 px-6 py-4 bg-surface border-t', neutralColors.border.default, 'mt-6')}>
-              <div className="flex gap-3">
-                {activeFilterCount > 0 && (
-                  <Button
-                    variant="outline"
-                    size="md"
-                    onClick={() => {
-                      onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX]);
-                      onSexFiltersChange([]);
-                      onAffiliationStatusFiltersChange([]);
-                    }}
-                    className="flex-1"
-                  >
-                    Clear All
-                  </Button>
-                )}
+            {/* Age Range Section */}
+            <div className="space-y-3">
+              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                Age Range
+              </label>
+              <AgeFilter
+                value={ageRange}
+                onChange={onAgeRangeChange}
+                min={AGE_RANGE_MIN}
+                max={AGE_RANGE_MAX}
+                placeholder="Filter by age range"
+                className="w-full"
+              />
+            </div>
+
+            {/* Sex Section */}
+            <div className="space-y-3">
+              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                Sex
+              </label>
+              <CheckboxList
+                options={genderOptions}
+                selectedIds={sexFilters}
+                onChange={values => onSexFiltersChange(values as Gender[])}
+              />
+            </div>
+
+            {/* Affiliation Status Section */}
+            <div className="space-y-3">
+              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                Affiliation Status
+              </label>
+              <CheckboxList
+                options={affiliationStatusOptions}
+                selectedIds={affiliationStatusFilters}
+                onChange={values => onAffiliationStatusFiltersChange(values as AffiliationStatus[])}
+              />
+            </div>
+
+            {/* Action buttons */}
+            <div className={cn('flex gap-3 pt-4 border-t', neutralColors.border.default)}>
+              {activeFilterCount > 0 && (
                 <Button
-                  variant="primary"
+                  variant="outline"
                   size="md"
-                  onClick={() => setIsModalOpen(false)}
-                  className={cn('flex-1', !activeFilterCount && 'w-full')}
+                  onClick={() => {
+                    onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX]);
+                    onSexFiltersChange([]);
+                    onAffiliationStatusFiltersChange([]);
+                  }}
+                  className="flex-1"
                 >
-                  Apply Filters
+                  Clear All
                 </Button>
-              </div>
+              )}
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => setIsModalOpen(false)}
+                className={cn('flex-1', !activeFilterCount && 'w-full')}
+              >
+                Apply Filters
+              </Button>
             </div>
           </div>
         </Modal>
