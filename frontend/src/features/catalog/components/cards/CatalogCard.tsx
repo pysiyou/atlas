@@ -2,8 +2,6 @@ import { Badge } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { Test } from '@/types';
-import { mobileCard } from '@/shared/design-system/tokens/components/card';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * CatalogCard Component
@@ -19,35 +17,35 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
   return (
     <div
       onClick={onClick}
-      className={mobileCard.base}
+      className="bg-surface rounded-lg p-4 shadow-sm border border-border hover:shadow-md transition-shadow cursor-pointer"
     >
       {/* Header: Test code (left) + Price (right) */}
-      <div className={`${mobileCard.header.container} flex justify-between items-center`}>
-        <span className={`text-xs ${brandColors.primary.icon} font-medium font-mono leading-none`}>{test.code}</span>
-        <div className={`font-medium ${brandColors.primary.icon} text-lg leading-none`}>
+      <div className="mb-3 flex justify-between items-center">
+        <span className="text-xs text-brand font-medium font-mono leading-none">{test.code}</span>
+        <div className="font-medium text-brand text-lg leading-none">
           {formatCurrency(test.price)}
         </div>
       </div>
 
       {/* Test name and synonyms */}
-      <div className={mobileCard.content.container}>
-        <div className={`${mobileCard.header.title} break-words`}>{test.name}</div>
+      <div className="space-y-2">
+        <div className="text-base font-semibold text-text-primary break-words">{test.name}</div>
         {test.synonyms && test.synonyms.length > 0 && (
-          <div className={`${mobileCard.content.textSecondary} truncate mt-1`}>
+          <div className="text-sm text-text-secondary truncate mt-1">
             {test.synonyms.slice(0, 2).join(', ')}
             {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
           </div>
         )}
         {/* Sample volume - shown if available */}
         {test.sampleVolume && (
-          <div className={`${mobileCard.content.textSecondary} mt-1`}>Volume: {test.sampleVolume}</div>
+          <div className="text-sm text-text-secondary mt-1">Volume: {test.sampleVolume}</div>
         )}
       </div>
 
       {/* Bottom section: Turnaround time (left) + Category + Sample Type badges (right) */}
-      <div className={mobileCard.footer.container}>
+      <div className="flex justify-between items-center mt-3 pt-3 border-t border-border">
         {/* Turnaround time on bottom left */}
-        <div className={mobileCard.content.textSecondary}>
+        <div className="text-sm text-text-secondary">
           TAT: {formatTurnaroundTime(test.turnaroundTime)}
         </div>
         {/* Category and Sample Type badges on bottom right */}

@@ -11,7 +11,6 @@ import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 import { CatalogCard } from '../components/cards/CatalogCard';
 
 /**
