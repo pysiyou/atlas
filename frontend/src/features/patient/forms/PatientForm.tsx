@@ -27,6 +27,7 @@ import { isAffiliationActive } from '../utils/affiliationUtils';
 import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
 import { AffiliationPlanSelector } from '../components/forms/AffiliationPlanSelector';
 import { semanticColors, brandColors, brandingColors } from '@/shared/design-system/tokens/colors';
+import { getFormSectionClasses } from '@/shared/design-system/tokens/presets';
 
 /**
  * Props for PatientFormSections component
@@ -567,37 +568,49 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
   existingAffiliation,
   onRenew,
 }) => {
+  const section = getFormSectionClasses();
+
   return (
     <div className="space-y-8">
-      <div className="bg-surface rounded p-6">
-        <h3 className="text-lg font-semibold text-text-primary mb-4">Patient Demographics</h3>
-        <DemographicsSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
+      <div className={section.container}>
+        <h3 className={section.heading}>Patient Demographics</h3>
+        <div className={section.content}>
+          <DemographicsSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
+        </div>
       </div>
-      <div className="bg-surface rounded p-6">
-        <h3 className="text-lg font-semibold text-text-primary mb-4">Address Information</h3>
-        <AddressSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
+      <div className={section.container}>
+        <h3 className={section.heading}>Address Information</h3>
+        <div className={section.content}>
+          <AddressSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
+        </div>
       </div>
-      <div className="bg-surface rounded p-6">
-        <h3 className="text-lg font-semibold text-text-primary mb-4">Lab Affiliation</h3>
-        <AffiliationSection
-          formData={formData}
-          errors={errors}
-          onFieldChange={onFieldChange}
-          existingAffiliation={existingAffiliation}
-          onRenew={onRenew}
-        />
+      <div className={section.container}>
+        <h3 className={section.heading}>Lab Affiliation</h3>
+        <div className={section.content}>
+          <AffiliationSection
+            formData={formData}
+            errors={errors}
+            onFieldChange={onFieldChange}
+            existingAffiliation={existingAffiliation}
+            onRenew={onRenew}
+          />
+        </div>
       </div>
-      <div className="bg-surface rounded p-6">
-        <h3 className="text-lg font-semibold text-text-primary mb-4">Emergency Contact</h3>
-        <EmergencyContactSection
-          formData={formData}
-          errors={errors}
-          onFieldChange={onFieldChange}
-        />
+      <div className={section.container}>
+        <h3 className={section.heading}>Emergency Contact</h3>
+        <div className={section.content}>
+          <EmergencyContactSection
+            formData={formData}
+            errors={errors}
+            onFieldChange={onFieldChange}
+          />
+        </div>
       </div>
-      <div className="bg-surface rounded p-6">
-        <h3 className="text-lg font-semibold text-text-primary mb-4">Medical History</h3>
-        <MedicalHistorySection formData={formData} onFieldChange={onFieldChange} />
+      <div className={section.container}>
+        <h3 className={section.heading}>Medical History</h3>
+        <div className={section.content}>
+          <MedicalHistorySection formData={formData} onFieldChange={onFieldChange} />
+        </div>
       </div>
     </div>
   );

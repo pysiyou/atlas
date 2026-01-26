@@ -152,6 +152,27 @@
   --auth-border-light: #3a4455;
   --auth-border-hover: #3d4760;
   --auth-border-focus: #4a6670;
+
+  /* Auth Error Colors */
+  --auth-error-bg: #3d2a2e;
+  --auth-error-bg-light: #4a3035;
+  --auth-error-border: #5a3a40;
+  --auth-error-text: #d4989d;
+  --auth-error-icon: #c9787e;
+
+  /* Auth Feature Card Colors */
+  --auth-feature-card-bg: #232938;
+  --auth-feature-card-hover: #283040;
+  --auth-feature-card-border: #2d3548;
+  --auth-feature-card-border-hover: #3d4760;
+  --auth-feature-card-icon-bg: #2d4550;
+  --auth-feature-card-icon-bg-hover: #3a5663;
+  --auth-feature-card-icon-border: #3d5a66;
+
+  /* Auth User Badge Colors */
+  --auth-user-badge-bg: #3a4556;
+  --auth-user-badge-border: #1a1f2e;
+  --auth-user-badge-icon: #8892a6;
 }
 
 /* Base Transitions */

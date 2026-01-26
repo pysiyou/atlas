@@ -65,6 +65,16 @@ export default defineConfig([
       'prefer-arrow-callback': 'error',
       // Allow separate type and value imports from same source
       'no-duplicate-imports': 'off',
+      
+      // Styling: Warn about hardcoded Tailwind classes that should use design tokens
+      // Note: This is a basic check. For comprehensive enforcement, see STYLING.md
+      'no-restricted-syntax': [
+        'warn',
+        {
+          selector: 'Literal[value=/\\b(bg-surface rounded p-6|text-lg font-semibold text-text-primary|bg-\\[#|text-\\[#)/]',
+          message: 'Avoid hardcoded Tailwind classes. Use design tokens from @/shared/design-system/tokens/presets instead. See STYLING.md for examples.',
+        },
+      ],
     },
   },
 ])
