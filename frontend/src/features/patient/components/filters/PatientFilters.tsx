@@ -51,6 +51,89 @@ const affiliationStatusOptions = [
 ];
 
 /**
+ * ModalAgeSlider - Dual-thumb slider for age range in modal
+ */
+const ModalAgeSlider: React.FC<{
+  value: [number, number];
+  onChange: (value: [number, number]) => void;
+  min: number;
+  max: number;
+}> = ({ value, onChange, min, max }) => {
+  const [localValue, setLocalValue] = useState<[number, number]>(value);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMin = Math.min(Number(e.target.value), localValue[1] - 1);
+    const newValue: [number, number] = [newMin, localValue[1]];
+    setLocalValue(newValue);
+    onChange(newValue);
+  };
+
+  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMax = Math.max(Number(e.target.value), localValue[0] + 1);
+    const newValue: [number, number] = [localValue[0], newMax];
+    setLocalValue(newValue);
+    onChange(newValue);
+  };
+
+  // Calculate percentages for visual track
+  const minPercent = ((localValue[0] - min) / (max - min)) * 100;
+  const maxPercent = ((localValue[1] - min) / (max - min)) * 100;
+
+  return (
+    <div className="w-full">
+      <p className="text-sm text-neutral-500 mb-4">Move the slider to filter by age</p>
+
+      {/* Slider Track */}
+      <div className="relative h-1 mb-6">
+        {/* Background track */}
+        <div className="absolute inset-0 bg-neutral-200 rounded-full" />
+
+        {/* Active track */}
+        <div
+          className="absolute h-full bg-amber-400 rounded-full"
+          style={{
+            left: `${minPercent}%`,
+            width: `${maxPercent - minPercent}%`,
+          }}
+        />
+
+        {/* Min thumb */}
+        <input
+          type="range"
+          min={min}
+          max={max}
+          value={localValue[0]}
+          onChange={handleMinChange}
+          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-amber-400 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-amber-400 [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+          style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
+        />
+
+        {/* Max thumb */}
+        <input
+          type="range"
+          min={min}
+          max={max}
+          value={localValue[1]}
+          onChange={handleMaxChange}
+          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-amber-400 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-amber-400 [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+          style={{ zIndex: 4 }}
+        />
+      </div>
+
+      {/* Age labels */}
+      <div className="flex justify-between text-lg font-medium text-neutral-900">
+        <span>{localValue[0]} years</span>
+        <span>{localValue[1]} years</span>
+      </div>
+    </div>
+  );
+};
+
+/**
  * SearchInput - Simple debounced search input
  */
 const SearchInput: React.FC<{
@@ -277,85 +360,92 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title="Filters"
-          size="lg"
+          title="Filter"
+          size="md"
         >
-          <div className="space-y-6">
-            {/* Search Section */}
-            <div className="space-y-3">
-              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                Search
-              </label>
-              <SearchInput
-                value={searchQuery}
-                onChange={onSearchChange}
-                placeholder="Search patients by name, ID, phone, or email..."
-              />
+          <div className="flex flex-col h-full bg-white">
+            {/* Filter Controls - Scrollable */}
+            <div className="flex-1 overflow-y-auto px-5 py-4">
+              {/* Search Section */}
+              <div className="mb-6">
+                <div className="relative w-full flex items-center h-10 px-4 bg-white border border-neutral-200 rounded-lg focus-within:border-amber-400 transition-colors">
+                  <input
+                    type="text"
+                    placeholder="Search patients..."
+                    value={searchQuery}
+                    onChange={e => onSearchChange(e.target.value)}
+                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-neutral-400"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => onSearchChange('')}
+                      className="p-0.5 hover:bg-neutral-100 rounded transition-colors"
+                    >
+                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-neutral-400" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Filter Sections */}
+              <div className="space-y-5">
+                {/* Age Range Section */}
+                <div className="w-full">
+                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Age Range</h4>
+                  <ModalAgeSlider
+                    value={ageRange}
+                    onChange={onAgeRangeChange}
+                    min={AGE_RANGE_MIN}
+                    max={AGE_RANGE_MAX}
+                  />
+                  <div className="border-b border-neutral-200 mt-4" />
+                </div>
+
+                {/* Sex Section */}
+                <div className="w-full">
+                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Sex</h4>
+                  <CheckboxList
+                    options={genderOptions}
+                    selectedIds={sexFilters}
+                    onChange={values => onSexFiltersChange(values as Gender[])}
+                    columns={genderOptions.length > 4 ? 2 : 1}
+                  />
+                  <div className="border-b border-neutral-200 mt-4" />
+                </div>
+
+                {/* Affiliation Status Section */}
+                <div className="w-full">
+                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Affiliation Status</h4>
+                  <CheckboxList
+                    options={affiliationStatusOptions}
+                    selectedIds={affiliationStatusFilters}
+                    onChange={values => onAffiliationStatusFiltersChange(values as AffiliationStatus[])}
+                    columns={affiliationStatusOptions.length > 4 ? 2 : 1}
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Age Range Section */}
-            <div className="space-y-3">
-              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                Age Range
-              </label>
-              <AgeFilter
-                value={ageRange}
-                onChange={onAgeRangeChange}
-                min={AGE_RANGE_MIN}
-                max={AGE_RANGE_MAX}
-                placeholder="Filter by age range"
-                className="w-full"
-              />
-            </div>
-
-            {/* Sex Section */}
-            <div className="space-y-3">
-              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                Sex
-              </label>
-              <CheckboxList
-                options={genderOptions}
-                selectedIds={sexFilters}
-                onChange={values => onSexFiltersChange(values as Gender[])}
-              />
-            </div>
-
-            {/* Affiliation Status Section */}
-            <div className="space-y-3">
-              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                Affiliation Status
-              </label>
-              <CheckboxList
-                options={affiliationStatusOptions}
-                selectedIds={affiliationStatusFilters}
-                onChange={values => onAffiliationStatusFiltersChange(values as AffiliationStatus[])}
-              />
-            </div>
-
-            {/* Action buttons */}
-            <div className={cn('flex gap-3 pt-4 border-t', neutralColors.border.default)}>
+            {/* Footer with Filter Button */}
+            <div className="px-5 py-4 border-t border-neutral-100 bg-white shrink-0">
               {activeFilterCount > 0 && (
-                <Button
-                  variant="outline"
-                  size="md"
+                <button
                   onClick={() => {
                     onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX]);
                     onSexFiltersChange([]);
                     onAffiliationStatusFiltersChange([]);
                   }}
-                  className="flex-1"
+                  className="w-full mb-3 text-sm text-neutral-500 hover:text-neutral-700 transition-colors"
                 >
-                  Clear All
-                </Button>
+                  Clear all filters
+                </button>
               )}
-              <Button
-                variant="primary"
-                size="md"
+              <button
                 onClick={() => setIsModalOpen(false)}
-                className={cn('flex-1', !activeFilterCount && 'w-full')}
+                className="w-full py-3 bg-amber-400 hover:bg-amber-500 text-white font-medium rounded-lg transition-colors"
               >
-                Apply Filters
-              </Button>
+                Filter
+              </button>
             </div>
           </div>
         </Modal>

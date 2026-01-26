@@ -311,12 +311,12 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         config={config}
+        filters={filters}
+        setFilter={setFilter}
         activeBadges={activeBadges}
         onClearAll={clearAll}
         activePresetId={activePresetId}
         onPresetClick={applyPreset}
-        renderControl={renderControl}
-        countActiveInSection={countActiveInSection}
       />
     </div>
   );

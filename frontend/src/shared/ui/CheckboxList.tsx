@@ -1,6 +1,6 @@
 /**
  * CheckboxList Component
- * 
+ *
  * Inline checkbox list for filter options with clean styling.
  * Shows all options directly without popovers.
  */
@@ -24,14 +24,16 @@ export interface CheckboxListProps {
   onChange: (selectedIds: string[]) => void;
   /** Custom className */
   className?: string;
+  /** Number of columns for grid layout */
+  columns?: 1 | 2;
 }
 
 /**
  * CheckboxList Component
- * 
+ *
  * Displays a list of checkboxes for multi-select filtering.
  * Options are visible inline without requiring popover interaction.
- * 
+ *
  * @component
  */
 export const CheckboxList: React.FC<CheckboxListProps> = ({
@@ -39,6 +41,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   selectedIds,
   onChange,
   className,
+  columns = 1,
 }) => {
   const handleToggle = (id: string) => {
     const newSelected = selectedIds.includes(id)
@@ -48,7 +51,10 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn(
+      columns === 2 ? 'grid grid-cols-2 gap-x-6 gap-y-2' : 'space-y-2',
+      className
+    )}>
       {options.map(option => {
         const isSelected = selectedIds.includes(option.id);
         return (
@@ -59,7 +65,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
               transitions.colors
             )}
           >
-            {/* Checkbox */}
+            {/* Square Checkbox with yellow/gold fill */}
             <div className="relative flex items-center justify-center shrink-0">
               <input
                 type="checkbox"
@@ -69,11 +75,11 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
               />
               <div
                 className={cn(
-                  'w-5 h-5 rounded border-2 flex items-center justify-center',
+                  'w-[18px] h-[18px] rounded-sm border flex items-center justify-center',
                   transitions.colors,
                   isSelected
-                    ? 'bg-brand border-brand'
-                    : cn('border-border-strong', 'group-hover:border-brand/50')
+                    ? 'bg-amber-400 border-amber-400'
+                    : cn('border-neutral-300 bg-white', 'group-hover:border-amber-300')
                 )}
               >
                 {isSelected && (

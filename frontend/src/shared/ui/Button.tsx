@@ -282,7 +282,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
-      className={`${baseClasses} ${BASE_STYLES[baseStyle]} ${SIZE_STYLES[size]} ${widthClass} ${className}`}
+      className={`${baseClasses} ${buttonBase.rounded} ${BASE_STYLES[baseStyle]} ${SIZE_STYLES[size]} ${widthClass} ${className}`}
       disabled={disabled || isLoading}
       {...props}
     >

@@ -7,7 +7,7 @@ import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
 import { filterControlSizing, iconSizes } from '@/shared/design-system/tokens/sizing';
-import { neutralColors, brandColors } from '@/shared/design-system/tokens/colors';
+import { neutralColors } from '@/shared/design-system/tokens/colors';
 import { hover, focus } from '@/shared/design-system/tokens/interactions';
 import { transitions } from '@/shared/design-system/tokens/animations';
 import { radius } from '@/shared/design-system/tokens/borders';

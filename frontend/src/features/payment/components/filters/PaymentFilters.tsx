@@ -55,6 +55,109 @@ const methodOptions = createFilterOptions(
   PAYMENT_METHOD_CONFIG
 );
 
+// Date preset options
+const DATE_PRESETS = [
+  { id: 'today', label: 'Today' },
+  { id: 'yesterday', label: 'Yesterday' },
+  { id: 'last7days', label: 'Last 7 Days' },
+  { id: 'last30days', label: 'Last 30 Days' },
+  { id: 'thisMonth', label: 'This Month' },
+  { id: 'lastMonth', label: 'Last Month' },
+] as const;
+
+type DatePresetId = (typeof DATE_PRESETS)[number]['id'];
+
+/**
+ * Get date range from preset ID
+ */
+const getDateRangeFromPreset = (presetId: DatePresetId): [Date, Date] => {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  switch (presetId) {
+    case 'today':
+      return [today, new Date(today.getTime() + 24 * 60 * 60 * 1000 - 1)];
+    case 'yesterday': {
+      const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+      return [yesterday, new Date(today.getTime() - 1)];
+    }
+    case 'last7days': {
+      const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return [weekAgo, now];
+    }
+    case 'last30days': {
+      const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+      return [monthAgo, now];
+    }
+    case 'thisMonth': {
+      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      return [firstDayOfMonth, now];
+    }
+    case 'lastMonth': {
+      const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const lastDayLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+      return [firstDayLastMonth, lastDayLastMonth];
+    }
+    default:
+      return [today, now];
+  }
+};
+
+/**
+ * Check if a date range matches a preset
+ */
+const getActivePresetId = (dateRange: [Date, Date] | null): DatePresetId | null => {
+  if (!dateRange) return null;
+
+  for (const preset of DATE_PRESETS) {
+    const presetRange = getDateRangeFromPreset(preset.id);
+    const startMatch = dateRange[0].toDateString() === presetRange[0].toDateString();
+    const endMatch = dateRange[1].toDateString() === presetRange[1].toDateString();
+    if (startMatch && endMatch) return preset.id;
+  }
+  return null;
+};
+
+/**
+ * ModalDateBadges - Badge-style date range selector for modal
+ */
+const ModalDateBadges: React.FC<{
+  value: [Date, Date] | null;
+  onChange: (value: [Date, Date] | null) => void;
+}> = ({ value, onChange }) => {
+  const activePresetId = getActivePresetId(value);
+
+  const handlePresetClick = (presetId: DatePresetId) => {
+    if (activePresetId === presetId) {
+      onChange(null);
+    } else {
+      onChange(getDateRangeFromPreset(presetId));
+    }
+  };
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {DATE_PRESETS.map(preset => {
+        const isActive = activePresetId === preset.id;
+        return (
+          <button
+            key={preset.id}
+            onClick={() => handlePresetClick(preset.id)}
+            className={cn(
+              'px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors',
+              isActive
+                ? 'bg-amber-400 border-amber-400 text-white'
+                : 'bg-white border-neutral-200 text-neutral-700 hover:border-amber-300 hover:bg-amber-50'
+            )}
+          >
+            {preset.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
 /**
  * SearchInput - Simple debounced search input
  */
@@ -282,83 +385,90 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title="Filters"
-          size="lg"
+          title="Filter"
+          size="md"
         >
-          <div className="space-y-6">
-            {/* Search Section */}
-            <div className="space-y-3">
-              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                Search
-              </label>
-              <SearchInput
-                value={searchQuery}
-                onChange={onSearchChange}
-                placeholder="Search payments by transaction ID, patient name, or reference..."
-              />
+          <div className="flex flex-col h-full bg-white">
+            {/* Filter Controls - Scrollable */}
+            <div className="flex-1 overflow-y-auto px-5 py-4">
+              {/* Search Section */}
+              <div className="mb-6">
+                <div className="relative w-full flex items-center h-10 px-4 bg-white border border-neutral-200 rounded-lg focus-within:border-amber-400 transition-colors">
+                  <input
+                    type="text"
+                    placeholder="Search payments..."
+                    value={searchQuery}
+                    onChange={e => onSearchChange(e.target.value)}
+                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-neutral-400"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => onSearchChange('')}
+                      className="p-0.5 hover:bg-neutral-100 rounded transition-colors"
+                    >
+                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-neutral-400" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Filter Sections */}
+              <div className="space-y-5">
+                {/* Date Range Section */}
+                <div className="w-full">
+                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Date Range</h4>
+                  <ModalDateBadges
+                    value={dateRange}
+                    onChange={onDateRangeChange}
+                  />
+                  <div className="border-b border-neutral-200 mt-4" />
+                </div>
+
+                {/* Status Section */}
+                <div className="w-full">
+                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Payment Status</h4>
+                  <CheckboxList
+                    options={statusOptions}
+                    selectedIds={statusFilters}
+                    onChange={values => onStatusFiltersChange(values as PaymentStatus[])}
+                    columns={statusOptions.length > 4 ? 2 : 1}
+                  />
+                  <div className="border-b border-neutral-200 mt-4" />
+                </div>
+
+                {/* Method Section */}
+                <div className="w-full">
+                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Payment Method</h4>
+                  <CheckboxList
+                    options={methodOptions}
+                    selectedIds={methodFilters}
+                    onChange={values => onMethodFiltersChange(values as PaymentMethod[])}
+                    columns={methodOptions.length > 4 ? 2 : 1}
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Date Range Section */}
-            <div className="space-y-3">
-              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                Date Range
-              </label>
-              <DateFilter
-                value={dateRange}
-                onChange={onDateRangeChange}
-                placeholder="Filter by date range"
-                className="w-full"
-              />
-            </div>
-
-            {/* Status Section */}
-            <div className="space-y-3">
-              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                Payment Status
-              </label>
-              <CheckboxList
-                options={statusOptions}
-                selectedIds={statusFilters}
-                onChange={values => onStatusFiltersChange(values as PaymentStatus[])}
-              />
-            </div>
-
-            {/* Method Section */}
-            <div className="space-y-3">
-              <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
-                Payment Method
-              </label>
-              <CheckboxList
-                options={methodOptions}
-                selectedIds={methodFilters}
-                onChange={values => onMethodFiltersChange(values as PaymentMethod[])}
-              />
-            </div>
-
-            {/* Action buttons */}
-            <div className={cn('flex gap-3 pt-4 border-t', neutralColors.border.default)}>
+            {/* Footer with Filter Button */}
+            <div className="px-5 py-4 border-t border-neutral-100 bg-white shrink-0">
               {activeFilterCount > 0 && (
-                <Button
-                  variant="outline"
-                  size="md"
+                <button
                   onClick={() => {
                     onDateRangeChange(null);
                     onStatusFiltersChange([]);
                     onMethodFiltersChange([]);
                   }}
-                  className="flex-1"
+                  className="w-full mb-3 text-sm text-neutral-500 hover:text-neutral-700 transition-colors"
                 >
-                  Clear All
-                </Button>
+                  Clear all filters
+                </button>
               )}
-              <Button
-                variant="primary"
-                size="md"
+              <button
                 onClick={() => setIsModalOpen(false)}
-                className={cn('flex-1', !activeFilterCount && 'w-full')}
+                className="w-full py-3 bg-amber-400 hover:bg-amber-500 text-white font-medium rounded-lg transition-colors"
               >
-                Apply Filters
-              </Button>
+                Filter
+              </button>
             </div>
           </div>
         </Modal>

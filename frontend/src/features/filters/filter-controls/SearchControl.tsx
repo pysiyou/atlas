@@ -8,7 +8,6 @@ import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
 import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
-import { filterInput } from '@/shared/design-system/tokens/components/filter';
 import { filterControlSizing } from '@/shared/design-system/tokens/sizing';
 import { radius } from '@/shared/design-system/tokens/borders';
 import { hover, focus } from '@/shared/design-system/tokens/interactions';
