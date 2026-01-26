@@ -10,7 +10,7 @@
 
 import React, { useMemo, useState } from 'react';
 import type { Patient } from '@/types';
-import { Button, Modal, TabbedSectionContainer, CircularProgress } from '@/shared/ui';
+import { Button, Modal, CircularProgress } from '@/shared/ui';
 import toast from 'react-hot-toast';
 import { usePatientForm } from '../hooks/usePatientForm';
 import { displayId } from '@/utils/id-display';
@@ -33,6 +33,84 @@ interface EditPatientModalProps {
   /** Determines whether the modal is used for creating or editing a patient */
   mode: 'create' | 'edit';
 }
+
+interface TabNavigationProps {
+  tabs: Array<{ id: string; label: string }>;
+  activeTab: string;
+  onTabChange: (tabId: string) => void;
+  formProgress: { percentage: number; filled: number; total: number };
+}
+
+const TabNavigation: React.FC<TabNavigationProps> = ({
+  tabs,
+  activeTab,
+  onTabChange,
+  formProgress,
+}) => (
+  <div className="flex items-center justify-between gap-4 mb-6">
+    <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">
+      {tabs.map(tab => {
+        const isActive = activeTab === tab.id;
+        return (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => onTabChange(tab.id)}
+            className={`
+              relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 cursor-pointer
+              ${
+                isActive
+                  ? 'bg-surface text-brand shadow-sm shadow-gray-200 ring-1 ring-black/5'
+                  : 'text-text-tertiary hover:text-text-primary hover:bg-neutral-200/50'
+              }
+            `}
+          >
+            {tab.label}
+          </button>
+        );
+      })}
+    </div>
+    <CircularProgress
+      size={18}
+      percentage={formProgress.percentage}
+      trackColorClass="stroke-gray-200"
+      progressColorClass={
+        formProgress.percentage === 100 ? 'stroke-emerald-500' : 'stroke-sky-500'
+      }
+      label={`${formProgress.filled}/${formProgress.total}`}
+      className="h-7"
+    />
+  </div>
+);
+
+interface ModalFooterProps {
+  onClose: () => void;
+  submitLabel: string;
+  isSubmitting: boolean;
+  formId: string;
+}
+
+const ModalFooter: React.FC<ModalFooterProps> = ({
+  onClose,
+  submitLabel,
+  isSubmitting,
+  formId,
+}) => (
+  <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-surface shrink-0 shadow-[0_-1px_3px_rgba(0,0,0,0.04)]">
+    <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
+      Cancel
+    </Button>
+    <Button
+      type="submit"
+      variant="save"
+      form={formId}
+      isLoading={isSubmitting}
+      disabled={isSubmitting}
+    >
+      {submitLabel}
+    </Button>
+  </div>
+);
 
 /**
  * EditPatientModal
@@ -140,28 +218,17 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       >
         <div className="h-full flex flex-col bg-app-bg">
           {/* Scrollable content area */}
-          <div className="flex-1 overflow-y-auto px-6 py-5 ">
+          <div className="flex-1 overflow-y-auto px-6 py-5">
             <form id="patient-upsert-form" onSubmit={handleSubmit} className="max-w-full">
-              <TabbedSectionContainer
+              <TabNavigation
                 tabs={tabs}
                 activeTab={activeTab}
                 onTabChange={setActiveTab}
-                headerRight={
-                  <CircularProgress
-                    size={18}
-                    percentage={formProgress.percentage}
-                    trackColorClass="stroke-gray-200"
-                    progressColorClass={
-                      formProgress.percentage === 100 ? 'stroke-emerald-500' : 'stroke-sky-500'
-                    }
-                    label={`${formProgress.filled}/${formProgress.total}`}
-                    className="h-7"
-                  />
-                }
-                className="rounded-lg shadow-sm border border-border bg-surface"
-                contentClassName="p-6"
-                headerClassName="px-6 py-4"
-              >
+                formProgress={formProgress}
+              />
+
+              {/* Form content */}
+              <div className="rounded-lg border border-border bg-surface p-6">
                 <PatientFormTabs
                   activeTab={activeTab}
                   formData={formData}
@@ -175,25 +242,16 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                   existingAffiliation={patient?.affiliation}
                   onRenew={handleRenew}
                 />
-              </TabbedSectionContainer>
+              </div>
             </form>
           </div>
 
-          {/* Fixed footer actions */}
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-surface shrink-0 shadow-[0_-1px_3px_rgba(0,0,0,0.04)]">
-            <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="save"
-              form="patient-upsert-form"
-              isLoading={isSubmitting}
-              disabled={isSubmitting}
-            >
-              {submitLabel}
-            </Button>
-          </div>
+          <ModalFooter
+            onClose={onClose}
+            submitLabel={submitLabel}
+            isSubmitting={isSubmitting}
+            formId="patient-upsert-form"
+          />
         </div>
       </Modal>
     </FormErrorBoundary>

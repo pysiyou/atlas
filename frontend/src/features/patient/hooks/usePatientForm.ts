@@ -5,7 +5,8 @@ import { validatePatientForm } from '../utils/patientValidation';
 export interface PatientFormData {
   fullName: string;
   dateOfBirth: string;
-  gender: Gender;
+  /** Optional when cleared via MultiSelectFilter; required for submit */
+  gender?: Gender;
   phone: string;
   email: string;
   height: string;
@@ -53,7 +54,7 @@ const normalizeFamilyHistory = (value: unknown): string => {
 const DEFAULT_FORM_DATA: PatientFormData = {
   fullName: '',
   dateOfBirth: '',
-  gender: 'male',
+  gender: undefined,
   phone: '',
   email: '',
   height: '',
@@ -89,7 +90,7 @@ const createInitialFormData = (initialData?: Partial<Patient>): PatientFormData 
     return {
       fullName: initialData.fullName || '',
       dateOfBirth: initialData.dateOfBirth || '',
-      gender: initialData.gender || 'male',
+      gender: initialData.gender,
       phone: initialData.phone || '',
       email: initialData.email || '',
       height: initialData.height !== undefined ? String(initialData.height) : '',

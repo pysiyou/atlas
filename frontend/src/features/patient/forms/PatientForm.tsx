@@ -12,7 +12,6 @@
 import React, { useMemo } from 'react';
 import {
   Input,
-  Select,
   Textarea,
   Badge,
   Button,
@@ -21,11 +20,13 @@ import {
   MultiSelectFilter,
 } from '@/shared/ui';
 import type { Gender, AffiliationDuration, Affiliation, Relationship } from '@/types';
-import { GENDER_OPTIONS, AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_OPTIONS } from '@/types';
+import { AFFILIATION_DURATION_OPTIONS, GENDER_VALUES, GENDER_CONFIG, RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG } from '@/types';
 import { formatDate } from '@/utils';
 import { isAffiliationActive } from '../utils/affiliationUtils';
 import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
 import { AffiliationPlanSelector } from '../components/forms/AffiliationPlanSelector';
+import { createFilterOptions } from '@/utils/filtering';
+import { ICONS } from '@/utils/icon-mappings';
 
 /**
  * Props for PatientFormSections component
@@ -34,7 +35,7 @@ interface PatientFormSectionsProps {
   formData: {
     fullName: string;
     dateOfBirth: string;
-    gender: Gender;
+    gender?: Gender;
     phone: string;
     email: string;
     height: string;
@@ -68,96 +69,135 @@ interface PatientFormSectionsProps {
  */
 export const DemographicsSection: React.FC<
   Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange'>
-> = ({ formData, errors, onFieldChange }) => (
-  <div className="space-y-4">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="md:col-span-2">
-        <Input
-          label="Full Name"
-          name="fullName"
-          value={formData.fullName}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            onFieldChange('fullName', e.target.value)
-          }
-          error={errors.fullName}
+> = ({ formData, errors, onFieldChange }) => {
+  // Convert gender options to FilterOption format
+  const genderOptions: FilterOption[] = useMemo(
+    () => createFilterOptions(GENDER_VALUES, GENDER_CONFIG),
+    []
+  );
+
+  // Convert single value to array for MultiSelectFilter (single-select mode)
+  const selectedGender = useMemo(
+    () => (formData.gender ? [formData.gender] : []),
+    [formData.gender]
+  );
+
+  // Handle gender change (single-select: only allow one selection)
+  const handleGenderChange = (selectedIds: string[]) => {
+    if (selectedIds.length === 0) {
+      // Clear button clicked: actually clear the selection (show placeholder)
+      onFieldChange('gender', undefined);
+    } else {
+      // Use the most recently selected item (last in array)
+      // Type guard to ensure valid Gender value
+      const lastId = selectedIds[selectedIds.length - 1];
+      const validGenders: Gender[] = ['male', 'female'];
+      if (validGenders.includes(lastId as Gender)) {
+        onFieldChange('gender', lastId as Gender);
+      }
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="md:col-span-2">
+          <Input
+            label="Full Name"
+            name="fullName"
+            value={formData.fullName}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onFieldChange('fullName', e.target.value)
+            }
+            error={errors.fullName}
+            required
+            placeholder="John Doe"
+          />
+        </div>
+        <DateInput
+          label="Date of Birth"
+          name="dateOfBirth"
+          value={formData.dateOfBirth}
+          onChange={(value: string) => onFieldChange('dateOfBirth', value)}
+          error={errors.dateOfBirth}
           required
-          placeholder="John Doe"
+          placeholder="Select date of birth"
+          maxDate={new Date()}
+        />
+        <div>
+          <label className="block text-xs font-medium text-text-tertiary mb-1.5">
+            Gender <span className="text-danger ml-1">*</span>
+          </label>
+          <MultiSelectFilter
+            label="Gender"
+            options={genderOptions}
+            selectedIds={selectedGender}
+            onChange={handleGenderChange}
+            placeholder="Select gender"
+            showSelectAll={false}
+            singleSelect={true}
+            icon={ICONS.dataFields.userHands}
+            className="w-full"
+          />
+          {errors.gender && (
+            <p className="mt-1 text-sm text-danger">{errors.gender}</p>
+          )}
+        </div>
+        <Input
+          label="Phone Number"
+          name="phone"
+          type="tel"
+          value={formData.phone}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onFieldChange('phone', e.target.value)
+          }
+          error={errors.phone}
+          required
+          placeholder="(555) 123-4567"
+        />
+        <Input
+          label="Email Address"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onFieldChange('email', e.target.value)
+          }
+          error={errors.email}
+          placeholder="patient@email.com"
+        />
+        <Input
+          label="Height (cm)"
+          name="height"
+          type="number"
+          step="0.1"
+          min="30"
+          max="250"
+          value={formData.height}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onFieldChange('height', e.target.value)
+          }
+          error={errors.height}
+          placeholder="175.5"
+        />
+        <Input
+          label="Weight (kg)"
+          name="weight"
+          type="number"
+          step="0.1"
+          min="1"
+          max="500"
+          value={formData.weight}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onFieldChange('weight', e.target.value)
+          }
+          error={errors.weight}
+          placeholder="70.5"
         />
       </div>
-      <DateInput
-        label="Date of Birth"
-        name="dateOfBirth"
-        value={formData.dateOfBirth}
-        onChange={(value: string) => onFieldChange('dateOfBirth', value)}
-        error={errors.dateOfBirth}
-        required
-        placeholder="Select date of birth"
-        maxDate={new Date()}
-      />
-      <Select
-        label="Gender"
-        name="gender"
-        value={formData.gender}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          onFieldChange('gender', e.target.value)
-        }
-        options={GENDER_OPTIONS}
-        required
-      />
-      <Input
-        label="Phone Number"
-        name="phone"
-        type="tel"
-        value={formData.phone}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onFieldChange('phone', e.target.value)
-        }
-        error={errors.phone}
-        required
-        placeholder="(555) 123-4567"
-      />
-      <Input
-        label="Email Address"
-        name="email"
-        type="email"
-        value={formData.email}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onFieldChange('email', e.target.value)
-        }
-        error={errors.email}
-        placeholder="patient@email.com"
-      />
-      <Input
-        label="Height (cm)"
-        name="height"
-        type="number"
-        step="0.1"
-        min="30"
-        max="250"
-        value={formData.height}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onFieldChange('height', e.target.value)
-        }
-        error={errors.height}
-        placeholder="175.5"
-      />
-      <Input
-        label="Weight (kg)"
-        name="weight"
-        type="number"
-        step="0.1"
-        min="1"
-        max="500"
-        value={formData.weight}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onFieldChange('weight', e.target.value)
-        }
-        error={errors.weight}
-        placeholder="70.5"
-      />
     </div>
-  </div>
-);
+  );
+};
 
 /**
  * Address Section
@@ -332,30 +372,25 @@ export const AffiliationSection: React.FC<
 export const EmergencyContactSection: React.FC<
   Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange'>
 > = ({ formData, errors, onFieldChange }) => {
-  // Convert relationship options to FilterOption format with colors
+  // Convert relationship options to FilterOption format with badge variants
   const relationshipOptions: FilterOption[] = useMemo(
     () =>
-      RELATIONSHIP_OPTIONS.map(opt => {
-        // Assign colors based on relationship type
-        let color: string = 'default';
-        if (opt.value === 'spouse')
-          color = 'primary'; // Spouse - sky blue
-        else if (opt.value === 'parent')
-          color = 'info'; // Parent - sky
-        else if (opt.value === 'sibling')
-          color = 'success'; // Sibling - green
-        else if (opt.value === 'child')
-          color = 'warning'; // Child - yellow/orange
-        else if (opt.value === 'friend')
-          color = 'purple'; // Friend - purple
-        else if (opt.value === 'other') color = 'neutral'; // Other - neutral gray
-
-        return {
-          id: opt.value,
-          label: opt.label,
-          color,
-        };
-      }),
+      RELATIONSHIP_VALUES.map(value => ({
+        id: value,
+        label: RELATIONSHIP_CONFIG[value].label,
+        color:
+          value === 'spouse'
+            ? 'primary'
+            : value === 'parent'
+              ? 'info'
+              : value === 'sibling'
+                ? 'success'
+                : value === 'child'
+                  ? 'warning'
+                  : value === 'friend'
+                    ? 'purple'
+                    : 'neutral', // 'other' uses neutral
+      })),
     []
   );
 
@@ -374,8 +409,7 @@ export const EmergencyContactSection: React.FC<
       // Use the most recently selected item (last in array)
       // Type guard to ensure valid Relationship value
       const lastId = selectedIds[selectedIds.length - 1];
-      const validRelationships: Relationship[] = ['spouse', 'parent', 'child', 'sibling', 'other'];
-      if (validRelationships.includes(lastId as Relationship)) {
+      if (RELATIONSHIP_VALUES.includes(lastId as Relationship)) {
         onFieldChange('emergencyContactRelationship', lastId as Relationship);
       }
     }
@@ -407,6 +441,7 @@ export const EmergencyContactSection: React.FC<
             placeholder="Select relationship"
             showSelectAll={false}
             singleSelect={true}
+            icon={ICONS.ui.link}
             className="w-full"
           />
           {errors.emergencyContactRelationship && (

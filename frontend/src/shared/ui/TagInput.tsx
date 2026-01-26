@@ -109,7 +109,7 @@ export const TagInput: React.FC<TagInputProps> = ({
   return (
     <div className={cn('w-full', className)}>
       {label && (
-        <div className="flex justify-between items-baseline mb-1 gap-2">
+        <div className="flex justify-between items-baseline mb-1.5 gap-2">
           <label
             htmlFor={inputId}
             className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
@@ -120,16 +120,16 @@ export const TagInput: React.FC<TagInputProps> = ({
         </div>
       )}
 
-      {/* Tags Container - matches result entry input height exactly */}
+      {/* Tags Container */}
       <div
         className={cn(
-          'w-full px-3 py-2 border rounded',
-          'bg-surface transition-colors',
-          'focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20',
-          error ? 'border-danger' : 'border-border',
+          'w-full px-3 py-2.5 border rounded-md',
+          'bg-surface transition-all duration-200',
           'flex flex-wrap gap-2 items-center',
-          // Ensure consistent height matching result entry inputs
-          tags.length === 0 ? 'min-h-[42px]' : 'min-h-[42px]'
+          'min-h-[42px]',
+          error
+            ? 'border-danger focus-within:border-danger focus-within:ring-2 focus-within:ring-danger/20'
+            : 'border-border-strong hover:border-border-strong focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20'
         )}
       >
         {/* Existing Tags */}
@@ -138,21 +138,24 @@ export const TagInput: React.FC<TagInputProps> = ({
             key={`${tag}-${index}`}
             variant={tagVariant === 'outline' ? 'primary' : tagVariant}
             size="sm"
-            className="flex items-center gap-1.5 px-2 py-0.5 h-6"
+            className="flex items-center gap-1.5 px-2.5 py-1 h-6 group/tag"
           >
             <span className="text-xs font-medium leading-tight">{tag}</span>
             <button
               type="button"
               onClick={() => handleRemoveTag(tag)}
-              className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-black/10 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-gray-400"
+              className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 focus:outline-none focus:ring-1 focus:ring-brand/40"
               aria-label={`Remove ${tag}`}
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-tertiary hover:text-text-secondary" />
+              <Icon
+                name={ICONS.actions.closeCircle}
+                className="w-3 h-3 text-white hover:text-red-500 transition-colors"
+              />
             </button>
           </Badge>
         ))}
 
-        {/* Input Field - matches result entry input styling exactly */}
+        {/* Input Field */}
         <input
           id={inputId}
           type="text"
@@ -160,16 +163,16 @@ export const TagInput: React.FC<TagInputProps> = ({
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={tags.length === 0 ? placeholder : ''}
-          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-[1.5]"
+          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-normal"
           disabled={maxTags !== undefined && tags.length >= maxTags}
         />
       </div>
 
       {/* Error Message */}
-      {error && <p className="text-xs text-danger mt-1">{error}</p>}
+      {error && <p className="text-xs text-danger mt-1.5">{error}</p>}
 
       {/* Helper Text */}
-      {helperText && !error && <p className="text-xs text-text-tertiary mt-1">{helperText}</p>}
+      {helperText && !error && <p className="text-xs text-text-tertiary mt-1.5">{helperText}</p>}
     </div>
   );
 };

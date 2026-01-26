@@ -221,7 +221,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
           )}
         >
           {/* Column 1: Left Icon */}
-          {icon && <Icon name={icon} className="w-4 h-4 text-text-disabled flex-shrink-0" />}
+          {icon && <Icon name={icon} className="w-4 h-4 text-text-muted flex-shrink-0" />}
 
           {/* Column 2: Content - flexible middle */}
           <div className="flex-1 min-w-0 overflow-hidden">
