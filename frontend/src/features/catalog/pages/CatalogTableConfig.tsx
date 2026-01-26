@@ -25,7 +25,7 @@ import { CatalogCard } from '../components/cards/CatalogCard';
 export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewConfig<Test> => {
   // Shared render functions
   const renderCode = (test: Test) => (
-    <span className={`text-xs ${brandColors.primary.icon} font-medium font-mono truncate block`}>{test.code}</span>
+    <span className="text-xs text-brand font-medium font-mono truncate block">{test.code}</span>
   );
 
   const renderName = (test: Test) => (
@@ -58,7 +58,7 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
   };
 
   const renderPrice = (test: Test) => (
-    <div className={`font-medium ${brandColors.primary.icon} truncate`}>{formatCurrency(test.price)}</div>
+    <div className="font-medium text-brand truncate">{formatCurrency(test.price)}</div>
   );
 
   const renderStatus = (test: Test) => (

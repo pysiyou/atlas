@@ -9,9 +9,6 @@ import React from 'react';
 import { Icon, type IconName } from '@/shared/ui';
 import type { VitalSigns } from '@/types/patient';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
-import { getInputClasses } from '@/shared/design-system/tokens/components/input';
-import { neutralColors } from '@/shared/design-system/tokens/colors';
 
 export interface VitalsSectionProps {
   /** Current vital signs data */
@@ -163,21 +160,21 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
   switch (status) {
     case 'normal':
       return {
-        border: semanticColors.success.borderLight,
-        text: semanticColors.success.icon,
-        bg: semanticColors.success.backgroundLight,
+        border: 'border-green-300',
+        text: 'text-success',
+        bg: 'bg-green-100',
       };
     case 'borderline':
       return {
-        border: semanticColors.warning.borderLight,
-        text: semanticColors.warning.valueHigh,
-        bg: semanticColors.warning.backgroundLight,
+        border: 'border-yellow-300',
+        text: 'text-warning',
+        bg: 'bg-yellow-100',
       };
     case 'abnormal':
       return {
-        border: semanticColors.danger.borderLight,
-        text: semanticColors.danger.icon,
-        bg: semanticColors.danger.backgroundLight,
+        border: 'border-red-300',
+        text: 'text-danger',
+        bg: 'bg-red-100',
       };
   }
 };
@@ -217,7 +214,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
                 {isAbnormal && (
-                  <Icon name={ICONS.actions.dangerSquare} className={`w-3 h-3 ${semanticColors.danger.requiredIndicator} shrink-0`} />
+                  <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-danger shrink-0" />
                 )}
                 <span className="text-xxs text-text-disabled truncate">Ref: {refRange}</span>
               </div>
@@ -243,7 +240,8 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                 step={config.step}
                 placeholder="--"
                 className={`
-                  ${getInputClasses(error !== undefined, true, 'left', 'sm', false)}
+                  w-full rounded border px-3 py-1.5 text-sm bg-surface pl-10
+                  ${error ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger/20' : 'border-border focus:border-brand focus:ring-2 focus:ring-brand/20'}
                   pr-12
                   [appearance:textfield]
                   [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0
@@ -255,19 +253,19 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               {/* Unit display (absolute positioned) */}
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
-                <span className={`text-xs ${neutralColors.text.disabled} select-none truncate`}>{config.unit}</span>
+                <span className="text-xs text-text-disabled select-none truncate">{config.unit}</span>
               </div>
 
               {/* Abnormal value alert (absolute positioned below input) */}
               {isAbnormal && (
-                <div className={`absolute -bottom-5 left-0 text-xxs ${semanticColors.danger.icon} font-medium`}>
+                <div className="absolute -bottom-5 left-0 text-xxs text-danger font-medium">
                   Abnormal value
                 </div>
               )}
             </div>
 
             {/* Error message */}
-            {error && <p className={`mt-1 text-sm ${semanticColors.danger.errorText}`}>{error}</p>}
+            {error && <p className="mt-1 text-sm text-danger">{error}</p>}
           </div>
         );
       })}
