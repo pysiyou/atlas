@@ -276,89 +276,102 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title="Filter Patients"
-          subtitle={activeFilterCount > 0 ? `${activeFilterCount} active filter${activeFilterCount > 1 ? 's' : ''}` : 'Refine your search'}
+          title="Filters"
           size="lg"
+          className="pb-0"
         >
-          <div className="space-y-6">
-            {/* Search Section */}
-            <div className="space-y-2">
-              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
-                Search
-              </label>
-              <SearchInput
-                value={searchQuery}
-                onChange={onSearchChange}
-                placeholder="Search patients by name, ID, phone, or email..."
-              />
-            </div>
+          <div className="flex flex-col h-full">
+            {/* Scrollable content area */}
+            <div className="flex-1 overflow-y-auto -mx-6 px-6 space-y-6">
+              {/* Search Section */}
+              <div className="space-y-3">
+                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                  Search
+                </label>
+                <SearchInput
+                  value={searchQuery}
+                  onChange={onSearchChange}
+                  placeholder="Search patients by name, ID, phone, or email..."
+                />
+              </div>
 
-            {/* Age Range Section */}
-            <div className="space-y-2">
-              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
-                Age Range
-              </label>
-              <AgeFilter
-                value={ageRange}
-                onChange={onAgeRangeChange}
-                min={AGE_RANGE_MIN}
-                max={AGE_RANGE_MAX}
-                placeholder="Filter by age range"
-                className="w-full"
-              />
-            </div>
-
-            {/* Sex Section */}
-            <div className="space-y-2">
-              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
-                Sex
-              </label>
-              <MultiSelectFilter
-                label="Sex"
-                options={genderOptions}
-                selectedIds={sexFilters}
-                onChange={values => onSexFiltersChange(values as Gender[])}
-                placeholder="Select sex/gender"
-                selectAllLabel="All genders"
-                icon={ICONS.dataFields.userHands}
-                className="w-full"
-              />
-            </div>
-
-            {/* Affiliation Status Section */}
-            <div className="space-y-2">
-              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
-                Affiliation Status
-              </label>
-              <MultiSelectFilter
-                label="Affiliation Status"
-                options={affiliationStatusOptions}
-                selectedIds={affiliationStatusFilters}
-                onChange={values => onAffiliationStatusFiltersChange(values as AffiliationStatus[])}
-                placeholder="Select affiliation status"
-                selectAllLabel="All statuses"
-                icon={ICONS.actions.infoCircle}
-                className="w-full"
-              />
-            </div>
-
-            {/* Clear All Button */}
-            {activeFilterCount > 0 && (
-              <div className={cn('pt-4 border-t', neutralColors.border.default)}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX]);
-                    onSexFiltersChange([]);
-                    onAffiliationStatusFiltersChange([]);
-                  }}
+              {/* Age Range Section */}
+              <div className="space-y-3">
+                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                  Age Range
+                </label>
+                <AgeFilter
+                  value={ageRange}
+                  onChange={onAgeRangeChange}
+                  min={AGE_RANGE_MIN}
+                  max={AGE_RANGE_MAX}
+                  placeholder="Filter by age range"
                   className="w-full"
+                />
+              </div>
+
+              {/* Sex Section */}
+              <div className="space-y-3">
+                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                  Sex
+                </label>
+                <MultiSelectFilter
+                  label="Sex"
+                  options={genderOptions}
+                  selectedIds={sexFilters}
+                  onChange={values => onSexFiltersChange(values as Gender[])}
+                  placeholder="Select sex/gender"
+                  selectAllLabel="All genders"
+                  icon={ICONS.dataFields.userHands}
+                  className="w-full"
+                />
+              </div>
+
+              {/* Affiliation Status Section */}
+              <div className="space-y-3">
+                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                  Affiliation Status
+                </label>
+                <MultiSelectFilter
+                  label="Affiliation Status"
+                  options={affiliationStatusOptions}
+                  selectedIds={affiliationStatusFilters}
+                  onChange={values => onAffiliationStatusFiltersChange(values as AffiliationStatus[])}
+                  placeholder="Select affiliation status"
+                  selectAllLabel="All statuses"
+                  icon={ICONS.actions.infoCircle}
+                  className="w-full"
+                />
+              </div>
+            </div>
+
+            {/* Fixed bottom action buttons */}
+            <div className={cn('sticky bottom-0 -mx-6 px-6 py-4 bg-surface border-t', neutralColors.border.default, 'mt-6')}>
+              <div className="flex gap-3">
+                {activeFilterCount > 0 && (
+                  <Button
+                    variant="outline"
+                    size="md"
+                    onClick={() => {
+                      onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX]);
+                      onSexFiltersChange([]);
+                      onAffiliationStatusFiltersChange([]);
+                    }}
+                    className="flex-1"
+                  >
+                    Clear All
+                  </Button>
+                )}
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => setIsModalOpen(false)}
+                  className={cn('flex-1', !activeFilterCount && 'w-full')}
                 >
-                  Clear All Filters
+                  Apply Filters
                 </Button>
               </div>
-            )}
+            </div>
           </div>
         </Modal>
       </>

@@ -281,87 +281,100 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title="Filter Payments"
-          subtitle={activeFilterCount > 0 ? `${activeFilterCount} active filter${activeFilterCount > 1 ? 's' : ''}` : 'Refine your search'}
+          title="Filters"
           size="lg"
+          className="pb-0"
         >
-          <div className="space-y-6">
-            {/* Search Section */}
-            <div className="space-y-2">
-              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
-                Search
-              </label>
-              <SearchInput
-                value={searchQuery}
-                onChange={onSearchChange}
-                placeholder="Search payments by transaction ID, patient name, or reference..."
-              />
-            </div>
+          <div className="flex flex-col h-full">
+            {/* Scrollable content area */}
+            <div className="flex-1 overflow-y-auto -mx-6 px-6 space-y-6">
+              {/* Search Section */}
+              <div className="space-y-3">
+                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                  Search
+                </label>
+                <SearchInput
+                  value={searchQuery}
+                  onChange={onSearchChange}
+                  placeholder="Search payments by transaction ID, patient name, or reference..."
+                />
+              </div>
 
-            {/* Date Range Section */}
-            <div className="space-y-2">
-              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
-                Date Range
-              </label>
-              <DateFilter
-                value={dateRange}
-                onChange={onDateRangeChange}
-                placeholder="Filter by date range"
-                className="w-full"
-              />
-            </div>
-
-            {/* Status Section */}
-            <div className="space-y-2">
-              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
-                Payment Status
-              </label>
-              <MultiSelectFilter
-                label="Payment Status"
-                options={statusOptions}
-                selectedIds={statusFilters}
-                onChange={values => onStatusFiltersChange(values as PaymentStatus[])}
-                placeholder="Select payment status"
-                selectAllLabel="All statuses"
-                icon={ICONS.actions.infoCircle}
-                className="w-full"
-              />
-            </div>
-
-            {/* Method Section */}
-            <div className="space-y-2">
-              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
-                Payment Method
-              </label>
-              <MultiSelectFilter
-                label="Payment Method"
-                options={methodOptions}
-                selectedIds={methodFilters}
-                onChange={values => onMethodFiltersChange(values as PaymentMethod[])}
-                placeholder="Select payment method"
-                selectAllLabel="All methods"
-                icon={ICONS.dataFields.wallet}
-                className="w-full"
-              />
-            </div>
-
-            {/* Clear All Button */}
-            {activeFilterCount > 0 && (
-              <div className={cn('pt-4 border-t', neutralColors.border.default)}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    onDateRangeChange(null);
-                    onStatusFiltersChange([]);
-                    onMethodFiltersChange([]);
-                  }}
+              {/* Date Range Section */}
+              <div className="space-y-3">
+                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                  Date Range
+                </label>
+                <DateFilter
+                  value={dateRange}
+                  onChange={onDateRangeChange}
+                  placeholder="Filter by date range"
                   className="w-full"
+                />
+              </div>
+
+              {/* Status Section */}
+              <div className="space-y-3">
+                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                  Payment Status
+                </label>
+                <MultiSelectFilter
+                  label="Payment Status"
+                  options={statusOptions}
+                  selectedIds={statusFilters}
+                  onChange={values => onStatusFiltersChange(values as PaymentStatus[])}
+                  placeholder="Select payment status"
+                  selectAllLabel="All statuses"
+                  icon={ICONS.actions.infoCircle}
+                  className="w-full"
+                />
+              </div>
+
+              {/* Method Section */}
+              <div className="space-y-3">
+                <label className={cn('block text-sm font-semibold', neutralColors.text.primary)}>
+                  Payment Method
+                </label>
+                <MultiSelectFilter
+                  label="Payment Method"
+                  options={methodOptions}
+                  selectedIds={methodFilters}
+                  onChange={values => onMethodFiltersChange(values as PaymentMethod[])}
+                  placeholder="Select payment method"
+                  selectAllLabel="All methods"
+                  icon={ICONS.dataFields.wallet}
+                  className="w-full"
+                />
+              </div>
+            </div>
+
+            {/* Fixed bottom action buttons */}
+            <div className={cn('sticky bottom-0 -mx-6 px-6 py-4 bg-surface border-t', neutralColors.border.default, 'mt-6')}>
+              <div className="flex gap-3">
+                {activeFilterCount > 0 && (
+                  <Button
+                    variant="outline"
+                    size="md"
+                    onClick={() => {
+                      onDateRangeChange(null);
+                      onStatusFiltersChange([]);
+                      onMethodFiltersChange([]);
+                    }}
+                    className="flex-1"
+                  >
+                    Clear All
+                  </Button>
+                )}
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => setIsModalOpen(false)}
+                  className={cn('flex-1', !activeFilterCount && 'w-full')}
                 >
-                  Clear All Filters
+                  Apply Filters
                 </Button>
               </div>
-            )}
+            </div>
           </div>
         </Modal>
       </>
