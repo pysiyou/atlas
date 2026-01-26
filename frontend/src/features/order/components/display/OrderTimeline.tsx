@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Avatar } from '@/shared/ui';
 import { useUserLookup } from '@/hooks/queries';
 import {
@@ -139,7 +139,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
   const { getUserName } = useUserLookup();
 
   // Get progress for each step
-  const stepProgressMap = React.useMemo(() => {
+  const stepProgressMap = useMemo(() => {
     return STATUS_TIMELINE_STEPS.reduce(
       (acc, step) => {
         acc[step.status] = getOrderStepProgress(order, step.status);

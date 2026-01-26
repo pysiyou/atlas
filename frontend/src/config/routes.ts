@@ -10,7 +10,6 @@ export const ROUTES = {
   ORDERS: '/orders',
   LABORATORY: '/laboratory',
   APPOINTMENTS: '/appointments',
-  BILLING: '/billing',
   PAYMENTS: '/payments',
   REPORTS: '/reports',
   CATALOG: '/catalog',
