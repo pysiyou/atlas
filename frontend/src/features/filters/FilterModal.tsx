@@ -264,7 +264,7 @@ const ModalDateBadges: React.FC<{
             key={preset.id}
             onClick={() => handlePresetClick(preset.id)}
             className={cn(
-              'px-3 py-1.5 text-sm font-medium rounded-lg',
+              'px-2 py-1 text-xxs font-medium rounded cursor-pointer',
               'filter-chip',
               isActive && 'filter-chip--active'
             )}

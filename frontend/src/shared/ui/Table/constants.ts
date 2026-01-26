@@ -21,15 +21,15 @@ export const SIZE_PRESETS: Record<string, ColumnWidth> = {
   /** Small - codes, dates, short values (100px fixed) */
   sm: { base: 100, min: 80, grow: 0, shrink: 0 },
   /** Medium - names, statuses, labels (150px fixed) */
-  md: { base: 150, min: 120, grow: 0, shrink: 0 },
+  md: { base: 120, min: 100, grow: 0, shrink: 0 },
   /** Large - descriptions, longer text (200px fixed) */
-  lg: { base: 200, min: 160, grow: 0, shrink: 0 },
+  lg: { base: 160, min: 140, grow: 0, shrink: 0 },
   /** Extra large - long text, comments (300px, grows more) */
-  xl: { base: 300, min: 200, grow: 2, shrink: 1 },
+  xl: { base: 200, min: 160, grow: 2, shrink: 1 },
   /** Auto - content-sized, no flex */
   auto: { grow: 0, shrink: 0 },
   /** Fill - fills 100% of remaining table width */
-  fill: { base: 0, min: 100, grow: 1, shrink: 1 },
+  fill: { base: 0, min: 200, grow: 1, shrink: 1 },
 };
 
 /**

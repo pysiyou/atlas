@@ -28,8 +28,9 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
         {/* Avatar: Patient name + Order ID - positioned at top left */}
         <Avatar
           primaryText={order.patientName || 'N/A'}
+          primaryTextClassName="font-semibold"
           secondaryText={displayId.order(order.orderId)}
-          secondaryTextClassName="font-mono"
+          secondaryTextClassName="font-mono text-text-tertiary"
           size="xs"
         />
         {/* Total price on top right */}
@@ -49,16 +50,16 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
                 <div className="flex items-center flex-1 min-w-0">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 shrink-0" />
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
-                  <span className="text-text-muted truncate">{test.testCode}</span>
+                  <span className="text-text-tertiary truncate">{test.testCode}</span>
                 </div>
-                <span className="font-medium text-text-muted ml-2 shrink-0">
+                <span className="font-medium text-text-tertiary ml-2 shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>
             ))}
             {/* Third line: Show remaining tests count if more than 2 */}
             {activeTests.length > 2 && (
-              <div className="text-xs text-text-muted">
+              <div className="text-xs text-text-tertiary">
                 +{activeTests.length - 2} more test{activeTests.length - 2 !== 1 ? 's' : ''}
               </div>
             )}

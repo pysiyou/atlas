@@ -1,14 +1,3 @@
-/**
- * Patient Table Configuration
- *
- * Multi-view table configuration for patient list.
- * Defines separate column sets for different screen sizes:
- *
- * - Card View (xs/sm ≤640px): Mobile card layout with PatientCard component
- * - Compact Table (md 768px): Minimal columns - ID, Name, Contact, Actions
- * - Medium Table (lg 1024px): Moderate columns - adds Gender, Tests
- * - Full Table (xl+ ≥1280px): All columns including Affiliation, Registered
- */
 
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
@@ -20,13 +9,7 @@ import { isAffiliationActive } from '../utils/affiliationUtils';
 import { PatientCard } from '../components/cards/PatientCard';
 import { ICONS } from '@/utils/icon-mappings';
 
-/**
- * Create patient table configuration with full, compact, and card views
- *
- * @param navigate - React Router navigate function
- * @param getOrdersByPatient - Function to get orders for a patient
- * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
- */
+
 // Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
 // eslint-disable-next-line max-lines-per-function 
 export const createPatientTableConfig = (
@@ -36,15 +19,15 @@ export const createPatientTableConfig = (
 ): TableViewConfig<Patient> => {
   // Shared render functions to avoid duplication
   const renderId = (patient: Patient) => (
-    <span className="text-xs text-brand font-medium font-mono truncate block">
+    <span className="text-xs text-brand font-medium font-mono truncate block hover:underline hover:font-bold">
       {displayId.patient(patient.id)}
     </span>
   );
 
   const renderName = (patient: Patient) => (
     <div className="min-w-0">
-      <div className="font-medium text-text-primary truncate">{patient.fullName}</div>
-      <div className="text-xs text-text-muted truncate">
+      <div className="font-semibold text-text-primary truncate">{patient.fullName}</div>
+      <div className="text-xs text-text-tertiary truncate">
         {calculateAge(patient.dateOfBirth)} years old
       </div>
     </div>
@@ -54,17 +37,23 @@ export const createPatientTableConfig = (
     <Badge variant={patient.gender} size="sm" />
   );
 
-  const renderTests = (patient: Patient) => {
+  const renderLastOrder = (patient: Patient) => {
     const patientOrders = getOrdersByPatient(patient.id);
-    const testCount = patientOrders.reduce((acc, order) => acc + (order.tests?.length || 0), 0);
+    if (patientOrders.length === 0) {
+      return <span className="text-xs text-text-tertiary truncate block">No orders</span>;
+    }
+
+    const lastOrder = patientOrders.sort((a, b) => 
+      new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
+    )[0];
 
     return (
       <div className="min-w-0">
-        <div className="font-medium truncate">
-          {testCount} test{testCount !== 1 ? 's' : ''}
+        <div className="text-xs text-brand font-medium font-mono truncate block hover:underline hover:font-bold">
+          {displayId.order(lastOrder.orderId)}
         </div>
-        <div className="text-xs text-text-muted truncate">
-          {patientOrders.length} order{patientOrders.length !== 1 ? 's' : ''}
+        <div className="text-xs text-text-tertiary truncate">
+          {formatDate(lastOrder.orderDate)}
         </div>
       </div>
     );
@@ -72,27 +61,27 @@ export const createPatientTableConfig = (
 
   const renderContact = (patient: Patient) => (
     <div className="text-xs min-w-0">
-      <div className=" font-medium truncate">{formatPhoneNumber(patient.phone)}</div>
-      {patient.email && <div className="text-xs text-text-muted truncate">{patient.email}</div>}
+      <div className="font-medium text-xs text-text-primary truncate">{formatPhoneNumber(patient.phone)}</div>
+      {patient.email && <div className="text-xs text-text-tertiary truncate">{patient.email}</div>}
     </div>
   );
 
   const renderAffiliation = (patient: Patient) => {
     if (!patient.affiliation) {
-      return <span className="text-xs text-text-muted truncate block">No Affiliation</span>;
+      return <span className="text-xs text-text-tertiary truncate block">No Affiliation</span>;
     }
     const isActive = isAffiliationActive(patient.affiliation);
     return (
       <div className="flex items-center gap-2 min-w-0">
-        <span className="text-xs text-text-muted truncate">
-          {isActive ? 'Expires' : 'Expired'}: {formatDate(patient.affiliation.endDate)}
+        <span className="text-xs text-text-tertiary truncate">
+          {isActive ? 'Expires on' : 'Expired on'}: {formatDate(patient.affiliation.endDate)}
         </span>
       </div>
     );
   };
 
   const renderRegistrationDate = (patient: Patient) => (
-    <div className="text-xs text-text-muted truncate">{formatDate(patient.registrationDate)}</div>
+    <div className="text-xs text-text-tertiary truncate">{formatDate(patient.registrationDate)}</div>
   );
 
   const renderActions = (patient: Patient) => (
@@ -132,6 +121,12 @@ export const createPatientTableConfig = (
         render: renderName,
       },
       {
+        key: 'contact',
+        header: 'Contact',
+        width: 'xl',
+        render: renderContact,
+      },
+      {
         key: 'gender',
         header: 'Gender',
         width: 'sm',
@@ -139,16 +134,10 @@ export const createPatientTableConfig = (
         render: renderGender,
       },
       {
-        key: 'tests',
-        header: 'Tests',
-        width: 'sm',
-        render: renderTests,
-      },
-      {
-        key: 'contact',
-        header: 'Contact',
-        width: 'fill',
-        render: renderContact,
+        key: 'lastOrder',
+        header: 'Last Order',
+        width: 'lg',
+        render: renderLastOrder,
       },
       {
         key: 'affiliation',
@@ -190,26 +179,24 @@ export const createPatientTableConfig = (
         render: renderName,
       },
       {
-        key: 'gender',
-        header: 'Gender',
-        width: 'sm', // 100px - shown in medium view
-        sortable: true,
-        render: renderGender,
-      },
-      {
-        key: 'tests',
-        header: 'Tests',
-        width: 'sm', // 100px - shown in medium view
-        render: renderTests,
-      },
-      {
         key: 'contact',
         header: 'Contact',
-        // Spans: Contact(fill with base:0, grow:1) + Affiliation(150px) + Registered(150px)
-        // Total base needed: 0 + 150 + 150 = 300px, plus grow:1 for Contact's flex share
         width: 'fill',
         render: renderContact,
       },
+      {
+        key: 'gender',
+        header: 'Gender',
+        width: 'lg', // 100px - shown in medium view
+        sortable: true,
+        render: renderGender,
+      },
+      // {
+      //   key: 'lastOrder',
+      //   header: 'Last Order',
+      //   width: 'sm', // 100px - shown in medium view
+      //   render: renderLastOrder,
+      // },
       {
         key: 'actions',
         header: '',
@@ -231,18 +218,14 @@ export const createPatientTableConfig = (
       {
         key: 'fullName',
         header: 'Name',
-        // Spans: Name(fill with base:0, grow:1) + Gender(100px) + Tests(100px)
-        // Total base needed: 0 + 100 + 100 = 200px, plus grow:1 for Name's flex share
-        width: { base: 200, min: 200, grow: 1, shrink: 1 },
+        width: 'fill',
         sortable: true,
         render: renderName,
       },
       {
         key: 'contact',
         header: 'Contact',
-        // Spans: Contact(fill with base:0, grow:1) + Affiliation(150px) + Registered(150px)
-        // Total base needed: 0 + 150 + 150 = 300px, plus grow:1 for Contact's flex share
-        width: { base: 300, min: 200, grow: 1, shrink: 1 },
+        width: 'fill',
         render: renderContact,
       },
       {

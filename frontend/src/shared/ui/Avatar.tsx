@@ -10,6 +10,8 @@ export interface AvatarProps {
   secondaryText?: string;
   /** Optional className for secondary text */
   secondaryTextClassName?: string;
+  /** Optional className for primary text */
+  primaryTextClassName?: string;
   /** If true, only shows the avatar circle without text labels */
   avatarOnly?: boolean;
 }
@@ -22,6 +24,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   onClick,
   secondaryText,
   secondaryTextClassName = '',
+  primaryTextClassName = '',
   avatarOnly = false,
 }) => {
   const [imageError, setImageError] = useState(false);
@@ -89,7 +92,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       {/* Primary and secondary text */}
       {hasText && (
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
-          <div className={`font-medium text-text-primary truncate ${textSizeClasses[size].primary}`}>
+          <div className={`font-medium text-text-primary truncate ${textSizeClasses[size].primary} ${primaryTextClassName}`}>
             {primaryText}
           </div>
           {secondaryText && (

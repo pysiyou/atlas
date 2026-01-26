@@ -28,11 +28,13 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
       className="bg-surface border border-border rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Avatar (top left) + Gender badge (top right) */}
-      <div className="mb-3 pb-3 border-b border-border flex justify-between items-center">
+      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
         {/* Avatar: Patient name + Age - positioned at top left */}
         <Avatar
           primaryText={patient.fullName}
+          primaryTextClassName="font-semibold"
           secondaryText={`${calculateAge(patient.dateOfBirth)} years old`}
+          secondaryTextClassName="text-text-tertiary"
           size="xs"
         />
         {/* Gender badge on top right */}
@@ -40,18 +42,18 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
       </div>
 
       {/* Contact info: Phone + email + address */}
-      <div className="space-y-2">
+      <div className="grow">
         <div className="space-y-1">
-          <div className="text-sm text-text-secondary">{formatPhoneNumber(patient.phone)}</div>
+          <div className="text-xs text-text-secondary">{formatPhoneNumber(patient.phone)}</div>
           {patient.email && <div className="text-sm text-text-secondary truncate">{patient.email}</div>}
-          <div className="text-sm text-text-secondary truncate">
+          <div className="text-xs text-text-secondary truncate">
             {patient.address.street}, {patient.address.city} {patient.address.postalCode}
           </div>
         </div>
       </div>
 
       {/* Bottom section: Add Order button - positioned at bottom right */}
-      <div className="flex justify-between items-center mt-3 pt-3 border-t border-border">
+      <div className="flex justify-between items-center mt-auto pt-3">
         <div></div>
         <IconButton variant="add" size="sm" title="Add Order" onClick={handleAddOrder} />
       </div>
