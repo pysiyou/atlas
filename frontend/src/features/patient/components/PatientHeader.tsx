@@ -9,7 +9,6 @@ import type { Patient } from '@/types/patient';
 import { isAffiliationActive } from '../utils/affiliationUtils';
 import { AffiliationPopover } from './filters/AffiliationPopover';
 import { ICONS } from '@/utils/icon-mappings';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 
 export interface PatientHeaderProps {
   patient: Patient;
@@ -33,13 +32,13 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
             affiliation={patient.affiliation}
             trigger={
               <button
-                className={`focus:outline-none focus:ring-2 ${brandColors.primary.focusRing} rounded transition-all flex items-center justify-center`}
+                className="focus:outline-none focus:ring-2 focus:ring-brand/20 rounded transition-all flex items-center justify-center"
                 aria-label="View affiliation details"
                 title="View affiliation details"
               >
                 <Icon
                   name={ICONS.ui.verified}
-                  className={`w-5 h-5 ${brandColors.primary.iconLight} hover:${brandColors.primary.icon} transition-colors cursor-pointer`}
+                  className="w-5 h-5 text-brand/70 hover:text-brand transition-colors cursor-pointer"
                 />
               </button>
             }

@@ -19,7 +19,6 @@ import type { Patient, Order } from '@/types';
 import { isAffiliationActive } from '../utils/affiliationUtils';
 import { PatientCard } from '../components/cards/PatientCard';
 import { ICONS } from '@/utils/icon-mappings';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * Create patient table configuration with full, compact, and card views
@@ -37,7 +36,7 @@ export const createPatientTableConfig = (
 ): TableViewConfig<Patient> => {
   // Shared render functions to avoid duplication
   const renderId = (patient: Patient) => (
-    <span className={`text-xs ${brandColors.primary.icon} font-medium font-mono truncate block`}>
+    <span className="text-xs text-brand font-medium font-mono truncate block">
       {displayId.patient(patient.id)}
     </span>
   );
