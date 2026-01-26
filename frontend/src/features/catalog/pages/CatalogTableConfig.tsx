@@ -50,7 +50,7 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
       return <div className="text-xs text-text-disabled truncate">-</div>;
     }
     return (
-      <div className="text-xs text-text-secondary truncate font-mono">
+      <div className="text-xs text-text-primary truncate font-semibold">
         {test.loincCodes.join(', ')}
       </div>
     );

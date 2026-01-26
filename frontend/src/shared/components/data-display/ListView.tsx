@@ -139,7 +139,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
   }
 
   return (
-    <div className={`min-h-0 flex-1 flex flex-col p-4 space-y-6 overflow-hidden ${className}`}>
+    <div className={`min-h-0 flex-1 flex flex-col p-4 gap-6 overflow-hidden ${className}`}>
       {/* Header */}
       {(title || headerActions) && (
         <div className="flex items-center justify-between shrink-0">
@@ -164,12 +164,12 @@ export function ListView<T extends TableDataItem = TableDataItem>({
       )}
 
       {/* Main Content */}
-      <div className="bg-surface rounded-lg border border-border shadow-sm flex flex-col flex-1 min-h-0">
+      <div className="bg-surface rounded-lg border border-border shadow-sm flex flex-col flex-1 min-h-0 overflow-hidden">
         {/* Filters */}
         {filters}
 
-        {/* Content Area */}
-        <div className="flex-1 min-h-0 overflow-y-auto">
+        {/* Content Area - Table scrolls internally */}
+        <div className="flex-1 min-h-0 flex flex-col">
           {mode === 'table' && viewConfig ? (
             <Table
               data={items}
@@ -202,11 +202,13 @@ export function ListView<T extends TableDataItem = TableDataItem>({
                 )}
               </div>
             ) : (
-              <div className="p-6">
-                <div className={`grid ${GRID_COLUMN_CLASSES[gridColumns]} gap-4`}>
-                  {items.map((item, index) => (
-                    <div key={index}>{renderItem(item, index)}</div>
-                  ))}
+              <div className="flex-1 overflow-y-auto">
+                <div className="p-6">
+                  <div className={`grid ${GRID_COLUMN_CLASSES[gridColumns]} gap-4`}>
+                    {items.map((item, index) => (
+                      <div key={index}>{renderItem(item, index)}</div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )

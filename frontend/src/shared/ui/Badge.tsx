@@ -123,7 +123,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
 /**
  * Base badge classes
  */
-const BASE_CLASSES = 'inline-flex items-center font-medium rounded-full';
+const BASE_CLASSES = 'inline-flex items-center font-medium rounded whitespace-nowrap';
 
 /**
  * Size classes
@@ -255,7 +255,7 @@ const VARIANT_STYLES: Record<string, string> = {
 // Custom display labels for variants (shorter/abbreviated versions)
 const VARIANT_LABELS: Record<string, string> = {
   'sample-collected': 'COLLECTED',
-  'in-progress': 'IN PROGRESS',
+  'in-progress': 'RUNNING',
   'no-show': 'NO SHOW',
   'chronic-condition': 'CHRONIC',
   superseded: 'SUPERSEDED', // Test replaced by retest

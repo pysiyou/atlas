@@ -114,7 +114,6 @@ export const CatalogList: React.FC = () => {
       onDismissError={handleDismissError}
       onRowClick={(test: Test) => navigate(`/catalog/${test.code}`)}
       title="Test Catalog"
-      subtitle={`${filteredTests.length} tests available`}
       filters={
         <CatalogFilters
           searchQuery={searchQuery}
