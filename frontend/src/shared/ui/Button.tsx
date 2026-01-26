@@ -81,7 +81,7 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
 
   // Secondary/Navigation actions
   cancel: { style: 'danger', icon: ICONS.actions.cross },
-  close: { style: 'outline', icon: ICONS.actions.cross },
+  close: { style: 'danger', icon: ICONS.actions.cross },
   back: { style: 'outline', icon: ICONS.actions.arrowLeft },
   previous: { style: 'outline', icon: ICONS.actions.chevronLeft },
   next: { style: 'primary', icon: ICONS.actions.chevronRight },

@@ -36,7 +36,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) =>
     return (
       <div className="w-5 h-5 rounded-full bg-success flex items-center justify-center">
         <svg
-          className="w-3 h-3 text-success"
+          className="w-3 h-3 text-white"
           fill="none"
           stroke="currentColor"
           strokeWidth="2.5"

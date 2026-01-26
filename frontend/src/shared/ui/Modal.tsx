@@ -153,7 +153,7 @@ const Modal = memo(
                 zIndex={backdropZIndex}
               />
 
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <div className="fixed inset-0 z-50 flex items-start justify-center lg:justify-end p-2 md:p-6">
                 <motion.div
                   role="dialog"
                   aria-modal="true"
@@ -180,27 +180,27 @@ const Modal = memo(
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className={`${getModalClasses()} ${maxWidthClass} ${className}`}
+                  className={`${getModalClasses()} ${maxWidthClass} ${className} flex flex-col h-[calc(100vh-16px)] md:h-[calc(100vh-48px)] origin-top lg:origin-top-right`}
                   onClick={handleModalClick}
                 >
                   {/* Header */}
-                  <div className="sticky top-0 z-10 border-b border-border bg-surface">
-                    <div className="flex items-start justify-between gap-4 p-6">
+                  <div className="px-6 py-4 border-b border-border bg-surface flex items-center justify-between shrink-0">
+                    <div className="flex items-start gap-3 min-w-0">
                       <div className="flex flex-col min-w-0">
                         <h2
                           id="modal-title"
-                          className="text-lg font-semibold text-text-primary truncate"
+                          className="text-lg font-semibold text-text truncate"
                           title={typeof title === 'string' ? title : undefined}
                         >
                           {title}
                         </h2>
                         {subtitle && (
-                          <span className="text-sm text-text-muted mt-1">{subtitle}</span>
+                          <span className="text-sm text-text-tertiary mt-0.5">{subtitle}</span>
                         )}
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex gap-2 shrink-0">
                       <IconButton
                         onClick={onClose}
                         variant="close"
@@ -222,7 +222,7 @@ const Modal = memo(
                   </div>
 
                   {/* Content */}
-                  <div className="p-6 overflow-y-auto">
+                  <div className="grow overflow-hidden relative flex flex-col min-h-0">
                     {children}
                   </div>
                 </motion.div>
