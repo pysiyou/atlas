@@ -56,7 +56,7 @@ const PatientSearchTagInput: React.FC<{
         ].join(' ')}
       >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-text-disabled" />
+          <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-text-muted" />
         </div>
 
         {selectedPatient && (
@@ -98,7 +98,7 @@ const PatientSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedPatient ? 'Search to change…' : 'Search by name, ID, or phone…'}
-          className="flex-1 min-w-[140px] outline-none text-xs text-text-primary placeholder:text-text-disabled bg-transparent leading-normal"
+          className="flex-1 min-w-[140px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-normal"
           autoComplete="off"
           disabled={disabled}
         />

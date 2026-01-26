@@ -159,7 +159,7 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
           >
             <div className="flex items-center gap-2 mb-2 min-w-0">
               <Icon name={config.icon} className={`w-4 h-4 ${colors.icon} shrink-0`} />
-              <span className="text-xs font-medium text-text-secondary uppercase tracking-wide whitespace-nowrap truncate">
+              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wide whitespace-nowrap truncate">
                 {config.label}
               </span>
             </div>

@@ -205,7 +205,7 @@ const SearchInput: React.FC<{
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className="flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0 placeholder:font-normal placeholder:text-text-tertiary"
+        className="flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0 placeholder:font-normal placeholder:text-text-muted"
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
@@ -368,7 +368,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
                     placeholder="Search orders..."
                     value={searchQuery}
                     onChange={e => onSearchChange(e.target.value)}
-                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-tertiary"
+                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-muted"
                   />
                   {searchQuery && (
                     <button

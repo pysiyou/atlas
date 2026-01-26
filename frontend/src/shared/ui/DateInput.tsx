@@ -105,7 +105,7 @@ export const DateInput: React.FC<DateInputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-text-secondary cursor-pointer truncate min-w-0"
+            className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
           >
             {label}
             {required && <span className="text-danger ml-1">*</span>}
@@ -128,19 +128,19 @@ export const DateInput: React.FC<DateInputProps> = ({
               disabled && 'bg-neutral-100 cursor-not-allowed'
             )}
           >
-            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-disabled flex-shrink-0" />
+            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted shrink-0" />
             <div className="flex-1 text-xs truncate">
               {dateValue ? (
                 <span className="text-text-primary">{format(dateValue, 'dd MMM yyyy')}</span>
               ) : (
-                <span className="text-text-disabled">{placeholder}</span>
+                <span className="text-text-muted">{placeholder}</span>
               )}
             </div>
 
             <Icon
               name={ICONS.actions.chevronDown}
               className={cn(
-                'w-4 h-4 text-text-disabled transition-transform flex-shrink-0',
+                'w-4 h-4 text-text-disabled transition-transform shrink-0',
                 isOpen && 'rotate-180'
               )}
             />

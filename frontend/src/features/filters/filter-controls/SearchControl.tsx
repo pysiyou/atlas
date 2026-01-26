@@ -117,7 +117,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
         placeholder={placeholder}
         value={localValue}
         onChange={handleChange}
-        className="flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0 placeholder:font-normal placeholder:text-text-tertiary"
+        className="flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0 placeholder:font-normal placeholder:text-text-muted"
       />
 
       {/* Column 3: Right Icons (loading/clear) */}

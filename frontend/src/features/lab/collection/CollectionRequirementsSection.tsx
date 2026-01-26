@@ -70,7 +70,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           <div className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
             <div className="flex-1">
-              <div className="text-xs font-medium text-text-secondary mb-1">Container Specifications</div>
+              <div className="text-xs font-medium text-text-tertiary mb-1">Container Specifications</div>
               <div className="text-xs text-text-tertiary">{activeTest.containerDescription}</div>
             </div>
           </div>
@@ -80,7 +80,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           <div className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
             <div className="flex-1">
-              <div className="text-xs font-medium text-text-secondary mb-1">Collection Instructions</div>
+              <div className="text-xs font-medium text-text-tertiary mb-1">Collection Instructions</div>
               <div className="text-xs text-text-tertiary">{activeTest.collectionNotes}</div>
             </div>
           </div>

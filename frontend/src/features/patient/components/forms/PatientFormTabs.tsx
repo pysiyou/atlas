@@ -38,33 +38,43 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
   switch (activeTab) {
     case 'general':
       return (
-        <div className="space-y-6">
-          <div>
-            <div className="text-xs font-medium text-slate-500">General</div>
-            <div className="text-sm font-semibold text-slate-900">Identity & contact</div>
+        <div className="space-y-8">
+          <div className="space-y-6">
+            <div className="pb-1">
+              <div className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-1">
+                General
+              </div>
+              <div className="text-base font-semibold text-text-primary">Identity & Contact</div>
+            </div>
+            <DemographicsSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
+            <AddressSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
           </div>
-          <DemographicsSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
-          <AddressSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
 
-          <div>
-            <div className="text-xs font-medium text-slate-500">Primary contact</div>
-            <div className="text-sm font-semibold text-slate-900">Emergency contact</div>
+          <div className="border-t border-border pt-6 space-y-6">
+            <div className="pb-1">
+              <div className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-1">
+                Primary Contact
+              </div>
+              <div className="text-base font-semibold text-text-primary">Emergency Contact</div>
+            </div>
+            <EmergencyContactSection
+              formData={formData}
+              errors={errors}
+              onFieldChange={onFieldChange}
+            />
           </div>
-          <EmergencyContactSection
-            formData={formData}
-            errors={errors}
-            onFieldChange={onFieldChange}
-          />
         </div>
       );
 
     case 'medical':
       return (
-        <div className="space-y-4">
-          <div>
-            <div className="text-xs font-medium text-slate-500">Medical Background</div>
-            <div className="text-sm font-semibold text-slate-900">
-              History, conditions, lifestyle
+        <div className="space-y-6">
+          <div className="pb-1">
+            <div className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-1">
+              Medical Background
+            </div>
+            <div className="text-base font-semibold text-text-primary">
+              History, Conditions & Lifestyle
             </div>
           </div>
           <MedicalHistorySection formData={formData} onFieldChange={onFieldChange} />
@@ -73,11 +83,13 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
 
     case 'vitals':
       return (
-        <div className="space-y-4">
-          <div>
-            <div className="text-xs font-medium text-slate-500">Vitals</div>
-            <div className="text-sm font-semibold text-slate-900">Measurements</div>
-            <div className="text-xs text-slate-500 mt-1">
+        <div className="space-y-6">
+          <div className="pb-1">
+            <div className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-1">
+              Vitals
+            </div>
+            <div className="text-base font-semibold text-text-primary">Measurements</div>
+            <div className="text-xs text-text-tertiary mt-1.5 leading-relaxed">
               Fill all vitals or leave all blank. Hints show typical ranges.
             </div>
           </div>
@@ -99,12 +111,12 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
     case 'affiliation':
       return (
         <div className="space-y-6">
-          <div className="pb-2">
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">
+          <div className="pb-1">
+            <div className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-1">
               Affiliation
             </div>
-            <div className="text-base font-semibold text-slate-900">Select Your Plan</div>
-            <div className="text-xs text-slate-500 mt-1">
+            <div className="text-base font-semibold text-text-primary">Select Your Plan</div>
+            <div className="text-xs text-text-tertiary mt-1.5 leading-relaxed">
               Choose a duration and pricing that works for you
             </div>
           </div>

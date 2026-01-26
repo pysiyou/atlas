@@ -207,7 +207,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="flex justify-between items-baseline mb-1 gap-2">
               <label
                 htmlFor={`vital-${fieldName}`}
-                className="text-xxs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
+                className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
               >
                 {config.label}
               </label>
@@ -216,7 +216,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                 {isAbnormal && (
                   <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-danger shrink-0" />
                 )}
-                <span className="text-xxs text-text-disabled truncate">Ref: {refRange}</span>
+                <span className="text-xxs text-text-tertiary truncate">Ref: {refRange}</span>
               </div>
             </div>
 
@@ -224,7 +224,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="relative">
               {/* Icon (left, matches shared Input pattern; z-10 so it stacks above input) */}
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                <Icon name={config.icon} className="w-4 h-4 text-text-disabled shrink-0" />
+                <Icon name={config.icon} className="w-4 h-4 text-text-muted shrink-0" />
               </div>
 
               <input
@@ -253,7 +253,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               {/* Unit display (absolute positioned) */}
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
-                <span className="text-xs text-text-disabled select-none truncate">{config.unit}</span>
+                <span className="text-xs text-text-tertiary select-none truncate">{config.unit}</span>
               </div>
 
               {/* Abnormal value alert (absolute positioned below input) */}

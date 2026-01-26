@@ -138,10 +138,10 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         subtitle={mode === 'edit' && patient ? <span className="font-mono">{displayId.patient(patient.id)}</span> : undefined}
         maxWidth="max-w-3xl"
       >
-        <div className="h-full flex flex-col bg-slate-50">
+        <div className="h-full flex flex-col bg-app-bg">
           {/* Scrollable content area */}
-          <div className="flex-1 overflow-y-auto p-6 scrollbar-thin">
-            <form id="patient-upsert-form" onSubmit={handleSubmit} className="max-w-4xl mx-auto">
+          <div className="flex-1 overflow-y-auto px-6 py-5 ">
+            <form id="patient-upsert-form" onSubmit={handleSubmit} className="max-w-full">
               <TabbedSectionContainer
                 tabs={tabs}
                 activeTab={activeTab}
@@ -158,9 +158,9 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                     className="h-7"
                   />
                 }
-                className="rounded-xl! shadow-none"
-                contentClassName="!p-6"
-                headerClassName="!px-6 !py-4"
+                className="rounded-lg shadow-sm border border-border bg-surface"
+                contentClassName="p-6"
+                headerClassName="px-6 py-4"
               >
                 <PatientFormTabs
                   activeTab={activeTab}
@@ -180,7 +180,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
           </div>
 
           {/* Fixed footer actions */}
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-surface shrink-0">
+          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-surface shrink-0 shadow-[0_-1px_3px_rgba(0,0,0,0.04)]">
             <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
               Cancel
             </Button>

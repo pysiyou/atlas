@@ -75,7 +75,7 @@ const ModalSearchInput: React.FC<{
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-tertiary"
+        className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-muted"
       />
       {localValue && (
         <button

@@ -60,7 +60,7 @@ const TestSearchTagInput: React.FC<{
         ].join(' ')}
       >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-text-disabled" />
+          <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-text-muted" />
         </div>
 
         {selectedTags.map(code => (
@@ -90,7 +90,7 @@ const TestSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedTags.length === 0 ? 'Search by code or name…' : ''}
-          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-disabled bg-transparent leading-normal"
+          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-normal"
           autoComplete="off"
         />
       </div>

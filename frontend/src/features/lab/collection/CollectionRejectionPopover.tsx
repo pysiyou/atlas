@@ -157,7 +157,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
       {/* Rejection Reasons */}
       <div className="space-y-2">
-        <label className="block text-xs font-medium text-text-secondary">Rejection Reasons</label>
+        <label className="block text-xs font-medium text-text-tertiary">Rejection Reasons</label>
         <div className="border border-border rounded-md max-h-[200px] overflow-y-auto">
           {REJECTION_REASONS.map(r => (
             <label
@@ -194,7 +194,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-text-secondary mb-1">
+        <label className="block text-xs font-medium text-text-tertiary mb-1">
           Notes {reasons.includes('other') && <span className="text-red-600">*</span>}
         </label>
         <textarea

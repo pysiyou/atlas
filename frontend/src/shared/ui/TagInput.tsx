@@ -112,7 +112,7 @@ export const TagInput: React.FC<TagInputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-text-secondary cursor-pointer truncate min-w-0"
+            className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
           >
             {label}
             {required && <span className="text-danger ml-1">*</span>}
@@ -160,7 +160,7 @@ export const TagInput: React.FC<TagInputProps> = ({
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={tags.length === 0 ? placeholder : ''}
-          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-disabled bg-transparent leading-[1.5]"
+          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-[1.5]"
           disabled={maxTags !== undefined && tags.length >= maxTags}
         />
       </div>

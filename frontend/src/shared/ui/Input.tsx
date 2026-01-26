@@ -12,7 +12,7 @@ import { ICONS } from '@/utils/icon-mappings';
  * Get input classes based on state
  */
 const getInputClasses = (hasError: boolean, hasIcon: boolean, disabled?: boolean) => {
-  const baseClasses = 'w-full rounded border px-3 py-2 text-sm transition-colors duration-200 focus:outline-none focus:ring-2';
+  const baseClasses = 'w-full rounded border px-3 py-2 text-xs transition-colors duration-200 focus:outline-none focus:ring-2 placeholder:text-text-muted';
   const iconPadding = hasIcon ? 'pl-10' : '';
   const stateClasses = hasError
     ? 'border-danger focus:border-danger focus:ring-danger/20'
@@ -67,7 +67,7 @@ export const Input: React.FC<InputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-sm font-medium text-text-primary cursor-pointer truncate min-w-0"
+            className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
           >
             {labelProp}
             {props.required && <span className="text-danger ml-1">*</span>}
@@ -77,7 +77,7 @@ export const Input: React.FC<InputProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-text-disabled" />
+            <Icon name={displayIcon} className="w-4 h-4 text-text-muted" />
           </div>
         )}
         <input
@@ -134,7 +134,7 @@ export const Textarea: React.FC<TextareaProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-sm font-medium text-text-primary cursor-pointer truncate min-w-0"
+            className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
           >
             {labelProp}
             {props.required && <span className="text-danger ml-1">*</span>}
@@ -144,7 +144,7 @@ export const Textarea: React.FC<TextareaProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute top-2.5 left-3 pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-text-disabled" />
+            <Icon name={displayIcon} className="w-4 h-4 text-text-muted" />
           </div>
         )}
         <textarea
@@ -204,7 +204,7 @@ export const Select: React.FC<SelectProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-sm font-medium text-text-primary cursor-pointer truncate min-w-0"
+            className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
           >
             {labelProp}
             {props.required && <span className="text-danger ml-1">*</span>}
@@ -214,7 +214,7 @@ export const Select: React.FC<SelectProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-text-disabled" />
+            <Icon name={displayIcon} className="w-4 h-4 text-text-muted" />
           </div>
         )}
         <select

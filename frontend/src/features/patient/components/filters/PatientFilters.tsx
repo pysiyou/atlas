@@ -192,7 +192,7 @@ const SearchInput: React.FC<{
         className={cn(
           'flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0',
           'placeholder:font-normal',
-          'placeholder:text-text-tertiary'
+          'placeholder:text-text-muted'
         )}
       />
       <div className="flex items-center gap-1 shrink-0">
@@ -369,7 +369,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                     placeholder="Search patients..."
                     value={searchQuery}
                     onChange={e => onSearchChange(e.target.value)}
-                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-tertiary"
+                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-muted"
                   />
                   {searchQuery && (
                     <button

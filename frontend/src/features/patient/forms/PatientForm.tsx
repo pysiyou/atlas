@@ -396,7 +396,7 @@ export const EmergencyContactSection: React.FC<
           placeholder="Jane Doe"
         />
         <div>
-          <label className="block text-xs font-medium text-text-secondary mb-1.5">
+          <label className="block text-xs font-medium text-text-tertiary mb-1.5">
             Relationship <span className="text-danger ml-1">*</span>
           </label>
           <MultiSelectFilter

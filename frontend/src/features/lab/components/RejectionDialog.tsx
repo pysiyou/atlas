@@ -228,7 +228,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       {/* Rejection Reason */}
       {!escalationRequired && (
         <div>
-        <label className="block text-xs font-medium text-text-secondary mb-1">
+        <label className="block text-xs font-medium text-text-tertiary mb-1">
           Rejection Reason <span className="text-red-600">*</span>
         </label>
           <textarea
