@@ -10,8 +10,6 @@ import { Popover } from '@/shared/ui/Popover';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
-import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
-import { dropdown } from '@/shared/design-system/tokens/components';
 
 interface AgeFilterProps {
   value: [number, number];
@@ -135,10 +133,10 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className={neutralColors.text.muted}>{placeholder}</span>;
+      return <span className="text-text-muted">{placeholder}</span>;
     }
     return (
-      <span className={cn(neutralColors.text.secondary, 'font-medium')}>
+      <span className={cn('text-text-secondary', 'font-medium')}>
         {start} - {end}
       </span>
     );
@@ -155,10 +153,11 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            dropdown.trigger.base,
+            'group relative flex items-center gap-2 w-full h-[34px] px-3 py-1.5',
+            'bg-surface border rounded-md cursor-pointer transition-colors duration-200',
             isOpen
-              ? dropdown.trigger.open
-              : dropdown.trigger.default,
+              ? 'border-brand bg-brand/5'
+              : 'border-border hover:border-border-strong hover:bg-surface-hover',
             className
           )}
         >
@@ -166,35 +165,35 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           <Icon
             name={ICONS.dataFields.hourglass}
             className={cn(
-              dropdown.icon,
-              isOpen ? brandColors.primary.icon : cn(neutralColors.text.disabled, `group-hover:${brandColors.primary.iconLight}`)
+              'w-4 h-4 shrink-0',
+              isOpen ? 'text-brand' : cn('text-text-disabled', 'group-hover:text-brand/70')
             )}
           />
           
           {/* Column 2: Content - flexible middle */}
-          <div className={cn(dropdown.content, 'font-medium')}>{renderTriggerContent()}</div>
+          <div className={cn('flex-1 min-w-0 text-xs font-medium truncate', 'font-medium')}>{renderTriggerContent()}</div>
 
           {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
-          <div className={dropdown.rightIcons}>
+          <div className="flex items-center gap-1 shrink-0">
             {value && (value[0] !== min || value[1] !== max) ? (
               <button
                 onClick={handleClear}
-                className={cn(dropdown.clearButton, `hover:${brandColors.primary.backgroundLightBg} group/clear`)}
+                className={cn('p-0.5 rounded hover:bg-brand/10 transition-colors group/clear')}
                 aria-label="Clear age filter"
               >
                 <Icon 
                   name={ICONS.actions.closeCircle} 
-                  className={cn(dropdown.clearIcon, `group-hover/clear:${brandColors.primary.icon}`)} 
+                  className={cn('w-3.5 h-3.5 text-text-disabled', 'group-hover/clear:text-brand')} 
                 />
               </button>
             ) : (
-              <div className={dropdown.clearButtonPlaceholder} />
+              <div className="w-[18px]" />
             )}
             <Icon
               name={ICONS.actions.chevronDown}
               className={cn(
-                dropdown.chevron,
-                isOpen && cn('rotate-180', brandColors.primary.icon)
+                'w-3.5 h-3.5 text-text-disabled transition-transform duration-200',
+                isOpen && cn('rotate-180', 'text-brand')
               )}
             />
           </div>
@@ -205,11 +204,11 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
       {() => (
         <div className="space-y-5">
           {/* Simple Value Display */}
-          <div className={cn('flex items-center justify-center gap-2 text-sm', neutralColors.text.tertiary)}>
-            <span className={cn('font-semibold tabular-nums', neutralColors.text.primary)}>{localValue[0]}</span>
-            <span className={neutralColors.text.disabled}>-</span>
-            <span className={cn('font-semibold tabular-nums', neutralColors.text.primary)}>{localValue[1]}</span>
-            <span className={cn(neutralColors.text.muted, 'ml-1')}>years</span>
+          <div className={cn('flex items-center justify-center gap-2 text-sm', 'text-text-tertiary')}>
+            <span className={cn('font-semibold tabular-nums', 'text-text-primary')}>{localValue[0]}</span>
+            <span className="text-text-disabled">-</span>
+            <span className={cn('font-semibold tabular-nums', 'text-text-primary')}>{localValue[1]}</span>
+            <span className={cn('text-text-muted', 'ml-1')}>years</span>
           </div>
 
           {/* Enhanced Slider - Pill-shaped track with multi-segment gradient */}
@@ -235,8 +234,8 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
                 'absolute w-4 h-4 rounded-full cursor-grab active:cursor-grabbing z-10 transition-all duration-200',
                 'hover:scale-125',
                 isDraggingHandle === 'min'
-                  ? `${brandColors.primary.backgroundMedium} scale-125 shadow-lg`
-                  : `${brandColors.primary.backgroundLight} hover:${brandColors.primary.backgroundMedium}`
+                  ? 'bg-brand scale-125 shadow-lg'
+                  : 'bg-brand/60 hover:bg-brand'
               )}
               style={{ left: `calc(${minPercent}% - 8px)` }}
               onMouseDown={onMouseDown('min')}
@@ -249,7 +248,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             >
               {/* Dotted outline when dragging */}
               {isDraggingHandle === 'min' && (
-                <div className={`absolute inset-0 rounded-full border-2 border-dashed ${brandColors.primary.borderMedium} -m-1 animate-pulse`} />
+                <div className="absolute inset-0 rounded-full border-2 border-dashed border-brand -m-1 animate-pulse" />
               )}
             </div>
 
@@ -259,8 +258,8 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
                 'absolute w-4 h-4 rounded-full cursor-grab active:cursor-grabbing z-10 transition-all duration-200',
                 'hover:scale-125',
                 isDraggingHandle === 'max'
-                  ? `${brandColors.primary.backgroundMedium} scale-125 shadow-lg`
-                  : `${brandColors.primary.backgroundLight} hover:${brandColors.primary.backgroundMedium}`
+                  ? 'bg-brand scale-125 shadow-lg'
+                  : 'bg-brand/60 hover:bg-brand'
               )}
               style={{ left: `calc(${maxPercent}% - 8px)` }}
               onMouseDown={onMouseDown('max')}
@@ -273,7 +272,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             >
               {/* Dotted outline when dragging */}
               {isDraggingHandle === 'max' && (
-                <div className={cn('absolute inset-0 rounded-full border-2 border-dashed -m-1 animate-pulse', brandColors.primary.borderMedium)} />
+                <div className={cn('absolute inset-0 rounded-full border-2 border-dashed -m-1 animate-pulse', 'border-brand')} />
               )}
             </div>
           </div>
@@ -282,13 +281,13 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           <div className="flex justify-between items-center text-xs font-medium mt-1">
             <span className={cn(
               'transition-colors duration-200',
-              localValue[0] === min ? brandColors.primary.icon : neutralColors.text.muted
+              localValue[0] === min ? 'text-brand' : 'text-text-muted'
             )}>
               {min}
             </span>
             <span className={cn(
               'transition-colors duration-200',
-              localValue[1] === max ? brandColors.primary.icon : neutralColors.text.muted
+              localValue[1] === max ? 'text-brand' : 'text-text-muted'
             )}>
               {max}
             </span>

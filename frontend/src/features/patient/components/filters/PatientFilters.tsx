@@ -14,11 +14,6 @@ import { AgeFilter } from './AgeFilter';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
-import { filterControlSizing } from '@/shared/design-system/tokens/sizing';
-import { radius } from '@/shared/design-system/tokens/borders';
-import { hover, focus } from '@/shared/design-system/tokens/interactions';
-import { transitions } from '@/shared/design-system/tokens/animations';
 import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../../config/constants';
@@ -175,19 +170,19 @@ const SearchInput: React.FC<{
     <div
       className={cn(
         'relative w-full flex items-center gap-2',
-        filterControlSizing.height,
+        'h-[34px]',
         'px-3 bg-surface border',
-        neutralColors.border.medium,
-        radius.md,
-        hover.background,
-        focus.outline,
+        'border-border-strong',
+        'rounded-md',
+        'hover:bg-surface-hover',
+        'focus-within:outline-none',
         'focus-within:border-brand',
-        transitions.colors
+        'transition-colors duration-200'
       )}
     >
       <Icon
         name={ICONS.actions.search}
-        className={cn(neutralColors.text.disabled, 'w-3.5 h-3.5 shrink-0')}
+        className={cn('text-text-disabled', 'w-3.5 h-3.5 shrink-0')}
       />
       <input
         type="text"
@@ -197,7 +192,7 @@ const SearchInput: React.FC<{
         className={cn(
           'flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0',
           'placeholder:font-normal',
-          `placeholder:${neutralColors.text.muted}`
+          'placeholder:text-text-muted'
         )}
       />
       <div className="flex items-center gap-1 shrink-0">
@@ -205,7 +200,7 @@ const SearchInput: React.FC<{
           <div
             className={cn(
               'w-4 h-4 border-2 border-t-transparent rounded-full animate-spin',
-              brandColors.primary.borderMedium
+              'border-brand'
             )}
           />
         )}
@@ -214,16 +209,16 @@ const SearchInput: React.FC<{
             onClick={handleClear}
             className={cn(
               'p-0.5',
-              hover.background,
+              'hover:bg-surface-hover',
               'rounded',
-              transitions.colors,
+              'transition-colors duration-200',
               'flex items-center justify-center cursor-pointer'
             )}
             aria-label="Clear search"
           >
             <Icon
               name={ICONS.actions.closeCircle}
-              className={cn('w-4 h-4', neutralColors.text.disabled, `hover:${neutralColors.text.tertiary}`)}
+              className={cn('w-4 h-4', 'text-text-disabled', 'hover:text-text-tertiary')}
             />
           </button>
         )}
@@ -267,7 +262,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   const renderFilters = () => (
     <>
       {/* Search */}
-      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+      <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
         <SearchInput
           value={searchQuery}
           onChange={onSearchChange}
@@ -276,7 +271,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
       </div>
 
       {/* Age Range */}
-      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+      <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
         <AgeFilter
           value={ageRange}
           onChange={onAgeRangeChange}
@@ -288,7 +283,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
       </div>
 
       {/* Sex */}
-      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+      <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
         <MultiSelectFilter
           label="Sex"
           options={genderOptions}
@@ -302,7 +297,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
       </div>
 
       {/* Affiliation Status */}
-      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+      <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
         <MultiSelectFilter
           label="Affiliation Status"
           options={affiliationStatusOptions}
@@ -321,11 +316,11 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   if (showModalView) {
     return (
       <>
-        <div className={cn('w-full bg-surface border-b', neutralColors.border.default)}>
+        <div className={cn('w-full bg-surface border-b', 'border-border')}>
           <div className="px-3 py-2 w-full">
             <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
               {/* Search control */}
-              <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+              <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
                 <SearchInput
                   value={searchQuery}
                   onChange={onSearchChange}
@@ -456,7 +451,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   // Tablet view: 2-column grid
   if (showTwoColumn) {
     return (
-      <div className={cn('w-full bg-surface border-b', neutralColors.border.default)}>
+      <div className={cn('w-full bg-surface border-b', 'border-border')}>
         <div className="px-3 py-2 w-full">
           <div className="grid grid-cols-2 gap-2 items-center w-full">
             {renderFilters()}
@@ -468,7 +463,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
 
   // Desktop view: 4-column grid
   return (
-    <div className={cn('w-full bg-surface border-b', neutralColors.border.default)}>
+    <div className={cn('w-full bg-surface border-b', 'border-border')}>
       <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
         <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">
           {renderFilters()}
