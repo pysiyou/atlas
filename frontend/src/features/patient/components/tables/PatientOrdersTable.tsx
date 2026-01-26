@@ -42,7 +42,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
                 className="hover:bg-brand/5 transition-colors cursor-pointer"
                 onClick={() => onOrderClick(String(order.orderId))}
               >
-                <td className="px-3 py-3 text-brand font-medium font-mono">
+                <td className="px-3 py-3 text-sky-600 font-medium font-mono">
                   {displayId.order(order.orderId)}
                 </td>
                 <td className="px-3 py-3 text-text-tertiary">
@@ -77,7 +77,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
             className="hover:bg-app-bg transition-colors cursor-pointer"
             onClick={() => onOrderClick(String(order.orderId))}
           >
-            <td className="px-2 py-3 text-xs text-brand font-medium font-mono max-w-0">
+            <td className="px-2 py-3 text-xs text-sky-600 font-medium font-mono max-w-0">
               <span className="block truncate">{displayId.order(order.orderId)}</span>
             </td>
             <td className="px-2 py-3 text-xs text-text-tertiary max-w-0">
