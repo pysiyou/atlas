@@ -26,8 +26,6 @@ import { formatDate } from '@/utils';
 import { isAffiliationActive } from '../utils/affiliationUtils';
 import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
 import { AffiliationPlanSelector } from '../components/forms/AffiliationPlanSelector';
-import { semanticColors, brandColors, brandingColors } from '@/shared/design-system/tokens/colors';
-import { getFormSectionClasses } from '@/shared/design-system/tokens/presets';
 
 /**
  * Props for PatientFormSections component
@@ -268,7 +266,7 @@ export const AffiliationSection: React.FC<
               <span className="text-xs font-medium text-text-muted uppercase tracking-wide">
                 Expiry Date
               </span>
-              <p className={`font-semibold text-sm ${isActive ? 'text-text-primary' : semanticColors.danger.icon}`}>
+              <p className={`font-semibold text-sm ${isActive ? 'text-text-primary' : 'text-danger'}`}>
                 {formatDate(existingAffiliation.endDate)}
               </p>
             </div>
@@ -290,7 +288,7 @@ export const AffiliationSection: React.FC<
                 onFieldChange('affiliationDuration', undefined);
               }
             }}
-            className={`w-4 h-4 ${brandingColors.affiliation.icon} border-border-strong rounded ${brandingColors.affiliation.focusRing} focus:ring-2`}
+            className="w-4 h-4 text-orange-500 border-border-strong rounded focus:ring-orange-500 focus:ring-2"
           />
           <label
             htmlFor="hasAffiliation"
@@ -305,7 +303,7 @@ export const AffiliationSection: React.FC<
       {(formData.hasAffiliation || (hasExistingAffiliation && !isActive)) && (
         <div>
           {errors?.affiliationDuration && (
-            <p className={`mb-2 text-sm ${semanticColors.danger.errorText}`}>{errors.affiliationDuration}</p>
+            <p className="mb-2 text-sm text-danger">{errors.affiliationDuration}</p>
           )}
           <AffiliationPlanSelector
             selectedDuration={formData.affiliationDuration}
@@ -399,7 +397,7 @@ export const EmergencyContactSection: React.FC<
         />
         <div>
           <label className="block text-xs font-medium text-text-secondary mb-1.5">
-            Relationship <span className={semanticColors.danger.requiredIndicator}>*</span>
+            Relationship <span className="text-danger ml-1">*</span>
           </label>
           <MultiSelectFilter
             label="Relationship"
@@ -412,7 +410,7 @@ export const EmergencyContactSection: React.FC<
             className="w-full"
           />
           {errors.emergencyContactRelationship && (
-            <p className={`mt-1 text-sm ${semanticColors.danger.errorText}`}>{errors.emergencyContactRelationship}</p>
+            <p className="mt-1 text-sm text-danger">{errors.emergencyContactRelationship}</p>
           )}
         </div>
         <Input
@@ -532,7 +530,7 @@ export const MedicalHistorySection: React.FC<
             name="smoking"
             checked={formData.smoking}
             onChange={e => onFieldChange('smoking', e.target.checked)}
-            className={`w-4 h-4 ${brandColors.primary.icon} border-border-strong rounded focus:ring-brand`}
+            className="w-4 h-4 text-brand border-border-strong rounded focus:ring-brand"
           />
           <label htmlFor="smoking" className="text-xs font-medium text-text-muted">
             Smoking
@@ -545,7 +543,7 @@ export const MedicalHistorySection: React.FC<
             name="alcohol"
             checked={formData.alcohol}
             onChange={e => onFieldChange('alcohol', e.target.checked)}
-            className={`w-4 h-4 ${brandColors.primary.icon} border-border-strong rounded focus:ring-brand`}
+            className="w-4 h-4 text-brand border-border-strong rounded focus:ring-brand"
           />
           <label htmlFor="alcohol" className="text-xs font-medium text-text-muted">
             Alcohol Use
@@ -568,25 +566,23 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
   existingAffiliation,
   onRenew,
 }) => {
-  const section = getFormSectionClasses();
-
   return (
     <div className="space-y-8">
-      <div className={section.container}>
-        <h3 className={section.heading}>Patient Demographics</h3>
-        <div className={section.content}>
+      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">Patient Demographics</h3>
+        <div className="space-y-4">
           <DemographicsSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
         </div>
       </div>
-      <div className={section.container}>
-        <h3 className={section.heading}>Address Information</h3>
-        <div className={section.content}>
+      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">Address Information</h3>
+        <div className="space-y-4">
           <AddressSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
         </div>
       </div>
-      <div className={section.container}>
-        <h3 className={section.heading}>Lab Affiliation</h3>
-        <div className={section.content}>
+      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">Lab Affiliation</h3>
+        <div className="space-y-4">
           <AffiliationSection
             formData={formData}
             errors={errors}
@@ -596,9 +592,9 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
           />
         </div>
       </div>
-      <div className={section.container}>
-        <h3 className={section.heading}>Emergency Contact</h3>
-        <div className={section.content}>
+      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">Emergency Contact</h3>
+        <div className="space-y-4">
           <EmergencyContactSection
             formData={formData}
             errors={errors}
@@ -606,9 +602,9 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
           />
         </div>
       </div>
-      <div className={section.container}>
-        <h3 className={section.heading}>Medical History</h3>
-        <div className={section.content}>
+      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">Medical History</h3>
+        <div className="space-y-4">
           <MedicalHistorySection formData={formData} onFieldChange={onFieldChange} />
         </div>
       </div>
