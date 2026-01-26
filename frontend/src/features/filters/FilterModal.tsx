@@ -69,20 +69,20 @@ const ModalSearchInput: React.FC<{
   }, [onChange]);
 
   return (
-    <div className="relative w-full flex items-center h-10 px-4 bg-white border border-neutral-200 rounded-lg focus-within:border-amber-400 transition-colors">
+    <div className="relative w-full flex items-center h-10 px-4 bg-surface border border-border rounded-lg focus-within:border-brand transition-colors">
       <input
         type="text"
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-neutral-400"
+        className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-muted"
       />
       {localValue && (
         <button
           onClick={handleClear}
-          className="p-0.5 hover:bg-neutral-100 rounded transition-colors flex items-center justify-center cursor-pointer"
+          className="p-0.5 hover:bg-surface-hover rounded transition-colors flex items-center justify-center cursor-pointer"
         >
-          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-neutral-400" />
+          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted" />
         </button>
       )}
     </div>
@@ -126,12 +126,12 @@ const ModalPriceSlider: React.FC<{
 
   return (
     <div className="w-full">
-      <p className="text-sm text-neutral-500 mb-4">Move the slider to change prices</p>
+      <p className="text-sm text-text-tertiary mb-4">Move the slider to change prices</p>
 
       {/* Slider Track */}
       <div className="relative h-1 mb-6">
         {/* Background track */}
-        <div className="absolute inset-0 bg-neutral-200 rounded-full" />
+        <div className="absolute inset-0 bg-border rounded-full" />
 
         {/* Active track */}
         <div
