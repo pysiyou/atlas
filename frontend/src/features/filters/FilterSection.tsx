@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * Props for FilterSection component
@@ -69,7 +68,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
         <div className="flex items-center gap-1.5">
           <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wide">{title}</h3>
           {activeCount > 0 && (
-            <span className={`inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full ${brandColors.primary.background} text-white text-xxs font-medium`}>
+            <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full bg-brand text-white text-xxs font-medium">
               {activeCount}
             </span>
           )}

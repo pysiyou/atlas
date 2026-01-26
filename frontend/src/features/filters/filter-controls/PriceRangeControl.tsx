@@ -9,8 +9,6 @@ import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import type { PriceRangeFilterControl } from '../types';
 import { ICONS } from '@/utils/icon-mappings';
-import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
-import { dropdown } from '@/shared/design-system/tokens/components';
 
 /**
  * Props for PriceRangeControl component
@@ -135,10 +133,10 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className={neutralColors.text.muted}>{config.placeholder || 'Filter by price range'}</span>;
+      return <span className="text-text-muted">{config.placeholder || 'Filter by price range'}</span>;
     }
     return (
-      <span className={cn(neutralColors.text.secondary, 'font-medium')}>
+      <span className="text-text-secondary font-medium">
         {formatPrice(start)} - {formatPrice(end)}
       </span>
     );
@@ -151,32 +149,32 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            dropdown.trigger.base,
-            isOpen ? dropdown.trigger.open : dropdown.trigger.default,
+            'h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus:outline-none focus:border-brand transition-colors duration-200 cursor-pointer flex items-center justify-between gap-2',
+            isOpen && 'border-brand',
             className
           )}
         >
           {/* Column 1: Left Icon */}
-          <Icon name={ICONS.dataFields.wallet} className={dropdown.icon} />
+          <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-text-muted shrink-0" />
           
           {/* Column 2: Content - flexible middle */}
-          <div className={dropdown.content}>{renderTriggerContent()}</div>
+          <div className="flex-1 min-w-0 text-xs font-medium">{renderTriggerContent()}</div>
 
           {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
-          <div className={dropdown.rightIcons}>
+          <div className="flex items-center gap-1 shrink-0">
             {value && (value[0] !== min || value[1] !== max) ? (
               <button
                 onClick={handleClear}
-                className={dropdown.clearButton}
+                className="p-0.5 hover:bg-surface-hover rounded transition-colors"
               >
-                <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
+                <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-disabled hover:text-text-tertiary" />
               </button>
             ) : (
-              <div className={dropdown.clearButtonPlaceholder} />
+              <div className="w-5 h-5" />
             )}
             <Icon
               name={ICONS.actions.chevronDown}
-              className={cn(dropdown.chevron, isOpen && 'rotate-180')}
+              className={cn('w-4 h-4 text-text-muted transition-transform', isOpen && 'rotate-180')}
             />
           </div>
         </div>
@@ -185,7 +183,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
     >
       {() => (
         <div className="space-y-4">
-          <div className={cn('flex items-center justify-between text-sm font-medium', neutralColors.text.tertiary)}>
+          <div className="flex items-center justify-between text-sm font-medium text-text-tertiary">
             <span>{formatPrice(localValue[0])}</span>
             <span>{formatPrice(localValue[1])}</span>
           </div>
@@ -195,7 +193,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
             <div className="absolute w-full h-1.5 bg-neutral-200 rounded-full overflow-hidden">
               {/* Active Range */}
               <div
-                className={`absolute h-full ${brandColors.primary.backgroundMedium}`}
+                className="absolute h-full bg-brand"
                 style={{
                   left: `${getPercentage(localValue[0])}%`,
                   width: `${getPercentage(localValue[1]) - getPercentage(localValue[0])}%`,
@@ -205,20 +203,20 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
 
             {/* Min Handle */}
             <div
-              className={`absolute w-5 h-5 bg-surface border-2 ${brandColors.primary.borderMedium} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
+              className="absolute w-5 h-5 bg-surface border-2 border-brand rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30"
               style={{ left: `calc(${getPercentage(localValue[0])}% - 10px)` }}
               onMouseDown={onMouseDown('min')}
             />
 
             {/* Max Handle */}
             <div
-              className={`absolute w-5 h-5 bg-surface border-2 ${brandColors.primary.borderMedium} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
+              className="absolute w-5 h-5 bg-surface border-2 border-brand rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30"
               style={{ left: `calc(${getPercentage(localValue[1])}% - 10px)` }}
               onMouseDown={onMouseDown('max')}
             />
           </div>
 
-          <div className={cn('flex justify-between items-center text-xs', neutralColors.text.disabled)}>
+          <div className="flex justify-between items-center text-xs text-text-disabled">
             <span>{formatPrice(min)}</span>
             <span>{formatPrice(max)}</span>
           </div>

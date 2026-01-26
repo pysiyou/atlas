@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
@@ -144,7 +143,7 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
       {validBadges.length > 1 && onClearAll && (
         <button
           onClick={onClearAll}
-          className={`ml-auto text-xxs font-medium ${brandColors.primary.icon} hover:${brandColors.primary.textOnLight} transition-colors cursor-pointer`}
+          className="ml-auto text-xxs font-medium text-brand hover:text-brand-dark transition-colors cursor-pointer"
         >
           Clear all
         </button>

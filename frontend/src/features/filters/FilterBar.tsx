@@ -11,20 +11,16 @@ import { FilterFactory } from './FilterFactory';
 import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
 import { FilterModal } from './FilterModal';
-import { neutralColors } from '@/shared/design-system/tokens/colors';
-import { filterControl } from '@/shared/design-system/tokens/components/filter';
-import { border } from '@/shared/design-system/tokens/borders';
-import { fontSize, fontWeight } from '@/shared/design-system/tokens/typography';
 import { Button } from '@/shared/ui/Button';
 import { Badge } from '@/shared/ui/Badge';
 import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
 
-// Token-based style constants for consistent styling
+// Style constants for consistent styling
 const filterStyles = {
-  controlHeight: filterControl.height,
-  container: `w-full bg-surface border-b ${neutralColors.border.default}`,
-  dropdownLabel: `${fontSize.xs} ${fontWeight.medium} ${neutralColors.text.secondary} mb-2`,
-  dropdownDivider: `pt-2 border-t ${border.default}`,
+  controlHeight: 'h-[34px]',
+  container: 'w-full bg-surface border-b border-border',
+  dropdownLabel: 'text-xs font-medium text-text-secondary mb-2',
+  dropdownDivider: 'pt-2 border-t border-border',
 } as const;
 
 /**

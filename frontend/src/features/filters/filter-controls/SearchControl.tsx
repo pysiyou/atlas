@@ -7,11 +7,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
-import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
-import { filterControlSizing } from '@/shared/design-system/tokens/sizing';
-import { radius } from '@/shared/design-system/tokens/borders';
-import { hover, focus } from '@/shared/design-system/tokens/interactions';
-import { transitions } from '@/shared/design-system/tokens/animations';
 
 /**
  * Props for SearchControl component
@@ -109,11 +104,11 @@ export const SearchControl: React.FC<SearchControlProps> = ({
   }, []);
 
   return (
-    <div className={cn('relative w-full flex items-center gap-2', filterControlSizing.height, 'px-3 bg-surface border', neutralColors.border.medium, radius.md, hover.background, focus.outline, 'focus-within:border-brand', transitions.colors, className)}>
+    <div className={cn('relative w-full flex items-center gap-2 h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-brand transition-colors duration-200', className)}>
       {/* Column 1: Left Icon */}
       <Icon
         name={ICONS.actions.search}
-        className={cn(neutralColors.text.disabled, 'w-3.5 h-3.5 shrink-0')}
+        className="w-3.5 h-3.5 shrink-0 text-text-disabled"
       />
 
       {/* Column 2: Input - flexible middle */}
@@ -122,25 +117,21 @@ export const SearchControl: React.FC<SearchControlProps> = ({
         placeholder={placeholder}
         value={localValue}
         onChange={handleChange}
-        className={cn(
-          'flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0',
-          'placeholder:font-normal',
-          `placeholder:${neutralColors.text.muted}`
-        )}
+        className="flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0 placeholder:font-normal placeholder:text-text-muted"
       />
 
       {/* Column 3: Right Icons (loading/clear) */}
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
-          <div className={cn('w-4 h-4 border-2 border-t-transparent rounded-full animate-spin', brandColors.primary.borderMedium)} />
+          <div className="w-4 h-4 border-2 border-brand border-t-transparent rounded-full animate-spin" />
         )}
         {localValue && !isDebouncing && (
           <button
             onClick={handleClear}
-            className={cn('p-0.5', hover.background, 'rounded', transitions.colors, 'flex items-center justify-center cursor-pointer')}
+            className="p-0.5 hover:bg-surface-hover rounded transition-colors duration-200 flex items-center justify-center cursor-pointer"
             aria-label="Clear search"
           >
-            <Icon name={ICONS.actions.closeCircle} className={cn('w-4 h-4', neutralColors.text.disabled, `hover:${neutralColors.text.tertiary}`)} />
+            <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-disabled hover:text-text-tertiary" />
           </button>
         )}
       </div>

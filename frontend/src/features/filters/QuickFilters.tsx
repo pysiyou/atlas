@@ -6,7 +6,6 @@
 import React from 'react';
 import { Icon, type IconName } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 import type { QuickFilterPreset } from './types';
 
 /**
@@ -54,7 +53,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
               'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xxs font-medium transition-colors cursor-pointer',
               'border',
               isActive
-                ? `${brandColors.primary.backgroundLightBg} ${brandColors.primary.border} ${brandColors.primary.textLight}`
+                ? 'bg-brand-light border-brand text-brand-dark'
                 : 'bg-surface border-border-strong text-text-secondary hover:bg-app-bg hover:border-gray-400'
             )}
           >

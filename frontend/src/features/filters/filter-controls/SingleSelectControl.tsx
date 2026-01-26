@@ -4,14 +4,12 @@
  */
 
 import React from 'react';
-import { neutralColors } from '@/shared/design-system/tokens/colors';
 import { Popover } from '@/shared/ui/Popover';
 import { Icon, type IconName } from '@/shared/ui/Icon';
 import { Badge } from '@/shared/ui/Badge';
 import { cn } from '@/utils';
 import type { SingleSelectFilterControl } from '../types';
 import { ICONS } from '@/utils/icon-mappings';
-import { dropdown, dropdownContent, dropdownItem } from '@/shared/design-system/tokens/components/dropdown';
 
 /**
  * Props for SingleSelectControl component
@@ -68,7 +66,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
   const renderTriggerContent = () => {
     if (!selectedOption) {
       return (
-        <span className={neutralColors.text.muted}>
+        <span className="text-text-muted">
           {config.placeholder || `Select ${config.label.toLowerCase()}...`}
         </span>
       );
@@ -88,34 +86,34 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            dropdown.trigger.base,
-            isOpen ? dropdown.trigger.open : dropdown.trigger.default,
+            'h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus:outline-none focus:border-brand transition-colors duration-200 cursor-pointer flex items-center justify-between gap-2',
+            isOpen && 'border-brand',
             className
           )}
         >
           {/* Column 1: Left Icon */}
           {config.icon && (
-            <Icon name={config.icon as IconName} className={dropdown.icon} />
+            <Icon name={config.icon as IconName} className="w-4 h-4 text-text-muted shrink-0" />
           )}
 
           {/* Column 2: Content - flexible middle */}
-          <div className={dropdown.content}>{renderTriggerContent()}</div>
+          <div className="flex-1 min-w-0 text-xs font-medium">{renderTriggerContent()}</div>
 
           {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
-          <div className={dropdown.rightIcons}>
+          <div className="flex items-center gap-1 shrink-0">
             {value ? (
               <button
                 onClick={handleClear}
-                className={dropdown.clearButton}
+                className="p-0.5 hover:bg-surface-hover rounded transition-colors"
               >
-                <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
+                <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-disabled hover:text-text-tertiary" />
               </button>
             ) : (
-              <div className={dropdown.clearButtonPlaceholder} />
+              <div className="w-5 h-5" />
             )}
             <Icon
               name={ICONS.actions.chevronDown}
-              className={cn(dropdown.chevron, isOpen && 'rotate-180')}
+              className={cn('w-4 h-4 text-text-muted transition-transform', isOpen && 'rotate-180')}
             />
           </div>
         </div>
@@ -123,9 +121,9 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       className=""
     >
       {() => (
-        <div className={dropdownContent.container}>
+        <div className="bg-surface border border-border rounded-md shadow-lg py-1 max-h-60 overflow-auto">
           {/* Options list */}
-          <div className={dropdownContent.optionsList}>
+          <div>
             {config.options.map(option => {
               const isSelected = value === option.id;
               return (
@@ -133,20 +131,19 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   key={option.id}
                   onClick={() => handleSelect(option.id)}
                   className={cn(
-                    dropdownItem.base,
-                    dropdownItem.hover,
-                    isSelected && dropdownItem.selected,
+                    'px-3 py-2 text-sm hover:bg-surface-hover cursor-pointer transition-colors duration-150 w-full flex items-center gap-2',
+                    isSelected && 'bg-app-bg',
                     'text-left'
                   )}
                 >
                   {/* Check indicator */}
-                  <div className={dropdownItem.checkbox.container}>
+                  <div className="flex items-center justify-center w-4 h-4 shrink-0">
                     {isSelected ? (
-                      <div className={cn(dropdownItem.checkbox.checked, 'transition-all duration-150')}>
-                        <Icon name={ICONS.actions.check} className={dropdownItem.checkbox.icon} />
+                      <div className="w-4 h-4 rounded bg-brand flex items-center justify-center transition-all duration-150">
+                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-white" />
                       </div>
                     ) : (
-                      <div className={dropdownItem.checkbox.unchecked} />
+                      <div className="w-4 h-4 rounded border border-border" />
                     )}
                   </div>
 
