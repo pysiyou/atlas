@@ -6,13 +6,11 @@
  */
 
 import React from 'react';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 import { Badge, Alert, Icon } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabCard, ProgressBadge } from '../components/LabCard';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
-import { labCard } from '@/shared/design-system/tokens/components/card';
 
 interface EntryCardProps {
   test: TestWithContext;
@@ -120,7 +118,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <Badge
           key={param.code}
           size="sm"
-          className={results[param.code] ? brandColors.primary.textOnLight : 'text-text-muted'}
+          className={results[param.code] ? 'text-sky-700' : 'text-text-muted'}
           variant={results[param.code] ? 'primary' : 'default'}
         >
           {param.name}
@@ -197,7 +195,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasAnyRejectionHistory ? labCard.rejectionBorder : ''}
+      className={hasAnyRejectionHistory ? 'border-amber-500' : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,

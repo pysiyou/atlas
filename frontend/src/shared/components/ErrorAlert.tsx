@@ -6,7 +6,6 @@
 import React from 'react';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
-import { inlineError } from '@/shared/design-system/tokens/components/shared';
 
 /**
  * Generic error type that matches all context error types
@@ -86,12 +85,12 @@ export const InlineError: React.FC<{
   if (!error) return null;
 
   return (
-    <div className={inlineError.container}>
+    <div className="flex items-center justify-between p-2 bg-danger/10 border border-danger/20 rounded text-sm text-danger">
       <span>{error.message}</span>
       {onDismiss && (
         <button
           onClick={onDismiss}
-          className={inlineError.dismissButton}
+          className="ml-2 text-danger hover:text-danger/80 font-bold"
           aria-label="Dismiss error"
         >
           ×

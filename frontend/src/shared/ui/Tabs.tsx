@@ -1,5 +1,4 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { tabsBase, getTabButtonClasses, getTabCountBadgeClasses, tabIndicator } from '@/shared/design-system/tokens/components/tabs';
 
 export interface TabItem {
   id: string;
@@ -160,10 +159,27 @@ export const TabsList: React.FC<TabsListProps> = ({
     }
   }, [indicator, onIndicatorChange]);
 
+  // Helper functions for inline class generation
+  const getTabButtonClasses = (variant: 'underline' | 'pills', isActive: boolean) => {
+    const base = 'relative px-4 py-2 text-sm font-medium transition-colors duration-200 whitespace-nowrap flex items-center gap-2';
+    if (variant === 'underline') {
+      return `${base} ${isActive ? 'text-brand' : 'text-text-secondary hover:text-text-primary'}`;
+    }
+    return `${base} rounded-md ${isActive ? 'bg-surface text-text-primary' : 'text-text-secondary hover:bg-surface-hover'}`;
+  };
+
+  const getTabCountBadgeClasses = (variant: 'underline' | 'pills', isActive: boolean) => {
+    const base = 'inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-medium';
+    if (variant === 'underline') {
+      return `${base} ${isActive ? 'bg-brand/10 text-brand' : 'bg-neutral-100 text-text-tertiary'}`;
+    }
+    return `${base} ${isActive ? 'bg-brand/10 text-brand' : 'bg-neutral-100 text-text-tertiary'}`;
+  };
+
   return (
     <div
       ref={containerRef}
-      className={`${tabsBase.container} ${variant === 'underline' ? tabsBase.underline : tabsBase.pills} ${className}`}
+      className={`flex items-center ${variant === 'underline' ? 'border-b border-border relative' : 'gap-1 bg-app-bg p-1 rounded-lg'} ${className}`}
     >
       {tabs.map(tab => {
         const isActive = activeTabId === tab.id;
@@ -193,7 +209,7 @@ export const TabsList: React.FC<TabsListProps> = ({
       {/* If headerRef is provided, indicator is rendered in TabbedSectionContainer wrapper */}
       {variant === 'underline' && !headerRef && (
         <div
-          className={`${tabIndicator.base} ${tabIndicator.color}`}
+          className="absolute bottom-0 h-0.5 bg-brand"
           style={{
             left: `${indicator.left}px`,
             width: `${indicator.width}px`,

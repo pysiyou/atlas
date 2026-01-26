@@ -12,7 +12,6 @@ import { SectionContainer, Badge, Avatar } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { OrderTest, PaymentStatus } from '@/types';
-import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 // ============================================================================
 // OrderCardHeader Component (Simple header for OrderCard)
@@ -100,7 +99,7 @@ export const BillingSummaryCard: React.FC<BillingSummaryCardProps> = ({
         </div>
         <div className="border-t pt-2 flex justify-between">
           <span className="font-semibold text-text-primary">Total:</span>
-          <span className={`font-bold text-xl ${brandColors.primary.icon}`}>{formatCurrency(totalPrice)}</span>
+          <span className="font-bold text-xl text-brand">{formatCurrency(totalPrice)}</span>
         </div>
         <div className="flex justify-between items-center pt-2">
           <span className="text-sm text-text-tertiary">Payment Status:</span>
@@ -147,7 +146,7 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className={`font-medium ${brandColors.primary.icon}`}>
+                  <div className="font-medium text-brand">
                     {formatCurrency(test.priceAtOrder)}
                   </div>
                   <Badge variant={test.status} size="sm" />
@@ -164,9 +163,9 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
                         <span
                           className={`font-medium ${
                             result.status === 'high' || result.status === 'low'
-                              ? semanticColors.warning.valueHigh
+                              ? 'text-warning'
                               : result.status === 'critical'
-                                ? semanticColors.danger.icon
+                                ? 'text-danger'
                                 : 'text-text-primary'
                           }`}
                         >
@@ -184,9 +183,9 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
               )}
 
               {test.validationNotes && (
-                <div className={`mt-2 p-2 ${brandColors.primary.backgroundLight} rounded text-sm`}>
-                  <span className={`font-medium ${brandColors.primary.textOnLight}`}>Validation Notes: </span>
-                  <span className={brandColors.primary.textLight}>{test.validationNotes}</span>
+                <div className="mt-2 p-2 bg-brand/10 rounded text-sm">
+                  <span className="font-medium text-brand">Validation Notes: </span>
+                  <span className="text-brand">{test.validationNotes}</span>
                 </div>
               )}
             </div>

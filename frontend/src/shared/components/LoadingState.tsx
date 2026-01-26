@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import { loadingState } from '@/shared/design-system/tokens/components/shared';
 
 export interface LoadingStateProps {
   /** Loading message to display */
@@ -19,7 +18,11 @@ export interface LoadingStateProps {
   className?: string;
 }
 
-const SIZE_CLASSES = loadingState.sizes;
+const SIZE_CLASSES = {
+  sm: 'w-6 h-6 border-2',
+  md: 'w-10 h-10 border-3',
+  lg: 'w-16 h-16 border-4',
+};
 
 /**
  * LoadingState component
@@ -36,18 +39,18 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   className = '',
 }) => {
   const containerClasses = fullScreen
-    ? loadingState.container.fullScreen
-    : loadingState.container.inline;
+    ? 'flex items-center justify-center min-h-screen'
+    : 'flex items-center justify-center p-8';
 
   return (
     <div className={`${containerClasses} ${className}`}>
       <div className="text-center">
         <div
-          className={`inline-block animate-spin rounded-full ${loadingState.spinner} ${SIZE_CLASSES[size]}`}
+          className={`inline-block animate-spin rounded-full border-brand border-t-transparent ${SIZE_CLASSES[size]}`}
           role="status"
           aria-label="Loading"
         />
-        {message && <p className={`mt-3 ${loadingState.message}`}>{message}</p>}
+        {message && <p className="mt-3 text-sm text-text-muted">{message}</p>}
       </div>
     </div>
   );

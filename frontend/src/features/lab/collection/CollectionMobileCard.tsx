@@ -15,7 +15,6 @@ import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { ContainerType } from '@/types';
 import type { SampleDisplay } from '../types';
 import { CollectionPopover } from './CollectionPopover';
-import { mobileCard } from '@/shared/design-system/tokens/components/card';
 
 interface CollectionMobileCardProps {
   display: SampleDisplay;
@@ -62,10 +61,10 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className={mobileCard.base}
+      className="bg-surface rounded-lg p-3 shadow-sm border border-border hover:shadow-md transition-shadow cursor-pointer"
     >
       {/* Header: Avatar (top left) + Status badge (top right) */}
-      <div className={`${mobileCard.header.container} flex justify-between items-center`}>
+      <div className="flex items-center justify-between gap-2 mb-2 flex justify-between items-center">
         <Avatar
           primaryText={patientName}
           secondaryText={displayId.order(order.orderId)}
@@ -88,16 +87,16 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
       </div>
 
       {/* Content: Volume, tests */}
-      <div className={mobileCard.content.container}>
+      <div className="space-y-2">
         <div className="space-y-1">
-          <div className={mobileCard.content.text}>
+          <div className="text-xs text-text-secondary">
             {isPending
               ? `${formatVolume(requirement.totalVolume)} required`
               : collectedVolume !== undefined
                 ? `${formatVolume(collectedVolume)} ${isRejected ? 'was collected' : 'collected'}`
                 : null}
           </div>
-          <div className={mobileCard.content.textSecondary}>
+          <div className="text-xs text-text-muted">
             {testCount} test{testCount !== 1 ? 's' : ''}: {testNames.slice(0, 2).join(', ')}
             {testCount > 2 && ` +${testCount - 2} more`}
           </div>
@@ -105,7 +104,7 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
       </div>
 
       {/* Bottom section: Badges (left) + Action button (right) */}
-      <div className={mobileCard.footer.container}>
+      <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
         <div className="flex items-center gap-2">
           <Badge variant={sample.sampleType} size="xs" />
           {sample.priority && <Badge variant={sample.priority} size="xs" />}

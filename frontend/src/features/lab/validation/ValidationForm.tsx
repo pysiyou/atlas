@@ -4,7 +4,6 @@
 
 import React, { useMemo } from 'react';
 import { Textarea } from '@/shared/ui';
-import { semanticColors, neutralColors } from '@/shared/design-system/tokens/colors';
 
 type ResultStatus =
   | 'normal'
@@ -117,9 +116,9 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
               const abnormal = status !== 'normal';
               const valueColor = abnormal
                 ? isCritical(status)
-                  ? semanticColors.danger.icon
-                  : semanticColors.warning.valueHigh
-                : neutralColors.text.primary; // text-text-primary
+                  ? 'text-red-600'
+                  : 'text-amber-600'
+                : 'text-text-primary';
               
               return (
                 <div
@@ -144,7 +143,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
       {(hasFlags || technicianNotes) && (
         <div className="mb-6 space-y-2 bg-app-bg/50 rounded-md p-3 border border-border-subtle">
           {hasFlags && (
-            <div className={`flex items-start text-xs ${semanticColors.danger.icon}`}>
+            <div className="flex items-start text-xs text-red-600">
               <div className="font-medium">{flags.join(', ')}</div>
             </div>
           )}

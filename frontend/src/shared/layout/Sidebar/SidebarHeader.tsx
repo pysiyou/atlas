@@ -6,7 +6,6 @@
 import React from 'react';
 import { Icon, IconButton } from '@/shared/ui';
 import { ICONS } from '@/utils/icon-mappings';
-import { sidebarHeader } from '@/shared/design-system/tokens/components/layout';
 
 interface SidebarHeaderProps {
   /** Whether the sidebar is collapsed */
@@ -27,11 +26,11 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   onMobileClose,
 }) => {
   return (
-    <div className={sidebarHeader.container}>
+    <div className="h-16 border-b border-border flex items-center px-4">
       <div className="flex items-center w-full h-full">
         {/* Logo */}
         <div
-          className={sidebarHeader.logoContainer}
+          className="w-12 h-12 flex items-center justify-center flex-shrink-0 cursor-pointer"
           onClick={() => isCollapsed && onToggleCollapse()}
           title={isCollapsed ? 'Expand Sidebar' : undefined}
         >
@@ -39,17 +38,17 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
             className="transition-cursor flex items-center justify-center"
             onClick={() => isCollapsed && onToggleCollapse()}
           >
-            <div className={sidebarHeader.logoIcon}>
+            <div className="w-8 h-8 text-brand">
               <Icon name={ICONS.ui.appLogo} className="w-full h-full" />
             </div>
           </div>
         </div>
 
         {/* Title and collapse/close button */}
-        <div className={sidebarHeader.titleContainer(isCollapsed)}>
+        <div className={isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'flex items-center justify-between flex-1 ml-3 transition-all duration-300'}>
           <div className="min-w-0 overflow-hidden whitespace-nowrap">
-            <h1 className={sidebarHeader.title}>Atlas Clinical Labs</h1>
-            <p className={sidebarHeader.subtitle}>Version 2.4</p>
+            <h1 className="text-base font-bold text-text-primary truncate">Atlas Clinical Labs</h1>
+            <p className="text-xs text-text-muted">Version 2.4</p>
           </div>
           {onMobileClose ? (
             <IconButton variant="close" size="sm" onClick={onMobileClose} title="Close Sidebar" />

@@ -14,11 +14,6 @@ import { DateFilter } from './DateFilter';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
-import { filterControlSizing } from '@/shared/design-system/tokens/sizing';
-import { radius } from '@/shared/design-system/tokens/borders';
-import { hover, focus } from '@/shared/design-system/tokens/interactions';
-import { transitions } from '@/shared/design-system/tokens/animations';
 import {
   ORDER_STATUS_VALUES,
   PAYMENT_STATUS_VALUES,
@@ -193,55 +188,38 @@ const SearchInput: React.FC<{
     <div
       className={cn(
         'relative w-full flex items-center gap-2',
-        filterControlSizing.height,
-        'px-3 bg-surface border',
-        neutralColors.border.medium,
-        radius.md,
-        hover.background,
-        focus.outline,
+        'h-9',
+        'px-3 bg-surface border border-border-medium rounded-md',
+        'hover:bg-app-bg',
+        'focus-within:outline-none focus-within:ring-2 focus-within:ring-brand/30',
         'focus-within:border-brand',
-        transitions.colors
+        'transition-colors'
       )}
     >
       <Icon
         name={ICONS.actions.search}
-        className={cn(neutralColors.text.disabled, 'w-3.5 h-3.5 shrink-0')}
+        className="text-text-disabled w-3.5 h-3.5 shrink-0"
       />
       <input
         type="text"
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className={cn(
-          'flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0',
-          'placeholder:font-normal',
-          `placeholder:${neutralColors.text.muted}`
-        )}
+        className="flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0 placeholder:font-normal placeholder:text-text-muted"
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
-          <div
-            className={cn(
-              'w-4 h-4 border-2 border-t-transparent rounded-full animate-spin',
-              brandColors.primary.borderMedium
-            )}
-          />
+          <div className="w-4 h-4 border-2 border-brand border-t-transparent rounded-full animate-spin" />
         )}
         {localValue && !isDebouncing && (
           <button
             onClick={handleClear}
-            className={cn(
-              'p-0.5',
-              hover.background,
-              'rounded',
-              transitions.colors,
-              'flex items-center justify-center cursor-pointer'
-            )}
+            className="p-0.5 hover:bg-app-bg rounded transition-colors flex items-center justify-center cursor-pointer"
             aria-label="Clear search"
           >
             <Icon
               name={ICONS.actions.closeCircle}
-              className={cn('w-4 h-4', neutralColors.text.disabled, `hover:${neutralColors.text.tertiary}`)}
+              className="w-4 h-4 text-text-disabled hover:text-text-tertiary"
             />
           </button>
         )}
@@ -285,7 +263,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
   const renderFilters = () => (
     <>
       {/* Search */}
-      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+      <div className="flex h-9 w-full items-center">
         <SearchInput
           value={searchQuery}
           onChange={onSearchChange}
@@ -294,7 +272,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
       </div>
 
       {/* Date Range */}
-      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+      <div className="flex h-9 w-full items-center">
         <DateFilter
           value={dateRange}
           onChange={onDateRangeChange}
@@ -304,7 +282,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
       </div>
 
       {/* Order Status */}
-      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+      <div className="flex h-9 w-full items-center">
         <MultiSelectFilter
           label="Order Status"
           options={orderStatusOptions}
@@ -318,7 +296,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
       </div>
 
       {/* Payment Status */}
-      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+      <div className="flex h-9 w-full items-center">
         <MultiSelectFilter
           label="Payment Status"
           options={paymentStatusOptions}
@@ -337,11 +315,11 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
   if (showModalView) {
     return (
       <>
-        <div className={cn('w-full bg-surface border-b', neutralColors.border.default)}>
+        <div className="w-full bg-surface border-b border-border">
           <div className="px-3 py-2 w-full">
             <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
               {/* Search control */}
-              <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+              <div className="flex h-9 w-full items-center">
                 <SearchInput
                   value={searchQuery}
                   onChange={onSearchChange}
@@ -470,7 +448,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
   // Tablet view: 2-column grid
   if (showTwoColumn) {
     return (
-      <div className={cn('w-full bg-surface border-b', neutralColors.border.default)}>
+      <div className="w-full bg-surface border-b border-border">
         <div className="px-3 py-2 w-full">
           <div className="grid grid-cols-2 gap-2 items-center w-full">
             {renderFilters()}
@@ -482,7 +460,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
 
   // Desktop view: 4-column grid
   return (
-    <div className={cn('w-full bg-surface border-b', neutralColors.border.default)}>
+    <div className="w-full bg-surface border-b border-border">
       <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
         <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">
           {renderFilters()}

@@ -11,7 +11,6 @@ import React, { type ReactNode } from 'react';
 import { Button, Icon, IconButton } from '@/shared/ui';
 import { useAuth } from '@/hooks';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 interface PopoverFormProps {
   /** Main title displayed in the header */
@@ -146,8 +145,8 @@ export const RadioCard: React.FC<RadioCardProps> = ({
 }) => {
   const selectedStyles =
     variant === 'red'
-      ? `${semanticColors.danger.backgroundLight} ${semanticColors.danger.border} ring-1 ring-red-200`
-      : `${brandColors.primary.backgroundLight} ${brandColors.primary.border} ring-1 ring-sky-200`;
+      ? 'bg-red-50 border-red-200 ring-1 ring-red-200'
+      : 'bg-sky-50 border-sky-200 ring-1 ring-sky-200';
 
   const disabledStyles = 'bg-neutral-100 border-border cursor-not-allowed opacity-60';
 
@@ -155,24 +154,24 @@ export const RadioCard: React.FC<RadioCardProps> = ({
     ? 'text-text-disabled'
     : variant === 'red'
       ? selected
-        ? semanticColors.danger.textLightDarker
+        ? 'text-red-800'
         : 'text-text-primary'
       : selected
-        ? brandColors.primary.textOnLight
+        ? 'text-sky-700'
         : 'text-text-primary';
 
   const descColor = disabled
     ? 'text-text-disabled'
     : variant === 'red'
       ? selected
-        ? semanticColors.danger.textLightMedium
+        ? 'text-red-600'
         : 'text-text-muted'
       : selected
-        ? brandColors.primary.textLightMedium
+        ? 'text-sky-600'
         : 'text-text-muted';
 
   const radioColor =
-    variant === 'red' ? `${semanticColors.danger.icon} focus:ring-red-500` : `${brandColors.primary.icon} focus:ring-brand`;
+    variant === 'red' ? 'text-red-600 focus:ring-red-500' : 'text-sky-600 focus:ring-brand';
 
   const handleClick = () => {
     if (!disabled) {
@@ -209,7 +208,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         <span className={`block text-xs font-medium ${labelColor}`}>{label}</span>
         <span className={`block text-xxs mt-0.5 ${descColor}`}>{description}</span>
         {disabled && disabledReason && (
-          <span className={`block text-xxs mt-1 ${semanticColors.danger.requiredIndicator} font-medium`}>{disabledReason}</span>
+          <span className="block text-xxs mt-1 text-red-600 font-medium">{disabledReason}</span>
         )}
       </div>
     </div>
@@ -241,7 +240,7 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
       relative flex items-start p-3 cursor-pointer rounded-lg border transition-all duration-200
       ${
         checked
-          ? `${brandColors.primary.backgroundLight} ${brandColors.primary.border} ring-1 ring-sky-200`
+          ? 'bg-sky-50 border-sky-200 ring-1 ring-sky-200'
           : 'bg-surface border-border hover:border-border-strong hover:bg-app-bg'
       }
     `}
@@ -252,14 +251,14 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className={`h-3.5 w-3.5 ${brandColors.primary.icon} border-border-strong focus:ring-brand rounded`}
+        className="h-3.5 w-3.5 text-sky-600 border-border-strong focus:ring-brand rounded"
       />
     </div>
     <div className="ml-2.5">
-      <span className={`block text-xs font-medium ${checked ? brandColors.primary.textOnLight : 'text-text-primary'}`}>
+      <span className={`block text-xs font-medium ${checked ? 'text-sky-700' : 'text-text-primary'}`}>
         {label}
       </span>
-      <span className={`block text-xxs mt-0.5 ${checked ? brandColors.primary.textLightMedium : 'text-text-muted'}`}>
+      <span className={`block text-xxs mt-0.5 ${checked ? 'text-sky-600' : 'text-text-muted'}`}>
         {description}
       </span>
     </div>

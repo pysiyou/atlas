@@ -6,7 +6,6 @@
 import React from 'react';
 import { format, isSameMonth, isSameDay, isBefore, isAfter, endOfMonth, setYear } from 'date-fns';
 import { cn } from '@/utils';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 import type { CalendarView } from '../hooks/useDateFilterState';
 import {
   generateCalendarDays,
@@ -82,8 +81,8 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                     !selected &&
                     !inRange &&
                     !disabled &&
-                    `font-bold ${brandColors.primary.icon} ${brandColors.primary.backgroundLight}`,
-                  inRange && !selected && `${brandColors.primary.backgroundLightBg} ${brandColors.primary.textLightMedium} rounded-none`,
+                    'font-bold text-brand bg-brand/10',
+                  inRange && !selected && 'bg-brand/20 text-brand rounded-none',
                   value &&
                     isSameDay(day, value[0]) &&
                     !isSameDay(value[0], value[1]) &&
@@ -92,7 +91,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                     isSameDay(day, value[1]) &&
                     !isSameDay(value[0], value[1]) &&
                     'rounded-r-full rounded-l-none',
-                  selected && `${brandColors.primary.backgroundMedium} text-white hover:${brandColors.primary.backgroundHover} z-10`
+                  selected && 'bg-brand text-white hover:bg-brand-hover z-10'
                 )}
               >
                 {format(day, 'd')}
@@ -122,9 +121,9 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
               className={cn(
                 'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
                 disabled && 'opacity-30 cursor-not-allowed',
-                !disabled && isSameMonth(month, new Date()) && `${brandColors.primary.icon} font-bold ${brandColors.primary.backgroundLight}`,
+                !disabled && isSameMonth(month, new Date()) && 'text-brand font-bold bg-brand/10',
                 !disabled && isSameMonth(month, currentMonth)
-                  ? `${brandColors.primary.backgroundLightBg} ${brandColors.primary.textLightMedium}`
+                  ? 'bg-brand/20 text-brand'
                   : 'hover:bg-neutral-100 text-text-secondary',
                 !disabled && 'hover:bg-neutral-100'
               )}
@@ -156,9 +155,9 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
               disabled && 'opacity-30 cursor-not-allowed',
               !disabled &&
                 year.getFullYear() === new Date().getFullYear() &&
-                `${brandColors.primary.icon} font-bold ${brandColors.primary.backgroundLight}`,
+                'text-brand font-bold bg-brand/10',
               !disabled && year.getFullYear() === currentMonth.getFullYear()
-                ? `${brandColors.primary.backgroundLightBg} ${brandColors.primary.textLightMedium}`
+                ? 'bg-brand/20 text-brand'
                 : 'hover:bg-neutral-100 text-text-secondary',
               !disabled && 'hover:bg-neutral-100'
             )}

@@ -14,8 +14,6 @@ import { Icon } from '@/shared/ui/Icon';
 import { Popover } from '@/shared/ui/Popover';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
-import { neutralColors } from '@/shared/design-system/tokens/colors';
-import { dropdown } from '@/shared/design-system/tokens/components';
 import { useDateFilterState } from '../../hooks/useDateFilterState';
 import { useDateFilterNavigation } from '../../hooks/useDateFilterNavigation';
 import { DateFilterCalendar } from '../DateFilterCalendar';
@@ -66,14 +64,14 @@ export const DateFilter: React.FC<DateFilterProps> = ({
    */
   const renderTriggerContent = () => {
     if (!value) {
-      return <span className={neutralColors.text.muted}>{placeholder}</span>;
+      return <span className="text-text-muted">{placeholder}</span>;
     }
     const [start, end] = value;
     if (isSameDay(start, end)) {
-      return <span className={cn(neutralColors.text.secondary, 'font-medium')}>{format(start, 'dd MMM yyyy')}</span>;
+      return <span className="text-text-secondary font-medium">{format(start, 'dd MMM yyyy')}</span>;
     }
     return (
-      <span className={cn(neutralColors.text.secondary, 'font-medium')}>
+      <span className="text-text-secondary font-medium">
         {format(start, 'dd MMM')} - {format(end, 'dd MMM yyyy')}
       </span>
     );
@@ -95,32 +93,32 @@ export const DateFilter: React.FC<DateFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            dropdown.trigger.base,
-            isOpen ? dropdown.trigger.open : dropdown.trigger.default,
+            'flex items-center justify-between gap-2 h-9 px-3 text-xs bg-surface border rounded-md cursor-pointer transition-colors',
+            isOpen ? 'border-brand bg-app-bg' : 'border-border-medium hover:bg-app-bg',
             className
           )}
         >
           {/* Column 1: Left Icon */}
-          <Icon name={ICONS.dataFields.date} className={dropdown.icon} />
+          <Icon name={ICONS.dataFields.date} className="w-3.5 h-3.5 text-text-disabled shrink-0" />
           
           {/* Column 2: Content - flexible middle */}
-          <div className={dropdown.content}>{renderTriggerContent()}</div>
+          <div className="flex-1 truncate">{renderTriggerContent()}</div>
 
           {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
-          <div className={dropdown.rightIcons}>
+          <div className="flex items-center gap-1 shrink-0">
             {value ? (
               <button
                 onClick={handleClear}
-                className={dropdown.clearButton}
+                className="p-0.5 hover:bg-neutral-100 rounded transition-colors"
               >
-                <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
+                <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-text-disabled hover:text-text-tertiary" />
               </button>
             ) : (
-              <div className={dropdown.clearButtonPlaceholder} />
+              <div className="w-4 h-4" />
             )}
             <Icon
               name={ICONS.actions.chevronDown}
-              className={cn(dropdown.chevron, isOpen && 'rotate-180')}
+              className={cn('w-3.5 h-3.5 text-text-disabled transition-transform', isOpen && 'rotate-180')}
             />
           </div>
         </div>

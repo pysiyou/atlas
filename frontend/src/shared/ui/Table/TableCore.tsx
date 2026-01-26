@@ -8,7 +8,6 @@ import type { ColumnConfig, SortConfig, PaginationConfig, TableVariant } from '.
 import { useTableSort } from './hooks/useTableSort';
 import { useTablePagination } from './hooks/useTablePagination';
 import { DEFAULT_LOADING_ROWS } from './constants';
-import { tableBase } from '@/shared/design-system/tokens/components/table';
 
 /**
  * Props for TableCore component
@@ -146,10 +145,14 @@ export function TableCore<T = Record<string, unknown>>({
     pageSizeOptions,
   });
 
+  const containerClasses = embedded 
+    ? 'flex flex-col h-full' 
+    : 'bg-surface rounded-lg border border-border shadow-sm flex flex-col h-full';
+
   // Loading state
   if (loading) {
     return (
-      <div className={tableBase.containerWithBorder(embedded)}>
+      <div className={containerClasses}>
         <div className="flex-1 overflow-auto" style={maxHeight ? { maxHeight } : undefined}>
           <TableHeader
             columns={columns}
@@ -172,7 +175,7 @@ export function TableCore<T = Record<string, unknown>>({
   // Empty state
   if (data.length === 0) {
     return (
-      <div className={tableBase.containerWithBorder(embedded)}>
+      <div className={containerClasses}>
         <TableEmpty message={emptyMessage} icon={emptyIcon} />
       </div>
     );
@@ -181,7 +184,7 @@ export function TableCore<T = Record<string, unknown>>({
   // Standard table view
   return (
     <div
-      className={tableBase.containerWithBorder(embedded)}
+      className={containerClasses}
       role="table"
       aria-label={ariaLabel}
       aria-rowcount={totalItems}

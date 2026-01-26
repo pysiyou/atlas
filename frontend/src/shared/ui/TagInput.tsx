@@ -10,7 +10,6 @@ import { Icon } from './Icon';
 import { Badge } from './Badge';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
-import { label as labelTokens, requiredIndicator, errorMessage, helperText as helperTextTokens, inputBorder, inputPadding, inputFocus } from '@/shared/design-system/tokens/components/input';
 
 export interface TagInputProps {
   /** Current tags as an array of strings */
@@ -113,10 +112,10 @@ export const TagInput: React.FC<TagInputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className={`${labelTokens.sm} cursor-pointer truncate min-w-0`}
+            className="text-xs font-medium text-text-secondary cursor-pointer truncate min-w-0"
           >
             {label}
-            {required && <span className={requiredIndicator.base}>*</span>}
+            {required && <span className="text-danger ml-1">*</span>}
           </label>
         </div>
       )}
@@ -124,10 +123,10 @@ export const TagInput: React.FC<TagInputProps> = ({
       {/* Tags Container - matches result entry input height exactly */}
       <div
         className={cn(
-          `w-full ${inputPadding.default} border rounded`,
+          'w-full px-3 py-2 border rounded',
           'bg-surface transition-colors',
-          inputFocus.default.replace('focus:', 'focus-within:'),
-          error ? inputBorder.error : inputBorder.default,
+          'focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20',
+          error ? 'border-danger' : 'border-border',
           'flex flex-wrap gap-2 items-center',
           // Ensure consistent height matching result entry inputs
           tags.length === 0 ? 'min-h-[42px]' : 'min-h-[42px]'
@@ -167,10 +166,10 @@ export const TagInput: React.FC<TagInputProps> = ({
       </div>
 
       {/* Error Message */}
-      {error && <p className={errorMessage.small}>{error}</p>}
+      {error && <p className="text-xs text-danger mt-1">{error}</p>}
 
       {/* Helper Text */}
-      {helperText && !error && <p className={helperTextTokens.base}>{helperText}</p>}
+      {helperText && !error && <p className="text-xs text-text-muted mt-1">{helperText}</p>}
     </div>
   );
 };

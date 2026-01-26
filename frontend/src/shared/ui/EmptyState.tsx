@@ -1,6 +1,5 @@
 import React from 'react';
 import { Icon, type IconName } from './Icon';
-import { emptyStateCard } from '@/shared/design-system/tokens/components/card';
 
 interface EmptyStateProps {
   /** Name of the icon to display */
@@ -24,14 +23,14 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div
-      className={`${emptyStateCard.container} ${className}`}
+      className={`flex flex-col items-center justify-center py-12 px-6 text-center ${className}`}
     >
-      <div className={emptyStateCard.iconContainer}>
-        <Icon name={icon} className={emptyStateCard.icon} />
+      <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
+        <Icon name={icon} className="w-8 h-8 text-text-disabled" />
       </div>
-      <p className={emptyStateCard.title}>{title}</p>
-      <p className={emptyStateCard.description}>{description}</p>
-      {action && <div className={emptyStateCard.action}>{action}</div>}
+      <p className="text-base font-semibold text-text-primary mb-2">{title}</p>
+      <p className="text-sm text-text-muted mb-4 max-w-md">{description}</p>
+      {action && <div className="mt-2">{action}</div>}
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import type { ColumnWidth, TableVariant } from './types';
-import { tableVariants } from '@/shared/design-system/tokens/components/table';
 
 /**
  * Tailwind breakpoint values in pixels
@@ -35,42 +34,38 @@ export const SIZE_PRESETS: Record<string, ColumnWidth> = {
 
 /**
  * Row heights for different variants
- * Uses design tokens for consistency
  */
 export const ROW_HEIGHTS: Record<TableVariant, number> = {
-  compact: tableVariants.compact.rowHeight,
-  default: tableVariants.default.rowHeight,
-  comfortable: tableVariants.comfortable.rowHeight,
+  compact: 40,
+  default: 48,
+  comfortable: 56,
 };
 
 /**
  * Padding classes for different variants
- * Uses design tokens for consistency
  */
 export const CELL_PADDING: Record<TableVariant, string> = {
-  compact: tableVariants.compact.cellPadding,
-  default: tableVariants.default.cellPadding,
-  comfortable: tableVariants.comfortable.cellPadding,
+  compact: 'px-4 py-2',
+  default: 'px-6 py-3',
+  comfortable: 'px-6 py-4',
 };
 
 /**
  * Header padding classes for different variants
- * Uses design tokens for consistency
  */
 export const HEADER_PADDING: Record<TableVariant, string> = {
-  compact: tableVariants.compact.headerPadding,
-  default: tableVariants.default.headerPadding,
-  comfortable: tableVariants.comfortable.headerPadding,
+  compact: 'px-4 py-2',
+  default: 'px-6 py-3',
+  comfortable: 'px-6 py-4',
 };
 
 /**
  * Text size classes for different variants
- * Uses design tokens for consistency
  */
 export const TEXT_SIZE: Record<TableVariant, string> = {
-  compact: tableVariants.compact.textSize,
-  default: tableVariants.default.textSize,
-  comfortable: tableVariants.comfortable.textSize,
+  compact: 'text-xs',
+  default: 'text-sm',
+  comfortable: 'text-sm',
 };
 
 /**

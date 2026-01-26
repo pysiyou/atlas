@@ -3,7 +3,6 @@ import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * OrderTableCard Component
@@ -34,11 +33,11 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
           size="xs"
         />
         {/* Total price on top right */}
-        <div className={`font-medium ${brandColors.primary.icon} text-lg`}>{formatCurrency(order.totalPrice)}</div>
+        <div className="font-medium text-brand text-lg">{formatCurrency(order.totalPrice)}</div>
       </div>
 
       {/* Tests list: Show at most 2 tests, third line shows remaining count */}
-      <div className="flex-grow">
+      <div className="grow">
         {activeTests.length > 0 && (
           <div className="space-y-1">
             {/* Display first 2 tests */}
@@ -48,11 +47,11 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
                 className="flex items-center justify-between text-xs text-text-secondary"
               >
                 <div className="flex items-center flex-1 min-w-0">
-                  <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 flex-shrink-0" />
+                  <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 shrink-0" />
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
                   <span className="text-text-muted truncate">{test.testCode}</span>
                 </div>
-                <span className="font-medium text-text-muted ml-2 flex-shrink-0">
+                <span className="font-medium text-text-muted ml-2 shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>

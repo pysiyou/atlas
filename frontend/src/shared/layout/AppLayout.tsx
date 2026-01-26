@@ -10,7 +10,6 @@
 import React, { type ReactNode, useState, useEffect } from 'react';
 import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
 import { Sidebar } from './Sidebar';
-import { appLayout } from '@/shared/design-system/tokens/components/layout';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -47,18 +46,18 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   };
 
   return (
-    <div className={appLayout.container}>
+    <div className="flex h-screen overflow-hidden bg-app-bg">
       {/* Mobile Menu Button - Only visible on mobile */}
       {isMobile && (
         <button
           onClick={handleToggleMobileSidebar}
           title="Open Menu"
-          className={appLayout.mobileMenuButton}
+          className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center bg-surface border border-border rounded-lg shadow-md hover:bg-surface-hover transition-colors lg:hidden"
           aria-label="Open navigation menu"
         >
           {/* Hamburger Menu Icon */}
           <svg
-            className={appLayout.mobileMenuIcon}
+            className="w-6 h-6 text-text-primary"
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -79,7 +78,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
       />
 
       {/* Main Content */}
-      <main className={appLayout.main}>{children}</main>
+      <main className="flex-1 overflow-y-auto">{children}</main>
     </div>
   );
 };

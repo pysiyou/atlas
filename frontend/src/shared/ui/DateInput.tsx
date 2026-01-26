@@ -12,7 +12,6 @@ import { ICONS } from '@/utils/icon-mappings';
 import { DateFilterCalendar } from '@/features/order/components/DateFilterCalendar';
 import { DateFilterHeader } from '@/features/order/components/DateFilterHeader';
 import { useDateFilterNavigation } from '@/features/order/hooks/useDateFilterNavigation';
-import { label as labelTokens, requiredIndicator, errorMessage, inputBorder, inputPadding } from '@/shared/design-system/tokens/components/input';
 
 interface DateInputProps {
   label?: string;
@@ -106,10 +105,10 @@ export const DateInput: React.FC<DateInputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className={`${labelTokens.sm} cursor-pointer truncate min-w-0`}
+            className="text-xs font-medium text-text-secondary cursor-pointer truncate min-w-0"
           >
             {label}
-            {required && <span className={requiredIndicator.base}>*</span>}
+            {required && <span className="text-danger ml-1">*</span>}
           </label>
         </div>
       )}
@@ -120,12 +119,12 @@ export const DateInput: React.FC<DateInputProps> = ({
         trigger={({ isOpen }) => (
           <div
             className={cn(
-              `flex items-center gap-2 ${inputPadding.default} bg-surface border rounded cursor-pointer transition-colors w-full`,
+              'flex items-center gap-2 px-3 py-2 bg-surface border rounded cursor-pointer transition-colors w-full',
               isOpen
                 ? 'border-brand ring-2 ring-brand/20'
                 : error
-                  ? inputBorder.error
-                  : inputBorder.default,
+                  ? 'border-danger'
+                  : 'border-border',
               disabled && 'bg-neutral-100 cursor-not-allowed'
             )}
           >
@@ -194,7 +193,7 @@ export const DateInput: React.FC<DateInputProps> = ({
       {/* Hidden input for form compatibility */}
       <input type="hidden" id={inputId} name={name} value={value} />
 
-      {error && <p className={errorMessage.base}>{error}</p>}
+      {error && <p className="text-xs text-danger mt-1">{error}</p>}
     </div>
   );
 };

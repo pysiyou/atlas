@@ -9,7 +9,6 @@ import React, { useState } from 'react';
 import { Icon } from '@/shared/ui';
 import type { IconName } from '@/shared/ui/Icon';
 import { ICONS } from '@/utils/icon-mappings';
-import { sectionCard } from '@/shared/design-system/tokens/components/shared';
 
 export interface SectionCardProps {
   /** Section title */
@@ -60,15 +59,15 @@ export const SectionCard: React.FC<SectionCardProps> = ({
   };
 
   return (
-    <div className={`${sectionCard.container} ${className}`}>
+    <div className={`bg-surface rounded-lg border border-border shadow-sm ${className}`}>
       {/* Header */}
       <div
-        className={`${sectionCard.header} ${collapsible ? sectionCard.headerCollapsible : ''}`}
+        className={`flex items-center justify-between p-4 border-b border-border ${collapsible ? 'cursor-pointer hover:bg-surface-hover transition-colors' : ''}`}
         onClick={toggleExpanded}
       >
         <div className="flex items-center gap-2">
-          {icon && <Icon name={icon} className={sectionCard.icon} />}
-          <h3 className={sectionCard.title}>{title}</h3>
+          {icon && <Icon name={icon} className="w-5 h-5 text-text-secondary" />}
+          <h3 className="text-base font-semibold text-text-primary">{title}</h3>
         </div>
         <div className="flex items-center gap-2">
           {headerRight}
@@ -82,7 +81,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
       </div>
 
       {/* Content */}
-      {(!collapsible || isExpanded) && <div className={`${sectionCard.content} ${contentClassName}`}>{children}</div>}
+      {(!collapsible || isExpanded) && <div className={`p-6 space-y-4 ${contentClassName}`}>{children}</div>}
     </div>
   );
 };

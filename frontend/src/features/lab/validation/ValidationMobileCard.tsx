@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 import { Badge, IconButton } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
@@ -14,8 +13,6 @@ import { usePatientNameLookup } from '@/hooks/queries';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { TestWithContext } from '@/types';
 import { RejectionDialog } from '../components';
-import { mobileCard } from '@/shared/design-system/tokens/components/card';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 type ResultStatus =
   | 'normal'
@@ -100,8 +97,8 @@ function ResultGrid({
         const abnormal = status !== 'normal';
         const valueColor = abnormal
           ? isCritical(status)
-            ? semanticColors.danger.icon
-            : semanticColors.warning.valueHigh
+            ? 'text-red-600'
+            : 'text-amber-600'
           : 'text-text-primary';
 
         return (
@@ -180,23 +177,23 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className={mobileCard.base}
+      className="bg-surface rounded-lg p-3 shadow-sm border border-border hover:shadow-md transition-shadow cursor-pointer"
     >
       {/* Header: Test name + Patient name, Test code, Sample ID */}
-      <div className={mobileCard.header.container}>
+      <div className="flex items-center justify-between gap-2 mb-2">
         <div className="min-w-0 overflow-hidden">
-          <div className={mobileCard.header.title}>{test.testName}</div>
+          <div className="text-sm font-medium text-text-primary truncate">{test.testName}</div>
           <div className="flex items-center gap-2 flex-wrap">
             <div className="text-xs text-text-secondary font-medium truncate">{patientName}</div>
             <div className="text-xxs text-text-disabled">•</div>
-            <div className={`text-xxs ${brandColors.primary.icon} font-medium font-mono truncate`}>
+            <div className="text-xxs text-sky-600 font-medium font-mono truncate">
               {test.testCode}
             </div>
             {test.sampleId && (
               <>
                 <div className="text-xs text-text-disabled">•</div>
                 <div
-                  className={`text-xxs ${brandColors.primary.icon} font-medium font-mono truncate`}
+                  className="text-xxs text-sky-600 font-medium font-mono truncate"
                   title={displayId.sample(test.sampleId)}
                 >
                   {displayId.sample(test.sampleId)}
@@ -208,13 +205,13 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
       </div>
 
       {/* Content: Results, entry date */}
-      <div className={mobileCard.content.container}>
+      <div className="space-y-2">
         <div className="space-y-1">
           <div className="mt-2">
             <ResultGrid results={test.results} flagStatusMap={flagStatusMap} />
           </div>
           {test.resultEnteredAt && (
-            <div className={mobileCard.content.textSecondary}>
+            <div className="text-xs text-text-muted">
               Entered: {formatDate(test.resultEnteredAt)}
             </div>
           )}
@@ -222,7 +219,7 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
       </div>
 
       {/* Bottom section: Badges (left) + Approve/Reject buttons (right) */}
-      <div className={mobileCard.footer.container}>
+      <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
         <div className="flex items-center gap-2">
           {hasFlags && (
             <Badge variant="danger" size="xs">

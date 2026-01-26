@@ -11,7 +11,6 @@ import { LoadingState } from '../LoadingState';
 import { ErrorAlert } from '../ErrorAlert';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { ICONS } from '@/utils/icon-mappings';
-import { listViewCard } from '@/shared/design-system/tokens/components/card';
 
 // TableDataItem accepts any object-like type (interfaces, types, classes)
 // Using a union type to accept both Record types and regular object types
@@ -146,8 +145,8 @@ export function ListView<T extends TableDataItem = TableDataItem>({
         <div className="flex items-center justify-between shrink-0">
           {title && (
             <div>
-              <h1 className={listViewCard.header.title}>{title}</h1>
-              {subtitle && <p className={listViewCard.header.description}>{subtitle}</p>}
+              <h1 className="text-2xl font-semibold text-text-primary">{title}</h1>
+              {subtitle && <p className="text-sm text-text-muted mt-1">{subtitle}</p>}
             </div>
           )}
           {headerActions}
@@ -165,7 +164,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
       )}
 
       {/* Main Content */}
-      <div className={listViewCard.container}>
+      <div className="bg-surface rounded-lg border border-border shadow-sm flex flex-col flex-1 min-h-0">
         {/* Filters */}
         {filters}
 
@@ -203,7 +202,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
                 )}
               </div>
             ) : (
-              <div className={listViewCard.grid.container}>
+              <div className="p-6">
                 <div className={`grid ${GRID_COLUMN_CLASSES[gridColumns]} gap-4`}>
                   {items.map((item, index) => (
                     <div key={index}>{renderItem(item, index)}</div>
@@ -223,7 +222,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
                 )}
               </div>
             ) : (
-              <div className={listViewCard.content}>
+              <div className="flex-1 overflow-y-auto">
                 {items.map((item, index) => (
                   <div key={index}>{renderItem(item, index)}</div>
                 ))}

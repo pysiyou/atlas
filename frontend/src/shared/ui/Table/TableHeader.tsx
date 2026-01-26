@@ -3,7 +3,6 @@ import type { TableHeaderProps } from './types';
 import { useColumnStyles } from './hooks/useColumnWidth';
 import { HEADER_PADDING, TEXT_SIZE } from './constants';
 import { ICONS } from '@/utils/icon-mappings';
-import { tableHeader } from '@/shared/design-system/tokens/components/table';
 
 /**
  * Table Header Component
@@ -20,7 +19,7 @@ export function TableHeader<T>({
 
   return (
     <div
-      className={`${tableHeader.container} ${tableHeader.row} font-medium ${TEXT_SIZE[variant]} text-text-muted uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
+      className={`flex items-stretch border-b border-border bg-app-bg flex items-center font-medium ${TEXT_SIZE[variant]} text-text-muted uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
     >
       {visibleColumns.map(column => {
         const style = columnStyles.get(column.key) || {};

@@ -3,7 +3,6 @@ import { Avatar, Icon } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
 import type { Patient } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 interface PatientSelectorProps {
   selectedPatient: Patient | null;
@@ -51,7 +50,7 @@ const PatientSearchTagInput: React.FC<{
           'bg-surface transition-colors',
           disabled ? 'bg-app-bg opacity-60 cursor-not-allowed' : '',
           !disabled && 'focus-within:ring-2 focus-within:ring-brand focus-within:border-transparent',
-          error ? semanticColors.danger.inputBorder : 'border-border-strong',
+          error ? 'border-danger' : 'border-border-strong',
           'flex flex-wrap gap-2 items-center',
           'min-h-[42px]',
         ].join(' ')}
@@ -61,7 +60,7 @@ const PatientSearchTagInput: React.FC<{
         </div>
 
         {selectedPatient && (
-          <div className={`flex items-center gap-2 px-2 py-1 rounded ${brandColors.primary.backgroundLight} border ${brandColors.primary.border} max-w-full shrink-0`}>
+          <div className="flex items-center gap-2 px-2 py-1 rounded bg-brand/10 border border-brand max-w-full shrink-0">
             {/* Small avatar with initial */}
             <Avatar
               primaryText={selectedPatient.fullName}
@@ -82,7 +81,7 @@ const PatientSearchTagInput: React.FC<{
               <button
                 type="button"
                 onClick={onClearSelection}
-                className={`flex items-center justify-center ml-0.5 -mr-0.5 hover:${brandColors.primary.backgroundLightBg} rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 ${brandColors.primary.focusRingLight} shrink-0`}
+                className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-brand/20 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30 shrink-0"
                 aria-label="Clear selected patient"
               >
                 <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-muted hover:text-text-secondary" />
@@ -105,7 +104,7 @@ const PatientSearchTagInput: React.FC<{
         />
       </div>
 
-      {error && <p className={`mt-1.5 text-xs ${semanticColors.danger.errorText}`}>{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-danger">{error}</p>}
     </div>
   );
 };
@@ -205,7 +204,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         'transition-colors',
                         'flex items-center justify-between gap-3',
                         'hover:bg-app-bg',
-                        `focus:outline-none focus-visible:ring-2 ${brandColors.primary.ring30.replace('ring-brand/30', 'focus-visible:ring-brand/30')}`,
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30',
                         isSelected ? 'bg-emerald-50/50' : 'bg-surface',
                       ].join(' ')}
                     >

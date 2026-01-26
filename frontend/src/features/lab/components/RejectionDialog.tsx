@@ -16,7 +16,6 @@ import { useRejectionManager } from '../hooks/useRejectionManager';
 import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 interface RejectionDialogContentProps {
   orderId: string | number;
@@ -229,9 +228,9 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       {/* Rejection Reason */}
       {!escalationRequired && (
         <div>
-          <label className="block text-xs font-medium text-text-secondary mb-1">
-            Rejection Reason <span className={semanticColors.danger.requiredIndicator}>*</span>
-          </label>
+        <label className="block text-xs font-medium text-text-secondary mb-1">
+          Rejection Reason <span className="text-red-600">*</span>
+        </label>
           <textarea
             rows={3}
             placeholder="Please explain why the results are being rejected..."
@@ -345,7 +344,7 @@ export const RejectionHistoryBanner: React.FC<RejectionHistoryBannerProps> = ({
   if (!message) return null;
 
   return (
-    <div className={`mt-2 px-2 py-1.5 ${semanticColors.warning.backgroundLight} ${semanticColors.warning.border} rounded ${semanticColors.warning.textLight}`}>
+    <div className="mt-2 px-2 py-1.5 bg-amber-50 border border-amber-200 rounded text-amber-700">
       <div className="flex items-center gap-1.5">
         <Icon name={ICONS.actions.loading} className="w-3 h-3" />
         <span className="text-xxs font-medium">{message}</span>

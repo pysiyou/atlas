@@ -14,7 +14,6 @@ import { SidebarProfile } from './SidebarProfile';
 import { getFilteredMenuItems, settingsItems } from './menuConfig';
 import type { MenuItem, SettingsItem } from './types';
 import type { AuthUser } from '@/types';
-import { sidebar } from '@/shared/design-system/tokens/components/layout';
 
 interface SidebarProps {
   /** Whether the sidebar is open on mobile */
@@ -51,9 +50,13 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   onToggleCollapse,
 }) => {
   const collapsed = isCollapsed && !isMobile;
+  const containerClasses = collapsed
+    ? 'w-16 bg-surface border-r border-border flex flex-col transition-all duration-300'
+    : 'w-64 bg-surface border-r border-border flex flex-col transition-all duration-300';
+  
   return (
     <aside
-      className={sidebar.container(collapsed)}
+      className={containerClasses}
       style={{ padding: '0' }}
       onClick={e => {
         e.stopPropagation();
@@ -152,7 +155,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className={sidebar.backdrop}
+            className="fixed inset-0 bg-black/50 z-40"
             onClick={onMobileClose}
             aria-hidden="true"
           />
@@ -161,7 +164,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-            className={sidebar.mobileContainer}
+            className="fixed top-0 left-0 bottom-0 z-50"
           >
             {content}
           </motion.div>

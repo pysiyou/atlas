@@ -16,7 +16,6 @@ import { useUserLookup } from '@/hooks/queries';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { getContainerIcon, ICONS } from '@/utils/icon-mappings';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * ContainerInfo - Displays container type and color with icon
@@ -290,7 +289,7 @@ export const FlagCountBadge: React.FC<FlagCountBadgeProps> = ({
 
   return (
     <Badge size={size} variant="danger" className={`flex items-center gap-1.5 ${className}`}>
-      {showIcon && <Icon name={ICONS.actions.warning} className={`w-3 h-3 ${semanticColors.danger.icon}`} />}
+      {showIcon && <Icon name={ICONS.actions.warning} className="w-3 h-3 text-red-600" />}
       {count} flag{count !== 1 ? 's' : ''}
     </Badge>
   );

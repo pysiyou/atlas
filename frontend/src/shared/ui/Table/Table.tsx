@@ -7,7 +7,6 @@ import type { TableProps } from './types';
 import { useTableSort } from './hooks/useTableSort';
 import { useTablePagination } from './hooks/useTablePagination';
 import { DEFAULT_LOADING_ROWS } from './constants';
-import { tableBase } from '@/shared/design-system/tokens/components/table';
 
 /**
  * Main Table Component
@@ -102,7 +101,7 @@ export function Table<T = Record<string, unknown>>({
   // Card view for mobile (xs/sm)
   if (shouldShowCard) {
     return (
-      <div className={tableBase.wrapper(embedded)}>
+      <div className={embedded ? 'flex flex-col h-full' : 'bg-surface rounded-lg border border-border shadow-sm flex flex-col h-full'}>
         <div className="p-4">
           <CardGrid<T>
             data={paginatedData as T[]}

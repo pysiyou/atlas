@@ -6,14 +6,12 @@
  */
 
 import React from 'react';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 import { Badge, IconButton } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import { usePatientNameLookup } from '@/hooks/queries';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { Test, TestWithContext } from '@/types';
-import { mobileCard } from '@/shared/design-system/tokens/components/card';
 
 interface EntryMobileCardProps {
   test: TestWithContext;
@@ -76,19 +74,19 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className={mobileCard.base}
+      className="bg-surface rounded-lg p-3 shadow-sm border border-border hover:shadow-md transition-shadow cursor-pointer"
     >
       {/* Header: Test name + Sample ID */}
-      <div className={mobileCard.header.container}>
+      <div className="flex items-center justify-between gap-2 mb-2">
         <div className="min-w-0 overflow-hidden">
-          <div className={mobileCard.header.title}>{test.testName}</div>
+          <div className="text-sm font-medium text-text-primary truncate">{test.testName}</div>
           <div className="flex items-center gap-2">
-            <div className={`text-xs ${brandColors.primary.icon} font-medium font-mono truncate`}>
+            <div className="text-xs text-sky-600 font-medium font-mono truncate">
               {test.testCode}
             </div>
             {test.sampleId && (
               <div
-                className={`text-xs ${brandColors.primary.icon} font-medium font-mono truncate`}
+                className="text-xs text-sky-600 font-medium font-mono truncate"
                 title={displayId.sample(test.sampleId)}
               >
                 • {displayId.sample(test.sampleId)}
@@ -99,12 +97,12 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
       </div>
 
       {/* Content: Patient, collection date */}
-      <div className={mobileCard.content.container}>
+      <div className="space-y-2">
         <div className="space-y-1">
-          <div className={`${mobileCard.content.text} font-medium`}>{patientName}</div>
-          <div className={`${mobileCard.content.textSecondary} font-mono`}>{displayId.order(test.orderId)}</div>
+          <div className="text-xs text-text-secondary font-medium">{patientName}</div>
+          <div className="text-xs text-text-muted font-mono">{displayId.order(test.orderId)}</div>
           {test.collectedAt && (
-            <div className={`${mobileCard.content.textSecondary} mt-1`}>
+            <div className="text-xs text-text-muted mt-1">
               Collected: {formatDate(test.collectedAt)}
             </div>
           )}
@@ -112,7 +110,7 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
       </div>
 
       {/* Bottom section: Badges (left) + Enter Results button (right) */}
-      <div className={mobileCard.footer.container}>
+      <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
         <div className="flex items-center gap-2">
           {test.priority && <Badge variant={test.priority} size="xs" />}
           <Badge variant={test.sampleType} size="xs" />

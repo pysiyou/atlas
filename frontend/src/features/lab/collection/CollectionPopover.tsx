@@ -12,7 +12,6 @@ import type { ContainerType } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS } from '@/types';
 import type { SampleRequirement } from '@/utils/sampleHelpers';
 import { ICONS, getContainerIcon } from '@/utils/icon-mappings';
-import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 interface CollectionPopoverContentProps {
   requirement: SampleRequirement;
@@ -103,10 +102,10 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       <div>
         <div className="flex items-center justify-between mb-1">
           <label className="block text-xs font-medium text-text-muted">
-            Volume Collected <span className={semanticColors.danger.requiredIndicator}>*</span>
+            Volume Collected <span className="text-red-600">*</span>
           </label>
           {minimumVolume > 0 && (
-            <div className={`text-xxs ${semanticColors.warning.valueHigh} ${semanticColors.warning.backgroundLight} px-2 py-0.5 rounded border ${semanticColors.warning.border} flex items-center gap-1`}>
+            <div className="text-xxs text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 flex items-center gap-1">
               <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
               Min: {minimumVolume} mL
             </div>
@@ -120,9 +119,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             onChange={e => setVolume(Number(e.target.value))}
             className={`w-full pl-3 pr-8 py-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all placeholder-gray-400 ${
               volume < minimumVolume
-                ? semanticColors.danger.inputBorder
+                ? 'border-red-500'
                 : volume > 100
-                  ? semanticColors.warning.borderLight
+                  ? 'border-amber-300'
                   : 'border-border-strong'
             }`}
             placeholder="0.0"
@@ -133,7 +132,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
         </div>
         <div className="h-6 mt-1.5">
           <div
-            className={`text-xs ${semanticColors.warning.valueHigh} flex items-center gap-1.5 ${semanticColors.warning.backgroundLight} p-1.5 rounded ${semanticColors.warning.border} transition-opacity duration-200 ${volume > 100 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            className={`text-xs text-amber-600 flex items-center gap-1.5 bg-amber-50 p-1.5 rounded border border-amber-200 transition-opacity duration-200 ${volume > 100 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           >
             <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
             Unusually high volume - please verify
@@ -144,7 +143,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       {/* Container Type */}
       <div>
         <label className="block text-xs font-medium text-text-muted mb-1">
-          Container Type <span className={semanticColors.danger.requiredIndicator}>*</span>
+          Container Type <span className="text-red-600">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
           {CONTAINER_TYPE_OPTIONS.map(option => {
@@ -159,8 +158,8 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   ${
                     isSelected
                       ? showWarning
-                        ? `${semanticColors.warning.backgroundLight} ${semanticColors.warning.border} ring-1 ring-yellow-200`
-                        : `${brandColors.primary.backgroundLight} ${brandColors.primary.border} ring-1 ring-sky-200`
+                        ? 'bg-amber-50 border-amber-200 ring-1 ring-yellow-200'
+                        : 'bg-sky-50 border-sky-200 ring-1 ring-sky-200'
                       : 'bg-surface border-border hover:border-border-strong hover:bg-app-bg'
                   }
                 `}
@@ -172,16 +171,16 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   name="container-type"
                   checked={isSelected}
                   onChange={() => setSelectedContainerType(option.value as ContainerType)}
-                  className={`h-3.5 w-3.5 border-border-strong ${showWarning ? `${semanticColors.warning.icon} ${semanticColors.warning.focusRing}` : `${brandColors.primary.icon} ${brandColors.primary.focusRing}`}`}
+                  className={`h-3.5 w-3.5 border-border-strong ${showWarning ? 'text-amber-600 focus:ring-amber-500/20' : 'text-sky-600 focus:ring-2 focus:ring-sky-500/20'}`}
                 />
                 <span
-                  className={`flex-1 text-xs font-medium ${isSelected ? (showWarning ? semanticColors.warning.textOnLight : brandColors.primary.textOnLight) : 'text-text-primary'}`}
+                  className={`flex-1 text-xs font-medium ${isSelected ? (showWarning ? 'text-amber-700' : 'text-sky-700') : 'text-text-primary'}`}
                 >
                   {option.name}
                 </span>
                 <Icon
                   name={getContainerIcon(option.value)}
-                  className={`w-5 h-5 ${isSelected ? (showWarning ? semanticColors.warning.icon : brandColors.primary.icon) : 'text-text-disabled'}`}
+                  className={`w-5 h-5 ${isSelected ? (showWarning ? 'text-amber-600' : 'text-sky-600') : 'text-text-disabled'}`}
                 />
               </div>
             );
@@ -189,7 +188,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
         </div>
         <div className="h-6 mt-1.5">
           <div
-            className={`text-xs ${semanticColors.warning.valueHigh} flex items-center gap-1.5 ${semanticColors.warning.backgroundLight} p-1.5 rounded border ${semanticColors.warning.border} transition-opacity duration-200 ${selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            className={`text-xs text-amber-600 flex items-center gap-1.5 bg-amber-50 p-1.5 rounded border border-amber-200 transition-opacity duration-200 ${selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           >
             <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
             Warning: Selected container type not in requirements
@@ -200,7 +199,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       {/* Container Color */}
       <div>
         <label className="block text-xs font-medium text-text-muted mb-1">
-          Container Color <span className={semanticColors.danger.requiredIndicator}>*</span>
+          Container Color <span className="text-red-600">*</span>
         </label>
         <div className="flex gap-3">
           {CONTAINER_COLOR_OPTIONS.map(option => {
@@ -226,9 +225,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           <div
             className={`text-xs flex items-center gap-1.5 p-1.5 rounded border transition-opacity duration-200 ${
               !selectedColor
-                ? `opacity-100 ${semanticColors.warning.valueHigh} ${semanticColors.warning.backgroundLight} ${semanticColors.warning.border}`
+                ? 'opacity-100 text-amber-600 bg-amber-50 border-amber-200'
                 : selectedColor && !requirement.containerTopColors.includes(selectedColor as never)
-                  ? `opacity-100 ${semanticColors.warning.valueHigh} ${semanticColors.warning.backgroundLight} ${semanticColors.warning.border}`
+                  ? 'opacity-100 text-amber-600 bg-amber-50 border-amber-200'
                   : 'opacity-0 pointer-events-none border-transparent'
             }`}
           >

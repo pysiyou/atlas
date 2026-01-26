@@ -15,7 +15,6 @@ import { OrderTableCard } from '../components/cards/OrderTableCard';
 import { PaymentPopover } from '@/features/payment/components/filters';
 import { ModalType } from '@/shared/context/ModalContext';
 import { ICONS } from '@/utils/icon-mappings';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * Create order table configuration with full, compact, and card views
@@ -36,7 +35,7 @@ export const createOrderTableConfig = (
 ): TableViewConfig<Order> => {
   // Shared render functions
   const renderOrderId = (order: Order) => (
-    <span className={`text-xs ${brandColors.primary.icon} font-medium font-mono truncate block`}>
+    <span className="text-xs text-brand font-medium font-mono truncate block">
       {displayId.order(order.orderId)}
     </span>
   );
@@ -78,7 +77,7 @@ export const createOrderTableConfig = (
   const renderStatus = (order: Order) => <Badge variant={order.overallStatus} size="sm" />;
 
   const renderTotalPrice = (order: Order) => (
-    <div className={`font-medium ${brandColors.primary.icon} truncate`}>{formatCurrency(order.totalPrice)}</div>
+    <div className="font-medium text-brand truncate">{formatCurrency(order.totalPrice)}</div>
   );
 
   const renderPaymentStatus = (order: Order) => <Badge variant={order.paymentStatus} size="sm" />;

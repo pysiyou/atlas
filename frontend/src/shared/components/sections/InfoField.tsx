@@ -8,7 +8,6 @@
 import React from 'react';
 import { Icon } from '@/shared/ui';
 import type { IconName } from '@/shared/ui/Icon';
-import { infoField } from '@/shared/design-system/tokens/components/shared';
 
 export interface InfoFieldProps {
   /** Field label */
@@ -45,23 +44,23 @@ export const InfoField: React.FC<InfoFieldProps> = ({
 }) => {
   if (orientation === 'vertical') {
     return (
-      <div className={`${infoField.container.vertical} ${className}`}>
+      <div className={`space-y-2 ${className}`}>
         <div className="flex items-center gap-2">
-          {icon && <Icon name={icon} className={infoField.icon} />}
-          <label className={infoField.label}>{label}</label>
+          {icon && <Icon name={icon} className="w-4 h-4 text-text-tertiary" />}
+          <label className="text-xs font-medium text-text-tertiary">{label}</label>
         </div>
-        <div className={infoField.value}>{value}</div>
+        <div className="text-sm text-text-primary">{value}</div>
       </div>
     );
   }
 
   return (
-    <div className={`${infoField.container.horizontal} ${className}`}>
-      <div className={infoField.labelContainer}>
-        {icon && <Icon name={icon} className={`${infoField.icon} flex-shrink-0`} />}
-        <label className={`${infoField.label} whitespace-nowrap`}>{label}</label>
+    <div className={`flex items-center justify-between gap-4 ${className}`}>
+      <div className="flex items-center gap-2">
+        {icon && <Icon name={icon} className="w-4 h-4 text-text-tertiary flex-shrink-0" />}
+        <label className="text-xs font-medium text-text-tertiary whitespace-nowrap">{label}</label>
       </div>
-      <div className={`${infoField.value} text-right min-w-0`}>{value}</div>
+      <div className="text-sm text-text-primary text-right min-w-0">{value}</div>
     </div>
   );
 };

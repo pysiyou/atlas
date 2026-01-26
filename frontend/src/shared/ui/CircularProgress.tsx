@@ -1,6 +1,4 @@
 import React from 'react';
-import { loadingColors } from '@/shared/design-system/tokens/animations';
-import { neutralColors } from '@/shared/design-system/tokens/colors';
 
 export interface CircularProgressProps {
   /** Size of the circular progress in pixels */
@@ -22,8 +20,8 @@ export interface CircularProgressProps {
 export const CircularProgress: React.FC<CircularProgressProps> = ({
   size = 32,
   strokeWidth = 2,
-  trackColorClass = loadingColors.trackStroke,
-  progressColorClass = loadingColors.progressStroke,
+  trackColorClass = 'stroke-neutral-200',
+  progressColorClass = 'stroke-success',
   percentage,
   label,
   className = '',
@@ -64,7 +62,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
       </div>
 
       {/* Label */}
-      {label && <span className={`${neutralColors.text.disabled} text-xs normal-case font-light`}>{label}</span>}
+      {label && <span className="text-text-disabled text-xs normal-case font-light">{label}</span>}
     </div>
   );
 };

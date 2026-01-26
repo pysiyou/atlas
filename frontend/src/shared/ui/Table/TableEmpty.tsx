@@ -1,6 +1,5 @@
 import { Icon, type IconName } from '../Icon';
 import { ICONS } from '@/utils/icon-mappings';
-import { tableEmpty } from '@/shared/design-system/tokens/components/table';
 
 interface TableEmptyProps {
   message?: React.ReactNode;
@@ -13,9 +12,9 @@ interface TableEmptyProps {
  */
 export function TableEmpty({ message = 'No data available', icon = ICONS.dataFields.document }: TableEmptyProps) {
   return (
-    <div className={tableEmpty.container}>
-      {icon && <Icon name={icon as IconName} className={tableEmpty.icon} />}
-      <p className={tableEmpty.message}>{message}</p>
+    <div className="flex flex-col items-center justify-center py-12 px-6">
+      {icon && <Icon name={icon as IconName} className="w-12 h-12 text-text-disabled mb-3" />}
+      <p className="text-sm text-text-muted">{message}</p>
     </div>
   );
 }

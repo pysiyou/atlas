@@ -9,7 +9,6 @@ import type { Test, TestParameter, Patient } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '@/utils/reference-ranges';
 import { validatePhysiologicValue, getPhysiologicLimit } from '@/utils/physiologic-limits';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 interface EntryFormProps {
   testDef: Test;
@@ -37,14 +36,14 @@ const RadioOption: React.FC<{
       className={cn(
         'group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150',
         'hover:bg-app-bg/80',
-        isSelected && `${brandColors.primary.backgroundLight}/50`
+        isSelected && 'bg-sky-50/50'
       )}
     >
       {/* Radio button */}
       <div className="flex-shrink-0 mr-3">
         <input type="radio" checked={isSelected} onChange={onSelect} className="sr-only" />
         {isSelected ? (
-          <div className={`w-5 h-5 rounded-full flex items-center justify-center ${brandColors.primary.backgroundMedium} transition-all duration-150`}>
+          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-sky-500 transition-all duration-150">
             <div className="w-2 h-2 rounded-full bg-surface" />
           </div>
         ) : (
@@ -93,7 +92,7 @@ const SelectParameterInput: React.FC<{
           className={cn(
             'flex items-center gap-2 px-3 py-2.5 bg-surface border rounded cursor-pointer transition-colors w-full min-h-[42px]',
             isOpen
-              ? `${brandColors.primary.borderMedium} ring-2 ${brandColors.primary.ring20}`
+              ? 'border-sky-500 ring-2 ring-sky-500/20'
               : 'border-border-strong hover:border-gray-400'
           )}
         >
@@ -230,7 +229,7 @@ const ParameterInput: React.FC<{
       className={cn(
         "block w-full pl-3 pr-12 py-2.5 border rounded focus:outline-none focus:ring-2 focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs placeholder:text-text-disabled transition-shadow relative z-10 bg-surface",
         hasError
-          ? `${semanticColors.danger.inputBorder} focus:ring-red-500/20`
+          ? 'border-red-500 focus:ring-red-500/20'
           : "border-border-strong focus:ring-brand"
       )}
       placeholder="--"
@@ -304,7 +303,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 </label>
                 <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
                   {isCritical && (
-                    <Icon name={ICONS.actions.dangerSquare} className={`w-3 h-3 ${semanticColors.danger.requiredIndicator} shrink-0`} />
+                    <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-red-600 shrink-0" />
                   )}
                   <span className="text-xxs text-text-disabled truncate">Ref: {refRange}</span>
                 </div>
@@ -333,12 +332,12 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   </div>
                 )}
                 {validationErrors[param.code] && (
-                  <div className={`absolute -bottom-5 left-0 text-xxs ${semanticColors.danger.icon} font-medium truncate max-w-full`} title={validationErrors[param.code]}>
+                  <div className="absolute -bottom-5 left-0 text-xxs text-red-600 font-medium truncate max-w-full" title={validationErrors[param.code]}>
                     Invalid value
                   </div>
                 )}
                 {!validationErrors[param.code] && isCritical && (
-                  <div className={`absolute -bottom-5 left-0 text-xxs ${semanticColors.danger.icon} font-medium`}>
+                  <div className="absolute -bottom-5 left-0 text-xxs text-red-600 font-medium">
                     Critical value
                   </div>
                 )}
@@ -369,7 +368,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       {!isModal && (
         <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-app-bg border-t border-border-subtle rounded-b flex items-center justify-between">
           {hasValidationErrors && (
-            <span className={`text-xxs ${semanticColors.danger.icon}`}>
+            <span className="text-xxs text-red-600">
               Please correct invalid values before submitting
             </span>
           )}

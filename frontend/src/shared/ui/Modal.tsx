@@ -9,7 +9,6 @@ import React, { memo, useCallback, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Portal } from './Portal';
 import { IconButton } from './IconButton';
-import { modalBase, modalPadding, modalHeader, getModalClasses } from '@/shared/design-system/tokens/components/modal';
 
 /**
  * Backdrop component with blur and opacity effects
@@ -103,6 +102,10 @@ const Modal = memo(
 
     const maxWidthClass = size && sizeClasses[size] ? sizeClasses[size] : maxWidth;
 
+    const getModalClasses = () => {
+      return 'relative bg-surface border border-border rounded-lg shadow-xl w-full';
+    };
+
     /**
      * Prevent modal click from closing the modal
      */
@@ -150,7 +153,7 @@ const Modal = memo(
                 zIndex={backdropZIndex}
               />
 
-              <div className={`${modalBase.container} ${modalPadding.container}`}>
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                 <motion.div
                   role="dialog"
                   aria-modal="true"
@@ -177,27 +180,27 @@ const Modal = memo(
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className={`${getModalClasses(size)} ${maxWidthClass} ${className}`}
+                  className={`${getModalClasses()} ${maxWidthClass} ${className}`}
                   onClick={handleModalClick}
                 >
                   {/* Header */}
-                  <div className={modalHeader.container}>
-                    <div className={modalHeader.titleContainer}>
+                  <div className="sticky top-0 z-10 border-b border-border bg-surface">
+                    <div className="flex items-start justify-between gap-4 p-6">
                       <div className="flex flex-col min-w-0">
                         <h2
                           id="modal-title"
-                          className={modalHeader.title}
+                          className="text-lg font-semibold text-text-primary truncate"
                           title={typeof title === 'string' ? title : undefined}
                         >
                           {title}
                         </h2>
                         {subtitle && (
-                          <span className={modalHeader.subtitle}>{subtitle}</span>
+                          <span className="text-sm text-text-muted mt-1">{subtitle}</span>
                         )}
                       </div>
                     </div>
 
-                    <div className={modalHeader.actions}>
+                    <div className="flex items-center gap-2">
                       <IconButton
                         onClick={onClose}
                         variant="close"
@@ -219,7 +222,7 @@ const Modal = memo(
                   </div>
 
                   {/* Content */}
-                  <div className={modalPadding.content}>
+                  <div className="p-6 overflow-y-auto">
                     {children}
                   </div>
                 </motion.div>

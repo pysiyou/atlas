@@ -9,7 +9,6 @@ import { formatCurrency } from '@/utils';
 import { getTestName, getTestSampleType, getTestCategory } from '@/utils/typeHelpers';
 import type { OrderTest, Test } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
-import { brandColors } from '@/shared/design-system/tokens/colors';
 
 export interface TestsTableProps {
   tests: OrderTest[];
@@ -52,7 +51,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
                     <div className="flex items-center gap-1">
                       <span
                         className={`font-mono ${
-                          isSuperseded ? 'text-text-disabled line-through' : brandColors.primary.icon
+                          isSuperseded ? 'text-text-disabled line-through' : 'text-brand'
                         }`}
                       >
                         {test.testCode}
@@ -61,7 +60,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
                         <Badge
                           variant="default"
                           size="xs"
-                          className={`text-xs ${brandColors.primary.backgroundLight} ${brandColors.primary.icon} ${brandColors.primary.border}`}
+                          className="text-xs bg-brand/10 text-brand border-brand"
                         >
                           #{retestNumber}
                         </Badge>
@@ -126,7 +125,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
             >
               <td
                 className={`px-4 py-3 font-mono truncate whitespace-nowrap ${
-                  isSuperseded ? 'text-text-disabled line-through' : brandColors.primary.icon
+                  isSuperseded ? 'text-text-disabled line-through' : 'text-brand'
                 }`}
               >
                 {test.testCode}
@@ -147,7 +146,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
                     <Badge
                       variant="default"
                       size="xs"
-                      className={`text-xs ${brandColors.primary.backgroundLight} ${brandColors.primary.icon} ${brandColors.primary.border}`}
+                      className="text-xs bg-brand/10 text-brand border-brand"
                     >
                       #{retestNumber}
                     </Badge>
@@ -169,7 +168,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
 
               <td
                 className={`px-4 py-3 text-right font-medium whitespace-nowrap ${
-                  isSuperseded ? 'text-text-disabled line-through' : brandColors.primary.icon
+                  isSuperseded ? 'text-text-disabled line-through' : 'text-brand'
                 }`}
               >
                 {formatCurrency(test.priceAtOrder)}
