@@ -11,7 +11,7 @@ import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
 import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
-import { dropdown, filterControl } from '@/shared/design-system/tokens/components';
+import { dropdown } from '@/shared/design-system/tokens/components';
 
 interface AgeFilterProps {
   value: [number, number];

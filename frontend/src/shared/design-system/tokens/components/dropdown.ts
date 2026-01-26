@@ -7,7 +7,6 @@
  */
 
 import { brandColors, neutralColors } from '../colors';
-import { radius, border } from '../borders';
 import { padding } from '../spacing';
 import { hover } from '../interactions';
 import { transitions } from '../animations';

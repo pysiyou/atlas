@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
+import { neutralColors } from '@/shared/design-system/tokens/colors';
 import { Popover } from '@/shared/ui/Popover';
 import { Icon, type IconName } from '@/shared/ui/Icon';
 import { Badge } from '@/shared/ui/Badge';

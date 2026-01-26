@@ -4,7 +4,6 @@ import { ICONS } from '@/utils/icon-mappings';
 import {
   paginationContainer,
   paginationSelect,
-  paginationPageButton,
   paginationNavButton,
   paginationText,
   getPageButtonClasses,
