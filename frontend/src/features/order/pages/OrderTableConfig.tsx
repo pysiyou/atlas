@@ -30,7 +30,7 @@ import { ICONS } from '@/utils/icon-mappings';
 export const createOrderTableConfig = (
   navigate: NavigateFunction,
   getPatientNameFn: (patientId: number | string) => string,
-  getTestNameFn: (testCode: string) => string,
+  _getTestNameFn: (testCode: string) => string,
   openModalFn?: (type: ModalType, props?: Record<string, unknown>) => void
 ): TableViewConfig<Order> => {
   // Shared render functions

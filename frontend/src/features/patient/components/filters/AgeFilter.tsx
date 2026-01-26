@@ -5,7 +5,7 @@
  * Features smooth animations, refined visual design, and enhanced micro-interactions.
  */
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Popover } from '@/shared/ui/Popover';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
@@ -20,8 +20,6 @@ interface AgeFilterProps {
   className?: string;
 }
 
-// Large component is necessary for age range slider with dual handles, mouse/touch event handling, and popover UI
-// eslint-disable-next-line max-lines-per-function
 export const AgeFilter: React.FC<AgeFilterProps> = ({
   value,
   onChange,
@@ -31,93 +29,29 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   className,
 }) => {
   const [localValue, setLocalValue] = useState<[number, number]>(value);
-  const [isDraggingHandle, setIsDraggingHandle] = useState<'min' | 'max' | null>(null);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef<'min' | 'max' | null>(null);
 
   // Sync local value when prop changes
   useEffect(() => {
     setLocalValue(value);
   }, [value]);
 
-  /**
-   * Calculate percentage position for a given value
-   */
-  const getPercentage = useCallback(
-    (val: number) => {
-      return ((val - min) / (max - min)) * 100;
-    },
-    [min, max]
-  );
-
-  /**
-   * Convert mouse position to slider value
-   */
-  const getValueFromPosition = useCallback(
-    (clientX: number) => {
-      if (!sliderRef.current) return 0;
-      const rect = sliderRef.current.getBoundingClientRect();
-      const percent = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
-      const rawValue = percent * (max - min) + min;
-      return Math.round(rawValue);
-    },
-    [min, max]
-  );
-
-  /**
-   * Handle mouse move during drag
-   */
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!isDragging.current) return;
-
-      const newValue = getValueFromPosition(e.clientX);
-
-      setLocalValue(prev => {
-        const [currMin, currMax] = prev;
-        if (isDragging.current === 'min') {
-          const nextMin = Math.min(newValue, currMax);
-          return [nextMin, currMax];
-        }
-        const nextMax = Math.max(newValue, currMin);
-        return [currMin, nextMax];
-      });
-    },
-    [getValueFromPosition]
-  );
-
-  // Use a ref to keep track of latest local value for the mouseup commit
-  const latestValueRef = useRef(localValue);
-  useEffect(() => {
-    latestValueRef.current = localValue;
-  }, [localValue]);
-
-  // Use ref to store the mouseup handler to avoid circular dependency
-  const mouseUpHandlerRef = useRef<() => void>(() => {});
-
-  // Update the handler ref whenever dependencies change
-  useEffect(() => {
-    mouseUpHandlerRef.current = () => {
-      if (isDragging.current) {
-        onChange(latestValueRef.current);
-      }
-      isDragging.current = null;
-      setIsDraggingHandle(null);
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', mouseUpHandlerRef.current);
-    };
-  }, [onChange, handleMouseMove]);
-
-  /**
-   * Handle mouse down on slider handle
-   */
-  const onMouseDown = (type: 'min' | 'max') => (e: React.MouseEvent) => {
-    e.preventDefault();
-    isDragging.current = type;
-    setIsDraggingHandle(type);
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', mouseUpHandlerRef.current);
+  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMin = Math.min(Number(e.target.value), localValue[1] - 1);
+    const newValue: [number, number] = [newMin, localValue[1]];
+    setLocalValue(newValue);
+    onChange(newValue);
   };
+
+  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMax = Math.max(Number(e.target.value), localValue[0] + 1);
+    const newValue: [number, number] = [localValue[0], newMax];
+    setLocalValue(newValue);
+    onChange(newValue);
+  };
+
+  // Calculate percentages for visual track
+  const minPercent = ((localValue[0] - min) / (max - min)) * 100;
+  const maxPercent = ((localValue[1] - min) / (max - min)) * 100;
 
   /**
    * Clear the filter and reset to default range
@@ -142,10 +76,6 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
     );
   };
 
-  const minPercent = getPercentage(localValue[0]);
-  const maxPercent = getPercentage(localValue[1]);
-  const rangeWidth = maxPercent - minPercent;
-
   return (
     <Popover
       placement="bottom-start"
@@ -153,11 +83,11 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'group relative flex items-center gap-2 w-full h-[34px] px-3 py-1.5',
-            'bg-surface border rounded-md cursor-pointer transition-colors duration-200',
+            'group relative flex items-center gap-2 w-full h-[34px] px-3',
+            'bg-surface border border-border-strong rounded-md cursor-pointer transition-colors duration-200',
             isOpen
-              ? 'border-brand bg-brand/5'
-              : 'border-border hover:border-border-strong hover:bg-surface-hover',
+              ? 'border-brand'
+              : 'hover:bg-surface-hover',
             className
           )}
         >
@@ -165,8 +95,8 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           <Icon
             name={ICONS.dataFields.hourglass}
             className={cn(
-              'w-4 h-4 shrink-0',
-              isOpen ? 'text-brand' : cn('text-text-disabled', 'group-hover:text-brand/70')
+              'w-4 h-4 shrink-0 transition-colors',
+              isOpen ? 'text-brand' : 'text-text-muted group-hover:text-brand'
             )}
           />
           
@@ -183,7 +113,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               >
                 <Icon 
                   name={ICONS.actions.closeCircle} 
-                  className={cn('w-3.5 h-3.5 text-text-disabled', 'group-hover/clear:text-brand')} 
+                  className={cn('w-3.5 h-3.5 text-text-muted', 'group-hover/clear:text-brand')} 
                 />
               </button>
             ) : (
@@ -192,7 +122,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             <Icon
               name={ICONS.actions.chevronDown}
               className={cn(
-                'w-3.5 h-3.5 text-text-disabled transition-transform duration-200',
+                'w-3.5 h-3.5 text-text-muted transition-transform duration-200',
                 isOpen && cn('rotate-180', 'text-brand')
               )}
             />
@@ -202,95 +132,50 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
       className="p-6 w-[320px]"
     >
       {() => (
-        <div className="space-y-5">
-          {/* Simple Value Display */}
-          <div className={cn('flex items-center justify-center gap-2 text-sm', 'text-text-tertiary')}>
-            <span className={cn('font-semibold tabular-nums', 'text-text-primary')}>{localValue[0]}</span>
-            <span className="text-text-disabled">-</span>
-            <span className={cn('font-semibold tabular-nums', 'text-text-primary')}>{localValue[1]}</span>
-            <span className={cn('text-text-tertiary', 'ml-1')}>years</span>
+        <div className="w-full">
+          <p className="text-sm text-text-tertiary mb-4">Move the slider to filter by age</p>
+
+          {/* Slider Track */}
+          <div className="relative h-1 mb-6">
+            {/* Background track */}
+            <div className="absolute inset-0 bg-border rounded-full" />
+
+            {/* Active track */}
+            <div
+              className="absolute h-full bg-brand rounded-full"
+              style={{
+                left: `${minPercent}%`,
+                width: `${maxPercent - minPercent}%`,
+              }}
+            />
+
+            {/* Min thumb */}
+            <input
+              type="range"
+              min={min}
+              max={max}
+              value={localValue[0]}
+              onChange={handleMinChange}
+              className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+              style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
+            />
+
+            {/* Max thumb */}
+            <input
+              type="range"
+              min={min}
+              max={max}
+              value={localValue[1]}
+              onChange={handleMaxChange}
+              className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+              style={{ zIndex: 4 }}
+            />
           </div>
 
-          {/* Enhanced Slider - Pill-shaped track with multi-segment gradient */}
-          <div className="relative h-10 flex items-center select-none touch-none py-3" ref={sliderRef}>
-            {/* Track Background - Light pill-shaped track */}
-            <div className="absolute w-full h-3 bg-neutral-100 rounded-full overflow-hidden">
-              {/* Active Range with vibrant multi-segment gradient */}
-              <div
-                className="absolute h-full rounded-full transition-all duration-150 bg-[linear-gradient(to_right,#60a5fa,#3b82f6,#6366f1,#8b5cf6,#a855f7,#ec4899)]"
-                style={{
-                  left: `${minPercent}%`,
-                  width: `${rangeWidth}%`,
-                }}
-              >
-                {/* Subtle shine overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-white/15 via-transparent to-transparent rounded-full" />
-              </div>
-            </div>
-
-            {/* Min Handle - Circular dot with dotted outline when active */}
-            <div
-              className={cn(
-                'absolute w-4 h-4 rounded-full cursor-grab active:cursor-grabbing z-10 transition-all duration-200',
-                'hover:scale-125',
-                isDraggingHandle === 'min'
-                  ? 'bg-brand scale-125 shadow-lg'
-                  : 'bg-brand/60 hover:bg-brand'
-              )}
-              style={{ left: `calc(${minPercent}% - 8px)` }}
-              onMouseDown={onMouseDown('min')}
-              role="slider"
-              aria-label="Minimum age"
-              aria-valuemin={min}
-              aria-valuemax={max}
-              aria-valuenow={localValue[0]}
-              tabIndex={0}
-            >
-              {/* Dotted outline when dragging */}
-              {isDraggingHandle === 'min' && (
-                <div className="absolute inset-0 rounded-full border-2 border-dashed border-brand -m-1 animate-pulse" />
-              )}
-            </div>
-
-            {/* Max Handle - Circular dot with dotted outline when active */}
-            <div
-              className={cn(
-                'absolute w-4 h-4 rounded-full cursor-grab active:cursor-grabbing z-10 transition-all duration-200',
-                'hover:scale-125',
-                isDraggingHandle === 'max'
-                  ? 'bg-brand scale-125 shadow-lg'
-                  : 'bg-brand/60 hover:bg-brand'
-              )}
-              style={{ left: `calc(${maxPercent}% - 8px)` }}
-              onMouseDown={onMouseDown('max')}
-              role="slider"
-              aria-label="Maximum age"
-              aria-valuemin={min}
-              aria-valuemax={max}
-              aria-valuenow={localValue[1]}
-              tabIndex={0}
-            >
-              {/* Dotted outline when dragging */}
-              {isDraggingHandle === 'max' && (
-                <div className={cn('absolute inset-0 rounded-full border-2 border-dashed -m-1 animate-pulse', 'border-brand')} />
-              )}
-            </div>
-          </div>
-
-          {/* Age Labels - Positioned below track */}
-          <div className="flex justify-between items-center text-xs font-medium mt-1">
-            <span className={cn(
-              'transition-colors duration-200',
-              localValue[0] === min ? 'text-brand' : 'text-text-tertiary'
-            )}>
-              {min}
-            </span>
-            <span className={cn(
-              'transition-colors duration-200',
-              localValue[1] === max ? 'text-brand' : 'text-text-tertiary'
-            )}>
-              {max}
-            </span>
+          {/* Age labels */}
+          <div className="flex justify-between text-lg font-medium text-text">
+            <span>{localValue[0]} years</span>
+            <span>{localValue[1]} years</span>
           </div>
         </div>
       )}

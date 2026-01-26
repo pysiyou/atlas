@@ -196,12 +196,12 @@ const SearchInput: React.FC<{
   return (
     <div
       className={cn(
-        'relative w-full flex items-center gap-2 h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-brand transition-colors duration-200'
+        'group relative w-full flex items-center gap-2 h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-brand transition-colors duration-200'
       )}
     >
       <Icon
         name={ICONS.actions.search}
-        className="w-3.5 h-3.5 shrink-0 text-text-disabled"
+        className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-brand transition-colors"
       />
       <input
         type="text"
@@ -222,7 +222,7 @@ const SearchInput: React.FC<{
           >
             <Icon
               name={ICONS.actions.closeCircle}
-              className="w-4 h-4 text-text-disabled hover:text-text-tertiary"
+              className="w-4 h-4 text-text-muted hover:text-text-tertiary"
             />
           </button>
         )}

@@ -32,11 +32,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const iconClasses = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4';
 
   return (
-    <div className={cn('relative flex items-center gap-2 h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-brand transition-colors duration-200', className)}>
+    <div className={cn('group relative flex items-center gap-2 h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-brand transition-colors duration-200', className)}>
       {/* Column 1: Left Icon */}
       <Icon
         name={ICONS.actions.search}
-        className={cn('text-text-disabled', iconClasses, 'shrink-0')}
+        className={cn('text-text-muted group-hover:text-brand transition-colors', iconClasses, 'shrink-0')}
       />
       
       {/* Column 2: Input - flexible middle */}

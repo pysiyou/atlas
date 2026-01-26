@@ -104,11 +104,11 @@ export const SearchControl: React.FC<SearchControlProps> = ({
   }, []);
 
   return (
-    <div className={cn('relative w-full flex items-center gap-2 h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-brand transition-colors duration-200', className)}>
+    <div className={cn('group relative w-full flex items-center gap-2 h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-brand transition-colors duration-200', className)}>
       {/* Column 1: Left Icon */}
       <Icon
         name={ICONS.actions.search}
-        className="w-3.5 h-3.5 shrink-0 text-text-disabled"
+        className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-brand transition-colors"
       />
 
       {/* Column 2: Input - flexible middle */}
@@ -131,7 +131,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
             className="p-0.5 hover:bg-surface-hover rounded transition-colors duration-200 flex items-center justify-center cursor-pointer"
             aria-label="Clear search"
           >
-            <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-disabled hover:text-text-tertiary" />
+            <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-tertiary" />
           </button>
         )}
       </div>

@@ -149,13 +149,13 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus:outline-none focus:border-brand transition-colors duration-200 cursor-pointer flex items-center justify-between gap-2',
+            'group h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus:outline-none focus:border-brand transition-colors duration-200 cursor-pointer flex items-center justify-between gap-2',
             isOpen && 'border-brand',
             className
           )}
         >
           {/* Column 1: Left Icon */}
-          <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-text-tertiary shrink-0" />
+          <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors" />
           
           {/* Column 2: Content - flexible middle */}
           <div className="flex-1 min-w-0 text-xs font-medium">{renderTriggerContent()}</div>
@@ -167,14 +167,14 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
                 onClick={handleClear}
                 className="p-0.5 hover:bg-surface-hover rounded transition-colors"
               >
-                <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-disabled hover:text-text-tertiary" />
+                <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-tertiary" />
               </button>
             ) : (
               <div className="w-5 h-5" />
             )}
             <Icon
               name={ICONS.actions.chevronDown}
-              className={cn('w-4 h-4 text-text-tertiary transition-transform', isOpen && 'rotate-180')}
+              className={cn('w-4 h-4 text-text-muted transition-transform', isOpen && 'rotate-180')}
             />
           </div>
         </div>

@@ -177,7 +177,7 @@ export const buildNewPatientPayload = (
     id: patientId,
     fullName: formData.fullName.trim(),
     dateOfBirth: formData.dateOfBirth,
-    gender: formData.gender,
+    gender: formData.gender!,
     phone: formData.phone.trim(),
     email: formData.email.trim() || undefined,
     height: formData.height ? parseFloat(formData.height) : undefined,

@@ -93,13 +93,13 @@ export const DateFilter: React.FC<DateFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'flex items-center justify-between gap-2 h-9 px-3 text-xs bg-surface border rounded-md cursor-pointer transition-colors',
-            isOpen ? 'border-brand bg-app-bg' : 'border-border-medium hover:bg-app-bg',
+            'group flex items-center justify-between gap-2 h-[34px] px-3 text-xs bg-surface border border-border-strong rounded-md cursor-pointer transition-colors',
+            isOpen ? 'border-brand' : 'hover:bg-surface-hover',
             className
           )}
         >
           {/* Column 1: Left Icon */}
-          <Icon name={ICONS.dataFields.date} className="w-3.5 h-3.5 text-text-disabled shrink-0" />
+          <Icon name={ICONS.dataFields.date} className="w-3.5 h-3.5 text-text-muted group-hover:text-brand shrink-0 transition-colors" />
           
           {/* Column 2: Content - flexible middle */}
           <div className="flex-1 truncate">{renderTriggerContent()}</div>
@@ -111,14 +111,14 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                 onClick={handleClear}
                 className="p-0.5 hover:bg-neutral-100 rounded transition-colors"
               >
-                <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-text-disabled hover:text-text-tertiary" />
+                <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-text-muted hover:text-text-tertiary" />
               </button>
             ) : (
               <div className="w-4 h-4" />
             )}
             <Icon
               name={ICONS.actions.chevronDown}
-              className={cn('w-3.5 h-3.5 text-text-disabled transition-transform', isOpen && 'rotate-180')}
+              className={cn('w-3.5 h-3.5 text-text-muted transition-transform', isOpen && 'rotate-180')}
             />
           </div>
         </div>

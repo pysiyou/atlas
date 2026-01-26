@@ -60,12 +60,6 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
     <div className="font-medium text-brand truncate">{formatCurrency(test.price)}</div>
   );
 
-  const renderStatus = (test: Test) => (
-    <Badge variant={test.isActive ? 'success' : 'default'} size="sm">
-      {test.isActive ? 'ACTIVE' : 'INACTIVE'}
-    </Badge>
-  );
-
   const renderActions = (test: Test) => (
     <TableActionMenu>
       <TableActionItem

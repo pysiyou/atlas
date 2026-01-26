@@ -215,13 +215,13 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'h-[34px] px-3 bg-surface border rounded-md flex items-center gap-2 cursor-pointer transition-colors text-xs',
-            isOpen ? 'border-brand ring-2 ring-brand/20' : 'border-border-strong hover:border-border-strong',
+            'group h-[34px] px-3 bg-surface border border-border-strong rounded-md flex items-center gap-2 cursor-pointer transition-colors text-xs',
+            isOpen ? 'border-brand' : 'hover:bg-surface-hover',
             className
           )}
         >
           {/* Column 1: Left Icon */}
-          {icon && <Icon name={icon} className="w-4 h-4 text-text-muted flex-shrink-0" />}
+          {icon && <Icon name={icon} className="w-4 h-4 text-text-muted group-hover:text-brand flex-shrink-0 transition-colors" />}
 
           {/* Column 2: Content - flexible middle */}
           <div className="flex-1 min-w-0 overflow-hidden">
@@ -246,14 +246,14 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
                 className="p-0.5 -mr-1 hover:bg-neutral-100 rounded transition-colors flex items-center justify-center"
                 aria-label="Clear selection"
               >
-                <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-text-disabled" />
+                <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-text-muted" />
               </button>
             ) : (
               <div className="w-4" />
             )}
             <Icon
               name={ICONS.actions.chevronDown}
-              className={cn('w-4 h-4 text-text-disabled transition-transform', isOpen && 'rotate-180')}
+              className={cn('w-4 h-4 text-text-muted transition-transform', isOpen && 'rotate-180')}
             />
           </div>
         </div>
