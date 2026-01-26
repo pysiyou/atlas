@@ -158,24 +158,24 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
       {/* Rejection Reasons */}
       <div className="space-y-2">
-        <label className="block text-xs font-medium text-gray-700">Rejection Reasons</label>
-        <div className="border border-gray-200 rounded-md max-h-[200px] overflow-y-auto">
+        <label className="block text-xs font-medium text-text-secondary">Rejection Reasons</label>
+        <div className="border border-border rounded-md max-h-[200px] overflow-y-auto">
           {REJECTION_REASONS.map(r => (
             <label
               key={r.value}
-              className={`flex items-start p-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 transition-colors ${reasons.includes(r.value) ? `${brandColors.primary.backgroundLight}/50` : ''}`}
+              className={`flex items-start p-2 hover:bg-app-bg cursor-pointer border-b border-border-subtle last:border-0 transition-colors ${reasons.includes(r.value) ? `${brandColors.primary.backgroundLight}/50` : ''}`}
             >
               <div className="flex items-center h-5">
                 <input
                   type="checkbox"
                   checked={reasons.includes(r.value)}
                   onChange={() => toggleReason(r.value)}
-                  className={`h-4 w-4 ${brandColors.primary.icon} border-gray-300 rounded focus:ring-sky-500`}
+                  className={`h-4 w-4 ${brandColors.primary.icon} border-border-strong rounded focus:ring-brand`}
                 />
               </div>
               <div className="ml-2 text-xs">
-                <div className="font-medium text-gray-900">{r.label}</div>
-                <div className="text-gray-500">{r.description}</div>
+                <div className="font-medium text-text-primary">{r.label}</div>
+                <div className="text-text-muted">{r.description}</div>
               </div>
             </label>
           ))}
@@ -184,7 +184,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
       {/* Recollection Toggle */}
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Next Step</label>
+        <label className="block text-xs font-medium text-text-muted mb-1">Next Step</label>
         <CheckboxCard
           checked={requireRecollection}
           onChange={() => setRequireRecollection(!requireRecollection)}
@@ -195,7 +195,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">
+        <label className="block text-xs font-medium text-text-secondary mb-1">
           Notes {reasons.includes('other') && <span className={semanticColors.danger.requiredIndicator}>*</span>}
         </label>
         <textarea
@@ -203,7 +203,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           placeholder="Additional details..."
           value={notes}
           onChange={e => setNotes(e.target.value)}
-          className="w-full px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
         />
         {reasons.includes('other') && !notes.trim() && (
           <p className={`text-xs ${semanticColors.danger.requiredIndicator} mt-1`}>Required when "Other" is selected</p>

@@ -38,9 +38,9 @@ export const alertVariants = {
     text: semanticColors.warning.textLight,      // text-yellow-800
   },
   info: {
-    bg: semanticColors.info.backgroundLight,    // bg-sky-100
-    border: semanticColors.info.border,         // border-sky-200
-    text: semanticColors.info.textLight,        // text-sky-800
+    bg: semanticColors.info.backgroundLight,    // bg-brand-light
+    border: semanticColors.info.border,         // border-brand-light
+    text: semanticColors.info.textLight,        // text-brand-text
   },
 } as const;
 

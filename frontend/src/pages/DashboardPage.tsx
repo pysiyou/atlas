@@ -92,8 +92,8 @@ export const Dashboard: React.FC = () => {
             <Card key={index} padding="lg" hover>
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <p className="text-sm text-gray-600 mb-1">{stat.label}</p>
-                  <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                  <p className="text-sm text-text-tertiary mb-1">{stat.label}</p>
+                  <p className="text-3xl font-bold text-text-primary">{stat.value}</p>
                   {stat.today !== undefined && (
                     <p className={`${body.small} ${semanticColors.success.icon} mt-1`}>+{stat.today} today</p>
                   )}
@@ -126,7 +126,7 @@ export const Dashboard: React.FC = () => {
               recentOrders.map(order => (
                 <div
                   key={order.orderId}
-                  className={`flex items-center justify-between ${padding.card.md} ${border.default} ${radius.md} hover:bg-gray-50`}
+                  className={`flex items-center justify-between ${padding.card.md} ${border.default} ${radius.md} hover:bg-app-bg`}
                 >
                   <div>
                     <p className={`${body.default} ${heading.h5}`}>{getPatientName(order.patientId)}</p>

@@ -55,19 +55,19 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
   };
 
   return (
-    <div className={cn('border-b border-gray-200 last:border-b-0', className)}>
+    <div className={cn('border-b border-border last:border-b-0', className)}>
       {/* Section header - compact */}
       <button
         onClick={toggleCollapse}
         disabled={!collapsible}
         className={cn(
           'w-full flex items-center justify-between px-3 py-1.5 text-left transition-colors',
-          collapsible && 'hover:bg-gray-50 cursor-pointer',
+          collapsible && 'hover:bg-app-bg cursor-pointer',
           !collapsible && 'cursor-default'
         )}
       >
         <div className="flex items-center gap-1.5">
-          <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{title}</h3>
+          <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wide">{title}</h3>
           {activeCount > 0 && (
             <span className={`inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full ${brandColors.primary.background} text-white text-xxs font-medium`}>
               {activeCount}
@@ -79,7 +79,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
           <Icon
             name={ICONS.actions.chevronDown}
             className={cn(
-              'w-3.5 h-3.5 text-gray-400 transition-transform',
+              'w-3.5 h-3.5 text-text-disabled transition-transform',
               isCollapsed && 'rotate-180'
             )}
           />

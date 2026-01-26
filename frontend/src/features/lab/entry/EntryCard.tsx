@@ -94,10 +94,10 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   // Badges ordered by importance for result entry workflow
   const badges = (
     <>
-      <h3 className="text-sm font-medium text-gray-900">{test.testName}</h3>
+      <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
       <Badge variant={test.priority} size="sm" />
       <Badge variant={test.sampleType} size="sm" />
-      <Badge size="sm" variant="default" className="text-gray-600">
+      <Badge size="sm" variant="default" className="text-text-tertiary">
         {test.testCode}
       </Badge>
     </>
@@ -120,14 +120,14 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <Badge
           key={param.code}
           size="sm"
-          className={results[param.code] ? brandColors.primary.textOnLight : 'text-gray-500'}
+          className={results[param.code] ? brandColors.primary.textOnLight : 'text-text-muted'}
           variant={results[param.code] ? 'primary' : 'default'}
         >
           {param.name}
         </Badge>
       ))}
       {parameterCount > 5 && (
-        <Badge size="sm" variant="default" className="text-gray-500">
+        <Badge size="sm" variant="default" className="text-text-muted">
           +{parameterCount - 5} more
         </Badge>
       )}

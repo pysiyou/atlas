@@ -43,8 +43,8 @@ export const createPaymentTableConfig = (
 
   const renderPatientName = (item: OrderPaymentDetails) => (
     <div className="min-w-0">
-      <div className="font-semibold text-gray-900 truncate">{item.patientName || 'N/A'}</div>
-      <div className="text-xxs text-gray-500 truncate font-mono">{displayId.patient(item.patientId)}</div>
+      <div className="font-semibold text-text-primary truncate">{item.patientName || 'N/A'}</div>
+      <div className="text-xxs text-text-muted truncate font-mono">{displayId.patient(item.patientId)}</div>
     </div>
   );
 
@@ -53,7 +53,7 @@ export const createPaymentTableConfig = (
       <div className="font-medium truncate">
         {item.tests?.length || 0} test{(item.tests?.length || 0) !== 1 ? 's' : ''}
       </div>
-      <div className="text-xs text-gray-500 truncate">
+      <div className="text-xs text-text-muted truncate">
         {item.tests
           ?.slice(0, 2)
           .map(t => t.testName || t.testCode)
@@ -83,7 +83,7 @@ export const createPaymentTableConfig = (
   };
 
   const renderOrderDate = (item: OrderPaymentDetails) => (
-    <span className="text-xs text-gray-500 truncate block">{formatDate(item.orderDate)}</span>
+    <span className="text-xs text-text-muted truncate block">{formatDate(item.orderDate)}</span>
   );
 
   const renderAction = (item: OrderPaymentDetails) => (

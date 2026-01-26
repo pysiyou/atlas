@@ -108,10 +108,10 @@ export const OrderUpsertLayout: React.FC<OrderUpsertLayoutProps> = ({
           {!isModal && (
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-text-primary">
                   {isEditMode ? 'Edit Order' : 'New Order'}
                 </h1>
-                {headerSubtitle && <p className="text-sm text-gray-500 mt-1">{headerSubtitle}</p>}
+                {headerSubtitle && <p className="text-sm text-text-muted mt-1">{headerSubtitle}</p>}
               </div>
             </div>
           )}
@@ -159,7 +159,7 @@ export const OrderUpsertLayout: React.FC<OrderUpsertLayoutProps> = ({
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 py-4 border-t border-gray-200 bg-white shrink-0">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 py-4 border-t border-border bg-surface shrink-0">
         <div className="flex items-baseline min-w-0 justify-between sm:justify-start">
           <span className={`text-lg font-bold ${brandColors.primary.icon}`}>{formatCurrency(totalPrice)}</span>
         </div>

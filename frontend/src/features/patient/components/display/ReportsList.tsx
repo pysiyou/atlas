@@ -33,17 +33,17 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
       {reportableOrders.map(order => (
         <div
           key={order.orderId}
-          className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors group"
+          className="flex items-center justify-between p-3 hover:bg-app-bg transition-colors group"
         >
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="w-8 h-8 flex items-center justify-center">
               <Icon name={ICONS.dataFields.pdf} className={`w-full h-full ${semanticColors.danger.iconLighter}`} />
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-medium font-mono text-gray-900 truncate">
+              <p className="text-xs font-medium font-mono text-text-primary truncate">
                 Report_{displayId.order(order.orderId)}.pdf
               </p>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-text-muted mt-0.5">
                 {formatDetailDate(order.orderDate)} • 1.2 MB
               </p>
             </div>

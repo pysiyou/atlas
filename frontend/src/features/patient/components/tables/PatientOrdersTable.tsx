@@ -46,7 +46,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
                 <td className={`px-3 py-3 ${brandColors.primary.icon} font-medium font-mono`}>
                   {displayId.order(order.orderId)}
                 </td>
-                <td className="px-3 py-3 text-gray-600">
+                <td className="px-3 py-3 text-text-tertiary">
                   {formatDetailDate(order.orderDate, 'short')}
                 </td>
                 <td className="px-3 py-3">
@@ -75,13 +75,13 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
         {orders.map(order => (
           <tr
             key={order.orderId}
-            className="hover:bg-gray-50 transition-colors cursor-pointer"
+            className="hover:bg-app-bg transition-colors cursor-pointer"
             onClick={() => onOrderClick(String(order.orderId))}
           >
             <td className={`px-2 py-3 text-xs ${brandColors.primary.icon} font-medium font-mono max-w-0`}>
               <span className="block truncate">{displayId.order(order.orderId)}</span>
             </td>
-            <td className="px-2 py-3 text-xs text-gray-500 max-w-0">
+            <td className="px-2 py-3 text-xs text-text-muted max-w-0">
               <span className="block truncate">{formatDetailDate(order.orderDate, 'short')}</span>
             </td>
             <td className="px-2 py-3 max-w-0">
@@ -89,7 +89,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
                 <div className="font-medium truncate">
                   {order.tests.length} test{order.tests.length !== 1 ? 's' : ''}
                 </div>
-                <div className="text-xs text-gray-500 truncate">
+                <div className="text-xs text-text-muted truncate">
                   {order.tests
                     .slice(0, 2)
                     .map(t => t.testName || t.testCode)

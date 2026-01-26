@@ -209,7 +209,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           {/* Enhanced Slider - Pill-shaped track with multi-segment gradient */}
           <div className="relative h-10 flex items-center select-none touch-none py-3" ref={sliderRef}>
             {/* Track Background - Light pill-shaped track */}
-            <div className="absolute w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+            <div className="absolute w-full h-3 bg-neutral-100 rounded-full overflow-hidden">
               {/* Active Range with vibrant multi-segment gradient */}
               <div
                 className="absolute h-full rounded-full transition-all duration-150 bg-[linear-gradient(to_right,#60a5fa,#3b82f6,#6366f1,#8b5cf6,#a855f7,#ec4899)]"

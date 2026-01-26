@@ -15,17 +15,17 @@ import { transitions } from '../animations';
  * Pagination Container Styles
  */
 export const paginationContainer = {
-  base: 'flex items-center justify-between px-4 py-4 bg-white border-t border-gray-200',
-  compact: 'flex items-center justify-between px-3 py-3 bg-white border-t border-gray-200',
+  base: 'flex items-center justify-between px-4 py-4 bg-surface border-t border-border',
+  compact: 'flex items-center justify-between px-3 py-3 bg-surface border-t border-border',
 } as const;
 
 /**
  * Pagination Select Styles
  */
 export const paginationSelect = {
-  base: `block w-full py-1 pl-3 pr-8 ${fontSize.xs} border border-gray-300 ${radius.md} cursor-pointer`,
-  focus: `${focus.outline} focus:ring-sky-500 focus:border-sky-500`,
-  combined: `block w-full py-1 pl-3 pr-8 ${fontSize.xs} border border-gray-300 ${radius.md} cursor-pointer ${focus.outline} focus:ring-sky-500 focus:border-sky-500`,
+  base: `block w-full py-1 pl-3 pr-8 ${fontSize.xs} border border-border-strong ${radius.md} cursor-pointer`,
+  focus: `${focus.outline} focus:ring-brand focus:border-brand`,
+  combined: `block w-full py-1 pl-3 pr-8 ${fontSize.xs} border border-border-strong ${radius.md} cursor-pointer ${focus.outline} focus:ring-brand focus:border-brand`,
 } as const;
 
 /**
@@ -42,7 +42,7 @@ export const paginationPageButton = {
  */
 export const paginationNavButton = {
   base: `p-1 ${radius.md} ${hover.backgroundStrong} ${disabled.combined} cursor-pointer flex items-center justify-center ${transitions.colors}`,
-  icon: 'w-5 h-5 text-gray-500',
+  icon: 'w-5 h-5 text-text-muted',
 } as const;
 
 /**

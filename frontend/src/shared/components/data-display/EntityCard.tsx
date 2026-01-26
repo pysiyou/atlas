@@ -84,7 +84,7 @@ export const EntityCard: React.FC<EntityCardProps> = ({
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2.5 flex-wrap min-w-0 flex-1">
               {typeof title === 'string' ? (
-                <h3 className="text-sm font-medium text-gray-900">{title}</h3>
+                <h3 className="text-sm font-medium text-text-primary">{title}</h3>
               ) : (
                 title
               )}
@@ -97,17 +97,17 @@ export const EntityCard: React.FC<EntityCardProps> = ({
           {context && (
             <div className="flex flex-col gap-1.5">
               {(context.primary || context.secondary || context.tertiary) && (
-                <div className="flex items-center gap-2 text-sm text-gray-700 flex-wrap">
+                <div className="flex items-center gap-2 text-sm text-text-secondary flex-wrap">
                   {context.primary}
-                  {context.primary && context.secondary && <span className="text-gray-300">|</span>}
+                  {context.primary && context.secondary && <span className="text-text-disabled">|</span>}
                   {context.secondary}
                   {context.secondary && context.tertiary && (
-                    <span className="text-gray-300">|</span>
+                    <span className="text-text-disabled">|</span>
                   )}
                   {context.tertiary}
                 </div>
               )}
-              {metadata && <div className="text-xs text-gray-500">{metadata}</div>}
+              {metadata && <div className="text-xs text-text-muted">{metadata}</div>}
             </div>
           )}
 
@@ -116,9 +116,9 @@ export const EntityCard: React.FC<EntityCardProps> = ({
 
           {/* Row 3: Content Section */}
           {content && (
-            <div className={`bg-gray-50 rounded-md p-3 border border-gray-100 ${contentClassName}`}>
+            <div className={`bg-app-bg rounded-md p-3 border border-border-subtle ${contentClassName}`}>
               {contentTitle && (
-                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                <div className="text-xs font-medium text-text-muted uppercase tracking-wide mb-2">
                   {contentTitle}
                 </div>
               )}

@@ -120,28 +120,28 @@ export const DateInput: React.FC<DateInputProps> = ({
         trigger={({ isOpen }) => (
           <div
             className={cn(
-              `flex items-center gap-2 ${inputPadding.default} bg-white border rounded cursor-pointer transition-colors w-full`,
+              `flex items-center gap-2 ${inputPadding.default} bg-surface border rounded cursor-pointer transition-colors w-full`,
               isOpen
-                ? 'border-sky-500 ring-2 ring-sky-500/20'
+                ? 'border-brand ring-2 ring-brand/20'
                 : error
                   ? inputBorder.error
                   : inputBorder.default,
-              disabled && 'bg-gray-100 cursor-not-allowed'
+              disabled && 'bg-neutral-100 cursor-not-allowed'
             )}
           >
-            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-disabled flex-shrink-0" />
             <div className="flex-1 text-xs truncate">
               {dateValue ? (
-                <span className="text-gray-900">{format(dateValue, 'dd MMM yyyy')}</span>
+                <span className="text-text-primary">{format(dateValue, 'dd MMM yyyy')}</span>
               ) : (
-                <span className="text-gray-300">{placeholder}</span>
+                <span className="text-text-disabled">{placeholder}</span>
               )}
             </div>
 
             <Icon
               name={ICONS.actions.chevronDown}
               className={cn(
-                'w-4 h-4 text-gray-400 transition-transform flex-shrink-0',
+                'w-4 h-4 text-text-disabled transition-transform flex-shrink-0',
                 isOpen && 'rotate-180'
               )}
             />
@@ -149,12 +149,12 @@ export const DateInput: React.FC<DateInputProps> = ({
             {dateValue && !disabled && (
               <button
                 onClick={handleClear}
-                className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer"
+                className="p-0.5 -mr-1 hover:bg-neutral-100 rounded transition-colors flex items-center justify-center cursor-pointer"
                 type="button"
               >
                 <Icon
                   name={ICONS.actions.closeCircle}
-                  className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600"
+                  className="w-3.5 h-3.5 text-text-disabled hover:text-text-tertiary"
                 />
               </button>
             )}

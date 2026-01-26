@@ -68,8 +68,8 @@ export const CONTAINER_COLOR_CONFIG: Record<
   blue: {
     label: 'Blue',
     meaning: 'Citrate (coagulation)',
-    bgClass: 'bg-sky-500',
-    textClass: 'text-sky-500',
+    bgClass: 'bg-brand',
+    textClass: 'text-brand',
   },
   green: {
     label: 'Green',
@@ -80,8 +80,8 @@ export const CONTAINER_COLOR_CONFIG: Record<
   gray: {
     label: 'Gray',
     meaning: 'Fluoride (glucose)',
-    bgClass: 'bg-gray-500',
-    textClass: 'text-gray-500',
+    bgClass: 'bg-app-bg0',
+    textClass: 'text-text-muted',
   },
   black: {
     label: 'Black',

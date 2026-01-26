@@ -119,17 +119,17 @@ export const DetailView: React.FC<DetailViewProps> = ({
     <div className={`h-full flex flex-col p-6 ${className}`}>
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+        <div className="flex items-center gap-2 text-sm text-text-tertiary mb-4">
           {breadcrumbs.map((crumb, index) => (
             <React.Fragment key={index}>
               {crumb.onClick ? (
-                <button onClick={crumb.onClick} className="hover:text-gray-900 transition-colors cursor-pointer">
+                <button onClick={crumb.onClick} className="hover:text-text-primary transition-colors cursor-pointer">
                   {crumb.label}
                 </button>
               ) : (
-                <span className="text-gray-900">{crumb.label}</span>
+                <span className="text-text-primary">{crumb.label}</span>
               )}
-              {index < breadcrumbs.length - 1 && <span className="text-gray-400">/</span>}
+              {index < breadcrumbs.length - 1 && <span className="text-text-disabled">/</span>}
             </React.Fragment>
           ))}
         </div>
@@ -141,7 +141,7 @@ export const DetailView: React.FC<DetailViewProps> = ({
           {onBack && (
             <button
               onClick={onBack}
-              className="p-2 hover:bg-gray-100 rounded-md transition-colors cursor-pointer"
+              className="p-2 hover:bg-neutral-100 rounded-md transition-colors cursor-pointer"
               aria-label="Go back"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,10 +156,10 @@ export const DetailView: React.FC<DetailViewProps> = ({
           )}
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-sm font-medium text-gray-900">{title}</h1>
+              <h1 className="text-sm font-medium text-text-primary">{title}</h1>
               {badges}
             </div>
-            {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
+            {subtitle && <p className="text-xs text-text-muted mt-1">{subtitle}</p>}
           </div>
         </div>
         {actions && <div className="flex items-center gap-3">{actions}</div>}

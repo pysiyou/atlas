@@ -85,7 +85,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
       <div className="flex flex-col h-full overflow-y-auto">
         {/* Quick Filters */}
         {config.quickFilters && config.quickFilters.length > 0 && (
-          <div className="px-4 pt-4 pb-2 border-b border-gray-200">
+          <div className="px-4 pt-4 pb-2 border-b border-border">
             <QuickFilters
               presets={config.quickFilters}
               activePresetId={activePresetId}
@@ -99,7 +99,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
           {/* Search Control */}
           {searchControl && (
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1.5">
+              <label className="block text-xs font-medium text-text-secondary mb-1.5">
                 {searchControl.label}
               </label>
               {renderControl(searchControl)}
@@ -139,7 +139,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="px-4 py-3 border-t border-gray-200 bg-gray-50 flex items-center justify-end gap-2 shrink-0">
+        <div className="px-4 py-3 border-t border-border bg-app-bg flex items-center justify-end gap-2 shrink-0">
           <Button variant="outline" size="sm" onClick={onClose}>
             Close
           </Button>

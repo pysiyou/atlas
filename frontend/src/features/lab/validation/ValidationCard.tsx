@@ -94,19 +94,19 @@ function ResultGrid({
           ? isCritical(status)
             ? semanticColors.danger.icon
             : semanticColors.warning.valueHigh
-          : 'text-gray-900';
+          : 'text-text-primary';
 
         return (
           <div
             key={key}
             className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
           >
-            <span className="text-xs text-gray-500 text-right" title={key}>
+            <span className="text-xs text-text-muted text-right" title={key}>
               {key}:
             </span>
             <span className={`text-sm font-medium text-left ${valueColor}`}>
               {resultValue}
-              {unit && <span className="text-gray-500 font-normal ml-1">{unit}</span>}
+              {unit && <span className="text-text-muted font-normal ml-1">{unit}</span>}
             </span>
           </div>
         );
@@ -172,10 +172,10 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
 
   const badges = (
     <>
-      <h3 className="text-sm font-medium text-gray-900">{test.testName}</h3>
+      <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
       <Badge variant={test.priority} size="sm" />
       <Badge variant={test.sampleType} size="sm" />
-      <Badge size="sm" variant="default" className="text-gray-600">
+      <Badge size="sm" variant="default" className="text-text-tertiary">
         {test.testCode}
       </Badge>
     </>
@@ -204,8 +204,8 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   );
 
   const additionalInfo = test.resultEnteredAt && (
-    <span className="text-xs text-gray-500">
-      Results entered <span className="text-gray-700">{formatDate(test.resultEnteredAt)}</span>
+    <span className="text-xs text-text-muted">
+      Results entered <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
       {test.enteredBy && <span> by {getUserName(test.enteredBy)}</span>}
     </span>
   );

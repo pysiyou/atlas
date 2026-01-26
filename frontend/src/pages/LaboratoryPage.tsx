@@ -39,8 +39,8 @@ export const Laboratory: React.FC = () => {
     <div className="h-full flex flex-col p-4 space-y-6">
       {/* Page Header: title with tabs on the right */}
       <div className="shrink-0 flex items-center justify-between gap-4 flex-wrap">
-        <h1 className="text-2xl font-bold text-gray-900">{pageTitle}</h1>
-        <div className="bg-gray-200/60 p-1 rounded flex items-center gap-1">
+        <h1 className="text-2xl font-bold text-text-primary">{pageTitle}</h1>
+        <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">
           {tabs.map(tab => {
             const isActive = activeTab === tab.id;
             return (
@@ -51,8 +51,8 @@ export const Laboratory: React.FC = () => {
                   relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 cursor-pointer
                   ${
                     isActive
-                      ? `bg-white ${brandColors.primary.textLightMedium} shadow-sm shadow-gray-200 ring-1 ring-black/5`
-                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'
+                      ? `bg-surface ${brandColors.primary.textLightMedium} shadow-sm shadow-gray-200 ring-1 ring-black/5`
+                      : 'text-text-muted hover:text-text-primary hover:bg-neutral-200/50'
                   }
                 `}
               >
@@ -69,9 +69,9 @@ export const Laboratory: React.FC = () => {
       </div>
 
       {/* Main Content Card */}
-      <div className="flex-1 flex flex-col bg-white rounded border border-gray-200 shadow-sm overflow-hidden min-h-0">
+      <div className="flex-1 flex flex-col bg-surface rounded border border-border shadow-sm overflow-hidden min-h-0">
         {/* Content Area: flex column, no scroll – filter + grid handle layout like ListView */}
-        <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-gray-50">
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-app-bg">
           {activeTab === 'collection' && <CollectionView />}
           {activeTab === 'entry' && <EntryView />}
           {activeTab === 'validation' && <ValidationView />}

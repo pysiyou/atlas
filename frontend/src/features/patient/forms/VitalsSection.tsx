@@ -152,8 +152,8 @@ const getVitalStatus = (
 const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) => {
   if (!status) {
     return {
-      border: 'border-gray-300',
-      text: 'text-gray-500',
+      border: 'border-border-strong',
+      text: 'text-text-muted',
       bg: 'bg-transparent',
     };
   }
@@ -208,7 +208,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="flex justify-between items-baseline mb-1 gap-2">
               <label
                 htmlFor={`vital-${fieldName}`}
-                className="text-xxs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+                className="text-xxs font-medium text-text-muted cursor-pointer truncate min-w-0"
               >
                 {config.label}
               </label>
@@ -217,7 +217,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                 {isAbnormal && (
                   <Icon name={ICONS.actions.dangerSquare} className={`w-3 h-3 ${semanticColors.danger.requiredIndicator} shrink-0`} />
                 )}
-                <span className="text-xxs text-gray-400 truncate">Ref: {refRange}</span>
+                <span className="text-xxs text-text-disabled truncate">Ref: {refRange}</span>
               </div>
             </div>
 
@@ -225,7 +225,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="relative">
               {/* Icon (left, matches shared Input pattern; z-10 so it stacks above input) */}
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                <Icon name={config.icon} className="w-4 h-4 text-gray-400 shrink-0" />
+                <Icon name={config.icon} className="w-4 h-4 text-text-disabled shrink-0" />
               </div>
 
               <input
@@ -241,21 +241,21 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                 step={config.step}
                 placeholder="--"
                 className={`
-                  block w-full pl-10 pr-12 py-2.5 border rounded bg-white
-                  text-xs placeholder:text-gray-300 transition-shadow
+                  block w-full pl-10 pr-12 py-2.5 border rounded bg-surface
+                  text-xs placeholder:text-text-disabled transition-shadow
                   [appearance:textfield]
                   [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0
                   [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0
-                  focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent
-                  disabled:bg-gray-100 disabled:cursor-not-allowed
-                  ${error ? semanticColors.danger.inputBorder : status ? statusColors.border : 'border-gray-300'}
+                  focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent
+                  disabled:bg-neutral-100 disabled:cursor-not-allowed
+                  ${error ? semanticColors.danger.inputBorder : status ? statusColors.border : 'border-border-strong'}
                   ${status ? statusColors.bg : ''}
                 `}
               />
 
               {/* Unit display (absolute positioned) */}
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
-                <span className="text-xs text-gray-400 select-none truncate">{config.unit}</span>
+                <span className="text-xs text-text-disabled select-none truncate">{config.unit}</span>
               </div>
 
               {/* Abnormal value alert (absolute positioned below input) */}

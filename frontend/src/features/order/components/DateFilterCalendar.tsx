@@ -50,7 +50,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
       <>
         <div className="grid grid-cols-7 gap-1 mb-1">
           {WEEKDAY_LABELS.map(day => (
-            <div key={day} className="text-center text-xs text-gray-400 py-1">
+            <div key={day} className="text-center text-xs text-text-disabled py-1">
               {day}
             </div>
           ))}
@@ -72,12 +72,12 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                 className={cn(
                   'h-8 w-8 text-xs rounded-full flex items-center justify-center transition-colors relative cursor-pointer',
                   disabled && 'opacity-30 cursor-not-allowed',
-                  !isCurrentMonth && 'text-gray-300',
+                  !isCurrentMonth && 'text-text-disabled',
                   isCurrentMonth &&
                     !selected &&
                     !inRange &&
                     !disabled &&
-                    'text-gray-700 hover:bg-gray-100',
+                    'text-text-secondary hover:bg-neutral-100',
                   isToday &&
                     !selected &&
                     !inRange &&
@@ -125,8 +125,8 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                 !disabled && isSameMonth(month, new Date()) && `${brandColors.primary.icon} font-bold ${brandColors.primary.backgroundLight}`,
                 !disabled && isSameMonth(month, currentMonth)
                   ? `${brandColors.primary.backgroundLightBg} ${brandColors.primary.textLightMedium}`
-                  : 'hover:bg-gray-100 text-gray-700',
-                !disabled && 'hover:bg-gray-100'
+                  : 'hover:bg-neutral-100 text-text-secondary',
+                !disabled && 'hover:bg-neutral-100'
               )}
             >
               {format(month, 'MMM')}
@@ -159,8 +159,8 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                 `${brandColors.primary.icon} font-bold ${brandColors.primary.backgroundLight}`,
               !disabled && year.getFullYear() === currentMonth.getFullYear()
                 ? `${brandColors.primary.backgroundLightBg} ${brandColors.primary.textLightMedium}`
-                : 'hover:bg-gray-100 text-gray-700',
-              !disabled && 'hover:bg-gray-100'
+                : 'hover:bg-neutral-100 text-text-secondary',
+              !disabled && 'hover:bg-neutral-100'
             )}
           >
             {format(year, 'yyyy')}

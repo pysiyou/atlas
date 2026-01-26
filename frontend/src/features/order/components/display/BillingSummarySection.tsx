@@ -45,15 +45,15 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
       {/* Receipt-style order summary matching PaymentPopover */}
       <div className="rounded  overflow-hidden flex-1 flex flex-col min-h-0">
         {/* Header with Order ID and Payment Status */}
-        <div className="px-3 py-2.5 border-b border-dashed border-gray-300">
+        <div className="px-3 py-2.5 border-b border-dashed border-border-strong">
           <div className="flex justify-between items-center">
-            <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+            <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
               Order <span className="font-mono">{displayId.order(order.orderId)}</span>
             </span>
             <Badge variant={order.paymentStatus} size="xs" />
           </div>
           {order.patientName && (
-            <p className="text-[11px] text-gray-500 mt-0.5 truncate">{order.patientName}</p>
+            <p className="text-[11px] text-text-muted mt-0.5 truncate">{order.patientName}</p>
           )}
         </div>
 
@@ -67,29 +67,29 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
                   className="flex justify-between gap-2 text-xs items-center"
                 >
                   <span className="flex items-center gap-2 min-w-0 flex-1">
-                    <span className="w-1 h-1 rounded-full bg-gray-400 shrink-0" />
-                    <span className="text-gray-700 truncate">
+                    <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
+                    <span className="text-text-secondary truncate">
                       {test.testName || test.testCode || 'Test'}
                       {test.testCode && test.testName !== test.testCode && (
-                        <span className="text-gray-500 ml-1">({test.testCode})</span>
+                        <span className="text-text-muted ml-1">({test.testCode})</span>
                       )}
                     </span>
                   </span>
-                  <span className="font-medium text-gray-800 tabular-nums shrink-0">
+                  <span className="font-medium text-text-primary tabular-nums shrink-0">
                     {formatCurrency(test.priceAtOrder)}
                   </span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-xs text-gray-500 italic">No items</p>
+            <p className="text-xs text-text-muted italic">No items</p>
           )}
         </div>
 
         {/* Total Footer (sum of active tests only) */}
-        <div className="border-t border-dashed border-gray-300 mx-3" />
+        <div className="border-t border-dashed border-border-strong mx-3" />
         <div className="px-3 py-2.5 flex justify-between items-center">
-          <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+          <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
             Total
           </span>
           <span className={`text-sm font-bold ${brandColors.primary.icon} tabular-nums`}>

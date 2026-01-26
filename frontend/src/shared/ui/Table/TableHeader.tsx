@@ -20,7 +20,7 @@ export function TableHeader<T>({
 
   return (
     <div
-      className={`${tableHeader.container} ${tableHeader.row} font-medium ${TEXT_SIZE[variant]} text-gray-500 uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
+      className={`${tableHeader.container} ${tableHeader.row} font-medium ${TEXT_SIZE[variant]} text-text-muted uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
     >
       {visibleColumns.map(column => {
         const style = columnStyles.get(column.key) || {};
@@ -33,8 +33,8 @@ export function TableHeader<T>({
             className={`
               ${HEADER_PADDING[variant]} 
               text-xxs flex items-center justify-start gap-2 whitespace-nowrap
-              ${isSortable ? 'cursor-pointer hover:bg-gray-100 select-none' : ''}
-              ${isActiveSort ? 'text-gray-900 bg-gray-100' : ''}
+              ${isSortable ? 'cursor-pointer hover:bg-neutral-100 select-none' : ''}
+              ${isActiveSort ? 'text-text-primary bg-neutral-100' : ''}
               ${column.headerClassName || ''}
             `.trim()}
             style={style}

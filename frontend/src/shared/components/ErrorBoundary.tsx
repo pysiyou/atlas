@@ -60,8 +60,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       // Default fallback UI
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-          <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
+        <div className="min-h-screen flex items-center justify-center bg-app-bg px-4">
+          <div className="max-w-md w-full bg-surface rounded-lg shadow-lg p-6">
             <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full">
               <svg
                 className="w-6 h-6 text-red-600"
@@ -78,16 +78,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </svg>
             </div>
 
-            <h2 className="mt-4 text-xl font-semibold text-center text-gray-900">
+            <h2 className="mt-4 text-xl font-semibold text-center text-text-primary">
               Something went wrong
             </h2>
 
-            <p className="mt-2 text-sm text-center text-gray-600">
+            <p className="mt-2 text-sm text-center text-text-tertiary">
               We're sorry, but something unexpected happened. Please try refreshing the page.
             </p>
 
             {import.meta.env.DEV && this.state.error && (
-              <div className="mt-4 p-3 bg-gray-100 rounded text-xs font-mono text-gray-800 overflow-auto max-h-40">
+              <div className="mt-4 p-3 bg-neutral-100 rounded text-xs font-mono text-text-primary overflow-auto max-h-40">
                 <p className="font-semibold mb-1">Error Details:</p>
                 <p>{this.state.error.message}</p>
                 {this.state.error.stack && (

@@ -140,12 +140,12 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       {isRecollection && !isRetest && (
         <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} />
       )}
-      <Badge size="sm" variant="default" className="text-gray-700">
+      <Badge size="sm" variant="default" className="text-text-secondary">
         {filledCount} / {totalParams} parameters
       </Badge>
       {turnaroundTime && (
-        <Badge size="sm" variant="default" className="text-gray-700 flex items-center gap-1.5">
-          <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-gray-600" />
+        <Badge size="sm" variant="default" className="text-text-secondary flex items-center gap-1.5">
+          <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-text-tertiary" />
           {turnaroundTime}h TAT
         </Badge>
       )}
@@ -200,15 +200,15 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
         <ModalFooter
           statusIcon={
             isComplete ? (
-              <Icon name={ICONS.actions.checkCircle} className="w-4 h-4 text-gray-400" />
+              <Icon name={ICONS.actions.checkCircle} className="w-4 h-4 text-text-disabled" />
             ) : (
-              <Icon name={ICONS.dataFields.clinicalNotes} className="w-4 h-4 text-gray-400" />
+              <Icon name={ICONS.dataFields.clinicalNotes} className="w-4 h-4 text-text-disabled" />
             )
           }
           statusMessage={
             isComplete ? 'Ready to submit' : 'Complete all parameters to submit results'
           }
-          statusClassName="text-gray-500"
+          statusClassName="text-text-muted"
         >
           <Button onClick={onClose} variant="cancel" size="md">
             Cancel
@@ -275,7 +275,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Remaining',
                 value: (
-                  <span className={remainingParams === 0 ? semanticColors.success.icon : 'text-gray-600'}>
+                  <span className={remainingParams === 0 ? semanticColors.success.icon : 'text-text-tertiary'}>
                     {remainingParams}
                   </span>
                 ),

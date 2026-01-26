@@ -43,10 +43,10 @@ export const createOrderTableConfig = (
 
   const renderPatientName = (order: Order) => (
     <div className="min-w-0">
-      <div className="font-semibold text-gray-900 truncate">
+      <div className="font-semibold text-text-primary truncate">
         {getPatientNameFn(order.patientId)}
       </div>
-      <div className="text-xxs text-gray-500 truncate font-mono">{displayId.patient(order.patientId)}</div>
+      <div className="text-xxs text-text-muted truncate font-mono">{displayId.patient(order.patientId)}</div>
     </div>
   );
 
@@ -60,7 +60,7 @@ export const createOrderTableConfig = (
         <div className="font-medium truncate">
           {activeCount} test{activeCount !== 1 ? 's' : ''}
         </div>
-        <div className="text-xs text-gray-500 truncate">
+        <div className="text-xs text-text-muted truncate">
           {activeTests
             .slice(0, 2)
             .map(t => getTestNameFn(t.testCode))
@@ -84,7 +84,7 @@ export const createOrderTableConfig = (
   const renderPaymentStatus = (order: Order) => <Badge variant={order.paymentStatus} size="sm" />;
 
   const renderOrderDate = (order: Order) => (
-    <div className="text-xs text-gray-500 truncate">{formatDate(order.orderDate)}</div>
+    <div className="text-xs text-text-muted truncate">{formatDate(order.orderDate)}</div>
   );
 
   const renderActions = (order: Order) => {
@@ -118,9 +118,9 @@ export const createOrderTableConfig = (
               trigger={
                 <button
                   type="button"
-                  className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-50 transition-colors cursor-pointer text-gray-700"
+                  className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-app-bg transition-colors cursor-pointer text-text-secondary"
                 >
-                  <span className="inline-flex w-5 h-5 shrink-0 items-center justify-center text-gray-500">
+                  <span className="inline-flex w-5 h-5 shrink-0 items-center justify-center text-text-muted">
                     <Icon name={ICONS.dataFields.wallet} className="w-4 h-4" />
                   </span>
                   <span className="flex-1 min-w-0">Payment</span>

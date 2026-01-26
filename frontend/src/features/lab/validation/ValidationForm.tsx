@@ -102,7 +102,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
 
   return (
-    <div className="bg-gray-50 rounded border border-gray-200 p-4">
+    <div className="bg-app-bg rounded border border-border p-4">
       {/* Results Grid */}
       {hasResults && (
         <div className="mb-6">
@@ -119,19 +119,19 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
                 ? isCritical(status)
                   ? semanticColors.danger.icon
                   : semanticColors.warning.valueHigh
-                : neutralColors.text.primary; // text-gray-900
+                : neutralColors.text.primary; // text-text-primary
               
               return (
                 <div
                   key={key}
                   className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
                 >
-                  <span className="text-xs text-gray-500 text-left" title={key}>
+                  <span className="text-xs text-text-muted text-left" title={key}>
                     {key}:
                   </span>
                   <span className={`text-sm font-medium text-left ${valueColor}`}>
                     {resultValue}
-                    {unit && <span className="text-gray-500 font-normal ml-1">{unit}</span>}
+                    {unit && <span className="text-text-muted font-normal ml-1">{unit}</span>}
                   </span>
                 </div>
               );
@@ -142,14 +142,14 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
 
       {/* Flags and Notes */}
       {(hasFlags || technicianNotes) && (
-        <div className="mb-6 space-y-2 bg-gray-50/50 rounded-md p-3 border border-gray-100">
+        <div className="mb-6 space-y-2 bg-app-bg/50 rounded-md p-3 border border-border-subtle">
           {hasFlags && (
             <div className={`flex items-start text-xs ${semanticColors.danger.icon}`}>
               <div className="font-medium">{flags.join(', ')}</div>
             </div>
           )}
           {technicianNotes && (
-            <div className="flex items-start text-xs text-gray-500">
+            <div className="flex items-start text-xs text-text-muted">
               <div className="italic">{technicianNotes}</div>
             </div>
           )}
@@ -157,7 +157,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
       )}
 
       {/* Validation Notes */}
-      <div className="space-y-3 border-t border-gray-200 pt-4">
+      <div className="space-y-3 border-t border-border pt-4">
         <Textarea
           label="Validation Notes"
           value={comments}
@@ -171,7 +171,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
           placeholder="Add validation notes..."
           rows={2}
         />
-        <span className="text-xs text-gray-400 hidden sm:inline-block">Ctrl+Enter to approve</span>
+        <span className="text-xs text-text-disabled hidden sm:inline-block">Ctrl+Enter to approve</span>
       </div>
     </div>
   );

@@ -43,7 +43,7 @@ const TestSearchTagInput: React.FC<{
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-test-search"
-          className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+          className="text-xs font-medium text-text-muted cursor-pointer truncate min-w-0"
         >
           Tests
         </label>
@@ -53,15 +53,15 @@ const TestSearchTagInput: React.FC<{
         className={[
           'relative',
           'w-full pl-10 pr-3 py-2.5 border rounded',
-          'bg-white transition-colors',
-          'focus-within:ring-2 focus-within:ring-sky-500 focus-within:border-transparent',
-          error ? semanticColors.danger.inputBorder : 'border-gray-300',
+          'bg-surface transition-colors',
+          'focus-within:ring-2 focus-within:ring-brand focus-within:border-transparent',
+          error ? semanticColors.danger.inputBorder : 'border-border-strong',
           'flex flex-wrap gap-2 items-center',
           'min-h-[42px]',
         ].join(' ')}
       >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-gray-400" />
+          <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-text-disabled" />
         </div>
 
         {selectedTags.map(code => (
@@ -78,7 +78,7 @@ const TestSearchTagInput: React.FC<{
               className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-black/10 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-gray-400"
               aria-label={`Remove ${code}`}
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-gray-500 hover:text-gray-700" />
+              <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-muted hover:text-text-secondary" />
             </button>
           </Badge>
         ))}
@@ -91,7 +91,7 @@ const TestSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedTags.length === 0 ? 'Search by code or name…' : ''}
-          className="flex-1 min-w-[120px] outline-none text-xs text-gray-900 placeholder:text-gray-300 bg-transparent leading-normal"
+          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-disabled bg-transparent leading-normal"
           autoComplete="off"
         />
       </div>
@@ -187,22 +187,22 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         <div
           className={[
             'mt-1',
-            'border border-gray-200/80',
+            'border border-border/80',
             'rounded',
             'overflow-hidden',
-            'bg-white',
+            'bg-surface',
             'shadow-lg shadow-gray-900/10',
             'ring-1 ring-black/5',
           ].join(' ')}
         >
           {/* Header row */}
-          <div className="px-4 py-2.5 bg-gray-50/70 border-b border-gray-200/70 flex items-center justify-between">
-            <div className="text-xs font-medium text-gray-600">Matching tests</div>
-            <div className="text-xs text-gray-500">{visibleTests.length} result(s)</div>
+          <div className="px-4 py-2.5 bg-app-bg/70 border-b border-border/70 flex items-center justify-between">
+            <div className="text-xs font-medium text-text-tertiary">Matching tests</div>
+            <div className="text-xs text-text-muted">{visibleTests.length} result(s)</div>
           </div>
 
           {visibleTests.length === 0 ? (
-            <div className="px-4 py-3 text-xs text-gray-500">No tests found</div>
+            <div className="px-4 py-3 text-xs text-text-muted">No tests found</div>
           ) : (
             <div className="max-h-[320px] overflow-y-auto divide-y divide-gray-100">
               {visibleTests.map(test => {
@@ -221,8 +221,8 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                       'transition-colors',
                       'flex items-center justify-between gap-4',
                       `hover:${brandColors.primary.backgroundLight}/40`,
-                      `focus:outline-none focus-visible:ring-2 ${brandColors.primary.ring30.replace('ring-sky-500/30', 'focus-visible:ring-sky-500/30')} focus-visible:${brandColors.primary.backgroundLight}/40`,
-                      isSelected ? 'bg-emerald-50/30' : 'bg-white',
+                      `focus:outline-none focus-visible:ring-2 ${brandColors.primary.ring30.replace('ring-brand/30', 'focus-visible:ring-brand/30')} focus-visible:${brandColors.primary.backgroundLight}/40`,
+                      isSelected ? 'bg-emerald-50/30' : 'bg-surface',
                     ].join(' ')}
                   >
                     <div className="min-w-0">

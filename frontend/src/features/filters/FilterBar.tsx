@@ -29,7 +29,7 @@ import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
 // Token-based style constants for consistent styling
 const filterStyles = {
   controlHeight: filterControl.height,
-  container: `w-full bg-white border-b ${border.default}`,
+  container: `w-full bg-surface border-b ${border.default}`,
   dropdownLabel: `${fontSize.xs} ${fontWeight.medium} ${neutralColors.text.secondary} mb-2`,
   dropdownDivider: `pt-2 border-t ${border.default}`,
 } as const;

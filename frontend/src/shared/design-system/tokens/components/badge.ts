@@ -59,12 +59,12 @@ export const semanticVariants = {
  * Base Variants
  */
 export const baseVariants = {
-  default: 'bg-gray-100 text-gray-800 border-transparent',
-  primary: 'bg-sky-100 text-sky-800 border-transparent',
-  secondary: 'bg-gray-100 text-gray-800 border-transparent',
-  outline: 'text-gray-800 border-gray-200 bg-transparent',
-  ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 border-transparent',
-  neutral: 'bg-slate-100 text-slate-700 border-slate-200',
+  default: 'bg-neutral-100 text-neutral-800 border-transparent',
+  primary: 'bg-brand-light text-brand-text border-transparent',
+  secondary: 'bg-neutral-100 text-neutral-800 border-transparent',
+  outline: 'text-neutral-800 border-neutral-200 bg-transparent',
+  ghost: 'bg-transparent text-text-tertiary hover:bg-neutral-100 border-transparent',
+  neutral: 'bg-slate-100 text-slate-700 border-slate-200', // Leaving slate as specific variant
   purple: 'bg-purple-100 text-purple-800 border-transparent',
   orange: 'bg-orange-100 text-orange-800 border-transparent',
   teal: 'bg-teal-100 text-teal-800 border-transparent',
@@ -74,14 +74,14 @@ export const baseVariants = {
  * Order Status Variants
  */
 export const orderStatusVariants = {
-  ordered: 'bg-sky-100 text-sky-800 border-transparent',
+  ordered: 'bg-brand-light text-brand-text border-transparent',
   'in-progress': 'bg-yellow-100 text-yellow-800 border-transparent',
   completed: semanticVariants.success.base,
   cancelled: semanticVariants.danger.base,
   validated: semanticVariants.success.base,
   rejected: semanticVariants.danger.base,
   superseded: 'bg-slate-200 text-slate-600 border-transparent line-through',
-  removed: 'bg-gray-100 text-gray-500 border-transparent line-through',
+  removed: 'bg-neutral-100 text-text-muted border-transparent line-through',
 } as const;
 
 /**
@@ -117,10 +117,10 @@ export const rejectionVariants = {
 export const sampleStatusVariants = {
   pending: 'bg-yellow-100 text-yellow-800 border-transparent',
   collected: semanticVariants.success.base,
-  received: 'bg-sky-100 text-sky-800 border-transparent',
+  received: 'bg-brand-light text-brand-text border-transparent',
   accessioned: 'bg-indigo-100 text-indigo-800 border-transparent',
-  stored: 'bg-gray-100 text-gray-800 border-transparent',
-  disposed: 'bg-gray-200 text-gray-800 border-transparent',
+  stored: 'bg-neutral-100 text-text-primary border-transparent',
+  disposed: 'bg-neutral-200 text-text-primary border-transparent',
   'sample-collected': 'bg-teal-100 text-teal-800 border-transparent',
 } as const;
 
@@ -128,7 +128,7 @@ export const sampleStatusVariants = {
  * Appointment Status Variants
  */
 export const appointmentStatusVariants = {
-  scheduled: 'bg-sky-100 text-sky-800 border-transparent',
+  scheduled: 'bg-brand-light text-brand-text border-transparent',
   confirmed: semanticVariants.success.base,
   'no-show': 'bg-orange-100 text-orange-800 border-transparent',
 } as const;
@@ -146,7 +146,7 @@ export const paymentStatusVariants = {
  * Priority Variants
  */
 export const priorityVariants = {
-  routine: 'bg-sky-100 text-sky-800 border-transparent',
+  routine: 'bg-brand-light text-brand-text border-transparent',
   urgent: 'bg-orange-100 text-orange-800 border-transparent',
   stat: 'bg-red-100 text-red-800 border-transparent font-bold',
 } as const;
@@ -162,11 +162,11 @@ export const sampleTypeVariants = {
   stool: 'bg-orange-100 text-orange-800 border-transparent',
   swab: 'bg-teal-100 text-teal-800 border-transparent',
   tissue: 'bg-purple-100 text-purple-800 border-transparent',
-  csf: 'bg-sky-100 text-sky-800 border-transparent',
-  sputum: 'bg-gray-100 text-gray-800 border-transparent',
+  csf: 'bg-brand-light text-brand-text border-transparent',
+  sputum: 'bg-neutral-100 text-text-primary border-transparent',
   fluid: 'bg-cyan-100 text-cyan-800 border-transparent',
-  other: 'bg-gray-100 text-gray-800 border-transparent',
-  unknown: 'bg-gray-100 text-gray-800 border-transparent',
+  other: 'bg-neutral-100 text-text-primary border-transparent',
+  unknown: 'bg-neutral-100 text-text-primary border-transparent',
 } as const;
 
 /**
@@ -174,12 +174,12 @@ export const sampleTypeVariants = {
  */
 export const testCategoryVariants = {
   hematology: 'bg-pink-100 text-pink-800 border-transparent',
-  biochemistry: 'bg-sky-100 text-sky-800 border-transparent',
-  chemistry: 'bg-sky-100 text-sky-800 border-transparent',
+  biochemistry: 'bg-brand-light text-brand-text border-transparent',
+  chemistry: 'bg-brand-light text-brand-text border-transparent',
   microbiology: 'bg-emerald-100 text-emerald-800 border-transparent',
   serology: 'bg-purple-100 text-purple-800 border-transparent',
   urinalysis: 'bg-yellow-100 text-yellow-800 border-transparent',
-  imaging: 'bg-gray-100 text-gray-800 border-transparent',
+  imaging: 'bg-neutral-100 text-text-primary border-transparent',
   immunology: 'bg-indigo-100 text-indigo-800 border-transparent',
   molecular: 'bg-cyan-100 text-cyan-800 border-transparent',
   toxicology: 'bg-red-100 text-red-800 border-transparent',
@@ -190,7 +190,7 @@ export const testCategoryVariants = {
  * Sex/Gender Variants
  */
 export const sexVariants = {
-  male: 'bg-sky-50 text-sky-700 border-transparent',
+  male: 'bg-brand-light/50 text-brand-hover border-transparent',
   female: 'bg-pink-50 text-pink-700 border-transparent',
 } as const;
 
@@ -198,7 +198,7 @@ export const sexVariants = {
  * Medical History Variants
  */
 export const medicalHistoryVariants = {
-  'chronic-condition': 'bg-sky-50 text-sky-700 border-transparent',
+  'chronic-condition': 'bg-brand-light/50 text-brand-hover border-transparent',
   medication: 'bg-green-50 text-green-700 border-transparent',
   allergy: 'bg-orange-50 text-orange-700 border-transparent',
   surgery: 'bg-purple-50 text-purple-700 border-transparent',
@@ -211,9 +211,9 @@ export const containerColorVariants = {
   'container-red': 'bg-red-500 text-white border-transparent',
   'container-yellow': 'bg-yellow-500 text-white border-transparent',
   'container-purple': 'bg-purple-500 text-white border-transparent',
-  'container-blue': 'bg-sky-500 text-white border-transparent',
+  'container-blue': 'bg-brand text-white border-transparent',
   'container-green': 'bg-green-500 text-white border-transparent',
-  'container-gray': 'bg-gray-500 text-white border-transparent',
+  'container-gray': 'bg-app-bg0 text-white border-transparent',
   'container-black': 'bg-black text-white border-transparent',
 } as const;
 
@@ -222,8 +222,8 @@ export const containerColorVariants = {
  */
 export const paymentMethodVariants = {
   cash: 'bg-emerald-100 text-emerald-800 border-transparent',
-  'credit-card': 'bg-sky-100 text-sky-800 border-transparent',
-  'debit-card': 'bg-sky-100 text-sky-800 border-transparent',
+  'credit-card': 'bg-brand-light text-brand-text border-transparent',
+  'debit-card': 'bg-brand-light text-brand-text border-transparent',
   insurance: 'bg-purple-100 text-purple-800 border-transparent',
   'bank-transfer': 'bg-indigo-100 text-indigo-800 border-transparent',
   'mobile-money': 'bg-orange-100 text-orange-800 border-transparent',
@@ -233,7 +233,7 @@ export const paymentMethodVariants = {
  * User Role Variants
  */
 export const userRoleVariants = {
-  receptionist: 'bg-sky-100 text-sky-800 border-transparent',
+  receptionist: 'bg-brand-light text-brand-text border-transparent',
   'lab-technician': semanticVariants.success.base,
   pathologist: 'bg-purple-100 text-purple-800 border-transparent',
   administrator: semanticVariants.danger.base,

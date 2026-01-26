@@ -44,11 +44,11 @@ export const buttonVariants = {
   },
   
   outline: {
-    base: 'border-2 border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 focus:ring-gray-500 focus:ring-offset-2',
+    base: 'border-2 border-border-strong bg-transparent text-text-secondary hover:bg-surface-hover focus:ring-neutral-500 focus:ring-offset-2',
   },
   
   ghost: {
-    base: 'bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-500 focus:ring-offset-2',
+    base: 'bg-transparent text-text-secondary hover:bg-surface-hover focus:ring-neutral-500 focus:ring-offset-2',
   },
 } as const;
 
@@ -89,15 +89,15 @@ export const iconButtonVariants = {
   },
   
   edit: {
-    base: 'bg-sky-600 text-white hover:bg-sky-700 focus:ring-sky-500 focus:ring-offset-2',
+    base: 'bg-brand text-text-inverse hover:bg-brand-hover focus:ring-brand focus:ring-offset-2',
   },
   
   view: {
-    base: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 focus:ring-offset-2',
+    base: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500 focus:ring-offset-2',
   },
   
   print: {
-    base: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 focus:ring-offset-2',
+    base: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500 focus:ring-offset-2',
   },
   
   add: {

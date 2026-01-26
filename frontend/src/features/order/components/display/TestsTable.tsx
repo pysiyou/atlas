@@ -45,14 +45,14 @@ export const TestsTable: React.FC<TestsTableProps> = ({
                 <tr
                   key={test.id || index}
                   className={`transition-colors ${
-                    isSuperseded ? 'bg-gray-50/50 opacity-60' : 'hover:bg-gray-50'
+                    isSuperseded ? 'bg-app-bg/50 opacity-60' : 'hover:bg-app-bg'
                   }`}
                 >
                   <td className="px-3 py-3">
                     <div className="flex items-center gap-1">
                       <span
                         className={`font-mono ${
-                          isSuperseded ? 'text-gray-400 line-through' : brandColors.primary.icon
+                          isSuperseded ? 'text-text-disabled line-through' : brandColors.primary.icon
                         }`}
                       >
                         {test.testCode}
@@ -70,7 +70,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
                   </td>
                   <td className="px-3 py-3">
                     <span
-                      className={`${isSuperseded ? 'text-gray-400 line-through' : 'text-gray-900'}`}
+                      className={`${isSuperseded ? 'text-text-disabled line-through' : 'text-text-primary'}`}
                     >
                       {testName}
                     </span>
@@ -98,7 +98,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
         <col style={{ width: '15%' }} />
         <col style={{ width: '8%' }} />
       </colgroup>
-      <thead className="bg-gray-50 text-gray-500 uppercase sticky top-0 z-10 [&_th]:font-normal">
+      <thead className="bg-app-bg text-text-muted uppercase sticky top-0 z-10 [&_th]:font-normal">
         <tr>
           <th className="px-4 py-2">Code</th>
           <th className="px-4 py-2">Name</th>
@@ -121,12 +121,12 @@ export const TestsTable: React.FC<TestsTableProps> = ({
             <tr
               key={test.id || index}
               className={`transition-colors ${
-                isSuperseded ? 'bg-gray-50/50 opacity-60' : 'hover:bg-gray-50'
+                isSuperseded ? 'bg-app-bg/50 opacity-60' : 'hover:bg-app-bg'
               }`}
             >
               <td
                 className={`px-4 py-3 font-mono truncate whitespace-nowrap ${
-                  isSuperseded ? 'text-gray-400 line-through' : brandColors.primary.icon
+                  isSuperseded ? 'text-text-disabled line-through' : brandColors.primary.icon
                 }`}
               >
                 {test.testCode}
@@ -139,7 +139,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
               >
                 <div className="flex items-center gap-1">
                   <span
-                    className={`font-medium ${isSuperseded ? 'text-gray-400' : 'text-gray-900'}`}
+                    className={`font-medium ${isSuperseded ? 'text-text-disabled' : 'text-text-primary'}`}
                   >
                     {testName}
                   </span>
@@ -169,7 +169,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
 
               <td
                 className={`px-4 py-3 text-right font-medium whitespace-nowrap ${
-                  isSuperseded ? 'text-gray-400 line-through' : brandColors.primary.icon
+                  isSuperseded ? 'text-text-disabled line-through' : brandColors.primary.icon
                 }`}
               >
                 {formatCurrency(test.priceAtOrder)}

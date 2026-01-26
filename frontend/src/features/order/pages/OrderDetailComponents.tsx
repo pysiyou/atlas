@@ -36,10 +36,10 @@ export const OrderCardHeader: React.FC<OrderCardHeaderProps> = ({
   return (
     <div className={className}>
       <div className="flex items-center gap-3 flex-wrap">
-        <h2 className="text-2xl font-bold text-gray-900 font-mono">{displayId.order(orderId)}</h2>
+        <h2 className="text-2xl font-bold text-text-primary font-mono">{displayId.order(orderId)}</h2>
         <Badge variant={priority} size="sm" />
         <Badge variant={status} size="sm" />
-        <span className="text-sm text-gray-600">{formatDate(orderDate)}</span>
+        <span className="text-sm text-text-tertiary">{formatDate(orderDate)}</span>
       </div>
     </div>
   );
@@ -68,8 +68,8 @@ export const OrderMetadata: React.FC<OrderMetadataProps> = ({
     <div className={`flex items-center gap-3 ${className}`}>
       <Avatar primaryText={patientName} size="sm" />
       <div>
-        <div className="font-medium text-gray-900">{patientName}</div>
-        <div className="text-xs text-gray-500">
+        <div className="font-medium text-text-primary">{patientName}</div>
+        <div className="text-xs text-text-muted">
           <span className="font-mono">{displayId.patient(patientId)}</span> • {formatDate(orderDate)}
           {referringPhysician && ` • ${referringPhysician}`}
         </div>
@@ -95,15 +95,15 @@ export const BillingSummaryCard: React.FC<BillingSummaryCardProps> = ({
     <SectionContainer title="Billing Summary">
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Subtotal:</span>
+          <span className="text-text-tertiary">Subtotal:</span>
           <span className="font-medium">{formatCurrency(totalPrice)}</span>
         </div>
         <div className="border-t pt-2 flex justify-between">
-          <span className="font-semibold text-gray-900">Total:</span>
+          <span className="font-semibold text-text-primary">Total:</span>
           <span className={`font-bold text-xl ${brandColors.primary.icon}`}>{formatCurrency(totalPrice)}</span>
         </div>
         <div className="flex justify-between items-center pt-2">
-          <span className="text-sm text-gray-600">Payment Status:</span>
+          <span className="text-sm text-text-tertiary">Payment Status:</span>
           <Badge
             variant={
               paymentStatus === 'paid'
@@ -138,11 +138,11 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
       <div className="space-y-3">
         {tests.map((test, index) => {
           return (
-            <div key={index} className="border border-gray-200 rounded p-4">
+            <div key={index} className="border border-border rounded p-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <div className="font-medium text-gray-900">{test.testName}</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="font-medium text-text-primary">{test.testName}</div>
+                  <div className="text-sm text-text-tertiary">
                     {test.testCode} • {test.sampleType}
                   </div>
                 </div>
@@ -155,24 +155,24 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
               </div>
 
               {test.results && (
-                <div className="mt-3 p-3 bg-gray-50 rounded">
-                  <div className="text-sm font-medium text-gray-700 mb-2">Results:</div>
+                <div className="mt-3 p-3 bg-app-bg rounded">
+                  <div className="text-sm font-medium text-text-secondary mb-2">Results:</div>
                   <div className="space-y-1">
                     {Object.entries(test.results).map(([key, result]) => (
                       <div key={key} className="flex justify-between text-sm">
-                        <span className="text-gray-600">{key}:</span>
+                        <span className="text-text-tertiary">{key}:</span>
                         <span
                           className={`font-medium ${
                             result.status === 'high' || result.status === 'low'
                               ? semanticColors.warning.valueHigh
                               : result.status === 'critical'
                                 ? semanticColors.danger.icon
-                                : 'text-gray-900'
+                                : 'text-text-primary'
                           }`}
                         >
                           {result.value} {result.unit}
                           {result.referenceRange && (
-                            <span className="text-gray-500 ml-2">
+                            <span className="text-text-muted ml-2">
                               (Ref: {result.referenceRange})
                             </span>
                           )}

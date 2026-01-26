@@ -102,25 +102,25 @@ function ResultGrid({
           ? isCritical(status)
             ? semanticColors.danger.icon
             : semanticColors.warning.valueHigh
-          : 'text-gray-900';
+          : 'text-text-primary';
 
         return (
           <div
             key={key}
             className="grid grid-cols-[1fr_auto] items-baseline whitespace-nowrap"
           >
-            <span className="text-xs text-gray-500" title={key}>
+            <span className="text-xs text-text-muted" title={key}>
               {key}:
             </span>
             <span className={`text-xs font-medium text-left ${valueColor}`}>
               {resultValue}
-              {unit && <span className="text-gray-500 font-normal ml-0.5 text-[9px]">{unit}</span>}
+              {unit && <span className="text-text-muted font-normal ml-0.5 text-[9px]">{unit}</span>}
             </span>
           </div>
         );
       })}
       {remainingCount > 0 && (
-        <div className="text-xs text-gray-500 col-span-full pt-0.5">
+        <div className="text-xs text-text-muted col-span-full pt-0.5">
           +{remainingCount} more
         </div>
       )}
@@ -187,14 +187,14 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
         <div className="min-w-0 overflow-hidden">
           <div className={mobileCard.header.title}>{test.testName}</div>
           <div className="flex items-center gap-2 flex-wrap">
-            <div className="text-xs text-gray-700 font-medium truncate">{patientName}</div>
-            <div className="text-xxs text-gray-400">•</div>
+            <div className="text-xs text-text-secondary font-medium truncate">{patientName}</div>
+            <div className="text-xxs text-text-disabled">•</div>
             <div className={`text-xxs ${brandColors.primary.icon} font-medium font-mono truncate`}>
               {test.testCode}
             </div>
             {test.sampleId && (
               <>
-                <div className="text-xs text-gray-400">•</div>
+                <div className="text-xs text-text-disabled">•</div>
                 <div
                   className={`text-xxs ${brandColors.primary.icon} font-medium font-mono truncate`}
                   title={displayId.sample(test.sampleId)}

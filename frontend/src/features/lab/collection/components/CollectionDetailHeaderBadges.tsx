@@ -51,16 +51,16 @@ export const CollectionDetailHeaderBadges: React.FC<CollectionDetailHeaderBadges
       )}
       <StatusBadgeRow sampleType={sample.sampleType} priority={sample.priority || 'routine'} />
       {getCollectionRequirements(sample.sampleType).isDerived && (
-        <Badge size="sm" variant="default" className="text-gray-600">
+        <Badge size="sm" variant="default" className="text-text-tertiary">
           {getCollectionRequirements(sample.sampleType).label}
         </Badge>
       )}
       {(isCollected || isRejected) && 'collectedVolume' in sample && (
-        <Badge size="sm" variant="default" className="text-gray-500">
+        <Badge size="sm" variant="default" className="text-text-muted">
           {formatVolume(sample.collectedVolume)} {isRejected ? 'was collected' : 'collected'}
         </Badge>
       )}
-      <Badge size="sm" variant="default" className="text-gray-500">
+      <Badge size="sm" variant="default" className="text-text-muted">
         {formatVolume(sample.requiredVolume)} required
       </Badge>
       <Badge variant={isPending ? 'pending' : isRejected ? 'rejected' : 'collected'} size="sm" />

@@ -29,7 +29,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
 }) => {
   return (
     <div className="space-y-3">
-      <div className="text-xs font-medium text-gray-500">Payment method</div>
+      <div className="text-xs font-medium text-text-muted">Payment method</div>
 
       <div className="grid grid-cols-2 gap-2">
         {paymentMethods.map(method => {
@@ -43,8 +43,8 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
                 relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                 ${
                   isSelected
-                    ? `bg-white ${brandColors.primary.borderMedium} border-2`
-                    : 'bg-white border-gray-200 hover:border-gray-300'
+                    ? `bg-surface ${brandColors.primary.borderMedium} border-2`
+                    : 'bg-surface border-border hover:border-border-strong'
                 }
                 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
               `}
@@ -52,11 +52,11 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
             >
               <Icon
                 name={method.icon as IconName}
-                className={`w-7 h-7 shrink-0 ${isSelected ? brandColors.primary.icon : 'text-gray-400'}`}
+                className={`w-7 h-7 shrink-0 ${isSelected ? brandColors.primary.icon : 'text-text-disabled'}`}
               />
               <span
                 className={`flex-1 text-xs font-medium text-left ${
-                  isSelected ? 'text-gray-900' : 'text-gray-700'
+                  isSelected ? 'text-text-primary' : 'text-text-secondary'
                 }`}
               >
                 {method.label}
@@ -64,12 +64,12 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
               <div
                 className={`
                   absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                  ${isSelected ? semanticColors.success.backgroundMedium : 'bg-transparent border-2 border-gray-300'}
+                  ${isSelected ? semanticColors.success.backgroundMedium : 'bg-transparent border-2 border-border-strong'}
                 `}
               >
                 <Icon
                   name={ICONS.actions.check}
-                  className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-gray-300'}`}
+                  className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-text-disabled'}`}
                 />
               </div>
             </button>

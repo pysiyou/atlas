@@ -26,7 +26,7 @@ export const filterControl = {
  * Filter Container Styles
  */
 export const filterContainer = {
-  base: `bg-white border-b ${border.default}`,
+  base: `bg-surface border-b ${border.default}`,
   row: 'flex flex-row flex-wrap items-center gap-x-3 gap-y-2 lg:gap-x-4 lg:gap-y-2',
   header: `flex items-center justify-between ${padding.horizontal.lg} ${padding.vertical.md} border-b ${neutralColors.border.default}`,
   content: `${padding.card.lg} space-y-4`,
@@ -46,7 +46,7 @@ export const filterInput = {
  * Filter Select Styles
  */
 export const filterSelect = {
-  trigger: `${filterControl.height} ${fontSize.xs} border ${neutralColors.border.medium} ${radius.md} ${padding.horizontal.sm} bg-white cursor-pointer ${hover.background} ${focus.outline} focus:${brandColors.primary.borderMedium} ${transitions.colors}`,
+  trigger: `${filterControl.height} ${fontSize.xs} border ${neutralColors.border.medium} ${radius.md} ${padding.horizontal.sm} bg-surface cursor-pointer ${hover.background} ${focus.outline} focus:${brandColors.primary.borderMedium} ${transitions.colors}`,
   placeholder: `${neutralColors.text.muted}`,
   value: `${neutralColors.text.primary}`,
 } as const;
@@ -57,7 +57,7 @@ export const filterSelect = {
 export const filterButton = {
   base: `${filterControl.height} ${fontSize.xs} ${fontWeight.medium} ${radius.md} ${padding.horizontal.md} cursor-pointer ${transitions.colors}`,
   primary: `${brandColors.primary.background} text-white ${hover.backgroundPrimary}`,
-  secondary: `bg-white border ${neutralColors.border.medium} ${neutralColors.text.secondary} ${hover.background}`,
+  secondary: `bg-surface border ${neutralColors.border.medium} ${neutralColors.text.secondary} ${hover.background}`,
   ghost: `${neutralColors.text.tertiary} ${hover.background}`,
 } as const;
 

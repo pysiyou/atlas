@@ -55,11 +55,11 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
                 className={`flex items-center justify-between ${mobileCard.content.text}`}
               >
                 <div className="flex items-center flex-1 min-w-0">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2 flex-shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mr-2 flex-shrink-0" />
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
-                  <span className="text-gray-500 truncate">{test.testCode}</span>
+                  <span className="text-text-muted truncate">{test.testCode}</span>
                 </div>
-                <span className="font-medium text-gray-500 ml-2 flex-shrink-0">
+                <span className="font-medium text-text-muted ml-2 flex-shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>

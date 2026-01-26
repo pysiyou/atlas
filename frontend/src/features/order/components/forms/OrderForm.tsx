@@ -57,7 +57,7 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
       />
 
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1.5">
+        <label className="block text-xs font-medium text-text-muted mb-1.5">
           Priority <span className={semanticColors.danger.requiredIndicator}>*</span>
         </label>
         <MultiSelectFilter

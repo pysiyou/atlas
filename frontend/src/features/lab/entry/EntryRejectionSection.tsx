@@ -33,31 +33,31 @@ const RejectionRecordDisplay: React.FC<ResultRejectionRecordDisplayProps> = ({
     <div className="space-y-1.5 text-xs">
       {/* Type - displayed as badge */}
       <div className="flex items-center">
-        <span className="text-gray-500 w-16 shrink-0">Type</span>
+        <span className="text-text-muted w-16 shrink-0">Type</span>
         <Badge variant={record.rejectionType} size="xs" />
       </div>
 
       {/* Reason */}
       {record.rejectionReason && (
         <div className="flex">
-          <span className="text-gray-500 w-16 shrink-0">Reason</span>
-          <span className="text-gray-900">{record.rejectionReason}</span>
+          <span className="text-text-muted w-16 shrink-0">Reason</span>
+          <span className="text-text-primary">{record.rejectionReason}</span>
         </div>
       )}
 
       {/* Rejected by */}
       {record.rejectedBy && (
         <div className="flex">
-          <span className="text-gray-500 w-16 shrink-0">By</span>
-          <span className="text-gray-900">{getUserName(record.rejectedBy)}</span>
+          <span className="text-text-muted w-16 shrink-0">By</span>
+          <span className="text-text-primary">{getUserName(record.rejectedBy)}</span>
         </div>
       )}
 
       {/* Date */}
       {record.rejectedAt && (
         <div className="flex">
-          <span className="text-gray-500 w-16 shrink-0">Date</span>
-          <span className="text-gray-900">{formatDate(record.rejectedAt)}</span>
+          <span className="text-text-muted w-16 shrink-0">Date</span>
+          <span className="text-text-primary">{formatDate(record.rejectedAt)}</span>
         </div>
       )}
     </div>
@@ -140,8 +140,8 @@ export const EntryRejectionSection: React.FC<EntryRejectionSectionProps> = ({
             onClick={() => setActiveIndex(index)}
             className={`px-2 py-0.5 text-xs rounded ${
               activeIndex === index
-                ? 'bg-gray-200 text-gray-800 font-medium'
-                : 'text-gray-500 hover:bg-gray-100'
+                ? 'bg-neutral-200 text-text-primary font-medium'
+                : 'text-text-muted hover:bg-neutral-100'
             }`}
           >
             {index + 1}
@@ -175,12 +175,12 @@ export const ResultRejectionBanner: React.FC<ResultRejectionBannerProps> = ({
   const typeLabel = rejection.rejectionType === 're-test' ? 'Re-test' : 'Re-collect';
 
   return (
-    <div className="text-xs text-gray-600">
+    <div className="text-xs text-text-tertiary">
       <span className="font-medium">
         {typeLabel} #{retestNumber}
       </span>
       {rejection.rejectionReason && (
-        <span className="text-gray-500"> · {rejection.rejectionReason}</span>
+        <span className="text-text-muted"> · {rejection.rejectionReason}</span>
       )}
     </div>
   );

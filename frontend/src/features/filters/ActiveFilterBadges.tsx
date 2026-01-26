@@ -106,11 +106,11 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 flex-wrap px-3 py-1.5 bg-gray-50 border-b border-gray-200',
+        'flex items-center gap-1.5 flex-wrap px-3 py-1.5 bg-app-bg border-b border-border',
         className
       )}
     >
-      <div className="flex items-center gap-1 text-xxs font-medium text-gray-500">
+      <div className="flex items-center gap-1 text-xxs font-medium text-text-muted">
         <Icon name={ICONS.actions.filter} className="w-3 h-3" />
         <span>Active:</span>
       </div>
@@ -122,18 +122,18 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
           return (
             <div
               key={badge.key}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-white border border-gray-300 rounded text-xxs"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-surface border border-border-strong rounded text-xxs"
             >
-              <span className="font-medium text-gray-700">{badge.label}:</span>
-              <span className="text-gray-600">{displayValue}</span>
+              <span className="font-medium text-text-secondary">{badge.label}:</span>
+              <span className="text-text-tertiary">{displayValue}</span>
               <button
                 onClick={() => onRemove(badge.key)}
-                className="ml-0.5 p-0.5 hover:bg-gray-100 rounded transition-colors cursor-pointer"
+                className="ml-0.5 p-0.5 hover:bg-neutral-100 rounded transition-colors cursor-pointer"
                 aria-label={`Remove ${badge.label} filter`}
               >
                 <Icon
                   name={ICONS.actions.closeCircle}
-                  className="w-2.5 h-2.5 text-gray-400 hover:text-gray-600"
+                  className="w-2.5 h-2.5 text-text-disabled hover:text-text-tertiary"
                 />
               </button>
             </div>

@@ -108,9 +108,9 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   // Loading state
   if (isLoading) {
     return (
-      <div className="w-90 md:w-96 bg-white rounded-lg shadow-xl border border-gray-200 p-8 flex flex-col items-center justify-center gap-4">
+      <div className="w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border p-8 flex flex-col items-center justify-center gap-4">
         <ClaudeLoader size="md" />
-        <p className="text-sm text-gray-500">Loading rejection options...</p>
+        <p className="text-sm text-text-muted">Loading rejection options...</p>
       </div>
     );
   }
@@ -118,7 +118,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   // Error state
   if (error && !options) {
     return (
-      <div className="w-90 md:w-96 bg-white rounded-lg shadow-xl border border-gray-200 p-4">
+      <div className="w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border p-4">
         <Alert variant="danger" className="mb-4">
           <p className="font-medium text-xs">Failed to load options</p>
           <p className="text-xxs mt-1">{error}</p>
@@ -200,7 +200,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       {/* Action Type Selection */}
       {!escalationRequired && (
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Follow-up Action</label>
+          <label className="block text-xs font-medium text-text-muted mb-1">Follow-up Action</label>
           <div className="grid grid-cols-1 gap-2">
             <RadioCard
               name="rejection-type"
@@ -229,7 +229,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       {/* Rejection Reason */}
       {!escalationRequired && (
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">
+          <label className="block text-xs font-medium text-text-secondary mb-1">
             Rejection Reason <span className={semanticColors.danger.requiredIndicator}>*</span>
           </label>
           <textarea
@@ -237,7 +237,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
             placeholder="Please explain why the results are being rejected..."
             value={reason}
             onChange={e => setReason(e.target.value)}
-            className="w-full px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+            className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
           />
         </div>
       )}

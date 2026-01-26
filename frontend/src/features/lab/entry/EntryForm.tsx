@@ -36,7 +36,7 @@ const RadioOption: React.FC<{
     <label
       className={cn(
         'group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150',
-        'hover:bg-gray-50/80',
+        'hover:bg-app-bg/80',
         isSelected && `${brandColors.primary.backgroundLight}/50`
       )}
     >
@@ -45,10 +45,10 @@ const RadioOption: React.FC<{
         <input type="radio" checked={isSelected} onChange={onSelect} className="sr-only" />
         {isSelected ? (
           <div className={`w-5 h-5 rounded-full flex items-center justify-center ${brandColors.primary.backgroundMedium} transition-all duration-150`}>
-            <div className="w-2 h-2 rounded-full bg-white" />
+            <div className="w-2 h-2 rounded-full bg-surface" />
           </div>
         ) : (
-          <div className="w-5 h-5 rounded-full border-2 border-gray-300 group-hover:border-gray-400 transition-all duration-150" />
+          <div className="w-5 h-5 rounded-full border-2 border-border-strong group-hover:border-gray-400 transition-all duration-150" />
         )}
       </div>
 
@@ -56,7 +56,7 @@ const RadioOption: React.FC<{
       <span
         className={cn(
           'text-sm transition-colors',
-          isSelected ? 'text-gray-900 font-medium' : 'text-gray-600 group-hover:text-gray-900'
+          isSelected ? 'text-text-primary font-medium' : 'text-text-tertiary group-hover:text-text-primary'
         )}
       >
         {option}
@@ -91,18 +91,18 @@ const SelectParameterInput: React.FC<{
         <div
           id={inputId}
           className={cn(
-            'flex items-center gap-2 px-3 py-2.5 bg-white border rounded cursor-pointer transition-colors w-full min-h-[42px]',
+            'flex items-center gap-2 px-3 py-2.5 bg-surface border rounded cursor-pointer transition-colors w-full min-h-[42px]',
             isOpen
               ? `${brandColors.primary.borderMedium} ring-2 ${brandColors.primary.ring20}`
-              : 'border-gray-300 hover:border-gray-400'
+              : 'border-border-strong hover:border-gray-400'
           )}
         >
           {/* Content */}
           <div className="flex-1 text-xs truncate">
             {value ? (
-              <span className="text-gray-900">{value}</span>
+              <span className="text-text-primary">{value}</span>
             ) : (
-              <span className="text-gray-400">-- Select --</span>
+              <span className="text-text-disabled">-- Select --</span>
             )}
           </div>
 
@@ -110,7 +110,7 @@ const SelectParameterInput: React.FC<{
           <Icon
             name={ICONS.actions.chevronDown}
             className={cn(
-              'w-4 h-4 text-gray-400 transition-transform flex-shrink-0',
+              'w-4 h-4 text-text-disabled transition-transform flex-shrink-0',
               isOpen && 'rotate-180'
             )}
           />
@@ -119,9 +119,9 @@ const SelectParameterInput: React.FC<{
           {value && (
             <button
               onClick={handleClear}
-              className="p-0.5 -mr-1 hover:bg-gray-100 rounded transition-colors flex items-center justify-center cursor-pointer flex-shrink-0"
+              className="p-0.5 -mr-1 hover:bg-neutral-100 rounded transition-colors flex items-center justify-center cursor-pointer flex-shrink-0"
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+              <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-disabled hover:text-text-tertiary" />
             </button>
           )}
         </div>
@@ -211,7 +211,7 @@ const ParameterInput: React.FC<{
       <input
         {...commonProps}
         type="text"
-        className="block w-full px-3 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-xs placeholder:text-gray-300 transition-shadow bg-white"
+        className="block w-full px-3 py-2.5 border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs placeholder:text-text-disabled transition-shadow bg-surface"
         placeholder="Enter text result..."
       />
     );
@@ -228,10 +228,10 @@ const ParameterInput: React.FC<{
       max={limit?.max}
       inputMode="decimal"
       className={cn(
-        "block w-full pl-3 pr-12 py-2.5 border rounded focus:outline-none focus:ring-2 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-xs placeholder:text-gray-300 transition-shadow relative z-10 bg-white",
+        "block w-full pl-3 pr-12 py-2.5 border rounded focus:outline-none focus:ring-2 focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs placeholder:text-text-disabled transition-shadow relative z-10 bg-surface",
         hasError
           ? `${semanticColors.danger.inputBorder} focus:ring-red-500/20`
-          : "border-gray-300 focus:ring-sky-500"
+          : "border-border-strong focus:ring-brand"
       )}
       placeholder="--"
     />
@@ -283,7 +283,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   if (!testDef?.parameters) return null;
 
   return (
-    <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+    <div className="bg-app-bg rounded-lg p-4 border border-border-subtle">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {testDef.parameters.map(param => {
           const value = results[param.code] ?? '';
@@ -298,7 +298,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
               <div className="flex justify-between items-baseline mb-1 gap-2">
                 <label
                   htmlFor={`result-${resultKey}-${param.code}`}
-                  className="text-xxs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+                  className="text-xxs font-medium text-text-muted cursor-pointer truncate min-w-0"
                 >
                   {param.name}
                 </label>
@@ -306,7 +306,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   {isCritical && (
                     <Icon name={ICONS.actions.dangerSquare} className={`w-3 h-3 ${semanticColors.danger.requiredIndicator} shrink-0`} />
                   )}
-                  <span className="text-xxs text-gray-400 truncate">Ref: {refRange}</span>
+                  <span className="text-xxs text-text-disabled truncate">Ref: {refRange}</span>
                 </div>
               </div>
 
@@ -327,7 +327,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 />
                 {valueType !== 'TEXT' && (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0 max-w-[40%]">
-                    <span className="text-xs text-gray-400 select-none truncate">
+                    <span className="text-xs text-text-disabled select-none truncate">
                       {param.unit || ''}
                     </span>
                   </div>
@@ -352,7 +352,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       <div className="mt-4">
         <label
           htmlFor={`notes-${resultKey}`}
-          className="text-xs font-medium text-gray-500 mb-1 block"
+          className="text-xs font-medium text-text-muted mb-1 block"
         >
           Technician Notes (Optional)
         </label>
@@ -367,7 +367,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
       {/* Submit button (card context only) */}
       {!isModal && (
-        <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-gray-50 border-t border-gray-100 rounded-b flex items-center justify-between">
+        <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-app-bg border-t border-border-subtle rounded-b flex items-center justify-between">
           {hasValidationErrors && (
             <span className={`text-xxs ${semanticColors.danger.icon}`}>
               Please correct invalid values before submitting

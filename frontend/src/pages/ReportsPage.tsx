@@ -40,8 +40,8 @@ export const Reports: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-        <p className="text-gray-600">{validatedOrders.length} report(s) available</p>
+        <h1 className="text-2xl font-bold text-text-primary">Reports</h1>
+        <p className="text-text-tertiary">{validatedOrders.length} report(s) available</p>
       </div>
 
       <SectionContainer title="Validated Orders Ready for Reporting">
@@ -50,16 +50,16 @@ export const Reports: React.FC = () => {
             {validatedOrders.map(order => (
               <div
                 key={order.orderId}
-                className="flex items-start justify-between p-4 border border-gray-200 rounded"
+                className="flex items-start justify-between p-4 border border-border rounded"
               >
                 <div className="flex items-start gap-3">
                   <Icon name={ICONS.dataFields.document} className={`w-6 h-6 ${semanticColors.info.icon} mt-1`} />
                   <div>
-                    <div className="font-medium text-gray-900">
+                    <div className="font-medium text-text-primary">
                       <span className="font-mono">{displayId.order(order.orderId)}</span>
                     </div>
-                    <div className="text-sm text-gray-600">{getPatientName(order.patientId)}</div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-text-tertiary">{getPatientName(order.patientId)}</div>
+                    <div className="text-sm text-text-muted">
                       {formatDate(order.orderDate)} • {order.tests.length} test(s)
                     </div>
                     <div className="mt-2 flex flex-wrap gap-2">

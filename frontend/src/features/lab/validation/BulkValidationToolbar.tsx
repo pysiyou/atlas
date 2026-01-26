@@ -93,12 +93,12 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
   if (selectedCount === 0) {
     return (
       <div className="mb-3">
-        <label className="inline-flex items-center gap-2 cursor-pointer text-sm text-gray-600">
+        <label className="inline-flex items-center gap-2 cursor-pointer text-sm text-text-tertiary">
           <input
             type="checkbox"
             checked={false}
             onChange={handleToggleAll}
-            className={`w-4 h-4 ${brandColors.primary.icon} border-gray-300 rounded ${brandColors.primary.focusRing}`}
+            className={`w-4 h-4 ${brandColors.primary.icon} border-border-strong rounded ${brandColors.primary.focusRing}`}
           />
           <span>Select all {totalCount} items</span>
         </label>
@@ -122,22 +122,22 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
               }
             }}
             onChange={handleToggleAll}
-            className={`w-4 h-4 ${brandColors.primary.icon} border-gray-300 rounded ${brandColors.primary.focusRing}`}
+            className={`w-4 h-4 ${brandColors.primary.icon} border-border-strong rounded ${brandColors.primary.focusRing}`}
           />
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-text-tertiary">
             {allSelected ? 'Deselect all' : 'Select all'}
           </span>
         </label>
 
         {/* Selection count */}
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-text-muted">
           {selectedCount} selected
         </span>
 
         {/* Clear button */}
         <button
           onClick={handleClearSelection}
-          className="text-sm text-gray-500 hover:text-gray-700"
+          className="text-sm text-text-muted hover:text-text-secondary"
         >
           Clear
         </button>
@@ -198,7 +198,7 @@ export const ValidationCheckbox: React.FC<ValidationCheckboxProps> = ({
       onChange={handleChange}
       disabled={disabled}
       className={cn(
-        `w-4 h-4 ${brandColors.primary.icon} border-gray-300 rounded ${brandColors.primary.focusRing}`,
+        `w-4 h-4 ${brandColors.primary.icon} border-border-strong rounded ${brandColors.primary.focusRing}`,
         disabled && 'opacity-50 cursor-not-allowed'
       )}
       onClick={e => e.stopPropagation()}

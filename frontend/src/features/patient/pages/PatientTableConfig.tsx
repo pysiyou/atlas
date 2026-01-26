@@ -63,7 +63,7 @@ export const createPatientTableConfig = (
         <div className="font-medium truncate">
           {testCount} test{testCount !== 1 ? 's' : ''}
         </div>
-        <div className="text-xs text-gray-500 truncate">
+        <div className="text-xs text-text-muted truncate">
           {patientOrders.length} order{patientOrders.length !== 1 ? 's' : ''}
         </div>
       </div>
@@ -73,18 +73,18 @@ export const createPatientTableConfig = (
   const renderContact = (patient: Patient) => (
     <div className="text-xs min-w-0">
       <div className="truncate">{formatPhoneNumber(patient.phone)}</div>
-      {patient.email && <div className="text-xs text-gray-500 truncate">{patient.email}</div>}
+      {patient.email && <div className="text-xs text-text-muted truncate">{patient.email}</div>}
     </div>
   );
 
   const renderAffiliation = (patient: Patient) => {
     if (!patient.affiliation) {
-      return <span className="text-xs text-gray-500 truncate block">No Affiliation</span>;
+      return <span className="text-xs text-text-muted truncate block">No Affiliation</span>;
     }
     const isActive = isAffiliationActive(patient.affiliation);
     return (
       <div className="flex items-center gap-2 min-w-0">
-        <span className="text-xs text-gray-500 truncate">
+        <span className="text-xs text-text-muted truncate">
           {isActive ? 'Expires' : 'Expired'}: {formatDate(patient.affiliation.endDate)}
         </span>
       </div>
@@ -92,7 +92,7 @@ export const createPatientTableConfig = (
   };
 
   const renderRegistrationDate = (patient: Patient) => (
-    <div className="text-xs text-gray-500 truncate">{formatDate(patient.registrationDate)}</div>
+    <div className="text-xs text-text-muted truncate">{formatDate(patient.registrationDate)}</div>
   );
 
   const renderActions = (patient: Patient) => (

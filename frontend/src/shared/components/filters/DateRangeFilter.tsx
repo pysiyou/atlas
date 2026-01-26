@@ -97,11 +97,11 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     <div className={`space-y-2 ${className}`}>
       {/* Label */}
       <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-gray-700">{label}</label>
+        <label className="text-xs font-medium text-text-secondary">{label}</label>
         {value && (
           <button
             onClick={handleClear}
-            className="text-xs text-sky-600 hover:text-sky-700 transition-colors"
+            className="text-xs text-brand hover:text-brand-hover transition-colors"
           >
             Clear
           </button>
@@ -114,7 +114,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
           <button
             key={preset.label}
             onClick={() => applyPreset(preset.days)}
-            className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 transition-colors"
+            className="px-3 py-1.5 text-xs font-medium text-text-secondary bg-surface border border-border-strong rounded-md hover:bg-app-bg hover:border-gray-400 transition-colors"
           >
             {preset.label}
           </button>
@@ -126,26 +126,26 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
         <div className="relative">
           <Icon
             name={ICONS.dataFields.date}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-disabled pointer-events-none"
           />
           <input
             type="date"
             value={startDate}
             onChange={e => handleStartChange(e.target.value)}
-            className="w-full pl-10 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+            className="w-full pl-10 pr-3 py-2 text-sm border border-border-strong rounded-md focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
             placeholder="Start date"
           />
         </div>
         <div className="relative">
           <Icon
             name={ICONS.dataFields.date}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-disabled pointer-events-none"
           />
           <input
             type="date"
             value={endDate}
             onChange={e => handleEndChange(e.target.value)}
-            className="w-full pl-10 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+            className="w-full pl-10 pr-3 py-2 text-sm border border-border-strong rounded-md focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
             placeholder="End date"
           />
         </div>

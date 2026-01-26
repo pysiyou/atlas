@@ -75,7 +75,7 @@ export const LAB_CARD_CONTAINERS = {
     `border ${neutralColors.border.default} hover:border hover:${brandColors.primary.borderLighter} hover:${brandColors.primary.backgroundLightBg} transition-all duration-200`,
 
   // Content section (gray background)
-  contentSection: `bg-gray-50 rounded p-2 border ${neutralColors.border.default}`,
+  contentSection: `bg-app-bg rounded p-2 border ${neutralColors.border.default}`,
 
   // Flags section (red background)
   flagsSection: `${semanticColors.danger.backgroundLight} rounded p-2 border ${semanticColors.danger.border}`,
@@ -87,7 +87,7 @@ export const LAB_CARD_LIST_ITEMS = {
   testItem: `flex items-center text-xs ${neutralColors.text.secondary}`,
 
   // List bullet (gray)
-  bullet: 'w-1 h-1 rounded-full bg-gray-400 mr-2',
+  bullet: 'w-1 h-1 rounded-full bg-neutral-400 mr-2',
 
   // List bullet (red for flags)
   bulletRed: `w-1 h-1 rounded-full ${semanticColors.danger.backgroundMedium} mr-2`,

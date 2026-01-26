@@ -12,34 +12,34 @@
 export const semanticColors = {
   success: {
     // For buttons, solid backgrounds
-    background: 'bg-green-600',
-    backgroundMedium: 'bg-green-500',
-    backgroundHover: 'hover:bg-green-700',
-    backgroundActive: 'active:bg-green-800',
-    text: 'text-white',
-    textOnLight: 'text-green-800',
+    background: 'bg-success',
+    backgroundMedium: 'bg-green-500', // Kept for specificity if needed, else could map to bg-success
+    backgroundHover: 'hover:opacity-90',
+    backgroundActive: 'active:opacity-100',
+    text: 'text-text-inverse',
+    textOnLight: 'text-green-800', // Could map to text-success if contrast allows
     
     // For badges, alerts, subtle backgrounds
     backgroundLight: 'bg-green-100',
     backgroundLightHover: 'hover:bg-green-200',
     textLight: 'text-green-800',
-    border: 'border-green-200',
+    border: 'border-green-200', // semantic border colors not fully mapped in CSS yet, using closest or creating new
     borderLight: 'border-green-300',
     
     // For icons, accents
-    icon: 'text-green-600',
+    icon: 'text-success',
     iconLight: 'text-green-500',
     
     // Focus states
-    focusRing: 'focus:ring-green-500',
+    focusRing: 'focus:ring-success',
   },
   
   danger: {
     // For buttons, solid backgrounds
-    background: 'bg-red-600',
-    backgroundHover: 'hover:bg-red-700',
-    backgroundActive: 'active:bg-red-800',
-    text: 'text-white',
+    background: 'bg-danger',
+    backgroundHover: 'hover:opacity-90',
+    backgroundActive: 'active:opacity-100',
+    text: 'text-text-inverse',
     textOnLight: 'text-red-800',
     
     // For badges, alerts, subtle backgrounds
@@ -52,26 +52,26 @@ export const semanticColors = {
     borderLight: 'border-red-300',
     
     // For icons, accents
-    icon: 'text-red-600',
+    icon: 'text-danger',
     iconLight: 'text-red-500',
     iconLighter: 'text-red-400',
     backgroundMedium: 'bg-red-500',
     
     // Error states (inputs, validation)
-    inputBorder: 'border-red-500',
-    errorText: 'text-red-600',
-    requiredIndicator: 'text-red-500',
+    inputBorder: 'border-danger',
+    errorText: 'text-danger',
+    requiredIndicator: 'text-danger',
     
     // Focus states
-    focusRing: 'focus:ring-red-500',
+    focusRing: 'focus:ring-danger',
   },
   
   warning: {
     // For buttons, solid backgrounds
-    background: 'bg-yellow-500',
-    backgroundHover: 'hover:bg-yellow-600',
-    backgroundActive: 'active:bg-yellow-700',
-    text: 'text-white',
+    background: 'bg-warning',
+    backgroundHover: 'hover:opacity-90',
+    backgroundActive: 'active:opacity-100',
+    text: 'text-text-inverse',
     textOnLight: 'text-yellow-800',
     
     // For badges, alerts, subtle backgrounds
@@ -82,37 +82,37 @@ export const semanticColors = {
     borderLight: 'border-yellow-300',
     
     // For icons, accents, high/low values
-    icon: 'text-yellow-600',
+    icon: 'text-warning',
     iconLight: 'text-yellow-500',
     iconLighter: 'text-yellow-400',
-    valueHigh: 'text-yellow-600', // Replaces amber-600 and orange-600
-    valueLow: 'text-yellow-600',   // Replaces amber-600 and orange-600
+    valueHigh: 'text-warning', 
+    valueLow: 'text-warning',
     
     // Focus states
-    focusRing: 'focus:ring-yellow-500',
+    focusRing: 'focus:ring-warning',
   },
   
   info: {
     // For buttons, solid backgrounds
-    background: 'bg-sky-600',
-    backgroundHover: 'hover:bg-sky-700',
-    backgroundActive: 'active:bg-sky-800',
-    text: 'text-white',
-    textOnLight: 'text-sky-800',
+    background: 'bg-info',
+    backgroundHover: 'hover:opacity-90',
+    backgroundActive: 'active:opacity-100',
+    text: 'text-text-inverse',
+    textOnLight: 'text-brand-text',
     
     // For badges, alerts, subtle backgrounds
-    backgroundLight: 'bg-sky-100',
+    backgroundLight: 'bg-brand-light',
     backgroundLightHover: 'hover:bg-sky-200',
-    textLight: 'text-sky-800',
-    border: 'border-sky-200',
-    borderLight: 'border-sky-300',
+    textLight: 'text-brand-text',
+    border: 'border-brand-light',
+    borderLight: 'border-brand-light',
     
     // For icons, accents
-    icon: 'text-sky-600',
-    iconLight: 'text-sky-500',
+    icon: 'text-info',
+    iconLight: 'text-brand',
     
     // Focus states
-    focusRing: 'focus:ring-sky-500',
+    focusRing: 'focus:ring-info',
   },
 } as const;
 
@@ -128,16 +128,16 @@ export const stateColors = {
   },
   
   disabled: {
-    background: 'bg-gray-100',
-    text: 'text-gray-400',
-    border: 'border-gray-300',
+    background: 'bg-neutral-100',
+    text: 'text-text-disabled',
+    border: 'border-neutral-300',
     cursor: 'cursor-not-allowed',
   },
   
   selected: {
-    background: 'bg-sky-50',
-    text: 'text-sky-900',
-    border: 'border-sky-500',
+    background: 'bg-brand-light/50', // Using opacity with brand-light
+    text: 'text-brand',
+    border: 'border-brand',
   },
 } as const;
 
@@ -146,39 +146,39 @@ export const stateColors = {
  */
 export const brandColors = {
   primary: {
-    background: 'bg-sky-600',
-    backgroundMedium: 'bg-sky-500',
-    backgroundLight: 'bg-sky-400',
-    backgroundHover: 'hover:bg-sky-700',
-    backgroundActive: 'active:bg-sky-800',
-    text: 'text-white',
-    textOnLight: 'text-sky-800',
-    backgroundLightBg: 'bg-sky-100',
-    textLight: 'text-sky-800',
-    textLightMedium: 'text-sky-700',
-    border: 'border-sky-200',
-    borderMedium: 'border-sky-500',
-    borderLight: 'border-sky-400',
-    borderLighter: 'border-sky-100',
-    icon: 'text-sky-600',
-    iconLight: 'text-sky-400',
-    focusRing: 'focus:ring-sky-500',
-    focusRingLight: 'focus:ring-sky-400',
-    ring20: 'ring-sky-500/20',
-    ring30: 'ring-sky-500/30',
+    background: 'bg-brand',
+    backgroundMedium: 'bg-brand', // Mapping to main brand for now
+    backgroundLight: 'bg-accent', // Sky-400 maps to accent
+    backgroundHover: 'hover:opacity-90',
+    backgroundActive: 'active:opacity-100',
+    text: 'text-text-inverse',
+    textOnLight: 'text-brand',
+    backgroundLightBg: 'bg-brand-light',
+    textLight: 'text-brand', // Sky-800 -> text-brand? Or text-primary? Kept branded
+    textLightMedium: 'text-brand', 
+    border: 'border-brand-light',
+    borderMedium: 'border-brand',
+    borderLight: 'border-accent',
+    borderLighter: 'border-brand-light',
+    icon: 'text-brand',
+    iconLight: 'text-accent',
+    focusRing: 'focus:ring-brand',
+    focusRingLight: 'focus:ring-accent',
+    ring20: 'ring-brand/20',
+    ring30: 'ring-brand/30',
   },
   
   secondary: {
-    background: 'bg-gray-200',
-    backgroundHover: 'hover:bg-gray-300',
-    backgroundActive: 'active:bg-gray-400',
-    text: 'text-gray-900',
-    textOnLight: 'text-gray-700',
-    backgroundLight: 'bg-gray-100',
-    textLight: 'text-gray-700',
-    border: 'border-gray-300',
-    icon: 'text-gray-600',
-    focusRing: 'focus:ring-gray-500',
+    background: 'bg-neutral-200',
+    backgroundHover: 'hover:bg-neutral-300',
+    backgroundActive: 'active:bg-neutral-400',
+    text: 'text-text-primary',
+    textOnLight: 'text-text-secondary',
+    backgroundLight: 'bg-neutral-100',
+    textLight: 'text-text-secondary',
+    border: 'border-neutral-300',
+    icon: 'text-text-tertiary',
+    focusRing: 'focus:ring-neutral-500',
   },
 } as const;
 
@@ -188,7 +188,7 @@ export const brandColors = {
  */
 export const brandingColors = {
   affiliation: {
-    // Orange branding for affiliation plans
+    // Orange branding for affiliation plans - Keeping hardcoded as specific branding
     background: 'bg-orange-500',
     backgroundHover: 'hover:bg-orange-600',
     backgroundLight: 'bg-orange-50',
@@ -205,24 +205,24 @@ export const brandingColors = {
  * Neutral Colors - Grayscale palette
  */
 export const neutralColors = {
-  white: 'bg-white text-gray-900',
+  white: 'bg-surface text-text-primary',
   gray: {
-    50: 'bg-gray-50 text-gray-900',
-    100: 'bg-gray-100 text-gray-900',
-    200: 'bg-gray-200 text-gray-900',
-    300: 'bg-gray-300 text-gray-900',
+    50: 'bg-neutral-50 text-text-primary',
+    100: 'bg-neutral-100 text-text-primary',
+    200: 'bg-neutral-200 text-text-primary',
+    300: 'bg-neutral-300 text-text-primary',
   },
   text: {
-    primary: 'text-gray-900',
-    secondary: 'text-gray-700',
-    tertiary: 'text-gray-600',
-    muted: 'text-gray-500',
-    disabled: 'text-gray-400',
+    primary: 'text-text-primary',
+    secondary: 'text-text-secondary',
+    tertiary: 'text-text-tertiary',
+    muted: 'text-text-muted',
+    disabled: 'text-text-disabled',
   },
   border: {
-    default: 'border-gray-200',
-    medium: 'border-gray-300',
-    strong: 'border-gray-400',
+    default: 'border-border', // gray-200
+    medium: 'border-border-strong', // gray-300 -> strong or medium?
+    strong: 'border-neutral-400',
   },
 } as const;
 
@@ -233,39 +233,39 @@ export const neutralColors = {
  */
 export const authColors = {
   // Background colors
-  background: 'bg-[#1a1f2e]',
-  backgroundSecondary: 'bg-[#232938]',
-  backgroundTertiary: 'bg-[#1e242f]',
-  backgroundHover: 'hover:bg-[#283040]',
+  background: 'bg-auth-bg',
+  backgroundSecondary: 'bg-auth-bg-secondary',
+  backgroundTertiary: 'bg-auth-bg-tertiary',
+  backgroundHover: 'hover:bg-auth-bg-hover',
   
   // Accent colors
-  accent: 'bg-[#3d5a66]',
-  accentHover: 'hover:bg-[#4a6b78]',
-  accentMedium: 'bg-[#4a6670]',
-  accentLight: 'bg-[#7a9ba8]',
-  accentBlur: 'bg-[#4a6670]', // For blur effects
+  accent: 'bg-auth-accent',
+  accentHover: 'hover:bg-auth-accent-hover',
+  accentMedium: 'bg-auth-accent-medium',
+  accentLight: 'bg-auth-accent-light',
+  accentBlur: 'bg-auth-accent-medium', // For blur effects
   
   // Text colors
   text: {
-    primary: 'text-[#e8eaed]',
-    secondary: 'text-[#b0b8c8]',
-    tertiary: 'text-[#8892a6]',
-    muted: 'text-[#6b7280]',
-    light: 'text-[#7a9ba8]',
-    dark: 'text-[#5c6478]',
-    placeholder: 'placeholder-[#5c6478]',
-    tagline: 'text-[#9ca3af]',
+    primary: 'text-auth-text-primary',
+    secondary: 'text-auth-text-secondary',
+    tertiary: 'text-auth-text-secondary', // Using secondary/muted map
+    muted: 'text-auth-text-muted',
+    light: 'text-auth-text-light',
+    dark: 'text-auth-text-muted', // Fallback
+    placeholder: 'placeholder-auth-text-muted',
+    tagline: 'text-auth-text-muted',
   },
   
   // Border colors
   border: {
-    default: 'border-[#2d3548]',
-    light: 'border-[#3a4455]',
-    hover: 'hover:border-[#3d4760]',
-    focus: 'focus:border-[#4a6670]',
-    accent: 'border-[#3d5a66]',
-    accentLight: 'border-[#2d4550]',
-    accentHover: 'border-[#3a5663]',
+    default: 'border-auth-border',
+    light: 'border-auth-border-light',
+    hover: 'hover:border-auth-border-hover',
+    focus: 'focus:border-auth-border-focus',
+    accent: 'border-auth-accent',
+    accentLight: 'border-auth-accent-medium',
+    accentHover: 'border-auth-accent-hover',
   },
   
   // Error state colors (for login errors)

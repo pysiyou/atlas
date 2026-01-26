@@ -94,7 +94,7 @@ export const RangeFilter: React.FC<RangeFilterProps> = ({
         <span className="font-medium">
           {minValue} {unit}
         </span>
-        <span className="text-gray-400">-</span>
+        <span className="text-text-disabled">-</span>
         <span className="font-medium">
           {maxValue} {unit}
         </span>
@@ -103,11 +103,11 @@ export const RangeFilter: React.FC<RangeFilterProps> = ({
       {/* Dual range sliders */}
       <div className="relative pt-2 pb-1">
         {/* Track */}
-        <div className="absolute top-1/2 left-0 right-0 h-2 bg-gray-200 rounded-full -translate-y-1/2" />
+        <div className="absolute top-1/2 left-0 right-0 h-2 bg-neutral-200 rounded-full -translate-y-1/2" />
 
         {/* Active range */}
         <div
-          className="absolute top-1/2 h-2 bg-sky-500 rounded-full -translate-y-1/2"
+          className="absolute top-1/2 h-2 bg-brand rounded-full -translate-y-1/2"
           style={{
             left: `${((minValue - min) / (max - min)) * 100}%`,
             right: `${100 - ((maxValue - min) / (max - min)) * 100}%`,
@@ -140,19 +140,19 @@ export const RangeFilter: React.FC<RangeFilterProps> = ({
 
         {/* Min thumb */}
         <div
-          className="absolute top-1/2 w-4 h-4 bg-white border-2 border-sky-500 rounded-full -translate-y-1/2 -translate-x-1/2 pointer-events-none shadow-sm"
+          className="absolute top-1/2 w-4 h-4 bg-surface border-2 border-brand rounded-full -translate-y-1/2 -translate-x-1/2 pointer-events-none shadow-sm"
           style={{ left: `${((minValue - min) / (max - min)) * 100}%` }}
         />
 
         {/* Max thumb */}
         <div
-          className="absolute top-1/2 w-4 h-4 bg-white border-2 border-sky-500 rounded-full -translate-y-1/2 -translate-x-1/2 pointer-events-none shadow-sm"
+          className="absolute top-1/2 w-4 h-4 bg-surface border-2 border-brand rounded-full -translate-y-1/2 -translate-x-1/2 pointer-events-none shadow-sm"
           style={{ left: `${((maxValue - min) / (max - min)) * 100}%` }}
         />
       </div>
 
       {/* Min/Max labels */}
-      <div className="flex items-center justify-between text-xs text-gray-500">
+      <div className="flex items-center justify-between text-xs text-text-muted">
         <span>
           {min} {unit}
         </span>

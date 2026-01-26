@@ -16,7 +16,7 @@ export interface DateFilterPresetsProps {
  */
 export const DateFilterPresets: React.FC<DateFilterPresetsProps> = ({ onSelect }) => {
   return (
-    <div className="mt-3 pt-2 border-t border-gray-100 flex items-center justify-between text-xs text-gray-600">
+    <div className="mt-3 pt-2 border-t border-border-subtle flex items-center justify-between text-xs text-text-tertiary">
       <button
         onClick={() => {
           const today = new Date();

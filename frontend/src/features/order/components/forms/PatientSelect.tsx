@@ -38,7 +38,7 @@ const PatientSearchTagInput: React.FC<{
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-patient-search"
-          className="text-xs font-medium text-gray-500 cursor-pointer truncate min-w-0"
+          className="text-xs font-medium text-text-muted cursor-pointer truncate min-w-0"
         >
           Patient
         </label>
@@ -48,16 +48,16 @@ const PatientSearchTagInput: React.FC<{
         className={[
           'relative',
           'w-full pl-10 pr-3 py-2.5 border rounded',
-          'bg-white transition-colors',
-          disabled ? 'bg-gray-50 opacity-60 cursor-not-allowed' : '',
-          !disabled && 'focus-within:ring-2 focus-within:ring-sky-500 focus-within:border-transparent',
-          error ? semanticColors.danger.inputBorder : 'border-gray-300',
+          'bg-surface transition-colors',
+          disabled ? 'bg-app-bg opacity-60 cursor-not-allowed' : '',
+          !disabled && 'focus-within:ring-2 focus-within:ring-brand focus-within:border-transparent',
+          error ? semanticColors.danger.inputBorder : 'border-border-strong',
           'flex flex-wrap gap-2 items-center',
           'min-h-[42px]',
         ].join(' ')}
       >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-gray-400" />
+          <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-text-disabled" />
         </div>
 
         {selectedPatient && (
@@ -70,11 +70,11 @@ const PatientSearchTagInput: React.FC<{
               className="shrink-0"
             />
             {/* Patient name */}
-            <span className="text-xs font-medium text-gray-900 truncate min-w-0">
+            <span className="text-xs font-medium text-text-primary truncate min-w-0">
               {selectedPatient.fullName}
             </span>
             {/* Patient ID */}
-            <span className="text-xxs font-semibold font-mono text-gray-600 shrink-0">
+            <span className="text-xxs font-semibold font-mono text-text-tertiary shrink-0">
               {displayId.patient(selectedPatient.id)}
             </span>
             {/* Clear button */}
@@ -85,7 +85,7 @@ const PatientSearchTagInput: React.FC<{
                 className={`flex items-center justify-center ml-0.5 -mr-0.5 hover:${brandColors.primary.backgroundLightBg} rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 ${brandColors.primary.focusRingLight} shrink-0`}
                 aria-label="Clear selected patient"
               >
-                <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-gray-500 hover:text-gray-700" />
+                <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-muted hover:text-text-secondary" />
               </button>
             )}
           </div>
@@ -99,7 +99,7 @@ const PatientSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedPatient ? 'Search to change…' : 'Search by name, ID, or phone…'}
-          className="flex-1 min-w-[140px] outline-none text-xs text-gray-900 placeholder:text-gray-300 bg-transparent leading-normal"
+          className="flex-1 min-w-[140px] outline-none text-xs text-text-primary placeholder:text-text-disabled bg-transparent leading-normal"
           autoComplete="off"
           disabled={disabled}
         />
@@ -176,15 +176,15 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
         <div
           className={[
             'mt-1',
-            'border border-gray-200/80',
+            'border border-border/80',
             'rounded',
-            'bg-white',
+            'bg-surface',
             'shadow-lg shadow-gray-900/10',
             'ring-1 ring-black/5',
           ].join(' ')}
         >
           {visiblePatients.length === 0 ? (
-            <div className="px-4 py-3 text-xs text-gray-500">No patients found</div>
+            <div className="px-4 py-3 text-xs text-text-muted">No patients found</div>
           ) : (
             <div className="max-h-[320px] overflow-y-auto p-2">
               <div className="space-y-1">
@@ -204,9 +204,9 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         'rounded',
                         'transition-colors',
                         'flex items-center justify-between gap-3',
-                        'hover:bg-gray-50',
-                        `focus:outline-none focus-visible:ring-2 ${brandColors.primary.ring30.replace('ring-sky-500/30', 'focus-visible:ring-sky-500/30')}`,
-                        isSelected ? 'bg-emerald-50/50' : 'bg-white',
+                        'hover:bg-app-bg',
+                        `focus:outline-none focus-visible:ring-2 ${brandColors.primary.ring30.replace('ring-brand/30', 'focus-visible:ring-brand/30')}`,
+                        isSelected ? 'bg-emerald-50/50' : 'bg-surface',
                       ].join(' ')}
                     >
                       <div className="min-w-0 flex items-center gap-2.5 flex-1">
@@ -218,14 +218,14 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                           className="shrink-0"
                         />
                         {/* Patient name */}
-                        <span className="text-xs font-medium text-gray-900 truncate">
+                        <span className="text-xs font-medium text-text-primary truncate">
                           {patient.fullName}
                         </span>
                       </div>
 
                       <div className="shrink-0 flex items-center gap-2">
                         {/* Patient ID on the right */}
-                        <span className="text-[11px] font-semibold font-mono text-gray-600">
+                        <span className="text-[11px] font-semibold font-mono text-text-tertiary">
                           {displayId.patient(patient.id)}
                         </span>
                         {/* Check icon if selected */}

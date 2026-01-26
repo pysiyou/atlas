@@ -45,7 +45,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
               className={`px-2 py-1 text-xs rounded transition-colors ${
                 activeTestCode === test.code
                   ? `${brandColors.primary.backgroundLightBg} ${brandColors.primary.textLightMedium} font-medium`
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-neutral-100 text-text-tertiary hover:bg-neutral-200'
               }`}
             >
               {test.code}
@@ -69,20 +69,20 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
 
         {activeTest.containerDescription && (
           <div className="flex items-start gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1.5 shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
             <div className="flex-1">
-              <div className="text-xs font-medium text-gray-700 mb-1">Container Specifications</div>
-              <div className="text-xs text-gray-600">{activeTest.containerDescription}</div>
+              <div className="text-xs font-medium text-text-secondary mb-1">Container Specifications</div>
+              <div className="text-xs text-text-tertiary">{activeTest.containerDescription}</div>
             </div>
           </div>
         )}
 
         {activeTest.collectionNotes && (
           <div className="flex items-start gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1.5 shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
             <div className="flex-1">
-              <div className="text-xs font-medium text-gray-700 mb-1">Collection Instructions</div>
-              <div className="text-xs text-gray-600">{activeTest.collectionNotes}</div>
+              <div className="text-xs font-medium text-text-secondary mb-1">Collection Instructions</div>
+              <div className="text-xs text-text-tertiary">{activeTest.collectionNotes}</div>
             </div>
           </div>
         )}
@@ -104,7 +104,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
         )}
 
         {activeTest.minimumVolume && (
-          <div className="flex items-center gap-2 text-xs text-gray-600">
+          <div className="flex items-center gap-2 text-xs text-text-tertiary">
             <span className="font-medium">Minimum Volume:</span>
             <span>{activeTest.minimumVolume} mL</span>
           </div>

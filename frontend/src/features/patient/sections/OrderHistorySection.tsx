@@ -54,15 +54,15 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
       contentClassName="flex flex-col gap-4 flex-1 min-h-0 overflow-y-auto"
     >
       {/* Order count */}
-      <div className="text-xs text-gray-500 -mt-2 mb-2">{orders.length} order(s) found</div>
+      <div className="text-xs text-text-muted -mt-2 mb-2">{orders.length} order(s) found</div>
 
       {/* Orders List */}
       <div className="flex-1 overflow-y-auto min-h-0">
         {orders.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Icon name={ICONS.dataFields.document} className="w-12 h-12 text-gray-300 mb-4" />
-            <p className="text-gray-600 font-medium mb-2">No orders found</p>
-            <p className="text-sm text-gray-500 mb-4">Create a new order for this patient</p>
+            <Icon name={ICONS.dataFields.document} className="w-12 h-12 text-text-disabled mb-4" />
+            <p className="text-text-tertiary font-medium mb-2">No orders found</p>
+            <p className="text-sm text-text-muted mb-4">Create a new order for this patient</p>
             <Button size="sm" variant="create" onClick={onCreateOrder}>
               Create Order
             </Button>
@@ -73,17 +73,17 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
               <div
                 key={order.orderId}
                 onClick={() => onOrderClick(order.orderId)}
-                className={`border border-gray-200 rounded-lg p-4 hover:${brandColors.primary.borderMedium} hover:${brandColors.primary.backgroundLightBg}/50 transition-colors cursor-pointer`}
+                className={`border border-border rounded-lg p-4 hover:${brandColors.primary.borderMedium} hover:${brandColors.primary.backgroundLightBg}/50 transition-colors cursor-pointer`}
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold text-gray-900 text-sm font-mono">
+                      <span className="font-semibold text-text-primary text-sm font-mono">
                         {displayId.order(order.orderId)}
                       </span>
                       <Badge variant={order.overallStatus} size="sm" />
                     </div>
-                    <div className="text-xs text-gray-600">
+                    <div className="text-xs text-text-tertiary">
                       {formatDate(order.orderDate)} • {order.tests.length} test(s)
                     </div>
                   </div>
@@ -91,13 +91,13 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
                     <div className={`font-semibold ${brandColors.primary.icon} text-sm`}>
                       {formatCurrency(order.totalPrice)}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-text-muted">
                       {order.paymentStatus.replace('-', ' ')}
                     </div>
                   </div>
                 </div>
                 {order.referringPhysician && (
-                  <div className="text-xs text-gray-500 mt-2">
+                  <div className="text-xs text-text-muted mt-2">
                     Referring Physician: {order.referringPhysician}
                   </div>
                 )}

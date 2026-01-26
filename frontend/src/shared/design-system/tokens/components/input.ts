@@ -14,7 +14,7 @@ import { radius, border } from '../borders';
  * Applied to all input types
  */
 export const inputBase = {
-  base: `block w-full bg-white transition-shadow duration-200 focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed`,
+  base: `block w-full bg-surface transition-shadow duration-200 focus:outline-none disabled:bg-neutral-100 disabled:cursor-not-allowed`,
   rounded: radius.input,
 } as const;
 
@@ -35,8 +35,8 @@ export const inputPadding = {
  * Input Border States
  */
 export const inputBorder = {
-  default: border.input, // border border-gray-300
-  focus: border.inputFocus, // border-2 border-sky-500 border-transparent
+  default: border.input, // border border-border-strong
+  focus: border.inputFocus, // border-2 border-brand border-transparent
   error: border.inputError, // border border-red-500
   disabled: `border ${neutralColors.border.medium}`,
 } as const;

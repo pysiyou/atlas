@@ -60,7 +60,7 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
         value={
           <>
             {patient.emergencyContact?.fullName || 'N/A'}{' '}
-            <span className="text-gray-400 font-normal">
+            <span className="text-text-disabled font-normal">
               ({patient.emergencyContact?.phone || 'N/A'})
             </span>
           </>

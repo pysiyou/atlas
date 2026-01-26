@@ -40,7 +40,7 @@ export const inlineError = {
 export const infoField = {
   label: `${label.default}`,
   value: `${fontSize.sm} ${neutralColors.text.primary}`,
-  icon: 'w-4 h-4 text-gray-400',
+  icon: 'w-4 h-4 text-text-muted', // gray-400 -> text-muted
   container: {
     horizontal: 'flex items-start justify-between gap-4',
     vertical: 'space-y-1',
@@ -53,10 +53,10 @@ export const infoField = {
  */
 export const sectionCard = {
   container: `${neutralColors.white} ${radius.lg} ${border.card} overflow-hidden`,
-  header: `flex items-center justify-between ${padding.horizontal.lg} ${padding.vertical.md} border-b ${border.default} bg-gray-50`,
-  headerCollapsible: 'cursor-pointer hover:bg-gray-100 transition-colors',
+  header: `flex items-center justify-between ${padding.horizontal.lg} ${padding.vertical.md} border-b ${border.default} bg-app-bg`,
+  headerCollapsible: 'cursor-pointer hover:bg-surface-hover transition-colors',
   title: `${fontSize.sm} ${fontWeight.semibold} ${neutralColors.text.primary}`,
-  icon: 'w-4 h-4 text-gray-500',
+  icon: 'w-4 h-4 text-text-muted',
   content: padding.card.md,
 } as const;
 
@@ -81,16 +81,16 @@ export const sectionGrid = {
  * Filter Components Styles
  */
 export const filterComponents = {
-  label: `${fontSize.xs} ${fontWeight.medium} text-gray-700`,
-  link: `${fontSize.xs} ${brandColors.primary.icon} hover:${brandColors.primary.textOnLight} disabled:text-gray-400 disabled:cursor-not-allowed transition-colors`,
-  separator: 'text-gray-300',
+  label: `${fontSize.xs} ${fontWeight.medium} text-text-secondary`,
+  link: `${fontSize.xs} ${brandColors.primary.icon} hover:${brandColors.primary.textOnLight} disabled:text-text-disabled disabled:cursor-not-allowed transition-colors`,
+  separator: 'text-border-strong', // gray-300
   resultCount: `${fontSize.xs} ${neutralColors.text.muted}`,
   bar: {
     container: `border-b ${border.default} ${neutralColors.white}`,
-    header: `flex items-center justify-between ${padding.horizontal.lg} ${padding.vertical.md} border-b border-gray-100`,
+    header: `flex items-center justify-between ${padding.horizontal.lg} ${padding.vertical.md} border-b border-border-subtle`,
     title: `${fontSize.sm} ${fontWeight.medium} ${neutralColors.text.primary}`,
     resetButton: `${fontSize.xs} ${brandColors.primary.icon} hover:${brandColors.primary.textOnLight} ${fontWeight.medium} transition-colors cursor-pointer`,
-    toggleButton: `p-1 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer`,
+    toggleButton: `p-1 text-text-muted hover:text-text-secondary transition-colors cursor-pointer`,
     content: `${padding.card.lg} space-y-4`,
   },
 } as const;

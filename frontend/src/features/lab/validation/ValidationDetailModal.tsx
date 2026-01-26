@@ -160,9 +160,9 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
         <ModalFooter
           statusIcon={
             hasFlags ? (
-              <Icon name={ICONS.actions.warning} className="w-4 h-4 text-gray-400" />
+              <Icon name={ICONS.actions.warning} className="w-4 h-4 text-text-disabled" />
             ) : (
-              <Icon name={ICONS.dataFields.clinicalNotes} className="w-4 h-4 text-gray-400" />
+              <Icon name={ICONS.dataFields.clinicalNotes} className="w-4 h-4 text-text-disabled" />
             )
           }
           statusMessage={
@@ -170,7 +170,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               ? 'Review flags carefully before approving'
               : 'Verify all results match expected values'
           }
-          statusClassName="text-gray-500"
+          statusClassName="text-text-muted"
         >
           <Popover
             placement="top-end"

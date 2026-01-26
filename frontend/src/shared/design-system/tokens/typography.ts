@@ -9,7 +9,7 @@
  * Font Sizes
  */
 export const fontSize = {
-  xxs: 'text-xxs', // 10px (custom theme variable)
+  xxs: 'text-xxs', // 10px
   xs: 'text-xs',   // 12px
   sm: 'text-sm',   // 14px
   base: 'text-base', // 16px
@@ -42,41 +42,44 @@ export const lineHeight = {
 /**
  * Heading Styles
  */
+/**
+ * Heading Styles
+ */
 export const heading = {
-  h1: 'text-2xl font-bold text-gray-900',
-  h2: 'text-xl font-semibold text-gray-900',
-  h3: 'text-lg font-medium text-gray-900',
-  h4: 'text-base font-medium text-gray-900',
-  h5: 'text-sm font-semibold text-gray-900',
-  h6: 'text-xs font-semibold text-gray-900',
+  h1: 'text-2xl font-bold text-text-primary',
+  h2: 'text-xl font-semibold text-text-primary',
+  h3: 'text-lg font-medium text-text-primary',
+  h4: 'text-base font-medium text-text-primary',
+  h5: 'text-sm font-semibold text-text-primary',
+  h6: 'text-xs font-semibold text-text-primary',
 } as const;
 
 /**
  * Body Text Styles
  */
 export const body = {
-  default: 'text-sm text-gray-700',
-  small: 'text-xs text-gray-600',
-  metadata: 'text-xs text-gray-500',
-  muted: 'text-sm text-gray-500',
-  large: 'text-base text-gray-700',
+  default: 'text-sm text-text-secondary',
+  small: 'text-xs text-text-tertiary',
+  metadata: 'text-xs text-text-muted',
+  muted: 'text-sm text-text-muted',
+  large: 'text-base text-text-secondary',
 } as const;
 
 /**
  * Label Styles
  */
 export const label = {
-  default: 'text-xs font-medium text-gray-500',
-  required: 'text-xs font-medium text-gray-500',
-  uppercase: 'text-xs font-medium text-gray-500 uppercase tracking-wide',
-  sm: 'text-xxs font-medium text-gray-500',
+  default: 'text-xs font-medium text-text-muted',
+  required: 'text-xs font-medium text-text-muted',
+  uppercase: 'text-xs font-medium text-text-muted uppercase tracking-wide',
+  sm: 'text-xxs font-medium text-text-muted',
 } as const;
 
 /**
  * Code/Monospace Styles
  */
 export const code = {
-  inline: 'font-mono text-xs text-sky-600',
+  inline: 'font-mono text-xs text-brand',
   block: 'font-mono text-sm',
   large: 'font-mono text-base',
 } as const;
@@ -85,38 +88,39 @@ export const code = {
  * Card Title Styles
  */
 export const cardTitle = {
-  default: 'text-sm font-medium text-gray-900',
-  large: 'text-base font-semibold text-gray-900',
+  default: 'text-sm font-medium text-text-primary',
+  large: 'text-base font-semibold text-text-primary',
 } as const;
 
 /**
  * Section Title Styles
  */
 export const sectionTitle = {
-  default: 'text-sm font-medium text-gray-700',
-  large: 'text-base font-semibold text-gray-900',
+  default: 'text-sm font-medium text-text-secondary',
+  large: 'text-base font-semibold text-text-primary',
 } as const;
 
 /**
  * Helper Text Styles
  */
 export const helper = {
-  default: 'text-xs text-gray-500',
-  error: 'text-sm text-red-600',
-  success: 'text-xs text-green-600',
+  default: 'text-xs text-text-muted',
+  error: 'text-sm text-danger',
+  success: 'text-xs text-success',
 } as const;
 
 /**
  * Error Message Styles
  */
 export const error = {
-  text: 'text-sm text-red-600',
-  textSmall: 'text-xs text-red-600',
+  text: 'text-sm text-danger',
+  textSmall: 'text-xs text-danger',
 } as const;
 
 /**
  * Required Indicator
  */
 export const required = {
-  indicator: 'text-red-500 ml-1',
+  indicator: 'text-danger ml-1',
 } as const;
+

@@ -180,7 +180,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
           </div>
 
           {/* Fixed footer actions */}
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-white shrink-0">
+          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-surface shrink-0">
             <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
               Cancel
             </Button>

@@ -102,7 +102,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       {/* Volume Input */}
       <div>
         <div className="flex items-center justify-between mb-1">
-          <label className="block text-xs font-medium text-gray-500">
+          <label className="block text-xs font-medium text-text-muted">
             Volume Collected <span className={semanticColors.danger.requiredIndicator}>*</span>
           </label>
           {minimumVolume > 0 && (
@@ -118,16 +118,16 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             inputMode="decimal"
             value={volume}
             onChange={e => setVolume(Number(e.target.value))}
-            className={`w-full pl-3 pr-8 py-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all placeholder-gray-400 ${
+            className={`w-full pl-3 pr-8 py-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all placeholder-gray-400 ${
               volume < minimumVolume
                 ? semanticColors.danger.inputBorder
                 : volume > 100
                   ? semanticColors.warning.borderLight
-                  : 'border-gray-300'
+                  : 'border-border-strong'
             }`}
             placeholder="0.0"
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-400 pointer-events-none">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-text-disabled pointer-events-none">
             mL
           </span>
         </div>
@@ -143,7 +143,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Type */}
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">
+        <label className="block text-xs font-medium text-text-muted mb-1">
           Container Type <span className={semanticColors.danger.requiredIndicator}>*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -161,7 +161,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                       ? showWarning
                         ? `${semanticColors.warning.backgroundLight} ${semanticColors.warning.border} ring-1 ring-yellow-200`
                         : `${brandColors.primary.backgroundLight} ${brandColors.primary.border} ring-1 ring-sky-200`
-                      : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      : 'bg-surface border-border hover:border-border-strong hover:bg-app-bg'
                   }
                 `}
                 onClick={() => setSelectedContainerType(option.value as ContainerType)}
@@ -172,16 +172,16 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   name="container-type"
                   checked={isSelected}
                   onChange={() => setSelectedContainerType(option.value as ContainerType)}
-                  className={`h-3.5 w-3.5 border-gray-300 ${showWarning ? `${semanticColors.warning.icon} ${semanticColors.warning.focusRing}` : `${brandColors.primary.icon} ${brandColors.primary.focusRing}`}`}
+                  className={`h-3.5 w-3.5 border-border-strong ${showWarning ? `${semanticColors.warning.icon} ${semanticColors.warning.focusRing}` : `${brandColors.primary.icon} ${brandColors.primary.focusRing}`}`}
                 />
                 <span
-                  className={`flex-1 text-xs font-medium ${isSelected ? (showWarning ? semanticColors.warning.textOnLight : brandColors.primary.textOnLight) : 'text-gray-900'}`}
+                  className={`flex-1 text-xs font-medium ${isSelected ? (showWarning ? semanticColors.warning.textOnLight : brandColors.primary.textOnLight) : 'text-text-primary'}`}
                 >
                   {option.name}
                 </span>
                 <Icon
                   name={getContainerIcon(option.value)}
-                  className={`w-5 h-5 ${isSelected ? (showWarning ? semanticColors.warning.icon : brandColors.primary.icon) : 'text-gray-400'}`}
+                  className={`w-5 h-5 ${isSelected ? (showWarning ? semanticColors.warning.icon : brandColors.primary.icon) : 'text-text-disabled'}`}
                 />
               </div>
             );
@@ -199,7 +199,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Color */}
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">
+        <label className="block text-xs font-medium text-text-muted mb-1">
           Container Color <span className={semanticColors.danger.requiredIndicator}>*</span>
         </label>
         <div className="flex gap-3">
@@ -240,13 +240,13 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Notes</label>
+        <label className="block text-xs font-medium text-text-muted mb-1">Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."
           value={notes}
           onChange={e => setNotes(e.target.value)}
-          className="w-full px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
         />
       </div>
     </PopoverForm>

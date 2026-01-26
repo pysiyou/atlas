@@ -70,9 +70,9 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
       sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0);
     return (
       <ModalFooter
-        statusIcon={<Icon name={getSampleStatusIcon('pending')} className="w-4 h-4 text-gray-400" />}
+        statusIcon={<Icon name={getSampleStatusIcon('pending')} className="w-4 h-4 text-text-disabled" />}
         statusMessage="Sample pending collection"
-        statusClassName="text-gray-500"
+        statusClassName="text-text-muted"
       >
         <CollectionPopover
           requirement={pendingSampleDisplay.requirement!}
@@ -100,13 +100,13 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
 
     return (
       <ModalFooter
-        statusIcon={<Icon name={getSampleStatusIcon('collected')} className="w-4 h-4 text-gray-400" />}
+        statusIcon={<Icon name={getSampleStatusIcon('collected')} className="w-4 h-4 text-text-disabled" />}
         statusMessage={
           hasValidatedTests
             ? `Cannot reject - ${validatedCount} test${validatedCount > 1 ? 's' : ''} already validated`
             : 'Sample collected successfully'
         }
-        statusClassName={hasValidatedTests ? semanticColors.warning.valueHigh : 'text-gray-500'}
+        statusClassName={hasValidatedTests ? semanticColors.warning.valueHigh : 'text-text-muted'}
       >
         {/* Print button - functionality handled by parent component */}
         {hasValidatedTests ? (
@@ -141,13 +141,13 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
   if (isRejected) {
     return (
       <ModalFooter
-        statusIcon={<Icon name={getSampleStatusIcon('rejected')} className="w-4 h-4 text-gray-400" />}
+        statusIcon={<Icon name={getSampleStatusIcon('rejected')} className="w-4 h-4 text-text-disabled" />}
         statusMessage={
           rejectedSample?.recollectionRequired
             ? 'Sample rejected - recollection requested'
             : 'Sample rejected'
         }
-        statusClassName="text-gray-500"
+        statusClassName="text-text-muted"
       />
     );
   }

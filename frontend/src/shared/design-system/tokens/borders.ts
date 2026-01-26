@@ -46,12 +46,12 @@ export const width = {
  * Border Colors (references color tokens)
  */
 export const color = {
-  default: 'border-gray-200',
-  medium: 'border-gray-300',
+  default: 'border-border',
+  medium: 'border-border-strong',
   strong: 'border-gray-400',
   
   // Focus states
-  focus: 'border-sky-500',
+  focus: 'border-brand',
   focusTransparent: 'border-transparent',
   
   // Error states
@@ -61,7 +61,7 @@ export const color = {
   success: 'border-green-200',
   danger: 'border-red-200',
   warning: 'border-yellow-200',
-  info: 'border-sky-200',
+  info: 'border-brand-light',
 } as const;
 
 /**
@@ -69,20 +69,20 @@ export const color = {
  */
 export const border = {
   // Default borders
-  default: 'border border-gray-200',
-  medium: 'border border-gray-300',
+  default: 'border border-border',
+  medium: 'border border-border-strong',
   
   // Input borders
-  input: 'border border-gray-300',
-  inputFocus: 'border-2 border-sky-500 border-transparent',
+  input: 'border border-border-strong',
+  inputFocus: 'border-2 border-brand border-transparent',
   inputError: 'border border-red-500',
   
   // Card borders
-  card: 'border border-gray-200',
+  card: 'border border-border',
   
   // Rejection indicator (left border)
   rejection: 'border-l-4 border-l-yellow-400',
   
   // Divider
-  divider: 'border-b border-gray-100',
+  divider: 'border-b border-border-subtle',
 } as const;

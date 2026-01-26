@@ -30,9 +30,9 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
 
   const renderName = (test: Test) => (
     <div className="min-w-0">
-      <div className="font-semibold text-gray-900 truncate">{test.name}</div>
+      <div className="font-semibold text-text-primary truncate">{test.name}</div>
       {test.synonyms && test.synonyms.length > 0 && (
-        <div className="text-xs text-gray-500 truncate">
+        <div className="text-xs text-text-muted truncate">
           {test.synonyms.slice(0, 2).join(', ')}
           {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
         </div>
@@ -48,10 +48,10 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
 
   const renderLoincCodes = (test: Test) => {
     if (!test.loincCodes || test.loincCodes.length === 0) {
-      return <div className="text-xs text-gray-400 truncate">-</div>;
+      return <div className="text-xs text-text-disabled truncate">-</div>;
     }
     return (
-      <div className="text-xs text-gray-700 truncate font-mono">
+      <div className="text-xs text-text-secondary truncate font-mono">
         {test.loincCodes.join(', ')}
       </div>
     );

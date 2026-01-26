@@ -49,7 +49,7 @@ export const modalHeader = {
   container: `${modalPadding.header} ${border.divider} ${neutralColors.white} flex items-center justify-between shrink-0`,
   titleContainer: 'flex items-start gap-3 min-w-0',
   title: `${heading.h2} truncate`,
-  subtitle: `${fontSize.sm} text-gray-600 mt-0.5`,
+  subtitle: `${fontSize.sm} text-text-tertiary mt-0.5`,
   actions: 'flex gap-2 shrink-0',
 } as const;
 

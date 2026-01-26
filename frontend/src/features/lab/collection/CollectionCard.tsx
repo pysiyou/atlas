@@ -100,10 +100,10 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   // Build badges (ordered by importance)
   const badges = (
     <>
-      <h3 className="text-sm font-medium text-gray-900">{patientName}</h3>
+      <h3 className="text-sm font-medium text-text-primary">{patientName}</h3>
       {sample.priority && <Badge variant={sample.priority} size="sm" />}
       <Badge variant={sample.sampleType} size="sm" />
-      <Badge size="sm" variant="default" className="text-gray-500">
+      <Badge size="sm" variant="default" className="text-text-muted">
         {isPending
           ? `${formatVolume(requirement.totalVolume)} required`
           : `${formatVolume(collectedVolume!)} ${isRejected ? 'was collected' : 'collected'}`}
@@ -120,7 +120,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
         </span>
       )}
       {getCollectionRequirements(sample.sampleType).isDerived && (
-        <Badge size="sm" variant="default" className="text-gray-600">
+        <Badge size="sm" variant="default" className="text-text-tertiary">
           {getCollectionRequirements(sample.sampleType).label}
         </Badge>
       )}

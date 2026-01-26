@@ -62,12 +62,12 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
   const { currentUser } = useAuth();
 
   return (
-    <div className="w-90 md:w-96 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex flex-col max-h-[600px]">
+    <div className="w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border overflow-hidden flex flex-col max-h-[600px]">
       {/* Header */}
-      <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-start justify-between">
+      <div className="px-4 py-3 bg-app-bg border-b border-border-subtle flex items-start justify-between">
         <div className="space-y-0.5">
-          <h4 className="font-medium text-gray-900">{title}</h4>
-          {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
+          <h4 className="font-medium text-text-primary">{title}</h4>
+          {subtitle && <p className="text-xs text-text-muted">{subtitle}</p>}
           {headerBadges && <div className="flex items-center gap-2 pt-1">{headerBadges}</div>}
         </div>
         <IconButton onClick={onCancel} variant="close" size="sm" title="Close" />
@@ -77,8 +77,8 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
       <div className="p-4 space-y-4 overflow-y-auto flex-1">{children}</div>
 
       {/* Footer */}
-      <div className="p-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-2 shrink-0">
-        <div className="text-xs text-gray-500 flex items-center gap-1.5">
+      <div className="p-3 bg-app-bg border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
+        <div className="text-xs text-text-muted flex items-center gap-1.5">
           {footerInfo || (
             <>
               <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
@@ -149,30 +149,30 @@ export const RadioCard: React.FC<RadioCardProps> = ({
       ? `${semanticColors.danger.backgroundLight} ${semanticColors.danger.border} ring-1 ring-red-200`
       : `${brandColors.primary.backgroundLight} ${brandColors.primary.border} ring-1 ring-sky-200`;
 
-  const disabledStyles = 'bg-gray-100 border-gray-200 cursor-not-allowed opacity-60';
+  const disabledStyles = 'bg-neutral-100 border-border cursor-not-allowed opacity-60';
 
   const labelColor = disabled
-    ? 'text-gray-400'
+    ? 'text-text-disabled'
     : variant === 'red'
       ? selected
         ? semanticColors.danger.textLightDarker
-        : 'text-gray-900'
+        : 'text-text-primary'
       : selected
         ? brandColors.primary.textOnLight
-        : 'text-gray-900';
+        : 'text-text-primary';
 
   const descColor = disabled
-    ? 'text-gray-400'
+    ? 'text-text-disabled'
     : variant === 'red'
       ? selected
         ? semanticColors.danger.textLightMedium
-        : 'text-gray-500'
+        : 'text-text-muted'
       : selected
         ? brandColors.primary.textLightMedium
-        : 'text-gray-500';
+        : 'text-text-muted';
 
   const radioColor =
-    variant === 'red' ? `${semanticColors.danger.icon} focus:ring-red-500` : `${brandColors.primary.icon} focus:ring-sky-500`;
+    variant === 'red' ? `${semanticColors.danger.icon} focus:ring-red-500` : `${brandColors.primary.icon} focus:ring-brand`;
 
   const handleClick = () => {
     if (!disabled) {
@@ -189,7 +189,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
             ? disabledStyles
             : selected
               ? selectedStyles
-              : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50 cursor-pointer'
+              : 'bg-surface border-border hover:border-border-strong hover:bg-app-bg cursor-pointer'
         }
       `}
       onClick={handleClick}
@@ -202,7 +202,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
           checked={selected}
           onChange={handleClick}
           disabled={disabled}
-          className={`h-3.5 w-3.5 border-gray-300 ${radioColor} ${disabled ? 'cursor-not-allowed' : ''}`}
+          className={`h-3.5 w-3.5 border-border-strong ${radioColor} ${disabled ? 'cursor-not-allowed' : ''}`}
         />
       </div>
       <div className="ml-2.5">
@@ -242,7 +242,7 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
       ${
         checked
           ? `${brandColors.primary.backgroundLight} ${brandColors.primary.border} ring-1 ring-sky-200`
-          : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+          : 'bg-surface border-border hover:border-border-strong hover:bg-app-bg'
       }
     `}
     onClick={onChange}
@@ -252,14 +252,14 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className={`h-3.5 w-3.5 ${brandColors.primary.icon} border-gray-300 focus:ring-sky-500 rounded`}
+        className={`h-3.5 w-3.5 ${brandColors.primary.icon} border-border-strong focus:ring-brand rounded`}
       />
     </div>
     <div className="ml-2.5">
-      <span className={`block text-xs font-medium ${checked ? brandColors.primary.textOnLight : 'text-gray-900'}`}>
+      <span className={`block text-xs font-medium ${checked ? brandColors.primary.textOnLight : 'text-text-primary'}`}>
         {label}
       </span>
-      <span className={`block text-xxs mt-0.5 ${checked ? brandColors.primary.textLightMedium : 'text-gray-500'}`}>
+      <span className={`block text-xxs mt-0.5 ${checked ? brandColors.primary.textLightMedium : 'text-text-muted'}`}>
         {description}
       </span>
     </div>

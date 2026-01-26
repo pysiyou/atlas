@@ -2,6 +2,80 @@
 
 @theme {
   --text-xxs: 10px;
+
+  /* Brand Colors */
+  --color-brand: var(--brand);
+  --color-brand-light: var(--brand-light);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-text: var(--brand-text);
+  --color-accent: var(--accent);
+
+  /* Semantic Colors */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+
+  /* Neutrals */
+  --color-neutral-950: var(--neutral-950);
+  --color-neutral-900: var(--neutral-900);
+  --color-neutral-850: var(--neutral-850);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral: var(--neutral);
+
+  /* Surfaces */
+  --color-surface: var(--surface);
+  --color-app-bg: var(--app-background);
+  --color-surface-card: var(--surface-card);
+  --color-surface-hover: var(--surface-hover);
+
+  /* Text */
+  --color-text-primary: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  --color-text-disabled: var(--text-disabled);
+  --color-text-inverse: var(--text-inverse);
+
+  /* Borders */
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  /* States */
+  --color-indicator-active: var(--indicator-active);
+
+  /* Shadows */
+  --shadow-1: var(--shadow-1);
+  --shadow-2: var(--shadow-2);
+  --shadow-3: var(--shadow-3);
+  --shadow-glow: var(--shadow-glow);
+
+  /* Auth Theme */
+  --color-auth-bg: var(--auth-bg);
+  --color-auth-bg-secondary: var(--auth-bg-secondary);
+  --color-auth-bg-tertiary: var(--auth-bg-tertiary);
+  --color-auth-bg-hover: var(--auth-bg-hover);
+  --color-auth-accent: var(--auth-accent);
+  --color-auth-accent-hover: var(--auth-accent-hover);
+  --color-auth-accent-medium: var(--auth-accent-medium);
+  --color-auth-accent-light: var(--auth-accent-light);
+  --color-auth-text-primary: var(--auth-text-primary);
+  --color-auth-text-secondary: var(--auth-text-secondary);
+  --color-auth-text-muted: var(--auth-text-muted);
+  --color-auth-text-light: var(--auth-text-light);
+  --color-auth-border: var(--auth-border);
+  --color-auth-border-light: var(--auth-border-light);
+  --color-auth-border-hover: var(--auth-border-hover);
+  --color-auth-border-focus: var(--auth-border-focus);
 }
 
 body {

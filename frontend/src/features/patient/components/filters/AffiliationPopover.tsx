@@ -21,7 +21,7 @@ export const AffiliationPopover: React.FC<AffiliationPopoverProps> = ({ affiliat
     <Popover trigger={trigger} placement="bottom-start" offsetValue={8}>
       {() => (
         <div className="p-4 w-full max-w-xs">
-          <h3 className="text-sm font-medium text-gray-900 mb-3 border-b border-gray-100 pb-2">
+          <h3 className="text-sm font-medium text-text-primary mb-3 border-b border-border-subtle pb-2">
             Affiliation Details
           </h3>
           <AffiliationInfo affiliation={affiliation} />

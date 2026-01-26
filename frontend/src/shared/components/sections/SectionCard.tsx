@@ -75,7 +75,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
           {collapsible && (
             <Icon
               name={isExpanded ? ICONS.actions.chevronUp : ICONS.actions.chevronDown}
-              className="w-4 h-4 text-gray-400"
+              className="w-4 h-4 text-text-disabled"
             />
           )}
         </div>

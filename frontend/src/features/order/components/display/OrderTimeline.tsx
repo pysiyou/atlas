@@ -100,7 +100,7 @@ const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
   if (!showDots) {
     // For many tests, show count instead of dots
     return (
-      <span className="ml-2 text-xs text-gray-500 font-medium">
+      <span className="ml-2 text-xs text-text-muted font-medium">
         {completed}/{total}
       </span>
     );
@@ -243,10 +243,10 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
 
         // Determine label color based on state
         const getLabelColor = () => {
-          if (progress.isFullyComplete) return 'text-gray-900';
-          if (blocked && step.status !== 'paid') return 'text-gray-400';
-          if (progress.isStarted) return 'text-gray-900';
-          return 'text-gray-400';
+          if (progress.isFullyComplete) return 'text-text-primary';
+          if (blocked && step.status !== 'paid') return 'text-text-disabled';
+          if (progress.isStarted) return 'text-text-primary';
+          return 'text-text-disabled';
         };
 
         // Determine status message color
@@ -285,7 +285,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
                   <p className={`text-xs mt-1 ${getStatusColor()}`}>{statusMessage}</p>
                 )}
                 {progress.isFullyComplete && completionInfo.completedAt && (
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-text-disabled mt-1">
                     {formatTimestamp(completionInfo.completedAt)}
                   </p>
                 )}

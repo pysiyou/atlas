@@ -1,0 +1,169 @@
+:root,
+[data-theme="studio-light"] {
+  /* Brand Colors - Sky Based */
+  --brand: #0284c7;
+  /* sky-600 */
+  --brand-light: #e0f2fe;
+  /* sky-100 */
+  --brand-hover: #0369a1;
+  /* sky-700 */
+  --brand-text: #075985;
+  /* sky-800 */
+  --accent: #38bdf8;
+  /* sky-400 */
+
+  /* Semantic Colors */
+  --success: #16a34a;
+  /* green-600 */
+  --warning: #eab308;
+  /* yellow-500 */
+  --danger: #dc2626;
+  /* red-600 */
+  --info: #0284c7;
+  /* sky-600 */
+
+  /* Neutral Scale (Gray) */
+  --neutral-950: #030712;
+  /* gray-950 */
+  --neutral-900: #111827;
+  /* gray-900 */
+  --neutral-850: #1f2937;
+  /* gray-800 */
+  --neutral-800: #374151;
+  /* gray-700 */
+  --neutral-700: #4b5563;
+  /* gray-600 */
+  --neutral-600: #6b7280;
+  /* gray-500 */
+  --neutral-500: #6b7280;
+  /* duplicate for mapping */
+  --neutral-400: #9ca3af;
+  /* gray-400 */
+  --neutral-300: #d1d5db;
+  /* gray-300 */
+  --neutral-200: #e5e7eb;
+  /* gray-200 */
+  --neutral-100: #f3f4f6;
+  /* gray-100 */
+  --neutral-50: #f9fafb;
+  /* gray-50 */
+  --neutral: #ffffff;
+  /* white */
+
+  /* Surfaces */
+  --app-background: var(--neutral-50);
+  --surface: var(--neutral);
+  --surface-elev: var(--neutral);
+  --surface-card: var(--neutral);
+  --surface-muted: var(--neutral-50);
+  --surface-contrast: var(--neutral-900);
+  --surface-accent: var(--brand);
+  --surface-button: var(--neutral-100);
+  --surface-hover: var(--neutral-50);
+  --surface-item-hover: var(--neutral-50);
+  --surface-selected: var(--brand-light);
+  --overlay: rgba(0, 0, 0, 0.5);
+
+  /* Text */
+  --text: var(--neutral-900);
+  /* gray-900 */
+  --text-secondary: var(--neutral-700);
+  /* gray-700 */
+  --text-tertiary: var(--neutral-600);
+  /* gray-600 */
+  --text-muted: var(--neutral-400);
+  /* gray-400 */
+  --text-disabled: var(--neutral-300);
+  /* gray-300 */
+  --text-accent: var(--brand);
+  --text-inverse: var(--neutral);
+  --placeholder: var(--neutral-400);
+
+  /* Borders */
+  --border: var(--neutral-200);
+  /* gray-200 */
+  --border-subtle: var(--neutral-100);
+  --border-strong: var(--neutral-300);
+  --border-hover: var(--neutral-300);
+  --border-active: var(--neutral-400);
+  --border-focus: var(--brand);
+  --border-error: var(--danger);
+  --ring-focus: var(--brand);
+
+  /* States */
+  --state-hover-overlay: rgba(0, 0, 0, 0.05);
+  --state-active-overlay: rgba(0, 0, 0, 0.1);
+  --state-focus-width: 2px;
+  --state-focus-offset: 0px;
+  --state-disabled-opacity: 0.5;
+
+  /* Indicators */
+  --indicator-active: var(--brand);
+  --indicator-inactive: var(--neutral-400);
+
+  /* Shadows */
+  --shadow-1: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-2: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-3: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 15px var(--brand);
+
+  /* Tones (Backwards compatibility/Mapping) */
+  --tone-neutral-bg: var(--neutral-200);
+  --tone-neutral-text: var(--neutral-900);
+  --tone-neutral-border: var(--border);
+
+  --tone-info-bg: var(--info);
+  --tone-info-text: var(--neutral);
+  --tone-info-border: var(--info);
+
+  --tone-success-bg: var(--success);
+  --tone-success-text: var(--neutral);
+  --tone-success-border: var(--success);
+
+  --tone-warning-bg: var(--warning);
+  --tone-warning-text: var(--neutral);
+  --tone-warning-border: var(--warning);
+
+  --tone-danger-bg: var(--danger);
+  --tone-danger-text: var(--neutral);
+  --tone-danger-border: var(--danger);
+
+  --tone-accent-bg: var(--brand);
+  --tone-accent-text: var(--neutral);
+  --tone-accent-border: var(--brand);
+
+  /* Auth Theme (Dark by default) */
+  --auth-bg: #1a1f2e;
+  --auth-bg-secondary: #232938;
+  --auth-bg-tertiary: #1e242f;
+  --auth-bg-hover: #283040;
+
+  --auth-accent: #3d5a66;
+  --auth-accent-hover: #4a6b78;
+  --auth-accent-medium: #4a6670;
+  --auth-accent-light: #7a9ba8;
+
+  --auth-text-primary: #e8eaed;
+  --auth-text-secondary: #b0b8c8;
+  --auth-text-muted: #6b7280;
+  --auth-text-light: #7a9ba8;
+
+  --auth-border: #2d3548;
+  --auth-border-light: #3a4455;
+  --auth-border-hover: #3d4760;
+  --auth-border-focus: #4a6670;
+}
+
+/* Base Transitions */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* RSuite Overrides to match theme */
+.rs-nav-item::after {
+  background-color: var(--indicator-active) !important;
+}
+
+.rs-nav-item-active::after {
+  background-color: var(--indicator-active) !important;
+}

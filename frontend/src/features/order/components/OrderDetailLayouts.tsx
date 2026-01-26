@@ -45,7 +45,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6">
       <SectionContainer
         title="Order Information"
-        className="shrink-0 bg-white"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
       >
         <OrderInfoSection order={order} layout="grid" />
@@ -53,7 +53,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Patient Information"
-        className="shrink-0 bg-white"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
         headerRight={
           patient && (
@@ -66,7 +66,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Order Progress"
-        className="shrink-0 bg-white"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible p-0"
         headerClassName="!py-1.5"
         headerRight={<OrderCircularProgress order={order} />}
@@ -93,7 +93,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Billing Summary"
-        className="shrink-0 bg-white"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
         headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
       >
@@ -121,7 +121,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
     <div className="flex-1 grid grid-cols-2 grid-rows-3 gap-4 min-h-0 h-full">
       <SectionContainer
         title="Order Information"
-        className="h-full flex flex-col min-h-0 bg-white"
+        className="h-full flex flex-col min-h-0 bg-surface"
         contentClassName="flex-1 min-h-0 overflow-y-auto"
       >
         <OrderInfoSection order={order} layout="column" />
@@ -129,7 +129,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Patient Information"
-        className="h-full flex flex-col min-h-0 bg-white"
+        className="h-full flex flex-col min-h-0 bg-surface"
         contentClassName="flex-1 min-h-0 overflow-y-auto"
         headerClassName="!py-1.5"
         headerRight={
@@ -143,7 +143,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Order Progress"
-        className="h-full flex flex-col min-h-0 bg-white"
+        className="h-full flex flex-col min-h-0 bg-surface"
         contentClassName="flex-1 min-h-0 overflow-y-auto p-0"
         headerClassName="!py-1.5"
         headerRight={<OrderCircularProgress order={order} />}
@@ -153,7 +153,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Billing Summary"
-        className="h-full flex flex-col min-h-0 bg-white"
+        className="h-full flex flex-col min-h-0 bg-surface"
         contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
         headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
       >
@@ -166,7 +166,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
             ? `Tests (${activeTests.length} active)`
             : `Tests (${order.tests.length})`
         }
-        className="h-full flex flex-col min-h-0 bg-white col-span-2"
+        className="h-full flex flex-col min-h-0 bg-surface col-span-2"
         contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
       >
         <TestsTable

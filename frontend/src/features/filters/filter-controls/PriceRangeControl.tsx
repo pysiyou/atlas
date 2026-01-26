@@ -185,7 +185,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
 
           <div className="relative h-6 flex items-center select-none touch-none" ref={sliderRef}>
             {/* Track Background */}
-            <div className="absolute w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+            <div className="absolute w-full h-1.5 bg-neutral-200 rounded-full overflow-hidden">
               {/* Active Range */}
               <div
                 className={`absolute h-full ${brandColors.primary.backgroundMedium}`}
@@ -198,14 +198,14 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
 
             {/* Min Handle */}
             <div
-              className={`absolute w-5 h-5 bg-white border-2 ${brandColors.primary.borderMedium} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
+              className={`absolute w-5 h-5 bg-surface border-2 ${brandColors.primary.borderMedium} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
               style={{ left: `calc(${getPercentage(localValue[0])}% - 10px)` }}
               onMouseDown={onMouseDown('min')}
             />
 
             {/* Max Handle */}
             <div
-              className={`absolute w-5 h-5 bg-white border-2 ${brandColors.primary.borderMedium} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
+              className={`absolute w-5 h-5 bg-surface border-2 ${brandColors.primary.borderMedium} rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 ${brandColors.primary.ring30}`}
               style={{ left: `calc(${getPercentage(localValue[1])}% - 10px)` }}
               onMouseDown={onMouseDown('max')}
             />

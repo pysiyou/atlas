@@ -24,8 +24,8 @@ export const tabsBase = {
 export const tabButtonUnderline = {
   base: 'whitespace-nowrap flex items-center justify-center transition-all duration-200 font-medium text-xs cursor-pointer',
   padding: `${padding.horizontal.md} ${padding.vertical.sm}`,
-  active: 'text-sky-600', // Uses brandColors.primary.icon equivalent
-  inactive: 'text-gray-500 hover:text-gray-700', // Uses neutralColors.text.muted and hover
+  active: 'text-brand', // Uses brandColors.primary.icon equivalent
+  inactive: 'text-text-muted hover:text-text-secondary', // Uses neutralColors.text.muted and hover
 } as const;
 
 /**
@@ -34,8 +34,8 @@ export const tabButtonUnderline = {
 export const tabButtonPills = {
   base: 'whitespace-nowrap flex items-center justify-center transition-all duration-200 font-medium text-xs cursor-pointer',
   padding: `${padding.horizontal.md} ${padding.vertical.xs} ${radius.md}`,
-  active: `${brandColors.primary.backgroundLight} text-sky-700`, // bg-sky-100 text-sky-700
-  inactive: 'bg-transparent text-gray-600 hover:bg-gray-100', // Uses neutralColors
+  active: `${brandColors.primary.backgroundLight} text-brand-hover`, // bg-brand-light text-brand-hover
+  inactive: 'bg-transparent text-text-tertiary hover:bg-neutral-100', // Uses neutralColors
 } as const;
 
 /**
@@ -43,7 +43,7 @@ export const tabButtonPills = {
  */
 export const tabIndicator = {
   base: 'absolute bottom-0 left-0 h-[2px] rounded-full pointer-events-none z-10',
-  color: `${brandColors.primary.background}`, // bg-sky-600
+  color: `${brandColors.primary.background}`, // bg-brand
   transition: 'left 320ms cubic-bezier(0.32, 0.72, 0, 1), width 320ms cubic-bezier(0.32, 0.72, 0, 1)',
 } as const;
 
@@ -53,12 +53,12 @@ export const tabIndicator = {
 export const tabCountBadge = {
   base: `ml-2 ${fontSize.xs} ${padding.vertical.xs} ${padding.horizontal.sm} ${radius.full}`,
   underline: {
-    active: `${brandColors.primary.backgroundLight} ${brandColors.primary.icon}`, // bg-sky-100 text-sky-600
-    inactive: 'bg-gray-100 text-gray-500', // Uses neutralColors
+    active: `${brandColors.primary.backgroundLight} ${brandColors.primary.icon}`, // bg-brand-light text-brand
+    inactive: 'bg-neutral-100 text-text-muted', // Uses neutralColors
   },
   pills: {
-    active: 'bg-sky-200 text-sky-800', // Uses brandColors.primary variants
-    inactive: 'bg-gray-100 text-gray-500', // Uses neutralColors
+    active: 'bg-brand-light text-brand-text', // Uses brandColors.primary variants
+    inactive: 'bg-neutral-100 text-text-muted', // Uses neutralColors
   },
 } as const;
 

@@ -53,16 +53,16 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
   );
 
   return (
-    <div className="rounded border border-gray-200 overflow-hidden">
-      <div className="px-3 py-2.5 border-b border-dashed border-gray-300">
+    <div className="rounded border border-border overflow-hidden">
+      <div className="px-3 py-2.5 border-b border-dashed border-border-strong">
         <div className="flex justify-between items-center">
-          <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+          <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
             Order <span className="font-mono">{displayId.order(order.orderId)}</span>
           </span>
           <Badge variant={order.paymentStatus} size="xs" />
         </div>
         {order.patientName && (
-          <p className="text-[11px] text-gray-500 mt-0.5 truncate">{order.patientName}</p>
+          <p className="text-[11px] text-text-muted mt-0.5 truncate">{order.patientName}</p>
         )}
       </div>
       <div className="px-3 py-2 max-h-32 overflow-y-auto">
@@ -74,27 +74,27 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
                 className="flex justify-between gap-2 text-xs items-center"
               >
                 <span className="flex items-center gap-2 min-w-0 flex-1">
-                  <span className="w-1 h-1 rounded-full bg-gray-400 shrink-0" />
-                  <span className="text-gray-700 truncate">
+                  <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
+                  <span className="text-text-secondary truncate">
                     {test.testName || test.testCode || 'Test'}
                     {test.testCode && test.testName !== test.testCode && (
-                      <span className="text-gray-500 ml-1">({test.testCode})</span>
+                      <span className="text-text-muted ml-1">({test.testCode})</span>
                     )}
                   </span>
                 </span>
-                <span className="font-medium text-gray-800 tabular-nums shrink-0">
+                <span className="font-medium text-text-primary tabular-nums shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-xs text-gray-500 italic">No items</p>
+          <p className="text-xs text-text-muted italic">No items</p>
         )}
       </div>
-      <div className="border-t border-dashed border-gray-300 mx-3" />
+      <div className="border-t border-dashed border-border-strong mx-3" />
       <div className="px-3 py-2.5 flex justify-between items-center">
-        <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+        <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
           Total
         </span>
         <span className={`text-sm font-bold ${brandColors.primary.iconLight} tabular-nums`}>
@@ -205,7 +205,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Payment Method Selection */}
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-2">
+        <label className="block text-xs font-medium text-text-muted mb-2">
           Payment Method <span className={semanticColors.danger.requiredIndicator}>*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -220,20 +220,20 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                   relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                   ${
                     isSelected
-                      ? `bg-white ${brandColors.primary.borderMedium} border-2`
-                      : 'bg-white border-gray-200 hover:border-gray-300'
+                      ? `bg-surface ${brandColors.primary.borderMedium} border-2`
+                      : 'bg-surface border-border hover:border-border-strong'
                   }
                 `}
               >
                 {/* Brand icon on the left */}
                 <Icon
                   name={method.icon as IconName}
-                  className={`w-7 h-7 shrink-0 ${isSelected ? brandColors.primary.icon : 'text-gray-400'}`}
+                  className={`w-7 h-7 shrink-0 ${isSelected ? brandColors.primary.icon : 'text-text-disabled'}`}
                 />
                 {/* Brand label */}
                 <span
                   className={`flex-1 text-xs font-medium text-left ${
-                    isSelected ? 'text-gray-900' : 'text-gray-700'
+                    isSelected ? 'text-text-primary' : 'text-text-secondary'
                   }`}
                 >
                   {method.label}
@@ -242,12 +242,12 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                 <div
                   className={`
                     absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                    ${isSelected ? semanticColors.success.backgroundMedium : 'bg-transparent border-2 border-gray-300'}
+                    ${isSelected ? semanticColors.success.backgroundMedium : 'bg-transparent border-2 border-border-strong'}
                   `}
                 >
                   <Icon
                     name={ICONS.actions.check}
-                    className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-gray-300'}`}
+                    className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-text-disabled'}`}
                   />
                 </div>
               </button>
@@ -258,13 +258,13 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Notes</label>
+        <label className="block text-xs font-medium text-text-muted mb-1">Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."
           value={notes}
           onChange={e => setNotes(e.target.value)}
-          className="w-full px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
         />
       </div>
 

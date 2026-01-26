@@ -22,10 +22,10 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
   return (
     <div
       onClick={onClick}
-      className="bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow flex flex-col h-full"
+      className="bg-surface border border-border rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow flex flex-col h-full"
     >
       {/* Header: Avatar (top left) + Total Price (top right) */}
-      <div className="flex justify-between items-start mb-3 pb-3 border-b border-gray-100">
+      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-subtle">
         {/* Avatar: Patient name + Order ID - positioned at top left */}
         <Avatar
           primaryText={order.patientName || 'N/A'}
@@ -45,21 +45,21 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
             {activeTests.slice(0, 2).map((test, index) => (
               <div
                 key={test.testCode || index}
-                className="flex items-center justify-between text-xs text-gray-700"
+                className="flex items-center justify-between text-xs text-text-secondary"
               >
                 <div className="flex items-center flex-1 min-w-0">
-                  <span className="w-1 h-1 rounded-full bg-gray-400 mr-2 flex-shrink-0" />
+                  <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 flex-shrink-0" />
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
-                  <span className="text-gray-500 truncate">{test.testCode}</span>
+                  <span className="text-text-muted truncate">{test.testCode}</span>
                 </div>
-                <span className="font-medium text-gray-500 ml-2 flex-shrink-0">
+                <span className="font-medium text-text-muted ml-2 flex-shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>
             ))}
             {/* Third line: Show remaining tests count if more than 2 */}
             {activeTests.length > 2 && (
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-text-muted">
                 +{activeTests.length - 2} more test{activeTests.length - 2 !== 1 ? 's' : ''}
               </div>
             )}
@@ -70,7 +70,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
       {/* Bottom section: Order date (left) + Payment status + Order status badges (right) */}
       <div className="flex justify-between items-center mt-auto pt-3">
         {/* Order date on bottom left */}
-        <div className="text-xs text-gray-500">{formatDate(order.orderDate)}</div>
+        <div className="text-xs text-text-muted">{formatDate(order.orderDate)}</div>
         {/* Payment status and Order status badges on bottom right */}
         <div className="flex items-center gap-2">
           {order.paymentStatus && <Badge variant={order.paymentStatus} size="xs" />}

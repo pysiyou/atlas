@@ -39,24 +39,24 @@ export const SPACING = {
  */
 export const TYPOGRAPHY = {
   heading: {
-    h1: 'text-2xl font-bold text-gray-900',
-    h2: 'text-xl font-semibold text-gray-900',
-    h3: 'text-lg font-medium text-gray-900',
-    h4: 'text-base font-medium text-gray-900',
+    h1: 'text-2xl font-bold text-text-primary',
+    h2: 'text-xl font-semibold text-text-primary',
+    h3: 'text-lg font-medium text-text-primary',
+    h4: 'text-base font-medium text-text-primary',
   },
   body: {
-    default: 'text-sm text-gray-700',
-    small: 'text-xs text-gray-600',
-    metadata: 'text-xs text-gray-500',
-    muted: 'text-sm text-gray-500',
+    default: 'text-sm text-text-secondary',
+    small: 'text-xs text-text-tertiary',
+    metadata: 'text-xs text-text-muted',
+    muted: 'text-sm text-text-muted',
   },
   label: {
-    default: 'text-xs font-medium text-gray-500',
-    required: 'text-xs font-medium text-gray-500',
-    uppercase: 'text-xs font-medium text-gray-500 uppercase tracking-wide',
+    default: 'text-xs font-medium text-text-muted',
+    required: 'text-xs font-medium text-text-muted',
+    uppercase: 'text-xs font-medium text-text-muted uppercase tracking-wide',
   },
   code: {
-    inline: 'font-mono text-xs text-sky-600',
+    inline: 'font-mono text-xs text-brand',
     block: 'font-mono text-sm',
   },
 } as const;
@@ -72,17 +72,17 @@ export const COLORS = {
     success: 'text-green-600 bg-green-50 border-green-200',
     warning: 'text-yellow-600 bg-yellow-50 border-yellow-200',
     error: 'text-red-600 bg-red-50 border-red-200',
-    info: 'text-sky-600 bg-sky-50 border-sky-200',
-    neutral: 'text-gray-600 bg-gray-50 border-gray-200',
+    info: 'text-brand bg-brand-light/50 border-brand-light',
+    neutral: 'text-text-tertiary bg-app-bg border-border',
   },
   priority: {
     urgent: 'text-red-600 bg-red-50',
     stat: `${semanticColors.warning.valueHigh} ${semanticColors.warning.backgroundLight}`,
-    routine: 'text-gray-600 bg-gray-50',
+    routine: 'text-text-tertiary bg-app-bg',
   },
   interactive: {
-    primary: 'text-sky-600 hover:text-sky-700',
-    secondary: 'text-gray-600 hover:text-gray-700',
+    primary: 'text-brand hover:text-brand-hover',
+    secondary: 'text-text-tertiary hover:text-text-secondary',
     danger: 'text-red-600 hover:text-red-700',
   },
 } as const;

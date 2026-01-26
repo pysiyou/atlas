@@ -55,7 +55,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
               'border',
               isActive
                 ? `${brandColors.primary.backgroundLightBg} ${brandColors.primary.border} ${brandColors.primary.textLight}`
-                : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
+                : 'bg-surface border-border-strong text-text-secondary hover:bg-app-bg hover:border-gray-400'
             )}
           >
             {preset.icon && <Icon name={preset.icon as IconName} className="w-3 h-3" />}

@@ -125,7 +125,7 @@ export const TagInput: React.FC<TagInputProps> = ({
       <div
         className={cn(
           `w-full ${inputPadding.default} border rounded`,
-          'bg-white transition-colors',
+          'bg-surface transition-colors',
           inputFocus.default.replace('focus:', 'focus-within:'),
           error ? inputBorder.error : inputBorder.default,
           'flex flex-wrap gap-2 items-center',
@@ -148,7 +148,7 @@ export const TagInput: React.FC<TagInputProps> = ({
               className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-black/10 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-gray-400"
               aria-label={`Remove ${tag}`}
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-gray-500 hover:text-gray-700" />
+              <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-muted hover:text-text-secondary" />
             </button>
           </Badge>
         ))}
@@ -161,7 +161,7 @@ export const TagInput: React.FC<TagInputProps> = ({
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={tags.length === 0 ? placeholder : ''}
-          className="flex-1 min-w-[120px] outline-none text-xs text-gray-900 placeholder:text-gray-300 bg-transparent leading-[1.5]"
+          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-disabled bg-transparent leading-[1.5]"
           disabled={maxTags !== undefined && tags.length >= maxTags}
         />
       </div>

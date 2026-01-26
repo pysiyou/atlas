@@ -38,7 +38,7 @@ export const labCard = {
     separator: `${neutralColors.text.disabled}`,
   },
   contentSection: {
-    base: `bg-gray-50 rounded p-3`,
+    base: `bg-app-bg rounded p-3`,
     title: `text-xs font-medium ${neutralColors.text.secondary} mb-2`,
   },
   rejectionBorder: stateColors.rejection.borderLeft, // border-l-4 border-l-yellow-400
@@ -105,7 +105,7 @@ export const emptyStateCard = {
  * Used by: ListView component
  */
 export const listViewCard = {
-  container: `flex-1 flex flex-col bg-white rounded ${neutralColors.border.default} overflow-hidden min-h-0`,
+  container: `flex-1 flex flex-col bg-surface rounded ${neutralColors.border.default} overflow-hidden min-h-0`,
   header: {
     title: `text-2xl font-bold ${neutralColors.text.primary}`,
     description: `text-sm ${neutralColors.text.muted} mt-1`,

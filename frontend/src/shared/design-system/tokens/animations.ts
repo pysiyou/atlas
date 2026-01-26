@@ -50,15 +50,15 @@ export const loadingColors = {
   primaryHex: '#10b981',
   secondary: 'text-emerald-600',
   secondaryHex: '#059669',
-  track: 'text-gray-200',
+  track: 'text-neutral-200',
   trackStroke: 'stroke-gray-200',
   progressStroke: 'stroke-emerald-500',
   skeleton: {
-    background: 'bg-gray-200',
+    background: 'bg-neutral-200',
     shimmer: 'bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200',
   },
   spinner: {
-    border: 'border-gray-200',
+    border: 'border-border',
     borderActive: 'border-t-emerald-500',
   },
 } as const;

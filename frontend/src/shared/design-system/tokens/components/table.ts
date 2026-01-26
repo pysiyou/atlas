@@ -12,6 +12,9 @@ import { fontSize } from '../typography';
 /**
  * Table Base Styles
  */
+/**
+ * Table Base Styles
+ */
 export const tableBase = {
   container: `flex flex-col h-full ${neutralColors.white}`,
   containerWithBorder: (embedded: boolean) => `flex flex-col h-full ${neutralColors.white} ${!embedded ? `${radius.md} ${border.default}` : ''}`,
@@ -46,9 +49,9 @@ export const tableVariants = {
  * Table Header Styles
  */
 export const tableHeader = {
-  container: `bg-gray-50 border-b border-gray-200 sticky top-0 z-10`,
+  container: `bg-app-bg border-b border-border sticky top-0 z-10`,
   row: 'flex items-center',
-  cell: (variant: keyof typeof tableVariants) => `${tableVariants[variant].headerPadding} ${tableVariants[variant].textSize} font-semibold text-gray-700`,
+  cell: (variant: keyof typeof tableVariants) => `${tableVariants[variant].headerPadding} ${tableVariants[variant].textSize} font-semibold text-text-secondary`,
 } as const;
 
 /**
@@ -56,8 +59,8 @@ export const tableHeader = {
  */
 export const tableRow = {
   base: `flex items-center ${border.divider} transition-colors`,
-  hover: 'hover:bg-gray-50',
-  striped: 'bg-gray-50',
+  hover: 'hover:bg-surface-hover',
+  striped: 'bg-app-bg',
   clickable: 'cursor-pointer',
 } as const;
 
@@ -65,10 +68,10 @@ export const tableRow = {
  * Table Cell Styles
  */
 export const tableCell = {
-  base: (variant: keyof typeof tableVariants) => `${tableVariants[variant].cellPadding} ${tableVariants[variant].textSize} text-gray-900`,
-  text: 'text-gray-900',
-  secondary: 'text-gray-600',
-  muted: 'text-gray-500',
+  base: (variant: keyof typeof tableVariants) => `${tableVariants[variant].cellPadding} ${tableVariants[variant].textSize} text-text-primary`,
+  text: 'text-text-primary',
+  secondary: 'text-text-secondary',
+  muted: 'text-text-muted',
 } as const;
 
 /**
@@ -76,8 +79,8 @@ export const tableCell = {
  */
 export const tableEmpty = {
   container: 'flex flex-col items-center justify-center py-12 px-4 text-center',
-  icon: 'w-12 h-12 text-gray-400 mb-4',
-  message: 'text-gray-500 text-sm',
+  icon: 'w-12 h-12 text-text-disabled mb-4',
+  message: 'text-text-muted text-sm',
 } as const;
 
 /**

@@ -83,7 +83,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
       subtitle={subtitle}
       size="3xl"
     >
-      <div className="flex flex-col h-full bg-gray-50">
+      <div className="flex flex-col h-full bg-app-bg">
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {/* Header Section with Badges and Context */}
           <SectionContainer hideHeader>
@@ -95,47 +95,47 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 
               {/* Row 2: Patient & Order context */}
               <div className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-3 text-sm text-gray-700 flex-wrap">
-                  <span className="font-semibold text-gray-900">{contextInfo.patientName}</span>
-                  <span className="text-gray-300 select-none">|</span>
-                  <span className="font-medium text-gray-900 text-xs font-mono tracking-wide whitespace-nowrap">
+                <div className="flex items-center gap-3 text-sm text-text-secondary flex-wrap">
+                  <span className="font-semibold text-text-primary">{contextInfo.patientName}</span>
+                  <span className="text-text-disabled select-none">|</span>
+                  <span className="font-medium text-text-primary text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.patientId === 'number'
                       ? displayId.patient(contextInfo.patientId)
                       : contextInfo.patientId}
                   </span>
                   {contextInfo.patientDob && (
                     <>
-                      <span className="text-gray-300 select-none">|</span>
-                      <span className="text-xs text-gray-600 whitespace-nowrap">
+                      <span className="text-text-disabled select-none">|</span>
+                      <span className="text-xs text-text-tertiary whitespace-nowrap">
                         DOB: {formatDate(contextInfo.patientDob)}
                       </span>
                     </>
                   )}
-                  <span className="text-gray-300 select-none">|</span>
-                  <span className="font-medium text-gray-900 text-xs font-mono tracking-wide whitespace-nowrap">
+                  <span className="text-text-disabled select-none">|</span>
+                  <span className="font-medium text-text-primary text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.orderId === 'number'
                       ? displayId.order(contextInfo.orderId)
                       : contextInfo.orderId}
                   </span>
                   {contextInfo.referringPhysician && (
                     <>
-                      <span className="text-gray-300 select-none">|</span>
-                      <span className="text-gray-600 whitespace-nowrap">{contextInfo.referringPhysician}</span>
+                      <span className="text-text-disabled select-none">|</span>
+                      <span className="text-text-tertiary whitespace-nowrap">{contextInfo.referringPhysician}</span>
                     </>
                   )}
                 </div>
 
                 {/* Collection info */}
                 {sampleInfo && sampleInfo.collectedAt && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-text-muted">
                     Sample{' '}
-                    <span className="font-medium text-gray-900 text-sm font-mono tracking-wide">
+                    <span className="font-medium text-text-primary text-sm font-mono tracking-wide">
                       {typeof sampleInfo.sampleId === 'number'
                         ? displayId.sample(sampleInfo.sampleId)
                         : sampleInfo.sampleId}
                     </span>{' '}
                     collected{' '}
-                    <span className="text-gray-700">{formatDate(sampleInfo.collectedAt)}</span>
+                    <span className="text-text-secondary">{formatDate(sampleInfo.collectedAt)}</span>
                     {sampleInfo.collectedBy && (
                       <span> by {getUserName(sampleInfo.collectedBy)}</span>
                     )}
@@ -154,7 +154,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 
         {/* Footer */}
         {footer && (
-          <div className="shrink-0 bg-white border-t border-gray-200 px-6 py-4">{footer}</div>
+          <div className="shrink-0 bg-surface border-t border-border px-6 py-4">{footer}</div>
         )}
       </div>
     </Modal>
@@ -269,7 +269,7 @@ interface ModalFooterProps {
 export const ModalFooter: React.FC<ModalFooterProps> = ({
   statusIcon,
   statusMessage,
-  statusClassName = 'text-gray-600',
+  statusClassName = 'text-text-tertiary',
   children,
 }) => (
   <div className="flex items-center justify-between">

@@ -64,7 +64,7 @@ export const Input: React.FC<InputProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-gray-400" />
+            <Icon name={displayIcon} className="w-4 h-4 text-text-disabled" />
           </div>
         )}
         <input
@@ -131,7 +131,7 @@ export const Textarea: React.FC<TextareaProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute top-2.5 left-3 pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-gray-400" />
+            <Icon name={displayIcon} className="w-4 h-4 text-text-disabled" />
           </div>
         )}
         <textarea
@@ -201,7 +201,7 @@ export const Select: React.FC<SelectProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-gray-400" />
+            <Icon name={displayIcon} className="w-4 h-4 text-text-disabled" />
           </div>
         )}
         <select

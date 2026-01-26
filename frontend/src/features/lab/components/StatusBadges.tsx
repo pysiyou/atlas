@@ -42,7 +42,7 @@ export const ContainerInfo: React.FC<ContainerInfoProps> = ({
     <span className="flex items-center" title={`Container: ${containerType}, Color: ${colorName}`}>
       <Icon
         name={getContainerIcon(containerType)}
-        className={`${iconSize} ${containerColor ? getContainerIconColor(containerColor) : 'text-gray-400'}`}
+        className={`${iconSize} ${containerColor ? getContainerIconColor(containerColor) : 'text-text-disabled'}`}
       />
     </span>
   );
@@ -62,7 +62,7 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
   sampleId,
   collectedAt,
   collectedBy,
-  className = 'text-xs text-gray-500',
+  className = 'text-xs text-text-muted',
 }) => {
   const { getUserName } = useUserLookup();
 
@@ -72,10 +72,10 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
     <span className={className}>
       {sampleId && (
         <>
-          Sample <span className="font-medium text-gray-900">{sampleId}</span>{' '}
+          Sample <span className="font-medium text-text-primary">{sampleId}</span>{' '}
         </>
       )}
-      collected <span className="text-gray-700">{formatDate(collectedAt)}</span>
+      collected <span className="text-text-secondary">{formatDate(collectedAt)}</span>
       {collectedBy && <span> by {getUserName(collectedBy)}</span>}
     </span>
   );
@@ -93,7 +93,7 @@ interface VolumeBadgeProps {
 export const VolumeBadge: React.FC<VolumeBadgeProps> = ({
   volume,
   label = 'mL',
-  className = 'text-gray-500',
+  className = 'text-text-muted',
 }) => (
   <Badge size="sm" variant="default" className={className}>
     {volume.toFixed(1)} {label}
@@ -201,7 +201,7 @@ interface EntryInfoLineProps {
 export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
   enteredAt,
   enteredBy,
-  className = 'text-xs text-gray-500',
+  className = 'text-xs text-text-muted',
 }) => {
   const { getUserName } = useUserLookup();
 
@@ -209,7 +209,7 @@ export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
 
   return (
     <span className={className}>
-      Results entered <span className="text-gray-700">{formatDate(enteredAt)}</span>
+      Results entered <span className="text-text-secondary">{formatDate(enteredAt)}</span>
       {enteredBy && <span> by {getUserName(enteredBy)}</span>}
     </span>
   );

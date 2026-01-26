@@ -51,7 +51,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
     <div className={`relative ${className}`}>
       <Icon
         name={icon}
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-disabled pointer-events-none"
       />
       <input
         type="text"
@@ -63,7 +63,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
       {value && (
         <button
           onClick={handleClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-text-disabled hover:text-text-tertiary transition-colors"
           aria-label="Clear search"
         >
           <Icon name={ICONS.actions.closeCircle} className="w-4 h-4" />

@@ -5,18 +5,16 @@
  * active, disabled, and selected states across all components.
  */
 
-import { brandColors, neutralColors } from './colors';
-
 /**
  * Hover State Tokens
  */
 export const hover = {
-  background: 'hover:bg-gray-50',
-  backgroundStrong: 'hover:bg-gray-100',
-  backgroundPrimary: 'hover:bg-sky-700',
-  text: 'hover:text-gray-900',
-  textPrimary: 'hover:text-sky-700',
-  border: 'hover:border-gray-300',
+  background: 'hover:bg-surface-hover',
+  backgroundStrong: 'hover:bg-neutral-100', // Need semantic var for neutral-100 really, but using direct map for now or surface-button?
+  backgroundPrimary: 'hover:bg-brand-hover',
+  text: 'hover:text-text-primary',
+  textPrimary: 'hover:text-brand-hover',
+  border: 'hover:border-border-strong',
   shadow: 'hover:shadow-md',
 } as const;
 
@@ -25,19 +23,19 @@ export const hover = {
  */
 export const focus = {
   ring: 'focus:ring-2 focus:ring-offset-2',
-  ringPrimary: 'focus:ring-sky-500',
-  ringDanger: 'focus:ring-red-500',
+  ringPrimary: 'focus:ring-brand',
+  ringDanger: 'focus:ring-danger',
   outline: 'focus:outline-none',
-  border: 'focus:border-sky-500',
-  visible: 'focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2',
+  border: 'focus:border-brand',
+  visible: 'focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2',
 } as const;
 
 /**
  * Active State Tokens
  */
 export const active = {
-  background: 'active:bg-gray-200',
-  backgroundPrimary: 'active:bg-sky-800',
+  background: 'active:bg-neutral-200',
+  backgroundPrimary: 'active:bg-brand-text', // darker than hover
   scale: 'active:scale-95',
 } as const;
 
@@ -47,8 +45,8 @@ export const active = {
 export const disabled = {
   opacity: 'disabled:opacity-50',
   cursor: 'disabled:cursor-not-allowed',
-  background: 'disabled:bg-gray-100',
-  text: 'disabled:text-gray-400',
+  background: 'disabled:bg-neutral-100',
+  text: 'disabled:text-text-disabled',
   combined: 'disabled:opacity-50 disabled:cursor-not-allowed',
 } as const;
 
@@ -56,12 +54,12 @@ export const disabled = {
  * Selected State Tokens
  */
 export const selected = {
-  background: 'bg-sky-50',
-  backgroundStrong: 'bg-sky-100',
-  border: 'border-sky-500',
-  borderStrong: 'border-2 border-sky-500',
-  text: 'text-sky-900',
-  ring: 'ring-2 ring-sky-500',
+  background: 'bg-brand-light/50',
+  backgroundStrong: 'bg-brand-light',
+  border: 'border-brand',
+  borderStrong: 'border-2 border-brand',
+  text: 'text-brand-text',
+  ring: 'ring-2 ring-brand',
 } as const;
 
 /**

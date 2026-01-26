@@ -7,10 +7,9 @@
  */
 
 import { brandColors, neutralColors } from '../colors';
-import { fontSize } from '../typography';
 import { radius, border } from '../borders';
 import { padding } from '../spacing';
-import { hover, focus } from '../interactions';
+import { hover } from '../interactions';
 import { transitions } from '../animations';
 import { filterControl } from './filter';
 
@@ -20,7 +19,7 @@ import { filterControl } from './filter';
  */
 export const dropdown = {
   trigger: {
-    base: `flex items-center gap-2 ${padding.horizontal.sm} py-1.5 ${filterControl.height} min-h-[34px] max-h-[34px] bg-white border rounded cursor-pointer ${transitions.colors} w-full overflow-hidden`,
+    base: `flex items-center gap-2 ${padding.horizontal.sm} py-1.5 ${filterControl.height} min-h-[34px] max-h-[34px] bg-surface border rounded cursor-pointer ${transitions.colors} w-full overflow-hidden`,
     default: `border ${neutralColors.border.medium} ${hover.border}`,
     open: `${brandColors.primary.borderMedium} ring-2 ${brandColors.primary.ring20}`,
   },
@@ -47,7 +46,7 @@ export const dropdownContent = {
 export const dropdownItem = {
   base: `group flex items-center ${padding.horizontal.lg} py-2.5 cursor-pointer ${transitions.colors}`,
   hover: `${hover.background}`,
-  selected: `bg-sky-50/30`,
+  selected: `bg-brand-light/30`,
   checkbox: {
     container: 'shrink-0 mr-3',
     unchecked: `w-5 h-5 rounded-md border-2 ${neutralColors.border.medium} group-hover:${neutralColors.border.strong} ${transitions.colors}`,
@@ -55,7 +54,7 @@ export const dropdownItem = {
     radio: {
       unchecked: `w-5 h-5 rounded-full border-2 ${neutralColors.border.medium} group-hover:${neutralColors.border.strong} ${transitions.colors}`,
       checked: `w-5 h-5 rounded-full flex items-center justify-center border-2 ${brandColors.primary.borderMedium} ${brandColors.primary.backgroundMedium}`,
-      inner: 'w-2 h-2 rounded-full bg-white',
+      inner: 'w-2 h-2 rounded-full bg-surface',
     },
     icon: 'w-3.5 h-3.5 text-white',
   },

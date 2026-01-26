@@ -55,7 +55,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
     <>
       {/* Barcode */}
       {(isCollected || isRejected) && sample.sampleId && (
-        <div className="flex items-center justify-center bg-gray-50 rounded p-4 border border-gray-200 mt-2">
+        <div className="flex items-center justify-center bg-app-bg rounded p-4 border border-border mt-2">
           <Barcode
             value={displayId.sample(sample.sampleId)}
             height={40}
@@ -71,7 +71,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
         <CollectionInfoLine
           collectedAt={collectedAt}
           collectedBy={collectedBy}
-          className="text-xs text-gray-500 mt-1"
+          className="text-xs text-text-muted mt-1"
         />
       )}
 
@@ -82,12 +82,12 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
             const testCode = testCodes[i];
             const test = testCode ? getTest(testCode) : undefined;
             return (
-              <li key={testCode || i} className="flex items-center text-xs text-gray-700">
-                <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2" />
+              <li key={testCode || i} className="flex items-center text-xs text-text-secondary">
+                <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mr-2" />
                 <span className="font-medium mr-1">{testName}</span>
-                <span className="text-gray-500 mr-2">{testCode}</span>
+                <span className="text-text-muted mr-2">{testCode}</span>
                 {test?.turnaroundTime && (
-                  <span className="text-gray-400 flex items-center gap-1">
+                  <span className="text-text-disabled flex items-center gap-1">
                     <Icon name={ICONS.dataFields.time} className="w-2.5 h-2.5" />
                     {test.turnaroundTime}h
                   </span>
@@ -127,7 +127,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
       {/* Collection Notes */}
       {collectionNotes && (
         <SectionContainer title="Collection Notes">
-          <div className="text-sm text-gray-900">{collectionNotes}</div>
+          <div className="text-sm text-text-primary">{collectionNotes}</div>
         </SectionContainer>
       )}
 
