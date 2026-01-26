@@ -104,7 +104,7 @@ const SearchInput: React.FC<{
         radius.md,
         hover.background,
         focus.outline,
-        `focus-within:${brandColors.primary.borderMedium}`,
+        'focus-within:border-brand',
         transitions.colors
       )}
     >
@@ -282,10 +282,86 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           title="Filter Payments"
+          subtitle={activeFilterCount > 0 ? `${activeFilterCount} active filter${activeFilterCount > 1 ? 's' : ''}` : 'Refine your search'}
           size="lg"
         >
-          <div className="space-y-4">
-            {renderFilters()}
+          <div className="space-y-6">
+            {/* Search Section */}
+            <div className="space-y-2">
+              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
+                Search
+              </label>
+              <SearchInput
+                value={searchQuery}
+                onChange={onSearchChange}
+                placeholder="Search payments by transaction ID, patient name, or reference..."
+              />
+            </div>
+
+            {/* Date Range Section */}
+            <div className="space-y-2">
+              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
+                Date Range
+              </label>
+              <DateFilter
+                value={dateRange}
+                onChange={onDateRangeChange}
+                placeholder="Filter by date range"
+                className="w-full"
+              />
+            </div>
+
+            {/* Status Section */}
+            <div className="space-y-2">
+              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
+                Payment Status
+              </label>
+              <MultiSelectFilter
+                label="Payment Status"
+                options={statusOptions}
+                selectedIds={statusFilters}
+                onChange={values => onStatusFiltersChange(values as PaymentStatus[])}
+                placeholder="Select payment status"
+                selectAllLabel="All statuses"
+                icon={ICONS.actions.infoCircle}
+                className="w-full"
+              />
+            </div>
+
+            {/* Method Section */}
+            <div className="space-y-2">
+              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
+                Payment Method
+              </label>
+              <MultiSelectFilter
+                label="Payment Method"
+                options={methodOptions}
+                selectedIds={methodFilters}
+                onChange={values => onMethodFiltersChange(values as PaymentMethod[])}
+                placeholder="Select payment method"
+                selectAllLabel="All methods"
+                icon={ICONS.dataFields.wallet}
+                className="w-full"
+              />
+            </div>
+
+            {/* Clear All Button */}
+            {activeFilterCount > 0 && (
+              <div className={cn('pt-4 border-t', neutralColors.border.default)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    onDateRangeChange(null);
+                    onStatusFiltersChange([]);
+                    onMethodFiltersChange([]);
+                  }}
+                  className="w-full"
+                >
+                  Clear All Filters
+                </Button>
+              </div>
+            )}
           </div>
         </Modal>
       </>

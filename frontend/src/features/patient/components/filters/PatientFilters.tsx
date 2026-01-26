@@ -97,7 +97,7 @@ const SearchInput: React.FC<{
         radius.md,
         hover.background,
         focus.outline,
-        `focus-within:${brandColors.primary.borderMedium}`,
+        'focus-within:border-brand',
         transitions.colors
       )}
     >
@@ -277,10 +277,88 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           title="Filter Patients"
+          subtitle={activeFilterCount > 0 ? `${activeFilterCount} active filter${activeFilterCount > 1 ? 's' : ''}` : 'Refine your search'}
           size="lg"
         >
-          <div className="space-y-4">
-            {renderFilters()}
+          <div className="space-y-6">
+            {/* Search Section */}
+            <div className="space-y-2">
+              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
+                Search
+              </label>
+              <SearchInput
+                value={searchQuery}
+                onChange={onSearchChange}
+                placeholder="Search patients by name, ID, phone, or email..."
+              />
+            </div>
+
+            {/* Age Range Section */}
+            <div className="space-y-2">
+              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
+                Age Range
+              </label>
+              <AgeFilter
+                value={ageRange}
+                onChange={onAgeRangeChange}
+                min={AGE_RANGE_MIN}
+                max={AGE_RANGE_MAX}
+                placeholder="Filter by age range"
+                className="w-full"
+              />
+            </div>
+
+            {/* Sex Section */}
+            <div className="space-y-2">
+              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
+                Sex
+              </label>
+              <MultiSelectFilter
+                label="Sex"
+                options={genderOptions}
+                selectedIds={sexFilters}
+                onChange={values => onSexFiltersChange(values as Gender[])}
+                placeholder="Select sex/gender"
+                selectAllLabel="All genders"
+                icon={ICONS.dataFields.userHands}
+                className="w-full"
+              />
+            </div>
+
+            {/* Affiliation Status Section */}
+            <div className="space-y-2">
+              <label className={cn('block text-xs font-semibold', neutralColors.text.secondary)}>
+                Affiliation Status
+              </label>
+              <MultiSelectFilter
+                label="Affiliation Status"
+                options={affiliationStatusOptions}
+                selectedIds={affiliationStatusFilters}
+                onChange={values => onAffiliationStatusFiltersChange(values as AffiliationStatus[])}
+                placeholder="Select affiliation status"
+                selectAllLabel="All statuses"
+                icon={ICONS.actions.infoCircle}
+                className="w-full"
+              />
+            </div>
+
+            {/* Clear All Button */}
+            {activeFilterCount > 0 && (
+              <div className={cn('pt-4 border-t', neutralColors.border.default)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX]);
+                    onSexFiltersChange([]);
+                    onAffiliationStatusFiltersChange([]);
+                  }}
+                  className="w-full"
+                >
+                  Clear All Filters
+                </Button>
+              </div>
+            )}
           </div>
         </Modal>
       </>
