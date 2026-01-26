@@ -1,7 +1,16 @@
 import type { TableBodyProps, ColumnConfig } from './types';
 import { TableCell } from './TableCell';
 import { ROW_HEIGHTS } from './constants';
-import { tableRow } from '@/shared/design-system/tokens/components/table';
+
+/**
+ * Table row styles
+ */
+const tableRow = {
+  base: 'flex items-center border-b border-border transition-colors duration-200',
+  clickable: 'cursor-pointer',
+  hover: 'hover:bg-surface-hover',
+  striped: 'bg-neutral-50',
+};
 
 /**
  * Table Row Component
@@ -26,7 +35,7 @@ export function TableRow<T>({
         return (
           <div
             key={rowKey}
-            className={`${tableRow.base} ${isClickable ? tableRow.clickable + ' ' + tableRow.hover : ''} ${isStriped ? tableRow.striped : ''} ${rowClassName ? rowClassName(item, index) : ''}`}
+            className={`${tableRow.base} ${isClickable ? `${tableRow.clickable} ${tableRow.hover}` : ''} ${isStriped ? tableRow.striped : ''} ${rowClassName ? rowClassName(item, index) : ''}`}
             style={{ height: `${ROW_HEIGHTS[variant]}px` }}
             onClick={() => onRowClick?.(item, index)}
           >

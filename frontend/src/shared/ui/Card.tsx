@@ -4,10 +4,6 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { cardBase } from '@/shared/design-system/tokens/components/card';
-import { padding } from '@/shared/design-system/tokens/spacing';
-import { border } from '@/shared/design-system/tokens/borders';
-import { heading, body } from '@/shared/design-system/tokens/typography';
 
 interface CardProps {
   children: ReactNode;
@@ -24,15 +20,16 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   const paddingClasses = {
     none: '',
-    sm: padding.card.sm,
-    md: padding.card.md,
-    lg: padding.card.lg,
+    sm: 'p-4',
+    md: 'p-6',
+    lg: 'p-8',
   };
 
-  const hoverClass = hover ? cardBase.hover : '';
+  const baseClasses = 'bg-surface rounded-lg border border-border shadow-sm';
+  const hoverClass = hover ? 'hover:shadow-md transition-shadow duration-200 cursor-pointer' : '';
 
   return (
-    <div className={`${cardBase.base} ${paddingClasses[paddingProp]} ${hoverClass} ${className}`}>
+    <div className={`${baseClasses} ${paddingClasses[paddingProp]} ${hoverClass} ${className}`}>
       {children}
     </div>
   );
@@ -49,10 +46,10 @@ interface CardHeaderProps {
 
 export const CardHeader: React.FC<CardHeaderProps> = ({ title, subtitle, action }) => {
   return (
-    <div className={`flex items-start justify-between mb-4 pb-4 ${border.divider}`}>
+    <div className="flex items-start justify-between mb-4 pb-4 border-b border-border">
       <div>
-        <h3 className={`${heading.h3}`}>{title}</h3>
-        {subtitle && <p className={`${body.muted} mt-1`}>{subtitle}</p>}
+        <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
+        {subtitle && <p className="text-sm text-text-muted mt-1">{subtitle}</p>}
       </div>
       {action && <div>{action}</div>}
     </div>

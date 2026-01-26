@@ -14,7 +14,6 @@
 import React, { type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
-import { getButtonVariant, getButtonSize, buttonBase } from '@/shared/design-system/tokens/components/button';
 
 /**
  * Base style variants (no default icon)
@@ -108,27 +107,30 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
 };
 
 /**
+ * Base classes applied to all buttons
+ */
+const BASE_CLASSES = 'inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg';
+
+/**
  * Base style classes for each variant
- * Uses design tokens to ensure consistency with IconButton
  */
 const BASE_STYLES: Record<BaseVariant, string> = {
-  primary: getButtonVariant('primary'),
-  secondary: getButtonVariant('secondary'),
-  danger: getButtonVariant('danger'),
-  success: getButtonVariant('success'),
-  warning: getButtonVariant('warning'),
-  outline: getButtonVariant('outline'),
+  primary: 'bg-brand text-text-inverse hover:opacity-90 focus:ring-brand',
+  secondary: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
+  danger: 'bg-danger text-text-inverse hover:opacity-90 focus:ring-danger',
+  success: 'bg-success text-text-inverse hover:opacity-90 focus:ring-success',
+  warning: 'bg-warning text-text-inverse hover:opacity-90 focus:ring-warning',
+  outline: 'border-2 border-border-strong bg-transparent text-text-secondary hover:bg-surface-hover focus:ring-neutral-500',
 };
 
 /**
  * Size-specific padding and text classes
- * Uses design tokens to ensure consistency with IconButton
  */
 const SIZE_STYLES: Record<ButtonSize, string> = {
-  xs: getButtonSize('xs'),
-  sm: getButtonSize('sm'),
-  md: getButtonSize('md'),
-  lg: getButtonSize('lg'),
+  xs: 'px-2 py-1 text-xs',
+  sm: 'px-3 py-1.5 text-xs',
+  md: 'px-4 py-2 text-sm',
+  lg: 'px-6 py-3 text-base',
 };
 
 /**
@@ -243,8 +245,6 @@ export const Button: React.FC<ButtonProps> = ({
     return null;
   };
 
-  // Base CSS classes - uses design tokens
-  const baseClasses = buttonBase.base;
   const widthClass = fullWidth ? 'w-full' : '';
 
   // Build content based on loading state
@@ -282,7 +282,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
-      className={`${baseClasses} ${buttonBase.rounded} ${BASE_STYLES[baseStyle]} ${SIZE_STYLES[size]} ${widthClass} ${className}`}
+      className={`${BASE_CLASSES} ${BASE_STYLES[baseStyle]} ${SIZE_STYLES[size]} ${widthClass} ${className}`}
       disabled={disabled || isLoading}
       {...props}
     >

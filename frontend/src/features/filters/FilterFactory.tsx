@@ -115,10 +115,11 @@ export const FilterFactory: React.FC<FilterFactoryProps> = ({
         />
       );
 
-    default:
+    default: {
       // TypeScript exhaustiveness check
       const _exhaustive: never = control;
       console.warn('Unknown filter control type:', _exhaustive);
       return null;
+    }
   }
 };

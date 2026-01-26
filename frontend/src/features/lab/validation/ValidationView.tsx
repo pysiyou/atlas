@@ -358,10 +358,6 @@ export const ValidationView: React.FC = () => {
     [comments, handleCommentsChange, handleValidate, openModal, getOrder]
   );
 
-  if (!orders || !testCatalog) {
-    return <div>Loading...</div>;
-  }
-
   // Prepare items for bulk validation toolbar (visible/filtered items with id only)
   const bulkItems = useMemo(
     () =>
@@ -373,6 +369,10 @@ export const ValidationView: React.FC = () => {
       })),
     [filteredTestsWithId]
   );
+
+  if (!orders || !testCatalog) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <DataErrorBoundary>

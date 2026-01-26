@@ -6,7 +6,6 @@
 import React, { type ReactNode } from 'react';
 import { Icon } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
-import { getAlertClasses } from '@/shared/design-system/tokens/components/alert';
 
 interface AlertProps {
   children: ReactNode;
@@ -15,13 +14,22 @@ interface AlertProps {
   className?: string;
 }
 
+/**
+ * Alert variant styles
+ */
+const VARIANT_STYLES = {
+  info: 'bg-blue-50 border-blue-200 text-blue-800',
+  success: 'bg-green-50 border-green-200 text-green-800',
+  warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
+  danger: 'bg-red-50 border-red-200 text-red-800',
+};
+
 export const Alert: React.FC<AlertProps> = ({
   children,
   variant = 'info',
   onClose,
   className = '',
 }) => {
-  // Colors match Badge component for visual consistency - uses design tokens
   const icons = {
     info: <Icon name={ICONS.actions.infoCircle} className="w-5 h-5" />,
     success: <Icon name={ICONS.actions.checkCircle} className="w-5 h-5" />,
@@ -32,7 +40,7 @@ export const Alert: React.FC<AlertProps> = ({
 
   return (
     <div
-      className={`${getAlertClasses(variant)} ${className}`}
+      className={`flex items-start gap-3 p-4 rounded-lg border ${VARIANT_STYLES[variant]} ${className}`}
       role="alert"
     >
       <div className="flex-shrink-0 mt-0.5">{icon}</div>

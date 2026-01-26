@@ -10,7 +10,6 @@ import { useLoginForm } from './hooks/useLoginForm';
 import { LoginBackground } from './components/LoginBackground';
 import { LoginBrandingPanel } from './components/LoginBrandingPanel';
 import { LoginFormCard } from './components/LoginFormCard';
-import { authColors } from '@/shared/design-system/tokens/colors';
 
 /**
  * Main LoginForm component
@@ -37,7 +36,7 @@ export const LoginForm: React.FC = () => {
   const formContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className={`min-h-screen ${authColors.background} flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden`}>
+    <div className="min-h-screen bg-auth-bg flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
       <LoginBackground />
 
       {/* Main content container */}

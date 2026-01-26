@@ -209,6 +209,7 @@ export const ValidationCheckbox: React.FC<ValidationCheckboxProps> = ({
 /**
  * Hook for managing bulk selection state
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useBulkSelection<T extends { id: number }>(items: T[]) {
   const [selectedIds, setSelectedIds] = React.useState<Set<number>>(new Set());
 
