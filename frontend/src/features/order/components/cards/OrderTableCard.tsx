@@ -30,7 +30,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
           primaryText={order.patientName || 'N/A'}
           primaryTextClassName="font-semibold"
           secondaryText={displayId.order(order.orderId)}
-          secondaryTextClassName="font-mono text-sky-600"
+          secondaryTextClassName="font-mono text-brand"
           size="xs"
         />
         {/* Total price on top right */}
@@ -50,7 +50,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
                 <div className="flex items-center flex-1 min-w-0">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 shrink-0" />
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
-                  <span className="text-sky-600 font-mono truncate">{test.testCode}</span>
+                  <span className="text-brand font-mono truncate">{test.testCode}</span>
                 </div>
                 <span className="font-medium text-text-tertiary ml-2 shrink-0">
                   {formatCurrency(test.priceAtOrder)}

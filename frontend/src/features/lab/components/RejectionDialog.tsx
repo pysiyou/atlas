@@ -9,7 +9,7 @@
  */
 
 import React, { useState } from 'react';
-import { Popover, IconButton, Icon, Alert, Button, ClaudeLoader } from '@/shared/ui';
+import { Popover, IconButton, Icon, Alert, Button, ClaudeLoader, FooterInfo } from '@/shared/ui';
 // Note: Icon is still used for Alert content and RejectionHistoryBanner
 import { PopoverForm, RadioCard } from './PopoverForm';
 import { useRejectionManager } from '../hooks/useRejectionManager';
@@ -158,12 +158,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       confirmVariant="danger"
       isSubmitting={isRejecting}
       disabled={isConfirmDisabled}
-      footerInfo={
-        <>
-          <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
-          <span>Rejecting results</span>
-        </>
-      }
+      footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text="Rejecting results" />}
     >
       {/* Error Alert */}
       {error && (

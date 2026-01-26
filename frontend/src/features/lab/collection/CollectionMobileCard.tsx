@@ -69,15 +69,15 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
           primaryText={patientName}
           primaryTextClassName="font-semibold"
           secondaryText={displayId.order(order.orderId)}
-          secondaryTextClassName="text-sky-600 font-mono"
+          secondaryTextClassName="text-brand font-mono"
           size="xs"
         />
         {isPending ? (
-          <Badge variant="warning" size="xs">
+          <Badge variant="pending" size="xs">
             PENDING
           </Badge>
         ) : isCollected ? (
-          <Badge variant="success" size="xs">
+          <Badge variant="collected" size="xs">
             COLLECTED
           </Badge>
         ) : isRejected ? (

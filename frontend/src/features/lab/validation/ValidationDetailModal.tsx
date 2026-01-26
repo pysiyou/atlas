@@ -159,15 +159,13 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       footer={
         <ModalFooter
           statusIcon={
-            hasFlags ? (
-              <Icon name={ICONS.actions.warning} className="w-4 h-4 text-text-disabled" />
-            ) : (
-              <Icon name={ICONS.dataFields.clinicalNotes} className="w-4 h-4 text-text-disabled" />
+            hasFlags ? undefined : (
+              <Icon name={ICONS.dataFields.clinicalNotes} className="w-3.5 h-3.5" />
             )
           }
           statusMessage={
             hasFlags
-              ? 'Review flags carefully before approving'
+              ? ''
               : 'Verify all results match expected values'
           }
           statusClassName="text-text-tertiary"
@@ -244,7 +242,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
             fields: [
               {
                 label: 'Sample ID',
-                value: test.sampleId ? <span className="text-sky-600 font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
+                value: test.sampleId ? <span className="text-brand font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
               },
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
               {
@@ -261,11 +259,11 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
               {
                 label: 'Test Code',
-                value: test.testCode ? <span className="text-sky-600 font-mono">{test.testCode}</span> : undefined,
+                value: test.testCode ? <span className="text-brand font-mono">{test.testCode}</span> : undefined,
               },
               {
                 label: 'Order ID',
-                value: test.orderId ? <span className="text-sky-600 font-mono">{displayId.order(test.orderId)}</span> : undefined,
+                value: test.orderId ? <span className="text-brand font-mono">{displayId.order(test.orderId)}</span> : undefined,
               },
             ],
           },

@@ -274,7 +274,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
               {/* Left: Label with dots, and Timestamp */}
               <div className="flex flex-col flex-1 min-w-0">
                 <div className="flex items-center">
-                  <p className={`text-sm font-medium ${getLabelColor()}`}>{step.label}</p>
+                  <p className={`text-xxs uppercase font-semibold ${getLabelColor()}`}>{step.label}</p>
                   {/* Test completion dots */}
                   {showTestDots && <TestDots progress={progress} />}
                 </div>
@@ -284,7 +284,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
                   <p className={`text-xs mt-1 ${getStatusColor()}`}>{statusMessage}</p>
                 )}
                 {progress.isFullyComplete && completionInfo.completedAt && (
-                  <p className="text-xs text-text-disabled mt-1">
+                  <p className="text-xxs text-text-tertiary mt-1">
                     {formatTimestamp(completionInfo.completedAt)}
                   </p>
                 )}

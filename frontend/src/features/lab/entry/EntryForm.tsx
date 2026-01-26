@@ -43,7 +43,7 @@ const RadioOption: React.FC<{
       <div className="flex-shrink-0 mr-3">
         <input type="radio" checked={isSelected} onChange={onSelect} className="sr-only" />
         {isSelected ? (
-          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-sky-500 transition-all duration-150">
+          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-brand transition-all duration-150">
             <div className="w-2 h-2 rounded-full bg-surface" />
           </div>
         ) : (
@@ -92,7 +92,7 @@ const SelectParameterInput: React.FC<{
           className={cn(
             'flex items-center gap-2 px-3 py-2.5 bg-surface border rounded cursor-pointer transition-colors w-full min-h-[42px]',
             isOpen
-              ? 'border-sky-500 ring-2 ring-sky-500/20'
+              ? 'border-brand ring-2 ring-brand/20'
               : 'border-border-strong hover:border-gray-400'
           )}
         >

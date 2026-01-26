@@ -6,7 +6,7 @@
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
 import React, { useState, useCallback, useEffect } from 'react';
-import { Popover, Button, Icon, Alert, Badge } from '@/shared/ui';
+import { Popover, Button, Icon, Alert, Badge, FooterInfo } from '@/shared/ui';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
@@ -56,7 +56,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
       <div className="px-3 py-2.5 border-b border-dashed border-border-strong">
         <div className="flex justify-between items-center">
           <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
-            Order <span className="font-mono text-sky-600">{displayId.order(order.orderId)}</span>
+            Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span>
           </span>
           <Badge variant={order.paymentStatus} size="xs" />
         </div>
@@ -77,7 +77,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
                   <span className="text-text-secondary truncate">
                     {test.testName || test.testCode || 'Test'}
                     {test.testCode && test.testName !== test.testCode && (
-                      <span className="text-sky-600 font-mono ml-1">({test.testCode})</span>
+                      <span className="text-brand font-mono ml-1">({test.testCode})</span>
                     )}
                   </span>
                 </span>
@@ -186,19 +186,14 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   return (
     <PopoverForm
       title="Process Payment"
-      subtitle={<span>Order <span className="font-mono text-sky-600">{displayId.order(order.orderId)}</span></span>}
+      subtitle={<span>Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span></span>}
       onCancel={onCancel}
       onConfirm={handleSubmit}
       confirmLabel="Process Payment"
       confirmVariant="primary"
       isSubmitting={submitting}
       disabled={!isValid}
-      footerInfo={
-        <div className="flex items-center gap-1.5">
-          <Icon name={ICONS.dataFields.wallet} className="w-3.5 h-3.5" />
-          <span>Processing payment</span>
-        </div>
-      }
+      footerInfo={<FooterInfo icon={ICONS.dataFields.wallet} text="Processing payment" />}
     >
       <PaymentReceipt order={order} />
 

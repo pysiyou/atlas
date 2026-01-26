@@ -6,7 +6,7 @@
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
-import { Popover, Button, Icon } from '@/shared/ui';
+import { Popover, Button, Icon, FooterInfo } from '@/shared/ui';
 import { PopoverForm } from '../components/PopoverForm';
 import type { ContainerType } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS } from '@/types';
@@ -91,12 +91,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       confirmLabel="Confirm"
       confirmVariant="primary"
       disabled={!isValid}
-      footerInfo={
-        <div className="flex items-center gap-1.5">
-          <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
-          <span>Collecting sample</span>
-        </div>
-      }
+      footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text="Collecting sample" />}
     >
       {/* Volume Input */}
       <div>
@@ -142,47 +137,54 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Type */}
       <div>
-        <label className="block text-xs font-medium text-text-tertiary mb-1">
-          Container Type <span className="text-red-600">*</span>
+        <label className="block text-xs font-medium text-text-tertiary mb-2">
+          Container Type <span className="text-danger">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
           {CONTAINER_TYPE_OPTIONS.map(option => {
             const isRequired = requirement.containerTypes.includes(option.value as ContainerType);
             const isSelected = selectedContainerType === option.value;
-            const showWarning = isSelected && !isRequired;
             return (
-              <div
+              <button
                 key={option.value}
-                className={`
-                  relative flex items-center gap-2 p-3 rounded-lg border transition-all duration-200 cursor-pointer
-                  ${
-                    isSelected
-                      ? showWarning
-                        ? 'bg-amber-50 border-amber-200 ring-1 ring-yellow-200'
-                        : 'bg-sky-50 border-sky-200 ring-1 ring-sky-200'
-                      : 'bg-surface border-border hover:border-border-strong hover:bg-app-bg'
-                  }
-                `}
+                type="button"
                 onClick={() => setSelectedContainerType(option.value as ContainerType)}
                 title={isRequired ? 'Required container type' : 'Not in requirements'}
+                className={`
+                  relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
+                  ${
+                    isSelected
+                      ? 'bg-surface border-brand border-2'
+                      : 'bg-surface border-border hover:border-border-strong'
+                  }
+                `}
               >
-                <input
-                  type="radio"
-                  name="container-type"
-                  checked={isSelected}
-                  onChange={() => setSelectedContainerType(option.value as ContainerType)}
-                  className={`h-3.5 w-3.5 border-border-strong ${showWarning ? 'text-amber-600 focus:ring-amber-500/20' : 'text-sky-600 focus:ring-2 focus:ring-sky-500/20'}`}
+                {/* Container icon on the left */}
+                <Icon
+                  name={getContainerIcon(option.value)}
+                  className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-text-disabled'}`}
                 />
+                {/* Container label */}
                 <span
-                  className={`flex-1 text-xs font-medium ${isSelected ? (showWarning ? 'text-amber-700' : 'text-sky-700') : 'text-text-primary'}`}
+                  className={`flex-1 text-xs font-medium text-left ${
+                    isSelected ? 'text-text-primary' : 'text-text-secondary'
+                  }`}
                 >
                   {option.name}
                 </span>
-                <Icon
-                  name={getContainerIcon(option.value)}
-                  className={`w-5 h-5 ${isSelected ? (showWarning ? 'text-amber-600' : 'text-sky-600') : 'text-text-disabled'}`}
-                />
-              </div>
+                {/* Checkmark indicator in top-right */}
+                <div
+                  className={`
+                    absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
+                    ${isSelected ? 'bg-green-600' : 'bg-transparent border-2 border-border-strong'}
+                  `}
+                >
+                  <Icon
+                    name={ICONS.actions.check}
+                    className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-text-disabled'}`}
+                  />
+                </div>
+              </button>
             );
           })}
         </div>

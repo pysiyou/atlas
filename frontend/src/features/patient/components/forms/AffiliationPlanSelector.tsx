@@ -112,18 +112,19 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
     );
   }
 
-  if (error) {
-    return (
-      <div className="bg-danger/10 border border-danger rounded-lg p-4">
-        <p className="text-sm text-danger">{error}</p>
-      </div>
-    );
-  }
+  // Show error warning but still allow plan selection
+  const showPricingError = error && pricing.length === 0;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Left Column - Text/Information */}
       <div className="space-y-6">
+        {showPricingError && (
+          <div className="bg-warning/10 border border-warning rounded-lg p-3 mb-4">
+            <p className="text-sm text-warning">{error}</p>
+            <p className="text-xs text-text-tertiary mt-1">You can still select a plan. Pricing will be calculated during checkout.</p>
+          </div>
+        )}
         <div className="space-y-4">
           <div>
             <h3 className="text-lg font-semibold text-text-primary mb-2">Lab Affiliation Benefits</h3>
@@ -199,15 +200,14 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
             return (
               <div
                 key={plan.duration}
-                onClick={() => hasPrice && handlePlanSelect(plan.duration)}
+                onClick={() => handlePlanSelect(plan.duration)}
                 className={`
                   relative border-2 rounded-xl p-5 cursor-pointer transition-all duration-200
                   ${
                     isSelected
-                      ? 'border-affiliation bg-affiliation/5 shadow-sm'
+                      ? 'border-brand bg-affiliation/5 shadow-sm'
                       : 'border-border hover:border-border-strong bg-surface hover:shadow-sm'
                   }
-                  ${!hasPrice ? 'opacity-50 cursor-not-allowed' : ''}
                 `}
               >
                 {/* Best Value Badge */}
@@ -228,12 +228,14 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                         w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all
                         ${
                           isSelected
-                            ? 'border-affiliation bg-affiliation'
+                            ? 'border-success bg-success'
                             : 'border-border-strong bg-surface'
                         }
                       `}
                     >
-                      {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-surface" />}
+                      {isSelected && (
+                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-text-inverse" />
+                      )}
                     </div>
                   </div>
 
@@ -270,7 +272,12 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                         )}
                       </div>
                     ) : (
-                      <div className="text-sm text-text-tertiary">Price not available</div>
+                      <div className="space-y-1">
+                        <div className="text-sm text-text-tertiary">Price not available</div>
+                        {isSelected && (
+                          <div className="text-xs text-warning">Pricing will be calculated during checkout</div>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -279,16 +286,16 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
           })}
         </div>
 
-        {/* Action Button */}
-        {selectedDuration && (
+        {/* Action Button - Only show when onAction is provided */}
+        {selectedDuration && onAction && (
           <div className="pt-4">
             <Button
               type="button"
               variant="primary"
               size="lg"
               fullWidth
-              onClick={onAction || undefined}
-              disabled={loading || !onAction}
+              onClick={onAction}
+              disabled={loading}
               className="font-semibold bg-affiliation hover:bg-affiliation-hover text-white rounded-lg py-3 text-base shadow-sm"
             >
               {loading ? 'Processing...' : getActionText()}

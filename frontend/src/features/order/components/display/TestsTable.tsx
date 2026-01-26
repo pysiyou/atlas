@@ -51,7 +51,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
                     <div className="flex items-center gap-1">
                       <span
                         className={`font-mono ${
-                          isSuperseded ? 'text-text-disabled line-through' : 'text-sky-600'
+                          isSuperseded ? 'text-text-disabled line-through' : 'text-brand'
                         }`}
                       >
                         {test.testCode}
@@ -125,7 +125,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
             >
               <td
                 className={`px-4 py-3 font-mono truncate whitespace-nowrap ${
-                  isSuperseded ? 'text-text-disabled line-through' : 'text-sky-600'
+                  isSuperseded ? 'text-text-disabled line-through' : 'text-brand'
                 }`}
               >
                 {test.testCode}

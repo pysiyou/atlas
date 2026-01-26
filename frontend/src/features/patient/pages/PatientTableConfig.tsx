@@ -19,7 +19,7 @@ export const createPatientTableConfig = (
 ): TableViewConfig<Patient> => {
   // Shared render functions to avoid duplication
   const renderId = (patient: Patient) => (
-    <span className="text-xs text-sky-600 font-medium font-mono truncate block hover:underline hover:font-bold">
+    <span className="text-xs text-brand font-medium font-mono truncate block hover:underline hover:font-bold">
       {displayId.patient(patient.id)}
     </span>
   );

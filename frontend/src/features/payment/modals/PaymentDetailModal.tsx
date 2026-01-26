@@ -13,7 +13,7 @@
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
 import React, { useState, useCallback } from 'react';
-import { Modal, Icon, Badge, Button, Alert } from '@/shared/ui';
+import { Modal, Icon, Badge, Button, Alert, FooterInfo } from '@/shared/ui';
 import { PaymentErrorBoundary } from '@/shared/components';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
@@ -79,11 +79,11 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
         <div className="space-y-1.5">
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Order Number:</span>
-            <span className="text-sky-600 font-medium font-mono">{displayId.order(order.orderId)}</span>
+            <span className="text-brand font-medium font-mono">{displayId.order(order.orderId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Patient Number:</span>
-            <span className="text-sky-600 font-medium font-mono">{displayId.patient(order.patientId)}</span>
+            <span className="text-brand font-medium font-mono">{displayId.patient(order.patientId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Order Date:</span>
@@ -114,7 +114,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
                       {test.testName || test.testCode || 'Test'}
                     </span>
                     {test.testCode && test.testName !== test.testCode && (
-                      <span className="text-xs text-sky-600 font-mono mt-0.5">{test.testCode}</span>
+                      <span className="text-xs text-brand font-mono mt-0.5">{test.testCode}</span>
                     )}
                   </span>
                 </span>
@@ -223,7 +223,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         title="Process Payment"
-        subtitle={<span>Order <span className="font-mono text-sky-600">{displayId.order(order.orderId)}</span></span>}
+        subtitle={<span>Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span></span>}
         size="xl"
         disableClose={submitting}
         closeOnBackdropClick={!submitting}
@@ -326,7 +326,9 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-surface shrink-0">
+          <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border bg-surface shrink-0">
+            <FooterInfo icon={ICONS.dataFields.wallet} text={isPaid ? 'Payment complete' : 'Processing payment'} />
+            <div className="flex items-center gap-3">
             <Button
               variant={isPaid ? 'close' : 'cancel'}
               size="md"
@@ -349,6 +351,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                 {submitting ? 'Processing...' : `Pay ${formatCurrency(order.totalPrice)}`}
               </Button>
             )}
+            </div>
           </div>
         </div>
       </Modal>

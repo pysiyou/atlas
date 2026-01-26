@@ -34,7 +34,7 @@ export const createPaymentTableConfig = (
         e.stopPropagation();
         navigate(`/orders/${item.orderId}`);
       }}
-      className="text-xs text-sky-600 font-medium font-mono hover:underline truncate block max-w-full"
+      className="text-xs text-brand font-medium font-mono hover:underline truncate block max-w-full"
     >
       {displayId.order(item.orderId)}
     </button>
@@ -43,7 +43,7 @@ export const createPaymentTableConfig = (
   const renderPatientName = (item: OrderPaymentDetails) => (
     <div className="min-w-0">
       <div className="font-semibold text-text-primary truncate">{item.patientName || 'N/A'}</div>
-      <div className="text-xxs text-sky-600 truncate font-mono">{displayId.patient(item.patientId)}</div>
+      <div className="text-xxs text-brand truncate font-mono">{displayId.patient(item.patientId)}</div>
     </div>
   );
 

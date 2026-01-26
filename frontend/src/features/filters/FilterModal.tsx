@@ -9,7 +9,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Modal } from '@/shared/ui/Modal';
 import { CheckboxList } from '@/shared/ui/CheckboxList';
-import { Icon } from '@/shared/ui/Icon';
+import { Icon, FooterInfo } from '@/shared/ui';
 import { ICONS } from '@/utils/icon-mappings';
 import { cn } from '@/utils';
 import { QuickFilters } from './QuickFilters';
@@ -492,12 +492,15 @@ export const FilterModal: React.FC<FilterModalProps> = ({
               Clear all filters
             </button>
           )}
-          <button
-            onClick={handleApplyFilters}
-            className="w-full py-3 bg-brand hover:opacity-90 text-text-inverse font-medium rounded-lg transition-colors"
-          >
-            Filter
-          </button>
+          <div className="flex items-center justify-between gap-3">
+            <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
+            <button
+              onClick={handleApplyFilters}
+              className="px-4 py-3 bg-brand hover:opacity-90 text-text-inverse font-medium rounded-lg transition-colors"
+            >
+              Filter
+            </button>
+          </div>
         </div>
       </div>
     </Modal>

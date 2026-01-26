@@ -10,7 +10,8 @@
 
 import React, { type ReactNode } from 'react';
 import { Modal } from '@/shared/ui/Modal';
-import { Badge, SectionContainer, DetailFieldGroup } from '@/shared/ui';
+import { Badge, SectionContainer, DetailFieldGroup, FooterInfo } from '@/shared/ui';
+import { ICONS } from '@/utils/icon-mappings';
 import type { DetailFieldConfig } from '@/shared/ui/DetailFieldGroup';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
@@ -54,6 +55,8 @@ interface LabDetailModalProps {
   children: ReactNode;
   /** Footer actions */
   footer?: ReactNode;
+  /** Footer info icon and text (defaults to lab workflow) */
+  footerInfo?: ReactNode;
 }
 
 /**
@@ -71,6 +74,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
   additionalContextInfo,
   children,
   footer,
+  footerInfo,
 }) => {
   const { getUserName } = useUserLookup();
 
@@ -98,7 +102,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 <div className="flex items-center gap-3 text-sm text-text-secondary flex-wrap">
                   <span className="font-semibold text-text-primary">{contextInfo.patientName}</span>
                   <span className="text-text-disabled select-none">|</span>
-                  <span className="font-medium text-sky-600 text-xs font-mono tracking-wide whitespace-nowrap">
+                  <span className="font-medium text-brand text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.patientId === 'number'
                       ? displayId.patient(contextInfo.patientId)
                       : contextInfo.patientId}
@@ -112,7 +116,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                     </>
                   )}
                   <span className="text-text-disabled select-none">|</span>
-                  <span className="font-medium text-sky-600 text-xs font-mono tracking-wide whitespace-nowrap">
+                  <span className="font-medium text-brand text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.orderId === 'number'
                       ? displayId.order(contextInfo.orderId)
                       : contextInfo.orderId}
@@ -129,7 +133,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 {sampleInfo && sampleInfo.collectedAt && (
                   <span className="text-xs text-text-tertiary">
                     Sample{' '}
-                    <span className="font-medium text-sky-600 text-xs font-mono tracking-wide">
+                    <span className="font-medium text-brand text-xs font-mono tracking-wide">
                       {typeof sampleInfo.sampleId === 'number'
                         ? displayId.sample(sampleInfo.sampleId)
                         : sampleInfo.sampleId}
@@ -153,8 +157,11 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
         </div>
 
         {/* Footer */}
-        {footer && (
-          <div className="shrink-0 bg-surface border-t border-border px-6 py-4">{footer}</div>
+        {(footer || footerInfo) && (
+          <div className="shrink-0 bg-surface border-t border-border px-6 py-4 flex items-center justify-between">
+            {footerInfo || <FooterInfo icon={ICONS.dataFields.flask} text="Lab workflow" />}
+            {footer}
+          </div>
         )}
       </div>
     </Modal>
@@ -273,10 +280,17 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
   children,
 }) => (
   <div className="flex items-center justify-between">
-    <div className={`flex items-center gap-2 text-sm ${statusClassName}`}>
-      {statusIcon}
-      <span>{statusMessage}</span>
-    </div>
+    {statusIcon && statusMessage ? (
+      <div className="text-xs text-text-tertiary flex items-center gap-1.5">
+        <div className="w-3.5 h-3.5 flex items-center justify-center">{statusIcon}</div>
+        <span>{statusMessage}</span>
+      </div>
+    ) : (
+      <div className={`flex items-center gap-2 text-sm ${statusClassName}`}>
+        {statusIcon}
+        {statusMessage && <span>{statusMessage}</span>}
+      </div>
+    )}
     <div className="flex items-center gap-3">{children}</div>
   </div>
 );

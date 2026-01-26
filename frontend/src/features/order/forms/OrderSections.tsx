@@ -25,7 +25,7 @@ export const OrderSections: React.FC<OrderSectionsProps> = ({ order, patient }) 
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-text-tertiary">Order ID:</span>
-            <span className="font-medium font-mono">{displayId.order(order.orderId)}</span>
+            <span className="font-medium font-mono text-brand">{displayId.order(order.orderId)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-text-tertiary">Order Date:</span>
@@ -77,7 +77,7 @@ export const OrderSections: React.FC<OrderSectionsProps> = ({ order, patient }) 
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-text-tertiary">Patient ID:</span>
-              <span className="font-medium font-mono">{displayId.patient(patient.id)}</span>
+              <span className="font-medium font-mono text-brand">{displayId.patient(patient.id)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-text-tertiary">Date of Birth:</span>

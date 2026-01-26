@@ -159,8 +159,10 @@ export const OrderUpsertLayout: React.FC<OrderUpsertLayoutProps> = ({
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 py-4 border-t border-border bg-surface shrink-0">
-        <div className="flex items-baseline min-w-0 justify-between sm:justify-start">
-          <span className="text-lg font-bold text-brand">{formatCurrency(totalPrice)}</span>
+        <div className="flex items-center gap-4">
+          <div className="flex items-baseline min-w-0">
+            <span className="text-lg font-bold text-brand">{formatCurrency(totalPrice)}</span>
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 shrink-0">

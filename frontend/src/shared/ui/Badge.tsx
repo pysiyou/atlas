@@ -79,6 +79,12 @@ export type BadgeVariant =
   // Sex/Gender
   | 'male'
   | 'female'
+  // Relationships (Emergency Contact)
+  | 'spouse'
+  | 'parent'
+  | 'sibling'
+  | 'child'
+  | 'friend'
   // Medical History
   | 'chronic-condition'
   | 'medication'
@@ -221,6 +227,13 @@ const VARIANT_STYLES: Record<string, string> = {
   // Sex/Gender
   male: 'bg-blue-100 text-blue-800',
   female: 'bg-pink-100 text-pink-800',
+  
+  
+  friend: 'bg-purple-100 text-purple-800',
+  child: 'bg-blue-100 text-blue-800',
+  parent: 'bg-green-100 text-green-800',
+  sibling: 'bg-red-100 text-red-800',
+  spouse: 'bg-yellow-100 text-yellow-800',
   
   // Medical history
   'chronic-condition': 'bg-orange-100 text-orange-800',

@@ -45,7 +45,7 @@ export const createOrderTableConfig = (
       <div className="font-semibold text-text-primary truncate">
         {getPatientNameFn(order.patientId)}
       </div>
-      <div className="text-xxs text-sky-600 truncate font-mono">{displayId.patient(order.patientId)}</div>
+      <div className="text-xxs text-brand truncate font-mono">{displayId.patient(order.patientId)}</div>
     </div>
   );
 
@@ -56,7 +56,7 @@ export const createOrderTableConfig = (
 
     return (
       <div className="min-w-0">
-        <div className="font-medium truncate font-mono text-xs text-sky-600">
+        <div className="font-medium truncate font-mono text-xs text-brand">
           {activeTests.map(t => t.testCode).join('/')}
         </div>
         <div className="text-xs text-text-tertiary truncate">

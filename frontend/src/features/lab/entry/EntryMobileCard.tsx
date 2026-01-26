@@ -81,12 +81,12 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
         <div className="min-w-0 overflow-hidden">
           <div className="text-sm font-medium text-text-primary truncate">{test.testName}</div>
           <div className="flex items-center gap-2">
-            <div className="text-xs text-sky-600 font-medium font-mono truncate">
+            <div className="text-xs text-brand font-medium font-mono truncate">
               {test.testCode}
             </div>
             {test.sampleId && (
               <div
-                className="text-xs text-sky-600 font-medium font-mono truncate"
+                className="text-xs text-brand font-medium font-mono truncate"
                 title={displayId.sample(test.sampleId)}
               >
                 • {displayId.sample(test.sampleId)}
@@ -100,7 +100,7 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
       <div className="space-y-2">
         <div className="space-y-1">
           <div className="text-xs text-text-secondary font-medium">{patientName}</div>
-          <div className="text-xs text-sky-600 font-mono">{displayId.order(test.orderId)}</div>
+          <div className="text-xs text-brand font-mono">{displayId.order(test.orderId)}</div>
           {test.collectedAt && (
             <div className="text-xs text-text-tertiary mt-1">
               Collected: {formatDate(test.collectedAt)}

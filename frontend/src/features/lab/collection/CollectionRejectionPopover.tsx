@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Popover, IconButton, Icon, Alert, Badge } from '@/shared/ui';
+import { Popover, IconButton, Alert, Badge, FooterInfo } from '@/shared/ui';
 import { PopoverForm, CheckboxCard } from '../components/PopoverForm';
 import type { RejectionReason } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
@@ -124,12 +124,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       confirmVariant="danger"
       isSubmitting={isSubmitting}
       disabled={!isValid}
-      footerInfo={
-        <>
-          <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
-          <span>Rejecting sample</span>
-        </>
-      }
+      footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text="Rejecting sample" />}
     >
       {/* Warning Alert */}
       {rejectionHistoryCount > 1 ? (
@@ -169,7 +164,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
                   type="checkbox"
                   checked={reasons.includes(r.value)}
                   onChange={() => toggleReason(r.value)}
-                  className="h-4 w-4 text-sky-600 border-border-strong rounded focus:ring-brand"
+                  className="h-4 w-4 text-brand border-border-strong rounded focus:ring-brand"
                 />
               </div>
               <div className="ml-2 text-xs">

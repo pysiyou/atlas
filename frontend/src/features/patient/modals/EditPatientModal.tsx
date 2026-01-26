@@ -10,7 +10,8 @@
 
 import React, { useMemo, useState } from 'react';
 import type { Patient } from '@/types';
-import { Button, Modal, CircularProgress } from '@/shared/ui';
+import { Button, Modal, CircularProgress, FooterInfo } from '@/shared/ui';
+import { ICONS } from '@/utils/icon-mappings';
 import toast from 'react-hot-toast';
 import { usePatientForm } from '../hooks/usePatientForm';
 import { displayId } from '@/utils/id-display';
@@ -75,7 +76,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
       percentage={formProgress.percentage}
       trackColorClass="stroke-gray-200"
       progressColorClass={
-        formProgress.percentage === 100 ? 'stroke-emerald-500' : 'stroke-sky-500'
+        formProgress.percentage === 100 ? 'stroke-emerald-500' : 'stroke-brand'
       }
       label={`${formProgress.filled}/${formProgress.total}`}
       className="h-7"
@@ -88,6 +89,7 @@ interface ModalFooterProps {
   submitLabel: string;
   isSubmitting: boolean;
   formId: string;
+  footerInfo?: React.ReactNode;
 }
 
 const ModalFooter: React.FC<ModalFooterProps> = ({
@@ -95,20 +97,24 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
   submitLabel,
   isSubmitting,
   formId,
+  footerInfo,
 }) => (
-  <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-surface shrink-0 shadow-[0_-1px_3px_rgba(0,0,0,0.04)]">
-    <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
-      Cancel
-    </Button>
-    <Button
-      type="submit"
-      variant="save"
-      form={formId}
-      isLoading={isSubmitting}
-      disabled={isSubmitting}
-    >
-      {submitLabel}
-    </Button>
+  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border bg-surface shrink-0 shadow-[0_-1px_3px_rgba(0,0,0,0.04)]">
+    {footerInfo}
+    <div className="flex items-center gap-3">
+      <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
+        Cancel
+      </Button>
+      <Button
+        type="submit"
+        variant="save"
+        form={formId}
+        isLoading={isSubmitting}
+        disabled={isSubmitting}
+      >
+        {submitLabel}
+      </Button>
+    </div>
   </div>
 );
 
@@ -251,6 +257,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
             submitLabel={submitLabel}
             isSubmitting={isSubmitting}
             formId="patient-upsert-form"
+            footerInfo={<FooterInfo icon={ICONS.dataFields.user} text={mode === 'edit' ? 'Editing patient' : 'Creating patient'} />}
           />
         </div>
       </Modal>

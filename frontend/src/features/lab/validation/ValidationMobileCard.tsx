@@ -186,14 +186,14 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
           <div className="flex items-center gap-2 flex-wrap">
             <div className="text-xs text-text-secondary font-medium truncate">{patientName}</div>
             <div className="text-xxs text-text-disabled">•</div>
-            <div className="text-xxs text-sky-600 font-medium font-mono truncate">
+            <div className="text-xxs text-brand font-medium font-mono truncate">
               {test.testCode}
             </div>
             {test.sampleId && (
               <>
                 <div className="text-xs text-text-disabled">•</div>
                 <div
-                  className="text-xxs text-sky-600 font-medium font-mono truncate"
+                  className="text-xxs text-brand font-medium font-mono truncate"
                   title={displayId.sample(test.sampleId)}
                 >
                   {displayId.sample(test.sampleId)}

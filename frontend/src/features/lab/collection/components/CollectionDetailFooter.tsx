@@ -69,8 +69,8 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
       sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0);
     return (
       <ModalFooter
-        statusIcon={<Icon name={getSampleStatusIcon('pending')} className="w-4 h-4 text-text-disabled" />}
-        statusMessage="Sample pending collection"
+        statusIcon={undefined}
+        statusMessage=""
         statusClassName="text-text-tertiary"
       >
         <CollectionPopover

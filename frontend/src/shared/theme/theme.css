@@ -1,8 +1,7 @@
 :root,
 [data-theme="studio-light"] {
-  /* Brand Colors - Sky Based */
+  /* Brand Colors */
   --brand: #0284c7;
-  /* sky-600 */
   --brand-light: #e0f2fe;
   /* sky-100 */
   --brand-hover: #0369a1;
@@ -20,7 +19,6 @@
   --danger: #dc2626;
   /* red-600 */
   --info: #0284c7;
-  /* sky-600 */
 
   /* Neutral Scale (Gray) */
   --neutral-950: #030712;

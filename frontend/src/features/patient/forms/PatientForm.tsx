@@ -373,23 +373,13 @@ export const EmergencyContactSection: React.FC<
   Pick<PatientFormSectionsProps, 'formData' | 'errors' | 'onFieldChange'>
 > = ({ formData, errors, onFieldChange }) => {
   // Convert relationship options to FilterOption format with badge variants
+  // Use relationship values directly as Badge variants (defined in Badge component)
   const relationshipOptions: FilterOption[] = useMemo(
     () =>
       RELATIONSHIP_VALUES.map(value => ({
         id: value,
         label: RELATIONSHIP_CONFIG[value].label,
-        color:
-          value === 'spouse'
-            ? 'primary'
-            : value === 'parent'
-              ? 'info'
-              : value === 'sibling'
-                ? 'success'
-                : value === 'child'
-                  ? 'warning'
-                  : value === 'friend'
-                    ? 'purple'
-                    : 'neutral', // 'other' uses neutral
+        color: value, // Use relationship value as Badge variant
       })),
     []
   );

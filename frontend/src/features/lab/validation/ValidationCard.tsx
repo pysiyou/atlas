@@ -173,7 +173,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
       <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
       <Badge variant={test.priority} size="sm" />
       <Badge variant={test.sampleType} size="sm" />
-      <span className="text-xs text-sky-600 font-mono">{test.testCode}</span>
+      <span className="text-xs text-brand font-mono">{test.testCode}</span>
     </>
   );
 

@@ -11,9 +11,9 @@ import { ICONS } from '@/utils/icon-mappings';
 
 /** Sample status for collection: pending, collected, rejected */
 const COLLECTION_STATUS_OPTIONS: FilterOption[] = [
-  { id: 'pending', label: 'PENDING', color: 'warning' },
-  { id: 'collected', label: 'COLLECTED', color: 'success' },
-  { id: 'rejected', label: 'REJECTED', color: 'error' },
+  { id: 'pending', label: 'PENDING', color: 'pending' },
+  { id: 'collected', label: 'COLLECTED', color: 'collected' },
+  { id: 'rejected', label: 'REJECTED', color: 'rejected' },
 ];
 
 /**

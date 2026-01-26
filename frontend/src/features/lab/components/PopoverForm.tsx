@@ -8,7 +8,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Button, Icon, IconButton } from '@/shared/ui';
+import { Button, IconButton, FooterInfo } from '@/shared/ui';
 import { useAuth } from '@/hooks';
 import { ICONS } from '@/utils/icon-mappings';
 
@@ -77,14 +77,12 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
 
       {/* Footer */}
       <div className="p-3 bg-app-bg border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
-        <div className="text-xs text-text-tertiary flex items-center gap-1.5">
-          {footerInfo || (
-            <>
-              <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
-              <span>Acting as {currentUser?.name || 'Lab Staff'}</span>
-            </>
-          )}
-        </div>
+        {footerInfo || (
+          <FooterInfo
+            icon={ICONS.actions.alertCircle}
+            text={`Acting as ${currentUser?.name || 'Lab Staff'}`}
+          />
+        )}
         <div className="flex items-center gap-2">
           <Button
             variant="cancel"
@@ -167,11 +165,11 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         ? 'text-red-600'
         : 'text-text-tertiary'
       : selected
-        ? 'text-sky-600'
+        ? 'text-brand'
         : 'text-text-tertiary';
 
   const radioColor =
-    variant === 'red' ? 'text-red-600 focus:ring-red-500' : 'text-sky-600 focus:ring-brand';
+    variant === 'red' ? 'text-red-600 focus:ring-red-500' : 'text-brand focus:ring-brand';
 
   const handleClick = () => {
     if (!disabled) {
@@ -251,14 +249,14 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="h-3.5 w-3.5 text-sky-600 border-border-strong focus:ring-brand rounded"
+        className="h-3.5 w-3.5 text-brand border-border-strong focus:ring-brand rounded"
       />
     </div>
     <div className="ml-2.5">
       <span className={`block text-xs font-medium ${checked ? 'text-sky-700' : 'text-text-primary'}`}>
         {label}
       </span>
-      <span className={`block text-xxs mt-0.5 ${checked ? 'text-sky-600' : 'text-text-tertiary'}`}>
+      <span className={`block text-xxs mt-0.5 ${checked ? 'text-brand' : 'text-text-tertiary'}`}>
         {description}
       </span>
     </div>

@@ -100,19 +100,19 @@ body {
 /* RSuite DateRangePicker Overrides */
 /* Note: Using Tailwind classes that match design tokens */
 /* border-gray-300 = neutralColors.border.medium */
-/* border-sky-500 = brandColors.primary.border equivalent */
-/* bg-sky-500 = brandColors.primary.background */
-/* bg-sky-100 = brandColors.primary.backgroundLight */
+/* border-brand = brandColors.primary.border equivalent */
+/* bg-brand = brandColors.primary.background */
+/* bg-brand-light = brandColors.primary.backgroundLight */
 .rs-picker-toggle {
   @apply !border-gray-300 !rounded !py-2 !px-3 !h-[42px] !flex !items-center;
 }
 
 .rs-picker-toggle:hover {
-  @apply !border-sky-500;
+  @apply !border-brand;
 }
 
 .rs-picker-toggle.rs-btn-active {
-  @apply !border-sky-500 !shadow-none !ring-2 !ring-sky-500;
+  @apply !border-brand !shadow-none !ring-2 !ring-brand;
 }
 
 .rs-picker-toggle {
@@ -128,15 +128,15 @@ body {
 }
 
 .rs-calendar-table-cell-selected .rs-calendar-table-cell-content {
-  @apply !bg-sky-500 !border-sky-500;
+  @apply !bg-brand !border-brand;
 }
 
 .rs-calendar-table-cell-in-range:before {
-  @apply !bg-sky-100;
+  @apply !bg-brand-light;
 }
 
 .rs-btn-primary {
-  @apply !bg-sky-500 !border-sky-500;
+  @apply !bg-brand !border-brand;
 }
 
 .rs-picker-menu {

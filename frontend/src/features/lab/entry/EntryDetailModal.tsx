@@ -124,7 +124,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       size={18}
       percentage={completionPercentage}
       trackColorClass="stroke-gray-200"
-      progressColorClass={completionPercentage === 100 ? 'stroke-emerald-500' : 'stroke-sky-500'}
+      progressColorClass={completionPercentage === 100 ? 'stroke-emerald-500' : 'stroke-brand'}
       label={`${filledCount}/${totalParams}`}
       className="h-7"
     />
@@ -199,13 +199,11 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
         <ModalFooter
           statusIcon={
             isComplete ? (
-              <Icon name={ICONS.actions.checkCircle} className="w-4 h-4 text-text-disabled" />
-            ) : (
-              <Icon name={ICONS.dataFields.clinicalNotes} className="w-4 h-4 text-text-disabled" />
-            )
+              <Icon name={ICONS.actions.checkCircle} className="w-3.5 h-3.5" />
+            ) : undefined
           }
           statusMessage={
-            isComplete ? 'Ready to submit' : 'Complete all parameters to submit results'
+            isComplete ? 'Ready to submit' : ''
           }
           statusClassName="text-text-tertiary"
         >
@@ -284,7 +282,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           {
             title: 'Test Information',
             fields: [
-              { label: 'Test Code', value: <span className="text-sky-600 font-mono">{test.testCode}</span> },
+              { label: 'Test Code', value: <span className="text-brand font-mono">{test.testCode}</span> },
               {
                 label: 'Sample Type',
                 badge: test.sampleType
@@ -293,7 +291,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               },
               {
                 label: 'Sample ID',
-                value: test.sampleId ? <span className="text-sky-600 font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
+                value: test.sampleId ? <span className="text-brand font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
               },
               {
                 label: 'Turnaround Time',

@@ -45,7 +45,13 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
   }, [mode, order, patientId]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={modalTitle} subtitle={subtitle} size="2xl">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={modalTitle}
+      subtitle={subtitle}
+      size="2xl"
+    >
       <OrderUpsertForm
         isModal={true}
         onClose={onClose}
