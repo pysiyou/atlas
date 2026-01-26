@@ -92,7 +92,7 @@ export const CatalogDetail: React.FC = () => {
       key: 'overview',
       title: 'Test Overview',
       rows: [
-        { label: 'Test Code', value: test.code },
+        { label: 'Test Code', value: <span className="text-sky-600 font-mono">{test.code}</span> },
         { label: 'Test Name', value: test.name },
         { label: 'Category', value: capitalize(test.category) },
         { label: 'Turnaround Time', value: formatTurnaroundTime(test.turnaroundTime) },
@@ -185,7 +185,7 @@ export const CatalogDetail: React.FC = () => {
         <div className="flex items-center gap-2">
           <div>
             <h1 className="text-sm font-medium text-text-primary">{test.name}</h1>
-            <p className="text-xs text-text-tertiary font-mono">{test.code}</p>
+            <p className="text-xs text-sky-600 font-mono">{test.code}</p>
           </div>
         </div>
       </div>
