@@ -26,7 +26,6 @@ import {
 import type { IconName } from '@/shared/ui/Icon';
 import type { OrderPaymentDetails } from '../types/types';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 interface PaymentDetailModalProps {
   /** Whether the modal is open */
@@ -136,7 +135,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
         <span className="text-sm font-semibold text-text-secondary uppercase tracking-wider">
           Total
         </span>
-        <span className={`text-lg font-bold ${brandColors.primary.iconLight} tabular-nums`}>
+        <span className="text-lg font-bold text-brand tabular-nums">
           {formatCurrency(activeTotal)}
         </span>
       </div>
@@ -239,7 +238,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             {!isPaid && (
               <div>
                 <label className="block text-sm font-medium text-text-secondary mb-3">
-                  Payment Method <span className={semanticColors.danger.requiredIndicator}>*</span>
+                  Payment Method <span className="text-danger">*</span>
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   {PAYMENT_METHODS.map(method => {
@@ -254,7 +253,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                           relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                           ${
                             isSelected
-                              ? `bg-surface ${brandColors.primary.borderMedium} border-2`
+                              ? 'bg-surface border-brand border-2'
                               : 'bg-surface border-border hover:border-border-strong'
                           }
                           ${submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
@@ -263,7 +262,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                         {/* Brand icon on the left */}
                         <Icon
                           name={method.icon as IconName}
-                          className={`w-7 h-7 shrink-0 ${isSelected ? brandColors.primary.icon : 'text-text-disabled'}`}
+                          className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-text-disabled'}`}
                         />
                         {/* Brand label */}
                         <span
@@ -277,7 +276,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                         <div
                           className={`
                             absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                            ${isSelected ? semanticColors.success.backgroundMedium : 'bg-transparent border-2 border-border-strong'}
+                            ${isSelected ? 'bg-green-600' : 'bg-transparent border-2 border-border-strong'}
                           `}
                         >
                           <Icon
@@ -316,11 +315,11 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
 
             {/* Paid Success Message */}
             {isPaid && (
-              <div className={`${semanticColors.success.backgroundLight} ${semanticColors.success.border} rounded-lg p-4 flex items-center gap-3`}>
-                <Icon name={ICONS.actions.checkCircle} className={`w-6 h-6 ${semanticColors.success.icon} shrink-0`} />
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
+                <Icon name={ICONS.actions.checkCircle} className="w-6 h-6 text-green-600 shrink-0" />
                 <div>
-                  <p className={`text-sm font-medium ${semanticColors.success.textLight}`}>Payment Complete</p>
-                  <p className={`text-xs ${semanticColors.success.icon} mt-0.5`}>This order has been fully paid.</p>
+                  <p className="text-sm font-medium text-green-700">Payment Complete</p>
+                  <p className="text-xs text-green-600 mt-0.5">This order has been fully paid.</p>
                 </div>
               </div>
             )}

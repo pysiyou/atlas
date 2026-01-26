@@ -19,7 +19,6 @@ import {
 import { useCreatePayment } from '@/hooks/queries/usePayments';
 import type { IconName } from '@/shared/ui/Icon';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors, brandColors } from '@/shared/design-system/tokens/colors';
 
 interface PaymentPopoverProps {
   /** Order to process payment for */
@@ -97,7 +96,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
         <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
           Total
         </span>
-        <span className={`text-sm font-bold ${brandColors.primary.iconLight} tabular-nums`}>
+        <span className="text-sm font-bold text-brand tabular-nums">
           {formatCurrency(activeTotal)}
         </span>
       </div>
@@ -206,7 +205,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       {/* Payment Method Selection */}
       <div>
         <label className="block text-xs font-medium text-text-muted mb-2">
-          Payment Method <span className={semanticColors.danger.requiredIndicator}>*</span>
+          Payment Method <span className="text-danger">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
           {PAYMENT_METHODS.map(method => {
@@ -220,7 +219,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                   relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                   ${
                     isSelected
-                      ? `bg-surface ${brandColors.primary.borderMedium} border-2`
+                      ? 'bg-surface border-brand border-2'
                       : 'bg-surface border-border hover:border-border-strong'
                   }
                 `}
@@ -228,7 +227,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                 {/* Brand icon on the left */}
                 <Icon
                   name={method.icon as IconName}
-                  className={`w-7 h-7 shrink-0 ${isSelected ? brandColors.primary.icon : 'text-text-disabled'}`}
+                  className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-text-disabled'}`}
                 />
                 {/* Brand label */}
                 <span
@@ -242,7 +241,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                 <div
                   className={`
                     absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                    ${isSelected ? semanticColors.success.backgroundMedium : 'bg-transparent border-2 border-border-strong'}
+                    ${isSelected ? 'bg-green-600' : 'bg-transparent border-2 border-border-strong'}
                   `}
                 >
                   <Icon
