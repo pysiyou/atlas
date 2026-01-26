@@ -80,16 +80,16 @@ const ModalAgeSlider: React.FC<{
 
   return (
     <div className="w-full">
-      <p className="text-sm text-neutral-500 mb-4">Move the slider to filter by age</p>
+      <p className="text-sm text-text-tertiary mb-4">Move the slider to filter by age</p>
 
       {/* Slider Track */}
       <div className="relative h-1 mb-6">
         {/* Background track */}
-        <div className="absolute inset-0 bg-neutral-200 rounded-full" />
+        <div className="absolute inset-0 bg-border rounded-full" />
 
         {/* Active track */}
         <div
-          className="absolute h-full bg-amber-400 rounded-full"
+          className="absolute h-full bg-brand rounded-full"
           style={{
             left: `${minPercent}%`,
             width: `${maxPercent - minPercent}%`,
@@ -103,7 +103,7 @@ const ModalAgeSlider: React.FC<{
           max={max}
           value={localValue[0]}
           onChange={handleMinChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-amber-400 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-amber-400 [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
           style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
         />
 
@@ -114,13 +114,13 @@ const ModalAgeSlider: React.FC<{
           max={max}
           value={localValue[1]}
           onChange={handleMaxChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-amber-400 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-amber-400 [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
           style={{ zIndex: 4 }}
         />
       </div>
 
       {/* Age labels */}
-      <div className="flex justify-between text-lg font-medium text-neutral-900">
+      <div className="flex justify-between text-lg font-medium text-text">
         <span>{localValue[0]} years</span>
         <span>{localValue[1]} years</span>
       </div>
@@ -358,25 +358,25 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
           title="Filter"
           size="md"
         >
-          <div className="flex flex-col h-full bg-white">
+          <div className="flex flex-col h-full bg-surface">
             {/* Filter Controls - Scrollable */}
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {/* Search Section */}
               <div className="mb-6">
-                <div className="relative w-full flex items-center h-10 px-4 bg-white border border-neutral-200 rounded-lg focus-within:border-amber-400 transition-colors">
+                <div className="relative w-full flex items-center h-10 px-4 bg-surface border border-border rounded-lg focus-within:border-brand transition-colors">
                   <input
                     type="text"
                     placeholder="Search patients..."
                     value={searchQuery}
                     onChange={e => onSearchChange(e.target.value)}
-                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-neutral-400"
+                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-muted"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => onSearchChange('')}
-                      className="p-0.5 hover:bg-neutral-100 rounded transition-colors"
+                      className="p-0.5 hover:bg-surface-hover rounded transition-colors"
                     >
-                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-neutral-400" />
+                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted" />
                     </button>
                   )}
                 </div>
@@ -386,31 +386,31 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
               <div className="space-y-5">
                 {/* Age Range Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Age Range</h4>
+                  <h4 className="text-sm font-semibold text-text mb-3">Age Range</h4>
                   <ModalAgeSlider
                     value={ageRange}
                     onChange={onAgeRangeChange}
                     min={AGE_RANGE_MIN}
                     max={AGE_RANGE_MAX}
                   />
-                  <div className="border-b border-neutral-200 mt-4" />
+                  <div className="border-b border-border mt-4" />
                 </div>
 
                 {/* Sex Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Sex</h4>
+                  <h4 className="text-sm font-semibold text-text mb-3">Sex</h4>
                   <CheckboxList
                     options={genderOptions}
                     selectedIds={sexFilters}
                     onChange={values => onSexFiltersChange(values as Gender[])}
                     columns={genderOptions.length > 4 ? 2 : 1}
                   />
-                  <div className="border-b border-neutral-200 mt-4" />
+                  <div className="border-b border-border mt-4" />
                 </div>
 
                 {/* Affiliation Status Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Affiliation Status</h4>
+                  <h4 className="text-sm font-semibold text-text mb-3">Affiliation Status</h4>
                   <CheckboxList
                     options={affiliationStatusOptions}
                     selectedIds={affiliationStatusFilters}
@@ -422,7 +422,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
             </div>
 
             {/* Footer with Filter Button */}
-            <div className="px-5 py-4 border-t border-neutral-100 bg-white shrink-0">
+            <div className="px-5 py-4 border-t border-border bg-surface shrink-0">
               {activeFilterCount > 0 && (
                 <button
                   onClick={() => {
@@ -430,14 +430,14 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                     onSexFiltersChange([]);
                     onAffiliationStatusFiltersChange([]);
                   }}
-                  className="w-full mb-3 text-sm text-neutral-500 hover:text-neutral-700 transition-colors"
+                  className="w-full mb-3 text-sm text-text-tertiary hover:text-text-secondary transition-colors"
                 >
                   Clear all filters
                 </button>
               )}
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="w-full py-3 bg-amber-400 hover:bg-amber-500 text-white font-medium rounded-lg transition-colors"
+                className="w-full py-3 bg-brand hover:opacity-90 text-text-inverse font-medium rounded-lg transition-colors"
               >
                 Filter
               </button>

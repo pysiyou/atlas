@@ -134,8 +134,8 @@ const ModalDateBadges: React.FC<{
             className={cn(
               'px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors',
               isActive
-                ? 'bg-amber-400 border-amber-400 text-white'
-                : 'bg-white border-neutral-200 text-neutral-700 hover:border-amber-300 hover:bg-amber-50'
+                ? 'bg-brand border-brand text-text-inverse'
+                : 'bg-surface border-border text-text-secondary hover:border-brand hover:bg-brand-light'
             )}
           >
             {preset.label}
@@ -189,7 +189,7 @@ const SearchInput: React.FC<{
       className={cn(
         'relative w-full flex items-center gap-2',
         'h-9',
-        'px-3 bg-surface border border-border-medium rounded-md',
+        'px-3 bg-surface border border-border-strong rounded-md',
         'hover:bg-app-bg',
         'focus-within:outline-none focus-within:ring-2 focus-within:ring-brand/30',
         'focus-within:border-brand',
@@ -357,25 +357,25 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
           title="Filter"
           size="md"
         >
-          <div className="flex flex-col h-full bg-white">
+          <div className="flex flex-col h-full bg-surface">
             {/* Filter Controls - Scrollable */}
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {/* Search Section */}
               <div className="mb-6">
-                <div className="relative w-full flex items-center h-10 px-4 bg-white border border-neutral-200 rounded-lg focus-within:border-amber-400 transition-colors">
+                <div className="relative w-full flex items-center h-10 px-4 bg-surface border border-border rounded-lg focus-within:border-brand transition-colors">
                   <input
                     type="text"
                     placeholder="Search orders..."
                     value={searchQuery}
                     onChange={e => onSearchChange(e.target.value)}
-                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-neutral-400"
+                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-muted"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => onSearchChange('')}
-                      className="p-0.5 hover:bg-neutral-100 rounded transition-colors"
+                      className="p-0.5 hover:bg-surface-hover rounded transition-colors"
                     >
-                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-neutral-400" />
+                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted" />
                     </button>
                   )}
                 </div>
@@ -385,29 +385,29 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
               <div className="space-y-5">
                 {/* Date Range Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Date Range</h4>
+                  <h4 className="text-sm font-semibold text-text mb-3">Date Range</h4>
                   <ModalDateBadges
                     value={dateRange}
                     onChange={onDateRangeChange}
                   />
-                  <div className="border-b border-neutral-200 mt-4" />
+                  <div className="border-b border-border mt-4" />
                 </div>
 
                 {/* Order Status Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Order Status</h4>
+                  <h4 className="text-sm font-semibold text-text mb-3">Order Status</h4>
                   <CheckboxList
                     options={orderStatusOptions}
                     selectedIds={statusFilters}
                     onChange={values => onStatusFiltersChange(values as OrderStatus[])}
                     columns={orderStatusOptions.length > 4 ? 2 : 1}
                   />
-                  <div className="border-b border-neutral-200 mt-4" />
+                  <div className="border-b border-border mt-4" />
                 </div>
 
                 {/* Payment Status Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Payment Status</h4>
+                  <h4 className="text-sm font-semibold text-text mb-3">Payment Status</h4>
                   <CheckboxList
                     options={paymentStatusOptions}
                     selectedIds={paymentFilters}
@@ -419,7 +419,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
             </div>
 
             {/* Footer with Filter Button */}
-            <div className="px-5 py-4 border-t border-neutral-100 bg-white shrink-0">
+            <div className="px-5 py-4 border-t border-border bg-surface shrink-0">
               {activeFilterCount > 0 && (
                 <button
                   onClick={() => {
@@ -427,14 +427,14 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
                     onStatusFiltersChange([]);
                     onPaymentFiltersChange([]);
                   }}
-                  className="w-full mb-3 text-sm text-neutral-500 hover:text-neutral-700 transition-colors"
+                  className="w-full mb-3 text-sm text-text-tertiary hover:text-text-secondary transition-colors"
                 >
                   Clear all filters
                 </button>
               )}
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="w-full py-3 bg-amber-400 hover:bg-amber-500 text-white font-medium rounded-lg transition-colors"
+                className="w-full py-3 bg-brand hover:opacity-90 text-text-inverse font-medium rounded-lg transition-colors"
               >
                 Filter
               </button>

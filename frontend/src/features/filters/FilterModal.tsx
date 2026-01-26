@@ -135,7 +135,7 @@ const ModalPriceSlider: React.FC<{
 
         {/* Active track */}
         <div
-          className="absolute h-full bg-amber-400 rounded-full"
+          className="absolute h-full bg-brand rounded-full"
           style={{
             left: `${minPercent}%`,
             width: `${maxPercent - minPercent}%`,
@@ -149,7 +149,7 @@ const ModalPriceSlider: React.FC<{
           max={max}
           value={localValue[0]}
           onChange={handleMinChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-amber-400 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-amber-400 [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
           style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
         />
 
@@ -160,13 +160,13 @@ const ModalPriceSlider: React.FC<{
           max={max}
           value={localValue[1]}
           onChange={handleMaxChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-amber-400 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-amber-400 [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
           style={{ zIndex: 4 }}
         />
       </div>
 
       {/* Price labels */}
-      <div className="flex justify-between text-lg font-medium text-neutral-900">
+      <div className="flex justify-between text-lg font-medium text-text">
         <span>{currency}{localValue[0]}</span>
         <span>{currency}{localValue[1]}</span>
       </div>
@@ -313,18 +313,18 @@ const ModalRadioList: React.FC<{
                 className={cn(
                   'w-[18px] h-[18px] rounded-full border flex items-center justify-center transition-colors',
                   isSelected
-                    ? 'border-amber-400 bg-white'
-                    : 'border-neutral-300 bg-white group-hover:border-amber-300'
+                    ? 'border-brand bg-surface'
+                    : 'border-border-strong bg-surface group-hover:border-brand'
                 )}
               >
                 {isSelected && (
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-brand" />
                 )}
               </div>
             </div>
             <span className={cn(
               'text-sm transition-colors',
-              isSelected ? 'text-neutral-900' : 'text-neutral-600 group-hover:text-neutral-900'
+              isSelected ? 'text-text' : 'text-text-secondary group-hover:text-text'
             )}>
               {option.label}
             </span>
@@ -422,7 +422,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
       default:
         // For other control types (ageRange), fall back to label only
         return (
-          <div className="text-sm text-neutral-500 italic">
+          <div className="text-sm text-text-tertiary italic">
             Use the main filter bar for this filter type
           </div>
         );
@@ -436,7 +436,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
       title="Filter"
       size="md"
     >
-      <div className="flex flex-col h-full bg-white">
+      <div className="flex flex-col h-full bg-surface">
         {/* Filter Controls - Scrollable */}
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {/* Search Control */}
@@ -467,14 +467,14 @@ export const FilterModal: React.FC<FilterModalProps> = ({
               {allFilterControls.map((control, index) => (
                 <div key={control.key} className="w-full">
                   {/* Filter Label */}
-                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">
+                  <h4 className="text-sm font-semibold text-text mb-3">
                     {control.label}
                   </h4>
                   {/* Filter Options */}
                   {renderModalControl(control)}
                   {/* Separator line (except for last item) */}
                   {index < allFilterControls.length - 1 && (
-                    <div className="border-b border-neutral-200 mt-4" />
+                    <div className="border-b border-border mt-4" />
                   )}
                 </div>
               ))}
@@ -483,18 +483,18 @@ export const FilterModal: React.FC<FilterModalProps> = ({
         </div>
 
         {/* Footer with Filter Button */}
-        <div className="px-5 py-4 border-t border-neutral-100 bg-white shrink-0">
+        <div className="px-5 py-4 border-t border-border bg-surface shrink-0">
           {activeBadges.length > 0 && (
             <button
               onClick={onClearAll}
-              className="w-full mb-3 text-sm text-neutral-500 hover:text-neutral-700 transition-colors"
+              className="w-full mb-3 text-sm text-text-tertiary hover:text-text-secondary transition-colors"
             >
               Clear all filters
             </button>
           )}
           <button
             onClick={handleApplyFilters}
-            className="w-full py-3 bg-amber-400 hover:bg-amber-500 text-white font-medium rounded-lg transition-colors"
+            className="w-full py-3 bg-brand hover:opacity-90 text-text-inverse font-medium rounded-lg transition-colors"
           >
             Filter
           </button>
