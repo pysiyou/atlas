@@ -1,15 +1,22 @@
 /**
  * PatientFilters Component
- *
- * Provides comprehensive filtering controls for the patients list using the new filter architecture.
- * Uses config-driven approach with FilterBar component.
- *
- * @module features/patient
+ * Simplified filter controls for patients list with direct component usage
  */
 
-import React, { useMemo } from 'react';
-import { FilterBar, type FilterValues } from '@/features/filters';
-import { patientFilterConfig } from '../../config/patientFilterConfig';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Icon } from '@/shared/ui/Icon';
+import { MultiSelectFilter } from '@/shared/ui/MultiSelectFilter';
+import { AgeFilter } from './AgeFilter';
+import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
+import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
+import { filterControlSizing } from '@/shared/design-system/tokens/sizing';
+import { radius } from '@/shared/design-system/tokens/borders';
+import { hover, focus } from '@/shared/design-system/tokens/interactions';
+import { transitions } from '@/shared/design-system/tokens/animations';
+import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
+import { createFilterOptions } from '@/utils/filtering';
+import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../../config/constants';
 import type { Gender } from '@/types';
 
 /**
@@ -21,31 +28,124 @@ export type AffiliationStatus = 'active' | 'inactive';
  * Props interface for PatientFilters component
  */
 export interface PatientFiltersProps {
-  /** Current search query string */
   searchQuery: string;
-  /** Callback fired when search query changes */
   onSearchChange: (value: string) => void;
-  /** Currently selected age range [min, max] */
   ageRange: [number, number];
-  /** Callback fired when age range changes */
   onAgeRangeChange: (range: [number, number]) => void;
-  /** Array of currently selected genders/sexes */
   sexFilters: Gender[];
-  /** Callback fired when gender/sex filters change */
   onSexFiltersChange: (values: Gender[]) => void;
-  /** Array of currently selected affiliation statuses */
   affiliationStatusFilters: AffiliationStatus[];
-  /** Callback fired when affiliation status filters change */
   onAffiliationStatusFiltersChange: (values: AffiliationStatus[]) => void;
 }
 
+// Prepare filter options
+const genderOptions = createFilterOptions(GENDER_VALUES, GENDER_CONFIG);
+const affiliationStatusOptions = [
+  { id: 'active', label: 'Active', color: 'success' },
+  { id: 'inactive', label: 'Inactive', color: 'default' },
+];
+
 /**
- * PatientFilters Component
- *
- * Composes FilterBar with patient-specific configuration.
- * Maps between legacy prop interface and new filter value structure.
- *
- * @component
+ * SearchInput - Simple debounced search input
+ */
+const SearchInput: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}> = ({ value, onChange, placeholder = 'Search...' }) => {
+  const [localValue, setLocalValue] = useState(value);
+  const [isDebouncing, setIsDebouncing] = useState(false);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  useEffect(() => {
+    if (localValue === value) {
+      setIsDebouncing(false);
+      return;
+    }
+
+    setIsDebouncing(true);
+    const timer = setTimeout(() => {
+      onChange(localValue);
+      setIsDebouncing(false);
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+      setIsDebouncing(false);
+    };
+  }, [localValue, value, onChange]);
+
+  const handleClear = useCallback(() => {
+    setLocalValue('');
+    onChange('');
+  }, [onChange]);
+
+  return (
+    <div
+      className={cn(
+        'relative w-full flex items-center gap-2',
+        filterControlSizing.height,
+        'px-3 bg-surface border',
+        neutralColors.border.medium,
+        radius.md,
+        hover.background,
+        focus.outline,
+        `focus-within:${brandColors.primary.borderMedium}`,
+        transitions.colors
+      )}
+    >
+      <Icon
+        name={ICONS.actions.search}
+        className={cn(neutralColors.text.disabled, 'w-3.5 h-3.5 shrink-0')}
+      />
+      <input
+        type="text"
+        placeholder={placeholder}
+        value={localValue}
+        onChange={e => setLocalValue(e.target.value)}
+        className={cn(
+          'flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0',
+          'placeholder:font-normal',
+          `placeholder:${neutralColors.text.muted}`
+        )}
+      />
+      <div className="flex items-center gap-1 shrink-0">
+        {isDebouncing && (
+          <div
+            className={cn(
+              'w-4 h-4 border-2 border-t-transparent rounded-full animate-spin',
+              brandColors.primary.borderMedium
+            )}
+          />
+        )}
+        {localValue && !isDebouncing && (
+          <button
+            onClick={handleClear}
+            className={cn(
+              'p-0.5',
+              hover.background,
+              'rounded',
+              transitions.colors,
+              'flex items-center justify-center cursor-pointer'
+            )}
+            aria-label="Clear search"
+          >
+            <Icon
+              name={ICONS.actions.closeCircle}
+              className={cn('w-4 h-4', neutralColors.text.disabled, `hover:${neutralColors.text.tertiary}`)}
+            />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * PatientFilters - Simple 4-column grid layout with search + 3 filters
  */
 export const PatientFilters: React.FC<PatientFiltersProps> = ({
   searchQuery,
@@ -57,38 +157,61 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   affiliationStatusFilters,
   onAffiliationStatusFiltersChange,
 }) => {
-  /**
-   * Convert props to filter values format
-   */
-  const filterValues = useMemo<FilterValues>(
-    () => ({
-      searchQuery,
-      ageRange,
-      sex: sexFilters,
-      affiliationStatus: affiliationStatusFilters,
-    }),
-    [searchQuery, ageRange, sexFilters, affiliationStatusFilters]
-  );
-
-  /**
-   * Handle filter changes and map back to props
-   */
-  const handleFilterChange = (filters: FilterValues) => {
-    if (filters.searchQuery !== undefined) {
-      onSearchChange(filters.searchQuery as string);
-    }
-    if (filters.ageRange !== undefined) {
-      onAgeRangeChange(filters.ageRange as [number, number]);
-    }
-    if (filters.sex !== undefined) {
-      onSexFiltersChange(filters.sex as Gender[]);
-    }
-    if (filters.affiliationStatus !== undefined) {
-      onAffiliationStatusFiltersChange(filters.affiliationStatus as AffiliationStatus[]);
-    }
-  };
-
   return (
-    <FilterBar config={patientFilterConfig} value={filterValues} onChange={handleFilterChange} />
+    <div className={cn('w-full bg-surface border-b', neutralColors.border.default)}>
+      <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
+        {/* 4-column grid: search + age + sex + affiliation */}
+        <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">
+          {/* Search */}
+          <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+            <SearchInput
+              value={searchQuery}
+              onChange={onSearchChange}
+              placeholder="Search patients by name, ID, phone, or email..."
+            />
+          </div>
+
+          {/* Age Range */}
+          <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+            <AgeFilter
+              value={ageRange}
+              onChange={onAgeRangeChange}
+              min={AGE_RANGE_MIN}
+              max={AGE_RANGE_MAX}
+              placeholder="Filter by age range"
+              className="w-full"
+            />
+          </div>
+
+          {/* Sex */}
+          <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+            <MultiSelectFilter
+              label="Sex"
+              options={genderOptions}
+              selectedIds={sexFilters}
+              onChange={values => onSexFiltersChange(values as Gender[])}
+              placeholder="Select sex/gender"
+              selectAllLabel="All genders"
+              icon={ICONS.dataFields.userHands}
+              className="w-full"
+            />
+          </div>
+
+          {/* Affiliation Status */}
+          <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+            <MultiSelectFilter
+              label="Affiliation Status"
+              options={affiliationStatusOptions}
+              selectedIds={affiliationStatusFilters}
+              onChange={values => onAffiliationStatusFiltersChange(values as AffiliationStatus[])}
+              placeholder="Select affiliation status"
+              selectAllLabel="All statuses"
+              icon={ICONS.actions.infoCircle}
+              className="w-full"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
