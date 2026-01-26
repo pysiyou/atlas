@@ -79,11 +79,11 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
         <div className="space-y-1.5">
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Order Number:</span>
-            <span className="text-text-secondary font-medium font-mono">{displayId.order(order.orderId)}</span>
+            <span className="text-sky-600 font-medium font-mono">{displayId.order(order.orderId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Patient Number:</span>
-            <span className="text-text-secondary font-medium font-mono">{displayId.patient(order.patientId)}</span>
+            <span className="text-sky-600 font-medium font-mono">{displayId.patient(order.patientId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Order Date:</span>
@@ -114,7 +114,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
                       {test.testName || test.testCode || 'Test'}
                     </span>
                     {test.testCode && test.testName !== test.testCode && (
-                      <span className="text-xs text-text-tertiary mt-0.5">{test.testCode}</span>
+                      <span className="text-xs text-sky-600 font-mono mt-0.5">{test.testCode}</span>
                     )}
                   </span>
                 </span>
@@ -223,7 +223,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         title="Process Payment"
-        subtitle={<span>Order <span className="font-mono">{displayId.order(order.orderId)}</span></span>}
+        subtitle={<span>Order <span className="font-mono text-sky-600">{displayId.order(order.orderId)}</span></span>}
         size="xl"
         disableClose={submitting}
         closeOnBackdropClick={!submitting}
