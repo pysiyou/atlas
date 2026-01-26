@@ -118,14 +118,14 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <Badge
           key={param.code}
           size="sm"
-          className={results[param.code] ? 'text-sky-700' : 'text-text-muted'}
+          className={results[param.code] ? 'text-sky-700' : 'text-text-tertiary'}
           variant={results[param.code] ? 'primary' : 'default'}
         >
           {param.name}
         </Badge>
       ))}
       {parameterCount > 5 && (
-        <Badge size="sm" variant="default" className="text-text-muted">
+        <Badge size="sm" variant="default" className="text-text-tertiary">
           +{parameterCount - 5} more
         </Badge>
       )}

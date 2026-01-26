@@ -87,7 +87,7 @@ export const Input: React.FC<InputProps> = ({
         />
       </div>
       {error && <p className="text-danger text-xs mt-1">{error}</p>}
-      {helperTextProp && !error && <p className="text-text-muted text-xs mt-1">{helperTextProp}</p>}
+      {helperTextProp && !error && <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>}
     </div>
   );
 };
@@ -155,7 +155,7 @@ export const Textarea: React.FC<TextareaProps> = ({
         />
       </div>
       {error && <p className="text-danger text-xs mt-1">{error}</p>}
-      {helperTextProp && !error && <p className="text-text-muted text-xs mt-1">{helperTextProp}</p>}
+      {helperTextProp && !error && <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>}
     </div>
   );
 };
@@ -230,7 +230,7 @@ export const Select: React.FC<SelectProps> = ({
         </select>
       </div>
       {error && <p className="text-danger text-xs mt-1">{error}</p>}
-      {helperTextProp && !error && <p className="text-text-muted text-xs mt-1">{helperTextProp}</p>}
+      {helperTextProp && !error && <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>}
     </div>
   );
 };

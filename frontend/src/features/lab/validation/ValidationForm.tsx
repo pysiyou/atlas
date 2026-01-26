@@ -125,12 +125,12 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
                   key={key}
                   className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
                 >
-                  <span className="text-xs text-text-muted text-left" title={key}>
+                  <span className="text-xs text-text-tertiary text-left" title={key}>
                     {key}:
                   </span>
                   <span className={`text-sm font-medium text-left ${valueColor}`}>
                     {resultValue}
-                    {unit && <span className="text-text-muted font-normal ml-1">{unit}</span>}
+                    {unit && <span className="text-text-tertiary font-normal ml-1">{unit}</span>}
                   </span>
                 </div>
               );
@@ -148,7 +148,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
             </div>
           )}
           {technicianNotes && (
-            <div className="flex items-start text-xs text-text-muted">
+            <div className="flex items-start text-xs text-text-tertiary">
               <div className="italic">{technicianNotes}</div>
             </div>
           )}

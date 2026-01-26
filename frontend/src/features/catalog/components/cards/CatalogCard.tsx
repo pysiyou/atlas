@@ -49,7 +49,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
       {/* Bottom section: Turnaround time (left) + Category + Sample Type badges (right) */}
       <div className="flex justify-between items-center mt-auto pt-3">
         {/* Turnaround time on bottom left */}
-        <div className="text-xs text-text-muted">
+        <div className="text-xs text-text-tertiary">
           TAT: {formatTurnaroundTime(test.turnaroundTime)}
         </div>
         {/* Category and Sample Type badges on bottom right */}

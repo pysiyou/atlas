@@ -80,7 +80,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
             <td className="px-2 py-3 text-xs text-brand font-medium font-mono max-w-0">
               <span className="block truncate">{displayId.order(order.orderId)}</span>
             </td>
-            <td className="px-2 py-3 text-xs text-text-muted max-w-0">
+            <td className="px-2 py-3 text-xs text-text-tertiary max-w-0">
               <span className="block truncate">{formatDetailDate(order.orderDate, 'short')}</span>
             </td>
             <td className="px-2 py-3 max-w-0">
@@ -88,7 +88,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
                 <div className="font-medium truncate">
                   {order.tests.length} test{order.tests.length !== 1 ? 's' : ''}
                 </div>
-                <div className="text-xs text-text-muted truncate">
+                <div className="text-xs text-text-tertiary truncate">
                   {order.tests
                     .slice(0, 2)
                     .map(t => t.testName || t.testCode)

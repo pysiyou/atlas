@@ -64,7 +64,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
    */
   const renderTriggerContent = () => {
     if (!value) {
-      return <span className="text-text-muted">{placeholder}</span>;
+      return <span className="text-text-tertiary">{placeholder}</span>;
     }
     const [start, end] = value;
     if (isSameDay(start, end)) {

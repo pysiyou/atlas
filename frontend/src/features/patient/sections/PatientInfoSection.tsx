@@ -61,7 +61,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
               {calculateAge(patient.dateOfBirth)} years old •{' '}
               {patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1)}
             </div>
-            <div className="text-xs text-text-muted mt-1">DOB: {formatDate(patient.dateOfBirth)}</div>
+            <div className="text-xs text-text-tertiary mt-1">DOB: {formatDate(patient.dateOfBirth)}</div>
           </div>
         </div>
 
@@ -86,7 +86,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           <div className="flex-1">
             <div className="text-xs text-text-tertiary mb-1">Address</div>
             <div className="font-medium text-text-primary">{patient.address.street}</div>
-            <div className="text-xs text-text-muted mt-1">
+            <div className="text-xs text-text-tertiary mt-1">
               {patient.address.city}, {patient.address.postalCode}
             </div>
           </div>
@@ -100,15 +100,15 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           <div className="flex-1">
             <div className="text-xs text-text-tertiary mb-2">Emergency Contact</div>
             <div className="font-medium text-text-primary">{patient.emergencyContact.fullName}</div>
-            <div className="text-xs text-text-muted mt-1">
+            <div className="text-xs text-text-tertiary mt-1">
               {RELATIONSHIP_CONFIG[patient.emergencyContact.relationship]?.label ||
                 patient.emergencyContact.relationship}
             </div>
-            <div className="text-xs text-text-muted mt-1">
+            <div className="text-xs text-text-tertiary mt-1">
               {formatPhoneNumber(patient.emergencyContact.phone)}
             </div>
             {patient.emergencyContact.email && (
-              <div className="text-xs text-text-muted mt-1">{patient.emergencyContact.email}</div>
+              <div className="text-xs text-text-tertiary mt-1">{patient.emergencyContact.email}</div>
             )}
           </div>
         </div>
@@ -133,19 +133,19 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
                 >
                   {isAffiliationActive(patient.affiliation) ? 'Active' : 'Expired'}
                 </Badge>
-                <div className="text-xs text-text-muted">
+                <div className="text-xs text-text-tertiary">
                   Assurance #:{' '}
                   <span className="font-mono font-medium text-text-primary">
                     {patient.affiliation.assuranceNumber}
                   </span>
                 </div>
-                <div className="text-xs text-text-muted">
+                <div className="text-xs text-text-tertiary">
                   Duration:{' '}
                   <span className="font-medium text-text-primary">
                     {getDurationLabel(patient.affiliation.duration)}
                   </span>
                 </div>
-                <div className="text-xs text-text-muted">
+                <div className="text-xs text-text-tertiary">
                   Expires:{' '}
                   <span
                     className={`font-medium ${isAffiliationActive(patient.affiliation) ? 'text-text-primary' : 'text-danger'}`}
@@ -169,7 +169,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
               <div className="font-medium text-text-primary">
                 {formatDate(patient.registrationDate)}
               </div>
-              <div className="text-xs text-text-muted mt-1">Registered by: {patient.createdBy}</div>
+              <div className="text-xs text-text-tertiary mt-1">Registered by: {patient.createdBy}</div>
             </div>
           </div>
 
@@ -178,7 +178,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
             <div className="flex-1">
               <div className="text-xs text-text-tertiary mb-1">Last Updated</div>
               <div className="font-medium text-text-primary">{formatDate(patient.updatedAt)}</div>
-              <div className="text-xs text-text-muted mt-1">Updated by: {patient.updatedBy}</div>
+              <div className="text-xs text-text-tertiary mt-1">Updated by: {patient.updatedBy}</div>
             </div>
           </div>
         </div>

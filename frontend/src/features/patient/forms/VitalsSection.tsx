@@ -152,7 +152,7 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
   if (!status) {
     return {
       border: 'border-border-strong',
-      text: 'text-text-muted',
+      text: 'text-text-tertiary',
       bg: 'bg-transparent',
     };
   }
@@ -207,7 +207,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="flex justify-between items-baseline mb-1 gap-2">
               <label
                 htmlFor={`vital-${fieldName}`}
-                className="text-xxs font-medium text-text-muted cursor-pointer truncate min-w-0"
+                className="text-xxs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
               >
                 {config.label}
               </label>

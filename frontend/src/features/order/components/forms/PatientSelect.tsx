@@ -37,7 +37,7 @@ const PatientSearchTagInput: React.FC<{
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-patient-search"
-          className="text-xs font-medium text-text-muted cursor-pointer truncate min-w-0"
+          className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
         >
           Patient
         </label>
@@ -84,7 +84,7 @@ const PatientSearchTagInput: React.FC<{
                 className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-brand/20 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30 shrink-0"
                 aria-label="Clear selected patient"
               >
-                <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-muted hover:text-text-secondary" />
+                <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-tertiary hover:text-text-secondary" />
               </button>
             )}
           </div>
@@ -183,7 +183,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
           ].join(' ')}
         >
           {visiblePatients.length === 0 ? (
-            <div className="px-4 py-3 text-xs text-text-muted">No patients found</div>
+            <div className="px-4 py-3 text-xs text-text-tertiary">No patients found</div>
           ) : (
             <div className="max-h-[320px] overflow-y-auto p-2">
               <div className="space-y-1">

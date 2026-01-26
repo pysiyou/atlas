@@ -174,7 +174,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
               </div>
               <div className="ml-2 text-xs">
                 <div className="font-medium text-text-primary">{r.label}</div>
-                <div className="text-text-muted">{r.description}</div>
+                <div className="text-text-tertiary">{r.description}</div>
               </div>
             </label>
           ))}
@@ -183,7 +183,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
       {/* Recollection Toggle */}
       <div>
-        <label className="block text-xs font-medium text-text-muted mb-1">Next Step</label>
+        <label className="block text-xs font-medium text-text-tertiary mb-1">Next Step</label>
         <CheckboxCard
           checked={requireRecollection}
           onChange={() => setRequireRecollection(!requireRecollection)}

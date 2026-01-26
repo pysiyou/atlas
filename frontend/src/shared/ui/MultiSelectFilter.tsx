@@ -185,7 +185,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   // Render the trigger content
   const renderTriggerContent = () => {
     if (selectedIds.length === 0) {
-      return <span className="text-text-muted">{placeholder || `Select ${label}...`}</span>;
+      return <span className="text-text-tertiary">{placeholder || `Select ${label}...`}</span>;
     }
 
     if (singleSelectedOption) {

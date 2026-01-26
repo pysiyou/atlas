@@ -44,7 +44,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         type="text"
         className={cn(
           'flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none',
-          'placeholder:font-normal placeholder:text-text-muted',
+          'placeholder:font-normal placeholder:text-text-tertiary',
           sizeClasses === 'h-[34px]' ? 'py-0' : ''
         )}
         {...props}

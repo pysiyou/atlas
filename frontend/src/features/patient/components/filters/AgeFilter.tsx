@@ -133,7 +133,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-text-muted">{placeholder}</span>;
+      return <span className="text-text-tertiary">{placeholder}</span>;
     }
     return (
       <span className={cn('text-text-secondary', 'font-medium')}>
@@ -208,7 +208,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             <span className={cn('font-semibold tabular-nums', 'text-text-primary')}>{localValue[0]}</span>
             <span className="text-text-disabled">-</span>
             <span className={cn('font-semibold tabular-nums', 'text-text-primary')}>{localValue[1]}</span>
-            <span className={cn('text-text-muted', 'ml-1')}>years</span>
+            <span className={cn('text-text-tertiary', 'ml-1')}>years</span>
           </div>
 
           {/* Enhanced Slider - Pill-shaped track with multi-segment gradient */}
@@ -281,13 +281,13 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           <div className="flex justify-between items-center text-xs font-medium mt-1">
             <span className={cn(
               'transition-colors duration-200',
-              localValue[0] === min ? 'text-brand' : 'text-text-muted'
+              localValue[0] === min ? 'text-brand' : 'text-text-tertiary'
             )}>
               {min}
             </span>
             <span className={cn(
               'transition-colors duration-200',
-              localValue[1] === max ? 'text-brand' : 'text-text-muted'
+              localValue[1] === max ? 'text-brand' : 'text-text-tertiary'
             )}>
               {max}
             </span>

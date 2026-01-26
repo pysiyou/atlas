@@ -31,7 +31,7 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
     <div className="min-w-0">
       <div className="font-semibold text-text-primary truncate">{test.name}</div>
       {test.synonyms && test.synonyms.length > 0 && (
-        <div className="text-xs text-text-muted truncate">
+        <div className="text-xs text-text-tertiary truncate">
           {test.synonyms.slice(0, 2).join(', ')}
           {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
         </div>

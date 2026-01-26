@@ -99,12 +99,12 @@ function ResultGrid({
             key={key}
             className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
           >
-            <span className="text-xs text-text-muted text-right" title={key}>
+            <span className="text-xs text-text-tertiary text-right" title={key}>
               {key}:
             </span>
             <span className={`text-sm font-medium text-left ${valueColor}`}>
               {resultValue}
-              {unit && <span className="text-text-muted font-normal ml-1">{unit}</span>}
+              {unit && <span className="text-text-tertiary font-normal ml-1">{unit}</span>}
             </span>
           </div>
         );
@@ -202,7 +202,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   );
 
   const additionalInfo = test.resultEnteredAt && (
-    <span className="text-xs text-text-muted">
+    <span className="text-xs text-text-tertiary">
       Results entered <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
       {test.enteredBy && <span> by {getUserName(test.enteredBy)}</span>}
     </span>

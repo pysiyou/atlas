@@ -71,7 +71,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
         <CollectionInfoLine
           collectedAt={collectedAt}
           collectedBy={collectedBy}
-          className="text-xs text-text-muted mt-1"
+          className="text-xs text-text-tertiary mt-1"
         />
       )}
 
@@ -85,7 +85,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
               <li key={testCode || i} className="flex items-center text-xs text-text-secondary">
                 <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mr-2" />
                 <span className="font-medium mr-1">{testName}</span>
-                <span className="text-text-muted mr-2">{testCode}</span>
+                <span className="text-sky-600 font-mono mr-2">{testCode}</span>
                 {test?.turnaroundTime && (
                   <span className="text-text-disabled flex items-center gap-1">
                     <Icon name={ICONS.dataFields.time} className="w-2.5 h-2.5" />

@@ -56,7 +56,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     width: 'sm',
     sortable: true,
     render: (test: Test) => (
-      <div className="text-xs text-text-muted truncate">{test.turnaroundTime}h</div>
+      <div className="text-xs text-text-tertiary truncate">{test.turnaroundTime}h</div>
     ),
   },
 ];
@@ -77,7 +77,7 @@ const AdminTestTable: React.FC<{ tests: Test[] }> = ({ tests }) => {
       CardComponent: ({ item }: { item: Test }) => (
         <div className="p-3 border rounded">
           <div className="font-medium">{item.name}</div>
-          <div className="text-xs text-text-muted">{item.code}</div>
+          <div className="text-xs text-text-tertiary">{item.code}</div>
         </div>
       ),
     }),
@@ -158,10 +158,10 @@ export const Admin: React.FC = () => {
 
       {/* Test Catalog */}
       <SectionContainer title="Test Catalog">
-        <div className="text-sm text-text-muted mb-3">{tests.length} total tests</div>
+        <div className="text-sm text-text-tertiary mb-3">{tests.length} total tests</div>
         <AdminTestTable tests={tests.filter(t => t.isActive).slice(0, 10)} />
         {tests.length > 10 && (
-          <div className="text-center py-3 text-sm text-text-muted">
+          <div className="text-center py-3 text-sm text-text-tertiary">
             Showing 10 of {tests.length} tests
           </div>
         )}

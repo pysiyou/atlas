@@ -102,7 +102,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
       <h3 className="text-sm font-medium text-text-primary">{patientName}</h3>
       {sample.priority && <Badge variant={sample.priority} size="sm" />}
       <Badge variant={sample.sampleType} size="sm" />
-      <Badge size="sm" variant="default" className="text-text-muted">
+      <Badge size="sm" variant="default" className="text-text-tertiary">
         {isPending
           ? `${formatVolume(requirement.totalVolume)} required`
           : `${formatVolume(collectedVolume!)} ${isRejected ? 'was collected' : 'collected'}`}

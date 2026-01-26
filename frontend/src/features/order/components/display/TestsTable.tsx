@@ -97,7 +97,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
         <col style={{ width: '15%' }} />
         <col style={{ width: '8%' }} />
       </colgroup>
-      <thead className="bg-app-bg text-text-muted uppercase sticky top-0 z-10 [&_th]:font-normal">
+      <thead className="bg-app-bg text-text-tertiary uppercase sticky top-0 z-10 [&_th]:font-normal">
         <tr>
           <th className="px-4 py-2">Code</th>
           <th className="px-4 py-2">Name</th>

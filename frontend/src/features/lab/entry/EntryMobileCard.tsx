@@ -102,7 +102,7 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
           <div className="text-xs text-text-secondary font-medium">{patientName}</div>
           <div className="text-xs text-sky-600 font-mono">{displayId.order(test.orderId)}</div>
           {test.collectedAt && (
-            <div className="text-xs text-text-muted mt-1">
+            <div className="text-xs text-text-tertiary mt-1">
               Collected: {formatDate(test.collectedAt)}
             </div>
           )}

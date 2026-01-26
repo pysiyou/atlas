@@ -24,7 +24,7 @@ export const OrderInfoField: React.FC<OrderInfoFieldProps> = ({
     <div className={`flex gap-3 ${className}`}>
       <Icon name={icon} className="w-4 h-4 text-text-disabled shrink-0" />
       <div className="min-w-0 flex-1">
-        <p className="text-xs text-text-muted">{label}</p>
+        <p className="text-xs text-text-tertiary">{label}</p>
         {/**
          * NOTE:
          * We intentionally render the value inside a <div> instead of a <p>.

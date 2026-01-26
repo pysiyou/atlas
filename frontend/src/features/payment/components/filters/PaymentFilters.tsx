@@ -208,7 +208,7 @@ const SearchInput: React.FC<{
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className="flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0 placeholder:font-normal placeholder:text-text-muted"
+        className="flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0 placeholder:font-normal placeholder:text-text-tertiary"
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
@@ -371,14 +371,14 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
                     placeholder="Search payments..."
                     value={searchQuery}
                     onChange={e => onSearchChange(e.target.value)}
-                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-muted"
+                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-tertiary"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => onSearchChange('')}
                       className="p-0.5 hover:bg-surface-hover rounded transition-colors"
                     >
-                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted" />
+                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
                     </button>
                   )}
                 </div>

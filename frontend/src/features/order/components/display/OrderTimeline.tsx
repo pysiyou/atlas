@@ -99,7 +99,7 @@ const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
   if (!showDots) {
     // For many tests, show count instead of dots
     return (
-      <span className="ml-2 text-xs text-text-muted font-medium">
+      <span className="ml-2 text-xs text-text-tertiary font-medium">
         {completed}/{total}
       </span>
     );

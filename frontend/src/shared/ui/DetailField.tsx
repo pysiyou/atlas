@@ -106,7 +106,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
         return (
           <div className="text-right text-xs">
             <div className="text-xs text-text-primary">{formattedDate}</div>
-            <div className="text-xs text-text-muted">by {userName}</div>
+            <div className="text-xs text-text-tertiary">by {userName}</div>
           </div>
         );
       }

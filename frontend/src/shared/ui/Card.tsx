@@ -49,7 +49,7 @@ export const CardHeader: React.FC<CardHeaderProps> = ({ title, subtitle, action 
     <div className="flex items-start justify-between mb-4 pb-4 border-b border-border">
       <div>
         <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
-        {subtitle && <p className="text-sm text-text-muted mt-1">{subtitle}</p>}
+        {subtitle && <p className="text-sm text-text-tertiary mt-1">{subtitle}</p>}
       </div>
       {action && <div>{action}</div>}
     </div>

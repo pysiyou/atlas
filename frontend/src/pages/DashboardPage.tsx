@@ -126,7 +126,7 @@ export const Dashboard: React.FC = () => {
                 >
                   <div>
                     <p className="text-sm font-semibold text-text-primary">{getPatientName(order.patientId)}</p>
-                    <p className="text-xs text-text-muted">
+                    <p className="text-xs text-text-tertiary">
                       <span className="font-mono">{displayId.order(order.orderId)}</span> • {order.tests.length} test(s)
                     </p>
                   </div>
@@ -146,7 +146,7 @@ export const Dashboard: React.FC = () => {
                 </div>
               ))
             ) : (
-              <p className="text-center text-sm text-text-muted py-8">No recent orders</p>
+              <p className="text-center text-sm text-text-tertiary py-8">No recent orders</p>
             )}
           </div>
         </SectionContainer>

@@ -56,7 +56,7 @@ export const TableActionItem: React.FC<TableActionItemProps> = ({
       {icon && (
         <span
           className={`inline-flex w-5 h-5 shrink-0 items-center justify-center ${
-            variant === 'danger' ? 'text-red-600' : 'text-text-muted'
+            variant === 'danger' ? 'text-red-600' : 'text-text-tertiary'
           }`}
         >
           {icon}

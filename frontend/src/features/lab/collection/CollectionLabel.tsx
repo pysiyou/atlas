@@ -97,7 +97,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
             </div>
 
             <!-- Date and Time -->
-            <div class="text-[9px] text-text-muted text-center leading-tight">
+            <div class="text-[9px] text-text-tertiary text-center leading-tight">
               ${formattedDate} ${formattedTime}
             </div>
           </div>

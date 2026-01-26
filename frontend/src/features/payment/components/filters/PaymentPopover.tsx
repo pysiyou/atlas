@@ -61,7 +61,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
           <Badge variant={order.paymentStatus} size="xs" />
         </div>
         {order.patientName && (
-          <p className="text-[11px] text-text-muted mt-0.5 truncate">{order.patientName}</p>
+          <p className="text-[11px] text-text-tertiary mt-0.5 truncate">{order.patientName}</p>
         )}
       </div>
       <div className="px-3 py-2 max-h-32 overflow-y-auto">
@@ -77,7 +77,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
                   <span className="text-text-secondary truncate">
                     {test.testName || test.testCode || 'Test'}
                     {test.testCode && test.testName !== test.testCode && (
-                      <span className="text-text-muted ml-1">({test.testCode})</span>
+                      <span className="text-text-tertiary ml-1">({test.testCode})</span>
                     )}
                   </span>
                 </span>
@@ -88,7 +88,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
             ))}
           </ul>
         ) : (
-          <p className="text-xs text-text-muted italic">No items</p>
+          <p className="text-xs text-text-tertiary italic">No items</p>
         )}
       </div>
       <div className="border-t border-dashed border-border-strong mx-3" />
@@ -204,7 +204,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Payment Method Selection */}
       <div>
-        <label className="block text-xs font-medium text-text-muted mb-2">
+        <label className="block text-xs font-medium text-text-tertiary mb-2">
           Payment Method <span className="text-danger">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -257,7 +257,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-text-muted mb-1">Notes</label>
+        <label className="block text-xs font-medium text-text-tertiary mb-1">Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."

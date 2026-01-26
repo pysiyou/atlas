@@ -99,7 +99,7 @@ export const OrderSections: React.FC<OrderSectionsProps> = ({ order, patient }) 
             )}
           </div>
         ) : (
-          <div className="text-sm text-text-muted">Patient information not available</div>
+          <div className="text-sm text-text-tertiary">Patient information not available</div>
         )}
       </SectionContainer>
     </div>

@@ -107,7 +107,7 @@ export const EntityCard: React.FC<EntityCardProps> = ({
                   {context.tertiary}
                 </div>
               )}
-              {metadata && <div className="text-xs text-text-muted">{metadata}</div>}
+              {metadata && <div className="text-xs text-text-tertiary">{metadata}</div>}
             </div>
           )}
 
@@ -121,7 +121,7 @@ export const EntityCard: React.FC<EntityCardProps> = ({
             <div className="pt-3 border-t border-border">
               <div className={`bg-app-bg rounded-md p-3 border border-border-subtle ${contentClassName}`}>
                 {contentTitle && (
-                  <div className="text-xs font-medium text-text-muted uppercase tracking-wide mb-2">
+                  <div className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-2">
                     {contentTitle}
                   </div>
                 )}

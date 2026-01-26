@@ -51,7 +51,7 @@ export const Laboratory: React.FC = () => {
                   ${
                     isActive
                       ? 'bg-surface text-brand shadow-sm shadow-gray-200 ring-1 ring-black/5'
-                      : 'text-text-muted hover:text-text-primary hover:bg-neutral-200/50'
+                      : 'text-text-tertiary hover:text-text-primary hover:bg-neutral-200/50'
                   }
                 `}
               >

@@ -19,7 +19,7 @@ export const Appointments: React.FC = () => {
           <p className="text-sm text-text-primary">
             Appointment management will be available once the API is implemented.
           </p>
-          <p className="text-sm text-text-muted mt-2">
+          <p className="text-sm text-text-tertiary mt-2">
             This feature will use TanStack Query hooks for data management.
           </p>
         </div>

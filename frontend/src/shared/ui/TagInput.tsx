@@ -147,7 +147,7 @@ export const TagInput: React.FC<TagInputProps> = ({
               className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-black/10 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-gray-400"
               aria-label={`Remove ${tag}`}
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-muted hover:text-text-secondary" />
+              <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-tertiary hover:text-text-secondary" />
             </button>
           </Badge>
         ))}
@@ -169,7 +169,7 @@ export const TagInput: React.FC<TagInputProps> = ({
       {error && <p className="text-xs text-danger mt-1">{error}</p>}
 
       {/* Helper Text */}
-      {helperText && !error && <p className="text-xs text-text-muted mt-1">{helperText}</p>}
+      {helperText && !error && <p className="text-xs text-text-tertiary mt-1">{helperText}</p>}
     </div>
   );
 };

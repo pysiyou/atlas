@@ -75,14 +75,14 @@ const ModalSearchInput: React.FC<{
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-muted"
+        className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-tertiary"
       />
       {localValue && (
         <button
           onClick={handleClear}
           className="p-0.5 hover:bg-surface-hover rounded transition-colors flex items-center justify-center cursor-pointer"
         >
-          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted" />
+          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
         </button>
       )}
     </div>

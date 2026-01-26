@@ -66,7 +66,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
       <div className="px-4 py-3 bg-app-bg border-b border-border-subtle flex items-start justify-between">
         <div className="space-y-0.5">
           <h4 className="font-medium text-text-primary">{title}</h4>
-          {subtitle && <p className="text-xs text-text-muted">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-text-tertiary">{subtitle}</p>}
           {headerBadges && <div className="flex items-center gap-2 pt-1">{headerBadges}</div>}
         </div>
         <IconButton onClick={onCancel} variant="close" size="sm" title="Close" />
@@ -77,7 +77,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
 
       {/* Footer */}
       <div className="p-3 bg-app-bg border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
-        <div className="text-xs text-text-muted flex items-center gap-1.5">
+        <div className="text-xs text-text-tertiary flex items-center gap-1.5">
           {footerInfo || (
             <>
               <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
@@ -165,10 +165,10 @@ export const RadioCard: React.FC<RadioCardProps> = ({
     : variant === 'red'
       ? selected
         ? 'text-red-600'
-        : 'text-text-muted'
+        : 'text-text-tertiary'
       : selected
         ? 'text-sky-600'
-        : 'text-text-muted';
+        : 'text-text-tertiary';
 
   const radioColor =
     variant === 'red' ? 'text-red-600 focus:ring-red-500' : 'text-sky-600 focus:ring-brand';
@@ -258,7 +258,7 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
       <span className={`block text-xs font-medium ${checked ? 'text-sky-700' : 'text-text-primary'}`}>
         {label}
       </span>
-      <span className={`block text-xxs mt-0.5 ${checked ? 'text-sky-600' : 'text-text-muted'}`}>
+      <span className={`block text-xxs mt-0.5 ${checked ? 'text-sky-600' : 'text-text-tertiary'}`}>
         {description}
       </span>
     </div>

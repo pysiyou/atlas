@@ -56,11 +56,11 @@ export const CollectionDetailHeaderBadges: React.FC<CollectionDetailHeaderBadges
         </Badge>
       )}
       {(isCollected || isRejected) && 'collectedVolume' in sample && (
-        <Badge size="sm" variant="default" className="text-text-muted">
+        <Badge size="sm" variant="default" className="text-text-tertiary">
           {formatVolume(sample.collectedVolume)} {isRejected ? 'was collected' : 'collected'}
         </Badge>
       )}
-      <Badge size="sm" variant="default" className="text-text-muted">
+      <Badge size="sm" variant="default" className="text-text-tertiary">
         {formatVolume(sample.requiredVolume)} required
       </Badge>
       <Badge variant={isPending ? 'pending' : isRejected ? 'rejected' : 'collected'} size="sm" />

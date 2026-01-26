@@ -49,7 +49,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
       {/* Main Menu Section */}
       <div className="mb-6">
         <div className={isCollapsed ? 'opacity-0 h-0 overflow-hidden' : 'px-4 mb-2 transition-all duration-300'}>
-          <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">
+          <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">
             Main Menu
           </h3>
         </div>
@@ -77,7 +77,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
       {/* Settings Section */}
       <div>
         <div className={isCollapsed ? 'opacity-0 h-0 overflow-hidden' : 'px-4 mb-2 transition-all duration-300'}>
-          <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">
+          <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">
             Settings
           </h3>
         </div>

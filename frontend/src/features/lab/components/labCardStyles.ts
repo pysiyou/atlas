@@ -9,7 +9,7 @@ export const LAB_CARD_TYPOGRAPHY = {
   title: 'text-sm font-medium text-text-primary',
 
   // Section Headers (small caps style)
-  sectionTitle: 'text-xxs font-medium text-text-muted uppercase tracking-wide',
+  sectionTitle: 'text-xxs font-medium text-text-tertiary uppercase tracking-wide',
 
   // Patient Names (medium emphasis within text-xs context)
   patientName: 'font-medium text-text-primary',
@@ -18,7 +18,7 @@ export const LAB_CARD_TYPOGRAPHY = {
   bodyText: 'text-xs text-text-secondary',
 
   // Metadata/Secondary Text
-  metadata: 'text-xs text-text-muted',
+  metadata: 'text-xs text-text-tertiary',
 
   // Separator/Divider Text
   separator: 'text-text-disabled',
@@ -95,13 +95,13 @@ export const LAB_CARD_LIST_ITEMS = {
   testName: 'font-medium mr-1',
 
   // Test code in list
-  testCode: 'text-sky-600',
+  testCode: 'text-sky-600 font-mono',
 } as const;
 
 // Context Row Constants (Patient/Order info)
 export const LAB_CARD_CONTEXT = {
   // Container for context row
-  container: 'flex items-center gap-2 text-xs text-text-muted flex-wrap',
+  container: 'flex items-center gap-2 text-xs text-text-tertiary flex-wrap',
 
   // Patient name styling
   patientName: 'font-medium text-text-primary',

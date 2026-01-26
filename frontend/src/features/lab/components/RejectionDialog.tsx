@@ -109,7 +109,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     return (
       <div className="w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border p-8 flex flex-col items-center justify-center gap-4">
         <ClaudeLoader size="md" />
-        <p className="text-sm text-text-muted">Loading rejection options...</p>
+        <p className="text-sm text-text-tertiary">Loading rejection options...</p>
       </div>
     );
   }
@@ -199,7 +199,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       {/* Action Type Selection */}
       {!escalationRequired && (
         <div>
-          <label className="block text-xs font-medium text-text-muted mb-1">Follow-up Action</label>
+          <label className="block text-xs font-medium text-text-tertiary mb-1">Follow-up Action</label>
           <div className="grid grid-cols-1 gap-2">
             <RadioCard
               name="rejection-type"

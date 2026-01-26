@@ -96,7 +96,7 @@ export const Avatar: React.FC<AvatarProps> = ({
             {primaryText}
           </div>
           {secondaryText && (
-            <div className={`${secondaryTextClassName ? '' : 'text-text-muted'} truncate ${textSizeClasses[size].secondary} ${secondaryTextClassName}`}>
+            <div className={`${secondaryTextClassName ? '' : 'text-text-tertiary'} truncate ${textSizeClasses[size].secondary} ${secondaryTextClassName}`}>
               {secondaryText}
             </div>
           )}

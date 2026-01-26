@@ -127,7 +127,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 
                 {/* Collection info */}
                 {sampleInfo && sampleInfo.collectedAt && (
-                  <span className="text-xs text-text-muted">
+                  <span className="text-xs text-text-tertiary">
                     Sample{' '}
                     <span className="font-medium text-text-primary text-sm font-mono tracking-wide">
                       {typeof sampleInfo.sampleId === 'number'

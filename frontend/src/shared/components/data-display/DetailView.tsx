@@ -159,7 +159,7 @@ export const DetailView: React.FC<DetailViewProps> = ({
               <h1 className="text-sm font-medium text-text-primary">{title}</h1>
               {badges}
             </div>
-            {subtitle && <p className="text-xs text-text-muted mt-1">{subtitle}</p>}
+            {subtitle && <p className="text-xs text-text-tertiary mt-1">{subtitle}</p>}
           </div>
         </div>
         {actions && <div className="flex items-center gap-3">{actions}</div>}

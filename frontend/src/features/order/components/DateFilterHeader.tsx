@@ -48,7 +48,7 @@ export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
       <button
         onClick={onPrevClick}
         disabled={isPrevDisabled}
-        className="p-1 hover:bg-neutral-100 rounded text-text-muted disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+        className="p-1 hover:bg-neutral-100 rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
       >
         <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
       </button>
@@ -66,7 +66,7 @@ export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
       <button
         onClick={onNextClick}
         disabled={isNextDisabled}
-        className="p-1 hover:bg-neutral-100 rounded text-text-muted disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+        className="p-1 hover:bg-neutral-100 rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
       >
         <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
       </button>

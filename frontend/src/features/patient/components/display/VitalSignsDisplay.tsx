@@ -132,7 +132,7 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
       <div className="flex items-center justify-center h-full min-h-[200px]">
         <div className="text-center">
           <Icon name={ICONS.dataFields.stethoscope} className="w-12 h-12 text-text-disabled mx-auto mb-2" />
-          <p className="text-sm text-text-muted">No vital signs recorded</p>
+          <p className="text-sm text-text-tertiary">No vital signs recorded</p>
         </div>
       </div>
     );

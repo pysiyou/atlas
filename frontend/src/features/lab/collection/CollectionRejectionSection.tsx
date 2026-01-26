@@ -48,7 +48,7 @@ const RejectionRecordDisplay: React.FC<RejectionRecordDisplayProps> = ({
       {/* Reasons */}
       {reasonLabels && (
         <div className="flex">
-          <span className="text-text-muted w-16 shrink-0">Reasons</span>
+          <span className="text-text-tertiary w-16 shrink-0">Reasons</span>
           <span className="text-text-primary">{reasonLabels}</span>
         </div>
       )}
@@ -56,7 +56,7 @@ const RejectionRecordDisplay: React.FC<RejectionRecordDisplayProps> = ({
       {/* Notes */}
       {notes && (
         <div className="flex">
-          <span className="text-text-muted w-16 shrink-0">Notes</span>
+          <span className="text-text-tertiary w-16 shrink-0">Notes</span>
           <span className="text-text-primary">{notes}</span>
         </div>
       )}
@@ -64,7 +64,7 @@ const RejectionRecordDisplay: React.FC<RejectionRecordDisplayProps> = ({
       {/* Rejected by */}
       {rejectedBy && (
         <div className="flex">
-          <span className="text-text-muted w-16 shrink-0">By</span>
+          <span className="text-text-tertiary w-16 shrink-0">By</span>
           <span className="text-text-primary">{getUserName(rejectedBy)}</span>
         </div>
       )}
@@ -72,7 +72,7 @@ const RejectionRecordDisplay: React.FC<RejectionRecordDisplayProps> = ({
       {/* Date */}
       {rejectedAt && (
         <div className="flex">
-          <span className="text-text-muted w-16 shrink-0">Date</span>
+          <span className="text-text-tertiary w-16 shrink-0">Date</span>
           <span className="text-text-primary">{formatDate(rejectedAt)}</span>
         </div>
       )}
@@ -150,7 +150,7 @@ export const CollectionRejectionSection: React.FC<SingleRejectionProps> = ({
               className={`px-2 py-0.5 text-xs rounded ${
                 activeIndex === index
                   ? 'bg-neutral-200 text-text-primary font-medium'
-                  : 'text-text-muted hover:bg-neutral-100'
+                  : 'text-text-tertiary hover:bg-neutral-100'
               }`}
             >
               {index + 1}

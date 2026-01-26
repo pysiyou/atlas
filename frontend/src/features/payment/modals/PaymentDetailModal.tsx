@@ -67,7 +67,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
           {order.patientName ? (
             <p className="text-sm font-semibold text-text-secondary">{order.patientName}</p>
           ) : (
-            <p className="text-sm text-text-muted italic">No patient name</p>
+            <p className="text-sm text-text-tertiary italic">No patient name</p>
           )}
           <div className="flex items-center gap-2">
             <Badge variant={order.paymentStatus} size="sm" />
@@ -78,20 +78,20 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
         </div>
         <div className="space-y-1.5">
           <div className="flex items-center text-xs">
-            <span className="text-text-muted w-28">Order Number:</span>
+            <span className="text-text-tertiary w-28">Order Number:</span>
             <span className="text-text-secondary font-medium font-mono">{displayId.order(order.orderId)}</span>
           </div>
           <div className="flex items-center text-xs">
-            <span className="text-text-muted w-28">Patient Number:</span>
+            <span className="text-text-tertiary w-28">Patient Number:</span>
             <span className="text-text-secondary font-medium font-mono">{displayId.patient(order.patientId)}</span>
           </div>
           <div className="flex items-center text-xs">
-            <span className="text-text-muted w-28">Order Date:</span>
+            <span className="text-text-tertiary w-28">Order Date:</span>
             <span className="text-text-secondary font-medium">{formatDate(order.orderDate)}</span>
           </div>
           {order.paymentDate && (
             <div className="flex items-center text-xs">
-              <span className="text-text-muted w-28">Payment Date:</span>
+              <span className="text-text-tertiary w-28">Payment Date:</span>
               <span className="text-text-secondary font-medium">{formatDate(order.paymentDate)}</span>
             </div>
           )}
@@ -114,7 +114,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
                       {test.testName || test.testCode || 'Test'}
                     </span>
                     {test.testCode && test.testName !== test.testCode && (
-                      <span className="text-xs text-text-muted mt-0.5">{test.testCode}</span>
+                      <span className="text-xs text-text-tertiary mt-0.5">{test.testCode}</span>
                     )}
                   </span>
                 </span>
@@ -125,7 +125,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-text-muted italic">No items</p>
+          <p className="text-sm text-text-tertiary italic">No items</p>
         )}
       </div>
 

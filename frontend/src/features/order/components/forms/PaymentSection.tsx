@@ -28,7 +28,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
 }) => {
   return (
     <div className="space-y-3">
-      <div className="text-xs font-medium text-text-muted">Payment method</div>
+      <div className="text-xs font-medium text-text-tertiary">Payment method</div>
 
       <div className="grid grid-cols-2 gap-2">
         {paymentMethods.map(method => {

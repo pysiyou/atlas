@@ -237,7 +237,7 @@ export const AffiliationSection: React.FC<
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <span className="text-xs font-medium text-text-muted uppercase tracking-wide">
+              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wide">
                 Assurance Number
               </span>
               <p className="font-mono font-semibold text-text-primary text-sm">
@@ -245,7 +245,7 @@ export const AffiliationSection: React.FC<
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-text-muted uppercase tracking-wide">
+              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wide">
                 Duration
               </span>
               <p className="font-semibold text-text-primary text-sm">
@@ -255,7 +255,7 @@ export const AffiliationSection: React.FC<
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-text-muted uppercase tracking-wide">
+              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wide">
                 Start Date
               </span>
               <p className="font-semibold text-text-primary text-sm">
@@ -263,7 +263,7 @@ export const AffiliationSection: React.FC<
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-text-muted uppercase tracking-wide">
+              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wide">
                 Expiry Date
               </span>
               <p className={`font-semibold text-sm ${isActive ? 'text-text-primary' : 'text-danger'}`}>
@@ -532,7 +532,7 @@ export const MedicalHistorySection: React.FC<
             onChange={e => onFieldChange('smoking', e.target.checked)}
             className="w-4 h-4 text-brand border-border-strong rounded focus:ring-brand"
           />
-          <label htmlFor="smoking" className="text-xs font-medium text-text-muted">
+          <label htmlFor="smoking" className="text-xs font-medium text-text-tertiary">
             Smoking
           </label>
         </div>
@@ -545,7 +545,7 @@ export const MedicalHistorySection: React.FC<
             onChange={e => onFieldChange('alcohol', e.target.checked)}
             className="w-4 h-4 text-brand border-border-strong rounded focus:ring-brand"
           />
-          <label htmlFor="alcohol" className="text-xs font-medium text-text-muted">
+          <label htmlFor="alcohol" className="text-xs font-medium text-text-tertiary">
             Alcohol Use
           </label>
         </div>

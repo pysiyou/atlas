@@ -297,7 +297,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
               <div className="flex justify-between items-baseline mb-1 gap-2">
                 <label
                   htmlFor={`result-${resultKey}-${param.code}`}
-                  className="text-xxs font-medium text-text-muted cursor-pointer truncate min-w-0"
+                  className="text-xxs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
                 >
                   {param.name}
                 </label>
@@ -351,7 +351,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       <div className="mt-4">
         <label
           htmlFor={`notes-${resultKey}`}
-          className="text-xs font-medium text-text-muted mb-1 block"
+          className="text-xs font-medium text-text-tertiary mb-1 block"
         >
           Technician Notes (Optional)
         </label>

@@ -66,7 +66,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
   const renderTriggerContent = () => {
     if (!selectedOption) {
       return (
-        <span className="text-text-muted">
+        <span className="text-text-tertiary">
           {config.placeholder || `Select ${config.label.toLowerCase()}...`}
         </span>
       );
@@ -93,7 +93,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
         >
           {/* Column 1: Left Icon */}
           {config.icon && (
-            <Icon name={config.icon as IconName} className="w-4 h-4 text-text-muted shrink-0" />
+            <Icon name={config.icon as IconName} className="w-4 h-4 text-text-tertiary shrink-0" />
           )}
 
           {/* Column 2: Content - flexible middle */}
@@ -113,7 +113,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
             )}
             <Icon
               name={ICONS.actions.chevronDown}
-              className={cn('w-4 h-4 text-text-muted transition-transform', isOpen && 'rotate-180')}
+              className={cn('w-4 h-4 text-text-tertiary transition-transform', isOpen && 'rotate-180')}
             />
           </div>
         </div>

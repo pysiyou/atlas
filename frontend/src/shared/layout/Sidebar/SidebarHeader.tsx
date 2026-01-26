@@ -48,7 +48,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
         <div className={isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'flex items-center justify-between flex-1 ml-3 transition-all duration-300'}>
           <div className="min-w-0 overflow-hidden whitespace-nowrap">
             <h1 className="text-base font-bold text-text-primary truncate">Atlas Clinical Labs</h1>
-            <p className="text-xs text-text-muted">Version 2.4</p>
+            <p className="text-xs text-text-tertiary">Version 2.4</p>
           </div>
           {onMobileClose ? (
             <IconButton variant="close" size="sm" onClick={onMobileClose} title="Close Sidebar" />

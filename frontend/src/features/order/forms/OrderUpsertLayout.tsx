@@ -110,7 +110,7 @@ export const OrderUpsertLayout: React.FC<OrderUpsertLayoutProps> = ({
                 <h1 className="text-2xl font-bold text-text-primary">
                   {isEditMode ? 'Edit Order' : 'New Order'}
                 </h1>
-                {headerSubtitle && <p className="text-sm text-text-muted mt-1">{headerSubtitle}</p>}
+                {headerSubtitle && <p className="text-sm text-text-tertiary mt-1">{headerSubtitle}</p>}
               </div>
             </div>
           )}

@@ -217,7 +217,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
             <CollectionInfoLine
               collectedAt={collectedAt}
               collectedBy={collectedBy}
-              className="text-xs text-text-muted mt-1"
+              className="text-xs text-text-tertiary mt-1"
             />
           )}
         </>

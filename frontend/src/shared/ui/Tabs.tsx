@@ -165,7 +165,7 @@ export const TabsList: React.FC<TabsListProps> = ({
     if (variant === 'underline') {
       return `${base} ${isActive ? 'text-brand' : 'text-text-secondary hover:text-text-primary'}`;
     }
-    return `${base} rounded-md ${isActive ? 'bg-surface text-text-primary' : 'text-text-secondary hover:bg-surface-hover'}`;
+    return `${base} rounded ${isActive ? 'bg-surface text-text-primary' : 'text-text-secondary hover:bg-surface-hover'}`;
   };
 
   const getTabCountBadgeClasses = (variant: 'underline' | 'pills', isActive: boolean) => {

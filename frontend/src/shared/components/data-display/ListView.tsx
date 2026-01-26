@@ -146,7 +146,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
           {title && (
             <div>
               <h1 className="text-2xl font-semibold text-text-primary">{title}</h1>
-              {subtitle && <p className="text-sm text-text-muted mt-1">{subtitle}</p>}
+              {subtitle && <p className="text-sm text-text-tertiary mt-1">{subtitle}</p>}
             </div>
           )}
           {headerActions}

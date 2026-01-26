@@ -185,7 +185,7 @@ export const CatalogDetail: React.FC = () => {
         <div className="flex items-center gap-2">
           <div>
             <h1 className="text-sm font-medium text-text-primary">{test.name}</h1>
-            <p className="text-xs text-text-muted font-mono">{test.code}</p>
+            <p className="text-xs text-text-tertiary font-mono">{test.code}</p>
           </div>
         </div>
       </div>

@@ -58,7 +58,7 @@ export const Reports: React.FC = () => {
                       <span className="font-mono">{displayId.order(order.orderId)}</span>
                     </div>
                     <div className="text-sm text-text-tertiary">{getPatientName(order.patientId)}</div>
-                    <div className="text-sm text-text-muted">
+                    <div className="text-sm text-text-tertiary">
                       {formatDate(order.orderDate)} • {order.tests.length} test(s)
                     </div>
                     <div className="mt-2 flex flex-wrap gap-2">

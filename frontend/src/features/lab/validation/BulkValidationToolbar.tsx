@@ -129,14 +129,14 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
         </label>
 
         {/* Selection count */}
-        <span className="text-sm text-text-muted">
+        <span className="text-sm text-text-tertiary">
           {selectedCount} selected
         </span>
 
         {/* Clear button */}
         <button
           onClick={handleClearSelection}
-          className="text-sm text-text-muted hover:text-text-secondary"
+          className="text-sm text-text-tertiary hover:text-text-secondary"
         >
           Clear
         </button>

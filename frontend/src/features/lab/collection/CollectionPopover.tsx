@@ -101,7 +101,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       {/* Volume Input */}
       <div>
         <div className="flex items-center justify-between mb-1">
-          <label className="block text-xs font-medium text-text-muted">
+          <label className="block text-xs font-medium text-text-tertiary">
             Volume Collected <span className="text-red-600">*</span>
           </label>
           {minimumVolume > 0 && (
@@ -142,7 +142,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Type */}
       <div>
-        <label className="block text-xs font-medium text-text-muted mb-1">
+        <label className="block text-xs font-medium text-text-tertiary mb-1">
           Container Type <span className="text-red-600">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -198,7 +198,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Color */}
       <div>
-        <label className="block text-xs font-medium text-text-muted mb-1">
+        <label className="block text-xs font-medium text-text-tertiary mb-1">
           Container Color <span className="text-red-600">*</span>
         </label>
         <div className="flex gap-3">
@@ -239,7 +239,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-text-muted mb-1">Notes</label>
+        <label className="block text-xs font-medium text-text-tertiary mb-1">Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."

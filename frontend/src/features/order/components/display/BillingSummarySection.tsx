@@ -52,7 +52,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
             <Badge variant={order.paymentStatus} size="xs" />
           </div>
           {order.patientName && (
-            <p className="text-[11px] text-text-muted mt-0.5 truncate">{order.patientName}</p>
+            <p className="text-[11px] text-text-tertiary mt-0.5 truncate">{order.patientName}</p>
           )}
         </div>
 
@@ -70,7 +70,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
                     <span className="text-text-secondary truncate">
                       {test.testName || test.testCode || 'Test'}
                       {test.testCode && test.testName !== test.testCode && (
-                        <span className="text-text-muted ml-1">({test.testCode})</span>
+                        <span className="text-text-tertiary ml-1">({test.testCode})</span>
                       )}
                     </span>
                   </span>
@@ -81,7 +81,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
               ))}
             </ul>
           ) : (
-            <p className="text-xs text-text-muted italic">No items</p>
+            <p className="text-xs text-text-tertiary italic">No items</p>
           )}
         </div>
 

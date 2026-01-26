@@ -33,14 +33,14 @@ const RejectionRecordDisplay: React.FC<ResultRejectionRecordDisplayProps> = ({
     <div className="space-y-1.5 text-xs">
       {/* Type - displayed as badge */}
       <div className="flex items-center">
-        <span className="text-text-muted w-16 shrink-0">Type</span>
+        <span className="text-text-tertiary w-16 shrink-0">Type</span>
         <Badge variant={record.rejectionType} size="xs" />
       </div>
 
       {/* Reason */}
       {record.rejectionReason && (
         <div className="flex">
-          <span className="text-text-muted w-16 shrink-0">Reason</span>
+          <span className="text-text-tertiary w-16 shrink-0">Reason</span>
           <span className="text-text-primary">{record.rejectionReason}</span>
         </div>
       )}
@@ -48,7 +48,7 @@ const RejectionRecordDisplay: React.FC<ResultRejectionRecordDisplayProps> = ({
       {/* Rejected by */}
       {record.rejectedBy && (
         <div className="flex">
-          <span className="text-text-muted w-16 shrink-0">By</span>
+          <span className="text-text-tertiary w-16 shrink-0">By</span>
           <span className="text-text-primary">{getUserName(record.rejectedBy)}</span>
         </div>
       )}
@@ -56,7 +56,7 @@ const RejectionRecordDisplay: React.FC<ResultRejectionRecordDisplayProps> = ({
       {/* Date */}
       {record.rejectedAt && (
         <div className="flex">
-          <span className="text-text-muted w-16 shrink-0">Date</span>
+          <span className="text-text-tertiary w-16 shrink-0">Date</span>
           <span className="text-text-primary">{formatDate(record.rejectedAt)}</span>
         </div>
       )}
@@ -141,7 +141,7 @@ export const EntryRejectionSection: React.FC<EntryRejectionSectionProps> = ({
             className={`px-2 py-0.5 text-xs rounded ${
               activeIndex === index
                 ? 'bg-neutral-200 text-text-primary font-medium'
-                : 'text-text-muted hover:bg-neutral-100'
+                : 'text-text-tertiary hover:bg-neutral-100'
             }`}
           >
             {index + 1}
@@ -180,7 +180,7 @@ export const ResultRejectionBanner: React.FC<ResultRejectionBannerProps> = ({
         {typeLabel} #{retestNumber}
       </span>
       {rejection.rejectionReason && (
-        <span className="text-text-muted"> · {rejection.rejectionReason}</span>
+        <span className="text-text-tertiary"> · {rejection.rejectionReason}</span>
       )}
     </div>
   );

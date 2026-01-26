@@ -61,7 +61,7 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
   sampleId,
   collectedAt,
   collectedBy,
-  className = 'text-xs text-text-muted',
+  className = 'text-xs text-text-tertiary',
 }) => {
   const { getUserName } = useUserLookup();
 
@@ -92,7 +92,7 @@ interface VolumeBadgeProps {
 export const VolumeBadge: React.FC<VolumeBadgeProps> = ({
   volume,
   label = 'mL',
-  className = 'text-text-muted',
+  className = 'text-text-tertiary',
 }) => (
   <Badge size="sm" variant="default" className={className}>
     {volume.toFixed(1)} {label}
@@ -200,7 +200,7 @@ interface EntryInfoLineProps {
 export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
   enteredAt,
   enteredBy,
-  className = 'text-xs text-text-muted',
+  className = 'text-xs text-text-tertiary',
 }) => {
   const { getUserName } = useUserLookup();
 

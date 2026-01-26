@@ -53,7 +53,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
               <tr key={`${row.label}-${idx}`} className="border-b border-border-subtle last:border-b-0">
                 {/* Label */}
                 <td className="px-4 py-2.5 align-top w-2/5 uppercase text-xs">
-                  <span className="block text-xxs text-text-muted">{row.label}</span>
+                  <span className="block text-xxs text-text-tertiary">{row.label}</span>
                 </td>
                 {/* Value */}
                 <td className="px-4 py-2.5 align-top w-3/5 text-sm">

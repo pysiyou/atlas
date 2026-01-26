@@ -40,7 +40,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
         >
           <div className="px-4 py-3 border-b border-border">
             <p className="text-sm font-medium text-text-primary truncate">{currentUser.name}</p>
-            <p className="text-xs text-text-muted truncate">{formatStatus(currentUser.role)}</p>
+            <p className="text-xs text-text-tertiary truncate">{formatStatus(currentUser.role)}</p>
           </div>
           <Button
             variant="logout"
@@ -68,7 +68,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
         <div className={isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'flex items-center justify-between flex-1 min-w-0 transition-all duration-300'}>
           <div className="flex-1 min-w-0 overflow-hidden">
             <p className="text-sm font-medium text-text-primary truncate">{currentUser.name}</p>
-            <p className="text-xs text-text-muted truncate">{formatStatus(currentUser.role)}</p>
+            <p className="text-xs text-text-tertiary truncate">{formatStatus(currentUser.role)}</p>
           </div>
 
           <IconButton

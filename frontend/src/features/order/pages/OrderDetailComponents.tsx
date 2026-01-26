@@ -68,7 +68,7 @@ export const OrderMetadata: React.FC<OrderMetadataProps> = ({
       <Avatar primaryText={patientName} size="sm" />
       <div>
         <div className="font-medium text-text-primary">{patientName}</div>
-        <div className="text-xs text-text-muted">
+        <div className="text-xs text-text-tertiary">
           <span className="font-mono">{displayId.patient(patientId)}</span> • {formatDate(orderDate)}
           {referringPhysician && ` • ${referringPhysician}`}
         </div>
@@ -171,7 +171,7 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
                         >
                           {result.value} {result.unit}
                           {result.referenceRange && (
-                            <span className="text-text-muted ml-2">
+                            <span className="text-text-tertiary ml-2">
                               (Ref: {result.referenceRange})
                             </span>
                           )}

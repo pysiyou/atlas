@@ -207,7 +207,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           statusMessage={
             isComplete ? 'Ready to submit' : 'Complete all parameters to submit results'
           }
-          statusClassName="text-text-muted"
+          statusClassName="text-text-tertiary"
         >
           <Button onClick={onClose} variant="cancel" size="md">
             Cancel

@@ -143,7 +143,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
                 <div>
                   <span className="text-sm font-medium text-text-primary">Priority Lab Services</span>
-                  <p className="text-xs text-text-muted mt-0.5">Faster processing and results</p>
+                  <p className="text-xs text-text-tertiary mt-0.5">Faster processing and results</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -152,7 +152,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
                 <div>
                   <span className="text-sm font-medium text-text-primary">Discounted Test Pricing</span>
-                  <p className="text-xs text-text-muted mt-0.5">Save on all lab tests</p>
+                  <p className="text-xs text-text-tertiary mt-0.5">Save on all lab tests</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -161,7 +161,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
                 <div>
                   <span className="text-sm font-medium text-text-primary">Assurance Number</span>
-                  <p className="text-xs text-text-muted mt-0.5">Auto-generated unique identifier</p>
+                  <p className="text-xs text-text-tertiary mt-0.5">Auto-generated unique identifier</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -172,7 +172,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <span className="text-sm font-medium text-text-primary">
                     Extended Validity Period
                   </span>
-                  <p className="text-xs text-text-muted mt-0.5">Long-term access to services</p>
+                  <p className="text-xs text-text-tertiary mt-0.5">Long-term access to services</p>
                 </div>
               </div>
             </div>
@@ -180,7 +180,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
 
           {/* Additional Info */}
           <div className="pt-4 border-t border-border">
-            <p className="text-xs text-text-muted leading-relaxed">
+            <p className="text-xs text-text-tertiary leading-relaxed">
               {hasExistingAffiliation
                 ? 'Your affiliation will be extended from the current end date when you renew or extend.'
                 : 'An assurance number will be automatically generated upon registration. All plans include full lab services access.'}
@@ -252,9 +252,9 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                               <span className="text-2xl font-bold text-text-primary">
                                 {formatCurrency(plan.monthlyPrice)}
                               </span>
-                              <span className="text-sm text-text-muted font-medium">/month</span>
+                              <span className="text-sm text-text-tertiary font-medium">/month</span>
                             </div>
-                            <div className="text-xs text-text-muted">
+                            <div className="text-xs text-text-tertiary">
                               {formatCurrency(plan.price)} per year
                             </div>
                           </>
@@ -263,14 +263,14 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                             <span className="text-xl font-bold text-text-primary">
                               {formatCurrency(plan.price)}
                             </span>
-                            <span className="text-sm text-text-muted">
+                            <span className="text-sm text-text-tertiary">
                               /{plan.duration === 6 ? '6 months' : '2 years'}
                             </span>
                           </div>
                         )}
                       </div>
                     ) : (
-                      <div className="text-sm text-text-muted">Price not available</div>
+                      <div className="text-sm text-text-tertiary">Price not available</div>
                     )}
                   </div>
                 </div>
@@ -293,7 +293,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
             >
               {loading ? 'Processing...' : getActionText()}
             </Button>
-            <p className="text-xs text-text-muted text-center mt-2">
+            <p className="text-xs text-text-tertiary text-center mt-2">
               All subscription auto renews until canceled
             </p>
           </div>

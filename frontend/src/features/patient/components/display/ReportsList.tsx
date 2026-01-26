@@ -42,7 +42,7 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
               <p className="text-xs font-medium font-mono text-text-primary truncate">
                 Report_{displayId.order(order.orderId)}.pdf
               </p>
-              <p className="text-xs text-text-muted mt-0.5">
+              <p className="text-xs text-text-tertiary mt-0.5">
                 {formatDetailDate(order.orderDate)} • 1.2 MB
               </p>
             </div>

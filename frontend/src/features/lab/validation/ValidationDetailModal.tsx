@@ -170,7 +170,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               ? 'Review flags carefully before approving'
               : 'Verify all results match expected values'
           }
-          statusClassName="text-text-muted"
+          statusClassName="text-text-tertiary"
         >
           <Popover
             placement="top-end"
