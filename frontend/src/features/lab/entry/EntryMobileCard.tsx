@@ -74,7 +74,7 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className="bg-surface border border-border rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col h-full"
+      className="bg-surface border border-border rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Test name + Sample ID */}
       <div className="flex items-center justify-between gap-2 mb-2">
@@ -100,7 +100,7 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
       <div className="space-y-2">
         <div className="space-y-1">
           <div className="text-xs text-text-secondary font-medium">{patientName}</div>
-          <div className="text-xs text-text-muted font-mono">{displayId.order(test.orderId)}</div>
+          <div className="text-xs text-sky-600 font-mono">{displayId.order(test.orderId)}</div>
           {test.collectedAt && (
             <div className="text-xs text-text-muted mt-1">
               Collected: {formatDate(test.collectedAt)}

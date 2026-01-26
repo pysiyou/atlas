@@ -17,35 +17,39 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
   return (
     <div
       onClick={onClick}
-      className="bg-surface border border-border rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col h-full"
+      className="bg-surface border border-border rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
     >
-      {/* Header: Test code (left) + Price (right) */}
-      <div className="mb-3 pb-3 border-b border-border flex justify-between items-center">
-        <span className="text-xs text-brand font-medium font-mono leading-none">{test.code}</span>
+      {/* Header: Test name + code (left) + Price (right) */}
+      <div className="flex justify-between items-center mb-3 pb-3 border-b border-border">
+        <div className="flex flex-col min-w-0">
+          <div className="text-sm font-semibold text-text-primary break-words">{test.name}</div>
+          <span className="text-xs text-sky-600 font-medium font-mono leading-none">{test.code}</span>
+        </div>
         <div className="font-medium text-brand text-lg leading-none">
           {formatCurrency(test.price)}
         </div>
       </div>
 
-      {/* Test name and synonyms */}
-      <div className="space-y-2">
-        <div className="text-base font-semibold text-text-primary break-words">{test.name}</div>
-        {test.synonyms && test.synonyms.length > 0 && (
-          <div className="text-sm text-text-secondary truncate mt-1">
-            {test.synonyms.slice(0, 2).join(', ')}
-            {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
-          </div>
-        )}
-        {/* Sample volume - shown if available */}
-        {test.sampleVolume && (
-          <div className="text-sm text-text-secondary mt-1">Volume: {test.sampleVolume}</div>
-        )}
+      {/* Synonyms and volume */}
+      <div className="grow">
+        <div className="space-y-1">
+          {test.synonyms && test.synonyms.length > 0 && (
+            <div className="text-xs text-text-secondary truncate">
+              {test.synonyms.slice(0, 2).join(', ')}
+              {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
+            </div>
+          )}
+          {/* Sample volume - shown if available */}
+          {test.sampleVolume && (
+            <div className="text-xs text-text-secondary">Volume: {test.sampleVolume}</div>
+          )}
+        </div>
       </div>
 
       {/* Bottom section: Turnaround time (left) + Category + Sample Type badges (right) */}
-      <div className="flex justify-between items-center mt-3 pt-3 border-t border-border">
+      <div className="flex justify-between items-center mt-auto pt-3">
         {/* Turnaround time on bottom left */}
-        <div className="text-sm text-text-secondary">
+        <div className="text-xs text-text-muted">
           TAT: {formatTurnaroundTime(test.turnaroundTime)}
         </div>
         {/* Category and Sample Type badges on bottom right */}

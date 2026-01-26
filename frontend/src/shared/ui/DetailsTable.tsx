@@ -39,7 +39,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
   const filteredRows = providedFilteredRows ?? filterDetailRows(rows);
 
   return (
-    <div className={`bg-surface border border-border rounded-lg overflow-hidden ${className}`}>
+    <div className={`bg-surface border border-border rounded-md overflow-hidden ${className}`}>
       {/* Header */}
       <div className="px-4 py-3 border-b border-border bg-app-bg">
         <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wide">{title}</h3>

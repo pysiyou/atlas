@@ -95,7 +95,7 @@ export const LAB_CARD_LIST_ITEMS = {
   testName: 'font-medium mr-1',
 
   // Test code in list
-  testCode: 'text-text-muted',
+  testCode: 'text-sky-600',
 } as const;
 
 // Context Row Constants (Patient/Order info)

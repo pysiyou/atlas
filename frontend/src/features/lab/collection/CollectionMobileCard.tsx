@@ -61,7 +61,7 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className="bg-surface border border-border rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col h-full"
+      className="bg-surface border border-border rounded-md p-3  duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Avatar (top left) + Status badge (top right) */}
       <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
@@ -69,7 +69,7 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
           primaryText={patientName}
           primaryTextClassName="font-semibold"
           secondaryText={displayId.order(order.orderId)}
-          secondaryTextClassName="text-text-tertiary"
+          secondaryTextClassName="text-sky-600 font-mono"
           size="xs"
         />
         {isPending ? (
@@ -90,14 +90,14 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
       {/* Content: Volume, tests */}
       <div className="grow">
         <div className="space-y-1">
-          <div className="text-xs text-text-secondary">
+          <div className="text-xs text-text-tertiary">
             {isPending
               ? `${formatVolume(requirement.totalVolume)} required`
               : collectedVolume !== undefined
                 ? `${formatVolume(collectedVolume)} ${isRejected ? 'was collected' : 'collected'}`
                 : null}
           </div>
-          <div className="text-xs text-text-primary">
+          <div className="text-xs text-text-secondary">
             {testCount} test{testCount !== 1 ? 's' : ''}: {testNames.slice(0, 2).join(', ')}
             {testCount > 2 && ` +${testCount - 2} more`}
           </div>

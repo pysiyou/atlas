@@ -103,7 +103,7 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
       {
         key: 'category',
         header: 'Category',
-        width: 'md',
+        width: 'lg',
         sortable: true,
         render: renderCategory,
       },
@@ -120,13 +120,6 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         width: 'sm',
         sortable: true,
         render: renderPrice,
-      },
-      {
-        key: 'isActive',
-        header: 'Status',
-        width: 'sm',
-        sortable: true,
-        render: renderStatus,
       },
       {
         key: 'actions',
@@ -155,25 +148,25 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         render: renderName,
       },
       {
-        key: 'category',
-        header: 'Category',
-        width: 'md',
-        sortable: true,
-        render: renderCategory,
-      },
-      {
-        key: 'sampleType',
-        header: 'Sample Type',
-        width: 'sm',
-        sortable: true,
-        render: renderSampleType,
-      },
-      {
         key: 'loincCodes',
-        header: 'LOINC Codes',
+        header: 'LOINC',
         width: 'md',
         sortable: false,
         render: renderLoincCodes,
+      },
+      // {
+      //   key: 'category',
+      //   header: 'Category',
+      //   width: 'md',
+      //   sortable: true,
+      //   render: renderCategory,
+      // },
+      {
+        key: 'sampleType',
+        header: 'Sample',
+        width: 'sm',
+        sortable: true,
+        render: renderSampleType,
       },
       {
         key: 'price',
@@ -181,13 +174,6 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         width: 'sm',
         sortable: true,
         render: renderPrice,
-      },
-      {
-        key: 'isActive',
-        header: 'Status',
-        width: 'sm',
-        sortable: true,
-        render: renderStatus,
       },
       {
         key: 'actions',
@@ -215,13 +201,13 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         truncate: true,
         render: renderName,
       },
-      {
-        key: 'category',
-        header: 'Category',
-        width: 'md',
-        sortable: true,
-        render: renderCategory,
-      },
+      // {
+      //   key: 'category',
+      //   header: 'Category',
+      //   width: 'md',
+      //   sortable: true,
+      //   render: renderCategory,
+      // },
       {
         key: 'price',
         header: 'Price',

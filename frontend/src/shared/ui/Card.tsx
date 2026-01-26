@@ -25,8 +25,8 @@ export const Card: React.FC<CardProps> = ({
     lg: 'p-8',
   };
 
-  const baseClasses = 'bg-surface rounded-lg border border-border shadow-md transition-shadow duration-200';
-  const hoverClass = hover ? 'hover:shadow-lg cursor-pointer' : '';
+  const baseClasses = 'bg-surface rounded-md border border-border duration-200';
+  const hoverClass = hover ? 'cursor-pointer' : '';
 
   return (
     <div className={`${baseClasses} ${paddingClasses[paddingProp]} ${hoverClass} ${className}`}>

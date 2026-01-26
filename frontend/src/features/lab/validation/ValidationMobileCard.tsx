@@ -177,7 +177,7 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className="bg-surface border border-border rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col h-full"
+      className="bg-surface border border-border rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Test name + Patient name, Test code, Sample ID */}
       <div className="flex items-center justify-between gap-2 mb-2">
@@ -211,7 +211,7 @@ export const ValidationMobileCard: React.FC<ValidationMobileCardProps> = ({
             <ResultGrid results={test.results} flagStatusMap={flagStatusMap} />
           </div>
           {test.resultEnteredAt && (
-            <div className="text-xs text-text-muted">
+            <div className="text-xs text-text-tertiary">
               Entered: {formatDate(test.resultEnteredAt)}
             </div>
           )}

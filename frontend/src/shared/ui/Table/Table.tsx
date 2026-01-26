@@ -101,8 +101,8 @@ export function Table<T = Record<string, unknown>>({
   // Card view for mobile (xs/sm)
   if (shouldShowCard) {
     return (
-      <div className={embedded ? 'flex flex-col h-full' : 'bg-surface rounded-lg border border-border shadow-sm flex flex-col h-full'}>
-        <div className="p-4">
+      <div className={embedded ? 'flex flex-col h-full min-h-0' : 'bg-surface rounded-lg border border-border shadow-sm flex flex-col h-full min-h-0'}>
+        <div className="flex-1 min-h-0 overflow-y-auto p-4">
           <CardGrid<T>
             data={paginatedData as T[]}
             CardComponent={viewConfig.CardComponent}

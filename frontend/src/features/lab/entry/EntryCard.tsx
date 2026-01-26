@@ -95,7 +95,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
       <Badge variant={test.priority} size="sm" />
       <Badge variant={test.sampleType} size="sm" />
-      <Badge size="sm" variant="default" className="text-text-tertiary">
+      <Badge size="sm" variant="default" className="text-sky-600">
         {test.testCode}
       </Badge>
     </>

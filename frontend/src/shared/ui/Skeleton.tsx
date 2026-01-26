@@ -111,7 +111,7 @@ export const SkeletonCard: React.FC<{
   showAvatar?: boolean;
   lines?: number;
 }> = ({ className = '', showAvatar = true, lines = 3 }) => (
-  <div className={`bg-surface rounded-lg border border-border shadow-sm p-4 ${className}`}>
+  <div className={`bg-surface rounded-md border border-border shadow-sm p-4 ${className}`}>
     <div className="flex items-start gap-4">
       {showAvatar && <SkeletonAvatar size="md" />}
       <div className="flex-1">
@@ -165,7 +165,7 @@ export const SkeletonPage: React.FC<{
     </div>
 
     {/* Table */}
-    <div className="bg-surface rounded-lg border border-border shadow-sm">
+    <div className="bg-surface rounded-md border border-border shadow-sm">
       {/* Table header */}
       <div className="flex items-center gap-4 py-3 px-6 border border-border border-b bg-app-bg">
         {Array.from({ length: 6 }).map((_, index) => (
