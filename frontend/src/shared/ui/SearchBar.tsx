@@ -6,9 +6,12 @@
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
-import { getInputClasses } from '@/shared/design-system/tokens/components/input';
 import { filterControlSizing, iconSizes } from '@/shared/design-system/tokens/sizing';
-import { neutralColors } from '@/shared/design-system/tokens/colors';
+import { neutralColors, brandColors } from '@/shared/design-system/tokens/colors';
+import { hover, focus } from '@/shared/design-system/tokens/interactions';
+import { transitions } from '@/shared/design-system/tokens/animations';
+import { radius } from '@/shared/design-system/tokens/borders';
+import { cn } from '@/utils';
 
 interface SearchBarProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   onSearch?: (value: string) => void;
@@ -30,20 +33,26 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     }
   };
 
-  const sizeClasses = size === 'sm' ? `py-1.5 text-xs ${filterControlSizing.height}` : 'py-2 text-sm';
+  const sizeClasses = size === 'sm' ? filterControlSizing.height : 'py-2';
   const iconClasses = size === 'sm' ? 'w-3.5 h-3.5' : iconSizes.sm;
 
   return (
-    <div className={`relative ${className}`}>
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <Icon
-          name={ICONS.actions.search}
-          className={`${neutralColors.text.disabled} ${iconClasses}`}
-        />
-      </div>
+    <div className={cn('relative flex items-center gap-2', filterControlSizing.height, 'px-3 bg-surface border', neutralColors.border.medium, radius.md, hover.background, focus.outline, `focus-within:${brandColors.primary.borderMedium}`, transitions.colors, className)}>
+      {/* Column 1: Left Icon */}
+      <Icon
+        name={ICONS.actions.search}
+        className={cn(neutralColors.text.disabled, iconClasses, 'shrink-0')}
+      />
+      
+      {/* Column 2: Input - flexible middle */}
       <input
         type="text"
-        className={`${getInputClasses(false, true, 'left', size === 'sm' ? 'sm' : 'md', false)} pl-9 pr-4 ${sizeClasses} font-medium placeholder:${neutralColors.text.muted} placeholder:font-normal`}
+        className={cn(
+          'flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none',
+          'placeholder:font-normal',
+          `placeholder:${neutralColors.text.muted}`,
+          sizeClasses === filterControlSizing.height ? 'py-0' : ''
+        )}
         {...props}
         onChange={handleChange}
       />

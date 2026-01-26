@@ -7,14 +7,7 @@
 import React, { useMemo, useState } from 'react';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useFilterState, useQuickFilters } from './hooks';
-import {
-  SearchControl,
-  DateRangeControl,
-  AgeRangeControl,
-  PriceRangeControl,
-  MultiSelectControl,
-  SingleSelectControl,
-} from './filter-controls';
+import { FilterFactory } from './FilterFactory';
 import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
 import { FilterModal } from './FilterModal';
@@ -29,7 +22,7 @@ import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
 // Token-based style constants for consistent styling
 const filterStyles = {
   controlHeight: filterControl.height,
-  container: `w-full bg-surface border-b ${border.default}`,
+  container: `w-full bg-surface border-b ${neutralColors.border.default}`,
   dropdownLabel: `${fontSize.xs} ${fontWeight.medium} ${neutralColors.text.secondary} mb-2`,
   dropdownDivider: `pt-2 border-t ${border.default}`,
 } as const;
@@ -136,82 +129,18 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
   };
 
   /**
-   * Render a filter control based on its type
+   * Render a filter control using the FilterFactory
    */
   const renderControl = (control: (typeof config.primaryFilters.controls)[0]) => {
-    const filterValue = filters[control.key];
-
-    switch (control.type) {
-      case 'search':
-        return (
-          <SearchControl
-            key={control.key}
-            value={(filterValue as string) || ''}
-            onChange={val => setFilter(control.key, val)}
-            placeholder={control.placeholder}
-            debounceMs={control.debounceMs}
-            className="w-full"
-          />
-        );
-
-      case 'dateRange':
-        return (
-          <DateRangeControl
-            key={control.key}
-            value={(filterValue as [Date, Date] | null) || null}
-            onChange={val => setFilter(control.key, val)}
-            config={control}
-            className="w-full"
-          />
-        );
-
-      case 'ageRange':
-        return (
-          <AgeRangeControl
-            key={control.key}
-            value={(filterValue as [number, number]) || [0, 150]}
-            onChange={val => setFilter(control.key, val)}
-            config={control}
-            className="w-full"
-          />
-        );
-
-      case 'priceRange':
-        return (
-          <PriceRangeControl
-            key={control.key}
-            value={(filterValue as [number, number]) || [control.min ?? 0, control.max ?? 10000]}
-            onChange={val => setFilter(control.key, val)}
-            config={control}
-            className="w-full"
-          />
-        );
-
-      case 'multiSelect':
-        return (
-          <MultiSelectControl
-            key={control.key}
-            value={(filterValue as string[]) || []}
-            onChange={val => setFilter(control.key, val)}
-            config={control}
-            className="w-full"
-          />
-        );
-
-      case 'singleSelect':
-        return (
-          <SingleSelectControl
-            key={control.key}
-            value={(filterValue as string | null) || null}
-            onChange={val => setFilter(control.key, val)}
-            config={control}
-            className="w-full"
-          />
-        );
-
-      default:
-        return null;
-    }
+    return (
+      <FilterFactory
+        key={control.key}
+        control={control}
+        value={filters}
+        onChange={setFilter}
+        className="w-full"
+      />
+    );
   };
 
   // Get non-search controls

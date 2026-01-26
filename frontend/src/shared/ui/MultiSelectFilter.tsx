@@ -226,40 +226,42 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
             className
           )}
         >
-          {/* Icon */}
+          {/* Column 1: Left Icon */}
           {icon && <Icon name={icon} className={dropdown.icon} />}
 
-          {/* Content: min-w-0 + truncate so it doesn't grow row when has values */}
+          {/* Column 2: Content - flexible middle */}
           <div className={dropdown.content}>
             {renderTriggerContent()}
           </div>
 
-          {/* Chevron */}
-          <Icon
-            name={ICONS.actions.chevronDown}
-            className={cn(dropdown.chevron, isOpen && 'rotate-180')}
-          />
-
-          {/* Clear button */}
-          {selectedIds.length > 0 && (
-            <button
-              type="button"
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleClear(e);
-              }}
-              onMouseDown={e => {
-                // Prevent popover from opening when clicking clear button
-                // But don't prevent default on the button itself to allow onClick to fire
-                e.stopPropagation();
-              }}
-              className={dropdown.clearButton}
-              aria-label="Clear selection"
-            >
-              <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
-            </button>
-          )}
+          {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
+          <div className={dropdown.rightIcons}>
+            {selectedIds.length > 0 ? (
+              <button
+                type="button"
+                onClick={e => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleClear(e);
+                }}
+                onMouseDown={e => {
+                  // Prevent popover from opening when clicking clear button
+                  // But don't prevent default on the button itself to allow onClick to fire
+                  e.stopPropagation();
+                }}
+                className={dropdown.clearButton}
+                aria-label="Clear selection"
+              >
+                <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
+              </button>
+            ) : (
+              <div className={dropdown.clearButtonPlaceholder} />
+            )}
+            <Icon
+              name={ICONS.actions.chevronDown}
+              className={cn(dropdown.chevron, isOpen && 'rotate-180')}
+            />
+          </div>
         </div>
       )}
       className={dropdownContent.minWidth}

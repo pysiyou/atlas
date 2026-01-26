@@ -29,12 +29,20 @@ export { FilterModal, type FilterModalProps } from './FilterModal';
 export { FilterSection, type FilterSectionProps } from './FilterSection';
 export { ActiveFilterBadges, type ActiveFilterBadgesProps } from './ActiveFilterBadges';
 export { QuickFilters, type QuickFiltersProps } from './QuickFilters';
+export { FilterFactory, type FilterFactoryProps } from './FilterFactory';
 
-// Filter Controls
+// Filter Components
 export {
-  SearchControl,
-  DateRangeControl,
-  AgeRangeControl,
-  MultiSelectControl,
-  SingleSelectControl,
-} from './filter-controls';
+  SearchFilter,
+  DateRangeFilter,
+  AgeRangeFilter,
+  PriceRangeFilter,
+  MultiSelectFilter,
+  SingleSelectFilter,
+  type SearchFilterProps,
+  type DateRangeFilterProps,
+  type AgeRangeFilterProps,
+  type PriceRangeFilterProps,
+  type MultiSelectFilterProps,
+  type SingleSelectFilterProps,
+} from './filters';

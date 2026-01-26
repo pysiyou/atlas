@@ -15,9 +15,6 @@ export { PaymentErrorBoundary } from './PaymentErrorBoundary';
 export { LoadingState } from './LoadingState';
 export type { LoadingStateProps } from './LoadingState';
 
-// Filter Components
-export * from './filters';
-
 // Section Components
 export * from './sections';
 

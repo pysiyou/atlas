@@ -105,7 +105,7 @@ export const emptyStateCard = {
  * Used by: ListView component
  */
 export const listViewCard = {
-  container: `flex-1 flex flex-col bg-surface rounded ${neutralColors.border.default} overflow-hidden min-h-0`,
+  container: `flex-1 flex flex-col bg-surface rounded border ${neutralColors.border.default} overflow-hidden min-h-0`,
   header: {
     title: `text-2xl font-bold ${neutralColors.text.primary}`,
     description: `text-sm ${neutralColors.text.muted} mt-1`,

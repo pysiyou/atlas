@@ -10,6 +10,7 @@ import { brandColors, neutralColors } from '../colors';
 import { padding } from '../spacing';
 import { hover } from '../interactions';
 import { transitions } from '../animations';
+import { radius } from '../borders';
 import { filterControl } from './filter';
 
 /**
@@ -18,15 +19,17 @@ import { filterControl } from './filter';
  */
 export const dropdown = {
   trigger: {
-    base: `flex items-center gap-2 ${padding.horizontal.sm} py-1.5 ${filterControl.height} min-h-[34px] max-h-[34px] bg-surface border rounded cursor-pointer ${transitions.colors} w-full overflow-hidden`,
+    base: `flex items-center gap-2 ${padding.horizontal.sm} py-1.5 ${filterControl.height} min-h-[34px] max-h-[34px] bg-surface border ${radius.md} rounded cursor-pointer ${transitions.colors} w-full overflow-hidden`,
     default: `border ${neutralColors.border.medium} ${hover.border}`,
-    open: `${brandColors.primary.borderMedium} ring-2 ${brandColors.primary.ring20}`,
+    open: `${brandColors.primary.borderMedium}`,
   },
   icon: `w-4 h-4 ${neutralColors.text.disabled} shrink-0`,
+  content: 'min-w-0 flex-1 text-xs truncate',
+  rightIcons: 'flex items-center gap-0.5 shrink-0',
   chevron: `w-4 h-4 ${neutralColors.text.disabled} ${transitions.colors} shrink-0`,
-  content: 'min-w-0 text-xs truncate ml-1',
-  clearButton: `p-0.5 -mr-1 ${hover.background} rounded ${transitions.colors} flex items-center justify-center cursor-pointer shrink-0`,
+  clearButton: `p-0.5 ${hover.background} rounded ${transitions.colors} flex items-center justify-center cursor-pointer shrink-0`,
   clearIcon: `w-4 h-4 ${neutralColors.text.disabled} hover:${neutralColors.text.tertiary}`,
+  clearButtonPlaceholder: 'w-5 h-5 shrink-0',
 } as const;
 
 /**

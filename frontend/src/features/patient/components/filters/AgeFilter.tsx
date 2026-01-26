@@ -156,13 +156,13 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
         <div
           className={cn(
             dropdown.trigger.base,
-            `hover:${brandColors.primary.borderLight} hover:shadow-sm`,
             isOpen
-              ? `${brandColors.primary.borderMedium} ring-2 ${brandColors.primary.ring20} shadow-md`
+              ? dropdown.trigger.open
               : dropdown.trigger.default,
             className
           )}
         >
+          {/* Column 1: Left Icon */}
           <Icon
             name={ICONS.dataFields.hourglass}
             className={cn(
@@ -170,28 +170,34 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               isOpen ? brandColors.primary.icon : cn(neutralColors.text.disabled, `group-hover:${brandColors.primary.iconLight}`)
             )}
           />
+          
+          {/* Column 2: Content - flexible middle */}
           <div className={cn(dropdown.content, 'font-medium')}>{renderTriggerContent()}</div>
 
-          <Icon
-            name={ICONS.actions.chevronDown}
-            className={cn(
-              dropdown.chevron,
-              isOpen && cn('rotate-180', brandColors.primary.icon)
+          {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
+          <div className={dropdown.rightIcons}>
+            {value && (value[0] !== min || value[1] !== max) ? (
+              <button
+                onClick={handleClear}
+                className={cn(dropdown.clearButton, `hover:${brandColors.primary.backgroundLightBg} group/clear`)}
+                aria-label="Clear age filter"
+              >
+                <Icon 
+                  name={ICONS.actions.closeCircle} 
+                  className={cn(dropdown.clearIcon, `group-hover/clear:${brandColors.primary.icon}`)} 
+                />
+              </button>
+            ) : (
+              <div className={dropdown.clearButtonPlaceholder} />
             )}
-          />
-
-          {value && (value[0] !== min || value[1] !== max) && (
-            <button
-              onClick={handleClear}
-              className={cn(dropdown.clearButton, `hover:${brandColors.primary.backgroundLightBg} group/clear`)}
-              aria-label="Clear age filter"
-            >
-              <Icon 
-                name={ICONS.actions.closeCircle} 
-                className={cn(dropdown.clearIcon, `group-hover/clear:${brandColors.primary.icon}`)} 
-              />
-            </button>
-          )}
+            <Icon
+              name={ICONS.actions.chevronDown}
+              className={cn(
+                dropdown.chevron,
+                isOpen && cn('rotate-180', brandColors.primary.icon)
+              )}
+            />
+          </div>
         </div>
       )}
       className="p-6 w-[320px]"

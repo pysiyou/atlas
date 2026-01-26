@@ -37,8 +37,8 @@ export const filterContainer = {
  */
 export const filterInput = {
   base: `${filterControl.height} ${fontSize.xs} border ${neutralColors.border.medium} ${radius.md} ${padding.horizontal.sm} ${focus.outline} focus:${brandColors.primary.borderMedium} ${transitions.colors}`,
-  withIcon: `${filterControl.height} ${fontSize.xs} border ${neutralColors.border.medium} ${radius.md} pl-9 pr-3 ${focus.outline} focus:${brandColors.primary.borderMedium} ${transitions.colors}`,
-  icon: `absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${neutralColors.text.disabled}`,
+  withIcon: `${filterControl.height} ${fontSize.xs} border ${neutralColors.border.medium} ${radius.md} pl-3 pr-9 ${focus.outline} focus:${brandColors.primary.borderMedium} ${transitions.colors}`,
+  icon: `absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 ${neutralColors.text.disabled}`,
   clearButton: `p-0.5 -mr-1 ${hover.background} rounded ${transitions.colors} flex items-center justify-center cursor-pointer shrink-0`,
 } as const;
 

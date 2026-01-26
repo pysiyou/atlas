@@ -100,22 +100,29 @@ export const DateFilter: React.FC<DateFilterProps> = ({
             className
           )}
         >
+          {/* Column 1: Left Icon */}
           <Icon name={ICONS.dataFields.date} className={dropdown.icon} />
+          
+          {/* Column 2: Content - flexible middle */}
           <div className={dropdown.content}>{renderTriggerContent()}</div>
 
-          <Icon
-            name={ICONS.actions.chevronDown}
-            className={cn(dropdown.chevron, isOpen && 'rotate-180')}
-          />
-
-          {value && (
-            <button
-              onClick={handleClear}
-              className={dropdown.clearButton}
-            >
-              <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
-            </button>
-          )}
+          {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
+          <div className={dropdown.rightIcons}>
+            {value ? (
+              <button
+                onClick={handleClear}
+                className={dropdown.clearButton}
+              >
+                <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
+              </button>
+            ) : (
+              <div className={dropdown.clearButtonPlaceholder} />
+            )}
+            <Icon
+              name={ICONS.actions.chevronDown}
+              className={cn(dropdown.chevron, isOpen && 'rotate-180')}
+            />
+          </div>
         </div>
       )}
       className="p-0 w-[280px]"

@@ -93,29 +93,31 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
             className
           )}
         >
-          {/* Icon */}
+          {/* Column 1: Left Icon */}
           {config.icon && (
             <Icon name={config.icon as IconName} className={dropdown.icon} />
           )}
 
-          {/* Content */}
+          {/* Column 2: Content - flexible middle */}
           <div className={dropdown.content}>{renderTriggerContent()}</div>
 
-          {/* Chevron */}
-          <Icon
-            name={ICONS.actions.chevronDown}
-            className={cn(dropdown.chevron, isOpen && 'rotate-180')}
-          />
-
-          {/* Clear button */}
-          {value && (
-            <button
-              onClick={handleClear}
-              className={dropdown.clearButton}
-            >
-              <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
-            </button>
-          )}
+          {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
+          <div className={dropdown.rightIcons}>
+            {value ? (
+              <button
+                onClick={handleClear}
+                className={dropdown.clearButton}
+              >
+                <Icon name={ICONS.actions.closeCircle} className={dropdown.clearIcon} />
+              </button>
+            ) : (
+              <div className={dropdown.clearButtonPlaceholder} />
+            )}
+            <Icon
+              name={ICONS.actions.chevronDown}
+              className={cn(dropdown.chevron, isOpen && 'rotate-180')}
+            />
+          </div>
         </div>
       )}
       className=""
