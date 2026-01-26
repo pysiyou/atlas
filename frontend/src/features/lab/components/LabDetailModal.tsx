@@ -98,7 +98,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 <div className="flex items-center gap-3 text-sm text-text-secondary flex-wrap">
                   <span className="font-semibold text-text-primary">{contextInfo.patientName}</span>
                   <span className="text-text-disabled select-none">|</span>
-                  <span className="font-medium text-text-primary text-xs font-mono tracking-wide whitespace-nowrap">
+                  <span className="font-medium text-sky-600 text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.patientId === 'number'
                       ? displayId.patient(contextInfo.patientId)
                       : contextInfo.patientId}
@@ -112,7 +112,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                     </>
                   )}
                   <span className="text-text-disabled select-none">|</span>
-                  <span className="font-medium text-text-primary text-xs font-mono tracking-wide whitespace-nowrap">
+                  <span className="font-medium text-sky-600 text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.orderId === 'number'
                       ? displayId.order(contextInfo.orderId)
                       : contextInfo.orderId}
@@ -129,7 +129,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 {sampleInfo && sampleInfo.collectedAt && (
                   <span className="text-xs text-text-tertiary">
                     Sample{' '}
-                    <span className="font-medium text-text-primary text-sm font-mono tracking-wide">
+                    <span className="font-medium text-sky-600 text-xs font-mono tracking-wide">
                       {typeof sampleInfo.sampleId === 'number'
                         ? displayId.sample(sampleInfo.sampleId)
                         : sampleInfo.sampleId}

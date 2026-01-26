@@ -284,7 +284,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           {
             title: 'Test Information',
             fields: [
-              { label: 'Test Code', badge: { value: test.testCode, variant: 'primary' } },
+              { label: 'Test Code', value: <span className="text-sky-600 font-mono">{test.testCode}</span> },
               {
                 label: 'Sample Type',
                 badge: test.sampleType
@@ -293,9 +293,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               },
               {
                 label: 'Sample ID',
-                badge: test.sampleId
-                  ? { value: displayId.sample(test.sampleId), variant: 'primary', className: 'font-mono' }
-                  : undefined,
+                value: test.sampleId ? <span className="text-sky-600 font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
               },
               {
                 label: 'Turnaround Time',

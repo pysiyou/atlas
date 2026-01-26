@@ -110,7 +110,7 @@ export const LabCard: React.FC<LabCardProps> = ({
             {sampleInfo?.sampleId && sampleInfo?.collectedAt && (
               <span className={LAB_CARD_TYPOGRAPHY.metadata}>
                 Sample{' '}
-                <span className={`${LAB_CARD_CONTEXT.patientName} font-mono text-sky-600`}>
+                <span className="font-mono text-sky-600">
                   {displayId.sample(sampleInfo.sampleId)}
                 </span>{' '}
                 collected{' '}
