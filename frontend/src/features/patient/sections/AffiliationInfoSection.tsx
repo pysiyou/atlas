@@ -8,7 +8,6 @@ import { Badge } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import type { Affiliation } from '@/types';
 import { isAffiliationActive } from '../utils/affiliationUtils';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 interface AffiliationInfoProps {
   affiliation: Affiliation;
@@ -46,7 +45,7 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
 
       <div>
         <div className="text-xs text-text-muted mb-0.5">End Date</div>
-        <div className={`font-medium ${isActive ? 'text-text-primary' : semanticColors.danger.icon}`}>
+        <div className={`font-medium ${isActive ? 'text-text-primary' : 'text-danger'}`}>
           {formatDate(affiliation.endDate)}
         </div>
       </div>

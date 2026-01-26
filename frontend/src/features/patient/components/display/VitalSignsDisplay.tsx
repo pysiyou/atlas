@@ -8,7 +8,6 @@ import { Icon } from '@/shared/ui';
 import type { IconName } from '@/shared/ui/Icon';
 import type { VitalSigns } from '@/types/patient';
 import { ICONS } from '@/utils/icon-mappings';
-import { semanticColors } from '@/shared/design-system/tokens/colors';
 
 export interface VitalSignsDisplayProps {
   vitalSigns?: VitalSigns;
@@ -102,27 +101,27 @@ const getStatusColors = (status: VitalStatus) => {
   switch (status) {
     case 'normal':
       return {
-        bg: semanticColors.success.backgroundLight,
-        border: semanticColors.success.border,
-        icon: semanticColors.success.icon,
-        value: semanticColors.success.textOnLight,
-        dot: semanticColors.success.background,
+        bg: 'bg-success/10',
+        border: 'border-success',
+        icon: 'text-success',
+        value: 'text-success',
+        dot: 'bg-success',
       };
     case 'borderline':
       return {
-        bg: semanticColors.warning.backgroundLight,
-        border: semanticColors.warning.border,
-        icon: semanticColors.warning.icon,
-        value: semanticColors.warning.textOnLight,
-        dot: semanticColors.warning.background,
+        bg: 'bg-warning/10',
+        border: 'border-warning',
+        icon: 'text-warning',
+        value: 'text-warning',
+        dot: 'bg-warning',
       };
     case 'abnormal':
       return {
-        bg: semanticColors.danger.backgroundLight,
-        border: semanticColors.danger.border,
-        icon: semanticColors.danger.icon,
-        value: semanticColors.danger.textOnLight,
-        dot: semanticColors.danger.background,
+        bg: 'bg-danger/10',
+        border: 'border-danger',
+        icon: 'text-danger',
+        value: 'text-danger',
+        dot: 'bg-danger',
       };
   }
 };
