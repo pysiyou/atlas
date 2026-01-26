@@ -121,18 +121,18 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
           return (
             <div
               key={badge.key}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-surface border border-border-strong rounded text-xxs"
+              className="inline-flex items-center gap-1 px-2 py-1 rounded text-xxs filter-chip"
             >
-              <span className="font-medium text-text-secondary">{badge.label}:</span>
-              <span className="text-text-tertiary">{displayValue}</span>
+              <span className="font-medium">{badge.label}:</span>
+              <span>{displayValue}</span>
               <button
                 onClick={() => onRemove(badge.key)}
-                className="ml-0.5 p-0.5 hover:bg-neutral-100 rounded transition-colors cursor-pointer"
+                className="ml-0.5 p-0.5 rounded transition-colors cursor-pointer hover:opacity-70"
                 aria-label={`Remove ${badge.label} filter`}
               >
                 <Icon
                   name={ICONS.actions.closeCircle}
-                  className="w-2.5 h-2.5 text-text-disabled hover:text-text-tertiary"
+                  className="w-2.5 h-2.5"
                 />
               </button>
             </div>

@@ -11,7 +11,7 @@
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge, Avatar, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
+import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils/id-display';
@@ -42,11 +42,12 @@ export const createPatientTableConfig = (
   );
 
   const renderName = (patient: Patient) => (
-    <Avatar
-      primaryText={patient.fullName}
-      secondaryText={`${calculateAge(patient.dateOfBirth)} years old`}
-      size="sm"
-    />
+    <div className="min-w-0">
+      <div className="font-medium text-text-primary truncate">{patient.fullName}</div>
+      <div className="text-xs text-text-muted truncate">
+        {calculateAge(patient.dateOfBirth)} years old
+      </div>
+    </div>
   );
 
   const renderGender = (patient: Patient) => (
@@ -71,7 +72,7 @@ export const createPatientTableConfig = (
 
   const renderContact = (patient: Patient) => (
     <div className="text-xs min-w-0">
-      <div className="truncate">{formatPhoneNumber(patient.phone)}</div>
+      <div className=" font-medium truncate">{formatPhoneNumber(patient.phone)}</div>
       {patient.email && <div className="text-xs text-text-muted truncate">{patient.email}</div>}
     </div>
   );

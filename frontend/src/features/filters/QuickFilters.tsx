@@ -50,11 +50,9 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
             key={preset.id}
             onClick={() => onPresetClick(preset.id)}
             className={cn(
-              'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xxs font-medium transition-colors cursor-pointer',
-              'border',
-              isActive
-                ? 'bg-brand-light border-brand text-brand-dark'
-                : 'bg-surface border-border-strong text-text-secondary hover:bg-app-bg hover:border-gray-400'
+              'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xxs font-medium cursor-pointer',
+              'filter-chip',
+              isActive && 'filter-chip--active'
             )}
           >
             {preset.icon && <Icon name={preset.icon as IconName} className="w-3 h-3" />}
