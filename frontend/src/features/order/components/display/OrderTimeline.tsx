@@ -222,18 +222,18 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
           : {};
         const statusMessage = getStatusMessage(step.status, progress, blocked);
 
-        // Determine connecting line color
+        // Determine connecting line color (must be background class, not border)
         const getLineColor = () => {
           if (progress.isFullyComplete && nextProgress?.isStarted) {
-            return semanticColors.success.background; // Using success color for completed
+            return semanticColors.success.background; // Green for completed → started
           }
           if (progress.isFullyComplete) {
-            return neutralColors.border.default;
+            return 'bg-border'; // Gray for completed → not started
           }
           if (blocked) {
-            return semanticColors.warning.backgroundLight; // Warning color for blocked
+            return semanticColors.warning.backgroundLight; // Yellow for blocked
           }
-          return neutralColors.border.default;
+          return 'bg-border'; // Gray for pending/not started
         };
 
         // Show test dots for test-based steps (not for order-level steps like created, paid, delivered)
