@@ -74,7 +74,7 @@ export const EntryMobileCard: React.FC<EntryMobileCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className="bg-surface rounded-lg p-3 shadow-sm border border-border hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-surface border border-border rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Test name + Sample ID */}
       <div className="flex items-center justify-between gap-2 mb-2">

@@ -61,10 +61,10 @@ export const CollectionMobileCard: React.FC<CollectionMobileCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className="bg-surface rounded-lg p-3 shadow-sm border border-border hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-surface border border-border rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Avatar (top left) + Status badge (top right) */}
-      <div className="flex items-center justify-between gap-2 mb-2 flex justify-between items-center">
+      <div className="flex items-center justify-between gap-2 mb-2">
         <Avatar
           primaryText={patientName}
           secondaryText={displayId.order(order.orderId)}

@@ -27,10 +27,10 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
   return (
     <div
       onClick={onClick}
-      className="bg-surface rounded-lg p-4 shadow-sm border border-border hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-surface border border-border rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Avatar (top left) + Total Price (top right) */}
-      <div className="mb-3 flex justify-between items-center">
+      <div className="mb-3 pb-3 border-b border-border flex justify-between items-center">
         {/* Avatar: Patient name + Order ID - positioned at top left */}
         <Avatar
           primaryText={item.patientName || 'N/A'}

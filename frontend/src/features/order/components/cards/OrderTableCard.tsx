@@ -21,10 +21,10 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
   return (
     <div
       onClick={onClick}
-      className="bg-surface border border-border rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow flex flex-col h-full"
+      className="bg-surface border border-border rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Avatar (top left) + Total Price (top right) */}
-      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-subtle">
+      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
         {/* Avatar: Patient name + Order ID - positioned at top left */}
         <Avatar
           primaryText={order.patientName || 'N/A'}

@@ -17,10 +17,10 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
   return (
     <div
       onClick={onClick}
-      className="bg-surface rounded-lg p-4 shadow-sm border border-border hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-surface border border-border rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Test code (left) + Price (right) */}
-      <div className="mb-3 flex justify-between items-center">
+      <div className="mb-3 pb-3 border-b border-border flex justify-between items-center">
         <span className="text-xs text-brand font-medium font-mono leading-none">{test.code}</span>
         <div className="font-medium text-brand text-lg leading-none">
           {formatCurrency(test.price)}
