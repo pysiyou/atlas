@@ -3,7 +3,6 @@ import { Badge, Avatar, IconButton } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { calculateAge, formatPhoneNumber } from '@/utils';
 import type { Patient } from '@/types';
-import { mobileCard } from '@/shared/design-system/tokens/components/card';
 
 /**
  * PatientCard Component
@@ -26,10 +25,10 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
   return (
     <div
       onClick={onClick}
-      className={mobileCard.base}
+      className="bg-surface rounded-lg p-4 shadow-sm border border-border hover:shadow-md transition-shadow cursor-pointer"
     >
       {/* Header: Avatar (top left) + Gender badge (top right) */}
-      <div className={`${mobileCard.header.container} flex justify-between items-center`}>
+      <div className="mb-3 flex justify-between items-center">
         {/* Avatar: Patient name + Age - positioned at top left */}
         <Avatar
           primaryText={patient.fullName}
@@ -41,18 +40,18 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
       </div>
 
       {/* Contact info: Phone + email + address */}
-      <div className={mobileCard.content.container}>
+      <div className="space-y-2">
         <div className="space-y-1">
-          <div className={mobileCard.content.text}>{formatPhoneNumber(patient.phone)}</div>
-          {patient.email && <div className={`${mobileCard.content.textSecondary} truncate`}>{patient.email}</div>}
-          <div className={`${mobileCard.content.textSecondary} truncate`}>
+          <div className="text-sm text-text-secondary">{formatPhoneNumber(patient.phone)}</div>
+          {patient.email && <div className="text-sm text-text-secondary truncate">{patient.email}</div>}
+          <div className="text-sm text-text-secondary truncate">
             {patient.address.street}, {patient.address.city} {patient.address.postalCode}
           </div>
         </div>
       </div>
 
       {/* Bottom section: Add Order button - positioned at bottom right */}
-      <div className={mobileCard.footer.container}>
+      <div className="flex justify-between items-center mt-3 pt-3 border-t border-border">
         <div></div>
         <IconButton variant="add" size="sm" title="Add Order" onClick={handleAddOrder} />
       </div>
