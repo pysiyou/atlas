@@ -9,8 +9,6 @@ import React from 'react';
 import { Icon } from './Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
-import { neutralColors } from '@/shared/design-system/tokens/colors';
-import { transitions } from '@/shared/design-system/tokens/animations';
 
 /**
  * Props for CheckboxList component
@@ -60,10 +58,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
         return (
           <label
             key={option.id}
-            className={cn(
-              'flex items-center gap-3 cursor-pointer group py-1',
-              transitions.colors
-            )}
+            className="flex items-center gap-3 cursor-pointer group py-1 transition-colors duration-200"
           >
             {/* Square Checkbox with yellow/gold fill */}
             <div className="relative flex items-center justify-center shrink-0">
@@ -75,11 +70,10 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
               />
               <div
                 className={cn(
-                  'w-[18px] h-[18px] rounded-sm border flex items-center justify-center',
-                  transitions.colors,
+                  'w-[18px] h-[18px] rounded-sm border flex items-center justify-center transition-colors duration-200',
                   isSelected
                     ? 'bg-amber-400 border-amber-400'
-                    : cn('border-neutral-300 bg-white', 'group-hover:border-amber-300')
+                    : 'border-neutral-300 bg-white group-hover:border-amber-300'
                 )}
               >
                 {isSelected && (
@@ -94,10 +88,8 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
             {/* Label */}
             <span
               className={cn(
-                'text-sm',
-                isSelected ? neutralColors.text.primary : neutralColors.text.secondary,
-                'group-hover:text-text-primary',
-                transitions.colors
+                'text-sm transition-colors duration-200 group-hover:text-text-primary',
+                isSelected ? 'text-text-primary' : 'text-text-secondary'
               )}
             >
               {option.label}

@@ -6,11 +6,6 @@
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
-import { filterControlSizing, iconSizes } from '@/shared/design-system/tokens/sizing';
-import { neutralColors } from '@/shared/design-system/tokens/colors';
-import { hover, focus } from '@/shared/design-system/tokens/interactions';
-import { transitions } from '@/shared/design-system/tokens/animations';
-import { radius } from '@/shared/design-system/tokens/borders';
 import { cn } from '@/utils';
 
 interface SearchBarProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -33,15 +28,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     }
   };
 
-  const sizeClasses = size === 'sm' ? filterControlSizing.height : 'py-2';
-  const iconClasses = size === 'sm' ? 'w-3.5 h-3.5' : iconSizes.sm;
+  const sizeClasses = size === 'sm' ? 'h-[34px]' : 'py-2';
+  const iconClasses = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4';
 
   return (
-    <div className={cn('relative flex items-center gap-2', filterControlSizing.height, 'px-3 bg-surface border', neutralColors.border.medium, radius.md, hover.background, focus.outline, 'focus-within:border-brand', transitions.colors, className)}>
+    <div className={cn('relative flex items-center gap-2 h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-brand transition-colors duration-200', className)}>
       {/* Column 1: Left Icon */}
       <Icon
         name={ICONS.actions.search}
-        className={cn(neutralColors.text.disabled, iconClasses, 'shrink-0')}
+        className={cn('text-text-disabled', iconClasses, 'shrink-0')}
       />
       
       {/* Column 2: Input - flexible middle */}
@@ -49,9 +44,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         type="text"
         className={cn(
           'flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none',
-          'placeholder:font-normal',
-          `placeholder:${neutralColors.text.muted}`,
-          sizeClasses === filterControlSizing.height ? 'py-0' : ''
+          'placeholder:font-normal placeholder:text-text-muted',
+          sizeClasses === 'h-[34px]' ? 'py-0' : ''
         )}
         {...props}
         onChange={handleChange}

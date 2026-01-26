@@ -13,7 +13,6 @@
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
-import { getButtonVariant, iconButtonVariants } from '@/shared/design-system/tokens/components/button';
 
 /**
  * Base style variants (require custom icon)
@@ -110,14 +109,25 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
 
 /**
  * Base style classes for each variant
- * Uses design tokens to ensure consistency with Button component
  */
 const BASE_STYLES: Record<BaseVariant, string> = {
-  primary: getButtonVariant('primary'),
-  secondary: getButtonVariant('secondary'),
-  danger: getButtonVariant('danger'),
-  success: getButtonVariant('success'),
-  warning: getButtonVariant('warning'),
+  primary: 'bg-brand text-text-inverse hover:opacity-90 focus:ring-brand',
+  secondary: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
+  danger: 'bg-danger text-text-inverse hover:opacity-90 focus:ring-danger',
+  success: 'bg-success text-text-inverse hover:opacity-90 focus:ring-success',
+  warning: 'bg-warning text-text-inverse hover:opacity-90 focus:ring-warning',
+};
+
+/**
+ * IconButton-specific variants (for actions like approve, delete, edit, etc.)
+ */
+const ICON_BUTTON_VARIANTS: Record<string, string> = {
+  approve: 'bg-success text-text-inverse hover:opacity-90 focus:ring-success',
+  delete: 'bg-danger text-text-inverse hover:opacity-90 focus:ring-danger',
+  edit: 'bg-brand text-text-inverse hover:opacity-90 focus:ring-brand',
+  view: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
+  print: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
+  add: 'bg-brand text-text-inverse hover:opacity-90 focus:ring-brand',
 };
 
 /**
@@ -187,14 +197,9 @@ export const IconButton = memo(
       // Determine the actual style to apply
       const baseStyle = getBaseStyle(variant);
       
-      // Check if this is an IconButton-specific variant (approve, delete, edit, view, print, add)
-      const isIconButtonSpecificVariant = 
-        variant === 'approve' || variant === 'delete' || variant === 'edit' || 
-        variant === 'view' || variant === 'print' || variant === 'add';
-      
-      // Use IconButton-specific variant tokens if applicable
-      const variantStyle = isIconButtonSpecificVariant && variant in iconButtonVariants
-        ? iconButtonVariants[variant as keyof typeof iconButtonVariants].base
+      // Check if this is an IconButton-specific variant
+      const variantStyle = variant in ICON_BUTTON_VARIANTS
+        ? ICON_BUTTON_VARIANTS[variant]
         : BASE_STYLES[baseStyle];
 
       // Determine which icon to render
