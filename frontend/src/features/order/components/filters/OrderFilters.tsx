@@ -1,46 +1,260 @@
 /**
  * OrderFilters Component
- *
- * Provides comprehensive filtering controls for the orders list using the new filter architecture.
- * Uses config-driven approach with FilterBar component.
- *
- * @module features/order
+ * Responsive filter controls with modal for smaller screens
  */
 
-import React, { useMemo } from 'react';
-import { FilterBar, type FilterValues } from '@/features/filters';
-import { orderFilterConfig } from '../../config/orderFilterConfig';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Icon } from '@/shared/ui/Icon';
+import { Button } from '@/shared/ui/Button';
+import { Badge } from '@/shared/ui/Badge';
+import { Modal } from '@/shared/ui/Modal';
+import { MultiSelectFilter } from '@/shared/ui/MultiSelectFilter';
+import { CheckboxList } from '@/shared/ui/CheckboxList';
+import { DateFilter } from './DateFilter';
+import { cn } from '@/utils';
+import { ICONS } from '@/utils/icon-mappings';
+import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
+import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
+import { filterControlSizing } from '@/shared/design-system/tokens/sizing';
+import { radius } from '@/shared/design-system/tokens/borders';
+import { hover, focus } from '@/shared/design-system/tokens/interactions';
+import { transitions } from '@/shared/design-system/tokens/animations';
+import {
+  ORDER_STATUS_VALUES,
+  PAYMENT_STATUS_VALUES,
+  ORDER_STATUS_CONFIG,
+  PAYMENT_STATUS_CONFIG,
+} from '@/types';
+import { createFilterOptions } from '@/utils/filtering';
 import type { OrderStatus, PaymentStatus } from '@/types';
 
 /**
  * Props interface for OrderFilters component
  */
 export interface OrderFiltersProps {
-  /** Current search query string */
   searchQuery: string;
-  /** Callback fired when search query changes */
   onSearchChange: (value: string) => void;
-  /** Currently selected date range [start, end] or null */
   dateRange: [Date, Date] | null;
-  /** Callback fired when date range changes */
   onDateRangeChange: (range: [Date, Date] | null) => void;
-  /** Array of currently selected order statuses */
   statusFilters: OrderStatus[];
-  /** Callback fired when order status filters change */
   onStatusFiltersChange: (values: OrderStatus[]) => void;
-  /** Array of currently selected payment statuses */
   paymentFilters: PaymentStatus[];
-  /** Callback fired when payment status filters change */
   onPaymentFiltersChange: (values: PaymentStatus[]) => void;
 }
 
+// Prepare filter options
+const orderStatusOptions = createFilterOptions(ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG);
+const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
+
+// Date preset options
+const DATE_PRESETS = [
+  { id: 'today', label: 'Today' },
+  { id: 'yesterday', label: 'Yesterday' },
+  { id: 'last7days', label: 'Last 7 Days' },
+  { id: 'last30days', label: 'Last 30 Days' },
+  { id: 'thisMonth', label: 'This Month' },
+  { id: 'lastMonth', label: 'Last Month' },
+] as const;
+
+type DatePresetId = (typeof DATE_PRESETS)[number]['id'];
+
 /**
- * OrderFilters Component
- *
- * Composes FilterBar with order-specific configuration.
- * Maps between legacy prop interface and new filter value structure.
- *
- * @component
+ * Get date range from preset ID
+ */
+const getDateRangeFromPreset = (presetId: DatePresetId): [Date, Date] => {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  switch (presetId) {
+    case 'today':
+      return [today, new Date(today.getTime() + 24 * 60 * 60 * 1000 - 1)];
+    case 'yesterday': {
+      const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+      return [yesterday, new Date(today.getTime() - 1)];
+    }
+    case 'last7days': {
+      const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return [weekAgo, now];
+    }
+    case 'last30days': {
+      const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+      return [monthAgo, now];
+    }
+    case 'thisMonth': {
+      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      return [firstDayOfMonth, now];
+    }
+    case 'lastMonth': {
+      const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const lastDayLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+      return [firstDayLastMonth, lastDayLastMonth];
+    }
+    default:
+      return [today, now];
+  }
+};
+
+/**
+ * Check if a date range matches a preset
+ */
+const getActivePresetId = (dateRange: [Date, Date] | null): DatePresetId | null => {
+  if (!dateRange) return null;
+
+  for (const preset of DATE_PRESETS) {
+    const presetRange = getDateRangeFromPreset(preset.id);
+    // Compare dates (ignoring time for simplicity)
+    const startMatch = dateRange[0].toDateString() === presetRange[0].toDateString();
+    const endMatch = dateRange[1].toDateString() === presetRange[1].toDateString();
+    if (startMatch && endMatch) return preset.id;
+  }
+  return null;
+};
+
+/**
+ * ModalDateBadges - Badge-style date range selector for modal
+ */
+const ModalDateBadges: React.FC<{
+  value: [Date, Date] | null;
+  onChange: (value: [Date, Date] | null) => void;
+}> = ({ value, onChange }) => {
+  const activePresetId = getActivePresetId(value);
+
+  const handlePresetClick = (presetId: DatePresetId) => {
+    if (activePresetId === presetId) {
+      // Deselect if already selected
+      onChange(null);
+    } else {
+      onChange(getDateRangeFromPreset(presetId));
+    }
+  };
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {DATE_PRESETS.map(preset => {
+        const isActive = activePresetId === preset.id;
+        return (
+          <button
+            key={preset.id}
+            onClick={() => handlePresetClick(preset.id)}
+            className={cn(
+              'px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors',
+              isActive
+                ? 'bg-amber-400 border-amber-400 text-white'
+                : 'bg-white border-neutral-200 text-neutral-700 hover:border-amber-300 hover:bg-amber-50'
+            )}
+          >
+            {preset.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+/**
+ * SearchInput - Simple debounced search input
+ */
+const SearchInput: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}> = ({ value, onChange, placeholder = 'Search...' }) => {
+  const [localValue, setLocalValue] = useState(value);
+  const [isDebouncing, setIsDebouncing] = useState(false);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  useEffect(() => {
+    if (localValue === value) {
+      setIsDebouncing(false);
+      return;
+    }
+
+    setIsDebouncing(true);
+    const timer = setTimeout(() => {
+      onChange(localValue);
+      setIsDebouncing(false);
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+      setIsDebouncing(false);
+    };
+  }, [localValue, value, onChange]);
+
+  const handleClear = useCallback(() => {
+    setLocalValue('');
+    onChange('');
+  }, [onChange]);
+
+  return (
+    <div
+      className={cn(
+        'relative w-full flex items-center gap-2',
+        filterControlSizing.height,
+        'px-3 bg-surface border',
+        neutralColors.border.medium,
+        radius.md,
+        hover.background,
+        focus.outline,
+        'focus-within:border-brand',
+        transitions.colors
+      )}
+    >
+      <Icon
+        name={ICONS.actions.search}
+        className={cn(neutralColors.text.disabled, 'w-3.5 h-3.5 shrink-0')}
+      />
+      <input
+        type="text"
+        placeholder={placeholder}
+        value={localValue}
+        onChange={e => setLocalValue(e.target.value)}
+        className={cn(
+          'flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0',
+          'placeholder:font-normal',
+          `placeholder:${neutralColors.text.muted}`
+        )}
+      />
+      <div className="flex items-center gap-1 shrink-0">
+        {isDebouncing && (
+          <div
+            className={cn(
+              'w-4 h-4 border-2 border-t-transparent rounded-full animate-spin',
+              brandColors.primary.borderMedium
+            )}
+          />
+        )}
+        {localValue && !isDebouncing && (
+          <button
+            onClick={handleClear}
+            className={cn(
+              'p-0.5',
+              hover.background,
+              'rounded',
+              transitions.colors,
+              'flex items-center justify-center cursor-pointer'
+            )}
+            aria-label="Clear search"
+          >
+            <Icon
+              name={ICONS.actions.closeCircle}
+              className={cn('w-4 h-4', neutralColors.text.disabled, `hover:${neutralColors.text.tertiary}`)}
+            />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * OrderFilters - Responsive filter layout
+ * - lg+: 4-column grid (search + date + order status + payment status)
+ * - md: 2-column grid
+ * - sm/xs: Search bar + Filters button (opens modal with all filters)
  */
 export const OrderFilters: React.FC<OrderFiltersProps> = ({
   searchQuery,
@@ -52,38 +266,228 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
   paymentFilters,
   onPaymentFiltersChange,
 }) => {
+  const breakpoint = useBreakpoint();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Count active filters for badge
+  const activeFilterCount =
+    (dateRange ? 1 : 0) +
+    statusFilters.length +
+    paymentFilters.length;
+
+  // Check if we should show modal view (sm and below)
+  const showModalView = isBreakpointAtMost(breakpoint, 'sm');
+  const showTwoColumn = breakpoint === 'md';
+
   /**
-   * Convert props to filter values format
+   * Render all filter controls (used in both inline and modal views)
    */
-  const filterValues = useMemo<FilterValues>(
-    () => ({
-      searchQuery,
-      dateRange,
-      status: statusFilters,
-      payment: paymentFilters,
-    }),
-    [searchQuery, dateRange, statusFilters, paymentFilters]
+  const renderFilters = () => (
+    <>
+      {/* Search */}
+      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+        <SearchInput
+          value={searchQuery}
+          onChange={onSearchChange}
+          placeholder="Search orders by ID, patient name, or details..."
+        />
+      </div>
+
+      {/* Date Range */}
+      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+        <DateFilter
+          value={dateRange}
+          onChange={onDateRangeChange}
+          placeholder="Filter by date range"
+          className="w-full"
+        />
+      </div>
+
+      {/* Order Status */}
+      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+        <MultiSelectFilter
+          label="Order Status"
+          options={orderStatusOptions}
+          selectedIds={statusFilters}
+          onChange={values => onStatusFiltersChange(values as OrderStatus[])}
+          placeholder="Select order status"
+          selectAllLabel="All statuses"
+          icon={ICONS.actions.infoCircle}
+          className="w-full"
+        />
+      </div>
+
+      {/* Payment Status */}
+      <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+        <MultiSelectFilter
+          label="Payment Status"
+          options={paymentStatusOptions}
+          selectedIds={paymentFilters}
+          onChange={values => onPaymentFiltersChange(values as PaymentStatus[])}
+          placeholder="Select payment status"
+          selectAllLabel="All payment statuses"
+          icon={ICONS.dataFields.wallet}
+          className="w-full"
+        />
+      </div>
+    </>
   );
 
-  /**
-   * Handle filter changes and map back to props
-   */
-  const handleFilterChange = (filters: FilterValues) => {
-    if (filters.searchQuery !== undefined) {
-      onSearchChange(filters.searchQuery as string);
-    }
-    if (filters.dateRange !== undefined) {
-      onDateRangeChange(filters.dateRange as [Date, Date] | null);
-    }
-    if (filters.status !== undefined) {
-      onStatusFiltersChange(filters.status as OrderStatus[]);
-    }
-    if (filters.payment !== undefined) {
-      onPaymentFiltersChange(filters.payment as PaymentStatus[]);
-    }
-  };
+  // Mobile view: Search bar + Filters button
+  if (showModalView) {
+    return (
+      <>
+        <div className={cn('w-full bg-surface border-b', neutralColors.border.default)}>
+          <div className="px-3 py-2 w-full">
+            <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
+              {/* Search control */}
+              <div className={cn('flex', filterControlSizing.height, 'w-full items-center')}>
+                <SearchInput
+                  value={searchQuery}
+                  onChange={onSearchChange}
+                  placeholder="Search orders..."
+                />
+              </div>
 
+              {/* Filters button */}
+              <div className="relative flex shrink-0">
+                <Button
+                  variant="filter"
+                  size="sm"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  Filters
+                </Button>
+                {activeFilterCount > 0 && (
+                  <Badge
+                    variant="primary"
+                    size="xs"
+                    className="absolute -top-1 -right-1 min-w-[18px] h-4 px-1 flex items-center justify-center"
+                  >
+                    {activeFilterCount}
+                  </Badge>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Filter Modal */}
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title="Filter"
+          size="md"
+        >
+          <div className="flex flex-col h-full bg-white">
+            {/* Filter Controls - Scrollable */}
+            <div className="flex-1 overflow-y-auto px-5 py-4">
+              {/* Search Section */}
+              <div className="mb-6">
+                <div className="relative w-full flex items-center h-10 px-4 bg-white border border-neutral-200 rounded-lg focus-within:border-amber-400 transition-colors">
+                  <input
+                    type="text"
+                    placeholder="Search orders..."
+                    value={searchQuery}
+                    onChange={e => onSearchChange(e.target.value)}
+                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-neutral-400"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => onSearchChange('')}
+                      className="p-0.5 hover:bg-neutral-100 rounded transition-colors"
+                    >
+                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-neutral-400" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Filter Sections */}
+              <div className="space-y-5">
+                {/* Date Range Section */}
+                <div className="w-full">
+                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Date Range</h4>
+                  <ModalDateBadges
+                    value={dateRange}
+                    onChange={onDateRangeChange}
+                  />
+                  <div className="border-b border-neutral-200 mt-4" />
+                </div>
+
+                {/* Order Status Section */}
+                <div className="w-full">
+                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Order Status</h4>
+                  <CheckboxList
+                    options={orderStatusOptions}
+                    selectedIds={statusFilters}
+                    onChange={values => onStatusFiltersChange(values as OrderStatus[])}
+                    columns={orderStatusOptions.length > 4 ? 2 : 1}
+                  />
+                  <div className="border-b border-neutral-200 mt-4" />
+                </div>
+
+                {/* Payment Status Section */}
+                <div className="w-full">
+                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">Payment Status</h4>
+                  <CheckboxList
+                    options={paymentStatusOptions}
+                    selectedIds={paymentFilters}
+                    onChange={values => onPaymentFiltersChange(values as PaymentStatus[])}
+                    columns={paymentStatusOptions.length > 4 ? 2 : 1}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Footer with Filter Button */}
+            <div className="px-5 py-4 border-t border-neutral-100 bg-white shrink-0">
+              {activeFilterCount > 0 && (
+                <button
+                  onClick={() => {
+                    onDateRangeChange(null);
+                    onStatusFiltersChange([]);
+                    onPaymentFiltersChange([]);
+                  }}
+                  className="w-full mb-3 text-sm text-neutral-500 hover:text-neutral-700 transition-colors"
+                >
+                  Clear all filters
+                </button>
+              )}
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="w-full py-3 bg-amber-400 hover:bg-amber-500 text-white font-medium rounded-lg transition-colors"
+              >
+                Filter
+              </button>
+            </div>
+          </div>
+        </Modal>
+      </>
+    );
+  }
+
+  // Tablet view: 2-column grid
+  if (showTwoColumn) {
+    return (
+      <div className={cn('w-full bg-surface border-b', neutralColors.border.default)}>
+        <div className="px-3 py-2 w-full">
+          <div className="grid grid-cols-2 gap-2 items-center w-full">
+            {renderFilters()}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop view: 4-column grid
   return (
-    <FilterBar config={orderFilterConfig} value={filterValues} onChange={handleFilterChange} />
+    <div className={cn('w-full bg-surface border-b', neutralColors.border.default)}>
+      <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
+        <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">
+          {renderFilters()}
+        </div>
+      </div>
+    </div>
   );
 };

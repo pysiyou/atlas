@@ -10,6 +10,8 @@ import { Icon, type IconName } from '@/shared/ui';
 import type { VitalSigns } from '@/types/patient';
 import { ICONS } from '@/utils/icon-mappings';
 import { semanticColors } from '@/shared/design-system/tokens/colors';
+import { getInputClasses } from '@/shared/design-system/tokens/components/input';
+import { neutralColors } from '@/shared/design-system/tokens/colors';
 
 export interface VitalsSectionProps {
   /** Current vital signs data */
@@ -241,21 +243,19 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                 step={config.step}
                 placeholder="--"
                 className={`
-                  block w-full pl-10 pr-12 py-2.5 border rounded bg-surface
-                  text-xs placeholder:text-text-disabled transition-shadow
+                  ${getInputClasses(error !== undefined, true, 'left', 'sm', false)}
+                  pr-12
                   [appearance:textfield]
                   [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0
                   [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0
-                  focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent
-                  disabled:bg-neutral-100 disabled:cursor-not-allowed
-                  ${error ? semanticColors.danger.inputBorder : status ? statusColors.border : 'border-border-strong'}
+                  ${status ? statusColors.border : ''}
                   ${status ? statusColors.bg : ''}
                 `}
               />
 
               {/* Unit display (absolute positioned) */}
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
-                <span className="text-xs text-text-disabled select-none truncate">{config.unit}</span>
+                <span className={`text-xs ${neutralColors.text.disabled} select-none truncate`}>{config.unit}</span>
               </div>
 
               {/* Abnormal value alert (absolute positioned below input) */}

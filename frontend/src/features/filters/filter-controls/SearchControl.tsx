@@ -8,7 +8,6 @@ import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
 import { brandColors, neutralColors } from '@/shared/design-system/tokens/colors';
-import { filterInput } from '@/shared/design-system/tokens/components/filter';
 import { filterControlSizing } from '@/shared/design-system/tokens/sizing';
 import { radius } from '@/shared/design-system/tokens/borders';
 import { hover, focus } from '@/shared/design-system/tokens/interactions';
@@ -110,7 +109,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
   }, []);
 
   return (
-    <div className={cn('relative w-full flex items-center gap-2', filterControlSizing.height, 'px-3 bg-surface border', neutralColors.border.medium, radius.md, hover.background, focus.outline, `focus-within:${brandColors.primary.borderMedium}`, transitions.colors, className)}>
+    <div className={cn('relative w-full flex items-center gap-2', filterControlSizing.height, 'px-3 bg-surface border', neutralColors.border.medium, radius.md, hover.background, focus.outline, 'focus-within:border-brand', transitions.colors, className)}>
       {/* Column 1: Left Icon */}
       <Icon
         name={ICONS.actions.search}

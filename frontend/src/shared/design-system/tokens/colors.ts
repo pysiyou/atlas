@@ -270,29 +270,29 @@ export const authColors = {
   
   // Error state colors (for login errors)
   error: {
-    background: 'bg-[#3d2a2e]',
-    backgroundLight: 'bg-[#4a3035]',
-    border: 'border-[#5a3a40]',
-    text: 'text-[#d4989d]',
-    icon: 'text-[#c9787e]',
+    background: 'bg-auth-error-bg',
+    backgroundLight: 'bg-auth-error-bg-light',
+    border: 'border-auth-error-border',
+    text: 'text-auth-error-text',
+    icon: 'text-auth-error-icon',
   },
   
   // Feature card colors
   featureCard: {
-    background: 'bg-[#232938]',
-    backgroundHover: 'hover:bg-[#283040]',
-    border: 'border-[#2d3548]',
-    borderHover: 'hover:border-[#3d4760]',
-    iconBackground: 'bg-[#2d4550]',
-    iconBackgroundHover: 'hover:bg-[#3a5663]',
-    iconBorder: 'border-[#3d5a66]',
+    background: 'bg-auth-feature-card-bg',
+    backgroundHover: 'hover:bg-auth-feature-card-hover',
+    border: 'border-auth-feature-card-border',
+    borderHover: 'hover:border-auth-feature-card-border-hover',
+    iconBackground: 'bg-auth-feature-card-icon-bg',
+    iconBackgroundHover: 'hover:bg-auth-feature-card-icon-bg-hover',
+    iconBorder: 'border-auth-feature-card-icon-border',
   },
   
   // User badge colors
   userBadge: {
-    background: 'bg-[#3a4556]',
-    border: 'border-2 border-[#1a1f2e]',
-    icon: 'text-[#8892a6]',
+    background: 'bg-auth-user-badge-bg',
+    border: 'border-2 border-auth-user-badge-border',
+    icon: 'text-auth-user-badge-icon',
   },
   
   // Focus ring colors

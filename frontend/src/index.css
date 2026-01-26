@@ -76,6 +76,21 @@
   --color-auth-border-light: var(--auth-border-light);
   --color-auth-border-hover: var(--auth-border-hover);
   --color-auth-border-focus: var(--auth-border-focus);
+  --color-auth-error-bg: var(--auth-error-bg);
+  --color-auth-error-bg-light: var(--auth-error-bg-light);
+  --color-auth-error-border: var(--auth-error-border);
+  --color-auth-error-text: var(--auth-error-text);
+  --color-auth-error-icon: var(--auth-error-icon);
+  --color-auth-feature-card-bg: var(--auth-feature-card-bg);
+  --color-auth-feature-card-hover: var(--auth-feature-card-hover);
+  --color-auth-feature-card-border: var(--auth-feature-card-border);
+  --color-auth-feature-card-border-hover: var(--auth-feature-card-border-hover);
+  --color-auth-feature-card-icon-bg: var(--auth-feature-card-icon-bg);
+  --color-auth-feature-card-icon-bg-hover: var(--auth-feature-card-icon-bg-hover);
+  --color-auth-feature-card-icon-border: var(--auth-feature-card-icon-border);
+  --color-auth-user-badge-bg: var(--auth-user-badge-bg);
+  --color-auth-user-badge-border: var(--auth-user-badge-border);
+  --color-auth-user-badge-icon: var(--auth-user-badge-icon);
 }
 
 body {

@@ -7,7 +7,7 @@ import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from './Icon';
 import { ICONS } from '@/utils/icon-mappings';
 import { filterControlSizing, iconSizes } from '@/shared/design-system/tokens/sizing';
-import { neutralColors, brandColors } from '@/shared/design-system/tokens/colors';
+import { neutralColors } from '@/shared/design-system/tokens/colors';
 import { hover, focus } from '@/shared/design-system/tokens/interactions';
 import { transitions } from '@/shared/design-system/tokens/animations';
 import { radius } from '@/shared/design-system/tokens/borders';
@@ -37,7 +37,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const iconClasses = size === 'sm' ? 'w-3.5 h-3.5' : iconSizes.sm;
 
   return (
-    <div className={cn('relative flex items-center gap-2', filterControlSizing.height, 'px-3 bg-surface border', neutralColors.border.medium, radius.md, hover.background, focus.outline, `focus-within:${brandColors.primary.borderMedium}`, transitions.colors, className)}>
+    <div className={cn('relative flex items-center gap-2', filterControlSizing.height, 'px-3 bg-surface border', neutralColors.border.medium, radius.md, hover.background, focus.outline, 'focus-within:border-brand', transitions.colors, className)}>
       {/* Column 1: Left Icon */}
       <Icon
         name={ICONS.actions.search}
