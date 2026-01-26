@@ -9,6 +9,7 @@ import { Button } from '@/shared/ui/Button';
 import { Badge } from '@/shared/ui/Badge';
 import { Modal } from '@/shared/ui/Modal';
 import { MultiSelectFilter } from '@/shared/ui/MultiSelectFilter';
+import { CheckboxList } from '@/shared/ui/CheckboxList';
 import { DateFilter } from './DateFilter';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
@@ -140,77 +141,6 @@ const SearchInput: React.FC<{
           </button>
         )}
       </div>
-    </div>
-  );
-};
-
-/**
- * CheckboxList - Inline checkbox list for filter options
- */
-const CheckboxList: React.FC<{
-  options: { id: string; label: string; color?: string }[];
-  selectedIds: string[];
-  onChange: (selectedIds: string[]) => void;
-}> = ({ options, selectedIds, onChange }) => {
-  const handleToggle = (id: string) => {
-    const newSelected = selectedIds.includes(id)
-      ? selectedIds.filter(selectedId => selectedId !== id)
-      : [...selectedIds, id];
-    onChange(newSelected);
-  };
-
-  return (
-    <div className="space-y-2">
-      {options.map(option => {
-        const isSelected = selectedIds.includes(option.id);
-        return (
-          <label
-            key={option.id}
-            className={cn(
-              'flex items-center gap-3 cursor-pointer group py-1',
-              transitions.colors
-            )}
-          >
-            {/* Checkbox */}
-            <div className="relative flex items-center justify-center shrink-0">
-              <input
-                type="checkbox"
-                checked={isSelected}
-                onChange={() => handleToggle(option.id)}
-                className="sr-only"
-              />
-              <div
-                className={cn(
-                  'w-5 h-5 rounded border-2 flex items-center justify-center',
-                  transitions.colors,
-                  isSelected
-                    ? 'bg-brand border-brand'
-                    : cn('border-border-strong', 'group-hover:border-brand/50')
-                )}
-              >
-                {isSelected && (
-                  <Icon
-                    name={ICONS.actions.check}
-                    className="w-3 h-3 text-white"
-                  />
-                )}
-              </div>
-            </div>
-
-            {/* Label */}
-            <span
-              className={cn(
-                'text-sm',
-                isSelected ? neutralColors.text.primary : neutralColors.text.secondary,
-                'group-hover:text-text-primary',
-                transitions.colors
-              )}
-            >
-              {option.label}
-            </span>
-          </label>
-        );
-      })}
     </div>
   );
 };
