@@ -5,7 +5,38 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import type { PatientFormData } from '../../hooks/usePatientForm';
+// PatientFormData type - temporary during migration
+type PatientFormData = {
+  fullName: string;
+  dateOfBirth: string;
+  gender?: 'male' | 'female';
+  phone: string;
+  email: string;
+  height: string;
+  weight: string;
+  street: string;
+  city: string;
+  postalCode: string;
+  hasAffiliation: boolean;
+  affiliationDuration?: 6 | 12 | 24;
+  emergencyContactFullName: string;
+  emergencyContactRelationship?: 'spouse' | 'parent' | 'sibling' | 'child' | 'friend' | 'other';
+  emergencyContactPhone: string;
+  emergencyContactEmail: string;
+  chronicConditions: string;
+  currentMedications: string;
+  allergies: string;
+  previousSurgeries: string;
+  familyHistory: string;
+  smoking: boolean;
+  alcohol: boolean;
+  temperature: string;
+  heartRate: string;
+  systolicBP: string;
+  diastolicBP: string;
+  respiratoryRate: string;
+  oxygenSaturation: string;
+};
 import {
   DemographicsSection,
   AddressSection,

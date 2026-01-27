@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useAuth } from '@/hooks';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNav } from './SidebarNav';
 import { SidebarProfile } from './SidebarProfile';
@@ -93,7 +93,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onMobileClose,
   isMobile = false,
 }) => {
-  const { currentUser, logout } = useAuth();
+  const { user: currentUser, logout } = useAuthStore();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const filteredMenuItems = getFilteredMenuItems(currentUser?.role);

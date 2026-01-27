@@ -11,7 +11,7 @@ import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tansta
 import { useCallback, useMemo, useState } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { patientAPI } from '@/services/api/patients';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import type { Patient } from '@/types';
 
 /**
@@ -27,7 +27,7 @@ import type { Patient } from '@/types';
  * ```
  */
 export function usePatientsList() {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.patients.list(),
@@ -58,7 +58,7 @@ export function usePatientsList() {
  * @param pageSize - Items per page (default: 20)
  */
 export function usePaginatedPatients(search?: string, initialPage = 1, pageSize = 20) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
   const [page, setPage] = useState(initialPage);
 
   const query = useQuery({
@@ -122,7 +122,7 @@ export function usePaginatedPatients(search?: string, initialPage = 1, pageSize 
  * ```
  */
 export function usePatient(patientId: string | undefined) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.patients.byId(patientId ?? ''),

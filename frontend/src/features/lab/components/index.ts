@@ -14,7 +14,7 @@ export { PopoverForm, RadioCard, CheckboxCard } from './PopoverForm';
 export { RejectionDialog, RejectionDialogContent, RejectionHistoryBanner } from './RejectionDialog';
 
 // Hooks
-export { useRejectionManager } from '../hooks/useRejectionManager';
+// useRejectionManager removed - use service hooks instead
 
 // Workflow view
 export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';

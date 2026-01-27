@@ -2,5 +2,4 @@
  * Centralized exports for order feature hooks
  */
 
-export * from './useDateFilterState';
-export * from './useDateFilterNavigation';
+// Date filter hooks removed - use useFilterStore instead

@@ -8,7 +8,8 @@ import { format } from 'date-fns';
 import { Icon } from '@/shared/ui/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
-import type { CalendarView } from '../hooks/useDateFilterState';
+// CalendarView type (previously from useDateFilterState)
+type CalendarView = 'days' | 'months' | 'years';
 import { generateCalendarYears } from '../utils/dateFilterHelpers';
 
 export interface DateFilterHeaderProps {

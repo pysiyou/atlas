@@ -33,4 +33,4 @@ export { ValidationView } from './validation/ValidationView';
 export { ValidationForm } from './validation/ValidationForm';
 
 // Hooks
-export { useRejectionManager } from './hooks/useRejectionManager';
+// useRejectionManager removed - use service hooks instead

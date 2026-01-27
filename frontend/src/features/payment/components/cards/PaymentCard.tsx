@@ -2,7 +2,30 @@ import { Badge, Avatar } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
-import type { OrderPaymentDetails } from '../../types/types';
+// OrderPaymentDetails type
+type OrderPaymentDetails = {
+  orderId: number;
+  orderDate: string;
+  patientId: number;
+  patientName: string;
+  tests: Array<{
+    testName: string;
+    priceAtOrder: number;
+    status?: string;
+    testCode?: string;
+  }>;
+  totalPrice: number;
+  paymentStatus: string;
+  paymentMethod?: string;
+  paymentDate?: string;
+  order: any;
+  payment?: {
+    paymentId: number;
+    paymentMethod: string;
+    amount: number;
+    paidAt: string;
+  };
+};
 import { PaymentButton } from '../display/PaymentButton';
 import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 
@@ -84,7 +107,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
           <Badge variant={item.paymentMethod} size="xs" />
         ) : item.paymentStatus === 'unpaid' ? (
           <div onClick={e => e.stopPropagation()}>
-            <PaymentButton order={item._order} size="xs" onPaymentSuccess={handlePaymentSuccess} />
+            <PaymentButton order={item.order} size="xs" onPaymentSuccess={handlePaymentSuccess} />
           </div>
         ) : null}
       </div>

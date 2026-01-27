@@ -23,7 +23,7 @@ export { useFiltering, useSearch, useMultiSelect } from '@/utils/filtering';
 // =============================================================================
 // Auth Hooks
 // =============================================================================
-export { useAuth } from '@/features/auth/useAuth';
+// useAuth removed - use useAuthStore from @/shared/stores/auth.store
 
 // =============================================================================
 // Responsive Layout Hooks

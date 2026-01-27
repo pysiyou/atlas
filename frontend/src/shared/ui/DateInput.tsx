@@ -11,7 +11,7 @@ import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
 import { DateFilterCalendar } from '@/features/order/components/DateFilterCalendar';
 import { DateFilterHeader } from '@/features/order/components/DateFilterHeader';
-import { useDateFilterNavigation } from '@/features/order/hooks/useDateFilterNavigation';
+// useDateFilterNavigation removed - logic inlined below
 
 interface DateInputProps {
   label?: string;
@@ -56,14 +56,44 @@ export const DateInput: React.FC<DateInputProps> = ({
   const defaultMinDate = minDate || new Date(1900, 0, 1);
   const defaultMaxDate = maxDate || new Date(2100, 11, 31);
 
-  const navigation = useDateFilterNavigation({
+  // Inline navigation logic (previously from useDateFilterNavigation)
+  const navigation = {
     currentMonth,
-    setCurrentMonth,
     view,
-    setView,
-    minDate: defaultMinDate,
-    maxDate: defaultMaxDate,
-  });
+    navigatePrevious: () => {
+      if (view === 'days') {
+        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+      } else if (view === 'months') {
+        setCurrentMonth(new Date(currentMonth.getFullYear() - 1, currentMonth.getMonth(), 1));
+      } else {
+        setCurrentMonth(new Date(currentMonth.getFullYear() - 10, currentMonth.getMonth(), 1));
+      }
+    },
+    navigateNext: () => {
+      if (view === 'days') {
+        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
+      } else if (view === 'months') {
+        setCurrentMonth(new Date(currentMonth.getFullYear() + 1, currentMonth.getMonth(), 1));
+      } else {
+        setCurrentMonth(new Date(currentMonth.getFullYear() + 10, currentMonth.getMonth(), 1));
+      }
+    },
+    navigateToToday: () => {
+      setCurrentMonth(new Date());
+      setView('days');
+    },
+    toggleView: () => {
+      setView(view === 'days' ? 'months' : view === 'months' ? 'years' : 'days');
+    },
+    selectMonth: (month: number) => {
+      setCurrentMonth(new Date(currentMonth.getFullYear(), month, 1));
+      setView('days');
+    },
+    selectYear: (year: number) => {
+      setCurrentMonth(new Date(year, currentMonth.getMonth(), 1));
+      setView('months');
+    },
+  };
 
   /**
    * Handle date selection
@@ -166,11 +196,11 @@ export const DateInput: React.FC<DateInputProps> = ({
             <DateFilterHeader
               currentMonth={currentMonth}
               view={view}
-              onPrevClick={navigation.handlePrevClick}
-              onNextClick={navigation.handleNextClick}
-              onTitleClick={navigation.handleTitleClick}
-              isPrevDisabled={navigation.isPrevDisabled()}
-              isNextDisabled={navigation.isNextDisabled()}
+              onPrevClick={navigation.navigatePrevious}
+              onNextClick={navigation.navigateNext}
+              onTitleClick={navigation.toggleView}
+              isPrevDisabled={false}
+              isNextDisabled={false}
             />
 
             <DateFilterCalendar

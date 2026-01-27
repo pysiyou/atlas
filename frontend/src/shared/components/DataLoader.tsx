@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import { usePatientsList, useOrdersList, useTestCatalog, useSamplesList } from '@/hooks/queries';
 import { SkeletonPage } from '@/shared/ui/Skeleton';
 import { Alert } from '@/shared/ui/Alert';
@@ -26,7 +26,7 @@ interface DataLoaderProps {
  * this component primarily handles the loading UI state
  */
 export const DataLoader: React.FC<DataLoaderProps> = ({ children, showLoadingSkeleton = true }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthStore();
 
   // Use TanStack Query hooks - they handle loading/error states automatically
   const {

@@ -18,7 +18,7 @@ import { LoadingState } from '@/shared/components/LoadingState';
 // Eagerly loaded components (small, frequently accessed)
 import { LoginForm } from '@/features/auth/LoginForm';
 import { AppLayout as DashboardLayout } from '@/shared/layout';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import { ModalRenderer } from '@/shared/ui';
 import { PublicRoute } from '@/shared/routes/PublicRoute';
 
@@ -58,7 +58,7 @@ interface ProtectedFeatureRouteProps {
 }
 
 const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children, featureName }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuthStore();
 
   // Show loading state while restoring auth from storage
   if (isLoading) {

@@ -11,7 +11,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { apiClient } from '@/services/api/client';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuthStore } from '@/shared/stores/auth.store';
 
 /**
  * API response type for users endpoint
@@ -47,7 +47,7 @@ export interface UserDisplayInfo {
  * ```
  */
 export function useUsersList() {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.users.list(),

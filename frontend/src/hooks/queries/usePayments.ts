@@ -16,7 +16,7 @@ import {
   getPaymentsByOrder,
   createPayment,
 } from '@/services/api/payments';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import type { PaymentMethod } from '@/types';
 
 /**
@@ -41,7 +41,7 @@ export interface PaymentsFilters {
  * ```
  */
 export function usePaymentsList(filters?: PaymentsFilters) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.payments.list(filters),
@@ -74,7 +74,7 @@ export function usePaymentsList(filters?: PaymentsFilters) {
  * ```
  */
 export function usePayment(paymentId: string | undefined) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.payments.byId(paymentId ?? ''),
@@ -101,7 +101,7 @@ export function usePayment(paymentId: string | undefined) {
  * @returns Array of payments for the order
  */
 export function usePaymentsByOrder(orderId: string | undefined) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.payments.byOrder(orderId ?? ''),

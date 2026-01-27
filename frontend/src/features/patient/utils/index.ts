@@ -3,5 +3,4 @@
  */
 
 export * from './patientUtils';
-export * from './patientPayloadBuilder';
-export * from './patientValidation';
+// Old utilities removed - logic moved to usePatientService

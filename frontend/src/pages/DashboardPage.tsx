@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { useAuth } from '@/hooks';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import {
   usePatientsList,
   useOrdersList,
@@ -17,7 +17,7 @@ import { displayId } from '@/utils/id-display';
 import { ICONS } from '@/utils/icon-mappings';
 
 export const Dashboard: React.FC = () => {
-  const { currentUser } = useAuth();
+  const { user: currentUser } = useAuthStore();
   const { patients } = usePatientsList();
   const { orders } = useOrdersList();
   const { payments } = usePaymentsList();

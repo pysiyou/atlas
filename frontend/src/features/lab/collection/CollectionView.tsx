@@ -5,7 +5,7 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import { useAuth } from '@/hooks';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import {
   useOrdersList,
   useOrderLookup,
@@ -72,7 +72,7 @@ const createSampleFilter =
   };
 
 export const CollectionView: React.FC = () => {
-  const { currentUser } = useAuth();
+  const { user: currentUser } = useAuthStore();
   const { refetch: refreshOrders } = useOrdersList();
   const { tests } = useTestCatalog();
   const { samples } = useSamplesList();

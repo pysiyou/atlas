@@ -6,7 +6,8 @@
 import React from 'react';
 import { format, isSameMonth, isSameDay, isBefore, isAfter, endOfMonth, setYear } from 'date-fns';
 import { cn } from '@/utils';
-import type { CalendarView } from '../hooks/useDateFilterState';
+// CalendarView type (previously from useDateFilterState)
+type CalendarView = 'days' | 'months' | 'years';
 import {
   generateCalendarDays,
   generateCalendarMonths,

@@ -11,7 +11,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { testAPI } from '@/services/api';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import type { Test, TestCategory } from '@/types';
 
 /**
@@ -27,7 +27,7 @@ import type { Test, TestCategory } from '@/types';
  * ```
  */
 export function useTestCatalog() {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.tests.all,
@@ -60,7 +60,7 @@ export function useTestCatalog() {
  * ```
  */
 export function useTest(testCode: string | undefined) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.tests.byCode(testCode ?? ''),

@@ -11,7 +11,7 @@ import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tansta
 import { useCallback, useMemo, useState } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { sampleAPI } from '@/services/api/samples';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import type {
   Sample,
   SampleStatus,
@@ -42,7 +42,7 @@ export interface SamplesFilters {
  * ```
  */
 export function useSamplesList(filters?: SamplesFilters) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.samples.list(filters),
@@ -77,7 +77,7 @@ export function usePaginatedSamples(
   initialPage = 1,
   pageSize = 20
 ) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
   const [page, setPage] = useState(initialPage);
 
   const query = useQuery({
@@ -150,7 +150,7 @@ export function usePaginatedSamples(
  * ```
  */
 export function useSample(sampleId: string | undefined) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.samples.byId(sampleId ?? ''),
@@ -220,7 +220,7 @@ export function useSamplesByStatus(status: SampleStatus | undefined) {
  * @returns Array of samples with pending status
  */
 export function usePendingSamples() {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.samples.pending(),

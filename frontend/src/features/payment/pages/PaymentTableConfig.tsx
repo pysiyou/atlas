@@ -11,7 +11,30 @@ import { displayId } from '@/utils/id-display';
 import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { PaymentButton } from '../components/display/PaymentButton';
-import type { OrderPaymentDetails } from '../types/types';
+// OrderPaymentDetails type
+type OrderPaymentDetails = {
+  orderId: number;
+  orderDate: string;
+  patientId: number;
+  patientName: string;
+  tests: Array<{
+    testName: string;
+    priceAtOrder: number;
+    status?: string;
+    testCode?: string;
+  }>;
+  totalPrice: number;
+  paymentStatus: string;
+  paymentMethod?: string;
+  paymentDate?: string;
+  order: any;
+  payment?: {
+    paymentId: number;
+    paymentMethod: string;
+    amount: number;
+    paidAt: string;
+  };
+};
 import { PaymentCard } from '../components/cards/PaymentCard';
 
 /**
@@ -87,7 +110,7 @@ export const createPaymentTableConfig = (
 
   const renderAction = (item: OrderPaymentDetails) => (
     <div onClick={e => e.stopPropagation()}>
-      <PaymentButton order={item._order} onPaymentSuccess={onPaymentSuccess} />
+      <PaymentButton order={item.order} onPaymentSuccess={onPaymentSuccess} />
     </div>
   );
 

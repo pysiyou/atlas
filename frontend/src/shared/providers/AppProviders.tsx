@@ -10,7 +10,7 @@ import React, { type ReactNode } from 'react';
 import { QueryProvider } from '@/lib/query';
 
 // Feature Providers
-import { AuthProvider } from '@/features/auth/AuthProvider';
+// AuthProvider removed - replaced by Zustand useAuthStore
 // Note: All data providers removed - all consumers migrated to TanStack Query hooks
 // - See @/hooks/queries for replacement hooks
 // - AppointmentsProvider and BillingProvider removed - API not yet implemented
@@ -35,13 +35,12 @@ function composeProviders(
  * Order matters: providers listed later can depend on those listed earlier
  *
  * NOTE: All data providers have been removed - all consumers migrated to TanStack Query hooks.
+ * NOTE: AuthProvider removed - replaced by Zustand useAuthStore
  * Remaining providers:
- * - AuthProvider: Active - manages authentication state
- * - ModalProvider: Active - manages modal state
+ * - ModalProvider: Active - manages modal state (to be replaced by useModalStore)
  */
 const featureProviders = [
-  AuthProvider, // Active - manages authentication state
-  ModalProvider, // Active - manages modal state
+  ModalProvider, // Active - manages modal state (to be replaced by useModalStore)
 ];
 
 const ComposedProviders = composeProviders(featureProviders);
@@ -69,4 +68,4 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => (
 /**
  * Re-export individual providers for cases where selective provision is needed
  */
-export { QueryProvider, AuthProvider, ModalProvider };
+export { QueryProvider, ModalProvider };

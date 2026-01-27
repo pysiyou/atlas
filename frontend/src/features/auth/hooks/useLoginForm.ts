@@ -5,7 +5,7 @@
  */
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import { ROUTES } from '@/config';
 
 const getErrorMessage = (err: unknown): string => {
@@ -35,7 +35,7 @@ const getErrorMessage = (err: unknown): string => {
 
 export const useLoginForm = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login } = useAuthStore();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

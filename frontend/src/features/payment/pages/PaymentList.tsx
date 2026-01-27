@@ -16,7 +16,50 @@ import { PaymentFilters } from '../components/filters/PaymentFilters';
 import { createPaymentTableConfig } from './PaymentTableConfig';
 import { PaymentDetailModal } from '../modals/PaymentDetailModal';
 import { useOrdersList, usePaymentsList } from '@/hooks/queries';
-import { createOrderPaymentDetailsList, type OrderPaymentDetails } from '../types/types';
+// OrderPaymentDetails type
+type OrderPaymentDetails = {
+  orderId: number;
+  orderDate: string;
+  patientId: number;
+  patientName: string;
+  tests: Array<{
+    testName: string;
+    priceAtOrder: number;
+    status?: string;
+    testCode?: string;
+  }>;
+  totalPrice: number;
+  paymentStatus: string;
+  paymentMethod?: string;
+  paymentDate?: string;
+  order: any;
+  payment?: {
+    paymentId: number;
+    paymentMethod: string;
+    amount: number;
+    paidAt: string;
+  };
+};
+
+// Helper function to create combined list
+const createOrderPaymentDetailsList = (orders: any[], payments: any[]): OrderPaymentDetails[] => {
+  return orders.map(order => {
+    const payment = payments.find(p => p.orderId === order.orderId);
+    return {
+      orderId: order.orderId,
+      orderDate: order.orderDate,
+      patientId: order.patientId,
+      patientName: order.patientName,
+      tests: order.tests,
+      totalPrice: order.totalPrice,
+      paymentStatus: order.paymentStatus,
+      paymentMethod: payment?.paymentMethod,
+      paymentDate: payment?.paidAt,
+      order,
+      payment,
+    };
+  });
+};
 import type { PaymentStatus, PaymentMethod } from '@/types';
 import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 
@@ -101,7 +144,7 @@ export const PaymentList: React.FC = () => {
     // Apply payment method filter
     if (methodFilters.length > 0) {
       filtered = filtered.filter(
-        item => item.paymentMethod && methodFilters.includes(item.paymentMethod)
+        item => item.paymentMethod && (methodFilters as string[]).includes(item.paymentMethod)
       );
     }
 

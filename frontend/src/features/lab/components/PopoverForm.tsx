@@ -9,7 +9,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Button, IconButton, FooterInfo } from '@/shared/ui';
-import { useAuth } from '@/hooks';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import { ICONS } from '@/utils/icon-mappings';
 
 interface PopoverFormProps {
@@ -58,7 +58,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
   headerBadges,
   children,
 }) => {
-  const { currentUser } = useAuth();
+  const { user: currentUser } = useAuthStore();
 
   return (
     <div className="w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border overflow-hidden flex flex-col max-h-[600px]">

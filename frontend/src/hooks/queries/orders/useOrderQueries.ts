@@ -7,7 +7,7 @@ import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { useMemo, useState, useCallback } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { orderAPI } from '@/services/api/orders';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import type { OrderStatus, PaymentStatus } from '@/types';
 
 /**
@@ -31,7 +31,7 @@ export interface PaginationOptions {
  * Hook to fetch and cache all orders
  */
 export function useOrdersList(filters?: OrdersFilters) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.orders.list(filters),
@@ -75,7 +75,7 @@ export function useOrdersList(filters?: OrdersFilters) {
  * Hook to fetch a single order by ID
  */
 export function useOrder(orderId: string | undefined) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
     queryKey: queryKeys.orders.byId(orderId ?? ''),
@@ -141,7 +141,7 @@ export function usePaginatedOrders(
   initialPage = 1,
   pageSize = 20
 ) {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
   const [page, setPage] = useState(initialPage);
 
   const query = useQuery({

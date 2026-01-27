@@ -6,4 +6,5 @@ export * from './pages/PaymentList';
 export * from './pages/PaymentTableConfig';
 export * from './components';
 export * from './modals/PaymentDetailModal';
-export * from './types/types';
+// Old types removed - use schemas instead
+// export * from './types/types';

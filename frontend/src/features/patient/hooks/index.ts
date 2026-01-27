@@ -2,5 +2,4 @@
  * Centralized exports for patient hooks
  */
 
-export * from './usePatientForm';
-export * from './usePatientMutation';
+// Old hooks removed - use usePatientService instead
