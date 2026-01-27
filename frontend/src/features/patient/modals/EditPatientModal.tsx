@@ -16,7 +16,7 @@ import toast from 'react-hot-toast';
 import { usePatientForm } from '../hooks/usePatientForm';
 import { displayId } from '@/utils/id-display';
 import { PatientFormTabs } from '../components/forms/PatientFormTabs';
-import { calculateFormProgress } from '../utils/formProgressCalculator';
+import { calculateFormProgress } from '../utils/patientUtils';
 import { usePatientMutation } from '../hooks/usePatientMutation';
 import { FormErrorBoundary } from '@/shared/components';
 

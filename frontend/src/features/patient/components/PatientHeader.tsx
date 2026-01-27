@@ -6,7 +6,7 @@
 import React from 'react';
 import { Button, Avatar, Icon, IconButton } from '@/shared/ui';
 import type { Patient } from '@/types/patient';
-import { isAffiliationActive } from '../utils/affiliationUtils';
+import { isAffiliationActive } from '../utils/patientUtils';
 import { AffiliationPopover } from './filters/AffiliationPopover';
 import { ICONS } from '@/utils/icon-mappings';
 

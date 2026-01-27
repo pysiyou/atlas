@@ -18,7 +18,6 @@ import { getTestSampleType } from '@/utils/typeHelpers';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import { ValidationCard } from './ValidationCard';
-import { ValidationMobileCard } from './ValidationMobileCard';
 import { BulkValidationToolbar, useBulkSelection, ValidationCheckbox } from './BulkValidationToolbar';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
@@ -396,13 +395,9 @@ export const ValidationView: React.FC = () => {
             orderHasValidatedTests: hasValidatedTests,
           };
 
-          if (isMobile) {
-            return <ValidationMobileCard {...cardProps} />;
-          }
-
           // Desktop: checkbox + card when id present, else card only
           // Only show checkbox if bulk validation is enabled
-          if (typeof test.id === 'number' && ENABLE_BULK_VALIDATION) {
+          if (!isMobile && typeof test.id === 'number' && ENABLE_BULK_VALIDATION) {
             return (
               <div className="flex items-start gap-3">
                 <div className="pt-4">
@@ -414,13 +409,13 @@ export const ValidationView: React.FC = () => {
                   />
                 </div>
                 <div className="flex-1">
-                  <ValidationCard {...cardProps} />
+                  <ValidationCard {...cardProps} isMobile={isMobile} />
                 </div>
               </div>
             );
           }
 
-          return <ValidationCard {...cardProps} />;
+          return <ValidationCard {...cardProps} isMobile={isMobile} />;
         }}
         getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
         emptyIcon="shield-check"

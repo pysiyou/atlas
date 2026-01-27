@@ -8,8 +8,8 @@ import { Icon, Avatar } from '@/shared/ui';
 import { calculateAge } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Patient } from '@/types';
-import { OrderInfoField } from './OrderInfoField';
-import { formatOrderDate } from '../../utils/orderDetailUtils';
+import { InfoField } from '@/shared/components/sections/InfoField';
+import { formatOrderDate } from '@/shared/utils/data/dateFormatters';
 import { ICONS } from '@/utils/icon-mappings';
 
 export interface PatientInfoSectionProps {
@@ -47,7 +47,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
           size="sm"
         />
       </div>
-      <OrderInfoField
+      <InfoField
         icon={ICONS.dataFields.userHands}
         label="Age & Gender"
         value={
@@ -55,8 +55,9 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
             {calculateAge(patient.dateOfBirth)} years old • {patient.gender}
           </span>
         }
+        orientation="vertical"
       />
-      <OrderInfoField
+      <InfoField
         icon={ICONS.dataFields.dateOfBirth}
         label="Date of Birth"
         value={
@@ -64,13 +65,15 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
             {formatOrderDate(patient.dateOfBirth, 'long')}
           </span>
         }
+        orientation="vertical"
       />
-      <OrderInfoField icon={ICONS.dataFields.phone} label="Phone" value={patient.phone} />
+      <InfoField icon={ICONS.dataFields.phone} label="Phone" value={patient.phone} orientation="vertical" />
       {patient.email && (
-        <OrderInfoField
+        <InfoField
           icon={ICONS.dataFields.email}
           label="Email"
           value={<span className="line-clamp-2 break-all">{patient.email}</span>}
+          orientation="vertical"
         />
       )}
     </div>

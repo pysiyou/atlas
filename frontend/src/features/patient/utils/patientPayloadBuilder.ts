@@ -5,7 +5,7 @@
 
 import type { Patient, Affiliation } from '@/types';
 import type { PatientFormData } from '../hooks/usePatientForm';
-import { generateAssuranceNumber, calculateEndDate, isAffiliationActive } from './affiliationUtils';
+import { generateAssuranceNumber, calculateEndDate, isAffiliationActive } from './patientUtils';
 
 /**
  * Creates affiliation data based on form state and existing patient data

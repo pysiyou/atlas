@@ -21,7 +21,6 @@ import { calculateRequiredSamples, getCollectionRequirements } from '@/utils/sam
 import { getTestNames } from '@/utils/typeHelpers';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';
-import { CollectionMobileCard } from './CollectionMobileCard';
 import { LabWorkflowView } from '../components/LabWorkflowView';
 import { CollectionFilters } from '../components/filters';
 import { DataErrorBoundary } from '@/shared/components';
@@ -208,13 +207,9 @@ export const CollectionView: React.FC = () => {
     <DataErrorBoundary>
       <LabWorkflowView
         items={filteredDisplays}
-        renderCard={display =>
-          isMobile ? (
-            <CollectionMobileCard display={display} onCollect={handleCollect} />
-          ) : (
-            <CollectionCard display={display} onCollect={handleCollect} />
-          )
-        }
+        renderCard={display => (
+          <CollectionCard display={display} onCollect={handleCollect} isMobile={isMobile} />
+        )}
         getItemKey={(display, idx) =>
           `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
         }

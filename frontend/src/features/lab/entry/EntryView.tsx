@@ -21,7 +21,6 @@ import type { TestResult, TestStatus, TestWithContext } from '@/types';
 import { isCollectedSample } from '@/types';
 import { EntryCard } from './EntryCard';
 import { EntryFilters } from '../components/filters';
-import { EntryMobileCard } from './EntryMobileCard';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { DataErrorBoundary } from '@/shared/components';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
@@ -372,10 +371,12 @@ export const EntryView: React.FC = () => {
             onClick: () => openTestModal(test, filtered as TestWithContext[]),
           };
 
-          return isMobile ? (
-            <EntryMobileCard key={`${test.orderId}-${test.testCode}-${idx}`} {...cardProps} />
-          ) : (
-            <EntryCard key={`${test.orderId}-${test.testCode}-${idx}`} {...cardProps} />
+          return (
+            <EntryCard
+              key={`${test.orderId}-${test.testCode}-${idx}`}
+              {...cardProps}
+              isMobile={isMobile}
+            />
           );
         }}
         getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}

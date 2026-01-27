@@ -1,6 +1,6 @@
 /**
  * FilterFactory Component
- * 
+ *
  * Factory component that dynamically renders the appropriate filter control
  * based on the filter configuration type. This provides a clean abstraction
  * for rendering different filter types without complex switch statements.
@@ -9,13 +9,13 @@
 import React from 'react';
 import type { FilterControl, FilterValues } from './types';
 import {
-  SearchFilter,
-  DateRangeFilter,
-  AgeRangeFilter,
-  PriceRangeFilter,
-  MultiSelectFilter,
-  SingleSelectFilter,
-} from './filters';
+  SearchControl,
+  DateRangeControl,
+  AgeRangeControl,
+  PriceRangeControl,
+  MultiSelectControl,
+  SingleSelectControl,
+} from './filter-controls';
 
 /**
  * Props for FilterFactory component
@@ -33,10 +33,10 @@ export interface FilterFactoryProps {
 
 /**
  * FilterFactory Component
- * 
+ *
  * Renders the appropriate filter component based on the control type.
  * Each filter component is self-contained and manages its own UI and interactions.
- * 
+ *
  * @component
  */
 export const FilterFactory: React.FC<FilterFactoryProps> = ({
@@ -57,17 +57,18 @@ export const FilterFactory: React.FC<FilterFactoryProps> = ({
   switch (control.type) {
     case 'search':
       return (
-        <SearchFilter
+        <SearchControl
           value={(filterValue as string) || ''}
           onChange={handleChange}
-          config={control}
+          placeholder={control.placeholder || `Search ${control.label.toLowerCase()}...`}
+          debounceMs={control.debounceMs}
           className={className}
         />
       );
 
     case 'dateRange':
       return (
-        <DateRangeFilter
+        <DateRangeControl
           value={(filterValue as [Date, Date] | null) || null}
           onChange={handleChange}
           config={control}
@@ -77,7 +78,7 @@ export const FilterFactory: React.FC<FilterFactoryProps> = ({
 
     case 'ageRange':
       return (
-        <AgeRangeFilter
+        <AgeRangeControl
           value={(filterValue as [number, number]) || [control.min ?? 0, control.max ?? 150]}
           onChange={handleChange}
           config={control}
@@ -87,7 +88,7 @@ export const FilterFactory: React.FC<FilterFactoryProps> = ({
 
     case 'priceRange':
       return (
-        <PriceRangeFilter
+        <PriceRangeControl
           value={(filterValue as [number, number]) || [control.min ?? 0, control.max ?? 10000]}
           onChange={handleChange}
           config={control}
@@ -97,7 +98,7 @@ export const FilterFactory: React.FC<FilterFactoryProps> = ({
 
     case 'multiSelect':
       return (
-        <MultiSelectFilter
+        <MultiSelectControl
           value={(filterValue as string[]) || []}
           onChange={handleChange}
           config={control}
@@ -107,7 +108,7 @@ export const FilterFactory: React.FC<FilterFactoryProps> = ({
 
     case 'singleSelect':
       return (
-        <SingleSelectFilter
+        <SingleSelectControl
           value={(filterValue as string | null) || null}
           onChange={handleChange}
           config={control}

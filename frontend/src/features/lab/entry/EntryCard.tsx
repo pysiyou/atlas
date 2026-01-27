@@ -1,13 +1,17 @@
 /**
- * EntryCard - Card component for result entry workflow
+ * EntryCard - Responsive card component for result entry workflow
  *
  * Displays test information with parameter completion progress.
  * Shows retest banners for tests that are retests of previously rejected results.
+ * Supports both desktop (LabCard) and mobile layouts via isMobile prop.
  */
 
 import React from 'react';
-import { Badge, Alert, Icon } from '@/shared/ui';
+import { Badge, Alert, Icon, IconButton } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
+import { formatDate } from '@/utils';
+import { displayId } from '@/utils/id-display';
+import { usePatientNameLookup } from '@/hooks/queries';
 import { LabCard, ProgressBadge } from '../components/LabCard';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
@@ -25,6 +29,8 @@ interface EntryCardProps {
   onNext?: () => void;
   onPrev?: () => void;
   onClick?: () => void;
+  /** When true, renders mobile-optimized layout */
+  isMobile?: boolean;
 }
 
 // Large component is necessary for comprehensive entry card with multiple status displays, action buttons, and conditional rendering
@@ -42,13 +48,16 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   onNext,
   onPrev,
   onClick,
+  isMobile = false,
 }) => {
   const { openModal } = useModal();
+  const { getPatientName } = usePatientNameLookup();
 
   if (!testDef?.parameters) return null;
 
   const parameterCount = testDef.parameters.length;
   const filledCount = Object.values(results).filter(v => v?.trim()).length;
+  const patientName = getPatientName(test.patientId);
 
   // Determine if this is a retest (result validation re-test flow)
   const isRetest = test.isRetest === true;
@@ -89,6 +98,71 @@ export const EntryCard: React.FC<EntryCardProps> = ({
     });
   };
 
+  // Mobile layout
+  if (isMobile) {
+    return (
+      <div
+        onClick={handleCardClick}
+        className="bg-surface border border-border rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
+      >
+        {/* Header: Test name */}
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <div className="min-w-0 overflow-hidden">
+            <div className="text-sm font-medium text-text-primary truncate">{test.testName}</div>
+            <div className="flex items-center gap-1.5 text-xs text-text-secondary">
+              <span className="truncate">{patientName}</span>
+              <span className="text-text-tertiary">•</span>
+              <span className="text-brand font-medium font-mono truncate">{test.testCode}</span>
+              {test.sampleId && (
+                <>
+                  <span className="text-text-tertiary">•</span>
+                  <span
+                    className="text-brand font-medium font-mono truncate"
+                    title={displayId.sample(test.sampleId)}
+                  >
+                    {displayId.sample(test.sampleId)}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Content: Collection date */}
+        <div className="space-y-1 ">
+            {test.collectedAt && (
+              <div className="text-xs text-text-tertiary mt-1">
+                Collected: {formatDate(test.collectedAt)}
+              </div>
+            )}
+          </div>
+
+        {/* Bottom section: Badges (left) + Enter Results button (right) */}
+        <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
+          <div className="flex items-center gap-2">
+            {test.priority && <Badge variant={test.priority} size="xs" />}
+            <Badge variant={test.sampleType} size="xs" />
+            {(isRetest || isSampleRecollection) && (
+              <Badge variant="warning" size="xs">
+                {isRetest ? 'RE-TEST' : 'RECOLLECTION'}
+              </Badge>
+            )}
+          </div>
+          <IconButton
+            variant="edit"
+            size="sm"
+            title="Enter Results"
+            onClick={e => {
+              e.stopPropagation();
+              handleCardClick();
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop layout (LabCard)
   // Badges ordered by importance for result entry workflow
   const badges = (
     <>
@@ -172,7 +246,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <div className="flex items-center gap-2 flex-wrap">
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Re-test of {test.retestOfTestId}
+            Re-test of <span className="font-mono text-brand">{displayId.orderTest(test.retestOfTestId)}</span>
           </Badge>
         </div>
       );
@@ -182,7 +256,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <div className="flex items-center gap-2 flex-wrap">
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection of {test.sampleOriginalSampleId}
+            Recollection of <span className="font-mono text-brand">{displayId.sample(test.sampleOriginalSampleId)}</span>
           </Badge>
         </div>
       );

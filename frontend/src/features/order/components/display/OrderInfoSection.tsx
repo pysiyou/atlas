@@ -7,8 +7,8 @@ import React from 'react';
 import { Badge } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
-import { OrderInfoField } from './OrderInfoField';
-import { formatOrderDate } from '../../utils/orderDetailUtils';
+import { InfoField } from '@/shared/components/sections/InfoField';
+import { formatOrderDate } from '@/shared/utils/data/dateFormatters';
 import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/utils/icon-helpers';
 
 export interface OrderInfoSectionProps {
@@ -22,12 +22,13 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layou
 
   return (
     <div className={containerClass}>
-      <OrderInfoField
+      <InfoField
         icon={getDataFieldIcon('orderId')}
         label="Order ID"
         value={<span className="font-mono text-brand">{displayId.order(order.orderId)}</span>}
+        orientation="vertical"
       />
-      <OrderInfoField
+      <InfoField
         icon={getDataFieldIcon('orderDate')}
         label="Order Date"
         value={
@@ -35,29 +36,34 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layou
             {formatOrderDate(order.orderDate, 'long')}
           </span>
         }
+        orientation="vertical"
       />
-      <OrderInfoField
+      <InfoField
         icon={getPriorityIcon(order.priority)}
         label="Priority"
         value={<Badge variant={order.priority} size="sm" />}
+        orientation="vertical"
       />
-      <OrderInfoField
+      <InfoField
         icon={getOrderStatusIcon(order.overallStatus)}
         label="Status"
         value={<Badge variant={order.overallStatus} size="sm" />}
+        orientation="vertical"
       />
       {order.referringPhysician && (
-        <OrderInfoField
+        <InfoField
           icon={getDataFieldIcon('referringPhysician')}
           label="Referring Physician"
           value={order.referringPhysician}
+          orientation="vertical"
         />
       )}
       {order.clinicalNotes && (
-        <OrderInfoField
+        <InfoField
           icon={getDataFieldIcon('clinicalNotes')}
           label="Clinical Notes"
           value={<span className="line-clamp-3 wrap-break-word">{order.clinicalNotes}</span>}
+          orientation="vertical"
         />
       )}
     </div>

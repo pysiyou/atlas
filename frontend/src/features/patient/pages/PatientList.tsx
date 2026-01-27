@@ -18,7 +18,7 @@ import { createPatientTableConfig } from './PatientTableConfig';
 import { calculateAge } from '@/utils';
 import type { Patient, Gender } from '@/types';
 import { EditPatientModal } from '../modals/EditPatientModal';
-import { isAffiliationActive } from '../utils/affiliationUtils';
+import { isAffiliationActive } from '../utils/patientUtils';
 
 /**
  * PatientList component - Migrated to use ListView

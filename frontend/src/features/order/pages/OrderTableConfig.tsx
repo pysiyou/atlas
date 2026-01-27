@@ -12,7 +12,7 @@ import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types';
 import { OrderTableCard } from '../components/cards/OrderTableCard';
-import { PaymentPopover } from '@/features/payment/components/filters';
+import { PaymentPopover } from '@/features/payment/components/filters/PaymentPopover';
 import { ModalType } from '@/shared/context/ModalContext';
 import { ICONS } from '@/utils/icon-mappings';
 

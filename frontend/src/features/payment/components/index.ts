@@ -2,6 +2,7 @@
  * Centralized exports for payment components
  */
 
-export * from './cards';
-export * from './filters';
-export * from './display';
+export * from './cards/PaymentCard';
+export * from './filters/PaymentFilters';
+export * from './filters/PaymentPopover';
+export * from './display/PaymentButton';

@@ -9,7 +9,7 @@
 
 import React, { useMemo } from 'react';
 import { FilterBar, type FilterValues } from '@/features/filters';
-import { validationFilterConfig } from '../../config/validationFilterConfig';
+import { validationFilterConfig } from '../../constants';
 import type { PriorityLevel } from '@/types';
 
 export interface ValidationFiltersProps {

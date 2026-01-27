@@ -5,7 +5,7 @@ import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Patient, Order } from '@/types';
-import { isAffiliationActive } from '../utils/affiliationUtils';
+import { isAffiliationActive } from '../utils/patientUtils';
 import { PatientCard } from '../components/cards/PatientCard';
 import { ICONS } from '@/utils/icon-mappings';
 

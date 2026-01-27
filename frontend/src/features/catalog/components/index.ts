@@ -2,5 +2,5 @@
  * Centralized exports for catalog components
  */
 
-export * from './cards';
-export * from './filters';
+export * from './cards/CatalogCard';
+export * from './filters/CatalogFilters';

@@ -1,11 +1,12 @@
 /**
- * CollectionCard - Card component for sample collection workflow
+ * CollectionCard - Responsive card component for sample collection workflow
  *
  * Displays sample information with collection/rejection actions.
+ * Supports both desktop (LabCard) and mobile layouts via isMobile prop.
  */
 
 import React from 'react';
-import { Badge, Icon, IconButton, Alert } from '@/shared/ui';
+import { Badge, Icon, IconButton, Alert, Avatar } from '@/shared/ui';
 import Barcode from 'react-barcode';
 import type { ContainerType, RejectedSample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
@@ -37,11 +38,13 @@ interface CollectionCardProps {
     selectedColor?: string,
     containerType?: ContainerType
   ) => void;
+  /** When true, renders mobile-optimized layout */
+  isMobile?: boolean;
 }
 
 // High complexity and large function are necessary for comprehensive collection card with multiple statuses, actions, and conditional rendering
 // eslint-disable-next-line max-lines-per-function, complexity
-export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onCollect }) => {
+export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onCollect, isMobile = false }) => {
   const { openModal } = useModal();
   const { getPatientName } = usePatientNameLookup();
   const { tests } = useTestCatalog();
@@ -78,15 +81,17 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   const collectedBy =
     (isCollected || isRejected) && 'collectedBy' in sample ? sample.collectedBy : undefined;
 
-  const handleCardClick = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (
-      target.closest('button') ||
-      target.closest('input') ||
-      target.closest('form') ||
-      target.closest('[data-popover-content]')
-    ) {
-      return;
+  const handleCardClick = (e?: React.MouseEvent) => {
+    if (e) {
+      const target = e.target as HTMLElement;
+      if (
+        target.closest('button') ||
+        target.closest('input') ||
+        target.closest('form') ||
+        target.closest('[data-popover-content]')
+      ) {
+        return;
+      }
     }
 
     if ((isCollected || isRejected) && sample.sampleId) {
@@ -96,6 +101,101 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
     }
   };
 
+  // Check if sample rejection should be blocked due to validated tests in the order
+  const hasValidatedTests = orderHasValidatedTests(order);
+
+  // Mobile layout
+  if (isMobile) {
+    const testCount = testNames.length;
+
+    return (
+      <div
+        onClick={() => handleCardClick()}
+        className="bg-surface border border-border rounded-md p-3  duration-200 cursor-pointer flex flex-col h-full"
+      >
+        {/* Header: Avatar (top left) + Status badge (top right) */}
+        <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
+          <Avatar
+            primaryText={patientName}
+            primaryTextClassName="font-semibold"
+            secondaryText={displayId.order(order.orderId)}
+            secondaryTextClassName="text-brand font-mono"
+            size="xs"
+          />
+          {isPending ? (
+            <Badge variant="pending" size="xs">
+              PENDING
+            </Badge>
+          ) : isCollected ? (
+            <Badge variant="collected" size="xs">
+              COLLECTED
+            </Badge>
+          ) : isRejected ? (
+            <Badge variant="rejected" size="xs">
+              REJECTED
+            </Badge>
+          ) : null}
+        </div>
+
+        {/* Content: Volume, tests */}
+        <div className="grow">
+          <div className="space-y-1">
+            <div className="text-xs text-text-tertiary">
+              {isPending
+                ? `${formatVolume(requirement.totalVolume)} required`
+                : collectedVolume !== undefined
+                  ? `${formatVolume(collectedVolume)} ${isRejected ? 'was collected' : 'collected'}`
+                  : null}
+            </div>
+            <div className="text-xs text-text-secondary">
+              {testCount} test{testCount !== 1 ? 's' : ''}: {testNames.slice(0, 2).join(', ')}
+              {testCount > 2 && ` +${testCount - 2} more`}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom section: Badges (left) + Action button (right) */}
+        <div className="flex items-center justify-between gap-2 mt-auto pt-3">
+          <div className="flex items-center gap-2">
+            <Badge variant={sample.sampleType} size="xs" />
+            {sample.priority && <Badge variant={sample.priority} size="xs" />}
+            {isRecollection && (
+              <Badge variant="warning" size="xs">
+                RECOLLECTION
+              </Badge>
+            )}
+          </div>
+          {isPending ? (
+            <div onClick={e => e.stopPropagation()}>
+              <CollectionPopover
+                requirement={requirement}
+                patientName={patientName}
+                testName={testNames.join(', ')}
+                isRecollection={
+                  isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)
+                }
+                onConfirm={(volume, notes, color, containerType) =>
+                  onCollect(display, volume, notes, color, containerType)
+                }
+              />
+            </div>
+          ) : (
+            <IconButton
+              variant="view"
+              size="sm"
+              title="View Details"
+              onClick={e => {
+                e.stopPropagation();
+                handleCardClick();
+              }}
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop layout (LabCard)
   // Build badges (ordered by importance)
   const badges = (
     <>
@@ -136,9 +236,6 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
       )}
     </>
   );
-
-  // Check if sample rejection should be blocked due to validated tests in the order
-  const hasValidatedTests = orderHasValidatedTests(order);
 
   // Build actions
   const actions = (
@@ -242,13 +339,13 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
         {isRecollection && sample.originalSampleId && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection of {sample.originalSampleId}
+            Recollection of <span className="font-mono text-white">{displayId.sample(sample.originalSampleId)}</span>
           </Badge>
         )}
         {rejectedSample?.recollectionSampleId && (
           <Badge size="sm" variant="info" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection requested: {rejectedSample.recollectionSampleId}
+            Recollection requested: <span className="font-mono text-white">{displayId.sample(rejectedSample.recollectionSampleId)}</span>
           </Badge>
         )}
       </div>

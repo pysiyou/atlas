@@ -5,8 +5,8 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import { InfoField } from './InfoField';
-import { formatDetailDate, formatAddress } from '../../utils/patientDetailUtils';
+import { InfoField } from '@/shared/components/sections/InfoField';
+import { formatDetailDate, formatAddress } from '../../utils/patientUtils';
 import { ICONS } from '@/utils/icon-mappings';
 
 export interface GeneralInfoSectionProps {
@@ -27,6 +27,7 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
         icon={ICONS.dataFields.gender}
         label="Gender"
         value={<span className="capitalize">{patient.gender}</span>}
+        orientation="vertical"
       />
       <InfoField
         icon={ICONS.dataFields.birthday}
@@ -36,24 +37,28 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
             {formatDetailDate(patient.dateOfBirth, 'long')}
           </span>
         }
+        orientation="vertical"
       />
-      <InfoField icon={ICONS.dataFields.phone} label="Phone Number" value={patient.phone} />
+      <InfoField icon={ICONS.dataFields.phone} label="Phone Number" value={patient.phone} orientation="vertical" />
       <InfoField
         icon={ICONS.dataFields.email}
         label="Email"
         value={<span className="line-clamp-2 break-all">{patient.email || 'N/A'}</span>}
+        orientation="vertical"
       />
       <InfoField
         icon={ICONS.dataFields.height}
         label="Height"
         value={patient.height ? `${patient.height} cm` : 'N/A'}
+        orientation="vertical"
       />
       <InfoField
         icon={ICONS.dataFields.weight}
         label="Weight"
         value={patient.weight ? `${patient.weight} kg` : 'N/A'}
+        orientation="vertical"
       />
-      <InfoField icon={ICONS.dataFields.address} label="Address" value={formatAddress(patient.address)} />
+      <InfoField icon={ICONS.dataFields.address} label="Address" value={formatAddress(patient.address)} orientation="vertical" />
       <InfoField
         icon={ICONS.dataFields.phone}
         label="Emergency Contact"
@@ -65,6 +70,7 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
             </span>
           </>
         }
+        orientation="vertical"
       />
     </div>
   );

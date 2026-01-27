@@ -16,7 +16,7 @@ import { ICONS } from '@/utils/icon-mappings';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
-import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../../config/constants';
+import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../../constants';
 import type { Gender } from '@/types';
 
 /**

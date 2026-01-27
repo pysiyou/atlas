@@ -12,7 +12,7 @@ export * from './pages';
 export * from './components';
 
 // Modals
-export * from './modals';
+export * from './modals/EditPatientModal';
 
 // Forms
 export * from './forms';
@@ -23,8 +23,8 @@ export * from './hooks';
 // Utils
 export * from './utils';
 
-// Config
-export * from './config';
+// Constants
+export * from './constants';
 
 // Sections (detail page sections)
 export * from './sections';

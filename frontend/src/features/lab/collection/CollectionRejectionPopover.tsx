@@ -7,6 +7,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Popover, IconButton, Alert, Badge, FooterInfo } from '@/shared/ui';
 import { PopoverForm, CheckboxCard } from '../components/PopoverForm';
+import { displayId } from '@/utils/id-display';
 import type { RejectionReason } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
 
@@ -113,10 +114,16 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
     </>
   );
 
+  // Format sampleId if it's a number or numeric string
+  const formattedSampleId =
+    typeof sampleId === 'string' && /^\d+$/.test(sampleId)
+      ? displayId.sample(parseInt(sampleId, 10))
+      : sampleId;
+
   return (
     <PopoverForm
       title={patientName || 'Reject Sample'}
-      subtitle={`${sampleType?.toUpperCase() || 'SAMPLE'} - ${sampleId}`}
+      subtitle={`${sampleType?.toUpperCase() || 'SAMPLE'} - ${formattedSampleId}`}
       headerBadges={headerBadges}
       onCancel={onCancel}
       onConfirm={handleConfirm}

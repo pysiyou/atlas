@@ -4,7 +4,6 @@
 
 export * from './OrderHeader';
 export * from './OrderInfoSection';
-export * from './OrderInfoField';
 export * from './PatientInfoSection';
 export * from './TestsTable';
 export * from './BillingSummarySection';

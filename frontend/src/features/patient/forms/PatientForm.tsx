@@ -22,7 +22,7 @@ import {
 import type { Gender, AffiliationDuration, Affiliation, Relationship } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS, GENDER_VALUES, GENDER_CONFIG, RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG } from '@/types';
 import { formatDate } from '@/utils';
-import { isAffiliationActive } from '../utils/affiliationUtils';
+import { isAffiliationActive } from '../utils/patientUtils';
 import type { FilterOption } from '@/shared/ui/MultiSelectFilter';
 import { AffiliationPlanSelector } from '../components/forms/AffiliationPlanSelector';
 import { createFilterOptions } from '@/utils/filtering';

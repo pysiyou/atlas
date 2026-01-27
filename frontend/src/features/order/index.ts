@@ -12,7 +12,7 @@ export * from './pages';
 export * from './components';
 
 // Modals
-export * from './modals';
+export * from './modals/OrderUpsertModal';
 
 // Forms
 export * from './forms';
@@ -22,6 +22,3 @@ export * from './hooks';
 
 // Utils
 export * from './utils';
-
-// Config
-export * from './config';

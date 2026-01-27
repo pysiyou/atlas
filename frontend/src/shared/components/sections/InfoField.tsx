@@ -42,23 +42,26 @@ export const InfoField: React.FC<InfoFieldProps> = ({
   orientation = 'horizontal',
   className = '',
 }) => {
+  // Vertical layout (icon-left style used by patient/order displays)
   if (orientation === 'vertical') {
     return (
-      <div className={`space-y-2 ${className}`}>
-        <div className="flex items-center gap-2">
-          {icon && <Icon name={icon} className="w-4 h-4 text-text-tertiary" />}
-          <label className="text-xs font-medium text-text-tertiary">{label}</label>
+      <div className={`flex gap-3 ${className}`}>
+        {icon && <Icon name={icon} className="w-4 h-4 text-text-disabled shrink-0" />}
+        <div className="min-w-0 flex-1">
+          <div className="text-xs text-text-tertiary">{label}</div>
+          {/* Using div instead of p to support ReactNode values that may contain block elements */}
+          <div className="text-sm font-medium text-text-primary mt-0.5 leading-relaxed">{value}</div>
         </div>
-        <div className="text-sm text-text-primary">{value}</div>
       </div>
     );
   }
 
+  // Horizontal layout (label-value side by side)
   return (
     <div className={`flex items-center justify-between gap-4 ${className}`}>
       <div className="flex items-center gap-2">
         {icon && <Icon name={icon} className="w-4 h-4 text-text-tertiary flex-shrink-0" />}
-        <label className="text-xs font-medium text-text-tertiary whitespace-nowrap">{label}</label>
+        <div className="text-xs font-medium text-text-tertiary whitespace-nowrap">{label}</div>
       </div>
       <div className="text-sm text-text-primary text-right min-w-0">{value}</div>
     </div>

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { SectionContainer, IconButton } from '@/shared/ui';
-import { PaymentPopover } from '@/features/payment/components/filters';
+import { PaymentPopover } from '@/features/payment/components/filters/PaymentPopover';
 import type { Order, OrderTest, Patient, Test, Invoice } from '@/types';
 import { OrderInfoSection } from './display/OrderInfoSection';
 import { PatientInfoSection } from './display/PatientInfoSection';

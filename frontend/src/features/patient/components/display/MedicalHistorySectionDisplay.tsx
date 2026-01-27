@@ -5,8 +5,8 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import { InfoField } from './InfoField';
-import { formatList, formatFamilyHistory } from '../../utils/patientDetailUtils';
+import { InfoField } from '@/shared/components/sections/InfoField';
+import { formatList, formatFamilyHistory } from '../../utils/patientUtils';
 import { ICONS } from '@/utils/icon-mappings';
 
 export interface MedicalHistorySectionDisplayProps {
@@ -27,26 +27,31 @@ export const MedicalHistorySectionDisplay: React.FC<MedicalHistorySectionDisplay
         icon={ICONS.medicalHistory.chronicCondition}
         label="Chronic Disease"
         value={formatList(patient.medicalHistory?.chronicConditions)}
+        orientation="vertical"
       />
       <InfoField
         icon={ICONS.medicalHistory.medication}
         label="Current Medications"
         value={formatList(patient.medicalHistory?.currentMedications)}
+        orientation="vertical"
       />
       <InfoField
         icon={ICONS.medicalHistory.surgery}
         label="Surgery"
         value={formatList(patient.medicalHistory?.previousSurgeries)}
+        orientation="vertical"
       />
       <InfoField
         icon={ICONS.medicalHistory.familyHistory}
         label="Family Disease"
         value={formatFamilyHistory(patient.medicalHistory?.familyHistory)}
+        orientation="vertical"
       />
       <InfoField
         icon={ICONS.medicalHistory.allergy}
         label="Allergies"
         value={formatList(patient.medicalHistory?.allergies)}
+        orientation="vertical"
       />
     </div>
   );

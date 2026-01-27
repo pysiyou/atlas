@@ -2,7 +2,6 @@
  * Centralized exports for patient utilities
  */
 
-export * from './affiliationUtils';
+export * from './patientUtils';
 export * from './patientPayloadBuilder';
-export * from './formProgressCalculator';
 export * from './patientValidation';

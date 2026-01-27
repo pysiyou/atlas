@@ -6,7 +6,7 @@
 import React from 'react';
 import { SectionContainer, Badge, Icon } from '@/shared/ui';
 import type { Patient } from '@/types';
-import { formatFamilyHistory } from '../utils/patientDetailUtils';
+import { formatFamilyHistory } from '../utils/patientUtils';
 import { ICONS } from '@/utils/icon-mappings';
 
 interface MedicalHistoryCardProps {

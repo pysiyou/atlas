@@ -3,5 +3,4 @@
  */
 
 export * from './dateFilterHelpers';
-export * from './orderDetailUtils';
 export * from './orderTimelineUtils';

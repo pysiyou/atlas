@@ -31,18 +31,18 @@ export { ActiveFilterBadges, type ActiveFilterBadgesProps } from './ActiveFilter
 export { QuickFilters, type QuickFiltersProps } from './QuickFilters';
 export { FilterFactory, type FilterFactoryProps } from './FilterFactory';
 
-// Filter Components
+// Filter Controls (for direct usage)
 export {
-  SearchFilter,
-  DateRangeFilter,
-  AgeRangeFilter,
-  PriceRangeFilter,
-  MultiSelectFilter,
-  SingleSelectFilter,
-  type SearchFilterProps,
-  type DateRangeFilterProps,
-  type AgeRangeFilterProps,
-  type PriceRangeFilterProps,
-  type MultiSelectFilterProps,
-  type SingleSelectFilterProps,
-} from './filters';
+  SearchControl,
+  DateRangeControl,
+  AgeRangeControl,
+  PriceRangeControl,
+  MultiSelectControl,
+  SingleSelectControl,
+  type SearchControlProps,
+  type DateRangeControlProps,
+  type AgeRangeControlProps,
+  type PriceRangeControlProps,
+  type MultiSelectControlProps,
+  type SingleSelectControlProps,
+} from './filter-controls';

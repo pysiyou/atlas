@@ -9,7 +9,7 @@
 
 import React, { useMemo } from 'react';
 import { FilterBar, type FilterValues } from '@/features/filters';
-import { entryFilterConfig } from '../../config/entryFilterConfig';
+import { entryFilterConfig } from '../../constants';
 import type { TestStatus } from '@/types';
 
 export interface EntryFiltersProps {

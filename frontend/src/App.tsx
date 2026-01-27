@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from 'react-hot-toast';
 
 // Composed Providers
-import { AppProviders } from '@/shared/providers';
+import { AppProviders } from '@/shared/providers/AppProviders';
 import { DataLoader } from '@/shared/components/DataLoader';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { FeatureErrorBoundary } from '@/shared/components/FeatureErrorBoundary';

@@ -4,10 +4,10 @@ import { LoadingState } from '@/shared/components';
 import { formatCurrency } from '@/utils';
 import type { Patient, Test, PriorityLevel } from '@/types';
 import type { PaymentMethodOption, PaymentMethod } from '@/types/billing';
-import { PatientSelect as PatientSelector } from '../components/forms/PatientSelect';
-import { TestSelect as TestSelector } from '../components/forms/TestSelect';
-import { OrderForm as OrderDetailsForm } from '../components/forms/OrderForm';
-import { PaymentSection } from '../components/forms/PaymentSection';
+import { PatientSelect as PatientSelector } from './sections/PatientSelect';
+import { TestSelect as TestSelector } from './sections/TestSelect';
+import { OrderForm as OrderDetailsForm } from './sections/OrderForm';
+import { PaymentSection } from './sections/PaymentSection';
 import { ICONS } from '@/utils/icon-mappings';
 
 /** Grouped props for patient selection section */

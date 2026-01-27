@@ -10,4 +10,3 @@ export { CollectionRejectionPopover } from './CollectionRejectionPopover';
 export { CollectionRejectionSection } from './CollectionRejectionSection';
 export { CollectionRequirementsSection } from './CollectionRequirementsSection';
 export { printCollectionLabel } from './CollectionLabel';
-export { CollectionMobileCard } from './CollectionMobileCard';

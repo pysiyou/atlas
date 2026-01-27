@@ -3,7 +3,7 @@
  */
 
 // Card components
-export * from './cards';
+export * from './cards/PatientCard';
 
 // Filter components
 export * from './filters';
@@ -12,7 +12,7 @@ export * from './filters';
 export * from './forms';
 
 // Table components
-export * from './tables';
+export * from './tables/PatientOrdersTable';
 
 // Display components
 export * from './display';

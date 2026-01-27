@@ -1,5 +1,5 @@
 /**
- * Form components exports
+ * Order form section components
  */
 
 export * from './OrderForm';
