@@ -111,6 +111,18 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
     };
   }, [onChange, handleMouseMove]);
 
+  // Cleanup event listeners on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      // Remove any lingering event listeners if component unmounts during drag
+      if (isDragging.current) {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', mouseUpHandlerRef.current);
+        isDragging.current = null;
+      }
+    };
+  }, [handleMouseMove]);
+
   const onMouseDown = (type: 'min' | 'max') => (e: React.MouseEvent) => {
     e.preventDefault();
     isDragging.current = type;

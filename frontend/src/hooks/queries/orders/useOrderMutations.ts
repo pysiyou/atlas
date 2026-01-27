@@ -42,7 +42,7 @@ export function useUpdateOrder() {
       await queryClient.cancelQueries({ queryKey: queryKeys.orders.lists() });
 
       const previousOrder = queryClient.getQueryData<Order>(queryKeys.orders.byId(orderIdStr));
-      const previousOrders = queryClient.getQueryData<Order[]>(queryKeys.orders.list());
+      const previousOrders = queryClient.getQueryData<Order[]>(queryKeys.orders.lists());
 
       if (previousOrder) {
         queryClient.setQueryData<Order>(queryKeys.orders.byId(orderIdStr), {
@@ -54,7 +54,7 @@ export function useUpdateOrder() {
 
       if (previousOrders) {
         queryClient.setQueryData<Order[]>(
-          queryKeys.orders.list(),
+          queryKeys.orders.lists(),
           previousOrders.map(o =>
             o.orderId === numericOrderId
               ? { ...o, ...updates, updatedAt: new Date().toISOString() }
@@ -72,7 +72,7 @@ export function useUpdateOrder() {
         queryClient.setQueryData(queryKeys.orders.byId(orderIdStr), context.previousOrder);
       }
       if (context?.previousOrders) {
-        queryClient.setQueryData(queryKeys.orders.list(), context.previousOrders);
+        queryClient.setQueryData(queryKeys.orders.lists(), context.previousOrders);
       }
     },
     onSettled: (_, __, variables) => {

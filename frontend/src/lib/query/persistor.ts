@@ -59,7 +59,16 @@ export function createPersister() {
     throttleTime: 100,
     // Custom serializer to handle dates
     serialize: (data) => JSON.stringify(data),
-    deserialize: (data) => JSON.parse(data),
+    // Safe deserializer with error handling for malformed localStorage data
+    deserialize: (data) => {
+      try {
+        return JSON.parse(data);
+      } catch (error) {
+        // Log error and return empty object to prevent app crash
+        console.error('Failed to parse persisted cache data:', error);
+        return null;
+      }
+    },
   });
 }
 

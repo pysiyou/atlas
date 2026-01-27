@@ -120,6 +120,24 @@ interface IconProps {
 }
 
 /**
+ * Sanitize SVG content by removing script tags and dangerous attributes
+ * Prevents XSS attacks while preserving SVG functionality
+ */
+const sanitizeSvg = (svgContent: string): string => {
+  // Remove script tags and their content
+  let sanitized = svgContent.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  
+  // Remove event handlers (onclick, onload, etc.)
+  sanitized = sanitized.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, '');
+  sanitized = sanitized.replace(/\s*on\w+\s*=\s*[^\s>]*/gi, '');
+  
+  // Remove javascript: URLs
+  sanitized = sanitized.replace(/javascript:/gi, '');
+  
+  return sanitized;
+};
+
+/**
  * Load SVG content from public icons directory
  */
 const loadSvg = async (name: string): Promise<string> => {
@@ -127,7 +145,8 @@ const loadSvg = async (name: string): Promise<string> => {
   if (!response.ok) {
     throw new Error(`Failed to load SVG: ${response.statusText}`);
   }
-  return await response.text();
+  const content = await response.text();
+  return sanitizeSvg(content);
 };
 
 /**

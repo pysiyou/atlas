@@ -122,7 +122,18 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
               };
             } catch (e) {
               // Barcode generation error - display fallback in UI
-              document.getElementById('barcode').innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="red" font-size="10">Barcode Error</text>';
+              const barcodeEl = document.getElementById('barcode');
+              if (barcodeEl) {
+                // Use safe DOM manipulation instead of innerHTML
+                const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                textEl.setAttribute('x', '50%');
+                textEl.setAttribute('y', '50%');
+                textEl.setAttribute('text-anchor', 'middle');
+                textEl.setAttribute('fill', 'red');
+                textEl.setAttribute('font-size', '10');
+                textEl.textContent = 'Barcode Error';
+                barcodeEl.appendChild(textEl);
+              }
             }
           })();
         </script>

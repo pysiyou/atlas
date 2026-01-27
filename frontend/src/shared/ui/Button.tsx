@@ -150,7 +150,7 @@ const SPINNER_SIZES: Record<ButtonSize, string> = {
   xs: 'h-3 w-3',
   sm: 'h-3.5 w-3.5',
   md: 'h-4 w-4',
-  lg: 'h-5 h-5',
+  lg: 'w-5 h-5',
 };
 
 /**

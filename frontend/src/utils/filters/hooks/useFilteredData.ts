@@ -94,11 +94,27 @@ export function useFilteredData<T>(options: UseFilteredDataOptions<T>): T[] {
           if (customSearchFields) {
             filtered = applySearchFilter(filtered, query, customSearchFields);
           } else {
-            // Default: search in all string fields (basic fallback)
+            // Default: search in all string fields (optimized - only extract string values)
+            // This avoids creating arrays for all values and only processes string fields
             filtered = applySearchFilter(
               filtered,
               query,
-              item => Object.values(item as Record<string, unknown>).map(v => String(v ?? ''))
+              item => {
+                const record = item as Record<string, unknown>;
+                const searchableStrings: string[] = [];
+                for (const key in record) {
+                  if (Object.prototype.hasOwnProperty.call(record, key)) {
+                    const value = record[key];
+                    if (typeof value === 'string' && value.trim()) {
+                      searchableStrings.push(value);
+                    } else if (value != null) {
+                      // Convert non-string primitives to string for search
+                      searchableStrings.push(String(value));
+                    }
+                  }
+                }
+                return searchableStrings;
+              }
             );
           }
           break;

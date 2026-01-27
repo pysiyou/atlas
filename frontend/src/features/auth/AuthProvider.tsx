@@ -46,7 +46,17 @@ const storage = {
 
 const decodeJwt = (token: string): { exp?: number; iat?: number } | null => {
   try {
-    const [, payload] = token.split('.');
+    // Validate JWT format: should have 3 parts separated by dots
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      return null;
+    }
+    
+    const [, payload] = parts;
+    if (!payload) {
+      return null;
+    }
+    
     return JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
   } catch {
     return null;
@@ -141,13 +151,19 @@ export const AuthProvider = ({ children }: Props) => {
 
   // Restore auth state on mount
   useEffect(() => {
+    const abortController = new AbortController();
     let mounted = true;
 
     const restore = async () => {
+      // Check if operation was aborted
+      if (abortController.signal.aborted) return;
+
       const token = storage.get(STORAGE_KEYS.ACCESS_TOKEN);
 
       if (!token) {
-        setIsLoading(false);
+        if (mounted && !abortController.signal.aborted) {
+          setIsLoading(false);
+        }
         return;
       }
 
@@ -155,32 +171,52 @@ export const AuthProvider = ({ children }: Props) => {
       let validToken = token;
       if (isTokenExpired(token)) {
         const refreshed = await refreshToken();
+        // Check if aborted after async operation
+        if (abortController.signal.aborted || !mounted) return;
+        
         if (!refreshed) {
-          if (mounted) setIsLoading(false);
+          if (mounted && !abortController.signal.aborted) {
+            setIsLoading(false);
+          }
           return;
         }
         validToken = refreshed;
       }
 
+      // Check if aborted before continuing
+      if (abortController.signal.aborted || !mounted) return;
+
       tokenRef.current = validToken;
 
       try {
         const userInfo = await apiClient.get<AuthUser>('/auth/me');
-        if (mounted) {
+        // Check if aborted after async operation
+        if (mounted && !abortController.signal.aborted) {
           setUser(userInfo);
           storage.set(STORAGE_KEYS.USER, JSON.stringify(userInfo));
           scheduleRefresh(validToken);
         }
       } catch {
-        clearAuth();
+        // Only clear auth if not aborted (abort means component unmounted, cleanup will handle it)
+        if (!abortController.signal.aborted) {
+          clearAuth();
+        }
       } finally {
-        if (mounted) setIsLoading(false);
+        if (mounted && !abortController.signal.aborted) {
+          setIsLoading(false);
+        }
       }
     };
 
     restore();
     return () => {
       mounted = false;
+      abortController.abort();
+      // Clear refresh timer on unmount to prevent memory leak
+      if (refreshTimerRef.current) {
+        clearTimeout(refreshTimerRef.current);
+        refreshTimerRef.current = undefined;
+      }
     };
   }, [clearAuth, refreshToken, scheduleRefresh]);
 

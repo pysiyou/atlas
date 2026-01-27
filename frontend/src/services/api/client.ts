@@ -57,14 +57,28 @@ class APIClient {
 
       if (response.ok) {
         const text = await response.text();
-        return text ? JSON.parse(text) : ({} as T);
+        if (!text || text.trim().length === 0) {
+          return {} as T;
+        }
+        try {
+          return JSON.parse(text);
+        } catch (parseError) {
+          logger.error('Failed to parse JSON response', parseError instanceof Error ? parseError : undefined);
+          throw { message: 'Invalid JSON response from server', status: response.status } as APIError;
+        }
       }
 
       // Handle 401 - try refresh once
       if (response.status === 401 && !isRetry) {
-        const newToken = await this.refreshToken();
-        if (newToken) {
-          return this.request<T>(method, endpoint, data, true);
+        try {
+          const newToken = await this.refreshToken();
+          if (newToken) {
+            return this.request<T>(method, endpoint, data, true);
+          }
+        } catch (refreshError) {
+          // If refresh fails, preserve 401 status instead of converting to generic error
+          logger.error('Token refresh failed', refreshError instanceof Error ? refreshError : undefined);
+          // Fall through to error handling below to preserve 401 status
         }
       }
 
