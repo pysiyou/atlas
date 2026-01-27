@@ -133,10 +133,10 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-text-tertiary">{config.placeholder || 'Filter by price range'}</span>;
+      return <span className="text-text-tertiary whitespace-nowrap">{config.placeholder || 'Filter by price range'}</span>;
     }
     return (
-      <span className="text-text-secondary font-medium">
+      <span className="text-text-secondary font-medium whitespace-nowrap">
         {formatPrice(start)} - {formatPrice(end)}
       </span>
     );
@@ -158,7 +158,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
           <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors" />
           
           {/* Column 2: Content - flexible middle */}
-          <div className="flex-1 min-w-0 text-xs font-medium">{renderTriggerContent()}</div>
+          <div className="flex-1 min-w-0 text-xs font-medium truncate">{renderTriggerContent()}</div>
 
           {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
           <div className="flex items-center gap-1 shrink-0">

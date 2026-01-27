@@ -67,10 +67,10 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-text-tertiary">{placeholder}</span>;
+      return <span className="text-text-tertiary whitespace-nowrap">{placeholder}</span>;
     }
     return (
-      <span className={cn('text-text-secondary', 'font-medium')}>
+      <span className={cn('text-text-secondary', 'font-medium', 'whitespace-nowrap')}>
         {start} - {end}
       </span>
     );

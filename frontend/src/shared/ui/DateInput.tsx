@@ -9,9 +9,9 @@ import { Icon } from './Icon';
 import { Popover } from './Popover';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
-import { DateFilterCalendar } from '@/features/order/components/DateFilterCalendar';
-import { DateFilterHeader } from '@/features/order/components/DateFilterHeader';
-import { useDateFilterNavigation } from '@/features/order/hooks/useDateFilterNavigation';
+import { DateFilterCalendar } from '@/utils/filters/filter-controls/DateFilterCalendar';
+import { DateFilterHeader } from '@/utils/filters/filter-controls/DateFilterHeader';
+import { useDateFilterNavigation } from '@/utils/filters/filter-controls/hooks/useDateFilterNavigation';
 
 interface DateInputProps {
   label?: string;

@@ -14,11 +14,11 @@ import { Icon } from '@/shared/ui/Icon';
 import { Popover } from '@/shared/ui/Popover';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
-import { useDateFilterState } from '../../hooks/useDateFilterState';
-import { useDateFilterNavigation } from '../../hooks/useDateFilterNavigation';
-import { DateFilterCalendar } from '../DateFilterCalendar';
-import { DateFilterHeader } from '../DateFilterHeader';
-import { DateFilterPresets } from '../DateFilterPresets';
+import { useDateFilterState } from './hooks/useDateFilterState';
+import { useDateFilterNavigation } from './hooks/useDateFilterNavigation';
+import { DateFilterCalendar } from './DateFilterCalendar';
+import { DateFilterHeader } from './DateFilterHeader';
+import { DateFilterPresets } from './DateFilterPresets';
 
 interface DateFilterProps {
   value: [Date, Date] | null;
@@ -64,14 +64,14 @@ export const DateFilter: React.FC<DateFilterProps> = ({
    */
   const renderTriggerContent = () => {
     if (!value) {
-      return <span className="text-text-tertiary">{placeholder}</span>;
+      return <span className="text-text-tertiary whitespace-nowrap">{placeholder}</span>;
     }
     const [start, end] = value;
     if (isSameDay(start, end)) {
-      return <span className="text-text-secondary font-medium">{format(start, 'dd MMM yyyy')}</span>;
+      return <span className="text-text-secondary font-medium whitespace-nowrap">{format(start, 'dd MMM yyyy')}</span>;
     }
     return (
-      <span className="text-text-secondary font-medium">
+      <span className="text-text-secondary font-medium whitespace-nowrap">
         {format(start, 'dd MMM')} - {format(end, 'dd MMM yyyy')}
       </span>
     );
