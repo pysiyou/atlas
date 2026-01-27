@@ -5,6 +5,7 @@
 
 // Types
 export type {
+  FilterOption,
   FilterControlType,
   FilterControl,
   SearchFilterControl,
@@ -21,7 +22,8 @@ export type {
 } from './types';
 
 // Hooks
-export { useFilterState, useFilterPersistence, useQuickFilters } from './hooks';
+export { useFilterState, useFilterPersistence, useQuickFilters, useFilteredData } from './hooks';
+export type { UseFilteredDataOptions } from './hooks';
 
 // Components
 export { FilterBar, type FilterBarProps } from './FilterBar';
@@ -46,3 +48,6 @@ export {
   type MultiSelectControlProps,
   type SingleSelectControlProps,
 } from './filter-controls';
+
+// Utilities
+export * from './utils';

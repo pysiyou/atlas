@@ -1,36 +1,41 @@
 /**
- * Filtering Module
- * Consolidated filtering utilities, hooks, and types
+ * Filtering Module (Legacy)
+ * 
+ * ⚠️ DEPRECATED: For new code, use @/utils/filters instead.
+ * 
+ * This module is kept for backward compatibility with:
+ * - useFiltering, useSearch, useMultiSelect hooks
+ * - Legacy filter functions
+ * 
+ * Shared utilities (FilterOption, createFilterOptions) are now in @/utils/filters
+ * and re-exported here for backward compatibility.
  *
  * @example
  * ```typescript
- * // Import hooks
- * import { useFiltering, useSearch, useMultiSelect } from '@/utils/filtering';
- *
- * // Import filter functions
- * import { createSearchFilter, combineFilters } from '@/utils/filtering';
- *
- * // Import utility functions
- * import { createFilterOptions } from '@/utils/filtering';
- *
- * // Import types
- * import type { FilterOption, SortConfig } from '@/utils/filtering';
+ * // OLD (deprecated):
+ * import { useFiltering } from '@/utils/filtering';
+ * 
+ * // NEW (preferred):
+ * import { FilterBar, useFilteredData } from '@/utils/filters';
  * ```
  */
 
-// Types
+// Re-export shared types and utilities from centralized filters
+export type { FilterOption } from '@/utils/filters';
+export { createFilterOptions } from '@/utils/filters';
+
+// Legacy types (still used by old hooks)
 export type {
   SortDirection,
   SortConfig,
-  FilterOption,
   UseFilteringOptions,
   UseFilteringReturn,
 } from './types';
 
-// Hooks
+// Legacy hooks (kept for backward compatibility)
 export { useFiltering, useSearch, useMultiSelect } from './hooks';
 
-// Pure filter functions
+// Legacy filter functions (kept for backward compatibility)
 export {
   createSearchFilter,
   createMultiFieldFilter,
@@ -40,6 +45,3 @@ export {
   filterByMultipleCriteria,
   sortItems,
 } from './filters';
-
-// Utility functions
-export { createFilterOptions } from './utils';

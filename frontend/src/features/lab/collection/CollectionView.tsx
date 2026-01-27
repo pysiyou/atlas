@@ -5,6 +5,7 @@
  */
 
 import React, { useMemo, useState } from 'react';
+import type { FilterValues } from '@/utils/filters';
 import { useAuth } from '@/hooks';
 import {
   useOrdersList,
@@ -22,8 +23,9 @@ import { getTestNames } from '@/utils/typeHelpers';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';
 import { LabWorkflowView } from '../components/LabWorkflowView';
-import { CollectionFilters } from '../components/filters';
 import { DataErrorBoundary } from '@/shared/components';
+import { FilterBar, useFilteredData } from '@/utils/filters';
+import { collectionFilterConfig } from '../constants';
 import type { SampleDisplay } from '../types';
 
 /**
@@ -79,10 +81,13 @@ export const CollectionView: React.FC = () => {
   const collectSampleMutation = useCollectSample();
   const { getPatient, getPatientName } = usePatientNameLookup();
   const { getOrder } = useOrderLookup();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  const [statusFilters, setStatusFilters] = useState<SampleStatus[]>(['pending']);
+  // Centralized filter state management
+  const [filters, setFilters] = useState<FilterValues>({
+    searchQuery: '',
+    dateRange: null,
+    sampleType: [],
+    status: ['pending'] as SampleStatus[],
+  });
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
@@ -120,45 +125,51 @@ export const CollectionView: React.FC = () => {
     return displays;
   }, [samples, tests, getPatient, getOrder]);
 
-  // Create memoized filter function
+  // Create memoized filter function for search
   const filterSample = useMemo(
     () => createSampleFilter(getPatientName, tests),
     [getPatientName, tests]
   );
 
-  // Apply date range, sample type, status, then search (same order as Order filters)
-  const filteredDisplays = useMemo(() => {
-    let out = allSampleDisplays;
-
-    if (dateRange) {
-      const [start, end] = dateRange;
-      const startDate = new Date(start);
-      startDate.setHours(0, 0, 0, 0);
-      const endDate = new Date(end);
-      endDate.setHours(23, 59, 59, 999);
-      out = out.filter(d => {
-        const orderDate = new Date(d.order.orderDate);
-        return orderDate >= startDate && orderDate <= endDate;
-      });
-    }
-
-    if (sampleTypeFilters.length > 0) {
-      out = out.filter(d => {
-        const st = d.requirement?.sampleType ?? d.sample?.sampleType;
-        return st && sampleTypeFilters.includes(st);
-      });
-    }
-
-    if (statusFilters.length > 0) {
-      out = out.filter(d => d.sample?.status && statusFilters.includes(d.sample.status));
-    }
-
-    if (searchQuery.trim()) {
-      out = out.filter(d => filterSample(d, searchQuery));
-    }
-
-    return out;
-  }, [allSampleDisplays, dateRange, sampleTypeFilters, statusFilters, searchQuery, filterSample]);
+  // Apply filters using centralized hook with custom search
+  const filteredDisplays = useFilteredData<SampleDisplay>({
+    items: allSampleDisplays,
+    filterValues: filters,
+    filterConfig: collectionFilterConfig,
+    customSearchFields: display => {
+      // Return fields that would match - this is a simplified version
+      // The actual filtering happens in customFilters
+      return [
+        display.order.orderId.toString(),
+        getPatientName(display.order.patientId),
+        display.sample?.sampleId?.toString() || '',
+      ];
+    },
+    customDateGetter: (display, field) => {
+      if (field === 'dateRange' || field === 'orderDate') {
+        return display.order.orderDate;
+      }
+      return null;
+    },
+    customFilters: {
+      searchQuery: (display, value) => {
+        const query = (value as string) || '';
+        if (!query.trim()) return true;
+        return filterSample(display, query);
+      },
+      sampleType: (display, value) => {
+        const filterValues = (value as string[]) || [];
+        if (filterValues.length === 0) return true;
+        const st = display.requirement?.sampleType ?? display.sample?.sampleType;
+        return !!(st && filterValues.includes(st));
+      },
+      status: (display, value) => {
+        const filterValues = (value as SampleStatus[]) || [];
+        if (filterValues.length === 0) return true;
+        return !!(display.sample?.status && filterValues.includes(display.sample.status));
+      },
+    },
+  });
 
   /**
    * Handle sample collection
@@ -216,18 +227,7 @@ export const CollectionView: React.FC = () => {
         emptyIcon="sample-collection"
         emptyTitle="No Pending Collections"
         emptyDescription="There are no samples waiting to be collected."
-        filterRow={
-          <CollectionFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            sampleTypeFilters={sampleTypeFilters}
-            onSampleTypeFiltersChange={setSampleTypeFilters}
-            statusFilters={statusFilters}
-            onStatusFiltersChange={setStatusFilters}
-          />
-        }
+        filterRow={<FilterBar config={collectionFilterConfig} value={filters} onChange={setFilters} />}
       />
     </DataErrorBoundary>
   );

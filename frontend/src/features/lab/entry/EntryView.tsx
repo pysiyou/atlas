@@ -20,7 +20,8 @@ import { logger } from '@/utils/logger';
 import type { TestResult, TestStatus, TestWithContext } from '@/types';
 import { isCollectedSample } from '@/types';
 import { EntryCard } from './EntryCard';
-import { EntryFilters } from '../components/filters';
+import { FilterBar, useFilteredData, type FilterValues } from '@/utils/filters';
+import { entryFilterConfig } from '../constants';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { DataErrorBoundary } from '@/shared/components';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
@@ -39,10 +40,13 @@ export const EntryView: React.FC = () => {
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  const [statusFilters, setStatusFilters] = useState<TestStatus[]>([]);
+  // Centralized filter state management
+  const [filters, setFilters] = useState<FilterValues>({
+    searchQuery: '',
+    dateRange: null,
+    sampleType: [],
+    status: [],
+  });
   const [results, setResults] = useState<Record<string, Record<string, string>>>({});
   const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
   const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
@@ -109,41 +113,35 @@ export const EntryView: React.FC = () => {
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
-  const filteredTests = useMemo(() => {
-    let out = allTests;
-
-    if (dateRange) {
-      const [start, end] = dateRange;
-      const startDate = new Date(start);
-      startDate.setHours(0, 0, 0, 0);
-      const endDate = new Date(end);
-      endDate.setHours(23, 59, 59, 999);
-      out = out.filter(t => {
-        const d = (t as { orderDate?: string }).orderDate;
-        if (!d) return false;
-        const orderDate = new Date(d);
-        return orderDate >= startDate && orderDate <= endDate;
-      });
-    }
-
-    if (sampleTypeFilters.length > 0) {
-      out = out.filter(
-        t => t.sampleType && sampleTypeFilters.includes(t.sampleType)
-      );
-    }
-
-    if (statusFilters.length > 0) {
-      out = out.filter(
-        t => t.status && statusFilters.includes(t.status as TestStatus)
-      );
-    }
-
-    if (searchQuery.trim()) {
-      out = out.filter(t => filterTest(t, searchQuery));
-    }
-
-    return out;
-  }, [allTests, dateRange, sampleTypeFilters, statusFilters, searchQuery, filterTest]);
+  // Apply filters using centralized hook with custom filters
+  const filteredTests = useFilteredData<TestWithContext>({
+    items: allTests,
+    filterValues: filters,
+    filterConfig: entryFilterConfig,
+    customDateGetter: (test, field) => {
+      if (field === 'dateRange' || field === 'orderDate') {
+        return (test as { orderDate?: string }).orderDate || null;
+      }
+      return null;
+    },
+    customFilters: {
+      searchQuery: (test, value) => {
+        const query = (value as string) || '';
+        if (!query.trim()) return true;
+        return !!filterTest(test, query);
+      },
+      sampleType: (test, value) => {
+        const filterValues = (value as string[]) || [];
+        if (filterValues.length === 0) return true;
+        return !!(test.sampleType && filterValues.includes(test.sampleType));
+      },
+      status: (test, value) => {
+        const filterValues = (value as TestStatus[]) || [];
+        if (filterValues.length === 0) return true;
+        return !!(test.status && filterValues.includes(test.status as TestStatus));
+      },
+    },
+  });
 
   const handleResultChange = useCallback((resultKey: string, paramCode: string, value: string) => {
     setResults(prev => ({
@@ -383,18 +381,7 @@ export const EntryView: React.FC = () => {
         emptyIcon="checklist"
         emptyTitle="No Pending Results"
         emptyDescription="There are no samples waiting for result entry."
-        filterRow={
-          <EntryFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            sampleTypeFilters={sampleTypeFilters}
-            onSampleTypeFiltersChange={setSampleTypeFilters}
-            statusFilters={statusFilters}
-            onStatusFiltersChange={setStatusFilters}
-          />
-        }
+        filterRow={<FilterBar config={entryFilterConfig} value={filters} onChange={setFilters} />}
       />
     </DataErrorBoundary>
   );

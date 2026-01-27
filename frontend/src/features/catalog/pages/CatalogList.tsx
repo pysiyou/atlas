@@ -10,9 +10,10 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTestCatalog } from '@/hooks/queries';
 import { ListView } from '@/shared/components';
-import { CatalogFilters } from '../components/filters/CatalogFilters';
+import { FilterBar, useFilteredData, type FilterValues } from '@/utils/filters';
+import { catalogFilterConfig } from '../config/catalogFilterConfig';
 import { createCatalogTableConfig } from './CatalogTableConfig';
-import type { Test, TestCategory } from '@/types';
+import type { Test } from '@/types';
 import { PRICE_RANGE } from '@/shared/constants';
 
 /**
@@ -39,59 +40,33 @@ export const CatalogList: React.FC = () => {
       }
     : null;
 
-  // Local filter state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilters, setCategoryFilters] = useState<TestCategory[]>([]);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  // Use shared constants for price range
-  const [priceRange, setPriceRange] = useState<[number, number]>([
-    PRICE_RANGE.MIN,
-    PRICE_RANGE.MAX,
-  ]);
+  // Centralized filter state management
+  const [filters, setFilters] = useState<FilterValues>({
+    searchQuery: '',
+    category: [],
+    sampleType: [],
+    priceRange: [PRICE_RANGE.MIN, PRICE_RANGE.MAX],
+  });
 
-  // Apply filters to tests
-  const filteredTests = useMemo(() => {
-    let filtered = tests;
+  // Apply filters using centralized hook
+  const filteredTests = useFilteredData<Test>({
+    items: tests,
+    filterValues: filters,
+    filterConfig: catalogFilterConfig,
+    customSearchFields: test => [
+      test.name,
+      test.code,
+      ...(test.synonyms || []),
+      ...(test.loincCodes || []),
+      ...(test.panels || []),
+    ],
+  });
 
-    // Apply search filter (name, code, synonyms)
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
-      filtered = filtered.filter(test => {
-        // Search in name
-        if (test.name.toLowerCase().includes(query)) return true;
-        // Search in code
-        if (test.code.toLowerCase().includes(query)) return true;
-        // Search in synonyms
-        if (test.synonyms?.some(syn => syn.toLowerCase().includes(query))) return true;
-        // Search in LOINC codes
-        if (test.loincCodes?.some(loinc => loinc.toLowerCase().includes(query))) return true;
-        // Search in panels
-        if (test.panels?.some(panel => panel.toLowerCase().includes(query))) return true;
-        return false;
-      });
-    }
-
-    // Apply category filter
-    if (categoryFilters.length > 0) {
-      filtered = filtered.filter(test => categoryFilters.includes(test.category));
-    }
-
-    // Apply sample type filter
-    if (sampleTypeFilters.length > 0) {
-      filtered = filtered.filter(test => sampleTypeFilters.includes(test.sampleType));
-    }
-
-    // Apply price range filter
-    const [minPrice, maxPrice] = priceRange;
-    if (minPrice !== 0 || maxPrice !== 10000) {
-      filtered = filtered.filter(test => {
-        return test.price >= minPrice && test.price <= maxPrice;
-      });
-    }
-
-    // Sort by name by default
-    return filtered.sort((a, b) => a.name.localeCompare(b.name));
-  }, [tests, searchQuery, categoryFilters, sampleTypeFilters, priceRange]);
+  // Sort by name by default
+  const sortedTests = useMemo(
+    () => [...filteredTests].sort((a, b) => a.name.localeCompare(b.name)),
+    [filteredTests]
+  );
 
   // Memoize table config to prevent recreation on every render
   const catalogTableConfig = useMemo(() => createCatalogTableConfig(navigate), [navigate]);
@@ -106,7 +81,7 @@ export const CatalogList: React.FC = () => {
   return (
     <ListView
       mode="table"
-      items={filteredTests}
+      items={sortedTests}
       viewConfig={catalogTableConfig}
       loading={isLoading}
       error={error}
@@ -114,18 +89,7 @@ export const CatalogList: React.FC = () => {
       onDismissError={handleDismissError}
       onRowClick={(test: Test) => navigate(`/catalog/${test.code}`)}
       title="Test Catalog"
-      filters={
-        <CatalogFilters
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          categoryFilters={categoryFilters}
-          onCategoryFiltersChange={setCategoryFilters}
-          sampleTypeFilters={sampleTypeFilters}
-          onSampleTypeFiltersChange={setSampleTypeFilters}
-          priceRange={priceRange}
-          onPriceRangeChange={setPriceRange}
-        />
-      }
+      filters={<FilterBar config={catalogFilterConfig} value={filters} onChange={setFilters} />}
       pagination={true}
       pageSize={20}
       pageSizeOptions={[10, 20, 50, 100]}

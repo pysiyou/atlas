@@ -18,15 +18,11 @@ export interface SortConfig<T> {
 
 /**
  * Filter option for multi-select filters
+ * 
+ * ⚠️ DEPRECATED: This type is now in @/utils/filters.
+ * Re-exported here for backward compatibility only.
  */
-export interface FilterOption {
-  /** Unique identifier for the option */
-  id: string;
-  /** Display label */
-  label: string;
-  /** Optional color for visual distinction */
-  color?: string;
-}
+export type { FilterOption } from '@/utils/filters';
 
 /**
  * Options for the useFiltering hook

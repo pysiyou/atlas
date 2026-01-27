@@ -1,12 +1,9 @@
 /**
- * Filtering Utility Functions (Legacy)
- * 
- * ⚠️ DEPRECATED: Use createFilterOptions from @/utils/filters instead.
- * 
- * This file is kept for backward compatibility only.
+ * Filter Options Utility
+ * Helper function for creating filter option arrays
  */
 
-import type { FilterOption } from '@/utils/filters';
+import type { FilterOption } from '../types';
 
 /**
  * Creates an array of FilterOption objects from a values array and configuration

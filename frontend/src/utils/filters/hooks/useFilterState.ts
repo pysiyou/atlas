@@ -3,7 +3,7 @@
  * Centralized filter state management
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import type { FilterValues } from '../types';
 
 /**
@@ -61,128 +61,148 @@ export function useFilterState(options: UseFilterStateOptions = {}): UseFilterSt
   const { initialFilters = {}, onChange } = options;
 
   const [filters, setFilters] = useState<FilterValues>(initialFilters);
+  const isInitialMount = useRef(true);
+  const isSyncingFromParent = useRef(false);
+  const onChangeRef = useRef(onChange);
+
+  // Keep onChange ref up to date
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+
+  // Sync filters when initialFilters change from parent (but don't trigger onChange)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    isSyncingFromParent.current = true;
+    setFilters(initialFilters);
+  }, [initialFilters]);
+
+  // Call onChange after filters change (but not on initial mount or when syncing from parent)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      return;
+    }
+    if (isSyncingFromParent.current) {
+      isSyncingFromParent.current = false;
+      return;
+    }
+    onChangeRef.current?.(filters);
+  }, [filters]);
 
   /**
    * Update a single filter value
    */
-  const setFilter = useCallback(
-    (key: string, value: unknown) => {
-      setFilters(prev => {
-        const updated = { ...prev, [key]: value };
-        onChange?.(updated);
-        return updated;
-      });
-    },
-    [onChange]
-  );
+  const setFilter = useCallback((key: string, value: unknown) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  }, []);
 
   /**
    * Clear a single filter (set to default empty value based on type)
    */
-  const clearFilter = useCallback(
-    (key: string) => {
-      setFilters(prev => {
-        const updated = { ...prev };
-        const currentValue = updated[key];
+  const clearFilter = useCallback((key: string) => {
+    setFilters(prev => {
+      const updated = { ...prev };
+      const currentValue = updated[key];
 
-        // Determine default value based on current value type
-        // Check for date range first (array with 2 Date objects)
-        if (
-          Array.isArray(currentValue) &&
-          currentValue.length === 2 &&
-          currentValue[0] instanceof Date &&
-          currentValue[1] instanceof Date
-        ) {
-          updated[key] = null;
+      // Determine default value based on current value type
+      // Check for date range first (array with 2 Date objects)
+      if (
+        Array.isArray(currentValue) &&
+        currentValue.length === 2 &&
+        currentValue[0] instanceof Date &&
+        currentValue[1] instanceof Date
+      ) {
+        updated[key] = null;
+      }
+      // Check for age range or price range (array with 2 numbers)
+      else if (
+        Array.isArray(currentValue) &&
+        currentValue.length === 2 &&
+        typeof currentValue[0] === 'number' &&
+        typeof currentValue[1] === 'number'
+      ) {
+        // Check if it's a price range by key name or value range
+        if (key === 'priceRange' || (currentValue[1] > 1000 && currentValue[1] <= 100000)) {
+          updated[key] = [0, 10000]; // Default price range
+        } else {
+          updated[key] = [0, 150]; // Default age range
         }
-        // Check for age range or price range (array with 2 numbers)
-        else if (
-          Array.isArray(currentValue) &&
-          currentValue.length === 2 &&
-          typeof currentValue[0] === 'number' &&
-          typeof currentValue[1] === 'number'
-        ) {
-          // Check if it's a price range by key name or value range
-          if (key === 'priceRange' || (currentValue[1] > 1000 && currentValue[1] <= 100000)) {
-            updated[key] = [0, 10000]; // Default price range
-          } else {
-            updated[key] = [0, 150]; // Default age range
-          }
-        }
-        // Other arrays (multi-select filters)
-        else if (Array.isArray(currentValue)) {
-          updated[key] = [];
-        }
-        // Single Date
-        else if (currentValue instanceof Date) {
-          updated[key] = null;
-        }
-        // String
-        else if (typeof currentValue === 'string') {
-          updated[key] = '';
-        }
-        // Number
-        else if (typeof currentValue === 'number') {
-          updated[key] = null;
-        }
-        // Everything else
-        else {
-          updated[key] = null;
-        }
+      }
+      // Other arrays (multi-select filters)
+      else if (Array.isArray(currentValue)) {
+        updated[key] = [];
+      }
+      // Single Date
+      else if (currentValue instanceof Date) {
+        updated[key] = null;
+      }
+      // String
+      else if (typeof currentValue === 'string') {
+        updated[key] = '';
+      }
+      // Number
+      else if (typeof currentValue === 'number') {
+        updated[key] = null;
+      }
+      // Everything else
+      else {
+        updated[key] = null;
+      }
 
-        onChange?.(updated);
-        return updated;
-      });
-    },
-    [onChange]
-  );
+      return updated;
+    });
+  }, []);
 
   /**
    * Clear all filters
    */
   const clearAll = useCallback(() => {
-    const cleared: FilterValues = {};
-    Object.keys(filters).forEach(key => {
-      const value = filters[key];
-      // Check for date range (array with 2 Date objects)
-      if (
-        Array.isArray(value) &&
-        value.length === 2 &&
-        value[0] instanceof Date &&
-        value[1] instanceof Date
-      ) {
-        cleared[key] = null;
-      }
-      // Check for age range or price range (array with 2 numbers) - reset to default
-      else if (
-        Array.isArray(value) &&
-        value.length === 2 &&
-        typeof value[0] === 'number' &&
-        typeof value[1] === 'number'
-      ) {
-        // Check if it's a price range by key name or value range
-        if (key === 'priceRange' || (value[1] > 1000 && value[1] <= 100000)) {
-          cleared[key] = [0, 10000]; // Default price range
-        } else {
-          cleared[key] = [0, 150]; // Default age range
+    setFilters(prev => {
+      const cleared: FilterValues = {};
+      Object.keys(prev).forEach(key => {
+        const value = prev[key];
+        // Check for date range (array with 2 Date objects)
+        if (
+          Array.isArray(value) &&
+          value.length === 2 &&
+          value[0] instanceof Date &&
+          value[1] instanceof Date
+        ) {
+          cleared[key] = null;
         }
-      }
-      // Other arrays (multi-select filters)
-      else if (Array.isArray(value)) {
-        cleared[key] = [];
-      }
-      // String
-      else if (typeof value === 'string') {
-        cleared[key] = '';
-      }
-      // Everything else (Date, number, null, etc.)
-      else {
-        cleared[key] = null;
-      }
+        // Check for age range or price range (array with 2 numbers) - reset to default
+        else if (
+          Array.isArray(value) &&
+          value.length === 2 &&
+          typeof value[0] === 'number' &&
+          typeof value[1] === 'number'
+        ) {
+          // Check if it's a price range by key name or value range
+          if (key === 'priceRange' || (value[1] > 1000 && value[1] <= 100000)) {
+            cleared[key] = [0, 10000]; // Default price range
+          } else {
+            cleared[key] = [0, 150]; // Default age range
+          }
+        }
+        // Other arrays (multi-select filters)
+        else if (Array.isArray(value)) {
+          cleared[key] = [];
+        }
+        // String
+        else if (typeof value === 'string') {
+          cleared[key] = '';
+        }
+        // Everything else (Date, number, null, etc.)
+        else {
+          cleared[key] = null;
+        }
+      });
+      return cleared;
     });
-    setFilters(cleared);
-    onChange?.(cleared);
-  }, [filters, onChange]);
+  }, []);
 
   /**
    * Count active filters

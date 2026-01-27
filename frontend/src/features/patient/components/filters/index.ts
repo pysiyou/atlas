@@ -4,5 +4,6 @@
 
 export * from './AgeFilter';
 export * from './AffiliationPopover';
-export * from './PatientFilters';
-export type { AffiliationStatus } from './PatientFilters';
+
+// AffiliationStatus type (moved from PatientFilters)
+export type AffiliationStatus = 'active' | 'inactive';

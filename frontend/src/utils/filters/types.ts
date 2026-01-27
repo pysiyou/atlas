@@ -3,7 +3,17 @@
  * Type definitions for the new filter system
  */
 
-import type { FilterOption } from '@/utils/filtering';
+/**
+ * Filter option for multi-select filters
+ */
+export interface FilterOption {
+  /** Unique identifier for the option */
+  id: string;
+  /** Display label */
+  label: string;
+  /** Optional color for visual distinction */
+  color?: string;
+}
 
 /**
  * Filter control types

@@ -3,4 +3,3 @@
  */
 
 export * from './cards/CatalogCard';
-export * from './filters/CatalogFilters';

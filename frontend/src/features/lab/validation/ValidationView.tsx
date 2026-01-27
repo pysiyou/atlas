@@ -26,7 +26,8 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext, CollectedSample } from '@/types';
 import { resultAPI } from '@/services/api';
 import { orderHasValidatedTests } from '@/features/order/utils';
-import { ValidationFilters } from '../components/filters';
+import { FilterBar, useFilteredData, type FilterValues } from '@/utils/filters';
+import { validationFilterConfig } from '../constants';
 
 /**
  * Feature flag to enable/disable bulk validation (select all) feature
@@ -47,10 +48,13 @@ export const ValidationView: React.FC = () => {
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  const [statusFilters, setStatusFilters] = useState<PriorityLevel[]>([]);
+  // Centralized filter state management
+  const [filters, setFilters] = useState<FilterValues>({
+    searchQuery: '',
+    dateRange: null,
+    sampleType: [],
+    status: [],
+  });
   const [comments, setComments] = useState<Record<string, string>>({});
   const [isValidating, setIsValidating] = useState<Record<string, boolean>>({});
   const [isBulkProcessing, setIsBulkProcessing] = useState(false);
@@ -122,41 +126,35 @@ export const ValidationView: React.FC = () => {
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
-  const filteredTests = useMemo(() => {
-    let out = allTests;
-
-    if (dateRange) {
-      const [start, end] = dateRange;
-      const startDate = new Date(start);
-      startDate.setHours(0, 0, 0, 0);
-      const endDate = new Date(end);
-      endDate.setHours(23, 59, 59, 999);
-      out = out.filter(t => {
-        const d = (t as { orderDate?: string }).orderDate;
-        if (!d) return false;
-        const orderDate = new Date(d);
-        return orderDate >= startDate && orderDate <= endDate;
-      });
-    }
-
-    if (sampleTypeFilters.length > 0) {
-      out = out.filter(
-        t => t.sampleType && sampleTypeFilters.includes(t.sampleType)
-      );
-    }
-
-    if (statusFilters.length > 0) {
-      out = out.filter(
-        t => t.priority && statusFilters.includes(t.priority as PriorityLevel)
-      );
-    }
-
-    if (searchQuery.trim()) {
-      out = out.filter(t => filterTest(t, searchQuery));
-    }
-
-    return out;
-  }, [allTests, dateRange, sampleTypeFilters, statusFilters, searchQuery, filterTest]);
+  // Apply filters using centralized hook with custom filters
+  const filteredTests = useFilteredData<TestWithContext>({
+    items: allTests,
+    filterValues: filters,
+    filterConfig: validationFilterConfig,
+    customDateGetter: (test, field) => {
+      if (field === 'dateRange' || field === 'orderDate') {
+        return (test as { orderDate?: string }).orderDate || null;
+      }
+      return null;
+    },
+    customFilters: {
+      searchQuery: (test, value) => {
+        const query = (value as string) || '';
+        if (!query.trim()) return true;
+        return !!filterTest(test, query);
+      },
+      sampleType: (test, value) => {
+        const filterValues = (value as string[]) || [];
+        if (filterValues.length === 0) return true;
+        return !!(test.sampleType && filterValues.includes(test.sampleType));
+      },
+      status: (test, value) => {
+        const filterValues = (value as PriorityLevel[]) || [];
+        if (filterValues.length === 0) return true;
+        return !!(test.priority && filterValues.includes(test.priority as PriorityLevel));
+      },
+    },
+  });
 
   /** Filtered tests with numeric id (for bulk selection) */
   const filteredTestsWithId = useMemo(
@@ -364,7 +362,7 @@ export const ValidationView: React.FC = () => {
         id: test.id,
         orderId: test.orderId,
         testCode: test.testCode,
-        hasCriticalValues: test.hasCriticalValues,
+        hasCriticalValues: test.hasCriticalValues as boolean | undefined,
       })),
     [filteredTestsWithId]
   );
@@ -422,16 +420,7 @@ export const ValidationView: React.FC = () => {
         emptyTitle="No Pending Validations"
         emptyDescription="There are no results waiting for validation."
         filterRow={
-          <ValidationFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            sampleTypeFilters={sampleTypeFilters}
-            onSampleTypeFiltersChange={setSampleTypeFilters}
-            statusFilters={statusFilters}
-            onStatusFiltersChange={setStatusFilters}
-          />
+          <FilterBar config={validationFilterConfig} value={filters} onChange={setFilters} />
         }
         afterFilterRow={
           ENABLE_BULK_VALIDATION && !isMobile && filteredTestsWithId.length > 0 ? (

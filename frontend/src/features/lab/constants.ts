@@ -6,9 +6,9 @@
  */
 
 import type { SampleStatus, TestStatus, PriorityLevel } from '@/types';
-import type { FilterConfig } from '@/features/filters';
-import type { FilterOption } from '@/utils/filtering';
-import { createFilterOptions } from '@/utils/filtering';
+import type { FilterConfig } from '@/utils/filters';
+import type { FilterOption } from '@/utils/filters';
+import { createFilterOptions } from '@/utils/filters';
 import {
   SAMPLE_TYPE_VALUES,
   SAMPLE_TYPE_CONFIG,

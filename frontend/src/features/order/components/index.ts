@@ -8,7 +8,6 @@ export * from './cards/OrderTableCard';
 
 // Filter components
 export * from './filters/DateFilter';
-export * from './filters/OrderFilters';
 
 // Display components
 export * from './display';

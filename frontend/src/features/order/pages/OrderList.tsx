@@ -9,13 +9,13 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useOrdersList, usePatientNameLookup, useTestNameLookup } from '@/hooks/queries';
-import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
-import { OrderFilters } from '../components/filters/OrderFilters';
+import { FilterBar, useFilteredData, type FilterValues } from '@/utils/filters';
+import { orderFilterConfig } from '../config/orderFilterConfig';
 import { createOrderTableConfig } from './OrderTableConfig';
-import type { Order, OrderStatus, PaymentStatus } from '@/types';
+import type { Order } from '@/types';
 
 /**
  * OrderList Component
@@ -48,58 +48,41 @@ export const OrderList: React.FC = () => {
       }
     : null;
 
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [paymentFilters, setPaymentFilters] = useState<PaymentStatus[]>([]);
+  // Centralized filter state management
+  const [filters, setFilters] = useState<FilterValues>({
+    searchQuery: '',
+    dateRange: null,
+    overallStatus: [],
+    paymentStatus: [],
+  });
 
-  // Use shared filtering hook for search and order status filters
-  const {
-    filteredItems: preFilteredOrders,
-    searchQuery,
-    setSearchQuery,
-    statusFilters,
-    setStatusFilters,
-  } = useFiltering<Order, OrderStatus>(orders, {
-    searchFields: order => [
+  // Apply filters using centralized hook
+  const preFilteredOrders = useFilteredData<Order>({
+    items: orders,
+    filterValues: filters,
+    filterConfig: orderFilterConfig,
+    customSearchFields: order => [
       order.orderId.toString(),
       order.patientId.toString(),
       getPatientName(order.patientId),
     ],
-    statusField: 'overallStatus',
-    defaultSort: { field: 'orderDate', direction: 'desc' },
+    customDateGetter: (order, field) => {
+      if (field === 'dateRange' || field === 'orderDate') {
+        return order.orderDate;
+      }
+      return null;
+    },
   });
 
-  // Apply date range, patient filter, and payment filters separately
+  // Apply patientIdFilter from URL params (separate from filter system)
   const filteredOrders = useMemo(() => {
-    let filtered = preFilteredOrders;
-
-    // Apply patientIdFilter
     if (patientIdFilter) {
       const numericPatientId =
         typeof patientIdFilter === 'string' ? parseInt(patientIdFilter, 10) : patientIdFilter;
-      filtered = filtered.filter(order => order.patientId === numericPatientId);
+      return preFilteredOrders.filter(order => order.patientId === numericPatientId);
     }
-
-    // Apply date range
-    if (dateRange) {
-      const [start, end] = dateRange;
-      const endDate = new Date(end);
-      endDate.setHours(23, 59, 59, 999);
-      const startDate = new Date(start);
-      startDate.setHours(0, 0, 0, 0);
-
-      filtered = filtered.filter(order => {
-        const orderDate = new Date(order.orderDate);
-        return orderDate >= startDate && orderDate <= endDate;
-      });
-    }
-
-    // Apply payment status filter
-    if (paymentFilters.length > 0) {
-      filtered = filtered.filter(order => paymentFilters.includes(order.paymentStatus));
-    }
-
-    return filtered;
-  }, [preFilteredOrders, patientIdFilter, dateRange, paymentFilters]);
+    return preFilteredOrders;
+  }, [preFilteredOrders, patientIdFilter]);
 
   // Memoize table config to prevent recreation on every render
   const orderTableConfig = useMemo(
@@ -132,18 +115,7 @@ export const OrderList: React.FC = () => {
           New Order
         </Button>
       }
-      filters={
-        <OrderFilters
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          dateRange={dateRange}
-          onDateRangeChange={setDateRange}
-          statusFilters={statusFilters}
-          onStatusFiltersChange={setStatusFilters}
-          paymentFilters={paymentFilters}
-          onPaymentFiltersChange={setPaymentFilters}
-        />
-      }
+      filters={<FilterBar config={orderFilterConfig} value={filters} onChange={setFilters} />}
       pagination={true}
       pageSize={20}
       pageSizeOptions={[10, 20, 50, 100]}

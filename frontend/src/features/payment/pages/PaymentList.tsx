@@ -10,14 +10,13 @@
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
-import { PaymentFilters } from '../components/filters/PaymentFilters';
+import { FilterBar, useFilteredData, type FilterValues } from '@/utils/filters';
+import { paymentFilterConfig } from '../config/paymentFilterConfig';
 import { createPaymentTableConfig } from './PaymentTableConfig';
 import { PaymentDetailModal } from '../modals/PaymentDetailModal';
 import { useOrdersList, usePaymentsList } from '@/hooks/queries';
 import { createOrderPaymentDetailsList, type OrderPaymentDetails } from '../types/types';
-import type { PaymentStatus, PaymentMethod } from '@/types';
 import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 
 /**
@@ -33,8 +32,14 @@ import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 export const PaymentList: React.FC = () => {
   const navigate = useNavigate();
   const { invalidateAll } = useInvalidatePayments();
-  const [methodFilters, setMethodFilters] = useState<PaymentMethod[]>([]);
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+
+  // Centralized filter state management
+  const [filters, setFilters] = useState<FilterValues>({
+    searchQuery: '',
+    dateRange: null,
+    paymentStatus: [],
+    paymentMethod: [],
+  });
 
   // State for payment detail modal
   const [selectedOrder, setSelectedOrder] = useState<OrderPaymentDetails | null>(null);
@@ -67,46 +72,19 @@ export const PaymentList: React.FC = () => {
     [orders, payments]
   );
 
-  // Use shared filtering hook for search and status filters
-  const {
-    filteredItems: preFilteredOrders,
-    searchQuery,
-    setSearchQuery,
-    statusFilters,
-    setStatusFilters,
-  } = useFiltering<OrderPaymentDetails, PaymentStatus>(orderPaymentDetailsList, {
-    searchFields: item => [item.orderId.toString(), item.patientName || ''],
-    statusField: 'paymentStatus',
-    defaultSort: { field: 'orderDate', direction: 'desc' },
+  // Apply filters using centralized hook
+  const filteredOrders = useFilteredData<OrderPaymentDetails>({
+    items: orderPaymentDetailsList,
+    filterValues: filters,
+    filterConfig: paymentFilterConfig,
+    customSearchFields: item => [item.orderId.toString(), item.patientName || ''],
+    customDateGetter: (item, field) => {
+      if (field === 'dateRange' || field === 'orderDate') {
+        return item.orderDate;
+      }
+      return null;
+    },
   });
-
-  // Apply payment method and date range filters
-  const filteredOrders = useMemo(() => {
-    let filtered = preFilteredOrders;
-
-    // Apply date range filter
-    if (dateRange) {
-      const [start, end] = dateRange;
-      const endDate = new Date(end);
-      endDate.setHours(23, 59, 59, 999);
-      const startDate = new Date(start);
-      startDate.setHours(0, 0, 0, 0);
-
-      filtered = filtered.filter(item => {
-        const orderDate = new Date(item.orderDate);
-        return orderDate >= startDate && orderDate <= endDate;
-      });
-    }
-
-    // Apply payment method filter
-    if (methodFilters.length > 0) {
-      filtered = filtered.filter(
-        item => item.paymentMethod && methodFilters.includes(item.paymentMethod)
-      );
-    }
-
-    return filtered;
-  }, [preFilteredOrders, dateRange, methodFilters]);
 
   /**
    * Handles successful payment - invalidates caches to refresh the data
@@ -162,18 +140,7 @@ export const PaymentList: React.FC = () => {
         onDismissError={handleDismissError}
         onRowClick={handleRowClick}
         title="Payments"
-        filters={
-          <PaymentFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            statusFilters={statusFilters}
-            onStatusFiltersChange={setStatusFilters}
-            methodFilters={methodFilters}
-            onMethodFiltersChange={setMethodFilters}
-          />
-        }
+        filters={<FilterBar config={paymentFilterConfig} value={filters} onChange={setFilters} />}
         pagination={true}
         pageSize={20}
         pageSizeOptions={[10, 20, 50, 100]}

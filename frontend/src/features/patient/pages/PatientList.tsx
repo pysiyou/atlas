@@ -5,20 +5,23 @@
  * This demonstrates the pattern for migrating all list views.
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePatientsList, useOrdersList } from '@/hooks/queries';
 import type { Order } from '@/types';
-import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
-import { PatientFilters, type AffiliationStatus } from '../components/filters/PatientFilters';
+import { FilterBar, useFilteredData, type FilterValues } from '@/utils/filters';
+import { patientFilterConfig } from '../config/patientFilterConfig';
 import { createPatientTableConfig } from './PatientTableConfig';
 import { calculateAge } from '@/utils';
-import type { Patient, Gender } from '@/types';
+import type { Patient } from '@/types';
 import { EditPatientModal } from '../modals/EditPatientModal';
 import { isAffiliationActive } from '../utils/patientUtils';
+import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
+
+type AffiliationStatus = 'active' | 'inactive';
 
 /**
  * PatientList component - Migrated to use ListView
@@ -44,69 +47,49 @@ export const PatientList: React.FC = () => {
       }
     : null;
 
-  const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
-  const [ageRange, setAgeRange] = React.useState<[number, number]>([0, 150]);
-  const [affiliationStatusFilters, setAffiliationStatusFilters] = React.useState<
-    AffiliationStatus[]
-  >([]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  // Use shared filtering hook
-  const {
-    filteredItems: preFilteredPatients,
-    searchQuery,
-    setSearchQuery,
-    statusFilters: sexFilters,
-    setStatusFilters: setSexFilters,
-  } = useFiltering<Patient, Gender>(patients, {
-    searchFields: patient => [
+  // Centralized filter state management
+  const [filters, setFilters] = useState<FilterValues>({
+    searchQuery: '',
+    ageRange: [AGE_RANGE_MIN, AGE_RANGE_MAX],
+    gender: [],
+    affiliationStatus: [],
+  });
+
+  // Apply filters using centralized hook with custom filters
+  const filteredPatients = useFilteredData<Patient>({
+    items: patients,
+    filterValues: filters,
+    filterConfig: patientFilterConfig,
+    customSearchFields: patient => [
       patient.fullName,
       patient.id.toString(),
       patient.phone,
       patient.email || '',
     ],
-    statusField: 'gender',
-    defaultSort: { field: 'registrationDate', direction: 'desc' },
-  });
+    customAgeCalculator: patient => calculateAge(patient.dateOfBirth),
+    customFilters: {
+      affiliationStatus: (patient, value) => {
+        const statusFilters = (value as AffiliationStatus[]) || [];
+        if (statusFilters.length === 0) return true;
 
-  // Use shared affiliation utility (no need for local function)
-
-  // Apply age and affiliation status filters
-  const filteredPatients = useMemo(() => {
-    let filtered = preFilteredPatients;
-
-    // Apply age filter
-    const [minAge, maxAge] = ageRange;
-    if (minAge !== 0 || maxAge !== 150) {
-      filtered = filtered.filter(patient => {
-        const age = calculateAge(patient.dateOfBirth);
-        return age >= minAge && age <= maxAge;
-      });
-    }
-
-    // Apply affiliation status filter
-    if (affiliationStatusFilters.length > 0) {
-      filtered = filtered.filter(patient => {
         const isActive = isAffiliationActive(patient.affiliation);
         const hasInactive = !patient.affiliation || !isActive;
 
-        if (
-          affiliationStatusFilters.includes('active') &&
-          affiliationStatusFilters.includes('inactive')
-        ) {
+        if (statusFilters.includes('active') && statusFilters.includes('inactive')) {
           return true; // Show all
         }
-        if (affiliationStatusFilters.includes('active')) {
+        if (statusFilters.includes('active')) {
           return isActive;
         }
-        if (affiliationStatusFilters.includes('inactive')) {
+        if (statusFilters.includes('inactive')) {
           return hasInactive;
         }
         return true;
-      });
-    }
-
-    return filtered;
-  }, [preFilteredPatients, ageRange, affiliationStatusFilters]);
+      },
+    },
+  });
 
   // Memoize table config to prevent recreation on every render
   const patientTableConfig = useMemo(() => {
@@ -136,18 +119,7 @@ export const PatientList: React.FC = () => {
             New Patient
           </Button>
         }
-        filters={
-          <PatientFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            ageRange={ageRange}
-            onAgeRangeChange={setAgeRange}
-            sexFilters={sexFilters}
-            onSexFiltersChange={setSexFilters}
-            affiliationStatusFilters={affiliationStatusFilters}
-            onAffiliationStatusFiltersChange={setAffiliationStatusFilters}
-          />
-        }
+        filters={<FilterBar config={patientFilterConfig} value={filters} onChange={setFilters} />}
         pagination={true}
         pageSize={20}
         pageSizeOptions={[10, 20, 50, 100]}

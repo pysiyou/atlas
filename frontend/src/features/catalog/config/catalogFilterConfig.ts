@@ -3,7 +3,7 @@
  * Config-driven filter setup for catalog page
  */
 
-import type { FilterConfig } from '@/features/filters';
+import type { FilterConfig } from '@/utils/filters';
 import type { TestCategory } from '@/types';
 import { PRICE_RANGE } from '@/shared/constants';
 import { ICONS } from '@/utils/icon-mappings';

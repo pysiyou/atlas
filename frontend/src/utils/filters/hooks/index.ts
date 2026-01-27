@@ -14,3 +14,7 @@ export {
   type UseQuickFiltersOptions,
   type UseQuickFiltersReturn,
 } from './useQuickFilters';
+export {
+  useFilteredData,
+  type UseFilteredDataOptions,
+} from './useFilteredData';
