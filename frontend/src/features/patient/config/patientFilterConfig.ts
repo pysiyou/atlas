@@ -6,7 +6,7 @@
 import type { FilterConfig } from '@/utils/filters';
 import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filters';
-import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
+import { AGE_RANGE_MIN, AGE_RANGE_MAX } from './constants';
 import { ICONS } from '@/utils/icon-mappings';
 
 /**

@@ -11,7 +11,7 @@ import { displayId } from '@/utils/id-display';
 import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { PaymentButton } from '../components/display/PaymentButton';
-import type { OrderPaymentDetails } from '../types/types';
+import type { OrderPaymentDetails } from '../types/paymentTypes';
 import { PaymentCard } from '../components/cards/PaymentCard';
 
 /**

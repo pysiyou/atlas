@@ -24,7 +24,7 @@ export * from './hooks';
 export * from './utils';
 
 // Constants
-export * from './constants';
+export * from './config/constants';
 
 // Sections (detail page sections)
-export * from './sections';
+export * from './components/display/sections';

@@ -19,7 +19,7 @@ import { calculateAge } from '@/utils';
 import type { Patient } from '@/types';
 import { EditPatientModal } from '../modals/EditPatientModal';
 import { isAffiliationActive } from '../utils/patientUtils';
-import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
+import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../config/constants';
 
 type AffiliationStatus = 'active' | 'inactive';
 

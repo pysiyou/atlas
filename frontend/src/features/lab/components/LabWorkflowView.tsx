@@ -9,7 +9,7 @@
 
 import React, { type ReactNode } from 'react';
 import { SearchBar, EmptyState } from '@/shared/ui';
-import { useSearch } from '@/utils/filtering';
+import { useSearch } from '@/utils/filters';
 import { ICONS } from '@/utils/icon-mappings';
 
 type IconName = 'search' | 'sample-collection' | 'checklist' | 'shield-check';

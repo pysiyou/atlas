@@ -7,7 +7,7 @@ import React from 'react';
 import { Badge } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import type { Affiliation } from '@/types';
-import { isAffiliationActive } from '../utils/patientUtils';
+import { isAffiliationActive } from '../../../utils/patientUtils';
 
 interface AffiliationInfoProps {
   affiliation: Affiliation;

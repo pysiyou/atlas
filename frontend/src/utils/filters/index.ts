@@ -22,7 +22,7 @@ export type {
 } from './types';
 
 // Hooks
-export { useFilterState, useFilterPersistence, useQuickFilters, useFilteredData } from './hooks';
+export { useFilterState, useFilterPersistence, useQuickFilters, useFilteredData, useSearch } from './hooks';
 export type { UseFilteredDataOptions } from './hooks';
 
 // Components

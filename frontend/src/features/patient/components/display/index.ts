@@ -6,3 +6,5 @@ export * from './GeneralInfoSection';
 export * from './MedicalHistorySectionDisplay';
 export * from './ReportsList';
 export * from './VitalSignsDisplay';
+export * from './tables';
+export * from './PatientDetailLayouts';

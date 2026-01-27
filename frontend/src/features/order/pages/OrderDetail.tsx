@@ -14,7 +14,7 @@ import {
   SmallScreenLayout,
   MediumScreenLayout,
   LargeScreenLayout,
-} from '../components/OrderDetailLayouts';
+} from '../components/display/OrderDetailLayouts';
 
 export const OrderDetail: React.FC = () => {
   const navigate = useNavigate();

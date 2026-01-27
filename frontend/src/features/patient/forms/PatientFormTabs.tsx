@@ -5,15 +5,15 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import type { PatientFormData } from '../../hooks/usePatientForm';
+import type { PatientFormData } from '../hooks/usePatientForm';
 import {
   DemographicsSection,
   AddressSection,
   EmergencyContactSection,
   AffiliationSection,
   MedicalHistorySection,
-} from '../../forms/PatientForm';
-import { VitalsSection } from '../../forms/VitalsSection';
+} from './PatientForm';
+import { VitalsSection } from './VitalsSection';
 
 export interface PatientFormTabsProps {
   activeTab: string;

@@ -24,7 +24,7 @@ import {
   type PaymentMethod,
 } from '@/types/billing';
 import type { IconName } from '@/shared/ui/Icon';
-import type { OrderPaymentDetails } from '../types/types';
+import type { OrderPaymentDetails } from '../types/paymentTypes';
 import { ICONS } from '@/utils/icon-mappings';
 
 interface PaymentDetailModalProps {

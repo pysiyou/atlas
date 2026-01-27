@@ -18,7 +18,10 @@ export * from './queries';
 // =============================================================================
 // Filtering Hooks
 // =============================================================================
-export { useFiltering, useSearch, useMultiSelect } from '@/utils/filtering';
+// Re-export from centralized filters module
+export { useSearch } from '@/utils/filters';
+// Legacy hooks (deprecated - use @/utils/filters instead)
+// Note: useFiltering and useMultiSelect are no longer exported as they're deprecated
 
 // =============================================================================
 // Auth Hooks

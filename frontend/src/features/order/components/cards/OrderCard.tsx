@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { Card } from '@/shared/ui';
-import { OrderCardHeader, OrderMetadata } from '../../pages/OrderDetailComponents';
+import { OrderCardHeader, OrderMetadata } from '../display/OrderDetailComponents';
 import { usePatientNameLookup } from '@/hooks/queries';
 import type { Order } from '@/types';
 

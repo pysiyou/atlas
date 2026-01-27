@@ -7,12 +7,12 @@ import React from 'react';
 import { SectionContainer, IconButton } from '@/shared/ui';
 import { PaymentPopover } from '@/features/payment/components/filters/PaymentPopover';
 import type { Order, OrderTest, Patient, Test, Invoice } from '@/types';
-import { OrderInfoSection } from './display/OrderInfoSection';
-import { PatientInfoSection } from './display/PatientInfoSection';
-import { TestsTable } from './display/TestsTable';
-import { BillingSummarySection } from './display/BillingSummarySection';
-import { OrderCircularProgress } from './OrderCircularProgress';
-import { OrderTimeline } from './display/OrderTimeline';
+import { OrderInfoSection } from './OrderInfoSection';
+import { PatientInfoSection } from './PatientInfoSection';
+import { TestsTable } from './TestsTable';
+import { BillingSummarySection } from './BillingSummarySection';
+import { OrderCircularProgress } from '../OrderCircularProgress';
+import { OrderTimeline } from './OrderTimeline';
 
 interface LayoutProps {
   order: Order;

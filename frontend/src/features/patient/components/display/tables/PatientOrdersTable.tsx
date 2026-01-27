@@ -7,7 +7,7 @@ import React from 'react';
 import { Badge, EmptyState } from '@/shared/ui';
 import { displayId } from '@/utils/id-display';
 import type { Order } from '@/types/order';
-import { formatDetailDate, formatOrderPrice } from '../../utils/patientUtils';
+import { formatDetailDate, formatOrderPrice } from '../../../utils/patientUtils';
 import { ICONS } from '@/utils/icon-mappings';
 
 export interface PatientOrdersTableProps {

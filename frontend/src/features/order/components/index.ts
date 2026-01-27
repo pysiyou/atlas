@@ -11,6 +11,3 @@ export * from './filters/DateFilter';
 
 // Display components
 export * from './display';
-
-// Root-level components
-export * from './OrderDetailLayouts';

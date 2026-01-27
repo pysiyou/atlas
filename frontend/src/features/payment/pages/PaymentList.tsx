@@ -16,7 +16,7 @@ import { paymentFilterConfig } from '../config/paymentFilterConfig';
 import { createPaymentTableConfig } from './PaymentTableConfig';
 import { PaymentDetailModal } from '../modals/PaymentDetailModal';
 import { useOrdersList, usePaymentsList } from '@/hooks/queries';
-import { createOrderPaymentDetailsList, type OrderPaymentDetails } from '../types/types';
+import { createOrderPaymentDetailsList, type OrderPaymentDetails } from '../types/paymentTypes';
 import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 
 /**

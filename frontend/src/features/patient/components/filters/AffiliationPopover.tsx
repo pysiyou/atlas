@@ -1,7 +1,7 @@
 import React from 'react';
 import { Popover, FooterInfo } from '@/shared/ui';
 import type { Affiliation } from '@/types';
-import { AffiliationInfo } from '../../sections/AffiliationInfoSection';
+import { AffiliationInfo } from '../display/sections/AffiliationInfoSection';
 import { ICONS } from '@/utils/icon-mappings';
 
 interface AffiliationPopoverProps {

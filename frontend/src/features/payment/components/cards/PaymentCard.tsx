@@ -2,7 +2,7 @@ import { Badge, Avatar } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils/id-display';
-import type { OrderPaymentDetails } from '../../types/types';
+import type { OrderPaymentDetails } from '../../types/paymentTypes';
 import { PaymentButton } from '../display/PaymentButton';
 import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 

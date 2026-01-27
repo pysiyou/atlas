@@ -8,3 +8,5 @@ export * from './PatientInfoSection';
 export * from './TestsTable';
 export * from './BillingSummarySection';
 export * from './OrderTimeline';
+export * from './OrderDetailComponents';
+export * from './OrderDetailLayouts';

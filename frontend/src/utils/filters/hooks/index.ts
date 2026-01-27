@@ -18,3 +18,4 @@ export {
   useFilteredData,
   type UseFilteredDataOptions,
 } from './useFilteredData';
+export { useSearch } from './useSearch';
