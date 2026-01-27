@@ -21,6 +21,9 @@ import { AppLayout as DashboardLayout } from '@/shared/layout';
 import { useAuth } from '@/features/auth/useAuth';
 import { ModalRenderer } from '@/shared/ui';
 import { PublicRoute } from '@/shared/routes/PublicRoute';
+import { useLocation } from 'react-router-dom';
+import { getRequiredRoles } from '@/shared/routes/routeRoles';
+import type { UserRole } from '@/types';
 
 // Lazy-loaded Pages (code-split by route)
 const Dashboard = lazy(() => import('@/pages/DashboardPage').then(m => ({ default: m.Dashboard })));
@@ -50,15 +53,21 @@ const PageLoadingFallback: React.FC = () => (
 );
 
 /**
- * Wrapper component for protected routes with feature error boundary
+ * Wrapper component for protected routes with feature error boundary and role-based access control
  */
 interface ProtectedFeatureRouteProps {
   children: React.ReactNode;
   featureName: string;
+  requiredRoles?: string[];
 }
 
-const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children, featureName }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ 
+  children, 
+  featureName,
+  requiredRoles 
+}) => {
+  const { isAuthenticated, isLoading, hasRole } = useAuth();
+  const location = useLocation();
 
   // Show loading state while restoring auth from storage
   if (isLoading) {
@@ -67,7 +76,15 @@ const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children,
 
   // Redirect to login if not authenticated after restoration completes
   if (!isAuthenticated) {
-    return <Navigate to={ROUTES.LOGIN} replace />;
+    return <Navigate to={ROUTES.LOGIN} replace state={{ from: location }} />;
+  }
+
+  // Check role-based access if required roles are specified
+  if (requiredRoles && requiredRoles.length > 0) {
+    if (!hasRole(requiredRoles as UserRole[])) {
+      // User doesn't have required role - redirect to dashboard
+      return <Navigate to={ROUTES.DASHBOARD} replace />;
+    }
   }
 
   return (
@@ -99,7 +116,10 @@ const AppRoutes: React.FC = () => {
           path={ROUTES.DASHBOARD}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Dashboard">
+              <ProtectedFeatureRoute 
+                featureName="Dashboard"
+                requiredRoles={getRequiredRoles(ROUTES.DASHBOARD) ?? undefined}
+              >
                 <Dashboard />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -109,7 +129,10 @@ const AppRoutes: React.FC = () => {
           path={`${ROUTES.PATIENTS}/*`}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Patients">
+              <ProtectedFeatureRoute 
+                featureName="Patients"
+                requiredRoles={getRequiredRoles(ROUTES.PATIENTS) ?? undefined}
+              >
                 <Patients />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -119,7 +142,10 @@ const AppRoutes: React.FC = () => {
           path={`${ROUTES.ORDERS}/*`}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Orders">
+              <ProtectedFeatureRoute 
+                featureName="Orders"
+                requiredRoles={getRequiredRoles(ROUTES.ORDERS) ?? undefined}
+              >
                 <Orders />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -129,7 +155,10 @@ const AppRoutes: React.FC = () => {
           path={`${ROUTES.CATALOG}/*`}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Catalog">
+              <ProtectedFeatureRoute 
+                featureName="Catalog"
+                requiredRoles={getRequiredRoles(ROUTES.CATALOG) ?? undefined}
+              >
                 <Catalog />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -139,7 +168,10 @@ const AppRoutes: React.FC = () => {
           path={ROUTES.LABORATORY}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Laboratory">
+              <ProtectedFeatureRoute 
+                featureName="Laboratory"
+                requiredRoles={getRequiredRoles(ROUTES.LABORATORY) ?? undefined}
+              >
                 <Laboratory />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -149,7 +181,10 @@ const AppRoutes: React.FC = () => {
           path={ROUTES.APPOINTMENTS}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Appointments">
+              <ProtectedFeatureRoute 
+                featureName="Appointments"
+                requiredRoles={getRequiredRoles(ROUTES.APPOINTMENTS) ?? undefined}
+              >
                 <Appointments />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -159,7 +194,10 @@ const AppRoutes: React.FC = () => {
           path={ROUTES.PAYMENTS}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Payments">
+              <ProtectedFeatureRoute 
+                featureName="Payments"
+                requiredRoles={getRequiredRoles(ROUTES.PAYMENTS) ?? undefined}
+              >
                 <Payments />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -169,7 +207,10 @@ const AppRoutes: React.FC = () => {
           path={ROUTES.REPORTS}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Reports">
+              <ProtectedFeatureRoute 
+                featureName="Reports"
+                requiredRoles={getRequiredRoles(ROUTES.REPORTS) ?? undefined}
+              >
                 <Reports />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -179,7 +220,10 @@ const AppRoutes: React.FC = () => {
           path={ROUTES.ADMIN}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Admin">
+              <ProtectedFeatureRoute 
+                featureName="Admin"
+                requiredRoles={getRequiredRoles(ROUTES.ADMIN) ?? undefined}
+              >
                 <Admin />
               </ProtectedFeatureRoute>
             </Suspense>

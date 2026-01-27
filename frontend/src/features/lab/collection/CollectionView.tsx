@@ -4,7 +4,7 @@
  * Displays samples awaiting collection with filtering by status.
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import type { FilterValues } from '@/utils/filters';
 import { useAuth } from '@/hooks';
 import {
@@ -218,9 +218,9 @@ export const CollectionView: React.FC = () => {
     <DataErrorBoundary>
       <LabWorkflowView
         items={filteredDisplays}
-        renderCard={display => (
+        renderCard={useCallback((display: SampleDisplay, _idx: number, _filtered: SampleDisplay[]) => (
           <CollectionCard display={display} onCollect={handleCollect} isMobile={isMobile} />
-        )}
+        ), [handleCollect, isMobile])}
         getItemKey={(display, idx) =>
           `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
         }

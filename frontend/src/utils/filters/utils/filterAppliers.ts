@@ -3,6 +3,8 @@
  * Reusable functions for applying different types of filters to data arrays
  */
 
+import { isValid } from 'date-fns';
+
 /**
  * Apply search filter across multiple fields
  *
@@ -84,14 +86,17 @@ export function applyDateRangeFilter<T>(
 
   const [start, end] = range;
   const startDate = new Date(start);
+  if (!isValid(startDate)) return items;
   startDate.setHours(0, 0, 0, 0);
   const endDate = new Date(end);
+  if (!isValid(endDate)) return items;
   endDate.setHours(23, 59, 59, 999);
 
   return items.filter(item => {
     const itemDate = getDate(item);
     if (!itemDate) return false;
     const date = new Date(itemDate);
+    if (!isValid(date)) return false;
     return date >= startDate && date <= endDate;
   });
 }

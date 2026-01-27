@@ -375,7 +375,7 @@ export const ValidationView: React.FC = () => {
     <DataErrorBoundary>
       <LabWorkflowView
         items={filteredTests}
-        renderCard={test => {
+        renderCard={useCallback((test: TestWithContext, _idx: number, _filtered: TestWithContext[]) => {
           const commentKey = `${test.orderId}-${test.testCode}`;
           // Check if the order has validated tests to block re-collect option
           const order = getOrder(test.orderId);
@@ -414,7 +414,7 @@ export const ValidationView: React.FC = () => {
           }
 
           return <ValidationCard {...cardProps} isMobile={isMobile} />;
-        }}
+        }, [getOrder, orderHasValidatedTests, comments, handleCommentsChange, handleValidate, openValidationModal, isMobile])}
         getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
         emptyIcon="shield-check"
         emptyTitle="No Pending Validations"

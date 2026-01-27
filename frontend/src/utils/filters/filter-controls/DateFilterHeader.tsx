@@ -40,6 +40,7 @@ export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
     if (view === 'days') return format(currentMonth, 'MMMM yyyy');
     if (view === 'months') return format(currentMonth, 'yyyy');
     const years = generateCalendarYears(currentMonth);
+    if (years.length === 0) return format(currentMonth, 'yyyy');
     return `${format(years[0], 'yyyy')} - ${format(years[years.length - 1], 'yyyy')}`;
   };
 

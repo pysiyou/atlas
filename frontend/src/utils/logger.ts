@@ -109,12 +109,6 @@ class Logger {
    */
   private sendToMonitoring(level: LogLevel, message: string, context?: LogContext): void {
     // TODO: Integrate with monitoring service (Sentry, LogRocket, etc.)
-    // Example:
-    // Sentry.captureMessage(message, {
-    //   level: level.toLowerCase(),
-    //   extra: context,
-    // });
-
     // Prevent unused variable warnings until monitoring is integrated
     void level;
     void message;

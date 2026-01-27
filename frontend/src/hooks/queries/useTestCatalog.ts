@@ -64,7 +64,10 @@ export function useTest(testCode: string | undefined) {
 
   const query = useQuery({
     queryKey: queryKeys.tests.byCode(testCode ?? ''),
-    queryFn: () => testAPI.getByCode(testCode!),
+    queryFn: () => {
+      if (!testCode) throw new Error('Test code is required');
+      return testAPI.getByCode(testCode);
+    },
     enabled: isAuthenticated && !isRestoring && !!testCode, // Only fetch when authenticated and not restoring
     ...cacheConfig.static,
   });

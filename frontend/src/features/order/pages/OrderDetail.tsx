@@ -23,12 +23,12 @@ export const OrderDetail: React.FC = () => {
   const { openModal } = useModal();
 
   // Use TanStack Query hooks
-  const { order, isLoading: orderLoading } = useOrder(id);
+  const { order, isLoading: orderLoading, refetch: refetchOrder } = useOrder(id);
   const { patient: patientData, isLoading: patientLoading } = usePatient(
     order?.patientId.toString()
   );
   const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();
-  const { isLoading: paymentsLoading } = usePaymentsByOrder(id);
+  const { isLoading: paymentsLoading, refetch: refetchPayments } = usePaymentsByOrder(id);
 
   // Normalize patient to Patient | null (not undefined)
   const patient = patientData ?? null;
@@ -70,6 +70,11 @@ export const OrderDetail: React.FC = () => {
       openModal(ModalType.NEW_ORDER, { order, mode: 'edit' });
     }
   };
+  const handlePaymentSuccess = () => {
+    // Refresh order and payments data after successful payment
+    refetchOrder();
+    refetchPayments();
+  };
 
   // Render appropriate layout based on screen size
   const renderContent = () => {
@@ -82,6 +87,7 @@ export const OrderDetail: React.FC = () => {
       supersededCount,
       onViewPatient: handleViewPatient,
       onViewInvoice: handleViewInvoice,
+      onPaymentSuccess: handlePaymentSuccess,
     };
 
     if (isSmall) {

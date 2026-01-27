@@ -1,6 +1,7 @@
 import type { SampleDisplay } from '../types';
 import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
 import { displayId } from '@/utils/id-display';
+import { escapeHtml } from '@/utils/html-escape';
 
 /**
  * Generates HTML content for printing a sample label
@@ -30,9 +31,9 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
     <!DOCTYPE html>
     <html>
       <head>
-        <title>Label - ${sampleIdDisplay}</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+        <title>Label - ${escapeHtml(sampleIdDisplay)}</title>
+        <script src="https://cdn.tailwindcss.com" integrity="sha384-..." crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
         <style>
           @media print {
             @page {
@@ -73,17 +74,17 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
           <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-1.5 p-2 border border-dashed border-border-strong print:border-none print:max-w-full print:p-0">
             <!-- Patient Name -->
             <div class="text-sm font-bold text-center text-text-primary leading-snug w-full">
-              ${patientName}
+              ${escapeHtml(patientName)}
             </div>
 
             <!-- Patient ID and Sample Type -->
             <div class="text-xxs text-text-tertiary text-center leading-tight">
-              ${patientIdDisplay} | ${sampleType.toUpperCase()}
+              ${escapeHtml(patientIdDisplay)} | ${escapeHtml(sampleType.toUpperCase())}
             </div>
 
             <!-- Container Info -->
             <div class="w-full text-xxs font-bold text-center text-text-primary bg-neutral-100 rounded px-2 py-1 print:py-0.5">
-              ${containerType.toUpperCase()}: ${colorName.toUpperCase()}
+              ${escapeHtml(containerType.toUpperCase())}: ${escapeHtml(colorName.toUpperCase())}
             </div>
 
             <!-- Barcode -->
@@ -93,7 +94,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
 
             <!-- Sample ID -->
             <div class="text-xxs text-text-tertiary text-center leading-tight">
-              ${sampleIdDisplay}
+              ${escapeHtml(sampleIdDisplay)}
             </div>
 
             <!-- Date and Time -->
@@ -106,7 +107,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
         <script>
           (function() {
             try {
-              JsBarcode("#barcode", "${sampleIdDisplay}", {
+              JsBarcode("#barcode", ${JSON.stringify(sampleIdDisplay)}, {
                 format: "CODE128",
                 width: 1.2,
                 height: 35,

@@ -32,7 +32,8 @@ export const buildAffiliation = (
 
   // If renewing or extending existing affiliation
   if (existingAffiliation && (isRenewing || formData.hasAffiliation)) {
-    const duration = formData.affiliationDuration!;
+    const duration = formData.affiliationDuration;
+    if (!duration) return undefined;
     const isActive = isAffiliationActive(existingAffiliation);
     // If active, extend from current end date. If expired, extend from today.
     const startDate = isActive
@@ -139,7 +140,7 @@ export const buildUpdatedPatientPayload = (
     },
     emergencyContact: {
       fullName: formData.emergencyContactFullName.trim(),
-      relationship: formData.emergencyContactRelationship!,
+      relationship: formData.emergencyContactRelationship ?? 'other',
       phone: formData.emergencyContactPhone.trim(),
       email: formData.emergencyContactEmail.trim() || undefined,
     },
@@ -177,7 +178,7 @@ export const buildNewPatientPayload = (
     id: patientId,
     fullName: formData.fullName.trim(),
     dateOfBirth: formData.dateOfBirth,
-    gender: formData.gender!,
+    gender: formData.gender ?? 'male',
     phone: formData.phone.trim(),
     email: formData.email.trim() || undefined,
     height: formData.height ? parseFloat(formData.height) : undefined,

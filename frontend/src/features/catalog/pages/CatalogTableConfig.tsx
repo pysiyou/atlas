@@ -148,13 +148,6 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         sortable: false,
         render: renderLoincCodes,
       },
-      // {
-      //   key: 'category',
-      //   header: 'Category',
-      //   width: 'md',
-      //   sortable: true,
-      //   render: renderCategory,
-      // },
       {
         key: 'sampleType',
         header: 'Sample',
@@ -195,13 +188,6 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         truncate: true,
         render: renderName,
       },
-      // {
-      //   key: 'category',
-      //   header: 'Category',
-      //   width: 'md',
-      //   sortable: true,
-      //   render: renderCategory,
-      // },
       {
         key: 'price',
         header: 'Price',

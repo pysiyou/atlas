@@ -131,9 +131,9 @@ const getVitalStatus = (
   // Calculate how far outside normal range (percentage)
   let deviation = 0;
   if (value < min) {
-    deviation = ((min - value) / min) * 100;
+    deviation = min === 0 ? 0 : ((min - value) / min) * 100;
   } else {
-    deviation = ((value - max) / max) * 100;
+    deviation = max === 0 ? 0 : ((value - max) / max) * 100;
   }
 
   // Borderline: within 20% of normal range

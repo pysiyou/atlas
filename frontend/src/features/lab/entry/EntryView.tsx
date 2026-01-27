@@ -349,7 +349,7 @@ export const EntryView: React.FC = () => {
     <DataErrorBoundary>
       <LabWorkflowView
         items={filteredTests}
-        renderCard={(test, idx, filtered) => {
+        renderCard={useCallback((test: TestWithContext, idx: number, filtered: TestWithContext[]) => {
           const testDef = getTest(test.testCode);
           const resultKey = `${test.orderId}-${test.testCode}`;
           const isComplete = testDef?.parameters
@@ -376,7 +376,7 @@ export const EntryView: React.FC = () => {
               isMobile={isMobile}
             />
           );
-        }}
+        }, [getTest, areAllParametersFilled, results, technicianNotes, handleResultChange, handleNotesChange, handleSaveResults, openTestModal, isMobile])}
         getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
         emptyIcon="checklist"
         emptyTitle="No Pending Results"

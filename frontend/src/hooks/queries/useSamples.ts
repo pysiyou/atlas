@@ -154,7 +154,10 @@ export function useSample(sampleId: string | undefined) {
 
   const query = useQuery({
     queryKey: queryKeys.samples.byId(sampleId ?? ''),
-    queryFn: () => sampleAPI.getById(sampleId!),
+    queryFn: () => {
+      if (!sampleId) throw new Error('Sample ID is required');
+      return sampleAPI.getById(sampleId);
+    },
     enabled: isAuthenticated && !isRestoring && !!sampleId, // Only fetch when authenticated and not restoring
     ...cacheConfig.dynamic,
   });

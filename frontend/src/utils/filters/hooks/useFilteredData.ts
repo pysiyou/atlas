@@ -82,8 +82,9 @@ export function useFilteredData<T>(options: UseFilteredDataOptions<T>): T[] {
       const filterValue = filterValues[control.key];
 
       // Skip if no value or custom filter exists
-      if (customFilters[control.key]) {
-        filtered = filtered.filter(item => customFilters[control.key]!(item, filterValue));
+      const customFilter = customFilters[control.key];
+      if (customFilter) {
+        filtered = filtered.filter(item => customFilter(item, filterValue));
         continue;
       }
 
@@ -175,7 +176,7 @@ export function useFilteredData<T>(options: UseFilteredDataOptions<T>): T[] {
             filtered = applyNumericRangeFilter(
               filtered,
               range,
-              item => customNumericGetter!(item, fieldName),
+              item => customNumericGetter(item, fieldName),
               defaults
             );
           } else {

@@ -156,6 +156,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
   const formatTimestamp = (dateString?: string): string => {
     if (!dateString) return '';
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
     const now = new Date();
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
 

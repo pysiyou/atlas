@@ -126,7 +126,10 @@ export function usePatient(patientId: string | undefined) {
 
   const query = useQuery({
     queryKey: queryKeys.patients.byId(patientId ?? ''),
-    queryFn: () => patientAPI.getById(patientId!),
+    queryFn: () => {
+      if (!patientId) throw new Error('Patient ID is required');
+      return patientAPI.getById(patientId);
+    },
     enabled: isAuthenticated && !isRestoring && !!patientId, // Only fetch when authenticated and not restoring
     ...cacheConfig.semiStatic,
   });

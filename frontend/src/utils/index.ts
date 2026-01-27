@@ -16,3 +16,4 @@ export * from './typeHelpers';
 export * from './errorHelpers';
 export * from './icon-mappings';
 export * from './icon-helpers';
+export * from './html-escape';

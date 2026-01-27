@@ -83,12 +83,19 @@ export function getInitials(name: string | undefined | null): string {
 
   // Single name: return first letter only
   if (parts.length === 1) {
-    return parts[0][0].toUpperCase();
+    const firstPart = parts[0];
+    if (!firstPart || firstPart.length === 0) return '??';
+    return firstPart[0].toUpperCase();
   }
 
   // Multiple names: return first letter of first and last parts
-  const firstInitial = parts[0][0];
-  const lastInitial = parts[parts.length - 1][0];
+  const firstPart = parts[0];
+  const lastPart = parts[parts.length - 1];
+  if (!firstPart || firstPart.length === 0 || !lastPart || lastPart.length === 0) {
+    return '??';
+  }
+  const firstInitial = firstPart[0];
+  const lastInitial = lastPart[0];
 
   return (firstInitial + lastInitial).toUpperCase();
 }

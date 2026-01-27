@@ -78,7 +78,10 @@ export function usePayment(paymentId: string | undefined) {
 
   const query = useQuery({
     queryKey: queryKeys.payments.byId(paymentId ?? ''),
-    queryFn: () => getPayment(paymentId!),
+    queryFn: () => {
+      if (!paymentId) throw new Error('Payment ID is required');
+      return getPayment(paymentId);
+    },
     enabled: isAuthenticated && !isRestoring && !!paymentId, // Only fetch when authenticated and not restoring
     ...cacheConfig.dynamic,
   });
@@ -105,7 +108,10 @@ export function usePaymentsByOrder(orderId: string | undefined) {
 
   const query = useQuery({
     queryKey: queryKeys.payments.byOrder(orderId ?? ''),
-    queryFn: () => getPaymentsByOrder(orderId!),
+    queryFn: () => {
+      if (!orderId) throw new Error('Order ID is required');
+      return getPaymentsByOrder(orderId);
+    },
     enabled: isAuthenticated && !isRestoring && !!orderId, // Only fetch when authenticated and not restoring
     ...cacheConfig.dynamic,
   });
@@ -116,6 +122,7 @@ export function usePaymentsByOrder(orderId: string | undefined) {
     isFetching: query.isFetching,
     isError: query.isError,
     error: query.error,
+    refetch: query.refetch,
   };
 }
 

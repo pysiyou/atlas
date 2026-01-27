@@ -191,12 +191,6 @@ export const createPatientTableConfig = (
         sortable: true,
         render: renderGender,
       },
-      // {
-      //   key: 'lastOrder',
-      //   header: 'Last Order',
-      //   width: 'sm', // 100px - shown in medium view
-      //   render: renderLastOrder,
-      // },
       {
         key: 'actions',
         header: '',

@@ -50,8 +50,9 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   };
 
   // Calculate percentages for visual track
-  const minPercent = ((localValue[0] - min) / (max - min)) * 100;
-  const maxPercent = ((localValue[1] - min) / (max - min)) * 100;
+  const range = max - min;
+  const minPercent = range === 0 ? 0 : ((localValue[0] - min) / range) * 100;
+  const maxPercent = range === 0 ? 0 : ((localValue[1] - min) / range) * 100;
 
   /**
    * Clear the filter and reset to default range

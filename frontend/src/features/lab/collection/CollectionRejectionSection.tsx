@@ -120,13 +120,20 @@ export const CollectionRejectionSection: React.FC<SingleRejectionProps> = ({
   // Sort rejection history by date (oldest first for chronological tab numbering)
   const sortedHistory = React.useMemo(() => {
     if (!rejectionHistory || rejectionHistory.length === 0) return [];
-    return [...rejectionHistory].sort(
-      (a, b) => new Date(a.rejectedAt).getTime() - new Date(b.rejectedAt).getTime()
-    );
+    return [...rejectionHistory]
+      .filter(item => {
+        const date = new Date(item.rejectedAt);
+        return !isNaN(date.getTime());
+      })
+      .sort(
+        (a, b) => new Date(a.rejectedAt).getTime() - new Date(b.rejectedAt).getTime()
+      );
   }, [rejectionHistory]);
 
   // Default to showing the most recent (last) attempt
-  const [activeIndex, setActiveIndex] = React.useState(sortedHistory.length - 1);
+  const [activeIndex, setActiveIndex] = React.useState(
+    sortedHistory.length > 0 ? sortedHistory.length - 1 : 0
+  );
 
   // Update active index when history changes
   React.useEffect(() => {

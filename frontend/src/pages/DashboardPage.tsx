@@ -18,24 +18,42 @@ import { ICONS } from '@/utils/icon-mappings';
 
 export const Dashboard: React.FC = () => {
   const { currentUser } = useAuth();
-  const { patients } = usePatientsList();
-  const { orders } = useOrdersList();
-  const { payments } = usePaymentsList();
+  const { patients, isLoading: isLoadingPatients, isError: isErrorPatients } = usePatientsList();
+  const { orders, isLoading: isLoadingOrders, isError: isErrorOrders } = useOrdersList();
+  const { payments, isLoading: isLoadingPayments, isError: isErrorPayments } = usePaymentsList();
   const { getPatientName } = usePatientNameLookup();
 
   // Stubbed until appointment/invoice APIs exist. TODO: Add hooks when available.
   const appointments: Array<{ date: string }> = [];
   const invoices: Array<{ paymentStatus: string }> = [];
 
+  // Show loading state if any query is loading
+  if (isLoadingPatients || isLoadingOrders || isLoadingPayments) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <p className="text-text-tertiary">Loading dashboard data...</p>
+      </div>
+    );
+  }
+
+  // Show error state if any query failed
+  if (isErrorPatients || isErrorOrders || isErrorPayments) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <p className="text-text-error">Failed to load dashboard data. Please refresh the page.</p>
+      </div>
+    );
+  }
+
   const today = new Date().toISOString().split('T')[0];
-  const todayPatients = patients.filter(p => p.registrationDate.startsWith(today)).length;
-  const todayOrders = orders.filter(o => o.orderDate.startsWith(today)).length;
+  const todayPatients = (patients || []).filter(p => p.registrationDate?.startsWith(today)).length;
+  const todayOrders = (orders || []).filter(o => o.orderDate?.startsWith(today)).length;
   const todayAppointments = appointments.filter(a => a.date === today).length;
-  const todayRevenue = payments
+  const todayRevenue = (payments || [])
     .filter(p => p.paidAt && p.paidAt.startsWith(today))
     .reduce((sum, p) => sum + p.amount, 0);
 
-  const pendingOrders = orders.filter(
+  const pendingOrders = (orders || []).filter(
     o => o.overallStatus === 'ordered' || o.overallStatus === 'in-progress'
   ).length;
   const outstandingInvoices = invoices.filter(i => i.paymentStatus !== 'paid').length;
@@ -43,14 +61,14 @@ export const Dashboard: React.FC = () => {
   const stats = [
     {
       label: 'Total Patients',
-      value: patients.length,
+      value: (patients || []).length,
       today: todayPatients,
       icon: <Icon name={ICONS.ui.usersGroup} className="w-8 h-8 text-brand" />,
       color: 'bg-brand/10',
     },
     {
       label: 'Total Orders',
-      value: orders.length,
+      value: (orders || []).length,
       today: todayOrders,
       icon: <Icon name={ICONS.dataFields.document} className="w-8 h-8 text-success" />,
       color: 'bg-success/10',
@@ -69,7 +87,7 @@ export const Dashboard: React.FC = () => {
     },
   ];
 
-  const recentOrders = orders.slice(-5).reverse();
+  const recentOrders = (orders || []).slice(-5).reverse();
 
   return (
     <div className="h-full overflow-y-auto p-6">

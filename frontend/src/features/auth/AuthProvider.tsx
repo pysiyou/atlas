@@ -3,6 +3,16 @@
  *
  * Manages JWT-based authentication with automatic token refresh.
  * Uses sessionStorage for persistence across page reloads.
+ *
+ * SECURITY NOTE: Tokens are stored in sessionStorage, which is accessible to JavaScript
+ * and vulnerable to XSS attacks. For production, consider:
+ * - Using HttpOnly cookies for token storage (requires backend support)
+ * - Implementing Content Security Policy (CSP) headers
+ * - Adding XSS mitigations (input sanitization, output encoding)
+ * - Minimizing PII stored in sessionStorage
+ *
+ * Current implementation is acceptable for development but should be reviewed
+ * for production deployment with security team.
  */
 import { useState, useEffect, useCallback, useRef, type ReactNode } from 'react';
 import type { AuthUser, UserRole } from '@/types';

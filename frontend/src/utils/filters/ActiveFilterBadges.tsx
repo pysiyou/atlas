@@ -38,7 +38,7 @@ function formatFilterValue(value: unknown, key?: string): string {
     if (value.length === 0) return '';
 
     // Date range
-    if (value.length === 2 && value[0] instanceof Date && value[1] instanceof Date) {
+    if (value.length >= 2 && value[0] instanceof Date && value[1] instanceof Date) {
       const [start, end] = value;
       if (start.getTime() === end.getTime()) {
         return format(start, 'dd MMM yyyy');
@@ -47,7 +47,7 @@ function formatFilterValue(value: unknown, key?: string): string {
     }
 
     // Age range or price range
-    if (value.length === 2 && typeof value[0] === 'number' && typeof value[1] === 'number') {
+    if (value.length >= 2 && typeof value[0] === 'number' && typeof value[1] === 'number') {
       const [min, max] = value;
       // Check if it's a price range by key name or value range
       const isPriceRange = key === 'priceRange' || (max > 1000 && max <= 100000);

@@ -14,6 +14,18 @@ export interface APIError {
 type TokenGetter = () => string | null;
 type RefreshHandler = () => Promise<string | null>;
 
+/**
+ * Type guard to check if error is an APIError
+ */
+function isAPIError(error: unknown): error is APIError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof (error as { message: unknown }).message === 'string'
+  );
+}
+
 class APIClient {
   private baseURL = API_CONFIG.baseURL;
   private timeout = API_CONFIG.timeout;
@@ -21,6 +33,16 @@ class APIClient {
 
   private getToken: TokenGetter = () => null;
   private refreshToken: RefreshHandler = async () => null;
+  private csrfToken: string | null = null;
+
+  /**
+   * Set CSRF token for CSRF protection
+   * Should be called after login or when CSRF token is received from backend
+   * Backend should provide CSRF token via response header or initial API call
+   */
+  setCsrfToken(token: string | null): void {
+    this.csrfToken = token;
+  }
 
   setTokenGetter(getter: TokenGetter): void {
     this.getToken = getter;
@@ -44,6 +66,20 @@ class APIClient {
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
+    
+    // CSRF protection: Add CSRF token for state-changing requests
+    // Note: Backend must support CSRF tokens and provide them via:
+    // - Response header (X-CSRF-Token) after login
+    // - Cookie with SameSite=Strict attribute
+    // - Or initial API endpoint that returns CSRF token
+    if (this.csrfToken && (method === 'POST' || method === 'PUT' || method === 'PATCH' || method === 'DELETE')) {
+      headers['X-CSRF-Token'] = this.csrfToken;
+    }
+    
+    // Alternative: Use SameSite cookies (configured on backend)
+    // If backend sets cookies with SameSite=Strict, CSRF protection is automatic
+    // This header indicates we expect SameSite cookie behavior
+    headers['X-Requested-With'] = 'XMLHttpRequest';
 
     try {
       const response = await fetch(`${this.baseURL}${endpoint}`, {
@@ -58,13 +94,16 @@ class APIClient {
       if (response.ok) {
         const text = await response.text();
         if (!text || text.trim().length === 0) {
-          return {} as T;
+          // Return undefined for void responses, empty object for object responses
+          // Type system will handle this appropriately
+          return undefined as T;
         }
         try {
-          return JSON.parse(text);
+          return JSON.parse(text) as T;
         } catch (parseError) {
           logger.error('Failed to parse JSON response', parseError instanceof Error ? parseError : undefined);
-          throw { message: 'Invalid JSON response from server', status: response.status } as APIError;
+          const apiError: APIError = { message: 'Invalid JSON response from server', status: response.status };
+          throw apiError;
         }
       }
 
@@ -91,17 +130,21 @@ class APIClient {
         // Use statusText
       }
 
-      throw { message, status: response.status } as APIError;
+      const apiError: APIError = { message, status: response.status };
+      throw apiError;
     } catch (error) {
       clearTimeout(timeoutId);
 
-      if ((error as APIError).status) {
+      // If it's already an APIError, re-throw it
+      if (isAPIError(error)) {
         throw error;
       }
 
-      const err = error as Error;
+      // Otherwise, wrap it as an APIError
+      const err = error instanceof Error ? error : new Error(String(error));
       logger.error('API request failed', err);
-      throw { message: err.message || 'Network error' } as APIError;
+      const apiError: APIError = { message: err.message || 'Network error' };
+      throw apiError;
     }
   }
 

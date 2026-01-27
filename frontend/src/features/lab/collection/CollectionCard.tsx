@@ -44,7 +44,7 @@ interface CollectionCardProps {
 
 // High complexity and large function are necessary for comprehensive collection card with multiple statuses, actions, and conditional rendering
 // eslint-disable-next-line max-lines-per-function, complexity
-export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onCollect, isMobile = false }) => {
+const CollectionCardComponent: React.FC<CollectionCardProps> = ({ display, onCollect, isMobile = false }) => {
   const { openModal } = useModal();
   const { getPatientName } = usePatientNameLookup();
   const { tests } = useTestCatalog();
@@ -377,3 +377,5 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
     />
   );
 };
+
+export const CollectionCard = React.memo(CollectionCardComponent);

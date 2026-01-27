@@ -17,7 +17,8 @@ export interface TabsProps {
 // Export hooks for custom tab implementations
 // eslint-disable-next-line react-refresh/only-export-components
 export const useTabs = (tabs: TabItem[], defaultTabId?: string) => {
-  const [activeTabId, setActiveTabId] = useState(defaultTabId || tabs[0]?.id);
+  const defaultId = defaultTabId || (tabs.length > 0 ? tabs[0]?.id : '');
+  const [activeTabId, setActiveTabId] = useState<string>(defaultId);
   const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0];
 
   return {
@@ -245,7 +246,7 @@ export const Tabs: React.FC<TabsProps> = ({
       />
 
       {/* Tab Content */}
-      <div className="mt-4 animate-in fade-in duration-200">{activeTab.content}</div>
+      {activeTab && <div className="mt-4 animate-in fade-in duration-200">{activeTab.content}</div>}
     </div>
   );
 };

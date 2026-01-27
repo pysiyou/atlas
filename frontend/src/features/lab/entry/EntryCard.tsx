@@ -35,7 +35,7 @@ interface EntryCardProps {
 
 // Large component is necessary for comprehensive entry card with multiple status displays, action buttons, and conditional rendering
 // eslint-disable-next-line max-lines-per-function
-export const EntryCard: React.FC<EntryCardProps> = ({
+const EntryCardComponent: React.FC<EntryCardProps> = ({
   test,
   testDef,
   resultKey,
@@ -287,3 +287,5 @@ export const EntryCard: React.FC<EntryCardProps> = ({
     />
   );
 };
+
+export const EntryCard = React.memo(EntryCardComponent);

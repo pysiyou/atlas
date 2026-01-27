@@ -120,7 +120,7 @@ interface ValidationCardProps {
   isMobile?: boolean;
 }
 
-export const ValidationCard: React.FC<ValidationCardProps> = ({
+const ValidationCardComponent: React.FC<ValidationCardProps> = ({
   test,
   commentKey,
   comments,
@@ -366,3 +366,5 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
     />
   );
 };
+
+export const ValidationCard = React.memo(ValidationCardComponent);

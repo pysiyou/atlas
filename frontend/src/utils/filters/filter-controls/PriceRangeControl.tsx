@@ -55,7 +55,9 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
 
   const getPercentage = useCallback(
     (val: number) => {
-      return ((val - min) / (max - min)) * 100;
+      const range = max - min;
+      if (range === 0) return 0;
+      return ((val - min) / range) * 100;
     },
     [min, max]
   );
@@ -96,19 +98,14 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
     latestValueRef.current = localValue;
   }, [localValue]);
 
-  // Use ref to store the mouseup handler to avoid circular dependency
-  const mouseUpHandlerRef = useRef<() => void>(() => {});
-
-  // Update the handler ref whenever dependencies change
-  useEffect(() => {
-    mouseUpHandlerRef.current = () => {
-      if (isDragging.current) {
-        onChange(latestValueRef.current);
-      }
-      isDragging.current = null;
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', mouseUpHandlerRef.current);
-    };
+  // Store the actual handler function to ensure cleanup uses the same reference
+  const mouseUpHandler = useCallback(() => {
+    if (isDragging.current) {
+      onChange(latestValueRef.current);
+    }
+    isDragging.current = null;
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', mouseUpHandler);
   }, [onChange, handleMouseMove]);
 
   // Cleanup event listeners on unmount to prevent memory leaks
@@ -117,17 +114,17 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
       // Remove any lingering event listeners if component unmounts during drag
       if (isDragging.current) {
         document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', mouseUpHandlerRef.current);
+        document.removeEventListener('mouseup', mouseUpHandler);
         isDragging.current = null;
       }
     };
-  }, [handleMouseMove]);
+  }, [handleMouseMove, mouseUpHandler]);
 
   const onMouseDown = (type: 'min' | 'max') => (e: React.MouseEvent) => {
     e.preventDefault();
     isDragging.current = type;
     document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', mouseUpHandlerRef.current);
+    document.addEventListener('mouseup', mouseUpHandler);
   };
 
   const handleClear = (e: React.MouseEvent) => {
