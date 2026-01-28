@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useOrdersList, usePatientsList, useTestCatalog, usePatientNameLookup, useSampleLookup } from '@/hooks/queries';
+import { useOrdersList, usePatientsList, useTestCatalog, usePatientNameLookup, useSampleLookup, useUserLookup } from '@/hooks/queries';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import type { ReportData, ValidatedTest } from '../types';
@@ -24,6 +24,7 @@ export const ReportDetail: React.FC = () => {
   const { tests, isLoading: testsLoading } = useTestCatalog();
   const { getPatientName } = usePatientNameLookup();
   const { getSample } = useSampleLookup();
+  const { getUserName, isLoading: usersLoading } = useUserLookup();
 
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -132,6 +133,9 @@ export const ReportDetail: React.FC = () => {
       validationNotes: test.test.validationNotes,
       enteredBy: test.test.enteredBy?.toString(),
       validatedBy: test.test.validatedBy?.toString(),
+      validatedByName: test.test.validatedBy 
+        ? getUserName(String(test.test.validatedBy).trim())
+        : undefined,
       enteredAt: test.test.resultEnteredAt,
       validatedAt: test.test.resultValidatedAt,
     }];

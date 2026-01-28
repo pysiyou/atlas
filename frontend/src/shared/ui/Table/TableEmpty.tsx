@@ -14,7 +14,11 @@ export function TableEmpty({ message = 'No data available', icon = ICONS.dataFie
   return (
     <div className="flex flex-col items-center justify-center py-12 px-6">
       {icon && <Icon name={icon as IconName} className="w-12 h-12 text-text-disabled mb-3" />}
-      <p className="text-sm text-text-tertiary">{message}</p>
+      {typeof message === 'string' ? (
+        <p className="text-sm text-text-tertiary">{message}</p>
+      ) : (
+        <div className="text-sm text-text-tertiary">{message}</div>
+      )}
     </div>
   );
 }

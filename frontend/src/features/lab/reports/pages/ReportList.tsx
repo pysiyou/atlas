@@ -15,6 +15,7 @@ import {
   useTestCatalog,
   usePatientNameLookup,
   useSampleLookup,
+  useUserLookup,
 } from '@/hooks/queries';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
@@ -46,9 +47,10 @@ export const ReportList: React.FC = () => {
   const { tests, isLoading: testsLoading } = useTestCatalog();
   const { getPatientName } = usePatientNameLookup();
   const { getSample } = useSampleLookup();
+  const { getUserName, isLoading: usersLoading } = useUserLookup();
 
   // Combined loading state
-  const loading = ordersLoading || patientsLoading || testsLoading;
+  const loading = ordersLoading || patientsLoading || testsLoading || usersLoading;
 
   // Format error for ErrorAlert component
   const error = isError
@@ -191,6 +193,9 @@ export const ReportList: React.FC = () => {
       validationNotes: test.validationNotes,
       enteredBy: test.enteredBy?.toString(),
       validatedBy: test.validatedBy?.toString(),
+      validatedByName: test.validatedBy 
+        ? getUserName(String(test.validatedBy).trim())
+        : undefined,
       enteredAt: test.resultEnteredAt,
       validatedAt: test.resultValidatedAt,
     }];

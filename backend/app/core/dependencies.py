@@ -94,3 +94,5 @@ require_receptionist = require_role(UserRole.ADMIN, UserRole.RECEPTIONIST)
 require_lab_tech = require_role(UserRole.ADMIN, UserRole.LAB_TECH)
 require_validator = require_role(UserRole.ADMIN, UserRole.VALIDATOR)
 require_billing = require_role(UserRole.ADMIN, UserRole.BILLING)
+# Sample collection: receptionists and lab techs can collect samples
+require_sample_collector = require_role(UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.LAB_TECH)

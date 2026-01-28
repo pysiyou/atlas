@@ -2,12 +2,12 @@
 Order API Routes
 """
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload, selectinload
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Union
 from datetime import datetime, timezone
 from app.database import get_db
-from app.core.dependencies import get_current_user, require_receptionist, require_validator
+from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.models.order import Order, OrderTest
 from app.models.test import Test
@@ -38,26 +38,8 @@ def get_orders(
 
     Query params:
     - paginated: If true, returns {data: [...], pagination: {...}} format
-
-    Role-based filtering:
-    - Admin/Receptionist: All orders
-    - Lab Tech: Only orders with pending/collected samples
-    - Validator: Only orders with results to validate
     """
     query = db.query(Order)
-
-    # Role-based filtering
-    if current_user.role == UserRole.LAB_TECH:
-        # Lab techs only see orders with samples to process
-        query = query.join(Sample).filter(
-            Sample.status.in_([SampleStatus.PENDING, SampleStatus.COLLECTED])
-        ).distinct()
-    elif current_user.role == UserRole.VALIDATOR:
-        # Validators only see orders with results to validate
-        query = query.join(OrderTest).filter(
-            OrderTest.status == TestStatus.RESULTED
-        ).distinct()
-    # Admin and Receptionist see all orders
 
     if patientId:
         query = query.filter(Order.patientId == patientId)
@@ -65,13 +47,29 @@ def get_orders(
     if status:
         query = query.filter(Order.overallStatus == status)
 
+    # Eagerly load relationships needed for serialization
+    query = query.options(
+        joinedload(Order.patient),
+        selectinload(Order.tests).joinedload(OrderTest.test)
+    )
+
     # Get total count for pagination (before offset/limit)
     total = query.count() if paginated else 0
 
     orders = query.order_by(Order.createdAt.desc()).offset(skip).limit(limit).all()
 
     # Serialize orders using response model to ensure relationships are included
-    serialized_orders = [OrderResponse.model_validate(o).model_dump(mode="json") for o in orders]
+    try:
+        serialized_orders = [OrderResponse.model_validate(o).model_dump(mode="json") for o in orders]
+    except Exception as e:
+        # Log the error for debugging
+        import traceback
+        print(f"Error serializing orders: {e}")
+        print(traceback.format_exc())
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error serializing order data: {str(e)}"
+        )
 
     if paginated:
         page = skip_to_page(skip, limit)
@@ -102,7 +100,7 @@ def get_order(
 def create_order(
     order_data: OrderCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_receptionist)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Create a new order
@@ -179,7 +177,7 @@ def update_order(
     orderId: int,
     order_data: OrderUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_receptionist)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Update order information, including tests.
@@ -313,11 +311,10 @@ def update_order(
 def mark_as_reported(
     orderId: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_validator)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Confirm order completion (all tests validated).
-    Only validators can confirm completed orders.
     """
     order = get_or_404(db, Order, orderId, "orderId")
 

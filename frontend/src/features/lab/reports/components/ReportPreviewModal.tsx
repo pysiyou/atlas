@@ -169,11 +169,30 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                       </span>
                     </div>
                   )}
-                  {reportData.testResults[0]?.validatedBy && (
+                  {reportData.testResults[0] && (
                     <div className="flex gap-2">
                       <span className="text-xs text-gray-700 min-w-[60px] truncate">Verified by:</span>
                       <span className="text-xs font-bold text-gray-800">
-                        {getUserName(reportData.testResults[0].validatedBy)}
+                        {(() => {
+                          const testResult = reportData.testResults[0];
+                          if (!testResult) return 'N/A';
+                          
+                          // Try validatedByName first (pre-resolved)
+                          if (testResult.validatedByName && testResult.validatedByName !== 'N/A' && testResult.validatedByName !== 'Unknown') {
+                            return testResult.validatedByName;
+                          }
+                          
+                          // Fall back to resolving from validatedBy ID
+                          if (testResult.validatedBy) {
+                            const resolvedName = getUserName(String(testResult.validatedBy).trim());
+                            if (resolvedName && resolvedName !== 'N/A' && resolvedName !== 'Unknown') {
+                              return resolvedName;
+                            }
+                          }
+                          
+                          // If we have validatedAt but no name, show "N/A"
+                          return testResult.validatedAt ? 'N/A' : '-';
+                        })()}
                       </span>
                     </div>
                   )}
@@ -231,9 +250,6 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                         }
                       }
                       
-                      // Format parameter name as "Full Name (Code)"
-                      const paramDisplayName = param.code ? `${param.name} (${param.code})` : param.name;
-                      
                       // Check if original parameter name is a section header (all caps, length > 3)
                       const isSectionHeader = param.name === param.name.toUpperCase() && param.name.length > 3 && !param.name.includes(':');
                       
@@ -270,7 +286,16 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                             'px-4 py-3 text-text-primary',
                             isSectionHeader && 'font-bold'
                           )}>
-                            {paramDisplayName}
+                            {isSectionHeader ? (
+                              param.name
+                            ) : (
+                              <div className="min-w-0">
+                                <div className="font-bold text-text-primary truncate">{param.name}</div>
+                                {param.code && (
+                                  <div className="text-xs font-medium truncate">{param.code}</div>
+                                )}
+                              </div>
+                            )}
                           </td>
                           <td className={cn('px-4 py-3 text-center', resultColorClass)}>
                             {param.value}

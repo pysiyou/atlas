@@ -33,6 +33,16 @@ class UserResponse(UserBase):
         from_attributes = True
 
 
+class UserLookupResponse(BaseModel):
+    """Minimal user info for display/lookup purposes (accessible to all authenticated users)"""
+    id: int
+    name: str
+    username: str
+
+    class Config:
+        from_attributes = True
+
+
 class Token(BaseModel):
     access_token: str
     refresh_token: str

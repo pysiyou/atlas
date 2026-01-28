@@ -5,21 +5,34 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
-from app.core.dependencies import require_admin
+from app.core.dependencies import get_current_user
 from app.core.security import get_password_hash
 from app.models.user import User
-from app.schemas.user import UserCreate, UserUpdate, UserResponse
+from app.schemas.user import UserCreate, UserUpdate, UserResponse, UserLookupResponse
 
 router = APIRouter()
+
+
+@router.get("/users/lookup", response_model=List[UserLookupResponse])
+def get_users_lookup(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get minimal user info for lookups (all authenticated users)
+    Returns only id, name, and username for display purposes
+    """
+    users = db.query(User).all()
+    return users
 
 
 @router.get("/users", response_model=List[UserResponse])
 def get_users(
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(get_current_user)
 ):
     """
-    Get all users (admin only)
+    Get all users
     """
     users = db.query(User).all()
     return users
@@ -29,7 +42,7 @@ def get_users(
 def get_user(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get user by ID
@@ -47,10 +60,10 @@ def get_user(
 def create_user(
     user_data: UserCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(get_current_user)
 ):
     """
-    Create a new user (admin only)
+    Create a new user
     """
     # Check if username already exists
     existing = db.query(User).filter(User.username == user_data.username).first()
@@ -82,10 +95,10 @@ def update_user(
     user_id: int,
     user_data: UserUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(get_current_user)
 ):
     """
-    Update user (admin only)
+    Update user
     """
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -111,10 +124,10 @@ def update_user(
 def delete_user(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(get_current_user)
 ):
     """
-    Delete user (admin only)
+    Delete user
     """
     user = db.query(User).filter(User.id == user_id).first()
     if not user:

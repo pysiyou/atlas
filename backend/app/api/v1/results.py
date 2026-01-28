@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from app.database import get_db
-from app.core.dependencies import get_current_user, require_lab_tech, require_validator
+from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.models.order import OrderTest
 from app.schemas.enums import TestStatus, ValidationDecision, RejectionAction
@@ -105,7 +105,7 @@ class BulkValidationResponse(BaseModel):
 @router.get("/results/pending-entry")
 def get_pending_entry(
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get tests awaiting result entry.
@@ -120,7 +120,7 @@ def get_pending_entry(
 @router.get("/results/pending-validation")
 def get_pending_validation(
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_validator)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get tests awaiting validation.
@@ -137,7 +137,7 @@ def get_rejection_options(
     orderId: int,
     testCode: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_validator)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get available rejection actions for a test.
@@ -176,7 +176,7 @@ def enter_results(
     testCode: str,
     result_data: ResultEntryRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Enter results for a test.
@@ -202,7 +202,7 @@ def validate_results(
     testCode: str,
     validation_data: ResultValidationRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_validator)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Validate test results - APPROVAL ONLY.
@@ -233,7 +233,7 @@ def reject_results(
     testCode: str,
     rejection_data: ResultRejectionRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_validator)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Reject test results during validation with proper tracking.
@@ -292,7 +292,7 @@ def reject_results(
 def validate_bulk(
     request: BulkValidationRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_validator)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Validate multiple test results in a single transaction.

@@ -14,16 +14,12 @@ import { apiClient } from '@/services/api/client';
 import { useAuthStore } from '@/shared/stores/auth.store';
 
 /**
- * API response type for users endpoint
+ * API response type for users lookup endpoint (all authenticated users)
  */
-interface UserResponse {
-  id: string;
+interface UserLookupResponse {
+  id: number; // Backend returns integer, we convert to string for consistency
   name: string;
   username: string;
-  role: string;
-  email?: string;
-  phone?: string;
-  createdAt: string;
 }
 
 /**
@@ -52,12 +48,13 @@ export function useUsersList() {
   const query = useQuery({
     queryKey: queryKeys.users.list(),
     queryFn: async () => {
-      const response = await apiClient.get<UserResponse[]>('/users');
+      // Use lookup endpoint which is accessible to all authenticated users
+      // Returns minimal user info (id, name, username) for display purposes
+      const response = await apiClient.get<UserLookupResponse[]>('/users/lookup');
       return response;
     },
     enabled: isAuthenticated && !isRestoring,
     ...cacheConfig.static, // Infinity cache
-    // Silently fail for permission issues - non-admin users won't have access
     retry: (failureCount, error) => {
       const apiError = error as { status?: number };
       // Don't retry for 401/403
@@ -90,8 +87,10 @@ export function useUsersMap(): Map<string, UserDisplayInfo> {
   return useMemo(() => {
     const map = new Map<string, UserDisplayInfo>();
     users.forEach(user => {
-      map.set(user.id, {
-        id: user.id,
+      // Ensure ID is always stored as string for consistent lookups
+      const idKey = String(user.id);
+      map.set(idKey, {
+        id: String(user.id), // Convert to string for consistency
         name: user.name,
         username: user.username,
       });
@@ -125,7 +124,11 @@ export function useUserLookup() {
         return 'Unknown';
       }
 
-      const user = usersMap.get(userId);
+      // Normalize userId to string and trim whitespace
+      const normalizedId = String(userId).trim();
+
+      // Try exact match first (string key)
+      const user = usersMap.get(normalizedId);
       if (user) {
         return user.name;
       }
@@ -137,7 +140,7 @@ export function useUserLookup() {
         unknown: 'Unknown User',
       };
 
-      const lowerUserId = userId.toLowerCase();
+      const lowerUserId = normalizedId.toLowerCase();
       if (systemUserNames[lowerUserId]) {
         return systemUserNames[lowerUserId];
       }

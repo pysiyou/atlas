@@ -64,6 +64,7 @@ export interface ReportData {
     validationNotes?: string;
     enteredBy?: string;
     validatedBy?: string;
+    validatedByName?: string;
     enteredAt?: string;
     validatedAt?: string;
   }>;

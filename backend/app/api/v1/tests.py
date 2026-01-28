@@ -7,7 +7,7 @@ from typing import List
 import hashlib
 import json
 from app.database import get_db
-from app.core.dependencies import get_current_user, require_admin
+from app.core.dependencies import get_current_user
 from app.core.cache import (
     cache_get,
     cache_set,
@@ -132,10 +132,10 @@ def search_tests(
 def create_test(
     test_data: TestCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(get_current_user)
 ):
     """
-    Create a new test (admin only).
+    Create a new test.
     Invalidates test catalog cache.
     """
     # Check if test code already exists
@@ -162,7 +162,7 @@ def update_test(
     testCode: str,
     test_data: TestUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Update test (price, active status).

@@ -10,7 +10,7 @@ from typing import Optional, List
 from datetime import datetime
 
 from app.database import get_db
-from app.core.dependencies import get_current_user, require_validator
+from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.models.order import Order, OrderTest
 from app.schemas.enums import TestStatus
@@ -63,7 +63,7 @@ class BulkNotifyRequest(BaseModel):
 @router.get("/critical-values/pending")
 def get_pending_critical_values(
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_validator)
+    current_user: User = Depends(get_current_user)
 ) -> List[CriticalValueResponse]:
     """
     Get all tests with critical values that have not been acknowledged.
@@ -97,7 +97,7 @@ def get_pending_critical_values(
 def get_all_critical_values(
     acknowledged: Optional[bool] = None,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_validator)
+    current_user: User = Depends(get_current_user)
 ) -> List[CriticalValueResponse]:
     """
     Get all tests with critical values, optionally filtered by acknowledgment status.
@@ -139,7 +139,7 @@ def notify_critical_value(
     test_id: int,
     request: NotifyRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_validator)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Record that a critical value notification was sent.
@@ -209,7 +209,7 @@ def acknowledge_critical_value(
     test_id: int,
     request: AcknowledgeRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_validator)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Record acknowledgment of a critical value notification.

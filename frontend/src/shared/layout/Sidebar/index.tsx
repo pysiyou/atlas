@@ -1,6 +1,6 @@
 /**
  * Sidebar Component
- * Navigation sidebar with role-based menu items
+ * Navigation sidebar with menu items
  * Organized into Header, Navigation, and Profile sections
  * Supports responsive behavior: overlay on mobile, fixed on desktop
  */
@@ -113,7 +113,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { user: currentUser, logout } = useAuthStore();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const filteredMenuItems = getFilteredMenuItems(currentUser?.role);
+  const filteredMenuItems = getFilteredMenuItems();
 
   const handleToggleCollapse = () => {
     setIsCollapsed(!isCollapsed);

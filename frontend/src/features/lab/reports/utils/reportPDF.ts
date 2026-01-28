@@ -322,6 +322,7 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
       unit: string;
       isSectionHeader?: boolean;
       status?: 'low' | 'high' | 'borderline';
+      hasCode?: boolean;
     }> = [
       { investigation: 'Primary Sample Type :', result: sampleType, referenceValue: '', unit: '' },
     ];
@@ -354,8 +355,8 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
         referenceValue = statusLabel + (referenceValue ? ' ' + referenceValue : '');
       }
       
-      // Format parameter name as "Full Name (Code)"
-      const paramDisplayName = param.code ? `${param.name} (${param.code})` : param.name;
+      // Format parameter name: name on first line, code on second line (if available)
+      const paramDisplayName = param.code ? `${param.name}\n${param.code}` : param.name;
       
       tableData.push({
         investigation: paramDisplayName,
@@ -364,6 +365,7 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
         unit: param.unit || '',
         isSectionHeader,
         status,
+        hasCode: !!param.code,
       });
     });
 
@@ -487,8 +489,11 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
     doc.setFont('helvetica', 'normal');
     
     const lastTest = reportData.testResults[reportData.testResults.length - 1];
-    if (lastTest.validatedBy && lastTest.validatedAt) {
-      doc.text(`Validated by: ${lastTest.validatedBy}`, margin, yPosition);
+    if (lastTest.validatedAt) {
+      const validatedByName = lastTest.validatedByName && lastTest.validatedByName !== 'N/A' 
+        ? lastTest.validatedByName 
+        : (lastTest.validatedBy ? lastTest.validatedBy : 'Unknown');
+      doc.text(`Validated by: ${validatedByName}`, margin, yPosition);
       yPosition += 5;
       doc.text(`Date: ${format(new Date(lastTest.validatedAt), 'MMM dd, yyyy HH:mm')}`, margin, yPosition);
     }

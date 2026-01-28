@@ -8,7 +8,7 @@ from sqlalchemy import or_
 from sqlalchemy.inspection import inspect
 from datetime import datetime, timezone
 from app.database import get_db
-from app.core.dependencies import get_current_user, require_receptionist
+from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.models.patient import Patient
 from app.models.order import Order, OrderTest
@@ -60,26 +60,8 @@ def get_patients(
 
     Query params:
     - paginated: If true, returns {data: [...], pagination: {...}} format
-
-    Role-based filtering:
-    - Admin/Receptionist: All patients
-    - Lab Tech: Only patients with pending/collected samples
-    - Validator: Only patients with results to validate
     """
     query = db.query(Patient)
-
-    # Role-based filtering
-    if current_user.role == UserRole.LAB_TECH:
-        # Lab techs only see patients with pending samples
-        query = query.join(Order).join(Sample).filter(
-            Sample.status.in_([SampleStatus.PENDING, SampleStatus.COLLECTED])
-        ).distinct()
-    elif current_user.role == UserRole.VALIDATOR:
-        # Validators only see patients with results to validate
-        query = query.join(Order).join(OrderTest).filter(
-            OrderTest.status == TestStatus.RESULTED
-        ).distinct()
-    # Admin and Receptionist see all patients (no filter)
 
     if search:
         search_term = f"%{search.lower()}%"
@@ -99,7 +81,17 @@ def get_patients(
     patients = query.offset(skip).limit(limit).all()
 
     # Normalize legacy JSON values before validating response schema.
-    data = [PatientResponse.model_validate(_patient_to_response_dict(p)).model_dump(mode="json") for p in patients]
+    try:
+        data = [PatientResponse.model_validate(_patient_to_response_dict(p)).model_dump(mode="json") for p in patients]
+    except Exception as e:
+        # Log the error for debugging
+        import traceback
+        print(f"Error serializing patients: {e}")
+        print(traceback.format_exc())
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error serializing patient data: {str(e)}"
+        )
 
     if paginated:
         page = skip_to_page(skip, limit)
@@ -131,7 +123,7 @@ def get_patient(
 def create_patient(
     patient_data: PatientCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_receptionist)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Create a new patient
@@ -173,7 +165,7 @@ def update_patient(
     patientId: int,
     patient_data: PatientUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_receptionist)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Update patient information
@@ -209,7 +201,7 @@ def update_patient(
 def delete_patient(
     patientId: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_receptionist)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Delete a patient

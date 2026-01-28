@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime, timezone
 from app.database import get_db
-from app.core.dependencies import get_current_user, require_receptionist
+from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.models.billing import Payment
 from app.models.order import Order
@@ -60,30 +60,10 @@ def get_payments(
 ):
     """
     Get all payments with optional filters.
-    
-    Role-based filtering:
-    - Admin/Receptionist/Billing: All payments
-    - Lab Tech/Validator: Only payments for orders they can access
     """
     from sqlalchemy.orm import joinedload
-    from app.models.sample import Sample
-    from app.models.order import OrderTest
-    from app.schemas.enums import SampleStatus, TestStatus, UserRole
     
     query = db.query(Payment).options(joinedload(Payment.order))
-
-    # Role-based filtering
-    if current_user.role == UserRole.LAB_TECH:
-        # Lab techs only see payments for orders with samples to process
-        query = query.join(Order).join(Sample).filter(
-            Sample.status.in_([SampleStatus.PENDING, SampleStatus.COLLECTED])
-        ).distinct()
-    elif current_user.role == UserRole.VALIDATOR:
-        # Validators only see payments for orders with results to validate
-        query = query.join(Order).join(OrderTest).filter(
-            OrderTest.status == TestStatus.RESULTED
-        ).distinct()
-    # Admin, Receptionist, and Billing see all payments
 
     if orderId:
         query = query.filter(Payment.orderId == orderId)
@@ -142,7 +122,7 @@ def get_payments_by_order(
 def create_payment(
     payment_data: PaymentCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_receptionist)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Create a new payment and update order payment status.

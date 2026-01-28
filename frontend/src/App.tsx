@@ -163,7 +163,7 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route
-          path={ROUTES.REPORTS}
+          path={`${ROUTES.REPORTS}/*`}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
               <ProtectedFeatureRoute featureName="Reports">

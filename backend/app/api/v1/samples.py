@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from pydantic import BaseModel, Field
 from app.database import get_db
-from app.core.dependencies import get_current_user, require_lab_tech
+from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.models.sample import Sample
 from app.models.order import Order, OrderTest
@@ -53,26 +53,8 @@ def get_samples(
 
     Query params:
     - paginated: If true, returns {data: [...], pagination: {...}} format
-
-    Role-based filtering:
-    - Admin/Receptionist: All samples
-    - Lab Tech: Only samples they need to process (pending/collected)
-    - Validator: Only samples with completed results to validate
     """
     query = db.query(Sample)
-
-    # Role-based filtering
-    if current_user.role == UserRole.LAB_TECH:
-        # Lab techs only see pending/collected samples
-        query = query.filter(
-            Sample.status.in_([SampleStatus.PENDING, SampleStatus.COLLECTED])
-        )
-    elif current_user.role == UserRole.VALIDATOR:
-        # Validators only see samples with completed tests
-        query = query.join(Order).join(OrderTest).filter(
-            OrderTest.status == TestStatus.RESULTED
-        ).distinct()
-    # Admin and Receptionist see all samples
 
     if orderId:
         query = query.filter(Sample.orderId == orderId)
@@ -88,7 +70,17 @@ def get_samples(
     samples = query.offset(skip).limit(limit).all()
 
     # Serialize samples using response model
-    serialized_samples = [SampleResponse.model_validate(s).model_dump(mode="json") for s in samples]
+    try:
+        serialized_samples = [SampleResponse.model_validate(s).model_dump(mode="json") for s in samples]
+    except Exception as e:
+        # Log the error for debugging
+        import traceback
+        print(f"Error serializing samples: {e}")
+        print(traceback.format_exc())
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error serializing sample data: {str(e)}"
+        )
 
     if paginated:
         page = skip_to_page(skip, limit)
@@ -100,10 +92,10 @@ def get_samples(
 @router.get("/samples/pending", response_model=List[SampleResponse])
 def get_pending_samples(
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)
+    current_user: User = Depends(get_current_user)
 ):
     """
-    Get all pending sample collections
+    Get all pending sample collections.
     """
     samples = db.query(Sample).filter(Sample.status == SampleStatus.PENDING).all()
     return samples
@@ -132,7 +124,7 @@ def collect_sample(
     sampleId: int,
     collect_data: SampleCollectRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Mark sample as collected.
@@ -158,7 +150,7 @@ def reject_sample(
     sampleId: int,
     reject_data: SampleRejectRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Reject a sample and append to rejection history.
@@ -183,7 +175,7 @@ def request_recollection(
     sampleId: int,
     recollection_data: RecollectionRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Request recollection for a rejected sample.
@@ -213,7 +205,7 @@ def reject_and_recollect_sample(
     sampleId: int,
     request_data: RejectAndRecollectRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Atomically reject a sample and request recollection.
