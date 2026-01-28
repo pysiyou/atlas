@@ -23,8 +23,8 @@ import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import {
   handlePrintCollectionLabel,
   getEffectiveContainerType,
-  formatRejectionReasons,
-} from '../components/labUtils';
+} from '../utils/lab-helpers';
+import { formatRejectionReasons } from '../utils/lab-formatters';
 import type { SampleDisplay } from '../types';
 import { orderHasValidatedTests } from '@/features/order/utils';
 import { ICONS, getContainerIcon } from '@/utils/icon-mappings';

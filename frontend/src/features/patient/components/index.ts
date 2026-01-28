@@ -2,20 +2,25 @@
  * Centralized exports for patient components
  */
 
-// Card components
-export * from './cards/PatientCard';
-
-// Filter components
-export * from './filters';
-
-// Form components
-export * from './forms';
-
-// Table components
-export * from './tables/PatientOrdersTable';
-
-// Display components
-export * from './display';
-
-// Root-level components
+// Main components
+export * from './PatientCard';
 export * from './PatientHeader';
+export * from './PatientForm';
+export * from './PatientFilters';
+export * from './EditPatientModal';
+
+// Display/Section components
+export * from './VitalSignsDisplay';
+export * from './GeneralInfoSection';
+export * from './MedicalHistorySection';
+export * from './MedicalHistorySectionDisplay';
+export * from './AffiliationInfoSection';
+export * from './AffiliationPlanSelector';
+export * from './PatientOrdersTable';
+export * from './ReportsList';
+export * from './PatientInfoSection';
+export * from './OrderHistorySection';
+export * from './VitalsSection';
+export * from './PatientFormTabs';
+export * from './AffiliationPopover';
+export * from './AgeFilter';

@@ -20,7 +20,7 @@ import { logger } from '@/utils/logger';
 import type { TestResult, TestStatus, TestWithContext } from '@/types';
 import { isCollectedSample } from '@/types';
 import { EntryCard } from './EntryCard';
-import { EntryFilters } from '../components/filters';
+import { EntryFilters } from './EntryFilters';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { DataErrorBoundary } from '@/shared/components';
 import { useModal, ModalType } from '@/shared/context/ModalContext';

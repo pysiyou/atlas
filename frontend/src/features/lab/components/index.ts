@@ -13,9 +13,6 @@ export { PopoverForm, RadioCard, CheckboxCard } from './PopoverForm';
 // Rejection dialog
 export { RejectionDialog, RejectionDialogContent, RejectionHistoryBanner } from './RejectionDialog';
 
-// Hooks
-// useRejectionManager removed - use service hooks instead
-
 // Workflow view
 export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
 
@@ -34,9 +31,9 @@ export {
   ReviewRequiredBadge,
 } from './StatusBadges';
 
-// Utilities
+// Utilities (moved to utils)
 export {
   handlePrintCollectionLabel,
-  formatRejectionReasons,
   getEffectiveContainerType,
-} from './labUtils';
+} from '../utils/lab-helpers';
+export { formatRejectionReasons } from '../utils/lab-formatters';

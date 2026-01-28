@@ -10,7 +10,7 @@ import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
-import { PaymentButton } from '../components/display/PaymentButton';
+import { PaymentButton } from '../components/PaymentButton';
 // OrderPaymentDetails type
 type OrderPaymentDetails = {
   orderId: number;
@@ -35,7 +35,7 @@ type OrderPaymentDetails = {
     paidAt: string;
   };
 };
-import { PaymentCard } from '../components/cards/PaymentCard';
+import { PaymentCard } from '../components/PaymentCard';
 
 /**
  * Create payment table configuration with full, compact, and card views

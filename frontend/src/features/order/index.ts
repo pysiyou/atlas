@@ -1,21 +1,20 @@
 /**
  * Order Feature - Main Exports
  *
- * This file provides backward-compatible exports for external consumers.
- * All exports are re-exported from their new locations.
+ * Organized exports following V2 architecture patterns
  */
 
-// Pages
-export * from './pages';
+// Schemas
+export * from './schemas';
+
+// Services
+export * from './services';
 
 // Components
 export * from './components';
 
-// Modals
-export * from './modals/OrderUpsertModal';
-
-// Forms
-export * from './forms';
+// Pages
+export * from './pages';
 
 // Hooks
 export * from './hooks';

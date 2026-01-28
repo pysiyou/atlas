@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks';
 import { usePatient, useOrdersByPatient } from '@/hooks/queries';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
-import { EditPatientModal } from '../modals/EditPatientModal';
+import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from './PatientDetailLayouts';
 

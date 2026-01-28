@@ -12,9 +12,9 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
-import { PaymentFilters } from '../components/filters/PaymentFilters';
+import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from './PaymentTableConfig';
-import { PaymentDetailModal } from '../modals/PaymentDetailModal';
+import { PaymentDetailModal } from '../components/PaymentDetailModal';
 import { useOrdersList, usePaymentsList } from '@/hooks/queries';
 // OrderPaymentDetails type
 type OrderPaymentDetails = {

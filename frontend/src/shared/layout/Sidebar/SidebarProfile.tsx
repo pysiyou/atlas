@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Avatar } from '@/shared/ui/Avatar';
+import { Avatar } from '@/shared/ui';
 import { Button, IconButton } from '@/shared/ui';
 import { formatStatus } from '@/utils/statusHelpers';
 import type { AuthUser } from '@/types';

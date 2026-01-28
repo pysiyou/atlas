@@ -1,30 +1,26 @@
 /**
  * Patient Feature - Main Exports
  *
- * This file provides backward-compatible exports for external consumers.
- * All exports are re-exported from their new locations.
+ * Organized exports following V2 architecture patterns
  */
 
-// Pages
-export * from './pages';
+// Schemas (rarely needed externally, but available)
+export * from './schemas';
+
+// Services (main API for external consumers)
+export * from './services';
 
 // Components
 export * from './components';
 
-// Modals
-export * from './modals/EditPatientModal';
+// Pages
+export * from './pages';
 
-// Forms
-export * from './forms';
-
-// Hooks
+// Hooks (for composition)
 export * from './hooks';
 
-// Utils
+// Utils (for advanced use)
 export * from './utils';
 
 // Constants
 export * from './constants';
-
-// Sections (detail page sections)
-export * from './sections';

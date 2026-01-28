@@ -1,5 +1,6 @@
 /**
- * Centralized exports for patient hooks
+ * Patient Feature Hooks
  */
 
-// Old hooks removed - use usePatientService instead
+export * from './usePatientForm';
+export * from './usePatientFilters';

@@ -1,10 +1,20 @@
 /**
  * Payment Feature - Main Exports
+ *
+ * Organized exports following V2 architecture patterns
  */
 
-export * from './pages/PaymentList';
-export * from './pages/PaymentTableConfig';
+// Schemas
+export * from './schemas';
+
+// Services
+export * from './services';
+
+// Components
 export * from './components';
-export * from './modals/PaymentDetailModal';
-// Old types removed - use schemas instead
-// export * from './types/types';
+
+// Pages
+export * from './pages';
+
+// Hooks
+export * from './hooks';

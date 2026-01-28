@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { MultiSelectFilter } from '@/shared/ui';
-import type { IconName } from '@/shared/ui/Icon';
+import type { IconName } from '@/shared/ui';
 import type { MultiSelectFilterControl } from '../types';
 
 /**

@@ -5,8 +5,16 @@ import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils/id-display';
 import type { Patient, Order } from '@/types';
-import { isAffiliationActive } from '../utils/patientUtils';
-import { PatientCard } from '../components/cards/PatientCard';
+// Helper function for affiliation status (pure function, no hook needed)
+const isAffiliationActive = (affiliation?: { endDate: string }): boolean => {
+  if (!affiliation) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const endDate = new Date(affiliation.endDate);
+  endDate.setHours(0, 0, 0, 0);
+  return endDate >= today;
+};
+import { PatientCard } from '../components/PatientCard';
 import { ICONS } from '@/utils/icon-mappings';
 
 

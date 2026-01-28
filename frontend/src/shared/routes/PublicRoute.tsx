@@ -7,7 +7,7 @@ import { type ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import { ROUTES } from '@/config';
-import { LoadingState } from '@/shared/components/LoadingState';
+import { LoadingState } from '@/shared/components';
 
 interface Props {
   children: ReactNode;

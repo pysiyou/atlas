@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { Icon } from '@/shared/ui';
-import type { IconName } from '@/shared/ui/Icon';
+import type { IconName } from '@/shared/ui';
 import { ICONS } from '@/utils/icon-mappings';
 
 export interface SectionCardProps {

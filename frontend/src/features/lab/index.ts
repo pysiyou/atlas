@@ -1,36 +1,34 @@
 /**
- * Lab Feature Index
- * Re-exports all lab-related components and utilities
+ * Lab Feature - Main Exports
+ *
+ * Organized exports following V2 architecture patterns
  */
 
-// Types
-export * from './types';
+// Schemas
+export * from './schemas';
 
-// Shared Components
+// Services
+export * from './services';
+
+// Shared components
 export * from './components';
 
-// Collection Workflow
-export { CollectionDetailModal } from './collection/CollectionDetailModal';
-export { CollectionCard } from './collection/CollectionCard';
-export { CollectionView } from './collection/CollectionView';
-export { CollectionPopover } from './collection/CollectionPopover';
-export { CollectionRejectionPopover } from './collection/CollectionRejectionPopover';
-export { CollectionRejectionSection } from './collection/CollectionRejectionSection';
-export { CollectionRequirementsSection } from './collection/CollectionRequirementsSection';
-export { printCollectionLabel } from './collection/CollectionLabel';
+// Workflow components
+export * from './collection';
+export * from './entry';
+export * from './validation';
 
-// Entry Workflow
-export { EntryDetailModal } from './entry/EntryDetailModal';
-export { EntryCard } from './entry/EntryCard';
-export { EntryView } from './entry/EntryView';
-export { EntryForm } from './entry/EntryForm';
-export { EntryRejectionSection } from './entry/EntryRejectionSection';
-
-// Validation Workflow
-export { ValidationDetailModal } from './validation/ValidationDetailModal';
-export { ValidationCard } from './validation/ValidationCard';
-export { ValidationView } from './validation/ValidationView';
-export { ValidationForm } from './validation/ValidationForm';
+// Pages
+export * from './pages';
 
 // Hooks
-// useRejectionManager removed - use service hooks instead
+export * from './hooks';
+
+// Utils
+export * from './utils';
+
+// Types (workflow-specific display types)
+export * from './types';
+
+// Constants
+export * from './constants';

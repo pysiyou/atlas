@@ -7,7 +7,7 @@ import React from 'react';
 import { UserCog, Settings, Bell, Box, Shield } from 'lucide-react';
 import { ALL_ROLES } from '@/types';
 import { ROUTES } from '@/config';
-import { Icon } from '@/shared/ui/Icon';
+import { Icon } from '@/shared/ui';
 import type { MenuItem, SettingsItem } from './types';
 
 /**

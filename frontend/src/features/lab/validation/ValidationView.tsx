@@ -26,7 +26,7 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext, CollectedSample } from '@/types';
 import { resultAPI } from '@/services/api';
 import { orderHasValidatedTests } from '@/features/order/utils';
-import { ValidationFilters } from '../components/filters';
+import { ValidationFilters } from './ValidationFilters';
 
 /**
  * Feature flag to enable/disable bulk validation (select all) feature

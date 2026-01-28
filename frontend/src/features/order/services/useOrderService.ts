@@ -41,10 +41,45 @@ export function useOrderService() {
     },
   });
 
-  // Business logic
+  // Business logic functions
+  
+  /**
+   * Calculate total price from tests
+   */
   const calculateTotalPrice = (tests: Array<{ priceAtOrder: number }>) => {
     return tests.reduce((sum, test) => sum + test.priceAtOrder, 0);
   };
 
-  return { create, update, calculateTotalPrice };
+  /**
+   * Get order status based on test statuses
+   */
+  const getOrderStatus = (order: { tests: Array<{ status: string }> }): string => {
+    if (order.tests.length === 0) return 'pending';
+    
+    const statuses = order.tests.map(t => t.status);
+    
+    // If all tests are validated, order is validated
+    if (statuses.every(s => s === 'validated')) return 'validated';
+    
+    // If any test is validated, order is processing
+    if (statuses.some(s => s === 'validated')) return 'processing';
+    
+    // If any test is in progress, order is processing
+    if (statuses.some(s => s === 'in-progress' || s === 'resulted')) return 'processing';
+    
+    // If any test is collected, order is collected
+    if (statuses.some(s => s === 'sample-collected' || s === 'collected')) return 'collected';
+    
+    return 'pending';
+  };
+
+  return {
+    // Mutations
+    create,
+    update,
+    
+    // Business logic
+    calculateTotalPrice,
+    getOrderStatus,
+  };
 }

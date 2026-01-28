@@ -13,7 +13,7 @@
  *   <Icon name={ICONS.dataFields.user} />
  */
 
-import type { IconName } from '@/shared/ui/Icon';
+import type { IconName } from '@/shared/ui';
 
 /**
  * Core category icons - same icon for all values in category

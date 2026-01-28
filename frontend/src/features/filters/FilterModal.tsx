@@ -7,8 +7,8 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Modal } from '@/shared/ui/Modal';
-import { CheckboxList } from '@/shared/ui/CheckboxList';
+import { Modal } from '@/shared/ui';
+import { CheckboxList } from '@/shared/ui';
 import { Icon, FooterInfo } from '@/shared/ui';
 import { ICONS } from '@/utils/icon-mappings';
 import { cn } from '@/utils';

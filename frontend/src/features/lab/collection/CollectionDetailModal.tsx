@@ -18,12 +18,10 @@ import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import { displayId } from '@/utils/id-display';
 import { CollectionInfoLine } from '../components/StatusBadges';
-import {
-  CollectionDetailHeaderBadges,
-  CollectionDetailFooter,
-  buildCollectionDetailGridSections,
-  CollectionDetailContent,
-} from './components';
+import { CollectionDetailHeaderBadges } from './CollectionDetailHeaderBadges';
+import { CollectionDetailFooter } from './CollectionDetailFooter';
+import { buildCollectionDetailGridSections } from './CollectionDetailGridSections';
+import { CollectionDetailContent } from './CollectionDetailContent';
 import {
   useSampleLookup,
   useTestNameLookup,

@@ -6,8 +6,8 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { LoadingState } from '../LoadingState';
-import { ErrorAlert } from '../ErrorAlert';
+import { LoadingState } from '../feedback/LoadingState';
+import { ErrorAlert } from '../feedback/ErrorAlert';
 import { SectionGrid } from '../sections';
 
 export type DetailViewLayout = 'single' | 'two-column' | 'three-column' | 'custom';

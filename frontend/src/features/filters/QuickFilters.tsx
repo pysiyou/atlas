@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Icon, type IconName } from '@/shared/ui/Icon';
+import { Icon, type IconName } from '@/shared/ui';
 import { cn } from '@/utils';
 import type { QuickFilterPreset } from './types';
 

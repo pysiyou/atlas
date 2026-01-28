@@ -1,6 +1,6 @@
 /**
- * Centralized exports for catalog components
+ * Catalog Components Index
  */
 
-export * from './cards/CatalogCard';
-export * from './filters/CatalogFilters';
+export * from './CatalogCard';
+export * from './CatalogFilters';

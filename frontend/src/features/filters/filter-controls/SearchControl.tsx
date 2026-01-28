@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Icon } from '@/shared/ui/Icon';
+import { Icon } from '@/shared/ui';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
 

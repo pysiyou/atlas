@@ -1,6 +1,7 @@
 /**
- * Centralized exports for patient utilities
+ * Patient Feature Utils
  */
 
-export * from './patientUtils';
-// Old utilities removed - logic moved to usePatientService
+export * from './patient-helpers';
+export * from './patient-formatters';
+export * from './form-transformers';

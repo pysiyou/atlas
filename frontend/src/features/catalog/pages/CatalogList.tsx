@@ -6,14 +6,14 @@
  * Uses shared ListView component for consistent UX.
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTestCatalog } from '@/hooks/queries';
 import { ListView } from '@/shared/components';
-import { CatalogFilters } from '../components/filters/CatalogFilters';
+import { CatalogFilters } from '../components/CatalogFilters';
 import { createCatalogTableConfig } from './CatalogTableConfig';
-import type { Test, TestCategory } from '@/types';
-import { PRICE_RANGE } from '@/shared/constants';
+import { useCatalogFilters } from '../hooks/useCatalogFilters';
+import type { Test } from '@/types';
 
 /**
  * CatalogList Component
@@ -39,59 +39,18 @@ export const CatalogList: React.FC = () => {
       }
     : null;
 
-  // Local filter state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilters, setCategoryFilters] = useState<TestCategory[]>([]);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  // Use shared constants for price range
-  const [priceRange, setPriceRange] = useState<[number, number]>([
-    PRICE_RANGE.MIN,
-    PRICE_RANGE.MAX,
-  ]);
-
-  // Apply filters to tests
-  const filteredTests = useMemo(() => {
-    let filtered = tests;
-
-    // Apply search filter (name, code, synonyms)
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
-      filtered = filtered.filter(test => {
-        // Search in name
-        if (test.name.toLowerCase().includes(query)) return true;
-        // Search in code
-        if (test.code.toLowerCase().includes(query)) return true;
-        // Search in synonyms
-        if (test.synonyms?.some(syn => syn.toLowerCase().includes(query))) return true;
-        // Search in LOINC codes
-        if (test.loincCodes?.some(loinc => loinc.toLowerCase().includes(query))) return true;
-        // Search in panels
-        if (test.panels?.some(panel => panel.toLowerCase().includes(query))) return true;
-        return false;
-      });
-    }
-
-    // Apply category filter
-    if (categoryFilters.length > 0) {
-      filtered = filtered.filter(test => categoryFilters.includes(test.category));
-    }
-
-    // Apply sample type filter
-    if (sampleTypeFilters.length > 0) {
-      filtered = filtered.filter(test => sampleTypeFilters.includes(test.sampleType));
-    }
-
-    // Apply price range filter
-    const [minPrice, maxPrice] = priceRange;
-    if (minPrice !== 0 || maxPrice !== 10000) {
-      filtered = filtered.filter(test => {
-        return test.price >= minPrice && test.price <= maxPrice;
-      });
-    }
-
-    // Sort by name by default
-    return filtered.sort((a, b) => a.name.localeCompare(b.name));
-  }, [tests, searchQuery, categoryFilters, sampleTypeFilters, priceRange]);
+  // Use catalog filters hook
+  const {
+    filteredTests,
+    searchQuery,
+    setSearchQuery,
+    categoryFilters,
+    setCategoryFilters,
+    sampleTypeFilters,
+    setSampleTypeFilters,
+    priceRange,
+    setPriceRange,
+  } = useCatalogFilters({ tests });
 
   // Memoize table config to prevent recreation on every render
   const catalogTableConfig = useMemo(() => createCatalogTableConfig(navigate), [navigate]);

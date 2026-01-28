@@ -7,8 +7,8 @@
 
 import { type ReactNode } from 'react';
 import { Table, EmptyState } from '@/shared/ui';
-import { LoadingState } from '../LoadingState';
-import { ErrorAlert } from '../ErrorAlert';
+import { LoadingState } from '../feedback/LoadingState';
+import { ErrorAlert } from '../feedback/ErrorAlert';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { ICONS } from '@/utils/icon-mappings';
 

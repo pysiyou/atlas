@@ -12,32 +12,10 @@ import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { EmptyState, BalancedDetailsLayout } from '@/shared/ui';
 import { LoadingState } from '@/shared/components';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
-import type { TableInput } from '@/shared/ui/BalancedDetailsLayout';
-import { formatArray, formatBoolean, formatDetailDate } from '@/shared/utils/data';
+import type { TableInput } from '@/shared/ui';
+import { formatDetailDate } from '@/shared/utils/data';
 import { ICONS } from '@/utils/icon-mappings';
-
-/**
- * Format array to comma-separated string with fallback
- */
-const formatArrayWithFallback = (arr: string[] | undefined): string => {
-  const formatted = formatArray(arr);
-  return formatted || '-';
-};
-
-/**
- * Format boolean to Yes/No with fallback
- */
-const formatBooleanWithFallback = (val: boolean | undefined): string => {
-  if (val === undefined) return '-';
-  return formatBoolean(val);
-};
-
-/**
- * Capitalize first letter
- */
-const capitalize = (str: string): string => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
+import { formatArrayWithFallback, formatBooleanWithFallback, capitalize } from '../utils/catalog-formatters';
 
 /**
  * CatalogDetail Component

@@ -13,12 +13,12 @@ import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
-import { PatientFilters, type AffiliationStatus } from '../components/filters/PatientFilters';
+import { PatientFilters, type AffiliationStatus } from '../components/PatientFilters';
 import { createPatientTableConfig } from './PatientTableConfig';
 import { calculateAge } from '@/utils';
 import type { Patient, Gender } from '@/types';
-import { EditPatientModal } from '../modals/EditPatientModal';
-import { isAffiliationActive } from '../utils/patientUtils';
+import { EditPatientModal } from '../components/EditPatientModal';
+import { usePatientService } from '../services/usePatientService';
 
 /**
  * PatientList component - Migrated to use ListView
@@ -35,6 +35,7 @@ export const PatientList: React.FC = () => {
   const { openModal } = useModal();
   const { patients, isLoading, isError, error: queryError, refetch } = usePatientsList();
   const { orders } = useOrdersList();
+  const { isAffiliationActive } = usePatientService();
 
   // Format error for ErrorAlert component
   const error = isError

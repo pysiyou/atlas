@@ -1,31 +1,29 @@
-export * from './Card';
-export * from './Button';
-export * from './CircularProgress';
-export * from './IconButton';
-export * from './Input';
-export * from './Badge';
+/**
+ * Shared UI Components
+ * 
+ * Primitive and atomic UI components organized by category
+ */
+
+// Forms (now grouped)
+export * from './forms';
+
+// Display (now grouped)
+export * from './display';
+
+// Layout (now grouped)
+export * from './layout';
+
+// Feedback (now grouped)
+export * from './feedback';
+
+// Navigation (now grouped)
+export * from './navigation';
+
+// Overlay (now grouped)
+export * from './overlay';
+
+// Table (already grouped)
 export * from './Table/index';
-export * from './Modal';
-export * from './Icon';
-export * from './SearchBar';
-export * from './SectionContainer';
-export * from './Tabs';
-export * from './Popover';
-export * from './DetailField';
-export * from './DetailFieldGroup';
-export * from './ModalRenderer';
-export * from './Alert';
-export * from './Avatar';
-export * from './LoadingSpinner';
-export * from './TableActionMenu';
-export * from './EmptyState';
-export * from './MultiSelectFilter';
-export * from './CheckboxList';
-export * from './Skeleton';
-export * from './DetailsTable';
-export * from './detailsTableUtils';
-export * from './BalancedDetailsLayout';
-export * from './TagInput';
-export * from './TabbedSectionContainer';
-export * from './DateInput';
+
+// Utilities at root
 export * from './FooterInfo';

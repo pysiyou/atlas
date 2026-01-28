@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { CollectionView } from '@/features/lab/collection/CollectionView';
 import { EntryView } from '@/features/lab/entry/EntryView';
 import { ValidationView } from '@/features/lab/validation/ValidationView';
-import { Icon } from '@/shared/ui/Icon';
+import { Icon } from '@/shared/ui';
 import { ICONS } from '@/utils/icon-mappings';
 
 export const Laboratory: React.FC = () => {

@@ -1,4 +1,4 @@
-import { Icon } from '../Icon';
+import { Icon } from '../display/Icon';
 import type { TableHeaderProps } from './types';
 import { useColumnStyles } from './hooks/useColumnWidth';
 import { HEADER_PADDING, TEXT_SIZE } from './constants';

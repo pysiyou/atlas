@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from 'react';
-import { Pagination } from '../Pagination';
+import { Pagination } from '../navigation/Pagination';
 import { TableHeader } from './TableHeader';
 import { TableRow } from './TableRow';
 import { TableSkeleton } from './TableSkeleton';

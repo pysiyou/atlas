@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Icon } from '@/shared/ui/Icon';
+import { Icon } from '@/shared/ui';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils/icon-mappings';
 // CalendarView type (previously from useDateFilterState)

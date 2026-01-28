@@ -6,8 +6,8 @@
 import React from 'react';
 import { Button, Avatar, Icon, IconButton } from '@/shared/ui';
 import type { Patient } from '@/types/patient';
-import { isAffiliationActive } from '../utils/patientUtils';
-import { AffiliationPopover } from './filters/AffiliationPopover';
+import { usePatientService } from '../services/usePatientService';
+import { AffiliationPopover } from './AffiliationPopover';
 import { ICONS } from '@/utils/icon-mappings';
 
 export interface PatientHeaderProps {
@@ -23,6 +23,7 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
   onEdit,
   onNewOrder,
 }) => {
+  const { isAffiliationActive } = usePatientService();
   return (
     <div className="flex items-center justify-between mb-4 shrink-0 flex-wrap gap-3">
       <div className="flex items-center gap-2 self-center">

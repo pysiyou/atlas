@@ -11,7 +11,7 @@ import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { ICONS } from '@/utils/icon-mappings';
-import { CatalogCard } from '../components/cards/CatalogCard';
+import { CatalogCard } from '../components/CatalogCard';
 
 /**
  * Create catalog table configuration with full, compact, and card views

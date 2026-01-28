@@ -1,4 +1,4 @@
-import { Icon, type IconName } from '../Icon';
+import { Icon, type IconName } from '../display/Icon';
 import { ICONS } from '@/utils/icon-mappings';
 
 interface TableEmptyProps {

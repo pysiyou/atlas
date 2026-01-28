@@ -4,8 +4,8 @@
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Popover } from '@/shared/ui/Popover';
-import { Icon } from '@/shared/ui/Icon';
+import { Popover } from '@/shared/ui';
+import { Icon } from '@/shared/ui';
 import { cn } from '@/utils';
 import type { PriceRangeFilterControl } from '../types';
 import { ICONS } from '@/utils/icon-mappings';

@@ -15,7 +15,7 @@ import {
   LAB_CARD_LIST_ITEMS,
   LAB_CARD_CONTEXT,
   LAB_CARD_HEADER,
-} from './labCardStyles';
+} from '../utils/lab-styles';
 
 interface PatientContext {
   patientName?: string;

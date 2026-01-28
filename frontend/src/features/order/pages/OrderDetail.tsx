@@ -9,7 +9,7 @@ import { useResponsiveLayout } from '@/hooks';
 import { useOrder, usePatient, useTestCatalog, usePaymentsByOrder } from '@/hooks/queries';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { Invoice } from '@/types';
-import { OrderHeader } from '../components/display/OrderHeader';
+import { OrderHeader } from '../components/OrderHeader';
 import {
   SmallScreenLayout,
   MediumScreenLayout,

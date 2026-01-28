@@ -3,6 +3,7 @@ import { patientSchema, patientFormSchema, type Patient } from '../schemas/patie
 import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
 import toast from 'react-hot-toast';
+import type { Affiliation, AffiliationDuration } from '@/types';
 
 export function usePatientService() {
   const queryClient = useQueryClient();
@@ -40,7 +41,11 @@ export function usePatientService() {
     },
   });
 
-  // Pure business logic functions
+  // Business logic functions
+  
+  /**
+   * Calculate age from date of birth
+   */
   const calculateAge = (dateOfBirth: string): number => {
     const today = new Date();
     const birth = new Date(dateOfBirth);
@@ -52,15 +57,57 @@ export function usePatientService() {
     return age;
   };
 
-  const isAffiliationActive = (patient: Patient): boolean => {
-    if (!patient.affiliation) return false;
-    return new Date(patient.affiliation.endDate) > new Date();
+  /**
+   * Check if affiliation is active
+   */
+  const isAffiliationActive = (affiliation?: Affiliation): boolean => {
+    if (!affiliation) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const endDate = new Date(affiliation.endDate);
+    endDate.setHours(0, 0, 0, 0);
+    return endDate >= today;
+  };
+
+  /**
+   * Get affiliation status label
+   */
+  const getAffiliationStatus = (affiliation?: Affiliation): 'active' | 'expired' | 'none' => {
+    if (!affiliation) return 'none';
+    return isAffiliationActive(affiliation) ? 'active' : 'expired';
+  };
+
+  /**
+   * Generate unique assurance number
+   */
+  const generateAssuranceNumber = (): string => {
+    const now = new Date();
+    const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+    const randomSuffix = Math.floor(Math.random() * 1000)
+      .toString()
+      .padStart(3, '0');
+    return `ASS-${dateStr}-${randomSuffix}`;
+  };
+
+  /**
+   * Calculate end date based on duration (duration is in months)
+   */
+  const calculateEndDate = (startDate: string, duration: AffiliationDuration): string => {
+    const start = new Date(startDate);
+    start.setMonth(start.getMonth() + duration);
+    return start.toISOString().slice(0, 10);
   };
 
   return {
+    // Mutations
     create,
     update,
+    
+    // Business logic
     calculateAge,
     isAffiliationActive,
+    getAffiliationStatus,
+    generateAssuranceNumber,
+    calculateEndDate,
   };
 }

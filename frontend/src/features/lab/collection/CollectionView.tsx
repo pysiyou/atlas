@@ -22,7 +22,7 @@ import { getTestNames } from '@/utils/typeHelpers';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';
 import { LabWorkflowView } from '../components/LabWorkflowView';
-import { CollectionFilters } from '../components/filters';
+import { CollectionFilters } from './CollectionFilters';
 import { DataErrorBoundary } from '@/shared/components';
 import type { SampleDisplay } from '../types';
 

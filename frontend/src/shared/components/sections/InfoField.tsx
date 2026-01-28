@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { Icon } from '@/shared/ui';
-import type { IconName } from '@/shared/ui/Icon';
+import type { IconName } from '@/shared/ui';
 
 export interface InfoFieldProps {
   /** Field label */

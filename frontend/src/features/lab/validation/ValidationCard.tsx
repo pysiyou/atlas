@@ -19,7 +19,7 @@ import {
   isCritical,
   statusMapFromFlags,
   parseResultEntry,
-} from '../components/labUtils';
+} from '../utils/lab-helpers';
 
 function ResultGrid({
   results,

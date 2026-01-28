@@ -10,10 +10,7 @@ import { Toaster } from 'react-hot-toast';
 
 // Composed Providers
 import { AppProviders } from '@/shared/providers/AppProviders';
-import { DataLoader } from '@/shared/components/DataLoader';
-import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
-import { FeatureErrorBoundary } from '@/shared/components/FeatureErrorBoundary';
-import { LoadingState } from '@/shared/components/LoadingState';
+import { DataLoader, ErrorBoundary, FeatureErrorBoundary, LoadingState } from '@/shared/components';
 
 // Eagerly loaded components (small, frequently accessed)
 import { LoginForm } from '@/features/auth/LoginForm';

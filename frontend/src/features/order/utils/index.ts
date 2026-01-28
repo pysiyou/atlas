@@ -1,6 +1,8 @@
 /**
- * Centralized exports for order feature utilities
+ * Order Feature Utils
  */
 
 export * from './dateFilterHelpers';
-export * from './orderTimelineUtils';
+export * from './order-timeline-utils';
+export * from './order-formatters';
+export * from './order-helpers';
