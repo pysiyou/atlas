@@ -36,16 +36,9 @@ export const getEffectiveContainerType = (
   return sampleType === 'urine' || sampleType === 'stool' ? 'cup' : 'tube';
 };
 
-/**
- * Result status types for validation display
- */
-export type ResultStatus =
-  | 'normal'
-  | 'high'
-  | 'low'
-  | 'critical'
-  | 'critical-high'
-  | 'critical-low';
+// Import ResultStatus from enums (single source of truth)
+import type { ResultStatus } from '@/types/enums/result-status';
+export type { ResultStatus };
 
 const ABNORMAL_STATUSES: ResultStatus[] = [
   'high',

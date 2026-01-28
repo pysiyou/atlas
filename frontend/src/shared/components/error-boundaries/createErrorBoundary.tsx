@@ -6,7 +6,7 @@
 
 import React, { Component, type ReactNode } from 'react';
 import { Alert, Button, Icon } from '@/shared/ui';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Props supported by all factory-created error boundaries.

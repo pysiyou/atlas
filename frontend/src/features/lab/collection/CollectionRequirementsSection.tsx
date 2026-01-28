@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Icon, SectionContainer } from '@/shared/ui';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /** Test detail for requirements display */
 export interface TestDetail {

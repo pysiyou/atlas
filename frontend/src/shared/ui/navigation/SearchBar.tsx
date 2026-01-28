@@ -5,7 +5,7 @@
 
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from '../display/Icon';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import { cn } from '@/utils';
 
 interface SearchBarProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {

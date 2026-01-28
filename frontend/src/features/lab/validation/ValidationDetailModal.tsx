@@ -12,9 +12,9 @@
 
 import React from 'react';
 import { Button, Icon, Popover, SectionContainer } from '@/shared/ui';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import {
   LabDetailModal,
   DetailGrid,

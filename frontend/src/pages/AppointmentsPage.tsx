@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { SectionContainer, Icon } from '@/shared/ui';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export const Appointments: React.FC = () => {
   return (

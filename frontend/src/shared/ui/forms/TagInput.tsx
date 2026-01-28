@@ -9,7 +9,7 @@ import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { Icon } from '../display/Icon';
 import { Badge } from '../display/Badge';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface TagInputProps {
   /** Current tags as an array of strings */

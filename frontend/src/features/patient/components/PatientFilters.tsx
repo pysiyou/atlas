@@ -12,7 +12,7 @@ import { MultiSelectFilter } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
 import { AgeFilter } from './AgeFilter';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';

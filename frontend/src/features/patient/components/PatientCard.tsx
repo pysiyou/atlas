@@ -2,7 +2,7 @@ import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { Badge, Avatar, IconButton } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { calculateAge, formatPhoneNumber } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Patient } from '@/types';
 
 /**

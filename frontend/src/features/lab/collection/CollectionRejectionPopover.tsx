@@ -7,9 +7,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Popover, IconButton, Alert, Badge, FooterInfo } from '@/shared/ui';
 import { PopoverForm, CheckboxCard } from '../components/PopoverForm';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { RejectionReason } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /** Rejection reason options with labels and descriptions */
 const REJECTION_REASONS: { value: RejectionReason; label: string; description: string }[] = [

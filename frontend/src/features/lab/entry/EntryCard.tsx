@@ -10,11 +10,11 @@ import React from 'react';
 import { Badge, Alert, Icon, IconButton } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { formatDate } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import { usePatientNameLookup } from '@/hooks/queries';
 import { LabCard, ProgressBadge } from '../components/LabCard';
 import type { Test, TestWithContext } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface EntryCardProps {
   test: TestWithContext;

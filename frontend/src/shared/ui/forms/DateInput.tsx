@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import { Icon } from '../display/Icon';
 import { Popover } from '../overlay/Popover';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import { DateFilterCalendar } from '@/features/order/components/DateFilterCalendar';
 import { DateFilterHeader } from '@/features/order/components/DateFilterHeader';
 // useDateFilterNavigation removed - logic inlined below

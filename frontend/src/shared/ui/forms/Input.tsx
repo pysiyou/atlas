@@ -5,7 +5,7 @@
 
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon, type IconName } from '../display/Icon';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Get input classes based on state

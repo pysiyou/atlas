@@ -9,7 +9,7 @@ import React from 'react';
 import { Alert, Icon } from '@/shared/ui';
 import type { PaymentMethodOption, PaymentMethod } from '@/types/billing';
 import type { IconName } from '@/shared/ui';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface PaymentSectionProps {
   paymentMethods: PaymentMethodOption[];

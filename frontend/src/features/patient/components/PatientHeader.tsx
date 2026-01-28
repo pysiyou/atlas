@@ -8,7 +8,7 @@ import { Button, Avatar, Icon, IconButton } from '@/shared/ui';
 import type { Patient } from '@/types/patient';
 import { usePatientService } from '../services/usePatientService';
 import { AffiliationPopover } from './AffiliationPopover';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface PatientHeaderProps {
   patient: Patient;

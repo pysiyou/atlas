@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Icon, IconButton } from '@/shared/ui';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface SidebarHeaderProps {
   /** Whether the sidebar is collapsed */

@@ -7,7 +7,7 @@
 
 import type { NavigateFunction } from 'react-router-dom';
 import { formatDate, formatCurrency } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { PaymentButton } from '../components/PaymentButton';

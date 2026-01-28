@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { Badge, Button, Icon, IconButton } from '@/shared/ui';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Order, Invoice } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface OrderHeaderProps {
   order: Order;

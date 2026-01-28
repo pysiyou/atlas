@@ -8,7 +8,7 @@
 import React from 'react';
 import { Icon } from '../display/Icon';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Props for CheckboxList component

@@ -9,7 +9,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Popover, Button, Icon, Alert, Badge, FooterInfo } from '@/shared/ui';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { formatCurrency } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Order } from '@/types';
 import {
   getEnabledPaymentMethods,
@@ -18,7 +18,7 @@ import {
 } from '@/types/billing';
 import { useCreatePayment } from '@/hooks/queries/usePayments';
 import type { IconName } from '@/shared/ui';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface PaymentPopoverProps {
   /** Order to process payment for */

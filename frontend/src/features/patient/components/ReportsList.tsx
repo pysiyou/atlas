@@ -5,10 +5,10 @@
 
 import React from 'react';
 import { Icon, IconButton, EmptyState } from '@/shared/ui';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Order } from '@/types';
 import { formatDetailDate, getReportableOrders } from '../utils/patient-formatters';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface ReportsListProps {
   orders: Order[];

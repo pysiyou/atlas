@@ -17,7 +17,7 @@ import {
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import type { ContainerType, ContainerTopColor, SampleStatus, Test } from '@/types';
-import { calculateRequiredSamples, getCollectionRequirements } from '@/utils/sampleHelpers';
+import { calculateRequiredSamples, getCollectionRequirements } from '@/utils';
 import { getTestNames } from '@/utils/typeHelpers';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';

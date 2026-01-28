@@ -10,7 +10,7 @@
 import React, { type ReactNode } from 'react';
 import { SearchBar, EmptyState } from '@/shared/ui';
 import { useSearch } from '@/utils/filtering';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 type IconName = 'search' | 'sample-collection' | 'checklist' | 'shield-check';
 

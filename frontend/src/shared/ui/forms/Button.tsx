@@ -13,7 +13,7 @@
 
 import React, { type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from '../display/Icon';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Base style variants (no default icon)

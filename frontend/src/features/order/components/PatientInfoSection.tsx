@@ -6,11 +6,11 @@
 import React from 'react';
 import { Icon, Avatar } from '@/shared/ui';
 import { calculateAge } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Patient } from '@/types';
 import { InfoField } from '@/shared/components/sections/InfoField';
 import { formatOrderDate } from '@/shared/utils/data/dateFormatters';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface PatientInfoSectionProps {
   patient: Patient | null;

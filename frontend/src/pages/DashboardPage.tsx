@@ -13,8 +13,8 @@ import {
 } from '@/hooks/queries';
 import { Card, SectionContainer, Badge, Icon } from '@/shared/ui';
 import { formatCurrency, formatDate } from '@/utils';
-import { displayId } from '@/utils/id-display';
-import { ICONS } from '@/utils/icon-mappings';
+import { displayId } from '@/utils';
+import { ICONS } from '@/utils';
 
 export const Dashboard: React.FC = () => {
   const { user: currentUser } = useAuthStore();

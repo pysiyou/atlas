@@ -7,7 +7,7 @@ import React from 'react';
 import type { Patient } from '@/types';
 import { InfoField } from '@/shared/components/sections/InfoField';
 import { formatDetailDate, formatAddress } from '../utils/patient-formatters';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface GeneralInfoSectionProps {
   patient: Patient;

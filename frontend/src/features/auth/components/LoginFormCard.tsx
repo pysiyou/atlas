@@ -5,7 +5,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { Icon } from '@/shared/ui';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface LoginFormCardProps {
   username: string;

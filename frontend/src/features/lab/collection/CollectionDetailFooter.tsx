@@ -17,8 +17,8 @@ import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import { ModalFooter } from '../components/LabDetailModal';
 import type { SampleDisplay } from '../types';
 import { orderHasValidatedTests, getValidatedTestCount } from '@/features/order/utils';
-import { getSampleStatusIcon } from '@/utils/icon-helpers';
-import { ICONS } from '@/utils/icon-mappings';
+import { getSampleStatusIcon } from '@/utils';
+import { ICONS } from '@/utils';
 
 interface CollectionDetailFooterProps {
   sample: Sample;
@@ -103,7 +103,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
         statusMessage={
           hasValidatedTests
             ? `Cannot reject - ${validatedCount} test${validatedCount > 1 ? 's' : ''} already validated`
-            : 'Sample collected successfully'
+            : ''
         }
         statusClassName={hasValidatedTests ? 'text-amber-600' : 'text-text-tertiary'}
       >

@@ -9,7 +9,7 @@ import React, { useState, useEffect } from 'react';
 import { Popover } from '@/shared/ui';
 import { Icon } from '@/shared/ui';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface AgeFilterProps {
   value: [number, number];

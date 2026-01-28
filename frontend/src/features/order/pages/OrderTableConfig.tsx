@@ -9,12 +9,12 @@ import type { NavigateFunction } from 'react-router-dom';
 import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, formatCurrency } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Order } from '@/types';
 import { OrderTableCard } from '../components/OrderTableCard';
 import { PaymentPopover } from '@/features/payment/components/PaymentPopover';
 import { ModalType } from '@/shared/context/ModalContext';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Create order table configuration with full, compact, and card views

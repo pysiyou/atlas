@@ -5,7 +5,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Icon } from './Icon';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface AlertProps {
   children: ReactNode;

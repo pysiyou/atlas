@@ -8,7 +8,7 @@ import { usePatientsList, useOrdersList, useTestCatalog } from '@/hooks/queries'
 import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Admin Test Table Columns

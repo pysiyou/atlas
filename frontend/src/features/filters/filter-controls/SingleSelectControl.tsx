@@ -9,7 +9,7 @@ import { Icon, type IconName } from '@/shared/ui';
 import { Badge } from '@/shared/ui';
 import { cn } from '@/utils';
 import type { SingleSelectFilterControl } from '../types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Props for SingleSelectControl component

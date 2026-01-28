@@ -12,7 +12,7 @@ import { MultiSelectFilter } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
 import { DateFilter } from '@/features/order/components/DateFilter';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';

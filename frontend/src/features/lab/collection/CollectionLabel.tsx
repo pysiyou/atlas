@@ -1,6 +1,6 @@
 import type { SampleDisplay } from '../types';
 import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 
 /**
  * Generates HTML content for printing a sample label

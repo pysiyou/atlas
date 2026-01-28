@@ -7,12 +7,12 @@ import React from 'react';
 import { Icon, SectionContainer } from '@/shared/ui';
 import Barcode from 'react-barcode';
 import type { Sample, RejectedSample, Test } from '@/types';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import { CollectionRequirementsSection } from './CollectionRequirementsSection';
 import { CollectionRejectionSection } from './CollectionRejectionSection';
 import { CollectionInfoLine } from '../components/StatusBadges';
 import { DetailGrid, type DetailGridSectionConfig } from '../components/LabDetailModal';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface CollectionDetailContentProps {
   sample: Sample;

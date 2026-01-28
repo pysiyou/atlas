@@ -16,7 +16,7 @@ import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { getTestNames } from '@/utils/typeHelpers';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import { LabCard, TestList } from '../components/LabCard';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
@@ -27,7 +27,7 @@ import {
 import { formatRejectionReasons } from '../utils/lab-formatters';
 import type { SampleDisplay } from '../types';
 import { orderHasValidatedTests } from '@/features/order/utils';
-import { ICONS, getContainerIcon } from '@/utils/icon-mappings';
+import { ICONS, getContainerIcon } from '@/utils';
 
 interface CollectionCardProps {
   display: SampleDisplay;

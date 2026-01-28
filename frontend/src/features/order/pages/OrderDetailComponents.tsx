@@ -10,7 +10,7 @@
 import React from 'react';
 import { SectionContainer, Badge, Avatar } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { OrderTest, PaymentStatus } from '@/types';
 
 // ============================================================================

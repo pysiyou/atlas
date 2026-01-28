@@ -11,7 +11,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { Badge, Button, Icon, SectionContainer, CircularProgress } from '@/shared/ui';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import { EntryForm } from './EntryForm';
 import { EntryRejectionSection } from './EntryRejectionSection';
 import {
@@ -20,7 +20,7 @@ import {
   ModalFooter,
   StatusBadgeRow,
 } from '../components/LabDetailModal';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import {
   CollectionInfoLine,
   RetestBadge,

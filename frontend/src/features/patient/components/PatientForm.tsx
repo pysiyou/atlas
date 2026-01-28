@@ -26,7 +26,7 @@ import { usePatientService } from '../services/usePatientService';
 import type { FilterOption } from '@/shared/ui';
 import { AffiliationPlanSelector } from './AffiliationPlanSelector';
 import { createFilterOptions } from '@/utils/filtering';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Props for PatientFormSections component

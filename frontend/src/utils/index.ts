@@ -2,18 +2,19 @@
  * Central export for all utilities
  */
 
-export * from './formatters';
+// Core utilities
 export * from './classnames';
-export * from './id-display';
-export * from './validation';
-export * from './reference-ranges';
-export * from './statusHelpers';
-export * from './sample-definitions';
-export * from './sampleHelpers';
+export * from './formatters';
 export * from './logger';
-export * from './orderUtils';
-export * from './typeHelpers';
-export * from './filtering';
+export * from './validation';
 export * from './errorHelpers';
-export * from './icon-mappings';
-export * from './icon-helpers';
+export * from './orderUtils';
+export * from './statusHelpers';
+export * from './typeHelpers';
+
+// Grouped utilities
+export * from './ids';
+export * from './icons';
+export * from './samples';
+export * from './lab';
+export * from './filtering';

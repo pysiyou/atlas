@@ -5,11 +5,11 @@
 
 import React from 'react';
 import { Badge } from '@/shared/ui';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Order } from '@/types';
 import { InfoField } from '@/shared/components/sections/InfoField';
 import { formatOrderDate } from '@/shared/utils/data/dateFormatters';
-import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/utils/icon-helpers';
+import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/utils';
 
 export interface OrderInfoSectionProps {
   order: Order;

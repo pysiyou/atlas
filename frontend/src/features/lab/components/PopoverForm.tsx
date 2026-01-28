@@ -10,7 +10,7 @@
 import React, { type ReactNode } from 'react';
 import { Button, IconButton, FooterInfo } from '@/shared/ui';
 import { useAuthStore } from '@/shared/stores/auth.store';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface PopoverFormProps {
   /** Main title displayed in the header */

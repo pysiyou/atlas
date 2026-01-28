@@ -14,7 +14,7 @@ import { LoadingState } from '@/shared/components';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { TableInput } from '@/shared/ui';
 import { formatDetailDate } from '@/shared/utils/data';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import { formatArrayWithFallback, formatBooleanWithFallback, capitalize } from '../utils/catalog-formatters';
 
 /**

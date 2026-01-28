@@ -13,9 +13,9 @@ import {
 } from '@/hooks/queries';
 import { SectionContainer, Badge, Button, EmptyState, Icon } from '@/shared/ui';
 import { formatDate } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import toast from 'react-hot-toast';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export const Reports: React.FC = () => {
   const { orders, isLoading: ordersLoading } = useOrdersList();

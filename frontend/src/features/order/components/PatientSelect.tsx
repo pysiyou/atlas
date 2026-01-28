@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, Icon } from '@/shared/ui';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Patient } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface PatientSelectorProps {
   selectedPatient: Patient | null;

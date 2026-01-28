@@ -8,12 +8,12 @@ import React from 'react';
 import { Badge, Icon, IconButton, Alert } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { formatDate } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import { useUserLookup, usePatientNameLookup } from '@/hooks/queries';
 import { LabCard } from '../components/LabCard';
 import { RejectionDialog } from '../components';
 import type { TestWithContext } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import {
   type ResultStatus,
   isCritical,

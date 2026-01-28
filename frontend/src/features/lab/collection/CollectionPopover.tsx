@@ -10,8 +10,8 @@ import { Popover, Button, Icon, FooterInfo } from '@/shared/ui';
 import { PopoverForm } from '../components/PopoverForm';
 import type { ContainerType } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS } from '@/types';
-import type { SampleRequirement } from '@/utils/sampleHelpers';
-import { ICONS, getContainerIcon } from '@/utils/icon-mappings';
+import type { SampleRequirement } from '@/utils';
+import { ICONS, getContainerIcon } from '@/utils';
 
 interface CollectionPopoverContentProps {
   requirement: SampleRequirement;

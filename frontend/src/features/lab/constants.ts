@@ -16,7 +16,7 @@ import {
   PRIORITY_LEVEL_VALUES,
   PRIORITY_LEVEL_CONFIG,
 } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 // ============================================================================
 // Status Constants

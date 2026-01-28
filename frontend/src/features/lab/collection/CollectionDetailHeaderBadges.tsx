@@ -7,9 +7,9 @@ import React from 'react';
 import { Badge, Icon } from '@/shared/ui';
 import type { ContainerType, ContainerTopColor, Sample, RejectedSample } from '@/types';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import { StatusBadgeRow } from '../components/LabDetailModal';
-import { getContainerIcon, ICONS } from '@/utils/icon-mappings';
+import { getContainerIcon, ICONS } from '@/utils';
 
 interface CollectionDetailHeaderBadgesProps {
   sample: Sample;

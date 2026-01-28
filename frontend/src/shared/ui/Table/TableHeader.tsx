@@ -2,7 +2,7 @@ import { Icon } from '../display/Icon';
 import type { TableHeaderProps } from './types';
 import { useColumnStyles } from './hooks/useColumnWidth';
 import { HEADER_PADDING, TEXT_SIZE } from './constants';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Table Header Component

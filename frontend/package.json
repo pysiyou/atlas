@@ -14,8 +14,6 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "preview": "vite preview",
-    "generate:data": "npx tsx scripts/generators/generate-all.ts",
-    "generate:fresh": "rm -rf data/generated && npx tsx scripts/generators/generate-all.ts",
     "prepare": "husky install"
   },
   "dependencies": {

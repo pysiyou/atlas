@@ -5,28 +5,11 @@
  * Common types shared across collection, entry, and validation workflows.
  */
 
-import type { Sample, Order, Patient, SampleType, ContainerType, ContainerTopColor } from '@/types';
+import type { Sample, Order, Patient } from '@/types';
 
-/**
- * Sample requirement for collection workflow.
- * Defines what samples need to be collected for a set of tests.
- */
-export interface SampleRequirement {
-  /** The type of sample required */
-  sampleType: SampleType;
-  /** Test codes that require this sample */
-  testCodes: string[];
-  /** Total volume needed in mL */
-  totalVolume: number;
-  /** Acceptable container types */
-  containerTypes: ContainerType[];
-  /** Acceptable container top colors */
-  containerTopColors: ContainerTopColor[];
-  /** Priority level of the sample */
-  priority: 'routine' | 'urgent' | 'stat';
-  /** Associated order ID */
-  orderId: number;
-}
+// Import SampleRequirement from utils (single source of truth)
+import type { SampleRequirement } from '@/utils';
+export type { SampleRequirement };
 
 /**
  * Display object for sample collection workflow.

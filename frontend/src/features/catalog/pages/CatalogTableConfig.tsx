@@ -10,7 +10,7 @@ import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import { CatalogCard } from '../components/CatalogCard';
 
 /**

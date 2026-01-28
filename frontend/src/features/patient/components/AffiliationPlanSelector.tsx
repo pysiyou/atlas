@@ -13,7 +13,7 @@ import { logger } from '@/utils/logger';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan, AffiliationPricing } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface AffiliationPlanSelectorProps {
   /** Currently selected duration */

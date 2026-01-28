@@ -6,11 +6,11 @@
 import React from 'react';
 import { SectionContainer, Badge, Icon } from '@/shared/ui';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Patient } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS, RELATIONSHIP_CONFIG } from '@/types';
 import { usePatientService } from '../services/usePatientService';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface PatientInfoCardProps {
   patient: Patient;

@@ -2,7 +2,7 @@
  * Billing and Financial Management Types
  */
 
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export type PaymentMethod =
   | 'cash'

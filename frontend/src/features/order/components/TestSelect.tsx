@@ -12,7 +12,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Badge, Icon } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface TestSelectorProps {
   selectedTests: string[];

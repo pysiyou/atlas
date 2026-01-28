@@ -12,7 +12,7 @@ import { MultiSelectFilter } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
 import { DateFilter } from './DateFilter';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import {
   ORDER_STATUS_VALUES,

@@ -14,13 +14,14 @@ import type { Order } from '@/types';
 interface UseOrderFormOptions {
   order?: Order;
   mode?: 'create' | 'edit';
+  initialPatientId?: number;
   onSubmitSuccess?: () => void;
 }
 
 /**
  * Hook for managing order form state and submission
  */
-export function useOrderForm({ order, mode = 'create', onSubmitSuccess }: UseOrderFormOptions = {}) {
+export function useOrderForm({ order, mode = 'create', initialPatientId, onSubmitSuccess }: UseOrderFormOptions = {}) {
   const { create, update } = useOrderService();
 
   const defaultValues = useMemo(() => {
@@ -34,8 +35,14 @@ export function useOrderForm({ order, mode = 'create', onSubmitSuccess }: UseOrd
         paymentMethod: undefined, // Payment method not stored on order
       } as Partial<OrderFormInput>;
     }
+    if (mode === 'create') {
+      return {
+        patientId: initialPatientId,
+        priority: 'routine' as const, // Default priority
+      } as Partial<OrderFormInput>;
+    }
     return {};
-  }, [mode, order]);
+  }, [mode, order, initialPatientId]);
 
   const form = useForm<OrderFormInput>({
     resolver: zodResolver(orderFormSchema),

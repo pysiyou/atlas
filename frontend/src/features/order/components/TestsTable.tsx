@@ -8,7 +8,7 @@ import { Badge, EmptyState } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import { getTestName, getTestSampleType, getTestCategory } from '@/utils/typeHelpers';
 import type { OrderTest, Test } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface TestsTableProps {
   tests: OrderTest[];

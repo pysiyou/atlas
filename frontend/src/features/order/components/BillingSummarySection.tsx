@@ -6,9 +6,9 @@
 import React from 'react';
 import { Badge, Button, Icon } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Order, Invoice } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface BillingSummarySectionProps {
   order: Order;

@@ -8,7 +8,7 @@ import { Popover } from '@/shared/ui';
 import { Icon } from '@/shared/ui';
 import { cn } from '@/utils';
 import type { PriceRangeFilterControl } from '../types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Props for PriceRangeControl component

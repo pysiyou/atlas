@@ -15,7 +15,7 @@ import { PopoverForm, RadioCard } from './PopoverForm';
 // useRejectionManager removed - TODO: replace with service hook or inline logic
 import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface RejectionDialogContentProps {
   orderId: string | number;

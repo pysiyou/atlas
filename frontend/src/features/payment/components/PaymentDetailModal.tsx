@@ -16,7 +16,7 @@ import React, { useState, useCallback } from 'react';
 import { Modal, Icon, Badge, Button, Alert, FooterInfo } from '@/shared/ui';
 import { PaymentErrorBoundary } from '@/shared/components';
 import { formatDate, formatCurrency } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import { useCreatePayment } from '@/hooks/queries/usePayments';
 import {
   getEnabledPaymentMethods,
@@ -48,7 +48,7 @@ type OrderPaymentDetails = {
     paidAt: string;
   };
 };
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface PaymentDetailModalProps {
   /** Whether the modal is open */

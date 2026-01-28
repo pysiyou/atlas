@@ -5,10 +5,10 @@
 
 import React from 'react';
 import { Badge, EmptyState } from '@/shared/ui';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Order } from '@/types/order';
 import { formatDetailDate, formatOrderPrice } from '../utils/patient-formatters';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface PatientOrdersTableProps {
   orders: Order[];

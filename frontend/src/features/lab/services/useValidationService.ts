@@ -1,5 +1,5 @@
 import type { TestParameter } from '../schemas/result.schema';
-import { validatePhysiologicValue } from '@/utils/physiologic-limits';
+import { validatePhysiologicValue } from '@/utils';
 
 export function useValidationService() {
   // Validation logic for test result entry

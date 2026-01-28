@@ -10,7 +10,7 @@ import { Table, EmptyState } from '@/shared/ui';
 import { LoadingState } from '../feedback/LoadingState';
 import { ErrorAlert } from '../feedback/ErrorAlert';
 import type { TableViewConfig } from '@/shared/ui/Table';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 // TableDataItem accepts any object-like type (interfaces, types, classes)
 // Using a union type to accept both Record types and regular object types

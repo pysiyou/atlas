@@ -8,13 +8,13 @@
  * for all values within each category, ensuring consistency.
  *
  * Usage:
- *   import { getPriorityIcon, getDataFieldIcon } from '@/utils/icon-helpers';
+ *   import { getPriorityIcon, getDataFieldIcon } from '@/utils';
  *   <Icon name={getPriorityIcon()} />
  *   <Icon name={getDataFieldIcon('user')} />
  */
 
 import type { IconName } from '@/shared/ui';
-import { ICONS } from './icon-mappings';
+import { ICONS } from './iconMappings';
 
 /**
  * Gets the icon for priority (same for all priority values)

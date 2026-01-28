@@ -6,7 +6,7 @@
 import type { FilterConfig } from '@/features/filters';
 import type { TestCategory } from '@/types';
 import { PRICE_RANGE } from '@/shared/constants';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Test category configuration for filter display

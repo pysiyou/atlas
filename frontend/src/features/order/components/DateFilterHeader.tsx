@@ -7,7 +7,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { Icon } from '@/shared/ui';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 // CalendarView type (previously from useDateFilterState)
 type CalendarView = 'days' | 'months' | 'years';
 import { generateCalendarYears } from '../utils/dateFilterHelpers';

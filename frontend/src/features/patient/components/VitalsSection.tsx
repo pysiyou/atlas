@@ -8,7 +8,7 @@
 import React from 'react';
 import { Icon, type IconName } from '@/shared/ui';
 import type { VitalSigns } from '@/types/patient';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export interface VitalsSectionProps {
   /** Current vital signs data */

@@ -19,7 +19,7 @@ export * from './PatientInfoSection';
 export * from './TestsTable';
 
 // Form components
-export * from './OrderForm';
+// OrderForm removed - replaced by OrderUpsertModal using useOrderForm hook
 export * from './PatientSelect';
 export * from './PaymentSection';
 export * from './TestSelect';

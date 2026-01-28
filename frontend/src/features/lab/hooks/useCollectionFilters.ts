@@ -8,7 +8,7 @@ import { useState, useMemo } from 'react';
 import type { SampleDisplay } from '../types';
 import type { SampleStatus } from '@/types';
 import { getTestNames } from '@/utils/typeHelpers';
-import { getCollectionRequirements } from '@/utils/sampleHelpers';
+import { getCollectionRequirements } from '@/utils';
 import type { Test } from '@/types';
 
 interface UseCollectionFiltersOptions {

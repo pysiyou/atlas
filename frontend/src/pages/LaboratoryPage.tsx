@@ -8,7 +8,7 @@ import { CollectionView } from '@/features/lab/collection/CollectionView';
 import { EntryView } from '@/features/lab/entry/EntryView';
 import { ValidationView } from '@/features/lab/validation/ValidationView';
 import { Icon } from '@/shared/ui';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 export const Laboratory: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'collection' | 'entry' | 'validation'>('collection');

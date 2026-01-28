@@ -3,7 +3,7 @@ import { Input, MultiSelectFilter, Textarea } from '@/shared/ui';
 import type { PriorityLevel } from '@/types';
 import { PRIORITY_LEVEL_OPTIONS } from '@/types';
 import type { FilterOption } from '@/shared/ui';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface OrderDetailsFormProps {
   referringPhysician: string;

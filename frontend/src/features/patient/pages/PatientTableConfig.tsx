@@ -3,7 +3,7 @@ import type { NavigateFunction } from 'react-router-dom';
 import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Patient, Order } from '@/types';
 // Helper function for affiliation status (pure function, no hook needed)
 const isAffiliationActive = (affiliation?: { endDate: string }): boolean => {
@@ -15,7 +15,7 @@ const isAffiliationActive = (affiliation?: { endDate: string }): boolean => {
   return endDate >= today;
 };
 import { PatientCard } from '../components/PatientCard';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 
 // Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions

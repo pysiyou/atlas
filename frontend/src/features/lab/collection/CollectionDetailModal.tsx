@@ -16,7 +16,7 @@ import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import Barcode from 'react-barcode';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import { CollectionInfoLine } from '../components/StatusBadges';
 import { CollectionDetailHeaderBadges } from './CollectionDetailHeaderBadges';
 import { CollectionDetailFooter } from './CollectionDetailFooter';

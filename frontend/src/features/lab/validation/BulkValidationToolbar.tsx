@@ -10,7 +10,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { Button, Icon } from '@/shared/ui';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface BulkValidationItem {
   id: number;

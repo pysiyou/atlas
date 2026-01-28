@@ -36,11 +36,15 @@ export const useAuthStore = create<AuthState>()(
             role: UserRole;
           }>('/auth/login', { username, password });
 
-          const userInfo = await apiClient.get<AuthUser>('/auth/me');
-
+          // Set token before calling /auth/me so Authorization header is included
           set({
             token: response.access_token,
             refreshToken: response.refresh_token,
+          });
+
+          const userInfo = await apiClient.get<AuthUser>('/auth/me');
+
+          set({
             user: userInfo,
             isAuthenticated: true,
           });

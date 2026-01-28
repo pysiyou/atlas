@@ -1,7 +1,7 @@
 import { Badge, Avatar } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatCurrency, formatDate } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 // OrderPaymentDetails type
 type OrderPaymentDetails = {
   orderId: number;

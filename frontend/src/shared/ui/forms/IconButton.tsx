@@ -12,7 +12,7 @@
 
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from '../display/Icon';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 /**
  * Base style variants (require custom icon)

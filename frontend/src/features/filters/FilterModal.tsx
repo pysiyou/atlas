@@ -10,7 +10,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Modal } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
 import { Icon, FooterInfo } from '@/shared/ui';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import { cn } from '@/utils';
 import { QuickFilters } from './QuickFilters';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';

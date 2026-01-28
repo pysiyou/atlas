@@ -3,7 +3,7 @@
  * Enhanced to support demographic-specific ranges and critical value checking
  */
 
-import type { ResultStatus } from '../types';
+import type { ResultStatus } from '@/types/enums/result-status';
 import type { CatalogReferenceRange, CriticalRange, TestParameter, Patient, Gender } from '@/types';
 
 /**

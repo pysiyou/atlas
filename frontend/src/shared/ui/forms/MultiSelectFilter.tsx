@@ -16,7 +16,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Minus } from 'lucide-react';
 import { Popover } from '../overlay/Popover';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 import { Badge } from '../display/Badge';
 import { Icon, type IconName } from '../display/Icon';
 

@@ -8,7 +8,7 @@
  * within each category. This ensures consistency across all components.
  *
  * Usage:
- *   import { ICONS } from '@/utils/icon-mappings';
+ *   import { ICONS } from '@/utils';
  *   <Icon name={ICONS.priority} />
  *   <Icon name={ICONS.dataFields.user} />
  */

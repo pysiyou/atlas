@@ -6,9 +6,9 @@ import React, { useCallback, useState } from 'react';
 import { Button, Textarea, Popover, Icon } from '@/shared/ui';
 import { cn } from '@/utils';
 import type { Test, TestParameter, Patient } from '@/types';
-import { formatReferenceRange, isCriticalValue } from '@/utils/reference-ranges';
-import { validatePhysiologicValue, getPhysiologicLimit } from '@/utils/physiologic-limits';
-import { ICONS } from '@/utils/icon-mappings';
+import { formatReferenceRange, isCriticalValue } from '@/utils';
+import { validatePhysiologicValue, getPhysiologicLimit } from '@/utils';
+import { ICONS } from '@/utils';
 
 interface EntryFormProps {
   testDef: Test;

@@ -6,9 +6,9 @@
 import React from 'react';
 import { SectionContainer, Badge, Button, Icon } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
-import { displayId } from '@/utils/id-display';
+import { displayId } from '@/utils';
 import type { Order } from '@/types';
-import { ICONS } from '@/utils/icon-mappings';
+import { ICONS } from '@/utils';
 
 interface OrderHistoryCardProps {
   orders: Order[];
