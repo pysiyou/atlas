@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { MenuItem, SettingsItem } from './types';
 
 interface SidebarNavProps {
@@ -38,23 +39,74 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   };
 
   const getNavLinkClasses = (isActive: boolean) => {
-    const base = 'flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors rounded-lg mx-2';
+    const base = isCollapsed
+      ? 'flex items-center justify-center py-3 text-sm font-medium transition-all duration-300 rounded-lg mx-2'
+      : 'flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-300 rounded-lg mx-2';
     return isActive
       ? `${base} bg-brand/10 text-brand`
       : `${base} text-text-secondary hover:bg-surface-hover hover:text-text-primary`;
+  };
+
+  const textContentVariants = {
+    hidden: { opacity: 0, width: 0 },
+    visible: {
+      opacity: 1,
+      width: 'auto',
+      transition: {
+        duration: 0.2,
+        ease: 'easeOut',
+      },
+    },
+    exit: {
+      opacity: 0,
+      width: 0,
+      transition: {
+        duration: 0.15,
+      },
+    },
+  };
+
+  const sectionTitleVariants = {
+    hidden: { opacity: 0, height: 0 },
+    visible: {
+      opacity: 1,
+      height: 'auto',
+      transition: {
+        duration: 0.2,
+        ease: 'easeOut',
+      },
+    },
+    exit: {
+      opacity: 0,
+      height: 0,
+      transition: {
+        duration: 0.15,
+      },
+    },
   };
 
   return (
     <div className="flex-1 overflow-y-auto py-4">
       {/* Main Menu Section */}
       <div className="mb-6">
-        <div className={isCollapsed ? 'opacity-0 h-0 overflow-hidden' : 'px-4 mb-2 transition-all duration-300'}>
-          <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">
-            Main Menu
-          </h3>
-        </div>
+        <AnimatePresence mode="wait">
+          {!isCollapsed && (
+            <motion.div
+              key="main-menu-title"
+              variants={sectionTitleVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="px-4 mb-2"
+            >
+              <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">
+                Main Menu
+              </h3>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <nav className="space-y-1">
-          {menuItems.map(item => (
+          {menuItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
@@ -62,13 +114,26 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               onClick={handleNavClick}
               className={({ isActive }) => getNavLinkClasses(isActive)}
             >
-              {/* Fixed Width Icon Container */}
-              <div className="w-5 h-5 flex-shrink-0">{item.icon}</div>
+              {/* Icon Container - Fixed, no animation */}
+              <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center">
+                {item.icon}
+              </div>
 
-              {/* Text Content */}
-              <span className={isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'truncate transition-all duration-300'}>
-                {item.label}
-              </span>
+              {/* Text Content - Animated */}
+              <AnimatePresence mode="wait">
+                {!isCollapsed && (
+                  <motion.span
+                    key={`text-${item.path}`}
+                    variants={textContentVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="truncate"
+                  >
+                    {item.label}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </NavLink>
           ))}
         </nav>
@@ -76,23 +141,51 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
       {/* Settings Section */}
       <div>
-        <div className={isCollapsed ? 'opacity-0 h-0 overflow-hidden' : 'px-4 mb-2 transition-all duration-300'}>
-          <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">
-            Settings
-          </h3>
-        </div>
+        <AnimatePresence mode="wait">
+          {!isCollapsed && (
+            <motion.div
+              key="settings-title"
+              variants={sectionTitleVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="px-4 mb-2"
+            >
+              <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">
+                Settings
+              </h3>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className="space-y-1">
           {settingsItems.map((item, index) => (
             <button
               key={index}
               disabled
-              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-text-disabled rounded-lg mx-2 cursor-not-allowed"
+              className={isCollapsed
+                ? 'w-full flex items-center justify-center py-3 text-sm font-medium text-text-disabled rounded-lg mx-2 cursor-not-allowed transition-all duration-300'
+                : 'w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-text-disabled rounded-lg mx-2 cursor-not-allowed transition-all duration-300'}
               title={isCollapsed ? item.label : 'Coming soon'}
             >
-              <div className="w-5 h-5 flex-shrink-0">{item.icon}</div>
-              <span className={isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'truncate transition-all duration-300'}>
-                {item.label}
-              </span>
+              {/* Icon Container - Fixed, no animation */}
+              <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center">
+                {item.icon}
+              </div>
+              {/* Text Content - Animated */}
+              <AnimatePresence mode="wait">
+                {!isCollapsed && (
+                  <motion.span
+                    key={`settings-text-${index}`}
+                    variants={textContentVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="truncate"
+                  >
+                    {item.label}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </button>
           ))}
         </div>

@@ -1,6 +1,7 @@
 /**
  * Report Preview Modal
  * Preview lab report before generating PDF
+ * Uses consistent modal structure matching other detail modals
  */
 
 import React from 'react';
@@ -8,6 +9,8 @@ import { Modal, Button, Icon } from '@/shared/ui';
 import type { ReportData } from '../types';
 import { format } from 'date-fns';
 import { cn } from '@/utils';
+import { companyConfig } from '@/config';
+import { useUserLookup } from '@/hooks/queries';
 
 interface ReportPreviewModalProps {
   isOpen: boolean;
@@ -17,6 +20,7 @@ interface ReportPreviewModalProps {
   isGenerating?: boolean;
 }
 
+// eslint-disable-next-line max-lines-per-function
 export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   isOpen,
   onClose,
@@ -24,128 +28,258 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   onGenerate,
   isGenerating = false,
 }) => {
+  const { getUserName } = useUserLookup();
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       title="Report Preview"
-      size="xl"
+      subtitle={`${reportData.patientName} - ${reportData.testResults.map(t => t.testName).join(', ')}`}
+      size="3xl"
     >
-      <div className="flex flex-col h-[70vh]">
+      <div className="flex flex-col h-full bg-app-bg">
         {/* Preview Content - Scrollable */}
-        <div className="flex-1 overflow-y-auto bg-gray-50 p-6 border border-border rounded">
-          {/* Header */}
-          <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
-            <h2 className="text-xl font-bold text-brand text-center mb-2">
-              Atlas Clinical Laboratories
-            </h2>
-            <p className="text-center text-sm text-text-tertiary">Laboratory Report</p>
-            <div className="mt-4 pt-4 border-t border-border"></div>
-          </div>
+        <div className="flex-1 overflow-y-auto ">
+          {/* Report Header Section - Two Column Layout */}
+          <div className="flex border-b border-border">
+            {/* Left Panel: Company Information */}
+            <div className="bg-[#E0F2F7] p-6 shrink-0 space-y-2" style={{ width: '40%' }}>
+              {/* Logo */}
+              {/* <div className="mb-4">
+                <div className="w-16 h-16 bg-white rounded-full border border-gray-300 flex items-center justify-center">
+                  <Icon 
+                    name={companyConfig.getBranding().logoPath.replace('/icons/', '').replace('.svg', '') as IconName} 
+                    className="w-8 h-8 text-gray-700" 
+                  />
+                </div>
+              </div> */}
+              
+              {/* Company Name */}
+              <h2 className="text-2xl font-bold text-gray-800 mb-3">
+                {companyConfig.getName()}
+              </h2>
+              
+              {/* Company Subtitle */}
+              {companyConfig.getConfig().company.subtitle && (
+                <p className="text-xs text-text-primary font-semibold">{companyConfig.getConfig().company.subtitle}</p>
+              )}
+              
+              {/* Address Lines */}
+              <div className="text-xs text-gray-700 space-y-0.5">
+                {companyConfig.getContact().address.street && (
+                  <p>{companyConfig.getContact().address.street}</p>
+                )}
+                {(() => {
+                  const { city, state, zipCode } = companyConfig.getContact().address;
+                  const parts = [city, state, zipCode].filter(Boolean);
+                  return parts.length > 0 ? (
+                    <p>{parts.join(', ')}</p>
+                  ) : null;
+                })()}
+                {companyConfig.getContact().address.country && (
+                  <p>{companyConfig.getContact().address.country}</p>
+                )}
+              </div>
+            </div>
 
-          {/* Patient Information */}
-          <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
-            <h3 className="text-sm font-bold text-text-primary uppercase tracking-wide mb-4">
-              Patient Information
-            </h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-text-tertiary">Patient Name:</span>
-                <span className="ml-2 font-medium text-text-primary">{reportData.patientName}</span>
-              </div>
-              <div>
-                <span className="text-text-tertiary">Order ID:</span>
-                <span className="ml-2 font-medium text-text-primary font-mono">
-                  ORD{reportData.order.orderId.toString().padStart(6, '0')}
-                </span>
-              </div>
-              <div>
-                <span className="text-text-tertiary">Order Date:</span>
-                <span className="ml-2 font-medium text-text-primary">
-                  {format(new Date(reportData.order.orderDate), 'MMM dd, yyyy HH:mm')}
-                </span>
-              </div>
-              <div>
-                <span className="text-text-tertiary">Priority:</span>
-                <span className="ml-2 font-medium text-text-primary uppercase">
-                  {reportData.order.priority}
-                </span>
-              </div>
-              {reportData.patientAge && (
-                <div>
-                  <span className="text-text-tertiary">Age:</span>
-                  <span className="ml-2 font-medium text-text-primary">{reportData.patientAge} years</span>
+            {/* Right Panel: Report Title and Details */}
+            <div className="bg-white p-4 flex-1">
+              {/* Report Title */}
+              <h1 className="text-base font-bold text-black mb-2">
+                {reportData.testResults.length > 0 ? (
+                  <>
+                    {reportData.testResults.map(t => t.testName).join(', ')} Results ({' '}
+                    <span className="text-brand font-mono">
+                      {reportData.testResults.map(t => t.testCode).join(', ')}
+                    </span>
+                    {' '})
+                  </>
+                ) : (
+                  'Test Results'
+                )}
+              </h1>
+              
+              {/* Patient and Processing Details - Two Sub-columns */}
+              <div className="grid grid-cols-2 gap-2">
+                {/* Left Sub-column: Patient Demographics */}
+                <div className="space-y-0.5">
+                  <p className="text-base font-bold text-gray-800">{reportData.patientName}</p>
+                  {reportData.patientAge && (
+                    <div className="flex gap-2">
+                      <span className="text-xs text-gray-700 min-w-[50px] truncate">Age:</span>
+                      <span className="text-xs font-bold text-gray-800">{reportData.patientAge}</span>
+                    </div>
+                  )}
+                  {reportData.patientGender && (
+                    <div className="flex gap-2">
+                      <span className="text-xs text-gray-700 min-w-[50px] truncate">Gender:</span>
+                      <span className="text-xs font-bold text-gray-800">{reportData.patientGender.toUpperCase()}</span>
+                    </div>
+                  )}
+                  {/* Phone or Email - show phone if available, otherwise show email */}
+                  {(() => {
+                    const orderExtended = reportData.order as typeof reportData.order & { 
+                      patientPhone?: string;
+                      patientEmail?: string;
+                    };
+                    if (orderExtended.patientPhone) {
+                      return (
+                        <div className="flex gap-2">
+                          <span className="text-xs text-gray-700 min-w-[50px] truncate">Phone:</span>
+                          <span className="text-xs font-bold text-gray-800">{orderExtended.patientPhone}</span>
+                        </div>
+                      );
+                    }
+                    if (orderExtended.patientEmail) {
+                      return (
+                        <div className="flex gap-2">
+                          <span className="text-xs text-gray-700 min-w-[50px] truncate">Email:</span>
+                          <span className="text-xs font-bold text-gray-800">{orderExtended.patientEmail}</span>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
                 </div>
-              )}
-              {reportData.patientGender && (
-                <div>
-                  <span className="text-text-tertiary">Gender:</span>
-                  <span className="ml-2 font-medium text-text-primary capitalize">
-                    {reportData.patientGender}
-                  </span>
+                
+                {/* Right Sub-column: Processing Details */}
+                <div className="space-y-0.5">
+                  <p className="text-base font-bold text-gray-800">Processing Details</p>
+                  {reportData.timestamps?.collectedAt || reportData.sampleCollection?.collectedAt ? (
+                    <div className="flex gap-2">
+                      <span className="text-xs text-gray-700 min-w-[60px] truncate">Sample:</span>
+                      <span className="text-xs font-bold text-gray-800">
+                        {format(new Date(reportData.timestamps?.collectedAt || reportData.sampleCollection?.collectedAt || ''), 'yyyy-MM-dd hh:mm a')}
+                      </span>
+                    </div>
+                  ) : null}
+                  {reportData.timestamps?.reportedAt ? (
+                    <div className="flex gap-2">
+                      <span className="text-xs text-gray-700 min-w-[60px] truncate">Results:</span>
+                      <span className="text-xs font-bold text-gray-800">
+                        {format(new Date(reportData.timestamps.reportedAt), 'yyyy-MM-dd hh:mm a')}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <span className="text-xs text-gray-700 min-w-[60px] truncate">Results:</span>
+                      <span className="text-xs font-bold text-gray-800">
+                        {format(new Date(), 'yyyy-MM-dd hh:mm a')}
+                      </span>
+                    </div>
+                  )}
+                  {reportData.testResults[0]?.validatedBy && (
+                    <div className="flex gap-2">
+                      <span className="text-xs text-gray-700 min-w-[60px] truncate">Verified by:</span>
+                      <span className="text-xs font-bold text-gray-800">
+                        {getUserName(reportData.testResults[0].validatedBy)}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              )}
-              {reportData.order.referringPhysician && (
-                <div className="col-span-2">
-                  <span className="text-text-tertiary">Referring Physician:</span>
-                  <span className="ml-2 font-medium text-text-primary">
-                    {reportData.order.referringPhysician}
-                  </span>
-                </div>
-              )}
+              </div>
             </div>
           </div>
 
+          {/* Test Results Section */}
+          <div className="p-6 space-y-4">
+
           {/* Test Results */}
           {reportData.testResults.map((test, index) => (
-            <div key={index} className="bg-white p-6 rounded-lg shadow-sm mb-6">
-              <h3 className="text-base font-bold text-text-primary mb-4">
-                {test.testName}
-                <span className="ml-2 text-sm font-mono text-text-tertiary">{test.testCode}</span>
-              </h3>
+            <div key={index} className="space-y-4">
+              {/* Test Name (centered) */}
+              <div className="text-center">
+                <h3 className="text-lg font-bold text-text-primary">
+                  {test.testName} ({test.testCode})
+                </h3>
+              </div>
 
               {/* Parameters Table */}
               <div className="overflow-x-auto">
-                <table className="w-full text-sm border-collapse">
+                <table className="w-full text-xs">
                   <thead>
-                    <tr className="bg-brand/10">
-                      <th className="border border-border p-2 text-left font-semibold text-brand">
-                        Parameter
-                      </th>
-                      <th className="border border-border p-2 text-left font-semibold text-brand">
-                        Result
-                      </th>
-                      <th className="border border-border p-2 text-left font-semibold text-brand">
-                        Reference Range
-                      </th>
-                      <th className="border border-border p-2 text-left font-semibold text-brand">
-                        Status
-                      </th>
+                    <tr>
+                      <th className="px-4 py-3 text-left font-semibold border-b-2 border-black">Investigation</th>
+                      <th className="px-4 py-3 text-center font-semibold border-b-2 border-black">Result</th>
+                      <th className="px-4 py-3 text-center font-semibold border-b-2 border-black">Reference Value</th>
+                      <th className="px-4 py-3 text-right font-semibold border-b-2 border-black">Unit</th>
                     </tr>
                   </thead>
                   <tbody>
+                    {/* Primary Sample Type Row */}
+                    <tr className="border-b border-border">
+                      <td className="px-4 py-3 text-text-primary">Primary Sample Type :</td>
+                      <td className="px-4 py-3 text-center text-text-primary">
+                        {reportData.order.tests[0]?.sampleType || 'N/A'}
+                      </td>
+                      <td className="px-4 py-3 text-center text-text-secondary"></td>
+                      <td className="px-4 py-3 text-right text-text-secondary"></td>
+                    </tr>
+                    
                     {test.parameters.map((param, paramIndex) => {
-                      const statusColor = param.isCritical
-                        ? 'text-red-600 font-bold'
-                        : param.status === 'high' || param.status === 'low'
-                          ? 'text-amber-600 font-semibold'
-                          : 'text-green-600';
+                      // Determine status
+                      let status: 'low' | 'high' | 'borderline' | undefined;
+                      if (param.status && param.status.toLowerCase() !== 'normal') {
+                        const statusLower = param.status.toLowerCase();
+                        if (statusLower === 'low' || statusLower === 'critical-low') {
+                          status = 'low';
+                        } else if (statusLower === 'high' || statusLower === 'critical-high') {
+                          status = 'high';
+                        } else if (statusLower === 'borderline') {
+                          status = 'borderline';
+                        }
+                      }
+                      
+                      // Format parameter name as "Full Name (Code)"
+                      const paramDisplayName = param.code ? `${param.name} (${param.code})` : param.name;
+                      
+                      // Check if original parameter name is a section header (all caps, length > 3)
+                      const isSectionHeader = param.name === param.name.toUpperCase() && param.name.length > 3 && !param.name.includes(':');
+                      
+                      // Result value color
+                      const resultColorClass = status === 'low' 
+                        ? 'text-blue-600' 
+                        : status === 'high' 
+                        ? 'text-red-600' 
+                        : 'text-text-primary';
+                      
+                      // Reference value with status label
+                      const referenceValueDisplay = (() => {
+                        if (!status) return param.referenceRange || '';
+                        const statusLabel = status === 'low' ? 'Low' : status === 'high' ? 'High' : 'Borderline';
+                        const statusColorClass = status === 'low' 
+                          ? 'text-blue-600 font-bold' 
+                          : status === 'high' 
+                          ? 'text-red-600 font-bold' 
+                          : 'text-amber-600 font-bold';
+                        return (
+                          <span>
+                            <span className={statusColorClass}>{statusLabel}</span>
+                            {param.referenceRange && <span className="text-text-secondary"> {param.referenceRange}</span>}
+                          </span>
+                        );
+                      })();
 
                       return (
                         <tr
                           key={paramIndex}
-                          className={cn('hover:bg-surface-hover', paramIndex % 2 === 0 ? 'bg-gray-50' : '')}
+                          className="border-b border-border last:border-0"
                         >
-                          <td className="border border-border p-2 font-medium">{param.name}</td>
-                          <td className="border border-border p-2">
+                          <td className={cn(
+                            'px-4 py-3 text-text-primary',
+                            isSectionHeader && 'font-bold'
+                          )}>
+                            {paramDisplayName}
+                          </td>
+                          <td className={cn('px-4 py-3 text-center', resultColorClass)}>
                             {param.value}
-                            {param.unit && <span className="ml-1 text-text-tertiary">{param.unit}</span>}
                           </td>
-                          <td className="border border-border p-2 text-text-secondary">
-                            {param.referenceRange || 'N/A'}
+                          <td className="px-4 py-3 text-center">
+                            {referenceValueDisplay}
                           </td>
-                          <td className={cn('border border-border p-2', statusColor)}>
-                            {param.status ? param.status.toUpperCase() : 'NORMAL'}
+                          <td className="px-4 py-3 text-right text-text-secondary">
+                            {param.unit || '-'}
                           </td>
                         </tr>
                       );
@@ -154,62 +288,48 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                 </table>
               </div>
 
-              {/* Notes */}
-              {test.technicianNotes && (
-                <div className="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
-                  <p className="text-xs font-semibold text-text-primary mb-1">Technician Notes:</p>
-                  <p className="text-sm text-text-secondary italic">{test.technicianNotes}</p>
-                </div>
-              )}
-
-              {test.validationNotes && (
-                <div className="mt-4 p-3 bg-green-50 border-l-4 border-green-400 rounded">
-                  <p className="text-xs font-semibold text-text-primary mb-1">Validation Notes:</p>
-                  <p className="text-sm text-text-secondary italic">{test.validationNotes}</p>
-                </div>
-              )}
-
-              {/* Metadata */}
-              <div className="mt-4 pt-3 border-t border-border text-xs text-text-tertiary">
-                {test.enteredBy && (
-                  <span className="mr-4">Entered by: {test.enteredBy}</span>
+              {/* Instrument and Interpretation */}
+              <div className="space-y-2 text-xs text-text-primary mt-4">
+                {test.technicianNotes && (
+                  <p>Instruments: {test.technicianNotes}</p>
                 )}
-                {test.validatedBy && (
-                  <span>Validated by: {test.validatedBy}</span>
+                {test.validationNotes && (
+                  <p>Interpretation: {test.validationNotes}</p>
                 )}
+                <p>Thanks for Reference</p>
+                <p className="text-center font-bold mt-4">****End of Report****</p>
               </div>
             </div>
           ))}
-
-          {/* Footer */}
-          <div className="bg-white p-4 rounded-lg shadow-sm border-t-2 border-border">
-            <p className="text-xs text-text-tertiary italic text-center">
-              This report contains confidential patient information. Handle according to applicable privacy laws.
-            </p>
-            <p className="text-xs text-text-tertiary text-center mt-2">
-              Generated: {format(new Date(), 'MMM dd, yyyy HH:mm')}
-            </p>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-border">
-          <Button variant="outline" onClick={onClose} disabled={isGenerating}>
-            Cancel
-          </Button>
-          <Button variant="download" onClick={onGenerate} disabled={isGenerating}>
-            {isGenerating ? (
-              <>
-                <Icon name="clock" className="w-4 h-4 animate-pulse" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Icon name="download" className="w-4 h-4" />
-                Download PDF
-              </>
-            )}
-          </Button>
+        {/* Footer */}
+        <div className="border-t border-border bg-surface p-4 space-y-4">
+          <div className="flex items-center justify-center gap-2 text-xs text-text-tertiary">
+            <Icon name="info-circle" className="w-4 h-4" />
+            <span>
+              {companyConfig.getReports().footerText} Generated: {format(new Date(), 'MMM dd, yyyy HH:mm')}
+            </span>
+          </div>
+          <div className="flex items-center justify-end gap-3">
+            <Button variant="cancel" onClick={onClose} disabled={isGenerating}>
+              Close
+            </Button>
+            <Button variant="download" onClick={onGenerate} disabled={isGenerating}>
+              {isGenerating ? (
+                <>
+                  <Icon name="clock" className="w-4 h-4 animate-pulse" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Icon name="download" className="w-4 h-4" />
+                  Download PDF
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
     </Modal>

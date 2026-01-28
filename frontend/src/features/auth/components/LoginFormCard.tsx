@@ -6,6 +6,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Icon } from '@/shared/ui';
 import { ICONS } from '@/utils';
+import { companyConfig } from '@/config';
 
 interface LoginFormCardProps {
   username: string;
@@ -40,6 +41,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
   onSubmit,
   onErrorDismiss,
 }) => {
+  const company = companyConfig.getConfig();
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -67,9 +69,9 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
               <Icon name={ICONS.ui.appLogo} className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="font-display text-2xl text-auth-text-primary">Atlas</h1>
+              <h1 className="font-display text-2xl text-auth-text-primary">{company.company.name}</h1>
               <p className="font-body text-auth-text-light text-xs tracking-wider uppercase">
-                Clinical Labs
+                {company.company.subtitle}
               </p>
             </div>
           </div>
@@ -189,7 +191,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
           {/* Footer */}
           <div className="mt-8 pt-6 border-t border-auth-border">
             <p className="font-body text-center text-sm text-auth-text-muted">
-              © 2026 Atlas Clinical Labs. All rights reserved.
+              {company.company.copyright}
             </p>
           </div>
         </div>

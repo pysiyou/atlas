@@ -1,0 +1,55 @@
+{
+  "company": {
+    "name": "CargoPlan",
+    "subtitle": "Central Healthcare Laboratory",
+    "fullName": "CargoPlan",
+    "displayName": "CargoPlan",
+    "tagline": "Accurate | Caring | Instant",
+    "version": "2.4",
+    "copyright": "© 2026 Atlas Clinical Labs. All rights reserved."
+  },
+  "branding": {
+    "logoPath": "/icons/app-logo.svg",
+    "primaryColor": "#0284c7",
+    "secondaryColor": "#38bdf8"
+  },
+  "contact": {
+    "address": {
+      "street": "Tam-Tam weekend",
+      "city": "Yaounde",
+      "state": "Centre",
+      "zipCode": "",
+      "country": "Cameroon",
+      "fullAddress": "yaounde, centre, cameroon"
+    },
+    "phone": ["0123456789", "0912345678"],
+    "email": "info@atlaslabs.com",
+    "website": "www.atlaslabs.com"
+  },
+  "features": [
+    {
+      "title": "Intelligent Patient Management",
+      "description": "Unified records, appointments, and complete medical history at your fingertips"
+    },
+    {
+      "title": "Streamlined Lab Workflows",
+      "description": "From sample collection to result delivery — optimized every step of the way"
+    },
+    {
+      "title": "Real-time Quality Control",
+      "description": "Instant validation, automated alerts, and comprehensive audit trails"
+    }
+  ],
+  "reports": {
+    "headerText": "Atlas Clinical Laboratories - Laboratory Report",
+    "footerText": "This report contains confidential patient information. Handle according to applicable privacy laws.",
+    "includeSignature": true
+  },
+  "marketing": {
+    "trustIndicator": {
+      "text": "Trusted by",
+      "count": "500+",
+      "audience": "healthcare professionals"
+    }
+  }
+}

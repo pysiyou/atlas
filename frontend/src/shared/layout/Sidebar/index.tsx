@@ -50,13 +50,30 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   onToggleCollapse,
 }) => {
   const collapsed = isCollapsed && !isMobile;
-  const containerClasses = collapsed
-    ? 'w-16 bg-surface border-r border-border flex flex-col transition-all duration-300'
-    : 'w-64 bg-surface border-r border-border flex flex-col transition-all duration-300';
+  
+  const sidebarVariants = {
+    expanded: {
+      width: '16rem', // w-64
+      transition: {
+        duration: 0.3,
+        ease: [0.4, 0, 0.2, 1],
+      },
+    },
+    collapsed: {
+      width: '4rem', // w-16
+      transition: {
+        duration: 0.3,
+        ease: [0.4, 0, 0.2, 1],
+      },
+    },
+  };
   
   return (
-    <aside
-      className={containerClasses}
+    <motion.aside
+      variants={sidebarVariants}
+      animate={collapsed ? 'collapsed' : 'expanded'}
+      initial={false}
+      className="bg-surface border-r border-border flex flex-col"
       style={{ padding: '0' }}
       onClick={e => {
         e.stopPropagation();
@@ -76,7 +93,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       {currentUser && (
         <SidebarProfile currentUser={currentUser} isCollapsed={collapsed} onLogout={onLogout} />
       )}
-    </aside>
+    </motion.aside>
   );
 };
 
@@ -154,7 +171,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
             className="fixed inset-0 bg-black/50 z-40"
             onClick={onMobileClose}
             aria-hidden="true"
@@ -163,7 +180,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             initial={{ x: '-100%' }}
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ 
+              duration: 0.3, 
+              ease: [0.4, 0, 0.2, 1],
+              type: 'spring',
+              stiffness: 300,
+              damping: 30
+            }}
             className="fixed top-0 left-0 bottom-0 z-50"
           >
             {content}

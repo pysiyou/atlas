@@ -6,6 +6,7 @@
 import React from 'react';
 import { Icon } from '@/shared/ui';
 import { ICONS } from '@/utils';
+import { companyConfig } from '@/config';
 
 interface LoginBrandingPanelProps {
   isVisible: boolean;
@@ -16,20 +17,8 @@ interface LoginBrandingPanelProps {
  * Displays the branding panel on the left side of the login page
  */
 export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisible }) => {
-  const features = [
-    {
-      title: 'Intelligent Patient Management',
-      description: 'Unified records, appointments, and complete medical history at your fingertips',
-    },
-    {
-      title: 'Streamlined Lab Workflows',
-      description: 'From sample collection to result delivery — optimized every step of the way',
-    },
-    {
-      title: 'Real-time Quality Control',
-      description: 'Instant validation, automated alerts, and comprehensive audit trails',
-    },
-  ];
+  const company = companyConfig.getConfig();
+  const features = companyConfig.getFeatures();
 
   return (
     <div
@@ -51,17 +40,16 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
             </div>
           </div>
           <div>
-            <h1 className="font-display text-5xl text-auth-text-primary tracking-tight">Atlas</h1>
+            <h1 className="font-display text-5xl text-auth-text-primary tracking-tight">{company.company.name}</h1>
             <p className="font-body text-auth-text-light text-sm tracking-widest uppercase mt-1">
-              Clinical Labs
+              {company.company.subtitle}
             </p>
           </div>
         </div>
 
         {/* Tagline */}
         <p className="font-body text-xl text-auth-text-muted leading-relaxed max-w-md">
-          Next-generation laboratory information system built for precision, speed, and seamless
-          clinical workflows.
+          {company.company.tagline}
         </p>
       </div>
 
@@ -105,8 +93,9 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
             ))}
           </div>
           <p className="font-body text-sm text-auth-text-secondary">
-            Trusted by <span className="text-auth-text-light font-semibold">500+</span> healthcare
-            professionals
+            {company.marketing.trustIndicator.text}{' '}
+            <span className="text-auth-text-light font-semibold">{company.marketing.trustIndicator.count}</span>{' '}
+            {company.marketing.trustIndicator.audience}
           </p>
         </div>
       </div>

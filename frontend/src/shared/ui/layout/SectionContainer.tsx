@@ -16,8 +16,8 @@ import React from 'react';
 type ContentSpacing = 'compact' | 'normal' | 'relaxed' | 'none';
 
 export interface SectionContainerProps {
-  /** Section title displayed in header */
-  title?: string;
+  /** Section title displayed in header (string or ReactNode) */
+  title?: string | React.ReactNode;
   /** Content to display in the section */
   children: React.ReactNode;
   /** Additional content to display in the header (right side) */
@@ -97,7 +97,13 @@ export const SectionContainer: React.FC<SectionContainerProps> = ({
         <div className={headerStyles}>
           <div className="flex items-center gap-2 min-w-0">
             {headerLeft && <div>{headerLeft}</div>}
-            {title && <p className="truncate">{title}</p>}
+            {title && (
+              typeof title === 'string' ? (
+                <p className="truncate">{title}</p>
+              ) : (
+                <div className="truncate">{title}</div>
+              )
+            )}
           </div>
           {(headerRight || headerContent) && <div>{headerRight ?? headerContent}</div>}
         </div>
