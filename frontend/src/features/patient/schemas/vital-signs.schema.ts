@@ -1,15 +1,22 @@
 import { z } from 'zod';
 
-/** Full vital signs schema - all fields required (for API responses) */
+/** Response vital signs schema - all fields optional/nullable (backend returns partial data) */
 export const vitalSignsSchema = z.object({
-  temperature: z.number().min(30).max(45),
-  heartRate: z.number().int().min(30).max(250),
-  systolicBP: z.number().int().min(50).max(250),
-  diastolicBP: z.number().int().min(30).max(150),
-  respiratoryRate: z.number().int().min(4).max(60),
-  oxygenSaturation: z.number().min(50).max(100),
+  temperature: z.number().min(30).max(45).nullable().optional(),
+  heartRate: z.number().int().min(30).max(250).nullable().optional(),
+  systolicBP: z.number().int().min(50).max(250).nullable().optional(),
+  diastolicBP: z.number().int().min(30).max(150).nullable().optional(),
+  respiratoryRate: z.number().int().min(4).max(60).nullable().optional(),
+  oxygenSaturation: z.number().min(50).max(100).nullable().optional(),
 }).refine(
-  (data) => data.systolicBP > data.diastolicBP,
+  (data) => {
+    // If both BP values are provided, systolic must be greater than diastolic
+    if (data.systolicBP !== undefined && data.systolicBP !== null && 
+        data.diastolicBP !== undefined && data.diastolicBP !== null) {
+      return data.systolicBP > data.diastolicBP;
+    }
+    return true;
+  },
   { message: 'Systolic must be greater than diastolic', path: ['systolicBP'] }
 );
 

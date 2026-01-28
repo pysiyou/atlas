@@ -146,9 +146,9 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       return;
     }
 
-    // Build payment request
+    // Build payment request - schema validates and transforms orderId
     const paymentData = {
-      orderId: order.orderId.toString(), // Convert to string as expected by hook
+      orderId: order.orderId, // Can be string or number, schema transforms to number
       amount,
       paymentMethod,
       notes: notes.trim() || undefined,

@@ -142,7 +142,8 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
     <div className="grid grid-cols-2 gap-3">
       {VITAL_SIGNS_CONFIG.map(config => {
         const value = vitalSigns[config.key];
-        if (value === undefined) return null;
+        // Skip if value is undefined or null (partial vital signs)
+        if (value === undefined || value === null) return null;
 
         const status = getVitalStatus(value, config.normalRange, config.criticalRange);
         const colors = getStatusColors(status);

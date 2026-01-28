@@ -116,9 +116,8 @@ export const PatientList: React.FC = () => {
       const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
       return orders.filter(o => o.patientId === numericId);
     };
-    const openNewOrderModal = (patientId?: string) => openModal(ModalType.NEW_ORDER, { patientId });
-    return createPatientTableConfig(navigate, getOrdersByPatient, openNewOrderModal);
-  }, [navigate, orders, openModal]);
+    return createPatientTableConfig(navigate, getOrdersByPatient);
+  }, [navigate, orders]);
 
   return (
     <>

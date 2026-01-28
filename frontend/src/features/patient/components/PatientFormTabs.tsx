@@ -16,15 +16,6 @@ import {
 } from './PatientForm';
 import { VitalsSection } from './VitalsSection';
 
-const VITAL_KEYS = [
-  'temperature',
-  'heartRate',
-  'systolicBP',
-  'diastolicBP',
-  'respiratoryRate',
-  'oxygenSaturation',
-] as const;
-
 export interface PatientFormTabsProps {
   activeTab: string;
   register: UseFormRegister<PatientFormInput>;
@@ -144,11 +135,12 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
   const initialHasAffiliation = useMemo(() => !!existingAffiliation, [existingAffiliation]);
   const [hasAffiliationChecked, setHasAffiliationChecked] = useState(initialHasAffiliation);
 
+  // Allow editing all vital signs - users can add missing vitals during edit
+  // Previously: marked null vitals as read-only, but with partial vitals support,
+  // users should be able to add new vitals to existing patients
   const emptyVitalKeysReadOnly = useMemo(() => {
-    if (existingVitalSigns == null) return new Set<string>();
-    const vs = existingVitalSigns as unknown as Record<string, unknown>;
-    return new Set(VITAL_KEYS.filter((k) => vs[k] == null || vs[k] === ''));
-  }, [existingVitalSigns]);
+    return new Set<string>(); // Empty set = no fields are read-only
+  }, []);
 
   const effectiveHasAffiliation = hasAffiliationChecked || !!formValues.affiliation;
   const formData = createFormDataAdapter(watch, effectiveHasAffiliation);

@@ -106,8 +106,8 @@ class PatientBase(BaseModel):
     @classmethod
     def validate_email(cls, v: str | None) -> str | None:
         """Validate email format if provided. Allows Unicode characters in local part."""
-        if v is None:
-            return v
+        if v is None or v == '':
+            return None  # Treat empty string as None
         # Email validation that allows Unicode characters in local part
         # RFC 5322 allows Unicode characters in email addresses
         # Pattern: local-part@domain where local-part can contain Unicode, domain is ASCII

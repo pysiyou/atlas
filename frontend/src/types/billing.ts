@@ -91,7 +91,7 @@ export interface Payment {
   amount: number;
   paymentMethod: PaymentMethod;
   paidAt: string;
-  receivedBy: number;
+  receivedBy: string; // Backend returns string user ID
   receiptGenerated: boolean;
   notes?: string;
   // Computed fields from relationships

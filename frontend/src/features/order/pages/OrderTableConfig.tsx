@@ -6,15 +6,12 @@
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
+import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
 import type { Order } from '@/types';
 import { OrderTableCard } from '../components/OrderTableCard';
-import { PaymentPopover } from '@/features/payment/components/PaymentPopover';
-import { ModalType } from '@/shared/context/ModalContext';
-import { ICONS } from '@/utils';
 
 /**
  * Create order table configuration with full, compact, and card views
@@ -30,8 +27,7 @@ import { ICONS } from '@/utils';
 export const createOrderTableConfig = (
   navigate: NavigateFunction,
   getPatientNameFn: (patientId: number | string) => string,
-  _getTestNameFn: (testCode: string) => string,
-  openModalFn?: (type: ModalType, props?: Record<string, unknown>) => void
+  _getTestNameFn: (testCode: string) => string
 ): TableViewConfig<Order> => {
   // Shared render functions
   const renderOrderId = (order: Order) => (
@@ -82,52 +78,6 @@ export const createOrderTableConfig = (
     <div className="text-xs text-text-tertiary truncate">{formatDate(order.orderDate)}</div>
   );
 
-  const renderActions = (order: Order) => {
-    // Orders can be edited if they are in 'ordered' status (not yet in progress)
-    const canEdit = order.overallStatus === 'ordered';
-    
-    return (
-      <TableActionMenu>
-        <TableActionItem
-          label="View Details"
-          icon={<Icon name={ICONS.actions.view} className="w-4 h-4" />}
-          onClick={() => navigate(`/orders/${order.orderId}`)}
-        />
-        {canEdit && openModalFn && (
-          <TableActionItem
-            label="Edit Order"
-            icon={<Icon name={ICONS.actions.edit} className="w-4 h-4" />}
-            onClick={() => openModalFn(ModalType.NEW_ORDER, { order, mode: 'edit' })}
-          />
-        )}
-        <TableActionItem
-          label="View Patient"
-          icon={<Icon name={ICONS.dataFields.user} className="w-4 h-4" />}
-          onClick={() => navigate(`/patients/${order.patientId}`)}
-        />
-        {order.paymentStatus === 'unpaid' && (
-          /* Stop propagation so menu stays open when opening payment popover */
-          <div onClick={e => e.stopPropagation()} className="w-full">
-            <PaymentPopover
-              order={order}
-              trigger={
-                <button
-                  type="button"
-                  className="w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-app-bg transition-colors cursor-pointer text-text-secondary"
-                >
-                  <span className="inline-flex w-5 h-5 shrink-0 items-center justify-center text-text-tertiary">
-                    <Icon name={ICONS.dataFields.wallet} className="w-4 h-4" />
-                  </span>
-                  <span className="flex-1 min-w-0">Payment</span>
-                </button>
-              }
-            />
-          </div>
-        )}
-      </TableActionMenu>
-    );
-  };
-
   return {
     fullColumns: [
       {
@@ -167,7 +117,7 @@ export const createOrderTableConfig = (
       {
         key: 'totalPrice',
         header: 'Amount',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderTotalPrice,
       },
@@ -184,15 +134,6 @@ export const createOrderTableConfig = (
         width: 'md',
         sortable: true,
         render: renderOrderDate,
-      },
-      {
-        key: 'actions',
-        header: '',
-        width: 'xs',
-        sticky: 'right',
-        className: 'overflow-visible !px-1',
-        headerClassName: '!px-1',
-        render: renderActions,
       },
     ],
     mediumColumns: [
@@ -226,7 +167,7 @@ export const createOrderTableConfig = (
       {
         key: 'totalPrice',
         header: 'Amount',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderTotalPrice,
       },
@@ -236,15 +177,6 @@ export const createOrderTableConfig = (
         width: 'sm',
         sortable: true,
         render: renderPaymentStatus,
-      },
-      {
-        key: 'actions',
-        header: '',
-        width: 'xs',
-        sticky: 'right',
-        className: 'overflow-visible !px-1',
-        headerClassName: '!px-1',
-        render: renderActions,
       },
     ],
     compactColumns: [
@@ -278,18 +210,9 @@ export const createOrderTableConfig = (
       {
         key: 'totalPrice',
         header: 'Amount',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderTotalPrice,
-      },
-      {
-        key: 'actions',
-        header: '',
-        width: 'xs',
-        sticky: 'right',
-        className: 'overflow-visible !px-1',
-        headerClassName: '!px-1',
-        render: renderActions,
       },
     ],
     CardComponent: OrderTableCard,

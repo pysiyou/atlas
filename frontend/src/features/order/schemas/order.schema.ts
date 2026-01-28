@@ -58,7 +58,8 @@ export const orderSchema = z.object({
 export type Order = z.infer<typeof orderSchema>;
 export type OrderTest = z.infer<typeof orderTestSchema>;
 
-export const orderFormSchema = z.object({
+// Form schema for CREATE (all required fields enforced)
+export const orderCreateSchema = z.object({
   patientId: positiveIntSchema,
   referringPhysician: z.string().min(1),
   priority: z.enum(['routine', 'urgent', 'stat']),
@@ -67,4 +68,12 @@ export const orderFormSchema = z.object({
   paymentMethod: z.enum(['cash', 'credit-card', 'debit-card', 'insurance', 'bank-transfer', 'mobile-money']).optional(),
 });
 
+// Form schema for UPDATE (all fields optional for partial updates)
+export const orderUpdateSchema = orderCreateSchema.partial();
+
+// Legacy: keep orderFormSchema as alias to createSchema for backwards compatibility
+export const orderFormSchema = orderCreateSchema;
+
 export type OrderFormInput = z.infer<typeof orderFormSchema>;
+export type OrderCreateInput = z.infer<typeof orderCreateSchema>;
+export type OrderUpdateInput = z.infer<typeof orderUpdateSchema>;

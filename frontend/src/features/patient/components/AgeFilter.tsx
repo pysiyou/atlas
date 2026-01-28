@@ -101,7 +101,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           />
           
           {/* Column 2: Content - flexible middle */}
-          <div className={cn('flex-1 min-w-0 text-xs font-medium truncate', 'font-medium')}>{renderTriggerContent()}</div>
+          <div className={cn('flex-1 min-w-0 text-xs font-medium truncate whitespace-nowrap overflow-hidden', 'font-medium')}>{renderTriggerContent()}</div>
 
           {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
           <div className="flex items-center gap-1 shrink-0">

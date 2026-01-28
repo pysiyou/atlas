@@ -103,8 +103,8 @@ export const OrderList: React.FC = () => {
 
   // Memoize table config to prevent recreation on every render
   const orderTableConfig = useMemo(
-    () => createOrderTableConfig(navigate, getPatientName, getTestName, openModal),
-    [navigate, getPatientName, getTestName, openModal]
+    () => createOrderTableConfig(navigate, getPatientName, getTestName),
+    [navigate, getPatientName, getTestName]
   );
 
   const handleDismissError = () => {

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { patientSchema, patientFormSchema, type Patient } from '../schemas/patient.schema';
+import { patientSchema, patientCreateSchema, patientUpdateSchema, type Patient } from '../schemas/patient.schema';
 import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
 import toast from 'react-hot-toast';
@@ -9,10 +9,10 @@ import { formInputToPayload } from '../utils/form-transformers';
 export function usePatientService() {
   const queryClient = useQueryClient();
 
-  // Create patient mutation with Zod validation
+  // Create patient mutation with Zod validation (full schema)
   const create = useMutation({
     mutationFn: async (input: unknown) => {
-      const validated = patientFormSchema.parse(input);
+      const validated = patientCreateSchema.parse(input);
       const transformed = formInputToPayload(validated);
       const response = await apiClient.post<Patient>('/patients', transformed);
       return patientSchema.parse(response);
@@ -26,10 +26,10 @@ export function usePatientService() {
     },
   });
 
-  // Update patient mutation
+  // Update patient mutation (partial schema - all fields optional)
   const update = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: unknown }) => {
-      const validated = patientFormSchema.partial().parse(data);
+      const validated = patientUpdateSchema.parse(data);
       const transformed = formInputToPayload(validated);
       const response = await apiClient.put<Patient>(`/patients/${id}`, transformed);
       return patientSchema.parse(response);

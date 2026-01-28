@@ -1,21 +1,26 @@
 import { z } from 'zod';
 
-// Phone validation (international format)
+// Phone validation - aligned with backend: [\d\s\-\+\(\)]+ (10-20 chars)
 export const phoneSchema = z
   .string()
-  .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number');
+  .min(10, 'Phone number must be at least 10 characters')
+  .max(20, 'Phone number must be at most 20 characters')
+  .regex(/^[\d\s\-+()]+$/, 'Invalid phone number format');
 
-// Email validation (optional or empty string)
+// Email validation (optional, empty string, or null from backend)
 export const emailSchema = z
   .string()
   .email('Invalid email')
   .optional()
-  .or(z.literal(''));
+  .or(z.literal(''))
+  .or(z.null());
 
-// Postal code (5 digits)
+// Postal code - aligned with backend: 1-20 chars, alphanumeric with spaces/hyphens
 export const postalCodeSchema = z
   .string()
-  .regex(/^\d{5}$/, 'Invalid postal code (5 digits required)');
+  .min(1, 'Postal code is required')
+  .max(20, 'Postal code must be at most 20 characters')
+  .regex(/^[\w\s-]+$/, 'Invalid postal code format');
 
 // Date schemas
 // Accept date-only (YYYY-MM-DD) from pickers or full ISO datetime from API

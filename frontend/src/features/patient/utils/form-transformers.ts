@@ -60,189 +60,90 @@ export function patientToFormInput(patient?: Partial<PatientType>): Partial<Pati
       : undefined,
     vitalSigns: patient.vitalSigns
       ? {
-          temperature: patient.vitalSigns.temperature,
-          heartRate: patient.vitalSigns.heartRate,
-          systolicBP: patient.vitalSigns.systolicBP,
-          diastolicBP: patient.vitalSigns.diastolicBP,
-          respiratoryRate: patient.vitalSigns.respiratoryRate,
-          oxygenSaturation: patient.vitalSigns.oxygenSaturation,
+          // Convert null to undefined for form schema compatibility
+          temperature: patient.vitalSigns.temperature ?? undefined,
+          heartRate: patient.vitalSigns.heartRate ?? undefined,
+          systolicBP: patient.vitalSigns.systolicBP ?? undefined,
+          diastolicBP: patient.vitalSigns.diastolicBP ?? undefined,
+          respiratoryRate: patient.vitalSigns.respiratoryRate ?? undefined,
+          oxygenSaturation: patient.vitalSigns.oxygenSaturation ?? undefined,
         }
       : undefined,
   };
 }
 
 /**
- * Generate unique assurance number (ASS-YYYYMMDD-XXX format)
- */
-function generateAssuranceNumber(): string {
-  const now = new Date();
-  const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-  const randomSuffix = Math.floor(Math.random() * 1000)
-    .toString()
-    .padStart(3, '0');
-  return `ASS-${dateStr}-${randomSuffix}`;
-}
-
-/**
- * Calculate end date based on duration (duration is in months)
- */
-function calculateEndDate(startDate: string, duration: 6 | 12 | 24): string {
-  const start = new Date(startDate);
-  start.setMonth(start.getMonth() + duration);
-  return start.toISOString().slice(0, 10);
-}
-
-/**
  * Transform form input to API payload
- * Handles optional fields and nested structures
+ * Simplified - let schema validation and backend handle most transformations
  */
 export function formInputToPayload(
   formData: Partial<PatientFormInput>,
   _existingPatient?: Partial<PatientType>
-): Partial<PatientFormInput> {
-  const payload: Partial<PatientFormInput> = { ...formData };
+): Record<string, unknown> {
+  const payload: Record<string, unknown> = {};
 
-  // Convert null to undefined for optional fields (clean up after nullish() validation)
-  if (payload.affiliation === null || payload.affiliation === undefined) {
-    delete payload.affiliation;
-  }
-  if (payload.medicalHistory === null || payload.medicalHistory === undefined) {
-    delete payload.medicalHistory;
-  }
-  if (payload.vitalSigns === null || payload.vitalSigns === undefined) {
-    delete payload.vitalSigns;
-  }
-
-  // Transform affiliation: only generate full affiliation when duration is explicitly provided
-  if (payload.affiliation && typeof payload.affiliation === 'object') {
-    // Clean up null values in affiliation object (convert to undefined)
-    const cleanedAffiliation: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(payload.affiliation)) {
-      if (value !== null && value !== undefined) {
-        cleanedAffiliation[key] = value;
-      }
-    }
-    // If all values were null/undefined, remove affiliation entirely and skip processing
-    if (Object.keys(cleanedAffiliation).length === 0) {
-      delete payload.affiliation;
-    } else {
-      const cleaned = cleanedAffiliation as PatientFormInput['affiliation'];
-      payload.affiliation = cleaned;
-      
-      // Convert duration from string to number if needed
-      const duration =
-        typeof cleaned.duration === 'string'
-          ? (Number(cleaned.duration) as 6 | 12 | 24)
-          : cleaned.duration;
-
-      // Only auto-generate fields if duration is provided
-      if (duration !== undefined && duration !== null) {
-        // If only duration is provided, generate full affiliation object
-        if (!cleaned.assuranceNumber && !cleaned.startDate) {
-          const startDate = new Date().toISOString().slice(0, 10);
-          payload.affiliation = {
-            assuranceNumber: generateAssuranceNumber(),
-            startDate,
-            endDate: calculateEndDate(startDate, duration),
-            duration,
-          };
-        } else if (cleaned.startDate && !cleaned.endDate) {
-          // If startDate exists but no endDate, calculate it
-          payload.affiliation = {
-            ...cleaned,
-            endDate: calculateEndDate(cleaned.startDate, duration),
-            duration,
-          };
-        } else {
-          // Ensure duration is set
-          payload.affiliation = {
-            ...cleaned,
-            duration,
-          };
-        }
-      } else {
-        // No duration provided - check if affiliation object is empty/partial
-        // If affiliation has no meaningful data, omit it entirely
-        const hasData = cleaned.assuranceNumber || 
-                       cleaned.startDate || 
-                       cleaned.endDate;
-        if (!hasData) {
-          delete payload.affiliation;
-        }
-        // Otherwise, send partial affiliation as-is (backend will handle it)
-      }
-    }
+  // Copy all primitive fields directly
+  if (formData.fullName !== undefined) payload.fullName = formData.fullName;
+  if (formData.dateOfBirth !== undefined) payload.dateOfBirth = formData.dateOfBirth;
+  if (formData.gender !== undefined) payload.gender = formData.gender;
+  if (formData.phone !== undefined) payload.phone = formData.phone;
+  
+  // Email: convert empty string to undefined (backend treats as null)
+  if (formData.email !== undefined) {
+    payload.email = formData.email === '' ? undefined : formData.email;
   }
   
-  // Clean up: remove affiliation if it's an empty object
-  if (payload.affiliation && typeof payload.affiliation === 'object' && 
-      Object.keys(payload.affiliation).length === 0) {
-    delete payload.affiliation;
+  if (formData.height !== undefined) payload.height = formData.height;
+  if (formData.weight !== undefined) payload.weight = formData.weight;
+
+  // Copy nested objects (backend handles validation)
+  if (formData.address !== undefined) payload.address = formData.address;
+  
+  // Emergency contact: clean up empty email
+  if (formData.emergencyContact !== undefined) {
+    const emergencyContact = { ...formData.emergencyContact };
+    if (emergencyContact.email === '') {
+      emergencyContact.email = undefined;
+    }
+    payload.emergencyContact = emergencyContact;
   }
 
-  // Handle medical history: convert familyHistory to array, handle partial data
-  if (payload.medicalHistory && typeof payload.medicalHistory === 'object') {
-    const familyHistory = payload.medicalHistory.familyHistory;
-    if (typeof familyHistory === 'string') {
-      // Convert string to array (split by semicolon or use as single item)
-      if (familyHistory.trim()) {
-        payload.medicalHistory.familyHistory = familyHistory
-          .split(';')
-          .map(s => s.trim())
-          .filter(Boolean);
-      } else {
-        // Empty string becomes empty array
-        payload.medicalHistory.familyHistory = [];
-      }
-    } else if (!Array.isArray(familyHistory)) {
-      // Ensure it's an array (fallback to empty array)
-      payload.medicalHistory.familyHistory = [];
-    }
-
-    // Convert null lifestyle to undefined, then provide default if needed
-    if (payload.medicalHistory.lifestyle === null || payload.medicalHistory.lifestyle === undefined) {
-      // Only provide default if medicalHistory has other data, otherwise let backend handle it
-      const hasOtherData = 
-        (Array.isArray(payload.medicalHistory.chronicConditions) && payload.medicalHistory.chronicConditions.length > 0) ||
-        (Array.isArray(payload.medicalHistory.currentMedications) && payload.medicalHistory.currentMedications.length > 0) ||
-        (Array.isArray(payload.medicalHistory.allergies) && payload.medicalHistory.allergies.length > 0) ||
-        (Array.isArray(payload.medicalHistory.previousSurgeries) && payload.medicalHistory.previousSurgeries.length > 0) ||
-        (Array.isArray(payload.medicalHistory.familyHistory) && payload.medicalHistory.familyHistory.length > 0);
-      
-      if (hasOtherData) {
-        payload.medicalHistory.lifestyle = {
-          smoking: false,
-          alcohol: false,
-        };
-      } else {
-        payload.medicalHistory.lifestyle = undefined;
-      }
-    }
+  // Affiliation: backend auto-generates fields when only duration is provided
+  if (formData.affiliation !== undefined && formData.affiliation !== null) {
+    payload.affiliation = formData.affiliation;
   }
 
-  // Vital signs: backend requires all fields when vitalSigns is present
-  // Send all fields with null for missing, or omit vitalSigns if no values
-  if (payload.vitalSigns) {
-    const vs = payload.vitalSigns;
-    const fields = ['temperature', 'heartRate', 'systolicBP', 'diastolicBP', 'respiratoryRate', 'oxygenSaturation'] as const;
-    const cleaned: Record<(typeof fields)[number], number | null> = {} as Record<(typeof fields)[number], number | null>;
-    let hasAnyValue = false;
+  // Medical history: ensure familyHistory is array format
+  if (formData.medicalHistory !== undefined && formData.medicalHistory !== null) {
+    const medicalHistory = { ...formData.medicalHistory };
     
-    for (const field of fields) {
-      const value = vs[field];
-      if (value !== undefined && value !== null && !isNaN(Number(value))) {
-        cleaned[field] = typeof value === 'number' ? value : Number(value);
-        hasAnyValue = true;
-      } else {
-        cleaned[field] = null;
-      }
+    // Convert familyHistory string to array if needed
+    if (typeof medicalHistory.familyHistory === 'string') {
+      medicalHistory.familyHistory = medicalHistory.familyHistory
+        .split(';')
+        .map(s => s.trim())
+        .filter(Boolean);
     }
     
-    if (!hasAnyValue) {
-      delete payload.vitalSigns;
-    } else {
-      // Type assertion: backend expects all fields (with null for missing)
-      payload.vitalSigns = cleaned as unknown as PatientFormInput['vitalSigns'];
+    payload.medicalHistory = medicalHistory;
+  }
+
+  // Vital signs: send partial updates (backend accepts optional fields)
+  if (formData.vitalSigns !== undefined && formData.vitalSigns !== null) {
+    // Filter out undefined/null values - only send provided vitals
+    const vs = formData.vitalSigns;
+    const vitalSigns: Record<string, number> = {};
+    
+    if (vs.temperature !== undefined && vs.temperature !== null) vitalSigns.temperature = vs.temperature;
+    if (vs.heartRate !== undefined && vs.heartRate !== null) vitalSigns.heartRate = vs.heartRate;
+    if (vs.systolicBP !== undefined && vs.systolicBP !== null) vitalSigns.systolicBP = vs.systolicBP;
+    if (vs.diastolicBP !== undefined && vs.diastolicBP !== null) vitalSigns.diastolicBP = vs.diastolicBP;
+    if (vs.respiratoryRate !== undefined && vs.respiratoryRate !== null) vitalSigns.respiratoryRate = vs.respiratoryRate;
+    if (vs.oxygenSaturation !== undefined && vs.oxygenSaturation !== null) vitalSigns.oxygenSaturation = vs.oxygenSaturation;
+    
+    // Only include vitalSigns if at least one field has a value
+    if (Object.keys(vitalSigns).length > 0) {
+      payload.vitalSigns = vitalSigns;
     }
   }
 

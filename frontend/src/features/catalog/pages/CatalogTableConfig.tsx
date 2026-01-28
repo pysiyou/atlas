@@ -6,11 +6,10 @@
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
+import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
-import { ICONS } from '@/utils';
 import { CatalogCard } from '../components/CatalogCard';
 
 /**
@@ -60,16 +59,6 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
     <div className="font-medium text-brand truncate">{formatCurrency(test.price)}</div>
   );
 
-  const renderActions = (test: Test) => (
-    <TableActionMenu>
-      <TableActionItem
-        label="View Details"
-        icon={<Icon name={ICONS.actions.view} className="w-4 h-4" />}
-        onClick={() => navigate(`/catalog/${test.code}`)}
-      />
-    </TableActionMenu>
-  );
-
   return {
     fullColumns: [
       {
@@ -114,15 +103,6 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         width: 'sm',
         sortable: true,
         render: renderPrice,
-      },
-      {
-        key: 'actions',
-        header: '',
-        width: 'xs',
-        sticky: 'right',
-        className: 'overflow-visible !px-1',
-        headerClassName: '!px-1',
-        render: renderActions,
       },
     ],
     mediumColumns: [
@@ -169,15 +149,6 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         sortable: true,
         render: renderPrice,
       },
-      {
-        key: 'actions',
-        header: '',
-        width: 'xs',
-        sticky: 'right',
-        className: 'overflow-visible !px-1',
-        headerClassName: '!px-1',
-        render: renderActions,
-      },
     ],
     compactColumns: [
       {
@@ -208,15 +179,6 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
         width: 'sm',
         sortable: true,
         render: renderPrice,
-      },
-      {
-        key: 'actions',
-        header: '',
-        width: 'xs',
-        sticky: 'right',
-        className: 'overflow-visible !px-1',
-        headerClassName: '!px-1',
-        render: renderActions,
       },
     ],
     CardComponent: CatalogCard,

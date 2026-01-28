@@ -3,7 +3,7 @@
  * Complete migration to new architecture
  */
 
-import React, { useMemo, useState, useRef, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Patient } from '@/types';
@@ -115,7 +115,6 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<string>('general');
   const { create, update } = usePatientService();
-  const isSubmittingRef = useRef(false);
 
   const defaultValues = useMemo(() => {
     if (mode === 'edit' && patient) {
@@ -141,20 +140,15 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
 
   const formValues = watch();
 
-  // Reset submission ref when modal opens/closes
-  useEffect(() => {
-    if (!isOpen) {
-      isSubmittingRef.current = false;
-    }
-  }, [isOpen]);
+  // Single source of truth for submission state - React Query's isPending
+  const isPendingMutation = create.isPending || update.isPending;
 
   const onSubmit = async (data: PatientFormInput) => {
-    // Prevent double submission - check ref and mutation pending state
-    if (isSubmittingRef.current || create.isPending || update.isPending) {
+    // React Query handles deduplication, but we check isPending for UX
+    if (isPendingMutation) {
       return;
     }
     
-    isSubmittingRef.current = true;
     try {
       if (mode === 'edit' && patient) {
         await update.mutateAsync({ id: patient.id, data });
@@ -164,20 +158,14 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       reset();
       onClose();
     } catch (error) {
-      // Error handled by service hook
+      // Error handled by service hook, form state preserved for retry
       console.error('Form submission error:', error);
-    } finally {
-      isSubmittingRef.current = false;
     }
   };
 
   // Handle form submission with validation
   const handleFormSubmit = handleSubmit(
     async (data) => {
-      // Additional guard at form level - check all possible submission states
-      if (isSubmittingRef.current || isSubmitting || create.isPending || update.isPending) {
-        return;
-      }
       await onSubmit(data);
     },
     (validationErrors) => {
@@ -266,7 +254,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
           <ModalFooter
             onClose={onClose}
             submitLabel={submitLabel}
-            isSubmitting={isSubmitting}
+            isSubmitting={isPendingMutation}
             formId="patient-form"
             footerInfo={
               mode === 'edit' && patient ? (

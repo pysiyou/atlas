@@ -79,8 +79,8 @@ export interface Patient {
   medicalHistory: MedicalHistory;
   vitalSigns?: VitalSigns;
   registrationDate: string;
-  createdBy: number;
+  createdBy: string; // Backend returns string user ID
   createdAt: string;
   updatedAt: string;
-  updatedBy: number;
+  updatedBy: string; // Backend returns string user ID
 }

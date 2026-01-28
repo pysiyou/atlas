@@ -1,6 +1,6 @@
 
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge, TableActionMenu, TableActionItem, Icon } from '@/shared/ui';
+import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
@@ -15,15 +15,13 @@ const isAffiliationActive = (affiliation?: { endDate: string }): boolean => {
   return endDate >= today;
 };
 import { PatientCard } from '../components/PatientCard';
-import { ICONS } from '@/utils';
 
 
 // Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
 // eslint-disable-next-line max-lines-per-function 
 export const createPatientTableConfig = (
   navigate: NavigateFunction,
-  getOrdersByPatient: (patientId: number | string) => Order[],
-  openNewOrderModal: (patientId?: string) => void
+  getOrdersByPatient: (patientId: number | string) => Order[]
 ): TableViewConfig<Patient> => {
   // Shared render functions to avoid duplication
   const renderId = (patient: Patient) => (
@@ -92,26 +90,6 @@ export const createPatientTableConfig = (
     <div className="text-xs text-text-tertiary truncate">{formatDate(patient.registrationDate)}</div>
   );
 
-  const renderActions = (patient: Patient) => (
-    <TableActionMenu>
-      <TableActionItem
-        label="View Details"
-        icon={<Icon name={ICONS.actions.view} className="w-4 h-4" />}
-        onClick={() => navigate(`/patients/${patient.id}`)}
-      />
-      <TableActionItem
-        label="Edit Patient"
-        icon={<Icon name={ICONS.actions.edit} className="w-4 h-4" />}
-        onClick={() => navigate(`/patients/${patient.id}/edit`)}
-      />
-      <TableActionItem
-        label="Create Order"
-        icon={<Icon name={ICONS.dataFields.document} className="w-4 h-4" />}
-        onClick={() => openNewOrderModal(patient.id.toString())}
-      />
-    </TableActionMenu>
-  );
-
   return {
     fullColumns: [
       {
@@ -161,15 +139,6 @@ export const createPatientTableConfig = (
         sortable: true,
         render: renderRegistrationDate,
       },
-      {
-        key: 'actions',
-        header: '',
-        width: 'xs',
-        sticky: 'right',
-        className: 'overflow-visible !px-1',
-        headerClassName: '!px-1',
-        render: renderActions,
-      },
     ],
     mediumColumns: [
       {
@@ -205,15 +174,6 @@ export const createPatientTableConfig = (
       //   width: 'sm', // 100px - shown in medium view
       //   render: renderLastOrder,
       // },
-      {
-        key: 'actions',
-        header: '',
-        width: 'xs',
-        sticky: 'right',
-        className: 'overflow-visible !px-1',
-        headerClassName: '!px-1',
-        render: renderActions,
-      },
     ],
     compactColumns: [
       {
@@ -235,15 +195,6 @@ export const createPatientTableConfig = (
         header: 'Contact',
         width: 'fill',
         render: renderContact,
-      },
-      {
-        key: 'actions',
-        header: '',
-        width: 'xs', // 60px fixed
-        sticky: 'right',
-        className: 'overflow-visible !px-1',
-        headerClassName: '!px-1',
-        render: renderActions,
       },
     ],
     CardComponent: PatientCard,

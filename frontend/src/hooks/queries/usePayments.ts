@@ -161,7 +161,7 @@ export function usePaymentMethodByOrder() {
  * Create payment request data
  */
 export interface CreatePaymentData {
-  orderId: string;
+  orderId: string | number;
   amount: number;
   paymentMethod: PaymentMethod;
   notes?: string;
@@ -170,6 +170,7 @@ export interface CreatePaymentData {
 /**
  * Mutation hook to create a new payment.
  * Invalidates relevant caches on success.
+ * Validates input with paymentFormSchema before API call.
  *
  * @returns Mutation result with mutate function
  *
@@ -183,11 +184,17 @@ export function useCreatePayment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreatePaymentData) => createPayment(data),
+    mutationFn: async (data: CreatePaymentData) => {
+      // Import schema for validation
+      const { paymentFormSchema } = await import('@/features/payment/schemas/payment.schema');
+      const validated = paymentFormSchema.parse(data);
+      return createPayment(validated);
+    },
     onSuccess: (_, variables) => {
       // Invalidate payments list and order-specific payments
+      const orderIdStr = typeof variables.orderId === 'string' ? variables.orderId : String(variables.orderId);
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.payments.byOrder(variables.orderId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.payments.byOrder(orderIdStr) });
       // Also invalidate orders since payment status may have changed
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
     },

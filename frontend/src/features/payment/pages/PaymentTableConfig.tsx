@@ -140,7 +140,7 @@ export const createPaymentTableConfig = (
       {
         key: 'totalPrice',
         header: 'Amount',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderTotalPrice,
       },
@@ -161,7 +161,7 @@ export const createPaymentTableConfig = (
       {
         key: 'orderDate',
         header: 'Date',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderOrderDate,
       },
@@ -197,7 +197,7 @@ export const createPaymentTableConfig = (
       {
         key: 'totalPrice',
         header: 'Amount',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderTotalPrice,
       },
@@ -233,7 +233,7 @@ export const createPaymentTableConfig = (
       {
         key: 'totalPrice',
         header: 'Amount',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderTotalPrice,
       },

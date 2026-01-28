@@ -10,6 +10,7 @@ export function usePaymentService() {
   const create = useMutation({
     mutationFn: async (input: unknown) => {
       const validated = paymentFormSchema.parse(input);
+      // API expects orderId as number, schema transforms string to number
       const response = await apiClient.post<Payment>('/payments', validated);
       return paymentSchema.parse(response);
     },

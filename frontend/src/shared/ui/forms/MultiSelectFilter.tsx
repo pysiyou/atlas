@@ -178,7 +178,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   // Render the trigger content
   const renderTriggerContent = () => {
     if (selectedIds.length === 0) {
-      return <span className="text-text-tertiary">{placeholder || `Select ${label}...`}</span>;
+      return <span className="text-text-tertiary whitespace-nowrap overflow-hidden truncate">{placeholder || `Select ${label}...`}</span>;
     }
 
     if (singleSelectedOption) {
@@ -192,7 +192,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
 
     // Show count for multiple selections – single line so truncate works
     return (
-      <span className="text-text-secondary truncate block">
+      <span className="text-text-secondary truncate block whitespace-nowrap">
         <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full text-white text-xxs font-medium align-middle mr-1 bg-brand">
           {selectedIds.length}
         </span>

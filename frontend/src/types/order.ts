@@ -149,7 +149,7 @@ export interface Order {
   paymentMethod?: string; // How payment was made
 
   // Metadata
-  createdBy: number;
+  createdBy: string; // Backend returns string user ID
   createdAt: string;
   updatedAt: string;
 }

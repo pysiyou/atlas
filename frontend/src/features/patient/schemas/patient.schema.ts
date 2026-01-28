@@ -23,14 +23,14 @@ export const patientSchema = z.object({
   dateOfBirth: dateStringSchema,
   gender: z.enum(['male', 'female']),
   phone: phoneSchema,
-  email: emailSchema,
-  height: z.number().min(30).max(250).optional(),
-  weight: z.number().min(1).max(500).optional(),
+  email: emailSchema.nullable(), // Backend can return null
+  height: z.number().min(30).max(250).nullable().optional(), // Backend can return null
+  weight: z.number().min(1).max(500).nullable().optional(), // Backend can return null
   address: addressSchema,
-  affiliation: affiliationSchema.optional(),
+  affiliation: affiliationSchema.nullable().optional(), // Backend can return null
   emergencyContact: emergencyContactSchema,
-  medicalHistory: medicalHistorySchema.optional(),
-  vitalSigns: vitalSignsSchema.nullable().optional(),
+  medicalHistory: medicalHistorySchema.nullable().optional(), // Backend can return null
+  vitalSigns: vitalSignsSchema.nullable().optional(), // Backend can return null
   registrationDate: dateStringSchema,
   createdBy: z.string(), // Backend returns string user ID
   createdAt: dateStringSchema,
@@ -41,8 +41,8 @@ export const patientSchema = z.object({
 export type Patient = z.infer<typeof patientSchema>;
 export type MedicalHistory = z.infer<typeof medicalHistorySchema>;
 
-// Form schema (excludes auto-generated fields; form uses partial affiliation and vital signs)
-export const patientFormSchema = patientSchema
+// Form schema for CREATE (excludes auto-generated fields; all required fields enforced)
+export const patientCreateSchema = patientSchema
   .omit({
     id: true,
     registrationDate: true,
@@ -56,4 +56,12 @@ export const patientFormSchema = patientSchema
     vitalSigns: vitalSignsFormSchema.nullish(),
   });
 
+// Form schema for UPDATE (all fields optional for partial updates)
+export const patientUpdateSchema = patientCreateSchema.partial();
+
+// Legacy: keep patientFormSchema as alias to createSchema for backwards compatibility
+export const patientFormSchema = patientCreateSchema;
+
 export type PatientFormInput = z.infer<typeof patientFormSchema>;
+export type PatientCreateInput = z.infer<typeof patientCreateSchema>;
+export type PatientUpdateInput = z.infer<typeof patientUpdateSchema>;

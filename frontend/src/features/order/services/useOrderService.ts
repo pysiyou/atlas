@@ -1,19 +1,18 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { orderFormSchema, orderSchema, type Order } from '../schemas/order.schema';
+import { orderCreateSchema, orderUpdateSchema, orderSchema, type Order } from '../schemas/order.schema';
 import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
 import toast from 'react-hot-toast';
+import { formInputToPayload } from '../utils/form-transformers';
 
 export function useOrderService() {
   const queryClient = useQueryClient();
 
   const create = useMutation({
     mutationFn: async (input: unknown) => {
-      const validated = orderFormSchema.parse(input);
-      const response = await apiClient.post<Order>('/orders', {
-        ...validated,
-        tests: validated.testCodes.map(code => ({ testCode: code })),
-      });
+      const validated = orderCreateSchema.parse(input);
+      const transformed = formInputToPayload(validated);
+      const response = await apiClient.post<Order>('/orders', transformed);
       return orderSchema.parse(response);
     },
     onSuccess: () => {
@@ -27,8 +26,9 @@ export function useOrderService() {
 
   const update = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: unknown }) => {
-      const validated = orderFormSchema.partial().parse(data);
-      const response = await apiClient.put<Order>(`/orders/${id}`, validated);
+      const validated = orderUpdateSchema.parse(data);
+      const transformed = formInputToPayload(validated);
+      const response = await apiClient.put<Order>(`/orders/${id}`, transformed);
       return orderSchema.parse(response);
     },
     onSuccess: (_, { id }) => {
