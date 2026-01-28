@@ -11,8 +11,8 @@ import { Icon, type IconName } from './display/Icon';
 interface FooterInfoProps {
   /** Icon name to display */
   icon: IconName;
-  /** Text to display */
-  text: string;
+  /** Text to display (can be string or ReactNode for custom styling) */
+  text: string | React.ReactNode;
 }
 
 /**
@@ -26,6 +26,6 @@ interface FooterInfoProps {
 export const FooterInfo: React.FC<FooterInfoProps> = ({ icon, text }) => (
   <div className="text-xs text-text-tertiary flex items-center gap-1.5">
     <Icon name={icon} className="w-3.5 h-3.5 text-text-muted" />
-    <span>{text}</span>
+    {typeof text === 'string' ? <span>{text}</span> : text}
   </div>
 );

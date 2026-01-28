@@ -3,8 +3,8 @@
  * Bridge component that adapts old form sections to React Hook Form
  */
 
-import React from 'react';
-import type { UseFormRegister, Control, FieldErrors } from 'react-hook-form';
+import React, { useState, useMemo } from 'react';
+import type { UseFormRegister, Control, FieldErrors, UseFormWatch, UseFormSetValue } from 'react-hook-form';
 import type { PatientFormInput } from '../schemas/patient.schema';
 import type { Patient } from '@/types';
 import {
@@ -22,6 +22,8 @@ export interface PatientFormTabsProps {
   control: Control<PatientFormInput>;
   errors: FieldErrors<PatientFormInput>;
   existingAffiliation?: Patient['affiliation'];
+  watch: UseFormWatch<PatientFormInput>;
+  setValue: UseFormSetValue<PatientFormInput>;
 }
 
 /**
@@ -29,42 +31,54 @@ export interface PatientFormTabsProps {
  * This allows us to reuse existing form sections while migrating to React Hook Form
  */
 function createFormDataAdapter(
-  _register: UseFormRegister<PatientFormInput>,
-  _control: Control<PatientFormInput>,
-  _errors: FieldErrors<PatientFormInput>
+  watch: UseFormWatch<PatientFormInput>,
+  hasAffiliationChecked: boolean
 ) {
-  // This is a temporary adapter - in a full migration, form sections would use React Hook Form directly
-  // For now, we create a flat structure that matches the old PatientFormData interface
+  const formValues = watch();
+  
+  // Map nested React Hook Form structure to flat structure expected by form sections
   return {
-    fullName: '',
-    dateOfBirth: '',
-    gender: undefined,
-    phone: '',
-    email: '',
-    height: '',
-    weight: '',
-    street: '',
-    city: '',
-    postalCode: '',
-    hasAffiliation: false,
-    affiliationDuration: undefined,
-    emergencyContactFullName: '',
-    emergencyContactRelationship: undefined,
-    emergencyContactPhone: '',
-    emergencyContactEmail: '',
-    chronicConditions: '',
-    currentMedications: '',
-    allergies: '',
-    previousSurgeries: '',
-    familyHistory: '',
-    smoking: false,
-    alcohol: false,
-    temperature: '',
-    heartRate: '',
-    systolicBP: '',
-    diastolicBP: '',
-    respiratoryRate: '',
-    oxygenSaturation: '',
+    fullName: formValues.fullName || '',
+    dateOfBirth: formValues.dateOfBirth || '',
+    gender: formValues.gender,
+    phone: formValues.phone || '',
+    email: formValues.email || '',
+    height: formValues.height?.toString() || '',
+    weight: formValues.weight?.toString() || '',
+    street: formValues.address?.street || '',
+    city: formValues.address?.city || '',
+    postalCode: formValues.address?.postalCode || '',
+    hasAffiliation: hasAffiliationChecked || !!formValues.affiliation,
+    affiliationDuration: formValues.affiliation?.duration,
+    emergencyContactFullName: formValues.emergencyContact?.fullName || '',
+    emergencyContactRelationship: formValues.emergencyContact?.relationship,
+    emergencyContactPhone: formValues.emergencyContact?.phone || '',
+    emergencyContactEmail: formValues.emergencyContact?.email || '',
+    chronicConditions: Array.isArray(formValues.medicalHistory?.chronicConditions) 
+      ? formValues.medicalHistory.chronicConditions.join('; ') 
+      : formValues.medicalHistory?.chronicConditions || '',
+    currentMedications: Array.isArray(formValues.medicalHistory?.currentMedications)
+      ? formValues.medicalHistory.currentMedications.join('; ')
+      : formValues.medicalHistory?.currentMedications || '',
+    allergies: Array.isArray(formValues.medicalHistory?.allergies)
+      ? formValues.medicalHistory.allergies.join('; ')
+      : formValues.medicalHistory?.allergies || '',
+    previousSurgeries: Array.isArray(formValues.medicalHistory?.previousSurgeries)
+      ? formValues.medicalHistory.previousSurgeries.join('; ')
+      : formValues.medicalHistory?.previousSurgeries || '',
+    familyHistory: typeof formValues.medicalHistory?.familyHistory === 'string'
+      ? formValues.medicalHistory.familyHistory
+      : Array.isArray(formValues.medicalHistory?.familyHistory)
+        ? formValues.medicalHistory.familyHistory.join('; ')
+        : '',
+    smoking: formValues.medicalHistory?.lifestyle?.smoking ?? false,
+    alcohol: formValues.medicalHistory?.lifestyle?.alcohol ?? false,
+    temperature: formValues.vitalSigns?.temperature?.toString() || '',
+    heartRate: formValues.vitalSigns?.heartRate?.toString() || '',
+    systolicBP: formValues.vitalSigns?.systolicBP?.toString() || '',
+    diastolicBP: formValues.vitalSigns?.diastolicBP?.toString() || '',
+    respiratoryRate: formValues.vitalSigns?.respiratoryRate?.toString() || '',
+    oxygenSaturation: formValues.vitalSigns?.oxygenSaturation?.toString() || '',
   };
 }
 
@@ -111,17 +125,111 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
   control,
   errors,
   existingAffiliation,
+  watch,
+  setValue,
 }) => {
-  // TODO: Full migration - form sections should use React Hook Form directly
-  // For now, this is a placeholder that shows the structure
-  // The actual form sections need to be migrated to use register() and Controller from react-hook-form
+  // Track checkbox state separately since hasAffiliation is derived from affiliation object
+  // Initialize from existing affiliation
+  const formValues = watch();
+  const initialHasAffiliation = useMemo(() => !!existingAffiliation, [existingAffiliation]);
+  const [hasAffiliationChecked, setHasAffiliationChecked] = useState(initialHasAffiliation);
   
-  const formData = createFormDataAdapter(register, control, errors);
+  // Use checkbox state OR affiliation object presence to determine hasAffiliation
+  const effectiveHasAffiliation = hasAffiliationChecked || !!formValues.affiliation;
+  
+  const formData = createFormDataAdapter(watch, effectiveHasAffiliation);
   const flatErrors = createErrorsAdapter(errors);
   
-  // Temporary handler - will be replaced when sections are fully migrated
-  const onFieldChange = () => {
-    // This will be handled by React Hook Form
+  // Handler that maps flat field names to nested React Hook Form structure
+  const onFieldChange = (field: string, value: unknown) => {
+    // Map flat field names to nested React Hook Form paths
+    const fieldMap: Record<string, (val: unknown) => void> = {
+      fullName: (val) => setValue('fullName', val as string),
+      dateOfBirth: (val) => setValue('dateOfBirth', val as string),
+      gender: (val) => setValue('gender', val as 'male' | 'female' | undefined),
+      phone: (val) => setValue('phone', val as string),
+      email: (val) => setValue('email', val as string),
+      height: (val) => setValue('height', val ? parseFloat(val as string) : undefined, { shouldValidate: true }),
+      weight: (val) => setValue('weight', val ? parseFloat(val as string) : undefined, { shouldValidate: true }),
+      street: (val) => {
+        const currentAddress = watch('address') || { street: '', city: '', postalCode: '' };
+        setValue('address', { ...currentAddress, street: val as string }, { shouldValidate: true });
+      },
+      city: (val) => {
+        const currentAddress = watch('address') || { street: '', city: '', postalCode: '' };
+        setValue('address', { ...currentAddress, city: val as string }, { shouldValidate: true });
+      },
+      postalCode: (val) => {
+        const currentAddress = watch('address') || { street: '', city: '', postalCode: '' };
+        setValue('address', { ...currentAddress, postalCode: val as string }, { shouldValidate: true });
+      },
+      hasAffiliation: (val) => {
+        setHasAffiliationChecked(val as boolean);
+        if (!val) {
+          setValue('affiliation', undefined);
+        }
+      },
+      affiliationDuration: (val) => {
+        const currentAffiliation = watch('affiliation');
+        setValue('affiliation', { ...currentAffiliation, duration: val } as PatientFormInput['affiliation'], { shouldValidate: true });
+        // Ensure checkbox is checked when duration is selected
+        if (val && !hasAffiliationChecked) {
+          setHasAffiliationChecked(true);
+        }
+      },
+      emergencyContactFullName: (val) => {
+        const currentContact = watch('emergencyContact') || { fullName: '', relationship: 'other' as const, phone: '', email: '' };
+        setValue('emergencyContact', { ...currentContact, fullName: val as string }, { shouldValidate: true });
+      },
+      emergencyContactRelationship: (val) => {
+        const currentContact = watch('emergencyContact') || { fullName: '', relationship: 'other' as const, phone: '', email: '' };
+        setValue('emergencyContact', { ...currentContact, relationship: val as PatientFormInput['emergencyContact']['relationship'] }, { shouldValidate: true });
+      },
+      emergencyContactPhone: (val) => {
+        const currentContact = watch('emergencyContact') || { fullName: '', relationship: 'other' as const, phone: '', email: '' };
+        setValue('emergencyContact', { ...currentContact, phone: val as string }, { shouldValidate: true });
+      },
+      emergencyContactEmail: (val) => {
+        const currentContact = watch('emergencyContact') || { fullName: '', relationship: 'other' as const, phone: '', email: '' };
+        setValue('emergencyContact', { ...currentContact, email: val as string }, { shouldValidate: true });
+      },
+      chronicConditions: (val) => {
+        const conditions = typeof val === 'string' ? val.split(';').map(s => s.trim()).filter(Boolean) : [];
+        setValue('medicalHistory.chronicConditions', conditions.length > 0 ? conditions : undefined, { shouldValidate: true });
+      },
+      currentMedications: (val) => {
+        const medications = typeof val === 'string' ? val.split(';').map(s => s.trim()).filter(Boolean) : [];
+        setValue('medicalHistory.currentMedications', medications.length > 0 ? medications : undefined, { shouldValidate: true });
+      },
+      allergies: (val) => {
+        const allergies = typeof val === 'string' ? val.split(';').map(s => s.trim()).filter(Boolean) : [];
+        setValue('medicalHistory.allergies', allergies.length > 0 ? allergies : undefined, { shouldValidate: true });
+      },
+      previousSurgeries: (val) => {
+        const surgeries = typeof val === 'string' ? val.split(';').map(s => s.trim()).filter(Boolean) : [];
+        setValue('medicalHistory.previousSurgeries', surgeries.length > 0 ? surgeries : undefined, { shouldValidate: true });
+      },
+      familyHistory: (val) => setValue('medicalHistory.familyHistory', val as string || undefined, { shouldValidate: true }),
+      smoking: (val) => {
+        const currentLifestyle = watch('medicalHistory.lifestyle') || { smoking: false, alcohol: false };
+        setValue('medicalHistory.lifestyle', { ...currentLifestyle, smoking: val as boolean }, { shouldValidate: true });
+      },
+      alcohol: (val) => {
+        const currentLifestyle = watch('medicalHistory.lifestyle') || { smoking: false, alcohol: false };
+        setValue('medicalHistory.lifestyle', { ...currentLifestyle, alcohol: val as boolean }, { shouldValidate: true });
+      },
+      temperature: (val) => setValue('vitalSigns.temperature', val ? parseFloat(val as string) : undefined, { shouldValidate: true }),
+      heartRate: (val) => setValue('vitalSigns.heartRate', val ? parseInt(val as string, 10) : undefined, { shouldValidate: true }),
+      systolicBP: (val) => setValue('vitalSigns.systolicBP', val ? parseInt(val as string, 10) : undefined, { shouldValidate: true }),
+      diastolicBP: (val) => setValue('vitalSigns.diastolicBP', val ? parseInt(val as string, 10) : undefined, { shouldValidate: true }),
+      respiratoryRate: (val) => setValue('vitalSigns.respiratoryRate', val ? parseInt(val as string, 10) : undefined, { shouldValidate: true }),
+      oxygenSaturation: (val) => setValue('vitalSigns.oxygenSaturation', val ? parseFloat(val as string) : undefined, { shouldValidate: true }),
+    };
+
+    const handler = fieldMap[field];
+    if (handler) {
+      handler(value);
+    }
   };
 
   switch (activeTab) {

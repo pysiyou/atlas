@@ -6,16 +6,19 @@
  * - Edit: mode === 'edit', order required.
  */
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { Controller } from 'react-hook-form';
-import type { Order, Patient, PriorityLevel } from '@/types';
-import { PRIORITY_LEVEL_OPTIONS } from '@/types';
-import { Modal, Input, Textarea, MultiSelectFilter, Button, FooterInfo } from '@/shared/ui';
-import type { BaseModalProps, FilterOption } from '@/shared/ui';
-import { displayId, ICONS } from '@/utils';
+import type { Order, Patient, PriorityLevel, PaymentMethod } from '@/types';
+import { PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG } from '@/types';
+import { getEnabledPaymentMethods, getDefaultPaymentMethod } from '@/types/billing';
+import { Modal, Input, Textarea, MultiSelectFilter, Button, FooterInfo, Icon, Alert } from '@/shared/ui';
+import type { BaseModalProps, IconName } from '@/shared/ui';
+import { displayId, ICONS, formatCurrency } from '@/utils';
+import { createFilterOptions } from '@/utils/filtering';
 import { useOrderForm } from '../hooks/useOrderForm';
 import { usePatientsList, usePatientSearch } from '@/hooks/queries';
 import { useTestCatalog, useTestSearch } from '@/hooks/queries';
+import { useCreatePayment } from '@/hooks/queries/usePayments';
 import { PatientSelect } from './PatientSelect';
 import { TestSelect } from './TestSelect';
 
@@ -34,7 +37,9 @@ const ModalFooter: React.FC<{
   isSubmitting: boolean;
   formId: string;
   footerInfo?: React.ReactNode;
-}> = ({ onClose, submitLabel, isSubmitting, formId, footerInfo }) => (
+  buttonVariant?: 'save' | 'primary';
+  buttonIcon?: React.ReactNode;
+}> = ({ onClose, submitLabel, isSubmitting, formId, footerInfo, buttonVariant = 'save', buttonIcon }) => (
   <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border bg-surface shrink-0 shadow-[0_-1px_3px_rgba(0,0,0,0.04)]">
     {footerInfo}
     <div className="flex items-center gap-3">
@@ -43,10 +48,11 @@ const ModalFooter: React.FC<{
       </Button>
       <Button
         type="submit"
-        variant="save"
+        variant={buttonVariant}
         form={formId}
         isLoading={isSubmitting}
         disabled={isSubmitting}
+        icon={buttonIcon}
       >
         {submitLabel}
       </Button>
@@ -63,6 +69,14 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
 }) => {
   const [patientSearch, setPatientSearch] = useState('');
   const [testSearch, setTestSearch] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | undefined>(undefined);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+
+  // Payment methods
+  const paymentMethods = useMemo(() => getEnabledPaymentMethods(), []);
+
+  // Payment mutation
+  const { mutate: createPaymentMutation, isPending: isProcessingPayment } = useCreatePayment();
 
   // Convert patientId prop (string) to number for hook
   const initialPatientId = useMemo(() => {
@@ -84,7 +98,36 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
     order,
     mode,
     initialPatientId,
-    onSubmitSuccess: onClose,
+    onSubmitSuccess: async (createdOrder?: Order) => {
+      // If payment method is selected and order was created, process payment
+      if (mode === 'create' && paymentMethod && createdOrder && createdOrder.totalPrice > 0) {
+        try {
+          await new Promise<void>((resolve, reject) => {
+            createPaymentMutation(
+              {
+                orderId: createdOrder.orderId.toString(),
+                amount: createdOrder.totalPrice,
+                paymentMethod,
+              },
+              {
+                onSuccess: () => {
+                  resolve();
+                },
+                onError: (err: unknown) => {
+                  const errorMessage = err instanceof Error ? err.message : 'Failed to process payment';
+                  setPaymentError(errorMessage);
+                  reject(err);
+                },
+              }
+            );
+          });
+        } catch {
+          // Error already handled in mutation callback
+          return; // Don't close modal if payment fails
+        }
+      }
+      onClose();
+    },
   });
 
   // Watch form values for calculations and display
@@ -123,15 +166,20 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
     }
   }, [mode, initialPatientId, patients, selectedPatientId, setValue]);
 
-  // Priority options
-  const priorityOptions: FilterOption[] = useMemo(
-    () =>
-      PRIORITY_LEVEL_OPTIONS.map(opt => {
-        const color = opt.value === 'stat' ? 'danger' : opt.value === 'urgent' ? 'warning' : 'info';
-        return { id: opt.value, label: opt.label, color };
-      }),
+  // Reset payment method when modal opens/closes
+  useEffect(() => {
+    if (isOpen && mode === 'create') {
+      setPaymentMethod(undefined);
+      setPaymentError(null);
+    }
+  }, [isOpen, mode]);
+
+  // Priority options for MultiSelectFilter with badges
+  const priorityOptions = useMemo(
+    () => createFilterOptions(PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG),
     []
   );
+
 
   const modalTitle = mode === 'edit' ? 'Edit Order' : 'New Order';
   const subtitle = useMemo((): React.ReactNode => {
@@ -148,13 +196,24 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
     return 'Select a patient and choose tests to create a new order.';
   }, [mode, order, patientId]);
 
-  const submitLabel = isSubmitting
-    ? mode === 'edit'
-      ? 'Saving...'
-      : 'Creating...'
-    : mode === 'edit'
-      ? 'Save Changes'
-      : 'Create Order';
+  const submitLabel = useMemo(() => {
+    if (isSubmitting || isProcessingPayment) {
+      if (mode === 'edit') {
+        return 'Saving...';
+      }
+      if (paymentMethod) {
+        return 'Processing...';
+      }
+      return 'Creating...';
+    }
+    if (mode === 'edit') {
+      return 'Save Changes';
+    }
+    if (paymentMethod && totalPrice > 0) {
+      return `Pay ${formatCurrency(totalPrice)}`;
+    }
+    return 'Create Order';
+  }, [isSubmitting, isProcessingPayment, mode, paymentMethod, totalPrice]);
 
   return (
     <Modal
@@ -191,7 +250,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                     setPatientSearch('');
                   }}
                   error={fieldState.error?.message}
-                  disabled={mode === 'edit'}
+                  disabled={mode === 'edit' || !!patientId}
                 />
               )}
             />
@@ -209,13 +268,18 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                   filteredTests={filteredTests}
                   onToggleTest={(code: string) => {
                     const current = field.value || [];
-                    const newValue = current.includes(code)
-                      ? current.filter(c => c !== code)
-                      : [...current, code];
+                    const isAdding = !current.includes(code);
+                    const newValue = isAdding
+                      ? [...current, code]
+                      : current.filter(c => c !== code);
                     field.onChange(newValue);
+                    // Clear search input when a test is selected
+                    if (isAdding) {
+                      setTestSearch('');
+                    }
                   }}
-                  totalPrice={totalPrice}
                   error={fieldState.error?.message}
+                  tests={tests}
                 />
               )}
             />
@@ -248,21 +312,19 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                 const selectedPriorityIds = field.value ? [field.value] : [];
                 return (
                   <div>
-                    <label className="block text-xs font-medium text-text-tertiary mb-1.5">
-                      Priority <span className="text-danger">*</span>
-                    </label>
                     <MultiSelectFilter
                       label="Priority"
                       options={priorityOptions}
                       selectedIds={selectedPriorityIds}
                       onChange={(selectedIds: string[]) => {
+                        // Single-select mode: use the most recent selection
                         const next = (selectedIds[selectedIds.length - 1] as PriorityLevel | undefined) || 'routine';
                         field.onChange(next);
                       }}
                       placeholder="Select priority"
                       showSelectAll={false}
                       singleSelect={true}
-                      className="w-full sm:w-full"
+                      className="w-full"
                       icon={ICONS.actions.warning}
                     />
                     {fieldState.error && (
@@ -290,13 +352,77 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                 />
               )}
             />
+
+            {/* Payment Method - Only in create mode */}
+            {mode === 'create' && (
+              <div>
+                <label className="block text-xs font-medium text-text-tertiary mb-2">
+                  Payment method
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {paymentMethods.map(method => {
+                    const isSelected = paymentMethod === method.value;
+                    return (
+                      <button
+                        key={method.value}
+                        type="button"
+                        disabled={isSubmitting || isProcessingPayment}
+                        onClick={() => {
+                          setPaymentMethod(method.value);
+                          setPaymentError(null);
+                        }}
+                        className={`
+                          relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
+                          ${
+                            isSelected
+                              ? 'bg-surface border-brand border-2'
+                              : 'bg-surface border-border hover:border-border-strong'
+                          }
+                          ${isSubmitting || isProcessingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                        `}
+                      >
+                        <Icon
+                          name={method.icon as IconName}
+                          className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-text-disabled'}`}
+                        />
+                        <span
+                          className={`flex-1 text-xs font-medium text-left ${
+                            isSelected ? 'text-text-primary' : 'text-text-secondary'
+                          }`}
+                        >
+                          {method.label}
+                        </span>
+                        <div
+                          className={`
+                            absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
+                            ${isSelected ? 'bg-green-600' : 'bg-transparent border-2 border-border-strong'}
+                          `}
+                        >
+                          <Icon
+                            name={ICONS.actions.check}
+                            className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-text-disabled'}`}
+                          />
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                {paymentError && (
+                  <Alert variant="danger" className="mt-3 py-3">
+                    <p className="text-sm">{paymentError}</p>
+                  </Alert>
+                )}
+              </div>
+            )}
           </div>
 
           <ModalFooter
             onClose={onClose}
             submitLabel={submitLabel}
-            isSubmitting={isSubmitting}
+            isSubmitting={isSubmitting || isProcessingPayment}
             formId="order-form"
+            buttonVariant={paymentMethod && mode === 'create' ? 'primary' : 'save'}
+            buttonIcon={paymentMethod && mode === 'create' && !isSubmitting && !isProcessingPayment ? <Icon name={ICONS.dataFields.wallet} /> : undefined}
             footerInfo={
               mode === 'edit' && order ? (
                 <FooterInfo
@@ -304,7 +430,9 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                   text={`Editing ${displayId.order(order.orderId)}`}
                 />
               ) : (
-                <FooterInfo icon={ICONS.actions.add} text="Creating new order" />
+                <div className="text-base font-semibold text-brand">
+                  Total: {formatCurrency(totalPrice)}
+                </div>
               )
             }
           />

@@ -15,7 +15,7 @@ interface UseOrderFormOptions {
   order?: Order;
   mode?: 'create' | 'edit';
   initialPatientId?: number;
-  onSubmitSuccess?: () => void;
+  onSubmitSuccess?: (createdOrder?: Order) => void | Promise<void>;
 }
 
 /**
@@ -52,13 +52,14 @@ export function useOrderForm({ order, mode = 'create', initialPatientId, onSubmi
 
   const onSubmit = async (data: OrderFormInput) => {
     try {
+      let createdOrder: Order | undefined;
       if (mode === 'edit' && order) {
         await update.mutateAsync({ id: order.orderId, data });
       } else {
-        await create.mutateAsync(data);
+        createdOrder = await create.mutateAsync(data);
       }
       form.reset();
-      onSubmitSuccess?.();
+      await onSubmitSuccess?.(createdOrder);
     } catch (error) {
       // Error handled by service hook
       console.error('Form submission error:', error);

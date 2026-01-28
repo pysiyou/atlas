@@ -73,7 +73,7 @@ const PatientSearchTagInput: React.FC<{
               {selectedPatient.fullName}
             </span>
             {/* Patient ID */}
-            <span className="text-xxs font-semibold font-mono text-text-tertiary shrink-0">
+            <span className="text-xxs font-semibold font-mono text-brand shrink-0">
               {displayId.patient(selectedPatient.id)}
             </span>
             {/* Clear button */}
@@ -224,7 +224,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
 
                       <div className="shrink-0 flex items-center gap-2">
                         {/* Patient ID on the right */}
-                        <span className="text-[11px] font-semibold font-mono text-text-tertiary">
+                        <span className="text-[11px] font-semibold font-mono text-brand">
                           {displayId.patient(patient.id)}
                         </span>
                         {/* Check icon if selected */}

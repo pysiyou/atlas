@@ -7,7 +7,6 @@
 
 import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { Icon } from '../display/Icon';
-import { Badge } from '../display/Badge';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 
@@ -123,36 +122,35 @@ export const TagInput: React.FC<TagInputProps> = ({
       {/* Tags Container */}
       <div
         className={cn(
-          'w-full px-3 py-2.5 border rounded-md',
-          'bg-surface transition-all duration-200',
+          'w-full px-3 py-2.5 border rounded',
+          'bg-surface transition-colors',
           'flex flex-wrap gap-2 items-center',
           'min-h-[42px]',
           error
-            ? 'border-danger focus-within:border-danger focus-within:ring-2 focus-within:ring-danger/20'
-            : 'border-border-strong hover:border-border-strong focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20'
+            ? 'border-danger focus-within:ring-2 focus-within:ring-brand focus-within:border-transparent'
+            : 'border-border-strong focus-within:ring-2 focus-within:ring-brand focus-within:border-transparent'
         )}
       >
         {/* Existing Tags */}
         {tags.map((tag, index) => (
-          <Badge
+          <div
             key={`${tag}-${index}`}
-            variant={tagVariant === 'outline' ? 'primary' : tagVariant}
-            size="sm"
-            className="flex items-center gap-1.5 px-2.5 py-1 h-6 group/tag"
+            className="flex items-center gap-2 px-2 py-1 rounded bg-brand/10 border border-brand max-w-full shrink-0"
           >
-            <span className="text-xs font-medium leading-tight">{tag}</span>
+            {/* Tag name */}
+            <span className="text-xs font-medium text-text-primary truncate min-w-0">
+              {tag}
+            </span>
+            {/* Clear button */}
             <button
               type="button"
               onClick={() => handleRemoveTag(tag)}
-              className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 focus:outline-none focus:ring-1 focus:ring-brand/40"
+              className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-brand/20 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30 shrink-0"
               aria-label={`Remove ${tag}`}
             >
-              <Icon
-                name={ICONS.actions.closeCircle}
-                className="w-3 h-3 text-white hover:text-red-500 transition-colors"
-              />
+              <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-tertiary hover:text-text-secondary" />
             </button>
-          </Badge>
+          </div>
         ))}
 
         {/* Input Field */}

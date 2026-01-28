@@ -13,7 +13,6 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { Minus } from 'lucide-react';
 import { Popover } from '../overlay/Popover';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
@@ -128,12 +127,6 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   // Check if all options are selected
   const allSelected = useMemo(
     () => options.length > 0 && selectedIds.length === options.length,
-    [options.length, selectedIds.length]
-  );
-
-  // Check if some but not all options are selected
-  const someSelected = useMemo(
-    () => selectedIds.length > 0 && selectedIds.length < options.length,
     [options.length, selectedIds.length]
   );
 
@@ -275,55 +268,35 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
             ))}
           </div>
 
-          {/* Footer actions - Select all (multi-select) and Clear */}
-          {(showSelectAll && !singleSelect && options.length > 0) || selectedIds.length > 0 ? (
+          {/* Footer actions - Select all / Deselect all (multi-select) */}
+          {showSelectAll && !singleSelect && options.length > 0 && (
             <div className="border-t border-border mt-2 pt-2">
-              {/* Select all - only show for multi-select */}
-              {showSelectAll && !singleSelect && options.length > 0 && (
-                <div className="px-3 py-2">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <div className="flex items-center justify-center">
-                      <input
-                        type="checkbox"
-                        checked={allSelected}
-                        onChange={handleSelectAll}
-                        className="sr-only"
-                      />
-                      {allSelected || someSelected ? (
-                        <div className="w-4 h-4 rounded border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150">
-                          {allSelected ? (
-                            <Icon name={ICONS.actions.check} className="w-3 h-3 text-white" />
-                          ) : (
-                            <Minus className="w-3 h-3 text-white" />
-                          )}
-                        </div>
-                      ) : (
-                        <div className="w-4 h-4 rounded border-2 border-border bg-white transition-all duration-150" />
-                      )}
-                    </div>
-                    <span className="text-xs font-medium text-text-primary">
-                      {selectAllLabel}
-                    </span>
-                  </label>
-                </div>
-              )}
-
-              {/* Clear button - show when there are selections */}
-              {selectedIds.length > 0 && (
-                <button
-                  type="button"
-                  onClick={e => {
-                    e.stopPropagation();
-                    handleClear(e);
-                  }}
-                  className="w-full px-3 py-2 flex items-center gap-2 text-xs font-medium text-danger hover:bg-danger/10 transition-colors"
-                >
-                  <Icon name={ICONS.actions.closeCircle} className="w-4 h-4" />
-                  <span>Clear selection</span>
-                </button>
-              )}
+              <div className="px-3 py-2">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <div className="flex items-center justify-center">
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      onChange={handleSelectAll}
+                      className="sr-only"
+                    />
+                    {allSelected ? (
+                      <div className="w-4 h-4 rounded border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150">
+                        <Icon name={ICONS.actions.cross} className="w-3 h-3 text-white" />
+                      </div>
+                    ) : (
+                      <div className="w-4 h-4 rounded border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150">
+                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-white" />
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-xs font-medium text-text-primary">
+                    {allSelected ? 'Deselect all' : selectAllLabel}
+                  </span>
+                </label>
+              </div>
             </div>
-          ) : null}
+          )}
         </div>
       )}
     </Popover>

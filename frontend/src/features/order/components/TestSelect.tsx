@@ -9,10 +9,9 @@
  * - Each list row shows: `code - name - price` and a green check icon when already selected.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Badge, Icon } from '@/shared/ui';
-import { formatCurrency } from '@/utils';
+import { Icon } from '@/shared/ui';
 import type { Test } from '@/types';
-import { ICONS } from '@/utils';
+import { ICONS, formatCurrency } from '@/utils';
 
 interface TestSelectorProps {
   selectedTests: string[];
@@ -20,8 +19,9 @@ interface TestSelectorProps {
   onTestSearchChange: (value: string) => void;
   filteredTests: Test[];
   onToggleTest: (testCode: string) => void;
-  totalPrice: number;
   error?: string;
+  /** Full test catalog for looking up test details by code */
+  tests?: Test[];
 }
 
 /**
@@ -29,9 +29,10 @@ interface TestSelectorProps {
  *
  * Selected tests are shown as removable tags inside the input box, while the
  * input text remains controlled by the parent (used to drive the results list).
+ * Tags match the patient tag styling (bg-brand/10, border-brand) but without avatars.
  */
 const TestSearchTagInput: React.FC<{
-  selectedTags: string[];
+  selectedTags: Array<{ code: string; name: string }>;
   value: string;
   onValueChange: (value: string) => void;
   onRemoveTag: (code: string) => void;
@@ -59,27 +60,33 @@ const TestSearchTagInput: React.FC<{
           'min-h-[42px]',
         ].join(' ')}
       >
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-start pt-2.5 pointer-events-none">
           <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-text-muted" />
         </div>
 
-        {selectedTags.map(code => (
-          <Badge
+        {selectedTags.map(({ code, name }) => (
+          <div
             key={code}
-            variant="primary"
-            size="sm"
-            className="flex items-center gap-1.5 px-2 py-0.5 h-6"
+            className="flex items-center gap-2 px-2 py-1 rounded bg-brand/10 border border-brand max-w-full shrink-0"
           >
-            <span className="text-xs font-medium leading-tight font-mono">{code}</span>
+            {/* Test name */}
+            <span className="text-xs font-medium text-text-primary truncate min-w-0">
+              {name}
+            </span>
+            {/* Test code */}
+            <span className="text-xxs font-semibold font-mono text-brand shrink-0">
+              {code}
+            </span>
+            {/* Clear button */}
             <button
               type="button"
               onClick={() => onRemoveTag(code)}
-              className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-black/10 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-gray-400"
+              className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-brand/20 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30 shrink-0"
               aria-label={`Remove ${code}`}
             >
               <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-tertiary hover:text-text-secondary" />
             </button>
-          </Badge>
+          </div>
         ))}
 
         <input
@@ -106,8 +113,8 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
   onTestSearchChange,
   filteredTests,
   onToggleTest,
-  totalPrice,
   error,
+  tests = [],
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -150,12 +157,19 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
     };
   }, []);
 
-  // Build tags for display inside the input.
-  // We render the test codes as tags (consistent "ID" representation).
-  const selectedTags = useMemo(
-    () => selectedTests.filter(code => typeof code === 'string' && code.trim().length > 0),
-    [selectedTests]
-  );
+  // Build tags with test details (code and name) for display inside the input.
+  // Matches patient tag styling but without avatar.
+  const selectedTags = useMemo(() => {
+    return selectedTests
+      .filter(code => typeof code === 'string' && code.trim().length > 0)
+      .map(code => {
+        const test = tests.find(t => t.code === code);
+        return {
+          code,
+          name: test?.name || code,
+        };
+      });
+  }, [selectedTests, tests]);
 
   return (
     <div ref={containerRef} className="relative">
@@ -175,8 +189,8 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         </div>
 
         <div className="shrink-0 pb-[2px]">
-          <div className="h-[34px] inline-flex items-center px-3 rounded border border-brand bg-brand/10 text-brand text-xs font-semibold">
-            Total: {formatCurrency(totalPrice)}
+          <div className="text-base font-semibold text-brand">
+            {selectedTests.length} {selectedTests.length === 1 ? 'test' : 'tests'}
           </div>
         </div>
       </div>

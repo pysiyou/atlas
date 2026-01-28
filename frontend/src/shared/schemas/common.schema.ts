@@ -18,7 +18,11 @@ export const postalCodeSchema = z
   .regex(/^\d{5}$/, 'Invalid postal code (5 digits required)');
 
 // Date schemas
-export const dateStringSchema = z.string().datetime();
+// Accept date-only (YYYY-MM-DD) from pickers or full ISO datetime from API
+export const dateStringSchema = z.union([
+  z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date (use YYYY-MM-DD)'),
+  z.string().datetime({ message: 'Invalid ISO datetime' }),
+]);
 export const dateSchema = z.coerce.date();
 
 // Numeric ranges

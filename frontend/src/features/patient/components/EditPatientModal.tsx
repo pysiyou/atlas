@@ -130,6 +130,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
     formState: { errors, isSubmitting },
     reset,
     watch,
+    setValue,
   } = useForm<PatientFormInput>({
     resolver: zodResolver(patientFormSchema),
     defaultValues,
@@ -152,6 +153,38 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       console.error('Form submission error:', error);
     }
   };
+
+  // Handle form submission with validation
+  const handleFormSubmit = handleSubmit(
+    onSubmit,
+    (validationErrors) => {
+      // Log validation errors for debugging
+      console.error('Form validation errors:', validationErrors);
+      console.error('Current form values:', formValues);
+      
+      // Show toast notification with first error
+      const firstErrorPath = Object.keys(validationErrors)[0];
+      const firstError = validationErrors[firstErrorPath as keyof typeof validationErrors];
+      const errorMessage = firstError?.message || 'Please fix form errors';
+      
+      // Import toast dynamically to avoid circular dependency
+      import('react-hot-toast').then(({ default: toast }) => {
+        toast.error(`Validation error: ${errorMessage}`);
+      });
+      
+      // Find first error and scroll to it
+      if (firstErrorPath) {
+        // Try to find the input field
+        const fieldName = firstErrorPath.split('.')[0];
+        const element = document.querySelector(`[name="${fieldName}"]`) || 
+                       document.querySelector(`#${fieldName}`) ||
+                       document.querySelector(`[id*="${fieldName}"]`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    }
+  );
 
   const modalTitle = mode === 'edit' ? 'Edit Patient' : 'New Patient';
   const submitLabel = isSubmitting
@@ -184,7 +217,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       >
         <div className="flex flex-col h-full bg-app-bg">
           <div className="flex-1 overflow-y-auto px-6 py-5">
-            <form id="patient-form" onSubmit={handleSubmit(onSubmit)} className="max-w-full">
+            <form id="patient-form" onSubmit={handleFormSubmit} className="max-w-full">
               <TabNavigation
                 tabs={tabs}
                 activeTab={activeTab}
@@ -199,6 +232,8 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                   control={control}
                   errors={errors}
                   existingAffiliation={patient?.affiliation}
+                  watch={watch}
+                  setValue={setValue}
                 />
               </div>
             </form>
@@ -213,7 +248,14 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
               mode === 'edit' && patient ? (
                 <FooterInfo
                   icon={ICONS.dataFields.user}
-                  text={`Editing ${displayId.patient(patient.id)}`}
+                  text={
+                    <>
+                      Editing{' '}
+                      <span className="text-brand font-mono">
+                        {displayId.patient(patient.id)}
+                      </span>
+                    </>
+                  }
                 />
               ) : (
                 <FooterInfo icon={ICONS.actions.add} text="Creating new patient" />
