@@ -4,6 +4,7 @@ import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
 import toast from 'react-hot-toast';
 import type { Affiliation, AffiliationDuration } from '@/types';
+import { formInputToPayload } from '../utils/form-transformers';
 
 export function usePatientService() {
   const queryClient = useQueryClient();
@@ -12,7 +13,8 @@ export function usePatientService() {
   const create = useMutation({
     mutationFn: async (input: unknown) => {
       const validated = patientFormSchema.parse(input);
-      const response = await apiClient.post<Patient>('/patients', validated);
+      const transformed = formInputToPayload(validated);
+      const response = await apiClient.post<Patient>('/patients', transformed);
       return patientSchema.parse(response);
     },
     onSuccess: () => {
@@ -28,7 +30,8 @@ export function usePatientService() {
   const update = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: unknown }) => {
       const validated = patientFormSchema.partial().parse(data);
-      const response = await apiClient.put<Patient>(`/patients/${id}`, validated);
+      const transformed = formInputToPayload(validated);
+      const response = await apiClient.put<Patient>(`/patients/${id}`, transformed);
       return patientSchema.parse(response);
     },
     onSuccess: (_, { id }) => {

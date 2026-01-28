@@ -72,6 +72,27 @@ export function patientToFormInput(patient?: Partial<PatientType>): Partial<Pati
 }
 
 /**
+ * Generate unique assurance number (ASS-YYYYMMDD-XXX format)
+ */
+function generateAssuranceNumber(): string {
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+  const randomSuffix = Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, '0');
+  return `ASS-${dateStr}-${randomSuffix}`;
+}
+
+/**
+ * Calculate end date based on duration (duration is in months)
+ */
+function calculateEndDate(startDate: string, duration: 6 | 12 | 24): string {
+  const start = new Date(startDate);
+  start.setMonth(start.getMonth() + duration);
+  return start.toISOString().slice(0, 10);
+}
+
+/**
  * Transform form input to API payload
  * Handles optional fields and nested structures
  */
@@ -79,25 +100,58 @@ export function formInputToPayload(
   formData: Partial<PatientFormInput>,
   _existingPatient?: Partial<PatientType>
 ): Partial<PatientFormInput> {
-  // Transform affiliation duration from string to number
   const payload: Partial<PatientFormInput> = { ...formData };
 
-  if (payload.affiliation && typeof payload.affiliation.duration === 'string') {
-    payload.affiliation = {
-      ...payload.affiliation,
-      duration: Number(payload.affiliation.duration) as 6 | 12 | 24,
-    };
+  // Transform affiliation: if only duration provided, generate full affiliation
+  if (payload.affiliation) {
+    // Convert duration from string to number if needed
+    const duration =
+      typeof payload.affiliation.duration === 'string'
+        ? (Number(payload.affiliation.duration) as 6 | 12 | 24)
+        : payload.affiliation.duration;
+
+    // If only duration is provided, generate full affiliation object
+    if (duration && !payload.affiliation.assuranceNumber && !payload.affiliation.startDate) {
+      const startDate = new Date().toISOString().slice(0, 10);
+      payload.affiliation = {
+        assuranceNumber: generateAssuranceNumber(),
+        startDate,
+        endDate: calculateEndDate(startDate, duration),
+        duration,
+      };
+    } else if (duration && payload.affiliation.startDate && !payload.affiliation.endDate) {
+      // If startDate exists but no endDate, calculate it
+      payload.affiliation = {
+        ...payload.affiliation,
+        endDate: calculateEndDate(payload.affiliation.startDate, duration),
+        duration,
+      };
+    } else if (duration) {
+      // Ensure duration is set
+      payload.affiliation = {
+        ...payload.affiliation,
+        duration,
+      };
+    }
   }
 
-  // Handle medical history familyHistory (can be string or array)
-  if (payload.medicalHistory?.familyHistory) {
+  // Handle medical history familyHistory: always convert to array
+  if (payload.medicalHistory) {
     const familyHistory = payload.medicalHistory.familyHistory;
     if (typeof familyHistory === 'string') {
-      // Convert semicolon-delimited string to array if needed
-      payload.medicalHistory.familyHistory = familyHistory
-        .split(';')
-        .map(s => s.trim())
-        .filter(Boolean);
+      // Convert string to array (split by semicolon or use as single item)
+      if (familyHistory.trim()) {
+        payload.medicalHistory.familyHistory = familyHistory
+          .split(';')
+          .map(s => s.trim())
+          .filter(Boolean);
+      } else {
+        // Empty string becomes empty array
+        payload.medicalHistory.familyHistory = [];
+      }
+    } else if (!Array.isArray(familyHistory)) {
+      // Ensure it's an array (fallback to empty array)
+      payload.medicalHistory.familyHistory = [];
     }
   }
 

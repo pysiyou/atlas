@@ -3,8 +3,9 @@ Pydantic schemas for Patient
 All fields use camelCase - no aliases needed
 """
 import re
-from pydantic import BaseModel, Field, field_validator, EmailStr
-from datetime import datetime
+from calendar import monthrange
+from pydantic import BaseModel, Field, field_validator, model_validator, EmailStr
+from datetime import datetime, timedelta
 from app.schemas.enums import Gender, AffiliationDuration, Relationship
 
 
@@ -47,6 +48,27 @@ class MedicalHistory(BaseModel):
     previousSurgeries: list[str] = Field(default_factory=list)
     familyHistory: list[str] = Field(default_factory=list)
     lifestyle: Lifestyle
+
+    @field_validator('familyHistory', mode='before')
+    @classmethod
+    def normalize_family_history(cls, v):
+        """Convert string to list if needed."""
+        if isinstance(v, str):
+            # Split by semicolon or use as single item
+            if v.strip():
+                return [item.strip() for item in v.split(';') if item.strip()]
+            return []
+        if v is None:
+            return []
+        return v
+
+
+class AffiliationInput(BaseModel):
+    """Partial affiliation input (for form submission)."""
+    assuranceNumber: str | None = None
+    startDate: str | None = None
+    endDate: str | None = None
+    duration: AffiliationDuration
 
 
 class Affiliation(BaseModel):
@@ -111,7 +133,57 @@ class PatientBase(BaseModel):
 
 class PatientCreate(PatientBase):
     """Schema for creating a new patient."""
-    pass
+    # Allow partial affiliation input (will be normalized in validator)
+    affiliation: Affiliation | AffiliationInput | None = None
+
+    @model_validator(mode='before')
+    @classmethod
+    def normalize_affiliation(cls, data: dict) -> dict:
+        """Auto-generate missing affiliation fields when only duration is provided."""
+        if isinstance(data, dict) and 'affiliation' in data:
+            aff = data['affiliation']
+            if isinstance(aff, dict):
+                # If only duration is provided, generate missing fields
+                if 'duration' in aff and not all(k in aff for k in ['assuranceNumber', 'startDate', 'endDate']):
+                    import secrets
+                    from datetime import datetime
+                    
+                    duration = aff['duration']
+                    start_date = aff.get('startDate')
+                    if not start_date:
+                        start_date = datetime.now().strftime('%Y-%m-%d')
+                    
+                    # Calculate end date (add months properly)
+                    start_dt = datetime.strptime(start_date, '%Y-%m-%d')
+                    # Add months by manipulating year/month, handling day overflow
+                    new_month = start_dt.month + duration
+                    new_year = start_dt.year
+                    while new_month > 12:
+                        new_month -= 12
+                        new_year += 1
+                    # Handle day overflow (e.g., Jan 31 + 1 month -> Feb 28/29)
+                    try:
+                        end_dt = start_dt.replace(year=new_year, month=new_month)
+                    except ValueError:
+                        # Day doesn't exist in target month (e.g., Feb 31), use last day of month
+                        last_day = monthrange(new_year, new_month)[1]
+                        end_dt = start_dt.replace(year=new_year, month=new_month, day=min(start_dt.day, last_day))
+                    end_date = end_dt.strftime('%Y-%m-%d')
+                    
+                    # Generate assurance number if missing
+                    assurance_number = aff.get('assuranceNumber')
+                    if not assurance_number:
+                        date_str = datetime.now().strftime('%Y%m%d')
+                        random_suffix = secrets.randbelow(1000)
+                        assurance_number = f'ASS-{date_str}-{random_suffix:03d}'
+                    
+                    data['affiliation'] = {
+                        'assuranceNumber': assurance_number,
+                        'startDate': start_date,
+                        'endDate': end_date,
+                        'duration': duration,
+                    }
+        return data
 
 
 class PatientUpdate(BaseModel):
@@ -127,8 +199,57 @@ class PatientUpdate(BaseModel):
     address: Address | None = None
     emergencyContact: EmergencyContact | None = None
     medicalHistory: MedicalHistory | None = None
-    affiliation: Affiliation | None = None
+    affiliation: Affiliation | AffiliationInput | None = None
     vitalSigns: VitalSigns | None = None
+
+    @model_validator(mode='before')
+    @classmethod
+    def normalize_affiliation(cls, data: dict) -> dict:
+        """Auto-generate missing affiliation fields when only duration is provided."""
+        if isinstance(data, dict) and 'affiliation' in data:
+            aff = data['affiliation']
+            if isinstance(aff, dict):
+                # If only duration is provided, generate missing fields
+                if 'duration' in aff and not all(k in aff for k in ['assuranceNumber', 'startDate', 'endDate']):
+                    import secrets
+                    from datetime import datetime
+                    
+                    duration = aff['duration']
+                    start_date = aff.get('startDate')
+                    if not start_date:
+                        start_date = datetime.now().strftime('%Y-%m-%d')
+                    
+                    # Calculate end date (add months properly)
+                    start_dt = datetime.strptime(start_date, '%Y-%m-%d')
+                    # Add months by manipulating year/month, handling day overflow
+                    new_month = start_dt.month + duration
+                    new_year = start_dt.year
+                    while new_month > 12:
+                        new_month -= 12
+                        new_year += 1
+                    # Handle day overflow (e.g., Jan 31 + 1 month -> Feb 28/29)
+                    try:
+                        end_dt = start_dt.replace(year=new_year, month=new_month)
+                    except ValueError:
+                        # Day doesn't exist in target month (e.g., Feb 31), use last day of month
+                        last_day = monthrange(new_year, new_month)[1]
+                        end_dt = start_dt.replace(year=new_year, month=new_month, day=min(start_dt.day, last_day))
+                    end_date = end_dt.strftime('%Y-%m-%d')
+                    
+                    # Generate assurance number if missing
+                    assurance_number = aff.get('assuranceNumber')
+                    if not assurance_number:
+                        date_str = datetime.now().strftime('%Y%m%d')
+                        random_suffix = secrets.randbelow(1000)
+                        assurance_number = f'ASS-{date_str}-{random_suffix:03d}'
+                    
+                    data['affiliation'] = {
+                        'assuranceNumber': assurance_number,
+                        'startDate': start_date,
+                        'endDate': end_date,
+                        'duration': duration,
+                    }
+        return data
 
 
 class PatientResponse(PatientBase):

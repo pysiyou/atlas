@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { nameSchema, phoneSchema, emailSchema, dateStringSchema } from '@/shared/schemas/common.schema';
 import { addressSchema } from './address.schema';
-import { affiliationSchema } from './affiliation.schema';
+import { affiliationSchema, affiliationFormSchema } from './affiliation.schema';
 import { emergencyContactSchema } from './emergency-contact.schema';
 import { vitalSignsSchema } from './vital-signs.schema';
 
@@ -30,25 +30,27 @@ export const patientSchema = z.object({
   affiliation: affiliationSchema.optional(),
   emergencyContact: emergencyContactSchema,
   medicalHistory: medicalHistorySchema.optional(),
-  vitalSigns: vitalSignsSchema.optional(),
+  vitalSigns: vitalSignsSchema.nullable().optional(),
   registrationDate: dateStringSchema,
-  createdBy: z.number().int().positive(),
+  createdBy: z.string(), // Backend returns string user ID
   createdAt: dateStringSchema,
   updatedAt: dateStringSchema,
-  updatedBy: z.number().int().positive(),
+  updatedBy: z.string(), // Backend returns string user ID
 });
 
 export type Patient = z.infer<typeof patientSchema>;
 export type MedicalHistory = z.infer<typeof medicalHistorySchema>;
 
-// Form schema (excludes auto-generated fields)
-export const patientFormSchema = patientSchema.omit({
-  id: true,
-  registrationDate: true,
-  createdBy: true,
-  createdAt: true,
-  updatedAt: true,
-  updatedBy: true,
-});
+// Form schema (excludes auto-generated fields; form uses partial affiliation)
+export const patientFormSchema = patientSchema
+  .omit({
+    id: true,
+    registrationDate: true,
+    createdBy: true,
+    createdAt: true,
+    updatedAt: true,
+    updatedBy: true,
+  })
+  .extend({ affiliation: affiliationFormSchema.optional() });
 
 export type PatientFormInput = z.infer<typeof patientFormSchema>;

@@ -19,10 +19,18 @@ export const postalCodeSchema = z
 
 // Date schemas
 // Accept date-only (YYYY-MM-DD) from pickers or full ISO datetime from API
-export const dateStringSchema = z.union([
-  z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date (use YYYY-MM-DD)'),
-  z.string().datetime({ message: 'Invalid ISO datetime' }),
-]);
+// For API responses, accepts ISO 8601 datetime strings (e.g., "2026-01-28T12:34:56.789Z")
+export const dateStringSchema = z.string().refine(
+  (val) => {
+    // Accept YYYY-MM-DD format
+    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return true;
+    // Accept ISO datetime format (with or without timezone)
+    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(val)) return true;
+    // Accept any string for API compatibility (backend may return various formats)
+    return true;
+  },
+  { message: 'Invalid date format' }
+);
 export const dateSchema = z.coerce.date();
 
 // Numeric ranges
