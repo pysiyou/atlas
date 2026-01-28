@@ -8,37 +8,49 @@ export const orderTestSchema = z.object({
   sampleType: z.string(),
   status: z.enum(['pending', 'collected', 'processing', 'validated', 'superseded', 'removed']),
   priceAtOrder: z.number().min(0),
-  sampleId: z.number().int().positive().optional(),
+  sampleId: z.number().int().positive().nullable().optional(), // Backend returns null
   results: z.record(z.string(), z.unknown()).nullable().optional(),
-  resultEnteredAt: z.string().datetime().optional(),
-  enteredBy: z.string().optional(),
-  resultValidatedAt: z.string().datetime().optional(),
-  validatedBy: z.string().optional(),
-  validationNotes: z.string().optional(),
-  flags: z.array(z.string()).optional(),
-  technicianNotes: z.string().optional(),
+  resultEnteredAt: z.string().datetime().nullable().optional(), // Backend returns null
+  enteredBy: z.string().nullable().optional(), // Backend returns null
+  resultValidatedAt: z.string().datetime().nullable().optional(), // Backend returns null
+  validatedBy: z.string().nullable().optional(), // Backend returns null
+  validationNotes: z.string().nullable().optional(), // Backend returns null
+  flags: z.array(z.string()).nullable().optional(), // Backend returns null
+  technicianNotes: z.string().nullable().optional(), // Backend returns null
   isReflexTest: z.boolean().optional(),
   triggeredBy: z.string().optional(),
   reflexRule: z.string().optional(),
   isRepeatTest: z.boolean().optional(),
   repeatReason: z.string().optional(),
   originalTestId: z.number().int().positive().optional(),
-  repeatNumber: z.number().int().positive().optional(),
+  repeatNumber: z.number().int().nonnegative().optional(), // Backend returns 0 for original, allow 0
   isRetest: z.boolean().optional(),
+  retestOfTestId: z.number().int().positive().nullable().optional(), // Backend returns null
+  retestNumber: z.number().int().nonnegative().optional(), // Backend returns 0 for original, allow 0
+  retestOrderTestId: z.number().int().positive().nullable().optional(), // Backend returns null
+  resultRejectionHistory: z.array(z.object({
+    rejectedAt: z.string(),
+    rejectedBy: z.string(),
+    rejectionReason: z.string(),
+    rejectionType: z.enum(['re-test', 're-collect']),
+  })).nullable().optional(), // Backend returns null
 });
 
 export const orderSchema = z.object({
-  id: positiveIntSchema,
-  orderNumber: z.string(),
+  orderId: positiveIntSchema, // Backend returns orderId, not id
   patientId: positiveIntSchema,
-  referringPhysician: z.string().min(1),
-  priority: z.enum(['routine', 'urgent', 'stat']),
-  clinicalNotes: z.string().optional(),
+  patientName: z.string(), // From backend relationship
+  orderDate: dateStringSchema,
   tests: z.array(orderTestSchema).min(1, 'At least one test is required'),
   totalPrice: z.number().min(0),
-  orderStatus: z.enum(['pending', 'collected', 'processing', 'validated', 'cancelled']),
   paymentStatus: z.enum(['unpaid', 'paid', 'refunded']),
-  orderDate: dateStringSchema,
+  overallStatus: z.enum(['ordered', 'in-progress', 'completed', 'cancelled']), // Backend returns overallStatus, not orderStatus
+  priority: z.enum(['routine', 'urgent', 'stat']),
+  referringPhysician: z.string().nullable().optional(), // Backend allows null
+  clinicalNotes: z.string().nullable().optional(), // Backend allows null
+  specialInstructions: z.array(z.string()).nullable().optional(), // Backend optional
+  patientPrepInstructions: z.string().nullable().optional(), // Backend optional
+  createdBy: z.string(), // Backend returns string user ID
   createdAt: dateStringSchema,
   updatedAt: dateStringSchema,
 });

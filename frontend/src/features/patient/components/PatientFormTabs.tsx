@@ -16,12 +16,23 @@ import {
 } from './PatientForm';
 import { VitalsSection } from './VitalsSection';
 
+const VITAL_KEYS = [
+  'temperature',
+  'heartRate',
+  'systolicBP',
+  'diastolicBP',
+  'respiratoryRate',
+  'oxygenSaturation',
+] as const;
+
 export interface PatientFormTabsProps {
   activeTab: string;
   register: UseFormRegister<PatientFormInput>;
   control: Control<PatientFormInput>;
   errors: FieldErrors<PatientFormInput>;
   existingAffiliation?: Patient['affiliation'];
+  /** When editing, vitals that were not provided show as N/A and disabled */
+  existingVitalSigns?: Patient['vitalSigns'] | null;
   watch: UseFormWatch<PatientFormInput>;
   setValue: UseFormSetValue<PatientFormInput>;
 }
@@ -125,18 +136,21 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
   control,
   errors,
   existingAffiliation,
+  existingVitalSigns,
   watch,
   setValue,
 }) => {
-  // Track checkbox state separately since hasAffiliation is derived from affiliation object
-  // Initialize from existing affiliation
   const formValues = watch();
   const initialHasAffiliation = useMemo(() => !!existingAffiliation, [existingAffiliation]);
   const [hasAffiliationChecked, setHasAffiliationChecked] = useState(initialHasAffiliation);
-  
-  // Use checkbox state OR affiliation object presence to determine hasAffiliation
+
+  const emptyVitalKeysReadOnly = useMemo(() => {
+    if (existingVitalSigns == null) return new Set<string>();
+    const vs = existingVitalSigns as unknown as Record<string, unknown>;
+    return new Set(VITAL_KEYS.filter((k) => vs[k] == null || vs[k] === ''));
+  }, [existingVitalSigns]);
+
   const effectiveHasAffiliation = hasAffiliationChecked || !!formValues.affiliation;
-  
   const formData = createFormDataAdapter(watch, effectiveHasAffiliation);
   const flatErrors = createErrorsAdapter(errors);
   
@@ -146,7 +160,11 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
     const fieldMap: Record<string, (val: unknown) => void> = {
       fullName: (val) => setValue('fullName', val as string),
       dateOfBirth: (val) => setValue('dateOfBirth', val as string),
-      gender: (val) => setValue('gender', val as 'male' | 'female' | undefined),
+      gender: (val) => {
+        if (val === 'male' || val === 'female') {
+          setValue('gender', val);
+        }
+      },
       phone: (val) => setValue('phone', val as string),
       email: (val) => setValue('email', val as string),
       height: (val) => setValue('height', val ? parseFloat(val as string) : undefined, { shouldValidate: true }),
@@ -218,12 +236,48 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
         const currentLifestyle = watch('medicalHistory.lifestyle') || { smoking: false, alcohol: false };
         setValue('medicalHistory.lifestyle', { ...currentLifestyle, alcohol: val as boolean }, { shouldValidate: true });
       },
-      temperature: (val) => setValue('vitalSigns.temperature', val ? parseFloat(val as string) : undefined, { shouldValidate: true }),
-      heartRate: (val) => setValue('vitalSigns.heartRate', val ? parseInt(val as string, 10) : undefined, { shouldValidate: true }),
-      systolicBP: (val) => setValue('vitalSigns.systolicBP', val ? parseInt(val as string, 10) : undefined, { shouldValidate: true }),
-      diastolicBP: (val) => setValue('vitalSigns.diastolicBP', val ? parseInt(val as string, 10) : undefined, { shouldValidate: true }),
-      respiratoryRate: (val) => setValue('vitalSigns.respiratoryRate', val ? parseInt(val as string, 10) : undefined, { shouldValidate: true }),
-      oxygenSaturation: (val) => setValue('vitalSigns.oxygenSaturation', val ? parseFloat(val as string) : undefined, { shouldValidate: true }),
+      temperature: (val) => {
+        const currentVitals = watch('vitalSigns') || {};
+        setValue('vitalSigns', {
+          ...currentVitals,
+          temperature: val ? parseFloat(val as string) : undefined,
+        }, { shouldValidate: true });
+      },
+      heartRate: (val) => {
+        const currentVitals = watch('vitalSigns') || {};
+        setValue('vitalSigns', {
+          ...currentVitals,
+          heartRate: val ? parseInt(val as string, 10) : undefined,
+        }, { shouldValidate: true });
+      },
+      systolicBP: (val) => {
+        const currentVitals = watch('vitalSigns') || {};
+        setValue('vitalSigns', {
+          ...currentVitals,
+          systolicBP: val ? parseInt(val as string, 10) : undefined,
+        }, { shouldValidate: true });
+      },
+      diastolicBP: (val) => {
+        const currentVitals = watch('vitalSigns') || {};
+        setValue('vitalSigns', {
+          ...currentVitals,
+          diastolicBP: val ? parseInt(val as string, 10) : undefined,
+        }, { shouldValidate: true });
+      },
+      respiratoryRate: (val) => {
+        const currentVitals = watch('vitalSigns') || {};
+        setValue('vitalSigns', {
+          ...currentVitals,
+          respiratoryRate: val ? parseInt(val as string, 10) : undefined,
+        }, { shouldValidate: true });
+      },
+      oxygenSaturation: (val) => {
+        const currentVitals = watch('vitalSigns') || {};
+        setValue('vitalSigns', {
+          ...currentVitals,
+          oxygenSaturation: val ? parseFloat(val as string) : undefined,
+        }, { shouldValidate: true });
+      },
     };
 
     const handler = fieldMap[field];
@@ -287,7 +341,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             </div>
             <div className="text-base font-semibold text-text-primary">Measurements</div>
             <div className="text-xs text-text-tertiary mt-1.5 leading-relaxed">
-              Fill all vitals or leave all blank. Hints show typical ranges.
+              Fill any vitals you have. Hints show typical ranges.
             </div>
           </div>
           <VitalsSection
@@ -301,6 +355,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             }}
             errors={flatErrors}
             onFieldChange={onFieldChange}
+            emptyKeysReadOnly={emptyVitalKeysReadOnly}
           />
         </div>
       );

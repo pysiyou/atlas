@@ -16,10 +16,10 @@ export const paymentSchema = z.object({
   invoiceId: z.number().int().positive().nullable(),
   amount: z.number().min(0),
   paymentMethod: paymentMethodSchema,
-  paidAt: dateStringSchema,
-  receivedBy: positiveIntSchema,
+  paidAt: dateStringSchema, // Uses dateStringSchema which accepts ISO datetime strings
+  receivedBy: z.string(), // Backend returns string user ID, not number
   receiptGenerated: z.boolean(),
-  notes: z.string().optional(),
+  notes: z.string().nullable().optional(), // Backend allows null
   // Computed fields from relationships
   orderTotalPrice: z.number().min(0).optional(),
   numberOfTests: z.number().int().min(0).optional(),

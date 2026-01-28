@@ -28,7 +28,7 @@ export function usePatientForm({ patient, mode = 'create', onSubmitSuccess }: Us
     if (mode === 'edit' && patient) {
       return patientToFormInput(patient) as Partial<PatientFormInput>;
     }
-    return {};
+    return { vitalSigns: {} };
   }, [mode, patient]);
 
   const form = useForm<PatientFormInput>({

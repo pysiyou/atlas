@@ -13,13 +13,13 @@ export const affiliationSchema = z.object({
 
 export type Affiliation = z.infer<typeof affiliationSchema>;
 
-/** Form-only: duration required; assuranceNumber/startDate/endDate optional (filled on submit or by API) */
+/** Form-only: all fields optional (partial submission allowed) */
 export const affiliationFormSchema = z
   .object({
-    assuranceNumber: z.string().min(1).optional(),
-    startDate: dateStringSchema.optional(),
-    endDate: dateStringSchema.optional(),
-    duration: z.union([z.literal(6), z.literal(12), z.literal(24)]),
+    assuranceNumber: z.string().min(1).nullish(),
+    startDate: dateStringSchema.nullish(),
+    endDate: dateStringSchema.nullish(),
+    duration: z.union([z.literal(6), z.literal(12), z.literal(24)]).nullish(),
   })
   .refine(
     (data) =>

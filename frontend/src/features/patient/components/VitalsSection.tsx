@@ -24,6 +24,8 @@ export interface VitalsSectionProps {
   errors?: Record<string, string>;
   /** Callback when a field changes */
   onFieldChange: (field: string, value: string) => void;
+  /** Keys that have no value from patient (partial vitals): show N/A and disable */
+  emptyKeysReadOnly?: ReadonlySet<string>;
 }
 
 /**
@@ -186,6 +188,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
   vitalSigns,
   errors = {},
   onFieldChange,
+  emptyKeysReadOnly,
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -197,74 +200,76 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
         const status = getVitalStatus(numericValue, config.normalRange);
         const statusColors = getStatusColors(status);
         const isAbnormal = status === 'abnormal';
+        const isNa = !value && emptyKeysReadOnly?.has(fieldName);
 
-        // Format reference range for display
         const refRange = `${config.normalRange.min}-${config.normalRange.max}`;
 
         return (
           <div key={config.key} className="group">
-            {/* Label and reference range row */}
             <div className="flex justify-between items-baseline mb-1 gap-2">
               <label
-                htmlFor={`vital-${fieldName}`}
-                className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
+                htmlFor={isNa ? undefined : `vital-${fieldName}`}
+                className={`text-xs font-medium truncate min-w-0 ${isNa ? 'text-text-tertiary cursor-default' : 'text-text-tertiary cursor-pointer'}`}
               >
                 {config.label}
               </label>
-
               <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
-                {isAbnormal && (
+                {isAbnormal && !isNa && (
                   <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-danger shrink-0" />
                 )}
                 <span className="text-xxs text-text-tertiary truncate">Ref: {refRange}</span>
               </div>
             </div>
 
-            {/* Input wrapper with relative positioning */}
             <div className="relative">
-              {/* Icon (left, matches shared Input pattern; z-10 so it stacks above input) */}
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                <Icon name={config.icon} className="w-4 h-4 text-text-muted shrink-0" />
+                <Icon name={config.icon} className={`w-4 h-4 shrink-0 ${isNa ? 'text-text-muted/70' : 'text-text-muted'}`} />
               </div>
 
-              <input
-                id={`vital-${fieldName}`}
-                name={fieldName}
-                type="number"
-                value={value}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  onFieldChange(fieldName, e.target.value)
-                }
-                min={config.min}
-                max={config.max}
-                step={config.step}
-                placeholder="--"
-                className={`
-                  w-full rounded border px-3 py-1.5 text-sm bg-surface pl-10
-                  ${error ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger/20' : 'border-border focus:border-brand focus:ring-2 focus:ring-brand/20'}
-                  pr-12
-                  [appearance:textfield]
-                  [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0
-                  [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0
-                  ${status ? statusColors.border : ''}
-                  ${status ? statusColors.bg : ''}
-                `}
-              />
-
-              {/* Unit display (absolute positioned) */}
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
-                <span className="text-xs text-text-tertiary select-none truncate">{config.unit}</span>
-              </div>
-
-              {/* Abnormal value alert (absolute positioned below input) */}
-              {isAbnormal && (
-                <div className="absolute -bottom-5 left-0 text-xxs text-danger font-medium">
-                  Abnormal value
+              {isNa ? (
+                <div
+                  className="w-full rounded border border-border bg-muted/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-tertiary"
+                  aria-label={`${config.label} not provided`}
+                >
+                  N/A
                 </div>
+              ) : (
+                <>
+                  <input
+                    id={`vital-${fieldName}`}
+                    name={fieldName}
+                    type="number"
+                    value={value}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      onFieldChange(fieldName, e.target.value)
+                    }
+                    min={config.min}
+                    max={config.max}
+                    step={config.step}
+                    placeholder="--"
+                    className={`
+                      w-full rounded border px-3 py-1.5 text-sm bg-surface pl-10
+                      ${error ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger/20' : 'border-border focus:border-brand focus:ring-2 focus:ring-brand/20'}
+                      pr-12
+                      [appearance:textfield]
+                      [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0
+                      [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0
+                      ${status ? statusColors.border : ''}
+                      ${status ? statusColors.bg : ''}
+                    `}
+                  />
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
+                    <span className="text-xs text-text-tertiary select-none truncate">{config.unit}</span>
+                  </div>
+                  {isAbnormal && (
+                    <div className="absolute -bottom-5 left-0 text-xxs text-danger font-medium">
+                      Abnormal value
+                    </div>
+                  )}
+                </>
               )}
             </div>
 
-            {/* Error message */}
             {error && <p className="mt-1 text-sm text-danger">{error}</p>}
           </div>
         );

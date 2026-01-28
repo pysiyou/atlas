@@ -13,7 +13,7 @@ from app.models.user import User
 from app.models.patient import Patient
 from app.models.order import Order, OrderTest
 from app.models.sample import Sample
-from app.schemas.patient import PatientCreate, PatientUpdate, PatientResponse
+from app.schemas.patient import PatientCreate, PatientUpdate, PatientResponse, MedicalHistory
 from app.schemas.enums import SampleStatus, TestStatus, UserRole
 from app.schemas.pagination import create_paginated_response, skip_to_page
 
@@ -136,6 +136,13 @@ def create_patient(
     """
     Create a new patient
     """
+    # Provide default empty medical history if None (DB column is nullable=False)
+    medical_history_data = (
+        patient_data.medicalHistory.model_dump() 
+        if patient_data.medicalHistory 
+        else MedicalHistory().model_dump()
+    )
+    
     patient = Patient(
         fullName=patient_data.fullName,
         dateOfBirth=patient_data.dateOfBirth,
@@ -146,7 +153,7 @@ def create_patient(
         weight=patient_data.weight,
         address=patient_data.address.model_dump(),
         emergencyContact=patient_data.emergencyContact.model_dump(),
-        medicalHistory=patient_data.medicalHistory.model_dump(),
+        medicalHistory=medical_history_data,
         affiliation=patient_data.affiliation.model_dump() if patient_data.affiliation else None,
         registrationDate=datetime.now(timezone.utc),
         createdBy=current_user.id,

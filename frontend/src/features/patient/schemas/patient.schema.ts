@@ -3,7 +3,7 @@ import { nameSchema, phoneSchema, emailSchema, dateStringSchema } from '@/shared
 import { addressSchema } from './address.schema';
 import { affiliationSchema, affiliationFormSchema } from './affiliation.schema';
 import { emergencyContactSchema } from './emergency-contact.schema';
-import { vitalSignsSchema } from './vital-signs.schema';
+import { vitalSignsSchema, vitalSignsFormSchema } from './vital-signs.schema';
 
 export const medicalHistorySchema = z.object({
   chronicConditions: z.array(z.string()).optional(),
@@ -12,9 +12,9 @@ export const medicalHistorySchema = z.object({
   previousSurgeries: z.array(z.string()).optional(),
   familyHistory: z.union([z.string(), z.array(z.string())]).optional(),
   lifestyle: z.object({
-    smoking: z.boolean(),
-    alcohol: z.boolean(),
-  }).optional(),
+    smoking: z.boolean().nullish(),
+    alcohol: z.boolean().nullish(),
+  }).nullish(),
 });
 
 export const patientSchema = z.object({
@@ -41,7 +41,7 @@ export const patientSchema = z.object({
 export type Patient = z.infer<typeof patientSchema>;
 export type MedicalHistory = z.infer<typeof medicalHistorySchema>;
 
-// Form schema (excludes auto-generated fields; form uses partial affiliation)
+// Form schema (excludes auto-generated fields; form uses partial affiliation and vital signs)
 export const patientFormSchema = patientSchema
   .omit({
     id: true,
@@ -51,6 +51,9 @@ export const patientFormSchema = patientSchema
     updatedAt: true,
     updatedBy: true,
   })
-  .extend({ affiliation: affiliationFormSchema.optional() });
+  .extend({
+    affiliation: affiliationFormSchema.nullish(),
+    vitalSigns: vitalSignsFormSchema.nullish(),
+  });
 
 export type PatientFormInput = z.infer<typeof patientFormSchema>;

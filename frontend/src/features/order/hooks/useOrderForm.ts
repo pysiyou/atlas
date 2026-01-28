@@ -6,7 +6,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { orderFormSchema, type OrderFormInput } from '../schemas/order.schema';
 import { useOrderService } from '../services/useOrderService';
 import type { Order } from '@/types';
@@ -23,6 +23,7 @@ interface UseOrderFormOptions {
  */
 export function useOrderForm({ order, mode = 'create', initialPatientId, onSubmitSuccess }: UseOrderFormOptions = {}) {
   const { create, update } = useOrderService();
+  const isSubmittingRef = useRef(false);
 
   const defaultValues = useMemo(() => {
     if (mode === 'edit' && order) {
@@ -51,6 +52,12 @@ export function useOrderForm({ order, mode = 'create', initialPatientId, onSubmi
   });
 
   const onSubmit = async (data: OrderFormInput) => {
+    // Prevent double submission using ref guard
+    if (isSubmittingRef.current || create.isPending || update.isPending) {
+      return;
+    }
+
+    isSubmittingRef.current = true;
     try {
       let createdOrder: Order | undefined;
       if (mode === 'edit' && order) {
@@ -64,6 +71,8 @@ export function useOrderForm({ order, mode = 'create', initialPatientId, onSubmi
       // Error handled by service hook
       console.error('Form submission error:', error);
       throw error;
+    } finally {
+      isSubmittingRef.current = false;
     }
   };
 

@@ -3,7 +3,7 @@
  * Complete migration to new architecture
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Patient } from '@/types';
@@ -115,12 +115,14 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<string>('general');
   const { create, update } = usePatientService();
+  const isSubmittingRef = useRef(false);
 
   const defaultValues = useMemo(() => {
     if (mode === 'edit' && patient) {
       return patientToFormInput(patient) as Partial<PatientFormInput>;
     }
-    return {};
+    // Create: seed vitalSigns so setValue merges and submit includes it (avoid stale watch + missing key)
+    return { vitalSigns: {} };
   }, [mode, patient]);
 
   const {
@@ -139,7 +141,20 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
 
   const formValues = watch();
 
+  // Reset submission ref when modal opens/closes
+  useEffect(() => {
+    if (!isOpen) {
+      isSubmittingRef.current = false;
+    }
+  }, [isOpen]);
+
   const onSubmit = async (data: PatientFormInput) => {
+    // Prevent double submission - check ref and mutation pending state
+    if (isSubmittingRef.current || create.isPending || update.isPending) {
+      return;
+    }
+    
+    isSubmittingRef.current = true;
     try {
       if (mode === 'edit' && patient) {
         await update.mutateAsync({ id: patient.id, data });
@@ -151,12 +166,20 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
     } catch (error) {
       // Error handled by service hook
       console.error('Form submission error:', error);
+    } finally {
+      isSubmittingRef.current = false;
     }
   };
 
   // Handle form submission with validation
   const handleFormSubmit = handleSubmit(
-    onSubmit,
+    async (data) => {
+      // Additional guard at form level - check all possible submission states
+      if (isSubmittingRef.current || isSubmitting || create.isPending || update.isPending) {
+        return;
+      }
+      await onSubmit(data);
+    },
     (validationErrors) => {
       // Log validation errors for debugging
       console.error('Form validation errors:', validationErrors);
@@ -232,6 +255,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                   control={control}
                   errors={errors}
                   existingAffiliation={patient?.affiliation}
+                  existingVitalSigns={patient?.vitalSigns}
                   watch={watch}
                   setValue={setValue}
                 />
