@@ -7,11 +7,12 @@ import React, { useState } from 'react';
 import { CollectionView } from '@/features/lab/collection/CollectionView';
 import { EntryView } from '@/features/lab/entry/EntryView';
 import { ValidationView } from '@/features/lab/validation/ValidationView';
+import { AnalyticsDashboard } from '@/features/lab/analytics';
 import { Icon } from '@/shared/ui';
 import { ICONS } from '@/utils';
 
 export const Laboratory: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'collection' | 'entry' | 'validation'>('collection');
+  const [activeTab, setActiveTab] = useState<'collection' | 'entry' | 'validation' | 'analytics'>('collection');
 
   const tabs = [
     {
@@ -28,6 +29,11 @@ export const Laboratory: React.FC = () => {
       id: 'validation' as const,
       label: 'Result Validation',
       icon: <Icon name={ICONS.ui.shieldCheck} className="w-4 h-4" />,
+    },
+    {
+      id: 'analytics' as const,
+      label: 'Analytics',
+      icon: <Icon name={ICONS.dataFields.trendingUp} className="w-4 h-4" />,
     },
   ];
 
@@ -74,6 +80,11 @@ export const Laboratory: React.FC = () => {
           {activeTab === 'collection' && <CollectionView />}
           {activeTab === 'entry' && <EntryView />}
           {activeTab === 'validation' && <ValidationView />}
+          {activeTab === 'analytics' && (
+            <div className="flex-1 overflow-y-auto p-6">
+              <AnalyticsDashboard />
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -279,10 +279,57 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   /** Check if form can be submitted */
   const canSubmit = isComplete && !hasValidationErrors;
 
+  // Detect critical values in current results
+  const criticalParameters = testDef?.parameters?.filter(param => {
+    const value = results[param.code];
+    if (!value) return false;
+    return checkCriticalStatus(param, value);
+  }) || [];
+
+  const hasCriticalValues = criticalParameters.length > 0;
+
   if (!testDef?.parameters) return null;
 
   return (
     <div className="bg-app-bg rounded-lg p-4 border border-border-subtle">
+      {/* Critical Value Alert Banner */}
+      {hasCriticalValues && (
+        <div className="mb-4 bg-red-100 border-l-4 border-red-600 p-4 rounded animate-pulse">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0">
+              <div className="p-1.5 bg-red-600 rounded-full">
+                <Icon name="alert-circle" className="w-4 h-4 text-white" />
+              </div>
+            </div>
+            <div className="flex-1">
+              <h4 className="text-sm font-bold text-red-900 uppercase tracking-wide mb-2">
+                ⚠️ PANIC VALUE DETECTED - Immediate Action Required
+              </h4>
+              <div className="space-y-1">
+                {criticalParameters.map(param => (
+                  <div key={param.code} className="text-xs text-red-800">
+                    <span className="font-semibold">{param.name}:</span>{' '}
+                    <span className="font-bold">{results[param.code]}</span>
+                    {param.unit && <span className="ml-1">{param.unit}</span>}
+                    {(param.criticalLow !== undefined || param.criticalHigh !== undefined) && (
+                      <span className="ml-2 text-red-700">
+                        (Critical range: 
+                        {param.criticalLow !== undefined && ` <${param.criticalLow}`}
+                        {param.criticalHigh !== undefined && ` >${param.criticalHigh}`}
+                        {param.unit && ` ${param.unit}`})
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 text-xs text-red-900 bg-amber-50 border border-amber-300 rounded p-2">
+                <strong>Required Actions:</strong> Notify physician immediately • Verify patient ID • Consider retest • Document notification
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {testDef.parameters.map(param => {
           const value = results[param.code] ?? '';

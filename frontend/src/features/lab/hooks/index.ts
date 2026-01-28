@@ -5,3 +5,4 @@
 export * from './useCollectionFilters';
 export * from './useEntryFilters';
 export * from './useValidationFilters';
+export * from './useRejectionManager';

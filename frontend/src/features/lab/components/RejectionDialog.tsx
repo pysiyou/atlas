@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 import { Popover, IconButton, Icon, Alert, Button, ClaudeLoader, FooterInfo } from '@/shared/ui';
 // Note: Icon is still used for Alert content and RejectionHistoryBanner
 import { PopoverForm, RadioCard } from './PopoverForm';
-// useRejectionManager removed - TODO: replace with service hook or inline logic
+import { useRejectionManager } from '../hooks/useRejectionManager';
 import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
 import { ICONS } from '@/utils';
@@ -38,31 +38,34 @@ interface RejectionDialogContentProps {
 // Large component is necessary for comprehensive rejection dialog with API integration, action management, and conditional UI
 // eslint-disable-next-line max-lines-per-function
 export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
-  orderId: _orderId,
-  testCode: _testCode,
+  orderId,
+  testCode,
   testName,
   patientName,
   onConfirm,
   onCancel,
   orderHasValidatedTests = false,
+  // High complexity is necessary for comprehensive rejection logic with multiple conditional branches and state management
+  // eslint-disable-next-line complexity
 }) => {
   const [reason, setReason] = useState('');
+  /** User override; when null, we use the derived default from options. */
   const [userOverride, setUserOverride] = useState<ResultRejectionType | null>(null);
 
-  // TEMPORARY: Placeholder during migration
-  // useRejectionManager removed - needs migration to service hook
-  const options: any[] = [];
-  const isLoading = false;
-  const isRejecting = false;
-  const error = null;
-  const fetchOptions = (_arg: any) => {};
-  const rejectWithAction = async (_reason: string, _type: string) => {};
-  const isActionEnabled = (_action: string) => false;
-  const getDisabledReason = (_action: string) => 'Migration in progress';
-  const retestAttemptsRemaining = 0;
-  const recollectionAttemptsRemaining = 0;
-  const escalationRequired = false;
-  const clearError = () => {};
+  const {
+    options,
+    isLoading,
+    isRejecting,
+    error,
+    fetchOptions,
+    rejectWithAction,
+    isActionEnabled,
+    getDisabledReason,
+    retestAttemptsRemaining,
+    recollectionAttemptsRemaining,
+    escalationRequired,
+    clearError,
+  } = useRejectionManager({ orderId, testCode, autoFetch: true });
 
   /**
    * Check if re-collect is allowed considering both API limits and validated tests.
@@ -87,17 +90,15 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   const handleConfirm = async () => {
     if (!reason.trim()) return;
 
-    await rejectWithAction(selectedType, reason);
-    // Placeholder result
-    onConfirm({
-      rejectionReason: reason,
-      rejectionType: selectedType,
-    } as any);
+    const result = await rejectWithAction(selectedType, reason);
+    if (result) {
+      onConfirm(result);
+    }
   };
 
   const subtitle = [
     testName,
-    _testCode ? `(${_testCode})` : '',
+    testCode ? `(${testCode})` : '',
     patientName ? `- ${patientName}` : '',
   ]
     .filter(Boolean)
@@ -130,7 +131,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
             size="sm"
             onClick={() => {
               clearError();
-              fetchOptions({} as any);
+              fetchOptions();
             }}
           >
             Retry

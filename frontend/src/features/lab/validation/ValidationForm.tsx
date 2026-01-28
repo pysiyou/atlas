@@ -2,8 +2,9 @@
  * ValidationForm - Form for reviewing and approving/rejecting test results
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Textarea } from '@/shared/ui';
+import { PanicValueAlert } from './components/PanicValueAlert';
 
 type ResultStatus =
   | 'normal'
@@ -100,8 +101,51 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   // Build flag status map for result parsing
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
 
+  // Track acknowledged panic values
+  const [acknowledgedPanicValues, setAcknowledgedPanicValues] = useState<Set<string>>(new Set());
+
+  // Detect panic values
+  const panicValues = useMemo(() => {
+    if (!hasResults) return [];
+    
+    return Object.entries(results)
+      .map(([key, rawValue]) => {
+        const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
+        if (!isCritical(status)) return null;
+        
+        return {
+          key,
+          parameterName: key,
+          value: resultValue,
+          unit,
+          status,
+        };
+      })
+      .filter((pv): pv is NonNullable<typeof pv> => pv !== null);
+  }, [results, flagStatusMap, hasResults]);
+
+  const handleAcknowledgePanicValue = (key: string) => {
+    setAcknowledgedPanicValues(prev => new Set([...prev, key]));
+  };
+
   return (
     <div className="bg-app-bg rounded border border-border p-4">
+      {/* Panic Value Alerts */}
+      {panicValues.length > 0 && (
+        <div className="mb-6 space-y-4">
+          {panicValues.map(pv => (
+            <PanicValueAlert
+              key={pv.key}
+              parameterName={pv.parameterName}
+              value={pv.value}
+              unit={pv.unit}
+              onAcknowledge={() => handleAcknowledgePanicValue(pv.key)}
+              isAcknowledged={acknowledgedPanicValues.has(pv.key)}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Results Grid */}
       {hasResults && (
         <div className="mb-6">
