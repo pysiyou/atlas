@@ -220,8 +220,8 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                   <thead>
                     <tr>
                       <th className="px-4 py-3 text-left font-semibold border-b-2 border-black">Investigation</th>
-                      <th className="px-4 py-3 text-center font-semibold border-b-2 border-black">Result</th>
-                      <th className="px-4 py-3 text-center font-semibold border-b-2 border-black">Reference Value</th>
+                      <th className="px-4 py-3 text-left font-semibold border-b-2 border-black">Result</th>
+                      <th className="px-4 py-3 text-left font-semibold border-b-2 border-black">Reference Value</th>
                       <th className="px-4 py-3 text-right font-semibold border-b-2 border-black">Unit</th>
                     </tr>
                   </thead>
@@ -229,53 +229,19 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                     {/* Primary Sample Type Row */}
                     <tr className="border-b border-border">
                       <td className="px-4 py-3 text-text-primary">Primary Sample Type :</td>
-                      <td className="px-4 py-3 text-center text-text-primary">
-                        {reportData.order.tests[0]?.sampleType || 'N/A'}
+                      <td className="px-4 py-3 text-left text-text-primary">
+                        {reportData.order.tests[0]?.sampleType?.toUpperCase() || 'N/A'}
                       </td>
-                      <td className="px-4 py-3 text-center text-text-secondary"></td>
+                      <td className="px-4 py-3 text-left text-text-secondary"></td>
                       <td className="px-4 py-3 text-right text-text-secondary"></td>
                     </tr>
                     
                     {test.parameters.map((param, paramIndex) => {
-                      // Determine status
-                      let status: 'low' | 'high' | 'borderline' | undefined;
-                      if (param.status && param.status.toLowerCase() !== 'normal') {
-                        const statusLower = param.status.toLowerCase();
-                        if (statusLower === 'low' || statusLower === 'critical-low') {
-                          status = 'low';
-                        } else if (statusLower === 'high' || statusLower === 'critical-high') {
-                          status = 'high';
-                        } else if (statusLower === 'borderline') {
-                          status = 'borderline';
-                        }
-                      }
-                      
                       // Check if original parameter name is a section header (all caps, length > 3)
                       const isSectionHeader = param.name === param.name.toUpperCase() && param.name.length > 3 && !param.name.includes(':');
                       
-                      // Result value color
-                      const resultColorClass = status === 'low' 
-                        ? 'text-blue-600' 
-                        : status === 'high' 
-                        ? 'text-red-600' 
-                        : 'text-text-primary';
-                      
-                      // Reference value with status label
-                      const referenceValueDisplay = (() => {
-                        if (!status) return param.referenceRange || '';
-                        const statusLabel = status === 'low' ? 'Low' : status === 'high' ? 'High' : 'Borderline';
-                        const statusColorClass = status === 'low' 
-                          ? 'text-blue-600 font-bold' 
-                          : status === 'high' 
-                          ? 'text-red-600 font-bold' 
-                          : 'text-amber-600 font-bold';
-                        return (
-                          <span>
-                            <span className={statusColorClass}>{statusLabel}</span>
-                            {param.referenceRange && <span className="text-text-secondary"> {param.referenceRange}</span>}
-                          </span>
-                        );
-                      })();
+                      // Check if value is abnormal
+                      const isAbnormal = param.status && param.status.toLowerCase() !== 'normal';
 
                       return (
                         <tr
@@ -297,11 +263,14 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                               </div>
                             )}
                           </td>
-                          <td className={cn('px-4 py-3 text-center', resultColorClass)}>
+                          <td className={cn(
+                            'px-4 py-3 text-left',
+                            isAbnormal ? 'text-red-600 font-bold' : 'text-text-primary'
+                          )}>
                             {param.value}
                           </td>
-                          <td className="px-4 py-3 text-center">
-                            {referenceValueDisplay}
+                          <td className="px-4 py-3 text-left text-text-secondary">
+                            {param.referenceRange || ''}
                           </td>
                           <td className="px-4 py-3 text-right text-text-secondary">
                             {param.unit || '-'}
