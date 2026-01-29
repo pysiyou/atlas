@@ -5,10 +5,10 @@
  */
 
 import React from 'react';
-import { Modal, Button, Icon } from '@/shared/ui';
+import { Modal, Button, Icon, FooterInfo } from '@/shared/ui';
 import type { ReportData } from '../types';
 import { format } from 'date-fns';
-import { cn } from '@/utils';
+import { cn, ICONS } from '@/utils';
 import { companyConfig } from '@/config';
 import { useUserLookup } from '@/hooks/queries';
 
@@ -301,30 +301,28 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="border-t border-border bg-surface p-4 space-y-4">
-          <div className="flex items-center justify-center gap-2 text-xs text-text-tertiary">
-            <Icon name="info-circle" className="w-4 h-4" />
-            <span>
-              {companyConfig.getReports().footerText} Generated: {format(new Date(), 'MMM dd, yyyy HH:mm')}
-            </span>
-          </div>
-          <div className="flex items-center justify-end gap-3">
-            <Button variant="cancel" onClick={onClose} disabled={isGenerating}>
+        {/* Footer - matches PaymentDetailModal / EditPatientModal */}
+        <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border bg-surface shrink-0 shadow-[0_-1px_3px_rgba(0,0,0,0.04)]">
+          <FooterInfo
+            icon={ICONS.dataFields.document}
+            text={
+              <>
+                {companyConfig.getReports().footerText} Generated: {format(new Date(), 'MMM dd, yyyy HH:mm')}
+              </>
+            }
+          />
+          <div className="flex items-center gap-3">
+            <Button variant="cancel" size="md" onClick={onClose} disabled={isGenerating}>
               Close
             </Button>
-            <Button variant="download" onClick={onGenerate} disabled={isGenerating}>
-              {isGenerating ? (
-                <>
-                  <Icon name="clock" className="w-4 h-4 animate-pulse" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <Icon name="download" className="w-4 h-4" />
-                  Download PDF
-                </>
-              )}
+            <Button
+              variant="download"
+              size="md"
+              onClick={onGenerate}
+              disabled={isGenerating}
+              isLoading={isGenerating}
+            >
+              {isGenerating ? 'Generating...' : 'Download PDF'}
             </Button>
           </div>
         </div>
