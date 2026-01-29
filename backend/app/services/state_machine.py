@@ -118,9 +118,10 @@ class TestStateMachine:
         TestStatus.PENDING: {TestStatus.SAMPLE_COLLECTED, TestStatus.REJECTED, TestStatus.REMOVED},
         TestStatus.SAMPLE_COLLECTED: {TestStatus.IN_PROGRESS, TestStatus.RESULTED, TestStatus.REJECTED},
         TestStatus.IN_PROGRESS: {TestStatus.RESULTED, TestStatus.REJECTED},
-        TestStatus.RESULTED: {TestStatus.VALIDATED, TestStatus.SUPERSEDED},
+        TestStatus.RESULTED: {TestStatus.VALIDATED, TestStatus.ESCALATED, TestStatus.SUPERSEDED},
         TestStatus.VALIDATED: set(),  # Terminal
         TestStatus.REJECTED: {TestStatus.PENDING},  # Can transition to pending when recollection is ready
+        TestStatus.ESCALATED: {TestStatus.VALIDATED, TestStatus.SUPERSEDED},  # Supervisor can validate or reject
         TestStatus.SUPERSEDED: set(),  # Terminal - replaced by retest
         TestStatus.REMOVED: set(),  # Terminal - removed from order during edit
     }
@@ -133,6 +134,7 @@ class TestStateMachine:
     # States from which results can be validated
     VALIDATION_STATES: Set[TestStatus] = {
         TestStatus.RESULTED,
+        TestStatus.ESCALATED,
     }
 
     @classmethod
@@ -173,6 +175,8 @@ class TestStateMachine:
             return False, "Sample must be collected before results can be entered"
         if status == TestStatus.RESULTED:
             return False, "Results already entered for this test"
+        if status == TestStatus.ESCALATED:
+            return False, "Test is escalated for supervisor review"
         if status == TestStatus.VALIDATED:
             return False, "Test has already been validated"
         if status == TestStatus.SUPERSEDED:

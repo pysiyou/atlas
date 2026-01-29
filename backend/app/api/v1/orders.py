@@ -26,7 +26,7 @@ router = APIRouter()
 @router.get("/orders")
 def get_orders(
     patientId: int | None = None,
-    status: OrderStatus | None = None,
+    order_status: OrderStatus | None = Query(None, alias="status"),
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     paginated: bool = Query(False, description="Return paginated response with total count"),
@@ -44,8 +44,8 @@ def get_orders(
     if patientId:
         query = query.filter(Order.patientId == patientId)
 
-    if status:
-        query = query.filter(Order.overallStatus == status)
+    if order_status:
+        query = query.filter(Order.overallStatus == order_status)
 
     # Eagerly load relationships needed for serialization
     query = query.options(

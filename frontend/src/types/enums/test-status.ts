@@ -14,6 +14,7 @@ export const TEST_STATUS_VALUES = [
   'resulted', // Results entered, awaiting validation
   'validated',
   'rejected',
+  'escalated', // Escalated for review; not yet handled in UI workflow
   'superseded', // Original test after retest is created during result validation rejection
   'removed', // Test removed from order during edit (hidden from UI but preserved for audit)
 ] as const;
@@ -29,6 +30,7 @@ export const TEST_STATUS_CONFIG: Record<TestStatus, { label: string }> = {
   resulted: { label: 'Resulted' },
   validated: { label: 'Validated' },
   rejected: { label: 'Rejected' },
+  escalated: { label: 'Escalated' },
   superseded: { label: 'Superseded' },
   removed: { label: 'Removed' },
 };

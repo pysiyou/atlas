@@ -58,6 +58,7 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
         TestStatus.RESULTED,
         TestStatus.VALIDATED,
         TestStatus.REJECTED,
+        TestStatus.ESCALATED,
     }
     any_started = any(t.status in started_statuses for t in active_tests)
     if any_started:
@@ -105,7 +106,8 @@ def update_order_status(db: Session, order_id: int) -> None:
                 TestStatus.PENDING,
                 TestStatus.SAMPLE_COLLECTED,
                 TestStatus.IN_PROGRESS,
-                TestStatus.RESULTED  # Needs validation
+                TestStatus.RESULTED,  # Needs validation
+                TestStatus.ESCALATED,  # Needs supervisor review
             }
             for t in active_tests
         )

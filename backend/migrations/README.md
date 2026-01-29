@@ -10,6 +10,7 @@ Apply these migrations in numerical order:
 1. `001_add_result_immutability_trigger.sql` - Prevents modification of validated results
 2. `002_make_audit_log_immutable.sql` - Makes audit log append-only (HIPAA compliance)
 3. `003_add_sample_fk_constraint.sql` - Adds foreign key constraint on OrderTest.sampleId
+4. `004_add_test_status_escalated.sql` - Adds 'escalated' to TestStatus enum (order_tests.status)
 
 ## How to Apply
 
@@ -23,6 +24,7 @@ psql -h localhost -U your_user -d atlas_db
 \i /path/to/migrations/001_add_result_immutability_trigger.sql
 \i /path/to/migrations/002_make_audit_log_immutable.sql
 \i /path/to/migrations/003_add_sample_fk_constraint.sql
+\i /path/to/migrations/004_add_test_status_escalated.sql
 ```
 
 ### Using a Migration Tool

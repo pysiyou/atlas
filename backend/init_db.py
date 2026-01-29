@@ -68,6 +68,11 @@ def apply_migrations():
         """))
         print("  ✓ Sample FK constraint applied")
         
+        # Migration 4: Add escalated to TestStatus enum (order_tests.status)
+        print("  ⏳ Adding test status 'escalated' to enum...")
+        conn.execute(text("ALTER TYPE teststatus ADD VALUE IF NOT EXISTS 'escalated'"))
+        print("  ✓ Test status escalated added")
+        
         conn.commit()
     
     print("✓ All migrations applied")

@@ -272,9 +272,9 @@ export const DateFilter: React.FC<DateFilterProps> = ({
       placement="bottom-start"
       showBackdrop={false}
       trigger={({ isOpen }: { isOpen: boolean }) => {
-        // Track popover open state (setState will be handled in useEffect)
+        // Defer sync to avoid setState during Popover's render (React forbids updating DateFilter while Popover is rendering)
         if (isOpen !== isPopoverOpen) {
-          setIsPopoverOpen(isOpen);
+          queueMicrotask(() => setIsPopoverOpen(isOpen));
         }
         return (
         <div

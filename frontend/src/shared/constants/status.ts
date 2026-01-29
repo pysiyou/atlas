@@ -49,6 +49,7 @@ export const TEST_STATUS_LABELS: Record<TestStatus, string> = {
   resulted: 'Resulted',
   validated: 'Validated',
   rejected: 'Rejected',
+  escalated: 'Escalated',
   superseded: 'Superseded',
   removed: 'Removed',
 };

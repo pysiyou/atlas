@@ -248,6 +248,32 @@ class AuditService:
             metadata=full_metadata
         )
 
+    def log_result_validation_escalate(
+        self,
+        order_id: int,
+        test_code: str,
+        order_test_id: int,
+        user_id: int,
+        rejection_reason: str,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> LabOperationLog:
+        """Log a result validation escalation to supervisor."""
+        full_metadata = {
+            "orderId": order_id,
+            "testCode": test_code,
+            "rejectionReason": rejection_reason,
+            **(metadata or {})
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.RESULT_VALIDATION_ESCALATE,
+            entity_type="test",
+            entity_id=order_test_id,
+            user_id=user_id,
+            before_state={"status": "resulted"},
+            after_state={"status": "escalated"},
+            metadata=full_metadata
+        )
+
     def get_entity_history(
         self,
         entity_type: str,

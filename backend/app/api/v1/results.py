@@ -43,7 +43,7 @@ class ResultRejectionRequest(BaseModel):
     rejectionReason: str = Field(..., min_length=1, max_length=1000, description="Reason for rejection")
     rejectionType: str = Field(
         ...,
-        description="'re-test' = re-run with same sample, 're-collect' = new sample needed"
+        description="'re-test' = re-run with same sample, 're-collect' = new sample needed, 'escalate' = escalate to supervisor when limits exceeded"
     )
 
 
@@ -262,7 +262,7 @@ def reject_results(
     if not action:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid rejection type: {rejection_data.rejectionType}. Valid options: 're-test', 're-collect'"
+            detail=f"Invalid rejection type: {rejection_data.rejectionType}. Valid options: 're-test', 're-collect', 'escalate'"
         )
 
     try:

@@ -90,7 +90,8 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   const handleConfirm = async () => {
     if (!reason.trim()) return;
 
-    const result = await rejectWithAction(selectedType, reason);
+    const actionType: ResultRejectionType = escalationRequired ? 'escalate' : selectedType;
+    const result = await rejectWithAction(actionType, reason);
     if (result) {
       onConfirm(result);
     }
@@ -141,24 +142,26 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     );
   }
 
-  // Confirm is disabled if:
-  // 1. No reason provided
-  // 2. Escalation is required (all options exhausted)
-  // 3. Neither re-test nor re-collect is available (considering validated tests block)
-  const isConfirmDisabled =
-    !reason.trim() || escalationRequired || (!isActionEnabled('re-test') && isRecollectBlocked);
+  const isConfirmDisabled = escalationRequired
+    ? !reason.trim()
+    : !reason.trim() || (!isActionEnabled('re-test') && isRecollectBlocked);
 
   return (
     <PopoverForm
-      title="Reject Results"
+      title={escalationRequired ? 'Escalate to Supervisor' : 'Reject Results'}
       subtitle={subtitle || undefined}
       onCancel={onCancel}
       onConfirm={handleConfirm}
-      confirmLabel="Reject"
+      confirmLabel={escalationRequired ? 'Escalate to Supervisor' : 'Reject'}
       confirmVariant="danger"
       isSubmitting={isRejecting}
       disabled={isConfirmDisabled}
-      footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text="Rejecting results" />}
+      footerInfo={
+        <FooterInfo
+          icon={ICONS.actions.alertCircle}
+          text={escalationRequired ? 'Escalating to supervisor' : 'Rejecting results'}
+        />
+      }
     >
       {/* Error Alert */}
       {error && (
@@ -220,21 +223,24 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
         </div>
       )}
 
-      {/* Rejection Reason */}
-      {!escalationRequired && (
-        <div>
+      {/* Rejection / Escalation Reason */}
+      <div>
         <label className="block text-xs font-medium text-text-tertiary mb-1">
-          Rejection Reason <span className="text-red-600">*</span>
+          {escalationRequired ? 'Reason for escalation' : 'Rejection Reason'}{' '}
+          <span className="text-red-600">*</span>
         </label>
-          <textarea
-            rows={3}
-            placeholder="Please explain why the results are being rejected..."
-            value={reason}
-            onChange={e => setReason(e.target.value)}
-            className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
-          />
-        </div>
-      )}
+        <textarea
+          rows={3}
+          placeholder={
+            escalationRequired
+              ? 'Please provide a reason for escalating to your supervisor...'
+              : 'Please explain why the results are being rejected...'
+          }
+          value={reason}
+          onChange={e => setReason(e.target.value)}
+          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
+        />
+      </div>
     </PopoverForm>
   );
 };

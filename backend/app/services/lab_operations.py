@@ -734,13 +734,7 @@ class LabOperationsService:
         elif action == RejectionAction.RECOLLECT_NEW_SAMPLE:
             return self._reject_with_recollect(order_id, test_code, user_id, rejection_reason)
         elif action == RejectionAction.ESCALATE_TO_SUPERVISOR:
-            return RejectionResult(
-                success=True,
-                action=action,
-                message="Escalation required. Please contact your supervisor.",
-                originalTestId=self._get_order_test(order_id, test_code, TestStatus.RESULTED).id,
-                escalationRequired=True
-            )
+            return self._reject_with_escalate(order_id, test_code, user_id, rejection_reason)
         else:
             raise LabOperationError(f"Unknown rejection action: {action.value}")
 
@@ -828,6 +822,54 @@ class LabOperationsService:
             message=f"Retest created successfully. Test is ready for new result entry.",
             originalTestId=original_test.id,
             newTestId=new_order_test.id
+        )
+
+    def _reject_with_escalate(
+        self,
+        order_id: int,
+        test_code: str,
+        user_id: int,
+        rejection_reason: str
+    ) -> RejectionResult:
+        """
+        Escalate test to supervisor: set status to ESCALATED and record in history.
+        """
+        original_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
+        TestStateMachine.validate_transition(TestStatus.RESULTED, TestStatus.ESCALATED)
+
+        rejection_record = {
+            "rejectedAt": datetime.now(timezone.utc).isoformat(),
+            "rejectedBy": str(user_id),
+            "rejectionReason": rejection_reason,
+            "rejectionType": "escalate"
+        }
+        if original_test.resultRejectionHistory is None:
+            original_test.resultRejectionHistory = []
+        original_test.resultRejectionHistory.append(rejection_record)
+        flag_modified(original_test, 'resultRejectionHistory')
+
+        # Do not set validation fields (resultValidatedAt, validatedBy, validationNotes) on escalate;
+        # those are for actual validation (approve). Escalation is recorded in resultRejectionHistory.
+        original_test.status = TestStatus.ESCALATED
+
+        self.audit.log_result_validation_escalate(
+            order_id=order_id,
+            test_code=test_code,
+            order_test_id=original_test.id,
+            user_id=user_id,
+            rejection_reason=rejection_reason
+        )
+
+        self.db.commit()
+        self.db.refresh(original_test)
+        update_order_status(self.db, order_id)
+
+        return RejectionResult(
+            success=True,
+            action=RejectionAction.ESCALATE_TO_SUPERVISOR,
+            message="Escalation recorded. Please contact your supervisor.",
+            originalTestId=original_test.id,
+            escalationRequired=True
         )
 
     def _reject_with_recollect(

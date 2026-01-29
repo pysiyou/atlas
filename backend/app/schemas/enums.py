@@ -104,6 +104,7 @@ class TestStatus(str, enum.Enum):
     RESULTED = "resulted"      # Results entered, awaiting validation
     VALIDATED = "validated"
     REJECTED = "rejected"
+    ESCALATED = "escalated"    # Escalated for review; workflow not yet implemented
     SUPERSEDED = "superseded"  # Original test after retest is created during result validation rejection
     REMOVED = "removed"        # Test removed from order during edit (hidden from UI but preserved for audit)
 
@@ -178,6 +179,7 @@ class LabOperationType(str, enum.Enum):
     RESULT_VALIDATION_APPROVE = "result_validation_approve"
     RESULT_VALIDATION_REJECT_RETEST = "result_validation_reject_retest"
     RESULT_VALIDATION_REJECT_RECOLLECT = "result_validation_reject_recollect"
+    RESULT_VALIDATION_ESCALATE = "result_validation_escalate"
 
     # Order Operations
     ORDER_STATUS_CHANGE = "order_status_change"

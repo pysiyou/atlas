@@ -73,7 +73,7 @@ export interface RejectionResult {
  */
 export interface RejectionRequest {
   rejectionReason: string;
-  rejectionType: 're-test' | 're-collect';
+  rejectionType: 're-test' | 're-collect' | 'escalate';
 }
 
 /**

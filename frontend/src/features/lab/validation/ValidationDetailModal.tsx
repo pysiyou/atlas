@@ -163,11 +163,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               <Icon name={ICONS.dataFields.clinicalNotes} className="w-3.5 h-3.5" />
             )
           }
-          statusMessage={
-            hasFlags
-              ? ''
-              : 'Verify all results match expected values'
-          }
+          statusMessage=""
           statusClassName="text-text-tertiary"
         >
           <Popover

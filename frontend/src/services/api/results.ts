@@ -34,6 +34,7 @@ interface ResultRejectionRequest {
    * Type of rejection:
    * - 're-test': Re-run with same sample, creates new OrderTest entry
    * - 're-collect': New sample required, triggers sample recollection flow
+   * - 'escalate': Escalate to supervisor when limits exceeded
    */
   rejectionType: ResultRejectionType;
 }

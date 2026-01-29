@@ -6,7 +6,7 @@ export const orderTestSchema = z.object({
   testCode: z.string(),
   testName: z.string(),
   sampleType: z.string(),
-  status: z.enum(['pending', 'collected', 'processing', 'validated', 'superseded', 'removed']),
+  status: z.enum(['pending', 'collected', 'processing', 'validated', 'escalated', 'superseded', 'removed']),
   priceAtOrder: z.number().min(0),
   sampleId: z.number().int().positive().nullable().optional(), // Backend returns null
   results: z.record(z.string(), z.unknown()).nullable().optional(),
@@ -32,7 +32,7 @@ export const orderTestSchema = z.object({
     rejectedAt: z.string(),
     rejectedBy: z.string(),
     rejectionReason: z.string(),
-    rejectionType: z.enum(['re-test', 're-collect']),
+    rejectionType: z.enum(['re-test', 're-collect', 'escalate']),
   })).nullable().optional(), // Backend returns null
 });
 

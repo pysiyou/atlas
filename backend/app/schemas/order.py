@@ -15,7 +15,7 @@ class ResultRejectionRecord(BaseModel):
     rejectedAt: datetime
     rejectedBy: str
     rejectionReason: str
-    rejectionType: Literal['re-test', 're-collect']  # 're-test' = same sample, 're-collect' = new sample needed
+    rejectionType: Literal['re-test', 're-collect', 'escalate']
 
 
 class ResultRejectionRequest(BaseModel):
@@ -23,9 +23,9 @@ class ResultRejectionRequest(BaseModel):
     Request body for rejecting test results during validation.
     """
     rejectionReason: str = Field(..., min_length=1, max_length=1000, description="Reason for rejection")
-    rejectionType: Literal['re-test', 're-collect'] = Field(
+    rejectionType: Literal['re-test', 're-collect', 'escalate'] = Field(
         ...,
-        description="'re-test' = re-run with same sample, 're-collect' = new sample needed"
+        description="'re-test' = re-run with same sample, 're-collect' = new sample needed, 'escalate' = escalate to supervisor"
     )
 
 

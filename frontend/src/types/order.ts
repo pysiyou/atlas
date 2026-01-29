@@ -38,8 +38,9 @@ export type ValidationDecision = 'approved' | 'rejected' | 'repeat-required';
  * Type for result rejection during validation.
  * 're-test': Re-run test with same sample, creates new OrderTest
  * 're-collect': New sample required, triggers sample recollection
+ * 'escalate': Escalate to supervisor when retest/recollect limits exceeded
  */
-export type ResultRejectionType = 're-test' | 're-collect';
+export type ResultRejectionType = 're-test' | 're-collect' | 'escalate';
 
 /**
  * Record of a result rejection event during validation.
