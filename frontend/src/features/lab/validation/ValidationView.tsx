@@ -36,10 +36,10 @@ const ENABLE_BULK_VALIDATION = false;
 // Large component is necessary for comprehensive validation view with filtering, sorting, card rendering, and validation functionality
 // eslint-disable-next-line max-lines-per-function
 export const ValidationView: React.FC = () => {
-  const { orders, refetch: refreshOrders } = useOrdersList();
+  const { orders, isLoading: ordersLoading } = useOrdersList();
   const { invalidateAll: invalidateOrders } = useInvalidateOrders();
   const { getOrder } = useOrderLookup();
-  const { tests: testCatalog } = useTestCatalog();
+  const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
@@ -128,21 +128,23 @@ export const ValidationView: React.FC = () => {
       const response = await resultAPI.validateBulk(items, 'Bulk approved');
 
       await invalidateOrders();
-      await refreshOrders();
 
-      if (response.failureCount === 0) {
+      const results = response?.results ?? [];
+      const successCount = response?.successCount ?? 0;
+      const failureCount = response?.failureCount ?? 0;
+
+      if (failureCount === 0) {
         toast.success({
-          title: `Successfully approved ${response.successCount ?? 0} result(s)`,
+          title: `Successfully approved ${successCount} result(s)`,
           subtitle: 'All selected results have been approved and the orders have been updated.',
         });
       } else {
-        // Show detailed error for failed items
-        const failedItems = response.results
+        const failedItems = results
           .filter(r => !r.success)
           .map(r => `${r.testCode} (Order ${r.orderId})`)
           .join(', ');
         toast.error({
-          title: `Approved ${response.successCount ?? 0}, failed ${response.failureCount ?? 0}${failedItems ? `: ${failedItems}` : ''}`,
+          title: `Approved ${successCount}, failed ${failureCount}${failedItems ? `: ${failedItems}` : ''}`,
           subtitle: 'Some results could not be approved. Check the failed items and try again if needed.',
         });
       }
@@ -158,7 +160,7 @@ export const ValidationView: React.FC = () => {
     } finally {
       setIsBulkProcessing(false);
     }
-  }, [allTests, invalidateOrders, refreshOrders, setSelectedIds]);
+  }, [allTests, invalidateOrders, setSelectedIds]);
 
   const handleCommentsChange = useCallback((commentKey: string, value: string) => {
     setComments(prev => ({ ...prev, [commentKey]: value }));
@@ -185,7 +187,7 @@ export const ValidationView: React.FC = () => {
       rejectionNotes?: string,
       rejectionType?: 're-test' | 're-collect'
     ) => {
-      if (!orders) return;
+      if (ordersLoading) return;
 
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
       const commentKey = `${orderIdStr}-${testCode}`;
@@ -205,7 +207,6 @@ export const ValidationView: React.FC = () => {
             validationNotes: comments[commentKey] || undefined,
           });
           await invalidateOrders();
-          await refreshOrders();
           toast.success({
             title: 'Results approved',
             subtitle: 'These results have been approved and are now final. The order status has been updated.',
@@ -219,7 +220,6 @@ export const ValidationView: React.FC = () => {
           if (alreadyRejected) {
             // Rejection was already performed by RejectionDialog - just refresh
             await invalidateOrders();
-            await refreshOrders();
             toast.success({
               title: 'Results rejected',
               subtitle: 'These results have been rejected. A re-test or new sample may have been requested.',
@@ -240,7 +240,6 @@ export const ValidationView: React.FC = () => {
               rejectionType: rejectType,
             });
             await invalidateOrders();
-            await refreshOrders();
 
             const message =
               rejectType === 're-collect'
@@ -274,7 +273,7 @@ export const ValidationView: React.FC = () => {
         setIsValidating(prev => ({ ...prev, [commentKey]: false }));
       }
     },
-    [comments, orders, isValidating, invalidateOrders, refreshOrders]
+    [comments, ordersLoading, isValidating, invalidateOrders]
   );
 
   const openValidationModal = useCallback(
@@ -313,7 +312,7 @@ export const ValidationView: React.FC = () => {
     [filteredTestsWithId]
   );
 
-  if (!orders || !testCatalog) {
+  if (ordersLoading || testsLoading) {
     return <div>Loading...</div>;
   }
 

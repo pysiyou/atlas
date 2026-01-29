@@ -15,8 +15,10 @@ export function usePaymentService() {
       const response = await apiClient.post<Payment>('/payments', validated);
       return paymentSchema.parse(response);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.all });
+      const orderIdStr = typeof data.orderId === 'string' ? data.orderId : String(data.orderId);
+      queryClient.invalidateQueries({ queryKey: queryKeys.payments.byOrder(orderIdStr) });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
       toast.success('Payment processed successfully');
     },

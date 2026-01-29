@@ -66,8 +66,11 @@ export function useRejectionManager({
   const [isRejecting, setIsRejecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const isMissing = (id: string | number | null | undefined, code: string | null | undefined) =>
+    id == null || id === '' || code == null || code === '';
+
   const fetchOptions = useCallback(async () => {
-    if (!orderId || !testCode) return;
+    if (isMissing(orderId, testCode)) return;
 
     setIsLoading(true);
     setError(null);
@@ -90,7 +93,7 @@ export function useRejectionManager({
 
   const rejectWithAction = useCallback(
     async (rejectionType: ResultRejectionType, reason: string): Promise<RejectionResult | null> => {
-      if (!orderId || !testCode) {
+      if (isMissing(orderId, testCode)) {
         setError('Order ID and test code are required');
         return null;
       }
@@ -156,9 +159,9 @@ export function useRejectionManager({
     setError(null);
   }, []);
 
-  // Auto-fetch options if enabled
+  // Auto-fetch options if enabled (orderId 0 is valid)
   useEffect(() => {
-    if (autoFetch && orderId && testCode) {
+    if (autoFetch && orderId != null && orderId !== '' && testCode != null && testCode !== '') {
       fetchOptions();
     }
   }, [autoFetch, orderId, testCode, fetchOptions]);

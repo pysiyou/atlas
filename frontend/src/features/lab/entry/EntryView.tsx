@@ -28,7 +28,7 @@ import { resultAPI } from '@/services/api';
 // Large component is necessary for comprehensive entry view with filtering, sorting, card rendering, and result entry functionality
 // eslint-disable-next-line max-lines-per-function
 export const EntryView: React.FC = () => {
-  const { orders, refetch: refreshOrders } = useOrdersList();
+  const { orders } = useOrdersList();
   const { invalidateAll: invalidateOrders } = useInvalidateOrders();
   const { tests: testCatalog } = useTestCatalog();
   const { getTest } = useTestNameLookup();
@@ -184,7 +184,6 @@ export const EntryView: React.FC = () => {
           technicianNotes: finalNotes || technicianNotes[resultKey] || undefined,
         });
         await invalidateOrders();
-        await refreshOrders();
         toast.success({
           title: 'Results saved successfully',
           subtitle: 'The results have been saved and the order has been updated. You can continue with other tests.',
@@ -220,7 +219,6 @@ export const EntryView: React.FC = () => {
       isSaving,
       getTest,
       invalidateOrders,
-      refreshOrders,
     ]
   );
 

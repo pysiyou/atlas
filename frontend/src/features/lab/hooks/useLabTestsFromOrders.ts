@@ -56,7 +56,7 @@ export function useLabTestsFromOrders({
       const patient = includePatient ? getPatient(order.patientId) : undefined;
       const patientName = getPatientName(order.patientId);
 
-      return order.tests
+      return (order.tests ?? [])
         .filter(testFilter)
         .map(test => {
           const testName = getTest(test.testCode)?.name || test.testCode;

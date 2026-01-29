@@ -38,13 +38,11 @@ export function useUpdateOrder() {
     },
     onMutate: async ({ orderId, updates }) => {
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
 
       await queryClient.cancelQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
       await queryClient.cancelQueries({ queryKey: queryKeys.orders.lists() });
 
       const previousOrder = queryClient.getQueryData<Order>(queryKeys.orders.byId(orderIdStr));
-      const previousOrders = queryClient.getQueryData<Order[]>(queryKeys.orders.list());
 
       if (previousOrder) {
         queryClient.setQueryData<Order>(queryKeys.orders.byId(orderIdStr), {
@@ -54,27 +52,13 @@ export function useUpdateOrder() {
         });
       }
 
-      if (previousOrders) {
-        queryClient.setQueryData<Order[]>(
-          queryKeys.orders.list(),
-          previousOrders.map(o =>
-            o.orderId === numericOrderId
-              ? { ...o, ...updates, updatedAt: new Date().toISOString() }
-              : o
-          )
-        );
-      }
-
-      return { previousOrder, previousOrders };
+      return { previousOrder };
     },
     onError: (error, variables, context) => {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
       if (context?.previousOrder) {
         queryClient.setQueryData(queryKeys.orders.byId(orderIdStr), context.previousOrder);
-      }
-      if (context?.previousOrders) {
-        queryClient.setQueryData(queryKeys.orders.list(), context.previousOrders);
       }
       toast.error({
         title: 'Failed to update order',
