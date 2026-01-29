@@ -48,6 +48,10 @@ export const EntryView: React.FC = () => {
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
+  const getOrderDate = useCallback((t: TestWithContext & { orderDate?: string }) => t.orderDate, []);
+  const getSampleType = useCallback((t: TestWithContext) => t.sampleType, []);
+  const getStatus = useCallback((t: TestWithContext) => t.status as TestStatus, []);
+
   const {
     filteredItems: filteredTests,
     searchQuery,
@@ -60,9 +64,9 @@ export const EntryView: React.FC = () => {
     setStatusFilters,
   } = useLabWorkflowFilters<TestWithContext, TestStatus>({
     items: allTests,
-    getOrderDate: t => (t as { orderDate?: string }).orderDate,
-    getSampleType: t => t.sampleType,
-    getStatus: t => t.status as TestStatus,
+    getOrderDate,
+    getSampleType,
+    getStatus,
     searchFilterFn: filterTest,
   });
 

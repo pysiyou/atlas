@@ -63,11 +63,11 @@ interface BaseSample {
   recollectionReason?: string;
   recollectionAttempt?: number; // 1 = original, 2 = 1st recollection, etc.
 
-  // Timestamps
+  // Timestamps (backend returns user identifier as string)
   createdAt: string;
-  createdBy: number;
+  createdBy: string;
   updatedAt: string;
-  updatedBy: number;
+  updatedBy: string;
 }
 
 /**

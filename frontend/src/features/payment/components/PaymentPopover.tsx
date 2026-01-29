@@ -19,6 +19,7 @@ import {
 import { useCreatePayment } from '@/hooks/queries/usePayments';
 import type { IconName } from '@/shared/ui';
 import { ICONS } from '@/utils';
+import { getErrorMessage } from '@/utils/errorHelpers';
 
 interface PaymentPopoverProps {
   /** Order to process payment for */
@@ -162,8 +163,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
         onConfirm();
       },
       onError: (err: unknown) => {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to process payment';
-        setError(errorMessage);
+        setError(getErrorMessage(err, 'Failed to process payment'));
       },
     });
   }, [amount, paymentMethod, notes, order.orderId, createPaymentMutation, onSuccess, onConfirm]);
@@ -276,33 +276,41 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
  * PaymentPopover - Popover trigger and container for payment processing
  *
  * Wraps PaymentPopoverContent with a Popover trigger button.
+ * PAY button is disabled when order is already paid.
  */
-const DEFAULT_TRIGGER = (size: 'xs' | 'sm' | 'md' | 'lg') => (
-  <Button size={size} variant="primary" icon={<Icon name={ICONS.dataFields.wallet} className="text-white" />}>
-    PAY
-  </Button>
-);
-
 export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
   order,
   onSuccess,
   size = 'sm',
   trigger,
-}) => (
-  <Popover
-    placement="bottom-end"
-    offsetValue={8}
-    trigger={trigger ?? DEFAULT_TRIGGER(size)}
-  >
-    {({ close }) => (
-      <div data-popover-content onClick={e => e.stopPropagation()}>
-        <PaymentPopoverContent
-          order={order}
-          onConfirm={close}
-          onCancel={close}
-          onSuccess={onSuccess}
-        />
-      </div>
-    )}
-  </Popover>
-);
+}) => {
+  const isPaid = order.paymentStatus === 'paid';
+  const defaultTrigger = (
+    <Button
+      size={size}
+      variant="primary"
+      disabled={isPaid}
+      icon={<Icon name={ICONS.dataFields.wallet} className="text-white" />}
+    >
+      PAY
+    </Button>
+  );
+  return (
+    <Popover
+      placement="bottom-end"
+      offsetValue={8}
+      trigger={trigger ?? defaultTrigger}
+    >
+      {({ close }) => (
+        <div data-popover-content onClick={e => e.stopPropagation()}>
+          <PaymentPopoverContent
+            order={order}
+            onConfirm={close}
+            onCancel={close}
+            onSuccess={onSuccess}
+          />
+        </div>
+      )}
+    </Popover>
+  );
+};

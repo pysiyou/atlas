@@ -3,6 +3,7 @@ import { paymentFormSchema, paymentSchema, type Payment } from '../schemas/payme
 import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '@/utils/errorHelpers';
 
 export function usePaymentService() {
   const queryClient = useQueryClient();
@@ -20,7 +21,7 @@ export function usePaymentService() {
       toast.success('Payment processed successfully');
     },
     onError: (error) => {
-      toast.error(`Failed to process payment: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(`Failed to process payment: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
 

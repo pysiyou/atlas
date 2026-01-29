@@ -15,6 +15,7 @@ import { Modal, Input, Textarea, MultiSelectFilter, Button, FooterInfo, Icon, Al
 import type { BaseModalProps, IconName } from '@/shared/ui';
 import { displayId, ICONS, formatCurrency } from '@/utils';
 import { createFilterOptions } from '@/utils/filtering';
+import { getErrorMessage } from '@/utils/errorHelpers';
 import { useOrderForm } from '../hooks/useOrderForm';
 import { usePatientsList, usePatientSearch } from '@/hooks/queries';
 import { useTestCatalog, useTestSearch } from '@/hooks/queries';
@@ -114,8 +115,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                   resolve();
                 },
                 onError: (err: unknown) => {
-                  const errorMessage = err instanceof Error ? err.message : 'Failed to process payment';
-                  setPaymentError(errorMessage);
+                  setPaymentError(getErrorMessage(err, 'Failed to process payment'));
                   reject(err);
                 },
               }

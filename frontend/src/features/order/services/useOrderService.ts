@@ -3,6 +3,7 @@ import { orderCreateSchema, orderUpdateSchema, orderSchema, type Order } from '.
 import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '@/utils/errorHelpers';
 import { formInputToPayload } from '../utils/form-transformers';
 
 export function useOrderService() {
@@ -20,7 +21,7 @@ export function useOrderService() {
       toast.success('Order created successfully');
     },
     onError: (error) => {
-      toast.error(`Failed to create order: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(`Failed to create order: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
 
@@ -37,7 +38,7 @@ export function useOrderService() {
       toast.success('Order updated successfully');
     },
     onError: (error) => {
-      toast.error(`Failed to update order: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(`Failed to update order: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
 

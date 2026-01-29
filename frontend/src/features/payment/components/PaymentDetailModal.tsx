@@ -24,6 +24,7 @@ import {
   type PaymentMethod,
 } from '@/types/billing';
 import type { IconName } from '@/shared/ui';
+import { getErrorMessage } from '@/utils/errorHelpers';
 // OrderPaymentDetails type
 type OrderPaymentDetails = {
   orderId: number;
@@ -231,8 +232,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         onClose();
       },
       onError: (err: unknown) => {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to process payment';
-        setError(errorMessage);
+        setError(getErrorMessage(err, 'Failed to process payment'));
       },
     });
   }, [order, isPaid, paymentMethod, notes, createPaymentMutation, onPaymentSuccess, onClose]);

@@ -28,7 +28,8 @@ export interface PaginationOptions {
 }
 
 /**
- * Hook to fetch and cache all orders
+ * Hook to fetch and cache all orders (client-side filtering applied from filters).
+ * For large datasets (hundreds/thousands of orders), prefer usePaginatedOrders to avoid over-fetching.
  */
 export function useOrdersList(filters?: OrdersFilters) {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();

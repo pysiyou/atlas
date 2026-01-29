@@ -3,6 +3,7 @@
  *
  * Displays tests awaiting validation (status: resulted and not yet validated).
  */
+/* eslint-disable max-lines */
 
 import React, { useState, useMemo, useCallback } from 'react';
 import {
@@ -57,6 +58,10 @@ export const ValidationView: React.FC = () => {
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
+  const getOrderDate = useCallback((t: TestWithContext & { orderDate?: string }) => t.orderDate, []);
+  const getSampleType = useCallback((t: TestWithContext) => t.sampleType, []);
+  const getStatus = useCallback((t: TestWithContext & { hasCriticalValues?: boolean }) => t.priority as PriorityLevel, []);
+
   const {
     filteredItems: filteredTests,
     searchQuery,
@@ -69,9 +74,9 @@ export const ValidationView: React.FC = () => {
     setStatusFilters,
   } = useLabWorkflowFilters<TestWithContext & { hasCriticalValues?: boolean }, PriorityLevel>({
     items: allTests,
-    getOrderDate: t => (t as { orderDate?: string }).orderDate,
-    getSampleType: t => t.sampleType,
-    getStatus: t => t.priority as PriorityLevel,
+    getOrderDate,
+    getSampleType,
+    getStatus,
     searchFilterFn: filterTest,
   });
 

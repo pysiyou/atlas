@@ -11,6 +11,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { resultAPI } from '@/services/api/results';
 import { logger } from '@/utils/logger';
+import { getErrorMessage } from '@/utils/errorHelpers';
 import type {
   RejectionOptionsResponse,
   RejectionResult,
@@ -76,7 +77,7 @@ export function useRejectionManager({
       const response = await resultAPI.getRejectionOptions(orderIdStr, testCode);
       setOptions(response);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to fetch rejection options';
+      const message = getErrorMessage(err, 'Failed to fetch rejection options');
       setError(message);
       logger.error('Failed to fetch rejection options', err instanceof Error ? err : undefined, {
         orderId,
@@ -105,7 +106,7 @@ export function useRejectionManager({
         });
         return result;
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to reject results';
+        const message = getErrorMessage(err, 'Failed to reject results');
         setError(message);
         logger.error('Failed to reject results', err instanceof Error ? err : undefined, {
           orderId,

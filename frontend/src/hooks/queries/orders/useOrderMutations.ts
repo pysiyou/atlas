@@ -6,6 +6,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
 import { orderAPI } from '@/services/api/orders';
+import { getErrorMessage } from '@/utils/errorHelpers';
+import { toast } from '@/shared/components/feedback';
 import type { Order, TestStatus } from '@/types';
 
 /**
@@ -65,7 +67,7 @@ export function useUpdateOrder() {
 
       return { previousOrder, previousOrders };
     },
-    onError: (_, variables, context) => {
+    onError: (error, variables, context) => {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
       if (context?.previousOrder) {
@@ -74,6 +76,10 @@ export function useUpdateOrder() {
       if (context?.previousOrders) {
         queryClient.setQueryData(queryKeys.orders.list(), context.previousOrders);
       }
+      toast.error({
+        title: 'Failed to update order',
+        subtitle: getErrorMessage(error, 'The order could not be updated. Please try again.'),
+      });
     },
     onSettled: (_, __, variables) => {
       const orderIdStr =
@@ -97,6 +103,12 @@ export function useDeleteOrder() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+    },
+    onError: (error) => {
+      toast.error({
+        title: 'Failed to delete order',
+        subtitle: getErrorMessage(error, 'The order could not be deleted. Please try again.'),
+      });
     },
   });
 }

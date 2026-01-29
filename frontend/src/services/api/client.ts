@@ -68,11 +68,18 @@ class APIClient {
         }
       }
 
-      // Parse error response
+      // Parse error response (FastAPI 422 returns detail as array of { loc, msg, type })
       let message = response.statusText || 'Request failed';
       try {
         const body = await response.json();
-        message = body.detail || body.message || message;
+        const raw = body.detail ?? body.message;
+        if (Array.isArray(raw)) {
+          message = raw.map((d: { msg?: string }) => d?.msg).filter(Boolean).join('; ') || message;
+        } else if (typeof raw === 'string') {
+          message = raw;
+        } else if (raw != null) {
+          message = String(raw);
+        }
       } catch {
         // Use statusText
       }

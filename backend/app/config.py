@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     
     # CORS (empty default for security - must be configured in production)
     CORS_ORIGINS: str = Field(default="", description="Comma-separated list of allowed origins")
+    # When set to "development", allow http://localhost:5173 if CORS_ORIGINS is empty
+    ENVIRONMENT: str = Field(default="production", description="production | development")
     
     # API
     API_V1_PREFIX: str = "/api/v1"
@@ -36,7 +38,10 @@ class Settings(BaseSettings):
     
     @property
     def cors_origins_list(self) -> List[str]:
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
+        origins = [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        if not origins and self.ENVIRONMENT == "development":
+            return ["http://localhost:5173"]
+        return origins
     
     class Config:
         import os

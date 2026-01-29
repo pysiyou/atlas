@@ -4,7 +4,7 @@
  * Displays samples awaiting collection with filtering by status.
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import {
   useOrdersList,
@@ -16,6 +16,7 @@ import {
 } from '@/hooks/queries';
 import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
+import { getErrorMessage } from '@/utils/errorHelpers';
 import type { ContainerType, ContainerTopColor, SampleStatus } from '@/types';
 import { calculateRequiredSamples } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -78,6 +79,10 @@ export const CollectionView: React.FC = () => {
     [getPatientName, tests]
   );
 
+  const getOrderDate = useCallback((d: SampleDisplay) => d.order.orderDate, []);
+  const getSampleType = useCallback((d: SampleDisplay) => d.requirement?.sampleType ?? d.sample?.sampleType, []);
+  const getStatus = useCallback((d: SampleDisplay) => d.sample?.status, []);
+
   const {
     filteredItems: filteredDisplays,
     searchQuery,
@@ -90,9 +95,9 @@ export const CollectionView: React.FC = () => {
     setStatusFilters,
   } = useLabWorkflowFilters<SampleDisplay, SampleStatus>({
     items: allSampleDisplays,
-    getOrderDate: d => d.order.orderDate,
-    getSampleType: d => d.requirement?.sampleType ?? d.sample?.sampleType,
-    getStatus: d => d.sample?.status,
+    getOrderDate,
+    getSampleType,
+    getStatus,
     searchFilterFn: filterSample,
     initialStatusFilters: ['pending'],
   });
@@ -151,9 +156,10 @@ export const CollectionView: React.FC = () => {
       });
     } catch (error) {
       logger.error('Error collecting sample', error instanceof Error ? error : undefined);
+      const message = getErrorMessage(error, 'The collection could not be saved. Check your connection and try again.');
       toast.error({
-        title: 'Failed to collect sample. Please try again.',
-        subtitle: 'The collection could not be saved. Check your connection and try again.',
+        title: 'Failed to collect sample',
+        subtitle: message,
       });
     }
   };

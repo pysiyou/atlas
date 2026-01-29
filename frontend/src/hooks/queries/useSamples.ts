@@ -32,6 +32,7 @@ export interface SamplesFilters {
  * Hook to fetch and cache all samples.
  * Uses dynamic cache - data is considered fresh for 30 seconds.
  * Only fetches when user is authenticated to prevent race conditions on login.
+ * For large datasets, prefer usePaginatedSamples to avoid over-fetching.
  *
  * @param filters - Optional filters to apply
  * @returns Query result containing samples array and loading state

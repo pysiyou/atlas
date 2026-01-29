@@ -3,6 +3,7 @@ import { patientSchema, patientCreateSchema, patientUpdateSchema, type Patient }
 import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '@/utils/errorHelpers';
 import type { Affiliation, AffiliationDuration } from '@/types';
 import { formInputToPayload } from '../utils/form-transformers';
 
@@ -22,7 +23,7 @@ export function usePatientService() {
       toast.success('Patient created successfully');
     },
     onError: (error) => {
-      toast.error(`Failed to create patient: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(`Failed to create patient: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
 
@@ -40,7 +41,7 @@ export function usePatientService() {
       toast.success('Patient updated successfully');
     },
     onError: (error) => {
-      toast.error(`Failed to update patient: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(`Failed to update patient: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
 
