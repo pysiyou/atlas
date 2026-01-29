@@ -14,7 +14,7 @@ import React, { useMemo } from 'react';
 import type { ContainerType, RejectedSample, RejectionReason } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import Barcode from 'react-barcode';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
 import { displayId } from '@/utils';
 import { CollectionInfoLine } from '../components/StatusBadges';

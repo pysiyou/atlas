@@ -51,7 +51,7 @@ function createFormDataAdapter(
     city: formValues.address?.city || '',
     postalCode: formValues.address?.postalCode || '',
     hasAffiliation: hasAffiliationChecked || !!formValues.affiliation,
-    affiliationDuration: formValues.affiliation?.duration,
+    affiliationDuration: formValues.affiliation?.duration ?? undefined,
     emergencyContactFullName: formValues.emergencyContact?.fullName || '',
     emergencyContactRelationship: formValues.emergencyContact?.relationship,
     emergencyContactPhone: formValues.emergencyContact?.phone || '',
@@ -123,11 +123,11 @@ function createErrorsAdapter(errors: FieldErrors<PatientFormInput>): Record<stri
 
 export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
   activeTab,
-  register,
-  control,
+  register: _register,
+  control: _control,
   errors,
   existingAffiliation,
-  existingVitalSigns,
+  existingVitalSigns: _existingVitalSigns,
   watch,
   setValue,
 }) => {

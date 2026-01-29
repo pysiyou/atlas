@@ -6,12 +6,12 @@
  */
 
 import React from 'react';
-import { Badge, Icon, IconButton, Alert, Avatar } from '@/shared/ui';
+import { Badge, Card, Icon, IconButton, Alert, Avatar } from '@/shared/ui';
 import Barcode from 'react-barcode';
 import type { ContainerType, RejectedSample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { usePatientNameLookup, useTestCatalog, useRejectSample } from '@/hooks/queries';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { getTestNames } from '@/utils/typeHelpers';
@@ -109,10 +109,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
     const testCount = testNames.length;
 
     return (
-      <div
-        onClick={() => handleCardClick()}
-        className="bg-surface border border-border rounded-md p-3  duration-200 cursor-pointer flex flex-col h-full"
-      >
+      <Card padding="list" hover className="flex flex-col h-full" onClick={() => handleCardClick()}>
         {/* Header: Avatar (top left) + Status badge (top right) */}
         <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
           <Avatar
@@ -191,7 +188,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
             />
           )}
         </div>
-      </div>
+      </Card>
     );
   }
 

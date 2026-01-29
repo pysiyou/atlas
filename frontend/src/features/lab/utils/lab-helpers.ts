@@ -4,7 +4,7 @@
  * Shared utility functions for lab workflow components.
  */
 
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 import { getCollectionRequirements } from '@/utils';
 import { getTestNames } from '@/utils/typeHelpers';
 import { printCollectionLabel } from '../collection/CollectionLabel';

@@ -12,6 +12,7 @@ import { displayId } from '@/utils';
 import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import type { ValidatedTest } from '../types';
+import { DATA_ID_PRIMARY, DATA_ID_PRIMARY_CLICKABLE, DATA_ID_SECONDARY } from '@/shared/constants';
 import { ReportPreviewButton } from '../components/ReportPreviewButton';
 import { ReportCard } from '../components/ReportCard';
 
@@ -32,9 +33,7 @@ export const createReportTableConfig = (
 ): TableViewConfig<ValidatedTest> => {
   // Shared render functions
   const renderTestId = (test: ValidatedTest) => (
-    <span className="text-xs text-brand font-medium font-mono truncate block">
-      {displayId.orderTest(test.testId)}
-    </span>
+    <span className={DATA_ID_PRIMARY}>{displayId.orderTest(test.testId)}</span>
   );
 
   const renderOrderId = (test: ValidatedTest) => (
@@ -43,7 +42,7 @@ export const createReportTableConfig = (
         e.stopPropagation();
         navigate(`/orders/${test.orderId}`);
       }}
-      className="text-xs text-brand font-medium font-mono hover:underline truncate block max-w-full"
+      className={DATA_ID_PRIMARY_CLICKABLE}
     >
       {displayId.order(test.orderId)}
     </button>
@@ -52,14 +51,14 @@ export const createReportTableConfig = (
   const renderPatientName = (test: ValidatedTest) => (
     <div className="min-w-0">
       <div className="font-semibold text-text-primary truncate">{test.patientName}</div>
-      <div className="text-xxs text-brand truncate font-mono">{displayId.patient(test.patientId)}</div>
+      <div className={DATA_ID_SECONDARY}>{displayId.patient(test.patientId)}</div>
     </div>
   );
 
   const renderTestName = (test: ValidatedTest) => (
     <div className="min-w-0">
       <div className="font-semibold text-text-primary truncate">{test.testName}</div>
-      <div className="text-xxs text-brand truncate font-mono">{test.testCode}</div>
+      <div className={DATA_ID_SECONDARY}>{test.testCode}</div>
     </div>
   );
 

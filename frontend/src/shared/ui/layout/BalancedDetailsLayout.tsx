@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import { DetailsTable, type DetailRow } from './DetailsTable';
+import { DetailsTable, type DetailTableRow } from './DetailsTable';
 import { filterDetailRows } from './detailsTableUtils';
 
 /**
@@ -20,7 +20,7 @@ export interface TableInput {
   /** Table title */
   title: string;
   /** Rows to display */
-  rows: DetailRow[];
+  rows: DetailTableRow[];
 }
 
 /**
@@ -43,8 +43,8 @@ export interface BalancedDetailsLayoutProps {
 interface TableSpec {
   key: string;
   title: string;
-  rows: DetailRow[];
-  filteredRows: DetailRow[];
+  rows: DetailTableRow[];
+  filteredRows: DetailTableRow[];
   effectiveHeight: number;
   originalIndex: number;
 }

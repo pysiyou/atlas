@@ -80,7 +80,7 @@ export const LabCard: React.FC<LabCardProps> = ({
 
   return (
     <div className={`${LAB_CARD_CONTAINERS.cardWrapper} ${className}`} onClick={onClick}>
-      <Card className={LAB_CARD_CONTAINERS.cardBase}>
+      <Card variant="lab">
         <div className={`flex flex-col ${LAB_CARD_SPACING.cardGap}`}>
           {/* Row 1: Badges and Actions */}
           <div className={LAB_CARD_HEADER.container}>

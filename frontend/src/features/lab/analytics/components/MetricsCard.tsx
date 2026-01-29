@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Icon } from '@/shared/ui';
+import { Card, Icon } from '@/shared/ui';
 import type { IconName } from '@/shared/ui';
 import { cn } from '@/utils';
 
@@ -38,7 +38,7 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
   const trendColor = trend && trend.value >= 0 ? 'text-green-600' : 'text-red-600';
 
   return (
-    <div className="bg-surface border border-border rounded-lg p-4 hover:border-brand/50 transition-colors">
+    <Card variant="metric" padding="sm" className="rounded-lg">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-1">
@@ -60,6 +60,6 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
           <Icon name={icon} className="w-5 h-5" />
         </div>
       </div>
-    </div>
+    </Card>
   );
 };

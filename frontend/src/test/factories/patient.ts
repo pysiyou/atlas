@@ -123,10 +123,10 @@ export const createMockPatient = (overrides?: Partial<Patient>): Patient => {
     medicalHistory: createMockMedicalHistory(),
     vitalSigns: faker.datatype.boolean() ? createMockVitalSigns() : undefined,
     registrationDate,
-    createdBy: faker.number.int({ min: 1, max: 100 }),
+    createdBy: String(faker.number.int({ min: 1, max: 100 })),
     createdAt,
     updatedAt: faker.date.between({ from: createdAt, to: new Date() }).toISOString(),
-    updatedBy: faker.number.int({ min: 1, max: 100 }),
+    updatedBy: String(faker.number.int({ min: 1, max: 100 })),
     ...overrides,
   };
 };

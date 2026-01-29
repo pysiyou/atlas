@@ -18,7 +18,7 @@ import { PopoverForm } from '../components/PopoverForm';
 import { EntryRejectionSection } from '../entry/EntryRejectionSection';
 import { EntryInfoLine } from '../components/StatusBadges';
 import { resultAPI } from '@/services/api';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
 import type { TestWithContext } from '@/types';
 import type { EscalationResolutionAction, EscalationResolveRequest } from '@/types/lab-operations';

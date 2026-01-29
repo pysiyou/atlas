@@ -5,6 +5,7 @@ import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
 import type { Patient, Order } from '@/types';
+import { DATA_ID_PRIMARY } from '@/shared/constants';
 // Helper function for affiliation status (pure function, no hook needed)
 const isAffiliationActive = (affiliation?: { endDate: string }): boolean => {
   if (!affiliation) return false;
@@ -20,14 +21,12 @@ import { PatientCard } from '../components/PatientCard';
 // Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
 // eslint-disable-next-line max-lines-per-function 
 export const createPatientTableConfig = (
-  navigate: NavigateFunction,
+  _navigate: NavigateFunction,
   getOrdersByPatient: (patientId: number | string) => Order[]
 ): TableViewConfig<Patient> => {
   // Shared render functions to avoid duplication
   const renderId = (patient: Patient) => (
-    <span className="text-xs text-brand font-medium font-mono truncate block hover:underline hover:font-bold">
-      {displayId.patient(patient.id)}
-    </span>
+    <span className={DATA_ID_PRIMARY}>{displayId.patient(patient.id)}</span>
   );
 
   const renderName = (patient: Patient) => (
@@ -55,9 +54,7 @@ export const createPatientTableConfig = (
 
     return (
       <div className="min-w-0">
-        <div className="text-xs text-brand font-medium font-mono truncate block hover:underline hover:font-bold">
-          {displayId.order(lastOrder.orderId)}
-        </div>
+        <div className={DATA_ID_PRIMARY}>{displayId.order(lastOrder.orderId)}</div>
         <div className="text-xs text-text-tertiary truncate">
           {formatDate(lastOrder.orderDate)}
         </div>

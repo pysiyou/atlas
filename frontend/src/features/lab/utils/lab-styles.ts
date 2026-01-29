@@ -1,24 +1,26 @@
 /**
  * Lab Card Style Constants
- * Direct style strings for lab workflow cards - no design-system token dependencies
+ * Uses shared typography tokens where they match; lab-specific tokens for section titles etc.
  */
 
-// Typography Constants
+import { TEXT_METADATA, BODY_SECONDARY } from '@/shared/constants';
+
+// Typography Constants (shared tokens for body/metadata; lab-specific for title/section)
 export const LAB_CARD_TYPOGRAPHY = {
   // Test/Item Names (primary emphasis)
   title: 'text-sm font-medium text-text-primary',
 
-  // Section Headers (small caps style)
+  // Section Headers (lab-specific: uppercase/tracking)
   sectionTitle: 'text-xxs font-medium text-text-tertiary uppercase tracking-wide',
 
   // Patient Names (medium emphasis within text-xs context)
   patientName: 'font-medium text-text-primary',
 
-  // Standard Body Text
-  bodyText: 'text-xs text-text-secondary',
+  // Standard Body Text – shared token
+  bodyText: BODY_SECONDARY,
 
-  // Metadata/Secondary Text
-  metadata: 'text-xs text-text-tertiary',
+  // Metadata/Secondary Text – shared token
+  metadata: TEXT_METADATA,
 
   // Separator/Divider Text
   separator: 'text-text-disabled',

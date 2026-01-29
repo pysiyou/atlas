@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Badge, Icon, IconButton, Alert } from '@/shared/ui';
+import { Badge, Card, Icon, IconButton, Alert } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
@@ -170,10 +170,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   // Mobile layout
   if (isMobile) {
     return (
-      <div
-        onClick={handleCardClick}
-        className="bg-surface border border-border rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
-      >
+      <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
         {/* Header: Test name + Patient name, Test code, Sample ID */}
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="min-w-0 overflow-hidden">
@@ -251,7 +248,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
             />
           </div>
         </div>
-      </div>
+      </Card>
     );
   }
 

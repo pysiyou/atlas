@@ -11,6 +11,7 @@ import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
 import type { Order } from '@/types';
+import { DATA_AMOUNT, DATA_ID_PRIMARY, DATA_ID_SECONDARY } from '@/shared/constants';
 import { OrderTableCard } from '../components/OrderTableCard';
 
 /**
@@ -25,15 +26,13 @@ import { OrderTableCard } from '../components/OrderTableCard';
 // Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
 // eslint-disable-next-line max-lines-per-function
 export const createOrderTableConfig = (
-  navigate: NavigateFunction,
+  _navigate: NavigateFunction,
   getPatientNameFn: (patientId: number | string) => string,
   _getTestNameFn: (testCode: string) => string
 ): TableViewConfig<Order> => {
   // Shared render functions
   const renderOrderId = (order: Order) => (
-    <span className="text-xs text-brand font-medium font-mono truncate block hover:underline hover:font-bold">
-      {displayId.order(order.orderId)}
-    </span>
+    <span className={DATA_ID_PRIMARY}>{displayId.order(order.orderId)}</span>
   );
 
   const renderPatientName = (order: Order) => (
@@ -41,7 +40,7 @@ export const createOrderTableConfig = (
       <div className="font-semibold text-text-primary truncate">
         {getPatientNameFn(order.patientId)}
       </div>
-      <div className="text-xxs text-brand truncate font-mono">{displayId.patient(order.patientId)}</div>
+      <div className={DATA_ID_SECONDARY}>{displayId.patient(order.patientId)}</div>
     </div>
   );
 
@@ -69,7 +68,7 @@ export const createOrderTableConfig = (
   const renderStatus = (order: Order) => <Badge variant={order.overallStatus} size="sm" />;
 
   const renderTotalPrice = (order: Order) => (
-    <div className="font-medium text-brand truncate">{formatCurrency(order.totalPrice)}</div>
+    <div className={`${DATA_AMOUNT} truncate`}>{formatCurrency(order.totalPrice)}</div>
   );
 
   const renderPaymentStatus = (order: Order) => <Badge variant={order.paymentStatus} size="sm" />;

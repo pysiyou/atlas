@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 import { Popover, Button, Icon, FooterInfo } from '@/shared/ui';
 import { PopoverForm } from '../components/PopoverForm';
 import type { ContainerType } from '@/types';

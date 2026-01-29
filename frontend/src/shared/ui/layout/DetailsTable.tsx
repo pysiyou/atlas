@@ -7,10 +7,11 @@
  */
 
 import React from 'react';
-import { filterDetailRows, type DetailRow } from './detailsTableUtils';
+import { DETAIL_LABEL, DETAIL_VALUE } from '@/shared/constants';
+import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';
 
 /** Re-export for consumers */
-export type { DetailRow };
+export type { DetailTableRow };
 
 /**
  * Props for DetailsTable component
@@ -19,9 +20,9 @@ export interface DetailsTableProps {
   /** Table title displayed in header */
   title: string;
   /** Array of rows to display */
-  rows: DetailRow[];
+  rows: DetailTableRow[];
   /** Optional pre-filtered rows (if provided, automatic filtering is skipped) */
-  filteredRows?: DetailRow[];
+  filteredRows?: DetailTableRow[];
   /** Additional CSS classes for the wrapper */
   className?: string;
 }
@@ -52,12 +53,12 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
             {filteredRows.map((row, idx) => (
               <tr key={`${row.label}-${idx}`} className="border-b border-border-subtle last:border-b-0">
                 {/* Label */}
-                <td className="px-4 py-2.5 align-top w-2/5 uppercase text-xs">
-                  <span className="block text-xxs text-text-tertiary">{row.label}</span>
+                <td className="px-4 py-2.5 align-top w-2/5 uppercase">
+                  <span className={`block ${DETAIL_LABEL}`}>{row.label}</span>
                 </td>
                 {/* Value */}
-                <td className="px-4 py-2.5 align-top w-3/5 text-sm">
-                  <div className="text-sm text-text-primary break-words">{row.value}</div>
+                <td className="px-4 py-2.5 align-top w-3/5">
+                  <div className={`break-words ${DETAIL_VALUE}`}>{row.value}</div>
                 </td>
               </tr>
             ))}

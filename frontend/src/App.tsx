@@ -17,6 +17,7 @@ import {
   FeatureErrorBoundary,
   LoadingState,
 } from '@/shared/components';
+import { AuthRehydrationGate } from '@/shared/components/AuthRehydrationGate';
 
 // Eagerly loaded components (small, frequently accessed)
 import { LoginForm } from '@/features/auth/LoginForm';
@@ -53,7 +54,8 @@ const PageLoadingFallback: React.FC = () => (
 );
 
 /**
- * Wrapper component for protected routes with feature error boundary
+ * Wrapper for protected routes. AuthRehydrationGate (mounted once in app) clears
+ * isLoading after one frame so we never stick on "Loading page...".
  */
 interface ProtectedFeatureRouteProps {
   children: React.ReactNode;
@@ -63,15 +65,8 @@ interface ProtectedFeatureRouteProps {
 const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children, featureName }) => {
   const { isAuthenticated, isLoading } = useAuthStore();
 
-  // Show loading state while restoring auth from storage
-  if (isLoading) {
-    return <PageLoadingFallback />;
-  }
-
-  // Redirect to login if not authenticated after restoration completes
-  if (!isAuthenticated) {
-    return <Navigate to={ROUTES.LOGIN} replace />;
-  }
+  if (isLoading) return <PageLoadingFallback />;
+  if (!isAuthenticated) return <Navigate to={ROUTES.LOGIN} replace />;
 
   return (
     <DashboardLayout>
@@ -205,9 +200,10 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <Router>
         <AppProviders>
-          <DataLoader>
-            <AppRoutes />
-            <ModalRenderer />
+          <AuthRehydrationGate>
+            <DataLoader>
+              <AppRoutes />
+              <ModalRenderer />
             <Toaster
               position="bottom-right"
               containerClassName="app-toaster"
@@ -225,7 +221,8 @@ const App: React.FC = () => {
             >
               {(t) => <AppToastBar toast={t} />}
             </Toaster>
-          </DataLoader>
+            </DataLoader>
+          </AuthRehydrationGate>
         </AppProviders>
       </Router>
     </ErrorBoundary>

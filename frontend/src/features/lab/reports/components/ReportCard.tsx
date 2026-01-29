@@ -4,7 +4,7 @@
  * Custom mobile card component for report data in table view.
  * Displays validated test information in a mobile-friendly card layout.
  */
-import { Badge, Avatar } from '@/shared/ui';
+import { Badge, Card, Avatar } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
@@ -25,10 +25,7 @@ interface ReportCardProps extends CardComponentProps<ValidatedTest> {
  */
 export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) {
   return (
-    <div
-      onClick={onClick}
-      className="bg-surface border border-border rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
-    >
+    <Card padding="list" hover className="flex flex-col h-full" onClick={onClick}>
       {/* Header: Avatar (top left) + Status (top right) */}
       <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
         {/* Avatar: Patient name + Test ID - positioned at top left */}
@@ -63,6 +60,6 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
           <ReportPreviewButton test={test} onPreview={onPreview} size="xs" />
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

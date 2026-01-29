@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { orderCreateSchema, orderUpdateSchema, orderSchema, type Order } from '../schemas/order.schema';
+import { orderCreateSchema, orderUpdateSchema, orderSchema } from '../schemas/order.schema';
+import type { Order } from '@/types';
 import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 import { getErrorMessage } from '@/utils/errorHelpers';
 import { formInputToPayload } from '../utils/form-transformers';
 
@@ -14,7 +15,7 @@ export function useOrderService() {
       const validated = orderCreateSchema.parse(input);
       const transformed = formInputToPayload(validated);
       const response = await apiClient.post<Order>('/orders', transformed);
-      return orderSchema.parse(response);
+      return orderSchema.parse(response) as Order;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
@@ -30,7 +31,7 @@ export function useOrderService() {
       const validated = orderUpdateSchema.parse(data);
       const transformed = formInputToPayload(validated);
       const response = await apiClient.put<Order>(`/orders/${id}`, transformed);
-      return orderSchema.parse(response);
+      return orderSchema.parse(response) as Order;
     },
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(String(id)) });

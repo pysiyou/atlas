@@ -196,7 +196,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
         )
       }
       footer={
-        <ModalFooter>
+        <ModalFooter statusMessage="">
           <Button onClick={onClose} variant="cancel" size="md">
             Cancel
           </Button>

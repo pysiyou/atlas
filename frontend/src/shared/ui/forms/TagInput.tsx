@@ -52,7 +52,7 @@ export const TagInput: React.FC<TagInputProps> = ({
   required = false,
   className = '',
   maxTags,
-  tagVariant = 'outline',
+  tagVariant: _tagVariant = 'outline',
 }) => {
   const [inputValue, setInputValue] = useState('');
 

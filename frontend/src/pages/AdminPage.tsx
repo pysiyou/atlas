@@ -6,6 +6,7 @@
 import React, { useMemo } from 'react';
 import { usePatientsList, useOrdersList, useTestCatalog } from '@/hooks/queries';
 import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/shared/ui';
+import { DATA_AMOUNT, DATA_ID_PRIMARY } from '@/shared/constants';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { ICONS } from '@/utils';
@@ -21,7 +22,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     width: 'sm',
     sortable: true,
     render: (test: Test) => (
-      <span className="text-xs text-brand font-medium font-mono truncate block">{test.code}</span>
+      <span className={DATA_ID_PRIMARY}>{test.code}</span>
     ),
   },
   {
@@ -47,7 +48,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     align: 'right',
     sortable: true,
     render: (test: Test) => (
-      <div className="font-medium text-brand truncate">{formatCurrency(test.price)}</div>
+      <div className={`${DATA_AMOUNT} truncate`}>{formatCurrency(test.price)}</div>
     ),
   },
   {

@@ -10,6 +10,7 @@ import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
+import { DATA_AMOUNT, DATA_ID_PRIMARY } from '@/shared/constants';
 import { CatalogCard } from '../components/CatalogCard';
 
 /**
@@ -20,10 +21,10 @@ import { CatalogCard } from '../components/CatalogCard';
  */
 // Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
 // eslint-disable-next-line max-lines-per-function
-export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewConfig<Test> => {
+export const createCatalogTableConfig = (_navigate: NavigateFunction): TableViewConfig<Test> => {
   // Shared render functions
   const renderCode = (test: Test) => (
-    <span className="text-xs text-brand font-medium font-mono truncate block">{test.code}</span>
+    <span className={DATA_ID_PRIMARY}>{test.code}</span>
   );
 
   const renderName = (test: Test) => (
@@ -56,7 +57,7 @@ export const createCatalogTableConfig = (navigate: NavigateFunction): TableViewC
   };
 
   const renderPrice = (test: Test) => (
-    <div className="font-medium text-brand truncate">{formatCurrency(test.price)}</div>
+    <div className={`${DATA_AMOUNT} truncate`}>{formatCurrency(test.price)}</div>
   );
 
   return {

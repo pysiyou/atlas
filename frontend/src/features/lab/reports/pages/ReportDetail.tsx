@@ -11,7 +11,7 @@ import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import type { ReportData, ValidatedTest } from '../types';
 import { formatDate } from '@/utils';
 import { companyConfig } from '@/config';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 
 export const ReportDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export const ReportDetail: React.FC = () => {
   const { tests, isLoading: testsLoading } = useTestCatalog();
   const { getPatientName } = usePatientNameLookup();
   const { getSample } = useSampleLookup();
-  const { getUserName, isLoading: usersLoading } = useUserLookup();
+  const { getUserName, isLoading: _usersLoading } = useUserLookup();
 
   const [isGenerating, setIsGenerating] = useState(false);
 

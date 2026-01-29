@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { patientSchema, patientCreateSchema, patientUpdateSchema, type Patient } from '../schemas/patient.schema';
 import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 import { getErrorMessage } from '@/utils/errorHelpers';
 import type { Affiliation, AffiliationDuration } from '@/types';
 import { formInputToPayload } from '../utils/form-transformers';

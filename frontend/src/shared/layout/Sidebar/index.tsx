@@ -56,14 +56,14 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       width: '16rem', // w-64
       transition: {
         duration: 0.3,
-        ease: [0.4, 0, 0.2, 1],
+        ease: [0.4, 0, 0.2, 1] as const,
       },
     },
     collapsed: {
       width: '4rem', // w-16
       transition: {
         duration: 0.3,
-        ease: [0.4, 0, 0.2, 1],
+        ease: [0.4, 0, 0.2, 1] as const,
       },
     },
   };
@@ -73,7 +73,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       variants={sidebarVariants}
       animate={collapsed ? 'collapsed' : 'expanded'}
       initial={false}
-      className="bg-surface border-r border-border flex flex-col"
+      className="bg-surface border-r border-border flex flex-col overflow-hidden"
       style={{ padding: '0' }}
       onClick={e => {
         e.stopPropagation();

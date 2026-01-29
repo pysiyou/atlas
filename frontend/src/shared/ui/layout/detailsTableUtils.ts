@@ -7,9 +7,9 @@
 import React from 'react';
 
 /**
- * Row type for table data
+ * Row type for table data (renamed to avoid clash with DetailRow component)
  */
-export interface DetailRow {
+export interface DetailTableRow {
   /** Label displayed on the left */
   label: string;
   /** Value displayed on the right - can be string or React node */
@@ -43,7 +43,7 @@ const hasValue = (value: React.ReactNode): boolean => {
  * @param rows - Rows to filter
  * @returns Filtered rows
  */
-export const filterDetailRows = (rows: DetailRow[] | undefined | null): DetailRow[] =>
+export const filterDetailRows = (rows: DetailTableRow[] | undefined | null): DetailTableRow[] =>
   Array.isArray(rows) ? rows.filter(r => hasValue(r.value)) : [];
 
 /**
@@ -51,6 +51,6 @@ export const filterDetailRows = (rows: DetailRow[] | undefined | null): DetailRo
  * @param rows - Rows to calculate height for
  * @returns Number of visible rows (minimum 1)
  */
-export const calculateEffectiveHeight = (rows: DetailRow[]): number => {
+export const calculateEffectiveHeight = (rows: DetailTableRow[]): number => {
   return Math.max(filterDetailRows(rows).length, 1);
 };

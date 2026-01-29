@@ -1,5 +1,6 @@
 import React from 'react';
 import { Badge, type BadgeVariant } from '../display/Badge';
+import { DETAIL_LABEL, DETAIL_VALUE } from '@/shared/constants';
 import { formatDate } from '@/utils';
 import { useUserLookup } from '@/hooks/queries';
 
@@ -71,8 +72,8 @@ export const DetailField: React.FC<DetailFieldProps> = ({
   label,
   value,
   className = '',
-  labelClassName = 'text-text-tertiary text-xs',
-  valueClassName = 'font-medium text-text-primary text-right text-xs',
+  labelClassName = DETAIL_LABEL,
+  valueClassName = `font-medium text-right ${DETAIL_VALUE}`,
   variant = 'default',
   timestamp,
   user,
@@ -104,15 +105,15 @@ export const DetailField: React.FC<DetailFieldProps> = ({
       // Stacked layout: date on top, user below
       if (userName) {
         return (
-          <div className="text-right text-xs">
-            <div className="text-xs text-text-primary">{formattedDate}</div>
-            <div className="text-xs text-text-tertiary">by {userName}</div>
+          <div className="text-right">
+            <div className={DETAIL_VALUE}>{formattedDate}</div>
+            <div className={DETAIL_LABEL}>by {userName}</div>
           </div>
         );
       }
 
       // Simple timestamp without user
-      return <span className="text-xs text-text-primary">{formattedDate}</span>;
+      return <span className={DETAIL_VALUE}>{formattedDate}</span>;
     }
 
     // Default: render value as-is
@@ -122,7 +123,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
   // Inline variant uses more compact styling
   if (variant === 'inline') {
     return (
-      <span className={`inline-flex items-center gap-1.5 text-xs ${className}`}>
+      <span className={`inline-flex items-center gap-1.5 ${className}`}>
         <span className={labelClassName}>{label}:</span>
         <span className={valueClassName}>{renderValue()}</span>
       </span>
@@ -131,7 +132,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
 
   // Default and stacked variants use the same container layout
   return (
-    <div className={`flex items-center justify-between text-sm ${className}`}>
+    <div className={`flex items-center justify-between ${className}`}>
       <span className={labelClassName}>{label}</span>
       <span className={valueClassName}>{renderValue()}</span>
     </div>

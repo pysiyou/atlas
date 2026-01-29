@@ -10,6 +10,7 @@ import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
 import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
+import { DATA_AMOUNT, DATA_ID_PRIMARY_CLICKABLE, DATA_ID_SECONDARY } from '@/shared/constants';
 import { PaymentButton } from '../components/PaymentButton';
 // OrderPaymentDetails type
 type OrderPaymentDetails = {
@@ -57,7 +58,7 @@ export const createPaymentTableConfig = (
         e.stopPropagation();
         navigate(`/orders/${item.orderId}`);
       }}
-      className="text-xs text-brand font-medium font-mono hover:underline truncate block max-w-full"
+      className={DATA_ID_PRIMARY_CLICKABLE}
     >
       {displayId.order(item.orderId)}
     </button>
@@ -66,7 +67,7 @@ export const createPaymentTableConfig = (
   const renderPatientName = (item: OrderPaymentDetails) => (
     <div className="min-w-0">
       <div className="font-semibold text-text-primary truncate">{item.patientName || 'N/A'}</div>
-      <div className="text-xxs text-brand truncate font-mono">{displayId.patient(item.patientId)}</div>
+      <div className={DATA_ID_SECONDARY}>{displayId.patient(item.patientId)}</div>
     </div>
   );
 
@@ -86,9 +87,7 @@ export const createPaymentTableConfig = (
   );
 
   const renderTotalPrice = (item: OrderPaymentDetails) => (
-    <span className="font-medium text-brand truncate block">
-      {formatCurrency(item.totalPrice)}
-    </span>
+    <span className={`${DATA_AMOUNT} truncate block`}>{formatCurrency(item.totalPrice)}</span>
   );
 
   const renderPaymentStatus = (item: OrderPaymentDetails) => (

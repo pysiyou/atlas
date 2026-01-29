@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { paymentFormSchema, paymentSchema, type Payment } from '../schemas/payment.schema';
 import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 import { getPaymentErrorMessage } from '@/utils/errorHelpers';
 
 export function usePaymentService() {

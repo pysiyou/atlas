@@ -12,7 +12,7 @@ import {
   useTestNameLookup,
 } from '@/hooks/queries';
 import { checkReferenceRangeWithDemographics } from '@/utils';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
 import type { TestResult, TestStatus, TestWithContext } from '@/types';
 import { EntryCard } from './EntryCard';
@@ -20,7 +20,7 @@ import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowV
 import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters, useLabTestsFromOrders } from '../hooks';
 import { entryFilterConfig } from '../constants';
-import { DataErrorBoundary } from '@/shared/components';
+import { DataErrorBoundary, LoadingState } from '@/shared/components';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { resultAPI } from '@/services/api';
@@ -28,9 +28,9 @@ import { resultAPI } from '@/services/api';
 // Large component is necessary for comprehensive entry view with filtering, sorting, card rendering, and result entry functionality
 // eslint-disable-next-line max-lines-per-function
 export const EntryView: React.FC = () => {
-  const { orders } = useOrdersList();
+  const { orders, isLoading: ordersLoading } = useOrdersList();
   const { invalidateAll: invalidateOrders } = useInvalidateOrders();
-  const { tests: testCatalog } = useTestCatalog();
+  const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();
   const { getTest } = useTestNameLookup();
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
@@ -282,8 +282,22 @@ export const EntryView: React.FC = () => {
     openTestModalRef.current = openTestModal;
   }, [openTestModal]);
 
+  const isLoading = ordersLoading || testsLoading;
+  const hasNoItems = allTests.length === 0;
+  if (isLoading && hasNoItems) {
+    return (
+      <DataErrorBoundary>
+        <LoadingState message="Loading result entry..." fullScreen />
+      </DataErrorBoundary>
+    );
+  }
+
   if (!orders || !testCatalog) {
-    return <div>Loading...</div>;
+    return (
+      <DataErrorBoundary>
+        <LoadingState message="Loading result entry..." fullScreen />
+      </DataErrorBoundary>
+    );
   }
 
   return (

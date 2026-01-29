@@ -26,7 +26,7 @@ import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import type { ReportData, ValidatedTest } from '../types';
 import { formatDate } from '@/utils';
 import { companyConfig } from '@/config';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 
 /**
  * ReportList Component

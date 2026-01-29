@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Modal, Button, Icon, FooterInfo } from '@/shared/ui';
+import { Modal, Button, FooterInfo } from '@/shared/ui';
 import type { ReportData } from '../types';
 import { format } from 'date-fns';
 import { cn, ICONS } from '@/utils';

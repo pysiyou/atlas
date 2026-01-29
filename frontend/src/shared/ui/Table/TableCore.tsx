@@ -3,8 +3,10 @@ import { Pagination } from '../navigation/Pagination';
 import { TableHeader } from './TableHeader';
 import { TableRow } from './TableRow';
 import { TableSkeleton } from './TableSkeleton';
-import { TableEmpty } from './TableEmpty';
+import { EmptyState } from '../display/EmptyState';
+import type { IconName } from '../display/Icon';
 import type { ColumnConfig, SortConfig, PaginationConfig, TableVariant } from './types';
+import { ICONS } from '@/utils';
 import { useTableSort } from './hooks/useTableSort';
 import { useTablePagination } from './hooks/useTablePagination';
 import { DEFAULT_LOADING_ROWS } from './constants';
@@ -172,13 +174,25 @@ export function TableCore<T = Record<string, unknown>>({
     );
   }
 
-  // Empty state
+  // Empty state – use EmptyState for consistent visuals; normalize string to EmptyState
   if (data.length === 0) {
-    return (
-      <div className={containerClasses}>
-        <TableEmpty message={emptyMessage} icon={emptyIcon} />
-      </div>
-    );
+    const emptyContent =
+      typeof emptyMessage === 'string' ? (
+        <EmptyState
+          icon={(emptyIcon || ICONS.dataFields.document) as IconName}
+          title={emptyMessage}
+          description="Try adjusting filters or add new items."
+        />
+      ) : (
+        emptyMessage ?? (
+          <EmptyState
+            icon={(emptyIcon || ICONS.dataFields.document) as IconName}
+            title="No data available"
+            description="Try adjusting filters or add new items."
+          />
+        )
+      );
+    return <div className={containerClasses}>{emptyContent}</div>;
   }
 
   // Standard table view

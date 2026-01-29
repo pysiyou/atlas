@@ -1,14 +1,40 @@
 import { z } from 'zod';
 import { dateStringSchema, positiveIntSchema } from '@/shared/schemas/common.schema';
+import type { TestStatus } from '@/types';
+
+const apiTestStatusSchema = z.enum([
+  'pending',
+  'collected',
+  'processing',
+  'validated',
+  'escalated',
+  'superseded',
+  'removed',
+  'sample-collected',
+  'in-progress',
+  'resulted',
+  'rejected',
+]);
+const normalizedStatusSchema = apiTestStatusSchema.transform((s): TestStatus => {
+  if (s === 'collected') return 'sample-collected';
+  if (s === 'processing') return 'in-progress';
+  return s as TestStatus;
+});
 
 export const orderTestSchema = z.object({
   id: z.number().int().positive().optional(),
   testCode: z.string(),
   testName: z.string(),
   sampleType: z.string(),
-  status: z.enum(['pending', 'collected', 'processing', 'validated', 'escalated', 'superseded', 'removed']),
+  status: normalizedStatusSchema,
   priceAtOrder: z.number().min(0),
-  sampleId: z.number().int().positive().nullable().optional(), // Backend returns null
+  sampleId: z
+    .number()
+    .int()
+    .positive()
+    .nullable()
+    .optional()
+    .transform((v) => (v === null ? undefined : v)), // Backend returns null; normalize to undefined
   results: z.record(z.string(), z.unknown()).nullable().optional(),
   resultEnteredAt: z.string().datetime().nullable().optional(), // Backend returns null
   enteredBy: z.string().nullable().optional(), // Backend returns null

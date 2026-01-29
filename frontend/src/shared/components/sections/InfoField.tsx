@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { DETAIL_LABEL, DETAIL_VALUE } from '@/shared/constants';
 import { Icon } from '@/shared/ui';
 import type { IconName } from '@/shared/ui';
 
@@ -48,9 +49,9 @@ export const InfoField: React.FC<InfoFieldProps> = ({
       <div className={`flex gap-3 ${className}`}>
         {icon && <Icon name={icon} className="w-4 h-4 text-text-disabled shrink-0" />}
         <div className="min-w-0 flex-1">
-          <div className="text-xs text-text-tertiary">{label}</div>
+          <div className={DETAIL_LABEL}>{label}</div>
           {/* Using div instead of p to support ReactNode values that may contain block elements */}
-          <div className="text-sm font-medium text-text-primary mt-0.5 leading-relaxed">{value}</div>
+          <div className={`font-medium mt-0.5 leading-relaxed ${DETAIL_VALUE}`}>{value}</div>
         </div>
       </div>
     );
@@ -61,9 +62,9 @@ export const InfoField: React.FC<InfoFieldProps> = ({
     <div className={`flex items-center justify-between gap-4 ${className}`}>
       <div className="flex items-center gap-2">
         {icon && <Icon name={icon} className="w-4 h-4 text-text-tertiary flex-shrink-0" />}
-        <div className="text-xs font-medium text-text-tertiary whitespace-nowrap">{label}</div>
+        <div className={`font-medium whitespace-nowrap ${DETAIL_LABEL}`}>{label}</div>
       </div>
-      <div className="text-sm text-text-primary text-right min-w-0">{value}</div>
+      <div className={`text-right min-w-0 ${DETAIL_VALUE}`}>{value}</div>
     </div>
   );
 };

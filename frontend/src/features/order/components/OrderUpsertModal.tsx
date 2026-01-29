@@ -6,11 +6,11 @@
  * - Edit: mode === 'edit', order required.
  */
 
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import type { Order, Patient, PriorityLevel, PaymentMethod } from '@/types';
 import { PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG } from '@/types';
-import { getEnabledPaymentMethods, getDefaultPaymentMethod } from '@/types/billing';
+import { getEnabledPaymentMethods } from '@/types/billing';
 import { Modal, Input, Textarea, MultiSelectFilter, Button, FooterInfo, Icon, Alert } from '@/shared/ui';
 import type { BaseModalProps, IconName } from '@/shared/ui';
 import { displayId, ICONS, formatCurrency } from '@/utils';
@@ -93,7 +93,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
     control,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors: _errors, isSubmitting },
     setValue,
   } = useOrderForm({
     order,
@@ -237,7 +237,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
               rules={{ required: 'Patient is required' }}
               render={({ field, fieldState }) => (
                 <PatientSelect
-                  selectedPatient={selectedPatient}
+                  selectedPatient={selectedPatient ?? null}
                   patientSearch={patientSearch}
                   onPatientSearchChange={setPatientSearch}
                   filteredPatients={filteredPatients}

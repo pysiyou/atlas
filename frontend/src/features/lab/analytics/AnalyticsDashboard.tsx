@@ -170,7 +170,7 @@ export const AnalyticsDashboard: React.FC = () => {
           title="Result Rejection Rate"
           value={`${analytics.rejections.resultRejections.rate.toFixed(1)}%`}
           subtitle={`${analytics.rejections.resultRejections.retestCount} retests, ${analytics.rejections.resultRejections.recollectCount} recollects`}
-          icon="undo"
+          icon="arrow-left"
           color={analytics.rejections.resultRejections.rate < 5 ? 'success' : analytics.rejections.resultRejections.rate < 10 ? 'warning' : 'danger'}
         />
       </div>

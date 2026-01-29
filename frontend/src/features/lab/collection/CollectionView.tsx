@@ -28,15 +28,15 @@ import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters } from '../hooks/useLabWorkflowFilters';
 import { createSampleSearchFilter } from '../utils/lab-helpers';
 import { collectionFilterConfig } from '../constants';
-import { DataErrorBoundary } from '@/shared/components';
+import { DataErrorBoundary, LoadingState } from '@/shared/components';
 import type { SampleDisplay } from '../types';
 
 export const CollectionView: React.FC = () => {
   const queryClient = useQueryClient();
   const { user: currentUser } = useAuthStore();
-  const { refetch: refreshOrders } = useOrdersList();
-  const { tests } = useTestCatalog();
-  const { samples } = useSamplesList();
+  const { refetch: refreshOrders, isLoading: ordersLoading } = useOrdersList();
+  const { tests, isLoading: testsLoading } = useTestCatalog();
+  const { samples, isLoading: samplesLoading } = useSamplesList();
   const collectSampleMutation = useCollectSample();
   const { getPatient, getPatientName } = usePatientNameLookup();
   const { getOrder } = useOrderLookup();
@@ -175,6 +175,16 @@ export const CollectionView: React.FC = () => {
       }
     }
   };
+
+  const isLoading = ordersLoading || testsLoading || samplesLoading;
+  const hasNoItems = allSampleDisplays.length === 0;
+  if (isLoading && hasNoItems) {
+    return (
+      <DataErrorBoundary>
+        <LoadingState message="Loading collection..." fullScreen />
+      </DataErrorBoundary>
+    );
+  }
 
   return (
     <DataErrorBoundary>

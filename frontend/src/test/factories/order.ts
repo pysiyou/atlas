@@ -87,7 +87,7 @@ export const createMockOrder = (overrides?: Partial<Order>): Order => {
     clinicalNotes: faker.datatype.boolean() ? faker.lorem.paragraph() : undefined,
     referringPhysician: faker.datatype.boolean() ? faker.person.fullName() : undefined,
     priority: faker.helpers.arrayElement(['routine', 'urgent', 'stat']),
-    createdBy: faker.number.int({ min: 1, max: 100 }),
+    createdBy: String(faker.number.int({ min: 1, max: 100 })),
     createdAt,
     updatedAt: faker.date.between({ from: createdAt, to: new Date() }).toISOString(),
     ...overrides,

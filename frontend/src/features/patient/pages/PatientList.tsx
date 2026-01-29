@@ -12,7 +12,7 @@ import type { Order } from '@/types';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
-import { useModal, ModalType } from '@/shared/context/ModalContext';
+import { useModal } from '@/shared/context/ModalContext';
 import { PatientFilters, type AffiliationStatus } from '../components/PatientFilters';
 import { createPatientTableConfig } from './PatientTableConfig';
 import { calculateAge } from '@/utils';
@@ -32,7 +32,7 @@ import { usePatientService } from '../services/usePatientService';
  */
 export const PatientList: React.FC = () => {
   const navigate = useNavigate();
-  const { openModal } = useModal();
+  useModal(); // openModal reserved for future use
   const { patients, isLoading, isError, error: queryError, refetch } = usePatientsList();
   const { orders } = useOrdersList();
   const { isAffiliationActive } = usePatientService();

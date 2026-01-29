@@ -11,10 +11,9 @@
  */
 
 import React from 'react';
-import { Button, Icon, Popover, SectionContainer } from '@/shared/ui';
+import { Button, Popover, SectionContainer } from '@/shared/ui';
 import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
-import { ICONS } from '@/utils';
 import {
   LabDetailModal,
   DetailGrid,
@@ -158,11 +157,6 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       }
       footer={
         <ModalFooter
-          statusIcon={
-            hasFlags ? undefined : (
-              <Icon name={ICONS.dataFields.clinicalNotes} className="w-3.5 h-3.5" />
-            )
-          }
           statusMessage=""
           statusClassName="text-text-tertiary"
         >

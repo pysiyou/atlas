@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Badge, Button, Alert, Icon } from '@/shared/ui';
+import { Badge, Card, Button, Alert, Icon } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/hooks/queries';
@@ -40,10 +40,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   // Mobile layout (same structure as ValidationCard/EntryCard)
   if (isMobile) {
     return (
-      <div
-        onClick={handleCardClick}
-        className="bg-surface border border-border rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
-      >
+      <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="min-w-0 overflow-hidden">
             <div className="text-sm font-medium text-text-primary truncate">
@@ -108,7 +105,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
             View
           </Button>
         </div>
-      </div>
+      </Card>
     );
   }
 

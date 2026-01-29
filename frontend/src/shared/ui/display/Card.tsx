@@ -1,25 +1,40 @@
 /**
  * Card Component
- * Reusable card container
+ * Reusable card container with optional elevation/hover variants.
  */
 
 import React, { type ReactNode } from 'react';
 
+export type CardVariant = 'default' | 'lab' | 'metric';
+
 interface CardProps {
   children: ReactNode;
   className?: string;
-  padding?: 'none' | 'sm' | 'md' | 'lg';
+  padding?: 'none' | 'list' | 'sm' | 'md' | 'lg';
+  /** Visual variant: default (no hover), lab (sky hover), metric (brand hover) */
+  variant?: CardVariant;
+  /** Deprecated: use variant for hover style; when true with variant=default, only adds cursor-pointer */
   hover?: boolean;
+  onClick?: (e: React.MouseEvent) => void;
 }
+
+const VARIANT_CLASSES: Record<CardVariant, string> = {
+  default: '',
+  lab: 'hover:border-sky-200 hover:bg-sky-50/30 transition-all duration-200',
+  metric: 'hover:border-brand/50 transition-colors duration-200',
+};
 
 export const Card: React.FC<CardProps> = ({
   children,
   className = '',
   padding: paddingProp = 'md',
+  variant = 'default',
   hover = false,
+  onClick,
 }) => {
   const paddingClasses = {
     none: '',
+    list: 'p-3',
     sm: 'p-4',
     md: 'p-6',
     lg: 'p-8',
@@ -27,9 +42,25 @@ export const Card: React.FC<CardProps> = ({
 
   const baseClasses = 'bg-surface rounded-md border border-border duration-200';
   const hoverClass = hover ? 'cursor-pointer' : '';
+  const variantClass = VARIANT_CLASSES[variant];
 
   return (
-    <div className={`${baseClasses} ${paddingClasses[paddingProp]} ${hoverClass} ${className}`}>
+    <div
+      className={`${baseClasses} ${paddingClasses[paddingProp]} ${variantClass} ${hoverClass} ${className}`}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={
+        onClick
+          ? (e: React.KeyboardEvent) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onClick(e as unknown as React.MouseEvent);
+              }
+            }
+          : undefined
+      }
+    >
       {children}
     </div>
   );
