@@ -89,10 +89,18 @@ export function calculateRequiredSamples(
   const requiredSamples: SampleRequirement[] = [];
 
   grouped.forEach((sampleTests, sampleType) => {
+    // Dedupe by testCode so retests/rejections don't list the same test multiple times
+    const seen = new Set<string>();
+    const uniqueTests = sampleTests.filter(t => {
+      if (seen.has(t.testCode)) return false;
+      seen.add(t.testCode);
+      return true;
+    });
+
     const containerTypesSet = new Set<ContainerType>();
     const containerTopColorsSet = new Set<ContainerTopColor>();
 
-    sampleTests.forEach(orderTest => {
+    uniqueTests.forEach(orderTest => {
       const testDef = testCatalog.find(t => t.code === orderTest.testCode);
       if (testDef) {
         testDef.containerTypes?.forEach(ct => containerTypesSet.add(ct));
@@ -100,8 +108,8 @@ export function calculateRequiredSamples(
       }
     });
 
-    const totalVolume = calculateTotalVolume(sampleTests, testCatalog);
-    const testCodes = sampleTests.map(t => t.testCode);
+    const totalVolume = calculateTotalVolume(uniqueTests, testCatalog);
+    const testCodes = uniqueTests.map(t => t.testCode);
     const testNames = testCodes.map(code => {
       const testDef = testCatalog.find(t => t.code === code);
       return testDef?.name || code;

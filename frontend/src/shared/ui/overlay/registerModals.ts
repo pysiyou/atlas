@@ -9,6 +9,7 @@ import { registerModal } from './modalRegistry';
 import { CollectionDetailModal } from '@/features/lab/collection/CollectionDetailModal';
 import { EntryDetailModal } from '@/features/lab/entry/EntryDetailModal';
 import { ValidationDetailModal } from '@/features/lab/validation/ValidationDetailModal';
+import { EscalationResolutionModal } from '@/features/lab/validation/EscalationResolutionModal';
 import { OrderUpsertModal } from '@/features/order/components/OrderUpsertModal';
 import type { ContainerType, Order, SampleDisplay, Test, TestWithContext } from '@/types';
 
@@ -107,6 +108,19 @@ registerModal(ModalType.VALIDATION_DETAIL, ValidationDetailModal, (props, basePr
     onApprove,
     onReject,
     orderHasValidatedTests,
+  };
+});
+
+// Register Escalation Resolution Modal (admin/labtech_plus only)
+registerModal(ModalType.ESCALATION_RESOLUTION_DETAIL, EscalationResolutionModal, (props, baseProps) => {
+  const { test, onResolved } = props as {
+    test: TestWithContext;
+    onResolved: () => void | Promise<void>;
+  };
+  return {
+    ...baseProps,
+    test: test as TestWithContext,
+    onResolved,
   };
 });
 

@@ -15,7 +15,7 @@ class ResultRejectionRecord(BaseModel):
     rejectedAt: datetime
     rejectedBy: str
     rejectionReason: str
-    rejectionType: Literal['re-test', 're-collect', 'escalate']
+    rejectionType: Literal['re-test', 're-collect', 'escalate', 'authorize_retest']
 
 
 class ResultRejectionRequest(BaseModel):

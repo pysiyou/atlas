@@ -666,7 +666,11 @@ class LabOperationsService:
         Returns:
             The updated order test
         """
-        order_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
+        order_test = self._get_order_test(order_id, test_code)
+        if order_test.status not in (TestStatus.RESULTED, TestStatus.ESCALATED):
+            raise LabOperationError(
+                f"Test {test_code} in order {order_id} cannot be validated (status: {order_test.status.value})"
+            )
 
         # Validate state transition
         can_validate, reason = TestStateMachine.can_validate(order_test.status)
@@ -943,6 +947,142 @@ class LabOperationsService:
             success=True,
             action=RejectionAction.RECOLLECT_NEW_SAMPLE,
             message=f"Sample rejected and recollection requested. New sample ID: {new_sample.sampleId}",
+            originalTestId=original_test.id,
+            newSampleId=new_sample.sampleId
+        )
+
+    def resolve_escalation_authorize_retest(
+        self,
+        order_id: int,
+        test_code: str,
+        user_id: int,
+        reason: str
+    ) -> RejectionResult:
+        """
+        Resolve escalated test by authorizing a retest (Path 2).
+        Original -> SUPERSEDED; new OrderTest with retestNumber=0 (fresh retry chain).
+        """
+        original_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
+        TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.SUPERSEDED)
+
+        rejection_record = {
+            "rejectedAt": datetime.now(timezone.utc).isoformat(),
+            "rejectedBy": str(user_id),
+            "rejectionReason": reason,
+            "rejectionType": "authorize_retest"
+        }
+        if original_test.resultRejectionHistory is None:
+            original_test.resultRejectionHistory = []
+        original_test.resultRejectionHistory.append(rejection_record)
+        flag_modified(original_test, 'resultRejectionHistory')
+
+        original_test.resultValidatedAt = datetime.now(timezone.utc)
+        original_test.validatedBy = str(user_id)
+        original_test.validationNotes = reason
+
+        new_order_test = OrderTest(
+            orderId=order_id,
+            testCode=test_code,
+            status=TestStatus.SAMPLE_COLLECTED,
+            priceAtOrder=original_test.priceAtOrder,
+            sampleId=original_test.sampleId,
+            isRetest=True,
+            retestOfTestId=original_test.id,
+            retestNumber=0,
+            resultRejectionHistory=original_test.resultRejectionHistory,
+            technicianNotes=f"Authorized re-test (escalation resolution): {reason}",
+            flags=original_test.flags,
+            isReflexTest=original_test.isReflexTest,
+            triggeredBy=original_test.triggeredBy,
+            reflexRule=original_test.reflexRule
+        )
+
+        self.db.add(new_order_test)
+        self.db.flush()
+
+        original_test.retestOrderTestId = new_order_test.id
+        original_test.status = TestStatus.SUPERSEDED
+
+        self.audit.log_escalation_resolution_authorize_retest(
+            order_id=order_id,
+            test_code=test_code,
+            original_test_id=original_test.id,
+            new_test_id=new_order_test.id,
+            user_id=user_id,
+            reason=reason
+        )
+
+        self.db.commit()
+        self.db.refresh(new_order_test)
+        update_order_status(self.db, order_id)
+
+        return RejectionResult(
+            success=True,
+            action=RejectionAction.RETEST_SAME_SAMPLE,
+            message="Authorized re-test created. Test is ready for new result entry.",
+            originalTestId=original_test.id,
+            newTestId=new_order_test.id
+        )
+
+    def resolve_escalation_final_reject(
+        self,
+        order_id: int,
+        test_code: str,
+        user_id: int,
+        rejection_reason: str
+    ) -> RejectionResult:
+        """
+        Resolve escalated test by final reject / new sample (Path 3).
+        Rejects sample and requests recollection.
+        """
+        original_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
+        TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.REJECTED)
+
+        if not original_test.sampleId:
+            raise LabOperationError("Cannot final reject - no sample linked to this test")
+
+        sample = self._get_sample(original_test.sampleId)
+        can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
+        if not can_reject:
+            raise LabOperationError(reject_reason)
+
+        rejection_record = {
+            "rejectedAt": datetime.now(timezone.utc).isoformat(),
+            "rejectedBy": str(user_id),
+            "rejectionReason": rejection_reason,
+            "rejectionType": "re-collect"
+        }
+        if original_test.resultRejectionHistory is None:
+            original_test.resultRejectionHistory = []
+        original_test.resultRejectionHistory.append(rejection_record)
+        flag_modified(original_test, 'resultRejectionHistory')
+
+        rejection_notes = f"Final reject (escalation resolution): {rejection_reason}"
+        rejected_sample, new_sample = self.reject_and_recollect(
+            sample_id=sample.sampleId,
+            user_id=user_id,
+            rejection_reasons=["other"],
+            rejection_notes=rejection_notes,
+            recollection_reason=rejection_reason
+        )
+
+        self.audit.log_escalation_resolution_final_reject(
+            order_id=order_id,
+            test_code=test_code,
+            test_id=original_test.id,
+            sample_id=sample.sampleId,
+            new_sample_id=new_sample.sampleId,
+            user_id=user_id,
+            rejection_reason=rejection_reason
+        )
+
+        self.db.commit()
+        self.db.refresh(original_test)
+
+        return RejectionResult(
+            success=True,
+            action=RejectionAction.RECOLLECT_NEW_SAMPLE,
+            message=f"Sample rejected and new sample requested. New sample ID: {new_sample.sampleId}",
             originalTestId=original_test.id,
             newSampleId=new_sample.sampleId
         )

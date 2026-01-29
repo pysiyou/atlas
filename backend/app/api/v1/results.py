@@ -5,13 +5,14 @@ Uses the unified LabOperationsService for all operations.
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AliasChoices
 from typing import Optional, List
 from app.database import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_role
 from app.models.user import User
+from app.schemas.enums import UserRole
 from app.models.order import OrderTest
-from app.schemas.enums import TestStatus, ValidationDecision, RejectionAction
+from app.schemas.enums import TestStatus, UserRole, ValidationDecision, RejectionAction
 from app.services.lab_operations import (
     LabOperationsService,
     LabOperationError,
@@ -102,6 +103,24 @@ class BulkValidationResponse(BaseModel):
     failureCount: int
 
 
+class EscalationResolveRequest(BaseModel):
+    """Request body for resolving an escalated test (admin/labtech_plus only)"""
+    action: str = Field(
+        ...,
+        description="'force_validate' | 'authorize_retest' | 'final_reject'"
+    )
+    validationNotes: Optional[str] = Field(None, max_length=1000)
+    rejectionReason: Optional[str] = Field(
+        None,
+        min_length=1,
+        max_length=1000,
+        validation_alias=AliasChoices("rejectionReason", "rejection_reason"),
+    )
+
+
+require_escalation_resolver = require_role(UserRole.ADMIN, UserRole.LAB_TECH_PLUS)
+
+
 @router.get("/results/pending-entry")
 def get_pending_entry(
     db: Session = Depends(get_db),
@@ -128,6 +147,21 @@ def get_pending_validation(
     """
     tests = db.query(OrderTest).filter(
         OrderTest.status == TestStatus.RESULTED
+    ).all()
+    return tests
+
+
+@router.get("/results/pending-escalation")
+def get_pending_escalation(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_escalation_resolver)
+):
+    """
+    Get tests pending escalation resolution (admin/labtech_plus only).
+    Returns tests with status ESCALATED.
+    """
+    tests = db.query(OrderTest).filter(
+        OrderTest.status == TestStatus.ESCALATED
     ).all()
     return tests
 
@@ -283,6 +317,84 @@ def reject_results(
             newTestId=result.newTestId,
             newSampleId=result.newSampleId,
             escalationRequired=result.escalationRequired
+        )
+    except LabOperationError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
+
+
+@router.post("/results/{orderId}/tests/{testCode}/escalation/resolve", response_model=RejectionResultResponse)
+def resolve_escalation(
+    orderId: int,
+    testCode: str,
+    body: EscalationResolveRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_escalation_resolver)
+):
+    """
+    Resolve an escalated test (admin/labtech_plus only).
+    Actions: force_validate, authorize_retest, final_reject.
+    """
+    valid_actions = {"force_validate", "authorize_retest", "final_reject"}
+    if body.action not in valid_actions:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid action: {body.action}. Valid options: {', '.join(valid_actions)}"
+        )
+    if body.action == "final_reject" and not (body.rejectionReason or "").strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="rejectionReason is required for final_reject"
+        )
+
+    try:
+        service = LabOperationsService(db)
+        if body.action == "force_validate":
+            order_test = service.validate_results(
+                order_id=orderId,
+                test_code=testCode,
+                user_id=current_user.id,
+                validation_notes=body.validationNotes
+            )
+            return RejectionResultResponse(
+                success=True,
+                action="force_validate",
+                message="Results force-validated.",
+                originalTestId=order_test.id,
+                newTestId=None,
+                newSampleId=None,
+                escalationRequired=False
+            )
+        if body.action == "authorize_retest":
+            result = service.resolve_escalation_authorize_retest(
+                order_id=orderId,
+                test_code=testCode,
+                user_id=current_user.id,
+                reason=body.rejectionReason or "Authorized re-test (escalation resolution)"
+            )
+            return RejectionResultResponse(
+                success=result.success,
+                action=result.action.value,
+                message=result.message,
+                originalTestId=result.originalTestId,
+                newTestId=result.newTestId,
+                newSampleId=result.newSampleId,
+                escalationRequired=False
+            )
+        # final_reject
+        result = service.resolve_escalation_final_reject(
+            order_id=orderId,
+            test_code=testCode,
+            user_id=current_user.id,
+            rejection_reason=(body.rejectionReason or "").strip()
+        )
+        return RejectionResultResponse(
+            success=result.success,
+            action=result.action.value,
+            message=result.message,
+            originalTestId=result.originalTestId,
+            newTestId=result.newTestId,
+            newSampleId=result.newSampleId,
+            escalationRequired=False
         )
     except LabOperationError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)

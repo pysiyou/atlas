@@ -32,6 +32,7 @@ export type BadgeVariant =
   // Rejection Types
   | 're-test'
   | 're-collect'
+  | 'authorize_retest'
   // Sample Statuses
   | 'pending'
   | 'collected'
@@ -174,6 +175,7 @@ const VARIANT_STYLES: Record<string, string> = {
   // Rejection types
   're-test': 'bg-yellow-100 text-yellow-800',
   're-collect': 'bg-orange-100 text-orange-800',
+  'authorize_retest': 'bg-emerald-100 text-emerald-800',
   
   // Sample statuses
   pending: 'bg-gray-100 text-gray-800',
@@ -282,6 +284,7 @@ const VARIANT_LABELS: Record<string, string> = {
   // Rejection type labels
   're-test': 'RE-TEST',
   're-collect': 'RE-COLLECT',
+  'authorize_retest': 'AUTHORIZE RE-TEST',
 };
 
 /**

@@ -5,7 +5,11 @@
 
 import { apiClient } from './client';
 import type { OrderTest, ValidationDecision, ResultRejectionType } from '@/types';
-import type { RejectionOptionsResponse, RejectionResult } from '@/types/lab-operations';
+import type {
+  RejectionOptionsResponse,
+  RejectionResult,
+  EscalationResolveRequest,
+} from '@/types/lab-operations';
 
 /**
  * Request body for entering test results
@@ -54,6 +58,30 @@ export const resultAPI = {
    */
   async getPendingValidation(): Promise<OrderTest[]> {
     return apiClient.get<OrderTest[]>('/results/pending-validation');
+  },
+
+  /**
+   * Get tests pending escalation resolution (admin/labtech_plus only).
+   * Returns tests with status escalated.
+   */
+  async getPendingEscalation(): Promise<OrderTest[]> {
+    return apiClient.get<OrderTest[]>('/results/pending-escalation');
+  },
+
+  /**
+   * Resolve an escalated test (admin/labtech_plus only).
+   * Actions: force_validate, authorize_retest, final_reject.
+   */
+  async resolveEscalation(
+    orderId: string | number,
+    testCode: string,
+    payload: EscalationResolveRequest
+  ): Promise<RejectionResult> {
+    const orderIdStr = typeof orderId === 'number' ? orderId.toString() : orderId;
+    return apiClient.post<RejectionResult>(
+      `/results/${orderIdStr}/tests/${testCode}/escalation/resolve`,
+      payload
+    );
   },
 
   /**

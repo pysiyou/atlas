@@ -1,41 +1,58 @@
 /**
  * Laboratory Page
- * Lab operations - sample collection, result entry, validation
+ * Lab operations - sample collection, result entry, validation, escalation, analytics
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { CollectionView } from '@/features/lab/collection/CollectionView';
 import { EntryView } from '@/features/lab/entry/EntryView';
 import { ValidationView } from '@/features/lab/validation/ValidationView';
+import { EscalationView } from '@/features/lab/validation/EscalationView';
 import { AnalyticsDashboard } from '@/features/lab/analytics';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import { Icon } from '@/shared/ui';
 import { ICONS } from '@/utils';
 
-export const Laboratory: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'collection' | 'entry' | 'validation' | 'analytics'>('collection');
+type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation' | 'analytics';
 
-  const tabs = [
-    {
-      id: 'collection' as const,
-      label: 'Sample Collection',
-      icon: <Icon name={ICONS.dataFields.flask} className="w-4 h-4" />,
-    },
-    {
-      id: 'entry' as const,
-      label: 'Result Entry',
-      icon: <Icon name={ICONS.dataFields.notebook} className="w-4 h-4" />,
-    },
-    {
-      id: 'validation' as const,
-      label: 'Result Validation',
-      icon: <Icon name={ICONS.ui.shieldCheck} className="w-4 h-4" />,
-    },
-    {
-      id: 'analytics' as const,
+export const Laboratory: React.FC = () => {
+  const { hasRole } = useAuthStore();
+  const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
+
+  const [activeTab, setActiveTab] = useState<LabTabId>('collection');
+
+  const tabs = useMemo((): Array<{ id: LabTabId; label: string; icon: React.ReactNode }> => {
+    const base: Array<{ id: LabTabId; label: string; icon: React.ReactNode }> = [
+      {
+        id: 'collection',
+        label: 'Sample Collection',
+        icon: <Icon name={ICONS.dataFields.flask} className="w-4 h-4" />,
+      },
+      {
+        id: 'entry',
+        label: 'Result Entry',
+        icon: <Icon name={ICONS.dataFields.notebook} className="w-4 h-4" />,
+      },
+      {
+        id: 'validation',
+        label: 'Result Validation',
+        icon: <Icon name={ICONS.ui.shieldCheck} className="w-4 h-4" />,
+      },
+    ];
+    if (canResolveEscalation) {
+      base.push({
+        id: 'escalation',
+        label: 'Escalation',
+        icon: <Icon name={ICONS.actions.alertCircle} className="w-4 h-4" />,
+      });
+    }
+    base.push({
+      id: 'analytics',
       label: 'Analytics',
       icon: <Icon name={ICONS.dataFields.trendingUp} className="w-4 h-4" />,
-    },
-  ];
+    });
+    return base;
+  }, [canResolveEscalation]);
 
   const activeTabConfig = tabs.find(t => t.id === activeTab);
   const pageTitle = activeTabConfig?.label ?? 'Laboratory';
@@ -80,6 +97,7 @@ export const Laboratory: React.FC = () => {
           {activeTab === 'collection' && <CollectionView />}
           {activeTab === 'entry' && <EntryView />}
           {activeTab === 'validation' && <ValidationView />}
+          {activeTab === 'escalation' && canResolveEscalation && <EscalationView />}
           {activeTab === 'analytics' && (
             <div className="flex-1 overflow-y-auto p-6">
               <AnalyticsDashboard />

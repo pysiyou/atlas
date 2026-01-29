@@ -180,6 +180,8 @@ class LabOperationType(str, enum.Enum):
     RESULT_VALIDATION_REJECT_RETEST = "result_validation_reject_retest"
     RESULT_VALIDATION_REJECT_RECOLLECT = "result_validation_reject_recollect"
     RESULT_VALIDATION_ESCALATE = "result_validation_escalate"
+    ESCALATION_RESOLUTION_AUTHORIZE_RETEST = "escalation_resolution_authorize_retest"
+    ESCALATION_RESOLUTION_FINAL_REJECT = "escalation_resolution_final_reject"
 
     # Order Operations
     ORDER_STATUS_CHANGE = "order_status_change"

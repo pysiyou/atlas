@@ -172,7 +172,12 @@ export const ResultRejectionBanner: React.FC<ResultRejectionBannerProps> = ({
   rejection,
   retestNumber,
 }) => {
-  const typeLabel = rejection.rejectionType === 're-test' ? 'Re-test' : 'Re-collect';
+  const typeLabel =
+    rejection.rejectionType === 'authorize_retest'
+      ? 'Authorize re-test'
+      : rejection.rejectionType === 're-test'
+        ? 'Re-test'
+        : 'Re-collect';
 
   return (
     <div className="text-xs text-text-tertiary">

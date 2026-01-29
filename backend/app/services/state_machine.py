@@ -121,7 +121,7 @@ class TestStateMachine:
         TestStatus.RESULTED: {TestStatus.VALIDATED, TestStatus.ESCALATED, TestStatus.SUPERSEDED},
         TestStatus.VALIDATED: set(),  # Terminal
         TestStatus.REJECTED: {TestStatus.PENDING},  # Can transition to pending when recollection is ready
-        TestStatus.ESCALATED: {TestStatus.VALIDATED, TestStatus.SUPERSEDED},  # Supervisor can validate or reject
+        TestStatus.ESCALATED: {TestStatus.VALIDATED, TestStatus.SUPERSEDED, TestStatus.REJECTED},  # Supervisor: force validate, authorize retest, or final reject
         TestStatus.SUPERSEDED: set(),  # Terminal - replaced by retest
         TestStatus.REMOVED: set(),  # Terminal - removed from order during edit
     }

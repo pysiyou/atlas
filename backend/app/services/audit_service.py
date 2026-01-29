@@ -274,6 +274,65 @@ class AuditService:
             metadata=full_metadata
         )
 
+    def log_escalation_resolution_authorize_retest(
+        self,
+        order_id: int,
+        test_code: str,
+        original_test_id: int,
+        new_test_id: int,
+        user_id: int,
+        reason: str,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> LabOperationLog:
+        """Log escalation resolution: authorize re-test (Path 2)."""
+        full_metadata = {
+            "orderId": order_id,
+            "testCode": test_code,
+            "originalTestId": original_test_id,
+            "newTestId": new_test_id,
+            "reason": reason,
+            **(metadata or {})
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.ESCALATION_RESOLUTION_AUTHORIZE_RETEST,
+            entity_type="test",
+            entity_id=original_test_id,
+            user_id=user_id,
+            before_state={"status": "escalated"},
+            after_state={"status": "superseded", "retestOrderTestId": new_test_id},
+            metadata=full_metadata
+        )
+
+    def log_escalation_resolution_final_reject(
+        self,
+        order_id: int,
+        test_code: str,
+        test_id: int,
+        sample_id: int,
+        new_sample_id: int,
+        user_id: int,
+        rejection_reason: str,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> LabOperationLog:
+        """Log escalation resolution: final reject / new sample (Path 3)."""
+        full_metadata = {
+            "orderId": order_id,
+            "testCode": test_code,
+            "originalSampleId": sample_id,
+            "newSampleId": new_sample_id,
+            "rejectionReason": rejection_reason,
+            **(metadata or {})
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.ESCALATION_RESOLUTION_FINAL_REJECT,
+            entity_type="test",
+            entity_id=test_id,
+            user_id=user_id,
+            before_state={"status": "escalated", "sampleId": sample_id},
+            after_state={"status": "rejected", "sampleId": new_sample_id},
+            metadata=full_metadata
+        )
+
     def get_entity_history(
         self,
         entity_type: str,
