@@ -1,32 +1,26 @@
 /**
- * CollectionFilters Component
- *
- * Filter row for sample collection tab. Uses FilterBar – same structure as Order.
- * Search, date range, sample type, status.
- *
- * @module features/lab
+ * LabFilters - Shared filter row for lab workflow tabs
+ * Composes FilterBar with lab filter config; used by Entry, Collection, Validation, Escalation.
  */
 
 import React, { useMemo } from 'react';
 import { FilterBar, type FilterValues } from '@/features/filters';
-import { collectionFilterConfig } from '../constants';
-import type { SampleStatus } from '@/types';
+import type { FilterConfig } from '@/features/filters';
 
-export interface CollectionFiltersProps {
+export interface LabFiltersProps<S = string[]> {
+  config: FilterConfig;
   searchQuery: string;
   onSearchChange: (value: string) => void;
   dateRange: [Date, Date] | null;
   onDateRangeChange: (range: [Date, Date] | null) => void;
   sampleTypeFilters: string[];
   onSampleTypeFiltersChange: (values: string[]) => void;
-  statusFilters: SampleStatus[];
-  onStatusFiltersChange: (values: SampleStatus[]) => void;
+  statusFilters: S;
+  onStatusFiltersChange: (values: S) => void;
 }
 
-/**
- * Composes FilterBar with collection-specific configuration.
- */
-export const CollectionFilters: React.FC<CollectionFiltersProps> = ({
+export function LabFilters<S = string[]>({
+  config,
   searchQuery,
   onSearchChange,
   dateRange,
@@ -35,7 +29,7 @@ export const CollectionFilters: React.FC<CollectionFiltersProps> = ({
   onSampleTypeFiltersChange,
   statusFilters,
   onStatusFiltersChange,
-}) => {
+}: LabFiltersProps<S>): React.ReactElement {
   const filterValues = useMemo<FilterValues>(
     () => ({
       searchQuery,
@@ -50,10 +44,8 @@ export const CollectionFilters: React.FC<CollectionFiltersProps> = ({
     if (filters.searchQuery !== undefined) onSearchChange(filters.searchQuery as string);
     if (filters.dateRange !== undefined) onDateRangeChange(filters.dateRange as [Date, Date] | null);
     if (filters.sampleType !== undefined) onSampleTypeFiltersChange(filters.sampleType as string[]);
-    if (filters.status !== undefined) onStatusFiltersChange(filters.status as SampleStatus[]);
+    if (filters.status !== undefined) onStatusFiltersChange(filters.status as S);
   };
 
-  return (
-    <FilterBar config={collectionFilterConfig} value={filterValues} onChange={handleFilterChange} />
-  );
-};
+  return <FilterBar config={config} value={filterValues} onChange={handleFilterChange} />;
+}

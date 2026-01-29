@@ -10,18 +10,16 @@ import {
   useInvalidateOrders,
   useTestCatalog,
   useTestNameLookup,
-  useSampleLookup,
-  usePatientNameLookup,
 } from '@/hooks/queries';
 import { checkReferenceRangeWithDemographics } from '@/utils';
-import { getTestSampleType } from '@/utils/typeHelpers';
 import toast from 'react-hot-toast';
 import { logger } from '@/utils/logger';
 import type { TestResult, TestStatus, TestWithContext } from '@/types';
-import { isCollectedSample } from '@/types';
 import { EntryCard } from './EntryCard';
-import { EntryFilters } from './EntryFilters';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
+import { LabFilters } from '../components/LabFilters';
+import { useLabWorkflowFilters, useLabTestsFromOrders } from '../hooks';
+import { entryFilterConfig } from '../constants';
 import { DataErrorBoundary } from '@/shared/components';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -34,116 +32,39 @@ export const EntryView: React.FC = () => {
   const { invalidateAll: invalidateOrders } = useInvalidateOrders();
   const { tests: testCatalog } = useTestCatalog();
   const { getTest } = useTestNameLookup();
-  const { getSample } = useSampleLookup();
-  const { getPatient, getPatientName } = usePatientNameLookup();
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  const [statusFilters, setStatusFilters] = useState<TestStatus[]>([]);
   const [results, setResults] = useState<Record<string, Record<string, string>>>({});
   const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
   const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
 
-  // Build list of tests awaiting result entry
-  // Excludes superseded tests (those replaced by retests)
-  const allTests: TestWithContext[] = useMemo(() => {
-    if (!orders || !testCatalog) return [];
-
-    return orders.flatMap(order => {
-      const patient = getPatient(order.patientId);
-      const patientName = getPatientName(order.patientId);
-
-      return order.tests
-        .filter(
-          test =>
-            // Filter for tests awaiting result entry (sample-collected or in-progress)
-            // Superseded tests are already excluded by status check
-            test.status === 'sample-collected' || test.status === 'in-progress'
-        )
-        .map(test => {
-          const testName = getTest(test.testCode)?.name || test.testCode;
-          const sampleType = getTestSampleType(test.testCode, testCatalog);
-          const sample = test.sampleId ? getSample(test.sampleId) : undefined;
-
-          let collectedAt: string | undefined;
-          let collectedBy: string | undefined;
-          if (sample && isCollectedSample(sample)) {
-            collectedAt = sample.collectedAt;
-            collectedBy = sample.collectedBy;
-          }
-
-          return {
-            ...test,
-            orderId: order.orderId,
-            orderDate: order.orderDate,
-            patientId: order.patientId,
-            patientName,
-            testName,
-            sampleType,
-            patient,
-            priority: order.priority,
-            referringPhysician: order.referringPhysician,
-            collectedAt,
-            collectedBy,
-            resultEnteredAt: test.resultEnteredAt ?? undefined,
-            resultValidatedAt: test.resultValidatedAt ?? undefined,
-            results: test.results ?? undefined,
-            // Include retest tracking info
-            isRetest: test.isRetest,
-            retestOfTestId: test.retestOfTestId,
-            retestNumber: test.retestNumber,
-            resultRejectionHistory: test.resultRejectionHistory,
-            // Include sample recollection info
-            sampleIsRecollection: sample?.isRecollection,
-            sampleOriginalSampleId: sample?.originalSampleId,
-            sampleRecollectionReason: sample?.recollectionReason,
-            sampleRecollectionAttempt: sample?.recollectionAttempt,
-            sampleRejectionHistory: sample?.rejectionHistory,
-          };
-        });
-    });
-  }, [orders, testCatalog, getPatient, getPatientName, getSample, getTest]);
+  const allTests = useLabTestsFromOrders({
+    orders,
+    testCatalog,
+    statusFilter: ['sample-collected', 'in-progress'],
+    includePatient: true,
+  });
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
-  const filteredTests = useMemo(() => {
-    let out = allTests;
-
-    if (dateRange) {
-      const [start, end] = dateRange;
-      const startDate = new Date(start);
-      startDate.setHours(0, 0, 0, 0);
-      const endDate = new Date(end);
-      endDate.setHours(23, 59, 59, 999);
-      out = out.filter(t => {
-        const d = (t as { orderDate?: string }).orderDate;
-        if (!d) return false;
-        const orderDate = new Date(d);
-        return orderDate >= startDate && orderDate <= endDate;
-      });
-    }
-
-    if (sampleTypeFilters.length > 0) {
-      out = out.filter(
-        t => t.sampleType && sampleTypeFilters.includes(t.sampleType)
-      );
-    }
-
-    if (statusFilters.length > 0) {
-      out = out.filter(
-        t => t.status && statusFilters.includes(t.status as TestStatus)
-      );
-    }
-
-    if (searchQuery.trim()) {
-      out = out.filter(t => filterTest(t, searchQuery));
-    }
-
-    return out;
-  }, [allTests, dateRange, sampleTypeFilters, statusFilters, searchQuery, filterTest]);
+  const {
+    filteredItems: filteredTests,
+    searchQuery,
+    setSearchQuery,
+    dateRange,
+    setDateRange,
+    sampleTypeFilters,
+    setSampleTypeFilters,
+    statusFilters,
+    setStatusFilters,
+  } = useLabWorkflowFilters<TestWithContext, TestStatus>({
+    items: allTests,
+    getOrderDate: t => (t as { orderDate?: string }).orderDate,
+    getSampleType: t => t.sampleType,
+    getStatus: t => t.status as TestStatus,
+    searchFilterFn: filterTest,
+  });
 
   const handleResultChange = useCallback((resultKey: string, paramCode: string, value: string) => {
     setResults(prev => ({
@@ -400,7 +321,8 @@ export const EntryView: React.FC = () => {
         emptyTitle="No Pending Results"
         emptyDescription="There are no samples waiting for result entry."
         filterRow={
-          <EntryFilters
+          <LabFilters<TestStatus[]>
+            config={entryFilterConfig}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             dateRange={dateRange}

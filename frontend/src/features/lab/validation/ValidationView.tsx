@@ -10,23 +10,21 @@ import {
   useInvalidateOrders,
   useOrderLookup,
   useTestCatalog,
-  useTestNameLookup,
-  useSampleLookup,
-  usePatientNameLookup,
 } from '@/hooks/queries';
-import { getTestSampleType } from '@/utils/typeHelpers';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
 import { ValidationCard } from './ValidationCard';
 import { BulkValidationToolbar, useBulkSelection, ValidationCheckbox } from './BulkValidationToolbar';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
+import { LabFilters } from '../components/LabFilters';
+import { useLabWorkflowFilters, useLabTestsFromOrders } from '../hooks';
+import { validationFilterConfig } from '../constants';
 import { DataErrorBoundary } from '@/shared/components';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import type { PriorityLevel, TestWithContext, CollectedSample } from '@/types';
+import type { PriorityLevel, TestWithContext } from '@/types';
 import { resultAPI } from '@/services/api';
 import { orderHasValidatedTests } from '@/features/order/utils';
-import { ValidationFilters } from './ValidationFilters';
 
 /**
  * Feature flag to enable/disable bulk validation (select all) feature
@@ -41,122 +39,41 @@ export const ValidationView: React.FC = () => {
   const { invalidateAll: invalidateOrders } = useInvalidateOrders();
   const { getOrder } = useOrderLookup();
   const { tests: testCatalog } = useTestCatalog();
-  const { getTest } = useTestNameLookup();
-  const { getSample } = useSampleLookup();
-  const { getPatientName, getPatient } = usePatientNameLookup();
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  const [statusFilters, setStatusFilters] = useState<PriorityLevel[]>([]);
   const [comments, setComments] = useState<Record<string, string>>({});
   const [isValidating, setIsValidating] = useState<Record<string, boolean>>({});
   const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
-  // Build list of tests awaiting validation
-  // Excludes superseded tests (those replaced by retests)
-  const allTests: (TestWithContext & { hasCriticalValues?: boolean })[] = useMemo(() => {
-    if (!orders || !testCatalog) return [];
-
-    return orders.flatMap(order => {
-      const patientName = getPatientName(order.patientId);
-      const patient = getPatient(order.patientId);
-      const patientDob = patient?.dateOfBirth;
-
-      return order.tests
-        .filter(
-          test =>
-            // Filter for tests awaiting validation (resulted but not yet validated)
-            // Superseded tests are already excluded by status check
-            test.status === 'resulted' && !test.validatedBy
-        )
-        .map(test => {
-          const testName = getTest(test.testCode)?.name || test.testCode;
-          const sampleType = getTestSampleType(test.testCode, testCatalog);
-          const sample = test.sampleId ? getSample(test.sampleId) : undefined;
-
-          const collectedAt =
-            sample?.status === 'collected' ? (sample as CollectedSample).collectedAt : undefined;
-          const collectedBy =
-            sample?.status === 'collected' ? (sample as CollectedSample).collectedBy : undefined;
-
-          // Check for critical values from flags
-          const hasCriticalValues = test.flags?.some(
-            (f: string) => f.includes('critical') || f.includes('CRITICAL')
-          ) || test.hasCriticalValues;
-
-          return {
-            ...test,
-            orderId: order.orderId,
-            orderDate: order.orderDate,
-            patientId: order.patientId,
-            patientName,
-            patientDob,
-            testName,
-            sampleType,
-            priority: order.priority,
-            referringPhysician: order.referringPhysician,
-            collectedAt,
-            collectedBy,
-            resultEnteredAt: test.resultEnteredAt ?? undefined,
-            resultValidatedAt: test.resultValidatedAt ?? undefined,
-            results: test.results ?? undefined,
-            hasCriticalValues,
-            // Include retest tracking info
-            isRetest: test.isRetest,
-            retestOfTestId: test.retestOfTestId,
-            retestNumber: test.retestNumber,
-            resultRejectionHistory: test.resultRejectionHistory,
-            // Include sample recollection info
-            sampleIsRecollection: sample?.isRecollection,
-            sampleOriginalSampleId: sample?.originalSampleId,
-            sampleRecollectionReason: sample?.recollectionReason,
-            sampleRecollectionAttempt: sample?.recollectionAttempt,
-            sampleRejectionHistory: sample?.rejectionHistory,
-          };
-        });
-    });
-  }, [orders, testCatalog, getPatientName, getPatient, getTest, getSample]);
+  const allTests = useLabTestsFromOrders({
+    orders,
+    testCatalog,
+    statusFilter: ['resulted'],
+    onlyUnvalidated: true,
+    includeHasCriticalValues: true,
+    includePatient: true,
+  });
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
-  const filteredTests = useMemo(() => {
-    let out = allTests;
-
-    if (dateRange) {
-      const [start, end] = dateRange;
-      const startDate = new Date(start);
-      startDate.setHours(0, 0, 0, 0);
-      const endDate = new Date(end);
-      endDate.setHours(23, 59, 59, 999);
-      out = out.filter(t => {
-        const d = (t as { orderDate?: string }).orderDate;
-        if (!d) return false;
-        const orderDate = new Date(d);
-        return orderDate >= startDate && orderDate <= endDate;
-      });
-    }
-
-    if (sampleTypeFilters.length > 0) {
-      out = out.filter(
-        t => t.sampleType && sampleTypeFilters.includes(t.sampleType)
-      );
-    }
-
-    if (statusFilters.length > 0) {
-      out = out.filter(
-        t => t.priority && statusFilters.includes(t.priority as PriorityLevel)
-      );
-    }
-
-    if (searchQuery.trim()) {
-      out = out.filter(t => filterTest(t, searchQuery));
-    }
-
-    return out;
-  }, [allTests, dateRange, sampleTypeFilters, statusFilters, searchQuery, filterTest]);
+  const {
+    filteredItems: filteredTests,
+    searchQuery,
+    setSearchQuery,
+    dateRange,
+    setDateRange,
+    sampleTypeFilters,
+    setSampleTypeFilters,
+    statusFilters,
+    setStatusFilters,
+  } = useLabWorkflowFilters<TestWithContext & { hasCriticalValues?: boolean }, PriorityLevel>({
+    items: allTests,
+    getOrderDate: t => (t as { orderDate?: string }).orderDate,
+    getSampleType: t => t.sampleType,
+    getStatus: t => t.priority as PriorityLevel,
+    searchFilterFn: filterTest,
+  });
 
   /** Filtered tests with numeric id (for bulk selection) */
   const filteredTestsWithId = useMemo(
@@ -444,7 +361,8 @@ export const ValidationView: React.FC = () => {
         emptyTitle="No Pending Validations"
         emptyDescription="There are no results waiting for validation."
         filterRow={
-          <ValidationFilters
+          <LabFilters<PriorityLevel[]>
+            config={validationFilterConfig}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             dateRange={dateRange}

@@ -64,14 +64,15 @@ export function LabWorkflowView<T>({
 }: LabWorkflowViewProps<T>): React.ReactElement {
   const useFilterRow = filterRow != null;
   const searchFilterFn = filterFn ?? (() => true);
-  const { filteredItems, searchQuery, setSearchQuery, isEmpty } = useSearch(
-    items,
-    searchFilterFn
-  );
+  const legacySearch = useSearch(items, searchFilterFn);
 
+  const filteredItems = useFilterRow ? items : legacySearch.filteredItems;
+  const searchQuery = legacySearch.searchQuery;
+  const setSearchQuery = legacySearch.setSearchQuery;
   const hasItems = items.length > 0;
+  const isEmpty = useFilterRow ? items.length === 0 : legacySearch.isEmpty;
   const showEmptyState = !hasItems || isEmpty;
-  const showNoMatches = hasItems && isEmpty;
+  const showNoMatches = !useFilterRow && hasItems && legacySearch.isEmpty;
 
   return (
     <div className="h-full flex flex-col min-h-0">

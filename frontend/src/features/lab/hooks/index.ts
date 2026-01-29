@@ -2,7 +2,6 @@
  * Lab Feature Hooks
  */
 
-export * from './useCollectionFilters';
-export * from './useEntryFilters';
-export * from './useValidationFilters';
+export * from './useLabWorkflowFilters';
+export * from './useLabTestsFromOrders';
 export * from './useRejectionManager';

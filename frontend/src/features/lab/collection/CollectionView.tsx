@@ -4,7 +4,7 @@
  * Displays samples awaiting collection with filtering by status.
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import {
   useOrdersList,
@@ -14,62 +14,19 @@ import {
   useCollectSample,
   usePatientNameLookup,
 } from '@/hooks/queries';
-import toast from 'react-hot-toast';
+import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
-import type { ContainerType, ContainerTopColor, SampleStatus, Test } from '@/types';
-import { calculateRequiredSamples, getCollectionRequirements } from '@/utils';
-import { getTestNames } from '@/utils/typeHelpers';
+import type { ContainerType, ContainerTopColor, SampleStatus } from '@/types';
+import { calculateRequiredSamples } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';
 import { LabWorkflowView } from '../components/LabWorkflowView';
-import { CollectionFilters } from './CollectionFilters';
+import { LabFilters } from '../components/LabFilters';
+import { useLabWorkflowFilters } from '../hooks/useLabWorkflowFilters';
+import { createSampleSearchFilter } from '../utils/lab-helpers';
+import { collectionFilterConfig } from '../constants';
 import { DataErrorBoundary } from '@/shared/components';
 import type { SampleDisplay } from '../types';
-
-/**
- * Creates a filter function for samples that searches across multiple fields
- */
-const createSampleFilter =
-  (getPatientName: (patientId: number) => string, tests: Test[]) =>
-  // High complexity is necessary for comprehensive search across multiple fields (order ID, sample ID, patient name, test names, rejection reasons, notes)
-  // eslint-disable-next-line complexity
-  (display: SampleDisplay, query: string): boolean => {
-    const lowerQuery = query.toLowerCase();
-    const sample = display.sample;
-    const sampleType = sample?.sampleType;
-    const collectionType = sampleType ? getCollectionRequirements(sampleType).collectionType : '';
-    const patientName = getPatientName(display.order.patientId);
-    const testNames = sample?.testCodes ? getTestNames(sample.testCodes, tests) : [];
-
-    // Search in rejection reasons/notes for rejected samples
-    const rejectionReasons =
-      sample?.status === 'rejected' && 'rejectionReasons' in sample
-        ? (sample.rejectionReasons || []).join(' ').toLowerCase()
-        : '';
-    const rejectionNotes =
-      sample?.status === 'rejected' && 'rejectionNotes' in sample
-        ? (sample.rejectionNotes || '').toLowerCase()
-        : '';
-
-    // Search in collection notes
-    const collectionNotes =
-      (sample?.status === 'collected' || sample?.status === 'rejected') &&
-      'collectionNotes' in sample
-        ? (sample.collectionNotes || '').toLowerCase()
-        : '';
-
-    return (
-      display.order.orderId.toString().toLowerCase().includes(lowerQuery) ||
-      sample?.sampleId?.toString().toLowerCase().includes(lowerQuery) ||
-      patientName.toLowerCase().includes(lowerQuery) ||
-      sampleType?.toLowerCase()?.includes(lowerQuery) ||
-      (collectionType.toLowerCase().includes(lowerQuery) && collectionType !== sampleType) ||
-      testNames.some((name: string) => name.toLowerCase().includes(lowerQuery)) ||
-      rejectionReasons.includes(lowerQuery) ||
-      rejectionNotes.includes(lowerQuery) ||
-      collectionNotes.includes(lowerQuery)
-    );
-  };
 
 export const CollectionView: React.FC = () => {
   const { user: currentUser } = useAuthStore();
@@ -79,10 +36,6 @@ export const CollectionView: React.FC = () => {
   const collectSampleMutation = useCollectSample();
   const { getPatient, getPatientName } = usePatientNameLookup();
   const { getOrder } = useOrderLookup();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  const [statusFilters, setStatusFilters] = useState<SampleStatus[]>(['pending']);
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
@@ -120,45 +73,29 @@ export const CollectionView: React.FC = () => {
     return displays;
   }, [samples, tests, getPatient, getOrder]);
 
-  // Create memoized filter function
   const filterSample = useMemo(
-    () => createSampleFilter(getPatientName, tests),
+    () => createSampleSearchFilter(getPatientName, tests),
     [getPatientName, tests]
   );
 
-  // Apply date range, sample type, status, then search (same order as Order filters)
-  const filteredDisplays = useMemo(() => {
-    let out = allSampleDisplays;
-
-    if (dateRange) {
-      const [start, end] = dateRange;
-      const startDate = new Date(start);
-      startDate.setHours(0, 0, 0, 0);
-      const endDate = new Date(end);
-      endDate.setHours(23, 59, 59, 999);
-      out = out.filter(d => {
-        const orderDate = new Date(d.order.orderDate);
-        return orderDate >= startDate && orderDate <= endDate;
-      });
-    }
-
-    if (sampleTypeFilters.length > 0) {
-      out = out.filter(d => {
-        const st = d.requirement?.sampleType ?? d.sample?.sampleType;
-        return st && sampleTypeFilters.includes(st);
-      });
-    }
-
-    if (statusFilters.length > 0) {
-      out = out.filter(d => d.sample?.status && statusFilters.includes(d.sample.status));
-    }
-
-    if (searchQuery.trim()) {
-      out = out.filter(d => filterSample(d, searchQuery));
-    }
-
-    return out;
-  }, [allSampleDisplays, dateRange, sampleTypeFilters, statusFilters, searchQuery, filterSample]);
+  const {
+    filteredItems: filteredDisplays,
+    searchQuery,
+    setSearchQuery,
+    dateRange,
+    setDateRange,
+    sampleTypeFilters,
+    setSampleTypeFilters,
+    statusFilters,
+    setStatusFilters,
+  } = useLabWorkflowFilters<SampleDisplay, SampleStatus>({
+    items: allSampleDisplays,
+    getOrderDate: d => d.order.orderDate,
+    getSampleType: d => d.requirement?.sampleType ?? d.sample?.sampleType,
+    getStatus: d => d.sample?.status,
+    searchFilterFn: filterSample,
+    initialStatusFilters: ['pending'],
+  });
 
   /**
    * Handle sample collection
@@ -235,7 +172,8 @@ export const CollectionView: React.FC = () => {
         emptyTitle="No Pending Collections"
         emptyDescription="There are no samples waiting to be collected."
         filterRow={
-          <CollectionFilters
+          <LabFilters<SampleStatus[]>
+            config={collectionFilterConfig}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             dateRange={dateRange}

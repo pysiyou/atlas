@@ -8,7 +8,6 @@ from datetime import datetime, timezone
 from typing import Tuple, List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
-from pydantic import BaseModel
 
 from app.models.sample import Sample
 from app.models.order import Order, OrderTest
@@ -23,50 +22,17 @@ from app.services.order_status_updater import update_order_status
 from app.services.result_validator import ResultValidatorService
 from app.services.flag_calculator import FlagCalculatorService
 from app.services.critical_notification_service import CriticalNotificationService
+from app.utils.exceptions import LabOperationError
+from app.services.lab_rejection import (
+    LabRejectionHandler,
+    RejectionOptions,
+    AvailableAction,
+    RejectionResult,
+)
 
-
-# Constants for limits
+# Constants for limits (used by sample/result ops; rejection limits live in lab_rejection)
 MAX_RETEST_ATTEMPTS = 3
 MAX_RECOLLECTION_ATTEMPTS = 3
-
-
-class LabOperationError(Exception):
-    """Custom exception for lab operation errors"""
-    def __init__(self, message: str, status_code: int = 400, error_code: str = "LAB_OPERATION_ERROR"):
-        self.message = message
-        self.status_code = status_code
-        self.error_code = error_code
-        super().__init__(self.message)
-
-
-class AvailableAction(BaseModel):
-    """Represents an available rejection action"""
-    action: RejectionAction
-    enabled: bool
-    disabledReason: Optional[str] = None
-    label: str
-    description: str
-
-
-class RejectionOptions(BaseModel):
-    """Response for rejection options query"""
-    canRetest: bool
-    retestAttemptsRemaining: int
-    canRecollect: bool
-    recollectionAttemptsRemaining: int
-    availableActions: List[AvailableAction]
-    escalationRequired: bool = False
-
-
-class RejectionResult(BaseModel):
-    """Result of a rejection operation"""
-    success: bool
-    action: RejectionAction
-    message: str
-    originalTestId: int
-    newTestId: Optional[int] = None
-    newSampleId: Optional[int] = None
-    escalationRequired: bool = False
 
 
 class LabOperationsService:
@@ -86,6 +52,14 @@ class LabOperationsService:
         self.result_validator = ResultValidatorService()
         self.flag_calculator = FlagCalculatorService()
         self.critical_notification = CriticalNotificationService(db)
+        self._rejection_handler = LabRejectionHandler(
+            db,
+            self.audit,
+            update_order_status,
+            lambda sid, uid, reasons, notes, rreason: self.reject_and_recollect(
+                sid, uid, reasons, notes, rreason
+            ),
+        )
 
     # ==================== HELPER METHODS ====================
 
@@ -161,77 +135,8 @@ class LabOperationsService:
 
     # ==================== REJECTION OPTIONS ====================
 
-    def get_rejection_options(
-        self,
-        order_id: int,
-        test_code: str
-    ) -> RejectionOptions:
-        """
-        Get available rejection actions for a test.
-
-        Args:
-            order_id: The order ID
-            test_code: The test code
-
-        Returns:
-            RejectionOptions with available actions and their status
-        """
-        order_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
-        sample = self._get_sample(order_test.sampleId) if order_test.sampleId else None
-
-        # Calculate retest availability
-        current_retest_number = order_test.retestNumber or 0
-        can_retest = current_retest_number < MAX_RETEST_ATTEMPTS
-        retest_attempts_remaining = MAX_RETEST_ATTEMPTS - current_retest_number
-
-        # Calculate recollection availability
-        recollection_attempt = sample.recollectionAttempt if sample else 1
-        can_recollect = recollection_attempt <= MAX_RECOLLECTION_ATTEMPTS if sample else False
-        recollection_attempts_remaining = MAX_RECOLLECTION_ATTEMPTS - (recollection_attempt - 1) if sample else 0
-
-        # Build available actions
-        available_actions = []
-
-        # Retest action
-        retest_action = AvailableAction(
-            action=RejectionAction.RETEST_SAME_SAMPLE,
-            enabled=can_retest,
-            disabledReason=f"Maximum {MAX_RETEST_ATTEMPTS} retest attempts reached" if not can_retest else None,
-            label="Re-test (Same Sample)",
-            description="Run the test again using the existing sample"
-        )
-        available_actions.append(retest_action)
-
-        # Recollect action
-        recollect_action = AvailableAction(
-            action=RejectionAction.RECOLLECT_NEW_SAMPLE,
-            enabled=can_recollect,
-            disabledReason=f"Maximum {MAX_RECOLLECTION_ATTEMPTS} recollection attempts reached" if not can_recollect else None,
-            label="Request New Sample",
-            description="Reject the current sample and request a new collection"
-        )
-        available_actions.append(recollect_action)
-
-        # Check if escalation is required
-        escalation_required = not can_retest and not can_recollect
-
-        if escalation_required:
-            escalate_action = AvailableAction(
-                action=RejectionAction.ESCALATE_TO_SUPERVISOR,
-                enabled=True,
-                label="Escalate to Supervisor",
-                description="All rejection options exhausted. Please escalate."
-            )
-            available_actions.append(escalate_action)
-
-        return RejectionOptions(
-            canRetest=can_retest,
-            retestAttemptsRemaining=retest_attempts_remaining,
-            canRecollect=can_recollect,
-            recollectionAttemptsRemaining=recollection_attempts_remaining,
-            availableActions=available_actions,
-            escalationRequired=escalation_required
-        )
+    def get_rejection_options(self, order_id: int, test_code: str) -> RejectionOptions:
+        return self._rejection_handler.get_rejection_options(order_id, test_code)
 
     # ==================== SAMPLE OPERATIONS ====================
 
@@ -749,222 +654,18 @@ class LabOperationsService:
             raise LabOperationError(action_info.disabledReason or f"Action {action.value} is disabled")
 
         if action == RejectionAction.RETEST_SAME_SAMPLE:
-            return self._reject_with_retest(order_id, test_code, user_id, rejection_reason)
-        elif action == RejectionAction.RECOLLECT_NEW_SAMPLE:
-            return self._reject_with_recollect(order_id, test_code, user_id, rejection_reason)
-        elif action == RejectionAction.ESCALATE_TO_SUPERVISOR:
-            return self._reject_with_escalate(order_id, test_code, user_id, rejection_reason)
-        else:
-            raise LabOperationError(f"Unknown rejection action: {action.value}")
-
-    def _reject_with_retest(
-        self,
-        order_id: int,
-        test_code: str,
-        user_id: int,
-        rejection_reason: str
-    ) -> RejectionResult:
-        """
-        Reject results and create a retest (same sample).
-
-        Creates a new OrderTest entry and marks original as SUPERSEDED.
-        """
-        original_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
-
-        # Get current retest number
-        current_retest_number = original_test.retestNumber or 0
-
-        # Create rejection record
-        rejection_record = {
-            "rejectedAt": datetime.now(timezone.utc).isoformat(),
-            "rejectedBy": str(user_id),  # Convert to string as per schema requirement
-            "rejectionReason": rejection_reason,
-            "rejectionType": "re-test"
-        }
-
-        # Initialize rejection history if needed
-        if original_test.resultRejectionHistory is None:
-            original_test.resultRejectionHistory = []
-        original_test.resultRejectionHistory.append(rejection_record)
-        flag_modified(original_test, 'resultRejectionHistory')
-
-        # Update original test validation metadata
-        original_test.resultValidatedAt = datetime.now(timezone.utc)
-        original_test.validatedBy = str(user_id)  # Convert to string as per model requirement
-        original_test.validationNotes = rejection_reason
-
-        # Create new OrderTest for retest (ID is auto-generated)
-        new_order_test = OrderTest(
-            orderId=order_id,
-            testCode=test_code,
-            status=TestStatus.SAMPLE_COLLECTED,
-            priceAtOrder=original_test.priceAtOrder,
-            sampleId=original_test.sampleId,
-            isRetest=True,
-            retestOfTestId=original_test.id,
-            retestNumber=current_retest_number + 1,
-            resultRejectionHistory=original_test.resultRejectionHistory,
-            technicianNotes=f"Re-test #{current_retest_number + 1}: {rejection_reason}",
-            flags=original_test.flags,
-            isReflexTest=original_test.isReflexTest,
-            triggeredBy=original_test.triggeredBy,
-            reflexRule=original_test.reflexRule
-        )
-
-        self.db.add(new_order_test)
-        self.db.flush()  # Get auto-generated ID
-
-        # Mark original as superseded
-        original_test.retestOrderTestId = new_order_test.id
-        original_test.status = TestStatus.SUPERSEDED
-
-        # Log audit
-        self.audit.log_result_validation_reject_retest(
-            order_id=order_id,
-            test_code=test_code,
-            original_test_id=original_test.id,
-            new_test_id=new_order_test.id,
-            user_id=user_id,
-            rejection_reason=rejection_reason,
-            retest_number=current_retest_number + 1
-        )
-
-        self.db.commit()
-        self.db.refresh(new_order_test)
-
-        # Update order status
-        update_order_status(self.db, order_id)
-
-        return RejectionResult(
-            success=True,
-            action=RejectionAction.RETEST_SAME_SAMPLE,
-            message=f"Retest created successfully. Test is ready for new result entry.",
-            originalTestId=original_test.id,
-            newTestId=new_order_test.id
-        )
-
-    def _reject_with_escalate(
-        self,
-        order_id: int,
-        test_code: str,
-        user_id: int,
-        rejection_reason: str
-    ) -> RejectionResult:
-        """
-        Escalate test to supervisor: set status to ESCALATED and record in history.
-        """
-        original_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
-        TestStateMachine.validate_transition(TestStatus.RESULTED, TestStatus.ESCALATED)
-
-        rejection_record = {
-            "rejectedAt": datetime.now(timezone.utc).isoformat(),
-            "rejectedBy": str(user_id),
-            "rejectionReason": rejection_reason,
-            "rejectionType": "escalate"
-        }
-        if original_test.resultRejectionHistory is None:
-            original_test.resultRejectionHistory = []
-        original_test.resultRejectionHistory.append(rejection_record)
-        flag_modified(original_test, 'resultRejectionHistory')
-
-        # Do not set validation fields (resultValidatedAt, validatedBy, validationNotes) on escalate;
-        # those are for actual validation (approve). Escalation is recorded in resultRejectionHistory.
-        original_test.status = TestStatus.ESCALATED
-
-        self.audit.log_result_validation_escalate(
-            order_id=order_id,
-            test_code=test_code,
-            order_test_id=original_test.id,
-            user_id=user_id,
-            rejection_reason=rejection_reason
-        )
-
-        self.db.commit()
-        self.db.refresh(original_test)
-        update_order_status(self.db, order_id)
-
-        return RejectionResult(
-            success=True,
-            action=RejectionAction.ESCALATE_TO_SUPERVISOR,
-            message="Escalation recorded. Please contact your supervisor.",
-            originalTestId=original_test.id,
-            escalationRequired=True
-        )
-
-    def _reject_with_recollect(
-        self,
-        order_id: int,
-        test_code: str,
-        user_id: int,
-        rejection_reason: str
-    ) -> RejectionResult:
-        """
-        Reject results and request sample recollection.
-
-        Rejects the sample and creates a new recollection sample.
-        """
-        original_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
-
-        if not original_test.sampleId:
-            raise LabOperationError("Cannot request recollection - no sample linked to this test")
-
-        sample = self._get_sample(original_test.sampleId)
-
-        # Validate sample can be rejected
-        can_reject, reason = SampleStateMachine.can_reject(sample.status)
-        if not can_reject:
-            raise LabOperationError(reason)
-
-        # Create rejection record for the test
-        rejection_record = {
-            "rejectedAt": datetime.now(timezone.utc).isoformat(),
-            "rejectedBy": str(user_id),  # Convert to string as per schema requirement
-            "rejectionReason": rejection_reason,
-            "rejectionType": "re-collect"
-        }
-
-        if original_test.resultRejectionHistory is None:
-            original_test.resultRejectionHistory = []
-        original_test.resultRejectionHistory.append(rejection_record)
-        flag_modified(original_test, 'resultRejectionHistory')
-
-        # Update test validation metadata
-        original_test.resultValidatedAt = datetime.now(timezone.utc)
-        original_test.validatedBy = str(user_id)  # Convert to string as per model requirement
-        original_test.validationNotes = rejection_reason
-
-        # Reject sample and create recollection
-        rejection_notes = f"Rejected during result validation: {rejection_reason}"
-        rejected_sample, new_sample = self.reject_and_recollect(
-            sample_id=sample.sampleId,
-            user_id=user_id,
-            rejection_reasons=["other"],
-            rejection_notes=rejection_notes,
-            recollection_reason=rejection_reason
-        )
-
-        # Log audit
-        self.audit.log_result_validation_reject_recollect(
-            order_id=order_id,
-            test_code=test_code,
-            test_id=original_test.id,
-            sample_id=sample.sampleId,
-            new_sample_id=new_sample.sampleId,
-            user_id=user_id,
-            rejection_reason=rejection_reason,
-            recollection_attempt=new_sample.recollectionAttempt
-        )
-
-        self.db.commit()
-        self.db.refresh(original_test)
-
-        return RejectionResult(
-            success=True,
-            action=RejectionAction.RECOLLECT_NEW_SAMPLE,
-            message=f"Sample rejected and recollection requested. New sample ID: {new_sample.sampleId}",
-            originalTestId=original_test.id,
-            newSampleId=new_sample.sampleId
-        )
+            return self._rejection_handler.reject_with_retest(
+                order_id, test_code, user_id, rejection_reason
+            )
+        if action == RejectionAction.RECOLLECT_NEW_SAMPLE:
+            return self._rejection_handler.reject_with_recollect(
+                order_id, test_code, user_id, rejection_reason
+            )
+        if action == RejectionAction.ESCALATE_TO_SUPERVISOR:
+            return self._rejection_handler.reject_with_escalate(
+                order_id, test_code, user_id, rejection_reason
+            )
+        raise LabOperationError(f"Unknown rejection action: {action.value}")
 
     def resolve_escalation_force_validate(
         self,

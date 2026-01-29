@@ -1,7 +1,4 @@
 /**
  * Lab Feature Services
+ * (Entry/Collection/Validation services removed; views use resultAPI and mutations directly.)
  */
-
-export * from './useCollectionService';
-export * from './useEntryService';
-export * from './useValidationService';

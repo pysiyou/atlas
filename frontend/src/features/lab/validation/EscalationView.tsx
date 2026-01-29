@@ -5,15 +5,17 @@
  * (Force Validate / Authorize Re-test / Final Reject).
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { usePendingEscalation, useInvalidateOrders } from '@/hooks/queries';
 import { EscalationCard } from './EscalationCard';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
+import { LabFilters } from '../components/LabFilters';
+import { useLabWorkflowFilters } from '../hooks/useLabWorkflowFilters';
+import { validationFilterConfig } from '../constants';
 import { DataErrorBoundary } from '@/shared/components';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
-import { ValidationFilters } from './ValidationFilters';
 
 export const EscalationView: React.FC = () => {
   const {
@@ -27,45 +29,27 @@ export const EscalationView: React.FC = () => {
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  const [statusFilters, setStatusFilters] = useState<PriorityLevel[]>([]);
-
   const escalatedTests: (TestWithContext & { hasCriticalValues?: boolean })[] = rawEscalated as unknown as (TestWithContext & { hasCriticalValues?: boolean })[];
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
-  const filteredTests = useMemo(() => {
-    let out = escalatedTests;
-    if (dateRange) {
-      const [start, end] = dateRange;
-      const startDate = new Date(start);
-      startDate.setHours(0, 0, 0, 0);
-      const endDate = new Date(end);
-      endDate.setHours(23, 59, 59, 999);
-      out = out.filter(t => {
-        const d = (t as { orderDate?: string }).orderDate;
-        if (!d) return false;
-        const orderDate = new Date(d);
-        return orderDate >= startDate && orderDate <= endDate;
-      });
-    }
-    if (sampleTypeFilters.length > 0) {
-      out = out.filter(
-        t => t.sampleType && sampleTypeFilters.includes(t.sampleType)
-      );
-    }
-    if (statusFilters.length > 0) {
-      out = out.filter(
-        t => t.priority && statusFilters.includes(t.priority as PriorityLevel)
-      );
-    }
-    if (searchQuery.trim()) {
-      out = out.filter(t => filterTest(t, searchQuery));
-    }
-    return out;
-  }, [escalatedTests, dateRange, sampleTypeFilters, statusFilters, searchQuery, filterTest]);
+  const {
+    filteredItems: filteredTests,
+    searchQuery,
+    setSearchQuery,
+    dateRange,
+    setDateRange,
+    sampleTypeFilters,
+    setSampleTypeFilters,
+    statusFilters,
+    setStatusFilters,
+  } = useLabWorkflowFilters<TestWithContext & { hasCriticalValues?: boolean }, PriorityLevel>({
+    items: escalatedTests,
+    getOrderDate: t => (t as { orderDate?: string }).orderDate,
+    getSampleType: t => t.sampleType,
+    getStatus: t => t.priority as PriorityLevel,
+    searchFilterFn: filterTest,
+  });
 
   const openEscalationModal = useCallback(
     (test: TestWithContext) => {
@@ -101,7 +85,8 @@ export const EscalationView: React.FC = () => {
         emptyTitle="No Escalated Tests"
         emptyDescription="There are no tests pending escalation resolution."
         filterRow={
-          <ValidationFilters
+          <LabFilters<PriorityLevel[]>
+            config={validationFilterConfig}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             dateRange={dateRange}

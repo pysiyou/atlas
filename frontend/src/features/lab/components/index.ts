@@ -16,6 +16,10 @@ export { RejectionDialog, RejectionDialogContent, RejectionHistoryBanner } from 
 // Workflow view
 export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
 
+// Shared lab filters
+export { LabFilters } from './LabFilters';
+export type { LabFiltersProps } from './LabFilters';
+
 // Detail modal
 export { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from './LabDetailModal';
 export type { DetailGridSectionConfig } from './LabDetailModal';
