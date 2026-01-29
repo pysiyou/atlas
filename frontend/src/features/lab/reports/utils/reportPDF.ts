@@ -23,33 +23,13 @@ const getDefaultTemplate = (): ReportTemplate => {
 };
 
 /**
- * Convert hex color to RGB array
- */
-function hexToRgb(hex: string): [number, number, number] {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
-    : [14, 165, 233]; // Default blue
-}
-
-/**
- * Format phone numbers for display
- */
-function formatPhoneNumbers(phone: string | string[]): string {
-  if (Array.isArray(phone)) {
-    return phone.join(' | ');
-  }
-  return phone;
-}
-
-/**
- * Format timestamp for report display
+ * Format timestamp for report display - matches modal preview format
  */
 function formatReportTimestamp(dateString?: string): string {
   if (!dateString) return 'N/A';
   try {
     const date = new Date(dateString);
-    return format(date, 'hh:mm a dd MMM, yy');
+    return format(date, 'yyyy-MM-dd hh:mm a');
   } catch {
     return 'N/A';
   }
@@ -69,226 +49,198 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
 
   const company = companyConfig.getConfig();
   const contact = company.contact;
-  const brandColor = hexToRgb(company.branding.primaryColor);
 
-  // ========== COMPANY HEADER SECTION ==========
-  // Logo placeholder (left side) - 20x20mm
-  const logoSize = 12;
-  doc.setFillColor(...brandColor);
-  doc.roundedRect(margin, yPosition, logoSize, logoSize, 2, 2, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'bold');
-  doc.text('LOGO', margin + logoSize / 2, yPosition + logoSize / 2, { align: 'center', baseline: 'middle' });
-
-  // Company name and tagline (left, next to logo)
+  // ========== REPORT HEADER SECTION - Two Column Layout (matches modal) ==========
+  const headerStartY = yPosition;
+  const headerHeight = 50;
+  
+  // Left Panel: Company Information (40% width, light blue background)
+  const leftPanelWidth = (pageWidth - margin * 2) * 0.40;
+  const rightPanelWidth = (pageWidth - margin * 2) * 0.60;
+  const leftPanelX = margin;
+  const rightPanelX = leftPanelX + leftPanelWidth;
+  
+  // Left panel background (light blue: #E0F2F7 = RGB 224, 242, 247)
+  doc.setFillColor(224, 242, 247);
+  doc.rect(leftPanelX, headerStartY, leftPanelWidth, headerHeight, 'F');
+  
+  // Company Name
   doc.setTextColor(0, 0, 0);
-  doc.setFontSize(14);
+  doc.setFontSize(18); // text-2xl equivalent
   doc.setFont('helvetica', 'bold');
-  const companyNameX = margin + logoSize + 5;
-  doc.text(company.company.fullName, companyNameX, yPosition + 4);
-
-  // Tagline below company name
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.text(company.company.tagline, companyNameX, yPosition + 8);
-
-  // Contact info (right side)
-  const contactX = pageWidth - margin - 60;
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  
-  // Phone
-  const phoneNumbers = formatPhoneNumbers(contact.phone);
-  if (phoneNumbers) {
-    doc.setTextColor(34, 197, 94); // Green for phone
-    doc.text('📞', contactX, yPosition + 4);
-    doc.setTextColor(0, 0, 0);
-    doc.text(phoneNumbers, contactX + 5, yPosition + 4);
-  }
-
-  // Email
-  if (contact.email) {
-    doc.setTextColor(234, 179, 8); // Yellow/amber for email
-    doc.text('✉', contactX, yPosition + 8);
-    doc.setTextColor(0, 0, 0);
-    doc.text(contact.email, contactX + 5, yPosition + 8);
-  }
-
-  // Full address (centered below company info)
-  yPosition += logoSize + 5;
-  if (contact.address.fullAddress) {
-    doc.setFontSize(7);
-    doc.setFont('helvetica', 'normal');
-    doc.text(contact.address.fullAddress, pageWidth / 2, yPosition, { align: 'center' });
-  }
-
-  yPosition += 8;
-
-  // ========== WEBSITE BAR ==========
-  // Blue bar with website
-  doc.setFillColor(...brandColor);
-  doc.rect(margin, yPosition, pageWidth - margin * 2, 6, 'F');
-  
-  // Website text (white, right-aligned on bar)
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  const website = contact.website.startsWith('www.') ? contact.website : `www.${contact.website}`;
-  doc.text(website, pageWidth - margin - 5, yPosition + 4, { align: 'right' });
-
-  yPosition += 10;
-
-  // ========== PATIENT & SAMPLE DETAILS SECTION ==========
-  // Three-column layout with vertical dividers
-  const detailsStartY = yPosition;
-  const sectionHeight = 35;
-  const col1Width = (pageWidth - margin * 2) * 0.35; // 35% for patient info
-  const col2Width = (pageWidth - margin * 2) * 0.35; // 35% for sample collection
-  const col3Width = (pageWidth - margin * 2) * 0.30; // 30% for barcode/timestamps
-  
-  const col1X = margin;
-  const col2X = col1X + col1Width;
-  const col3X = col2X + col2Width;
-  
-  // Draw vertical dividers
-  doc.setDrawColor(220, 220, 220);
-  doc.setLineWidth(0.3);
-  doc.line(col2X, detailsStartY, col2X, detailsStartY + sectionHeight);
-  doc.line(col3X, detailsStartY, col3X, detailsStartY + sectionHeight);
-  
-  // Top border line (light blue/teal)
-  doc.setDrawColor(...brandColor);
-  doc.setLineWidth(0.5);
-  doc.line(margin, detailsStartY, pageWidth - margin, detailsStartY);
-  
-  // Bottom border line (light gray)
-  doc.setDrawColor(220, 220, 220);
-  doc.setLineWidth(0.3);
-  doc.line(margin, detailsStartY + sectionHeight, pageWidth - margin, detailsStartY + sectionHeight);
-  
-  // ========== COLUMN 1: PATIENT INFORMATION ==========
-  doc.setTextColor(0, 0, 0);
-  let currentY = detailsStartY + 5;
-  
-  // Patient Name (large, bold)
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text(reportData.patientName, col1X + 3, currentY);
+  let currentY = headerStartY + 8;
+  doc.text(companyConfig.getName(), leftPanelX + 5, currentY);
   currentY += 6;
   
-  // Age
-  if (reportData.patientAge) {
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Age : ${reportData.patientAge} Years`, col1X + 3, currentY);
+  // Company Subtitle
+  if (company.company.subtitle) {
+    doc.setFontSize(9); // text-xs equivalent
+    doc.setFont('helvetica', 'bold');
+    doc.text(company.company.subtitle, leftPanelX + 5, currentY);
     currentY += 4;
   }
   
-  // Sex
+  // Address Lines
+  doc.setFontSize(9); // text-xs equivalent
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(55, 65, 81); // text-gray-700
+  if (contact.address.street) {
+    doc.text(contact.address.street, leftPanelX + 5, currentY);
+    currentY += 3.5;
+  }
+  const { city, state, zipCode } = contact.address;
+  const addressParts = [city, state, zipCode].filter(Boolean);
+  if (addressParts.length > 0) {
+    doc.text(addressParts.join(', '), leftPanelX + 5, currentY);
+    currentY += 3.5;
+  }
+  if (contact.address.country) {
+    doc.text(contact.address.country, leftPanelX + 5, currentY);
+  }
+  
+  // Right Panel: Report Title and Details (white background)
+  currentY = headerStartY + 5;
+  
+  // Report Title
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(14); // text-base equivalent
+  doc.setFont('helvetica', 'bold');
+  const reportTitle = reportData.testResults.length > 0
+    ? `${reportData.testResults.map(t => t.testName).join(', ')} Results ( ${reportData.testResults.map(t => t.testCode).join(', ')} )`
+    : 'Test Results';
+  doc.text(reportTitle, rightPanelX + 5, currentY);
+  currentY += 6;
+  
+  // Patient and Processing Details - Two Sub-columns
+  const subCol1Width = rightPanelWidth * 0.5;
+  const subCol1X = rightPanelX;
+  const subCol2X = rightPanelX + subCol1Width;
+  
+  // Left Sub-column: Patient Demographics
+  let subColY = currentY;
+  doc.setFontSize(14); // text-base equivalent
+  doc.setFont('helvetica', 'bold');
+  doc.text(reportData.patientName, subCol1X + 5, subColY);
+  subColY += 5;
+  
+  if (reportData.patientAge) {
+    doc.setFontSize(9); // text-xs equivalent
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(55, 65, 81); // text-gray-700
+    doc.text('Age:', subCol1X + 5, subColY);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(31, 41, 55); // text-gray-800
+    doc.text(String(reportData.patientAge), subCol1X + 20, subColY);
+    subColY += 4;
+  }
+  
   if (reportData.patientGender) {
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Sex : ${reportData.patientGender}`, col1X + 3, currentY);
-    currentY += 4;
+    doc.setTextColor(55, 65, 81);
+    doc.text('Gender:', subCol1X + 5, subColY);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(31, 41, 55);
+    doc.text(reportData.patientGender.toUpperCase(), subCol1X + 25, subColY);
+    subColY += 4;
   }
   
-  // PID (below age and sex)
-  if (reportData.patientId) {
+  // Phone or Email
+  const orderExtended = reportData.order as typeof reportData.order & { 
+    patientPhone?: string;
+    patientEmail?: string;
+  };
+  if (orderExtended.patientPhone) {
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text(`PID : ${reportData.patientId}`, col1X + 3, currentY);
-  }
-  
-  // QR Code (positioned to the right, aligned with patient name area)
-  const qrSize = 18;
-  const qrX = col1X + col1Width - qrSize - 3;
-  const qrY = detailsStartY + 5; // Align with patient name
-  doc.setDrawColor(200, 200, 200);
-  doc.setLineWidth(0.5);
-  doc.rect(qrX, qrY, qrSize, qrSize);
-  doc.setFontSize(6);
-  doc.setTextColor(150, 150, 150);
-  doc.text('QR', qrX + qrSize / 2, qrY + qrSize / 2, { align: 'center', baseline: 'middle' });
-
-  // ========== COLUMN 2: SAMPLE COLLECTION DETAILS ==========
-  currentY = detailsStartY + 5;
-  
-  // Sample Collected At heading
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(0, 0, 0);
-  doc.text('Sample Collected At:', col2X + 5, currentY);
-  currentY += 5;
-  
-  // Collection address (can span multiple lines) - use company address
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  const collectionAddress = companyConfig.getContact().address.fullAddress || 'N/A';
-  const addressLines = doc.splitTextToSize(collectionAddress, col2Width - 10);
-  doc.text(addressLines, col2X + 5, currentY);
-  currentY += addressLines.length * 4 + 2;
-  
-  // Referring Doctor
-  if (reportData.order.referringPhysician) {
+    doc.setTextColor(55, 65, 81);
+    doc.text('Phone:', subCol1X + 5, subColY);
     doc.setFont('helvetica', 'bold');
-    doc.text('Ref. By:', col2X + 5, currentY);
+    doc.setTextColor(31, 41, 55);
+    doc.text(orderExtended.patientPhone, subCol1X + 25, subColY);
+    subColY += 4;
+  } else if (orderExtended.patientEmail) {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(55, 65, 81);
+    doc.text('Email:', subCol1X + 5, subColY);
     doc.setFont('helvetica', 'bold');
-    doc.text(reportData.order.referringPhysician, col2X + 25, currentY);
-  }
-
-  // ========== COLUMN 3: BARCODE AND TIMESTAMPS ==========
-  currentY = detailsStartY + 3;
-  
-  // Barcode
-  const barcodeHeight = 12;
-  const barcodeWidth = col3Width - 10;
-  const barcodeX = col3X + 5;
-  doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.5);
-  // Draw barcode lines (more realistic)
-  const numBars = 30;
-  for (let i = 0; i < numBars; i++) {
-    const barX = barcodeX + (i * (barcodeWidth / numBars));
-    doc.line(barX, currentY, barX, currentY + barcodeHeight);
+    doc.setTextColor(31, 41, 55);
+    doc.text(orderExtended.patientEmail, subCol1X + 25, subColY);
   }
   
-  // Barcode number below barcode (format: 00001 00001 3 5)
-  currentY += barcodeHeight + 3;
-  doc.setFontSize(7);
-  doc.setFont('helvetica', 'normal');
-  const patientIdStr = reportData.patientId ? reportData.patientId.toString().padStart(5, '0') : '00000';
-  const orderIdStr = reportData.order.orderId.toString().padStart(5, '0');
-  const barcodeNumber = `${orderIdStr} ${patientIdStr} ${Math.floor(Math.random() * 10)} ${Math.floor(Math.random() * 10)}`;
-  doc.text(barcodeNumber, barcodeX, currentY);
-  currentY += 5;
-  
-  // Timestamps - Two-column layout with labels left-aligned and values right-aligned
-  doc.setFontSize(7);
-  const timestamps = reportData.timestamps || {};
-  const timestampValueX = col3X + col3Width - 5; // Right edge of column 3
-  
-  const registeredAt = timestamps.registeredAt || reportData.order.orderDate;
+  // Right Sub-column: Processing Details
+  subColY = currentY;
+  doc.setFontSize(14); // text-base equivalent
   doc.setFont('helvetica', 'bold');
-  doc.text('Registered on:', barcodeX, currentY);
-  doc.setFont('helvetica', 'normal');
-  doc.text(formatReportTimestamp(registeredAt), timestampValueX, currentY, { align: 'right' });
-  currentY += 4;
+  doc.setTextColor(31, 41, 55);
+  doc.text('Processing Details', subCol2X + 5, subColY);
+  subColY += 5;
   
-  const collectedAt = timestamps.collectedAt || reportData.sampleCollection?.collectedAt;
-  doc.setFont('helvetica', 'bold');
-  doc.text('Collected on:', barcodeX, currentY);
-  doc.setFont('helvetica', 'normal');
-  doc.text(formatReportTimestamp(collectedAt), timestampValueX, currentY, { align: 'right' });
-  currentY += 4;
+  const collectedAt = reportData.timestamps?.collectedAt || reportData.sampleCollection?.collectedAt;
+  if (collectedAt) {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(55, 65, 81);
+    doc.text('Sample:', subCol2X + 5, subColY);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(31, 41, 55);
+    doc.text(formatReportTimestamp(collectedAt), subCol2X + 25, subColY);
+    subColY += 4;
+  }
   
-  const reportedAt = timestamps.reportedAt || new Date().toISOString();
-  doc.setFont('helvetica', 'bold');
-  doc.text('Reported on:', barcodeX, currentY);
-  doc.setFont('helvetica', 'normal');
-  doc.text(formatReportTimestamp(reportedAt), timestampValueX, currentY, { align: 'right' });
-
-  yPosition = detailsStartY + sectionHeight + 10;
+  const reportedAt = reportData.timestamps?.reportedAt;
+  if (reportedAt) {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(55, 65, 81);
+    doc.text('Results:', subCol2X + 5, subColY);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(31, 41, 55);
+    doc.text(formatReportTimestamp(reportedAt), subCol2X + 25, subColY);
+  } else {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(55, 65, 81);
+    doc.text('Results:', subCol2X + 5, subColY);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(31, 41, 55);
+    doc.text(formatReportTimestamp(new Date().toISOString()), subCol2X + 25, subColY);
+  }
+  subColY += 4;
+  
+  // Verified by
+  if (reportData.testResults[0]) {
+    const testResult = reportData.testResults[0];
+    let verifiedByName = 'N/A';
+    
+    // Try validatedByName first (pre-resolved)
+    if (testResult.validatedByName && testResult.validatedByName !== 'N/A' && testResult.validatedByName !== 'Unknown') {
+      verifiedByName = testResult.validatedByName;
+    } else if (testResult.validatedBy) {
+      // Fall back to validatedBy ID (will show as ID if not resolved)
+      verifiedByName = testResult.validatedBy;
+    } else if (testResult.validatedAt) {
+      verifiedByName = 'N/A';
+    } else {
+      verifiedByName = '-';
+    }
+    
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(55, 65, 81);
+    doc.text('Verified by:', subCol2X + 5, subColY);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(31, 41, 55);
+    doc.text(verifiedByName, subCol2X + 30, subColY);
+  }
+  
+  // Bottom border line
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(0.3);
+  doc.line(margin, headerStartY + headerHeight, pageWidth - margin, headerStartY + headerHeight);
+  
+  yPosition = headerStartY + headerHeight + 10;
 
   // ========== TEST RESULTS SECTION ==========
   reportData.testResults.forEach((test) => {
@@ -312,7 +264,7 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
     yPosition += 2;
 
     // Primary Sample Type row as part of the table
-    const sampleType = reportData.order.tests[0]?.sampleType || 'N/A';
+    const sampleType = (reportData.order.tests[0]?.sampleType || 'N/A').toUpperCase();
     
     // Build table data with Primary Sample Type as first row
     const tableData: Array<{
@@ -321,7 +273,7 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
       referenceValue: string;
       unit: string;
       isSectionHeader?: boolean;
-      status?: 'low' | 'high' | 'borderline';
+      isAbnormal?: boolean;
       hasCode?: boolean;
     }> = [
       { investigation: 'Primary Sample Type :', result: sampleType, referenceValue: '', unit: '' },
@@ -329,31 +281,17 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
     
     // Add parameters
     test.parameters.forEach(param => {
-      // Format result value (number only, no unit)
+      // Format result value
       const resultValue = String(param.value);
       
-      // Determine status
-      let status: 'low' | 'high' | 'borderline' | undefined;
-      if (param.status && param.status.toLowerCase() !== 'normal') {
-        const statusLower = param.status.toLowerCase();
-        if (statusLower === 'low' || statusLower === 'critical-low') {
-          status = 'low';
-        } else if (statusLower === 'high' || statusLower === 'critical-high') {
-          status = 'high';
-        } else if (statusLower === 'borderline') {
-          status = 'borderline';
-        }
-      }
+      // Check if value is abnormal
+      const isAbnormal = !!(param.status && param.status.toLowerCase() !== 'normal');
       
       // Check if parameter name is a section header (all caps, length > 3)
       const isSectionHeader = param.name === param.name.toUpperCase() && param.name.length > 3 && !param.name.includes(':');
       
-      // Format reference value with status label
-      let referenceValue = param.referenceRange || '';
-      if (status) {
-        const statusLabel = status === 'low' ? 'Low' : status === 'high' ? 'High' : 'Borderline';
-        referenceValue = statusLabel + (referenceValue ? ' ' + referenceValue : '');
-      }
+      // Format reference value (no status labels, just the range)
+      const referenceValue = param.referenceRange || '';
       
       // Format parameter name: name on first line, code on second line (if available)
       const paramDisplayName = param.code ? `${param.name}\n${param.code}` : param.name;
@@ -362,9 +300,9 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
         investigation: paramDisplayName,
         result: resultValue,
         referenceValue,
-        unit: param.unit || '',
+        unit: param.unit || '-',
         isSectionHeader,
-        status,
+        isAbnormal,
         hasCode: !!param.code,
       });
     });
@@ -379,100 +317,96 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
 
     autoTable(doc, {
       startY: yPosition,
-      head: [['Investigation', 'Result', 'Reference Value', 'Unit']],
+      head: [['INVESTIGATION', 'RESULT', 'REFERENCE VALUE', 'UNIT']],
       body: tableBody,
       theme: 'plain',
+      margin: { left: margin, right: margin },
+      columnStyles: {
+        0: { cellWidth: 'auto', halign: 'left' }, // Investigation - left aligned
+        1: { cellWidth: 'auto', halign: 'left' }, // Result - left aligned (matches modal)
+        2: { cellWidth: 'auto', halign: 'left' }, // Reference Value - left aligned (matches modal)
+        3: { cellWidth: 20, halign: 'right' }, // Unit - right aligned
+      },
+      styles: {
+        lineColor: [220, 220, 220], // border-border-subtle
+        lineWidth: 0.3,
+      },
       headStyles: {
-        fillColor: [255, 255, 255],
-        textColor: [0, 0, 0],
+        fillColor: [250, 250, 250], // bg-app-bg
+        textColor: [107, 114, 128], // text-text-tertiary
         fontStyle: 'bold',
-        fontSize: 10,
+        fontSize: 9,
         lineWidth: 0.5,
-        lineColor: [0, 0, 0],
+        lineColor: [229, 231, 235], // border-border-strong
       },
       bodyStyles: {
         fontSize: 9,
         lineWidth: 0.3,
-        lineColor: [200, 200, 200],
-      },
-      margin: { left: margin, right: margin },
-      columnStyles: {
-        0: { cellWidth: 'auto', halign: 'left' }, // Investigation - left aligned
-        1: { cellWidth: 'auto', halign: 'center' }, // Result - center aligned
-        2: { cellWidth: 'auto', halign: 'center' }, // Reference Value - center aligned
-        3: { cellWidth: 20, halign: 'right' }, // Unit - right aligned
+        lineColor: [220, 220, 220], // border-border-subtle
+        textColor: [31, 41, 55], // text-text-primary
       },
       didParseCell: (data) => {
         const rowIndex = data.row.index;
         const rowData = tableData[rowIndex];
         
-        // Section headers: bold, uppercase in Investigation column
+        // Section headers: bold, background color
         if (data.section === 'body' && data.column.index === 0 && rowData?.isSectionHeader) {
+          data.cell.styles.fontStyle = 'bold';
+          data.cell.styles.fillColor = [250, 250, 250]; // bg-app-bg/50
+        }
+        
+        // Abnormal result values: red and bold
+        if (data.section === 'body' && data.column.index === 1 && rowData?.isAbnormal) {
+          data.cell.styles.textColor = [220, 38, 38]; // text-red-600
           data.cell.styles.fontStyle = 'bold';
         }
         
-        // Color code result values based on status
-        if (data.section === 'body' && data.column.index === 1 && rowData?.status) {
-          if (rowData.status === 'low') {
-            data.cell.styles.textColor = [59, 130, 246]; // Blue
-          } else if (rowData.status === 'high') {
-            data.cell.styles.textColor = [239, 68, 68]; // Red
-          }
-        }
-        
-        // Color code reference value status labels
-        if (data.section === 'body' && data.column.index === 2 && rowData?.status) {
-          if (rowData.status === 'low') {
-            data.cell.styles.textColor = [59, 130, 246]; // Blue
-          } else if (rowData.status === 'high') {
-            data.cell.styles.textColor = [239, 68, 68]; // Red
-          } else if (rowData.status === 'borderline') {
-            data.cell.styles.textColor = [245, 158, 11]; // Orange
-          }
+        // Investigation column: bold name, normal code (if has code)
+        if (data.section === 'body' && data.column.index === 0 && rowData?.hasCode && !rowData?.isSectionHeader) {
+          // First line (name) should be bold, second line (code) normal
+          // This is handled by the multi-line text format
         }
       },
     });
 
     yPosition = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
 
+    // ========== INSTRUMENT AND INTERPRETATION SECTION (per test, matches modal) ==========
+    // Check if we need a new page
+    if (yPosition > pageHeight - 60) {
+      doc.addPage();
+      yPosition = margin;
+    }
+
     yPosition += 5;
+    doc.setFontSize(9); // text-xs equivalent
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(31, 41, 55); // text-text-primary
+    
+    // Instrument info (if available)
+    if (test.technicianNotes) {
+      doc.text(`Instruments: ${test.technicianNotes}`, margin, yPosition);
+      yPosition += 5;
+    }
+    
+    // Interpretation (if available)
+    if (test.validationNotes) {
+      doc.text(`Interpretation: ${test.validationNotes}`, margin, yPosition);
+      yPosition += 5;
+    }
+    
+    doc.text('Thanks for Reference', margin, yPosition);
+    yPosition += 8;
+    
+    // End of Report
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('****End of Report****', pageWidth / 2, yPosition, { align: 'center' });
+    yPosition += 10;
   });
 
-  // ========== INSTRUMENT AND INTERPRETATION SECTION ==========
-  // Check if we need a new page
-  if (yPosition > pageHeight - 60) {
-    doc.addPage();
-    yPosition = margin;
-  }
-
-  yPosition += 5;
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(0, 0, 0);
-  
-  // Instrument info (if available)
-  const lastTest = reportData.testResults[reportData.testResults.length - 1];
-  if (lastTest.technicianNotes) {
-    doc.text(`Instruments: ${lastTest.technicianNotes}`, margin, yPosition);
-    yPosition += 5;
-  }
-  
-  // Interpretation (if available)
-  if (lastTest.validationNotes) {
-    doc.text(`Interpretation: ${lastTest.validationNotes}`, margin, yPosition);
-    yPosition += 5;
-  }
-  
-  yPosition += 5;
-  doc.text('Thanks for Reference', margin, yPosition);
-  yPosition += 8;
-  
-  // End of Report
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.text('****End of Report****', pageWidth / 2, yPosition, { align: 'center' });
-
   // ========== SIGNATURE SECTION ==========
+  // Note: Modal doesn't show signature section, but keeping for template compatibility
   if (template.includeSignature) {
     if (yPosition > pageHeight - 60) {
       doc.addPage();
@@ -490,12 +424,19 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
     
     const lastTest = reportData.testResults[reportData.testResults.length - 1];
     if (lastTest.validatedAt) {
-      const validatedByName = lastTest.validatedByName && lastTest.validatedByName !== 'N/A' 
-        ? lastTest.validatedByName 
-        : (lastTest.validatedBy ? lastTest.validatedBy : 'Unknown');
+      // Use same logic as modal for verified by
+      let validatedByName = 'N/A';
+      if (lastTest.validatedByName && lastTest.validatedByName !== 'N/A' && lastTest.validatedByName !== 'Unknown') {
+        validatedByName = lastTest.validatedByName;
+      } else if (lastTest.validatedBy) {
+        validatedByName = lastTest.validatedBy;
+      } else {
+        validatedByName = '-';
+      }
+      
       doc.text(`Validated by: ${validatedByName}`, margin, yPosition);
       yPosition += 5;
-      doc.text(`Date: ${format(new Date(lastTest.validatedAt), 'MMM dd, yyyy HH:mm')}`, margin, yPosition);
+      doc.text(`Date: ${format(new Date(lastTest.validatedAt), 'yyyy-MM-dd hh:mm a')}`, margin, yPosition);
     }
   }
 
@@ -513,8 +454,9 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
     doc.setLineWidth(0.3);
     doc.line(margin, pageHeight - 20, pageWidth - margin, pageHeight - 20);
     
-    // Footer text
-    const footerLines = doc.splitTextToSize(template.footerText, pageWidth - margin * 2);
+    // Footer text with generation timestamp (matches modal)
+    const footerText = `${template.footerText} Generated: ${format(new Date(), 'MMM dd, yyyy HH:mm')}`;
+    const footerLines = doc.splitTextToSize(footerText, pageWidth - margin * 2);
     doc.text(footerLines, pageWidth / 2, pageHeight - 15, { align: 'center' });
     
     // Page number

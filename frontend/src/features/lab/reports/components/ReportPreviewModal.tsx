@@ -218,22 +218,22 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr>
-                      <th className="px-4 py-3 text-left font-semibold border-b-2 border-black">Investigation</th>
-                      <th className="px-4 py-3 text-left font-semibold border-b-2 border-black">Result</th>
-                      <th className="px-4 py-3 text-left font-semibold border-b-2 border-black">Reference Value</th>
-                      <th className="px-4 py-3 text-right font-semibold border-b-2 border-black">Unit</th>
+                    <tr className="bg-app-bg border-b border-border-strong">
+                      <th className="px-6 py-3 text-left font-medium text-text-tertiary uppercase tracking-wider">Investigation</th>
+                      <th className="px-6 py-3 text-left font-medium text-text-tertiary uppercase tracking-wider">Result</th>
+                      <th className="px-6 py-3 text-left font-medium text-text-tertiary uppercase tracking-wider">Reference Value</th>
+                      <th className="px-6 py-3 text-right font-medium text-text-tertiary uppercase tracking-wider">Unit</th>
                     </tr>
                   </thead>
                   <tbody>
                     {/* Primary Sample Type Row */}
-                    <tr className="border-b border-border">
-                      <td className="px-4 py-3 text-text-primary">Primary Sample Type :</td>
-                      <td className="px-4 py-3 text-left text-text-primary">
+                    <tr className="border-b border-border-subtle hover:bg-app-bg transition-colors">
+                      <td className="px-6 py-3 text-text-primary">Primary Sample Type :</td>
+                      <td className="px-6 py-3 text-left text-text-primary">
                         {reportData.order.tests[0]?.sampleType?.toUpperCase() || 'N/A'}
                       </td>
-                      <td className="px-4 py-3 text-left text-text-secondary"></td>
-                      <td className="px-4 py-3 text-right text-text-secondary"></td>
+                      <td className="px-6 py-3 text-left text-text-secondary"></td>
+                      <td className="px-6 py-3 text-right text-text-secondary"></td>
                     </tr>
                     
                     {test.parameters.map((param, paramIndex) => {
@@ -246,10 +246,13 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                       return (
                         <tr
                           key={paramIndex}
-                          className="border-b border-border last:border-0"
+                          className={cn(
+                            'border-b border-border-subtle last:border-0 hover:bg-app-bg transition-colors',
+                            isSectionHeader && 'bg-app-bg/50'
+                          )}
                         >
                           <td className={cn(
-                            'px-4 py-3 text-text-primary',
+                            'px-6 py-3 text-text-primary',
                             isSectionHeader && 'font-bold'
                           )}>
                             {isSectionHeader ? (
@@ -264,15 +267,15 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                             )}
                           </td>
                           <td className={cn(
-                            'px-4 py-3 text-left',
+                            'px-6 py-3 text-left',
                             isAbnormal ? 'text-red-600 font-bold' : 'text-text-primary'
                           )}>
                             {param.value}
                           </td>
-                          <td className="px-4 py-3 text-left text-text-secondary">
+                          <td className="px-6 py-3 text-left text-text-secondary">
                             {param.referenceRange || ''}
                           </td>
-                          <td className="px-4 py-3 text-right text-text-secondary">
+                          <td className="px-6 py-3 text-right text-text-secondary">
                             {param.unit || '-'}
                           </td>
                         </tr>
