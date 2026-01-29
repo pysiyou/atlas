@@ -39,10 +39,12 @@ export {
   PriceRangeControl,
   MultiSelectControl,
   SingleSelectControl,
+  FilterHelpIcon,
   type SearchControlProps,
   type DateRangeControlProps,
   type AgeRangeControlProps,
   type PriceRangeControlProps,
   type MultiSelectControlProps,
   type SingleSelectControlProps,
+  type FilterHelpIconProps,
 } from './filter-controls';

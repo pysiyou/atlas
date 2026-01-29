@@ -107,6 +107,7 @@ export const catalogFilterConfig: FilterConfig = {
         label: 'Search',
         placeholder: 'Search tests by name, code, or synonym...',
         debounceMs: 300,
+        helpText: 'Search tests by name, code, or synonym.',
       },
       {
         type: 'multiSelect',
@@ -116,6 +117,7 @@ export const catalogFilterConfig: FilterConfig = {
         selectAllLabel: 'All categories',
         icon: ICONS.ui.category,
         placeholder: 'Select test categories',
+        helpText: 'Filter by test category (e.g. Hematology, Biochemistry).',
       },
       {
         type: 'multiSelect',
@@ -123,8 +125,9 @@ export const catalogFilterConfig: FilterConfig = {
         label: 'Sample Type',
         options: sampleTypeFilterOptions,
         selectAllLabel: 'All sample types',
-        icon: 'sample-collection',
+        icon: ICONS.dataFields.sampleCollection,
         placeholder: 'Select sample types',
+        helpText: 'Filter by required specimen type for the test.',
       },
       {
         type: 'priceRange',
@@ -135,6 +138,7 @@ export const catalogFilterConfig: FilterConfig = {
         max: PRICE_RANGE.MAX,
         currency: '',
         icon: ICONS.dataFields.wallet,
+        helpText: 'Filter tests by price range (min–max).',
       },
     ],
   },

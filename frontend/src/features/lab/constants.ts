@@ -89,6 +89,7 @@ export const collectionFilterConfig: FilterConfig = {
         label: 'Search',
         placeholder: 'Search samples by order ID, sample ID, patient, or test...',
         debounceMs: 300,
+        helpText: 'Search by order ID, sample ID, patient name, or test name.',
       },
       {
         type: 'dateRange',
@@ -96,6 +97,7 @@ export const collectionFilterConfig: FilterConfig = {
         label: 'Date Range',
         placeholder: 'Filter by date range',
         icon: ICONS.dataFields.date,
+        helpText: 'Filter samples by collection or order date range.',
       },
       {
         type: 'multiSelect',
@@ -105,6 +107,7 @@ export const collectionFilterConfig: FilterConfig = {
         selectAllLabel: 'All sample types',
         icon: ICONS.dataFields.sampleCollection,
         placeholder: 'Select sample type',
+        helpText: 'Filter by specimen type (e.g. blood, urine, swab).',
       },
       {
         type: 'multiSelect',
@@ -114,6 +117,7 @@ export const collectionFilterConfig: FilterConfig = {
         selectAllLabel: 'All statuses',
         icon: ICONS.sampleStatus,
         placeholder: 'Select status',
+        helpText: 'Filter by collection status: Pending, Collected, or Rejected.',
       },
     ],
   },
@@ -149,6 +153,7 @@ export const entryFilterConfig: FilterConfig = {
         label: 'Search',
         placeholder: 'Search tests by order ID, patient, or test name...',
         debounceMs: 300,
+        helpText: 'Search by order ID, patient name, or test name.',
       },
       {
         type: 'dateRange',
@@ -156,6 +161,7 @@ export const entryFilterConfig: FilterConfig = {
         label: 'Date Range',
         placeholder: 'Filter by date range',
         icon: ICONS.dataFields.date,
+        helpText: 'Filter by order or result date range.',
       },
       {
         type: 'multiSelect',
@@ -165,6 +171,7 @@ export const entryFilterConfig: FilterConfig = {
         selectAllLabel: 'All sample types',
         icon: ICONS.dataFields.sampleCollection,
         placeholder: 'Select sample type',
+        helpText: 'Filter by specimen type (e.g. blood, urine).',
       },
       {
         type: 'multiSelect',
@@ -174,6 +181,7 @@ export const entryFilterConfig: FilterConfig = {
         selectAllLabel: 'All statuses',
         icon: ICONS.testStatus,
         placeholder: 'Select status',
+        helpText: 'Filter by test status: Sample Collected or In Progress.',
       },
     ],
   },
@@ -209,6 +217,7 @@ export const validationFilterConfig: FilterConfig = {
         label: 'Search',
         placeholder: 'Search tests by order ID, patient, or test name...',
         debounceMs: 300,
+        helpText: 'Search by order ID, patient name, or test name.',
       },
       {
         type: 'dateRange',
@@ -216,6 +225,7 @@ export const validationFilterConfig: FilterConfig = {
         label: 'Date Range',
         placeholder: 'Filter by date range',
         icon: ICONS.dataFields.date,
+        helpText: 'Filter by order or validation date range.',
       },
       {
         type: 'multiSelect',
@@ -225,6 +235,7 @@ export const validationFilterConfig: FilterConfig = {
         selectAllLabel: 'All sample types',
         icon: ICONS.dataFields.sampleCollection,
         placeholder: 'Select sample type',
+        helpText: 'Filter by specimen type (e.g. blood, urine).',
       },
       {
         type: 'multiSelect',
@@ -234,6 +245,7 @@ export const validationFilterConfig: FilterConfig = {
         selectAllLabel: 'All statuses',
         icon: ICONS.priority,
         placeholder: 'Select status',
+        helpText: 'Filter by priority level: Routine, Urgent, or Stat.',
       },
     ],
   },

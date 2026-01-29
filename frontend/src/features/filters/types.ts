@@ -32,6 +32,8 @@ export interface BaseFilterControl {
   placeholder?: string;
   /** Icon name for the filter */
   icon?: string;
+  /** Optional help text shown in a popover via info icon */
+  helpText?: string;
 }
 
 /**

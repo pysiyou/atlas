@@ -9,3 +9,4 @@ export { AgeRangeControl, type AgeRangeControlProps } from './AgeRangeControl';
 export { PriceRangeControl, type PriceRangeControlProps } from './PriceRangeControl';
 export { MultiSelectControl, type MultiSelectControlProps } from './MultiSelectControl';
 export { SingleSelectControl, type SingleSelectControlProps } from './SingleSelectControl';
+export { FilterHelpIcon, type FilterHelpIconProps } from './FilterHelpIcon';
