@@ -15,6 +15,7 @@ from app.models.order import Order, OrderTest
 from app.schemas.sample import SampleResponse, SampleCollectRequest, SampleRejectRequest, RecollectionRequest
 from app.schemas.enums import SampleStatus, TestStatus, UserRole, RejectionReason
 from app.schemas.pagination import create_paginated_response, skip_to_page
+from app.api.deps import PaginationParams
 from app.services.lab_operations import LabOperationsService, LabOperationError
 
 router = APIRouter()
@@ -40,20 +41,15 @@ class RejectAndRecollectResponse(BaseModel):
 
 @router.get("/samples")
 def get_samples(
+    pagination: PaginationParams,
     orderId: Optional[int] = None,
     sampleStatus: Optional[SampleStatus] = None,
-    skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
     paginated: bool = Query(False, description="Return paginated response with total count"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """
-    Get all samples with optional filters.
-
-    Query params:
-    - paginated: If true, returns {data: [...], pagination: {...}} format
-    """
+    """Get all samples with optional filters. Pagination via PaginationParams."""
+    skip, limit = pagination["skip"], pagination["limit"]
     query = db.query(Sample)
 
     if orderId:

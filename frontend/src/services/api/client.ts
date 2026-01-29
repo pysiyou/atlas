@@ -57,7 +57,14 @@ class APIClient {
 
       if (response.ok) {
         const text = await response.text();
-        return text ? JSON.parse(text) : ({} as T);
+        try {
+          return text ? JSON.parse(text) : ({} as T);
+        } catch (parseError) {
+          throw {
+            message: (parseError as Error).message || 'Invalid response',
+            status: response.status,
+          } as APIError;
+        }
       }
 
       // Handle 401 - try refresh once

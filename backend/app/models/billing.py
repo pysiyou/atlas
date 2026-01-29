@@ -51,7 +51,7 @@ class Payment(Base):
     notes = Column(String, nullable=True)
 
     # Relationship for eager loading
-    order = relationship("Order", foreign_keys=[orderId])
+    order = relationship("Order", back_populates="payments", foreign_keys=[orderId])
 
 
 class InsuranceClaim(Base):

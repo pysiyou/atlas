@@ -5,6 +5,7 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import {
   useOrdersList,
@@ -14,9 +15,10 @@ import {
   useCollectSample,
   usePatientNameLookup,
 } from '@/hooks/queries';
+import { queryKeys } from '@/lib/query';
 import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
-import { getErrorMessage } from '@/utils/errorHelpers';
+import { getErrorMessage, isLikelyNetworkOrTimeout } from '@/utils/errorHelpers';
 import type { ContainerType, ContainerTopColor, SampleStatus } from '@/types';
 import { calculateRequiredSamples } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -30,6 +32,7 @@ import { DataErrorBoundary } from '@/shared/components';
 import type { SampleDisplay } from '../types';
 
 export const CollectionView: React.FC = () => {
+  const queryClient = useQueryClient();
   const { user: currentUser } = useAuthStore();
   const { refetch: refreshOrders } = useOrdersList();
   const { tests } = useTestCatalog();
@@ -156,11 +159,20 @@ export const CollectionView: React.FC = () => {
       });
     } catch (error) {
       logger.error('Error collecting sample', error instanceof Error ? error : undefined);
-      const message = getErrorMessage(error, 'The collection could not be saved. Check your connection and try again.');
-      toast.error({
-        title: 'Failed to collect sample',
-        subtitle: message,
-      });
+      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      if (isLikelyNetworkOrTimeout(error)) {
+        toast.error({
+          title: 'Action may have completed',
+          subtitle: 'The request did not complete. Please refresh the page to see the latest status.',
+        });
+      } else {
+        const message = getErrorMessage(error, 'The collection could not be saved. Check your connection and try again.');
+        toast.error({
+          title: 'Failed to collect sample',
+          subtitle: message,
+        });
+      }
     }
   };
 

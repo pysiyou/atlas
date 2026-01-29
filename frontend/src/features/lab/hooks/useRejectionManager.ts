@@ -109,6 +109,18 @@ export function useRejectionManager({
         });
         return result;
       } catch (err) {
+        const status = typeof err === 'object' && err !== null && 'status' in err
+          ? (err as { status?: number }).status
+          : undefined;
+        if (typeof status === 'number' && status >= 200 && status < 300) {
+          return {
+            success: true,
+            action: 'retest_same_sample',
+            message: 'Rejection applied; response could not be parsed.',
+            originalTestId: 0,
+            escalationRequired: false,
+          } as RejectionResult;
+        }
         const message = getErrorMessage(err, 'Failed to reject results');
         setError(message);
         logger.error('Failed to reject results', err instanceof Error ? err : undefined, {

@@ -39,6 +39,7 @@ class Order(Base):
     # Relationships
     patient = relationship("Patient", foreign_keys=[patientId])
     tests = relationship("OrderTest", back_populates="order", cascade="all, delete-orphan")
+    payments = relationship("Payment", back_populates="order", lazy="select")
 
     @property
     def patientName(self) -> str:

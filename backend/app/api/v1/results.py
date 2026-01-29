@@ -6,14 +6,15 @@ Uses the unified LabOperationsService for all operations.
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
-from pydantic import BaseModel, Field, AliasChoices
-from typing import Optional, List, Any
+from pydantic import BaseModel, Field, AliasChoices, model_validator
+from typing import Optional, List, Any, Literal
 from app.database import get_db
 from app.core.dependencies import get_current_user, require_role
 from app.models.user import User
 from app.models.order import Order, OrderTest
 from app.models.sample import Sample
 from app.schemas.enums import TestStatus, UserRole, ValidationDecision, RejectionAction
+from app.schemas.order import OrderTestResponse
 from app.services.lab_operations import (
     LabOperationsService,
     LabOperationError,
@@ -37,13 +38,16 @@ class ResultValidationRequest(BaseModel):
     validationNotes: Optional[str] = None
 
 
+ResultRejectionTypeLiteral = Literal["re-test", "re-collect", "escalate"]
+
+
 class ResultRejectionRequest(BaseModel):
     """
     Request body for rejecting test results during validation.
-    Uses the new action-based approach.
+    Uses the new action-based approach. rejectionType validated by schema (422 on invalid).
     """
     rejectionReason: str = Field(..., min_length=1, max_length=1000, description="Reason for rejection")
-    rejectionType: str = Field(
+    rejectionType: ResultRejectionTypeLiteral = Field(
         ...,
         description="'re-test' = re-run with same sample, 're-collect' = new sample needed, 'escalate' = escalate to supervisor when limits exceeded"
     )
@@ -84,7 +88,7 @@ class BulkValidationItem(BaseModel):
 
 class BulkValidationRequest(BaseModel):
     """Request body for bulk validation"""
-    items: List[BulkValidationItem] = Field(..., min_items=1, description="List of tests to validate")
+    items: List[BulkValidationItem] = Field(..., min_length=1, description="List of tests to validate")
     validationNotes: Optional[str] = None
 
 
@@ -104,9 +108,12 @@ class BulkValidationResponse(BaseModel):
     failureCount: int
 
 
+EscalationResolveActionLiteral = Literal["force_validate", "authorize_retest", "final_reject"]
+
+
 class EscalationResolveRequest(BaseModel):
-    """Request body for resolving an escalated test (admin/labtech_plus only)"""
-    action: str = Field(
+    """Request body for resolving an escalated test (admin/labtech_plus only). rejectionReason required when action is final_reject."""
+    action: EscalationResolveActionLiteral = Field(
         ...,
         description="'force_validate' | 'authorize_retest' | 'final_reject'"
     )
@@ -117,6 +124,12 @@ class EscalationResolveRequest(BaseModel):
         max_length=1000,
         validation_alias=AliasChoices("rejectionReason", "rejection_reason"),
     )
+
+    @model_validator(mode="after")
+    def require_rejection_reason_for_final_reject(self):
+        if self.action == "final_reject" and not (self.rejectionReason or "").strip():
+            raise ValueError("rejectionReason is required for action 'final_reject'")
+        return self
 
 
 require_escalation_resolver = require_role(UserRole.ADMIN, UserRole.LAB_TECH_PLUS)
@@ -162,7 +175,7 @@ class PendingEscalationItemResponse(BaseModel):
         from_attributes = True
 
 
-@router.get("/results/pending-entry")
+@router.get("/results/pending-entry", response_model=List[OrderTestResponse])
 def get_pending_entry(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -171,25 +184,31 @@ def get_pending_entry(
     Get tests awaiting result entry.
     Returns tests with status SAMPLE_COLLECTED (not SUPERSEDED).
     """
-    tests = db.query(OrderTest).filter(
-        OrderTest.status == TestStatus.SAMPLE_COLLECTED
-    ).all()
-    return tests
+    tests = (
+        db.query(OrderTest)
+        .filter(OrderTest.status == TestStatus.SAMPLE_COLLECTED)
+        .options(joinedload(OrderTest.test))
+        .all()
+    )
+    return [OrderTestResponse.model_validate(t).model_dump(mode="json") for t in tests]
 
 
-@router.get("/results/pending-validation")
+@router.get("/results/pending-validation", response_model=List[OrderTestResponse])
 def get_pending_validation(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
     Get tests awaiting validation.
-    Returns tests with status COMPLETED (not SUPERSEDED).
+    Returns tests with status RESULTED (not SUPERSEDED).
     """
-    tests = db.query(OrderTest).filter(
-        OrderTest.status == TestStatus.RESULTED
-    ).all()
-    return tests
+    tests = (
+        db.query(OrderTest)
+        .filter(OrderTest.status == TestStatus.RESULTED)
+        .options(joinedload(OrderTest.test))
+        .all()
+    )
+    return [OrderTestResponse.model_validate(t).model_dump(mode="json") for t in tests]
 
 
 @router.get("/results/pending-escalation", response_model=List[PendingEscalationItemResponse])
@@ -379,21 +398,13 @@ def reject_results(
     Before calling this endpoint, use GET /rejection-options to check what actions
     are available and whether any limits have been reached.
     """
-    # Map rejection type string to RejectionAction enum
+    # Schema validates rejectionType as Literal['re-test','re-collect','escalate']; map to RejectionAction
     action_map = {
-        're-test': RejectionAction.RETEST_SAME_SAMPLE,
-        're-collect': RejectionAction.RECOLLECT_NEW_SAMPLE,
-        'retest_same_sample': RejectionAction.RETEST_SAME_SAMPLE,
-        'recollect_new_sample': RejectionAction.RECOLLECT_NEW_SAMPLE,
-        'escalate': RejectionAction.ESCALATE_TO_SUPERVISOR
+        "re-test": RejectionAction.RETEST_SAME_SAMPLE,
+        "re-collect": RejectionAction.RECOLLECT_NEW_SAMPLE,
+        "escalate": RejectionAction.ESCALATE_TO_SUPERVISOR,
     }
-
-    action = action_map.get(rejection_data.rejectionType)
-    if not action:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid rejection type: {rejection_data.rejectionType}. Valid options: 're-test', 're-collect', 'escalate'"
-        )
+    action = action_map[rejection_data.rejectionType]
 
     try:
         service = LabOperationsService(db)
@@ -428,20 +439,8 @@ def resolve_escalation(
 ):
     """
     Resolve an escalated test (admin/labtech_plus only).
-    Actions: force_validate, authorize_retest, final_reject.
+    Actions: force_validate, authorize_retest, final_reject. Schema validates action and requires rejectionReason for final_reject.
     """
-    valid_actions = {"force_validate", "authorize_retest", "final_reject"}
-    if body.action not in valid_actions:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid action: {body.action}. Valid options: {', '.join(valid_actions)}"
-        )
-    if body.action == "final_reject" and not (body.rejectionReason or "").strip():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="rejectionReason is required for final_reject"
-        )
-
     try:
         service = LabOperationsService(db)
         if body.action == "force_validate":
@@ -469,7 +468,7 @@ def resolve_escalation(
             )
             return RejectionResultResponse(
                 success=result.success,
-                action=result.action.value,
+                action="authorize_retest",
                 message=result.message,
                 originalTestId=result.originalTestId,
                 newTestId=result.newTestId,
@@ -485,7 +484,7 @@ def resolve_escalation(
         )
         return RejectionResultResponse(
             success=result.success,
-            action=result.action.value,
+            action="final_reject",
             message=result.message,
             originalTestId=result.originalTestId,
             newTestId=result.newTestId,

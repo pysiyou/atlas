@@ -3,42 +3,63 @@ Order API Routes
 """
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload, selectinload
-from sqlalchemy.exc import SQLAlchemyError
-from typing import List, Union
+from pydantic import BaseModel, Field
+from typing import Optional
 from datetime import datetime, timezone
 from app.database import get_db
 from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.models.order import Order, OrderTest
-from app.models.test import Test
-from app.models.patient import Patient
 from app.models.sample import Sample
-from app.schemas.order import OrderCreate, OrderUpdate, OrderResponse
-from app.schemas.enums import OrderStatus, PaymentStatus, TestStatus, SampleStatus, UserRole
+from app.models.billing import Payment
+from app.schemas.order import OrderCreate, OrderUpdate, OrderResponse, OrderDetailResponse
+from app.schemas.enums import OrderStatus, PaymentStatus, TestStatus
 from app.schemas.pagination import create_paginated_response, skip_to_page
-from app.services.sample_generator import generate_samples_for_order
 from app.services.audit_service import AuditService
+from app.services.order_status_updater import update_order_status
 from app.utils.db_helpers import get_or_404
+from app.api.deps import PaginationParams
+from app.services.order_service import OrderService
+from app.services.payment_service import enrich_payment
+from app.schemas.payment import PaymentResponse
 
 router = APIRouter()
 
 
+class OrderTestStatusUpdate(BaseModel):
+    """Body for PATCH /orders/{orderId}/tests/{testCode}"""
+    status: TestStatus = Field(..., description="New test status")
+    technicianNotes: Optional[str] = None
+    validationNotes: Optional[str] = None
+
+
+class OrderPaymentUpdate(BaseModel):
+    """Body for PATCH /orders/{orderId}/payment"""
+    paymentStatus: PaymentStatus = Field(..., description="paid | unpaid")
+    amountPaid: Optional[float] = Field(None, ge=0)
+
+
+class CriticalNotifyRequest(BaseModel):
+    """Body for POST /orders/{orderId}/tests/{testCode}/critical"""
+    notifiedTo: str = Field(..., min_length=1)
+
+
 @router.get("/orders")
 def get_orders(
+    pagination: PaginationParams,
     patientId: int | None = None,
     order_status: OrderStatus | None = Query(None, alias="status"),
-    skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
+    paymentStatus: PaymentStatus | None = Query(None, alias="paymentStatus"),
     paginated: bool = Query(False, description="Return paginated response with total count"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
     Get all orders with optional filters.
-
-    Query params:
-    - paginated: If true, returns {data: [...], pagination: {...}} format
+    Query params: paginated: If true, returns {data: [...], pagination: {...}} format.
     """
+    skip = pagination["skip"]
+    limit = pagination["limit"]
     query = db.query(Order)
 
     if patientId:
@@ -46,6 +67,9 @@ def get_orders(
 
     if order_status:
         query = query.filter(Order.overallStatus == order_status)
+
+    if paymentStatus:
+        query = query.filter(Order.paymentStatus == paymentStatus)
 
     # Eagerly load relationships needed for serialization
     query = query.options(
@@ -78,22 +102,42 @@ def get_orders(
     return serialized_orders
 
 
-@router.get("/orders/{orderId}", response_model=OrderResponse)
+@router.get("/orders/{orderId}")
 def get_order(
     orderId: int,
+    include: Optional[str] = Query(None, description="Include related data, e.g. 'payments'"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
-    Get order by ID with all tests
+    Get order by ID with all tests. Eager-loads patient and tests to avoid N+1.
+    Use ?include=payments to also return payments for this order (single request for order detail page).
+    Without include, response shape is unchanged (no payments key) for frontend compatibility.
     """
-    order = db.query(Order).filter(Order.orderId == orderId).first()
+    options = [
+        joinedload(Order.patient),
+        selectinload(Order.tests).joinedload(OrderTest.test),
+    ]
+    if include == "payments":
+        options.append(selectinload(Order.payments))
+    order = (
+        db.query(Order)
+        .filter(Order.orderId == orderId)
+        .options(*options)
+        .first()
+    )
     if not order:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Order {orderId} not found"
         )
-    return order
+    if include == "payments":
+        order_dump = OrderResponse.model_validate(order).model_dump(mode="json")
+        order_dump["payments"] = [
+            PaymentResponse(**enrich_payment(p, order)) for p in order.payments
+        ]
+        return OrderDetailResponse(**order_dump)
+    return OrderResponse.model_validate(order)
 
 
 @router.post("/orders", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
@@ -102,74 +146,8 @@ def create_order(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """
-    Create a new order
-    """
-    # Verify patient exists
-    patient = db.query(Patient).filter(Patient.id == order_data.patientId).first()
-    if not patient:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Patient {order_data.patientId} not found"
-        )
-
-    # Calculate total price and validate tests
-    total_price = 0.0
-    test_entries = []
-
-    for test_data in order_data.tests:
-        # Get test from catalog
-        test = db.query(Test).filter(Test.code == test_data.testCode).first()
-        if not test:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Test {test_data.testCode} not found"
-            )
-
-        total_price += test.price
-        test_entries.append((test.code, test.price))
-
-    # Create order first
-    order = Order(
-        patientId=order_data.patientId,
-        orderDate=datetime.now(timezone.utc),
-        totalPrice=total_price,
-        paymentStatus=PaymentStatus.UNPAID,
-        overallStatus=OrderStatus.ORDERED,
-        priority=order_data.priority,
-        referringPhysician=order_data.referringPhysician,
-        clinicalNotes=order_data.clinicalNotes,
-        specialInstructions=order_data.specialInstructions,
-        patientPrepInstructions=order_data.patientPrepInstructions,
-        createdBy=current_user.id,
-    )
-
-    try:
-        db.add(order)
-        db.flush()  # Get auto-generated orderId
-
-        # Create OrderTests with the generated orderId
-        for test_code, price in test_entries:
-            order_test = OrderTest(
-                orderId=order.orderId,
-                testCode=test_code,
-                status=TestStatus.PENDING,
-                priceAtOrder=price,
-            )
-            db.add(order_test)
-
-        db.flush()  # Ensure OrderTests are created
-
-        # Generate samples for this order
-        generate_samples_for_order(order.orderId, db, current_user.id)
-
-        db.commit()
-        db.refresh(order)
-    except SQLAlchemyError:
-        db.rollback()
-        raise HTTPException(status_code=500, detail="Failed to create order")
-
-    return order
+    """Create a new order. Delegates to OrderService."""
+    return OrderService(db).create_order(order_data, current_user.id)
 
 
 @router.put("/orders/{orderId}", response_model=OrderResponse)
@@ -179,132 +157,155 @@ def update_order(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """Update order information, including tests. Delegates to OrderService."""
+    return OrderService(db).update_order(orderId, order_data, current_user.id)
+
+
+@router.delete("/orders/{orderId}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_order(
+    orderId: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Delete an order. Allowed only when the order has no payments. Cascades to order tests and samples."""
+    order = get_or_404(db, Order, orderId, "orderId")
+    has_payments = db.query(Payment).filter(Payment.orderId == orderId).first() is not None
+    if has_payments:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot delete order that has payments. Remove or void payments first."
+        )
+    db.query(Sample).filter(Sample.orderId == orderId).delete()
+    db.delete(order)
+    db.commit()
+    return None
+
+
+@router.patch("/orders/{orderId}/tests/{testCode}", response_model=OrderResponse)
+def update_order_test_status(
+    orderId: int,
+    testCode: str,
+    body: OrderTestStatusUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     """
-    Update order information, including tests.
-    
-    When tests are provided:
-    - New tests are added (creates OrderTest entries)
-    - Tests not in the list are removed (only if they have no results)
-    - Existing tests are kept
-    - Total price is recalculated
+    Update test status within an order. Optionally update technicianNotes or validationNotes.
+    Recomputes order overall status after update.
     """
-    order = db.query(Order).filter(Order.orderId == orderId).first()
+    order = db.query(Order).filter(Order.orderId == orderId).options(
+        selectinload(Order.tests).joinedload(OrderTest.test),
+        joinedload(Order.patient),
+    ).first()
     if not order:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Order {orderId} not found"
         )
-
-    update_data = order_data.model_dump(exclude_unset=True)
-    tests_to_update = update_data.pop('tests', None)
-
-    # Handle test updates if provided
-    if tests_to_update is not None:
-        # Get existing test codes
-        existing_test_codes = {ot.testCode for ot in order.tests}
-        # tests_to_update is a list of dicts from model_dump(), so use bracket notation
-        new_test_codes = {t['testCode'] for t in tests_to_update}
-        
-        # Find tests to remove (existing tests not in new list)
-        tests_to_remove = existing_test_codes - new_test_codes
-        
-        # Find tests to add (new tests not in existing list)
-        tests_to_add = new_test_codes - existing_test_codes
-        
-        # Validate: Can't remove tests that have results or are in progress
-        for ot in order.tests:
-            if ot.testCode in tests_to_remove:
-                # Check if test has results
-                if ot.results is not None:
-                    raise HTTPException(
-                        status_code=status.HTTP_400_BAD_REQUEST,
-                        detail=f"Cannot remove test {ot.testCode} - it has results entered"
-                    )
-                # Only allow removing tests that are still pending
-                if ot.status != TestStatus.PENDING:
-                    raise HTTPException(
-                        status_code=status.HTTP_400_BAD_REQUEST,
-                        detail=f"Cannot remove test {ot.testCode} - it is in progress (status: {ot.status})"
-                    )
-        
-        # Calculate price for tests that will remain (before removing)
-        existing_tests_price = sum(
-            ot.priceAtOrder for ot in order.tests
-            if ot.testCode not in tests_to_remove and ot.status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED}
+    order_test = next((t for t in order.tests if t.testCode == testCode), None)
+    if not order_test:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Test {testCode} not found in order {orderId}"
         )
-        
-        # Initialize audit service for logging changes
-        audit_service = AuditService(db)
-
-        # Remove tests (mark as removed for audit trail)
-        for ot in order.tests:
-            if ot.testCode in tests_to_remove:
-                old_status = ot.status.value if ot.status else "unknown"
-                ot.status = TestStatus.REMOVED
-                # Log the test removal for audit compliance
-                audit_service.log_test_removed(
-                    order_id=order.orderId,
-                    test_id=ot.id,
-                    test_code=ot.testCode,
-                    user_id=current_user.id,
-                    old_status=old_status
-                )
-        
-        # Add new tests and calculate price adjustment
-        total_price_adjustment = 0.0
-        for test_data in tests_to_update:
-            # test_data is a dict from model_dump(), so use bracket notation
-            test_code = test_data['testCode']
-            if test_code in tests_to_add:
-                # Get test from catalog
-                test = db.query(Test).filter(Test.code == test_code).first()
-                if not test:
-                    raise HTTPException(
-                        status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f"Test {test_code} not found"
-                    )
-                
-                # Create new OrderTest
-                order_test = OrderTest(
-                    orderId=order.orderId,
-                    testCode=test.code,
-                    status=TestStatus.PENDING,
-                    priceAtOrder=test.price,
-                )
-                db.add(order_test)
-                db.flush()  # Get the ID for audit logging
-                total_price_adjustment += test.price
-                # Log the test addition for audit compliance
-                audit_service.log_test_added(
-                    order_id=order.orderId,
-                    test_id=order_test.id,
-                    test_code=test.code,
-                    user_id=current_user.id
-                )
-        
-        # Recalculate total price
-        # Keep price for existing tests that remain, add price for new tests
-        order.totalPrice = existing_tests_price + total_price_adjustment
-        
-        # Generate samples for newly added tests
-        from app.services.sample_generator import generate_samples_for_order
-        # Only generate samples for new tests
-        new_order_tests = [ot for ot in order.tests if ot.testCode in tests_to_add]
-        if new_order_tests:
-            # Generate samples for the order (will handle only tests without samples)
-            generate_samples_for_order(order.orderId, db, current_user.id)
-
-    # Update other fields
-    for field, value in update_data.items():
-        setattr(order, field, value)
-
-    # Update timestamp
-    order.updatedAt = datetime.now(timezone.utc)
-
+    order_test.status = body.status
+    if body.technicianNotes is not None:
+        order_test.technicianNotes = body.technicianNotes
+    if body.validationNotes is not None:
+        order_test.validationNotes = body.validationNotes
+    update_order_status(db, orderId)
     db.commit()
     db.refresh(order)
-
     return order
+
+
+@router.post("/orders/{orderId}/tests/{testCode}/critical", response_model=OrderResponse)
+def mark_order_test_critical(
+    orderId: int,
+    testCode: str,
+    body: CriticalNotifyRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Record that a critical value notification was sent for this order test.
+    Resolves OrderTest by orderId + testCode and delegates to critical notification + audit.
+    """
+    from app.services.critical_notification_service import CriticalNotificationService
+    from app.services.flag_calculator import ResultFlag
+    from app.schemas.enums import ResultStatus
+
+    order = db.query(Order).filter(Order.orderId == orderId).options(
+        selectinload(Order.tests).joinedload(OrderTest.test),
+        joinedload(Order.patient),
+    ).first()
+    if not order:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Order {orderId} not found"
+        )
+    order_test = next((t for t in order.tests if t.testCode == testCode), None)
+    if not order_test:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Test {testCode} not found in order {orderId}"
+        )
+    if not order_test.hasCriticalValues:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Test does not have critical values"
+        )
+    service = CriticalNotificationService(db)
+    critical_flags = []
+    if order_test.flags:
+        for flag_str in order_test.flags:
+            parts = flag_str.split(":")
+            if len(parts) >= 2:
+                critical_flags.append(
+                    ResultFlag(
+                        item_code=parts[0],
+                        item_name=parts[0],
+                        value=float(parts[2]) if len(parts) > 2 else 0,
+                        status=ResultStatus(parts[1]) if parts[1] in [s.value for s in ResultStatus] else ResultStatus.CRITICAL,
+                        reference_low=None,
+                        reference_high=None,
+                        critical_low=None,
+                        critical_high=None,
+                        unit=None,
+                    )
+                )
+    service.create_notification(
+        order_test=order_test,
+        order=order,
+        critical_flags=critical_flags,
+        notified_to=body.notifiedTo,
+        notification_method="phone",
+    )
+    audit = AuditService(db)
+    audit.log_critical_value_notified(
+        order_id=orderId,
+        test_id=order_test.id,
+        test_code=testCode,
+        user_id=current_user.id,
+        notified_to=body.notifiedTo,
+        notification_method="phone",
+    )
+    db.commit()
+    db.refresh(order)
+    return order
+
+
+@router.patch("/orders/{orderId}/payment", response_model=OrderResponse)
+def update_order_payment_status(
+    orderId: int,
+    body: OrderPaymentUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Update order payment status. Optionally record a payment amount (creates a Payment record). Delegates to OrderService."""
+    return OrderService(db).update_order_payment(
+        orderId, body.paymentStatus, body.amountPaid, current_user.id
+    )
 
 
 @router.post("/orders/{orderId}/report", status_code=status.HTTP_200_OK)

@@ -27,7 +27,8 @@ export const useAuthStore = create<AuthState>()(
         token: null,
         refreshToken: null,
         isAuthenticated: false,
-        isLoading: false,
+        /** True until persist has rehydrated; gates route decisions. */
+        isLoading: true,
 
         login: async (username, password) => {
           const response = await apiClient.post<{
@@ -42,12 +43,22 @@ export const useAuthStore = create<AuthState>()(
             refreshToken: response.refresh_token,
           });
 
-          const userInfo = await apiClient.get<AuthUser>('/auth/me');
-
-          set({
-            user: userInfo,
-            isAuthenticated: true,
-          });
+          try {
+            const userInfo = await apiClient.get<AuthUser>('/auth/me');
+            set({
+              user: userInfo,
+              isAuthenticated: true,
+            });
+          } catch {
+            // Keep storage in sync: do not leave token without user
+            set({
+              user: null,
+              token: null,
+              refreshToken: null,
+              isAuthenticated: false,
+            });
+            throw new Error('Failed to load user after login. Please try again.');
+          }
         },
 
         logout: async () => {
@@ -93,6 +104,12 @@ export const useAuthStore = create<AuthState>()(
     },
     {
       name: 'auth-storage',
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
+        refreshToken: state.refreshToken,
+        isAuthenticated: state.isAuthenticated,
+      }),
       storage: {
         getItem: (name) => {
           try {
@@ -116,6 +133,21 @@ export const useAuthStore = create<AuthState>()(
             // Ignore
           }
         },
+      },
+      onRehydrateStorage: () => {
+        // If persist never calls the completion callback (e.g. storage error), stop blocking login after 300ms
+        const REHYDRATE_TIMEOUT_MS = 300;
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          useAuthStore.setState({ isLoading: false });
+        };
+        const timeoutId = window.setTimeout(finish, REHYDRATE_TIMEOUT_MS);
+        return () => {
+          clearTimeout(timeoutId);
+          finish();
+        };
       },
     }
   )

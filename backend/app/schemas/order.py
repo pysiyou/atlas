@@ -3,8 +3,9 @@ Pydantic schemas for Order
 """
 from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Optional, List
 from app.schemas.enums import OrderStatus, PaymentStatus, PriorityLevel, TestStatus
+from app.schemas.payment import PaymentResponse
 
 
 class ResultRejectionRecord(BaseModel):
@@ -110,6 +111,11 @@ class OrderResponse(BaseModel):
     createdBy: str
     createdAt: datetime
     updatedAt: datetime
-    
+
     class Config:
         from_attributes = True
+
+
+class OrderDetailResponse(OrderResponse):
+    """Order plus optional payments for GET /orders/{id}?include=payments."""
+    payments: Optional[List[PaymentResponse]] = None

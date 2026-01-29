@@ -4,6 +4,7 @@ Authentication API Routes.
 Provides login, logout, token refresh, and user info endpoints.
 Uses JWT tokens with distinct access/refresh types for security.
 """
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -101,8 +102,10 @@ def refresh_token(request: RefreshRequest, db: Session = Depends(get_db)):
 
 @router.get("/me", response_model=UserResponse)
 def get_me(current_user: User = Depends(get_current_user)):
-    """Get the current authenticated user's information."""
-    return current_user
+    """Get the current authenticated user's information. Sets loggedInAt to current time for frontend AuthUser."""
+    data = UserResponse.model_validate(current_user).model_dump()
+    data["loggedInAt"] = datetime.now(timezone.utc)
+    return UserResponse(**data)
 
 
 @router.post("/logout")

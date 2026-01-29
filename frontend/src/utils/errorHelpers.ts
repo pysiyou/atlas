@@ -54,6 +54,38 @@ export function getErrorMessage(error: unknown, fallback: string): string {
 }
 
 /**
+ * User-friendly message for payment mutations (e.g. 409 = order already paid).
+ */
+export function getPaymentErrorMessage(error: unknown, fallback: string): string {
+  if (typeof error === 'object' && error !== null && 'status' in error) {
+    const status = (error as { status?: number }).status;
+    if (status === 409) {
+      return 'This order is already paid. Refresh the page to see the latest status.';
+    }
+  }
+  return getErrorMessage(error, fallback);
+}
+
+/**
+ * True when we did not get a clear server response (network/timeout/abort).
+ * Use to show "Action may have completed; please refresh" for critical mutations.
+ */
+export function isLikelyNetworkOrTimeout(error: unknown): boolean {
+  if (typeof error === 'object' && error !== null && 'status' in error) {
+    const status = (error as { status?: number }).status;
+    if (typeof status === 'number' && status >= 400) return false;
+  }
+  const msg = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+  return (
+    msg.includes('network') ||
+    msg.includes('fetch') ||
+    msg.includes('abort') ||
+    msg.includes('timeout') ||
+    msg === 'load failed'
+  );
+}
+
+/**
  * Type guard to check if an error is an instance of Error
  * @param error - The error to check
  * @returns True if error is an Error instance

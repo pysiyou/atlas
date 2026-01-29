@@ -28,6 +28,7 @@ class UserUpdate(BaseModel):
 class UserResponse(UserBase):
     id: int
     createdAt: datetime
+    loggedInAt: datetime | None = None  # Set by /auth/me to current time; frontend AuthUser expects it
 
     class Config:
         from_attributes = True

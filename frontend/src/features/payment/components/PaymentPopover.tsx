@@ -19,7 +19,7 @@ import {
 import { useCreatePayment } from '@/hooks/queries/usePayments';
 import type { IconName } from '@/shared/ui';
 import { ICONS } from '@/utils';
-import { getErrorMessage } from '@/utils/errorHelpers';
+import { getPaymentErrorMessage } from '@/utils/errorHelpers';
 
 interface PaymentPopoverProps {
   /** Order to process payment for */
@@ -163,7 +163,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
         onConfirm();
       },
       onError: (err: unknown) => {
-        setError(getErrorMessage(err, 'Failed to process payment'));
+        setError(getPaymentErrorMessage(err, 'Failed to process payment'));
       },
     });
   }, [amount, paymentMethod, notes, order.orderId, createPaymentMutation, onSuccess, onConfirm]);

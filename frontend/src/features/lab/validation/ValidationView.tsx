@@ -26,6 +26,7 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
 import { resultAPI } from '@/services/api';
 import { orderHasValidatedTests } from '@/features/order/utils';
+import { getErrorMessage, isLikelyNetworkOrTimeout } from '@/utils/errorHelpers';
 
 /**
  * Feature flag to enable/disable bulk validation (select all) feature
@@ -260,15 +261,19 @@ export const ValidationView: React.FC = () => {
         });
       } catch (error) {
         logger.error('Error validating results', error instanceof Error ? error : undefined);
-        // Extract error message from API error (APIError interface has a message property)
-        const errorMessage =
-          error && typeof error === 'object' && 'message' in error
-            ? (error as { message: string }).message
-            : 'Unknown error';
-        toast.error({
-          title: `Failed to validate results: ${errorMessage}`,
-          subtitle: 'The validation request failed. Please try again or contact support if the issue persists.',
-        });
+        await invalidateOrders();
+        if (isLikelyNetworkOrTimeout(error)) {
+          toast.error({
+            title: 'Action may have completed',
+            subtitle: 'The request did not complete. Please refresh the page to see the latest status.',
+          });
+        } else {
+          const errorMessage = getErrorMessage(error, 'Unknown error');
+          toast.error({
+            title: `Failed to validate results: ${errorMessage}`,
+            subtitle: 'The validation request failed. Please try again or contact support if the issue persists.',
+          });
+        }
       } finally {
         setIsValidating(prev => ({ ...prev, [commentKey]: false }));
       }

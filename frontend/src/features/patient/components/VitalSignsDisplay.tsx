@@ -29,7 +29,7 @@ const VITAL_SIGNS_CONFIG: VitalSignConfig[] = [
     key: 'temperature',
     label: 'Temperature',
     unit: '°C',
-    icon: ICONS.landing.thermometer,
+    icon: ICONS.dataFields.thermometer,
     normalRange: { min: 36.5, max: 37.3 },
     criticalRange: { min: 30.0, max: 45.0 },
   },
