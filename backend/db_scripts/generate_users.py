@@ -31,10 +31,10 @@ def generate_users(db):
             "email": "mike@atlas.local"
         },
         {
-            "username": "validator",
-            "password": "valid123",
+            "username": "labtech_plus",
+            "password": "labplus123",
             "name": "Dr. Emily Rodriguez",
-            "role": UserRole.VALIDATOR,
+            "role": UserRole.LAB_TECH_PLUS,
             "email": "emily@atlas.local"
         },
     ]

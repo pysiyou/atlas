@@ -129,7 +129,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   };
 
   return (
-    <div className="bg-app-bg rounded border border-border p-4">
+    <div className="bg-app-bg rounded border border-border p-4 border">
       {/* Panic Value Alerts */}
       {panicValues.length > 0 && (
         <div className="mb-6 space-y-4">

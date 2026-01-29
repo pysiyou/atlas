@@ -5,12 +5,12 @@
  * Use the role value directly as the Badge variant (e.g., variant="receptionist").
  */
 
-// 1. VALUES - The single source of truth
+// 1. VALUES - The single source of truth (must match backend UserRole enum values)
 export const USER_ROLE_VALUES = [
+  'administrator',
   'receptionist',
   'lab-technician',
-  'pathologist',
-  'administrator',
+  'lab-technician-plus',
 ] as const;
 
 // 2. TYPE - Derived from values
@@ -18,6 +18,10 @@ export type UserRole = (typeof USER_ROLE_VALUES)[number];
 
 // 3. CONFIG - Metadata for each value (label and description only, colors handled by Badge)
 export const USER_ROLE_CONFIG: Record<UserRole, { label: string; description: string }> = {
+  administrator: {
+    label: 'Administrator',
+    description: 'Full system access',
+  },
   receptionist: {
     label: 'Receptionist',
     description: 'Front desk and patient registration',
@@ -26,13 +30,9 @@ export const USER_ROLE_CONFIG: Record<UserRole, { label: string; description: st
     label: 'Lab Technician',
     description: 'Sample collection and processing',
   },
-  pathologist: {
-    label: 'Pathologist',
-    description: 'Result validation and diagnosis',
-  },
-  administrator: {
-    label: 'Administrator',
-    description: 'Full system access',
+  'lab-technician-plus': {
+    label: 'Lab Tech Plus',
+    description: 'Extended lab access including result validation',
   },
 };
 

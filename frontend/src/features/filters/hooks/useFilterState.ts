@@ -63,13 +63,14 @@ export function useFilterState(options: UseFilterStateOptions = {}): UseFilterSt
   const [filters, setFilters] = useState<FilterValues>(initialFilters);
 
   /**
-   * Update a single filter value
+   * Update a single filter value.
+   * onChange is deferred to avoid updating parent (e.g. CollectionView) during FilterBar's setState.
    */
   const setFilter = useCallback(
     (key: string, value: unknown) => {
       setFilters(prev => {
         const updated = { ...prev, [key]: value };
-        onChange?.(updated);
+        queueMicrotask(() => onChange?.(updated));
         return updated;
       });
     },
@@ -130,7 +131,7 @@ export function useFilterState(options: UseFilterStateOptions = {}): UseFilterSt
           updated[key] = null;
         }
 
-        onChange?.(updated);
+        queueMicrotask(() => onChange?.(updated));
         return updated;
       });
     },
@@ -181,7 +182,7 @@ export function useFilterState(options: UseFilterStateOptions = {}): UseFilterSt
       }
     });
     setFilters(cleared);
-    onChange?.(cleared);
+    queueMicrotask(() => onChange?.(cleared));
   }, [filters, onChange]);
 
   /**

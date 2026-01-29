@@ -37,9 +37,9 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
       title="Collection Requirements & Instructions"
       headerRight={
         <div className="flex gap-1">
-          {testDetails.map(test => (
+          {testDetails.map((test, index) => (
             <button
-              key={test.code}
+              key={`${test.code}-${index}`}
               onClick={() => setActiveTestCode(test.code)}
               className={`px-2 py-1 text-xs rounded transition-colors font-mono ${
                 activeTestCode === test.code

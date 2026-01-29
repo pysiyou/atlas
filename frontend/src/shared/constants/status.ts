@@ -57,8 +57,8 @@ export const TEST_STATUS_LABELS: Record<TestStatus, string> = {
  * User role labels
  */
 export const USER_ROLE_LABELS: Record<UserRole, string> = {
+  administrator: 'Administrator',
   receptionist: 'Receptionist',
   'lab-technician': 'Lab Technician',
-  pathologist: 'Pathologist',
-  administrator: 'Administrator',
+  'lab-technician-plus': 'Lab Tech Plus',
 };

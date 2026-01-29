@@ -122,7 +122,7 @@ def init_db():
         print("✅ Database initialization complete!")
         print("="*60)
         print("\n📊 Test Data Summary:")
-        print("  • Users: 4 (admin, receptionist, lab tech, validator)")
+        print("  • Users: 4 (admin, receptionist, lab tech, lab tech plus)")
         print("  • Patients: 10")
         print("  • Tests in catalog: 87")
         print("  • Orders: ~13 (10 basic + 3 with results)")

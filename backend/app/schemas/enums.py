@@ -31,8 +31,7 @@ class UserRole(str, enum.Enum):
     ADMIN = "administrator"
     RECEPTIONIST = "receptionist"
     LAB_TECH = "lab-technician"
-    VALIDATOR = "pathologist"
-    BILLING = "billing"
+    LAB_TECH_PLUS = "lab-technician-plus"
 
 
 class SampleType(str, enum.Enum):

@@ -8,7 +8,7 @@ import type { Order } from '@/types';
  * 2. Payment Received - Patient completes payment (required before sample collection)
  * 3. Sample Collected - Physical sample obtained from patient
  * 4. Results Entered - Lab technician enters test results
- * 5. Completed - All results validated by pathologist/supervisor
+ * 5. Completed - All results validated by lab tech plus/supervisor
  */
 export const STATUS_TIMELINE_STEPS = [
   { status: 'created', label: 'Order Created' },

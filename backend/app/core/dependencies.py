@@ -92,7 +92,6 @@ def require_role(*allowed_roles: UserRole):
 require_admin = require_role(UserRole.ADMIN)
 require_receptionist = require_role(UserRole.ADMIN, UserRole.RECEPTIONIST)
 require_lab_tech = require_role(UserRole.ADMIN, UserRole.LAB_TECH)
-require_validator = require_role(UserRole.ADMIN, UserRole.VALIDATOR)
-require_billing = require_role(UserRole.ADMIN, UserRole.BILLING)
-# Sample collection: receptionists and lab techs can collect samples
-require_sample_collector = require_role(UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.LAB_TECH)
+require_lab_tech_plus = require_role(UserRole.ADMIN, UserRole.LAB_TECH_PLUS)
+# Sample collection: receptionists and lab techs (and lab tech plus) can collect samples
+require_sample_collector = require_role(UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.LAB_TECH, UserRole.LAB_TECH_PLUS)

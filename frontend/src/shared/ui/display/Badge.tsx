@@ -105,10 +105,10 @@ export type BadgeVariant =
   | 'bank-transfer'
   | 'mobile-money'
   // User Roles
+  | 'administrator'
   | 'receptionist'
   | 'lab-technician'
-  | 'pathologist'
-  | 'administrator'
+  | 'lab-technician-plus'
   // Arbitrary string fallback
   | (string & {});
 
@@ -258,10 +258,10 @@ const VARIANT_STYLES: Record<string, string> = {
   'mobile-money': 'bg-teal-100 text-teal-800',
   
   // User roles
+  administrator: 'bg-red-100 text-red-800',
   receptionist: 'bg-blue-100 text-blue-800',
   'lab-technician': 'bg-green-100 text-green-800',
-  pathologist: 'bg-purple-100 text-purple-800',
-  administrator: 'bg-red-100 text-red-800',
+  'lab-technician-plus': 'bg-purple-100 text-purple-800',
 };
 
 // Custom display labels for variants (shorter/abbreviated versions)

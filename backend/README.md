@@ -48,7 +48,7 @@ poetry run python seed_data.py
 
 This creates:
 
-- 4 users (admin, receptionist, labtech, validator)
+- 4 users (admin, receptionist, labtech, labtech_plus)
 - 4 test types (CBC, Glucose, Lipid Panel, Urinalysis)
 - 2 example patients
 - 2 example orders

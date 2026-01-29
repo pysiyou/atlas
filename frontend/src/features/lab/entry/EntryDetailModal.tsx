@@ -196,17 +196,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
         )
       }
       footer={
-        <ModalFooter
-          statusIcon={
-            isComplete ? (
-              <Icon name={ICONS.actions.checkCircle} className="w-3.5 h-3.5" />
-            ) : undefined
-          }
-          statusMessage={
-            isComplete ? 'Ready to submit' : ''
-          }
-          statusClassName="text-text-tertiary"
-        >
+        <ModalFooter>
           <Button onClick={onClose} variant="cancel" size="md">
             Cancel
           </Button>

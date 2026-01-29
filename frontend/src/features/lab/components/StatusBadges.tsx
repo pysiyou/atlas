@@ -118,7 +118,7 @@ export const FlagBadge: React.FC<FlagBadgeProps> = ({ count }) => {
   if (count === 0) return null;
 
   return (
-    <Badge size="sm" variant="danger">
+    <Badge size="sm" variant="danger" icon="warning">
       {count} FLAG{count > 1 ? 'S' : ''}
     </Badge>
   );
@@ -310,7 +310,7 @@ export const FlagCountBadge: React.FC<FlagCountBadgeProps> = ({
 
   return (
     <Badge size={size} variant="danger" className={`flex items-center gap-1.5 ${className}`}>
-      {showIcon && <Icon name={ICONS.actions.warning} className="w-3 h-3 text-red-600" />}
+      {showIcon && <Icon name={ICONS.actions.warning} className="w-3 h-3 shrink-0 text-current" />}
       {count} flag{count !== 1 ? 's' : ''}
     </Badge>
   );

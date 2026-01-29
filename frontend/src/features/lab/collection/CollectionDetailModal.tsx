@@ -74,9 +74,15 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
 
   const testDetails = useMemo(() => {
     if (!sample?.testCodes) return [];
+    const seen = new Set<string>();
     return sample.testCodes
       .map(code => getTest(code))
-      .filter((test): test is NonNullable<typeof test> => test !== undefined);
+      .filter((test): test is NonNullable<typeof test> => test !== undefined)
+      .filter(test => {
+        if (seen.has(test.code)) return false;
+        seen.add(test.code);
+        return true;
+      });
   }, [sample, getTest]);
 
   if (!sample) return null;
