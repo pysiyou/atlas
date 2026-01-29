@@ -66,7 +66,10 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           authorize_retest: 'Authorized re-test created.',
           final_reject: 'Sample rejected; new sample requested.',
         };
-        toast.success(messages[action] ?? 'Operation completed.');
+        toast.success({
+          title: messages[action] ?? 'Operation completed.',
+          subtitle: 'The escalation has been resolved and the test status updated. You may need to refresh the view.',
+        });
       } catch (err) {
         const apiError = err as { message?: string };
         logger.error('Escalation resolve failed', apiError?.message ?? err);
@@ -74,7 +77,10 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           apiError && typeof apiError === 'object' && typeof apiError.message === 'string'
             ? apiError.message
             : 'Failed to resolve escalation.';
-        toast.error(msg);
+        toast.error({
+          title: msg,
+          subtitle: 'The escalation could not be resolved. Check the details and try again.',
+        });
       } finally {
         setResolving(false);
         setValidationNotesForceValidate('');
@@ -227,7 +233,10 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
                   onCancel={close}
                   onConfirm={() => {
                     if (!reasonFinalReject.trim()) {
-                      toast.error('Please provide a reason for final reject.');
+                      toast.error({
+                        title: 'Please provide a reason for final reject.',
+                        subtitle: 'A reason is required when final rejecting. This will request a new sample from the patient.',
+                      });
                       return;
                     }
                     resolve('final_reject', reasonFinalReject.trim());

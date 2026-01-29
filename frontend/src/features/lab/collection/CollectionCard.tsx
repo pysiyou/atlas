@@ -282,17 +282,21 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
                         notes,
                         requireRecollection,
                       });
-                      toast.success(
-                        requireRecollection
+                      toast.success({
+                        title: requireRecollection
                           ? 'Sample rejected - recollection will be requested'
-                          : 'Sample rejected'
-                      );
+                          : 'Sample rejected',
+                        subtitle: 'The sample has been rejected. Recollection will be requested if you chose that option.',
+                      });
                     } catch (error) {
                       logger.error(
                         'Failed to reject sample',
                         error instanceof Error ? error : undefined
                       );
-                      toast.error('Failed to reject sample');
+                      toast.error({
+                        title: 'Failed to reject sample',
+                        subtitle: 'The rejection could not be saved. Please try again or check the sample status.',
+                      });
                     }
                   }}
                 />

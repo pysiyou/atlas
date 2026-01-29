@@ -171,19 +171,31 @@ export const CollectionView: React.FC = () => {
     selectedContainerType?: ContainerType
   ) => {
     if (!currentUser) {
-      toast.error('You must be logged in to collect samples');
+      toast.error({
+        title: 'You must be logged in to collect samples',
+        subtitle: 'Please sign in to record sample collections, then try again.',
+      });
       return;
     }
     if (!display.sample || !display.requirement) {
-      toast.error('Invalid sample data');
+      toast.error({
+        title: 'Invalid sample data',
+        subtitle: 'The sample or requirement data is missing or invalid. Refresh the page and try again.',
+      });
       return;
     }
     if (!selectedColor) {
-      toast.error('Container color is required');
+      toast.error({
+        title: 'Container color is required',
+        subtitle: 'Select the container cap color before confirming the collection.',
+      });
       return;
     }
     if (!selectedContainerType) {
-      toast.error('Container type is required');
+      toast.error({
+        title: 'Container type is required',
+        subtitle: 'Select the container type (e.g. cup or tube) before confirming the collection.',
+      });
       return;
     }
 
@@ -196,12 +208,16 @@ export const CollectionView: React.FC = () => {
         collectionNotes: notes,
       });
       await refreshOrders();
-      toast.success(
-        `${(display.sample.sampleType ?? 'sample').toString().toUpperCase()} sample collected`
-      );
+      toast.success({
+        title: `${(display.sample.sampleType ?? 'sample').toString().toUpperCase()} sample collected`,
+        subtitle: 'The sample has been recorded and the order has been updated. You can continue with the next sample.',
+      });
     } catch (error) {
       logger.error('Error collecting sample', error instanceof Error ? error : undefined);
-      toast.error('Failed to collect sample. Please try again.');
+      toast.error({
+        title: 'Failed to collect sample. Please try again.',
+        subtitle: 'The collection could not be saved. Check your connection and try again.',
+      });
     }
   };
 

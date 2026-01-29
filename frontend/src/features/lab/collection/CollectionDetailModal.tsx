@@ -122,13 +122,19 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
         notes,
         requireRecollection,
       });
-      toast.success(
-        requireRecollection ? 'Sample rejected - recollection will be requested' : 'Sample rejected'
-      );
+      toast.success({
+        title: requireRecollection
+          ? 'Sample rejected - recollection will be requested'
+          : 'Sample rejected',
+        subtitle: 'The sample has been rejected. Recollection will be requested if you chose that option.',
+      });
       onClose();
     } catch (error) {
       logger.error('Failed to reject sample', error instanceof Error ? error : undefined);
-      toast.error('Failed to reject sample');
+      toast.error({
+        title: 'Failed to reject sample',
+        subtitle: 'The rejection could not be saved. Please try again or check the sample status.',
+      });
     }
   };
 

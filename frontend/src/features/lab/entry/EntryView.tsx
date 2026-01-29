@@ -184,13 +184,19 @@ export const EntryView: React.FC = () => {
 
       const testResults = finalResults || results[resultKey];
       if (!testResults || Object.keys(testResults).length === 0) {
-        toast.error('No results to save');
+        toast.error({
+          title: 'No results to save',
+          subtitle: 'There are no results entered for this test. Enter values in the required fields before saving.',
+        });
         return;
       }
 
       const testDef = getTest(testCode);
       if (!testDef?.parameters) {
-        toast.error('Test parameters not found');
+        toast.error({
+          title: 'Test parameters not found',
+          subtitle: 'The test configuration could not be loaded. Refresh the page or contact support.',
+        });
         return;
       }
 
@@ -198,7 +204,10 @@ export const EntryView: React.FC = () => {
       const formattedResults: Record<string, TestResult> = {};
       const testItem = allTests.find(t => t.orderId === numericOrderId && t.testCode === testCode);
       if (!testItem) {
-        toast.error('Test not found in current list');
+        toast.error({
+          title: 'Test not found in current list',
+          subtitle: 'This test could not be found in the current order. The list may have been updated—refresh and try again.',
+        });
         return;
       }
       const patient = testItem.patient;
@@ -225,9 +234,10 @@ export const EntryView: React.FC = () => {
           param.allowedValues
         ) {
           if (!param.allowedValues.includes(value)) {
-            toast.error(
-              `${param.name}: Invalid value. Must be one of: ${param.allowedValues.join(', ')}`
-            );
+            toast.error({
+              title: `${param.name}: Invalid value. Must be one of: ${param.allowedValues.join(', ')}`,
+              subtitle: 'The value entered is not in the allowed list for this parameter. Choose one of the options shown.',
+            });
             return;
           }
         }
@@ -250,7 +260,10 @@ export const EntryView: React.FC = () => {
         });
         await invalidateOrders();
         await refreshOrders();
-        toast.success('Results saved successfully');
+        toast.success({
+          title: 'Results saved successfully',
+          subtitle: 'The results have been saved and the order has been updated. You can continue with other tests.',
+        });
 
         // Clear local state
         setResults(prev => {
@@ -265,7 +278,10 @@ export const EntryView: React.FC = () => {
         });
       } catch (error) {
         logger.error('Error saving results', error instanceof Error ? error : undefined);
-        toast.error('Failed to save results. Please try again.');
+        toast.error({
+          title: 'Failed to save results. Please try again.',
+          subtitle: 'The results could not be saved. Check your connection and try again.',
+        });
       } finally {
         setIsSaving(prev => ({ ...prev, [resultKey]: false }));
       }

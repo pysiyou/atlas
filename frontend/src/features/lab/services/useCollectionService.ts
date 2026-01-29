@@ -49,11 +49,15 @@ export function useCollectionService() {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
       
-      toast.success(
-        `${(display.sample.sampleType ?? 'sample').toString().toUpperCase()} sample collected`
-      );
+      toast.success({
+        title: `${(display.sample.sampleType ?? 'sample').toString().toUpperCase()} sample collected`,
+        subtitle: 'The sample has been recorded with the selected container and volume. The order has been updated.',
+      });
     } catch (error) {
-      toast.error(`Failed to collect sample: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error({
+        title: `Failed to collect sample: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        subtitle: 'The collection could not be saved. Check your connection and the sample details, then try again.',
+      });
       throw error;
     }
   };
@@ -78,9 +82,15 @@ export function useCollectionService() {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
       
-      toast.success('Sample rejected');
+      toast.success({
+        title: 'Sample rejected',
+        subtitle: 'The sample has been rejected and the order updated. Recollection may be required depending on your selection.',
+      });
     } catch (error) {
-      toast.error(`Failed to reject sample: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error({
+        title: `Failed to reject sample: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        subtitle: 'The rejection could not be saved. Please try again or check the sample status.',
+      });
       throw error;
     }
   };
@@ -93,9 +103,15 @@ export function useCollectionService() {
       printCollectionLabel(display, patientName);
     } catch (error) {
       if (error instanceof Error) {
-        toast.error(error.message);
+        toast.error({
+          title: error.message,
+          subtitle: 'The label could not be printed. Check your printer and try again.',
+        });
       } else {
-        toast.error('Failed to print label');
+        toast.error({
+          title: 'Failed to print label',
+          subtitle: 'Ensure the printer is connected and the sample data is valid.',
+        });
       }
     }
   };

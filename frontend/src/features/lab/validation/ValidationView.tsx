@@ -195,7 +195,10 @@ export const ValidationView: React.FC = () => {
         .filter((item): item is { orderId: number; testCode: string } => item !== null);
 
       if (items.length === 0) {
-        toast.error('No valid tests selected');
+        toast.error({
+          title: 'No valid tests selected',
+          subtitle: 'Select at least one test from the list before running bulk approval.',
+        });
         return;
       }
 
@@ -206,25 +209,30 @@ export const ValidationView: React.FC = () => {
       await refreshOrders();
 
       if (response.failureCount === 0) {
-        toast.success(
-          `Successfully approved ${response.successCount ?? 0} result(s)`
-        );
+        toast.success({
+          title: `Successfully approved ${response.successCount ?? 0} result(s)`,
+          subtitle: 'All selected results have been approved and the orders have been updated.',
+        });
       } else {
         // Show detailed error for failed items
         const failedItems = response.results
           .filter(r => !r.success)
           .map(r => `${r.testCode} (Order ${r.orderId})`)
           .join(', ');
-        toast.error(
-          `Approved ${response.successCount ?? 0}, failed ${response.failureCount ?? 0}${failedItems ? `: ${failedItems}` : ''}`
-        );
+        toast.error({
+          title: `Approved ${response.successCount ?? 0}, failed ${response.failureCount ?? 0}${failedItems ? `: ${failedItems}` : ''}`,
+          subtitle: 'Some results could not be approved. Check the failed items and try again if needed.',
+        });
       }
 
       // Clear selection
       setSelectedIds(new Set());
     } catch (error) {
       logger.error('Error in bulk validation', error instanceof Error ? error : undefined);
-      toast.error('Failed to approve results. Please try again.');
+      toast.error({
+        title: 'Failed to approve results. Please try again.',
+        subtitle: 'The bulk approval request failed. Check your connection and try again.',
+      });
     } finally {
       setIsBulkProcessing(false);
     }
@@ -276,7 +284,10 @@ export const ValidationView: React.FC = () => {
           });
           await invalidateOrders();
           await refreshOrders();
-          toast.success('Results approved');
+          toast.success({
+            title: 'Results approved',
+            subtitle: 'These results have been approved and are now final. The order status has been updated.',
+          });
         } else {
           // Check if the rejection was already performed by the RejectionDialog.
           // When both rejectionNotes and rejectionType are undefined, the dialog
@@ -287,7 +298,10 @@ export const ValidationView: React.FC = () => {
             // Rejection was already performed by RejectionDialog - just refresh
             await invalidateOrders();
             await refreshOrders();
-            toast.success('Results rejected');
+            toast.success({
+              title: 'Results rejected',
+              subtitle: 'These results have been rejected. A re-test or new sample may have been requested.',
+            });
           } else {
             // Legacy path: rejection not yet performed, we need to call the API
             if (!rejectionNotes) {
@@ -310,7 +324,10 @@ export const ValidationView: React.FC = () => {
               rejectType === 're-collect'
                 ? 'Sample rejected - new collection required'
                 : 'Results rejected - re-test created';
-            toast.error(message);
+            toast.error({
+              title: message,
+              subtitle: 'The rejection has been recorded. Follow up on re-test or recollection as needed.',
+            });
           }
         }
 
@@ -327,7 +344,10 @@ export const ValidationView: React.FC = () => {
           error && typeof error === 'object' && 'message' in error
             ? (error as { message: string }).message
             : 'Unknown error';
-        toast.error(`Failed to validate results: ${errorMessage}`);
+        toast.error({
+          title: `Failed to validate results: ${errorMessage}`,
+          subtitle: 'The validation request failed. Please try again or contact support if the issue persists.',
+        });
       } finally {
         setIsValidating(prev => ({ ...prev, [commentKey]: false }));
       }

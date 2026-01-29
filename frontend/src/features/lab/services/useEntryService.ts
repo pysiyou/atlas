@@ -32,9 +32,15 @@ export function useEntryService() {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
       
-      toast.success('Results saved successfully');
+      toast.success({
+        title: 'Results saved successfully',
+        subtitle: 'The results have been saved and the order has been updated. You can continue with other tests.',
+      });
     } catch (error) {
-      toast.error(`Failed to save results: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error({
+        title: `Failed to save results: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        subtitle: 'The results could not be saved. Check your connection and the entered values, then try again.',
+      });
       throw error;
     }
   };
@@ -58,9 +64,15 @@ export function useEntryService() {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
       
-      toast.success('Results rejected');
+      toast.success({
+        title: 'Results rejected',
+        subtitle: 'The results have been rejected. A re-test or new sample may have been requested as selected.',
+      });
     } catch (error) {
-      toast.error(`Failed to reject results: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error({
+        title: `Failed to reject results: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        subtitle: 'The rejection could not be saved. Please try again or check the test status.',
+      });
       throw error;
     }
   };

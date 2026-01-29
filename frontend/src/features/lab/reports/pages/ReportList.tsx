@@ -248,11 +248,17 @@ export const ReportList: React.FC = () => {
       const filename = `Lab_Report_TST${previewTest.testId.toString().padStart(6, '0')}_${formatDate(new Date())}.pdf`;
       downloadPDF(doc, filename);
 
-      toast.success('Report downloaded successfully');
+      toast.success({
+        title: 'Report downloaded successfully',
+        subtitle: 'The report has been generated and the download should start shortly. Check your downloads folder.',
+      });
       setPreviewTest(null);
     } catch (error) {
       console.error('Error generating report:', error);
-      toast.error('Failed to generate report');
+      toast.error({
+        title: 'Failed to generate report',
+        subtitle: 'The report could not be generated. Please try again or contact support if the issue persists.',
+      });
     } finally {
       setIsGenerating(false);
     }

@@ -16,9 +16,15 @@ export const handlePrintCollectionLabel = (display: SampleDisplay, patientName: 
     printCollectionLabel(display, patientName);
   } catch (error) {
     if (error instanceof Error) {
-      toast.error(error.message);
+      toast.error({
+        title: error.message,
+        subtitle: 'The label could not be printed. Check your printer and try again.',
+      });
     } else {
-      toast.error('Failed to print label');
+      toast.error({
+        title: 'Failed to print label',
+        subtitle: 'Ensure the printer is connected and the sample data is valid.',
+      });
     }
   }
 };

@@ -1,42 +1,75 @@
 /**
- * AppToastBar – card layout, icon left, title, close top-right.
- * All non-color styles are inline; colors use theme vars (theme.css).
+ * AppToastBar – dark notification card.
+ * Row 1: status icon, title, circle-close button. Row 2: secondary text (subtitle).
+ * Supports message as string (title only) or ToastMessageObject. Colors from theme --toast-* vars.
  */
 
 import React from 'react';
 import toastLib from 'react-hot-toast';
 import { resolveValue, type Toast } from 'react-hot-toast';
 
-const iconTheme = {
-  success: { primary: 'var(--success)', secondary: 'var(--neutral)' },
-  error: { primary: 'var(--danger)', secondary: 'var(--neutral)' },
-} as const;
+/** Rich toast payload: optional title (default per variant if omitted), optional subtitle, actions, variant. */
+export interface ToastMessageObject {
+  title?: string;
+  subtitle?: string;
+  actions?: { label: string; onClick: () => void }[];
+  variant?: 'info' | 'warning';
+}
+
+function isToastMessageObject(m: unknown): m is ToastMessageObject {
+  if (typeof m !== 'object' || m === null) return false;
+  const o = m as Record<string, unknown>;
+  return (
+    typeof o.title === 'string' ||
+    typeof o.subtitle === 'string' ||
+    Array.isArray(o.actions) ||
+    o.variant === 'info' ||
+    o.variant === 'warning'
+  );
+}
+
+const DEFAULT_TITLES: Record<ToastVariant, string> = {
+  success: 'Success',
+  error: 'Error',
+  info: 'Informational',
+  warning: 'Warning',
+  loading: 'Loading',
+};
+
+type ToastVariant = 'success' | 'error' | 'info' | 'warning' | 'loading';
 
 const barStyle: React.CSSProperties = {
-  position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'stretch',
   gap: 0,
   minWidth: 320,
   maxWidth: 380,
-  padding: '36px 14px 12px 14px',
-  background: 'var(--surface)',
-  color: 'var(--text)',
-  border: '1px solid var(--border)',
+  padding: 14,
+  background: 'var(--toast-bg)',
+  color: 'var(--toast-text)',
   borderRadius: 12,
-  boxShadow: 'var(--shadow-2)',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
   lineHeight: 1.4,
   pointerEvents: 'auto',
   fontFamily: 'inherit',
 };
 
+/** Row 1: icon, title, close (circle-close icon). */
+const row1Style: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 12,
+};
+
+const titleWrapStyle: React.CSSProperties = {
+  flex: '1 1 auto',
+  minWidth: 0,
+};
+
 const closeStyle: React.CSSProperties = {
-  position: 'absolute',
-  top: 10,
-  right: 10,
-  width: 28,
-  height: 28,
+  width: 24,
+  height: 24,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -45,10 +78,9 @@ const closeStyle: React.CSSProperties = {
   background: 'none',
   border: 'none',
   borderRadius: 6,
-  color: 'var(--text-muted)',
-  fontSize: 20,
-  lineHeight: 1,
+  color: 'var(--toast-close)',
   cursor: 'pointer',
+  flexShrink: 0,
 };
 
 const closeHoverStyle = (
@@ -56,100 +88,131 @@ const closeHoverStyle = (
   over: boolean
 ): void => {
   const t = e.currentTarget;
-  t.style.color = over ? 'var(--text)' : 'var(--text-muted)';
-  t.style.background = over ? 'var(--surface-hover)' : 'none';
-};
-
-const bodyStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'flex-start',
-  gap: 12,
-};
-
-const contentStyle: React.CSSProperties = {
-  flex: '1 1 auto',
-  minWidth: 0,
+  t.style.color = over ? 'var(--toast-text)' : 'var(--toast-close)';
+  t.style.background = over ? 'rgba(255,255,255,0.1)' : 'none';
 };
 
 const titleStyle: React.CSSProperties = {
   fontWeight: 600,
-  fontSize: '0.9375rem',
-  color: 'var(--text)',
+  fontSize: '0.875rem',
+  color: 'var(--toast-text)',
   whiteSpace: 'pre-line',
   margin: 0,
 };
 
-function SuccessIcon({ primary, secondary }: { primary: string; secondary: string }) {
+/** Row 2: secondary text. */
+const subtitleStyle: React.CSSProperties = {
+  fontSize: '0.75rem',
+  color: 'var(--toast-text-muted)',
+  margin: '6px 0 0 0',
+  paddingLeft: 36,
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical' as const,
+  overflow: 'hidden',
+};
+
+const actionsRowStyle: React.CSSProperties = {
+  display: 'flex',
+  flexWrap: 'wrap' as const,
+  gap: '8px 16px',
+  marginTop: 8,
+  paddingLeft: 36,
+};
+
+const actionButtonStyle: React.CSSProperties = {
+  background: 'none',
+  border: 'none',
+  padding: 0,
+  color: 'var(--toast-text-muted)',
+  fontSize: '0.875rem',
+  cursor: 'pointer',
+  fontFamily: 'inherit',
+  lineHeight: 1.4,
+};
+
+/** Circle-close icon for dismiss button. */
+function CloseCircleIcon() {
   return (
-    <div
-      role="img"
-      aria-hidden
-      style={{
-        width: 24,
-        height: 24,
-        borderRadius: 12,
-        background: primary,
-        border: `2px solid ${primary}`,
-        flexShrink: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <span
-        style={{
-          width: 6,
-          height: 12,
-          borderRight: `2px solid ${secondary}`,
-          borderBottom: `2px solid ${secondary}`,
-          transform: 'rotate(45deg)',
-          marginBottom: 4,
-          marginLeft: 2,
-          boxSizing: 'border-box',
-        }}
-      />
-    </div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} width={24} height={24}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M14.5 9.5L9.5 14.5M9.5 9.5l5 5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
-function ErrorIcon({ primary, secondary }: { primary: string; secondary: string }) {
+function StatusIconSvg({
+  colorVar,
+  children,
+}: {
+  colorVar: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div
+    <span
       role="img"
       aria-hidden
       style={{
         width: 24,
         height: 24,
-        borderRadius: 12,
-        background: primary,
-        border: `2px solid ${primary}`,
         flexShrink: 0,
-        position: 'relative',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: `var(${colorVar})`,
       }}
     >
-      <span
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          width: 12,
-          height: 2,
-          background: secondary,
-          transform: 'translate(-50%, -50%) rotate(45deg)',
-        }}
-      />
-      <span
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          width: 12,
-          height: 2,
-          background: secondary,
-          transform: 'translate(-50%, -50%) rotate(-45deg)',
-        }}
-      />
-    </div>
+      {children}
+    </span>
+  );
+}
+
+/** Outlined circle + checkmark; interior transparent/white, stroke green. */
+function SuccessIconSvg() {
+  return (
+    <StatusIconSvg colorVar="--toast-success">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={24} height={24}>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M8 12l3 3 5-6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </StatusIconSvg>
+  );
+}
+
+/** Outlined circle + i; interior transparent. */
+function InfoIconSvg() {
+  return (
+    <StatusIconSvg colorVar="--toast-info">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={24} height={24}>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 16v-4M12 8h.01" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </StatusIconSvg>
+  );
+}
+
+/** Outlined circle + i; interior transparent. */
+function WarningIconSvg() {
+  return (
+    <StatusIconSvg colorVar="--toast-warning">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={24} height={24}>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 8v4M12 16h.01" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="12" cy="16" r="1" fill="currentColor" />
+      </svg>
+    </StatusIconSvg>
+  );
+}
+
+/** Outlined circle + X; interior transparent. */
+function ErrorIconSvg() {
+  return (
+    <StatusIconSvg colorVar="--toast-danger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={24} height={24}>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M14.5 9.5L9.5 14.5M9.5 9.5l5 5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </StatusIconSvg>
   );
 }
 
@@ -161,8 +224,8 @@ function LoadingIcon() {
       style={{
         width: 24,
         height: 24,
-        border: '2px solid var(--border-strong)',
-        borderRightColor: 'var(--text-muted)',
+        border: '2px solid var(--toast-text-muted)',
+        borderRightColor: 'var(--toast-text)',
         borderRadius: '50%',
         flexShrink: 0,
         animation: 'app-toast-spin 1s linear infinite',
@@ -171,19 +234,28 @@ function LoadingIcon() {
   );
 }
 
-function ToastIcon({ t }: { t: Toast }) {
-  const { icon, type, iconTheme: custom } = t;
-  if (icon !== undefined) {
-    return typeof icon === 'string' ? <span style={{ flexShrink: 0 }}>{icon}</span> : icon;
+function ToastIconBlock({
+  variant,
+  customIcon,
+}: {
+  variant: ToastVariant;
+  customIcon?: React.ReactNode;
+}) {
+  if (customIcon !== undefined) {
+    return typeof customIcon === 'string' ? (
+      <span style={{ flexShrink: 0 }}>{customIcon}</span>
+    ) : (
+      <>{customIcon}</>
+    );
   }
-  if (type === 'blank') return null;
-  if (type === 'loading') return <LoadingIcon />;
-  const theme = custom ?? (type === 'error' ? iconTheme.error : iconTheme.success);
-  return type === 'error' ? (
-    <ErrorIcon primary={theme.primary} secondary={theme.secondary} />
-  ) : (
-    <SuccessIcon primary={theme.primary} secondary={theme.secondary} />
-  );
+  if (variant === 'loading') {
+    return <LoadingIcon />;
+  }
+  if (variant === 'success') return <SuccessIconSvg />;
+  if (variant === 'error') return <ErrorIconSvg />;
+  if (variant === 'info') return <InfoIconSvg />;
+  if (variant === 'warning') return <WarningIconSvg />;
+  return null;
 }
 
 const SPIN_KEYFRAMES = `@keyframes app-toast-spin { to { transform: rotate(360deg); } }`;
@@ -197,16 +269,37 @@ function ensureSpinKeyframes(): void {
   document.head.appendChild(el);
 }
 
+function getEffectiveVariant(toast: Toast, raw: unknown): ToastVariant {
+  if (isToastMessageObject(raw) && raw.variant === 'info') return 'info';
+  if (isToastMessageObject(raw) && raw.variant === 'warning') return 'warning';
+  if (toast.type === 'success') return 'success';
+  if (toast.type === 'error') return 'error';
+  if (toast.type === 'loading') return 'loading';
+  return 'success';
+}
+
 export interface AppToastBarProps {
   toast: Toast;
 }
 
 export const AppToastBar: React.FC<AppToastBarProps> = ({ toast }) => {
   ensureSpinKeyframes();
-  const message = resolveValue(toast.message, toast);
+  const raw = resolveValue(toast.message, toast);
+  const variant = getEffectiveVariant(toast, raw);
+  const isObj = isToastMessageObject(raw);
+  const resolvedTitle = isObj
+    ? (raw.title?.trim() || DEFAULT_TITLES[variant])
+    : String(raw ?? DEFAULT_TITLES[variant]);
+  const subtitle = isObj ? raw.subtitle : undefined;
+  const actions = isObj ? raw.actions : undefined;
 
   return (
     <div style={{ ...barStyle, ...toast.style }} {...toast.ariaProps}>
+      <div style={row1Style}>
+        <ToastIconBlock variant={variant} customIcon={toast.icon} />
+        <div style={titleWrapStyle}>
+          <div style={titleStyle}>{resolvedTitle}</div>
+        </div>
         <button
           type="button"
           aria-label="Dismiss"
@@ -215,14 +308,29 @@ export const AppToastBar: React.FC<AppToastBarProps> = ({ toast }) => {
           onMouseLeave={(e) => closeHoverStyle(e, false)}
           onClick={() => toastLib.dismiss(toast.id)}
         >
-          ×
+          <CloseCircleIcon />
         </button>
-        <div style={bodyStyle}>
-          <ToastIcon t={toast} />
-          <div style={contentStyle}>
-            <div style={titleStyle}>{message}</div>
-          </div>
-        </div>
       </div>
+      {subtitle != null && subtitle !== '' && (
+        <div style={subtitleStyle}>{subtitle}</div>
+      )}
+      {actions != null && actions.length > 0 && (
+        <div style={actionsRowStyle}>
+          {actions.map((a, i) => (
+            <button
+              key={i}
+              type="button"
+              style={actionButtonStyle}
+              onClick={() => {
+                a.onClick();
+                toastLib.dismiss(toast.id);
+              }}
+            >
+              {a.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };

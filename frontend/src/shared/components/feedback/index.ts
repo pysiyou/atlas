@@ -5,6 +5,7 @@
  */
 
 export { AppToastBar } from './AppToastBar';
+export type { ToastMessageObject } from './AppToastBar';
 export { DataLoader } from './DataLoader';
 export { ErrorAlert } from './ErrorAlert';
 export { LoadingState } from './LoadingState';

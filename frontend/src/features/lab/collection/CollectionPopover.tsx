@@ -53,15 +53,24 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
   const handleSubmit = useCallback(() => {
     if (!selectedColor) {
-      toast.error('Please select the container color');
+      toast.error({
+        title: 'Please select the container color',
+        subtitle: 'Select the container cap color to match the actual sample container used.',
+      });
       return;
     }
     if (!selectedContainerType) {
-      toast.error('Please select the container type');
+      toast.error({
+        title: 'Please select the container type',
+        subtitle: 'Select the container type (cup or tube) used for this sample.',
+      });
       return;
     }
     if (volume < minimumVolume) {
-      toast.error(`Volume must be at least ${minimumVolume} mL`);
+      toast.error({
+        title: `Volume must be at least ${minimumVolume} mL`,
+        subtitle: 'Enter a volume that meets the minimum required for this sample type.',
+      });
       return;
     }
     onConfirm(volume, notes, selectedColor, selectedContainerType);

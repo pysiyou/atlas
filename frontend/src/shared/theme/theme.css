@@ -62,6 +62,16 @@
   --surface-selected: var(--brand-light);
   --overlay: rgba(0, 0, 0, 0.5);
 
+  /* Toast (dark notification bar – fixed palette) */
+  --toast-bg: #333333;
+  --toast-text: #ffffff;
+  --toast-text-muted: #cccccc;
+  --toast-close: #e0e0e0;
+  --toast-success: #6cd96d;
+  --toast-info: #2196f3;
+  --toast-warning: #ffc107;
+  --toast-danger: #f44336;
+
   /* Text */
   --text: var(--neutral-900);
   /* gray-900 */
