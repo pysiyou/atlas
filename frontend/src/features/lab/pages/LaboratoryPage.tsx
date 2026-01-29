@@ -1,6 +1,6 @@
 /**
- * Laboratory Page
- * Lab operations - sample collection, result entry, validation, escalation
+ * Laboratory Page (canonical)
+ * Lab operations - sample collection, result entry, validation, escalation, analytics
  */
 
 import React, { useMemo, useState } from 'react';
@@ -8,11 +8,12 @@ import { CollectionView } from '../collection/CollectionView';
 import { EntryView } from '../entry/EntryView';
 import { ValidationView } from '../validation/ValidationView';
 import { EscalationView } from '../validation/EscalationView';
+import { AnalyticsDashboard } from '@/features/lab/analytics';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import { Icon } from '@/shared/ui';
 import { ICONS } from '@/utils';
 
-type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation';
+type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation' | 'analytics';
 
 export const Laboratory: React.FC = () => {
   const { hasRole } = useAuthStore();
@@ -45,6 +46,11 @@ export const Laboratory: React.FC = () => {
         icon: <Icon name={ICONS.actions.alertCircle} className="w-4 h-4" />,
       });
     }
+    base.push({
+      id: 'analytics',
+      label: 'Analytics',
+      icon: <Icon name={ICONS.dataFields.trendingUp} className="w-4 h-4" />,
+    });
     return base;
   }, [canResolveEscalation]);
 
@@ -92,6 +98,11 @@ export const Laboratory: React.FC = () => {
           {activeTab === 'entry' && <EntryView />}
           {activeTab === 'validation' && <ValidationView />}
           {activeTab === 'escalation' && canResolveEscalation && <EscalationView />}
+          {activeTab === 'analytics' && (
+            <div className="flex-1 overflow-y-auto p-6">
+              <AnalyticsDashboard />
+            </div>
+          )}
         </div>
       </div>
     </div>

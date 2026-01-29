@@ -119,6 +119,25 @@ class LabOperationsService:
             )
         return order_test
 
+    def _get_validatable_order_test(self, order_id: int, test_code: str) -> OrderTest:
+        """Get the active order test that can be validated (RESULTED or ESCALATED). Uses highest id to avoid picking a superseded row."""
+        order_test = (
+            self.db.query(OrderTest)
+            .filter(
+                OrderTest.orderId == order_id,
+                OrderTest.testCode == test_code,
+                OrderTest.status.in_([TestStatus.RESULTED, TestStatus.ESCALATED]),
+            )
+            .order_by(OrderTest.id.desc())
+            .first()
+        )
+        if not order_test:
+            raise LabOperationError(
+                f"Test {test_code} not found in order {order_id} with status resulted or escalated",
+                status_code=404,
+            )
+        return order_test
+
     def _serialize_sample_state(self, sample: Sample) -> Dict[str, Any]:
         """Serialize sample state for audit logging"""
         return {
@@ -666,11 +685,7 @@ class LabOperationsService:
         Returns:
             The updated order test
         """
-        order_test = self._get_order_test(order_id, test_code)
-        if order_test.status not in (TestStatus.RESULTED, TestStatus.ESCALATED):
-            raise LabOperationError(
-                f"Test {test_code} in order {order_id} cannot be validated (status: {order_test.status.value})"
-            )
+        order_test = self._get_validatable_order_test(order_id, test_code)
 
         # Validate state transition
         can_validate, reason = TestStateMachine.can_validate(order_test.status)
@@ -951,6 +966,41 @@ class LabOperationsService:
             newSampleId=new_sample.sampleId
         )
 
+    def resolve_escalation_force_validate(
+        self,
+        order_id: int,
+        test_code: str,
+        user_id: int,
+        validation_notes: Optional[str] = None
+    ) -> OrderTest:
+        """
+        Resolve escalated test by force-validating (Path 1).
+        Fetches the test with status=ESCALATED so we do not pick up a superseded row
+        when multiple tests exist for the same order_id + test_code.
+        """
+        order_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
+        can_validate, reason = TestStateMachine.can_validate(order_test.status)
+        if not can_validate:
+            raise LabOperationError(reason)
+
+        order_test.resultValidatedAt = datetime.now(timezone.utc)
+        order_test.validatedBy = str(user_id)
+        order_test.validationNotes = validation_notes
+        order_test.status = TestStatus.VALIDATED
+
+        self.audit.log_result_validation_approve(
+            order_id=order_id,
+            test_code=test_code,
+            test_id=order_test.id,
+            user_id=user_id,
+            validation_notes=validation_notes
+        )
+
+        self.db.commit()
+        self.db.refresh(order_test)
+        update_order_status(self.db, order_id)
+        return order_test
+
     def resolve_escalation_authorize_retest(
         self,
         order_id: int,
@@ -1057,7 +1107,13 @@ class LabOperationsService:
         original_test.resultRejectionHistory.append(rejection_record)
         flag_modified(original_test, 'resultRejectionHistory')
 
+        # Transition ESCALATED -> REJECTED before reject_and_recollect (which does REJECTED -> PENDING)
         rejection_notes = f"Final reject (escalation resolution): {rejection_reason}"
+        original_test.resultValidatedAt = datetime.now(timezone.utc)
+        original_test.validatedBy = str(user_id)
+        original_test.validationNotes = rejection_notes
+        original_test.status = TestStatus.REJECTED
+
         rejected_sample, new_sample = self.reject_and_recollect(
             sample_id=sample.sampleId,
             user_id=user_id,

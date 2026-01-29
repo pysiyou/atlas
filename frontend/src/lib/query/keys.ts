@@ -142,6 +142,14 @@ export const queryKeys = {
     details: () => [...queryKeys.appointments.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.appointments.details(), id] as const,
   },
+
+  /**
+   * Lab results / escalation (role-gated)
+   */
+  results: {
+    all: ['results'] as const,
+    pendingEscalation: () => [...queryKeys.results.all, 'pending-escalation'] as const,
+  },
 } as const;
 
 /**

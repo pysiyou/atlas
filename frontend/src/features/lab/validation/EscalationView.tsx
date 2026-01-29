@@ -1,35 +1,28 @@
 /**
  * EscalationView - Dedicated tab for escalated tests (admin/labtech_plus only)
  *
- * Lists tests with status escalated; click opens resolution modal
+ * Uses GET /results/pending-escalation for role-gated data. Click opens resolution modal
  * (Force Validate / Authorize Re-test / Final Reject).
  */
 
 import React, { useState, useMemo, useCallback } from 'react';
-import {
-  useOrdersList,
-  useInvalidateOrders,
-  useTestCatalog,
-  useTestNameLookup,
-  useSampleLookup,
-  usePatientNameLookup,
-} from '@/hooks/queries';
-import { getTestSampleType } from '@/utils/typeHelpers';
+import { usePendingEscalation, useInvalidateOrders } from '@/hooks/queries';
 import { EscalationCard } from './EscalationCard';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { DataErrorBoundary } from '@/shared/components';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import type { PriorityLevel, TestWithContext, CollectedSample } from '@/types';
+import type { PriorityLevel, TestWithContext } from '@/types';
 import { ValidationFilters } from './ValidationFilters';
 
 export const EscalationView: React.FC = () => {
-  const { orders, refetch: refreshOrders } = useOrdersList();
+  const {
+    escalatedTests: rawEscalated,
+    isLoading,
+    refetch,
+    invalidatePendingEscalation,
+  } = usePendingEscalation();
   const { invalidateAll: invalidateOrders } = useInvalidateOrders();
-  const { tests: testCatalog } = useTestCatalog();
-  const { getTest } = useTestNameLookup();
-  const { getSample } = useSampleLookup();
-  const { getPatientName, getPatient } = usePatientNameLookup();
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
@@ -39,59 +32,7 @@ export const EscalationView: React.FC = () => {
   const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
   const [statusFilters, setStatusFilters] = useState<PriorityLevel[]>([]);
 
-  const escalatedTests: (TestWithContext & { hasCriticalValues?: boolean })[] = useMemo(() => {
-    if (!orders || !testCatalog) return [];
-
-    return orders.flatMap(order => {
-      const patientName = getPatientName(order.patientId);
-      const patient = getPatient(order.patientId);
-      const patientDob = patient?.dateOfBirth;
-
-      return order.tests
-        .filter(test => test.status === 'escalated')
-        .map(test => {
-          const testName = getTest(test.testCode)?.name || test.testCode;
-          const sampleType = getTestSampleType(test.testCode, testCatalog);
-          const sample = test.sampleId ? getSample(test.sampleId) : undefined;
-          const collectedAt =
-            sample?.status === 'collected' ? (sample as CollectedSample).collectedAt : undefined;
-          const collectedBy =
-            sample?.status === 'collected' ? (sample as CollectedSample).collectedBy : undefined;
-          const hasCriticalValues =
-            test.flags?.some(
-              (f: string) => f.includes('critical') || f.includes('CRITICAL')
-            ) || test.hasCriticalValues;
-
-          return {
-            ...test,
-            orderId: order.orderId,
-            orderDate: order.orderDate,
-            patientId: order.patientId,
-            patientName,
-            patientDob,
-            testName,
-            sampleType,
-            priority: order.priority,
-            referringPhysician: order.referringPhysician,
-            collectedAt,
-            collectedBy,
-            resultEnteredAt: test.resultEnteredAt ?? undefined,
-            resultValidatedAt: test.resultValidatedAt ?? undefined,
-            results: test.results ?? undefined,
-            hasCriticalValues,
-            isRetest: test.isRetest,
-            retestOfTestId: test.retestOfTestId,
-            retestNumber: test.retestNumber,
-            resultRejectionHistory: test.resultRejectionHistory,
-            sampleIsRecollection: sample?.isRecollection,
-            sampleOriginalSampleId: sample?.originalSampleId,
-            sampleRecollectionReason: sample?.recollectionReason,
-            sampleRecollectionAttempt: sample?.recollectionAttempt,
-            sampleRejectionHistory: sample?.rejectionHistory,
-          };
-        });
-    });
-  }, [orders, testCatalog, getPatientName, getPatient, getTest, getSample]);
+  const escalatedTests: (TestWithContext & { hasCriticalValues?: boolean })[] = rawEscalated as unknown as (TestWithContext & { hasCriticalValues?: boolean })[];
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
@@ -131,15 +72,16 @@ export const EscalationView: React.FC = () => {
       openModal(ModalType.ESCALATION_RESOLUTION_DETAIL, {
         test,
         onResolved: async () => {
+          invalidatePendingEscalation();
           await invalidateOrders();
-          await refreshOrders();
+          await refetch();
         },
       });
     },
-    [openModal, invalidateOrders, refreshOrders]
+    [openModal, invalidatePendingEscalation, invalidateOrders, refetch]
   );
 
-  if (!orders || !testCatalog) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 

@@ -14,6 +14,7 @@ import {
   ModalFooter,
   StatusBadgeRow,
 } from '../components/LabDetailModal';
+import { PopoverForm } from '../components/PopoverForm';
 import { EntryRejectionSection } from '../entry/EntryRejectionSection';
 import { EntryInfoLine } from '../components/StatusBadges';
 import { resultAPI } from '@/services/api';
@@ -36,22 +37,25 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   onResolved,
 }) => {
   const [resolving, setResolving] = useState(false);
+  const [validationNotesForceValidate, setValidationNotesForceValidate] = useState('');
   const [reasonAuthorizeRetest, setReasonAuthorizeRetest] = useState('');
   const [reasonFinalReject, setReasonFinalReject] = useState('');
 
   const resolve = useCallback(
-    async (action: EscalationResolutionAction, rejectionReason?: string) => {
+    async (action: EscalationResolutionAction, rejectionReasonOrNotes?: string) => {
       if (resolving) return;
       setResolving(true);
       try {
         const payload: EscalationResolveRequest = {
           action,
-          validationNotes: action === 'force_validate' ? undefined : undefined,
+          ...(action === 'force_validate' && {
+            validationNotes: rejectionReasonOrNotes?.trim() || undefined,
+          }),
           ...(action === 'authorize_retest' && {
-            rejectionReason: rejectionReason?.trim() || 'Authorized re-test (escalation resolution)',
+            rejectionReason: rejectionReasonOrNotes?.trim() || 'Authorized re-test (escalation resolution)',
           }),
           ...(action === 'final_reject' && {
-            rejectionReason: (rejectionReason ?? '').trim(),
+            rejectionReason: (rejectionReasonOrNotes ?? '').trim(),
           }),
         };
         await resultAPI.resolveEscalation(test.orderId, test.testCode, payload);
@@ -62,7 +66,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           authorize_retest: 'Authorized re-test created.',
           final_reject: 'Sample rejected; new sample requested.',
         };
-        toast.success(messages[action]);
+        toast.success(messages[action] ?? 'Operation completed.');
       } catch (err) {
         const apiError = err as { message?: string };
         logger.error('Escalation resolve failed', apiError?.message ?? err);
@@ -73,6 +77,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         toast.error(msg);
       } finally {
         setResolving(false);
+        setValidationNotesForceValidate('');
         setReasonAuthorizeRetest('');
         setReasonFinalReject('');
       }
@@ -80,7 +85,10 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
     [test.orderId, test.testCode, onResolved, onClose, resolving]
   );
 
-  const handleForceValidate = useCallback(() => resolve('force_validate'), [resolve]);
+  const handleForceValidate = useCallback(
+    () => resolve('force_validate', validationNotesForceValidate),
+    [resolve, validationNotesForceValidate]
+  );
 
   const rejectionHistory = test.resultRejectionHistory || [];
   const hasRejectionHistory = rejectionHistory.length > 0;
@@ -119,14 +127,46 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       }
       footer={
         <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
-          <Button
-            variant="approve"
-            size="md"
-            onClick={handleForceValidate}
-            disabled={resolving}
+          <Popover
+            placement="top-end"
+            offsetValue={8}
+            trigger={
+              <Button variant="approve" size="md" disabled={resolving}>
+                Force Validate
+              </Button>
+            }
           >
-            Force Validate
-          </Button>
+            {({ close }) => (
+              <div data-popover-content onClick={e => e.stopPropagation()}>
+                <PopoverForm
+                  title="Force Validate"
+                  subtitle="Validation notes (optional)"
+                  onCancel={close}
+                  onConfirm={() => {
+                    handleForceValidate();
+                    close();
+                  }}
+                  confirmLabel="Confirm"
+                  confirmVariant="success"
+                  isSubmitting={resolving}
+                >
+                  <div>
+                    <label className="sr-only" htmlFor="escalation-force-validate-notes">
+                      Validation notes
+                    </label>
+                    <textarea
+                      id="escalation-force-validate-notes"
+                      className="w-full border border-border rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface text-text-primary placeholder:text-text-disabled"
+                      placeholder="e.g. Supervisor override after review"
+                      value={validationNotesForceValidate}
+                      onChange={e => setValidationNotesForceValidate(e.target.value)}
+                      maxLength={1000}
+                    />
+                  </div>
+                </PopoverForm>
+              </div>
+            )}
+          </Popover>
           <Popover
             placement="top-end"
             offsetValue={8}
@@ -137,34 +177,36 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             }
           >
             {({ close }) => (
-              <div data-popover-content className="p-3 w-80" onClick={e => e.stopPropagation()}>
-                <p className="text-sm text-text-secondary mb-2">Reason (recommended):</p>
-                <textarea
-                  className="w-full border rounded px-2 py-1.5 text-sm min-h-[60px] mb-3"
-                  placeholder="e.g. One more run with senior tech"
-                  value={reasonAuthorizeRetest}
-                  onChange={e => setReasonAuthorizeRetest(e.target.value)}
-                  maxLength={1000}
-                />
-                <div className="flex justify-end gap-2">
-                  <Button variant="secondary" size="sm" onClick={close}>
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="approve"
-                    size="sm"
-                    onClick={() => {
-                      resolve(
-                        'authorize_retest',
-                        reasonAuthorizeRetest || 'Authorized re-test (escalation resolution)'
-                      );
-                      close();
-                    }}
-                    disabled={resolving}
-                  >
-                    Confirm
-                  </Button>
-                </div>
+              <div data-popover-content onClick={e => e.stopPropagation()}>
+                <PopoverForm
+                  title="Authorize Re-test"
+                  subtitle="Reason (recommended)"
+                  onCancel={close}
+                  onConfirm={() => {
+                    resolve(
+                      'authorize_retest',
+                      reasonAuthorizeRetest || 'Authorized re-test (escalation resolution)'
+                    );
+                    close();
+                  }}
+                  confirmLabel="Confirm"
+                  confirmVariant="success"
+                  isSubmitting={resolving}
+                >
+                  <div>
+                    <label className="sr-only" htmlFor="escalation-authorize-retest-reason">
+                      Reason
+                    </label>
+                    <textarea
+                      id="escalation-authorize-retest-reason"
+                      className="w-full border border-border rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface text-text-primary placeholder:text-text-disabled"
+                      placeholder="e.g. One more run with senior tech"
+                      value={reasonAuthorizeRetest}
+                      onChange={e => setReasonAuthorizeRetest(e.target.value)}
+                      maxLength={1000}
+                    />
+                  </div>
+                </PopoverForm>
               </div>
             )}
           </Popover>
@@ -178,35 +220,38 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             }
           >
             {({ close }) => (
-              <div data-popover-content className="p-3 w-80" onClick={e => e.stopPropagation()}>
-                <p className="text-sm text-text-secondary mb-2">Reason (required):</p>
-                <textarea
-                  className="w-full border rounded px-2 py-1.5 text-sm min-h-[60px] mb-3"
-                  placeholder="e.g. Sample compromised; request new collection"
-                  value={reasonFinalReject}
-                  onChange={e => setReasonFinalReject(e.target.value)}
-                  maxLength={1000}
-                />
-                <div className="flex justify-end gap-2">
-                  <Button variant="secondary" size="sm" onClick={close}>
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="reject"
-                    size="sm"
-                    onClick={() => {
-                      if (!reasonFinalReject.trim()) {
-                        toast.error('Please provide a reason for final reject.');
-                        return;
-                      }
-                      resolve('final_reject', reasonFinalReject.trim());
-                      close();
-                    }}
-                    disabled={resolving || !reasonFinalReject.trim()}
-                  >
-                    Confirm
-                  </Button>
-                </div>
+              <div data-popover-content onClick={e => e.stopPropagation()}>
+                <PopoverForm
+                  title="Final Reject / New Sample"
+                  subtitle="Reason (required)"
+                  onCancel={close}
+                  onConfirm={() => {
+                    if (!reasonFinalReject.trim()) {
+                      toast.error('Please provide a reason for final reject.');
+                      return;
+                    }
+                    resolve('final_reject', reasonFinalReject.trim());
+                    close();
+                  }}
+                  confirmLabel="Confirm"
+                  confirmVariant="danger"
+                  isSubmitting={resolving}
+                  disabled={!reasonFinalReject.trim()}
+                >
+                  <div>
+                    <label className="sr-only" htmlFor="escalation-final-reject-reason">
+                      Reason
+                    </label>
+                    <textarea
+                      id="escalation-final-reject-reason"
+                      className="w-full border border-border rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface text-text-primary placeholder:text-text-disabled"
+                      placeholder="e.g. Sample compromised; request new collection"
+                      value={reasonFinalReject}
+                      onChange={e => setReasonFinalReject(e.target.value)}
+                      maxLength={1000}
+                    />
+                  </div>
+                </PopoverForm>
               </div>
             )}
           </Popover>

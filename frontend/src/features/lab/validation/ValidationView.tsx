@@ -206,7 +206,9 @@ export const ValidationView: React.FC = () => {
       await refreshOrders();
 
       if (response.failureCount === 0) {
-        toast.success(`Successfully approved ${response.successCount} result(s)`);
+        toast.success(
+          `Successfully approved ${response.successCount ?? 0} result(s)`
+        );
       } else {
         // Show detailed error for failed items
         const failedItems = response.results
@@ -214,7 +216,7 @@ export const ValidationView: React.FC = () => {
           .map(r => `${r.testCode} (Order ${r.orderId})`)
           .join(', ');
         toast.error(
-          `Approved ${response.successCount}, failed ${response.failureCount}${failedItems ? `: ${failedItems}` : ''}`
+          `Approved ${response.successCount ?? 0}, failed ${response.failureCount ?? 0}${failedItems ? `: ${failedItems}` : ''}`
         );
       }
 

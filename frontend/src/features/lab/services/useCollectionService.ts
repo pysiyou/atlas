@@ -49,7 +49,9 @@ export function useCollectionService() {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
       
-      toast.success(`${display.sample.sampleType.toUpperCase()} sample collected`);
+      toast.success(
+        `${(display.sample.sampleType ?? 'sample').toString().toUpperCase()} sample collected`
+      );
     } catch (error) {
       toast.error(`Failed to collect sample: ${error instanceof Error ? error.message : 'Unknown error'}`);
       throw error;

@@ -10,7 +10,13 @@ import { Toaster } from 'react-hot-toast';
 
 // Composed Providers
 import { AppProviders } from '@/shared/providers/AppProviders';
-import { DataLoader, ErrorBoundary, FeatureErrorBoundary, LoadingState } from '@/shared/components';
+import {
+  AppToastBar,
+  DataLoader,
+  ErrorBoundary,
+  FeatureErrorBoundary,
+  LoadingState,
+} from '@/shared/components';
 
 // Eagerly loaded components (small, frequently accessed)
 import { LoginForm } from '@/features/auth/LoginForm';
@@ -204,28 +210,21 @@ const App: React.FC = () => {
             <ModalRenderer />
             <Toaster
               position="top-right"
+              containerClassName="app-toaster"
               toastOptions={{
                 duration: 3000,
-                style: {
-                  background: '#fff',
-                  color: '#363636',
-                },
                 success: {
                   duration: 3000,
-                  iconTheme: {
-                    primary: '#10B981',
-                    secondary: '#fff',
-                  },
+                  iconTheme: { primary: 'var(--success)', secondary: 'var(--neutral)' },
                 },
                 error: {
                   duration: 4000,
-                  iconTheme: {
-                    primary: '#EF4444',
-                    secondary: '#fff',
-                  },
+                  iconTheme: { primary: 'var(--danger)', secondary: 'var(--neutral)' },
                 },
               }}
-            />
+            >
+              {(t) => <AppToastBar toast={t} />}
+            </Toaster>
           </DataLoader>
         </AppProviders>
       </Router>

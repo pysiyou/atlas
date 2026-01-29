@@ -93,3 +93,6 @@ export {
   useInvalidatePayments,
 } from './usePayments';
 export type { PaymentsFilters, CreatePaymentData } from './usePayments';
+
+// Lab results / escalation (role-gated)
+export { usePendingEscalation } from './usePendingEscalation';

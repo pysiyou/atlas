@@ -196,7 +196,9 @@ export const CollectionView: React.FC = () => {
         collectionNotes: notes,
       });
       await refreshOrders();
-      toast.success(`${display.sample.sampleType.toUpperCase()} sample collected`);
+      toast.success(
+        `${(display.sample.sampleType ?? 'sample').toString().toUpperCase()} sample collected`
+      );
     } catch (error) {
       logger.error('Error collecting sample', error instanceof Error ? error : undefined);
       toast.error('Failed to collect sample. Please try again.');

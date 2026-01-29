@@ -3,15 +3,16 @@ Results API Routes - for result entry and validation
 
 Uses the unified LabOperationsService for all operations.
 """
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from pydantic import BaseModel, Field, AliasChoices
-from typing import Optional, List
+from typing import Optional, List, Any
 from app.database import get_db
 from app.core.dependencies import get_current_user, require_role
 from app.models.user import User
-from app.schemas.enums import UserRole
-from app.models.order import OrderTest
+from app.models.order import Order, OrderTest
+from app.models.sample import Sample
 from app.schemas.enums import TestStatus, UserRole, ValidationDecision, RejectionAction
 from app.services.lab_operations import (
     LabOperationsService,
@@ -121,6 +122,46 @@ class EscalationResolveRequest(BaseModel):
 require_escalation_resolver = require_role(UserRole.ADMIN, UserRole.LAB_TECH_PLUS)
 
 
+class PendingEscalationItemResponse(BaseModel):
+    """Enriched escalation item for frontend TestWithContext (order + patient + test + sample context)."""
+    id: int
+    orderId: int
+    orderDate: datetime
+    patientId: int
+    patientName: str
+    patientDob: Optional[str] = None
+    testCode: str
+    testName: str
+    sampleType: str
+    status: str
+    sampleId: Optional[int] = None
+    results: Optional[dict] = None
+    resultEnteredAt: Optional[datetime] = None
+    enteredBy: Optional[str] = None
+    resultValidatedAt: Optional[datetime] = None
+    validatedBy: Optional[str] = None
+    validationNotes: Optional[str] = None
+    flags: Optional[List[str]] = None
+    technicianNotes: Optional[str] = None
+    hasCriticalValues: bool = False
+    isRetest: bool = False
+    retestOfTestId: Optional[int] = None
+    retestNumber: int = 0
+    resultRejectionHistory: Optional[List[Any]] = None
+    priority: str
+    referringPhysician: Optional[str] = None
+    collectedAt: Optional[datetime] = None
+    collectedBy: Optional[str] = None
+    sampleIsRecollection: bool = False
+    sampleOriginalSampleId: Optional[int] = None
+    sampleRecollectionReason: Optional[str] = None
+    sampleRecollectionAttempt: Optional[int] = None
+    sampleRejectionHistory: Optional[List[Any]] = None
+
+    class Config:
+        from_attributes = True
+
+
 @router.get("/results/pending-entry")
 def get_pending_entry(
     db: Session = Depends(get_db),
@@ -151,19 +192,74 @@ def get_pending_validation(
     return tests
 
 
-@router.get("/results/pending-escalation")
+@router.get("/results/pending-escalation", response_model=List[PendingEscalationItemResponse])
 def get_pending_escalation(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_escalation_resolver)
 ):
     """
     Get tests pending escalation resolution (admin/labtech_plus only).
-    Returns tests with status ESCALATED.
+    Returns enriched list (order + patient + test + sample context) for Escalation tab.
     """
-    tests = db.query(OrderTest).filter(
-        OrderTest.status == TestStatus.ESCALATED
-    ).all()
-    return tests
+    tests = (
+        db.query(OrderTest)
+        .filter(OrderTest.status == TestStatus.ESCALATED)
+        .options(
+            joinedload(OrderTest.order).joinedload(Order.patient),
+            joinedload(OrderTest.test),
+        )
+        .all()
+    )
+    sample_ids = [t.sampleId for t in tests if t.sampleId]
+    samples_by_id = {}
+    if sample_ids:
+        for s in db.query(Sample).filter(Sample.sampleId.in_(sample_ids)).all():
+            samples_by_id[s.sampleId] = s
+
+    out = []
+    for t in tests:
+        order = t.order
+        patient = order.patient if order else None
+        sample = samples_by_id.get(t.sampleId) if t.sampleId else None
+        test_def = t.test
+        out.append(
+            PendingEscalationItemResponse(
+                id=t.id,
+                orderId=t.orderId,
+                orderDate=order.orderDate,
+                patientId=order.patientId,
+                patientName=patient.fullName if patient else "Unknown",
+                patientDob=patient.dateOfBirth if patient else None,
+                testCode=t.testCode,
+                testName=test_def.displayName if test_def else t.testCode,
+                sampleType=test_def.sampleType if test_def else "Unknown",
+                status=t.status.value,
+                sampleId=t.sampleId,
+                results=t.results,
+                resultEnteredAt=t.resultEnteredAt,
+                enteredBy=t.enteredBy,
+                resultValidatedAt=t.resultValidatedAt,
+                validatedBy=t.validatedBy,
+                validationNotes=t.validationNotes,
+                flags=t.flags,
+                technicianNotes=t.technicianNotes,
+                hasCriticalValues=t.hasCriticalValues or False,
+                isRetest=t.isRetest or False,
+                retestOfTestId=t.retestOfTestId,
+                retestNumber=t.retestNumber or 0,
+                resultRejectionHistory=t.resultRejectionHistory,
+                priority=order.priority.value if order and order.priority else "routine",
+                referringPhysician=order.referringPhysician if order else None,
+                collectedAt=sample.collectedAt if sample else None,
+                collectedBy=sample.collectedBy if sample else None,
+                sampleIsRecollection=sample.isRecollection if sample else False,
+                sampleOriginalSampleId=sample.originalSampleId if sample else None,
+                sampleRecollectionReason=sample.recollectionReason if sample else None,
+                sampleRecollectionAttempt=sample.recollectionAttempt if sample else None,
+                sampleRejectionHistory=sample.rejectionHistory if sample else None,
+            )
+        )
+    return out
 
 
 @router.get("/results/{orderId}/tests/{testCode}/rejection-options", response_model=RejectionOptionsResponse)
@@ -349,7 +445,7 @@ def resolve_escalation(
     try:
         service = LabOperationsService(db)
         if body.action == "force_validate":
-            order_test = service.validate_results(
+            order_test = service.resolve_escalation_force_validate(
                 order_id=orderId,
                 test_code=testCode,
                 user_id=current_user.id,

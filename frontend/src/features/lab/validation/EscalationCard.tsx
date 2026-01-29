@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Badge, IconButton, Alert, Icon } from '@/shared/ui';
+import { Badge, Button, Alert, Icon } from '@/shared/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/hooks/queries';
@@ -96,15 +96,17 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
               </Badge>
             )}
           </div>
-          <IconButton
-            variant="approve"
+          <Button
+            variant="primary"
             size="sm"
-            title="Resolve"
+            icon={<Icon name={ICONS.actions.eye} className="text-white" />}
             onClick={e => {
               e.stopPropagation();
               onClick();
             }}
-          />
+          >
+            View
+          </Button>
         </div>
       </div>
     );
@@ -125,15 +127,17 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
 
   const actions = (
     <div className="flex items-center gap-2 z-10" onClick={e => e.stopPropagation()}>
-      <IconButton
-        variant="approve"
+      <Button
+        variant="primary"
         size="sm"
-        title="Resolve"
+        icon={<Icon name={ICONS.actions.eye} className="text-white" />}
         onClick={e => {
           e.stopPropagation();
           onClick();
         }}
-      />
+      >
+        View
+      </Button>
     </div>
   );
 
@@ -187,11 +191,16 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
     ) : undefined;
 
   const content = (
-    <div className="text-sm text-text-secondary">
-      <span className="font-mono">{test.testCode}</span>
+    <div className="text-xs text-text-secondary">
+      <span className="font-mono text-brand">{test.testCode}</span>
+      {test.orderId != null && (
+        <span className="ml-2">
+          Order <span className="font-mono text-brand">{displayId.order(test.orderId)}</span>
+        </span>
+      )}
       {test.sampleId && (
-        <span className="ml-2 text-text-tertiary">
-          Sample {displayId.sample(test.sampleId)}
+        <span className="ml-2">
+          Sample <span className="font-mono text-brand">{displayId.sample(test.sampleId)}</span>
         </span>
       )}
     </div>

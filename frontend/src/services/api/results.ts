@@ -9,6 +9,8 @@ import type {
   RejectionOptionsResponse,
   RejectionResult,
   EscalationResolveRequest,
+  EscalationResolveResult,
+  PendingEscalationItem,
 } from '@/types/lab-operations';
 
 /**
@@ -62,10 +64,10 @@ export const resultAPI = {
 
   /**
    * Get tests pending escalation resolution (admin/labtech_plus only).
-   * Returns tests with status escalated.
+   * Returns enriched list (order + patient + test + sample context) for Escalation tab.
    */
-  async getPendingEscalation(): Promise<OrderTest[]> {
-    return apiClient.get<OrderTest[]>('/results/pending-escalation');
+  async getPendingEscalation(): Promise<PendingEscalationItem[]> {
+    return apiClient.get<PendingEscalationItem[]>('/results/pending-escalation');
   },
 
   /**
@@ -76,9 +78,9 @@ export const resultAPI = {
     orderId: string | number,
     testCode: string,
     payload: EscalationResolveRequest
-  ): Promise<RejectionResult> {
+  ): Promise<EscalationResolveResult> {
     const orderIdStr = typeof orderId === 'number' ? orderId.toString() : orderId;
-    return apiClient.post<RejectionResult>(
+    return apiClient.post<EscalationResolveResult>(
       `/results/${orderIdStr}/tests/${testCode}/escalation/resolve`,
       payload
     );
