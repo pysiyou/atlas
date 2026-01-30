@@ -21,7 +21,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
   size = 32,
   strokeWidth = 2,
   trackColorClass = 'stroke-neutral-200',
-  progressColorClass = 'stroke-brand',
+  progressColorClass = 'stroke-action-primary',
   percentage,
   label,
   className = '',

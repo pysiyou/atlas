@@ -26,16 +26,16 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
   return (
     <div
       onClick={onClick}
-      className="bg-surface border border-border rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
+      className="bg-surface-default border border-border-default rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Avatar (top left) + Gender badge (top right) */}
-      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
+      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
         {/* Avatar: Patient name + Patient ID - positioned at top left */}
         <Avatar
           primaryText={patient.fullName}
           primaryTextClassName="font-semibold"
           secondaryText={displayId.patient(patient.id)}
-          secondaryTextClassName="font-mono text-brand"
+          secondaryTextClassName="font-mono text-action-primary"
           size="xs"
         />
         {/* Gender badge on top right */}

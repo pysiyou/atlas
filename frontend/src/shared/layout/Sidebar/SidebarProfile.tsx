@@ -32,7 +32,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   return (
-    <div className="mt-auto border-t border-border py-4">
+    <div className="mt-auto border-t border-border-default py-4">
       <AnimatePresence>
         {isCollapsed && showProfileMenu && (
           <motion.div
@@ -40,10 +40,10 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute bottom-20 left-20 bg-surface border border-border rounded shadow-lg w-48 overflow-hidden z-50"
+            className="absolute bottom-20 left-20 bg-surface-default border border-border-default rounded shadow-lg w-48 overflow-hidden z-50"
             onClick={e => e.stopPropagation()}
           >
-            <div className="px-4 py-3 border-b border-border">
+            <div className="px-4 py-3 border-b border-border-default">
               <p className="text-sm font-medium text-text-primary truncate">{currentUser.name}</p>
               <p className="text-xs text-text-tertiary truncate">{formatStatus(currentUser.role)}</p>
             </div>

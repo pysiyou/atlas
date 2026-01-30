@@ -51,7 +51,7 @@ export const createOrderTableConfig = (
 
     return (
       <div className="min-w-0">
-        <div className="font-medium truncate font-mono text-xs text-brand">
+        <div className="font-medium truncate font-mono text-xs text-action-primary">
           {activeTests.map(t => t.testCode).join('/')}
         </div>
         <div className="text-xs text-text-tertiary truncate">

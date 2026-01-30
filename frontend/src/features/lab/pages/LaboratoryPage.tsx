@@ -73,13 +73,13 @@ export const Laboratory: React.FC = () => {
                   relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 cursor-pointer
                   ${
                     isActive
-                      ? 'bg-surface text-brand shadow-sm shadow-gray-200 ring-1 ring-black/5'
+                      ? 'bg-surface-default text-action-primary shadow-sm shadow-1 ring-1 ring-black/5'
                       : 'text-text-tertiary hover:text-text-primary hover:bg-neutral-200/50'
                   }
                 `}
               >
                 <div
-                  className={`${isActive ? 'text-brand' : 'text-text-disabled'} flex items-center`}
+                  className={`${isActive ? 'text-action-primary' : 'text-text-disabled'} flex items-center`}
                 >
                   {tab.icon}
                 </div>
@@ -91,9 +91,9 @@ export const Laboratory: React.FC = () => {
       </div>
 
       {/* Main Content Card */}
-      <div className="flex-1 flex flex-col bg-surface rounded border border-border shadow-sm overflow-hidden min-h-0">
+      <div className="flex-1 flex flex-col bg-surface-default rounded border border-border-default shadow-sm overflow-hidden min-h-0">
         {/* Content Area: flex column, no scroll – filter + grid handle layout like ListView */}
-        <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-app-bg">
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-surface-canvas">
           {activeTab === 'collection' && <CollectionView />}
           {activeTab === 'entry' && <EntryView />}
           {activeTab === 'validation' && <ValidationView />}

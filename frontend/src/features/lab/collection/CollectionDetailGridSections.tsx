@@ -88,7 +88,7 @@ export const buildCollectionDetailGridSections = ({
         label: 'Remaining',
         value:
           remainingVolume !== undefined ? (
-            <span className={remainingVolume < sample.requiredVolume * 0.2 ? 'text-red-600' : ''}>
+            <span className={remainingVolume < sample.requiredVolume * 0.2 ? 'text-feedback-danger-text' : ''}>
               {formatVolume(remainingVolume)}
             </span>
           ) : undefined,

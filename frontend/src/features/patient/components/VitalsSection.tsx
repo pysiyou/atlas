@@ -162,21 +162,21 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
   switch (status) {
     case 'normal':
       return {
-        border: 'border-green-300',
-        text: 'text-success',
-        bg: 'bg-green-100',
+        border: 'border-feedback-success-border',
+        text: 'text-feedback-success-text',
+        bg: 'bg-feedback-success-bg-strong',
       };
     case 'borderline':
       return {
-        border: 'border-yellow-300',
-        text: 'text-warning',
-        bg: 'bg-yellow-100',
+        border: 'border-feedback-warning-border',
+        text: 'text-feedback-warning-text',
+        bg: 'bg-feedback-warning-bg-strong',
       };
     case 'abnormal':
       return {
-        border: 'border-red-300',
-        text: 'text-danger',
-        bg: 'bg-red-100',
+        border: 'border-feedback-danger-border',
+        text: 'text-feedback-danger-text',
+        bg: 'bg-feedback-danger-bg-strong',
       };
   }
 };
@@ -215,7 +215,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
               </label>
               <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
                 {isAbnormal && !isNa && (
-                  <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-danger shrink-0" />
+                  <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-feedback-danger-text shrink-0" />
                 )}
                 <span className="text-xxs text-text-tertiary truncate">Ref: {refRange}</span>
               </div>
@@ -228,7 +228,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               {isNa ? (
                 <div
-                  className="w-full rounded border border-border bg-muted/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-tertiary"
+                  className="w-full rounded border border-border-default bg-muted/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-tertiary"
                   aria-label={`${config.label} not provided`}
                 >
                   N/A
@@ -248,8 +248,8 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     step={config.step}
                     placeholder="--"
                     className={`
-                      w-full rounded border px-3 py-1.5 text-sm bg-surface pl-10
-                      ${error ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger/20' : 'border-border focus:border-brand focus:ring-2 focus:ring-brand/20'}
+                      w-full rounded border px-3 py-1.5 text-sm bg-surface-default pl-10
+                      ${error ? 'border-border-error focus:border-border-error focus:ring-2 focus:ring-action-danger focus:ring-opacity-20' : 'border-border-default focus:border-action-primary focus:ring-2 focus:ring-action-primary focus:ring-opacity-20'}
                       pr-12
                       [appearance:textfield]
                       [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0
@@ -262,7 +262,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     <span className="text-xs text-text-tertiary select-none truncate">{config.unit}</span>
                   </div>
                   {isAbnormal && (
-                    <div className="absolute -bottom-5 left-0 text-xxs text-danger font-medium">
+                    <div className="absolute -bottom-5 left-0 text-xxs text-feedback-danger-text font-medium">
                       Abnormal value
                     </div>
                   )}
@@ -270,7 +270,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
               )}
             </div>
 
-            {error && <p className="mt-1 text-sm text-danger">{error}</p>}
+            {error && <p className="mt-1 text-sm text-feedback-danger-text">{error}</p>}
           </div>
         );
       })}

@@ -28,7 +28,7 @@ export const AffiliationPopover: React.FC<AffiliationPopoverProps> = ({ affiliat
             </h3>
             <AffiliationInfo affiliation={affiliation} />
           </div>
-          <div className="px-4 py-3 bg-app-bg border-t border-border-subtle">
+          <div className="px-4 py-3 bg-surface-canvas border-t border-border-subtle">
             <FooterInfo icon={ICONS.dataFields.user} text="Viewing affiliation" />
           </div>
         </div>

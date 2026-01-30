@@ -45,8 +45,8 @@ function ResultGrid({
           const abnormal = status !== 'normal';
           const valueColor = abnormal
             ? isCritical(status)
-              ? 'text-red-600'
-              : 'text-amber-600'
+              ? 'text-feedback-danger-text'
+              : 'text-feedback-warning-text'
             : 'text-text-primary';
 
           return (
@@ -83,8 +83,8 @@ function ResultGrid({
         const abnormal = status !== 'normal';
         const valueColor = abnormal
           ? isCritical(status)
-            ? 'text-red-600'
-            : 'text-amber-600'
+            ? 'text-feedback-danger-text'
+            : 'text-feedback-warning-text'
           : 'text-text-primary';
 
         return (
@@ -178,14 +178,14 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
             <div className="flex items-center gap-2 flex-wrap">
               <div className="text-xs text-text-secondary font-medium truncate">{patientName}</div>
               <div className="text-xxs text-text-disabled">•</div>
-              <div className="text-xxs text-brand font-medium font-mono truncate">
+              <div className="text-xxs text-action-primary font-medium font-mono truncate">
                 {test.testCode}
               </div>
               {test.sampleId && (
                 <>
                   <div className="text-xs text-text-disabled">•</div>
                   <div
-                    className="text-xxs text-brand font-medium font-mono truncate"
+                    className="text-xxs text-action-primary font-medium font-mono truncate"
                     title={displayId.sample(test.sampleId)}
                   >
                     {displayId.sample(test.sampleId)}
@@ -258,7 +258,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
       <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
       <Badge variant={test.priority} size="sm" />
       <Badge variant={test.sampleType} size="sm" />
-      <span className="text-xs text-brand font-mono">{test.testCode}</span>
+      <span className="text-xs text-action-primary font-mono">{test.testCode}</span>
     </>
   );
 
@@ -338,7 +338,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasRejectionHistory ? 'border-amber-500' : ''}
+      className={hasRejectionHistory ? 'border-feedback-warning-border-strong' : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,

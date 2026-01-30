@@ -109,12 +109,12 @@ export const EntryCard: React.FC<EntryCardProps> = ({
             <div className="flex items-center gap-1.5 text-xs text-text-secondary">
               <span className="truncate">{patientName}</span>
               <span className="text-text-tertiary">•</span>
-              <span className="text-brand font-medium font-mono truncate">{test.testCode}</span>
+              <span className="text-action-primary font-medium font-mono truncate">{test.testCode}</span>
               {test.sampleId && (
                 <>
                   <span className="text-text-tertiary">•</span>
                   <span
-                    className="text-brand font-medium font-mono truncate"
+                    className="text-action-primary font-medium font-mono truncate"
                     title={displayId.sample(test.sampleId)}
                   >
                     {displayId.sample(test.sampleId)}
@@ -166,7 +166,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
       <Badge variant={test.priority} size="sm" />
       <Badge variant={test.sampleType} size="sm" />
-      <span className="text-xs text-brand font-mono">{test.testCode}</span>
+      <span className="text-xs text-action-primary font-mono">{test.testCode}</span>
     </>
   );
 
@@ -187,7 +187,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <Badge
           key={param.code}
           size="sm"
-          className={results[param.code] ? 'text-sky-700' : 'text-text-tertiary'}
+          className={results[param.code] ? 'text-action-primary-text' : 'text-text-tertiary'}
           variant={results[param.code] ? 'primary' : 'default'}
         >
           {param.name}
@@ -253,7 +253,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <div className="flex items-center gap-2 flex-wrap">
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection of <span className="font-mono text-brand">{displayId.sample(test.sampleOriginalSampleId)}</span>
+            Recollection of <span className="font-mono text-action-primary">{displayId.sample(test.sampleOriginalSampleId)}</span>
           </Badge>
         </div>
       );
@@ -264,7 +264,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasAnyRejectionHistory ? 'border-amber-500' : ''}
+      className={hasAnyRejectionHistory ? 'border-feedback-warning-border-strong' : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,

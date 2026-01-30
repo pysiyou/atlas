@@ -27,13 +27,13 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
   return (
     <Card padding="list" hover className="flex flex-col h-full" onClick={onClick}>
       {/* Header: Avatar (top left) + Status (top right) */}
-      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
+      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
         {/* Avatar: Patient name + Test ID - positioned at top left */}
         <Avatar
           primaryText={test.patientName}
           primaryTextClassName="font-semibold"
           secondaryText={displayId.orderTest(test.testId)}
-          secondaryTextClassName="font-mono text-brand"
+          secondaryTextClassName="font-mono text-action-primary"
           size="xs"
         />
         {/* Status badge on top right */}
@@ -44,7 +44,7 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
       <div className="grow space-y-2">
         <div>
           <div className="font-medium text-text-primary text-sm">{test.testName}</div>
-          <div className="text-xs text-brand font-mono">{test.testCode}</div>
+          <div className="text-xs text-action-primary font-mono">{test.testCode}</div>
         </div>
         <div className="text-xs text-text-tertiary">
           Order: <span className="font-mono">{displayId.order(test.orderId)}</span>

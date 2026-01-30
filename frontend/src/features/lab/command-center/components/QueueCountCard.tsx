@@ -29,7 +29,7 @@ export const QueueCountCard: React.FC<QueueCountCardProps> = ({
       type="button"
       onClick={onViewQueue}
       className={cn(
-        'w-full text-left rounded-lg border border-border bg-surface p-4 shadow-sm transition-colors hover:border-brand hover:bg-brand/5',
+        'w-full text-left rounded-lg border border-border-default bg-surface-default p-4 shadow-sm transition-colors hover:border-action-primary hover:bg-action-primary-muted-bg',
         className
       )}
     >
@@ -38,7 +38,7 @@ export const QueueCountCard: React.FC<QueueCountCardProps> = ({
           {icon ?? <Icon name={ICONS.ui.dashboard} className="w-5 h-5 text-text-tertiary" />}
           <span className="text-sm font-medium text-text-primary truncate">{title}</span>
         </div>
-        <span className="text-2xl font-bold text-brand tabular-nums">{count}</span>
+        <span className="text-2xl font-bold text-action-primary tabular-nums">{count}</span>
       </div>
       {onViewQueue && (
         <p className="text-xxs text-text-tertiary mt-2">Click to view queue</p>

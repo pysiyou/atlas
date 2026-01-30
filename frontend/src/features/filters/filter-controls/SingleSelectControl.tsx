@@ -86,14 +86,14 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'group h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus:outline-none focus:border-brand transition-colors duration-200 cursor-pointer flex items-center justify-between gap-2',
-            isOpen && 'border-brand',
+            'group h-[34px] px-3 bg-surface-default border border-border-strong rounded-md hover:bg-surface-hover focus:outline-none focus:border-action-primary transition-colors duration-200 cursor-pointer flex items-center justify-between gap-2',
+            isOpen && 'border-action-primary',
             className
           )}
         >
           {/* Column 1: Left Icon */}
           {config.icon && (
-            <Icon name={config.icon as IconName} className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors" />
+            <Icon name={config.icon as IconName} className="w-4 h-4 text-text-muted group-hover:text-action-primary shrink-0 transition-colors" />
           )}
 
           {/* Column 2: Content - flexible middle */}
@@ -121,7 +121,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       className=""
     >
       {() => (
-        <div className="bg-surface border border-border rounded-md shadow-lg py-1 max-h-60 overflow-auto">
+        <div className="bg-surface-default border border-border-default rounded-md shadow-lg py-1 max-h-60 overflow-auto">
           {/* Options list */}
           <div>
             {config.options.map(option => {
@@ -132,18 +132,18 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   onClick={() => handleSelect(option.id)}
                   className={cn(
                     'px-3 py-2 text-sm hover:bg-surface-hover cursor-pointer transition-colors duration-150 w-full flex items-center gap-2',
-                    isSelected && 'bg-app-bg',
+                    isSelected && 'bg-surface-canvas',
                     'text-left'
                   )}
                 >
                   {/* Check indicator */}
                   <div className="flex items-center justify-center w-4 h-4 shrink-0">
                     {isSelected ? (
-                      <div className="w-4 h-4 rounded bg-brand flex items-center justify-center transition-all duration-150">
-                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-white" />
+                      <div className="w-4 h-4 rounded bg-action-primary flex items-center justify-center transition-all duration-150">
+                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-action-primary-on" />
                       </div>
                     ) : (
-                      <div className="w-4 h-4 rounded border border-border" />
+                      <div className="w-4 h-4 rounded border border-border-default" />
                     )}
                   </div>
 

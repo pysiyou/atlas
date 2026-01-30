@@ -97,7 +97,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
             type="checkbox"
             checked={false}
             onChange={handleToggleAll}
-            className="w-4 h-4 text-brand border-border-strong rounded focus:ring-2 focus:ring-brand/20"
+            className="w-4 h-4 text-action-primary border-border-strong rounded focus:ring-2 focus:ring-action-primary/20"
           />
           <span>Select all {totalCount} items</span>
         </label>
@@ -121,7 +121,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
               }
             }}
             onChange={handleToggleAll}
-            className="w-4 h-4 text-brand border-border-strong rounded focus:ring-2 focus:ring-brand/20"
+            className="w-4 h-4 text-action-primary border-border-strong rounded focus:ring-2 focus:ring-action-primary/20"
           />
           <span className="text-sm text-text-tertiary">
             {allSelected ? 'Deselect all' : 'Select all'}
@@ -145,7 +145,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
       {/* Right side: Actions */}
       <div className="flex items-center gap-3">
         {criticalSelectedCount > 0 && selectedCount > 0 && (
-          <span className="text-xs text-amber-600">
+          <span className="text-xs text-feedback-warning-text">
             {criticalSelectedCount} critical skipped
           </span>
         )}
@@ -197,7 +197,7 @@ export const ValidationCheckbox: React.FC<ValidationCheckboxProps> = ({
       onChange={handleChange}
       disabled={disabled}
       className={cn(
-        'w-4 h-4 text-brand border-border-strong rounded focus:ring-2 focus:ring-brand/20',
+        'w-4 h-4 text-action-primary border-border-strong rounded focus:ring-2 focus:ring-action-primary/20',
         disabled && 'opacity-50 cursor-not-allowed'
       )}
       onClick={e => e.stopPropagation()}

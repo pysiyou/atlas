@@ -81,7 +81,7 @@ export const EntityCard: React.FC<EntityCardProps> = ({
       <Card>
         <div className="flex flex-col">
           {/* Row 1: Title, Badges, and Actions */}
-          <div className="flex items-start justify-between gap-3 pb-3 border-b border-border">
+          <div className="flex items-start justify-between gap-3 pb-3 border-b border-border-default">
             <div className="flex items-center gap-2.5 flex-wrap min-w-0 flex-1">
               {typeof title === 'string' ? (
                 <h3 className="text-sm font-medium text-text-primary">{title}</h3>
@@ -95,7 +95,7 @@ export const EntityCard: React.FC<EntityCardProps> = ({
 
           {/* Row 2: Context Information */}
           {context && (
-            <div className="flex flex-col gap-1.5 pt-3 border-t border-border">
+            <div className="flex flex-col gap-1.5 pt-3 border-t border-border-default">
               {(context.primary || context.secondary || context.tertiary) && (
                 <div className="flex items-center gap-2 text-sm text-text-secondary flex-wrap">
                   {context.primary}
@@ -113,13 +113,13 @@ export const EntityCard: React.FC<EntityCardProps> = ({
 
           {/* Additional Info (e.g., recollection badges) */}
           {additionalInfo && (
-            <div className="pt-3 border-t border-border">{additionalInfo}</div>
+            <div className="pt-3 border-t border-border-default">{additionalInfo}</div>
           )}
 
           {/* Row 3: Content Section */}
           {content && (
-            <div className="pt-3 border-t border-border">
-              <div className={`bg-app-bg rounded-md p-3 border border-border-subtle ${contentClassName}`}>
+            <div className="pt-3 border-t border-border-default">
+              <div className={`bg-surface-canvas rounded-md p-3 border border-border-subtle ${contentClassName}`}>
                 {contentTitle && (
                   <div className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-2">
                     {contentTitle}
@@ -132,12 +132,12 @@ export const EntityCard: React.FC<EntityCardProps> = ({
 
           {/* Row 4: Flags */}
           {flags && (
-            <div className="pt-3 border-t border-border">{flags}</div>
+            <div className="pt-3 border-t border-border-default">{flags}</div>
           )}
 
           {/* Row 5: Banner (e.g., recollection notice) */}
           {banner && (
-            <div className="pt-3 border-t border-border">{banner}</div>
+            <div className="pt-3 border-t border-border-default">{banner}</div>
           )}
         </div>
       </Card>

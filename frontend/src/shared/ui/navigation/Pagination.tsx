@@ -56,19 +56,19 @@ export const Pagination: React.FC<PaginationProps> = ({
   const getPageButtonClasses = (isActive: boolean) => {
     const base = 'min-w-[32px] h-8 px-2 text-xs font-medium rounded transition-colors';
     return isActive
-      ? `${base} bg-brand text-white`
+      ? `${base} bg-action-primary text-action-primary-on`
       : `${base} text-text-secondary hover:bg-surface-hover`;
   };
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 border-t border-border bg-surface">
+    <div className="flex items-center justify-between px-6 py-3 border-t border-border-default bg-surface-default">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           <span className="text-xs text-text-secondary">Rows per page:</span>
           <select
             value={pageSize}
             onChange={e => onPageSizeChange(Number(e.target.value))}
-            className="h-8 px-2 pr-8 text-xs bg-surface border border-border rounded cursor-pointer hover:border-border-strong focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+            className="h-8 px-2 pr-8 text-xs bg-surface-default border border-border-default rounded cursor-pointer hover:border-border-strong focus:outline-none focus:border-action-primary focus:ring-2 focus:ring-action-primary/20"
           >
             {pageSizeOptions.map(option => (
               <option key={option} value={option} className="text-xs">

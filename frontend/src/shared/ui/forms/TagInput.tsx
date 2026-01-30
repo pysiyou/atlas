@@ -114,7 +114,7 @@ export const TagInput: React.FC<TagInputProps> = ({
             className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
           >
             {label}
-            {required && <span className="text-danger ml-1">*</span>}
+            {required && <span className="text-feedback-danger-text ml-1">*</span>}
           </label>
         </div>
       )}
@@ -123,19 +123,19 @@ export const TagInput: React.FC<TagInputProps> = ({
       <div
         className={cn(
           'w-full px-3 py-2.5 border rounded',
-          'bg-surface transition-colors',
+          'bg-surface-default transition-colors',
           'flex flex-wrap gap-2 items-center',
           'min-h-[42px]',
           error
-            ? 'border-danger focus-within:ring-2 focus-within:ring-brand focus-within:border-transparent'
-            : 'border-border-strong focus-within:ring-2 focus-within:ring-brand focus-within:border-transparent'
+            ? 'border-border-error focus-within:ring-2 focus-within:ring-action-primary focus-within:border-transparent'
+            : 'border-border-strong focus-within:ring-2 focus-within:ring-action-primary focus-within:border-transparent'
         )}
       >
         {/* Existing Tags */}
         {tags.map((tag, index) => (
           <div
             key={`${tag}-${index}`}
-            className="flex items-center gap-2 px-2 py-1 rounded bg-brand/10 border border-brand max-w-full shrink-0"
+            className="flex items-center gap-2 px-2 py-1 rounded bg-action-primary-muted-bg border border-action-primary max-w-full shrink-0"
           >
             {/* Tag name */}
             <span className="text-xs font-medium text-text-primary truncate min-w-0">
@@ -145,7 +145,7 @@ export const TagInput: React.FC<TagInputProps> = ({
             <button
               type="button"
               onClick={() => handleRemoveTag(tag)}
-              className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-brand/20 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30 shrink-0"
+              className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-action-primary-muted-bg rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-action-primary shrink-0"
               aria-label={`Remove ${tag}`}
             >
               <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-tertiary hover:text-text-secondary" />
@@ -167,7 +167,7 @@ export const TagInput: React.FC<TagInputProps> = ({
       </div>
 
       {/* Error Message */}
-      {error && <p className="text-xs text-danger mt-1.5">{error}</p>}
+      {error && <p className="text-xs text-feedback-danger-text mt-1.5">{error}</p>}
 
       {/* Helper Text */}
       {helperText && !error && <p className="text-xs text-text-tertiary mt-1.5">{helperText}</p>}

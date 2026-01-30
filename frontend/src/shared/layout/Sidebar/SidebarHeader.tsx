@@ -23,7 +23,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   const company = companyConfig.getConfig();
 
   return (
-    <div className="h-16 border-b border-border flex items-center">
+    <div className="h-16 border-b border-border-default flex items-center">
       {/* Fixed 4rem icon column — no transition, icon stays motionless */}
       <div
         className="w-16 shrink-0 flex items-center justify-center cursor-pointer"
@@ -33,7 +33,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
         tabIndex={0}
         onKeyDown={e => e.key === 'Enter' && isCollapsed && onToggleCollapse()}
       >
-        <div className="w-8 h-8 text-brand flex items-center justify-center">
+        <div className="w-8 h-8 text-action-primary flex items-center justify-center">
           <Icon name={ICONS.ui.appLogo} className="w-full h-full" />
         </div>
       </div>

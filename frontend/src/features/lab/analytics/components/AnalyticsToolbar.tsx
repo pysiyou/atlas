@@ -39,12 +39,12 @@ export const AnalyticsToolbar: React.FC<AnalyticsToolbarProps> = ({
 }) => (
   <div className="flex flex-wrap items-center justify-between gap-4 py-2">
     <div className="flex flex-wrap items-center gap-3">
-      <div className="inline-flex items-center rounded-md border border-brand bg-brand/10 text-brand-text overflow-hidden">
+      <div className="inline-flex items-center rounded-md border border-action-primary bg-action-primary-muted-bg text-action-primary-text overflow-hidden">
         <Icon name={ICONS.dataFields.date ?? 'calendar'} className="w-4 h-4 ml-2 shrink-0" />
         <select
           value={dateRangePreset}
           onChange={(e) => onDateRangePreset(e.target.value as DateRangePreset)}
-          className="bg-transparent text-sm font-medium py-2 pl-2 pr-8 focus:outline-none cursor-pointer text-brand-text"
+          className="bg-transparent text-sm font-medium py-2 pl-2 pr-8 focus:outline-none cursor-pointer text-action-primary-text"
         >
           {PRESET_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -57,7 +57,7 @@ export const AnalyticsToolbar: React.FC<AnalyticsToolbarProps> = ({
       <select
         value={compareTo}
         onChange={(e) => onCompareToChange(e.target.value as CompareToOption)}
-        className="text-sm border border-border rounded-md px-3 py-1.5 bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-brand"
+        className="text-sm border border-border-default rounded-md px-3 py-1.5 bg-surface-default text-text-primary focus:outline-none focus:ring-2 focus:ring-action-primary"
       >
         <option value="none">None</option>
         <option value="lastWeek">Last Week</option>

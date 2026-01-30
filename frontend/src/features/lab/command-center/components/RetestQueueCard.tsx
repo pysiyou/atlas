@@ -36,7 +36,7 @@ export const RetestQueueCard: React.FC<RetestQueueCardProps> = ({ items, onViewQ
         <button
           type="button"
           onClick={onViewQueue}
-          className="text-xxs text-brand font-medium hover:underline"
+          className="text-xxs text-action-primary font-medium hover:underline"
         >
           View entry queue →
         </button>

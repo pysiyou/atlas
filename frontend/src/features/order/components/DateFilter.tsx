@@ -279,10 +279,10 @@ export const DateFilter: React.FC<DateFilterProps> = ({
         return (
         <div
           className={cn(
-            'flex items-center gap-2 px-3 py-2 bg-surface border rounded cursor-pointer transition-colors w-full h-9',
+            'flex items-center gap-2 px-3 py-2 bg-surface-default border rounded cursor-pointer transition-colors w-full h-9',
             isOpen
-              ? 'border-brand ring-2 ring-brand/20'
-              : 'border-border hover:border-border-strong',
+              ? 'border-action-primary ring-2 ring-action-primary ring-opacity-20'
+              : 'border-border-default hover:border-border-strong',
             className
           )}
         >
@@ -351,7 +351,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
           />
 
           {/* Separator */}
-          <div className="my-3 border-t border-border" />
+          <div className="my-3 border-t border-border-default" />
 
           {/* Quick Presets */}
           <div className="mt-3">
@@ -377,13 +377,13 @@ export const DateFilter: React.FC<DateFilterProps> = ({
 
           {/* Apply Button */}
           {tempStart && (
-            <div className="mt-3 pt-3 border-t border-border">
+            <div className="mt-3 pt-3 border-t border-border-default">
               <button
                 onClick={() => {
                   handleApply();
                   close();
                 }}
-                className="w-full px-3 py-2 bg-brand hover:opacity-90 text-text-inverse text-xs font-medium rounded transition-colors"
+                className="w-full px-3 py-2 bg-action-primary hover:opacity-90 text-text-inverse text-xs font-medium rounded transition-colors"
               >
                 Apply
               </button>

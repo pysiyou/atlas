@@ -38,25 +38,25 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
       subtitle={`${reportData.patientName} - ${reportData.testResults.map(t => t.testName).join(', ')}`}
       size="3xl"
     >
-      <div className="flex flex-col h-full bg-app-bg">
+      <div className="flex flex-col h-full bg-surface-canvas">
         {/* Preview Content - Scrollable */}
         <div className="flex-1 overflow-y-auto ">
           {/* Report Header Section - Two Column Layout */}
-          <div className="flex border-b border-border">
+          <div className="flex border-b border-border-default">
             {/* Left Panel: Company Information */}
-            <div className="bg-[#E0F2F7] p-6 shrink-0 space-y-2" style={{ width: '40%' }}>
+            <div className="bg-surface-report-panel p-6 shrink-0 space-y-2" style={{ width: '40%' }}>
               {/* Logo */}
               {/* <div className="mb-4">
-                <div className="w-16 h-16 bg-white rounded-full border border-gray-300 flex items-center justify-center">
+                <div className="w-16 h-16 bg-surface-default rounded-full border border-border-default flex items-center justify-center">
                   <Icon 
                     name={companyConfig.getBranding().logoPath.replace('/icons/', '').replace('.svg', '') as IconName} 
-                    className="w-8 h-8 text-gray-700" 
+                    className="w-8 h-8 text-text-secondary" 
                   />
                 </div>
               </div> */}
               
               {/* Company Name */}
-              <h2 className="text-2xl font-bold text-gray-800 mb-3">
+              <h2 className="text-2xl font-bold text-text-primary mb-3">
                 {companyConfig.getName()}
               </h2>
               
@@ -66,7 +66,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
               )}
               
               {/* Address Lines */}
-              <div className="text-xs text-gray-700 space-y-0.5">
+              <div className="text-xs text-text-secondary space-y-0.5">
                 {companyConfig.getContact().address.street && (
                   <p>{companyConfig.getContact().address.street}</p>
                 )}
@@ -84,13 +84,13 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
             </div>
 
             {/* Right Panel: Report Title and Details */}
-            <div className="bg-white p-4 flex-1">
+            <div className="bg-surface-default p-4 flex-1">
               {/* Report Title */}
-              <h1 className="text-base font-bold text-black mb-2">
+              <h1 className="text-base font-bold text-text-primary mb-2">
                 {reportData.testResults.length > 0 ? (
                   <>
                     {reportData.testResults.map(t => t.testName).join(', ')} Results ({' '}
-                    <span className="text-brand font-mono">
+                    <span className="text-action-primary font-mono">
                       {reportData.testResults.map(t => t.testCode).join(', ')}
                     </span>
                     {' '})
@@ -104,17 +104,17 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
               <div className="grid grid-cols-2 gap-2">
                 {/* Left Sub-column: Patient Demographics */}
                 <div className="space-y-0.5">
-                  <p className="text-base font-bold text-gray-800">{reportData.patientName}</p>
+                  <p className="text-base font-bold text-text-primary">{reportData.patientName}</p>
                   {reportData.patientAge && (
                     <div className="flex gap-2">
-                      <span className="text-xs text-gray-700 min-w-[50px] truncate">Age:</span>
-                      <span className="text-xs font-bold text-gray-800">{reportData.patientAge}</span>
+                      <span className="text-xs text-text-secondary min-w-[50px] truncate">Age:</span>
+                      <span className="text-xs font-bold text-text-primary">{reportData.patientAge}</span>
                     </div>
                   )}
                   {reportData.patientGender && (
                     <div className="flex gap-2">
-                      <span className="text-xs text-gray-700 min-w-[50px] truncate">Gender:</span>
-                      <span className="text-xs font-bold text-gray-800">{reportData.patientGender.toUpperCase()}</span>
+                      <span className="text-xs text-text-secondary min-w-[50px] truncate">Gender:</span>
+                      <span className="text-xs font-bold text-text-primary">{reportData.patientGender.toUpperCase()}</span>
                     </div>
                   )}
                   {/* Phone or Email - show phone if available, otherwise show email */}
@@ -126,16 +126,16 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                     if (orderExtended.patientPhone) {
                       return (
                         <div className="flex gap-2">
-                          <span className="text-xs text-gray-700 min-w-[50px] truncate">Phone:</span>
-                          <span className="text-xs font-bold text-gray-800">{orderExtended.patientPhone}</span>
+                          <span className="text-xs text-text-secondary min-w-[50px] truncate">Phone:</span>
+                          <span className="text-xs font-bold text-text-primary">{orderExtended.patientPhone}</span>
                         </div>
                       );
                     }
                     if (orderExtended.patientEmail) {
                       return (
                         <div className="flex gap-2">
-                          <span className="text-xs text-gray-700 min-w-[50px] truncate">Email:</span>
-                          <span className="text-xs font-bold text-gray-800">{orderExtended.patientEmail}</span>
+                          <span className="text-xs text-text-secondary min-w-[50px] truncate">Email:</span>
+                          <span className="text-xs font-bold text-text-primary">{orderExtended.patientEmail}</span>
                         </div>
                       );
                     }
@@ -145,34 +145,34 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                 
                 {/* Right Sub-column: Processing Details */}
                 <div className="space-y-0.5">
-                  <p className="text-base font-bold text-gray-800">Processing Details</p>
+                  <p className="text-base font-bold text-text-primary">Processing Details</p>
                   {reportData.timestamps?.collectedAt || reportData.sampleCollection?.collectedAt ? (
                     <div className="flex gap-2">
-                      <span className="text-xs text-gray-700 min-w-[60px] truncate">Sample:</span>
-                      <span className="text-xs font-bold text-gray-800">
+                      <span className="text-xs text-text-secondary min-w-[60px] truncate">Sample:</span>
+                      <span className="text-xs font-bold text-text-primary">
                         {format(new Date(reportData.timestamps?.collectedAt || reportData.sampleCollection?.collectedAt || ''), 'yyyy-MM-dd hh:mm a')}
                       </span>
                     </div>
                   ) : null}
                   {reportData.timestamps?.reportedAt ? (
                     <div className="flex gap-2">
-                      <span className="text-xs text-gray-700 min-w-[60px] truncate">Results:</span>
-                      <span className="text-xs font-bold text-gray-800">
+                      <span className="text-xs text-text-secondary min-w-[60px] truncate">Results:</span>
+                      <span className="text-xs font-bold text-text-primary">
                         {format(new Date(reportData.timestamps.reportedAt), 'yyyy-MM-dd hh:mm a')}
                       </span>
                     </div>
                   ) : (
                     <div className="flex gap-2">
-                      <span className="text-xs text-gray-700 min-w-[60px] truncate">Results:</span>
-                      <span className="text-xs font-bold text-gray-800">
+                      <span className="text-xs text-text-secondary min-w-[60px] truncate">Results:</span>
+                      <span className="text-xs font-bold text-text-primary">
                         {format(new Date(), 'yyyy-MM-dd hh:mm a')}
                       </span>
                     </div>
                   )}
                   {reportData.testResults[0] && (
                     <div className="flex gap-2">
-                      <span className="text-xs text-gray-700 min-w-[60px] truncate">Verified by:</span>
-                      <span className="text-xs font-bold text-gray-800">
+                      <span className="text-xs text-text-secondary min-w-[60px] truncate">Verified by:</span>
+                      <span className="text-xs font-bold text-text-primary">
                         {(() => {
                           const testResult = reportData.testResults[0];
                           if (!testResult) return 'N/A';
@@ -218,7 +218,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="bg-app-bg border-b border-border-strong">
+                    <tr className="bg-surface-canvas border-b border-border-strong">
                       <th className="px-6 py-3 text-left font-medium text-text-tertiary uppercase tracking-wider">Investigation</th>
                       <th className="px-6 py-3 text-left font-medium text-text-tertiary uppercase tracking-wider">Result</th>
                       <th className="px-6 py-3 text-left font-medium text-text-tertiary uppercase tracking-wider">Reference Value</th>
@@ -227,7 +227,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                   </thead>
                   <tbody>
                     {/* Primary Sample Type Row */}
-                    <tr className="border-b border-border-subtle hover:bg-app-bg transition-colors">
+                    <tr className="border-b border-border-subtle hover:bg-surface-canvas transition-colors">
                       <td className="px-6 py-3 text-text-primary">Primary Sample Type :</td>
                       <td className="px-6 py-3 text-left text-text-primary">
                         {reportData.order.tests[0]?.sampleType?.toUpperCase() || 'N/A'}
@@ -247,8 +247,8 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                         <tr
                           key={paramIndex}
                           className={cn(
-                            'border-b border-border-subtle last:border-0 hover:bg-app-bg transition-colors',
-                            isSectionHeader && 'bg-app-bg/50'
+                            'border-b border-border-subtle last:border-0 hover:bg-surface-canvas transition-colors',
+                            isSectionHeader && 'bg-surface-canvas/50'
                           )}
                         >
                           <td className={cn(
@@ -268,7 +268,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                           </td>
                           <td className={cn(
                             'px-6 py-3 text-left',
-                            isAbnormal ? 'text-red-600 font-bold' : 'text-text-primary'
+                            isAbnormal ? 'text-feedback-danger-text font-bold' : 'text-text-primary'
                           )}>
                             {param.value}
                           </td>
@@ -302,7 +302,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         </div>
 
         {/* Footer - matches PaymentDetailModal / EditPatientModal */}
-        <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border bg-surface shrink-0 shadow-[0_-1px_3px_rgba(0,0,0,0.04)]">
+        <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface-default shrink-0 shadow-[var(--shadow-footer)]">
           <FooterInfo
             icon={ICONS.dataFields.document}
             text={

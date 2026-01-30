@@ -21,20 +21,20 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
   return (
     <div
       onClick={onClick}
-      className="bg-surface border border-border rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
+      className="bg-surface-default border border-border-default rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Avatar (top left) + Total Price (top right) */}
-      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
+      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
         {/* Avatar: Patient name + Order ID - positioned at top left */}
         <Avatar
           primaryText={order.patientName || 'N/A'}
           primaryTextClassName="font-semibold"
           secondaryText={displayId.order(order.orderId)}
-          secondaryTextClassName="font-mono text-brand"
+          secondaryTextClassName="font-mono text-action-primary"
           size="xs"
         />
         {/* Total price on top right */}
-        <div className="font-medium text-brand text-lg">{formatCurrency(order.totalPrice)}</div>
+        <div className="font-medium text-action-primary text-lg">{formatCurrency(order.totalPrice)}</div>
       </div>
 
       {/* Tests list: Show at most 2 tests, third line shows remaining count */}
@@ -50,7 +50,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
                 <div className="flex items-center flex-1 min-w-0">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 shrink-0" />
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
-                  <span className="text-brand font-mono truncate">{test.testCode}</span>
+                  <span className="text-action-primary font-mono truncate">{test.testCode}</span>
                 </div>
                 <span className="font-medium text-text-tertiary ml-2 shrink-0">
                   {formatCurrency(test.priceAtOrder)}

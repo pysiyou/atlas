@@ -14,9 +14,9 @@ const getInputClasses = (hasError: boolean, hasIcon: boolean, disabled?: boolean
   const baseClasses = 'w-full rounded border px-3 py-2 text-xs transition-colors duration-200 focus:outline-none focus:ring-2 placeholder:text-text-muted';
   const iconPadding = hasIcon ? 'pl-10' : '';
   const stateClasses = hasError
-    ? 'border-danger focus:border-danger focus:ring-danger/20'
-    : 'border-border focus:border-brand focus:ring-brand/20';
-  const disabledClasses = disabled ? 'bg-neutral-100 text-text-disabled cursor-not-allowed' : 'bg-surface';
+    ? 'border-border-error focus:border-border-error focus:ring-action-danger focus:ring-opacity-20'
+    : 'border-border-default focus:border-action-primary focus:ring-action-primary focus:ring-opacity-20';
+  const disabledClasses = disabled ? 'bg-neutral-100 text-text-disabled cursor-not-allowed' : 'bg-surface-default';
   
   return `${baseClasses} ${iconPadding} ${stateClasses} ${disabledClasses}`;
 };
@@ -69,7 +69,7 @@ export const Input: React.FC<InputProps> = ({
             className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
           >
             {labelProp}
-            {props.required && <span className="text-danger ml-1">*</span>}
+            {props.required && <span className="text-feedback-danger-text ml-1">*</span>}
           </label>
         </div>
       )}
@@ -85,7 +85,7 @@ export const Input: React.FC<InputProps> = ({
           {...props}
         />
       </div>
-      {error && <p className="text-danger text-xs mt-1">{error}</p>}
+      {error && <p className="text-feedback-danger-text text-xs mt-1">{error}</p>}
       {helperTextProp && !error && <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>}
     </div>
   );
@@ -136,7 +136,7 @@ export const Textarea: React.FC<TextareaProps> = ({
             className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
           >
             {labelProp}
-            {props.required && <span className="text-danger ml-1">*</span>}
+            {props.required && <span className="text-feedback-danger-text ml-1">*</span>}
           </label>
         </div>
       )}
@@ -153,7 +153,7 @@ export const Textarea: React.FC<TextareaProps> = ({
           {...props}
         />
       </div>
-      {error && <p className="text-danger text-xs mt-1">{error}</p>}
+      {error && <p className="text-feedback-danger-text text-xs mt-1">{error}</p>}
       {helperTextProp && !error && <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>}
     </div>
   );
@@ -206,7 +206,7 @@ export const Select: React.FC<SelectProps> = ({
             className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
           >
             {labelProp}
-            {props.required && <span className="text-danger ml-1">*</span>}
+            {props.required && <span className="text-feedback-danger-text ml-1">*</span>}
           </label>
         </div>
       )}
@@ -228,7 +228,7 @@ export const Select: React.FC<SelectProps> = ({
           ))}
         </select>
       </div>
-      {error && <p className="text-danger text-xs mt-1">{error}</p>}
+      {error && <p className="text-feedback-danger-text text-xs mt-1">{error}</p>}
       {helperTextProp && !error && <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>}
     </div>
   );

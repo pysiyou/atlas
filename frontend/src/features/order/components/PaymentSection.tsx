@@ -42,8 +42,8 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
                 relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                 ${
                   isSelected
-                    ? 'bg-surface border-brand border-2'
-                    : 'bg-surface border-border hover:border-border-strong'
+                    ? 'bg-surface-default border-action-primary border-2'
+                    : 'bg-surface-default border-border-default hover:border-border-strong'
                 }
                 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
               `}
@@ -51,7 +51,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
             >
               <Icon
                 name={method.icon as IconName}
-                className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-text-disabled'}`}
+                className={`w-7 h-7 shrink-0 ${isSelected ? 'text-action-primary' : 'text-text-disabled'}`}
               />
               <span
                 className={`flex-1 text-xs font-medium text-left ${
@@ -63,12 +63,12 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
               <div
                 className={`
                   absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                  ${isSelected ? 'bg-success' : 'bg-transparent border-2 border-border-strong'}
+                  ${isSelected ? 'bg-action-success' : 'bg-transparent border-2 border-border-strong'}
                 `}
               >
                 <Icon
                   name={ICONS.actions.check}
-                  className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-text-disabled'}`}
+                  className={`w-3 h-3 ${isSelected ? 'text-action-success-on' : 'text-text-disabled'}`}
                 />
               </div>
             </button>

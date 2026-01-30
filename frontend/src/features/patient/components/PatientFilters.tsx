@@ -89,7 +89,7 @@ const ModalAgeSlider: React.FC<{
 
         {/* Active track */}
         <div
-          className="absolute h-full bg-brand rounded-full"
+          className="absolute h-full bg-action-primary rounded-full"
           style={{
             left: `${minPercent}%`,
             width: `${maxPercent - minPercent}%`,
@@ -103,7 +103,7 @@ const ModalAgeSlider: React.FC<{
           max={max}
           value={localValue[0]}
           onChange={handleMinChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-action-primary [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-action-primary [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
           style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
         />
 
@@ -114,7 +114,7 @@ const ModalAgeSlider: React.FC<{
           max={max}
           value={localValue[1]}
           onChange={handleMaxChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-action-primary [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-action-primary [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
           style={{ zIndex: 4 }}
         />
       </div>
@@ -171,18 +171,18 @@ const SearchInput: React.FC<{
       className={cn(
         'group relative w-full flex items-center gap-2',
         'h-[34px]',
-        'px-3 bg-surface border',
+        'px-3 bg-surface-default border',
         'border-border-strong',
         'rounded-md',
         'hover:bg-surface-hover',
         'focus-within:outline-none',
-        'focus-within:border-brand',
+        'focus-within:border-action-primary',
         'transition-colors duration-200'
       )}
     >
       <Icon
         name={ICONS.actions.search}
-        className={cn('text-text-muted group-hover:text-brand transition-colors', 'w-3.5 h-3.5 shrink-0')}
+        className={cn('text-text-muted group-hover:text-action-primary transition-colors', 'w-3.5 h-3.5 shrink-0')}
       />
       <input
         type="text"
@@ -201,7 +201,7 @@ const SearchInput: React.FC<{
           <div
             className={cn(
               'w-4 h-4 border-2 border-t-transparent rounded-full animate-spin',
-              'border-brand'
+              'border-action-primary'
             )}
           />
         )}
@@ -317,7 +317,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   if (showModalView) {
     return (
       <>
-        <div className={cn('w-full bg-surface border-b', 'border-border')}>
+        <div className={cn('w-full bg-surface-default border-b', 'border-border-default')}>
           <div className="px-3 py-2 w-full">
             <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
               {/* Search control */}
@@ -359,12 +359,12 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
           title="Filter"
           size="md"
         >
-          <div className="flex flex-col h-full bg-surface">
+          <div className="flex flex-col h-full bg-surface-default">
             {/* Filter Controls - Scrollable */}
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {/* Search Section */}
               <div className="mb-6">
-                <div className="relative w-full flex items-center h-10 px-4 bg-surface border border-border rounded-lg focus-within:border-brand transition-colors">
+                <div className="relative w-full flex items-center h-10 px-4 bg-surface-default border border-border-default rounded-lg focus-within:border-action-primary transition-colors">
                   <input
                     type="text"
                     placeholder="Search patients..."
@@ -394,7 +394,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                     min={AGE_RANGE_MIN}
                     max={AGE_RANGE_MAX}
                   />
-                  <div className="border-b border-border mt-4" />
+                  <div className="border-b border-border-default mt-4" />
                 </div>
 
                 {/* Sex Section */}
@@ -406,7 +406,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                     onChange={values => onSexFiltersChange(values as Gender[])}
                     columns={genderOptions.length > 4 ? 2 : 1}
                   />
-                  <div className="border-b border-border mt-4" />
+                  <div className="border-b border-border-default mt-4" />
                 </div>
 
                 {/* Affiliation Status Section */}
@@ -423,7 +423,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
             </div>
 
             {/* Footer with Filter Button */}
-            <div className="px-5 py-4 border-t border-border bg-surface shrink-0">
+            <div className="px-5 py-4 border-t border-border-default bg-surface-default shrink-0">
               {activeFilterCount > 0 && (
                 <button
                   onClick={() => {
@@ -438,7 +438,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
               )}
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="w-full py-3 bg-brand hover:opacity-90 text-text-inverse font-medium rounded-lg transition-colors"
+                className="w-full py-3 bg-action-primary hover:opacity-90 text-text-inverse font-medium rounded-lg transition-colors"
               >
                 Filter
               </button>
@@ -452,7 +452,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   // Tablet view: 2-column grid
   if (showTwoColumn) {
     return (
-      <div className={cn('w-full bg-surface border-b', 'border-border')}>
+      <div className={cn('w-full bg-surface-default border-b', 'border-border-default')}>
         <div className="px-3 py-2 w-full">
           <div className="grid grid-cols-2 gap-2 items-center w-full">
             {renderFilters()}
@@ -464,7 +464,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
 
   // Desktop view: 4-column grid
   return (
-    <div className={cn('w-full bg-surface border-b', 'border-border')}>
+    <div className={cn('w-full bg-surface-default border-b', 'border-border-default')}>
       <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
         <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">
           {renderFilters()}

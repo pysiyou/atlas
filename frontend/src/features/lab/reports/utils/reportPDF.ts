@@ -60,7 +60,7 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
   const leftPanelX = margin;
   const rightPanelX = leftPanelX + leftPanelWidth;
   
-  // Left panel background (light blue: #E0F2F7 = RGB 224, 242, 247)
+  // Left panel background — maps to --surface-report-panel (RGB 224, 242, 247)
   doc.setFillColor(224, 242, 247);
   doc.rect(leftPanelX, headerStartY, leftPanelWidth, headerHeight, 'F');
   
@@ -332,7 +332,7 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
         lineWidth: 0.3,
       },
       headStyles: {
-        fillColor: [250, 250, 250], // bg-app-bg
+        fillColor: [250, 250, 250], // bg-surface-canvas
         textColor: [107, 114, 128], // text-text-tertiary
         fontStyle: 'bold',
         fontSize: 9,
@@ -352,12 +352,12 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
         // Section headers: bold, background color
         if (data.section === 'body' && data.column.index === 0 && rowData?.isSectionHeader) {
           data.cell.styles.fontStyle = 'bold';
-          data.cell.styles.fillColor = [250, 250, 250]; // bg-app-bg/50
+          data.cell.styles.fillColor = [250, 250, 250]; // bg-surface-canvas/50
         }
         
         // Abnormal result values: red and bold
         if (data.section === 'body' && data.column.index === 1 && rowData?.isAbnormal) {
-          data.cell.styles.textColor = [220, 38, 38]; // text-red-600
+          data.cell.styles.textColor = [220, 38, 38]; // text-feedback-danger-text
           data.cell.styles.fontStyle = 'bold';
         }
         

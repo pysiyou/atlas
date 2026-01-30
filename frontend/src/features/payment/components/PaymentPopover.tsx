@@ -53,11 +53,11 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
   );
 
   return (
-    <div className="rounded border border-border overflow-hidden">
-      <div className="px-3 py-2.5 border-b border-dashed border-border-strong">
+    <div className="rounded border border-border-default overflow-hidden">
+      <div className="px-3 py-2.5 border-b border-dashed border-border-default-strong">
         <div className="flex justify-between items-center">
           <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
-            Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span>
+            Order <span className="font-mono text-action-primary">{displayId.order(order.orderId)}</span>
           </span>
           <Badge variant={order.paymentStatus} size="xs" />
         </div>
@@ -78,7 +78,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
                   <span className="text-text-secondary truncate">
                     {test.testName || test.testCode || 'Test'}
                     {test.testCode && test.testName !== test.testCode && (
-                      <span className="text-brand font-mono ml-1">({test.testCode})</span>
+                      <span className="text-action-primary font-mono ml-1">({test.testCode})</span>
                     )}
                   </span>
                 </span>
@@ -92,12 +92,12 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
           <p className="text-xs text-text-tertiary italic">No items</p>
         )}
       </div>
-      <div className="border-t border-dashed border-border-strong mx-3" />
+      <div className="border-t border-dashed border-border-default-strong mx-3" />
       <div className="px-3 py-2.5 flex justify-between items-center">
         <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
           Total
         </span>
-        <span className="text-sm font-bold text-brand tabular-nums">
+        <span className="text-sm font-bold text-action-primary tabular-nums">
           {formatCurrency(activeTotal)}
         </span>
       </div>
@@ -186,7 +186,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   return (
     <PopoverForm
       title="Process Payment"
-      subtitle={<span>Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span></span>}
+      subtitle={<span>Order <span className="font-mono text-action-primary">{displayId.order(order.orderId)}</span></span>}
       onCancel={onCancel}
       onConfirm={handleSubmit}
       confirmLabel="Process Payment"
@@ -200,7 +200,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       {/* Payment Method Selection */}
       <div>
         <label className="block text-xs font-medium text-text-tertiary mb-2">
-          Payment Method <span className="text-danger">*</span>
+          Payment Method <span className="text-feedback-danger-text">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
           {PAYMENT_METHODS.map(method => {
@@ -214,15 +214,15 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                   relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                   ${
                     isSelected
-                      ? 'bg-surface border-brand border-2'
-                      : 'bg-surface border-border hover:border-border-strong'
+                      ? 'bg-surface-default border-action-primary border-2'
+                      : 'bg-surface-default border-border-default hover:border-border-strong'
                   }
                 `}
               >
                 {/* Brand icon on the left */}
                 <Icon
                   name={method.icon as IconName}
-                  className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-text-disabled'}`}
+                  className={`w-7 h-7 shrink-0 ${isSelected ? 'text-action-primary' : 'text-text-disabled'}`}
                 />
                 {/* Brand label */}
                 <span
@@ -236,12 +236,12 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                 <div
                   className={`
                     absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                    ${isSelected ? 'bg-green-600' : 'bg-transparent border-2 border-border-strong'}
+                    ${isSelected ? 'bg-action-success' : 'bg-transparent border-2 border-border-strong'}
                   `}
                 >
                   <Icon
                     name={ICONS.actions.check}
-                    className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-text-disabled'}`}
+                    className={`w-3 h-3 ${isSelected ? 'text-action-success-on' : 'text-text-disabled'}`}
                   />
                 </div>
               </button>
@@ -258,7 +258,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
           placeholder="Add optional notes..."
           value={notes}
           onChange={e => setNotes(e.target.value)}
-          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
+          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent"
         />
       </div>
 
@@ -290,7 +290,7 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
       size={size}
       variant="primary"
       disabled={isPaid}
-      icon={<Icon name={ICONS.dataFields.wallet} className="text-white" />}
+      icon={<Icon name={ICONS.dataFields.wallet} className="text-action-primary-on" />}
     >
       PAY
     </Button>

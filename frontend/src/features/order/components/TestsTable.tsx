@@ -47,7 +47,7 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
               {test.testCode}
             </span>
             {isRetest && retestNumber > 0 && (
-              <Badge variant="default" size="xs" className="text-xs bg-brand/10 text-brand border-brand">
+              <Badge variant="default" size="xs" className="text-xs bg-action-primary-muted-bg text-action-primary border-action-primary">
                 #{retestNumber}
               </Badge>
             )}
@@ -130,7 +130,7 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
     const isSuperseded = item.status === 'superseded';
     return (
       <div
-        className="p-3 border border-border rounded-lg hover:bg-surface-hover cursor-pointer transition-colors"
+        className="p-3 border border-border-default rounded-lg hover:bg-surface-hover cursor-pointer transition-colors"
         onClick={onClick}
         role="button"
         tabIndex={0}
@@ -182,7 +182,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
   );
 
   const rowClassName = (test: OrderTest) =>
-    test.status === 'superseded' ? 'bg-app-bg/50 opacity-60' : '';
+    test.status === 'superseded' ? 'bg-surface-canvas/50 opacity-60' : '';
 
   return (
     <Table<OrderTest>

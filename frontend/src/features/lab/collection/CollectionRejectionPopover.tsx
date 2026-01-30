@@ -160,18 +160,18 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       {/* Rejection Reasons */}
       <div className="space-y-2">
         <label className="block text-xs font-medium text-text-tertiary">Rejection Reasons</label>
-        <div className="border border-border rounded-md max-h-[200px] overflow-y-auto">
+        <div className="border border-border-default rounded-md max-h-[200px] overflow-y-auto">
           {REJECTION_REASONS.map(r => (
             <label
               key={r.value}
-              className={`flex items-start p-2 hover:bg-app-bg cursor-pointer border-b border-border-subtle last:border-0 transition-colors ${reasons.includes(r.value) ? 'bg-sky-50/50' : ''}`}
+              className={`flex items-start p-2 hover:bg-surface-canvas cursor-pointer border-b border-border-subtle last:border-0 transition-colors ${reasons.includes(r.value) ? 'bg-action-primary-muted-bg' : ''}`}
             >
               <div className="flex items-center h-5">
                 <input
                   type="checkbox"
                   checked={reasons.includes(r.value)}
                   onChange={() => toggleReason(r.value)}
-                  className="h-4 w-4 text-brand border-border-strong rounded focus:ring-brand"
+                  className="h-4 w-4 text-action-primary border-border-strong rounded focus:ring-action-primary"
                 />
               </div>
               <div className="ml-2 text-xs">
@@ -197,17 +197,17 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       {/* Notes */}
       <div>
         <label className="block text-xs font-medium text-text-tertiary mb-1">
-          Notes {reasons.includes('other') && <span className="text-red-600">*</span>}
+          Notes {reasons.includes('other') && <span className="text-feedback-danger-text">*</span>}
         </label>
         <textarea
           rows={2}
           placeholder="Additional details..."
           value={notes}
           onChange={e => setNotes(e.target.value)}
-          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
+          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent"
         />
         {reasons.includes('other') && !notes.trim() && (
-          <p className="text-xs text-red-600 mt-1">Required when "Other" is selected</p>
+          <p className="text-xs text-feedback-danger-text mt-1">Required when "Other" is selected</p>
         )}
       </div>
     </PopoverForm>

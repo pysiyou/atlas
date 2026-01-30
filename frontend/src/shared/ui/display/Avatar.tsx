@@ -83,7 +83,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         />
       ) : (
         <div
-          className={`rounded bg-brand flex items-center justify-center text-white font-semibold shrink-0 ${sizeClasses[size]}`}
+          className={`rounded bg-action-primary flex items-center justify-center text-action-primary-on font-semibold shrink-0 ${sizeClasses[size]}`}
         >
           {getInitials(primaryText)}
         </div>

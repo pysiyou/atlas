@@ -21,25 +21,25 @@ export const VolumeChart: React.FC<VolumeChartProps> = ({ data }) => {
   }));
 
   return (
-    <div className="bg-surface border border-border rounded-lg p-4">
+    <div className="bg-surface-default border border-border-default rounded-lg p-4">
       <h3 className="text-sm font-semibold text-text-primary mb-4">Test Volume Trend</h3>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
           <XAxis 
             dataKey="date" 
-            tick={{ fill: '#6b7280', fontSize: 12 }}
-            tickLine={{ stroke: '#e5e7eb' }}
+            tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
+            tickLine={{ stroke: 'var(--chart-grid)' }}
           />
           <YAxis 
-            label={{ value: 'Tests', angle: -90, position: 'insideLeft', style: { fill: '#6b7280', fontSize: 12 } }}
-            tick={{ fill: '#6b7280', fontSize: 12 }}
-            tickLine={{ stroke: '#e5e7eb' }}
+            label={{ value: 'Tests', angle: -90, position: 'insideLeft', style: { fill: 'var(--chart-axis)', fontSize: 12 } }}
+            tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
+            tickLine={{ stroke: 'var(--chart-grid)' }}
           />
           <Tooltip 
             contentStyle={{ 
-              backgroundColor: '#ffffff', 
-              border: '1px solid #e5e7eb',
+              backgroundColor: 'var(--chart-tooltip-bg)', 
+              border: '1px solid var(--chart-tooltip-border)',
               borderRadius: '8px',
               fontSize: '12px'
             }}
@@ -48,9 +48,9 @@ export const VolumeChart: React.FC<VolumeChartProps> = ({ data }) => {
           <Line 
             type="monotone" 
             dataKey="count" 
-            stroke="#0ea5e9" 
+            stroke="var(--chart-series-primary)" 
             strokeWidth={2}
-            dot={{ fill: '#0ea5e9', r: 4 }}
+            dot={{ fill: 'var(--chart-series-primary)', r: 4 }}
             activeDot={{ r: 6 }}
           />
         </LineChart>

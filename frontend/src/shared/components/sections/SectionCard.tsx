@@ -59,10 +59,10 @@ export const SectionCard: React.FC<SectionCardProps> = ({
   };
 
   return (
-    <div className={`bg-surface rounded-md border border-border shadow-sm ${className}`}>
+    <div className={`bg-surface-default rounded-md border border-border-default shadow-sm ${className}`}>
       {/* Header */}
       <div
-        className={`flex items-center justify-between p-4 border-b border-border ${collapsible ? 'cursor-pointer hover:bg-surface-hover transition-colors' : ''}`}
+        className={`flex items-center justify-between p-4 border-b border-border-default ${collapsible ? 'cursor-pointer hover:bg-surface-hover transition-colors' : ''}`}
         onClick={toggleExpanded}
       >
         <div className="flex items-center gap-2">

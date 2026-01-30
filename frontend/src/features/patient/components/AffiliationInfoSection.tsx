@@ -46,7 +46,7 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
 
       <div>
         <div className="text-xs text-text-tertiary mb-0.5">End Date</div>
-        <div className={`font-medium ${isActive ? 'text-text-primary' : 'text-danger'}`}>
+        <div className={`font-medium ${isActive ? 'text-text-primary' : 'text-feedback-danger-text'}`}>
           {formatDate(affiliation.endDate)}
         </div>
       </div>

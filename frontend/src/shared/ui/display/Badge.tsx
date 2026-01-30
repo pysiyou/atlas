@@ -145,32 +145,32 @@ const SIZES = {
  * Variant styles - comprehensive badge color system
  */
 const VARIANT_STYLES: Record<string, string> = {
-  // Base variants
+  // Base variants — semantic tokens
   default: 'bg-neutral-100 text-text-primary',
-  primary: 'bg-brand text-text-inverse',
-  secondary: 'bg-neutral-200 text-text-primary',
-  outline: 'border border-border bg-transparent text-text-secondary',
+  primary: 'bg-action-primary text-action-primary-on',
+  secondary: 'bg-action-secondary-bg text-action-secondary-text',
+  outline: 'border border-border-default bg-transparent text-text-secondary',
   ghost: 'bg-transparent text-text-secondary',
-  neutral: 'bg-neutral-200 text-text-primary',
-  danger: 'bg-danger text-text-inverse',
-  error: 'bg-danger text-text-inverse',
-  success: 'bg-success text-text-inverse',
-  warning: 'bg-warning text-text-inverse',
-  info: 'bg-info text-text-inverse',
+  neutral: 'bg-action-secondary-bg text-action-secondary-text',
+  danger: 'bg-action-danger text-action-danger-on',
+  error: 'bg-action-danger text-action-danger-on',
+  success: 'bg-action-success text-action-success-on',
+  warning: 'bg-action-warning text-action-warning-on',
+  info: 'bg-action-primary text-action-primary-on',
   purple: 'bg-purple-100 text-purple-800',
   orange: 'bg-orange-100 text-orange-800',
   teal: 'bg-teal-100 text-teal-800',
   
-  // Order statuses
+  // Order statuses — semantic feedback where applicable
   ordered: 'bg-blue-100 text-blue-800',
-  'in-progress': 'bg-amber-100 text-amber-800',
-  completed: 'bg-green-100 text-green-800',
-  cancelled: 'bg-red-100 text-red-800',
-  validated: 'bg-green-100 text-green-800',
-  rejected: 'bg-red-100 text-red-800',
-  escalated: 'bg-amber-100 text-amber-800',
-  superseded: 'bg-gray-100 text-gray-600',
-  resulted: 'bg-green-100 text-green-800',
+  'in-progress': 'bg-feedback-warning-bg-strong text-feedback-warning-text-strong',
+  completed: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
+  cancelled: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
+  validated: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
+  rejected: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
+  escalated: 'bg-feedback-warning-bg-strong text-feedback-warning-text-strong',
+  superseded: 'bg-neutral-100 text-text-tertiary',
+  resulted: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
   
   // Rejection types
   're-test': 'bg-yellow-100 text-yellow-800',
@@ -178,54 +178,54 @@ const VARIANT_STYLES: Record<string, string> = {
   'authorize_retest': 'bg-emerald-100 text-emerald-800',
   
   // Sample statuses
-  pending: 'bg-gray-100 text-gray-800',
+  pending: 'bg-neutral-100 text-text-secondary',
   collected: 'bg-blue-100 text-blue-800',
   received: 'bg-indigo-100 text-indigo-800',
   accessioned: 'bg-purple-100 text-purple-800',
   stored: 'bg-slate-100 text-slate-800',
-  disposed: 'bg-gray-100 text-gray-600',
+  disposed: 'bg-neutral-100 text-text-tertiary',
   'sample-collected': 'bg-blue-100 text-blue-800',
   
   // Appointment statuses
   scheduled: 'bg-blue-100 text-blue-800',
-  confirmed: 'bg-green-100 text-green-800',
-  'no-show': 'bg-red-100 text-red-800',
+  confirmed: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
+  'no-show': 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
   
   // Payment statuses
   partial: 'bg-yellow-100 text-yellow-800',
-  paid: 'bg-green-100 text-green-800',
-  unpaid: 'bg-red-100 text-red-800',
+  paid: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
+  unpaid: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
   
   // Priorities
-  routine: 'bg-gray-100 text-gray-800',
-  urgent: 'bg-orange-100 text-orange-800',
-  stat: 'bg-red-100 text-red-800',
+  routine: 'bg-neutral-100 text-text-secondary',
+  urgent: 'bg-feedback-warning-bg-strong text-feedback-warning-text-strong',
+  stat: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
   
   // Test categories
-  hematology: 'bg-red-100 text-red-800',
+  hematology: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
   biochemistry: 'bg-blue-100 text-blue-800',
-  microbiology: 'bg-green-100 text-green-800',
+  microbiology: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
   serology: 'bg-purple-100 text-purple-800',
   urinalysis: 'bg-yellow-100 text-yellow-800',
   imaging: 'bg-indigo-100 text-indigo-800',
   immunology: 'bg-pink-100 text-pink-800',
   molecular: 'bg-teal-100 text-teal-800',
   toxicology: 'bg-orange-100 text-orange-800',
-  coagulation: 'bg-red-100 text-red-800',
+  coagulation: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
   chemistry: 'bg-blue-100 text-blue-800',
   
   // Sample types
-  blood: 'bg-red-100 text-red-800',
+  blood: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
   urine: 'bg-yellow-100 text-yellow-800',
-  stool: 'bg-amber-100 text-amber-800',
+  stool: 'bg-feedback-warning-bg-strong text-feedback-warning-text-strong',
   swab: 'bg-blue-100 text-blue-800',
   tissue: 'bg-pink-100 text-pink-800',
   fluid: 'bg-cyan-100 text-cyan-800',
   csf: 'bg-indigo-100 text-indigo-800',
-  sputum: 'bg-green-100 text-green-800',
-  other: 'bg-gray-100 text-gray-800',
-  plasma: 'bg-red-100 text-red-800',
-  serum: 'bg-amber-100 text-amber-800',
+  sputum: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
+  other: 'bg-neutral-100 text-text-secondary',
+  plasma: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
+  serum: 'bg-feedback-warning-bg-strong text-feedback-warning-text-strong',
   
   // Sex/Gender
   male: 'bg-blue-100 text-blue-800',
@@ -234,27 +234,27 @@ const VARIANT_STYLES: Record<string, string> = {
   
   friend: 'bg-purple-100 text-purple-800',
   child: 'bg-blue-100 text-blue-800',
-  parent: 'bg-green-100 text-green-800',
-  sibling: 'bg-red-100 text-red-800',
+  parent: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
+  sibling: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
   spouse: 'bg-yellow-100 text-yellow-800',
   
   // Medical history
   'chronic-condition': 'bg-orange-100 text-orange-800',
   medication: 'bg-blue-100 text-blue-800',
-  allergy: 'bg-red-100 text-red-800',
+  allergy: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
   surgery: 'bg-purple-100 text-purple-800',
   
   // Container colors
-  'container-red': 'bg-red-500 text-white',
+  'container-red': 'bg-red-500 text-text-inverse',
   'container-yellow': 'bg-yellow-400 text-gray-900',
-  'container-purple': 'bg-purple-500 text-white',
-  'container-blue': 'bg-blue-500 text-white',
-  'container-green': 'bg-green-500 text-white',
-  'container-gray': 'bg-gray-500 text-white',
-  'container-black': 'bg-gray-900 text-white',
+  'container-purple': 'bg-purple-500 text-text-inverse',
+  'container-blue': 'bg-blue-500 text-text-inverse',
+  'container-green': 'bg-green-500 text-text-inverse',
+  'container-gray': 'bg-gray-500 text-text-inverse',
+  'container-black': 'bg-gray-900 text-text-inverse',
   
   // Payment methods
-  cash: 'bg-green-100 text-green-800',
+  cash: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
   'credit-card': 'bg-blue-100 text-blue-800',
   'debit-card': 'bg-indigo-100 text-indigo-800',
   insurance: 'bg-purple-100 text-purple-800',
@@ -262,9 +262,9 @@ const VARIANT_STYLES: Record<string, string> = {
   'mobile-money': 'bg-teal-100 text-teal-800',
   
   // User roles
-  administrator: 'bg-red-100 text-red-800',
+  administrator: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
   receptionist: 'bg-blue-100 text-blue-800',
-  'lab-technician': 'bg-green-100 text-green-800',
+  'lab-technician': 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
   'lab-technician-plus': 'bg-purple-100 text-purple-800',
 };
 

@@ -104,11 +104,11 @@ export const SearchControl: React.FC<SearchControlProps> = ({
   }, []);
 
   return (
-    <div className={cn('group relative w-full flex items-center gap-2 h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-brand transition-colors duration-200', className)}>
+    <div className={cn('group relative w-full flex items-center gap-2 h-[34px] px-3 bg-surface-default border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-action-primary transition-colors duration-200', className)}>
       {/* Column 1: Left Icon */}
       <Icon
         name={ICONS.actions.search}
-        className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-brand transition-colors"
+        className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-action-primary transition-colors"
       />
 
       {/* Column 2: Input - flexible middle */}
@@ -123,7 +123,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
       {/* Column 3: Right Icons (loading/clear) */}
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
-          <div className="w-4 h-4 border-2 border-brand border-t-transparent rounded-full animate-spin" />
+          <div className="w-4 h-4 border-2 border-action-primary border-t-transparent rounded-full animate-spin" />
         )}
         {localValue && !isDebouncing && (
           <button

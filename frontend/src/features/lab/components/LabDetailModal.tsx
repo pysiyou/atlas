@@ -87,7 +87,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
       subtitle={subtitle}
       size="3xl"
     >
-      <div className="flex flex-col h-full bg-app-bg">
+      <div className="flex flex-col h-full bg-surface-canvas">
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {/* Header Section with Badges and Context */}
           <SectionContainer hideHeader>
@@ -102,7 +102,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 <div className="flex items-center gap-3 text-sm text-text-secondary flex-wrap">
                   <span className="font-semibold text-text-primary">{contextInfo.patientName}</span>
                   <span className="text-text-disabled select-none">|</span>
-                  <span className="font-medium text-brand text-xs font-mono tracking-wide whitespace-nowrap">
+                  <span className="font-medium text-action-primary text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.patientId === 'number'
                       ? displayId.patient(contextInfo.patientId)
                       : contextInfo.patientId}
@@ -116,7 +116,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                     </>
                   )}
                   <span className="text-text-disabled select-none">|</span>
-                  <span className="font-medium text-brand text-xs font-mono tracking-wide whitespace-nowrap">
+                  <span className="font-medium text-action-primary text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.orderId === 'number'
                       ? displayId.order(contextInfo.orderId)
                       : contextInfo.orderId}
@@ -133,7 +133,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 {sampleInfo && sampleInfo.collectedAt && (
                   <span className="text-xs text-text-tertiary">
                     Sample{' '}
-                    <span className="font-medium text-brand text-xs font-mono tracking-wide">
+                    <span className="font-medium text-action-primary text-xs font-mono tracking-wide">
                       {typeof sampleInfo.sampleId === 'number'
                         ? displayId.sample(sampleInfo.sampleId)
                         : sampleInfo.sampleId}
@@ -158,7 +158,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 
         {/* Footer */}
         {(footer || footerInfo) && (
-          <div className="shrink-0 bg-surface border-t border-border px-6 py-4 flex items-center justify-between">
+          <div className="shrink-0 bg-surface-default border-t border-border-default px-6 py-4 flex items-center justify-between">
             {footerInfo || <FooterInfo icon={ICONS.dataFields.flask} text="Lab workflow" />}
             {footer}
           </div>

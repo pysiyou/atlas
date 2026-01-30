@@ -35,7 +35,7 @@ export const OrderCardHeader: React.FC<OrderCardHeaderProps> = ({
   return (
     <div className={className}>
       <div className="flex items-center gap-3 flex-wrap">
-        <h2 className="text-2xl font-bold text-brand font-mono">{displayId.order(orderId)}</h2>
+        <h2 className="text-2xl font-bold text-action-primary font-mono">{displayId.order(orderId)}</h2>
         <Badge variant={priority} size="sm" />
         <Badge variant={status} size="sm" />
         <span className="text-sm text-text-tertiary">{formatDate(orderDate)}</span>
@@ -69,7 +69,7 @@ export const OrderMetadata: React.FC<OrderMetadataProps> = ({
       <div>
         <div className="font-medium text-text-primary">{patientName}</div>
         <div className="text-xs text-text-tertiary">
-          <span className="font-mono text-brand">{displayId.patient(patientId)}</span> • {formatDate(orderDate)}
+          <span className="font-mono text-action-primary">{displayId.patient(patientId)}</span> • {formatDate(orderDate)}
           {referringPhysician && ` • ${referringPhysician}`}
         </div>
       </div>
@@ -99,7 +99,7 @@ export const BillingSummaryCard: React.FC<BillingSummaryCardProps> = ({
         </div>
         <div className="border-t pt-2 flex justify-between">
           <span className="font-semibold text-text-primary">Total:</span>
-          <span className="font-bold text-xl text-brand">{formatCurrency(totalPrice)}</span>
+          <span className="font-bold text-xl text-action-primary">{formatCurrency(totalPrice)}</span>
         </div>
         <div className="flex justify-between items-center pt-2">
           <span className="text-sm text-text-tertiary">Payment Status:</span>
@@ -137,16 +137,16 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
       <div className="space-y-3">
         {tests.map((test, index) => {
           return (
-            <div key={index} className="border border-border rounded p-4">
+            <div key={index} className="border border-border-default rounded p-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <div className="font-medium text-text-primary">{test.testName}</div>
                   <div className="text-sm text-text-tertiary">
-                    <span className="text-brand font-mono">{test.testCode}</span> • {test.sampleType}
+                    <span className="text-action-primary font-mono">{test.testCode}</span> • {test.sampleType}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-medium text-brand">
+                  <div className="font-medium text-action-primary">
                     {formatCurrency(test.priceAtOrder)}
                   </div>
                   <Badge variant={test.status} size="sm" />
@@ -154,7 +154,7 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
               </div>
 
               {test.results && (
-                <div className="mt-3 p-3 bg-app-bg rounded">
+                <div className="mt-3 p-3 bg-surface-canvas rounded">
                   <div className="text-sm font-medium text-text-secondary mb-2">Results:</div>
                   <div className="space-y-1">
                     {Object.entries(test.results).map(([key, result]) => (
@@ -163,9 +163,9 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
                         <span
                           className={`font-medium ${
                             result.status === 'high' || result.status === 'low'
-                              ? 'text-warning'
+                              ? 'text-feedback-warning-text'
                               : result.status === 'critical'
-                                ? 'text-danger'
+                                ? 'text-feedback-danger-text'
                                 : 'text-text-primary'
                           }`}
                         >
@@ -183,9 +183,9 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
               )}
 
               {test.validationNotes && (
-                <div className="mt-2 p-2 bg-brand/10 rounded text-sm">
-                  <span className="font-medium text-brand">Validation Notes: </span>
-                  <span className="text-brand">{test.validationNotes}</span>
+                <div className="mt-2 p-2 bg-action-primary-muted-bg rounded text-sm">
+                  <span className="font-medium text-action-primary">Validation Notes: </span>
+                  <span className="text-action-primary">{test.validationNotes}</span>
                 </div>
               )}
             </div>

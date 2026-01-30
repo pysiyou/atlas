@@ -15,8 +15,11 @@ import {
 } from 'recharts';
 import { format } from 'date-fns';
 
-const BAR_COLOR = '#16a34a'; // green-600 / --success
-const AXIS_COLOR = '#6b7280';
+const BAR_COLOR = 'var(--chart-series-success)';
+const AXIS_COLOR = 'var(--chart-axis)';
+const GRID_STROKE = 'var(--chart-grid)';
+const TOOLTIP_BG = 'var(--chart-tooltip-bg)';
+const TOOLTIP_BORDER = 'var(--chart-tooltip-border)';
 
 interface TrendPoint {
   date: string;
@@ -49,20 +52,20 @@ export const TestsByDayBarChart: React.FC<TestsByDayBarChartProps> = ({
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={chartData}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+        <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} />
         <XAxis
           dataKey="date"
           tick={{ fill: AXIS_COLOR, fontSize: 12 }}
-          tickLine={{ stroke: '#e5e7eb' }}
+          tickLine={{ stroke: GRID_STROKE }}
         />
         <YAxis
           tick={{ fill: AXIS_COLOR, fontSize: 12 }}
-          tickLine={{ stroke: '#e5e7eb' }}
+          tickLine={{ stroke: GRID_STROKE }}
         />
         <Tooltip
           contentStyle={{
-            backgroundColor: '#ffffff',
-            border: '1px solid #e5e7eb',
+            backgroundColor: TOOLTIP_BG,
+            border: `1px solid ${TOOLTIP_BORDER}`,
             borderRadius: '8px',
             fontSize: '12px',
           }}

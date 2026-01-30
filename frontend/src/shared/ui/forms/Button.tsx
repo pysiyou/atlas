@@ -115,11 +115,11 @@ const BASE_CLASSES = 'inline-flex items-center justify-center font-medium transi
  * Base style classes for each variant
  */
 const BASE_STYLES: Record<BaseVariant, string> = {
-  primary: 'bg-brand text-text-inverse hover:opacity-90 focus:ring-brand',
-  secondary: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
-  danger: 'bg-danger text-text-inverse hover:opacity-90 focus:ring-danger',
-  success: 'bg-success text-text-inverse hover:opacity-90 focus:ring-success',
-  warning: 'bg-warning text-text-inverse hover:opacity-90 focus:ring-warning',
+  primary: 'bg-action-primary text-action-primary-on hover:opacity-90 focus:ring-action-primary',
+  secondary: 'bg-action-secondary-bg text-action-secondary-text hover:bg-action-secondary-bg-hover focus:ring-neutral-500',
+  danger: 'bg-action-danger text-action-danger-on hover:opacity-90 focus:ring-action-danger',
+  success: 'bg-action-success text-action-success-on hover:opacity-90 focus:ring-action-success',
+  warning: 'bg-action-warning text-action-warning-on hover:opacity-90 focus:ring-action-warning',
   outline: 'border-2 border-border-strong bg-transparent text-text-secondary hover:bg-surface-hover focus:ring-neutral-500',
 };
 

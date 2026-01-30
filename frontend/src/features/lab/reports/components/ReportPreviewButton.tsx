@@ -32,7 +32,7 @@ export const ReportPreviewButton: React.FC<ReportPreviewButtonProps> = ({
       variant="view" 
       size={size} 
       onClick={() => onPreview(test)}
-      className="bg-brand text-text-inverse hover:opacity-90"
+      className="bg-action-primary text-text-inverse hover:opacity-90"
     />
   );
 };

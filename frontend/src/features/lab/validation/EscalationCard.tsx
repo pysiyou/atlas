@@ -51,14 +51,14 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
                 {test.patientName}
               </div>
               <div className="text-xxs text-text-disabled">•</div>
-              <div className="text-xxs text-brand font-medium font-mono truncate">
+              <div className="text-xxs text-action-primary font-medium font-mono truncate">
                 {test.testCode}
               </div>
               {test.sampleId && (
                 <>
                   <div className="text-xs text-text-disabled">•</div>
                   <div
-                    className="text-xxs text-brand font-medium font-mono truncate"
+                    className="text-xxs text-action-primary font-medium font-mono truncate"
                     title={displayId.sample(test.sampleId)}
                   >
                     {displayId.sample(test.sampleId)}
@@ -96,7 +96,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
           <Button
             variant="primary"
             size="sm"
-            icon={<Icon name={ICONS.actions.eye} className="text-white" />}
+            icon={<Icon name={ICONS.actions.eye} className="text-action-primary-on" />}
             onClick={e => {
               e.stopPropagation();
               onClick();
@@ -118,7 +118,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
       {test.sampleType && (
         <Badge variant={test.sampleType as 'blood' | 'urine' | 'other'} size="sm" />
       )}
-      <span className="text-xs text-brand font-mono">{test.testCode}</span>
+      <span className="text-xs text-action-primary font-mono">{test.testCode}</span>
     </>
   );
 
@@ -127,7 +127,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
       <Button
         variant="primary"
         size="sm"
-        icon={<Icon name={ICONS.actions.eye} className="text-white" />}
+        icon={<Icon name={ICONS.actions.eye} className="text-action-primary-on" />}
         onClick={e => {
           e.stopPropagation();
           onClick();
@@ -189,15 +189,15 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
 
   const content = (
     <div className="text-xs text-text-secondary">
-      <span className="font-mono text-brand">{test.testCode}</span>
+      <span className="font-mono text-action-primary">{test.testCode}</span>
       {test.orderId != null && (
         <span className="ml-2">
-          Order <span className="font-mono text-brand">{displayId.order(test.orderId)}</span>
+          Order <span className="font-mono text-action-primary">{displayId.order(test.orderId)}</span>
         </span>
       )}
       {test.sampleId && (
         <span className="ml-2">
-          Sample <span className="font-mono text-brand">{displayId.sample(test.sampleId)}</span>
+          Sample <span className="font-mono text-action-primary">{displayId.sample(test.sampleId)}</span>
         </span>
       )}
     </div>
@@ -206,7 +206,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasRejectionHistory ? 'border-amber-500' : ''}
+      className={hasRejectionHistory ? 'border-feedback-warning-border-strong' : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,

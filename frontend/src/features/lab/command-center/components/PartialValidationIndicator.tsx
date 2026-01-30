@@ -15,7 +15,7 @@ export const PartialValidationIndicator: React.FC<PartialValidationIndicatorProp
 }) => {
   if (count === 0) return null;
   return (
-    <div className="mt-3 flex items-center gap-2 text-xs text-amber-700">
+    <div className="mt-3 flex items-center gap-2 text-xs text-feedback-warning-text">
       <Icon name={ICONS.ui.lock} className="w-4 h-4 flex-shrink-0" />
       <span>{count} order(s) partially validated</span>
     </div>

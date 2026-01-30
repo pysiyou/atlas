@@ -123,8 +123,8 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     <CircularProgress
       size={18}
       percentage={completionPercentage}
-      trackColorClass="stroke-gray-200"
-      progressColorClass={completionPercentage === 100 ? 'stroke-emerald-500' : 'stroke-brand'}
+      trackColorClass="stroke-border-default"
+      progressColorClass={completionPercentage === 100 ? 'stroke-action-success' : 'stroke-action-primary'}
       label={`${filledCount}/${totalParams}`}
       className="h-7"
     />
@@ -254,7 +254,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Filled',
                 value: (
-                  <span className={isComplete ? 'text-emerald-600' : 'text-amber-600'}>
+                  <span className={isComplete ? 'text-feedback-success-text' : 'text-feedback-warning-text'}>
                     {filledCount}
                   </span>
                 ),
@@ -262,7 +262,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Remaining',
                 value: (
-                  <span className={remainingParams === 0 ? 'text-emerald-600' : 'text-text-tertiary'}>
+                  <span className={remainingParams === 0 ? 'text-feedback-success-text' : 'text-text-tertiary'}>
                     {remainingParams}
                   </span>
                 ),
@@ -272,7 +272,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           {
             title: 'Test Information',
             fields: [
-              { label: 'Test Code', value: <span className="text-brand font-mono">{test.testCode}</span> },
+              { label: 'Test Code', value: <span className="text-action-primary font-mono">{test.testCode}</span> },
               {
                 label: 'Sample Type',
                 badge: test.sampleType
@@ -281,7 +281,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               },
               {
                 label: 'Sample ID',
-                value: test.sampleId ? <span className="text-brand font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
+                value: test.sampleId ? <span className="text-action-primary font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
               },
               {
                 label: 'Turnaround Time',

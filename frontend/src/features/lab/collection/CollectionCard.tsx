@@ -111,12 +111,12 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
     return (
       <Card padding="list" hover className="flex flex-col h-full" onClick={() => handleCardClick()}>
         {/* Header: Avatar (top left) + Status badge (top right) */}
-        <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
+        <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
           <Avatar
             primaryText={patientName}
             primaryTextClassName="font-semibold"
             secondaryText={displayId.order(order.orderId)}
-            secondaryTextClassName="text-brand font-mono"
+            secondaryTextClassName="text-action-primary font-mono"
             size="xs"
           />
           {isPending ? (
@@ -340,13 +340,13 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
         {isRecollection && sample.originalSampleId && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection of <span className="font-mono text-white">{displayId.sample(sample.originalSampleId)}</span>
+            Recollection of <span className="font-mono text-text-inverse">{displayId.sample(sample.originalSampleId)}</span>
           </Badge>
         )}
         {rejectedSample?.recollectionSampleId && (
           <Badge size="sm" variant="info" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection requested: <span className="font-mono text-white">{displayId.sample(rejectedSample.recollectionSampleId)}</span>
+            Recollection requested: <span className="font-mono text-text-inverse">{displayId.sample(rejectedSample.recollectionSampleId)}</span>
           </Badge>
         )}
       </div>
@@ -355,7 +355,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   return (
     <LabCard
       onClick={handleCardClick}
-      className={isRejected ? 'border-amber-500' : ''}
+      className={isRejected ? 'border-feedback-warning-border-strong' : ''}
       context={{
         orderId: order.orderId,
         referringPhysician: order.referringPhysician,

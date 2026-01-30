@@ -45,27 +45,27 @@ export const Dashboard: React.FC = () => {
       label: 'Total Patients',
       value: patients.length,
       today: todayPatients,
-      icon: <Icon name={ICONS.ui.usersGroup} className="w-8 h-8 text-brand" />,
-      color: 'bg-brand/10',
+      icon: <Icon name={ICONS.ui.usersGroup} className="w-8 h-8 text-action-primary" />,
+      color: 'bg-action-primary-muted-bg',
     },
     {
       label: 'Total Orders',
       value: orders.length,
       today: todayOrders,
-      icon: <Icon name={ICONS.dataFields.document} className="w-8 h-8 text-success" />,
-      color: 'bg-success/10',
+      icon: <Icon name={ICONS.dataFields.document} className="w-8 h-8 text-feedback-success-text" />,
+      color: 'bg-feedback-success-bg',
     },
     {
       label: 'Appointments Today',
       value: todayAppointments,
-      icon: <Icon name={ICONS.dataFields.date} className="w-8 h-8 text-purple-600" />,
-      color: 'bg-purple-50',
+      icon: <Icon name={ICONS.dataFields.date} className="w-8 h-8 text-action-primary" />,
+      color: 'bg-action-primary-muted-bg',
     },
     {
       label: 'Revenue Today',
       value: formatCurrency(todayRevenue),
-      icon: <Icon name={ICONS.dataFields.dollarSign} className="w-8 h-8 text-warning" />,
-      color: 'bg-warning/10',
+      icon: <Icon name={ICONS.dataFields.dollarSign} className="w-8 h-8 text-feedback-warning-text" />,
+      color: 'bg-feedback-warning-bg',
     },
   ];
 
@@ -91,7 +91,7 @@ export const Dashboard: React.FC = () => {
                   <p className="text-sm text-text-tertiary mb-1">{stat.label}</p>
                   <p className="text-3xl font-bold text-text-primary">{stat.value}</p>
                   {stat.today !== undefined && (
-                    <p className="text-xs text-success mt-1">+{stat.today} today</p>
+                    <p className="text-xs text-feedback-success-text mt-1">+{stat.today} today</p>
                   )}
                 </div>
                 <div className={`p-3 rounded ${stat.color}`}>{stat.icon}</div>
@@ -104,7 +104,7 @@ export const Dashboard: React.FC = () => {
         {pendingOrders > 0 && (
           <Card padding="md">
             <div className="flex items-center gap-3">
-              <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning" />
+              <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-feedback-warning-text" />
               <div>
                 <p className="text-sm font-semibold text-text-primary">Pending Actions</p>
                 <p className="text-xs text-text-secondary">
@@ -122,7 +122,7 @@ export const Dashboard: React.FC = () => {
               recentOrders.map(order => (
                 <div
                   key={order.orderId}
-                  className="flex items-center justify-between p-4 border border-border rounded-md hover:bg-app-bg"
+                  className="flex items-center justify-between p-4 border border-border-default rounded-md hover:bg-surface-canvas"
                 >
                   <div>
                     <p className="text-sm font-semibold text-text-primary">{getPatientName(order.patientId)}</p>

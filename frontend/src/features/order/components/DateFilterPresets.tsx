@@ -21,7 +21,7 @@ export const DateFilterPresets: React.FC<DateFilterPresetsProps> = ({ onSelect }
           const today = new Date();
           onSelect(today, today);
         }}
-        className="hover:text-brand font-medium px-1 py-0.5 rounded hover:bg-brand/10 transition-colors cursor-pointer"
+        className="hover:text-action-primary font-medium px-1 py-0.5 rounded hover:bg-action-primary-muted-bg transition-colors cursor-pointer"
       >
         Today
       </button>
@@ -30,7 +30,7 @@ export const DateFilterPresets: React.FC<DateFilterPresetsProps> = ({ onSelect }
           const yesterday = subDays(new Date(), 1);
           onSelect(yesterday, yesterday);
         }}
-        className="hover:text-brand font-medium px-1 py-0.5 rounded hover:bg-brand/10 transition-colors cursor-pointer"
+        className="hover:text-action-primary font-medium px-1 py-0.5 rounded hover:bg-action-primary-muted-bg transition-colors cursor-pointer"
       >
         Yesterday
       </button>
@@ -40,7 +40,7 @@ export const DateFilterPresets: React.FC<DateFilterPresetsProps> = ({ onSelect }
           const lastWeek = subDays(today, 6);
           onSelect(lastWeek, today);
         }}
-        className="hover:text-brand font-medium px-1 py-0.5 rounded hover:bg-brand/10 transition-colors cursor-pointer"
+        className="hover:text-action-primary font-medium px-1 py-0.5 rounded hover:bg-action-primary-muted-bg transition-colors cursor-pointer"
       >
         Last Week
       </button>

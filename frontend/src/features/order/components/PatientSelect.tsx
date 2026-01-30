@@ -47,10 +47,10 @@ const PatientSearchTagInput: React.FC<{
         className={[
           'relative',
           'w-full pl-10 pr-3 py-2.5 border rounded',
-          'bg-surface transition-colors',
-          disabled ? 'bg-app-bg opacity-60 cursor-not-allowed' : '',
-          !disabled && 'focus-within:ring-2 focus-within:ring-brand focus-within:border-transparent',
-          error ? 'border-danger' : 'border-border-strong',
+          'bg-surface-default transition-colors',
+          disabled ? 'bg-surface-canvas opacity-60 cursor-not-allowed' : '',
+          !disabled && 'focus-within:ring-2 focus-within:ring-action-primary focus-within:border-transparent',
+          error ? 'border-border-error' : 'border-border-strong',
           'flex flex-wrap gap-2 items-center',
           'min-h-[42px]',
         ].join(' ')}
@@ -60,7 +60,7 @@ const PatientSearchTagInput: React.FC<{
         </div>
 
         {selectedPatient && (
-          <div className="flex items-center gap-2 px-2 py-1 rounded bg-brand/10 border border-brand max-w-full shrink-0">
+          <div className="flex items-center gap-2 px-2 py-1 rounded bg-action-primary-muted-bg border border-action-primary max-w-full shrink-0">
             {/* Small avatar with initial */}
             <Avatar
               primaryText={selectedPatient.fullName}
@@ -73,7 +73,7 @@ const PatientSearchTagInput: React.FC<{
               {selectedPatient.fullName}
             </span>
             {/* Patient ID */}
-            <span className="text-xxs font-semibold font-mono text-brand shrink-0">
+            <span className="text-xxs font-semibold font-mono text-action-primary shrink-0">
               {displayId.patient(selectedPatient.id)}
             </span>
             {/* Clear button */}
@@ -81,7 +81,7 @@ const PatientSearchTagInput: React.FC<{
               <button
                 type="button"
                 onClick={onClearSelection}
-                className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-brand/20 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30 shrink-0"
+                className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-action-primary-muted-bg rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-action-primary/30 shrink-0"
                 aria-label="Clear selected patient"
               >
                 <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-tertiary hover:text-text-secondary" />
@@ -104,7 +104,7 @@ const PatientSearchTagInput: React.FC<{
         />
       </div>
 
-      {error && <p className="mt-1.5 text-xs text-danger">{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-feedback-danger-text">{error}</p>}
     </div>
   );
 };
@@ -175,10 +175,10 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
         <div
           className={[
             'mt-1',
-            'border border-border/80',
+            'border border-border-default/80',
             'rounded',
-            'bg-surface',
-            'shadow-lg shadow-gray-900/10',
+            'bg-surface-default',
+            'shadow-lg shadow-2',
             'ring-1 ring-black/5',
           ].join(' ')}
         >
@@ -203,9 +203,9 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         'rounded',
                         'transition-colors',
                         'flex items-center justify-between gap-3',
-                        'hover:bg-app-bg',
-                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30',
-                        isSelected ? 'bg-emerald-50/50' : 'bg-surface',
+                        'hover:bg-surface-canvas',
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-opacity-30',
+                        isSelected ? 'bg-feedback-success-bg' : 'bg-surface-default',
                       ].join(' ')}
                     >
                       <div className="min-w-0 flex items-center gap-2.5 flex-1">
@@ -224,12 +224,12 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
 
                       <div className="shrink-0 flex items-center gap-2">
                         {/* Patient ID on the right */}
-                        <span className="text-[11px] font-semibold font-mono text-brand">
+                        <span className="text-[11px] font-semibold font-mono text-action-primary">
                           {displayId.patient(patient.id)}
                         </span>
                         {/* Check icon if selected */}
                         {isSelected && (
-                          <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-emerald-600" />
+                          <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-feedback-success-text" />
                         )}
                       </div>
                     </button>

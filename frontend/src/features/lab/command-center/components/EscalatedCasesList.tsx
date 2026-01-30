@@ -30,7 +30,7 @@ export const EscalatedCasesList: React.FC<EscalatedCasesListProps> = ({
             <button
               type="button"
               onClick={() => onItemClick?.(item)}
-              className="w-full text-left rounded border border-border bg-surface p-3 text-xs hover:border-brand hover:bg-brand/5 transition-colors"
+              className="w-full text-left rounded border border-border-default bg-surface-default p-3 text-xs hover:border-action-primary hover:bg-action-primary-muted-bg transition-colors"
             >
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 <span className="font-medium text-text-primary truncate">

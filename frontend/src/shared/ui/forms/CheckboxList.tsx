@@ -72,8 +72,8 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
                 className={cn(
                   'w-[18px] h-[18px] rounded-sm border flex items-center justify-center transition-colors duration-200',
                   isSelected
-                    ? 'bg-brand border-brand'
-                    : 'border-border-strong bg-surface group-hover:border-brand'
+                    ? 'bg-action-primary border-action-primary'
+                    : 'border-border-strong bg-surface-default group-hover:border-action-primary'
                 )}
               >
                 {isSelected && (

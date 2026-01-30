@@ -25,7 +25,7 @@ export const ProblemSolverSection: React.FC<ProblemSolverSectionProps> = ({
   if (escalatedCases.length === 0 && !canAccessSupervisorActions) return null;
 
   return (
-    <section className="rounded-lg border border-border bg-surface p-4 space-y-4">
+    <section className="rounded-lg border border-border-default bg-surface-default p-4 space-y-4">
       <h2 className="text-sm font-bold text-text-primary uppercase tracking-wide">
         Problem Solver
       </h2>

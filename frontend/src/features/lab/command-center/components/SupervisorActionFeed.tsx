@@ -29,7 +29,7 @@ export const SupervisorActionFeed: React.FC<SupervisorActionFeedProps> = ({
       <ul className="space-y-2">
         {items.slice(0, 10).map(item => (
           <li key={item.id}>
-            <div className="rounded border border-border bg-surface p-3 text-xs">
+            <div className="rounded border border-border-default bg-surface-default p-3 text-xs">
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 <span className="font-medium text-text-primary truncate">
                   {item.patientName} · {item.testName}
@@ -51,7 +51,7 @@ export const SupervisorActionFeed: React.FC<SupervisorActionFeedProps> = ({
                 <Button
                   variant="primary"
                   size="sm"
-                  icon={<Icon name={ICONS.actions.eye} className="text-white" />}
+                  icon={<Icon name={ICONS.actions.eye} className="text-action-primary-on" />}
                   onClick={() => onResolve(item)}
                 >
                   Resolve

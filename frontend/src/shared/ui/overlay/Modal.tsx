@@ -16,7 +16,7 @@ import { IconButton } from '../forms/IconButton';
 const Backdrop = ({
   onClick,
   zIndex = 40,
-  opacity = 0.5,
+  opacity: _opacity,
   className = '',
 }: {
   onClick?: () => void;
@@ -26,7 +26,7 @@ const Backdrop = ({
 }) => {
   const inlineStyle: React.CSSProperties = {
     zIndex,
-    backgroundColor: `rgba(0, 0, 0, ${opacity})`,
+    backgroundColor: 'var(--overlay-modal)',
     backdropFilter: 'blur(2px)',
   };
 
@@ -103,7 +103,7 @@ const Modal = memo(
     const maxWidthClass = size && sizeClasses[size] ? sizeClasses[size] : maxWidth;
 
     const getModalClasses = () => {
-      return 'relative bg-surface border border-border rounded-lg shadow-xl w-full';
+      return 'relative bg-surface-default border border-border-default rounded-lg shadow-xl w-full';
     };
 
     /**
@@ -184,7 +184,7 @@ const Modal = memo(
                   onClick={handleModalClick}
                 >
                   {/* Header */}
-                  <div className="px-6 py-4 border-b border-border bg-surface flex items-center justify-between shrink-0">
+                  <div className="px-6 py-4 border-b border-border-default bg-surface-default flex items-center justify-between shrink-0">
                     <div className="flex items-start gap-3 min-w-0">
                       <div className="flex flex-col min-w-0">
                         <h2

@@ -149,13 +149,13 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
       trigger={({ isOpen }) => (
         <div
           className={cn(
-            'group h-[34px] px-3 bg-surface border border-border-strong rounded-md hover:bg-surface-hover focus:outline-none focus:border-brand transition-colors duration-200 cursor-pointer flex items-center justify-between gap-2',
-            isOpen && 'border-brand',
+            'group h-[34px] px-3 bg-surface-default border border-border-strong rounded-md hover:bg-surface-hover focus:outline-none focus:border-action-primary transition-colors duration-200 cursor-pointer flex items-center justify-between gap-2',
+            isOpen && 'border-action-primary',
             className
           )}
         >
           {/* Column 1: Left Icon */}
-          <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors" />
+          <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-text-muted group-hover:text-action-primary shrink-0 transition-colors" />
           
           {/* Column 2: Content - flexible middle */}
           <div className="flex-1 min-w-0 text-xs font-medium">{renderTriggerContent()}</div>
@@ -193,7 +193,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
             <div className="absolute w-full h-1.5 bg-neutral-200 rounded-full overflow-hidden">
               {/* Active Range */}
               <div
-                className="absolute h-full bg-brand"
+                className="absolute h-full bg-action-primary"
                 style={{
                   left: `${getPercentage(localValue[0])}%`,
                   width: `${getPercentage(localValue[1]) - getPercentage(localValue[0])}%`,
@@ -203,14 +203,14 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
 
             {/* Min Handle */}
             <div
-              className="absolute w-5 h-5 bg-surface border-2 border-brand rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30"
+              className="absolute w-5 h-5 bg-surface-default border-2 border-action-primary rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-action-primary/30"
               style={{ left: `calc(${getPercentage(localValue[0])}% - 10px)` }}
               onMouseDown={onMouseDown('min')}
             />
 
             {/* Max Handle */}
             <div
-              className="absolute w-5 h-5 bg-surface border-2 border-brand rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30"
+              className="absolute w-5 h-5 bg-surface-default border-2 border-action-primary rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-action-primary/30"
               style={{ left: `calc(${getPercentage(localValue[1])}% - 10px)` }}
               onMouseDown={onMouseDown('max')}
             />

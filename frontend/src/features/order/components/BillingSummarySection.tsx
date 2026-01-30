@@ -44,10 +44,10 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
       {/* Receipt-style order summary matching PaymentPopover */}
       <div className="rounded  overflow-hidden flex-1 flex flex-col min-h-0">
         {/* Header with Order ID and Payment Status */}
-        <div className="px-3 py-2.5 border-b border-dashed border-border-strong">
+        <div className="px-3 py-2.5 border-b border-dashed border-border-default-strong">
           <div className="flex justify-between items-center">
             <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
-              Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span>
+              Order <span className="font-mono text-action-primary">{displayId.order(order.orderId)}</span>
             </span>
             <Badge variant={order.paymentStatus} size="xs" />
           </div>
@@ -70,7 +70,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
                     <span className="text-text-secondary truncate">
                       {test.testName || test.testCode || 'Test'}
                       {test.testCode && test.testName !== test.testCode && (
-                        <span className="text-brand font-mono ml-1">({test.testCode})</span>
+                        <span className="text-action-primary font-mono ml-1">({test.testCode})</span>
                       )}
                     </span>
                   </span>
@@ -86,12 +86,12 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
         </div>
 
         {/* Total Footer (sum of active tests only) */}
-        <div className="border-t border-dashed border-border-strong mx-3" />
+        <div className="border-t border-dashed border-border-default-strong mx-3" />
         <div className="px-3 py-2.5 flex justify-between items-center">
           <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
             Total
           </span>
-          <span className="text-sm font-bold text-brand tabular-nums">
+          <span className="text-sm font-bold text-action-primary tabular-nums">
             {formatCurrency(activeTotal)}
           </span>
         </div>

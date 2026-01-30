@@ -35,19 +35,19 @@ const RadioOption: React.FC<{
     <label
       className={cn(
         'group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150',
-        'hover:bg-app-bg/80',
-        isSelected && 'bg-sky-50/50'
+        'hover:bg-surface-canvas/80',
+        isSelected && 'bg-action-primary-muted-bg'
       )}
     >
       {/* Radio button */}
       <div className="flex-shrink-0 mr-3">
         <input type="radio" checked={isSelected} onChange={onSelect} className="sr-only" />
         {isSelected ? (
-          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-brand transition-all duration-150">
-            <div className="w-2 h-2 rounded-full bg-surface" />
+          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-action-primary transition-all duration-150">
+            <div className="w-2 h-2 rounded-full bg-surface-default" />
           </div>
         ) : (
-          <div className="w-5 h-5 rounded-full border-2 border-border-strong group-hover:border-gray-400 transition-all duration-150" />
+          <div className="w-5 h-5 rounded-full border-2 border-border-strong group-hover:border-border-hover transition-all duration-150" />
         )}
       </div>
 
@@ -90,10 +90,10 @@ const SelectParameterInput: React.FC<{
         <div
           id={inputId}
           className={cn(
-            'flex items-center gap-2 px-3 py-2.5 bg-surface border rounded cursor-pointer transition-colors w-full min-h-[42px]',
+            'flex items-center gap-2 px-3 py-2.5 bg-surface-default border rounded cursor-pointer transition-colors w-full min-h-[42px]',
             isOpen
-              ? 'border-brand ring-2 ring-brand/20'
-              : 'border-border-strong hover:border-gray-400'
+              ? 'border-action-primary ring-2 ring-action-primary ring-opacity-20'
+              : 'border-border-strong hover:border-border-hover'
           )}
         >
           {/* Content */}
@@ -210,7 +210,7 @@ const ParameterInput: React.FC<{
       <input
         {...commonProps}
         type="text"
-        className="block w-full px-3 py-2.5 border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs placeholder:text-text-muted transition-shadow bg-surface"
+        className="block w-full px-3 py-2.5 border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs placeholder:text-text-muted transition-shadow bg-surface-default"
         placeholder="Enter text result..."
       />
     );
@@ -227,10 +227,10 @@ const ParameterInput: React.FC<{
       max={limit?.max}
       inputMode="decimal"
       className={cn(
-        "block w-full pl-3 pr-12 py-2.5 border rounded focus:outline-none focus:ring-2 focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs placeholder:text-text-muted transition-shadow relative z-10 bg-surface",
+        "block w-full pl-3 pr-12 py-2.5 border rounded focus:outline-none focus:ring-2 focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs placeholder:text-text-muted transition-shadow relative z-10 bg-surface-default",
         hasError
-          ? 'border-red-500 focus:ring-red-500/20'
-          : "border-border-strong focus:ring-brand"
+          ? 'border-border-error focus:ring-action-danger/20'
+          : "border-border-strong focus:ring-action-primary"
       )}
       placeholder="--"
     />
@@ -291,28 +291,28 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   if (!testDef?.parameters) return null;
 
   return (
-    <div className="bg-app-bg rounded-lg p-4 border border-border-subtle">
+    <div className="bg-surface-canvas rounded-lg p-4 border border-border-subtle">
       {/* Critical Value Alert Banner */}
       {hasCriticalValues && (
-        <div className="mb-4 bg-red-100 border-l-4 border-red-600 p-4 rounded animate-pulse">
+        <div className="mb-4 bg-feedback-danger-bg-strong border-l-4 border-feedback-danger-border-strong p-4 rounded animate-pulse">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0">
-              <div className="p-1.5 bg-red-600 rounded-full">
-                <Icon name="alert-circle" className="w-4 h-4 text-white" />
+              <div className="p-1.5 bg-action-danger rounded-full">
+                <Icon name="alert-circle" className="w-4 h-4 text-action-danger-on" />
               </div>
             </div>
             <div className="flex-1">
-              <h4 className="text-sm font-bold text-red-900 uppercase tracking-wide mb-2">
+              <h4 className="text-sm font-bold text-feedback-danger-text-strong uppercase tracking-wide mb-2">
                 ⚠️ PANIC VALUE DETECTED - Immediate Action Required
               </h4>
               <div className="space-y-1">
                 {criticalParameters.map(param => (
-                  <div key={param.code} className="text-xs text-red-800">
+                  <div key={param.code} className="text-xs text-feedback-danger-text-strong">
                     <span className="font-semibold">{param.name}:</span>{' '}
                     <span className="font-bold">{results[param.code]}</span>
                     {param.unit && <span className="ml-1">{param.unit}</span>}
                     {(param.criticalLow !== undefined || param.criticalHigh !== undefined) && (
-                      <span className="ml-2 text-red-700">
+                      <span className="ml-2 text-feedback-danger-text-strong">
                         (Critical range: 
                         {param.criticalLow !== undefined && ` <${param.criticalLow}`}
                         {param.criticalHigh !== undefined && ` >${param.criticalHigh}`}
@@ -322,7 +322,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   </div>
                 ))}
               </div>
-              <div className="mt-3 text-xs text-red-900 bg-amber-50 border border-amber-300 rounded p-2">
+              <div className="mt-3 text-xs text-feedback-danger-text-strong bg-feedback-warning-bg border border-feedback-warning-border-strong rounded p-2">
                 <strong>Required Actions:</strong> Notify physician immediately • Verify patient ID • Consider retest • Document notification
               </div>
             </div>
@@ -350,7 +350,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 </label>
                 <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
                   {isCritical && (
-                    <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-red-600 shrink-0" />
+                    <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-feedback-danger-text shrink-0" />
                   )}
                   <span className="text-xxs text-text-disabled truncate">Ref: {refRange}</span>
                 </div>
@@ -379,12 +379,12 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   </div>
                 )}
                 {validationErrors[param.code] && (
-                  <div className="absolute -bottom-5 left-0 text-xxs text-red-600 font-medium truncate max-w-full" title={validationErrors[param.code]}>
+                  <div className="absolute -bottom-5 left-0 text-xxs text-feedback-danger-text font-medium truncate max-w-full" title={validationErrors[param.code]}>
                     Invalid value
                   </div>
                 )}
                 {!validationErrors[param.code] && isCritical && (
-                  <div className="absolute -bottom-5 left-0 text-xxs text-red-600 font-medium">
+                  <div className="absolute -bottom-5 left-0 text-xxs text-feedback-danger-text font-medium">
                     Critical value
                   </div>
                 )}
@@ -413,9 +413,9 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
       {/* Submit button (card context only) */}
       {!isModal && (
-        <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-app-bg border-t border-border-subtle rounded-b flex items-center justify-between">
+        <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-surface-canvas border-t border-border-subtle rounded-b flex items-center justify-between">
           {hasValidationErrors && (
-            <span className="text-xxs text-red-600">
+            <span className="text-xxs text-feedback-danger-text">
               Please correct invalid values before submitting
             </span>
           )}

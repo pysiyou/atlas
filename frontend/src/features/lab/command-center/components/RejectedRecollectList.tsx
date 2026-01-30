@@ -29,7 +29,7 @@ export const RejectedRecollectList: React.FC<RejectedRecollectListProps> = ({
               {item.patientName} · {displayId.sample(item.sampleId)}
             </span>
             {item.rejectionReasons?.length ? (
-              <span className="text-xxs text-amber-700 truncate max-w-[120px]" title={item.rejectionReasons.join(', ')}>
+              <span className="text-xxs text-feedback-warning-text truncate max-w-[120px]" title={item.rejectionReasons.join(', ')}>
                 {item.rejectionReasons[0]}
               </span>
             ) : null}
@@ -43,7 +43,7 @@ export const RejectedRecollectList: React.FC<RejectedRecollectListProps> = ({
         <button
           type="button"
           onClick={onViewQueue}
-          className="text-xxs text-brand font-medium hover:underline"
+          className="text-xxs text-action-primary font-medium hover:underline"
         >
           View collection →
         </button>

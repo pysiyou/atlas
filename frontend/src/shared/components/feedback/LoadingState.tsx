@@ -46,7 +46,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
     <div className={`${containerClasses} ${className}`}>
       <div className="text-center">
         <div
-          className={`inline-block animate-spin rounded-full border-brand border-t-transparent ${SIZE_CLASSES[size]}`}
+          className={`inline-block animate-spin rounded-full border-action-primary border-t-transparent ${SIZE_CLASSES[size]}`}
           role="status"
           aria-label="Loading"
         />

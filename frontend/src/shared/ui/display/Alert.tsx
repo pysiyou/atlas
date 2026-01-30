@@ -18,10 +18,10 @@ interface AlertProps {
  * Alert variant styles
  */
 const VARIANT_STYLES = {
-  info: 'bg-blue-50 border-blue-200 text-blue-800',
-  success: 'bg-green-50 border-green-200 text-green-800',
-  warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-  danger: 'bg-red-50 border-red-200 text-red-800',
+  info: 'bg-action-primary-muted-bg border-border-focus text-action-primary-text',
+  success: 'bg-feedback-success-bg border-feedback-success-border text-feedback-success-text-strong',
+  warning: 'bg-feedback-warning-bg border-feedback-warning-border text-feedback-warning-text-strong',
+  danger: 'bg-feedback-danger-bg border-feedback-danger-border text-feedback-danger-text-strong',
 };
 
 export const Alert: React.FC<AlertProps> = ({

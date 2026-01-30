@@ -82,8 +82,8 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                     !selected &&
                     !inRange &&
                     !disabled &&
-                    'font-bold text-brand bg-brand/10',
-                  inRange && !selected && 'bg-brand/20 text-brand rounded-none',
+                    'font-bold text-action-primary bg-action-primary-muted-bg',
+                  inRange && !selected && 'bg-action-primary-muted-bg text-action-primary rounded-none',
                   value &&
                     isSameDay(day, value[0]) &&
                     !isSameDay(value[0], value[1]) &&
@@ -92,7 +92,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                     isSameDay(day, value[1]) &&
                     !isSameDay(value[0], value[1]) &&
                     'rounded-r-full rounded-l-none',
-                  selected && 'bg-brand text-white hover:bg-brand-hover z-10'
+                  selected && 'bg-action-primary text-action-primary-on hover:bg-action-primary-hover z-10'
                 )}
               >
                 {format(day, 'd')}
@@ -122,9 +122,9 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
               className={cn(
                 'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
                 disabled && 'opacity-30 cursor-not-allowed',
-                !disabled && isSameMonth(month, new Date()) && 'text-brand font-bold bg-brand/10',
+                !disabled && isSameMonth(month, new Date()) && 'text-action-primary font-bold bg-action-primary-muted-bg',
                 !disabled && isSameMonth(month, currentMonth)
-                  ? 'bg-brand/20 text-brand'
+                  ? 'bg-action-primary-muted-bg text-action-primary'
                   : 'hover:bg-neutral-100 text-text-secondary',
                 !disabled && 'hover:bg-neutral-100'
               )}
@@ -156,9 +156,9 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
               disabled && 'opacity-30 cursor-not-allowed',
               !disabled &&
                 year.getFullYear() === new Date().getFullYear() &&
-                'text-brand font-bold bg-brand/10',
+                'text-action-primary font-bold bg-action-primary-muted-bg',
               !disabled && year.getFullYear() === currentMonth.getFullYear()
-                ? 'bg-brand/20 text-brand'
+                ? 'bg-action-primary-muted-bg text-action-primary'
                 : 'hover:bg-neutral-100 text-text-secondary',
               !disabled && 'hover:bg-neutral-100'
             )}

@@ -61,9 +61,9 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
   const { user: currentUser } = useAuthStore();
 
   return (
-    <div className="w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border overflow-hidden flex flex-col max-h-[600px]">
+    <div className="w-90 md:w-96 bg-surface-default rounded-lg shadow-xl border border-border-default overflow-hidden flex flex-col max-h-[600px]">
       {/* Header */}
-      <div className="px-4 py-3 bg-app-bg border-b border-border-subtle flex items-start justify-between">
+      <div className="px-4 py-3 bg-surface-canvas border-b border-border-subtle flex items-start justify-between">
         <div className="space-y-0.5">
           <h4 className="font-medium text-text-primary">{title}</h4>
           {subtitle && <p className="text-xs text-text-tertiary">{subtitle}</p>}
@@ -76,7 +76,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
       <div className="p-4 space-y-4 overflow-y-auto flex-1">{children}</div>
 
       {/* Footer */}
-      <div className="p-3 bg-app-bg border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
+      <div className="p-3 bg-surface-canvas border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
         {footerInfo || (
           <FooterInfo
             icon={ICONS.actions.alertCircle}
@@ -143,33 +143,33 @@ export const RadioCard: React.FC<RadioCardProps> = ({
 }) => {
   const selectedStyles =
     variant === 'red'
-      ? 'bg-red-50 border-red-200 ring-1 ring-red-200'
-      : 'bg-sky-50 border-sky-200 ring-1 ring-sky-200';
+      ? 'bg-feedback-danger-bg border-feedback-danger-border ring-1 ring-feedback-danger-border'
+      : 'bg-action-primary-muted-bg border-action-primary ring-1 ring-action-primary';
 
-  const disabledStyles = 'bg-neutral-100 border-border cursor-not-allowed opacity-60';
+  const disabledStyles = 'bg-neutral-100 border-border-default cursor-not-allowed opacity-60';
 
   const labelColor = disabled
     ? 'text-text-disabled'
     : variant === 'red'
       ? selected
-        ? 'text-red-800'
+        ? 'text-feedback-danger-text-strong'
         : 'text-text-primary'
       : selected
-        ? 'text-sky-700'
+        ? 'text-action-primary-text'
         : 'text-text-primary';
 
   const descColor = disabled
     ? 'text-text-disabled'
     : variant === 'red'
       ? selected
-        ? 'text-red-600'
+        ? 'text-feedback-danger-text'
         : 'text-text-tertiary'
       : selected
-        ? 'text-brand'
+        ? 'text-action-primary'
         : 'text-text-tertiary';
 
   const radioColor =
-    variant === 'red' ? 'text-red-600 focus:ring-red-500' : 'text-brand focus:ring-brand';
+    variant === 'red' ? 'text-feedback-danger-text focus:ring-action-danger' : 'text-action-primary focus:ring-action-primary';
 
   const handleClick = () => {
     if (!disabled) {
@@ -186,7 +186,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
             ? disabledStyles
             : selected
               ? selectedStyles
-              : 'bg-surface border-border hover:border-border-strong hover:bg-app-bg cursor-pointer'
+              : 'bg-surface-default border-border-default hover:border-border-strong hover:bg-surface-canvas cursor-pointer'
         }
       `}
       onClick={handleClick}
@@ -206,7 +206,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         <span className={`block text-xs font-medium ${labelColor}`}>{label}</span>
         <span className={`block text-xxs mt-0.5 ${descColor}`}>{description}</span>
         {disabled && disabledReason && (
-          <span className="block text-xxs mt-1 text-red-600 font-medium">{disabledReason}</span>
+          <span className="block text-xxs mt-1 text-feedback-danger-text font-medium">{disabledReason}</span>
         )}
       </div>
     </div>
@@ -238,8 +238,8 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
       relative flex items-start p-3 cursor-pointer rounded-lg border transition-all duration-200
       ${
         checked
-          ? 'bg-sky-50 border-sky-200 ring-1 ring-sky-200'
-          : 'bg-surface border-border hover:border-border-strong hover:bg-app-bg'
+          ? 'bg-action-primary-muted-bg border-action-primary ring-1 ring-action-primary'
+          : 'bg-surface-default border-border-default hover:border-border-strong hover:bg-surface-canvas'
       }
     `}
     onClick={onChange}
@@ -249,14 +249,14 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="h-3.5 w-3.5 text-brand border-border-strong focus:ring-brand rounded"
+        className="h-3.5 w-3.5 text-action-primary border-border-strong focus:ring-action-primary rounded"
       />
     </div>
     <div className="ml-2.5">
-      <span className={`block text-xs font-medium ${checked ? 'text-sky-700' : 'text-text-primary'}`}>
+      <span className={`block text-xs font-medium ${checked ? 'text-action-primary-text' : 'text-text-primary'}`}>
         {label}
       </span>
-      <span className={`block text-xxs mt-0.5 ${checked ? 'text-brand' : 'text-text-tertiary'}`}>
+      <span className={`block text-xxs mt-0.5 ${checked ? 'text-action-primary' : 'text-text-tertiary'}`}>
         {description}
       </span>
     </div>

@@ -29,8 +29,8 @@ export const LAB_CARD_TYPOGRAPHY = {
   emphasizedInline: 'text-text-secondary',
 
   // Flags Text (in red context)
-  flagText: 'text-xs text-red-600',
-  flagTitle: 'text-xxs font-medium text-red-600 uppercase tracking-wide',
+  flagText: 'text-xs text-feedback-danger-text',
+  flagTitle: 'text-xxs font-medium text-feedback-danger-text uppercase tracking-wide',
 } as const;
 
 // Spacing Constants
@@ -73,13 +73,13 @@ export const LAB_CARD_CONTAINERS = {
 
   // Card base styling (applied via Card component)
   cardBase:
-    'border border-border hover:border hover:border-sky-200 hover:bg-sky-50/30 transition-all duration-200',
+    'border border-border-default hover:border hover:border-border-focus hover:bg-action-primary-muted-bg transition-all duration-200',
 
   // Content section (gray background)
-  contentSection: 'bg-app-bg rounded p-2 border border-border',
+  contentSection: 'bg-surface-canvas rounded p-2 border border-border-default',
 
   // Flags section (red background)
-  flagsSection: 'bg-red-50 rounded p-2 border border-red-200',
+  flagsSection: 'bg-feedback-danger-bg rounded p-2 border border-feedback-danger-border',
 } as const;
 
 // List Item Constants
@@ -91,13 +91,13 @@ export const LAB_CARD_LIST_ITEMS = {
   bullet: 'w-1 h-1 rounded-full bg-neutral-400 mr-2',
 
   // List bullet (red for flags)
-  bulletRed: 'w-1 h-1 rounded-full bg-red-500 mr-2',
+  bulletRed: 'w-1 h-1 rounded-full bg-feedback-danger-text mr-2',
 
   // Test name in list
   testName: 'font-medium mr-1',
 
   // Test code in list
-  testCode: 'text-brand font-mono',
+  testCode: 'text-action-primary font-mono',
 } as const;
 
 // Context Row Constants (Patient/Order info)

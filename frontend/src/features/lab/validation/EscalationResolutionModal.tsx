@@ -162,7 +162,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
                     </label>
                     <textarea
                       id="escalation-force-validate-notes"
-                      className="w-full border border-border rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface text-text-primary placeholder:text-text-disabled"
+                      className="w-full border border-border-default rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface-default text-text-primary placeholder:text-text-disabled"
                       placeholder="e.g. Supervisor override after review"
                       value={validationNotesForceValidate}
                       onChange={e => setValidationNotesForceValidate(e.target.value)}
@@ -205,7 +205,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
                     </label>
                     <textarea
                       id="escalation-authorize-retest-reason"
-                      className="w-full border border-border rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface text-text-primary placeholder:text-text-disabled"
+                      className="w-full border border-border-default rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface-default text-text-primary placeholder:text-text-disabled"
                       placeholder="e.g. One more run with senior tech"
                       value={reasonAuthorizeRetest}
                       onChange={e => setReasonAuthorizeRetest(e.target.value)}
@@ -253,7 +253,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
                     </label>
                     <textarea
                       id="escalation-final-reject-reason"
-                      className="w-full border border-border rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface text-text-primary placeholder:text-text-disabled"
+                      className="w-full border border-border-default rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface-default text-text-primary placeholder:text-text-disabled"
                       placeholder="e.g. Sample compromised; request new collection"
                       value={reasonFinalReject}
                       onChange={e => setReasonFinalReject(e.target.value)}
@@ -298,7 +298,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
               {
                 label: 'Sample ID',
                 value: test.sampleId ? (
-                  <span className="text-brand font-mono">{displayId.sample(test.sampleId)}</span>
+                  <span className="text-action-primary font-mono">{displayId.sample(test.sampleId)}</span>
                 ) : undefined,
               },
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
@@ -317,13 +317,13 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
               {
                 label: 'Test Code',
                 value: test.testCode ? (
-                  <span className="text-brand font-mono">{test.testCode}</span>
+                  <span className="text-action-primary font-mono">{test.testCode}</span>
                 ) : undefined,
               },
               {
                 label: 'Order ID',
                 value: test.orderId ? (
-                  <span className="text-brand font-mono">{displayId.order(test.orderId)}</span>
+                  <span className="text-action-primary font-mono">{displayId.order(test.orderId)}</span>
                 ) : undefined,
               },
             ],

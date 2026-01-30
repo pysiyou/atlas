@@ -34,9 +34,9 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) =>
   // Fully complete - green checkmark (no animation)
   if (isFullyComplete) {
     return (
-      <div className="w-5 h-5 rounded-full bg-success flex items-center justify-center">
+      <div className="w-5 h-5 rounded-full bg-action-success flex items-center justify-center">
         <svg
-          className="w-3 h-3 text-white"
+          className="w-3 h-3 text-action-success-on"
           fill="none"
           stroke="currentColor"
           strokeWidth="2.5"
@@ -52,8 +52,8 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) =>
   // This applies to ALL incomplete steps that have started (payment, sample collection, etc.)
   if (showPulsingDot) {
     return (
-      <div className="w-5 h-5 rounded-full border-2 border-brand bg-brand/10 flex items-center justify-center">
-        <div className="w-2 h-2 rounded-full bg-brand animate-pulse" />
+      <div className="w-5 h-5 rounded-full border-2 border-action-primary bg-action-primary-muted-bg flex items-center justify-center">
+        <div className="w-2 h-2 rounded-full bg-action-primary animate-pulse" />
       </div>
     );
   }
@@ -61,8 +61,8 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) =>
   // Blocked state (not started) - lock icon (payment required)
   if (isBlocked) {
     return (
-      <div className="w-5 h-5 rounded-full border-2 border-warning/30 bg-warning/10 flex items-center justify-center">
-        <svg className="w-2.5 h-2.5 text-warning" fill="currentColor" viewBox="0 0 20 20">
+      <div className="w-5 h-5 rounded-full border-2 border-feedback-warning-border bg-feedback-warning-bg flex items-center justify-center">
+        <svg className="w-2.5 h-2.5 text-feedback-warning-text" fill="currentColor" viewBox="0 0 20 20">
           <path
             fillRule="evenodd"
             d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
@@ -74,7 +74,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) =>
   }
 
   // Not started - empty circle
-  return <div className="w-5 h-5 rounded-full border-2 border-border bg-white" />;
+  return <div className="w-5 h-5 rounded-full border-2 border-border-default bg-surface-default" />;
 };
 
 interface TestDotsProps {
@@ -114,8 +114,8 @@ const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
             key={index}
             className={`w-2 h-2 rounded-full transition-all duration-200 ${
               isCompleted
-                ? 'bg-brand ring-2 ring-brand/30'
-                : 'bg-transparent ring-1 ring-brand'
+                ? 'bg-action-primary ring-2 ring-action-primary ring-opacity-30'
+                : 'bg-transparent ring-1 ring-action-primary'
             }`}
           />
         );
@@ -224,15 +224,15 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
         // Determine connecting line color (must be background class, not border)
         const getLineColor = () => {
           if (progress.isFullyComplete && nextProgress?.isStarted) {
-            return 'bg-success'; // Green for completed → started
+            return 'bg-action-success'; // Green for completed → started
           }
           if (progress.isFullyComplete) {
-            return 'bg-border'; // Gray for completed → not started
+            return 'bg-border-default'; // Gray for completed → not started
           }
           if (blocked) {
-            return 'bg-warning/10'; // Yellow for blocked
+            return 'bg-feedback-warning-bg'; // Yellow for blocked
           }
-          return 'bg-border'; // Gray for pending/not started
+          return 'bg-border-default'; // Gray for pending/not started
         };
 
         // Show test dots for test-based steps (not for order-level steps like created, paid, delivered)
@@ -250,9 +250,9 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
 
         // Determine status message color
         const getStatusColor = () => {
-          if (step.status === 'paid' && !progress.isFullyComplete) return 'text-warning';
-          if (blocked) return 'text-warning';
-          return 'text-info';
+          if (step.status === 'paid' && !progress.isFullyComplete) return 'text-feedback-warning-text';
+          if (blocked) return 'text-feedback-warning-text';
+          return 'text-action-primary';
         };
 
         return (

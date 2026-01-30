@@ -69,7 +69,7 @@ const ModalSearchInput: React.FC<{
   }, [onChange]);
 
   return (
-    <div className="relative w-full flex items-center h-10 px-4 bg-surface border border-border rounded-lg focus-within:border-brand transition-colors">
+    <div className="relative w-full flex items-center h-10 px-4 bg-surface-default border border-border-default rounded-lg focus-within:border-action-primary transition-colors">
       <input
         type="text"
         placeholder={placeholder}
@@ -135,7 +135,7 @@ const ModalPriceSlider: React.FC<{
 
         {/* Active track */}
         <div
-          className="absolute h-full bg-brand rounded-full"
+          className="absolute h-full bg-action-primary rounded-full"
           style={{
             left: `${minPercent}%`,
             width: `${maxPercent - minPercent}%`,
@@ -149,7 +149,7 @@ const ModalPriceSlider: React.FC<{
           max={max}
           value={localValue[0]}
           onChange={handleMinChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-action-primary [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-action-primary [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
           style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
         />
 
@@ -160,7 +160,7 @@ const ModalPriceSlider: React.FC<{
           max={max}
           value={localValue[1]}
           onChange={handleMaxChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-action-primary [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-action-primary [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
           style={{ zIndex: 4 }}
         />
       </div>
@@ -313,12 +313,12 @@ const ModalRadioList: React.FC<{
                 className={cn(
                   'w-[18px] h-[18px] rounded-full border flex items-center justify-center transition-colors',
                   isSelected
-                    ? 'border-brand bg-surface'
-                    : 'border-border-strong bg-surface group-hover:border-brand'
+                    ? 'border-action-primary bg-surface-default'
+                    : 'border-border-strong bg-surface-default group-hover:border-action-primary'
                 )}
               >
                 {isSelected && (
-                  <div className="w-2.5 h-2.5 rounded-full bg-brand" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-action-primary" />
                 )}
               </div>
             </div>
@@ -436,7 +436,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
       title="Filter"
       size="md"
     >
-      <div className="flex flex-col h-full bg-surface">
+      <div className="flex flex-col h-full bg-surface-default">
         {/* Filter Controls - Scrollable */}
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {/* Search Control */}
@@ -474,7 +474,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                   {renderModalControl(control)}
                   {/* Separator line (except for last item) */}
                   {index < allFilterControls.length - 1 && (
-                    <div className="border-b border-border mt-4" />
+                    <div className="border-b border-border-default mt-4" />
                   )}
                 </div>
               ))}
@@ -483,7 +483,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
         </div>
 
         {/* Footer with Filter Button */}
-        <div className="px-5 py-4 border-t border-border bg-surface shrink-0">
+        <div className="px-5 py-4 border-t border-border-default bg-surface-default shrink-0">
           {activeBadges.length > 0 && (
             <button
               onClick={onClearAll}
@@ -496,7 +496,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
             <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
             <button
               onClick={handleApplyFilters}
-              className="px-4 py-3 bg-brand hover:opacity-90 text-text-inverse font-medium rounded-lg transition-colors"
+              className="px-4 py-3 bg-action-primary hover:opacity-90 text-text-inverse font-medium rounded-lg transition-colors"
             >
               Filter
             </button>

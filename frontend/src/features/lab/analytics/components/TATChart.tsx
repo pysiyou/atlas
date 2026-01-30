@@ -19,31 +19,31 @@ export const TATChart: React.FC<TATChartProps> = ({ data }) => {
   ];
 
   return (
-    <div className="bg-surface border border-border rounded-lg p-4">
+    <div className="bg-surface-default border border-border-default rounded-lg p-4">
       <h3 className="text-sm font-semibold text-text-primary mb-4">TAT Breakdown by Stage</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
           <XAxis 
             dataKey="stage" 
-            tick={{ fill: '#6b7280', fontSize: 12 }}
-            tickLine={{ stroke: '#e5e7eb' }}
+            tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
+            tickLine={{ stroke: 'var(--chart-grid)' }}
           />
           <YAxis 
-            label={{ value: 'Minutes', angle: -90, position: 'insideLeft', style: { fill: '#6b7280', fontSize: 12 } }}
-            tick={{ fill: '#6b7280', fontSize: 12 }}
-            tickLine={{ stroke: '#e5e7eb' }}
+            label={{ value: 'Minutes', angle: -90, position: 'insideLeft', style: { fill: 'var(--chart-axis)', fontSize: 12 } }}
+            tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
+            tickLine={{ stroke: 'var(--chart-grid)' }}
           />
           <Tooltip 
             contentStyle={{ 
-              backgroundColor: '#ffffff', 
-              border: '1px solid #e5e7eb',
+              backgroundColor: 'var(--chart-tooltip-bg)', 
+              border: '1px solid var(--chart-tooltip-border)',
               borderRadius: '8px',
               fontSize: '12px'
             }}
             formatter={(value) => [`${value} min`, 'Time']}
           />
-          <Bar dataKey="minutes" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="minutes" fill="var(--chart-series-primary)" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

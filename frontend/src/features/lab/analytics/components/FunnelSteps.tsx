@@ -55,7 +55,7 @@ export const FunnelSteps: React.FC<FunnelStepsProps> = ({ funnel, stepChanges = 
                 <span
                   className={cn(
                     'text-xs font-medium',
-                    change.isPositive ? 'text-green-600' : 'text-red-600'
+                    change.isPositive ? 'text-feedback-success-text' : 'text-feedback-danger-text'
                   )}
                 >
                   {change.isPositive ? '↑' : '↓'}

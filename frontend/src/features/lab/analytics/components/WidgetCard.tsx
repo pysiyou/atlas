@@ -55,7 +55,7 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
         <span
           className={cn(
             'text-sm font-medium',
-            change.isPositive ? 'text-green-600' : 'text-red-600'
+            change.isPositive ? 'text-feedback-success-text' : 'text-feedback-danger-text'
           )}
         >
           {change.isPositive ? '↑' : '↓'}
@@ -65,7 +65,7 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
     </div>
     {subtitle && <p className="text-xs text-text-tertiary mt-0.5">{subtitle}</p>}
     {chartTitle && (
-      <p className="text-xs font-medium text-text-secondary mt-3 pb-1 border-b border-dotted border-border">
+      <p className="text-xs font-medium text-text-secondary mt-3 pb-1 border-b border-dotted border-border-default">
         {chartTitle}
       </p>
     )}

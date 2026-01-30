@@ -101,27 +101,27 @@ const getStatusColors = (status: VitalStatus) => {
   switch (status) {
     case 'normal':
       return {
-        bg: 'bg-success/10',
-        border: 'border-success',
-        icon: 'text-success',
-        value: 'text-success',
-        dot: 'bg-success',
+        bg: 'bg-feedback-success-bg',
+        border: 'border-feedback-success-border',
+        icon: 'text-feedback-success-text',
+        value: 'text-feedback-success-text',
+        dot: 'bg-action-success',
       };
     case 'borderline':
       return {
-        bg: 'bg-warning/10',
-        border: 'border-warning',
-        icon: 'text-warning',
-        value: 'text-warning',
-        dot: 'bg-warning',
+        bg: 'bg-feedback-warning-bg',
+        border: 'border-feedback-warning-border',
+        icon: 'text-feedback-warning-text',
+        value: 'text-feedback-warning-text',
+        dot: 'bg-action-warning',
       };
     case 'abnormal':
       return {
-        bg: 'bg-danger/10',
-        border: 'border-danger',
-        icon: 'text-danger',
-        value: 'text-danger',
-        dot: 'bg-danger',
+        bg: 'bg-feedback-danger-bg',
+        border: 'border-border-error',
+        icon: 'text-feedback-danger-text',
+        value: 'text-feedback-danger-text',
+        dot: 'bg-action-danger',
       };
   }
 };

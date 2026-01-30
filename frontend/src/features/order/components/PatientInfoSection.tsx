@@ -43,7 +43,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
         <Avatar
           primaryText={patient.fullName}
           secondaryText={displayId.patient(patient.id)}
-          secondaryTextClassName="font-mono text-brand"
+          secondaryTextClassName="font-mono text-action-primary"
           size="sm"
         />
       </div>

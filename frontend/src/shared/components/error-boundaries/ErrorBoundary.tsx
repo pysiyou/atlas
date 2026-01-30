@@ -60,11 +60,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       // Default fallback UI
       return (
-        <div className="min-h-screen flex items-center justify-center bg-app-bg px-4">
-          <div className="max-w-md w-full bg-surface rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full">
+        <div className="min-h-screen flex items-center justify-center bg-surface-canvas px-4">
+          <div className="max-w-md w-full bg-surface-default rounded-lg shadow-lg p-6">
+            <div className="flex items-center justify-center w-12 h-12 mx-auto bg-feedback-danger-bg-strong rounded-full">
               <svg
-                className="w-6 h-6 text-red-600"
+                className="w-6 h-6 text-feedback-danger-text"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

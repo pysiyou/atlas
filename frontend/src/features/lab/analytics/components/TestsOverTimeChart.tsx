@@ -16,9 +16,12 @@ import {
 } from 'recharts';
 import { format } from 'date-fns';
 
-const CHART_COLOR = '#8b5cf6';
-const COMPARISON_COLOR = '#a78bfa'; // violet-400, lighter
-const AXIS_COLOR = '#6b7280';
+const CHART_COLOR = 'var(--chart-series-accent)';
+const COMPARISON_COLOR = 'var(--chart-series-accent-light)';
+const AXIS_COLOR = 'var(--chart-axis)';
+const GRID_STROKE = 'var(--chart-grid)';
+const TOOLTIP_BG = 'var(--chart-tooltip-bg)';
+const TOOLTIP_BORDER = 'var(--chart-tooltip-border)';
 
 interface TrendPoint {
   date: string;
@@ -65,20 +68,20 @@ export const TestsOverTimeChart: React.FC<TestsOverTimeChartProps> = ({
   return (
     <ResponsiveContainer width="100%" height={height}>
       <LineChart data={chartData}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+        <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} />
         <XAxis
           dataKey="date"
           tick={{ fill: AXIS_COLOR, fontSize: 12 }}
-          tickLine={{ stroke: '#e5e7eb' }}
+          tickLine={{ stroke: GRID_STROKE }}
         />
         <YAxis
           tick={{ fill: AXIS_COLOR, fontSize: 12 }}
-          tickLine={{ stroke: '#e5e7eb' }}
+          tickLine={{ stroke: GRID_STROKE }}
         />
         <Tooltip
           contentStyle={{
-            backgroundColor: '#ffffff',
-            border: '1px solid #e5e7eb',
+            backgroundColor: TOOLTIP_BG,
+            border: `1px solid ${TOOLTIP_BORDER}`,
             borderRadius: '8px',
             fontSize: '12px',
           }}

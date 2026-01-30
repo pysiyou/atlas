@@ -120,8 +120,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
       {/* Left Column - Text/Information */}
       <div className="space-y-6">
         {showPricingError && (
-          <div className="bg-warning/10 border border-warning rounded-lg p-3 mb-4">
-            <p className="text-sm text-warning">{error}</p>
+          <div className="bg-feedback-warning-bg border border-feedback-warning-border rounded-lg p-3 mb-4">
+            <p className="text-sm text-feedback-warning-text">{error}</p>
             <p className="text-xs text-text-tertiary mt-1">You can still select a plan. Pricing will be calculated during checkout.</p>
           </div>
         )}
@@ -139,8 +139,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
             <h4 className="text-sm font-semibold text-text-primary">What's Included</h4>
             <div className="space-y-2.5">
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success/10 flex items-center justify-center mt-0.5">
-                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-success" />
+                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-feedback-success-bg flex items-center justify-center mt-0.5">
+                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-feedback-success-text" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-text-primary">Priority Lab Services</span>
@@ -148,8 +148,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success/10 flex items-center justify-center mt-0.5">
-                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-success" />
+                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-feedback-success-bg flex items-center justify-center mt-0.5">
+                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-feedback-success-text" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-text-primary">Discounted Test Pricing</span>
@@ -157,8 +157,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success/10 flex items-center justify-center mt-0.5">
-                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-success" />
+                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-feedback-success-bg flex items-center justify-center mt-0.5">
+                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-feedback-success-text" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-text-primary">Assurance Number</span>
@@ -166,8 +166,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success/10 flex items-center justify-center mt-0.5">
-                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-success" />
+                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-feedback-success-bg flex items-center justify-center mt-0.5">
+                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-feedback-success-text" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-text-primary">
@@ -180,7 +180,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
           </div>
 
           {/* Additional Info */}
-          <div className="pt-4 border-t border-border">
+          <div className="pt-4 border-t border-border-default">
             <p className="text-xs text-text-tertiary leading-relaxed">
               {hasExistingAffiliation
                 ? 'Your affiliation will be extended from the current end date when you renew or extend.'
@@ -205,15 +205,15 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   relative border-2 rounded-xl p-5 cursor-pointer transition-all duration-200
                   ${
                     isSelected
-                      ? 'border-brand bg-affiliation/5 shadow-sm'
-                      : 'border-border hover:border-border-strong bg-surface hover:shadow-sm'
+                      ? 'border-action-primary bg-action-primary-muted-bg shadow-sm'
+                      : 'border-border-default hover:border-border-strong bg-surface-default hover:shadow-sm'
                   }
                 `}
               >
                 {/* Best Value Badge */}
                 {plan.isBestValue && (
                   <div className="absolute -top-2 -right-2">
-                    <div className="bg-danger text-white text-[10px] font-semibold px-2 py-0.5 rounded-md transform rotate-3 shadow-sm">
+                    <div className="bg-action-danger text-action-danger-on text-[10px] font-semibold px-2 py-0.5 rounded-md transform rotate-3 shadow-sm">
                       Best Value
                     </div>
                   </div>
@@ -228,8 +228,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                         w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all
                         ${
                           isSelected
-                            ? 'border-success bg-success'
-                            : 'border-border-strong bg-surface'
+                            ? 'border-action-success bg-action-success'
+                            : 'border-border-strong bg-surface-default'
                         }
                       `}
                     >
@@ -275,7 +275,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                       <div className="space-y-1">
                         <div className="text-sm text-text-tertiary">Price not available</div>
                         {isSelected && (
-                          <div className="text-xs text-warning">Pricing will be calculated during checkout</div>
+                          <div className="text-xs text-feedback-warning-text">Pricing will be calculated during checkout</div>
                         )}
                       </div>
                     )}
@@ -296,7 +296,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               fullWidth
               onClick={onAction}
               disabled={loading}
-              className="font-semibold bg-affiliation hover:bg-affiliation-hover text-white rounded-lg py-3 text-base shadow-sm"
+              className="font-semibold bg-action-primary hover:bg-action-primary-hover text-action-primary-on rounded-lg py-3 text-base shadow-sm"
             >
               {loading ? 'Processing...' : getActionText()}
             </Button>

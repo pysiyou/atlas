@@ -28,15 +28,15 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
   }
 
   return (
-    <div className="flex flex-col divide-y divide-gray-100">
+    <div className="flex flex-col divide-y divide-border-subtle">
       {reportableOrders.map((order: Order) => (
         <div
           key={order.orderId}
-          className="flex items-center justify-between p-3 hover:bg-app-bg transition-colors group"
+          className="flex items-center justify-between p-3 hover:bg-surface-canvas transition-colors group"
         >
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="w-8 h-8 flex items-center justify-center">
-              <Icon name={ICONS.dataFields.pdf} className="w-full h-full text-danger" />
+              <Icon name={ICONS.dataFields.pdf} className="w-full h-full text-feedback-danger-text" />
             </div>
             <div className="min-w-0">
               <p className="text-xs font-medium font-mono text-text-primary truncate">

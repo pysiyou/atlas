@@ -95,7 +95,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
       </div>
 
       {/* Emergency Contact Section */}
-      <div className="mt-4 pt-4 border-t border-border">
+      <div className="mt-4 pt-4 border-t border-border-default">
         <div className="flex items-start gap-3">
           <Icon name={ICONS.dataFields.userHands} className="w-5 h-5 text-text-disabled mt-1" />
           <div className="flex-1">
@@ -116,7 +116,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
       </div>
 
       {/* Lab Affiliation Section */}
-      <div className="mt-4 pt-4 border-t border-border">
+      <div className="mt-4 pt-4 border-t border-border-default">
         <div className="flex items-start gap-3">
           <Icon name={ICONS.ui.shield} className="w-5 h-5 text-text-disabled mt-1" />
           <div className="flex-1">
@@ -149,7 +149,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
                 <div className="text-xs text-text-tertiary">
                   Expires:{' '}
                   <span
-                    className={`font-medium ${isAffiliationActive(patient.affiliation) ? 'text-text-primary' : 'text-danger'}`}
+                    className={`font-medium ${isAffiliationActive(patient.affiliation) ? 'text-text-primary' : 'text-feedback-danger-text'}`}
                   >
                     {formatDate(patient.affiliation.endDate)}
                   </span>
@@ -161,7 +161,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
       </div>
 
       {/* Registration & Metadata Section */}
-      <div className="mt-4 pt-4 border-t border-border">
+      <div className="mt-4 pt-4 border-t border-border-default">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-start gap-3">
             <Icon name={ICONS.dataFields.date} className="w-5 h-5 text-text-disabled mt-1" />

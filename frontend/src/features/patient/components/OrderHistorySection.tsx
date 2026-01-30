@@ -72,7 +72,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
               <div
                 key={order.orderId}
                 onClick={() => onOrderClick(order.orderId)}
-                className="border border-border rounded-lg p-4 hover:border-brand hover:bg-brand/5 transition-colors cursor-pointer"
+                className="border border-border-default rounded-lg p-4 hover:border-action-primary hover:bg-action-primary-muted-bg transition-colors cursor-pointer"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
@@ -87,7 +87,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-semibold text-brand text-sm">
+                    <div className="font-semibold text-action-primary text-sm">
                       {formatCurrency(order.totalPrice)}
                     </div>
                     <div className="text-xs text-text-tertiary">

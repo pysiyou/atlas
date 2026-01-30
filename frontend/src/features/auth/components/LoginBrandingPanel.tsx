@@ -22,7 +22,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
 
   return (
     <div
-      className={`hidden lg:flex flex-col items-start text-white space-y-10 flex-1 max-w-lg transition-all duration-1000 delay-200 ${
+      className={`hidden lg:flex flex-col items-start text-auth-text-primary space-y-10 flex-1 max-w-lg transition-all duration-1000 delay-200 ${
         isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
       }`}
     >

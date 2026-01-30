@@ -1,68 +1,166 @@
-:root,
+/**
+ * Atlas Design System — Theme Primitives & Semantic Tokens
+ * Source: Reverse-engineered from component usage. Dark mode: override primitives in [data-theme="studio-dark"].
+ */
+
 [data-theme="studio-light"] {
-  /* Brand Colors */
-  --brand: #0284c7;
-  --brand-light: #e0f2fe;
-  /* sky-100 */
-  --brand-hover: #0369a1;
-  /* sky-700 */
-  --brand-text: #075985;
-  /* sky-800 */
-  --accent: #38bdf8;
-  /* sky-400 */
+  /* ─── Primitives (Palette) ─── */
+  /* Brand (sky-600 family) */
+  --primitive-brand-50: #f0f9ff;
+  --primitive-brand-100: #e0f2fe;
+  --primitive-brand-200: #bae6fd;
+  --primitive-brand-300: #7dd3fc;
+  --primitive-brand-400: #38bdf8;
+  --primitive-brand-500: #0ea5e9;
+  --primitive-brand-600: #0284c7;
+  --primitive-brand-700: #0369a1;
+  --primitive-brand-800: #075985;
+  --primitive-brand-900: #0c4a6e;
+  --primitive-brand-950: #082f49;
 
-  /* Semantic Colors */
-  --success: #16a34a;
-  /* green-600 */
-  --warning: #eab308;
-  /* yellow-500 */
-  --danger: #dc2626;
-  /* red-600 */
-  --info: #0284c7;
+  /* Neutral */
+  --primitive-neutral-0: #ffffff;
+  --primitive-neutral-50: #f9fafb;
+  --primitive-neutral-100: #f3f4f6;
+  --primitive-neutral-200: #e5e7eb;
+  --primitive-neutral-300: #d1d5db;
+  --primitive-neutral-400: #9ca3af;
+  --primitive-neutral-500: #6b7280;
+  --primitive-neutral-600: #6b7280;
+  --primitive-neutral-700: #4b5563;
+  --primitive-neutral-800: #374151;
+  --primitive-neutral-850: #1f2937;
+  --primitive-neutral-900: #111827;
+  --primitive-neutral-950: #030712;
 
-  /* Neutral Scale (Gray) */
-  --neutral-950: #030712;
-  /* gray-950 */
-  --neutral-900: #111827;
-  /* gray-900 */
-  --neutral-850: #1f2937;
-  /* gray-800 */
-  --neutral-800: #374151;
-  /* gray-700 */
-  --neutral-700: #4b5563;
-  /* gray-600 */
-  --neutral-600: #6b7280;
-  /* gray-500 */
-  --neutral-500: #6b7280;
-  /* duplicate for mapping */
-  --neutral-400: #9ca3af;
-  /* gray-400 */
-  --neutral-300: #d1d5db;
-  /* gray-300 */
-  --neutral-200: #e5e7eb;
-  /* gray-200 */
-  --neutral-100: #f3f4f6;
-  /* gray-100 */
-  --neutral-50: #f9fafb;
-  /* gray-50 */
-  --neutral: #ffffff;
-  /* white */
+  /* Success (green) */
+  --primitive-success-50: #f0fdf4;
+  --primitive-success-100: #dcfce7;
+  --primitive-success-200: #bbf7d0;
+  --primitive-success-500: #22c55e;
+  --primitive-success-600: #16a34a;
+  --primitive-success-700: #15803d;
+  --primitive-success-800: #166534;
+
+  /* Warning (amber) */
+  --primitive-warning-50: #fffbeb;
+  --primitive-warning-100: #fef3c7;
+  --primitive-warning-200: #fde68a;
+  --primitive-warning-300: #fcd34d;
+  --primitive-warning-500: #eab308;
+  --primitive-warning-600: #ca8a04;
+  --primitive-warning-700: #a16207;
+  --primitive-warning-800: #854d0e;
+  --primitive-warning-900: #713f12;
+
+  /* Danger (red) */
+  --primitive-danger-50: #fef2f2;
+  --primitive-danger-100: #fee2e2;
+  --primitive-danger-200: #fecaca;
+  --primitive-danger-500: #ef4444;
+  --primitive-danger-600: #dc2626;
+  --primitive-danger-700: #b91c1c;
+  --primitive-danger-800: #991b1b;
+  --primitive-danger-900: #7f1d1d;
+
+  /* Info / accent (violet for charts) */
+  --primitive-info-500: #8b5cf6;
+  --primitive-info-400: #a78bfa;
+
+  /* ─── Tokens (Semantic) ─── */
+  /* Actions */
+  --action-primary: var(--primitive-brand-600);
+  --action-primary-hover: var(--primitive-brand-700);
+  --action-primary-muted-bg: var(--primitive-brand-100);
+  --action-primary-on: var(--primitive-neutral-0);
+  --action-primary-text: var(--primitive-brand-800);
+  --action-secondary-bg: var(--primitive-neutral-200);
+  --action-secondary-bg-hover: var(--primitive-neutral-300);
+  --action-secondary-text: var(--primitive-neutral-900);
+  --action-danger: var(--primitive-danger-600);
+  --action-danger-hover: var(--primitive-danger-700);
+  --action-danger-on: var(--primitive-neutral-0);
+  --action-success: var(--primitive-success-600);
+  --action-success-on: var(--primitive-neutral-0);
+  --action-warning: var(--primitive-warning-500);
+  --action-warning-on: var(--primitive-neutral-950);
 
   /* Surfaces */
-  --app-background: var(--neutral-50);
-  --surface: var(--neutral);
-  --surface-elev: var(--neutral);
-  --surface-card: var(--neutral);
-  --surface-muted: var(--neutral-50);
-  --surface-contrast: var(--neutral-900);
-  --surface-accent: var(--brand);
-  --surface-button: var(--neutral-100);
-  --surface-hover: var(--neutral-50);
-  --surface-item-hover: var(--neutral-50);
-  --surface-selected: var(--brand-light);
-  --overlay: rgba(0, 0, 0, 0.5);
+  --surface-canvas: var(--primitive-neutral-50);
+  --surface-default: var(--primitive-neutral-0);
+  --surface-raised: var(--primitive-neutral-0);
+  --surface-overlay: var(--primitive-neutral-0);
+  --surface-hover: var(--primitive-neutral-50);
+  --surface-selected: var(--primitive-brand-100);
+  --surface-report-panel: #e0f2f7;
 
-  /* Toast (dark notification bar – fixed palette) */
+  /* Text */
+  --text-primary: var(--primitive-neutral-900);
+  --text-secondary: var(--primitive-neutral-700);
+  --text-tertiary: var(--primitive-neutral-600);
+  --text-muted: var(--primitive-neutral-400);
+  --text-disabled: var(--primitive-neutral-300);
+  --text-inverse: var(--primitive-neutral-0);
+
+  /* Borders */
+  --border-default: var(--primitive-neutral-200);
+  --border-subtle: var(--primitive-neutral-100);
+  --border-strong: var(--primitive-neutral-300);
+  --border-focus: var(--primitive-brand-600);
+  --border-error: var(--primitive-danger-600);
+  --border-hover: var(--primitive-neutral-300);
+
+  /* Focus */
+  --focus-ring: var(--primitive-brand-600);
+  --focus-ring-offset: var(--surface-default);
+
+  /* Feedback — success */
+  --feedback-success-bg: var(--primitive-success-50);
+  --feedback-success-bg-strong: var(--primitive-success-100);
+  --feedback-success-text: var(--primitive-success-600);
+  --feedback-success-text-strong: var(--primitive-success-700);
+  --feedback-success-border: var(--primitive-success-200);
+
+  /* Feedback — warning */
+  --feedback-warning-bg: var(--primitive-warning-50);
+  --feedback-warning-bg-strong: var(--primitive-warning-100);
+  --feedback-warning-text: var(--primitive-warning-700);
+  --feedback-warning-text-strong: var(--primitive-warning-800);
+  --feedback-warning-border: var(--primitive-warning-200);
+  --feedback-warning-border-strong: var(--primitive-warning-300);
+
+  /* Feedback — danger */
+  --feedback-danger-bg: var(--primitive-danger-50);
+  --feedback-danger-bg-strong: var(--primitive-danger-100);
+  --feedback-danger-text: var(--primitive-danger-600);
+  --feedback-danger-text-strong: var(--primitive-danger-700);
+  --feedback-danger-border: var(--primitive-danger-200);
+  --feedback-danger-border-strong: var(--primitive-danger-600);
+
+  /* Charts */
+  --chart-grid: var(--primitive-neutral-200);
+  --chart-axis: var(--primitive-neutral-500);
+  --chart-tooltip-bg: var(--primitive-neutral-0);
+  --chart-tooltip-border: var(--primitive-neutral-200);
+  --chart-series-primary: var(--primitive-brand-500);
+  --chart-series-success: var(--primitive-success-600);
+  --chart-series-danger: var(--primitive-danger-500);
+  --chart-series-accent: var(--primitive-info-500);
+  --chart-series-accent-light: var(--primitive-info-400);
+
+  /* Overlay & shadows */
+  --overlay-modal: rgba(0, 0, 0, 0.5);
+  --shadow-footer: 0 -1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-1: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-2: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-3: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 15px var(--action-primary);
+
+  /* State overlays (hover/active on surfaces) */
+  --state-hover-overlay: rgba(0, 0, 0, 0.05);
+  --state-active-overlay: rgba(0, 0, 0, 0.1);
+
+  /* Toasts */
   --toast-bg: #333333;
   --toast-text: #ffffff;
   --toast-text-muted: #cccccc;
@@ -72,103 +170,30 @@
   --toast-warning: #ffc107;
   --toast-danger: #f44336;
 
-  /* Text */
-  --text: var(--neutral-900);
-  /* gray-900 */
-  --text-secondary: var(--neutral-700);
-  /* gray-700 */
-  --text-tertiary: var(--neutral-600);
-  /* gray-600 */
-  --text-muted: var(--neutral-400);
-  /* gray-400 */
-  --text-disabled: var(--neutral-300);
-  /* gray-300 */
-  --text-accent: var(--brand);
-  --text-inverse: var(--neutral);
-  --placeholder: var(--neutral-400);
-
-  /* Borders */
-  --border: var(--neutral-200);
-  /* gray-200 */
-  --border-subtle: var(--neutral-100);
-  --border-strong: var(--neutral-300);
-  --border-hover: var(--neutral-300);
-  --border-active: var(--neutral-400);
-  --border-focus: var(--brand);
-  --border-error: var(--danger);
-  --ring-focus: var(--brand);
-
-  /* States */
-  --state-hover-overlay: rgba(0, 0, 0, 0.05);
-  --state-active-overlay: rgba(0, 0, 0, 0.1);
-  --state-focus-width: 2px;
-  --state-focus-offset: 0px;
-  --state-disabled-opacity: 0.5;
-
-  /* Indicators */
-  --indicator-active: var(--brand);
-  --indicator-inactive: var(--neutral-400);
-
-  /* Shadows */
-  --shadow-1: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-2: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-3: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-glow: 0 0 15px var(--brand);
-
-  /* Tones (Backwards compatibility/Mapping) */
-  --tone-neutral-bg: var(--neutral-200);
-  --tone-neutral-text: var(--neutral-900);
-  --tone-neutral-border: var(--border);
-
-  --tone-info-bg: var(--info);
-  --tone-info-text: var(--neutral);
-  --tone-info-border: var(--info);
-
-  --tone-success-bg: var(--success);
-  --tone-success-text: var(--neutral);
-  --tone-success-border: var(--success);
-
-  --tone-warning-bg: var(--warning);
-  --tone-warning-text: var(--neutral);
-  --tone-warning-border: var(--warning);
-
-  --tone-danger-bg: var(--danger);
-  --tone-danger-text: var(--neutral);
-  --tone-danger-border: var(--danger);
-
-  --tone-accent-bg: var(--brand);
-  --tone-accent-text: var(--neutral);
-  --tone-accent-border: var(--brand);
-
-  /* Auth Theme (Dark by default) */
-  --auth-bg: #1a1f2e;
-  --auth-bg-secondary: #232938;
-  --auth-bg-tertiary: #1e242f;
-  --auth-bg-hover: #283040;
-
-  --auth-accent: #3d5a66;
-  --auth-accent-hover: #4a6b78;
-  --auth-accent-medium: #4a6670;
-  --auth-accent-light: #7a9ba8;
-
+  /* Auth (login context) */
+  --auth-canvas: #1a1f2e;
+  --auth-panel: #232938;
+  --auth-panel-hover: #283040;
+  --auth-input-bg: #232938;
+  --auth-input-border: #2d3548;
+  --auth-input-border-focus: #4a6670;
+  --auth-input-focus-ring: rgba(74, 102, 112, 0.5);
   --auth-text-primary: #e8eaed;
   --auth-text-secondary: #b0b8c8;
   --auth-text-muted: #6b7280;
   --auth-text-light: #7a9ba8;
-
+  --auth-accent: #3d5a66;
+  --auth-accent-hover: #4a6b78;
+  --auth-accent-medium: #4a6670;
+  --auth-accent-light: #7a9ba8;
   --auth-border: #2d3548;
   --auth-border-light: #3a4455;
   --auth-border-hover: #3d4760;
-  --auth-border-focus: #4a6670;
-
-  /* Auth Error Colors */
   --auth-error-bg: #3d2a2e;
   --auth-error-bg-light: #4a3035;
   --auth-error-border: #5a3a40;
   --auth-error-text: #d4989d;
   --auth-error-icon: #c9787e;
-
-  /* Auth Feature Card Colors */
   --auth-feature-card-bg: #232938;
   --auth-feature-card-hover: #283040;
   --auth-feature-card-border: #2d3548;
@@ -176,50 +201,16 @@
   --auth-feature-card-icon-bg: #2d4550;
   --auth-feature-card-icon-bg-hover: #3a5663;
   --auth-feature-card-icon-border: #3d5a66;
-
-  /* Auth User Badge Colors */
   --auth-user-badge-bg: #3a4556;
   --auth-user-badge-border: #1a1f2e;
   --auth-user-badge-icon: #8892a6;
 }
 
-/* Base Transitions */
-* {
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-/* Filter Chip Styles - Consistent styling for all filter bins */
-.filter-chip {
-  background-color: var(--surface);
-  border: 1px solid var(--border-strong);
-  color: var(--text-secondary);
-  border-radius: 0.25rem; /* rounded */
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-
-.filter-chip:hover {
-  background-color: var(--surface-hover);
-  border: 1px solid var(--border-hover);
-  color: var(--text-secondary);
-}
-
-.filter-chip--active {
-  background-color: var(--brand-light);
-  border: 1px solid var(--brand);
-  color: var(--brand-text);
-}
-
-.filter-chip--active:hover {
-  background-color: var(--brand-light);
-  border: 1px solid var(--brand);
-  color: var(--brand-text);
-}
-
-/* RSuite Overrides to match theme */
-.rs-nav-item::after {
-  background-color: var(--indicator-active) !important;
-}
-
-.rs-nav-item-active::after {
-  background-color: var(--indicator-active) !important;
-}
+/* Optional utility classes (reference tokens only) */
+.btn-primary { background-color: var(--action-primary); color: var(--action-primary-on); }
+.btn-primary:hover { background-color: var(--action-primary-hover); }
+.btn-secondary { background-color: var(--action-secondary-bg); color: var(--action-secondary-text); }
+.btn-secondary:hover { background-color: var(--action-secondary-bg-hover); }
+.btn-outline { border: 2px solid var(--border-strong); background: transparent; color: var(--text-secondary); }
+.btn-outline:hover { background-color: var(--surface-hover); }
+.surface-selected { background-color: var(--surface-selected); border: 1px solid var(--action-primary); color: var(--action-primary-text); }

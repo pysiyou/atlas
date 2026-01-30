@@ -22,8 +22,8 @@ export const RedZoneSection: React.FC<RedZoneSectionProps> = ({
   isNotifying = false,
 }) => {
   return (
-    <section className="rounded-lg border border-red-200 bg-red-50/50 p-4 space-y-4">
-      <h2 className="text-sm font-bold text-red-900 uppercase tracking-wide">Red Zone</h2>
+    <section className="rounded-lg border border-feedback-danger-border bg-feedback-danger-bg/50 p-4 space-y-4">
+      <h2 className="text-sm font-bold text-feedback-danger-text-strong uppercase tracking-wide">Red Zone</h2>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 space-y-3">
           {criticalAlerts.length === 0 ? (

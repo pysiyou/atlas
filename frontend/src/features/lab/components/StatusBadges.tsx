@@ -79,7 +79,7 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
     <span className={className}>
       {formattedSampleId && (
         <>
-          Sample <span className="font-mono text-brand">{formattedSampleId}</span>{' '}
+          Sample <span className="font-mono text-action-primary">{formattedSampleId}</span>{' '}
         </>
       )}
       collected <span className="text-text-secondary">{formatDate(collectedAt)}</span>
@@ -156,13 +156,13 @@ export const RecollectionBadge: React.FC<RecollectionBadgeProps> = ({
       {formattedOriginalId && (
         <Badge size="sm" variant="warning" className="flex items-center gap-1">
           <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-          Recollection of <span className="font-mono text-brand">{formattedOriginalId}</span>
+          Recollection of <span className="font-mono text-action-primary">{formattedOriginalId}</span>
         </Badge>
       )}
       {formattedRecollectionId && (
         <Badge size="sm" variant="info" className="flex items-center gap-1">
           <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-          Recollection requested: <span className="font-mono text-brand">{formattedRecollectionId}</span>
+          Recollection requested: <span className="font-mono text-action-primary">{formattedRecollectionId}</span>
         </Badge>
       )}
     </div>

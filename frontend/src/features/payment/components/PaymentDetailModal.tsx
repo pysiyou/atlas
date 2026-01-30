@@ -84,9 +84,9 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
   );
 
   return (
-    <div className="rounded-lg border border-border overflow-hidden bg-surface">
+    <div className="rounded-lg border border-border-default overflow-hidden bg-surface-default">
       {/* Receipt Header */}
-      <div className="px-6 py-4 border-b border-dashed border-border-strong bg-app-bg">
+      <div className="px-6 py-4 border-b border-dashed border-border-default-strong bg-surface-canvas">
         <div className="flex justify-between items-center mb-2">
           {order.patientName ? (
             <p className="text-sm font-semibold text-text-secondary">{order.patientName}</p>
@@ -103,11 +103,11 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
         <div className="space-y-1.5">
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Order Number:</span>
-            <span className="text-brand font-medium font-mono">{displayId.order(order.orderId)}</span>
+            <span className="text-action-primary font-medium font-mono">{displayId.order(order.orderId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Patient Number:</span>
-            <span className="text-brand font-medium font-mono">{displayId.patient(order.patientId)}</span>
+            <span className="text-action-primary font-medium font-mono">{displayId.patient(order.patientId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Order Date:</span>
@@ -138,7 +138,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
                       {test.testName || test.testCode || 'Test'}
                     </span>
                     {test.testCode && test.testName !== test.testCode && (
-                      <span className="text-xs text-brand font-mono mt-0.5">{test.testCode}</span>
+                      <span className="text-xs text-action-primary font-mono mt-0.5">{test.testCode}</span>
                     )}
                   </span>
                 </span>
@@ -154,12 +154,12 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
       </div>
 
       {/* Receipt Footer with Total (sum of active tests only) */}
-      <div className="border-t border-dashed border-border-strong mx-6" />
-      <div className="px-6 py-4 flex justify-between items-center bg-app-bg">
+      <div className="border-t border-dashed border-border-default-strong mx-6" />
+      <div className="px-6 py-4 flex justify-between items-center bg-surface-canvas">
         <span className="text-sm font-semibold text-text-secondary uppercase tracking-wider">
           Total
         </span>
-        <span className="text-lg font-bold text-brand tabular-nums">
+        <span className="text-lg font-bold text-action-primary tabular-nums">
           {formatCurrency(activeTotal)}
         </span>
       </div>
@@ -246,12 +246,12 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         title="Process Payment"
-        subtitle={<span>Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span></span>}
+        subtitle={<span>Order <span className="font-mono text-action-primary">{displayId.order(order.orderId)}</span></span>}
         size="xl"
         disableClose={submitting}
         closeOnBackdropClick={!submitting}
       >
-        <div className="flex flex-col h-full bg-app-bg">
+        <div className="flex flex-col h-full bg-surface-canvas">
           {/* Scrollable content area */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {/* Receipt-style Order Summary */}
@@ -261,7 +261,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             {!isPaid && (
               <div>
                 <label className="block text-sm font-medium text-text-secondary mb-3">
-                  Payment Method <span className="text-danger">*</span>
+                  Payment Method <span className="text-feedback-danger-text">*</span>
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   {PAYMENT_METHODS.map(method => {
@@ -276,8 +276,8 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                           relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                           ${
                             isSelected
-                              ? 'bg-surface border-brand border-2'
-                              : 'bg-surface border-border hover:border-border-strong'
+                              ? 'bg-surface-default border-action-primary border-2'
+                              : 'bg-surface-default border-border-default hover:border-border-strong'
                           }
                           ${submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                         `}
@@ -285,7 +285,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                         {/* Brand icon on the left */}
                         <Icon
                           name={method.icon as IconName}
-                          className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-text-disabled'}`}
+                          className={`w-7 h-7 shrink-0 ${isSelected ? 'text-action-primary' : 'text-text-disabled'}`}
                         />
                         {/* Brand label */}
                         <span
@@ -299,12 +299,12 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                         <div
                           className={`
                             absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                            ${isSelected ? 'bg-green-600' : 'bg-transparent border-2 border-border-strong'}
+                            ${isSelected ? 'bg-action-success' : 'bg-transparent border-2 border-border-strong'}
                           `}
                         >
                           <Icon
                             name={ICONS.actions.check}
-                            className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-text-disabled'}`}
+                            className={`w-3 h-3 ${isSelected ? 'text-action-primary-on' : 'text-text-disabled'}`}
                           />
                         </div>
                       </button>
@@ -324,7 +324,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
                   disabled={submitting}
-                  className="w-full px-4 py-3 text-sm border border-border-strong rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent resize-none disabled:opacity-50 disabled:bg-app-bg"
+                  className="w-full px-4 py-3 text-sm border border-border-strong rounded-lg focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent resize-none disabled:opacity-50 disabled:bg-surface-canvas"
                 />
               </div>
             )}
@@ -338,18 +338,18 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
 
             {/* Paid Success Message */}
             {isPaid && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
-                <Icon name={ICONS.actions.checkCircle} className="w-6 h-6 text-green-600 shrink-0" />
+              <div className="bg-feedback-success-bg border border-feedback-success-border rounded-lg p-4 flex items-center gap-3">
+                <Icon name={ICONS.actions.checkCircle} className="w-6 h-6 text-feedback-success-text shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-green-700">Payment Complete</p>
-                  <p className="text-xs text-green-600 mt-0.5">This order has been fully paid.</p>
+                  <p className="text-sm font-medium text-feedback-success-text-strong">Payment Complete</p>
+                  <p className="text-xs text-feedback-success-text mt-0.5">This order has been fully paid.</p>
                 </div>
               </div>
             )}
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border bg-surface shrink-0">
+          <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface-default shrink-0">
             <FooterInfo icon={ICONS.dataFields.wallet} text={isPaid ? 'Payment complete' : 'Processing payment'} />
             <div className="flex items-center gap-3">
             <Button

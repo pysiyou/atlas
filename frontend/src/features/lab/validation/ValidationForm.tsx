@@ -129,7 +129,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   };
 
   return (
-    <div className="bg-app-bg rounded border border-border p-4 border">
+    <div className="bg-surface-canvas rounded border border-border-default p-4 border">
       {/* Panic Value Alerts */}
       {panicValues.length > 0 && (
         <div className="mb-6 space-y-4">
@@ -160,8 +160,8 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
               const abnormal = status !== 'normal';
               const valueColor = abnormal
                 ? isCritical(status)
-                  ? 'text-red-600'
-                  : 'text-amber-600'
+                  ? 'text-feedback-danger-text'
+                  : 'text-feedback-warning-text'
                 : 'text-text-primary';
               
               return (
@@ -185,9 +185,9 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
 
       {/* Flags and Notes */}
       {(hasFlags || technicianNotes) && (
-        <div className="mb-6 space-y-2 bg-app-bg/50 rounded-md p-3 border border-border-subtle">
+        <div className="mb-6 space-y-2 bg-surface-canvas/50 rounded-md p-3 border border-border-subtle">
           {hasFlags && (
-            <div className="flex items-start text-xs text-red-600">
+            <div className="flex items-start text-xs text-feedback-danger-text">
               <div className="font-medium">{flags.join(', ')}</div>
             </div>
           )}
@@ -200,7 +200,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
       )}
 
       {/* Validation Notes */}
-      <div className="space-y-3 border-t border-border pt-4">
+      <div className="space-y-3 border-t border-border-default pt-4">
         <Textarea
           label="Validation Notes"
           value={comments}
