@@ -36,6 +36,7 @@ export function useOrderService() {
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(String(id)) });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
       toast.success('Order updated successfully');
     },
     onError: (error) => {

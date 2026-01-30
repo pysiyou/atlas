@@ -1,6 +1,6 @@
 /**
  * Laboratory Page (canonical)
- * Lab operations - sample collection, result entry, validation, escalation, dashboard
+ * Lab operations - sample collection, result entry, validation, escalation, command center
  */
 
 import React, { useMemo, useState } from 'react';
@@ -8,7 +8,7 @@ import { CollectionView } from '../collection/CollectionView';
 import { EntryView } from '../entry/EntryView';
 import { ValidationView } from '../validation/ValidationView';
 import { EscalationView } from '../validation/EscalationView';
-import { AnalyticsDashboard } from '@/features/lab/analytics';
+import { CommandCenterDashboard } from '@/features/lab/command-center';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import { Icon } from '@/shared/ui';
 import { ICONS } from '@/utils';
@@ -48,7 +48,7 @@ export const Laboratory: React.FC = () => {
     }
     base.push({
       id: 'dashboard',
-      label: 'Dashboard',
+      label: 'Command Center',
       icon: <Icon name={ICONS.ui.dashboard} className="w-4 h-4" />,
     });
     return base;
@@ -99,9 +99,7 @@ export const Laboratory: React.FC = () => {
           {activeTab === 'validation' && <ValidationView />}
           {activeTab === 'escalation' && canResolveEscalation && <EscalationView />}
           {activeTab === 'dashboard' && (
-            <div className="flex-1 overflow-y-auto p-6">
-              <AnalyticsDashboard />
-            </div>
+            <CommandCenterDashboard onNavigateToTab={setActiveTab} />
           )}
         </div>
       </div>

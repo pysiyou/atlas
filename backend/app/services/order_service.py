@@ -170,6 +170,14 @@ class OrderService:
         for field, value in update_data.items():
             setattr(order, field, value)
         order.updatedAt = datetime.now(timezone.utc)
+
+        # Cascade priority change to all samples for this order
+        if "priority" in update_data:
+            for sample in self.db.query(Sample).filter(Sample.orderId == order_id).all():
+                sample.priority = order.priority
+                sample.updatedAt = datetime.now(timezone.utc)
+                sample.updatedBy = str(user_id)
+
         self.db.commit()
         self.db.refresh(order)
         return self._order_with_relations(order.orderId)

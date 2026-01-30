@@ -17,6 +17,7 @@ export * from './components';
 export * from './collection';
 export * from './entry';
 export * from './validation';
+export * from './command-center';
 
 // Pages
 export * from './pages';

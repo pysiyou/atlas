@@ -70,6 +70,7 @@ export function useUpdateOrder() {
         typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
     },
   });
 }
