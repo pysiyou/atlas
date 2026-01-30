@@ -1,6 +1,6 @@
 /**
  * Laboratory Page (canonical)
- * Lab operations - sample collection, result entry, validation, escalation, analytics
+ * Lab operations - sample collection, result entry, validation, escalation, dashboard
  */
 
 import React, { useMemo, useState } from 'react';
@@ -13,7 +13,7 @@ import { useAuthStore } from '@/shared/stores/auth.store';
 import { Icon } from '@/shared/ui';
 import { ICONS } from '@/utils';
 
-type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation' | 'analytics';
+type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation' | 'dashboard';
 
 export const Laboratory: React.FC = () => {
   const { hasRole } = useAuthStore();
@@ -47,9 +47,9 @@ export const Laboratory: React.FC = () => {
       });
     }
     base.push({
-      id: 'analytics',
-      label: 'Analytics',
-      icon: <Icon name={ICONS.dataFields.trendingUp} className="w-4 h-4" />,
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: <Icon name={ICONS.ui.dashboard} className="w-4 h-4" />,
     });
     return base;
   }, [canResolveEscalation]);
@@ -98,7 +98,7 @@ export const Laboratory: React.FC = () => {
           {activeTab === 'entry' && <EntryView />}
           {activeTab === 'validation' && <ValidationView />}
           {activeTab === 'escalation' && canResolveEscalation && <EscalationView />}
-          {activeTab === 'analytics' && (
+          {activeTab === 'dashboard' && (
             <div className="flex-1 overflow-y-auto p-6">
               <AnalyticsDashboard />
             </div>

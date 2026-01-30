@@ -3,6 +3,13 @@
  * Type definitions for lab analytics and metrics
  */
 
+/** Daily TAT/compliance for trend charts */
+export interface TATTrendPoint {
+  date: string;
+  averageTAT: number;
+  complianceRate: number;
+}
+
 export interface TATMetrics {
   averageTAT: number; // minutes
   medianTAT: number;
@@ -13,6 +20,8 @@ export interface TATMetrics {
     collectionToEntry: number;
     entryToValidation: number;
   };
+  /** Daily series for "TAT Over Time" / "Compliance Over Time" charts */
+  trend?: TATTrendPoint[];
 }
 
 export interface VolumeMetrics {
@@ -66,6 +75,22 @@ export interface BacklogMetrics {
   };
 }
 
+/** Lab funnel: Orders → Collected → Entered → Validated */
+export interface FunnelMetrics {
+  orders: number;
+  collected: number;
+  entered: number;
+  validated: number;
+}
+
+/** Period-over-period percentage deltas for trend indicators */
+export interface PeriodChange {
+  totalTests?: number;
+  averageTAT?: number;
+  complianceRate?: number;
+  validatedPercent?: number;
+}
+
 export interface LabAnalytics {
   tat: TATMetrics;
   volume: VolumeMetrics;
@@ -73,6 +98,7 @@ export interface LabAnalytics {
   criticalValues: CriticalValueMetrics;
   productivity: ProductivityMetrics;
   backlog: BacklogMetrics;
+  funnel: FunnelMetrics;
   generatedAt: string;
 }
 

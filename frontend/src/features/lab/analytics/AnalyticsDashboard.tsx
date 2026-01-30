@@ -1,28 +1,148 @@
 /**
  * Analytics Dashboard
- * Comprehensive lab metrics and KPIs
+ * Lab metrics in 3x2 widget grid with toolbar (date range, compare-to, export).
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useLabMetrics } from './hooks/useLabMetrics';
-import { MetricsCard } from './components/MetricsCard';
-import { TATChart } from './components/TATChart';
-import { VolumeChart } from './components/VolumeChart';
-import { RejectionChart } from './components/RejectionChart';
+import { AnalyticsToolbar } from './components/AnalyticsToolbar';
+import type { DateRangePreset, CompareToOption } from './components/AnalyticsToolbar';
+import { WidgetCard } from './components/WidgetCard';
+import { TestsOverTimeChart } from './components/TestsOverTimeChart';
+import { TATTrendChart } from './components/TATTrendChart';
+import { FunnelSteps } from './components/FunnelSteps';
+import { TestsByDayBarChart } from './components/TestsByDayBarChart';
 import { ProductivityTable } from './components/ProductivityTable';
-import { Icon, Button } from '@/shared/ui';
 import { ICONS } from '@/utils';
 import { format, subDays } from 'date-fns';
-import type { DateRangeFilter } from './types';
+import type { DateRangeFilter, PeriodChange } from './types';
+
+function getDateRangeForPreset(preset: DateRangePreset): DateRangeFilter {
+  const end = new Date();
+  const start =
+    preset === 'thisWeek' || preset === 'last7'
+      ? subDays(end, 7)
+      : preset === 'last30'
+        ? subDays(end, 30)
+        : subDays(end, 90);
+  return {
+    startDate: format(start, 'yyyy-MM-dd'),
+    endDate: format(end, 'yyyy-MM-dd'),
+  };
+}
+
+function getComparisonDateRange(
+  dateRange: DateRangeFilter,
+  option: CompareToOption
+): DateRangeFilter | null {
+  if (option === 'none') return null;
+  const start = new Date(dateRange.startDate);
+  const end = new Date(dateRange.endDate);
+  const days = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  if (option === 'lastWeek') {
+    return {
+      startDate: format(subDays(start, 7), 'yyyy-MM-dd'),
+      endDate: format(subDays(end, 7), 'yyyy-MM-dd'),
+    };
+  }
+  return {
+    startDate: format(subDays(start, days), 'yyyy-MM-dd'),
+    endDate: format(subDays(start, 1), 'yyyy-MM-dd'),
+  };
+}
+
+function computePeriodChange(
+  current: { volume: { total: number }; tat: { averageTAT: number; complianceRate: number }; funnel: { validated: number }; volumeTotal: number },
+  comparison: { volume: { total: number }; tat: { averageTAT: number; complianceRate: number }; funnel: { validated: number }; volumeTotal: number }
+): PeriodChange {
+  const pct = (a: number, b: number) =>
+    b === 0 ? undefined : Math.round(((a - b) / b) * 100 * 100) / 100;
+  const currValidPct = current.volumeTotal > 0 ? (current.funnel.validated / current.volumeTotal) * 100 : 0;
+  const prevValidPct = comparison.volumeTotal > 0 ? (comparison.funnel.validated / comparison.volumeTotal) * 100 : 0;
+  const tatDelta =
+    comparison.tat.averageTAT > 0
+      ? Math.round(((comparison.tat.averageTAT - current.tat.averageTAT) / comparison.tat.averageTAT) * 100 * 100) / 100
+      : undefined;
+  return {
+    totalTests: pct(current.volume.total, comparison.volume.total),
+    averageTAT: tatDelta,
+    complianceRate: pct(current.tat.complianceRate, comparison.tat.complianceRate),
+    validatedPercent: pct(currValidPct, prevValidPct),
+  };
+}
+
+function formatMinutes(minutes: number): string {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  if (hours > 0) return `${hours}h ${mins}m`;
+  return `${mins}m`;
+}
+
+const DATE_RANGE_LABELS: Record<DateRangePreset, string> = {
+  thisWeek: 'This Week',
+  last7: 'Last 7 days',
+  last30: 'Last 30 days',
+  last90: 'Last 90 days',
+};
 
 export const AnalyticsDashboard: React.FC = () => {
-  // Default to last 30 days
-  const [dateRange, setDateRange] = useState<DateRangeFilter>({
-    startDate: format(subDays(new Date(), 30), 'yyyy-MM-dd'),
-    endDate: format(new Date(), 'yyyy-MM-dd'),
-  });
+  const [dateRangePreset, setDateRangePreset] = useState<DateRangePreset>('last30');
+  const [dateRange, setDateRange] = useState<DateRangeFilter>(() =>
+    getDateRangeForPreset('last30')
+  );
+  const [compareTo, setCompareTo] = useState<CompareToOption>('none');
+
+  const comparisonRange = useMemo(
+    () => getComparisonDateRange(dateRange, compareTo),
+    [dateRange, compareTo]
+  );
 
   const { analytics, isLoading } = useLabMetrics(dateRange);
+  const comparison = useLabMetrics(comparisonRange ?? undefined);
+
+  const periodChange = useMemo((): PeriodChange | undefined => {
+    if (!comparisonRange || !comparison.analytics) return undefined;
+    return computePeriodChange(
+      {
+        volume: analytics.volume,
+        tat: analytics.tat,
+        funnel: analytics.funnel,
+        volumeTotal: analytics.volume.total,
+      },
+      {
+        volume: comparison.analytics.volume,
+        tat: comparison.analytics.tat,
+        funnel: comparison.analytics.funnel,
+        volumeTotal: comparison.analytics.volume.total,
+      }
+    );
+  }, [comparisonRange, analytics, comparison.analytics]);
+
+  const dateRangeLabel = DATE_RANGE_LABELS[dateRangePreset];
+
+  const handleDateRangePreset = (preset: DateRangePreset) => {
+    setDateRangePreset(preset);
+    setDateRange(getDateRangeForPreset(preset));
+  };
+
+  const handleExportData = () => {
+    const payload = {
+      dateRange,
+      comparisonRange: comparisonRange ?? undefined,
+      analytics,
+      comparisonAnalytics: comparison.analytics ?? undefined,
+      exportedAt: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `lab-analytics-${format(new Date(), 'yyyy-MM-dd-HHmm')}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   if (isLoading) {
     return (
@@ -32,204 +152,121 @@ export const AnalyticsDashboard: React.FC = () => {
     );
   }
 
-  const formatMinutes = (minutes: number): string => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (hours > 0) {
-      return `${hours}h ${mins}m`;
-    }
-    return `${mins}m`;
-  };
+  const validatedPct =
+    analytics.volume.total > 0
+      ? Math.round((analytics.funnel.validated / analytics.volume.total) * 100 * 100) / 100
+      : 0;
 
   return (
     <div className="space-y-6">
-      {/* Header with date range selector */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary">Lab Analytics</h1>
-          <p className="text-sm text-text-tertiary mt-1">
-            Performance metrics and insights
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setDateRange({
-                startDate: format(subDays(new Date(), 7), 'yyyy-MM-dd'),
-                endDate: format(new Date(), 'yyyy-MM-dd'),
-              });
-            }}
-          >
-            Last 7 days
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setDateRange({
-                startDate: format(subDays(new Date(), 30), 'yyyy-MM-dd'),
-                endDate: format(new Date(), 'yyyy-MM-dd'),
-              });
-            }}
-          >
-            Last 30 days
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setDateRange({
-                startDate: format(subDays(new Date(), 90), 'yyyy-MM-dd'),
-                endDate: format(new Date(), 'yyyy-MM-dd'),
-              });
-            }}
-          >
-            Last 90 days
-          </Button>
-        </div>
-      </div>
+      <AnalyticsToolbar
+        dateRange={dateRange}
+        dateRangeLabel={dateRangeLabel}
+        dateRangePreset={dateRangePreset}
+        onDateRangePreset={handleDateRangePreset}
+        compareTo={compareTo}
+        onCompareToChange={setCompareTo}
+        onExportData={handleExportData}
+      />
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricsCard
-          title="Average TAT"
-          value={formatMinutes(analytics.tat.averageTAT)}
-          subtitle={`Target: ${formatMinutes(analytics.tat.targetTAT)}`}
-          icon={ICONS.dataFields.hourglass}
-          color={analytics.tat.averageTAT <= analytics.tat.targetTAT ? 'success' : 'warning'}
-        />
-        <MetricsCard
-          title="TAT Compliance"
-          value={`${analytics.tat.complianceRate}%`}
-          subtitle="Tests within target"
-          icon="check-circle"
-          color={analytics.tat.complianceRate >= 80 ? 'success' : analytics.tat.complianceRate >= 60 ? 'warning' : 'danger'}
-        />
-        <MetricsCard
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Row 1, Col 1: Total Tests */}
+        <WidgetCard
           title="Total Tests"
-          value={analytics.volume.total.toLocaleString()}
-          subtitle="In selected period"
           icon={ICONS.dataFields.flask}
-          color="brand"
-        />
-        <MetricsCard
-          title="Critical Values"
-          value={analytics.criticalValues.total}
-          subtitle={`${analytics.criticalValues.pending} pending`}
-          icon="alert-circle"
-          color={analytics.criticalValues.pending > 0 ? 'danger' : 'success'}
-        />
-      </div>
+          value={analytics.volume.total.toLocaleString()}
+          change={
+            periodChange?.totalTests !== undefined
+              ? {
+                  value: Math.abs(periodChange.totalTests),
+                  isPositive: periodChange.totalTests > 0,
+                }
+              : undefined
+          }
+          chartTitle="Tests Over Time"
+        >
+          <TestsOverTimeChart
+            trend={analytics.volume.trend}
+            comparisonTrend={comparison.analytics?.volume.trend}
+            height={200}
+          />
+        </WidgetCard>
 
-      {/* Backlog Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <MetricsCard
-          title="Pending Collection"
-          value={analytics.backlog.pendingCollection}
-          subtitle={analytics.backlog.oldestPending.collection 
-            ? `Oldest: ${format(new Date(analytics.backlog.oldestPending.collection), 'MMM dd, HH:mm')}`
-            : 'All current'
+        {/* Row 1, Col 2: Average TAT */}
+        <WidgetCard
+          title="Average TAT"
+          icon={ICONS.dataFields.hourglass}
+          value={formatMinutes(analytics.tat.averageTAT)}
+          change={
+            periodChange?.averageTAT !== undefined
+              ? {
+                  value: Math.abs(periodChange.averageTAT),
+                  isPositive: periodChange.averageTAT > 0,
+                }
+              : undefined
           }
-          icon="sample-collection"
-          color={analytics.backlog.pendingCollection > 10 ? 'warning' : 'success'}
-        />
-        <MetricsCard
-          title="Pending Entry"
-          value={analytics.backlog.pendingEntry}
-          subtitle={analytics.backlog.oldestPending.entry 
-            ? `Oldest: ${format(new Date(analytics.backlog.oldestPending.entry), 'MMM dd, HH:mm')}`
-            : 'All current'
-          }
-          icon="pen"
-          color={analytics.backlog.pendingEntry > 10 ? 'warning' : 'success'}
-        />
-        <MetricsCard
-          title="Pending Validation"
-          value={analytics.backlog.pendingValidation}
-          subtitle={analytics.backlog.oldestPending.validation 
-            ? `Oldest: ${format(new Date(analytics.backlog.oldestPending.validation), 'MMM dd, HH:mm')}`
-            : 'All current'
-          }
+          chartTitle="TAT Over Time"
+        >
+          <TATTrendChart data={analytics.tat} mode="tat" height={200} />
+        </WidgetCard>
+
+        {/* Row 1, Col 3: TAT Compliance */}
+        <WidgetCard
+          title="TAT Compliance"
           icon="check-circle"
-          color={analytics.backlog.pendingValidation > 10 ? 'warning' : 'success'}
-        />
+          value={`${analytics.tat.complianceRate}%`}
+          change={
+            periodChange?.complianceRate !== undefined
+              ? {
+                  value: Math.abs(periodChange.complianceRate),
+                  isPositive: periodChange.complianceRate > 0,
+                }
+              : undefined
+          }
+          chartTitle="Compliance Over Time"
+        >
+          <TATTrendChart data={analytics.tat} mode="compliance" height={200} />
+        </WidgetCard>
+
+        {/* Row 2, Col 1: Lab Funnel */}
+        <WidgetCard
+          title="Lab Funnel"
+          icon="checklist"
+          value={`${validatedPct}%`}
+          change={
+            periodChange?.validatedPercent !== undefined
+              ? {
+                  value: Math.abs(periodChange.validatedPercent),
+                  isPositive: periodChange.validatedPercent > 0,
+                }
+              : undefined
+          }
+          chartTitle="Conversion by stage"
+        >
+          <FunnelSteps funnel={analytics.funnel} />
+        </WidgetCard>
+
+        {/* Row 2, Col 2: Test Volume (bar) */}
+        <WidgetCard
+          title="Test Volume"
+          icon="clock"
+          value={analytics.volume.total.toLocaleString()}
+          subtitle="Tests in period"
+          chartTitle="Tests by Day"
+        >
+          <TestsByDayBarChart trend={analytics.volume.trend} height={200} />
+        </WidgetCard>
+
+        {/* Row 2, Col 3: Technician Productivity */}
+        <WidgetCard
+          title="Technician Productivity"
+          icon="users-group"
+          value={`${analytics.productivity.byTechnician.length} technicians`}
+          chartTitle="Workload"
+        >
+          <ProductivityTable data={analytics.productivity} compact />
+        </WidgetCard>
       </div>
-
-      {/* Rejection Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <MetricsCard
-          title="Sample Rejection Rate"
-          value={`${analytics.rejections.sampleRejections.rate.toFixed(1)}%`}
-          subtitle={`${analytics.rejections.sampleRejections.total} samples rejected`}
-          icon="warning"
-          color={analytics.rejections.sampleRejections.rate < 5 ? 'success' : analytics.rejections.sampleRejections.rate < 10 ? 'warning' : 'danger'}
-        />
-        <MetricsCard
-          title="Result Rejection Rate"
-          value={`${analytics.rejections.resultRejections.rate.toFixed(1)}%`}
-          subtitle={`${analytics.rejections.resultRejections.retestCount} retests, ${analytics.rejections.resultRejections.recollectCount} recollects`}
-          icon="arrow-left"
-          color={analytics.rejections.resultRejections.rate < 5 ? 'success' : analytics.rejections.resultRejections.rate < 10 ? 'warning' : 'danger'}
-        />
-      </div>
-
-      {/* Charts - First Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <TATChart data={analytics.tat} />
-        <VolumeChart data={analytics.volume} />
-      </div>
-
-      {/* Charts - Second Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <RejectionChart data={analytics.rejections} />
-        <ProductivityTable data={analytics.productivity} />
-      </div>
-
-      {/* Critical Values Detail */}
-      {analytics.criticalValues.total > 0 && (
-        <div className="bg-surface border border-border rounded-lg p-4">
-          <h3 className="text-sm font-semibold text-text-primary mb-4">Critical Values by Test</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {analytics.criticalValues.byTest.slice(0, 6).map(test => (
-              <div key={test.testCode} className="flex items-center justify-between p-3 bg-surface-hover rounded border border-border/50">
-                <div>
-                  <p className="text-sm font-medium text-text-primary">{test.testName}</p>
-                  <p className="text-xs text-text-tertiary font-mono">{test.testCode}</p>
-                </div>
-                <span className="text-lg font-bold text-red-600">{test.count}</span>
-              </div>
-            ))}
-          </div>
-          {analytics.criticalValues.averageResponseTime > 0 && (
-            <div className="mt-4 pt-4 border-t border-border">
-              <p className="text-sm text-text-secondary">
-                <span className="font-medium">Average Response Time:</span>{' '}
-                {formatMinutes(analytics.criticalValues.averageResponseTime)}
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Test Volume by Priority */}
-      {Object.keys(analytics.volume.byPriority).length > 0 && (
-        <div className="bg-surface border border-border rounded-lg p-4">
-          <h3 className="text-sm font-semibold text-text-primary mb-4">Test Volume by Priority</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {Object.entries(analytics.volume.byPriority).map(([priority, count]) => (
-              <div key={priority} className="flex items-center justify-between p-3 bg-surface-hover rounded border border-border/50">
-                <div className="flex items-center gap-2">
-                  <Icon name={ICONS.priority} className="w-4 h-4 text-text-tertiary" />
-                  <span className="text-sm font-medium text-text-primary capitalize">{priority}</span>
-                </div>
-                <span className="text-lg font-bold text-brand">{count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

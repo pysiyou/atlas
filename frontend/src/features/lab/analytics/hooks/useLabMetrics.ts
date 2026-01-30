@@ -8,11 +8,13 @@ import { useOrdersList, useSamplesList, useUsersList } from '@/hooks/queries';
 import type {
   LabAnalytics,
   TATMetrics,
+  TATTrendPoint,
   VolumeMetrics,
   RejectionMetrics,
   CriticalValueMetrics,
   ProductivityMetrics,
   BacklogMetrics,
+  FunnelMetrics,
   DateRangeFilter,
 } from '../types';
 
@@ -26,8 +28,31 @@ const minutesBetween = (start: string | undefined, end: string | undefined): num
   return Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60));
 };
 
+/** Filter orders by date range (order date) */
+function filterOrdersByRange(orders: ReturnType<typeof useOrdersList>['orders'], range: DateRangeFilter | undefined) {
+  if (!orders || !range) return orders ?? [];
+  const start = new Date(range.startDate);
+  const end = new Date(range.endDate);
+  return orders.filter(order => {
+    const orderDate = new Date(order.orderDate);
+    return orderDate >= start && orderDate <= end;
+  });
+}
+
+/** Filter samples by date range (createdAt) */
+function filterSamplesByRange(samples: ReturnType<typeof useSamplesList>['samples'], range: DateRangeFilter | undefined) {
+  if (!samples || !range) return samples ?? [];
+  const start = new Date(range.startDate);
+  const end = new Date(range.endDate);
+  return samples.filter(sample => {
+    const sampleDate = new Date(sample.createdAt);
+    return sampleDate >= start && sampleDate <= end;
+  });
+}
+
 /**
- * Main hook to calculate all lab metrics
+ * Main hook to calculate all lab metrics. Call twice with dateRange and comparisonDateRange
+ * to get periodChange in the dashboard.
  */
 export function useLabMetrics(dateRange?: DateRangeFilter) {
   const { orders, isLoading: ordersLoading } = useOrdersList();
@@ -36,28 +61,14 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
 
   const isLoading = ordersLoading || samplesLoading;
 
-  // Filter data by date range if provided
-  const filteredOrders = useMemo(() => {
-    if (!orders || !dateRange) return orders;
-    
-    return orders.filter(order => {
-      const orderDate = new Date(order.orderDate);
-      const start = new Date(dateRange.startDate);
-      const end = new Date(dateRange.endDate);
-      return orderDate >= start && orderDate <= end;
-    });
-  }, [orders, dateRange]);
-
-  const filteredSamples = useMemo(() => {
-    if (!samples || !dateRange) return samples;
-    
-    return samples.filter(sample => {
-      const sampleDate = new Date(sample.createdAt);
-      const start = new Date(dateRange.startDate);
-      const end = new Date(dateRange.endDate);
-      return sampleDate >= start && sampleDate <= end;
-    });
-  }, [samples, dateRange]);
+  const filteredOrders = useMemo(
+    () => filterOrdersByRange(orders, dateRange),
+    [orders, dateRange]
+  );
+  const filteredSamples = useMemo(
+    () => filterSamplesByRange(samples, dateRange),
+    [samples, dateRange]
+  );
 
   // Calculate TAT metrics
   const tatMetrics = useMemo((): TATMetrics => {
@@ -100,6 +111,28 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     const targetTAT = 240; // 4 hours
     const complianceRate = tatTimes.length > 0 ? (tatTimes.filter(t => t <= targetTAT).length / tatTimes.length) * 100 : 0;
 
+    // Daily TAT/compliance for trend charts
+    const dailyTAT: Record<string, number[]> = {};
+    const dailyCompliance: Record<string, number> = {};
+    filteredOrders.forEach(order => {
+      order.tests.forEach(test => {
+        if (test.resultValidatedAt) {
+          const totalTAT = minutesBetween(order.orderDate, test.resultValidatedAt);
+          const dateKey = test.resultValidatedAt.split('T')[0];
+          if (!dailyTAT[dateKey]) dailyTAT[dateKey] = [];
+          dailyTAT[dateKey].push(totalTAT);
+          dailyCompliance[dateKey] = (dailyCompliance[dateKey] ?? 0) + (totalTAT <= targetTAT ? 1 : 0);
+        }
+      });
+    });
+    const trend: TATTrendPoint[] = Object.entries(dailyTAT)
+      .map(([date, times]) => ({
+        date,
+        averageTAT: Math.round(times.reduce((a, b) => a + b, 0) / times.length),
+        complianceRate: Math.round(((dailyCompliance[date] ?? 0) / times.length) * 100),
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
     return {
       averageTAT: Math.round(averageTAT),
       medianTAT: Math.round(medianTAT),
@@ -110,6 +143,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
         collectionToEntry: breakdowns.collectionToEntry.length > 0 ? Math.round(breakdowns.collectionToEntry.reduce((a, b) => a + b, 0) / breakdowns.collectionToEntry.length) : 0,
         entryToValidation: breakdowns.entryToValidation.length > 0 ? Math.round(breakdowns.entryToValidation.reduce((a, b) => a + b, 0) / breakdowns.entryToValidation.length) : 0,
       },
+      trend,
     };
   }, [filteredOrders, filteredSamples]);
 
@@ -356,6 +390,26 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     };
   }, [filteredSamples, filteredOrders]);
 
+  // Funnel: orders → collected → entered → validated (counts by stage)
+  const funnelMetrics = useMemo((): FunnelMetrics => {
+    if (!filteredOrders) return { orders: 0, collected: 0, entered: 0, validated: 0 };
+    let ordersCount = 0;
+    let collected = 0;
+    let entered = 0;
+    let validated = 0;
+    filteredOrders.forEach(order => {
+      ordersCount++;
+      order.tests.forEach(test => {
+        const sample = filteredSamples?.find(s => s.sampleId === test.sampleId);
+        const isCollected = sample && 'collectedAt' in sample && sample.collectedAt;
+        if (isCollected) collected++;
+        if (test.resultEnteredAt) entered++;
+        if (test.resultValidatedAt) validated++;
+      });
+    });
+    return { orders: ordersCount, collected, entered, validated };
+  }, [filteredOrders, filteredSamples]);
+
   // Combine all metrics
   const analytics: LabAnalytics = useMemo(() => ({
     tat: tatMetrics,
@@ -364,8 +418,9 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     criticalValues: criticalValueMetrics,
     productivity: productivityMetrics,
     backlog: backlogMetrics,
+    funnel: funnelMetrics,
     generatedAt: new Date().toISOString(),
-  }), [tatMetrics, volumeMetrics, rejectionMetrics, criticalValueMetrics, productivityMetrics, backlogMetrics]);
+  }), [tatMetrics, volumeMetrics, rejectionMetrics, criticalValueMetrics, productivityMetrics, backlogMetrics, funnelMetrics]);
 
   return {
     analytics,

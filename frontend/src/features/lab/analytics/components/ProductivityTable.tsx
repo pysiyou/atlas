@@ -8,25 +8,25 @@ import type { ProductivityMetrics } from '../types';
 
 interface ProductivityTableProps {
   data: ProductivityMetrics;
+  /** When true, render only the table (no card wrapper/heading); for embedding in WidgetCard */
+  compact?: boolean;
 }
 
-export const ProductivityTable: React.FC<ProductivityTableProps> = ({ data }) => {
+export const ProductivityTable: React.FC<ProductivityTableProps> = ({ data, compact = false }) => {
   if (data.byTechnician.length === 0) {
+    const empty = <div className="flex items-center justify-center py-8 text-text-tertiary text-sm">No productivity data available</div>;
+    if (compact) return empty;
     return (
       <div className="bg-surface border border-border rounded-lg p-4">
         <h3 className="text-sm font-semibold text-text-primary mb-4">Technician Productivity</h3>
-        <div className="flex items-center justify-center h-[200px] text-text-tertiary text-sm">
-          No productivity data available
-        </div>
+        <div className="flex items-center justify-center h-[200px] text-text-tertiary text-sm">No productivity data available</div>
       </div>
     );
   }
 
-  return (
-    <div className="bg-surface border border-border rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-text-primary mb-4">Technician Productivity</h3>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+  const table = (
+    <div className="overflow-x-auto max-h-[200px] overflow-y-auto">
+      <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border">
               <th className="text-left py-2 px-3 text-xs font-semibold text-text-tertiary uppercase tracking-wide">
@@ -63,6 +63,13 @@ export const ProductivityTable: React.FC<ProductivityTableProps> = ({ data }) =>
           </tbody>
         </table>
       </div>
+  );
+
+  if (compact) return table;
+  return (
+    <div className="bg-surface border border-border rounded-lg p-4">
+      <h3 className="text-sm font-semibold text-text-primary mb-4">Technician Productivity</h3>
+      {table}
     </div>
   );
 };
