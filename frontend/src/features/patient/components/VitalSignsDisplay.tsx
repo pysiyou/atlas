@@ -8,6 +8,7 @@ import { Icon } from '@/shared/ui';
 import type { IconName } from '@/shared/ui';
 import type { VitalSigns } from '@/types/patient';
 import { ICONS } from '@/utils';
+import { getBadgeAppearance } from '@/shared/theme/theme';
 
 export interface VitalSignsDisplayProps {
   vitalSigns?: VitalSigns;
@@ -95,9 +96,26 @@ const getVitalStatus = (
 };
 
 /**
- * Gets color classes based on vital sign status
+ * Gets color classes based on vital sign status and theme appearance
  */
-const getStatusColors = (status: VitalStatus) => {
+const getStatusColors = (status: VitalStatus, appearance: 'unified' | 'tinted') => {
+  if (appearance === 'unified') {
+    // Unified: neutral background, colored text/icons
+    const base = {
+      bg: 'bg-badge-bg',
+      border: 'border-border-default shadow-sm',
+    };
+    switch (status) {
+      case 'normal':
+        return { ...base, icon: 'text-feedback-success-text-strong', value: 'text-feedback-success-text-strong', dot: 'bg-feedback-success-text-strong' };
+      case 'borderline':
+        return { ...base, icon: 'text-feedback-warning-text-strong', value: 'text-feedback-warning-text-strong', dot: 'bg-feedback-warning-text-strong' };
+      case 'abnormal':
+        return { ...base, icon: 'text-feedback-danger-text-strong', value: 'text-feedback-danger-text-strong', dot: 'bg-feedback-danger-text-strong' };
+    }
+  }
+
+  // Tinted: colored backgrounds
   switch (status) {
     case 'normal':
       return {
@@ -127,6 +145,8 @@ const getStatusColors = (status: VitalStatus) => {
 };
 
 export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns }) => {
+  const appearance = getBadgeAppearance();
+
   if (!vitalSigns) {
     return (
       <div className="flex items-center justify-center h-full min-h-[200px]">
@@ -146,7 +166,7 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
         if (value === undefined || value === null) return null;
 
         const status = getVitalStatus(value, config.normalRange, config.criticalRange);
-        const colors = getStatusColors(status);
+        const colors = getStatusColors(status, appearance);
 
         return (
           <div
