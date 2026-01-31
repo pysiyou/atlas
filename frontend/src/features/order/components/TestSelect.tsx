@@ -29,7 +29,7 @@ interface TestSelectorProps {
  *
  * Selected tests are shown as removable tags inside the input box, while the
  * input text remains controlled by the parent (used to drive the results list).
- * Tags match the patient tag styling (bg-action-primary-muted-bg, border-action-primary) but without avatars.
+ * Tags match the patient tag styling (bg-action-primary-muted-bg, border-border-default) but without avatars.
  */
 const TestSearchTagInput: React.FC<{
   selectedTags: Array<{ code: string; name: string }>;
@@ -67,7 +67,7 @@ const TestSearchTagInput: React.FC<{
         {selectedTags.map(({ code, name }) => (
           <div
             key={code}
-            className="flex items-center gap-2 px-2 py-1 rounded bg-action-primary-muted-bg border border-action-primary max-w-full shrink-0"
+            className="flex items-center gap-2 px-2 py-1 rounded bg-action-primary-muted-bg border border-border-default max-w-full shrink-0"
           >
             {/* Test name */}
             <span className="text-xs font-medium text-text-primary truncate min-w-0">
@@ -199,12 +199,12 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
       {isPopoverOpen && hasSearch && (
         <div
           className={[
-            'mt-1',
+            'mt-1 text-text-primary',
             'border border-border-default/80',
             'rounded',
             'overflow-hidden',
             'bg-surface-default',
-            'shadow-lg shadow-2',
+            'shadow-2',
             'ring-1 ring-black/5',
           ].join(' ')}
         >
@@ -230,17 +230,17 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                     type="button"
                     onClick={() => onToggleTest(code)}
                     className={[
-                      'w-full text-left px-4 py-3',
+                      'w-full text-left px-4 py-3 text-text-primary',
                       'transition-colors',
                       'flex items-center justify-between gap-4',
-                      'hover:bg-action-primary-muted-bg',
-                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-opacity-30 focus-visible:bg-action-primary-muted-bg',
+                      'hover:bg-surface-hover',
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-opacity-30 focus-visible:bg-surface-hover',
                       isSelected ? 'bg-feedback-success-bg' : 'bg-surface-default',
                     ].join(' ')}
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="shrink-0 text-xs font-semibold font-mono px-2 py-0.5 rounded bg-action-primary-muted-bg text-action-primary border border-action-primary">
+                        <span className="shrink-0 text-xs font-semibold font-mono px-2 py-0.5 rounded bg-action-primary-muted-bg text-action-primary border border-border-default">
                           {code}
                         </span>
                         <span className="shrink-0 text-xs font-medium px-2 py-0.5 rounded truncate">
@@ -250,7 +250,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                     </div>
 
                     <div className="shrink-0 flex items-center gap-2">
-                      <div className="text-xs font-semibold px-2 py-1 rounded bg-action-primary-muted-bg text-action-primary border border-action-primary">
+                      <div className="text-xs font-semibold px-2 py-1 rounded bg-action-primary-muted-bg text-action-primary border border-border-default">
                         {formatCurrency(price)}
                       </div>
                       {isSelected && (

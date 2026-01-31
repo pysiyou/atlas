@@ -60,7 +60,7 @@ const PatientSearchTagInput: React.FC<{
         </div>
 
         {selectedPatient && (
-          <div className="flex items-center gap-2 px-2 py-1 rounded bg-action-primary-muted-bg border border-action-primary max-w-full shrink-0">
+          <div className="flex items-center gap-2 px-2 py-1 rounded bg-action-primary-muted-bg border border-border-default max-w-full shrink-0">
             {/* Small avatar with initial */}
             <Avatar
               primaryText={selectedPatient.fullName}
