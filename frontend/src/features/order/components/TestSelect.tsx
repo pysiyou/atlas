@@ -12,6 +12,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Icon } from '@/shared/ui';
 import type { Test } from '@/types';
 import { ICONS, formatCurrency } from '@/utils';
+import { getBadgeAppearance } from '@/shared/theme/theme';
+import { TAG_STYLES } from '@/shared/ui/display/badge-colors';
 
 interface TestSelectorProps {
   selectedTests: string[];
@@ -38,6 +40,9 @@ const TestSearchTagInput: React.FC<{
   onRemoveTag: (code: string) => void;
   error?: string;
 }> = ({ selectedTags, value, onValueChange, onRemoveTag, error }) => {
+  const appearance = getBadgeAppearance();
+  const tagStyles = TAG_STYLES[appearance];
+
   return (
     <div className="w-full">
       <div className="flex justify-between items-baseline mb-1 gap-2">
@@ -67,24 +72,21 @@ const TestSearchTagInput: React.FC<{
         {selectedTags.map(({ code, name }) => (
           <div
             key={code}
-            className="flex items-center gap-2 px-2 py-1 rounded bg-action-primary-muted-bg border border-border-default max-w-full shrink-0"
+            className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
           >
-            {/* Test name */}
-            <span className="text-xs font-medium text-text-primary truncate min-w-0">
+            <span className={`text-xs font-medium truncate min-w-0 ${tagStyles.text}`}>
               {name}
             </span>
-            {/* Test code */}
-            <span className="text-xxs font-semibold font-mono text-action-primary shrink-0">
+            <span className={`text-xxs font-semibold font-mono shrink-0 ${tagStyles.code}`}>
               {code}
             </span>
-            {/* Clear button */}
             <button
               type="button"
               onClick={() => onRemoveTag(code)}
-              className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-action-primary-muted-bg rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-action-primary/30 shrink-0"
+              className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-action-primary/30 shrink-0"
               aria-label={`Remove ${code}`}
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-tertiary hover:text-text-secondary" />
+              <Icon name={ICONS.actions.closeCircle} className={`w-3 h-3 ${tagStyles.remove}`} />
             </button>
           </div>
         ))}
@@ -118,6 +120,8 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const appearance = getBadgeAppearance();
+  const tagStyles = TAG_STYLES[appearance];
 
   /**
    * Defensive: normalize selected tests to a set for fast membership checks.
@@ -240,7 +244,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="shrink-0 text-xs font-semibold font-mono px-2 py-0.5 rounded bg-action-primary-muted-bg text-action-primary border border-border-default">
+                        <span className={`shrink-0 text-xs font-semibold font-mono px-2 py-0.5 rounded ${tagStyles.container} ${tagStyles.code}`}>
                           {code}
                         </span>
                         <span className="shrink-0 text-xs font-medium px-2 py-0.5 rounded truncate">
@@ -250,7 +254,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                     </div>
 
                     <div className="shrink-0 flex items-center gap-2">
-                      <div className="text-xs font-semibold px-2 py-1 rounded bg-action-primary-muted-bg text-action-primary border border-border-default">
+                      <div className={`text-xs font-semibold px-2 py-1 rounded ${tagStyles.container} ${tagStyles.code}`}>
                         {formatCurrency(price)}
                       </div>
                       {isSelected && (

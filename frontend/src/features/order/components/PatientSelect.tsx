@@ -3,6 +3,8 @@ import { Avatar, Icon } from '@/shared/ui';
 import { displayId } from '@/utils';
 import type { Patient } from '@/types';
 import { ICONS } from '@/utils';
+import { getBadgeAppearance } from '@/shared/theme/theme';
+import { TAG_STYLES } from '@/shared/ui/display/badge-colors';
 
 interface PatientSelectorProps {
   selectedPatient: Patient | null;
@@ -31,6 +33,8 @@ const PatientSearchTagInput: React.FC<{
   error?: string;
   disabled?: boolean;
 }> = ({ selectedPatient, value, onValueChange, onClearSelection, error, disabled = false }) => {
+  const appearance = getBadgeAppearance();
+  const tagStyles = TAG_STYLES[appearance];
 
   return (
     <div className="w-full">
@@ -60,31 +64,27 @@ const PatientSearchTagInput: React.FC<{
         </div>
 
         {selectedPatient && (
-          <div className="flex items-center gap-2 px-2 py-1 rounded bg-action-primary-muted-bg border border-border-default max-w-full shrink-0">
-            {/* Small avatar with initial */}
+          <div className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}>
             <Avatar
               primaryText={selectedPatient.fullName}
               size="xxs"
               avatarOnly={true}
               className="shrink-0"
             />
-            {/* Patient name */}
-            <span className="text-xs font-medium text-text-primary truncate min-w-0">
+            <span className={`text-xs font-medium truncate min-w-0 ${tagStyles.text}`}>
               {selectedPatient.fullName}
             </span>
-            {/* Patient ID */}
-            <span className="text-xxs font-semibold font-mono text-action-primary shrink-0">
+            <span className={`text-xxs font-semibold font-mono shrink-0 ${tagStyles.code}`}>
               {displayId.patient(selectedPatient.id)}
             </span>
-            {/* Clear button */}
             {!disabled && (
               <button
                 type="button"
                 onClick={onClearSelection}
-                className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-action-primary-muted-bg rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-action-primary/30 shrink-0"
+                className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-action-primary/30 shrink-0"
                 aria-label="Clear selected patient"
               >
-                <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-tertiary hover:text-text-secondary" />
+                <Icon name={ICONS.actions.closeCircle} className={`w-3 h-3 ${tagStyles.remove}`} />
               </button>
             )}
           </div>

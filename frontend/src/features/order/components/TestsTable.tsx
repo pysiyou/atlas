@@ -11,6 +11,8 @@ import { formatCurrency } from '@/utils';
 import { getTestName, getTestSampleType, getTestCategory } from '@/utils/typeHelpers';
 import type { OrderTest, Test } from '@/types';
 import { ICONS } from '@/utils';
+import { getBadgeAppearance } from '@/shared/theme/theme';
+import { TAG_STYLES } from '@/shared/ui/display/badge-colors';
 
 export interface TestsTableProps {
   tests: OrderTest[];
@@ -28,6 +30,9 @@ const EMPTY_MESSAGE = (
 );
 
 function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest> {
+  const appearance = getBadgeAppearance();
+  const tagStyles = TAG_STYLES[appearance];
+
   const simpleColumns = [
     {
       key: 'testCode',
@@ -47,7 +52,7 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
               {test.testCode}
             </span>
             {isRetest && retestNumber > 0 && (
-              <Badge variant="default" size="xs" className="text-xs bg-action-primary-muted-bg text-action-primary border-action-primary">
+              <Badge variant="info" size="xs" className={tagStyles.container}>
                 #{retestNumber}
               </Badge>
             )}

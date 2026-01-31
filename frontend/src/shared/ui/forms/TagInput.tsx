@@ -9,6 +9,8 @@ import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { Icon } from '../display/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
+import { getBadgeAppearance } from '@/shared/theme/theme';
+import { TAG_STYLES } from '../display/badge-colors';
 
 export interface TagInputProps {
   /** Current tags as an array of strings */
@@ -55,6 +57,8 @@ export const TagInput: React.FC<TagInputProps> = ({
   tagVariant: _tagVariant = 'outline',
 }) => {
   const [inputValue, setInputValue] = useState('');
+  const appearance = getBadgeAppearance();
+  const tagStyles = TAG_STYLES[appearance];
 
   /**
    * Handles adding a new tag
@@ -135,20 +139,18 @@ export const TagInput: React.FC<TagInputProps> = ({
         {tags.map((tag, index) => (
           <div
             key={`${tag}-${index}`}
-            className="flex items-center gap-2 px-2 py-1 rounded bg-action-primary-muted-bg border border-border-default max-w-full shrink-0"
+            className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
           >
-            {/* Tag name */}
-            <span className="text-xs font-medium text-text-primary truncate min-w-0">
+            <span className={`text-xs font-medium truncate min-w-0 ${tagStyles.text}`}>
               {tag}
             </span>
-            {/* Clear button */}
             <button
               type="button"
               onClick={() => handleRemoveTag(tag)}
-              className="flex items-center justify-center ml-0.5 -mr-0.5 hover:bg-action-primary-muted-bg rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-action-primary shrink-0"
+              className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-action-primary shrink-0"
               aria-label={`Remove ${tag}`}
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-3 h-3 text-text-tertiary hover:text-text-secondary" />
+              <Icon name={ICONS.actions.closeCircle} className={`w-3 h-3 ${tagStyles.remove}`} />
             </button>
           </div>
         ))}
