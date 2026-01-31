@@ -11,7 +11,7 @@ interface CardProps {
   children: ReactNode;
   className?: string;
   padding?: 'none' | 'list' | 'sm' | 'md' | 'lg';
-  /** Visual variant: default (no hover), lab (sky hover), metric (brand hover) */
+  /** Visual variant: default (no hover), lab (surface hover, matches table row), metric (brand hover) */
   variant?: CardVariant;
   /** Deprecated: use variant for hover style; when true with variant=default, only adds cursor-pointer */
   hover?: boolean;
@@ -20,7 +20,7 @@ interface CardProps {
 
 const VARIANT_CLASSES: Record<CardVariant, string> = {
   default: '',
-  lab: 'hover:border-border-focus hover:bg-action-primary-muted-bg transition-all duration-200',
+  lab: 'shadow-sm hover:bg-surface-hover transition-colors duration-200',
   metric: 'hover:border-action-primary hover:border-opacity-50 transition-colors duration-200',
 };
 

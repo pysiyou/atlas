@@ -305,6 +305,16 @@
   --auth-user-badge-icon: var(--primitive-neutral-600);
 }
 
+/* Dark theme: inputs default to theme text color (avoid black text on dark bg) */
+[data-theme="github"] input,
+[data-theme="github"] textarea,
+[data-theme="github"] select,
+[data-theme="noir-studio"] input,
+[data-theme="noir-studio"] textarea,
+[data-theme="noir-studio"] select {
+  color: var(--text-primary);
+}
+
 /* ─── github: primitives only + token overrides (rgba / theme-specific) ─── */
 [data-theme="github"] {
   --primitive-brand-50: #eef6ff;

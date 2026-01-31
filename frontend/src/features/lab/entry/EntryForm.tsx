@@ -210,7 +210,7 @@ const ParameterInput: React.FC<{
       <input
         {...commonProps}
         type="text"
-        className="block w-full px-3 py-2.5 border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs placeholder:text-text-muted transition-shadow bg-surface-default"
+        className="block w-full px-3 py-2.5 border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs text-text-primary placeholder:text-text-muted transition-shadow bg-surface-default"
         placeholder="Enter text result..."
       />
     );
@@ -227,7 +227,7 @@ const ParameterInput: React.FC<{
       max={limit?.max}
       inputMode="decimal"
       className={cn(
-        "block w-full pl-3 pr-12 py-2.5 border rounded focus:outline-none focus:ring-2 focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs placeholder:text-text-muted transition-shadow relative z-10 bg-surface-default",
+        "block w-full pl-3 pr-12 py-2.5 border rounded focus:outline-none focus:ring-2 focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs text-text-primary placeholder:text-text-muted transition-shadow relative z-10 bg-surface-default",
         hasError
           ? 'border-border-error focus:ring-action-danger/20'
           : "border-border-strong focus:ring-action-primary"

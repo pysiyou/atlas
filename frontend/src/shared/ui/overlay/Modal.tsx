@@ -189,7 +189,7 @@ const Modal = memo(
                       <div className="flex flex-col min-w-0">
                         <h2
                           id="modal-title"
-                          className="text-lg font-semibold text-text truncate"
+                          className="text-lg font-semibold text-text-primary truncate"
                           title={typeof title === 'string' ? title : undefined}
                         >
                           {title}

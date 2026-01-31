@@ -73,7 +73,7 @@ export const LAB_CARD_CONTAINERS = {
 
   // Card base styling (applied via Card component)
   cardBase:
-    'border border-border-default hover:border hover:border-border-focus hover:bg-action-primary-muted-bg transition-all duration-200',
+    'border border-border-default shadow-sm hover:bg-surface-hover transition-colors duration-200',
 
   // Content section (gray background)
   contentSection: 'bg-surface-canvas rounded p-2 border border-border-default',

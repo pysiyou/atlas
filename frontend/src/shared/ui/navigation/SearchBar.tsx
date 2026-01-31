@@ -43,7 +43,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       <input
         type="text"
         className={cn(
-          'flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none',
+          'flex-1 min-w-0 text-xs font-medium text-text-primary bg-transparent border-0 outline-none',
           'placeholder:font-normal placeholder:text-text-muted',
           sizeClasses === 'h-[34px]' ? 'py-0' : ''
         )}

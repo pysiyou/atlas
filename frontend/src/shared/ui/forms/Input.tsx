@@ -11,12 +11,12 @@ import { ICONS } from '@/utils';
  * Get input classes based on state
  */
 const getInputClasses = (hasError: boolean, hasIcon: boolean, disabled?: boolean) => {
-  const baseClasses = 'w-full rounded border px-3 py-2 text-xs transition-colors duration-200 focus:outline-none focus:ring-2 placeholder:text-text-muted';
+  const baseClasses = 'w-full rounded border px-3 py-2 text-xs text-text-primary bg-surface-default transition-colors duration-200 focus:outline-none focus:ring-2 placeholder:text-text-muted';
   const iconPadding = hasIcon ? 'pl-10' : '';
   const stateClasses = hasError
     ? 'border-border-error focus:border-border-error focus:ring-action-danger focus:ring-opacity-20'
     : 'border-border-default focus:border-action-primary focus:ring-action-primary focus:ring-opacity-20';
-  const disabledClasses = disabled ? 'bg-neutral-100 text-text-disabled cursor-not-allowed' : 'bg-surface-default';
+  const disabledClasses = disabled ? 'bg-neutral-100 text-text-disabled cursor-not-allowed' : '';
   
   return `${baseClasses} ${iconPadding} ${stateClasses} ${disabledClasses}`;
 };

@@ -58,9 +58,9 @@ export const Laboratory: React.FC = () => {
   const pageTitle = activeTabConfig?.label ?? 'Laboratory';
 
   return (
-    <div className="h-full flex flex-col p-4 space-y-6">
+    <div className="h-full flex flex-col p-4 space-y-6 min-w-0 overflow-hidden">
       {/* Page Header: title with tabs on the right */}
-      <div className="shrink-0 flex items-center justify-between gap-4 flex-wrap">
+      <div className="shrink-0 flex items-center justify-between gap-4 flex-wrap min-w-0">
         <h1 className="text-2xl font-bold text-text-primary">{pageTitle}</h1>
         <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">
           {tabs.map(tab => {
@@ -91,7 +91,7 @@ export const Laboratory: React.FC = () => {
       </div>
 
       {/* Main Content Card */}
-      <div className="flex-1 flex flex-col bg-surface-default rounded border border-border-default shadow-sm overflow-hidden min-h-0">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-surface-default rounded border border-border-default shadow-sm overflow-hidden">
         {/* Content Area: flex column, no scroll – filter + grid handle layout like ListView */}
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-surface-canvas">
           {activeTab === 'collection' && <CollectionView />}
