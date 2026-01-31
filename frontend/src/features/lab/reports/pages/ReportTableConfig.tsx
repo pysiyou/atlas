@@ -50,14 +50,14 @@ export const createReportTableConfig = (
 
   const renderPatientName = (test: ValidatedTest) => (
     <div className="min-w-0">
-      <div className="font-semibold text-text-primary truncate">{test.patientName}</div>
+      <div className="text-text-primary truncate">{test.patientName}</div>
       <div className={DATA_ID_SECONDARY}>{displayId.patient(test.patientId)}</div>
     </div>
   );
 
   const renderTestName = (test: ValidatedTest) => (
     <div className="min-w-0">
-      <div className="font-semibold text-text-primary truncate">{test.testName}</div>
+      <div className="text-text-primary truncate">{test.testName}</div>
       <div className={DATA_ID_SECONDARY}>{test.testCode}</div>
     </div>
   );

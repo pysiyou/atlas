@@ -29,7 +29,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
 
   const renderName = (test: Test) => (
     <div className="min-w-0">
-      <div className="font-semibold text-text-primary truncate">{test.name}</div>
+      <div className="text-text-primary truncate">{test.name}</div>
       {test.synonyms && test.synonyms.length > 0 && (
         <div className="text-xs text-text-tertiary truncate">
           {test.synonyms.slice(0, 2).join(', ')}
@@ -50,7 +50,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       return <div className="text-xs text-text-disabled truncate">-</div>;
     }
     return (
-      <div className="text-xs text-text-primary truncate font-semibold">
+      <div className="text-xs text-text-primary truncate">
         {test.loincCodes.join(', ')}
       </div>
     );

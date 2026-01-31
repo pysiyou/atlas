@@ -20,9 +20,7 @@ import { ICONS } from '@/utils';
  */
 type BaseVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'outline' | 'warning';
 
-/**
- * Semantic action variants (bundled icon + style)
- */
+
 type SemanticVariant =
   | 'save'
   | 'cancel'
@@ -109,7 +107,7 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
 /**
  * Base classes applied to all buttons
  */
-const BASE_CLASSES = 'inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap';
+const BASE_CLASSES = 'inline-flex items-center justify-center gap-1.5 font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap';
 
 /**
  * Base style classes for each variant
@@ -247,37 +245,45 @@ export const Button: React.FC<ButtonProps> = ({
 
   const widthClass = fullWidth ? 'w-full' : '';
 
+  const iconWrapperClass = 'inline-flex items-center justify-center shrink-0';
+
   // Build content based on loading state
   const content = isLoading ? (
-    <span className="flex items-center justify-center gap-1.5">
-      <svg
-        className={`animate-spin ${SPINNER_SIZES[size]}`}
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        />
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        />
-      </svg>
+    <>
+      <span className={iconWrapperClass}>
+        <svg
+          className={`animate-spin ${SPINNER_SIZES[size]}`}
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          />
+        </svg>
+      </span>
       {children && <span>Loading...</span>}
-    </span>
+    </>
   ) : (
-    <span className="flex items-center justify-center gap-1.5">
-      {iconPosition === 'left' && renderIconElement()}
+    <>
+      {iconPosition === 'left' && shouldShowIcon && (
+        <span className={iconWrapperClass}>{renderIconElement()}</span>
+      )}
       {children}
-      {iconPosition === 'right' && renderIconElement()}
-    </span>
+      {iconPosition === 'right' && shouldShowIcon && (
+        <span className={iconWrapperClass}>{renderIconElement()}</span>
+      )}
+    </>
   );
 
   return (

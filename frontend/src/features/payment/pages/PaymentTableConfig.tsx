@@ -66,7 +66,7 @@ export const createPaymentTableConfig = (
 
   const renderPatientName = (item: OrderPaymentDetails) => (
     <div className="min-w-0">
-      <div className="font-semibold text-text-primary truncate">{item.patientName || 'N/A'}</div>
+      <div className="text-text-primary truncate">{item.patientName || 'N/A'}</div>
       <div className={DATA_ID_SECONDARY}>{displayId.patient(item.patientId)}</div>
     </div>
   );
@@ -108,7 +108,7 @@ export const createPaymentTableConfig = (
   );
 
   const renderAction = (item: OrderPaymentDetails) => (
-    <div onClick={e => e.stopPropagation()}>
+    <div className="flex items-center" onClick={e => e.stopPropagation()}>
       <PaymentButton order={item.order} onPaymentSuccess={onPaymentSuccess} />
     </div>
   );

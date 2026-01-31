@@ -9,13 +9,19 @@ import { CELL_PADDING, TEXT_SIZE } from './constants';
 export function TableCell({ column, children, variant }: TableCellProps) {
   const style = getColumnStyle(column);
 
-  // Determine alignment classes
+  // Alignment for outer cell and inner content wrapper
   const alignClass =
     column.align === 'center'
       ? 'text-center justify-center'
       : column.align === 'right'
         ? 'text-right justify-end'
         : 'text-left justify-start';
+  const innerJustifyClass =
+    column.align === 'center'
+      ? 'justify-center'
+      : column.align === 'right'
+        ? 'justify-end'
+        : 'justify-start';
 
   // Handle sticky positioning
   const stickyClass =
@@ -43,7 +49,7 @@ export function TableCell({ column, children, variant }: TableCellProps) {
       `.trim()}
       style={style}
     >
-      <div className="min-w-0 flex-1">{children}</div>
+      <div className={`min-w-0 flex-1 flex items-center ${innerJustifyClass}`}>{children}</div>
     </div>
   );
 }

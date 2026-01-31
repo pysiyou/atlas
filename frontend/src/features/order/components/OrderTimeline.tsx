@@ -290,13 +290,13 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
                 )}
               </div>
 
-              {/* Right: Avatar of operator */}
+              {/* Right: Avatar of operator (matches order card avatar style) */}
               {progress.isFullyComplete && completionInfo.completedBy && (
                 <Avatar
                   primaryText={getUserName(completionInfo.completedBy)}
-                  size="xxs"
+                  size="xs"
                   avatarOnly
-                  className="ring-2 ring-white shadow-sm ml-2"
+                  className="ml-2"
                 />
               )}
             </div>

@@ -41,10 +41,10 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
 
   return (
     <div className="flex flex-col justify-between h-full">
-      {/* Receipt-style order summary matching PaymentPopover */}
-      <div className="rounded  overflow-hidden flex-1 flex flex-col min-h-0">
+      {/* Receipt-style order summary; -mx-4 so dashed borders touch section container edge (counteracts SectionContainer p-4) */}
+      <div className="rounded overflow-hidden flex-1 flex flex-col min-h-0 -mx-4">
         {/* Header with Order ID and Payment Status */}
-        <div className="px-3 py-2.5 border-b border-dashed border-border-default-strong">
+        <div className="px-4 py-2.5 border-b border-dashed border-border-strong">
           <div className="flex justify-between items-center">
             <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
               Order <span className="font-mono text-action-primary">{displayId.order(order.orderId)}</span>
@@ -57,7 +57,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
         </div>
 
         {/* Items List - Scrollable (active tests only) */}
-        <div className="px-3 py-2 flex-1 min-h-0 overflow-y-auto">
+        <div className="px-4 py-2 flex-1 min-h-0 overflow-y-auto">
           {activeTests.length > 0 ? (
             <ul className="space-y-1.5">
               {activeTests.map((test, idx) => (
@@ -86,8 +86,8 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
         </div>
 
         {/* Total Footer (sum of active tests only) */}
-        <div className="border-t border-dashed border-border-default-strong mx-3" />
-        <div className="px-3 py-2.5 flex justify-between items-center">
+        <div className="border-t border-dashed border-border-strong" />
+        <div className="px-4 py-2.5 flex justify-between items-center">
           <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
             Total
           </span>

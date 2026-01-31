@@ -54,7 +54,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
 
   return (
     <div className="rounded border border-border-default overflow-hidden">
-      <div className="px-3 py-2.5 border-b border-dashed border-border-default-strong">
+      <div className="px-3 py-2.5 border-b border-dashed border-border-strong">
         <div className="flex justify-between items-center">
           <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
             Order <span className="font-mono text-action-primary">{displayId.order(order.orderId)}</span>
@@ -92,7 +92,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
           <p className="text-xs text-text-tertiary italic">No items</p>
         )}
       </div>
-      <div className="border-t border-dashed border-border-default-strong mx-3" />
+      <div className="border-t border-dashed border-border-strong" />
       <div className="px-3 py-2.5 flex justify-between items-center">
         <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
           Total

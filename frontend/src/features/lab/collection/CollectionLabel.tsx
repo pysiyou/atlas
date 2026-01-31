@@ -70,7 +70,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
       </head>
       <body class="bg-surface-default m-0 p-0">
         <div class="label-wrapper">
-          <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-1.5 p-2 border border-dashed border-border-default-strong print:border-none print:max-w-full print:p-0">
+          <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-1.5 p-2 border border-dashed border-border-strong print:border-none print:max-w-full print:p-0">
             <!-- Patient Name -->
             <div class="text-sm font-bold text-center text-text-primary leading-snug w-full">
               ${patientName}

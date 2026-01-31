@@ -29,16 +29,16 @@ export const ProductivityTable: React.FC<ProductivityTableProps> = ({ data, comp
       <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border-default">
-              <th className="text-left py-2 px-3 text-xs font-semibold text-text-tertiary uppercase tracking-wide">
+              <th className="text-left py-2 px-3 text-xs text-text-tertiary uppercase tracking-wide">
                 Technician
               </th>
-              <th className="text-right py-2 px-3 text-xs font-semibold text-text-tertiary uppercase tracking-wide">
+              <th className="text-right py-2 px-3 text-xs text-text-tertiary uppercase tracking-wide">
                 Results Entered
               </th>
-              <th className="text-right py-2 px-3 text-xs font-semibold text-text-tertiary uppercase tracking-wide">
+              <th className="text-right py-2 px-3 text-xs text-text-tertiary uppercase tracking-wide">
                 Validations
               </th>
-              <th className="text-right py-2 px-3 text-xs font-semibold text-text-tertiary uppercase tracking-wide">
+              <th className="text-right py-2 px-3 text-xs text-text-tertiary uppercase tracking-wide">
                 Total
               </th>
             </tr>
@@ -55,7 +55,7 @@ export const ProductivityTable: React.FC<ProductivityTableProps> = ({ data, comp
                 <td className="py-2 px-3 text-right text-text-secondary">
                   {tech.validations}
                 </td>
-                <td className="py-2 px-3 text-right font-semibold text-action-primary">
+                <td className="py-2 px-3 text-right text-action-primary">
                   {tech.resultsEntered + tech.validations}
                 </td>
               </tr>

@@ -31,7 +31,7 @@ export const createPatientTableConfig = (
 
   const renderName = (patient: Patient) => (
     <div className="min-w-0">
-      <div className="font-semibold text-text-primary truncate">{patient.fullName}</div>
+      <div className="text-text-primary truncate">{patient.fullName}</div>
       <div className="text-xs text-text-tertiary truncate">
         {calculateAge(patient.dateOfBirth)} years old
       </div>

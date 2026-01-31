@@ -37,7 +37,7 @@ export const createOrderTableConfig = (
 
   const renderPatientName = (order: Order) => (
     <div className="min-w-0">
-      <div className="font-semibold text-text-primary truncate">
+      <div className="text-text-primary truncate">
         {getPatientNameFn(order.patientId)}
       </div>
       <div className={DATA_ID_SECONDARY}>{displayId.patient(order.patientId)}</div>

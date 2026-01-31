@@ -105,7 +105,9 @@ export const SectionContainer: React.FC<SectionContainerProps> = ({
               )
             )}
           </div>
-          {(headerRight || headerContent) && <div>{headerRight ?? headerContent}</div>}
+          {(headerRight || headerContent) && (
+            <div className="flex items-center shrink-0">{headerRight ?? headerContent}</div>
+          )}
         </div>
       )}
       <div className={contentStyles}>{children}</div>

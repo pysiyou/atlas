@@ -13,16 +13,19 @@
   --color-action-secondary-bg-hover: var(--action-secondary-bg-hover);
   --color-action-secondary-text: var(--action-secondary-text);
   --color-action-danger: var(--action-danger);
+  --color-action-danger-hover: var(--action-danger-hover);
   --color-action-danger-on: var(--action-danger-on);
   --color-action-success: var(--action-success);
   --color-action-success-on: var(--action-success-on);
   --color-action-warning: var(--action-warning);
   --color-action-warning-on: var(--action-warning-on);
 
+  /* Badge */
+  --color-badge-bg: var(--badge-bg);
+
   /* Surfaces */
   --color-surface-canvas: var(--surface-canvas);
   --color-surface-default: var(--surface-default);
-  --color-surface-raised: var(--surface-raised);
   --color-surface-hover: var(--surface-hover);
   --color-surface-selected: var(--surface-selected);
   --color-surface-report-panel: var(--surface-report-panel);
@@ -42,10 +45,6 @@
   --color-border-focus: var(--border-focus);
   --color-border-error: var(--border-error);
   --color-border-hover: var(--border-hover);
-
-  /* Focus */
-  --color-focus-ring: var(--focus-ring);
-  --color-focus-ring-offset: var(--focus-ring-offset);
 
   /* Feedback — success */
   --color-feedback-success-bg: var(--feedback-success-bg);
@@ -92,6 +91,7 @@
   --color-neutral-600: var(--primitive-neutral-600);
   --color-neutral-700: var(--primitive-neutral-700);
   --color-neutral-800: var(--primitive-neutral-800);
+  --color-neutral-850: var(--primitive-neutral-850);
   --color-neutral-900: var(--primitive-neutral-900);
   --color-neutral-950: var(--primitive-neutral-950);
 
@@ -101,9 +101,7 @@
   /* Shadows */
   --shadow-1: var(--shadow-1);
   --shadow-2: var(--shadow-2);
-  --shadow-3: var(--shadow-3);
   --shadow-footer: var(--shadow-footer);
-  --shadow-glow: var(--shadow-glow);
 
   /* Auth */
   --color-auth-canvas: var(--auth-canvas);

@@ -1,11 +1,6 @@
-/**
- * Atlas Design System — Theme Primitives & Semantic Tokens
- * Source: Reverse-engineered from component usage. Dark mode: override primitives in [data-theme="studio-dark"].
- */
-
-[data-theme="studio-light"] {
-  /* ─── Primitives (Palette) ─── */
-  /* Brand (sky-600 family) */
+/* ─── Default: studio-light (primitives + light tokens) ─── */
+:root {
+  /* Primitives */
   --primitive-brand-50: #f0f9ff;
   --primitive-brand-100: #e0f2fe;
   --primitive-brand-200: #bae6fd;
@@ -18,7 +13,6 @@
   --primitive-brand-900: #0c4a6e;
   --primitive-brand-950: #082f49;
 
-  /* Neutral */
   --primitive-neutral-0: #ffffff;
   --primitive-neutral-50: #f9fafb;
   --primitive-neutral-100: #f3f4f6;
@@ -33,7 +27,6 @@
   --primitive-neutral-900: #111827;
   --primitive-neutral-950: #030712;
 
-  /* Success (green) */
   --primitive-success-50: #f0fdf4;
   --primitive-success-100: #dcfce7;
   --primitive-success-200: #bbf7d0;
@@ -42,7 +35,6 @@
   --primitive-success-700: #15803d;
   --primitive-success-800: #166534;
 
-  /* Warning (amber) */
   --primitive-warning-50: #fffbeb;
   --primitive-warning-100: #fef3c7;
   --primitive-warning-200: #fde68a;
@@ -53,7 +45,6 @@
   --primitive-warning-800: #854d0e;
   --primitive-warning-900: #713f12;
 
-  /* Danger (red) */
   --primitive-danger-50: #fef2f2;
   --primitive-danger-100: #fee2e2;
   --primitive-danger-200: #fecaca;
@@ -63,12 +54,10 @@
   --primitive-danger-800: #991b1b;
   --primitive-danger-900: #7f1d1d;
 
-  /* Info / accent (violet for charts) */
   --primitive-info-500: #8b5cf6;
   --primitive-info-400: #a78bfa;
 
-  /* ─── Tokens (Semantic) ─── */
-  /* Actions */
+  /* Light tokens (semantic) */
   --action-primary: var(--primitive-brand-600);
   --action-primary-hover: var(--primitive-brand-700);
   --action-primary-muted-bg: var(--primitive-brand-100);
@@ -85,7 +74,6 @@
   --action-warning: var(--primitive-warning-500);
   --action-warning-on: var(--primitive-neutral-950);
 
-  /* Surfaces */
   --surface-canvas: var(--primitive-neutral-50);
   --surface-default: var(--primitive-neutral-0);
   --surface-raised: var(--primitive-neutral-0);
@@ -94,7 +82,8 @@
   --surface-selected: var(--primitive-brand-100);
   --surface-report-panel: #e0f2f7;
 
-  /* Text */
+  --badge-bg: var(--primitive-neutral-0);
+
   --text-primary: var(--primitive-neutral-900);
   --text-secondary: var(--primitive-neutral-700);
   --text-tertiary: var(--primitive-neutral-600);
@@ -102,7 +91,6 @@
   --text-disabled: var(--primitive-neutral-300);
   --text-inverse: var(--primitive-neutral-0);
 
-  /* Borders */
   --border-default: var(--primitive-neutral-200);
   --border-subtle: var(--primitive-neutral-100);
   --border-strong: var(--primitive-neutral-300);
@@ -110,34 +98,27 @@
   --border-error: var(--primitive-danger-600);
   --border-hover: var(--primitive-neutral-300);
 
-  /* Focus */
   --focus-ring: var(--primitive-brand-600);
   --focus-ring-offset: var(--surface-default);
 
-  /* Feedback — success */
   --feedback-success-bg: var(--primitive-success-50);
   --feedback-success-bg-strong: var(--primitive-success-100);
   --feedback-success-text: var(--primitive-success-600);
   --feedback-success-text-strong: var(--primitive-success-700);
   --feedback-success-border: var(--primitive-success-200);
-
-  /* Feedback — warning */
   --feedback-warning-bg: var(--primitive-warning-50);
   --feedback-warning-bg-strong: var(--primitive-warning-100);
   --feedback-warning-text: var(--primitive-warning-700);
   --feedback-warning-text-strong: var(--primitive-warning-800);
   --feedback-warning-border: var(--primitive-warning-200);
   --feedback-warning-border-strong: var(--primitive-warning-300);
-
-  /* Feedback — danger */
   --feedback-danger-bg: var(--primitive-danger-50);
   --feedback-danger-bg-strong: var(--primitive-danger-100);
   --feedback-danger-text: var(--primitive-danger-600);
-  --feedback-danger-text-strong: var(--primitive-danger-700);
+  --feedback-danger-text-strong: var(--primitive-danger-500);
   --feedback-danger-border: var(--primitive-danger-200);
   --feedback-danger-border-strong: var(--primitive-danger-600);
 
-  /* Charts */
   --chart-grid: var(--primitive-neutral-200);
   --chart-axis: var(--primitive-neutral-500);
   --chart-tooltip-bg: var(--primitive-neutral-0);
@@ -148,7 +129,6 @@
   --chart-series-accent: var(--primitive-info-500);
   --chart-series-accent-light: var(--primitive-info-400);
 
-  /* Overlay & shadows */
   --overlay-modal: rgba(0, 0, 0, 0.5);
   --shadow-footer: 0 -1px 3px rgba(0, 0, 0, 0.04);
   --shadow-1: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -156,11 +136,9 @@
   --shadow-3: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-glow: 0 0 15px var(--action-primary);
 
-  /* State overlays (hover/active on surfaces) */
   --state-hover-overlay: rgba(0, 0, 0, 0.05);
   --state-active-overlay: rgba(0, 0, 0, 0.1);
 
-  /* Toasts */
   --toast-bg: #333333;
   --toast-text: #ffffff;
   --toast-text-muted: #cccccc;
@@ -170,7 +148,6 @@
   --toast-warning: #ffc107;
   --toast-danger: #f44336;
 
-  /* Auth (login context) */
   --auth-canvas: #1a1f2e;
   --auth-panel: #232938;
   --auth-panel-hover: #283040;
@@ -204,6 +181,263 @@
   --auth-user-badge-bg: #3a4556;
   --auth-user-badge-border: #1a1f2e;
   --auth-user-badge-icon: #8892a6;
+}
+
+/* ─── Dark: shared token layer (primitives set per theme below) ─── */
+[data-theme="github"],
+[data-theme="noir-studio"] {
+  --action-primary: var(--primitive-brand-500);
+  --action-primary-hover: var(--primitive-brand-400);
+  --action-primary-on: var(--primitive-neutral-900);
+  --action-primary-text: var(--primitive-brand-300);
+  --action-secondary-bg: var(--primitive-neutral-200);
+  --action-secondary-bg-hover: var(--primitive-neutral-300);
+  --action-secondary-text: var(--primitive-neutral-900);
+  --action-danger: var(--primitive-danger-500);
+  --action-danger-hover: var(--primitive-danger-600);
+  --action-danger-on: var(--primitive-neutral-900);
+  --action-success: var(--primitive-success-500);
+  --action-success-on: var(--primitive-neutral-900);
+  --action-warning: var(--primitive-warning-500);
+  --action-warning-on: var(--primitive-neutral-950);
+
+  --surface-canvas: var(--primitive-neutral-50);
+  --surface-default: var(--primitive-neutral-0);
+  --surface-raised: var(--primitive-neutral-100);
+  --surface-overlay: var(--primitive-neutral-100);
+  --surface-hover: var(--primitive-neutral-100);
+  --surface-selected: var(--primitive-neutral-200);
+  --surface-report-panel: var(--primitive-neutral-50);
+
+  --badge-bg: var(--primitive-neutral-200);
+
+  --text-primary: var(--primitive-neutral-850);
+  --text-secondary: var(--primitive-neutral-700);
+  --text-tertiary: var(--primitive-neutral-600);
+  --text-muted: var(--primitive-neutral-500);
+  --text-disabled: var(--primitive-neutral-400);
+  --text-inverse: var(--primitive-neutral-0);
+
+  --border-default: var(--primitive-neutral-200);
+  --border-subtle: var(--primitive-neutral-100);
+  --border-strong: var(--primitive-neutral-300);
+  --border-focus: var(--primitive-brand-500);
+  --border-error: var(--primitive-danger-500);
+  --border-hover: var(--primitive-neutral-300);
+
+  --focus-ring: var(--primitive-brand-500);
+  --focus-ring-offset: var(--surface-default);
+
+  --feedback-success-bg-strong: var(--primitive-success-100);
+  --feedback-success-text: var(--primitive-success-500);
+  --feedback-success-text-strong: var(--primitive-success-600);
+  --feedback-success-border: var(--primitive-success-200);
+  --feedback-warning-bg-strong: var(--primitive-warning-100);
+  --feedback-warning-text: var(--primitive-warning-500);
+  --feedback-warning-text-strong: var(--primitive-warning-600);
+  --feedback-warning-border: var(--primitive-warning-200);
+  --feedback-warning-border-strong: var(--primitive-warning-300);
+  --feedback-danger-bg-strong: var(--primitive-danger-100);
+  --feedback-danger-text: var(--primitive-danger-500);
+  --feedback-danger-text-strong: var(--primitive-danger-600);
+  --feedback-danger-border: var(--primitive-danger-200);
+  --feedback-danger-border-strong: var(--primitive-danger-600);
+
+  --chart-grid: var(--primitive-neutral-200);
+  --chart-axis: var(--primitive-neutral-500);
+  --chart-tooltip-bg: var(--primitive-neutral-100);
+  --chart-tooltip-border: var(--primitive-neutral-200);
+  --chart-series-primary: var(--primitive-brand-500);
+  --chart-series-success: var(--primitive-success-500);
+  --chart-series-danger: var(--primitive-danger-500);
+  --chart-series-accent: var(--primitive-info-500);
+  --chart-series-accent-light: var(--primitive-info-400);
+
+  --overlay-modal: rgba(0, 0, 0, 0.8);
+  --shadow-footer: 0 -1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-1: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-2: 0 4px 12px var(--primitive-neutral-0);
+  --shadow-3: 0 12px 32px var(--primitive-neutral-0);
+  --shadow-glow: 0 0 15px var(--action-primary);
+
+  --state-hover-overlay: rgba(255, 255, 255, 0.04);
+  --state-active-overlay: rgba(255, 255, 255, 0.08);
+
+  --toast-bg: var(--primitive-neutral-200);
+  --toast-text: var(--primitive-neutral-900);
+  --toast-text-muted: var(--primitive-neutral-600);
+  --toast-close: var(--primitive-neutral-700);
+  --toast-success: var(--primitive-success-500);
+  --toast-info: var(--primitive-info-500);
+  --toast-warning: var(--primitive-warning-500);
+  --toast-danger: var(--primitive-danger-500);
+
+  --auth-canvas: var(--primitive-neutral-0);
+  --auth-panel: var(--primitive-neutral-50);
+  --auth-panel-hover: var(--primitive-neutral-100);
+  --auth-input-bg: var(--primitive-neutral-0);
+  --auth-input-border: var(--primitive-neutral-200);
+  --auth-input-border-focus: var(--primitive-neutral-400);
+  --auth-text-primary: var(--primitive-neutral-850);
+  --auth-text-secondary: var(--primitive-neutral-700);
+  --auth-text-muted: var(--primitive-neutral-500);
+  --auth-text-light: var(--primitive-neutral-600);
+  --auth-accent: var(--primitive-brand-500);
+  --auth-accent-hover: var(--primitive-brand-400);
+  --auth-accent-medium: var(--primitive-brand-600);
+  --auth-accent-light: var(--primitive-brand-300);
+  --auth-border: var(--primitive-neutral-200);
+  --auth-border-light: var(--primitive-neutral-300);
+  --auth-border-hover: var(--primitive-neutral-300);
+  --auth-error-bg-light: var(--primitive-danger-100);
+  --auth-error-border: var(--primitive-danger-500);
+  --auth-error-text: var(--primitive-danger-500);
+  --auth-error-icon: var(--primitive-danger-500);
+  --auth-feature-card-bg: var(--primitive-neutral-50);
+  --auth-feature-card-hover: var(--primitive-neutral-100);
+  --auth-feature-card-border: var(--primitive-neutral-200);
+  --auth-feature-card-border-hover: var(--primitive-neutral-300);
+  --auth-feature-card-icon-bg: var(--primitive-neutral-100);
+  --auth-feature-card-icon-bg-hover: var(--primitive-neutral-200);
+  --auth-feature-card-icon-border: var(--primitive-neutral-300);
+  --auth-user-badge-bg: var(--primitive-neutral-200);
+  --auth-user-badge-border: var(--primitive-neutral-100);
+  --auth-user-badge-icon: var(--primitive-neutral-600);
+}
+
+/* ─── github: primitives only + token overrides (rgba / theme-specific) ─── */
+[data-theme="github"] {
+  --primitive-brand-50: #eef6ff;
+  --primitive-brand-100: #ddecff;
+  --primitive-brand-200: #bcdaff;
+  --primitive-brand-300: #8bc0ff;
+  --primitive-brand-400: #58a0ff;
+  --primitive-brand-500: #1F6FEB;
+  --primitive-brand-600: #1a5fd4;
+  --primitive-brand-700: #144aad;
+  --primitive-brand-800: #0f3685;
+  --primitive-brand-900: #0c2d6b;
+  --primitive-brand-950: #081a42;
+
+  --primitive-neutral-0: #0B0F16;
+  --primitive-neutral-50: #0D1117;
+  --primitive-neutral-100: #161B22;
+  --primitive-neutral-200: #21262D;
+  --primitive-neutral-300: #30363D;
+  --primitive-neutral-400: #484F58;
+  --primitive-neutral-500: #6E7681;
+  --primitive-neutral-600: #8B949E;
+  --primitive-neutral-700: #CACACA;
+  --primitive-neutral-800: #F5F5F5;
+  --primitive-neutral-850: #FFFFFF;
+  --primitive-neutral-900: #FFFFFF;
+  --primitive-neutral-950: #000000;
+
+  --primitive-success-50: #0d2818;
+  --primitive-success-100: #134d22;
+  --primitive-success-200: #157b2e;
+  --primitive-success-500: #2EA043;
+  --primitive-success-600: #238636;
+  --primitive-success-700: #196c2e;
+  --primitive-success-800: #145c26;
+
+  --primitive-warning-50: #3d2e0a;
+  --primitive-warning-100: #5c4410;
+  --primitive-warning-200: #8b6916;
+  --primitive-warning-300: #b88620;
+  --primitive-warning-500: #D29922;
+  --primitive-warning-600: #9E6A03;
+  --primitive-warning-700: #7d5402;
+  --primitive-warning-800: #5c3e02;
+  --primitive-warning-900: #4a3302;
+
+  --primitive-danger-50: #3d1616;
+  --primitive-danger-100: #5c2222;
+  --primitive-danger-200: #8b2d2d;
+  --primitive-danger-500: #DA3633;
+  --primitive-danger-600: #b62c29;
+  --primitive-danger-700: #912320;
+  --primitive-danger-800: #6b1a18;
+  --primitive-danger-900: #571412;
+
+  --primitive-info-500: #1F6FEB;
+  --primitive-info-400: #58a0ff;
+
+  /* Overrides: rgba tokens (cannot derive from primitives without relative color) */
+  --action-primary-muted-bg: rgba(31, 111, 235, 0.15);
+  --feedback-success-bg: rgba(46, 160, 67, 0.15);
+  --feedback-warning-bg: rgba(210, 153, 34, 0.15);
+  --feedback-danger-bg: rgba(218, 54, 51, 0.15);
+  --auth-input-focus-ring: rgba(31, 111, 235, 0.4);
+  --auth-error-bg: rgba(218, 54, 51, 0.15);
+}
+
+/* ─── noir-studio: primitives only + token overrides ─── */
+[data-theme="noir-studio"] {
+  --primitive-brand-50: #fdf4f0;
+  --primitive-brand-100: #fce8e0;
+  --primitive-brand-200: #f8d0c0;
+  --primitive-brand-300: #f0a88a;
+  --primitive-brand-400: #e68a5c;
+  --primitive-brand-500: #da7756;
+  --primitive-brand-600: #c46544;
+  --primitive-brand-700: #a35238;
+  --primitive-brand-800: #82432e;
+  --primitive-brand-900: #6b3826;
+  --primitive-brand-950: #3d1f16;
+
+  --primitive-neutral-0: #0D0D0D;
+  --primitive-neutral-50: #121212;
+  --primitive-neutral-100: #171717;
+  --primitive-neutral-200: #202020;
+  --primitive-neutral-300: #2E2E2E;
+  --primitive-neutral-400: #3D3D3D;
+  --primitive-neutral-500: #555555;
+  --primitive-neutral-600: #777777;
+  --primitive-neutral-700: #A0A0A0;
+  --primitive-neutral-800: #D0D0D0;
+  --primitive-neutral-850: #E0E0E0;
+  --primitive-neutral-900: #F5F5F5;
+  --primitive-neutral-950: #FFFFFF;
+
+  --primitive-success-50: #0d2818;
+  --primitive-success-100: #134d22;
+  --primitive-success-200: #166534;
+  --primitive-success-500: #1b784c;
+  --primitive-success-600: #166534;
+  --primitive-success-700: #145c26;
+  --primitive-success-800: #134d22;
+
+  --primitive-warning-50: #3d3208;
+  --primitive-warning-100: #5c4a0c;
+  --primitive-warning-200: #8b6f12;
+  --primitive-warning-300: #c49418;
+  --primitive-warning-500: #FFC247;
+  --primitive-warning-600: #eab308;
+  --primitive-warning-700: #ca8a04;
+  --primitive-warning-800: #a16207;
+  --primitive-warning-900: #854d0e;
+
+  --primitive-danger-50: #3d1616;
+  --primitive-danger-100: #5c2222;
+  --primitive-danger-200: #8b2d2d;
+  --primitive-danger-500: #aa3232;
+  --primitive-danger-600: #922b2b;
+  --primitive-danger-700: #7a2424;
+  --primitive-danger-800: #621d1d;
+  --primitive-danger-900: #4a1616;
+
+  --primitive-info-500: #1F6FEB;
+  --primitive-info-400: #58a0ff;
+
+  /* Overrides: rgba + theme-specific */
+  --action-primary-muted-bg: rgba(218, 119, 86, 0.15);
+  --feedback-success-bg: rgba(27, 120, 76, 0.15);
+  --feedback-warning-bg: rgba(255, 194, 71, 0.15);
+  --feedback-danger-bg: rgba(170, 50, 50, 0.15);
+  --shadow-glow: 0 0 18px var(--action-primary);
+  --auth-input-focus-ring: rgba(218, 119, 86, 0.4);
+  --auth-error-bg: rgba(170, 50, 50, 0.15);
 }
 
 /* Optional utility classes (reference tokens only) */

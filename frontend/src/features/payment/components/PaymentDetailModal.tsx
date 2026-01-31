@@ -86,7 +86,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
   return (
     <div className="rounded-lg border border-border-default overflow-hidden bg-surface-default">
       {/* Receipt Header */}
-      <div className="px-6 py-4 border-b border-dashed border-border-default-strong bg-surface-canvas">
+      <div className="px-6 py-4 border-b border-dashed border-border-strong bg-surface-canvas">
         <div className="flex justify-between items-center mb-2">
           {order.patientName ? (
             <p className="text-sm font-semibold text-text-secondary">{order.patientName}</p>
@@ -154,7 +154,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
       </div>
 
       {/* Receipt Footer with Total (sum of active tests only) */}
-      <div className="border-t border-dashed border-border-default-strong mx-6" />
+      <div className="border-t border-dashed border-border-strong" />
       <div className="px-6 py-4 flex justify-between items-center bg-surface-canvas">
         <span className="text-sm font-semibold text-text-secondary uppercase tracking-wider">
           Total

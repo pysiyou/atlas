@@ -130,7 +130,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
 /**
  * Base badge classes
  */
-const BASE_CLASSES = 'inline-flex items-center font-medium rounded whitespace-nowrap';
+const BASE_CLASSES = 'inline-flex items-center font-medium rounded whitespace-nowrap shadow-sm border border-border-default';
 
 /**
  * Size classes
@@ -141,131 +141,119 @@ const SIZES = {
   md: 'px-3 py-1 text-sm',
 };
 
+/** Single shared background for all badges (theme token); variants only set text color */
+const BADGE_BG = 'bg-badge-bg';
+
 /**
- * Variant styles - comprehensive badge color system
+ * Variant styles — same bg for all; text color only
  */
 const VARIANT_STYLES: Record<string, string> = {
-  // Base variants — semantic tokens
-  default: 'bg-neutral-100 text-text-primary',
-  primary: 'bg-action-primary text-action-primary-on',
-  secondary: 'bg-action-secondary-bg text-action-secondary-text',
-  outline: 'border border-border-default bg-transparent text-text-secondary',
-  ghost: 'bg-transparent text-text-secondary',
-  neutral: 'bg-action-secondary-bg text-action-secondary-text',
-  danger: 'bg-action-danger text-action-danger-on',
-  error: 'bg-action-danger text-action-danger-on',
-  success: 'bg-action-success text-action-success-on',
-  warning: 'bg-action-warning text-action-warning-on',
-  info: 'bg-action-primary text-action-primary-on',
-  purple: 'bg-purple-100 text-purple-800',
-  orange: 'bg-orange-100 text-orange-800',
-  teal: 'bg-teal-100 text-teal-800',
-  
-  // Order statuses — semantic feedback where applicable
-  ordered: 'bg-blue-100 text-blue-800',
-  'in-progress': 'bg-feedback-warning-bg-strong text-feedback-warning-text-strong',
-  completed: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
-  cancelled: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  validated: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
-  rejected: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  escalated: 'bg-feedback-warning-bg-strong text-feedback-warning-text-strong',
-  superseded: 'bg-neutral-100 text-text-tertiary',
-  resulted: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
-  
-  // Rejection types
-  're-test': 'bg-yellow-100 text-yellow-800',
-  're-collect': 'bg-orange-100 text-orange-800',
-  'authorize_retest': 'bg-emerald-100 text-emerald-800',
-  
-  // Sample statuses
-  pending: 'bg-neutral-100 text-text-secondary',
-  collected: 'bg-blue-100 text-blue-800',
-  received: 'bg-indigo-100 text-indigo-800',
-  accessioned: 'bg-purple-100 text-purple-800',
-  stored: 'bg-slate-100 text-slate-800',
-  disposed: 'bg-neutral-100 text-text-tertiary',
-  'sample-collected': 'bg-blue-100 text-blue-800',
-  
-  // Appointment statuses
-  scheduled: 'bg-blue-100 text-blue-800',
-  confirmed: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
-  'no-show': 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  
-  // Payment statuses
-  partial: 'bg-yellow-100 text-yellow-800',
-  paid: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
-  unpaid: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  
-  // Priorities
-  routine: 'bg-neutral-100 text-text-secondary',
-  urgent: 'bg-feedback-warning-bg-strong text-feedback-warning-text-strong',
-  stat: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  
-  // Test categories
-  hematology: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  biochemistry: 'bg-blue-100 text-blue-800',
-  microbiology: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
-  serology: 'bg-purple-100 text-purple-800',
-  urinalysis: 'bg-yellow-100 text-yellow-800',
-  imaging: 'bg-indigo-100 text-indigo-800',
-  immunology: 'bg-pink-100 text-pink-800',
-  molecular: 'bg-teal-100 text-teal-800',
-  toxicology: 'bg-orange-100 text-orange-800',
-  coagulation: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  chemistry: 'bg-blue-100 text-blue-800',
-  
-  // Sample types
-  blood: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  urine: 'bg-yellow-100 text-yellow-800',
-  stool: 'bg-feedback-warning-bg-strong text-feedback-warning-text-strong',
-  swab: 'bg-blue-100 text-blue-800',
-  tissue: 'bg-pink-100 text-pink-800',
-  fluid: 'bg-cyan-100 text-cyan-800',
-  csf: 'bg-indigo-100 text-indigo-800',
-  sputum: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
-  other: 'bg-neutral-100 text-text-secondary',
-  plasma: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  serum: 'bg-feedback-warning-bg-strong text-feedback-warning-text-strong',
-  
-  // Sex/Gender
-  male: 'bg-blue-100 text-blue-800',
-  female: 'bg-pink-100 text-pink-800',
-  
-  
-  friend: 'bg-purple-100 text-purple-800',
-  child: 'bg-blue-100 text-blue-800',
-  parent: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
-  sibling: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  spouse: 'bg-yellow-100 text-yellow-800',
-  
-  // Medical history
-  'chronic-condition': 'bg-orange-100 text-orange-800',
-  medication: 'bg-blue-100 text-blue-800',
-  allergy: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  surgery: 'bg-purple-100 text-purple-800',
-  
-  // Container colors
-  'container-red': 'bg-red-500 text-text-inverse',
-  'container-yellow': 'bg-yellow-400 text-gray-900',
-  'container-purple': 'bg-purple-500 text-text-inverse',
-  'container-blue': 'bg-blue-500 text-text-inverse',
-  'container-green': 'bg-green-500 text-text-inverse',
-  'container-gray': 'bg-gray-500 text-text-inverse',
-  'container-black': 'bg-gray-900 text-text-inverse',
-  
-  // Payment methods
-  cash: 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
-  'credit-card': 'bg-blue-100 text-blue-800',
-  'debit-card': 'bg-indigo-100 text-indigo-800',
-  insurance: 'bg-purple-100 text-purple-800',
-  'bank-transfer': 'bg-cyan-100 text-cyan-800',
-  'mobile-money': 'bg-teal-100 text-teal-800',
-  
-  // User roles
-  administrator: 'bg-feedback-danger-bg-strong text-feedback-danger-text-strong',
-  receptionist: 'bg-blue-100 text-blue-800',
-  'lab-technician': 'bg-feedback-success-bg-strong text-feedback-success-text-strong',
-  'lab-technician-plus': 'bg-purple-100 text-purple-800',
+  default: `${BADGE_BG} text-text-primary`,
+  primary: `${BADGE_BG} text-action-primary`,
+  secondary: `${BADGE_BG} text-action-secondary-text`,
+  outline: `${BADGE_BG} border border-border-default text-text-secondary`,
+  ghost: `${BADGE_BG} text-text-secondary`,
+  neutral: `${BADGE_BG} text-action-secondary-text`,
+  danger: `${BADGE_BG} text-feedback-danger-text-strong`,
+  error: `${BADGE_BG} text-feedback-danger-text-strong`,
+  success: `${BADGE_BG} text-feedback-success-text-strong`,
+  warning: `${BADGE_BG} text-feedback-warning-text-strong`,
+  info: `${BADGE_BG} text-action-primary`,
+  purple: `${BADGE_BG} text-purple-800`,
+  orange: `${BADGE_BG} text-orange-800`,
+  teal: `${BADGE_BG} text-teal-800`,
+
+  ordered: `${BADGE_BG} text-blue-800`,
+  'in-progress': `${BADGE_BG} text-feedback-warning-text-strong`,
+  completed: `${BADGE_BG} text-feedback-success-text-strong`,
+  cancelled: `${BADGE_BG} text-feedback-danger-text-strong`,
+  validated: `${BADGE_BG} text-feedback-success-text-strong`,
+  rejected: `${BADGE_BG} text-feedback-danger-text-strong`,
+  escalated: `${BADGE_BG} text-feedback-warning-text-strong`,
+  superseded: `${BADGE_BG} text-text-tertiary`,
+  resulted: `${BADGE_BG} text-feedback-success-text-strong`,
+
+  're-test': `${BADGE_BG} text-yellow-800`,
+  're-collect': `${BADGE_BG} text-orange-800`,
+  authorize_retest: `${BADGE_BG} text-emerald-800`,
+
+  pending: `${BADGE_BG} text-text-secondary`,
+  collected: `${BADGE_BG} text-blue-800`,
+  received: `${BADGE_BG} text-indigo-800`,
+  accessioned: `${BADGE_BG} text-purple-800`,
+  stored: `${BADGE_BG} text-slate-800`,
+  disposed: `${BADGE_BG} text-text-tertiary`,
+  'sample-collected': `${BADGE_BG} text-blue-800`,
+
+  scheduled: `${BADGE_BG} text-blue-800`,
+  confirmed: `${BADGE_BG} text-feedback-success-text-strong`,
+  'no-show': `${BADGE_BG} text-feedback-danger-text-strong`,
+
+  partial: `${BADGE_BG} text-yellow-800`,
+  paid: `${BADGE_BG} text-feedback-success-text-strong`,
+  unpaid: `${BADGE_BG} text-feedback-danger-text-strong`,
+
+  routine: `${BADGE_BG} text-text-secondary`,
+  urgent: `${BADGE_BG} text-feedback-warning-text-strong`,
+  stat: `${BADGE_BG} text-feedback-danger-text-strong`,
+
+  hematology: `${BADGE_BG} text-feedback-danger-text-strong`,
+  biochemistry: `${BADGE_BG} text-blue-800`,
+  microbiology: `${BADGE_BG} text-feedback-success-text-strong`,
+  serology: `${BADGE_BG} text-purple-800`,
+  urinalysis: `${BADGE_BG} text-yellow-800`,
+  imaging: `${BADGE_BG} text-indigo-800`,
+  immunology: `${BADGE_BG} text-pink-800`,
+  molecular: `${BADGE_BG} text-teal-800`,
+  toxicology: `${BADGE_BG} text-orange-800`,
+  coagulation: `${BADGE_BG} text-feedback-danger-text-strong`,
+  chemistry: `${BADGE_BG} text-blue-800`,
+
+  blood: `${BADGE_BG} text-feedback-danger-text-strong`,
+  urine: `${BADGE_BG} text-yellow-800`,
+  stool: `${BADGE_BG} text-feedback-warning-text-strong`,
+  swab: `${BADGE_BG} text-blue-800`,
+  tissue: `${BADGE_BG} text-pink-800`,
+  fluid: `${BADGE_BG} text-cyan-800`,
+  csf: `${BADGE_BG} text-indigo-800`,
+  sputum: `${BADGE_BG} text-feedback-success-text-strong`,
+  other: `${BADGE_BG} text-text-secondary`,
+  plasma: `${BADGE_BG} text-feedback-danger-text-strong`,
+  serum: `${BADGE_BG} text-feedback-warning-text-strong`,
+
+  male: `${BADGE_BG} text-blue-800`,
+  female: `${BADGE_BG} text-pink-800`,
+
+  friend: `${BADGE_BG} text-purple-800`,
+  child: `${BADGE_BG} text-blue-800`,
+  parent: `${BADGE_BG} text-feedback-success-text-strong`,
+  sibling: `${BADGE_BG} text-feedback-danger-text-strong`,
+  spouse: `${BADGE_BG} text-yellow-800`,
+
+  'chronic-condition': `${BADGE_BG} text-orange-800`,
+  medication: `${BADGE_BG} text-blue-800`,
+  allergy: `${BADGE_BG} text-feedback-danger-text-strong`,
+  surgery: `${BADGE_BG} text-purple-800`,
+
+  'container-red': `${BADGE_BG} text-red-600`,
+  'container-yellow': `${BADGE_BG} text-yellow-700`,
+  'container-purple': `${BADGE_BG} text-purple-600`,
+  'container-blue': `${BADGE_BG} text-blue-600`,
+  'container-green': `${BADGE_BG} text-green-600`,
+  'container-gray': `${BADGE_BG} text-gray-600`,
+  'container-black': `${BADGE_BG} text-gray-900`,
+
+  cash: `${BADGE_BG} text-feedback-success-text-strong`,
+  'credit-card': `${BADGE_BG} text-blue-800`,
+  'debit-card': `${BADGE_BG} text-indigo-800`,
+  insurance: `${BADGE_BG} text-purple-800`,
+  'bank-transfer': `${BADGE_BG} text-cyan-800`,
+  'mobile-money': `${BADGE_BG} text-teal-800`,
+
+  administrator: `${BADGE_BG} text-feedback-danger-text-strong`,
+  receptionist: `${BADGE_BG} text-blue-800`,
+  'lab-technician': `${BADGE_BG} text-feedback-success-text-strong`,
+  'lab-technician-plus': `${BADGE_BG} text-purple-800`,
 };
 
 // Custom display labels for variants (shorter/abbreviated versions)
@@ -372,6 +360,10 @@ export const Badge: React.FC<BadgeProps> = ({
       )}
       {...props}
     >
+      <span
+        className={cn('w-1 h-1 rounded-full bg-current shrink-0', iconElement || content ? 'mr-1.5' : '')}
+        aria-hidden
+      />
       {iconElement && <span className="mr-1 shrink-0">{iconElement}</span>}
       {content}
     </div>
