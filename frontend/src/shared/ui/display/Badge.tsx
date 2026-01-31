@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@/utils';
+import { getBadgeAppearance } from '@/shared/theme/theme';
 import { Icon, type IconName } from './Icon';
 
 export type BadgeVariant =
@@ -127,10 +128,10 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   showIcon?: boolean;
 }
 
-/**
- * Base badge classes
- */
+/** Base when unified (current design) */
 const BASE_CLASSES = 'inline-flex items-center font-medium rounded whitespace-nowrap shadow-sm border border-border-default';
+/** Base when tinted (main branch: no border/shadow) */
+const TINTED_BASE_CLASSES = 'inline-flex items-center font-medium rounded whitespace-nowrap';
 
 /**
  * Size classes
@@ -256,6 +257,117 @@ const VARIANT_STYLES: Record<string, string> = {
   'lab-technician-plus': `${BADGE_BG} text-purple-800`,
 };
 
+/** Tinted appearance: exact copy of main branch VARIANT_STYLES */
+const TINTED_VARIANT_STYLES: Record<string, string> = {
+  default: 'bg-neutral-100 text-text-primary',
+  primary: 'bg-brand text-text-inverse',
+  secondary: 'bg-neutral-200 text-text-primary',
+  outline: 'border border-border bg-transparent text-text-secondary',
+  ghost: 'bg-transparent text-text-secondary',
+  neutral: 'bg-neutral-200 text-text-primary',
+  danger: 'bg-danger text-text-inverse',
+  error: 'bg-danger text-text-inverse',
+  success: 'bg-success text-text-inverse',
+  warning: 'bg-warning text-text-inverse',
+  info: 'bg-info text-text-inverse',
+  purple: 'bg-purple-100 text-purple-800',
+  orange: 'bg-orange-100 text-orange-800',
+  teal: 'bg-teal-100 text-teal-800',
+
+  ordered: 'bg-blue-100 text-blue-800',
+  'in-progress': 'bg-amber-100 text-amber-800',
+  completed: 'bg-green-100 text-green-800',
+  cancelled: 'bg-red-100 text-red-800',
+  validated: 'bg-green-100 text-green-800',
+  rejected: 'bg-red-100 text-red-800',
+  escalated: 'bg-amber-100 text-amber-800',
+  superseded: 'bg-gray-100 text-gray-600',
+  resulted: 'bg-green-100 text-green-800',
+
+  're-test': 'bg-yellow-100 text-yellow-800',
+  're-collect': 'bg-orange-100 text-orange-800',
+  authorize_retest: 'bg-emerald-100 text-emerald-800',
+
+  pending: 'bg-gray-100 text-gray-800',
+  collected: 'bg-blue-100 text-blue-800',
+  received: 'bg-indigo-100 text-indigo-800',
+  accessioned: 'bg-purple-100 text-purple-800',
+  stored: 'bg-slate-100 text-slate-800',
+  disposed: 'bg-gray-100 text-gray-600',
+  'sample-collected': 'bg-blue-100 text-blue-800',
+
+  scheduled: 'bg-blue-100 text-blue-800',
+  confirmed: 'bg-green-100 text-green-800',
+  'no-show': 'bg-red-100 text-red-800',
+
+  partial: 'bg-yellow-100 text-yellow-800',
+  paid: 'bg-green-100 text-green-800',
+  unpaid: 'bg-red-100 text-red-800',
+
+  routine: 'bg-gray-100 text-gray-800',
+  urgent: 'bg-orange-100 text-orange-800',
+  stat: 'bg-red-100 text-red-800',
+
+  hematology: 'bg-red-100 text-red-800',
+  biochemistry: 'bg-blue-100 text-blue-800',
+  microbiology: 'bg-green-100 text-green-800',
+  serology: 'bg-purple-100 text-purple-800',
+  urinalysis: 'bg-yellow-100 text-yellow-800',
+  imaging: 'bg-indigo-100 text-indigo-800',
+  immunology: 'bg-pink-100 text-pink-800',
+  molecular: 'bg-teal-100 text-teal-800',
+  toxicology: 'bg-orange-100 text-orange-800',
+  coagulation: 'bg-red-100 text-red-800',
+  chemistry: 'bg-blue-100 text-blue-800',
+
+  blood: 'bg-red-100 text-red-800',
+  urine: 'bg-yellow-100 text-yellow-800',
+  stool: 'bg-amber-100 text-amber-800',
+  swab: 'bg-blue-100 text-blue-800',
+  tissue: 'bg-pink-100 text-pink-800',
+  fluid: 'bg-cyan-100 text-cyan-800',
+  csf: 'bg-indigo-100 text-indigo-800',
+  sputum: 'bg-green-100 text-green-800',
+  other: 'bg-gray-100 text-gray-800',
+  plasma: 'bg-red-100 text-red-800',
+  serum: 'bg-amber-100 text-amber-800',
+
+  male: 'bg-blue-100 text-blue-800',
+  female: 'bg-pink-100 text-pink-800',
+
+  friend: 'bg-purple-100 text-purple-800',
+  child: 'bg-blue-100 text-blue-800',
+  parent: 'bg-green-100 text-green-800',
+  sibling: 'bg-red-100 text-red-800',
+  spouse: 'bg-yellow-100 text-yellow-800',
+
+  'chronic-condition': 'bg-orange-100 text-orange-800',
+  medication: 'bg-blue-100 text-blue-800',
+  allergy: 'bg-red-100 text-red-800',
+  surgery: 'bg-purple-100 text-purple-800',
+
+  'container-red': 'bg-red-500 text-white',
+  'container-yellow': 'bg-yellow-400 text-gray-900',
+  'container-purple': 'bg-purple-500 text-white',
+  'container-blue': 'bg-blue-500 text-white',
+  'container-green': 'bg-green-500 text-white',
+  'container-gray': 'bg-gray-500 text-white',
+  'container-black': 'bg-gray-900 text-white',
+
+  cash: 'bg-green-100 text-green-800',
+  'credit-card': 'bg-blue-100 text-blue-800',
+  'debit-card': 'bg-indigo-100 text-indigo-800',
+  insurance: 'bg-purple-100 text-purple-800',
+  'bank-transfer': 'bg-cyan-100 text-cyan-800',
+  'mobile-money': 'bg-teal-100 text-teal-800',
+
+  administrator: 'bg-red-100 text-red-800',
+  receptionist: 'bg-blue-100 text-blue-800',
+  'lab-technician': 'bg-green-100 text-green-800',
+  'lab-technician-plus': 'bg-purple-100 text-purple-800',
+  pathologist: 'bg-purple-100 text-purple-800',
+};
+
 // Custom display labels for variants (shorter/abbreviated versions)
 const VARIANT_LABELS: Record<string, string> = {
   'sample-collected': 'COLLECTED',
@@ -306,11 +418,12 @@ export const Badge: React.FC<BadgeProps> = ({
   children,
   ...props
 }) => {
-  // Normalize variant to lowercase string for lookup
   const normalizedVariant = String(variant).toLowerCase();
-
-  // Lookup style or fallback to default
-  const variantClass = VARIANT_STYLES[normalizedVariant] || VARIANT_STYLES.default;
+  const appearance = getBadgeAppearance();
+  const variantClass =
+    appearance === 'tinted'
+      ? TINTED_VARIANT_STYLES[normalizedVariant] ?? TINTED_VARIANT_STYLES.default
+      : VARIANT_STYLES[normalizedVariant] || VARIANT_STYLES.default;
 
   // Auto-generate content if children is missing (and it's not a generic variant like 'default')
   let content = children;
@@ -351,7 +464,7 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <div
       className={cn(
-        BASE_CLASSES,
+        appearance === 'tinted' ? TINTED_BASE_CLASSES : BASE_CLASSES,
         variantClass,
         SIZES[size],
         strikethrough && 'line-through',
@@ -360,10 +473,12 @@ export const Badge: React.FC<BadgeProps> = ({
       )}
       {...props}
     >
-      <span
-        className={cn('w-1 h-1 rounded-full bg-current shrink-0', iconElement || content ? 'mr-1.5' : '')}
-        aria-hidden
-      />
+      {appearance !== 'tinted' && (
+        <span
+          className={cn('w-1 h-1 rounded-full bg-current shrink-0', iconElement || content ? 'mr-1.5' : '')}
+          aria-hidden
+        />
+      )}
       {iconElement && <span className="mr-1 shrink-0">{iconElement}</span>}
       {content}
     </div>

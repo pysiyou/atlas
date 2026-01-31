@@ -20,8 +20,14 @@
   --color-action-warning: var(--action-warning);
   --color-action-warning-on: var(--action-warning-on);
 
-  /* Badge */
+  /* Badge (main-branch tinted: brand/danger/success/warning/info/border) */
   --color-badge-bg: var(--badge-bg);
+  --color-brand: var(--action-primary);
+  --color-danger: var(--action-danger);
+  --color-success: var(--action-success);
+  --color-warning: var(--action-warning);
+  --color-info: var(--chart-series-accent);
+  --color-border: var(--border-default);
 
   /* Surfaces */
   --color-surface-canvas: var(--surface-canvas);
