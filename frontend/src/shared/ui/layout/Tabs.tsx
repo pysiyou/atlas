@@ -44,7 +44,7 @@ export const TAB_INDICATOR_TRANSITION =
   'left 320ms cubic-bezier(0.32, 0.72, 0, 1), width 320ms cubic-bezier(0.32, 0.72, 0, 1)';
 
 // Large component is necessary for comprehensive tabs list with indicator animation, keyboard navigation, and responsive behavior
-// eslint-disable-next-line max-lines-per-function
+ 
 export const TabsList: React.FC<TabsListProps> = ({
   tabs,
   activeTabId,

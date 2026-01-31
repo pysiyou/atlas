@@ -249,7 +249,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
 
     let total = 0;
     let acknowledged = 0;
-    let responseTimes: number[] = [];
+    const responseTimes: number[] = [];
     const testCounts: Record<string, { testName: string; count: number }> = {};
 
     filteredOrders.forEach(order => {

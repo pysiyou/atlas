@@ -1,0 +1,19 @@
+{
+  "$schema": "https://unpkg.com/knip@4/schema.json",
+  "entry": [
+    "src/main.tsx",
+    "src/App.tsx",
+    "src/pages/DashboardPage.tsx",
+    "src/pages/PatientsPage.tsx",
+    "src/pages/OrdersPage.tsx",
+    "src/pages/CatalogPage.tsx",
+    "src/pages/LaboratoryPage.tsx",
+    "src/pages/AppointmentsPage.tsx",
+    "src/pages/PaymentsPage.tsx",
+    "src/pages/ReportsPage.tsx",
+    "src/pages/AdminPage.tsx"
+  ],
+  "project": ["src/**/*.{ts,tsx}"],
+  "ignoreFiles": ["src/test/**", "**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
+  "ignoreDependencies": ["tailwindcss", "lint-staged"]
+}

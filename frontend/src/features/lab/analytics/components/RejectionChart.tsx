@@ -13,7 +13,7 @@ interface RejectionChartProps {
 
 export const RejectionChart: React.FC<RejectionChartProps> = ({ data }) => {
   const chartData = data.sampleRejections.topReasons.map(item => ({
-    reason: item.reason.length > 20 ? item.reason.substring(0, 20) + '...' : item.reason,
+    reason: item.reason.length > 20 ? `${item.reason.substring(0, 20)  }...` : item.reason,
     count: item.count,
     fullReason: item.reason,
   }));

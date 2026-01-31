@@ -50,7 +50,7 @@ export interface FilterBarProps {
  * @component
  */
 // Large component is necessary for comprehensive filter bar with multiple filter types, state management, responsive views, and UI rendering
-/* eslint-disable max-lines */
+ 
 // eslint-disable-next-line max-lines-per-function
 export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, className }) => {
   // Breakpoint detection for responsive views

@@ -16,20 +16,13 @@
 export * from './queries';
 
 // =============================================================================
-// Filtering Hooks
-// =============================================================================
-export { useFiltering, useSearch, useMultiSelect } from '@/utils/filtering';
-
-// =============================================================================
 // Auth Hooks
 // =============================================================================
 // useAuth removed - use useAuthStore from @/shared/stores/auth.store
 
 // =============================================================================
-// Responsive Layout Hooks
+// Responsive Layout Hooks (import from @/hooks/useBreakpoint or @/utils/filtering directly)
 // =============================================================================
-export { useBreakpoint, isBreakpointAtLeast, isBreakpointAtMost } from './useBreakpoint';
-export type { Breakpoint } from './useBreakpoint';
 export { useResponsiveLayout } from './useResponsiveLayout';
 export type { ResponsiveLayoutConfig } from './useResponsiveLayout';
 

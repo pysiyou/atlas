@@ -118,7 +118,7 @@ export const ReportDetail: React.FC = () => {
         
         return {
           name: fullName,
-          code: code,
+          code,
           value: result.value,
           unit: result.unit,
           referenceRange: result.referenceRange,
@@ -155,12 +155,12 @@ export const ReportDetail: React.FC = () => {
       patientGender: test.patientGender,
       timestamps: {
         registeredAt: test.order.orderDate || test.order.createdAt,
-        collectedAt: collectedAt,
+        collectedAt,
         reportedAt: test.test.resultValidatedAt || new Date().toISOString(),
       },
       sampleCollection: {
-        collectedAt: collectedAt,
-        collectedBy: collectedBy,
+        collectedAt,
+        collectedBy,
         address: companyConfig.getContact().address.fullAddress,
       },
       testResults,
