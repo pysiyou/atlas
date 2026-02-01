@@ -270,7 +270,7 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
                     fill: '#ffffff',
                     fontSize: segment.fontSize,
                     fontWeight: 700,
-                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                    fontFamily: 'Nunito, sans-serif',
                     textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                     letterSpacing: '-0.02em',
                     transition: 'transform 0.2s ease-out',
@@ -296,7 +296,7 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
                     fill: '#ffffff',
                     fontSize: int.fontSize,
                     fontWeight: 700,
-                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                    fontFamily: 'Nunito, sans-serif',
                     textShadow: '0 2px 6px rgba(0, 0, 0, 0.5)',
                     opacity: 0.9,
                   }}

@@ -1,5 +1,7 @@
 /* ─── Default: studio-light (primitives + light tokens) ─── */
 :root {
+  --font-sans: 'Nunito', sans-serif;
+
   /* Primitives */
   --primitive-brand-50: #f0f9ff;
   --primitive-brand-100: #e0f2fe;
