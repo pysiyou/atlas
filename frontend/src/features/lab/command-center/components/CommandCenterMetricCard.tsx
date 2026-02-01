@@ -77,8 +77,8 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
 
         <div className="min-h-0 flex-1" aria-hidden />
 
-        {/* Trend line: bottom-left, no padding/margin */}
-        <div className="shrink-0 text-left p-0 m-0">
+        {/* Trend line: bottom-left, small margin */}
+        <div className="shrink-0 text-left m-2 sm:m-2.5">
           {trend != null ? (
             <p className="flex items-center gap-1.5 truncate text-xs font-medium">
               <Icon
