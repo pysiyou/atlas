@@ -44,7 +44,7 @@ export const CommandCenterView: React.FC = () => {
     >
       {/* Row 1: Sampling (X of total), Result entry, Validation — totals = completed + pending; trend = count-based */}
       <div className="min-h-0 overflow-hidden border-b border-border-default grid grid-cols-3">
-        <div className={`${rowCellClass} p-2`}>
+        <div className={`${rowCellClass} flex items-stretch p-2`}>
           <CommandCenterMetricCard
             title="Sampled today"
             primaryValue={row1.isLoading ? '—' : row1.samplingDoneToday}
@@ -53,7 +53,7 @@ export const CommandCenterView: React.FC = () => {
             trend={{ value: row1.samplesCreatedToday, label: 'more samples today', format: 'count' }}
           />
         </div>
-        <div className={`${rowCellClass} p-2`}>
+        <div className={`${rowCellClass} flex items-stretch p-2`}>
           <CommandCenterMetricCard
             title="Result entry"
             primaryValue={row1.isLoading ? '—' : row1.resultEnteredToday}
@@ -62,7 +62,7 @@ export const CommandCenterView: React.FC = () => {
             trend={{ value: row1.resultEntryQueueEnteredToday, label: 'entered result-entry today', format: 'count' }}
           />
         </div>
-        <div className={`${rowCellClass} p-2`}>
+        <div className={`${rowCellClass} flex items-stretch p-2`}>
           <CommandCenterMetricCard
             title="Validation"
             primaryValue={row1.isLoading ? '—' : row1.validatedToday}
