@@ -107,6 +107,8 @@ export type IconName =
   | 'heart-pulse'
   | 'pulse'
   | 'blood'
+  | 'up-trend'
+  | 'down-trend'
 
 interface IconProps {
   /** Name of the icon to display (must match SVG filename without .svg extension) */

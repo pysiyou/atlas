@@ -1,4 +1,4 @@
-export { CommandCenterDashboard } from './CommandCenterDashboard';
-export * from './components';
-export * from './hooks';
-export * from './types';
+export { CommandCenterView } from './CommandCenterView';
+export { VennBubbles } from './components';
+export type { VennBubblesProps, VennSegment, VennIntersection } from './components';
+export { createLabSegments } from './utils';

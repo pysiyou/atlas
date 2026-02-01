@@ -1,0 +1,1 @@
+export { createLabSegments } from './labSegments';

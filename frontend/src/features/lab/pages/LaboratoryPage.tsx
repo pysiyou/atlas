@@ -8,7 +8,7 @@ import { CollectionView } from '../collection/CollectionView';
 import { EntryView } from '../entry/EntryView';
 import { ValidationView } from '../validation/ValidationView';
 import { EscalationView } from '../validation/EscalationView';
-import { CommandCenterDashboard } from '@/features/lab/command-center';
+import { CommandCenterView } from '@/features/lab/command-center';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import { Icon } from '@/shared/ui';
 import { ICONS } from '@/utils';
@@ -99,7 +99,9 @@ export const Laboratory: React.FC = () => {
           {activeTab === 'validation' && <ValidationView />}
           {activeTab === 'escalation' && canResolveEscalation && <EscalationView />}
           {activeTab === 'dashboard' && (
-            <CommandCenterDashboard onNavigateToTab={setActiveTab} />
+            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+              <CommandCenterView />
+            </div>
           )}
         </div>
       </div>
