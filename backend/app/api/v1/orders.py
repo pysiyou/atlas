@@ -4,7 +4,7 @@ Order API Routes
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload, selectinload
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Literal, Optional
 from datetime import datetime, timezone
 from app.database import get_db
 from app.core.dependencies import get_current_user
@@ -50,6 +50,9 @@ def get_orders(
     patientId: int | None = None,
     order_status: OrderStatus | None = Query(None, alias="status"),
     paymentStatus: PaymentStatus | None = Query(None, alias="paymentStatus"),
+    sort: Literal["createdAt", "updatedAt"] = Query(
+        "createdAt", description="Sort by createdAt (default) or updatedAt (last modified)"
+    ),
     paginated: bool = Query(False, description="Return paginated response with total count"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -57,6 +60,7 @@ def get_orders(
     """
     Get all orders with optional filters.
     Query params: paginated: If true, returns {data: [...], pagination: {...}} format.
+    sort: createdAt (default) or updatedAt for last-modified ordering.
     """
     skip = pagination["skip"]
     limit = pagination["limit"]
@@ -80,7 +84,8 @@ def get_orders(
     # Get total count for pagination (before offset/limit)
     total = query.count() if paginated else 0
 
-    orders = query.order_by(Order.createdAt.desc()).offset(skip).limit(limit).all()
+    order_by = Order.updatedAt.desc() if sort == "updatedAt" else Order.createdAt.desc()
+    orders = query.order_by(order_by).offset(skip).limit(limit).all()
 
     # Serialize orders using response model to ensure relationships are included
     try:

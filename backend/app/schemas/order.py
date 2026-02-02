@@ -62,6 +62,10 @@ class OrderTestResponse(BaseModel):
     # Result rejection history
     resultRejectionHistory: list[ResultRejectionRecord] | None = None
     
+    # Metadata
+    createdAt: datetime
+    updatedAt: datetime
+    
     class Config:
         from_attributes = True
 

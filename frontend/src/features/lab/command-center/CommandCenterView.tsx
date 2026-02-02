@@ -4,10 +4,12 @@
  */
 
 import React, { useMemo } from 'react';
-import { useWorkflowStateCounts, useCommandCenterRow1Metrics } from './hooks';
+import { TableCore } from '@/shared/ui';
+import { useWorkflowStateCounts, useCommandCenterRow1Metrics, useCommandCenterActivityRows } from './hooks';
 import { VennBubbles, CommandCenterMetricCard } from './components';
 import type { VennIntersection } from './components';
 import { createLabSegments } from './utils';
+import { commandCenterActivityColumns } from './commandCenterActivityTableConfig';
 import { ICONS } from '@/utils';
 
 const rowCellClass =
@@ -36,6 +38,8 @@ export const CommandCenterView: React.FC = () => {
     { segmentIds: ['entry', 'validation'], value: entryValidationPct },
     { segmentIds: ['sampling', 'validation'], value: samplingValidationPct },
   ], [samplingEntryPct, entryValidationPct, samplingValidationPct]);
+
+  const { rows: activityRows, isLoading: activityLoading } = useCommandCenterActivityRows();
 
   return (
     <div
@@ -97,8 +101,18 @@ export const CommandCenterView: React.FC = () => {
         <div className={rowCellClass}>
           <span className="text-text-tertiary text-sm">Row 3 — 3/8</span>
         </div>
-        <div className={rowCellClass}>
-          <span className="text-text-tertiary text-sm">Row 3 — 5/8</span>
+        <div className={`${rowCellClass} flex flex-col min-h-0 p-2`}>
+          <TableCore
+            data={activityRows}
+            columns={commandCenterActivityColumns}
+            showHeader={false}
+            pagination={false}
+            maxHeight="100%"
+            embedded
+            loading={activityLoading}
+            emptyMessage="No recent activity"
+            getRowKey={(row, i) => `${row.orderId}-${row.testCode}-${row.sampleId ?? 0}-${i}`}
+          />
         </div>
       </div>
     </div>

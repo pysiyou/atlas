@@ -45,6 +45,10 @@ const COLOR_MAP: Record<string, BadgeColor> = {
   escalated: 'warning',
   superseded: 'muted',
   resulted: 'success',
+  removed: 'muted',
+  // Test status (explicit so all are visible; pending was neutral = low contrast)
+  pending: 'info',
+  'sample-collected': 'info',
 
   // Rejection types
   're-test': 'warning',
@@ -254,8 +258,16 @@ export const CONTAINER_STYLES: Record<string, string> = {
  * Display labels for specific variants
  */
 export const DISPLAY_LABELS: Record<string, string> = {
+  // Test status
+  pending: 'PENDING',
   'sample-collected': 'COLLECTED',
-  'in-progress': 'RUNNING',
+  'in-progress': 'IN PROGRESS',
+  resulted: 'RESULTED',
+  validated: 'VALIDATED',
+  rejected: 'REJECTED',
+  escalated: 'ESCALATED',
+  superseded: 'SUPERSEDED',
+  removed: 'REMOVED',
   'no-show': 'NO SHOW',
   'chronic-condition': 'CHRONIC',
   'credit-card': 'CREDIT CARD',

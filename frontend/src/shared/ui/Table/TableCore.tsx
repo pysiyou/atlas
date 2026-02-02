@@ -47,6 +47,8 @@ interface TableCoreProps<T> {
   maxHeight?: string;
   /** Embedded mode (removes outer border/rounded corners) */
   embedded?: boolean;
+  /** Show header row (default true). Set false for headerless tables. */
+  showHeader?: boolean;
 
   // === Interactions ===
   /** Row click handler */
@@ -104,6 +106,7 @@ export function TableCore<T = Record<string, unknown>>({
   stickyHeader = false,
   maxHeight,
   embedded = false,
+  showHeader = true,
   onRowClick,
   rowClassName,
   getRowKey,
@@ -156,14 +159,16 @@ export function TableCore<T = Record<string, unknown>>({
     return (
       <div className={containerClasses}>
         <div className="flex-1 overflow-auto" style={maxHeight ? { maxHeight } : undefined}>
-          <TableHeader
-            columns={columns}
-            visibleColumns={columns}
-            sort={null}
-            onSort={() => {}}
-            variant={variant}
-            sticky={stickyHeader}
-          />
+          {showHeader && (
+            <TableHeader
+              columns={columns}
+              visibleColumns={columns}
+              sort={null}
+              onSort={() => {}}
+              variant={variant}
+              sticky={stickyHeader}
+            />
+          )}
           <TableSkeleton
             columns={columns as ColumnConfig<unknown>[]}
             rows={loadingRows}
@@ -207,14 +212,16 @@ export function TableCore<T = Record<string, unknown>>({
 
       {/* Scrollable table area */}
       <div className="flex-1 overflow-auto" style={maxHeight ? { maxHeight } : undefined}>
-        <TableHeader
-          columns={columns}
-          visibleColumns={columns}
-          sort={sort}
-          onSort={handleSort}
-          variant={variant}
-          sticky={stickyHeader}
-        />
+        {showHeader && (
+          <TableHeader
+            columns={columns}
+            visibleColumns={columns}
+            sort={sort}
+            onSort={handleSort}
+            variant={variant}
+            sticky={stickyHeader}
+          />
+        )}
         <TableRow<T>
           data={paginatedData as T[]}
           visibleColumns={columns}

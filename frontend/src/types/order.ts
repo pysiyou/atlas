@@ -113,6 +113,10 @@ export interface OrderTest {
   criticalNotifiedAt?: string;
   criticalNotifiedTo?: string;
   criticalAcknowledgedAt?: string;
+
+  // Metadata
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Order {

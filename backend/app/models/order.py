@@ -100,6 +100,10 @@ class OrderTest(Base):
     criticalNotifiedTo = Column("critical_notified_to", String, nullable=True)
     criticalAcknowledgedAt = Column("critical_acknowledged_at", DateTime(timezone=True), nullable=True)
 
+    # Metadata
+    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
+    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
     # Relationships
     order = relationship("Order", back_populates="tests")
     test = relationship("Test", foreign_keys=[testCode])

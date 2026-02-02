@@ -73,6 +73,51 @@ def apply_migrations():
         conn.execute(text("ALTER TYPE teststatus ADD VALUE IF NOT EXISTS 'escalated'"))
         print("  ✓ Test status escalated added")
         
+        # Migration 5: Add timestamps to order_tests
+        print("  ⏳ Adding timestamps to order_tests...")
+        # Check if columns already exist
+        result = conn.execute(text("""
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'order_tests' 
+            AND column_name IN ('created_at', 'updated_at')
+        """))
+        existing_columns = {row[0] for row in result}
+        
+        if 'created_at' not in existing_columns:
+            conn.execute(text("""
+                ALTER TABLE order_tests 
+                ADD COLUMN created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
+            """))
+            print("    ✓ Added created_at column")
+        
+        if 'updated_at' not in existing_columns:
+            conn.execute(text("""
+                ALTER TABLE order_tests 
+                ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
+            """))
+            print("    ✓ Added updated_at column")
+        
+        # Create or replace the update trigger
+        conn.execute(text("""
+            CREATE OR REPLACE FUNCTION update_order_test_updated_at()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                NEW.updated_at = CURRENT_TIMESTAMP;
+                RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql;
+        """))
+        
+        conn.execute(text("DROP TRIGGER IF EXISTS order_test_updated_at_trigger ON order_tests;"))
+        conn.execute(text("""
+            CREATE TRIGGER order_test_updated_at_trigger
+            BEFORE UPDATE ON order_tests
+            FOR EACH ROW
+            EXECUTE FUNCTION update_order_test_updated_at();
+        """))
+        print("  ✓ Order test timestamps and trigger applied")
+        
         conn.commit()
     
     print("✓ All migrations applied")
