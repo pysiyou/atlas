@@ -17,11 +17,10 @@ import {
 import { PopoverForm } from '../components/PopoverForm';
 import { EntryRejectionSection } from '../entry/EntryRejectionSection';
 import { EntryInfoLine } from '../components/StatusBadges';
-import { resultAPI } from '@/services/api';
+import { useResolveEscalation } from '@/hooks/queries/useResultMutations';
 import { toast } from '@/shared/components/feedback';
-import { logger } from '@/utils/logger';
 import type { TestWithContext } from '@/types';
-import type { EscalationResolutionAction, EscalationResolveRequest } from '@/types/lab-operations';
+import type { EscalationResolutionAction } from '@/types/lab-operations';
 
 interface EscalationResolutionModalProps {
   isOpen: boolean;
@@ -36,59 +35,64 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   test,
   onResolved,
 }) => {
-  const [resolving, setResolving] = useState(false);
   const [validationNotesForceValidate, setValidationNotesForceValidate] = useState('');
   const [reasonAuthorizeRetest, setReasonAuthorizeRetest] = useState('');
   const [reasonFinalReject, setReasonFinalReject] = useState('');
 
+  // Use TanStack Query mutation for escalation resolution
+  const resolveEscalation = useResolveEscalation();
+  const resolving = resolveEscalation.isPending;
+
   const resolve = useCallback(
     async (action: EscalationResolutionAction, rejectionReasonOrNotes?: string) => {
       if (resolving) return;
-      setResolving(true);
-      try {
-        const payload: EscalationResolveRequest = {
+
+      const messages: Record<EscalationResolutionAction, string> = {
+        force_validate: 'Results force-validated.',
+        authorize_retest: 'Authorized re-test created.',
+        final_reject: 'Sample rejected; new sample requested.',
+      };
+
+      resolveEscalation.mutate(
+        {
+          orderId: test.orderId,
+          testCode: test.testCode,
           action,
-          ...(action === 'force_validate' && {
-            validationNotes: rejectionReasonOrNotes?.trim() || undefined,
-          }),
-          ...(action === 'authorize_retest' && {
-            rejectionReason: rejectionReasonOrNotes?.trim() || 'Authorized re-test (escalation resolution)',
-          }),
-          ...(action === 'final_reject' && {
-            rejectionReason: (rejectionReasonOrNotes ?? '').trim(),
-          }),
-        };
-        await resultAPI.resolveEscalation(test.orderId, test.testCode, payload);
-        await onResolved();
-        onClose();
-        const messages: Record<EscalationResolutionAction, string> = {
-          force_validate: 'Results force-validated.',
-          authorize_retest: 'Authorized re-test created.',
-          final_reject: 'Sample rejected; new sample requested.',
-        };
-        toast.success({
-          title: messages[action] ?? 'Operation completed.',
-          subtitle: 'The escalation has been resolved and the test status updated. You may need to refresh the view.',
-        });
-      } catch (err) {
-        const apiError = err as { message?: string };
-        logger.error('Escalation resolve failed', apiError?.message ?? err);
-        const msg =
-          apiError && typeof apiError === 'object' && typeof apiError.message === 'string'
-            ? apiError.message
-            : 'Failed to resolve escalation.';
-        toast.error({
-          title: msg,
-          subtitle: 'The escalation could not be resolved. Check the details and try again.',
-        });
-      } finally {
-        setResolving(false);
-        setValidationNotesForceValidate('');
-        setReasonAuthorizeRetest('');
-        setReasonFinalReject('');
-      }
+          validationNotes: action === 'force_validate' ? rejectionReasonOrNotes?.trim() : undefined,
+          rejectionReason:
+            action === 'authorize_retest'
+              ? rejectionReasonOrNotes?.trim() || 'Authorized re-test (escalation resolution)'
+              : action === 'final_reject'
+                ? (rejectionReasonOrNotes ?? '').trim()
+                : undefined,
+        },
+        {
+          onSuccess: async () => {
+            await onResolved();
+            onClose();
+            toast.success({
+              title: messages[action] ?? 'Operation completed.',
+              subtitle: 'The escalation has been resolved and the test status updated.',
+            });
+            setValidationNotesForceValidate('');
+            setReasonAuthorizeRetest('');
+            setReasonFinalReject('');
+          },
+          onError: (err) => {
+            const apiError = err as { message?: string };
+            const msg =
+              apiError && typeof apiError === 'object' && typeof apiError.message === 'string'
+                ? apiError.message
+                : 'Failed to resolve escalation.';
+            toast.error({
+              title: msg,
+              subtitle: 'The escalation could not be resolved. Check the details and try again.',
+            });
+          },
+        }
+      );
     },
-    [test.orderId, test.testCode, onResolved, onClose, resolving]
+    [test.orderId, test.testCode, onResolved, onClose, resolving, resolveEscalation]
   );
 
   const handleForceValidate = useCallback(

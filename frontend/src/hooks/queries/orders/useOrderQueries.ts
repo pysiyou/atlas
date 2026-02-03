@@ -8,7 +8,7 @@ import { useMemo, useState, useCallback } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { orderAPI } from '@/services/api/orders';
 import { useAuthStore } from '@/shared/stores/auth.store';
-import type { OrderStatus, PaymentStatus } from '@/types';
+import type { Order, OrderStatus, PaymentStatus } from '@/types';
 
 /**
  * Filter options for orders list
@@ -201,5 +201,156 @@ export function usePaginatedOrders(
     goToPage,
     nextPage,
     prevPage,
+  };
+}
+
+/**
+ * Hook that uses select to return order summary statistics.
+ * Uses the same cached data as useOrdersList but derives summary stats.
+ * Re-renders only when the summary changes, not on every order change.
+ *
+ * This demonstrates the TanStack Query select pattern for computing
+ * derived data efficiently.
+ *
+ * @returns Order statistics { total, byStatus, byPaymentStatus }
+ *
+ * @example
+ * ```tsx
+ * const { stats, isLoading } = useOrderStats();
+ * // stats.total = 150
+ * // stats.byStatus['in-progress'] = 45
+ * ```
+ */
+export function useOrderStats() {
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+
+  const query = useQuery({
+    queryKey: queryKeys.orders.list(),
+    queryFn: () => orderAPI.getAll(),
+    enabled: isAuthenticated && !isRestoring,
+    ...cacheConfig.dynamic,
+    // SELECT PATTERN: Compute statistics from orders
+    // Only re-renders when the stats actually change
+    select: (orders: Order[]) => {
+      const byStatus: Record<string, number> = {};
+      const byPaymentStatus: Record<string, number> = {};
+
+      orders.forEach(order => {
+        // Count by status
+        const status = order.overallStatus;
+        byStatus[status] = (byStatus[status] || 0) + 1;
+
+        // Count by payment status
+        const paymentStatus = order.paymentStatus;
+        byPaymentStatus[paymentStatus] = (byPaymentStatus[paymentStatus] || 0) + 1;
+      });
+
+      return {
+        total: orders.length,
+        byStatus,
+        byPaymentStatus,
+        unpaidCount: byPaymentStatus['unpaid'] || 0,
+        inProgressCount: byStatus['in-progress'] || 0,
+      };
+    },
+  });
+
+  return {
+    stats: query.data ?? {
+      total: 0,
+      byStatus: {},
+      byPaymentStatus: {},
+      unpaidCount: 0,
+      inProgressCount: 0,
+    },
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
+}
+
+/**
+ * Hook that uses select to return a specific order's summary.
+ * Extracts just the fields needed for display, avoiding re-renders
+ * when other order fields change.
+ *
+ * @param orderId - The order ID
+ * @returns Order summary or null if not found
+ *
+ * @example
+ * ```tsx
+ * const summary = useOrderSummary('123');
+ * // summary = { orderId: 123, totalTests: 5, pendingTests: 2, totalAmount: 1500 }
+ * ```
+ */
+export function useOrderSummary(orderId: string | undefined) {
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+
+  const query = useQuery({
+    queryKey: queryKeys.orders.byId(orderId ?? ''),
+    queryFn: () => orderAPI.getById(orderId!),
+    enabled: isAuthenticated && !isRestoring && !!orderId,
+    ...cacheConfig.dynamic,
+    // SELECT PATTERN: Extract only summary fields
+    select: (order: Order) => ({
+      orderId: order.orderId,
+      patientName: order.patientName,
+      totalTests: order.tests.length,
+      pendingTests: order.tests.filter(t =>
+        ['pending', 'sample-collected', 'in-progress', 'resulted'].includes(t.status)
+      ).length,
+      completedTests: order.tests.filter(t => t.status === 'validated').length,
+      totalAmount: order.totalPrice,
+      isPaid: order.paymentStatus === 'paid',
+      status: order.overallStatus,
+    }),
+  });
+
+  return query.data ?? null;
+}
+
+/**
+ * Hook that uses select to return recent orders (last 7 days).
+ * Filters and transforms the cached order list.
+ *
+ * @param limit - Maximum number of orders to return (default: 10)
+ * @returns Recent orders array
+ *
+ * @example
+ * ```tsx
+ * const { recentOrders, isLoading } = useRecentOrders(5);
+ * ```
+ */
+export function useRecentOrders(limit = 10) {
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const sevenDaysAgo = useMemo(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    return date;
+  }, []);
+
+  const query = useQuery({
+    queryKey: queryKeys.orders.list(),
+    queryFn: () => orderAPI.getAll(),
+    enabled: isAuthenticated && !isRestoring,
+    ...cacheConfig.dynamic,
+    // SELECT PATTERN: Filter to recent orders and limit
+    select: (orders: Order[]) =>
+      orders
+        .filter(order => new Date(order.orderDate) >= sevenDaysAgo)
+        .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime())
+        .slice(0, limit)
+        .map(order => ({
+          orderId: order.orderId,
+          patientName: order.patientName,
+          orderDate: order.orderDate,
+          status: order.overallStatus,
+          testCount: order.tests.length,
+        })),
+  });
+
+  return {
+    recentOrders: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
   };
 }

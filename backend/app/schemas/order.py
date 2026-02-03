@@ -3,9 +3,27 @@ Pydantic schemas for Order
 """
 from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
-from typing import Literal, Optional, List
+from typing import Literal, Optional, List, Dict, Any, Union
 from app.schemas.enums import OrderStatus, PaymentStatus, PriorityLevel, TestStatus
 from app.schemas.payment import PaymentResponse
+
+
+class TestResultValue(BaseModel):
+    """
+    Individual test result parameter value.
+    Flexible to handle both numeric and text results.
+    """
+    value: Union[str, float, int, None] = None
+    unit: Optional[str] = None
+    referenceRange: Optional[str] = None
+    flag: Optional[Literal["normal", "high", "low", "critical", "critical-high", "critical-low"]] = None
+
+    class Config:
+        from_attributes = True
+
+
+# Type alias for results dict - keys are parameter codes, values are result data
+TestResultsDict = Dict[str, Union[TestResultValue, Dict[str, Any], str, float, int, None]]
 
 
 class ResultRejectionRecord(BaseModel):
@@ -44,7 +62,7 @@ class OrderTestResponse(BaseModel):
     status: TestStatus
     priceAtOrder: float
     sampleId: int | None = None
-    results: dict | None = None
+    results: Optional[TestResultsDict] = None
     resultEnteredAt: datetime | None = None
     enteredBy: str | None = None
     resultValidatedAt: datetime | None = None

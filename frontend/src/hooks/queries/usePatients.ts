@@ -176,6 +176,83 @@ export function usePatientSearch(searchQuery: string) {
 }
 
 /**
+ * Hook that uses the select pattern to return only dropdown options.
+ * Uses the same cached data as usePatientsList but transforms it.
+ * Re-renders only when the selected data (options array) changes.
+ *
+ * This demonstrates the TanStack Query select pattern for deriving
+ * component-specific data from a shared cache.
+ *
+ * @returns Array of patient options for dropdowns { value, label }
+ *
+ * @example
+ * ```tsx
+ * const { options, isLoading } = usePatientOptions();
+ * // options = [{ value: 1, label: 'John Doe' }, ...]
+ * ```
+ */
+export function usePatientOptions() {
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+
+  const query = useQuery({
+    queryKey: queryKeys.patients.list(),
+    queryFn: () => patientAPI.getAll(),
+    enabled: isAuthenticated && !isRestoring,
+    ...cacheConfig.semiStatic,
+    // SELECT PATTERN: Transform full patient list to dropdown options
+    // Only re-renders when the derived options change, not the full data
+    select: (patients: Patient[]) =>
+      patients.map(p => ({
+        value: p.id,
+        label: p.fullName,
+        // Include extra data for search functionality
+        searchText: `${p.fullName} ${p.phone}`.toLowerCase(),
+      })),
+  });
+
+  return {
+    options: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
+}
+
+/**
+ * Hook that uses select to return patient names by ID.
+ * Creates a Map for O(1) lookups without re-rendering on full data changes.
+ *
+ * @returns Map of patient IDs to names
+ *
+ * @example
+ * ```tsx
+ * const { namesMap, isLoading } = usePatientNames();
+ * const name = namesMap.get(patientId) ?? 'Unknown';
+ * ```
+ */
+export function usePatientNames() {
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+
+  const query = useQuery({
+    queryKey: queryKeys.patients.list(),
+    queryFn: () => patientAPI.getAll(),
+    enabled: isAuthenticated && !isRestoring,
+    ...cacheConfig.semiStatic,
+    // SELECT PATTERN: Transform to Map for efficient lookups
+    select: (patients: Patient[]) => {
+      const map = new Map<number, string>();
+      patients.forEach(p => map.set(p.id, p.fullName));
+      return map;
+    },
+  });
+
+  return {
+    namesMap: query.data ?? new Map<number, string>(),
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
+}
+
+/**
  * Hook to get patient name lookup function.
  * Returns a function that resolves patient IDs to names.
  *

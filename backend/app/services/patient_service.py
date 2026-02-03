@@ -103,6 +103,7 @@ class PatientService:
             emergencyContact=patient_data.emergencyContact.model_dump(),
             medicalHistory=medical_history_data,
             affiliation=patient_data.affiliation.model_dump() if patient_data.affiliation else None,
+            vitalSigns=patient_data.vitalSigns.model_dump() if patient_data.vitalSigns else None,
             registrationDate=datetime.now(timezone.utc),
             createdBy=user_id,
             updatedBy=user_id,

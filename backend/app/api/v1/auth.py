@@ -20,6 +20,7 @@ from app.core.security import (
 from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.schemas.user import LoginRequest, Token, UserResponse
+from app.schemas.responses import MessageResponse
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -108,12 +109,12 @@ def get_me(current_user: User = Depends(get_current_user)):
     return UserResponse(**data)
 
 
-@router.post("/logout")
-def logout():
+@router.post("/logout", response_model=MessageResponse)
+def logout() -> MessageResponse:
     """
     Logout endpoint.
 
     Note: JWT tokens are stateless - the client must discard tokens.
     This endpoint exists for API completeness and future token blacklisting.
     """
-    return {"message": "Logged out successfully"}
+    return MessageResponse(message="Logged out successfully")

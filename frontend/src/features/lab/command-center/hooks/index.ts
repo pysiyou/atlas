@@ -4,3 +4,7 @@ export { useCommandCenterRow1Metrics } from './useCommandCenterRow1Metrics';
 export type { CommandCenterRow1Metrics } from './useCommandCenterRow1Metrics';
 export { useCommandCenterActivityRows } from './useCommandCenterActivityRows';
 export type { CommandCenterActivityRow } from './useCommandCenterActivityRows';
+export { useWeeklyActivities } from './useWeeklyActivities';
+export type { DayActivity } from './useWeeklyActivities';
+export { useLabHistory } from './useLabHistory';
+export type { LabHistoryEvent, LabHistoryEventType } from './useLabHistory';

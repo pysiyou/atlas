@@ -1,12 +1,15 @@
 """
 Order API Routes
 """
+import logging
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload, selectinload
 from pydantic import BaseModel, Field
 from typing import Literal, Optional
 from datetime import datetime, timezone
 from app.database import get_db
+
+logger = logging.getLogger(__name__)
 from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.models.order import Order, OrderTest
@@ -22,6 +25,7 @@ from app.api.deps import PaginationParams
 from app.services.order_service import OrderService
 from app.services.payment_service import enrich_payment
 from app.schemas.payment import PaymentResponse
+from app.schemas.responses import OrderReportResponse
 
 router = APIRouter()
 
@@ -90,14 +94,11 @@ def get_orders(
     # Serialize orders using response model to ensure relationships are included
     try:
         serialized_orders = [OrderResponse.model_validate(o).model_dump(mode="json") for o in orders]
-    except Exception as e:
-        # Log the error for debugging
-        import traceback
-        print(f"Error serializing orders: {e}")
-        print(traceback.format_exc())
+    except Exception:
+        logger.exception("Error serializing orders")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error serializing order data: {str(e)}"
+            detail="Error processing order data"
         )
 
     if paginated:
@@ -180,9 +181,17 @@ def delete_order(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Cannot delete order that has payments. Remove or void payments first."
         )
-    db.query(Sample).filter(Sample.orderId == orderId).delete()
-    db.delete(order)
-    db.commit()
+    try:
+        db.query(Sample).filter(Sample.orderId == orderId).delete()
+        db.delete(order)
+        db.commit()
+    except Exception:
+        db.rollback()
+        logger.exception(f"Failed to delete order {orderId}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete order"
+        )
     return None
 
 
@@ -218,9 +227,20 @@ def update_order_test_status(
         order_test.technicianNotes = body.technicianNotes
     if body.validationNotes is not None:
         order_test.validationNotes = body.validationNotes
-    update_order_status(db, orderId)
-    db.commit()
-    db.refresh(order)
+
+    try:
+        update_order_status(db, orderId)
+        db.commit()
+        db.refresh(order)
+    except HTTPException:
+        raise
+    except Exception:
+        db.rollback()
+        logger.exception(f"Failed to update test status for order {orderId}/{testCode}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update test status"
+        )
     return order
 
 
@@ -295,8 +315,17 @@ def mark_order_test_critical(
         notified_to=body.notifiedTo,
         notification_method="phone",
     )
-    db.commit()
-    db.refresh(order)
+
+    try:
+        db.commit()
+        db.refresh(order)
+    except Exception:
+        db.rollback()
+        logger.exception(f"Failed to record critical value notification for order {orderId}/{testCode}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to record critical value notification"
+        )
     return order
 
 
@@ -313,12 +342,12 @@ def update_order_payment_status(
     )
 
 
-@router.post("/orders/{orderId}/report", status_code=status.HTTP_200_OK)
+@router.post("/orders/{orderId}/report", response_model=OrderReportResponse, status_code=status.HTTP_200_OK)
 def mark_as_reported(
     orderId: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
-):
+) -> OrderReportResponse:
     """
     Confirm order completion (all tests validated).
     """
@@ -331,4 +360,4 @@ def mark_as_reported(
         )
 
     # Order is already in COMPLETED state (final state), just acknowledge
-    return {"orderId": orderId, "status": "completed", "message": "Order is complete"}
+    return OrderReportResponse(orderId=orderId, status="completed", message="Order is complete")

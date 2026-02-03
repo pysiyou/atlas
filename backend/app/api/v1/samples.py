@@ -3,11 +3,14 @@ Sample API Routes
 
 Uses the unified LabOperationsService for all operations.
 """
+import logging
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from pydantic import BaseModel, Field
 from app.database import get_db
+
+logger = logging.getLogger(__name__)
 from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.models.sample import Sample
@@ -28,10 +31,28 @@ class RejectAndRecollectRequest(BaseModel):
     recollectionReason: Optional[str] = Field(None, max_length=1000, description="Reason for recollection")
 
 
+class RejectedSampleSummary(BaseModel):
+    """Summary of a rejected sample."""
+    sampleId: int
+    status: str
+    rejectedAt: Optional[str] = None
+    recollectionSampleId: Optional[int] = None
+
+
+class NewSampleSummary(BaseModel):
+    """Summary of a newly created recollection sample."""
+    sampleId: int
+    status: str
+    priority: str
+    isRecollection: bool
+    originalSampleId: Optional[int] = None
+    recollectionAttempt: int
+
+
 class RejectAndRecollectResponse(BaseModel):
     """Response for combined reject and recollect operation"""
-    rejectedSample: dict
-    newSample: dict
+    rejectedSample: RejectedSampleSummary
+    newSample: NewSampleSummary
     recollectionAttempt: int
     message: str
 
@@ -68,14 +89,11 @@ def get_samples(
     # Serialize samples using response model
     try:
         serialized_samples = [SampleResponse.model_validate(s).model_dump(mode="json") for s in samples]
-    except Exception as e:
-        # Log the error for debugging
-        import traceback
-        print(f"Error serializing samples: {e}")
-        print(traceback.format_exc())
+    except Exception:
+        logger.exception("Error serializing samples")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error serializing sample data: {str(e)}"
+            detail="Error processing sample data"
         )
 
     if paginated:
@@ -227,22 +245,22 @@ def reject_and_recollect_sample(
         )
 
         return RejectAndRecollectResponse(
-            rejectedSample={
-                "sampleId": rejected_sample.sampleId,
-                "status": rejected_sample.status.value,
-                "rejectedAt": rejected_sample.rejectedAt.isoformat() if rejected_sample.rejectedAt else None,
-                "recollectionSampleId": rejected_sample.recollectionSampleId
-            },
-            newSample={
-                "sampleId": new_sample.sampleId,
-                "status": new_sample.status.value,
-                "priority": new_sample.priority.value,
-                "isRecollection": new_sample.isRecollection,
-                "originalSampleId": new_sample.originalSampleId,
-                "recollectionAttempt": new_sample.recollectionAttempt
-            },
+            rejectedSample=RejectedSampleSummary(
+                sampleId=rejected_sample.sampleId,
+                status=rejected_sample.status.value,
+                rejectedAt=rejected_sample.rejectedAt.isoformat() if rejected_sample.rejectedAt else None,
+                recollectionSampleId=rejected_sample.recollectionSampleId
+            ),
+            newSample=NewSampleSummary(
+                sampleId=new_sample.sampleId,
+                status=new_sample.status.value,
+                priority=new_sample.priority.value,
+                isRecollection=new_sample.isRecollection,
+                originalSampleId=new_sample.originalSampleId,
+                recollectionAttempt=new_sample.recollectionAttempt
+            ),
             recollectionAttempt=new_sample.recollectionAttempt,
-            message=f"Sample rejected and recollection requested successfully"
+            message="Sample rejected and recollection requested successfully"
         )
     except LabOperationError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)

@@ -467,9 +467,9 @@ def generate_african_name(gender: str) -> tuple[str, str]:
     except Exception:
         # Fallback if specific gender call fails or signature mismatches
         try:
-             full_name = niafaker.generate_name()
-        except:
-             full_name = fake.name()
+            full_name = niafaker.generate_name()
+        except Exception:
+            full_name = fake.name()
         
     parts = full_name.split()
     if len(parts) >= 2:
@@ -495,7 +495,7 @@ def _create_single_patient_data() -> dict:
     # Generate phone number using NiaFaker
     try:
         phone = niafaker.generate_phone_number()
-    except:
+    except Exception:
         phone = f"+254{random.randint(700000000, 799999999)}"
     
     # Generate email (optional)
@@ -536,7 +536,7 @@ def _create_single_patient_data() -> dict:
     street_address = "Unknown Street"
     try:
         street_address = niafaker.generate_address()
-    except:
+    except Exception:
         street_address = fake.street_address()
 
     address = {
@@ -551,8 +551,8 @@ def _create_single_patient_data() -> dict:
     emergency_phone = "+254700000000"
     try:
         emergency_phone = niafaker.generate_phone_number()
-    except:
-        pass
+    except Exception:
+        pass  # Keep the default phone number
 
     # Random relationship
     relationship = random.choice([r.value for r in Relationship])

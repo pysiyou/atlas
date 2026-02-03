@@ -3,18 +3,21 @@ Results API Routes - for result entry and validation
 
 Uses the unified LabOperationsService for all operations.
 """
+import logging
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 from pydantic import BaseModel, Field, AliasChoices, model_validator
 from typing import Optional, List, Any, Literal
 from app.database import get_db
+
+logger = logging.getLogger(__name__)
 from app.core.dependencies import get_current_user, require_role
 from app.models.user import User
 from app.models.order import Order, OrderTest
 from app.models.sample import Sample
 from app.schemas.enums import TestStatus, UserRole, ValidationDecision, RejectionAction
-from app.schemas.order import OrderTestResponse
+from app.schemas.order import OrderTestResponse, TestResultsDict
 from app.services.lab_operations import (
     LabOperationsService,
     LabOperationError,
@@ -28,7 +31,7 @@ router = APIRouter()
 
 class ResultEntryRequest(BaseModel):
     """Request body for entering test results"""
-    results: dict  # Record<string, TestResult>
+    results: TestResultsDict  # Record<string, TestResult>
     technicianNotes: Optional[str] = None
 
 
@@ -148,7 +151,7 @@ class PendingEscalationItemResponse(BaseModel):
     sampleType: str
     status: str
     sampleId: Optional[int] = None
-    results: Optional[dict] = None
+    results: Optional[TestResultsDict] = None
     resultEnteredAt: Optional[datetime] = None
     enteredBy: Optional[str] = None
     resultValidatedAt: Optional[datetime] = None
@@ -539,24 +542,26 @@ def validate_bulk(
                 error=e.message
             ))
             failure_count += 1
-        except Exception as e:
-            # Catch any unexpected errors
+        except Exception:
+            # Catch any unexpected errors - log but don't expose details
+            logger.exception(f"Unexpected error validating {item.orderId}/{item.testCode}")
             results.append(BulkValidationResult(
                 orderId=item.orderId,
                 testCode=item.testCode,
                 success=False,
-                error=f"Unexpected error: {str(e)}"
+                error="An unexpected error occurred"
             ))
             failure_count += 1
 
     # Commit all successful validations
     try:
         db.commit()
-    except Exception as e:
+    except Exception:
         db.rollback()
+        logger.exception("Failed to commit bulk validation")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to commit bulk validation: {str(e)}"
+            detail="Failed to commit bulk validation"
         )
 
     return BulkValidationResponse(

@@ -13,3 +13,11 @@ export type { QueryKeys } from './keys';
 
 // Provider component
 export { QueryProvider } from './QueryProvider';
+
+// Validation utilities
+export {
+  createValidatedQueryFn,
+  createValidatedArrayQueryFn,
+  createValidatedSelector,
+  ValidationError,
+} from './withValidation';

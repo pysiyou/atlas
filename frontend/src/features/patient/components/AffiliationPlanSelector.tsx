@@ -4,14 +4,13 @@
  * Inspired by modern subscription plan selection patterns
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Button, Icon } from '@/shared/ui';
 import { ClaudeLoader } from '@/shared/ui';
-import { affiliationAPI } from '@/services/api';
+import { useAffiliationPricing } from '@/hooks/queries/useAffiliationPricing';
 import { formatCurrency } from '@/utils';
-import { logger } from '@/utils/logger';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
-import type { AffiliationPlan, AffiliationPricing } from '@/types/affiliation';
+import type { AffiliationPlan } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
 import { ICONS } from '@/utils';
 
@@ -47,28 +46,9 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
   loading = false,
   onAction,
 }) => {
-  const [pricing, setPricing] = useState<AffiliationPricing[]>([]);
-  const [isLoadingPricing, setIsLoadingPricing] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Fetch pricing on mount
-  useEffect(() => {
-    const fetchPricing = async () => {
-      try {
-        setIsLoadingPricing(true);
-        setError(null);
-        const data = await affiliationAPI.getPricing();
-        setPricing(data);
-      } catch (err) {
-        setError('Failed to load pricing. Please try again.');
-        logger.error('Error fetching affiliation pricing', err instanceof Error ? err : undefined);
-      } finally {
-        setIsLoadingPricing(false);
-      }
-    };
-
-    fetchPricing();
-  }, []);
+  // Use TanStack Query for pricing data with static caching
+  const { pricing, isLoading: isLoadingPricing, isError } = useAffiliationPricing();
+  const error = isError ? 'Failed to load pricing. Please try again.' : null;
 
   // Build plans with pricing information
   const plans: AffiliationPlan[] = useMemo(() => {

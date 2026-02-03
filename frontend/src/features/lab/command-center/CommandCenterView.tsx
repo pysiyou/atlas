@@ -6,14 +6,14 @@
 import React, { useMemo } from 'react';
 import { TableCore } from '@/shared/ui';
 import { useWorkflowStateCounts, useCommandCenterRow1Metrics, useCommandCenterActivityRows } from './hooks';
-import { VennBubbles, CommandCenterMetricCard } from './components';
+import { VennBubbles, CommandCenterMetricCard, WeeklyActivitiesChart, LabHistoryTimeline } from './components';
 import type { VennIntersection } from './components';
 import { createLabSegments } from './utils';
 import { commandCenterActivityColumns } from './commandCenterActivityTableConfig';
 import { ICONS } from '@/utils';
 
 const rowCellClass =
-  'min-h-0 overflow-hidden border-border-default bg-surface-default flex items-center justify-center border-r last:border-r-0';
+  'min-h-0 overflow-hidden border-border-default flex items-center justify-center border-r last:border-r-0';
 
 export const CommandCenterView: React.FC = () => {
   const {
@@ -81,16 +81,18 @@ export const CommandCenterView: React.FC = () => {
         className="min-h-0 overflow-hidden border-b border-border-default grid"
         style={{ gridTemplateColumns: '2fr 1fr' }}
       >
-        <div className={rowCellClass}>
-          <span className="text-text-tertiary text-sm">Row 2 — 2/3</span>
-        </div>
         <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2`}>
-          <VennBubbles
-            segments={segments}
-            intersections={intersections}
-            isLoading={isLoading}
-            emptyMessage="No operations in progress"
-          />
+          <WeeklyActivitiesChart />
+        </div>
+        <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2 min-h-0`}>
+          <div className="flex-1 min-h-0 min-w-0 flex flex-col ">
+            <VennBubbles
+              segments={segments}
+              intersections={intersections}
+              isLoading={isLoading}
+              emptyMessage="No operations in progress"
+            />
+          </div>
         </div>
       </div>
       {/* Row 3: 3/8 + 5/8 */}
@@ -98,8 +100,8 @@ export const CommandCenterView: React.FC = () => {
         className="min-h-0 overflow-hidden grid"
         style={{ gridTemplateColumns: '3fr 5fr' }}
       >
-        <div className={rowCellClass}>
-          <span className="text-text-tertiary text-sm">Row 3 — 3/8</span>
+        <div className={`${rowCellClass} flex flex-col min-h-0`}>
+          <LabHistoryTimeline />
         </div>
         <div className={`${rowCellClass} flex flex-col min-h-0 p-2`}>
           <TableCore

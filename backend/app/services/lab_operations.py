@@ -6,6 +6,7 @@ Coordinates state machine validation, audit logging, and business logic.
 """
 from datetime import datetime, timezone
 from typing import Tuple, List, Optional, Dict, Any
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -132,6 +133,26 @@ class LabOperationsService:
             "retestNumber": order_test.retestNumber,
             "isRetest": order_test.isRetest
         }
+
+    @staticmethod
+    def _results_to_json_serializable(results: Dict[str, Any]) -> Dict[str, Any]:
+        """Convert results dict to JSON-serializable form for DB/audit (Pydantic models -> dict)."""
+        out: Dict[str, Any] = {}
+        for k, v in results.items():
+            if v is None or isinstance(v, (str, int, float, bool)):
+                out[k] = v
+            elif isinstance(v, BaseModel):
+                out[k] = v.model_dump()
+            elif isinstance(v, dict):
+                out[k] = LabOperationsService._results_to_json_serializable(v)
+            elif isinstance(v, list):
+                out[k] = [
+                    item.model_dump() if isinstance(item, BaseModel) else item
+                    for item in v
+                ]
+            else:
+                out[k] = v
+        return out
 
     # ==================== REJECTION OPTIONS ====================
 
@@ -527,8 +548,11 @@ class LabOperationsService:
                 patient_dob=patient_dob
             )
 
+        # Normalize results for JSON persistence (ORM + audit log require plain dicts)
+        results_serializable = self._results_to_json_serializable(results)
+
         # Update results
-        order_test.results = results
+        order_test.results = results_serializable
         order_test.resultEnteredAt = datetime.now(timezone.utc)
         order_test.enteredBy = str(user_id)  # Convert to string as per model requirement
         order_test.technicianNotes = technician_notes
@@ -554,13 +578,13 @@ class LabOperationsService:
                 critical_values=self.flag_calculator.flags_to_json(critical_flags)
             )
 
-        # Log audit
+        # Log audit (after_state must be JSON-serializable)
         self.audit.log_result_entry(
             order_id=order_id,
             test_code=test_code,
             test_id=order_test.id,
             user_id=user_id,
-            results=results
+            results=results_serializable
         )
 
         self.db.commit()

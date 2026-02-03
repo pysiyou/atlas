@@ -1,12 +1,15 @@
 """
 Test Catalog API Routes
 """
+import logging
+import hashlib
+import json
 from fastapi import APIRouter, Depends, HTTPException, status, Query, Response, Request
 from sqlalchemy.orm import Session
 from typing import List
-import hashlib
-import json
 from app.database import get_db
+
+logger = logging.getLogger(__name__)
 from app.core.dependencies import get_current_user
 from app.core.cache import (
     cache_get,
@@ -147,9 +150,18 @@ def create_test(
         )
 
     test = Test(**test_data.model_dump())
-    db.add(test)
-    db.commit()
-    db.refresh(test)
+
+    try:
+        db.add(test)
+        db.commit()
+        db.refresh(test)
+    except Exception:
+        db.rollback()
+        logger.exception(f"Failed to create test {test_data.code}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create test"
+        )
 
     # Invalidate cache
     invalidate_tests_cache()
@@ -179,8 +191,16 @@ def update_test(
     for field, value in update_data.items():
         setattr(test, field, value)
 
-    db.commit()
-    db.refresh(test)
+    try:
+        db.commit()
+        db.refresh(test)
+    except Exception:
+        db.rollback()
+        logger.exception(f"Failed to update test {testCode}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update test"
+        )
 
     # Invalidate cache
     invalidate_tests_cache()

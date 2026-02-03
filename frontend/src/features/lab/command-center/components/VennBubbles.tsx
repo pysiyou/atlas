@@ -2,10 +2,9 @@
  * VennBubbles - Modern Venn-diagram-style bubble visualization.
  * Shows overlapping circles with percentages. Supports intersection data.
  * Radius ∝ √(value) so area ∝ value.
- * Enhanced with animations and modern UI features.
  */
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { Badge } from '@/shared/ui/display/Badge';
 
 /** Data for a single segment in the Venn diagram */
@@ -89,9 +88,6 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
   ariaLabel,
   className = '',
 }) => {
-  const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
-  const [animatedValues, setAnimatedValues] = useState<Record<string, number>>({});
-
   // Use canvas background for ring to create visual separation
   const adaptiveRingColor = ringColor ?? 'var(--surface-canvas)';
 
@@ -134,33 +130,7 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
       .filter(Boolean);
   }, [intersections, segmentMap]);
 
-  // Animate percentage values on mount
-  useEffect(() => {
-    const duration = 1200;
-    const steps = 60;
-    const stepDuration = duration / steps;
-    let currentStep = 0;
-
-    const interval = setInterval(() => {
-      currentStep++;
-      const progress = Math.min(currentStep / steps, 1);
-      const easeProgress = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-
-      const newValues: Record<string, number> = {};
-      segments.forEach((seg) => {
-        newValues[seg.id] = seg.value * easeProgress;
-      });
-      setAnimatedValues(newValues);
-
-      if (currentStep >= steps) {
-        clearInterval(interval);
-      }
-    }, stepDuration);
-
-    return () => clearInterval(interval);
-  }, [segments]);
-
-  const baseClass = 'w-full h-full min-w-0 min-h-0 flex flex-col bg-surface-canvas rounded-lg';
+  const baseClass = 'h-full w-full min-h-0 min-w-0 flex flex-col bg-surface-canvas rounded-lg overflow-hidden';
 
   if (isLoading) {
     return (
@@ -205,14 +175,15 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
 
   return (
     <div className={`${baseClass} ${className}`}>
-      <div className="flex-1 min-h-0 flex items-center justify-center p-4">
-        <svg
-          viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
-          className="w-full h-full max-h-full transition-all duration-300"
-          preserveAspectRatio="xMidYMid meet"
-          aria-label={ariaLabel ?? segments.map((s) => `${s.label}: ${s.value}%`).join(', ')}
-          style={{ filter: 'drop-shadow(0 4px 12px var(--shadow-2))' }}
-        >
+      <div className="flex-1 min-h-0 min-w-0 flex flex-col p-2">
+        <div className="flex-1 min-h-0 min-w-0">
+          <svg
+            viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
+            className="w-full h-full"
+            style={{ display: 'block', filter: 'drop-shadow(0 4px 12px var(--shadow-2))' }}
+            preserveAspectRatio="xMidYMid meet"
+            aria-label={ariaLabel ?? segments.map((s) => `${s.label}: ${s.value}%`).join(', ')}
+          >
           <defs>
             {segmentData.map((segment) => (
               <React.Fragment key={`defs-${segment.id}`}>
@@ -231,20 +202,8 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
             ))}
           </defs>
 
-          {segmentData.map((segment, index) => {
-            const animatedValue = animatedValues[segment.id] ?? 0;
-            const isHovered = hoveredSegment === segment.id;
-            
-            return (
-              <g 
-                key={segment.id}
-                style={{
-                  animation: `venn-fade-in 0.6s ease-out ${index * 0.1}s both`,
-                  cursor: 'pointer',
-                }}
-                onMouseEnter={() => setHoveredSegment(segment.id)}
-                onMouseLeave={() => setHoveredSegment(null)}
-              >
+          {segmentData.map((segment) => (
+              <g key={segment.id}>
                 {/* Main circle with shadow */}
                 <circle
                   cx={segment.cx}
@@ -254,12 +213,7 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
                   stroke={adaptiveRingColor}
                   strokeWidth={ringWidth}
                   filter={`url(#shadow-${segment.id})`}
-                  style={{
-                    transition: 'transform 0.2s ease-out',
-                    transform: isHovered ? `translate(${segment.cx}px, ${segment.cy}px) scale(1.05) translate(${-segment.cx}px, ${-segment.cy}px)` : 'none',
-                  }}
                 />
-                
                 {/* Percentage text */}
                 <text
                   x={segment.cx}
@@ -273,15 +227,12 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
                     fontFamily: 'Nunito, sans-serif',
                     textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                     letterSpacing: '-0.02em',
-                    transition: 'transform 0.2s ease-out',
-                    transform: isHovered ? `translate(${segment.cx}px, ${segment.cy}px) scale(1.05) translate(${-segment.cx}px, ${-segment.cy}px)` : 'none',
                   }}
                 >
-                  {Math.round(animatedValue)}%
+                  {Math.round(segment.value)}%
                 </text>
               </g>
-            );
-          })}
+            ))}
 
           {intersectionLabels.map(
             (int, idx) =>
@@ -305,25 +256,14 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
                 </text>
               )
           )}
-        </svg>
-      </div>
+          </svg>
+        </div>
 
       {showLegend && (
-        <div className="shrink-0 px-4 pb-4 pt-2">
+        <div className="shrink-0">
           <div className="flex flex-wrap justify-center gap-2">
-            {segments.map((segment) => {
-              const isHovered = hoveredSegment === segment.id;
-              return (
-                <div 
-                  key={segment.id}
-                  style={{
-                    cursor: 'pointer',
-                    transition: 'transform 0.2s ease-out',
-                    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-                  }}
-                  onMouseEnter={() => setHoveredSegment(segment.id)}
-                  onMouseLeave={() => setHoveredSegment(null)}
-                >
+            {segments.map((segment) => (
+                <div key={segment.id}>
                   <Badge
                     variant="neutral"
                     size="sm"
@@ -339,24 +279,11 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
                     </span>
                   </Badge>
                 </div>
-              );
-            })}
+            ))}
           </div>
         </div>
       )}
-
-      <style>{`
-        @keyframes venn-fade-in {
-          from {
-            opacity: 0;
-            transform: scale(0.8);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-      `}</style>
+      </div>
     </div>
   );
 };

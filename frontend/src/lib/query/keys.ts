@@ -149,6 +149,18 @@ export const queryKeys = {
   results: {
     all: ['results'] as const,
     pendingEscalation: () => [...queryKeys.results.all, 'pending-escalation'] as const,
+    rejectionOptions: (orderId: string, testCode: string) =>
+      [...queryKeys.results.all, 'rejection-options', orderId, testCode] as const,
+  },
+
+  /**
+   * Affiliation pricing (static data)
+   */
+  affiliations: {
+    all: ['affiliations'] as const,
+    pricing: () => [...queryKeys.affiliations.all, 'pricing'] as const,
+    priceByDuration: (duration: number) =>
+      [...queryKeys.affiliations.all, 'pricing', duration] as const,
   },
 } as const;
 

@@ -171,12 +171,13 @@ class OrderService:
             setattr(order, field, value)
         order.updatedAt = datetime.now(timezone.utc)
 
-        # Cascade priority change to all samples for this order
+        # Cascade priority change to all samples for this order (bulk update)
         if "priority" in update_data:
-            for sample in self.db.query(Sample).filter(Sample.orderId == order_id).all():
-                sample.priority = order.priority
-                sample.updatedAt = datetime.now(timezone.utc)
-                sample.updatedBy = str(user_id)
+            self.db.query(Sample).filter(Sample.orderId == order_id).update({
+                Sample.priority: order.priority,
+                Sample.updatedAt: datetime.now(timezone.utc),
+                Sample.updatedBy: str(user_id)
+            }, synchronize_session="fetch")
 
         self.db.commit()
         self.db.refresh(order)

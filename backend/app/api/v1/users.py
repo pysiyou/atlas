@@ -1,10 +1,13 @@
 """
 User Management API Routes
 """
+import logging
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
+
+logger = logging.getLogger(__name__)
 from app.core.dependencies import get_current_user
 from app.core.security import get_password_hash
 from app.models.user import User
@@ -82,11 +85,19 @@ def create_user(
         email=user_data.email,
         phone=user_data.phone,
     )
-    
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    
+
+    try:
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    except Exception:
+        db.rollback()
+        logger.exception(f"Failed to create user {user_data.username}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create user"
+        )
+
     return user
 
 
@@ -113,10 +124,18 @@ def update_user(
             user.hashedPassword = get_password_hash(value)
         else:
             setattr(user, field, value)
-    
-    db.commit()
-    db.refresh(user)
-    
+
+    try:
+        db.commit()
+        db.refresh(user)
+    except Exception:
+        db.rollback()
+        logger.exception(f"Failed to update user {user_id}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update user"
+        )
+
     return user
 
 
@@ -136,7 +155,15 @@ def delete_user(
             detail=f"User {user_id} not found"
         )
     
-    db.delete(user)
-    db.commit()
-    
+    try:
+        db.delete(user)
+        db.commit()
+    except Exception:
+        db.rollback()
+        logger.exception(f"Failed to delete user {user_id}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete user"
+        )
+
     return None
