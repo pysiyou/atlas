@@ -386,17 +386,17 @@
 
 /* ─── noir-studio: primitives only + token overrides ─── */
 [data-theme="noir-studio"] {
-  --primitive-brand-50: #fdf4f0;
-  --primitive-brand-100: #fce8e0;
-  --primitive-brand-200: #f8d0c0;
-  --primitive-brand-300: #f0a88a;
-  --primitive-brand-400: #e68a5c;
-  --primitive-brand-500: #da7756;
-  --primitive-brand-600: #c46544;
-  --primitive-brand-700: #a35238;
-  --primitive-brand-800: #82432e;
-  --primitive-brand-900: #6b3826;
-  --primitive-brand-950: #3d1f16;
+  --primitive-brand-50: #f0f9ff;
+  --primitive-brand-100: #e0f2fe;
+  --primitive-brand-200: #bae6fd;
+  --primitive-brand-300: #7dd3fc;
+  --primitive-brand-400: #38bdf8;
+  --primitive-brand-500: #0ea5e9;
+  --primitive-brand-600: #0284c7;
+  --primitive-brand-700: #0369a1;
+  --primitive-brand-800: #075985;
+  --primitive-brand-900: #0c4a6e;
+  --primitive-brand-950: #082f49;
 
   --primitive-neutral-0: #0D0D0D;
   --primitive-neutral-50: #121212;
