@@ -445,7 +445,7 @@
 
 [data-theme="noir-studio"] {
   /* Primitive overrides for noir-studio theme */
-  --primitive-brand-50: #fdf4f0;
+  /* --primitive-brand-50: #fdf4f0;
   --primitive-brand-100: #fce8e0;
   --primitive-brand-200: #f8d0c0;
   --primitive-brand-300: #f0a88a;
@@ -455,7 +455,19 @@
   --primitive-brand-700: #a35238;
   --primitive-brand-800: #82432e;
   --primitive-brand-900: #6b3826;
-  --primitive-brand-950: #3d1f16;
+  --primitive-brand-950: #3d1f16; */
+
+  --primitive-brand-50: #d6edfc;
+  --primitive-brand-100: #b3dff9;
+  --primitive-brand-200: #7dc6f2;
+  --primitive-brand-300: #47a8e5;
+  --primitive-brand-400: #1e88d4;
+  --primitive-brand-500: #0a6bb5;
+  --primitive-brand-600: #085691;
+  --primitive-brand-700: #064574;
+  --primitive-brand-800: #05365b;
+  --primitive-brand-900: #032a46;
+  --primitive-brand-950: #021829;
 
   --primitive-neutral-0: #0D0D0D;
   --primitive-neutral-50: #121212;

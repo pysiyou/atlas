@@ -47,7 +47,7 @@ const barStyle: React.CSSProperties = {
   maxWidth: 380,
   padding: 14,
   background: 'var(--toast-bg)',
-  color: 'var(--toast-text)',
+  color: 'var(--toast-fg)',
   borderRadius: 12,
   boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
   lineHeight: 1.4,
@@ -88,14 +88,14 @@ const closeHoverStyle = (
   over: boolean
 ): void => {
   const t = e.currentTarget;
-  t.style.color = over ? 'var(--toast-text)' : 'var(--toast-close)';
+  t.style.color = over ? 'var(--toast-fg)' : 'var(--toast-close)';
   t.style.background = over ? 'rgba(255,255,255,0.1)' : 'none';
 };
 
 const titleStyle: React.CSSProperties = {
   fontWeight: 600,
   fontSize: '0.875rem',
-  color: 'var(--toast-text)',
+  color: 'var(--toast-fg)',
   whiteSpace: 'pre-line',
   margin: 0,
 };
@@ -103,7 +103,7 @@ const titleStyle: React.CSSProperties = {
 /** Row 2: secondary text. */
 const subtitleStyle: React.CSSProperties = {
   fontSize: '0.75rem',
-  color: 'var(--toast-text-muted)',
+  color: 'var(--toast-fg-muted)',
   margin: '6px 0 0 0',
   paddingLeft: 36,
   display: '-webkit-box',
@@ -124,7 +124,7 @@ const actionButtonStyle: React.CSSProperties = {
   background: 'none',
   border: 'none',
   padding: 0,
-  color: 'var(--toast-text-muted)',
+  color: 'var(--toast-fg-muted)',
   fontSize: '0.875rem',
   cursor: 'pointer',
   fontFamily: 'inherit',
@@ -224,8 +224,8 @@ function LoadingIcon() {
       style={{
         width: 24,
         height: 24,
-        border: '2px solid var(--toast-text-muted)',
-        borderRightColor: 'var(--toast-text)',
+        border: '2px solid var(--toast-fg-muted)',
+        borderRightColor: 'var(--toast-fg)',
         borderRadius: '50%',
         flexShrink: 0,
         animation: 'app-toast-spin 1s linear infinite',
