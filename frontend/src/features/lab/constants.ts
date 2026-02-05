@@ -199,9 +199,10 @@ export const entryFilterConfig: FilterConfig = {
 
 /** Priority options for validation workflow */
 const priorityOptions = createFilterOptions(PRIORITY_LEVEL_VALUES, {
-  routine: { label: PRIORITY_LEVEL_CONFIG.routine.label },
+  low: { label: PRIORITY_LEVEL_CONFIG.low.label },
+  medium: { label: PRIORITY_LEVEL_CONFIG.medium.label },
+  high: { label: PRIORITY_LEVEL_CONFIG.high.label },
   urgent: { label: PRIORITY_LEVEL_CONFIG.urgent.label },
-  stat: { label: PRIORITY_LEVEL_CONFIG.stat.label },
 } as Record<PriorityLevel, { label: string }>);
 
 /** Validation filter configuration */
@@ -245,7 +246,7 @@ export const validationFilterConfig: FilterConfig = {
         selectAllLabel: 'All statuses',
         icon: ICONS.priority,
         placeholder: 'Select status',
-        helpText: 'Filter by priority level: Routine, Urgent, or Stat.',
+        helpText: 'Filter by priority level: Low, Medium, High, or Urgent.',
       },
     ],
   },

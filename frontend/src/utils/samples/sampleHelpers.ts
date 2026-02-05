@@ -16,7 +16,7 @@ export interface SampleRequirement {
   totalVolume: number;
   containerTypes: ContainerType[];
   containerTopColors: ContainerTopColor[];
-  priority: 'routine' | 'urgent' | 'stat';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
   orderId: number;
 }
 
@@ -82,7 +82,7 @@ export function calculateTotalVolume(tests: OrderTest[], testCatalog: Test[]): n
 export function calculateRequiredSamples(
   tests: OrderTest[],
   testCatalog: Test[],
-  orderPriority: 'routine' | 'urgent' | 'stat',
+  orderPriority: 'low' | 'medium' | 'high' | 'urgent',
   orderId: number
 ): SampleRequirement[] {
   const grouped = groupTestsBySample(tests, testCatalog);

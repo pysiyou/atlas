@@ -85,7 +85,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
         <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
           <div className="flex items-center gap-2">
             <Badge variant="escalated" size="xs" />
-            {test.priority && <Badge variant={test.priority as 'routine' | 'urgent' | 'stat'} size="xs" />}
+            {test.priority && <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="xs" />}
             {test.sampleType && <Badge variant={test.sampleType as 'blood' | 'urine' | 'other'} size="xs" />}
             {(isRetest || hasRejectionHistory) && (
               <Badge variant="warning" size="xs">
@@ -114,7 +114,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
     <>
       <h3 className="text-sm font-medium text-text-primary">{test.testName ?? test.testCode}</h3>
       <Badge variant="escalated" size="sm" />
-      {test.priority && <Badge variant={test.priority as 'routine' | 'urgent' | 'stat'} size="sm" />}
+      {test.priority && <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="sm" />}
       {test.sampleType && (
         <Badge variant={test.sampleType as 'blood' | 'urine' | 'other'} size="sm" />
       )}

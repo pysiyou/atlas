@@ -54,7 +54,7 @@ def generate_orders(db: Session):
                     totalPrice=total_price,
                     paymentStatus=PaymentStatus.UNPAID,
                     overallStatus=OrderStatus.ORDERED,
-                    priority=PriorityLevel.ROUTINE,
+                    priority=PriorityLevel.LOW,
                     createdBy=1  # admin user ID (integer)
                 )
                 db.add(order)

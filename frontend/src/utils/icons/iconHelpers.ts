@@ -18,7 +18,7 @@ import { ICONS } from './iconMappings';
 
 /**
  * Gets the icon for priority (same for all priority values)
- * @param _priority - Priority level (routine, urgent, stat) - value is ignored
+ * @param _priority - Priority level (low, medium, high, urgent) - value is ignored
  * @returns Icon name for priority
  */
 export const getPriorityIcon = (_priority?: string): IconName => {

@@ -71,7 +71,7 @@ export const orderSchema = z.object({
   totalPrice: z.number().min(0),
   paymentStatus: z.enum(['unpaid', 'paid', 'refunded']),
   overallStatus: z.enum(['ordered', 'in-progress', 'completed', 'cancelled']), // Backend returns overallStatus, not orderStatus
-  priority: z.enum(['routine', 'urgent', 'stat']),
+  priority: z.enum(['low', 'medium', 'high', 'urgent']),
   referringPhysician: z.string().nullable().optional(), // Backend allows null
   clinicalNotes: z.string().nullable().optional(), // Backend allows null
   specialInstructions: z.array(z.string()).nullable().optional(), // Backend optional
@@ -88,7 +88,7 @@ export type OrderTest = z.infer<typeof orderTestSchema>;
 export const orderCreateSchema = z.object({
   patientId: positiveIntSchema,
   referringPhysician: z.string().min(1),
-  priority: z.enum(['routine', 'urgent', 'stat']),
+  priority: z.enum(['low', 'medium', 'high', 'urgent']),
   clinicalNotes: z.string().optional(),
   testCodes: z.array(z.string()).min(1, 'At least one test is required'),
   paymentMethod: z.enum(['cash', 'credit-card', 'debit-card', 'insurance', 'bank-transfer', 'mobile-money']).optional(),

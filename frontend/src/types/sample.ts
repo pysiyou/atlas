@@ -48,7 +48,7 @@ interface BaseSample {
   // What this sample is for
   testCodes: string[]; // Links to Test catalog (no testNames)
   requiredVolume: number;
-  priority: 'routine' | 'urgent' | 'stat';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
 
   // Required specs (what catalog says we need)
   requiredContainerTypes: ContainerType[];

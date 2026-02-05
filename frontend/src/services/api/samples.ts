@@ -129,7 +129,7 @@ export const sampleAPI = {
    * - Creates a new recollection sample in PENDING status
    * - Links the two samples together
    * - Updates order tests to point to the new sample
-   * - Escalates priority to URGENT
+   * - Escalates priority to urgent
    */
   async rejectAndRecollect(
     sampleId: string,

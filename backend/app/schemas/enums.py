@@ -117,9 +117,10 @@ class OrderStatus(str, enum.Enum):
 
 
 class PriorityLevel(str, enum.Enum):
-    ROUTINE = "routine"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
     URGENT = "urgent"
-    STAT = "stat"
 
 
 class PaymentStatus(str, enum.Enum):

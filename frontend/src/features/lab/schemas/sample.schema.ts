@@ -15,7 +15,7 @@ export const sampleSchema = z.object({
   sampleType: z.enum(['blood', 'urine', 'stool', 'serum', 'plasma', 'other']),
   testCodes: z.array(z.string()),
   requiredVolume: z.number().min(0),
-  priority: z.enum(['routine', 'urgent', 'stat']),
+  priority: z.enum(['low', 'medium', 'high', 'urgent']),
   requiredContainerTypes: z.array(z.string()),
   requiredContainerColors: z.array(z.string()),
   rejectionHistory: z.array(rejectionRecordSchema).optional(),

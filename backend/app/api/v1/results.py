@@ -270,7 +270,7 @@ def get_pending_escalation(
                 retestOfTestId=t.retestOfTestId,
                 retestNumber=t.retestNumber or 0,
                 resultRejectionHistory=t.resultRejectionHistory,
-                priority=order.priority.value if order and order.priority else "routine",
+                priority=order.priority.value if order and order.priority else "low",
                 referringPhysician=order.referringPhysician if order else None,
                 collectedAt=sample.collectedAt if sample else None,
                 collectedBy=sample.collectedBy if sample else None,

@@ -29,7 +29,7 @@ class Order(Base):
     patientPrepInstructions = Column("patient_prep_instructions", String, nullable=True)
     clinicalNotes = Column("clinical_notes", String, nullable=True)
     referringPhysician = Column("referring_physician", String, nullable=True)
-    priority = Column(Enum(PriorityLevel), nullable=False, default=PriorityLevel.ROUTINE)
+    priority = Column(Enum(PriorityLevel), nullable=False, default=PriorityLevel.LOW)
 
     # Metadata
     createdBy = Column("created_by", String, nullable=False)

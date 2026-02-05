@@ -92,7 +92,7 @@ class OrderCreate(BaseModel):
     """Schema for creating a new order."""
     patientId: int = Field(..., gt=0, description="Patient ID")
     tests: list[OrderTestCreate] = Field(..., min_length=1, description="At least one test required")
-    priority: PriorityLevel = PriorityLevel.ROUTINE
+    priority: PriorityLevel = PriorityLevel.LOW
     referringPhysician: str | None = Field(None, max_length=200)
     clinicalNotes: str | None = Field(None, max_length=2000)
     specialInstructions: list[str] | None = None

@@ -49,7 +49,7 @@ export const CollectionDetailHeaderBadges: React.FC<CollectionDetailHeaderBadges
           />
         </span>
       )}
-      <StatusBadgeRow sampleType={sample.sampleType} priority={sample.priority || 'routine'} />
+      <StatusBadgeRow sampleType={sample.sampleType} priority={sample.priority || 'low'} />
       {getCollectionRequirements(sample.sampleType).isDerived && (
         <Badge size="sm" variant="default" className="text-text-tertiary">
           {getCollectionRequirements(sample.sampleType).label}

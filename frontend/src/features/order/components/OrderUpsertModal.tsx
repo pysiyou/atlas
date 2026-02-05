@@ -318,7 +318,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                       selectedIds={selectedPriorityIds}
                       onChange={(selectedIds: string[]) => {
                         // Single-select mode: use the most recent selection
-                        const next = (selectedIds[selectedIds.length - 1] as PriorityLevel | undefined) || 'routine';
+                        const next = (selectedIds[selectedIds.length - 1] as PriorityLevel | undefined) || 'low';
                         field.onChange(next);
                       }}
                       placeholder="Select priority"

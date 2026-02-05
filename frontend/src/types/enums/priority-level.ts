@@ -6,16 +6,17 @@
  */
 
 // 1. VALUES - The single source of truth
-export const PRIORITY_LEVEL_VALUES = ['routine', 'urgent', 'stat'] as const;
+export const PRIORITY_LEVEL_VALUES = ['low', 'medium', 'high', 'urgent'] as const;
 
 // 2. TYPE - Derived from values
 export type PriorityLevel = (typeof PRIORITY_LEVEL_VALUES)[number];
 
 // 3. CONFIG - Metadata for each value (label only, colors handled by Badge; sortOrder for priority sorting)
 export const PRIORITY_LEVEL_CONFIG: Record<PriorityLevel, { label: string; sortOrder: number }> = {
-  routine: { label: 'Routine', sortOrder: 2 },
-  urgent: { label: 'Urgent', sortOrder: 1 },
-  stat: { label: 'STAT', sortOrder: 0 },
+  low: { label: 'Low', sortOrder: 3 },
+  medium: { label: 'Medium', sortOrder: 2 },
+  high: { label: 'High', sortOrder: 1 },
+  urgent: { label: 'Urgent', sortOrder: 0 },
 };
 
 // 4. OPTIONS - For dropdowns/selects

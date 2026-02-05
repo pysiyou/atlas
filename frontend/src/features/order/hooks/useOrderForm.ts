@@ -39,7 +39,7 @@ export function useOrderForm({ order, mode = 'create', initialPatientId, onSubmi
     if (mode === 'create') {
       return {
         patientId: initialPatientId,
-        priority: 'routine' as const, // Default priority
+        priority: 'low' as const, // Default priority
       } as Partial<OrderFormInput>;
     }
     return {};

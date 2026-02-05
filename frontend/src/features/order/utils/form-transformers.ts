@@ -17,7 +17,7 @@ export function orderToFormInput(order?: Partial<Order>): Partial<OrderFormInput
   return {
     patientId: order.patientId,
     referringPhysician: order.referringPhysician || '',
-    priority: order.priority || 'routine',
+    priority: order.priority || 'low',
     clinicalNotes: order.clinicalNotes || '',
     testCodes: order.tests?.map(test => test.testCode) || [],
     // paymentMethod is form-only, not in Order type

@@ -75,9 +75,10 @@ const COLOR_MAP: Record<string, BadgeColor> = {
   unpaid: 'danger',
 
   // Priority
-  routine: 'neutral',
-  urgent: 'warning',
-  stat: 'danger',
+  low: 'neutral',
+  medium: 'info',
+  high: 'warning',
+  urgent: 'danger',
 
   // Test categories
   hematology: 'danger',
@@ -282,7 +283,7 @@ export const DISPLAY_LABELS: Record<string, string> = {
 /**
  * Variants that should pulse by default
  */
-export const CRITICAL_VARIANTS = new Set(['critical', 'critical-high', 'critical-low', 'stat']);
+export const CRITICAL_VARIANTS = new Set(['critical', 'critical-high', 'critical-low', 'urgent']);
 
 /**
  * Size configurations

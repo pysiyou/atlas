@@ -29,7 +29,7 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
   const priorityOptions: FilterOption[] = useMemo(
     () =>
       PRIORITY_LEVEL_OPTIONS.map(opt => {
-        const color = opt.value === 'stat' ? 'danger' : opt.value === 'urgent' ? 'warning' : 'info';
+        const color = opt.value === 'urgent' ? 'danger' : opt.value === 'high' ? 'warning' : opt.value === 'medium' ? 'info' : 'neutral';
         return { id: opt.value, label: opt.label, color };
       }),
     []
@@ -39,8 +39,8 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
 
   const handlePriorityChange = (selectedIds: string[]) => {
     // Single-select mode: use the most recent selection.
-    // If cleared, keep a safe default (routine) since priority is required.
-    const next = (selectedIds[selectedIds.length - 1] as PriorityLevel | undefined) || 'routine';
+    // If cleared, keep a safe default (low) since priority is required.
+    const next = (selectedIds[selectedIds.length - 1] as PriorityLevel | undefined) || 'low';
     onPriorityChange(next);
   };
 
