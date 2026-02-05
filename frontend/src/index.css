@@ -182,6 +182,12 @@
   --color-auth-card: var(--auth-feature-card-bg);
   --color-auth-card-hover: var(--auth-feature-card-hover);
   --color-auth-card-stroke: var(--auth-feature-card-border);
+  --color-auth-card-icon: var(--auth-card-icon-bg);
+  --color-auth-card-icon-hover: var(--auth-card-icon-hover);
+  --color-auth-card-icon-border: var(--auth-card-icon-border);
+  --color-auth-badge: var(--auth-badge-bg);
+  --color-auth-badge-border: var(--auth-badge-border);
+  --color-auth-badge-icon: var(--auth-badge-icon);
 }
 
 body {

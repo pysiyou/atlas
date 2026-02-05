@@ -266,6 +266,12 @@
   --auth-feature-card-bg: #232938;
   --auth-feature-card-hover: #283040;
   --auth-feature-card-border: #2d3548;
+  --auth-card-icon-bg: #2d3548;
+  --auth-card-icon-hover: #3a4455;
+  --auth-card-icon-border: #2d3548;
+  --auth-badge-bg: #2d3548;
+  --auth-badge-border: #232938;
+  --auth-badge-icon: #7a9ba8;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -417,6 +423,12 @@
   --auth-feature-card-bg: var(--primitive-neutral-50);
   --auth-feature-card-hover: var(--primitive-neutral-100);
   --auth-feature-card-border: var(--primitive-neutral-200);
+  --auth-card-icon-bg: var(--primitive-neutral-100);
+  --auth-card-icon-hover: var(--primitive-neutral-200);
+  --auth-card-icon-border: var(--primitive-neutral-200);
+  --auth-badge-bg: var(--primitive-neutral-100);
+  --auth-badge-border: var(--primitive-neutral-50);
+  --auth-badge-icon: var(--primitive-neutral-500);
 
   /* RGBA overrides (cannot derive from primitives) */
   --brand-muted: rgba(31, 111, 235, 0.15);
@@ -576,13 +588,19 @@
   --auth-feature-card-bg: var(--primitive-neutral-50);
   --auth-feature-card-hover: var(--primitive-neutral-100);
   --auth-feature-card-border: var(--primitive-neutral-200);
+  --auth-card-icon-bg: var(--primitive-neutral-100);
+  --auth-card-icon-hover: var(--primitive-neutral-200);
+  --auth-card-icon-border: var(--primitive-neutral-200);
+  --auth-badge-bg: var(--primitive-neutral-100);
+  --auth-badge-border: var(--primitive-neutral-50);
+  --auth-badge-icon: var(--primitive-neutral-500);
 
   /* RGBA overrides (cannot derive from primitives) */
-  --brand-muted: rgba(218, 119, 86, 0.15);
-  --success-bg: rgba(27, 120, 76, 0.15);
-  --warning-bg: rgba(255, 194, 71, 0.15);
-  --danger-bg: rgba(170, 50, 50, 0.15);
-  --auth-error-bg: rgba(170, 50, 50, 0.15);
+  --brand-muted: rgba(31, 111, 235, 0.15);
+  --success-bg: rgba(46, 160, 67, 0.15);
+  --warning-bg: rgba(210, 153, 34, 0.15);
+  --danger-bg: rgba(218, 54, 51, 0.15);
+  --auth-error-bg: rgba(218, 54, 51, 0.15);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
