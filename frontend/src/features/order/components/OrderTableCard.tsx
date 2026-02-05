@@ -50,9 +50,9 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
                 <div className="flex items-center flex-1 min-w-0">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 shrink-0" />
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
-                  <span className="text-action-primary font-mono truncate">{test.testCode}</span>
+                  <span className="font-mono text-text-primary truncate">{test.testCode}</span>
                 </div>
-                <span className="font-medium text-text-tertiary ml-2 shrink-0">
+                <span className="font-medium text-action-primary ml-2 shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>

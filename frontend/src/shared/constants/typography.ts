@@ -26,7 +26,7 @@ export const DETAIL_LABEL = 'text-xs text-text-tertiary';
 export const DETAIL_VALUE = 'text-sm text-text-primary';
 
 /** Amount/currency cell: consistent styling for price and amount columns */
-export const DATA_AMOUNT = 'text-sm font-medium text-action-primary';
+export const DATA_AMOUNT = 'text-sm font-medium text-text-primary';
 
 /** Metadata/secondary label text (e.g. timestamps, captions) */
 export const TEXT_METADATA = 'text-xs text-text-tertiary';

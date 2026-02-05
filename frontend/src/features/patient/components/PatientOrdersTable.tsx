@@ -6,7 +6,7 @@
 import React, { useMemo } from 'react';
 import { Table, Badge, EmptyState } from '@/shared/ui';
 import type { TableViewConfig, CardComponentProps } from '@/shared/ui/Table';
-import { DATA_AMOUNT, DATA_ID_PRIMARY } from '@/shared/constants';
+import { DATA_AMOUNT, DATA_ID_PRIMARY, DATA_ID_PRIMARY_INLINE } from '@/shared/constants';
 import { displayId } from '@/utils';
 import type { Order } from '@/types/order';
 import { formatDetailDate, formatOrderPrice } from '../utils/patient-formatters';
@@ -101,7 +101,7 @@ function buildDetailedViewConfig(): TableViewConfig<Order> {
           <div className="font-medium truncate">
             {order.tests.length} test{order.tests.length !== 1 ? 's' : ''}
           </div>
-          <div className="text-xs text-text-tertiary truncate">
+          <div className={`truncate ${DATA_ID_PRIMARY_INLINE}`}>
             {order.tests.slice(0, 2).map(t => t.testName || t.testCode).join(', ')}
             {order.tests.length > 2 && ` +${order.tests.length - 2} more`}
           </div>

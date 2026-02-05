@@ -81,7 +81,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
                   <span className="text-action-primary font-mono truncate">{test.testCode}</span>
                 </div>
-                <span className="font-medium text-text-tertiary ml-2 flex-shrink-0">
+                <span className="font-medium text-action-primary ml-2 flex-shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>

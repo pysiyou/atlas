@@ -71,20 +71,22 @@ export const createPaymentTableConfig = (
     </div>
   );
 
-  const renderTests = (item: OrderPaymentDetails) => (
-    <div className="min-w-0">
-      <div className="font-medium truncate">
-        {item.tests?.length || 0} test{(item.tests?.length || 0) !== 1 ? 's' : ''}
+  const renderTests = (item: OrderPaymentDetails) => {
+    const activeTests = (item.tests ?? []).filter(
+      t => t.status !== 'superseded' && t.status !== 'removed'
+    );
+    const activeCount = activeTests.length;
+    return (
+      <div className="min-w-0">
+        <div className="font-medium truncate font-mono text-xs text-text-primary">
+          {activeTests.map(t => t.testCode ?? t.testName).join('/')}
+        </div>
+        <div className="text-xs text-text-tertiary truncate">
+          {activeCount} test{activeCount !== 1 ? 's' : ''}
+        </div>
       </div>
-      <div className="text-xs text-text-tertiary truncate">
-        {item.tests
-          ?.slice(0, 2)
-          .map(t => t.testName || t.testCode)
-          .join(', ')}
-        {(item.tests?.length || 0) > 2 && ` +${(item.tests?.length || 0) - 2} more`}
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderTotalPrice = (item: OrderPaymentDetails) => (
     <span className={`${DATA_AMOUNT} truncate block`}>{formatCurrency(item.totalPrice)}</span>
