@@ -299,13 +299,14 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   {param.name}
                 </label>
                 <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
-                  {isCritical && (
-                    <span className="flex items-center gap-0.5 text-xxs font-medium text-feedback-danger-text shrink-0">
-                      <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3" />
-                      Critical
-                    </span>
-                  )}
-                  <span className="text-xxs text-text-disabled truncate">Ref: {refRange}</span>
+                  <span
+                    className={cn(
+                      'text-xxs truncate',
+                      isCritical ? 'text-feedback-danger-text font-medium animate-pulse' : 'text-text-disabled'
+                    )}
+                  >
+                    Ref: {refRange}
+                  </span>
                 </div>
               </div>
 
