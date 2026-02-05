@@ -288,14 +288,12 @@ function formatOperationType(type: LabOperationType): string {
 }
 
 function formatDateTime(date: Date): string {
-  return date.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
+  const time = date.toLocaleString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
   });
+  return `${getDateLabel(date)}, ${time}`;
 }
 
 function getDateLabel(date: Date): string {
