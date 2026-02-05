@@ -189,7 +189,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
           </form>
 
           {/* Footer */}
-          <div className="mt-8 pt-6 border-t border-auth-border">
+          <div className="mt-8 pt-6 border-t border-auth-stroke">
             <p className="font-body text-center text-sm text-auth-fg-subtle">
               {company.company.copyright}
             </p>
