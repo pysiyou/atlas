@@ -8,7 +8,7 @@ import { Table, Badge, EmptyState } from '@/shared/ui';
 import type { TableViewConfig, CardComponentProps } from '@/shared/ui/Table';
 import { DATA_AMOUNT, DATA_ID_PRIMARY_INLINE } from '@/shared/constants';
 import { formatCurrency } from '@/utils';
-import { getTestName, getTestSampleType, getTestCategory } from '@/utils/typeHelpers';
+import { getTestName, getTestSampleType } from '@/utils/typeHelpers';
 import type { OrderTest, Test } from '@/types';
 import { ICONS } from '@/utils';
 import { getBadgeAppearance } from '@/shared/theme/theme';
@@ -86,18 +86,18 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
 
   const detailedColumns = [
     ...simpleColumns,
-    {
-      key: 'category',
-      header: 'Category',
-      width: 'md' as const,
-      render: (test: OrderTest) => {
-        const category = getTestCategory(test.testCode, testCatalog);
-        const isSuperseded = test.status === 'superseded';
-        return (
-          <Badge variant={category as 'default'} size="sm" strikethrough={isSuperseded} />
-        );
-      },
-    },
+    // {
+    //   key: 'category',
+    //   header: 'Category',
+    //   width: 'md' as const,
+    //   render: (test: OrderTest) => {
+    //     const category = getTestCategory(test.testCode, testCatalog);
+    //     const isSuperseded = test.status === 'superseded';
+    //     return (
+    //       <Badge variant={category as 'default'} size="sm" strikethrough={isSuperseded} />
+    //     );
+    //   },
+    // },
     {
       key: 'sampleType',
       header: 'Sample',

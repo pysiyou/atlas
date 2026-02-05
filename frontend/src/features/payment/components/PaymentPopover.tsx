@@ -275,8 +275,8 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 /**
  * PaymentPopover - Popover trigger and container for payment processing
  *
- * Wraps PaymentPopoverContent with a Popover trigger button.
- * PAY button is disabled when order is already paid.
+ * Wraps PaymentPopoverContent with a Popover trigger. Shows PAY button when unpaid,
+ * or a Paid badge when order is already paid.
  */
 export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
   order,
@@ -285,11 +285,14 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
   trigger,
 }) => {
   const isPaid = order.paymentStatus === 'paid';
+  if (isPaid && trigger == null) {
+    return <Badge variant="paid" size="sm" />;
+  }
+
   const defaultTrigger = (
     <Button
       size={size}
       variant="primary"
-      disabled={isPaid}
       icon={<Icon name={ICONS.dataFields.wallet} className="text-action-primary-on" />}
     >
       PAY

@@ -85,9 +85,9 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
           )}
         </div>
 
-        {/* Total Footer (sum of active tests only) */}
-        <div className="border-t border-dashed border-border-strong" />
-        <div className="px-4 py-2.5 flex justify-between items-center">
+        {/* Total Footer: pt compensates for items list py-2 (8px) + divider so total above = SectionContainer pb (16px) + footer pb */}
+        <div className="border-t border-dashed border-border-strong shrink-0" />
+        <div className="shrink-0 flex justify-between items-center px-4 pt-4">
           <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
             Total
           </span>
