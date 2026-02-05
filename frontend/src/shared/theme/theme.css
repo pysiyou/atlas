@@ -10,6 +10,17 @@
 
 :root {
   --font-sans: 'Nunito', sans-serif;
+  /* Font weight scale (Tailwind-aligned); default = light */
+  --font-weight-thin: 200;
+  --font-weight-extralight: 300;
+  --font-weight-light: 400;
+  --font-weight-normal: 500;
+  --font-weight-medium: 600;
+  --font-weight-semibold: 700;
+  --font-weight-bold: 800;
+  --font-weight-extrabold: 900;
+  --font-weight-black: 900;
+  --font-weight-default: var(--font-weight-thin);
 
   /* Brand Palette - Primary action color */
   --primitive-brand-50: #f0f9ff;

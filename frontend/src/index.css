@@ -4,6 +4,17 @@
   /* Custom text size */
   --text-xxs: 10px;
 
+  /* Font weights (from theme.css; use font-thin, font-light, font-medium, etc.) */
+  --font-weight-thin: var(--font-weight-thin);
+  --font-weight-extralight: var(--font-weight-extralight);
+  --font-weight-light: var(--font-weight-light);
+  --font-weight-normal: var(--font-weight-normal);
+  --font-weight-medium: var(--font-weight-medium);
+  --font-weight-semibold: var(--font-weight-semibold);
+  --font-weight-bold: var(--font-weight-bold);
+  --font-weight-extrabold: var(--font-weight-extrabold);
+  --font-weight-black: var(--font-weight-black);
+
   /* ═══════════════════════════════════════════════════════════════════
      FOREGROUND
      ═══════════════════════════════════════════════════════════════════ */
@@ -192,6 +203,7 @@
 
 body {
   font-family: var(--font-sans);
+  font-weight: var(--font-weight-default);
 }
 
 /* RSuite DateRangePicker Overrides */
