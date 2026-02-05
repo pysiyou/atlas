@@ -216,8 +216,10 @@ const ParameterInput: React.FC<{
     );
   }
 
-  // Numeric input with validation
+  // Numeric input with validation (spinner hidden via appearance classes)
   const hasError = !!validationError;
+  const noSpinner =
+    '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0';
   return (
     <input
       {...commonProps}
@@ -226,7 +228,7 @@ const ParameterInput: React.FC<{
       min={limit?.min}
       max={limit?.max}
       inputMode="decimal"
-      className={cn(inputBase, 'block pr-12 relative z-10', hasError && inputError)}
+      className={cn(inputBase, 'block pr-12 relative z-10', noSpinner, hasError && inputError)}
       placeholder="--"
     />
   );
@@ -274,57 +276,10 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   /** Check if form can be submitted */
   const canSubmit = isComplete && !hasValidationErrors;
 
-  // Detect critical values in current results
-  const criticalParameters = testDef?.parameters?.filter(param => {
-    const value = results[param.code];
-    if (!value) return false;
-    return checkCriticalStatus(param, value);
-  }) || [];
-
-  const hasCriticalValues = criticalParameters.length > 0;
-
   if (!testDef?.parameters) return null;
 
   return (
     <div className="bg-surface-canvas rounded-lg p-4 border border-border-subtle">
-      {/* Critical Value Alert Banner */}
-      {hasCriticalValues && (
-        <div className="mb-4 bg-feedback-danger-bg-strong border-l-4 border-feedback-danger-border-strong p-4 rounded animate-pulse">
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0">
-              <div className="p-1.5 bg-action-danger rounded-full">
-                <Icon name="alert-circle" className="w-4 h-4 text-action-danger-on" />
-              </div>
-            </div>
-            <div className="flex-1">
-              <h4 className="text-sm font-bold text-feedback-danger-text-strong uppercase tracking-wide mb-2">
-                ⚠️ PANIC VALUE DETECTED - Immediate Action Required
-              </h4>
-              <div className="space-y-1">
-                {criticalParameters.map(param => (
-                  <div key={param.code} className="text-xs text-feedback-danger-text-strong">
-                    <span className="font-semibold">{param.name}:</span>{' '}
-                    <span className="font-bold">{results[param.code]}</span>
-                    {param.unit && <span className="ml-1">{param.unit}</span>}
-                    {(param.criticalLow !== undefined || param.criticalHigh !== undefined) && (
-                      <span className="ml-2 text-feedback-danger-text-strong">
-                        (Critical range: 
-                        {param.criticalLow !== undefined && ` <${param.criticalLow}`}
-                        {param.criticalHigh !== undefined && ` >${param.criticalHigh}`}
-                        {param.unit && ` ${param.unit}`})
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div className="mt-3 text-xs text-feedback-danger-text-strong bg-feedback-warning-bg border border-feedback-warning-border-strong rounded p-2">
-                <strong>Required Actions:</strong> Notify physician immediately • Verify patient ID • Consider retest • Document notification
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {testDef.parameters.map(param => {
           const value = results[param.code] ?? '';
@@ -345,7 +300,10 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 </label>
                 <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
                   {isCritical && (
-                    <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-feedback-danger-text shrink-0" />
+                    <span className="flex items-center gap-0.5 text-xxs font-medium text-feedback-danger-text shrink-0">
+                      <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3" />
+                      Critical
+                    </span>
                   )}
                   <span className="text-xxs text-text-disabled truncate">Ref: {refRange}</span>
                 </div>
@@ -376,11 +334,6 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 {validationErrors[param.code] && (
                   <div className="absolute -bottom-5 left-0 text-xxs text-feedback-danger-text font-medium truncate max-w-full" title={validationErrors[param.code]}>
                     Invalid value
-                  </div>
-                )}
-                {!validationErrors[param.code] && isCritical && (
-                  <div className="absolute -bottom-5 left-0 text-xxs text-feedback-danger-text font-medium">
-                    Critical value
                   </div>
                 )}
               </div>
