@@ -24,13 +24,26 @@ export type RejectionSource =
  * Lab operation types for audit tracking
  */
 export type LabOperationType =
+  // Sample Operations
   | 'sample_collect'
   | 'sample_reject'
   | 'sample_recollection_request'
+  // Result Operations
   | 'result_entry'
   | 'result_validation_approve'
   | 'result_validation_reject_retest'
-  | 'result_validation_reject_recollect';
+  | 'result_validation_reject_recollect'
+  | 'result_validation_escalate'
+  | 'escalation_resolution_authorize_retest'
+  | 'escalation_resolution_final_reject'
+  // Order Operations
+  | 'order_status_change'
+  | 'test_removed'
+  | 'test_added'
+  // Critical Value Operations
+  | 'critical_value_detected'
+  | 'critical_value_notified'
+  | 'critical_value_acknowledged';
 
 /**
  * Available rejection action with metadata
@@ -184,15 +197,15 @@ export interface RejectAndRecollectResponse {
 export interface LabOperationRecord {
   id: number;
   operationType: LabOperationType;
-  entityType: 'sample' | 'test' | 'order';
+  entityType: 'sample' | 'test' | 'order' | 'order_test';
   entityId: number;
-  performedBy: number;
+  performedBy: string;
+  performedByName?: string | null;
   performedAt: string;
-  beforeState: Record<string, unknown>;
-  afterState: Record<string, unknown>;
-  /** Optional free-text comment for this operation (e.g. rejection reason, notes) */
-  comment?: string;
-  metadata?: Record<string, unknown>;
+  beforeState: Record<string, unknown> | null;
+  afterState: Record<string, unknown> | null;
+  operationData?: Record<string, unknown> | null;
+  comment?: string | null;
 }
 
 /**

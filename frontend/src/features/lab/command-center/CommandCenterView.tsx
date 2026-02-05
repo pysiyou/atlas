@@ -4,8 +4,8 @@
  */
 
 import React, { useMemo } from 'react';
-import { useWorkflowStateCounts, useCommandCenterRow1Metrics } from './hooks';
-import { VennBubbles, CommandCenterMetricCard } from './components';
+import { useWorkflowStateCounts, useCommandCenterRow1Metrics, useLabOperationLogs } from './hooks';
+import { VennBubbles, CommandCenterMetricCard, ActivitiesTimeline } from './components';
 import type { VennIntersection } from './components';
 import { createLabSegments } from './utils';
 import { ICONS } from '@/utils';
@@ -25,6 +25,7 @@ export const CommandCenterView: React.FC = () => {
   } = useWorkflowStateCounts();
 
   const row1 = useCommandCenterRow1Metrics();
+  const { logs, isLoading: logsLoading } = useLabOperationLogs({ limit: 50, hoursBack: 24 });
 
   const segments = useMemo(
     () => createLabSegments(samplingPct, entryPct, validationPct),
@@ -94,7 +95,9 @@ export const CommandCenterView: React.FC = () => {
         className="min-h-0 overflow-hidden grid"
         style={{ gridTemplateColumns: '3fr 5fr' }}
       >
-        <div className={`${rowCellClass} flex flex-col min-h-0`} />
+        <div className={`${rowCellClass} flex flex-col items-start justify-start min-h-0 w-full`}>
+          <ActivitiesTimeline logs={logs} isLoading={logsLoading} className="w-full" />
+        </div>
         <div className={`${rowCellClass} flex flex-col min-h-0 p-2`} />
       </div>
     </div>

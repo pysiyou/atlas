@@ -11,7 +11,7 @@ from app.middleware import CacheHeadersMiddleware
 from app.middleware.error_handlers import register_exception_handlers
 
 # Import routers
-from app.api.v1 import auth, patients, tests, orders, samples, results, users, payments, affiliations, critical_values, analyzer
+from app.api.v1 import auth, patients, tests, orders, samples, results, users, payments, affiliations, critical_values, analyzer, audit
 
 
 @asynccontextmanager
@@ -71,4 +71,5 @@ app.include_router(payments.router, prefix=settings.API_V1_PREFIX, tags=["paymen
 app.include_router(affiliations.router, prefix=settings.API_V1_PREFIX, tags=["affiliations"])
 app.include_router(critical_values.router, prefix=settings.API_V1_PREFIX, tags=["critical-values"])
 app.include_router(analyzer.router, prefix=settings.API_V1_PREFIX, tags=["analyzer"])
+app.include_router(audit.router, prefix=settings.API_V1_PREFIX, tags=["audit"])
 
