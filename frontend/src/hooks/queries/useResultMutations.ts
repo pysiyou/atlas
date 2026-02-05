@@ -15,9 +15,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { resultAPI } from '@/services/api';
 import { useAuthStore } from '@/shared/stores/auth.store';
-import type { OrderTest, ValidationDecision, ResultRejectionType } from '@/types';
+import type { ValidationDecision, ResultRejectionType } from '@/types';
 import type {
-  RejectionOptionsResponse,
   RejectionResult,
   EscalationResolveRequest,
 } from '@/types/lab-operations';

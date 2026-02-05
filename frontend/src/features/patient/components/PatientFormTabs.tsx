@@ -9,11 +9,11 @@ import type { PatientFormInput } from '../schemas/patient.schema';
 import type { Patient } from '@/types';
 import {
   DemographicsSection,
-  AddressSection,
-  EmergencyContactSection,
-  AffiliationSection,
-  MedicalHistorySection,
-} from './PatientForm';
+} from './form-sections/DemographicsSection';
+import { AddressSection } from './form-sections/AddressSection';
+import { EmergencyContactSection } from './form-sections/EmergencyContactSection';
+import { AffiliationSection } from './form-sections/AffiliationSection';
+import { MedicalHistorySection } from './form-sections/MedicalHistorySection';
 import { VitalsSection } from './VitalsSection';
 
 export interface PatientFormTabsProps {

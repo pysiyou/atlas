@@ -80,7 +80,11 @@ export function useOrder(orderId: string | undefined) {
 
   const query = useQuery({
     queryKey: queryKeys.orders.byId(orderId ?? ''),
-    queryFn: () => orderAPI.getById(orderId!),
+    queryFn: async () => {
+      const data = await orderAPI.getById(orderId!);
+      if (!data) throw new Error('Order not found');
+      return data;
+    },
     enabled: isAuthenticated && !isRestoring && !!orderId,
     ...cacheConfig.dynamic,
   });
@@ -287,7 +291,11 @@ export function useOrderSummary(orderId: string | undefined) {
 
   const query = useQuery({
     queryKey: queryKeys.orders.byId(orderId ?? ''),
-    queryFn: () => orderAPI.getById(orderId!),
+    queryFn: async () => {
+      const data = await orderAPI.getById(orderId!);
+      if (!data) throw new Error('Order not found');
+      return data;
+    },
     enabled: isAuthenticated && !isRestoring && !!orderId,
     ...cacheConfig.dynamic,
     // SELECT PATTERN: Extract only summary fields

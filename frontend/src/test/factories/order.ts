@@ -53,6 +53,8 @@ export const createMockOrderTest = (overrides?: Partial<OrderTest>): OrderTest =
     enteredBy: hasResults ? faker.person.fullName() : undefined,
     technicianNotes: faker.datatype.boolean() ? faker.lorem.sentence() : undefined,
     flags: faker.datatype.boolean() ? ['hemolyzed', 'lipemic'] : undefined,
+    createdAt: faker.date.recent().toISOString(),
+    updatedAt: faker.date.recent().toISOString(),
     ...overrides,
   };
 };

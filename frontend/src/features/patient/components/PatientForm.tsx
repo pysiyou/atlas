@@ -11,7 +11,7 @@ import { AddressSection } from './form-sections/AddressSection';
 import { AffiliationSection } from './form-sections/AffiliationSection';
 import { EmergencyContactSection } from './form-sections/EmergencyContactSection';
 import { MedicalHistorySection } from './form-sections/MedicalHistorySection';
-import { PatientFormData } from './form-sections/types';
+import type { PatientFormData } from './form-sections/types';
 
 export type { PatientFormData };
 

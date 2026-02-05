@@ -65,7 +65,7 @@ export function createValidatedQueryFn<T>(
 
     if (!result.success) {
       // In development, log the validation error for debugging
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.DEV) {
         console.error('API Response Validation Failed:', result.error.format());
         console.error('Raw data:', data);
       }
@@ -141,7 +141,7 @@ export function createValidatedArrayQueryFn<T>(
 
     // If any items failed validation, throw with details
     if (errors.length > 0) {
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.DEV) {
         console.error(`Array validation failed for ${errors.length} items:`, errors);
       }
       throw new ValidationError(
@@ -178,13 +178,15 @@ export function createValidatedArrayQueryFn<T>(
  * });
  * ```
  */
+import type { ZodType } from 'zod';
+
 export function createValidatedSelector<TInput, TOutput>(
-  schema: ZodSchema<TOutput, any, TInput>
+  schema: ZodType<TOutput, any, any>
 ): (data: TInput) => TOutput {
   return (data: TInput) => {
     const result = schema.safeParse(data);
     if (!result.success) {
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.DEV) {
         console.error('Select validation failed:', result.error.format());
       }
       throw new ValidationError(
@@ -193,6 +195,6 @@ export function createValidatedSelector<TInput, TOutput>(
         data
       );
     }
-    return result.data;
+    return result.data as TOutput;
   };
 }
