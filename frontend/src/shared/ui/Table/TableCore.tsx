@@ -150,8 +150,8 @@ export function TableCore<T = Record<string, unknown>>({
     pageSizeOptions,
   });
 
-  const containerClasses = embedded 
-    ? 'flex flex-col h-full' 
+  const containerClasses = embedded
+    ? 'flex flex-col flex-1 min-h-0'
     : 'bg-panel rounded-lg border border-stroke shadow-sm flex flex-col h-full';
 
   // Loading state

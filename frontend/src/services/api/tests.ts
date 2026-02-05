@@ -92,7 +92,9 @@ export const testAPI = {
    * Transforms resultItems to parameters for frontend compatibility
    */
   async getAll(params?: GetTestsParams): Promise<Test[]> {
-    const queryParams: Record<string, string> = {};
+    const queryParams: Record<string, string> = {
+      limit: '1000', // Request up to backend max to ensure full catalog is loaded
+    };
     if (params?.category) queryParams.category = params.category;
     if (params?.activeOnly !== undefined) queryParams.activeOnly = String(params.activeOnly);
     if (params?.skip) queryParams.skip = String(params.skip);

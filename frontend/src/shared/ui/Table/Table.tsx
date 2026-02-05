@@ -111,14 +111,16 @@ export function Table<T = Record<string, unknown>>({
           />
         </div>
         {pagination && (
-          <Pagination
-            currentPage={currentPage}
-            totalItems={totalItems}
-            pageSize={pageSize}
-            onPageChange={setCurrentPage}
-            onPageSizeChange={setPageSize}
-            pageSizeOptions={effectivePageSizeOptions}
-          />
+          <div className="shrink-0">
+            <Pagination
+              currentPage={currentPage}
+              totalItems={totalItems}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={setPageSize}
+              pageSizeOptions={effectivePageSizeOptions}
+            />
+          </div>
         )}
       </div>
     );
@@ -132,29 +134,41 @@ export function Table<T = Record<string, unknown>>({
       : viewConfig.fullColumns;
 
   return (
-    <TableCore<T>
-      data={paginatedData as T[]}
-      columns={activeColumns}
-      pagination={pagination}
-      initialPageSize={initialPageSize}
-      pageSizeOptions={pageSizeOptions}
-      defaultSort={defaultSort}
-      sort={controlledSort}
-      onSortChange={onSortChange}
-      variant={variant}
-      striped={striped}
-      stickyHeader={stickyHeader}
-      maxHeight={maxHeight}
-      embedded={embedded}
-      onRowClick={onRowClick}
-      rowClassName={rowClassName}
-      getRowKey={getRowKey}
-      loading={loading}
-      loadingRows={loadingRows}
-      emptyMessage={emptyMessage}
-      emptyIcon={emptyIcon}
-      caption={caption}
-      ariaLabel={ariaLabel}
-    />
+    <div className={embedded ? 'flex flex-col h-full min-h-0' : 'bg-panel rounded-lg border border-stroke shadow-sm flex flex-col h-full min-h-0'}>
+      <TableCore<T>
+        data={paginatedData as T[]}
+        columns={activeColumns}
+        pagination={false}
+        defaultSort={defaultSort}
+        sort={controlledSort}
+        onSortChange={onSortChange}
+        variant={variant}
+        striped={striped}
+        stickyHeader={stickyHeader}
+        maxHeight={maxHeight}
+        embedded={true}
+        onRowClick={onRowClick}
+        rowClassName={rowClassName}
+        getRowKey={getRowKey}
+        loading={loading}
+        loadingRows={loadingRows}
+        emptyMessage={emptyMessage}
+        emptyIcon={emptyIcon}
+        caption={caption}
+        ariaLabel={ariaLabel}
+      />
+      {pagination && (
+        <div className="shrink-0">
+          <Pagination
+            currentPage={currentPage}
+            totalItems={totalItems}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+            onPageSizeChange={setPageSize}
+            pageSizeOptions={effectivePageSizeOptions}
+          />
+        </div>
+      )}
+    </div>
   );
 }
