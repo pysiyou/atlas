@@ -68,7 +68,7 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
         const name = getTestName(test.testCode, testCatalog);
         const isSuperseded = test.status === 'superseded';
         return (
-          <span className={isSuperseded ? 'text-text-disabled line-through' : 'text-text-primary'}>
+          <span className={isSuperseded ? 'text-text-disabled line-through' : 'text-text'}>
             {name}
           </span>
         );
@@ -135,7 +135,7 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
     const isSuperseded = item.status === 'superseded';
     return (
       <div
-        className="p-3 border border-border-default rounded-lg hover:bg-surface-hover cursor-pointer"
+        className="p-3 border border-border rounded-lg hover:bg-surface-hover cursor-pointer"
         onClick={onClick}
         role="button"
         tabIndex={0}
@@ -147,10 +147,10 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
           </span>
           <Badge variant={item.status} size="sm" strikethrough={isSuperseded} />
         </div>
-        <div className={`text-sm mt-1 ${isSuperseded ? 'text-text-disabled line-through' : 'text-text-primary'}`}>
+        <div className={`text-sm mt-1 ${isSuperseded ? 'text-text-disabled line-through' : 'text-text'}`}>
           {name}
         </div>
-        <div className="text-xs text-text-tertiary mt-1">{formatCurrency(item.priceAtOrder)}</div>
+        <div className="text-xs text-text-3 mt-1">{formatCurrency(item.priceAtOrder)}</div>
       </div>
     );
   };
@@ -187,7 +187,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
   );
 
   const rowClassName = (test: OrderTest) =>
-    test.status === 'superseded' ? 'bg-surface-canvas/50 opacity-60' : '';
+    test.status === 'superseded' ? 'bg-canvas/50 opacity-60' : '';
 
   return (
     <Table<OrderTest>

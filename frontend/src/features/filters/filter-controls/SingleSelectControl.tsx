@@ -67,7 +67,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
   const renderTriggerContent = () => {
     if (!selectedOption) {
       return (
-        <span className="text-text-tertiary">
+        <span className="text-text-3">
           {config.placeholder || `Select ${config.label.toLowerCase()}...`}
         </span>
       );
@@ -90,7 +90,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
         >
           {/* Column 1: Left Icon */}
           {config.icon && (
-            <Icon name={config.icon as IconName} className="w-4 h-4 text-text-muted group-hover:text-action-primary shrink-0 transition-colors" />
+            <Icon name={config.icon as IconName} className="w-4 h-4 text-text-muted group-hover:text-primary shrink-0 transition-colors" />
           )}
 
           {/* Column 2: Content - flexible middle */}
@@ -103,7 +103,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                 onClick={handleClear}
                 className="p-0.5 hover:bg-surface-hover rounded transition-colors"
               >
-                <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-tertiary" />
+                <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-3" />
               </button>
             ) : (
               <div className="w-5 h-5" />
@@ -118,7 +118,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       className=""
     >
       {() => (
-        <div className="bg-surface-default border border-border-default rounded-md shadow-lg py-1 max-h-60 overflow-auto">
+        <div className="bg-surface border border-border rounded-md shadow-lg py-1 max-h-60 overflow-auto">
           {/* Options list */}
           <div>
             {config.options.map(option => {
@@ -129,18 +129,18 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   onClick={() => handleSelect(option.id)}
                   className={cn(
                     'px-3 py-2 text-sm hover:bg-surface-hover cursor-pointer transition-colors duration-150 w-full flex items-center gap-2',
-                    isSelected && 'bg-surface-canvas',
+                    isSelected && 'bg-canvas',
                     'text-left'
                   )}
                 >
                   {/* Check indicator */}
                   <div className="flex items-center justify-center w-4 h-4 shrink-0">
                     {isSelected ? (
-                      <div className="w-4 h-4 rounded bg-action-primary flex items-center justify-center transition-all duration-150">
-                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-action-primary-on" />
+                      <div className="w-4 h-4 rounded bg-primary flex items-center justify-center transition-all duration-150">
+                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-primary-on" />
                       </div>
                     ) : (
-                      <div className="w-4 h-4 rounded border border-border-default" />
+                      <div className="w-4 h-4 rounded border border-border" />
                     )}
                   </div>
 

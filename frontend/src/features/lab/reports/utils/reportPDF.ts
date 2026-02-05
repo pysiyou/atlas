@@ -60,7 +60,7 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
   const leftPanelX = margin;
   const rightPanelX = leftPanelX + leftPanelWidth;
   
-  // Left panel background — maps to --surface-report-panel (RGB 224, 242, 247)
+  // Left panel background — maps to --surface-report (RGB 224, 242, 247)
   doc.setFillColor(224, 242, 247);
   doc.rect(leftPanelX, headerStartY, leftPanelWidth, headerHeight, 'F');
   
@@ -332,8 +332,8 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
         lineWidth: 0.3,
       },
       headStyles: {
-        fillColor: [250, 250, 250], // bg-surface-canvas
-        textColor: [107, 114, 128], // text-text-tertiary
+        fillColor: [250, 250, 250], // bg-canvas
+        textColor: [107, 114, 128], // text-text-3
         fontStyle: 'bold',
         fontSize: 9,
         lineWidth: 0.5,
@@ -343,7 +343,7 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
         fontSize: 9,
         lineWidth: 0.3,
         lineColor: [220, 220, 220], // border-border-subtle
-        textColor: [31, 41, 55], // text-text-primary
+        textColor: [31, 41, 55], // text-text
       },
       didParseCell: (data) => {
         const rowIndex = data.row.index;
@@ -352,12 +352,12 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
         // Section headers: bold, background color
         if (data.section === 'body' && data.column.index === 0 && rowData?.isSectionHeader) {
           data.cell.styles.fontStyle = 'bold';
-          data.cell.styles.fillColor = [250, 250, 250]; // bg-surface-canvas/50
+          data.cell.styles.fillColor = [250, 250, 250]; // bg-canvas/50
         }
         
         // Abnormal result values: red and bold
         if (data.section === 'body' && data.column.index === 1 && rowData?.isAbnormal) {
-          data.cell.styles.textColor = [220, 38, 38]; // text-feedback-danger-text
+          data.cell.styles.textColor = [220, 38, 38]; // text-danger-text
           data.cell.styles.fontStyle = 'bold';
         }
         
@@ -381,7 +381,7 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
     yPosition += 5;
     doc.setFontSize(9); // text-xs equivalent
     doc.setFont('helvetica', 'normal');
-    doc.setTextColor(31, 41, 55); // text-text-primary
+    doc.setTextColor(31, 41, 55); // text-text
     
     // Instrument info (if available)
     if (test.technicianNotes) {

@@ -45,29 +45,29 @@ function ResultGrid({
           const abnormal = status !== 'normal';
           const valueColor = abnormal
             ? isCritical(status)
-              ? 'text-feedback-danger-text'
-              : 'text-feedback-warning-text'
-            : 'text-text-primary';
+              ? 'text-danger-text'
+              : 'text-warning-text'
+            : 'text-text';
 
           return (
             <div
               key={key}
               className="grid grid-cols-[1fr_auto] items-baseline whitespace-nowrap"
             >
-              <span className="text-xs text-text-tertiary" title={key}>
+              <span className="text-xs text-text-3" title={key}>
                 {key}:
               </span>
               <span className={`text-xs font-medium text-left ${valueColor}`}>
                 {resultValue}
                 {unit && (
-                  <span className="text-text-tertiary font-normal ml-0.5 text-[9px]">{unit}</span>
+                  <span className="text-text-3 font-normal ml-0.5 text-[9px]">{unit}</span>
                 )}
               </span>
             </div>
           );
         })}
         {remainingCount > 0 && (
-          <div className="text-xs text-text-tertiary col-span-full pt-0.5">
+          <div className="text-xs text-text-3 col-span-full pt-0.5">
             +{remainingCount} more
           </div>
         )}
@@ -83,21 +83,21 @@ function ResultGrid({
         const abnormal = status !== 'normal';
         const valueColor = abnormal
           ? isCritical(status)
-            ? 'text-feedback-danger-text'
-            : 'text-feedback-warning-text'
-          : 'text-text-primary';
+            ? 'text-danger-text'
+            : 'text-warning-text'
+          : 'text-text';
 
         return (
           <div
             key={key}
             className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
           >
-            <span className="text-xs text-text-tertiary text-right" title={key}>
+            <span className="text-xs text-text-3 text-right" title={key}>
               {key}:
             </span>
             <span className={`text-sm font-medium text-left ${valueColor}`}>
               {resultValue}
-              {unit && <span className="text-text-tertiary font-normal ml-1">{unit}</span>}
+              {unit && <span className="text-text-3 font-normal ml-1">{unit}</span>}
             </span>
           </div>
         );
@@ -174,18 +174,18 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
         {/* Header: Test name + Patient name, Test code, Sample ID */}
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="min-w-0 overflow-hidden">
-            <div className="text-sm font-medium text-text-primary truncate">{test.testName}</div>
+            <div className="text-sm font-medium text-text truncate">{test.testName}</div>
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="text-xs text-text-secondary font-medium truncate">{patientName}</div>
+              <div className="text-xs text-text-2 font-medium truncate">{patientName}</div>
               <div className="text-xxs text-text-disabled">•</div>
-              <div className="text-xxs text-action-primary font-medium font-mono truncate">
+              <div className="text-xxs text-primary font-medium font-mono truncate">
                 {test.testCode}
               </div>
               {test.sampleId && (
                 <>
                   <div className="text-xs text-text-disabled">•</div>
                   <div
-                    className="text-xxs text-action-primary font-medium font-mono truncate"
+                    className="text-xxs text-primary font-medium font-mono truncate"
                     title={displayId.sample(test.sampleId)}
                   >
                     {displayId.sample(test.sampleId)}
@@ -203,7 +203,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
               <ResultGrid results={test.results} flagStatusMap={flagStatusMap} compact />
             </div>
             {test.resultEnteredAt && (
-              <div className="text-xs text-text-tertiary">
+              <div className="text-xs text-text-3">
                 Entered: {formatDate(test.resultEnteredAt)}
               </div>
             )}
@@ -255,10 +255,10 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   // Desktop layout (LabCard)
   const badges = (
     <>
-      <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
+      <h3 className="text-sm font-medium text-text">{test.testName}</h3>
       <Badge variant={test.priority} size="sm" />
       <Badge variant={test.sampleType} size="sm" />
-      <span className="text-xs text-action-primary font-mono">{test.testCode}</span>
+      <span className="text-xs text-primary font-mono">{test.testCode}</span>
     </>
   );
 
@@ -285,8 +285,8 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   );
 
   const additionalInfo = test.resultEnteredAt && (
-    <span className="text-xs text-text-tertiary">
-      Results entered <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
+    <span className="text-xs text-text-3">
+      Results entered <span className="text-text-2">{formatDate(test.resultEnteredAt)}</span>
       {test.enteredBy && <span> by {getUserName(test.enteredBy)}</span>}
     </span>
   );
@@ -338,7 +338,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasRejectionHistory ? 'border-feedback-warning-border-strong' : ''}
+      className={hasRejectionHistory ? 'border-warning-border-strong' : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,

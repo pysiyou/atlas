@@ -35,9 +35,9 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
       padding="none"
       className={cn(
         'relative flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-border-subtle',
-        'bg-surface-default shadow-1',
+        'bg-surface shadow-sm',
         'transition-all duration-200 ease-out',
-        'hover:border-border-hover hover:shadow-2'
+        'hover:border-border-hover hover:shadow-md'
       )}
     >
       <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden">
@@ -46,8 +46,8 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
           <div
             className={cn(
               'flex h-11 w-11 shrink-0 items-center justify-center rounded',
-              'bg-(--action-primary-muted-bg) text-(--action-primary)',
-              'ring-1 ring-(--action-primary)/20'
+              'bg-(--primary-muted) text-(--primary)',
+              'ring-1 ring-(--primary)/20'
             )}
           >
             <Icon name={icon} className="h-5 w-5" />
@@ -57,19 +57,19 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
             <div className="flex min-w-0 items-baseline gap-2">
               <span
                 className={cn(
-                  'truncate tabular-nums font-bold leading-tight text-text-primary',
+                  'truncate tabular-nums font-bold leading-tight text-text',
                   'text-base sm:text-xl'
                 )}
               >
                 {displayPrimary}
               </span>
               {displaySecondary != null && displaySecondary !== '' && (
-                <span className="shrink-0 text-xs font-medium text-text-tertiary">
+                <span className="shrink-0 text-xs font-medium text-text-3">
                   out of {displaySecondary}
                 </span>
               )}
             </div>
-            <span className="truncate text-xs font-medium text-text-tertiary">
+            <span className="truncate text-xs font-medium text-text-3">
               {title}
             </span>
           </div>
@@ -85,21 +85,21 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
                 name={trendUp ? 'up-trend' : 'down-trend'}
                 className={cn(
                   'h-3.5 w-3.5 shrink-0',
-                  trendUp ? 'text-feedback-success-text' : 'text-feedback-danger-text'
+                  trendUp ? 'text-success-text' : 'text-danger-text'
                 )}
               />
               <span
                 className={cn(
                   'tabular-nums font-semibold',
-                  trendUp ? 'text-feedback-success-text' : 'text-feedback-danger-text'
+                  trendUp ? 'text-success-text' : 'text-danger-text'
                 )}
               >
                 {trend.format === 'count' ? trendCount : `${trendCount}%`}
               </span>
-              <span className="text-text-tertiary font-normal">{trend.label}</span>
+              <span className="text-text-3 font-normal">{trend.label}</span>
             </p>
           ) : (
-            <p className="text-xs text-text-tertiary">—</p>
+            <p className="text-xs text-text-3">—</p>
           )}
         </div>
       </div>

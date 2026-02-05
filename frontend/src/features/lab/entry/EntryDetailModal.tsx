@@ -124,7 +124,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       size={18}
       percentage={completionPercentage}
       trackColorClass="stroke-border-default"
-      progressColorClass={completionPercentage === 100 ? 'stroke-action-success' : 'stroke-action-primary'}
+      progressColorClass={completionPercentage === 100 ? 'stroke-success' : 'stroke-primary'}
       label={`${filledCount}/${totalParams}`}
       className="h-7"
     />
@@ -139,12 +139,12 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       {isRecollection && !isRetest && (
         <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} />
       )}
-      <Badge size="sm" variant="default" className="text-text-secondary">
+      <Badge size="sm" variant="default" className="text-text-2">
         {filledCount} / {totalParams} parameters
       </Badge>
       {turnaroundTime && (
-        <Badge size="sm" variant="default" className="text-text-secondary flex items-center gap-1.5">
-          <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-text-tertiary" />
+        <Badge size="sm" variant="default" className="text-text-2 flex items-center gap-1.5">
+          <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-text-3" />
           {turnaroundTime}h TAT
         </Badge>
       )}
@@ -254,7 +254,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Filled',
                 value: (
-                  <span className={isComplete ? 'text-feedback-success-text' : 'text-feedback-warning-text'}>
+                  <span className={isComplete ? 'text-success-text' : 'text-warning-text'}>
                     {filledCount}
                   </span>
                 ),
@@ -262,7 +262,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Remaining',
                 value: (
-                  <span className={remainingParams === 0 ? 'text-feedback-success-text' : 'text-text-tertiary'}>
+                  <span className={remainingParams === 0 ? 'text-success-text' : 'text-text-3'}>
                     {remainingParams}
                   </span>
                 ),
@@ -272,7 +272,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           {
             title: 'Test Information',
             fields: [
-              { label: 'Test Code', value: <span className="text-action-primary font-mono">{test.testCode}</span> },
+              { label: 'Test Code', value: <span className="text-primary font-mono">{test.testCode}</span> },
               {
                 label: 'Sample Type',
                 badge: test.sampleType
@@ -281,7 +281,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               },
               {
                 label: 'Sample ID',
-                value: test.sampleId ? <span className="text-action-primary font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
+                value: test.sampleId ? <span className="text-primary font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
               },
               {
                 label: 'Turnaround Time',

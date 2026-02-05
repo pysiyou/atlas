@@ -21,8 +21,8 @@ export const VolumeChart: React.FC<VolumeChartProps> = ({ data }) => {
   }));
 
   return (
-    <div className="bg-surface-default border border-border-default rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-text-primary mb-4">Test Volume Trend</h3>
+    <div className="bg-surface border border-border rounded-lg p-4">
+      <h3 className="text-sm font-semibold text-text mb-4">Test Volume Trend</h3>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
@@ -38,7 +38,7 @@ export const VolumeChart: React.FC<VolumeChartProps> = ({ data }) => {
           />
           <Tooltip 
             contentStyle={{ 
-              backgroundColor: 'var(--chart-tooltip-bg)', 
+              backgroundColor: 'var(--chart-tooltip)', 
               border: '1px solid var(--chart-tooltip-border)',
               borderRadius: '8px',
               fontSize: '12px'
@@ -48,9 +48,9 @@ export const VolumeChart: React.FC<VolumeChartProps> = ({ data }) => {
           <Line 
             type="monotone" 
             dataKey="count" 
-            stroke="var(--chart-series-primary)" 
+            stroke="var(--chart-primary)" 
             strokeWidth={2}
-            dot={{ fill: 'var(--chart-series-primary)', r: 4 }}
+            dot={{ fill: 'var(--chart-primary)', r: 4 }}
             activeDot={{ r: 6 }}
           />
         </LineChart>

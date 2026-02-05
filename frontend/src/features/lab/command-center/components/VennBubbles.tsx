@@ -89,7 +89,7 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
   className = '',
 }) => {
   // Use canvas background for ring to create visual separation
-  const adaptiveRingColor = ringColor ?? 'var(--surface-canvas)';
+  const adaptiveRingColor = ringColor ?? 'var(--canvas)';
 
   const sortedSegments = useMemo(
     () => [...segments].sort((a, b) => b.value - a.value),
@@ -130,7 +130,7 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
       .filter(Boolean);
   }, [intersections, segmentMap]);
 
-  const baseClass = 'h-full w-full min-h-0 min-w-0 flex flex-col bg-surface-canvas rounded-lg overflow-hidden';
+  const baseClass = 'h-full w-full min-h-0 min-w-0 flex flex-col bg-canvas rounded-lg overflow-hidden';
 
   if (isLoading) {
     return (
@@ -140,20 +140,20 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
             <div 
               className="absolute inset-0 rounded-full border-4 border-transparent animate-spin" 
               style={{ 
-                borderTopColor: 'var(--action-primary)',
+                borderTopColor: 'var(--primary)',
                 animationDuration: '1s' 
               }} 
             />
             <div 
               className="absolute inset-2 rounded-full border-4 border-transparent animate-spin" 
               style={{ 
-                borderTopColor: 'var(--chart-series-accent)',
+                borderTopColor: 'var(--chart-accent)',
                 animationDuration: '1.5s', 
                 animationDirection: 'reverse' 
               }} 
             />
           </div>
-          <span className="text-text-tertiary text-sm font-medium">Loading visualization…</span>
+          <span className="text-text-3 text-sm font-medium">Loading visualization…</span>
         </div>
       </div>
     );
@@ -167,7 +167,7 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
             <circle cx="18" cy="24" r="12" stroke="currentColor" strokeWidth="2" className="text-text-muted" />
             <circle cx="30" cy="24" r="12" stroke="currentColor" strokeWidth="2" className="text-text-muted" />
           </svg>
-          <span className="text-text-tertiary text-sm font-medium">{emptyMessage}</span>
+          <span className="text-text-3 text-sm font-medium">{emptyMessage}</span>
         </div>
       </div>
     );
@@ -180,7 +180,7 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
           <svg
             viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
             className="w-full h-full"
-            style={{ display: 'block', filter: 'drop-shadow(0 4px 12px var(--shadow-2))' }}
+            style={{ display: 'block', filter: 'drop-shadow(0 4px 12px var(--shadow-md))' }}
             preserveAspectRatio="xMidYMid meet"
             aria-label={ariaLabel ?? segments.map((s) => `${s.label}: ${s.value}%`).join(', ')}
           >

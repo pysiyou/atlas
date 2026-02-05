@@ -70,7 +70,7 @@ const ListItem: React.FC<{
       className={cn(
         'flex items-center gap-3 px-3 py-2 text-sm cursor-pointer',
         'hover:bg-surface-hover transition-colors',
-        isSelected && 'bg-surface-default'
+        isSelected && 'bg-surface'
       )}
     >
       {/* Checkbox/Radio */}
@@ -84,19 +84,19 @@ const ListItem: React.FC<{
         {singleSelect ? (
           // Circular radio button style for single-select
           isSelected ? (
-            <div className="w-4 h-4 rounded-full border-2 border-action-primary flex items-center justify-center bg-surface-default">
-              <div className="w-2 h-2 rounded-full bg-action-primary" />
+            <div className="w-4 h-4 rounded-full border-2 border-primary flex items-center justify-center bg-surface">
+              <div className="w-2 h-2 rounded-full bg-primary" />
             </div>
           ) : (
-            <div className="w-4 h-4 rounded-full border-2 border-border-default bg-surface-default" />
+            <div className="w-4 h-4 rounded-full border-2 border-border bg-surface" />
           )
         ) : // Square checkbox style for multi-select
         isSelected ? (
-          <div className="w-4 h-4 rounded border-2 border-action-primary bg-action-primary flex items-center justify-center transition-all duration-150">
-            <Icon name={ICONS.actions.check} className="w-3 h-3 text-action-primary-on" />
+          <div className="w-4 h-4 rounded border-2 border-primary bg-primary flex items-center justify-center transition-all duration-150">
+            <Icon name={ICONS.actions.check} className="w-3 h-3 text-primary-on" />
           </div>
         ) : (
-          <div className="w-4 h-4 rounded border-2 border-border-default bg-surface-default transition-all duration-150" />
+          <div className="w-4 h-4 rounded border-2 border-border bg-surface transition-all duration-150" />
         )}
       </div>
 
@@ -179,7 +179,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   // Render the trigger content
   const renderTriggerContent = () => {
     if (selectedIds.length === 0) {
-      return <span className="text-text-tertiary whitespace-nowrap overflow-hidden truncate">{placeholder || `Select ${label}...`}</span>;
+      return <span className="text-text-3 whitespace-nowrap overflow-hidden truncate">{placeholder || `Select ${label}...`}</span>;
     }
 
     if (singleSelectedOption) {
@@ -193,8 +193,8 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
 
     // Show count for multiple selections – single line so truncate works
     return (
-      <span className="text-text-secondary truncate block whitespace-nowrap">
-        <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full text-action-primary-on text-xxs font-medium align-middle mr-1 bg-action-primary">
+      <span className="text-text-2 truncate block whitespace-nowrap">
+        <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full text-primary-on text-xxs font-medium align-middle mr-1 bg-primary">
           {selectedIds.length}
         </span>
         selected
@@ -216,7 +216,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
           )}
         >
           {/* Column 1: Left Icon */}
-          {icon && <Icon name={icon} className="w-4 h-4 text-text-muted group-hover:text-action-primary flex-shrink-0 transition-colors" />}
+          {icon && <Icon name={icon} className="w-4 h-4 text-text-muted group-hover:text-primary flex-shrink-0 transition-colors" />}
 
           {/* Column 2: Content - flexible middle */}
           <div className="flex-1 min-w-0 overflow-hidden">
@@ -256,7 +256,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       className="min-w-[200px]"
     >
       {() => (
-        <div className="bg-surface-default border border-border-default rounded-md shadow-lg py-2">
+        <div className="bg-surface border border-border rounded-md shadow-lg py-2">
           {/* Options list */}
           <div className="max-h-[300px] overflow-y-auto">
             {options.map(option => (
@@ -272,7 +272,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
 
           {/* Footer actions - Select all / Deselect all (multi-select) */}
           {showSelectAll && !singleSelect && options.length > 0 && (
-            <div className="border-t border-border-default mt-2 pt-2">
+            <div className="border-t border-border mt-2 pt-2">
               <div className="px-3 py-2">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <div className="flex items-center justify-center">
@@ -283,16 +283,16 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
                       className="sr-only"
                     />
                     {allSelected ? (
-                      <div className="w-4 h-4 rounded border-2 border-action-primary bg-action-primary flex items-center justify-center transition-all duration-150">
-                        <Icon name={ICONS.actions.cross} className="w-3 h-3 text-action-primary-on" />
+                      <div className="w-4 h-4 rounded border-2 border-primary bg-primary flex items-center justify-center transition-all duration-150">
+                        <Icon name={ICONS.actions.cross} className="w-3 h-3 text-primary-on" />
                       </div>
                     ) : (
-                      <div className="w-4 h-4 rounded border-2 border-action-primary bg-action-primary flex items-center justify-center transition-all duration-150">
-                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-action-primary-on" />
+                      <div className="w-4 h-4 rounded border-2 border-primary bg-primary flex items-center justify-center transition-all duration-150">
+                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-primary-on" />
                       </div>
                     )}
                   </div>
-                  <span className="text-xs font-medium text-text-primary">
+                  <span className="text-xs font-medium text-text">
                     {allSelected ? 'Deselect all' : selectAllLabel}
                   </span>
                 </label>

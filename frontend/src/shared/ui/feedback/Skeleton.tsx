@@ -93,7 +93,7 @@ export const SkeletonTableRow: React.FC<{
   columns?: number;
   className?: string;
 }> = ({ columns = 5, className = '' }) => (
-  <div className={`flex items-center gap-4 py-4 px-6 border-b border-border-default ${className}`}>
+  <div className={`flex items-center gap-4 py-4 px-6 border-b border-border ${className}`}>
     {Array.from({ length: columns }).map((_, index) => (
       <div key={index} className="flex-1">
         <Skeleton height={16} width={index === 0 ? '60%' : '80%'} />
@@ -111,7 +111,7 @@ export const SkeletonCard: React.FC<{
   showAvatar?: boolean;
   lines?: number;
 }> = ({ className = '', showAvatar = true, lines = 3 }) => (
-  <div className={`bg-surface-default rounded-md border border-border-default shadow-sm p-4 ${className}`}>
+  <div className={`bg-surface rounded-md border border-border shadow-sm p-4 ${className}`}>
     <div className="flex items-start gap-4">
       {showAvatar && <SkeletonAvatar size="md" />}
       <div className="flex-1">
@@ -165,9 +165,9 @@ export const SkeletonPage: React.FC<{
     </div>
 
     {/* Table */}
-    <div className="bg-surface-default rounded-md border border-border-default shadow-sm">
+    <div className="bg-surface rounded-md border border-border shadow-sm">
       {/* Table header */}
-      <div className="flex items-center gap-4 py-3 px-6 border border-border-default border-b bg-surface-canvas">
+      <div className="flex items-center gap-4 py-3 px-6 border border-border border-b bg-canvas">
         {Array.from({ length: 6 }).map((_, index) => (
           <div key={index} className="flex-1">
             <Skeleton height={12} width="60%" />

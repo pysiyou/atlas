@@ -155,7 +155,7 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
   if (!status) {
     return {
       border: 'border-border-strong',
-      text: 'text-text-tertiary',
+      text: 'text-text-3',
       bg: 'bg-transparent',
     };
   }
@@ -163,21 +163,21 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
   switch (status) {
     case 'normal':
       return {
-        border: 'border-feedback-success-border',
-        text: 'text-feedback-success-text',
-        bg: 'bg-feedback-success-bg-strong',
+        border: 'border-success-border',
+        text: 'text-success-text',
+        bg: 'bg-success-bg-strong',
       };
     case 'borderline':
       return {
-        border: 'border-feedback-warning-border',
-        text: 'text-feedback-warning-text',
-        bg: 'bg-feedback-warning-bg-strong',
+        border: 'border-warning-border',
+        text: 'text-warning-text',
+        bg: 'bg-warning-bg-strong',
       };
     case 'abnormal':
       return {
-        border: 'border-feedback-danger-border',
-        text: 'text-feedback-danger-text',
-        bg: 'bg-feedback-danger-bg-strong',
+        border: 'border-danger-border',
+        text: 'text-danger-text',
+        bg: 'bg-danger-bg-strong',
       };
   }
 };
@@ -210,26 +210,26 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="flex justify-between items-baseline mb-1 gap-2">
               <label
                 htmlFor={isNa ? undefined : `vital-${fieldName}`}
-                className={`text-xs font-medium truncate min-w-0 ${isNa ? 'text-text-tertiary cursor-default' : 'text-text-tertiary cursor-pointer'}`}
+                className={`text-xs font-medium truncate min-w-0 ${isNa ? 'text-text-3 cursor-default' : 'text-text-3 cursor-pointer'}`}
               >
                 {config.label}
               </label>
               <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
                 {isAbnormal && !isNa && (
-                  <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-feedback-danger-text shrink-0" />
+                  <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-danger-text shrink-0" />
                 )}
-                <span className="text-xxs text-text-tertiary truncate">Ref: {refRange}</span>
+                <span className="text-xxs text-text-3 truncate">Ref: {refRange}</span>
               </div>
             </div>
 
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                <Icon name={config.icon} className={cn('w-4 h-4 shrink-0 transition-colors', isNa ? 'text-text-muted/70' : 'text-text-muted group-hover:text-action-primary')} />
+                <Icon name={config.icon} className={cn('w-4 h-4 shrink-0 transition-colors', isNa ? 'text-text-muted/70' : 'text-text-muted group-hover:text-primary')} />
               </div>
 
               {isNa ? (
                 <div
-                  className="w-full rounded border border-border-default bg-muted/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-tertiary"
+                  className="w-full rounded border border-border bg-muted/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-3"
                   aria-label={`${config.label} not provided`}
                 >
                   N/A
@@ -257,10 +257,10 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     )}
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
-                    <span className="text-xs text-text-tertiary select-none truncate">{config.unit}</span>
+                    <span className="text-xs text-text-3 select-none truncate">{config.unit}</span>
                   </div>
                   {isAbnormal && (
-                    <div className="absolute -bottom-5 left-0 text-xxs text-feedback-danger-text font-medium">
+                    <div className="absolute -bottom-5 left-0 text-xxs text-danger-text font-medium">
                       Abnormal value
                     </div>
                   )}
@@ -268,7 +268,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
               )}
             </div>
 
-            {error && <p className="mt-1 text-sm text-feedback-danger-text">{error}</p>}
+            {error && <p className="mt-1 text-sm text-danger-text">{error}</p>}
           </div>
         );
       })}

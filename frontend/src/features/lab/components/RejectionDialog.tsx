@@ -128,11 +128,11 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
         className={
           isModal
             ? 'flex flex-col items-center justify-center gap-4 py-8'
-            : 'w-90 md:w-96 bg-surface-default rounded-lg shadow-xl border border-border-default p-8 flex flex-col items-center justify-center gap-4'
+            : 'w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border p-8 flex flex-col items-center justify-center gap-4'
         }
       >
         <ClaudeLoader size="md" />
-        <p className="text-sm text-text-tertiary">Loading rejection options...</p>
+        <p className="text-sm text-text-3">Loading rejection options...</p>
       </div>
     );
   }
@@ -140,7 +140,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   // Error state
   if (error && !options) {
     return (
-      <div className={isModal ? 'space-y-4' : 'w-90 md:w-96 bg-surface-default rounded-lg shadow-xl border border-border-default p-4'}>
+      <div className={isModal ? 'space-y-4' : 'w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border p-4'}>
         <Alert variant="danger" className="mb-4">
           <p className="font-medium text-xs">Failed to load options</p>
           <p className="text-xxs mt-1">{error}</p>
@@ -204,7 +204,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       {/* Action Type Selection */}
       {!escalationRequired && (
         <div>
-          <label className="block text-xs font-medium text-text-tertiary mb-1">Follow-up Action</label>
+          <label className="block text-xs font-medium text-text-3 mb-1">Follow-up Action</label>
           <div className="grid grid-cols-1 gap-2">
             <RadioCard
               name="rejection-type"
@@ -232,9 +232,9 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
 
       {/* Rejection / Escalation Reason */}
       <div>
-        <label className="block text-xs font-medium text-text-tertiary mb-1">
+        <label className="block text-xs font-medium text-text-3 mb-1">
           {escalationRequired ? 'Reason for escalation' : 'Rejection Reason'}{' '}
-          <span className="text-feedback-danger-text">*</span>
+          <span className="text-danger-text">*</span>
         </label>
         <textarea
           rows={3}
@@ -255,7 +255,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     return (
       <div className="flex flex-col min-h-0">
         <div className="p-4 space-y-4 overflow-y-auto flex-1 min-h-0">{body}</div>
-        <div className="px-6 py-4 border-t border-border-default bg-surface-default shrink-0 flex items-center justify-between gap-2">
+        <div className="px-6 py-4 border-t border-border bg-surface shrink-0 flex items-center justify-between gap-2">
           <FooterInfo
             icon={ICONS.actions.alertCircle}
             text={escalationRequired ? 'Escalating to supervisor' : 'Rejecting results'}
@@ -421,7 +421,7 @@ export const RejectionHistoryBanner: React.FC<RejectionHistoryBannerProps> = ({
   if (!message) return null;
 
   return (
-    <div className="mt-2 px-2 py-1.5 bg-feedback-warning-bg border border-feedback-warning-border rounded text-feedback-warning-text">
+    <div className="mt-2 px-2 py-1.5 bg-warning-bg border border-warning-border rounded text-warning-text">
       <div className="flex items-center gap-1.5">
         <Icon name={ICONS.actions.loading} className="w-3 h-3" />
         <span className="text-xxs font-medium">{message}</span>

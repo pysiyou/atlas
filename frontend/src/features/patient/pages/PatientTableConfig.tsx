@@ -31,8 +31,8 @@ export const createPatientTableConfig = (
 
   const renderName = (patient: Patient) => (
     <div className="min-w-0">
-      <div className="text-text-primary truncate">{patient.fullName}</div>
-      <div className="text-xs text-text-tertiary truncate">
+      <div className="text-text truncate">{patient.fullName}</div>
+      <div className="text-xs text-text-3 truncate">
         {calculateAge(patient.dateOfBirth)} years old
       </div>
     </div>
@@ -45,7 +45,7 @@ export const createPatientTableConfig = (
   const renderLastOrder = (patient: Patient) => {
     const patientOrders = getOrdersByPatient(patient.id);
     if (patientOrders.length === 0) {
-      return <span className="text-xs text-text-tertiary truncate block">No orders</span>;
+      return <span className="text-xs text-text-3 truncate block">No orders</span>;
     }
 
     const lastOrder = patientOrders.sort((a, b) => 
@@ -55,7 +55,7 @@ export const createPatientTableConfig = (
     return (
       <div className="min-w-0">
         <div className={DATA_ID_PRIMARY}>{displayId.order(lastOrder.orderId)}</div>
-        <div className="text-xs text-text-tertiary truncate">
+        <div className="text-xs text-text-3 truncate">
           {formatDate(lastOrder.orderDate)}
         </div>
       </div>
@@ -64,19 +64,19 @@ export const createPatientTableConfig = (
 
   const renderContact = (patient: Patient) => (
     <div className="text-xs min-w-0">
-      <div className="font-medium text-xs text-text-primary truncate">{formatPhoneNumber(patient.phone)}</div>
-      {patient.email && <div className="text-xs text-text-tertiary truncate">{patient.email}</div>}
+      <div className="font-medium text-xs text-text truncate">{formatPhoneNumber(patient.phone)}</div>
+      {patient.email && <div className="text-xs text-text-3 truncate">{patient.email}</div>}
     </div>
   );
 
   const renderAffiliation = (patient: Patient) => {
     if (!patient.affiliation) {
-      return <span className="text-xs text-text-tertiary truncate block">No Affiliation</span>;
+      return <span className="text-xs text-text-3 truncate block">No Affiliation</span>;
     }
     const isActive = isAffiliationActive(patient.affiliation);
     return (
       <div className="flex items-center gap-2 min-w-0">
-        <span className="text-xs text-text-tertiary truncate">
+        <span className="text-xs text-text-3 truncate">
           {isActive ? 'Expires on' : 'Expired on'}: {formatDate(patient.affiliation.endDate)}
         </span>
       </div>
@@ -84,7 +84,7 @@ export const createPatientTableConfig = (
   };
 
   const renderRegistrationDate = (patient: Patient) => (
-    <div className="text-xs text-text-tertiary truncate">{formatDate(patient.registrationDate)}</div>
+    <div className="text-xs text-text-3 truncate">{formatDate(patient.registrationDate)}</div>
   );
 
   return {

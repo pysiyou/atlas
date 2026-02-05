@@ -102,16 +102,16 @@ const getStatusColors = (status: VitalStatus, appearance: 'unified' | 'tinted') 
   if (appearance === 'unified') {
     // Unified: neutral background, colored text/icons
     const base = {
-      bg: 'bg-badge-bg',
-      border: 'border-border-default shadow-sm',
+      bg: 'bg-badge',
+      border: 'border-border shadow-sm',
     };
     switch (status) {
       case 'normal':
-        return { ...base, icon: 'text-feedback-success-text-strong', value: 'text-feedback-success-text-strong', dot: 'bg-feedback-success-text-strong' };
+        return { ...base, icon: 'text-success-text-strong', value: 'text-success-text-strong', dot: 'bg-success-text-strong' };
       case 'borderline':
-        return { ...base, icon: 'text-feedback-warning-text-strong', value: 'text-feedback-warning-text-strong', dot: 'bg-feedback-warning-text-strong' };
+        return { ...base, icon: 'text-warning-text-strong', value: 'text-warning-text-strong', dot: 'bg-warning-text-strong' };
       case 'abnormal':
-        return { ...base, icon: 'text-feedback-danger-text-strong', value: 'text-feedback-danger-text-strong', dot: 'bg-feedback-danger-text-strong' };
+        return { ...base, icon: 'text-danger-text-strong', value: 'text-danger-text-strong', dot: 'bg-danger-text-strong' };
     }
   }
 
@@ -119,27 +119,27 @@ const getStatusColors = (status: VitalStatus, appearance: 'unified' | 'tinted') 
   switch (status) {
     case 'normal':
       return {
-        bg: 'bg-feedback-success-bg',
-        border: 'border-feedback-success-border',
-        icon: 'text-feedback-success-text',
-        value: 'text-feedback-success-text',
-        dot: 'bg-action-success',
+        bg: 'bg-success-bg',
+        border: 'border-success-border',
+        icon: 'text-success-text',
+        value: 'text-success-text',
+        dot: 'bg-success',
       };
     case 'borderline':
       return {
-        bg: 'bg-feedback-warning-bg',
-        border: 'border-feedback-warning-border',
-        icon: 'text-feedback-warning-text',
-        value: 'text-feedback-warning-text',
-        dot: 'bg-action-warning',
+        bg: 'bg-warning-bg',
+        border: 'border-warning-border',
+        icon: 'text-warning-text',
+        value: 'text-warning-text',
+        dot: 'bg-warning',
       };
     case 'abnormal':
       return {
-        bg: 'bg-feedback-danger-bg',
+        bg: 'bg-danger-bg',
         border: 'border-border-error',
-        icon: 'text-feedback-danger-text',
-        value: 'text-feedback-danger-text',
-        dot: 'bg-action-danger',
+        icon: 'text-danger-text',
+        value: 'text-danger-text',
+        dot: 'bg-danger',
       };
   }
 };
@@ -152,7 +152,7 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
       <div className="flex items-center justify-center h-full min-h-[200px]">
         <div className="text-center">
           <Icon name={ICONS.dataFields.stethoscope} className="w-12 h-12 text-text-disabled mx-auto mb-2" />
-          <p className="text-sm text-text-tertiary">No vital signs recorded</p>
+          <p className="text-sm text-text-3">No vital signs recorded</p>
         </div>
       </div>
     );
@@ -178,7 +178,7 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
           >
             <div className="flex items-center gap-2 mb-2 min-w-0">
               <Icon name={config.icon} className={`w-4 h-4 ${colors.icon} shrink-0`} />
-              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wide whitespace-nowrap truncate">
+              <span className="text-xs font-medium text-text-3 uppercase tracking-wide whitespace-nowrap truncate">
                 {config.label}
               </span>
             </div>

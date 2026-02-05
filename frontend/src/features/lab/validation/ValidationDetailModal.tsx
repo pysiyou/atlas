@@ -158,7 +158,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       footer={
         <ModalFooter
           statusMessage=""
-          statusClassName="text-text-tertiary"
+          statusClassName="text-text-3"
         >
           <Popover
             placement="top-end"
@@ -232,7 +232,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
             fields: [
               {
                 label: 'Sample ID',
-                value: test.sampleId ? <span className="text-action-primary font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
+                value: test.sampleId ? <span className="text-primary font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
               },
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
               {
@@ -249,11 +249,11 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
               {
                 label: 'Test Code',
-                value: test.testCode ? <span className="text-action-primary font-mono">{test.testCode}</span> : undefined,
+                value: test.testCode ? <span className="text-primary font-mono">{test.testCode}</span> : undefined,
               },
               {
                 label: 'Order ID',
-                value: test.orderId ? <span className="text-action-primary font-mono">{displayId.order(test.orderId)}</span> : undefined,
+                value: test.orderId ? <span className="text-primary font-mono">{displayId.order(test.orderId)}</span> : undefined,
               },
             ],
           },

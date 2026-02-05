@@ -73,7 +73,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       variants={sidebarVariants}
       animate={collapsed ? 'collapsed' : 'expanded'}
       initial={false}
-      className="bg-surface-default border-r border-border-default flex flex-col overflow-hidden"
+      className="bg-surface border-r border-border flex flex-col overflow-hidden"
       style={{ padding: '0' }}
       onClick={e => {
         e.stopPropagation();
@@ -172,7 +172,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="fixed inset-0 bg-overlay-modal z-40"
+            className="fixed inset-0 bg-overlay z-40"
             onClick={onMobileClose}
             aria-hidden="true"
           />

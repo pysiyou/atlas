@@ -79,7 +79,7 @@ export const ReportDetail: React.FC = () => {
   if (ordersLoading || patientsLoading || testsLoading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-text-tertiary">Loading...</div>
+        <div className="text-text-3">Loading...</div>
       </div>
     );
   }

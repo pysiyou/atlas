@@ -22,7 +22,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
 
   return (
     <div
-      className={`hidden lg:flex flex-col items-start text-auth-text-primary space-y-10 flex-1 max-w-lg transition-all duration-1000 delay-200 ${
+      className={`hidden lg:flex flex-col items-start text-auth-text space-y-10 flex-1 max-w-lg transition-all duration-1000 delay-200 ${
         isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
       }`}
     >
@@ -40,7 +40,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
             </div>
           </div>
           <div>
-            <h1 className="font-display text-5xl text-auth-text-primary tracking-tight">{company.company.name}</h1>
+            <h1 className="font-display text-5xl text-auth-text tracking-tight">{company.company.name}</h1>
             <p className="font-body text-auth-text-light text-sm tracking-widest uppercase mt-1">
               {company.company.subtitle}
             </p>
@@ -58,20 +58,20 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
         {features.map((feature, index) => (
           <div
             key={feature.title}
-            className={`group flex items-start gap-4 p-4 rounded-xl bg-auth-feature-card-bg border border-auth-feature-card-border hover:bg-auth-feature-card-hover hover:border-auth-feature-card-border-hover transition-all duration-300 ${
+            className={`group flex items-start gap-4 p-4 rounded-xl bg-auth-card border border-auth-card-border hover:bg-auth-card-hover hover:border-auth-card-border-hover transition-all duration-300 ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
             }`}
             style={{ transitionDelay: `${400 + index * 100}ms` }}
           >
             {/* Feature icon */}
-            <div className="w-10 h-10 rounded-lg bg-auth-feature-card-icon-bg border border-auth-feature-card-icon-border flex items-center justify-center flex-shrink-0 group-hover:bg-auth-feature-card-icon-bg-hover transition-colors duration-300">
+            <div className="w-10 h-10 rounded-lg bg-auth-card-icon border border-auth-card-icon-border flex items-center justify-center flex-shrink-0 group-hover:bg-auth-card-icon-hover transition-colors duration-300">
               <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-auth-text-light" />
             </div>
             <div>
-              <h3 className="font-body font-semibold text-auth-text-primary text-[15px] leading-tight">
+              <h3 className="font-body font-semibold text-auth-text text-[15px] leading-tight">
                 {feature.title}
               </h3>
-              <p className="font-body text-sm text-auth-text-secondary mt-1 leading-relaxed">
+              <p className="font-body text-sm text-auth-text-2 mt-1 leading-relaxed">
                 {feature.description}
               </p>
             </div>
@@ -86,13 +86,13 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
             {[1, 2, 3].map(i => (
               <div
                 key={i}
-                className="w-8 h-8 rounded-full bg-auth-user-badge-bg border-2 border-auth-user-badge-border flex items-center justify-center"
+                className="w-8 h-8 rounded-full bg-auth-badge border-2 border-auth-badge-border flex items-center justify-center"
               >
-                <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-auth-user-badge-icon" />
+                <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-auth-badge-icon" />
               </div>
             ))}
           </div>
-          <p className="font-body text-sm text-auth-text-secondary">
+          <p className="font-body text-sm text-auth-text-2">
             {company.marketing.trustIndicator.text}{' '}
             <span className="text-auth-text-light font-semibold">{company.marketing.trustIndicator.count}</span>{' '}
             {company.marketing.trustIndicator.audience}

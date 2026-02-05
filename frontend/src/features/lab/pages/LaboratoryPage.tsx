@@ -61,7 +61,7 @@ export const Laboratory: React.FC = () => {
     <div className="h-full flex flex-col p-4 space-y-6 min-w-0 overflow-hidden">
       {/* Page Header: title with tabs on the right */}
       <div className="shrink-0 flex items-center justify-between gap-4 flex-wrap min-w-0">
-        <h1 className="text-2xl font-bold text-text-primary">{pageTitle}</h1>
+        <h1 className="text-2xl font-bold text-text">{pageTitle}</h1>
         <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">
           {tabs.map(tab => {
             const isActive = activeTab === tab.id;
@@ -73,13 +73,13 @@ export const Laboratory: React.FC = () => {
                   relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 cursor-pointer
                   ${
                     isActive
-                      ? 'bg-surface-default text-action-primary shadow-sm shadow-1 ring-1 ring-black/5'
-                      : 'text-text-tertiary hover:text-text-primary hover:bg-neutral-200/50'
+                      ? 'bg-surface text-primary shadow-sm ring-1 ring-black/5'
+                      : 'text-text-3 hover:text-text hover:bg-neutral-200/50'
                   }
                 `}
               >
                 <div
-                  className={`${isActive ? 'text-action-primary' : 'text-text-disabled'} flex items-center`}
+                  className={`${isActive ? 'text-primary' : 'text-text-disabled'} flex items-center`}
                 >
                   {tab.icon}
                 </div>
@@ -91,9 +91,9 @@ export const Laboratory: React.FC = () => {
       </div>
 
       {/* Main Content Card */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-surface-default rounded border border-border-default shadow-sm overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-surface rounded border border-border shadow-sm overflow-hidden">
         {/* Content Area: flex column, no scroll – filter + grid handle layout like ListView */}
-        <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-surface-canvas">
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-canvas">
           {activeTab === 'collection' && <CollectionView />}
           {activeTab === 'entry' && <EntryView />}
           {activeTab === 'validation' && <ValidationView />}

@@ -41,7 +41,7 @@ const ModalFooter: React.FC<{
   buttonVariant?: 'save' | 'primary';
   buttonIcon?: React.ReactNode;
 }> = ({ onClose, submitLabel, isSubmitting, formId, footerInfo, buttonVariant = 'save', buttonIcon }) => (
-  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface-default shrink-0 shadow-[var(--shadow-footer)]">
+  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border bg-surface shrink-0 shadow-[var(--shadow-footer)]">
     {footerInfo}
     <div className="flex items-center gap-3">
       <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
@@ -223,7 +223,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
       subtitle={subtitle}
       size="2xl"
     >
-      <div className="flex flex-col h-full bg-surface-canvas">
+      <div className="flex flex-col h-full bg-canvas">
         <form
           id="order-form"
           onSubmit={handleSubmit}
@@ -328,7 +328,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                       icon={ICONS.actions.warning}
                     />
                     {fieldState.error && (
-                      <p className="mt-1.5 text-xs text-feedback-danger-text">{fieldState.error.message}</p>
+                      <p className="mt-1.5 text-xs text-danger-text">{fieldState.error.message}</p>
                     )}
                   </div>
                 );
@@ -356,7 +356,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
             {/* Payment Method - Only in create mode */}
             {mode === 'create' && (
               <div>
-                <label className="block text-xs font-medium text-text-tertiary mb-2">
+                <label className="block text-xs font-medium text-text-3 mb-2">
                   Payment method
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -375,19 +375,19 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                           relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                           ${
                             isSelected
-                              ? 'bg-surface-default border-action-primary border-2'
-                              : 'bg-surface-default border-border-default hover:border-border-strong'
+                              ? 'bg-surface border-primary border-2'
+                              : 'bg-surface border-border hover:border-border-strong'
                           }
                           ${isSubmitting || isProcessingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                         `}
                       >
                         <Icon
                           name={method.icon as IconName}
-                          className={`w-7 h-7 shrink-0 ${isSelected ? 'text-action-primary' : 'text-text-disabled'}`}
+                          className={`w-7 h-7 shrink-0 ${isSelected ? 'text-primary' : 'text-text-disabled'}`}
                         />
                         <span
                           className={`flex-1 text-xs font-medium text-left ${
-                            isSelected ? 'text-text-primary' : 'text-text-secondary'
+                            isSelected ? 'text-text' : 'text-text-2'
                           }`}
                         >
                           {method.label}
@@ -395,12 +395,12 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                         <div
                           className={`
                             absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                            ${isSelected ? 'bg-action-success' : 'bg-transparent border-2 border-border-strong'}
+                            ${isSelected ? 'bg-success' : 'bg-transparent border-2 border-border-strong'}
                           `}
                         >
                           <Icon
                             name={ICONS.actions.check}
-                            className={`w-3 h-3 ${isSelected ? 'text-action-primary-on' : 'text-text-disabled'}`}
+                            className={`w-3 h-3 ${isSelected ? 'text-primary-on' : 'text-text-disabled'}`}
                           />
                         </div>
                       </button>
@@ -430,7 +430,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                   text={`Editing ${displayId.order(order.orderId)}`}
                 />
               ) : (
-                <div className="text-base font-semibold text-action-primary">
+                <div className="text-base font-semibold text-primary">
                   Total: {formatCurrency(totalPrice)}
                 </div>
               )

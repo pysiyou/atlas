@@ -26,7 +26,7 @@ const Backdrop = ({
 }) => {
   const inlineStyle: React.CSSProperties = {
     zIndex,
-    backgroundColor: 'var(--overlay-modal)',
+    backgroundColor: 'var(--overlay)',
     backdropFilter: 'blur(2px)',
   };
 
@@ -103,7 +103,7 @@ const Modal = memo(
     const maxWidthClass = size && sizeClasses[size] ? sizeClasses[size] : maxWidth;
 
     const getModalClasses = () => {
-      return 'relative bg-surface-default border border-border-default rounded-lg shadow-xl w-full';
+      return 'relative bg-surface border border-border rounded-lg shadow-xl w-full';
     };
 
     /**
@@ -184,18 +184,18 @@ const Modal = memo(
                   onClick={handleModalClick}
                 >
                   {/* Header */}
-                  <div className="px-6 py-4 border-b border-border-default bg-surface-default flex items-center justify-between shrink-0">
+                  <div className="px-6 py-4 border-b border-border bg-surface flex items-center justify-between shrink-0">
                     <div className="flex items-start gap-3 min-w-0">
                       <div className="flex flex-col min-w-0">
                         <h2
                           id="modal-title"
-                          className="text-lg font-semibold text-text-primary truncate"
+                          className="text-lg font-semibold text-text truncate"
                           title={typeof title === 'string' ? title : undefined}
                         >
                           {title}
                         </h2>
                         {subtitle && (
-                          <span className="text-sm text-text-tertiary mt-0.5">{subtitle}</span>
+                          <span className="text-sm text-text-3 mt-0.5">{subtitle}</span>
                         )}
                       </div>
                     </div>

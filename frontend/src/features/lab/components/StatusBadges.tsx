@@ -62,7 +62,7 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
   sampleId,
   collectedAt,
   collectedBy,
-  className = 'text-xs text-text-tertiary',
+  className = 'text-xs text-text-3',
 }) => {
   const { getUserName } = useUserLookup();
 
@@ -79,10 +79,10 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
     <span className={className}>
       {formattedSampleId && (
         <>
-          Sample <span className="font-mono text-action-primary">{formattedSampleId}</span>{' '}
+          Sample <span className="font-mono text-primary">{formattedSampleId}</span>{' '}
         </>
       )}
-      collected <span className="text-text-secondary">{formatDate(collectedAt)}</span>
+      collected <span className="text-text-2">{formatDate(collectedAt)}</span>
       {collectedBy && <span> by {getUserName(collectedBy)}</span>}
     </span>
   );
@@ -100,7 +100,7 @@ interface VolumeBadgeProps {
 export const VolumeBadge: React.FC<VolumeBadgeProps> = ({
   volume,
   label = 'mL',
-  className = 'text-text-tertiary',
+  className = 'text-text-3',
 }) => (
   <Badge size="sm" variant="default" className={className}>
     {volume.toFixed(1)} {label}
@@ -156,13 +156,13 @@ export const RecollectionBadge: React.FC<RecollectionBadgeProps> = ({
       {formattedOriginalId && (
         <Badge size="sm" variant="warning" className="flex items-center gap-1">
           <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-          Recollection of <span className="font-mono text-action-primary">{formattedOriginalId}</span>
+          Recollection of <span className="font-mono text-primary">{formattedOriginalId}</span>
         </Badge>
       )}
       {formattedRecollectionId && (
         <Badge size="sm" variant="info" className="flex items-center gap-1">
           <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-          Recollection requested: <span className="font-mono text-action-primary">{formattedRecollectionId}</span>
+          Recollection requested: <span className="font-mono text-primary">{formattedRecollectionId}</span>
         </Badge>
       )}
     </div>
@@ -221,7 +221,7 @@ interface EntryInfoLineProps {
 export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
   enteredAt,
   enteredBy,
-  className = 'text-xs text-text-tertiary',
+  className = 'text-xs text-text-3',
 }) => {
   const { getUserName } = useUserLookup();
 
@@ -229,7 +229,7 @@ export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
 
   return (
     <span className={className}>
-      Results entered <span className="text-text-secondary">{formatDate(enteredAt)}</span>
+      Results entered <span className="text-text-2">{formatDate(enteredAt)}</span>
       {enteredBy && <span> by {getUserName(enteredBy)}</span>}
     </span>
   );

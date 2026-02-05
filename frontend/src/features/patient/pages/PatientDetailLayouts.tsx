@@ -32,7 +32,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6">
       <SectionContainer
         title="Vital Signs"
-        className="shrink-0 bg-surface-default"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
       >
         <VitalSignsDisplay vitalSigns={patient.vitalSigns} />
@@ -40,7 +40,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="General Info"
-        className="shrink-0 bg-surface-default"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
       >
         <GeneralInfoSection patient={patient} layout="grid" />
@@ -48,7 +48,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Medical History"
-        className="shrink-0 bg-surface-default"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
       >
         <MedicalHistorySectionDisplay patient={patient} layout="grid" />
@@ -84,7 +84,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
     <div className="flex-1 grid grid-cols-2 grid-rows-3 gap-4 min-h-0 h-full">
       <SectionContainer
         title="Vital Signs"
-        className="h-full flex flex-col min-h-0 bg-surface-default"
+        className="h-full flex flex-col min-h-0 bg-surface"
         contentClassName="flex-1 min-h-0 overflow-y-auto"
       >
         <VitalSignsDisplay vitalSigns={patient.vitalSigns} />
@@ -92,7 +92,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Reports"
-        className="h-full flex flex-col min-h-0 bg-surface-default"
+        className="h-full flex flex-col min-h-0 bg-surface"
         contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
       >
         <ReportsList orders={orders} />
@@ -100,7 +100,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="General Info"
-        className="h-full flex flex-col min-h-0 bg-surface-default"
+        className="h-full flex flex-col min-h-0 bg-surface"
         contentClassName="flex-1 min-h-0 overflow-y-auto"
       >
         <GeneralInfoSection patient={patient} layout="column" />
@@ -108,7 +108,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Medical History"
-        className="h-full flex flex-col min-h-0 bg-surface-default"
+        className="h-full flex flex-col min-h-0 bg-surface"
         contentClassName="flex-1 min-h-0 overflow-y-auto"
       >
         <MedicalHistorySectionDisplay patient={patient} layout="column" />
@@ -116,7 +116,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Related Orders"
-        className="h-full flex flex-col min-h-0 bg-surface-default col-span-2"
+        className="h-full flex flex-col min-h-0 bg-surface col-span-2"
         contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
         headerClassName="!py-1.5"
         headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}

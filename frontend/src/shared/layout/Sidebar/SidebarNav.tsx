@@ -25,8 +25,8 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   const getNavLinkClasses = (isActive: boolean) => {
     const base = 'flex items-center py-3 text-sm font-medium rounded';
     return isActive
-      ? `${base} bg-action-primary-muted-bg text-action-primary`
-      : `${base} text-text-secondary hover:bg-surface-hover hover:text-text-primary`;
+      ? `${base} bg-primary-muted text-primary`
+      : `${base} text-text-2 hover:bg-surface-hover hover:text-text`;
   };
 
   return (

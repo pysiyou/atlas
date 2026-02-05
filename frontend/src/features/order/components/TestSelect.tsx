@@ -32,7 +32,7 @@ interface TestSelectorProps {
  *
  * Selected tests are shown as removable tags inside the input box, while the
  * input text remains controlled by the parent (used to drive the results list).
- * Tags match the patient tag styling (bg-action-primary-muted-bg, border-border-default) but without avatars.
+ * Tags match the patient tag styling (bg-primary-muted, border-border) but without avatars.
  */
 const TestSearchTagInput: React.FC<{
   selectedTags: Array<{ code: string; name: string }>;
@@ -49,7 +49,7 @@ const TestSearchTagInput: React.FC<{
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-test-search"
-          className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
+          className="text-xs font-medium text-text-3 cursor-pointer truncate min-w-0"
         >
           Tests
         </label>
@@ -63,7 +63,7 @@ const TestSearchTagInput: React.FC<{
         )}
       >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-start pt-2.5 pointer-events-none">
-          <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-text-muted group-hover:text-action-primary transition-colors" />
+          <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-text-muted group-hover:text-primary transition-colors" />
         </div>
 
         {selectedTags.map(({ code, name }) => (
@@ -80,7 +80,7 @@ const TestSearchTagInput: React.FC<{
             <button
               type="button"
               onClick={() => onRemoveTag(code)}
-              className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-action-primary/30 shrink-0"
+              className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-primary/30 shrink-0"
               aria-label={`Remove ${code}`}
             >
               <Icon name={ICONS.actions.closeCircle} className={`w-3 h-3 ${tagStyles.remove}`} />
@@ -96,12 +96,12 @@ const TestSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedTags.length === 0 ? 'Search by code or name…' : ''}
-          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-normal"
+          className="flex-1 min-w-[120px] outline-none text-xs text-text placeholder:text-text-muted bg-transparent leading-normal"
           autoComplete="off"
         />
       </div>
 
-      {error && <p className="mt-1.5 text-xs text-feedback-danger-text">{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-danger-text">{error}</p>}
     </div>
   );
 };
@@ -190,7 +190,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         </div>
 
         <div className="shrink-0 pb-[2px]">
-          <div className="text-base font-semibold text-action-primary">
+          <div className="text-base font-semibold text-primary">
             {selectedTests.length} {selectedTests.length === 1 ? 'test' : 'tests'}
           </div>
         </div>
@@ -200,23 +200,23 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
       {isPopoverOpen && hasSearch && (
         <div
           className={[
-            'mt-1 text-text-primary',
-            'border border-border-default/80',
+            'mt-1 text-text',
+            'border border-border/80',
             'rounded',
             'overflow-hidden',
-            'bg-surface-default',
-            'shadow-2',
+            'bg-surface',
+            'shadow-md',
             'ring-1 ring-black/5',
           ].join(' ')}
         >
           {/* Header row */}
-          <div className="px-4 py-2.5 bg-surface-canvas/70 border-b border-border-default/70 flex items-center justify-between">
-            <div className="text-xs font-medium text-text-tertiary">Matching tests</div>
-            <div className="text-xs text-text-tertiary">{visibleTests.length} result(s)</div>
+          <div className="px-4 py-2.5 bg-canvas/70 border-b border-border/70 flex items-center justify-between">
+            <div className="text-xs font-medium text-text-3">Matching tests</div>
+            <div className="text-xs text-text-3">{visibleTests.length} result(s)</div>
           </div>
 
           {visibleTests.length === 0 ? (
-            <div className="px-4 py-3 text-xs text-text-tertiary">No tests found</div>
+            <div className="px-4 py-3 text-xs text-text-3">No tests found</div>
           ) : (
             <div className="max-h-[320px] overflow-y-auto divide-y divide-border-subtle">
               {visibleTests.map(test => {
@@ -231,12 +231,12 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                     type="button"
                     onClick={() => onToggleTest(code)}
                     className={[
-                      'w-full text-left px-4 py-3 text-text-primary',
+                      'w-full text-left px-4 py-3 text-text',
                       'transition-colors',
                       'flex items-center justify-between gap-4',
                       'hover:bg-surface-hover',
-                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-opacity-30 focus-visible:bg-surface-hover',
-                      isSelected ? 'bg-feedback-success-bg' : 'bg-surface-default',
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-opacity-30 focus-visible:bg-surface-hover',
+                      isSelected ? 'bg-success-bg' : 'bg-surface',
                     ].join(' ')}
                   >
                     <div className="min-w-0">
@@ -255,7 +255,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                         {formatCurrency(price)}
                       </div>
                       {isSelected && (
-                        <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-feedback-success-text" />
+                        <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-success-text" />
                       )}
                     </div>
                   </button>

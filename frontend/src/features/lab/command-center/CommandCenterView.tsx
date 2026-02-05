@@ -11,7 +11,7 @@ import { createLabSegments } from './utils';
 import { ICONS } from '@/utils';
 
 const rowCellClass =
-  'min-h-0 overflow-hidden border-border-default flex items-center justify-center border-r last:border-r-0';
+  'min-h-0 overflow-hidden border-border flex items-center justify-center border-r last:border-r-0';
 
 export const CommandCenterView: React.FC = () => {
   const {
@@ -43,7 +43,7 @@ export const CommandCenterView: React.FC = () => {
       style={{ gridTemplateRows: '20fr 40fr 40fr' }}
     >
       {/* Row 1: Sampling (X of total), Result entry, Validation — totals = completed + pending; trend = count-based */}
-      <div className="min-h-0 overflow-hidden border-b border-border-default grid grid-cols-3">
+      <div className="min-h-0 overflow-hidden border-b border-border grid grid-cols-3">
         <div className={`${rowCellClass} flex items-stretch p-2`}>
           <CommandCenterMetricCard
             title="Sampled today"
@@ -74,7 +74,7 @@ export const CommandCenterView: React.FC = () => {
       </div>
       {/* Row 2: 2/3 + 1/3 */}
       <div
-        className="min-h-0 overflow-hidden border-b border-border-default grid"
+        className="min-h-0 overflow-hidden border-b border-border grid"
         style={{ gridTemplateColumns: '2fr 1fr' }}
       >
         <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2`} />

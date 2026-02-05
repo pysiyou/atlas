@@ -42,7 +42,7 @@ const PatientSearchTagInput: React.FC<{
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-patient-search"
-          className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
+          className="text-xs font-medium text-text-3 cursor-pointer truncate min-w-0"
         >
           Patient
         </label>
@@ -52,12 +52,12 @@ const PatientSearchTagInput: React.FC<{
         className={cn(
           inputContainerBase,
           'group relative pl-10 pr-3 py-2.5 flex flex-wrap gap-2 items-center min-h-[42px]',
-          disabled && 'bg-surface-canvas opacity-60 cursor-not-allowed',
+          disabled && 'bg-canvas opacity-60 cursor-not-allowed',
           error && inputContainerError
         )}
       >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-text-muted group-hover:text-action-primary transition-colors" />
+          <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-text-muted group-hover:text-primary transition-colors" />
         </div>
 
         {selectedPatient && (
@@ -78,7 +78,7 @@ const PatientSearchTagInput: React.FC<{
               <button
                 type="button"
                 onClick={onClearSelection}
-                className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-action-primary/30 shrink-0"
+                className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-primary/30 shrink-0"
                 aria-label="Clear selected patient"
               >
                 <Icon name={ICONS.actions.closeCircle} className={`w-3 h-3 ${tagStyles.remove}`} />
@@ -95,13 +95,13 @@ const PatientSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedPatient ? 'Search to change…' : 'Search by name, ID, or phone…'}
-          className="flex-1 min-w-[140px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-normal"
+          className="flex-1 min-w-[140px] outline-none text-xs text-text placeholder:text-text-muted bg-transparent leading-normal"
           autoComplete="off"
           disabled={disabled}
         />
       </div>
 
-      {error && <p className="mt-1.5 text-xs text-feedback-danger-text">{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-danger-text">{error}</p>}
     </div>
   );
 };
@@ -172,15 +172,15 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
         <div
           className={[
             'mt-1',
-            'border border-border-default/80',
+            'border border-border/80',
             'rounded',
-            'bg-surface-default',
-            'shadow-lg shadow-2',
+            'bg-surface',
+            'shadow-lg shadow-md',
             'ring-1 ring-black/5',
           ].join(' ')}
         >
           {visiblePatients.length === 0 ? (
-            <div className="px-4 py-3 text-xs text-text-tertiary">No patients found</div>
+            <div className="px-4 py-3 text-xs text-text-3">No patients found</div>
           ) : (
             <div className="max-h-[320px] overflow-y-auto p-2">
               <div className="space-y-1">
@@ -200,9 +200,9 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         'rounded',
                         'transition-colors',
                         'flex items-center justify-between gap-3',
-                        'hover:bg-surface-canvas',
-                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-opacity-30',
-                        isSelected ? 'bg-feedback-success-bg' : 'bg-surface-default',
+                        'hover:bg-canvas',
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-opacity-30',
+                        isSelected ? 'bg-success-bg' : 'bg-surface',
                       ].join(' ')}
                     >
                       <div className="min-w-0 flex items-center gap-2.5 flex-1">
@@ -214,19 +214,19 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                           className="shrink-0"
                         />
                         {/* Patient name */}
-                        <span className="text-xs font-medium text-text-primary truncate">
+                        <span className="text-xs font-medium text-text truncate">
                           {patient.fullName}
                         </span>
                       </div>
 
                       <div className="shrink-0 flex items-center gap-2">
                         {/* Patient ID on the right */}
-                        <span className="text-[11px] font-semibold font-mono text-action-primary">
+                        <span className="text-[11px] font-semibold font-mono text-primary">
                           {displayId.patient(patient.id)}
                         </span>
                         {/* Check icon if selected */}
                         {isSelected && (
-                          <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-feedback-success-text" />
+                          <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-success-text" />
                         )}
                       </div>
                     </button>

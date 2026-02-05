@@ -3,90 +3,126 @@
 @theme {
   --text-xxs: 10px;
 
-  /* Actions */
-  --color-action-primary: var(--action-primary);
-  --color-action-primary-hover: var(--action-primary-hover);
-  --color-action-primary-muted-bg: var(--action-primary-muted-bg);
-  --color-action-primary-on: var(--action-primary-on);
-  --color-action-primary-text: var(--action-primary-text);
-  --color-action-secondary-bg: var(--action-secondary-bg);
-  --color-action-secondary-bg-hover: var(--action-secondary-bg-hover);
-  --color-action-secondary-text: var(--action-secondary-text);
-  --color-action-danger: var(--action-danger);
-  --color-action-danger-hover: var(--action-danger-hover);
-  --color-action-danger-on: var(--action-danger-on);
-  --color-action-success: var(--action-success);
-  --color-action-success-on: var(--action-success-on);
-  --color-action-warning: var(--action-warning);
-  --color-action-warning-on: var(--action-warning-on);
+  /* ═══════════════════════════════════════════════════════════════════════════
+     PRIMARY ACTIONS
+     Interactive elements: buttons, links, focus states
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --color-primary: var(--action-primary);
+  --color-primary-hover: var(--action-primary-hover);
+  --color-primary-muted: var(--action-primary-muted-bg);
+  --color-primary-on: var(--action-primary-on);
+  --color-primary-text: var(--action-primary-text);
 
-  /* Badge (main-branch tinted: brand/danger/success/warning/info/border) */
-  --color-badge-bg: var(--badge-bg);
-  --color-brand: var(--action-primary);
+  /* ═══════════════════════════════════════════════════════════════════════════
+     SECONDARY ACTIONS
+     Less prominent interactive elements
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --color-secondary: var(--action-secondary-bg);
+  --color-secondary-hover: var(--action-secondary-bg-hover);
+  --color-secondary-text: var(--action-secondary-text);
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     SEMANTIC ACTIONS
+     Contextual action states: danger, success, warning
+     ═══════════════════════════════════════════════════════════════════════════ */
   --color-danger: var(--action-danger);
-  --color-success: var(--action-success);
-  --color-warning: var(--action-warning);
-  --color-info: var(--chart-series-accent);
-  --color-border: var(--border-default);
+  --color-danger-hover: var(--action-danger-hover);
+  --color-danger-on: var(--action-danger-on);
 
-  /* Surfaces */
-  --color-surface-canvas: var(--surface-canvas);
-  --color-surface-default: var(--surface-default);
+  --color-success: var(--action-success);
+  --color-success-on: var(--action-success-on);
+
+  --color-warning: var(--action-warning);
+  --color-warning-on: var(--action-warning-on);
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     SURFACES
+     Backgrounds for containers, cards, panels
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --color-canvas: var(--surface-canvas);
+  --color-surface: var(--surface-default);
   --color-surface-hover: var(--surface-hover);
   --color-surface-selected: var(--surface-selected);
-  --color-surface-report-panel: var(--surface-report-panel);
+  --color-surface-report: var(--surface-report-panel);
 
-  /* Text */
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-tertiary: var(--text-tertiary);
+  /* ═══════════════════════════════════════════════════════════════════════════
+     TEXT
+     Typography hierarchy: primary → tertiary, muted, disabled, inverse
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --color-text: var(--text-primary);
+  --color-text-2: var(--text-secondary);
+  --color-text-3: var(--text-tertiary);
   --color-text-muted: var(--text-muted);
   --color-text-disabled: var(--text-disabled);
   --color-text-inverse: var(--text-inverse);
 
-  /* Borders */
-  --color-border-default: var(--border-default);
+  /* ═══════════════════════════════════════════════════════════════════════════
+     BORDERS
+     Dividers, outlines, focus/error states
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --color-border: var(--border-default);
   --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
   --color-border-focus: var(--border-focus);
   --color-border-error: var(--border-error);
   --color-border-hover: var(--border-hover);
 
-  /* Feedback — success */
-  --color-feedback-success-bg: var(--feedback-success-bg);
-  --color-feedback-success-bg-strong: var(--feedback-success-bg-strong);
-  --color-feedback-success-text: var(--feedback-success-text);
-  --color-feedback-success-text-strong: var(--feedback-success-text-strong);
-  --color-feedback-success-border: var(--feedback-success-border);
+  /* ═══════════════════════════════════════════════════════════════════════════
+     FEEDBACK - SUCCESS
+     Positive states: completion, validation, confirmation
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --color-success-bg: var(--feedback-success-bg);
+  --color-success-bg-strong: var(--feedback-success-bg-strong);
+  --color-success-text: var(--feedback-success-text);
+  --color-success-text-strong: var(--feedback-success-text-strong);
+  --color-success-border: var(--feedback-success-border);
 
-  /* Feedback — warning */
-  --color-feedback-warning-bg: var(--feedback-warning-bg);
-  --color-feedback-warning-bg-strong: var(--feedback-warning-bg-strong);
-  --color-feedback-warning-text: var(--feedback-warning-text);
-  --color-feedback-warning-text-strong: var(--feedback-warning-text-strong);
-  --color-feedback-warning-border: var(--feedback-warning-border);
-  --color-feedback-warning-border-strong: var(--feedback-warning-border-strong);
+  /* ═══════════════════════════════════════════════════════════════════════════
+     FEEDBACK - WARNING
+     Cautionary states: pending, requires attention
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --color-warning-bg: var(--feedback-warning-bg);
+  --color-warning-bg-strong: var(--feedback-warning-bg-strong);
+  --color-warning-text: var(--feedback-warning-text);
+  --color-warning-text-strong: var(--feedback-warning-text-strong);
+  --color-warning-border: var(--feedback-warning-border);
+  --color-warning-border-strong: var(--feedback-warning-border-strong);
 
-  /* Feedback — danger */
-  --color-feedback-danger-bg: var(--feedback-danger-bg);
-  --color-feedback-danger-bg-strong: var(--feedback-danger-bg-strong);
-  --color-feedback-danger-text: var(--feedback-danger-text);
-  --color-feedback-danger-text-strong: var(--feedback-danger-text-strong);
-  --color-feedback-danger-border: var(--feedback-danger-border);
-  --color-feedback-danger-border-strong: var(--feedback-danger-border-strong);
+  /* ═══════════════════════════════════════════════════════════════════════════
+     FEEDBACK - DANGER
+     Error states: failures, destructive, critical
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --color-danger-bg: var(--feedback-danger-bg);
+  --color-danger-bg-strong: var(--feedback-danger-bg-strong);
+  --color-danger-text: var(--feedback-danger-text);
+  --color-danger-text-strong: var(--feedback-danger-text-strong);
+  --color-danger-border: var(--feedback-danger-border);
+  --color-danger-border-strong: var(--feedback-danger-border-strong);
 
-  /* Charts */
+  /* ═══════════════════════════════════════════════════════════════════════════
+     BADGE
+     Tag/pill component backgrounds
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --color-badge: var(--badge-bg);
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     CHARTS
+     Data visualization: axes, tooltips, series
+     ═══════════════════════════════════════════════════════════════════════════ */
   --color-chart-grid: var(--chart-grid);
   --color-chart-axis: var(--chart-axis);
-  --color-chart-tooltip-bg: var(--chart-tooltip-bg);
+  --color-chart-tooltip: var(--chart-tooltip-bg);
   --color-chart-tooltip-border: var(--chart-tooltip-border);
-  --color-chart-series-primary: var(--chart-series-primary);
-  --color-chart-series-success: var(--chart-series-success);
-  --color-chart-series-danger: var(--chart-series-danger);
-  --color-chart-series-accent: var(--chart-series-accent);
-  --color-chart-series-accent-light: var(--chart-series-accent-light);
+  --color-chart-primary: var(--chart-series-primary);
+  --color-chart-success: var(--chart-series-success);
+  --color-chart-danger: var(--chart-series-danger);
+  --color-chart-accent: var(--chart-series-accent);
+  --color-chart-accent-light: var(--chart-series-accent-light);
 
-  /* Primitives (for neutral/gray utilities used in components) */
+  /* ═══════════════════════════════════════════════════════════════════════════
+     NEUTRALS (Primitives)
+     Raw gray scale for direct usage when semantic tokens don't fit
+     ═══════════════════════════════════════════════════════════════════════════ */
   --color-neutral-0: var(--primitive-neutral-0);
   --color-neutral-50: var(--primitive-neutral-50);
   --color-neutral-100: var(--primitive-neutral-100);
@@ -101,23 +137,32 @@
   --color-neutral-900: var(--primitive-neutral-900);
   --color-neutral-950: var(--primitive-neutral-950);
 
-  /* Overlay */
-  --color-overlay-modal: var(--overlay-modal);
+  /* ═══════════════════════════════════════════════════════════════════════════
+     OVERLAY
+     Modal backdrops, dimmed backgrounds
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --color-overlay: var(--overlay-modal);
 
-  /* Shadows */
-  --shadow-1: var(--shadow-1);
-  --shadow-2: var(--shadow-2);
+  /* ═══════════════════════════════════════════════════════════════════════════
+     SHADOWS
+     Elevation levels for depth hierarchy
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --shadow-sm: var(--shadow-1);
+  --shadow-md: var(--shadow-2);
   --shadow-footer: var(--shadow-footer);
 
-  /* Auth */
+  /* ═══════════════════════════════════════════════════════════════════════════
+     AUTH (Isolated Module)
+     Login/registration specific tokens - kept separate as scoped to auth flow
+     ═══════════════════════════════════════════════════════════════════════════ */
   --color-auth-canvas: var(--auth-canvas);
   --color-auth-panel: var(--auth-panel);
   --color-auth-panel-hover: var(--auth-panel-hover);
-  --color-auth-input-bg: var(--auth-input-bg);
+  --color-auth-input: var(--auth-input-bg);
   --color-auth-input-border: var(--auth-input-border);
-  --color-auth-input-border-focus: var(--auth-input-border-focus);
-  --color-auth-text-primary: var(--auth-text-primary);
-  --color-auth-text-secondary: var(--auth-text-secondary);
+  --color-auth-input-focus: var(--auth-input-border-focus);
+  --color-auth-text: var(--auth-text-primary);
+  --color-auth-text-2: var(--auth-text-secondary);
   --color-auth-text-muted: var(--auth-text-muted);
   --color-auth-text-light: var(--auth-text-light);
   --color-auth-accent: var(--auth-accent);
@@ -127,38 +172,38 @@
   --color-auth-border: var(--auth-border);
   --color-auth-border-light: var(--auth-border-light);
   --color-auth-border-hover: var(--auth-border-hover);
-  --color-auth-error-bg: var(--auth-error-bg);
-  --color-auth-error-bg-light: var(--auth-error-bg-light);
+  --color-auth-error: var(--auth-error-bg);
+  --color-auth-error-light: var(--auth-error-bg-light);
   --color-auth-error-border: var(--auth-error-border);
   --color-auth-error-text: var(--auth-error-text);
   --color-auth-error-icon: var(--auth-error-icon);
-  --color-auth-feature-card-bg: var(--auth-feature-card-bg);
-  --color-auth-feature-card-hover: var(--auth-feature-card-hover);
-  --color-auth-feature-card-border: var(--auth-feature-card-border);
-  --color-auth-feature-card-border-hover: var(--auth-feature-card-border-hover);
-  --color-auth-feature-card-icon-bg: var(--auth-feature-card-icon-bg);
-  --color-auth-feature-card-icon-bg-hover: var(--auth-feature-card-icon-bg-hover);
-  --color-auth-feature-card-icon-border: var(--auth-feature-card-icon-border);
-  --color-auth-user-badge-bg: var(--auth-user-badge-bg);
-  --color-auth-user-badge-border: var(--auth-user-badge-border);
-  --color-auth-user-badge-icon: var(--auth-user-badge-icon);
+  --color-auth-card: var(--auth-feature-card-bg);
+  --color-auth-card-hover: var(--auth-feature-card-hover);
+  --color-auth-card-border: var(--auth-feature-card-border);
+  --color-auth-card-border-hover: var(--auth-feature-card-border-hover);
+  --color-auth-card-icon: var(--auth-feature-card-icon-bg);
+  --color-auth-card-icon-hover: var(--auth-feature-card-icon-bg-hover);
+  --color-auth-card-icon-border: var(--auth-feature-card-icon-border);
+  --color-auth-badge: var(--auth-user-badge-bg);
+  --color-auth-badge-border: var(--auth-user-badge-border);
+  --color-auth-badge-icon: var(--auth-user-badge-icon);
 }
 
 body {
   font-family: var(--font-sans);
 }
 
-/* RSuite DateRangePicker Overrides — use new semantic tokens */
+/* RSuite DateRangePicker Overrides */
 .rs-picker-toggle {
   @apply !border-border-strong !rounded !py-2 !px-3 !h-[42px] !flex !items-center;
 }
 
 .rs-picker-toggle:hover {
-  @apply !border-action-primary;
+  @apply !border-primary;
 }
 
 .rs-picker-toggle.rs-btn-active {
-  @apply !border-action-primary !shadow-none !ring-2 !ring-action-primary;
+  @apply !border-primary !shadow-none !ring-2 !ring-primary;
 }
 
 .rs-picker-toggle {
@@ -174,15 +219,15 @@ body {
 }
 
 .rs-calendar-table-cell-selected .rs-calendar-table-cell-content {
-  @apply !bg-action-primary !border-action-primary;
+  @apply !bg-primary !border-primary;
 }
 
 .rs-calendar-table-cell-in-range:before {
-  @apply !bg-action-primary-muted-bg;
+  @apply !bg-primary-muted;
 }
 
 .rs-btn-primary {
-  @apply !bg-action-primary !border-action-primary;
+  @apply !bg-primary !border-primary;
 }
 
 .rs-picker-menu {

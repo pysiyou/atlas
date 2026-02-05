@@ -60,11 +60,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       // Default fallback UI
       return (
-        <div className="min-h-screen flex items-center justify-center bg-surface-canvas px-4">
-          <div className="max-w-md w-full bg-surface-default rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-center w-12 h-12 mx-auto bg-feedback-danger-bg-strong rounded-full">
+        <div className="min-h-screen flex items-center justify-center bg-canvas px-4">
+          <div className="max-w-md w-full bg-surface rounded-lg shadow-lg p-6">
+            <div className="flex items-center justify-center w-12 h-12 mx-auto bg-danger-bg-strong rounded-full">
               <svg
-                className="w-6 h-6 text-feedback-danger-text"
+                className="w-6 h-6 text-danger-text"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -78,16 +78,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </svg>
             </div>
 
-            <h2 className="mt-4 text-xl font-semibold text-center text-text-primary">
+            <h2 className="mt-4 text-xl font-semibold text-center text-text">
               Something went wrong
             </h2>
 
-            <p className="mt-2 text-sm text-center text-text-tertiary">
+            <p className="mt-2 text-sm text-center text-text-3">
               We're sorry, but something unexpected happened. Please try refreshing the page.
             </p>
 
             {import.meta.env.DEV && this.state.error && (
-              <div className="mt-4 p-3 bg-neutral-100 rounded text-xs font-mono text-text-primary overflow-auto max-h-40">
+              <div className="mt-4 p-3 bg-neutral-100 rounded text-xs font-mono text-text overflow-auto max-h-40">
                 <p className="font-semibold mb-1">Error Details:</p>
                 <p>{this.state.error.message}</p>
                 {this.state.error.stack && (

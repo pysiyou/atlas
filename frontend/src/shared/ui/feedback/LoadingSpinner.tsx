@@ -32,7 +32,7 @@ const LOADER_SEED = 42;
 
 export const ClaudeLoader: React.FC<ClaudeLoaderProps> = ({
   size = 'md',
-  color = 'var(--feedback-success-text)',
+  color = 'var(--success-text)',
   armCount = 12,
 }) => {
   const pixelSize = SIZE_MAP[size];

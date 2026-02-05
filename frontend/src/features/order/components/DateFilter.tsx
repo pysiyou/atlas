@@ -281,10 +281,10 @@ export const DateFilter: React.FC<DateFilterProps> = ({
         <div
           className={cn(inputTrigger, 'w-full', isOpen && inputTriggerOpen, className)}
         >
-          <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted group-hover:text-action-primary transition-colors shrink-0" />
-          <div className="flex-1 min-w-0 text-xs text-text-primary truncate">
+          <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted group-hover:text-primary transition-colors shrink-0" />
+          <div className="flex-1 min-w-0 text-xs text-text truncate">
             {value ? (
-              <span className="text-text-primary">
+              <span className="text-text">
                 {format(value[0], 'MMM dd')} - {format(value[1], 'MMM dd')}
               </span>
             ) : (
@@ -308,7 +308,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
             >
               <Icon
                 name={ICONS.actions.closeCircle}
-                className="w-3.5 h-3.5 text-text-disabled hover:text-text-tertiary"
+                className="w-3.5 h-3.5 text-text-disabled hover:text-text-3"
               />
             </button>
           )}
@@ -346,7 +346,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
           />
 
           {/* Separator */}
-          <div className="my-3 border-t border-border-default" />
+          <div className="my-3 border-t border-border" />
 
           {/* Quick Presets */}
           <div className="mt-3">
@@ -372,13 +372,13 @@ export const DateFilter: React.FC<DateFilterProps> = ({
 
           {/* Apply Button */}
           {tempStart && (
-            <div className="mt-3 pt-3 border-t border-border-default">
+            <div className="mt-3 pt-3 border-t border-border">
               <button
                 onClick={() => {
                   handleApply();
                   close();
                 }}
-                className="w-full px-3 py-2 bg-action-primary hover:opacity-90 text-text-inverse text-xs font-medium rounded transition-colors"
+                className="w-full px-3 py-2 bg-primary hover:opacity-90 text-text-inverse text-xs font-medium rounded transition-colors"
               >
                 Apply
               </button>

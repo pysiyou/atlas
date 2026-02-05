@@ -51,23 +51,23 @@ export const CollectionDetailHeaderBadges: React.FC<CollectionDetailHeaderBadges
       )}
       <StatusBadgeRow sampleType={sample.sampleType} priority={sample.priority || 'low'} />
       {getCollectionRequirements(sample.sampleType).isDerived && (
-        <Badge size="sm" variant="default" className="text-text-tertiary">
+        <Badge size="sm" variant="default" className="text-text-3">
           {getCollectionRequirements(sample.sampleType).label}
         </Badge>
       )}
       {(isCollected || isRejected) && 'collectedVolume' in sample && (
-        <Badge size="sm" variant="default" className="text-text-tertiary">
+        <Badge size="sm" variant="default" className="text-text-3">
           {formatVolume(sample.collectedVolume)} {isRejected ? 'was collected' : 'collected'}
         </Badge>
       )}
-      <Badge size="sm" variant="default" className="text-text-tertiary">
+      <Badge size="sm" variant="default" className="text-text-3">
         {formatVolume(sample.requiredVolume)} required
       </Badge>
       <Badge variant={isPending ? 'pending' : isRejected ? 'rejected' : 'collected'} size="sm" />
       {isRejected && rejectedSample?.recollectionSampleId && (
         <Badge size="sm" variant="info" className="flex items-center gap-1">
           <Icon name={ICONS.actions.checkCircle} className="w-3 h-3" />
-          Recollection: <span className="font-mono text-action-primary">{displayId.sample(rejectedSample.recollectionSampleId)}</span>
+          Recollection: <span className="font-mono text-primary">{displayId.sample(rejectedSample.recollectionSampleId)}</span>
         </Badge>
       )}
     </>

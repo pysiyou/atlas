@@ -23,12 +23,12 @@ export const AffiliationPopover: React.FC<AffiliationPopoverProps> = ({ affiliat
       {() => (
         <div className="flex flex-col w-full max-w-xs">
           <div className="p-4">
-            <h3 className="text-sm font-medium text-text-primary mb-3 border-b border-border-subtle pb-2">
+            <h3 className="text-sm font-medium text-text mb-3 border-b border-border-subtle pb-2">
               Affiliation Details
             </h3>
             <AffiliationInfo affiliation={affiliation} />
           </div>
-          <div className="px-4 py-3 bg-surface-canvas border-t border-border-subtle">
+          <div className="px-4 py-3 bg-canvas border-t border-border-subtle">
             <FooterInfo icon={ICONS.dataFields.user} text="Viewing affiliation" />
           </div>
         </div>

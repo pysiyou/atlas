@@ -81,7 +81,7 @@ export const CONTAINER_COLOR_CONFIG: Record<
     label: 'Gray',
     meaning: 'Fluoride (glucose)',
     bgClass: 'bg-gray-500',
-    textClass: 'text-text-tertiary',
+    textClass: 'text-text-3',
   },
   black: {
     label: 'Black',

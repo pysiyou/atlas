@@ -163,23 +163,23 @@ export const TabsList: React.FC<TabsListProps> = ({
   const getTabButtonClasses = (variant: 'underline' | 'pills', isActive: boolean) => {
     const base = 'relative px-4 py-2 text-sm font-medium transition-colors duration-200 whitespace-nowrap flex items-center gap-2';
     if (variant === 'underline') {
-      return `${base} ${isActive ? 'text-action-primary' : 'text-text-secondary hover:text-text-primary'}`;
+      return `${base} ${isActive ? 'text-primary' : 'text-text-2 hover:text-text'}`;
     }
-    return `${base} rounded ${isActive ? 'bg-surface-default text-text-primary' : 'text-text-secondary hover:bg-surface-hover'}`;
+    return `${base} rounded ${isActive ? 'bg-surface text-text' : 'text-text-2 hover:bg-surface-hover'}`;
   };
 
   const getTabCountBadgeClasses = (variant: 'underline' | 'pills', isActive: boolean) => {
     const base = 'inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-medium';
     if (variant === 'underline') {
-      return `${base} ${isActive ? 'bg-action-primary-muted-bg text-action-primary' : 'bg-neutral-100 text-text-tertiary'}`;
+      return `${base} ${isActive ? 'bg-primary-muted text-primary' : 'bg-neutral-100 text-text-3'}`;
     }
-    return `${base} ${isActive ? 'bg-action-primary-muted-bg text-action-primary' : 'bg-neutral-100 text-text-tertiary'}`;
+    return `${base} ${isActive ? 'bg-primary-muted text-primary' : 'bg-neutral-100 text-text-3'}`;
   };
 
   return (
     <div
       ref={containerRef}
-      className={`flex items-center ${variant === 'underline' ? 'border-b border-border-default relative' : 'gap-1 bg-surface-canvas p-1 rounded-lg'} ${className}`}
+      className={`flex items-center ${variant === 'underline' ? 'border-b border-border relative' : 'gap-1 bg-canvas p-1 rounded-lg'} ${className}`}
     >
       {tabs.map(tab => {
         const isActive = activeTabId === tab.id;
@@ -209,7 +209,7 @@ export const TabsList: React.FC<TabsListProps> = ({
       {/* If headerRef is provided, indicator is rendered in TabbedSectionContainer wrapper */}
       {variant === 'underline' && !headerRef && (
         <div
-          className="absolute bottom-0 h-0.5 bg-action-primary"
+          className="absolute bottom-0 h-0.5 bg-primary"
           style={{
             left: `${indicator.left}px`,
             width: `${indicator.width}px`,

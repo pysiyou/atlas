@@ -15,10 +15,10 @@ import {
 } from 'recharts';
 import { format } from 'date-fns';
 
-const BAR_COLOR = 'var(--chart-series-success)';
+const BAR_COLOR = 'var(--chart-success)';
 const AXIS_COLOR = 'var(--chart-axis)';
 const GRID_STROKE = 'var(--chart-grid)';
-const TOOLTIP_BG = 'var(--chart-tooltip-bg)';
+const TOOLTIP_BG = 'var(--chart-tooltip)';
 const TOOLTIP_BORDER = 'var(--chart-tooltip-border)';
 
 interface TrendPoint {
@@ -43,7 +43,7 @@ export const TestsByDayBarChart: React.FC<TestsByDayBarChartProps> = ({
 
   if (chartData.length === 0) {
     return (
-      <div className="flex items-center justify-center text-text-tertiary text-sm" style={{ height }}>
+      <div className="flex items-center justify-center text-text-3 text-sm" style={{ height }}>
         No data
       </div>
     );

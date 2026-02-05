@@ -77,13 +77,13 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                     !selected &&
                     !inRange &&
                     !disabled &&
-                    'text-text-secondary hover:bg-neutral-100',
+                    'text-text-2 hover:bg-neutral-100',
                   isToday &&
                     !selected &&
                     !inRange &&
                     !disabled &&
-                    'font-bold text-action-primary bg-action-primary-muted-bg',
-                  inRange && !selected && 'bg-action-primary-muted-bg text-action-primary rounded-none',
+                    'font-bold text-primary bg-primary-muted',
+                  inRange && !selected && 'bg-primary-muted text-primary rounded-none',
                   value &&
                     isSameDay(day, value[0]) &&
                     !isSameDay(value[0], value[1]) &&
@@ -92,7 +92,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                     isSameDay(day, value[1]) &&
                     !isSameDay(value[0], value[1]) &&
                     'rounded-r-full rounded-l-none',
-                  selected && 'bg-action-primary text-action-primary-on hover:bg-action-primary-hover z-10'
+                  selected && 'bg-primary text-primary-on hover:bg-primary-hover z-10'
                 )}
               >
                 {format(day, 'd')}
@@ -122,10 +122,10 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
               className={cn(
                 'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
                 disabled && 'opacity-30 cursor-not-allowed',
-                !disabled && isSameMonth(month, new Date()) && 'text-action-primary font-bold bg-action-primary-muted-bg',
+                !disabled && isSameMonth(month, new Date()) && 'text-primary font-bold bg-primary-muted',
                 !disabled && isSameMonth(month, currentMonth)
-                  ? 'bg-action-primary-muted-bg text-action-primary'
-                  : 'hover:bg-neutral-100 text-text-secondary',
+                  ? 'bg-primary-muted text-primary'
+                  : 'hover:bg-neutral-100 text-text-2',
                 !disabled && 'hover:bg-neutral-100'
               )}
             >
@@ -156,10 +156,10 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
               disabled && 'opacity-30 cursor-not-allowed',
               !disabled &&
                 year.getFullYear() === new Date().getFullYear() &&
-                'text-action-primary font-bold bg-action-primary-muted-bg',
+                'text-primary font-bold bg-primary-muted',
               !disabled && year.getFullYear() === currentMonth.getFullYear()
-                ? 'bg-action-primary-muted-bg text-action-primary'
-                : 'hover:bg-neutral-100 text-text-secondary',
+                ? 'bg-primary-muted text-primary'
+                : 'hover:bg-neutral-100 text-text-2',
               !disabled && 'hover:bg-neutral-100'
             )}
           >

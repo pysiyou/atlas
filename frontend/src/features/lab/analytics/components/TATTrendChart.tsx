@@ -16,10 +16,10 @@ import {
 import type { TATMetrics } from '../types';
 import { format } from 'date-fns';
 
-const CHART_COLOR = 'var(--chart-series-accent)';
+const CHART_COLOR = 'var(--chart-accent)';
 const AXIS_COLOR = 'var(--chart-axis)';
 const GRID_STROKE = 'var(--chart-grid)';
-const TOOLTIP_BG = 'var(--chart-tooltip-bg)';
+const TOOLTIP_BG = 'var(--chart-tooltip)';
 const TOOLTIP_BORDER = 'var(--chart-tooltip-border)';
 
 export type TATTrendMode = 'tat' | 'compliance';
@@ -44,7 +44,7 @@ export const TATTrendChart: React.FC<TATTrendChartProps> = ({
 
   if (chartData.length === 0) {
     return (
-      <div className="flex items-center justify-center text-text-tertiary text-sm" style={{ height }}>
+      <div className="flex items-center justify-center text-text-3 text-sm" style={{ height }}>
         No trend data
       </div>
     );

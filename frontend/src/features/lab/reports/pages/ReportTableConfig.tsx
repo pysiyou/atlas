@@ -50,20 +50,20 @@ export const createReportTableConfig = (
 
   const renderPatientName = (test: ValidatedTest) => (
     <div className="min-w-0">
-      <div className="text-text-primary truncate">{test.patientName}</div>
+      <div className="text-text truncate">{test.patientName}</div>
       <div className={DATA_ID_SECONDARY}>{displayId.patient(test.patientId)}</div>
     </div>
   );
 
   const renderTestName = (test: ValidatedTest) => (
     <div className="min-w-0">
-      <div className="text-text-primary truncate">{test.testName}</div>
+      <div className="text-text truncate">{test.testName}</div>
       <div className={DATA_ID_SECONDARY}>{test.testCode}</div>
     </div>
   );
 
   const renderOrderDate = (test: ValidatedTest) => (
-    <span className="text-xs text-text-tertiary truncate block">{formatDate(test.orderDate)}</span>
+    <span className="text-xs text-text-3 truncate block">{formatDate(test.orderDate)}</span>
   );
 
   const renderStatus = () => <Badge variant="validated" size="sm" />;

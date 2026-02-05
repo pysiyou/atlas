@@ -61,7 +61,7 @@ export const InfoField: React.FC<InfoFieldProps> = ({
   return (
     <div className={`flex items-center justify-between gap-4 ${className}`}>
       <div className="flex items-center gap-2">
-        {icon && <Icon name={icon} className="w-4 h-4 text-text-tertiary flex-shrink-0" />}
+        {icon && <Icon name={icon} className="w-4 h-4 text-text-3 flex-shrink-0" />}
         <div className={`font-medium whitespace-nowrap ${DETAIL_LABEL}`}>{label}</div>
       </div>
       <div className={`text-right min-w-0 ${DETAIL_VALUE}`}>{value}</div>

@@ -136,10 +136,10 @@ export const DateInput: React.FC<DateInputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-text-tertiary cursor-pointer truncate min-w-0"
+            className="text-xs font-medium text-text-3 cursor-pointer truncate min-w-0"
           >
             {label}
-            {required && <span className="text-feedback-danger-text ml-1">*</span>}
+            {required && <span className="text-danger-text ml-1">*</span>}
           </label>
         </div>
       )}
@@ -157,10 +157,10 @@ export const DateInput: React.FC<DateInputProps> = ({
               disabled && 'bg-neutral-100 cursor-not-allowed'
             )}
           >
-            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted group-hover:text-action-primary transition-colors shrink-0" />
-            <div className="flex-1 min-w-0 text-xs text-text-primary truncate">
+            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted group-hover:text-primary transition-colors shrink-0" />
+            <div className="flex-1 min-w-0 text-xs text-text truncate">
               {dateValue ? (
-                <span className="text-text-primary">{format(dateValue, 'dd MMM yyyy')}</span>
+                <span className="text-text">{format(dateValue, 'dd MMM yyyy')}</span>
               ) : (
                 <span className="text-text-muted">{placeholder}</span>
               )}
@@ -182,7 +182,7 @@ export const DateInput: React.FC<DateInputProps> = ({
               >
                 <Icon
                   name={ICONS.actions.closeCircle}
-                  className="w-3.5 h-3.5 text-text-disabled hover:text-text-tertiary"
+                  className="w-3.5 h-3.5 text-text-disabled hover:text-text-3"
                 />
               </button>
             )}
@@ -222,7 +222,7 @@ export const DateInput: React.FC<DateInputProps> = ({
       {/* Hidden input for form compatibility */}
       <input type="hidden" id={inputId} name={name} value={value} />
 
-      {error && <p className="text-xs text-feedback-danger-text mt-1">{error}</p>}
+      {error && <p className="text-xs text-danger-text mt-1">{error}</p>}
     </div>
   );
 };

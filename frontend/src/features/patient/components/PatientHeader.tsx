@@ -33,13 +33,13 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
             affiliation={patient.affiliation}
             trigger={
               <button
-                className="focus:outline-none focus:ring-2 focus:ring-action-primary/20 rounded flex items-center justify-center"
+                className="focus:outline-none focus:ring-2 focus:ring-primary/20 rounded flex items-center justify-center"
                 aria-label="View affiliation details"
                 title="View affiliation details"
               >
                 <Icon
                   name={ICONS.ui.verified}
-                  className="w-5 h-5 text-action-primary opacity-70 hover:opacity-100 cursor-pointer"
+                  className="w-5 h-5 text-primary opacity-70 hover:opacity-100 cursor-pointer"
                 />
               </button>
             }

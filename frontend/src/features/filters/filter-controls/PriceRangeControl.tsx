@@ -134,10 +134,10 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-text-tertiary">{config.placeholder || 'Filter by price range'}</span>;
+      return <span className="text-text-3">{config.placeholder || 'Filter by price range'}</span>;
     }
     return (
-      <span className="text-text-secondary font-medium">
+      <span className="text-text-2 font-medium">
         {formatPrice(start)} - {formatPrice(end)}
       </span>
     );
@@ -152,7 +152,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
           className={cn(inputTrigger, 'justify-between', isOpen && inputTriggerOpen, className)}
         >
           {/* Column 1: Left Icon */}
-          <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-text-muted group-hover:text-action-primary shrink-0 transition-colors" />
+          <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-text-muted group-hover:text-primary shrink-0 transition-colors" />
           
           {/* Column 2: Content - flexible middle */}
           <div className="flex-1 min-w-0 text-xs font-medium">{renderTriggerContent()}</div>
@@ -164,7 +164,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
                 onClick={handleClear}
                 className="p-0.5 hover:bg-surface-hover rounded transition-colors"
               >
-                <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-tertiary" />
+                <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-3" />
               </button>
             ) : (
               <div className="w-5 h-5" />
@@ -180,7 +180,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
     >
       {() => (
         <div className="space-y-4">
-          <div className="flex items-center justify-between text-sm font-medium text-text-tertiary">
+          <div className="flex items-center justify-between text-sm font-medium text-text-3">
             <span>{formatPrice(localValue[0])}</span>
             <span>{formatPrice(localValue[1])}</span>
           </div>
@@ -190,7 +190,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
             <div className="absolute w-full h-1.5 bg-neutral-200 rounded-full overflow-hidden">
               {/* Active Range */}
               <div
-                className="absolute h-full bg-action-primary"
+                className="absolute h-full bg-primary"
                 style={{
                   left: `${getPercentage(localValue[0])}%`,
                   width: `${getPercentage(localValue[1]) - getPercentage(localValue[0])}%`,
@@ -200,14 +200,14 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
 
             {/* Min Handle */}
             <div
-              className="absolute w-5 h-5 bg-surface-default border-2 border-action-primary rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-action-primary/30"
+              className="absolute w-5 h-5 bg-surface border-2 border-primary rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-primary/30"
               style={{ left: `calc(${getPercentage(localValue[0])}% - 10px)` }}
               onMouseDown={onMouseDown('min')}
             />
 
             {/* Max Handle */}
             <div
-              className="absolute w-5 h-5 bg-surface-default border-2 border-action-primary rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-action-primary/30"
+              className="absolute w-5 h-5 bg-surface border-2 border-primary rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-primary/30"
               style={{ left: `calc(${getPercentage(localValue[1])}% - 10px)` }}
               onMouseDown={onMouseDown('max')}
             />

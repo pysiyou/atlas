@@ -26,9 +26,9 @@ export function TableCell({ column, children, variant }: TableCellProps) {
   // Handle sticky positioning
   const stickyClass =
     column.sticky === 'left'
-      ? 'sticky left-0 bg-surface-default z-[1]'
+      ? 'sticky left-0 bg-surface z-[1]'
       : column.sticky === 'right'
-        ? 'sticky right-0 bg-surface-default z-[1]'
+        ? 'sticky right-0 bg-surface z-[1]'
         : '';
 
   // Apply truncation if enabled
@@ -39,7 +39,7 @@ export function TableCell({ column, children, variant }: TableCellProps) {
       className={`
         ${CELL_PADDING[variant]} 
         ${TEXT_SIZE[variant]}
-        text-text-primary
+        text-text
         overflow-hidden
         flex items-center
         ${alignClass}

@@ -87,7 +87,7 @@ export function LabWorkflowView<T>({
         <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">
           <div className="flex items-center gap-4 flex-wrap">
             {title != null && title !== '' && (
-              <h3 className="text-base font-medium text-text-primary">{title}</h3>
+              <h3 className="text-base font-medium text-text">{title}</h3>
             )}
             {hasItems && filters && (
               <>

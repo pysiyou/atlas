@@ -121,7 +121,7 @@ const FloatingContent: React.FC<FloatingContentProps> = ({
         exit={{ opacity: 0, y: -10, scale: 0.95 }}
         transition={{ duration: 0.2 }}
         className={cn(
-          'bg-surface-default text-text-primary border border-border-default shadow-lg rounded overflow-hidden flex flex-col h-full',
+          'bg-surface text-text border border-border shadow-lg rounded overflow-hidden flex flex-col h-full',
           noBorder && 'border-0',
           className
         )}

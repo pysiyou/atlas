@@ -19,8 +19,8 @@ export const TATChart: React.FC<TATChartProps> = ({ data }) => {
   ];
 
   return (
-    <div className="bg-surface-default border border-border-default rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-text-primary mb-4">TAT Breakdown by Stage</h3>
+    <div className="bg-surface border border-border rounded-lg p-4">
+      <h3 className="text-sm font-semibold text-text mb-4">TAT Breakdown by Stage</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
@@ -36,14 +36,14 @@ export const TATChart: React.FC<TATChartProps> = ({ data }) => {
           />
           <Tooltip 
             contentStyle={{ 
-              backgroundColor: 'var(--chart-tooltip-bg)', 
+              backgroundColor: 'var(--chart-tooltip)', 
               border: '1px solid var(--chart-tooltip-border)',
               borderRadius: '8px',
               fontSize: '12px'
             }}
             formatter={(value) => [`${value} min`, 'Time']}
           />
-          <Bar dataKey="minutes" fill="var(--chart-series-primary)" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="minutes" fill="var(--chart-primary)" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

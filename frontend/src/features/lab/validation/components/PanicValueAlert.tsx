@@ -41,20 +41,20 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
       className={cn(
         'border-l-4 rounded p-4 animate-pulse',
         isAcknowledged
-? 'bg-feedback-danger-bg border-feedback-danger-border'
-            : 'bg-feedback-danger-bg-strong border-feedback-danger-border-strong shadow-lg'
+? 'bg-danger-bg border-danger-border'
+            : 'bg-danger-bg-strong border-danger-border-strong shadow-lg'
       )}
     >
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0">
-          <div className="p-2 bg-action-danger rounded-full">
-            <Icon name="alert-circle" className="w-5 h-5 text-action-danger-on" />
+          <div className="p-2 bg-danger rounded-full">
+            <Icon name="alert-circle" className="w-5 h-5 text-danger-on" />
           </div>
         </div>
 
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <h4 className="text-sm font-bold text-feedback-danger-text-strong uppercase tracking-wide">
+            <h4 className="text-sm font-bold text-danger-text-strong uppercase tracking-wide">
               ⚠️ PANIC VALUE - Immediate Action Required
             </h4>
             {isAcknowledged && (
@@ -66,8 +66,8 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
 
           <div className="space-y-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-sm font-semibold text-text-primary">{parameterName}:</span>
-              <span className="text-lg font-bold text-feedback-danger-text-strong">
+              <span className="text-sm font-semibold text-text">{parameterName}:</span>
+              <span className="text-lg font-bold text-danger-text-strong">
                 {value}
                 {unit && <span className="ml-1 text-sm font-normal">{unit}</span>}
               </span>
@@ -76,22 +76,22 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
             <div className="grid grid-cols-2 gap-4 text-xs">
               {referenceRange && (
                 <div>
-                  <span className="text-text-tertiary">Reference Range:</span>
-                  <span className="ml-2 font-medium text-text-secondary">{referenceRange}</span>
+                  <span className="text-text-3">Reference Range:</span>
+                  <span className="ml-2 font-medium text-text-2">{referenceRange}</span>
                 </div>
               )}
               <div>
-                <span className="text-text-tertiary">Critical Threshold:</span>
-                <span className="ml-2 font-medium text-feedback-danger-text-strong">
+                <span className="text-text-3">Critical Threshold:</span>
+                <span className="ml-2 font-medium text-danger-text-strong">
                   {isCriticalLow && criticalLow !== undefined && `< ${criticalLow} ${unit || ''}`}
                   {isCriticalHigh && criticalHigh !== undefined && `> ${criticalHigh} ${unit || ''}`}
                 </span>
               </div>
             </div>
 
-            <div className="mt-3 p-3 bg-feedback-warning-bg border border-feedback-warning-border rounded text-xs">
-              <p className="font-semibold text-feedback-warning-text-strong mb-1">📋 Required Actions:</p>
-              <ul className="list-disc list-inside space-y-1 text-feedback-warning-text-strong">
+            <div className="mt-3 p-3 bg-warning-bg border border-warning-border rounded text-xs">
+              <p className="font-semibold text-warning-text-strong mb-1">📋 Required Actions:</p>
+              <ul className="list-disc list-inside space-y-1 text-warning-text-strong">
                 <li>Immediately notify the ordering physician</li>
                 <li>Verify patient identification</li>
                 <li>Consider retest to confirm result</li>
@@ -103,7 +103,7 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
           {onAcknowledge && !isAcknowledged && (
             <button
               onClick={onAcknowledge}
-              className="mt-4 px-4 py-2 bg-action-danger hover:bg-action-danger-hover text-action-danger-on text-sm font-semibold rounded transition-colors flex items-center gap-2"
+              className="mt-4 px-4 py-2 bg-danger hover:bg-danger-hover text-danger-on text-sm font-semibold rounded transition-colors flex items-center gap-2"
             >
               <Icon name="check-circle" className="w-4 h-4" />
               Acknowledge Panic Value

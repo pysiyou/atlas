@@ -137,7 +137,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         <EntryInfoLine enteredAt={test.resultEnteredAt} enteredBy={test.enteredBy} />
       }
       footer={
-        <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
+        <ModalFooter statusMessage="" statusClassName="text-text-3">
           <Popover
             placement="top-end"
             offsetValue={8}
@@ -303,7 +303,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
               {
                 label: 'Sample ID',
                 value: test.sampleId ? (
-                  <span className="text-action-primary font-mono">{displayId.sample(test.sampleId)}</span>
+                  <span className="text-primary font-mono">{displayId.sample(test.sampleId)}</span>
                 ) : undefined,
               },
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
@@ -322,13 +322,13 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
               {
                 label: 'Test Code',
                 value: test.testCode ? (
-                  <span className="text-action-primary font-mono">{test.testCode}</span>
+                  <span className="text-primary font-mono">{test.testCode}</span>
                 ) : undefined,
               },
               {
                 label: 'Order ID',
                 value: test.orderId ? (
-                  <span className="text-action-primary font-mono">{displayId.order(test.orderId)}</span>
+                  <span className="text-primary font-mono">{displayId.order(test.orderId)}</span>
                 ) : undefined,
               },
             ],

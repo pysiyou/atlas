@@ -30,7 +30,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         <div className="flex items-start gap-3">
           <Icon name={ICONS.dataFields.health} className="w-5 h-5 text-text-disabled mt-1 shrink-0" />
           <div className="flex-1">
-            <div className="text-xs text-text-tertiary mb-1">Chronic Conditions</div>
+            <div className="text-xs text-text-3 mb-1">Chronic Conditions</div>
             <div className="flex flex-wrap gap-2">
               {medicalHistory.chronicConditions.map((condition: string, index: number) => (
                 <Badge key={index} variant="chronic-condition" size="sm">
@@ -47,7 +47,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         <div className="flex items-start gap-3">
           <Icon name={ICONS.dataFields.medicine} className="w-5 h-5 text-text-disabled mt-1 shrink-0" />
           <div className="flex-1">
-            <div className="text-xs text-text-tertiary mb-1">Current Medications</div>
+            <div className="text-xs text-text-3 mb-1">Current Medications</div>
             <div className="flex flex-wrap gap-2">
               {medicalHistory.currentMedications.map((medication: string, index: number) => (
                 <Badge key={index} variant="medication" size="sm">
@@ -62,9 +62,9 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
       {/* Allergies */}
       {medicalHistory.allergies.length > 0 && (
         <div className="flex items-start gap-3">
-          <Icon name={ICONS.actions.warning} className="w-5 h-5 text-feedback-warning-text mt-1 shrink-0" />
+          <Icon name={ICONS.actions.warning} className="w-5 h-5 text-warning-text mt-1 shrink-0" />
           <div className="flex-1">
-            <div className="text-xs text-text-tertiary mb-1">Allergies</div>
+            <div className="text-xs text-text-3 mb-1">Allergies</div>
             <div className="flex flex-wrap gap-2">
               {medicalHistory.allergies.map((allergy: string, index: number) => (
                 <Badge key={index} variant="allergy" size="sm">
@@ -81,7 +81,7 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         <div className="flex items-start gap-3">
           <Icon name={ICONS.dataFields.medicalKit} className="w-5 h-5 text-text-disabled mt-1 shrink-0" />
           <div className="flex-1">
-            <div className="text-xs text-text-tertiary mb-1">Previous Surgeries</div>
+            <div className="text-xs text-text-3 mb-1">Previous Surgeries</div>
             <div className="flex flex-wrap gap-2">
               {medicalHistory.previousSurgeries.map((surgery: string, index: number) => (
                 <Badge key={index} variant="surgery" size="sm">
@@ -98,8 +98,8 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         <div className="flex items-start gap-3">
           <Icon name={ICONS.ui.usersGroup} className="w-5 h-5 text-text-disabled mt-1 shrink-0" />
           <div className="flex-1">
-            <div className="text-xs text-text-tertiary mb-1">Family History</div>
-            <div className="text-sm text-text-primary">
+            <div className="text-xs text-text-3 mb-1">Family History</div>
+            <div className="text-sm text-text">
               {formatFamilyHistory(medicalHistory.familyHistory)}
             </div>
           </div>
@@ -110,17 +110,17 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
       <div className="flex items-start gap-3">
         <div className="text-text-disabled mt-1 shrink-0" style={{ width: 20, height: 20 }} />
         <div className="flex-1">
-          <div className="text-xs text-text-tertiary mb-2">Lifestyle</div>
+          <div className="text-xs text-text-3 mb-2">Lifestyle</div>
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
               <Icon name={ICONS.dataFields.health} className="w-4 h-4 text-text-disabled" />
-              <span className="text-xs text-text-secondary">
+              <span className="text-xs text-text-2">
                 Smoking: {medicalHistory.lifestyle.smoking ? 'Yes' : 'No'}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <Icon name={ICONS.dataFields.health} className="w-4 h-4 text-text-disabled" />
-              <span className="text-xs text-text-secondary">
+              <span className="text-xs text-text-2">
                 Alcohol: {medicalHistory.lifestyle.alcohol ? 'Yes' : 'No'}
               </span>
             </div>

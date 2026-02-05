@@ -106,11 +106,11 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       {/* Volume Input */}
       <div>
         <div className="flex items-center justify-between mb-1">
-          <label className="block text-xs font-medium text-text-tertiary">
-            Volume Collected <span className="text-feedback-danger-text">*</span>
+          <label className="block text-xs font-medium text-text-3">
+            Volume Collected <span className="text-danger-text">*</span>
           </label>
           {minimumVolume > 0 && (
-            <div className="text-xxs text-feedback-warning-text bg-feedback-warning-bg px-2 py-0.5 rounded border border-feedback-warning-border flex items-center gap-1">
+            <div className="text-xxs text-warning-text bg-warning-bg px-2 py-0.5 rounded border border-warning-border flex items-center gap-1">
               <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
               Min: {minimumVolume} mL
             </div>
@@ -126,7 +126,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
               inputBase,
               'pr-8',
               volume < minimumVolume && inputError,
-              volume > 100 && 'border-feedback-warning-border-strong focus:ring-2 focus:ring-feedback-warning-border focus:ring-opacity-20'
+              volume > 100 && 'border-warning-border-strong focus:ring-2 focus:ring-warning-border focus:ring-opacity-20'
             )}
             placeholder="0.0"
           />
@@ -136,7 +136,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
         </div>
         <div className="h-6 mt-1.5">
           <div
-            className={`text-xs text-feedback-warning-text flex items-center gap-1.5 bg-feedback-warning-bg p-1.5 rounded border border-feedback-warning-border transition-opacity duration-200 ${volume > 100 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            className={`text-xs text-warning-text flex items-center gap-1.5 bg-warning-bg p-1.5 rounded border border-warning-border transition-opacity duration-200 ${volume > 100 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           >
             <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
             Unusually high volume - please verify
@@ -146,8 +146,8 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Type */}
       <div>
-        <label className="block text-xs font-medium text-text-tertiary mb-2">
-          Container Type <span className="text-feedback-danger-text">*</span>
+        <label className="block text-xs font-medium text-text-3 mb-2">
+          Container Type <span className="text-danger-text">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
           {CONTAINER_TYPE_OPTIONS.map(option => {
@@ -163,20 +163,20 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                   ${
                     isSelected
-                      ? 'bg-surface-default border-action-primary border-2'
-                      : 'bg-surface-default border-border-default hover:border-border-strong'
+                      ? 'bg-surface border-primary border-2'
+                      : 'bg-surface border-border hover:border-border-strong'
                   }
                 `}
               >
                 {/* Container icon on the left */}
                 <Icon
                   name={getContainerIcon(option.value)}
-                  className={`w-7 h-7 shrink-0 ${isSelected ? 'text-action-primary' : 'text-text-disabled'}`}
+                  className={`w-7 h-7 shrink-0 ${isSelected ? 'text-primary' : 'text-text-disabled'}`}
                 />
                 {/* Container label */}
                 <span
                   className={`flex-1 text-xs font-medium text-left ${
-                    isSelected ? 'text-text-primary' : 'text-text-secondary'
+                    isSelected ? 'text-text' : 'text-text-2'
                   }`}
                 >
                   {option.name}
@@ -185,12 +185,12 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                 <div
                   className={`
                     absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                    ${isSelected ? 'bg-action-success' : 'bg-transparent border-2 border-border-strong'}
+                    ${isSelected ? 'bg-success' : 'bg-transparent border-2 border-border-strong'}
                   `}
                 >
                   <Icon
                     name={ICONS.actions.check}
-                    className={`w-3 h-3 ${isSelected ? 'text-action-primary-on' : 'text-text-disabled'}`}
+                    className={`w-3 h-3 ${isSelected ? 'text-primary-on' : 'text-text-disabled'}`}
                   />
                 </div>
               </button>
@@ -199,7 +199,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
         </div>
         <div className="h-6 mt-1.5">
           <div
-            className={`text-xs text-feedback-warning-text flex items-center gap-1.5 bg-feedback-warning-bg p-1.5 rounded border border-feedback-warning-border transition-opacity duration-200 ${selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            className={`text-xs text-warning-text flex items-center gap-1.5 bg-warning-bg p-1.5 rounded border border-warning-border transition-opacity duration-200 ${selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           >
             <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
             Warning: Selected container type not in requirements
@@ -209,8 +209,8 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Color */}
       <div>
-        <label className="block text-xs font-medium text-text-tertiary mb-1">
-          Container Color <span className="text-feedback-danger-text">*</span>
+        <label className="block text-xs font-medium text-text-3 mb-1">
+          Container Color <span className="text-danger-text">*</span>
         </label>
         <div className="flex gap-3">
           {CONTAINER_COLOR_OPTIONS.map(option => {
@@ -222,9 +222,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                 onClick={() => setSelectedColor(option.value)}
                 className={`w-8 h-8 rounded-full transition-all duration-200 ${option.colorClass} ${
                   isSelected
-                    ? 'scale-110 ring-2 ring-offset-2 ring-action-primary shadow-md'
+                    ? 'scale-110 ring-2 ring-offset-2 ring-primary shadow-md'
                     : isRequired
-                      ? 'opacity-100 hover:scale-105 hover:shadow-sm ring-2 ring-feedback-success-border'
+                      ? 'opacity-100 hover:scale-105 hover:shadow-sm ring-2 ring-success-border'
                       : 'opacity-60 hover:opacity-80 hover:scale-105 hover:shadow-sm'
                 }`}
                 title={`${option.name}${isRequired ? ' (Required)' : ''}`}
@@ -236,9 +236,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           <div
             className={`text-xs flex items-center gap-1.5 p-1.5 rounded border transition-opacity duration-200 ${
               !selectedColor
-                ? 'opacity-100 text-feedback-warning-text bg-feedback-warning-bg border-feedback-warning-border'
+                ? 'opacity-100 text-warning-text bg-warning-bg border-warning-border'
                 : selectedColor && !requirement.containerTopColors.includes(selectedColor as never)
-                  ? 'opacity-100 text-feedback-warning-text bg-feedback-warning-bg border-feedback-warning-border'
+                  ? 'opacity-100 text-warning-text bg-warning-bg border-warning-border'
                   : 'opacity-0 pointer-events-none border-transparent'
             }`}
           >
@@ -250,7 +250,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-text-tertiary mb-1">Notes</label>
+        <label className="block text-xs font-medium text-text-3 mb-1">Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."
@@ -296,7 +296,7 @@ export const CollectionPopover: React.FC<CollectionPopoverProps> = ({
     offsetValue={8}
     trigger={
       trigger || (
-        <Button variant="primary" size="xs" icon={<Icon name={ICONS.dataFields.flask} className="text-action-primary-on" />}>
+        <Button variant="primary" size="xs" icon={<Icon name={ICONS.dataFields.flask} className="text-primary-on" />}>
           {isRecollection ? 'RECOLLECT' : 'COLLECT'}
         </Button>
       )

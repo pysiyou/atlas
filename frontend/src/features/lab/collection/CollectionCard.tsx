@@ -111,12 +111,12 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
     return (
       <Card padding="list" hover className="flex flex-col h-full" onClick={() => handleCardClick()}>
         {/* Header: Avatar (top left) + Status badge (top right) */}
-        <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
+        <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
           <Avatar
             primaryText={patientName}
             primaryTextClassName="font-semibold"
             secondaryText={displayId.order(order.orderId)}
-            secondaryTextClassName="text-action-primary font-mono"
+            secondaryTextClassName="text-primary font-mono"
             size="xs"
           />
           {isPending ? (
@@ -137,14 +137,14 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
         {/* Content: Volume, tests */}
         <div className="grow">
           <div className="space-y-1">
-            <div className="text-xs text-text-tertiary">
+            <div className="text-xs text-text-3">
               {isPending
                 ? `${formatVolume(requirement.totalVolume)} required`
                 : collectedVolume !== undefined
                   ? `${formatVolume(collectedVolume)} ${isRejected ? 'was collected' : 'collected'}`
                   : null}
             </div>
-            <div className="text-xs text-text-secondary">
+            <div className="text-xs text-text-2">
               {testCount} test{testCount !== 1 ? 's' : ''}: {testNames.slice(0, 2).join(', ')}
               {testCount > 2 && ` +${testCount - 2} more`}
             </div>
@@ -196,10 +196,10 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   // Build badges (ordered by importance)
   const badges = (
     <>
-      <h3 className="text-sm font-medium text-text-primary">{patientName}</h3>
+      <h3 className="text-sm font-medium text-text">{patientName}</h3>
       {sample.priority && <Badge variant={sample.priority} size="sm" />}
       <Badge variant={sample.sampleType} size="sm" />
-      <Badge size="sm" variant="default" className="text-text-tertiary">
+      <Badge size="sm" variant="default" className="text-text-3">
         {isPending
           ? `${formatVolume(requirement.totalVolume)} required`
           : `${formatVolume(collectedVolume!)} ${isRejected ? 'was collected' : 'collected'}`}
@@ -216,7 +216,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
         </span>
       )}
       {getCollectionRequirements(sample.sampleType).isDerived && (
-        <Badge size="sm" variant="default" className="text-text-tertiary">
+        <Badge size="sm" variant="default" className="text-text-3">
           {getCollectionRequirements(sample.sampleType).label}
         </Badge>
       )}
@@ -355,7 +355,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   return (
     <LabCard
       onClick={handleCardClick}
-      className={isRejected ? 'border-feedback-warning-border-strong' : ''}
+      className={isRejected ? 'border-warning-border-strong' : ''}
       context={{
         orderId: order.orderId,
         referringPhysician: order.referringPhysician,

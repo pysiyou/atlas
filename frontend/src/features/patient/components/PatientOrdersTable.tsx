@@ -41,7 +41,7 @@ function buildSimpleViewConfig(): TableViewConfig<Order> {
       header: 'Date',
       width: 'md' as const,
       render: (order: Order) => (
-        <span className="text-xs text-text-tertiary">{formatDetailDate(order.orderDate, 'short')}</span>
+        <span className="text-xs text-text-3">{formatDetailDate(order.orderDate, 'short')}</span>
       ),
     },
     {
@@ -53,7 +53,7 @@ function buildSimpleViewConfig(): TableViewConfig<Order> {
   ];
   const CardComponent: React.FC<CardComponentProps<Order>> = ({ item, onClick }) => (
     <div
-      className="p-3 border border-border-default rounded-lg hover:bg-surface-hover cursor-pointer"
+      className="p-3 border border-border rounded-lg hover:bg-surface-hover cursor-pointer"
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -63,7 +63,7 @@ function buildSimpleViewConfig(): TableViewConfig<Order> {
         <span className={DATA_ID_PRIMARY}>{displayId.order(item.orderId)}</span>
         <Badge variant={item.overallStatus} size="sm" />
       </div>
-      <div className="text-xs text-text-tertiary mt-1">{formatDetailDate(item.orderDate, 'short')}</div>
+      <div className="text-xs text-text-3 mt-1">{formatDetailDate(item.orderDate, 'short')}</div>
     </div>
   );
   return {
@@ -89,7 +89,7 @@ function buildDetailedViewConfig(): TableViewConfig<Order> {
       header: 'Date',
       width: 'md' as const,
       render: (order: Order) => (
-        <span className="block truncate text-xs text-text-tertiary">{formatDetailDate(order.orderDate, 'short')}</span>
+        <span className="block truncate text-xs text-text-3">{formatDetailDate(order.orderDate, 'short')}</span>
       ),
     },
     {
@@ -133,7 +133,7 @@ function buildDetailedViewConfig(): TableViewConfig<Order> {
   const compactColumns = fullColumns.slice(0, 3);
   const CardComponent: React.FC<CardComponentProps<Order>> = ({ item, onClick }) => (
     <div
-      className="p-3 border border-border-default rounded-lg hover:bg-surface-hover cursor-pointer"
+      className="p-3 border border-border rounded-lg hover:bg-surface-hover cursor-pointer"
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -143,8 +143,8 @@ function buildDetailedViewConfig(): TableViewConfig<Order> {
         <span className={DATA_ID_PRIMARY}>{displayId.order(item.orderId)}</span>
         <Badge variant={item.overallStatus} size="sm" />
       </div>
-      <div className="text-xs text-text-tertiary mt-1">{formatDetailDate(item.orderDate, 'short')}</div>
-      <div className="text-xs text-text-secondary mt-1">
+      <div className="text-xs text-text-3 mt-1">{formatDetailDate(item.orderDate, 'short')}</div>
+      <div className="text-xs text-text-2 mt-1">
         {item.tests.length} test(s) · {formatOrderPrice(item.totalPrice)}
       </div>
     </div>

@@ -20,9 +20,9 @@ export const RejectionChart: React.FC<RejectionChartProps> = ({ data }) => {
 
   if (chartData.length === 0) {
     return (
-      <div className="bg-surface-default border border-border-default rounded-lg p-4">
-        <h3 className="text-sm font-semibold text-text-primary mb-4">Top Rejection Reasons</h3>
-        <div className="flex items-center justify-center h-[250px] text-text-tertiary text-sm">
+      <div className="bg-surface border border-border rounded-lg p-4">
+        <h3 className="text-sm font-semibold text-text mb-4">Top Rejection Reasons</h3>
+        <div className="flex items-center justify-center h-[250px] text-text-3 text-sm">
           No rejections in selected period
         </div>
       </div>
@@ -30,8 +30,8 @@ export const RejectionChart: React.FC<RejectionChartProps> = ({ data }) => {
   }
 
   return (
-    <div className="bg-surface-default border border-border-default rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-text-primary mb-4">Top Rejection Reasons</h3>
+    <div className="bg-surface border border-border rounded-lg p-4">
+      <h3 className="text-sm font-semibold text-text mb-4">Top Rejection Reasons</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={chartData} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
@@ -49,14 +49,14 @@ export const RejectionChart: React.FC<RejectionChartProps> = ({ data }) => {
           />
           <Tooltip 
             contentStyle={{ 
-              backgroundColor: 'var(--chart-tooltip-bg)', 
+              backgroundColor: 'var(--chart-tooltip)', 
               border: '1px solid var(--chart-tooltip-border)',
               borderRadius: '8px',
               fontSize: '12px'
             }}
             formatter={(value, _name, props) => [`${value} rejections`, props.payload.fullReason]}
           />
-          <Bar dataKey="count" fill="var(--chart-series-danger)" radius={[0, 4, 4, 0]} />
+          <Bar dataKey="count" fill="var(--chart-danger)" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

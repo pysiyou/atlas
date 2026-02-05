@@ -50,20 +50,20 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
   return (
     <div
       onClick={onClick}
-      className="bg-surface-default border border-border-default rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
+      className="bg-surface border border-border rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Avatar (top left) + Total Price (top right) */}
-      <div className="pb-3 border-b border-border-default flex justify-between items-center">
+      <div className="pb-3 border-b border-border flex justify-between items-center">
         {/* Avatar: Patient name + Order ID - positioned at top left */}
         <Avatar
           primaryText={item.patientName || 'N/A'}
           primaryTextClassName="font-semibold"
           secondaryText={displayId.order(item.orderId)}
-          secondaryTextClassName="font-mono text-action-primary"
+          secondaryTextClassName="font-mono text-primary"
           size="xs"
         />
         {/* Total price on top right */}
-        <div className="font-medium text-text-primary text-lg">{formatCurrency(item.totalPrice)}</div>
+        <div className="font-medium text-text text-lg">{formatCurrency(item.totalPrice)}</div>
       </div>
 
       {/* Tests list: Show at most 2 tests, third line shows remaining count */}
@@ -74,21 +74,21 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
             {item.tests.slice(0, 2).map((test, index) => (
               <div
                 key={test.testCode || index}
-                className="flex items-center justify-between text-xs text-text-secondary"
+                className="flex items-center justify-between text-xs text-text-2"
               >
                 <div className="flex items-center flex-1 min-w-0">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 flex-shrink-0" />
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
-                  <span className="text-action-primary font-mono truncate">{test.testCode}</span>
+                  <span className="text-primary font-mono truncate">{test.testCode}</span>
                 </div>
-                <span className="font-medium text-text-primary ml-2 flex-shrink-0">
+                <span className="font-medium text-text ml-2 flex-shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>
             ))}
             {/* Third line: Show remaining tests count if more than 2 */}
             {item.tests.length > 2 && (
-              <div className="text-xs text-text-tertiary">
+              <div className="text-xs text-text-3">
                 +{item.tests.length - 2} more test{item.tests.length - 2 !== 1 ? 's' : ''}
               </div>
             )}
@@ -99,7 +99,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
       {/* Bottom section: Date (left) + Payment method/button (right) */}
       <div className="flex justify-between items-center pt-3">
         {/* Date on bottom left - show payment date if paid, otherwise order date */}
-        <div className="text-xs text-text-tertiary">
+        <div className="text-xs text-text-3">
           {item.paymentDate ? formatDate(item.paymentDate) : formatDate(item.orderDate)}
         </div>
         {/* Payment method or Payment button on bottom right */}

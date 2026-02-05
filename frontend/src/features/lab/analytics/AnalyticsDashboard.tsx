@@ -147,7 +147,7 @@ export const AnalyticsDashboard: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-text-tertiary">Loading analytics...</div>
+        <div className="text-text-3">Loading analytics...</div>
       </div>
     );
   }

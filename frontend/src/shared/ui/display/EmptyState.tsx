@@ -28,8 +28,8 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
         <Icon name={icon} className="w-8 h-8 text-text-disabled" />
       </div>
-      <p className="text-base font-semibold text-text-primary mb-2">{title}</p>
-      <p className="text-sm text-text-tertiary mb-4 max-w-md">{description}</p>
+      <p className="text-base font-semibold text-text mb-2">{title}</p>
+      <p className="text-sm text-text-3 mb-4 max-w-md">{description}</p>
       {action && <div className="mt-2">{action}</div>}
     </div>
   );

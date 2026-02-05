@@ -71,7 +71,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
       <ModalFooter
         statusIcon={undefined}
         statusMessage=""
-        statusClassName="text-text-tertiary"
+        statusClassName="text-text-3"
       >
         <CollectionPopover
           requirement={pendingSampleDisplay.requirement!}
@@ -105,7 +105,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
             ? `Cannot reject - ${validatedCount} test${validatedCount > 1 ? 's' : ''} already validated`
             : ''
         }
-        statusClassName={hasValidatedTests ? 'text-feedback-warning-text' : 'text-text-tertiary'}
+        statusClassName={hasValidatedTests ? 'text-warning-text' : 'text-text-3'}
       >
         {/* Print button - functionality handled by parent component */}
         {hasValidatedTests ? (
@@ -146,7 +146,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
             ? 'Sample rejected - recollection requested'
             : 'Sample rejected'
         }
-        statusClassName="text-text-tertiary"
+        statusClassName="text-text-3"
       />
     );
   }

@@ -111,23 +111,23 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
  * Base style classes for each variant
  */
 const BASE_STYLES: Record<BaseVariant, string> = {
-  primary: 'bg-action-primary text-action-primary-on hover:opacity-90 focus:ring-action-primary',
-  secondary: 'bg-neutral-200 text-action-secondary-text hover:bg-neutral-300 focus:ring-neutral-500',
-  danger: 'bg-action-danger text-action-danger-on hover:opacity-90 focus:ring-action-danger',
-  success: 'bg-action-success text-action-success-on hover:opacity-90 focus:ring-action-success',
-  warning: 'bg-action-warning text-action-warning-on hover:opacity-90 focus:ring-action-warning',
+  primary: 'bg-primary text-primary-on hover:opacity-90 focus:ring-primary',
+  secondary: 'bg-neutral-200 text-secondary-text hover:bg-neutral-300 focus:ring-neutral-500',
+  danger: 'bg-danger text-danger-on hover:opacity-90 focus:ring-danger',
+  success: 'bg-success text-success-on hover:opacity-90 focus:ring-success',
+  warning: 'bg-warning text-warning-on hover:opacity-90 focus:ring-warning',
 };
 
 /**
  * IconButton-specific variants (for actions like approve, delete, edit, etc.)
  */
 const ICON_BUTTON_VARIANTS: Record<string, string> = {
-  approve: 'bg-action-success text-action-success-on hover:opacity-90 focus:ring-action-success',
-  delete: 'bg-action-danger text-action-danger-on hover:opacity-90 focus:ring-action-danger',
-  edit: 'bg-action-primary text-action-primary-on hover:opacity-90 focus:ring-action-primary',
-  view: 'bg-neutral-200 text-action-secondary-text hover:bg-neutral-300 focus:ring-neutral-500',
-  print: 'bg-neutral-200 text-action-secondary-text hover:bg-neutral-300 focus:ring-neutral-500',
-  add: 'bg-action-primary text-action-primary-on hover:opacity-90 focus:ring-action-primary',
+  approve: 'bg-success text-success-on hover:opacity-90 focus:ring-success',
+  delete: 'bg-danger text-danger-on hover:opacity-90 focus:ring-danger',
+  edit: 'bg-primary text-primary-on hover:opacity-90 focus:ring-primary',
+  view: 'bg-neutral-200 text-secondary-text hover:bg-neutral-300 focus:ring-neutral-500',
+  print: 'bg-neutral-200 text-secondary-text hover:bg-neutral-300 focus:ring-neutral-500',
+  add: 'bg-primary text-primary-on hover:opacity-90 focus:ring-primary',
 };
 
 /**

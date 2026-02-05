@@ -68,10 +68,10 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-text-tertiary">{placeholder}</span>;
+      return <span className="text-text-3">{placeholder}</span>;
     }
     return (
-      <span className={cn('text-text-secondary', 'font-medium')}>
+      <span className={cn('text-text-2', 'font-medium')}>
         {start} - {end}
       </span>
     );
@@ -89,10 +89,10 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             name={ICONS.dataFields.hourglass}
             className={cn(
               'w-4 h-4 shrink-0 transition-colors',
-              isOpen ? 'text-action-primary' : 'text-text-muted group-hover:text-action-primary'
+              isOpen ? 'text-primary' : 'text-text-muted group-hover:text-primary'
             )}
           />
-          <div className="flex-1 min-w-0 text-xs font-medium text-text-primary truncate whitespace-nowrap overflow-hidden">
+          <div className="flex-1 min-w-0 text-xs font-medium text-text truncate whitespace-nowrap overflow-hidden">
             {renderTriggerContent()}
           </div>
 
@@ -101,12 +101,12 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             {value && (value[0] !== min || value[1] !== max) ? (
               <button
                 onClick={handleClear}
-                className={cn('p-0.5 rounded hover:bg-action-primary-muted-bg transition-colors group/clear')}
+                className={cn('p-0.5 rounded hover:bg-primary-muted transition-colors group/clear')}
                 aria-label="Clear age filter"
               >
                 <Icon 
                   name={ICONS.actions.closeCircle} 
-                  className={cn('w-3.5 h-3.5 text-text-muted', 'group-hover/clear:text-action-primary')} 
+                  className={cn('w-3.5 h-3.5 text-text-muted', 'group-hover/clear:text-primary')} 
                 />
               </button>
             ) : (
@@ -116,7 +116,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               name={ICONS.actions.chevronDown}
               className={cn(
                 'w-3.5 h-3.5 text-text-muted transition-transform duration-200',
-                isOpen && cn('rotate-180', 'text-action-primary')
+                isOpen && cn('rotate-180', 'text-primary')
               )}
             />
           </div>
@@ -126,7 +126,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
     >
       {() => (
         <div className="w-full">
-          <p className="text-sm text-text-tertiary mb-4">Move the slider to filter by age</p>
+          <p className="text-sm text-text-3 mb-4">Move the slider to filter by age</p>
 
           {/* Slider Track */}
           <div className="relative h-1 mb-6">
@@ -135,7 +135,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
 
             {/* Active track */}
             <div
-              className="absolute h-full bg-action-primary rounded-full"
+              className="absolute h-full bg-primary rounded-full"
               style={{
                 left: `${minPercent}%`,
                 width: `${maxPercent - minPercent}%`,
@@ -149,7 +149,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               max={max}
               value={localValue[0]}
               onChange={handleMinChange}
-              className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-action-primary [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-action-primary [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+              className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
               style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
             />
 
@@ -160,7 +160,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               max={max}
               value={localValue[1]}
               onChange={handleMaxChange}
-              className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-action-primary [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-action-primary [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+              className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
               style={{ zIndex: 4 }}
             />
           </div>

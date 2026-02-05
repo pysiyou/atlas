@@ -92,12 +92,12 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
   if (selectedCount === 0) {
     return (
       <div className="mb-3">
-        <label className="inline-flex items-center gap-2 cursor-pointer text-sm text-text-tertiary">
+        <label className="inline-flex items-center gap-2 cursor-pointer text-sm text-text-3">
           <input
             type="checkbox"
             checked={false}
             onChange={handleToggleAll}
-            className="w-4 h-4 text-action-primary border-border-strong rounded focus:ring-2 focus:ring-action-primary/20"
+            className="w-4 h-4 text-primary border-border-strong rounded focus:ring-2 focus:ring-primary/20"
           />
           <span>Select all {totalCount} items</span>
         </label>
@@ -121,22 +121,22 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
               }
             }}
             onChange={handleToggleAll}
-            className="w-4 h-4 text-action-primary border-border-strong rounded focus:ring-2 focus:ring-action-primary/20"
+            className="w-4 h-4 text-primary border-border-strong rounded focus:ring-2 focus:ring-primary/20"
           />
-          <span className="text-sm text-text-tertiary">
+          <span className="text-sm text-text-3">
             {allSelected ? 'Deselect all' : 'Select all'}
           </span>
         </label>
 
         {/* Selection count */}
-        <span className="text-sm text-text-tertiary">
+        <span className="text-sm text-text-3">
           {selectedCount} selected
         </span>
 
         {/* Clear button */}
         <button
           onClick={handleClearSelection}
-          className="text-sm text-text-tertiary hover:text-text-secondary"
+          className="text-sm text-text-3 hover:text-text-2"
         >
           Clear
         </button>
@@ -145,7 +145,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
       {/* Right side: Actions */}
       <div className="flex items-center gap-3">
         {criticalSelectedCount > 0 && selectedCount > 0 && (
-          <span className="text-xs text-feedback-warning-text">
+          <span className="text-xs text-warning-text">
             {criticalSelectedCount} critical skipped
           </span>
         )}
@@ -197,7 +197,7 @@ export const ValidationCheckbox: React.FC<ValidationCheckboxProps> = ({
       onChange={handleChange}
       disabled={disabled}
       className={cn(
-        'w-4 h-4 text-action-primary border-border-strong rounded focus:ring-2 focus:ring-action-primary/20',
+        'w-4 h-4 text-primary border-border-strong rounded focus:ring-2 focus:ring-primary/20',
         disabled && 'opacity-50 cursor-not-allowed'
       )}
       onClick={e => e.stopPropagation()}

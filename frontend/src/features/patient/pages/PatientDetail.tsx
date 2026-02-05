@@ -27,7 +27,7 @@ export const PatientDetail: React.FC = () => {
   if (patientLoading || ordersLoading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-text-tertiary">Loading...</div>
+        <div className="text-text-3">Loading...</div>
       </div>
     );
   }
@@ -36,7 +36,7 @@ export const PatientDetail: React.FC = () => {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center py-12">
-          <p className="text-text-tertiary">Patient not found</p>
+          <p className="text-text-3">Patient not found</p>
         </div>
       </div>
     );

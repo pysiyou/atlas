@@ -129,7 +129,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   };
 
   return (
-    <div className="bg-surface-canvas rounded border border-border-default p-4 border">
+    <div className="bg-canvas rounded border border-border p-4 border">
       {/* Panic Value Alerts */}
       {panicValues.length > 0 && (
         <div className="mb-6 space-y-4">
@@ -160,21 +160,21 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
               const abnormal = status !== 'normal';
               const valueColor = abnormal
                 ? isCritical(status)
-                  ? 'text-feedback-danger-text'
-                  : 'text-feedback-warning-text'
-                : 'text-text-primary';
+                  ? 'text-danger-text'
+                  : 'text-warning-text'
+                : 'text-text';
               
               return (
                 <div
                   key={key}
                   className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
                 >
-                  <span className="text-xs text-text-tertiary text-left" title={key}>
+                  <span className="text-xs text-text-3 text-left" title={key}>
                     {key}:
                   </span>
                   <span className={`text-sm font-medium text-left ${valueColor}`}>
                     {resultValue}
-                    {unit && <span className="text-text-tertiary font-normal ml-1">{unit}</span>}
+                    {unit && <span className="text-text-3 font-normal ml-1">{unit}</span>}
                   </span>
                 </div>
               );
@@ -185,14 +185,14 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
 
       {/* Flags and Notes */}
       {(hasFlags || technicianNotes) && (
-        <div className="mb-6 space-y-2 bg-surface-canvas/50 rounded-md p-3 border border-border-subtle">
+        <div className="mb-6 space-y-2 bg-canvas/50 rounded-md p-3 border border-border-subtle">
           {hasFlags && (
-            <div className="flex items-start text-xs text-feedback-danger-text">
+            <div className="flex items-start text-xs text-danger-text">
               <div className="font-medium">{flags.join(', ')}</div>
             </div>
           )}
           {technicianNotes && (
-            <div className="flex items-start text-xs text-text-tertiary">
+            <div className="flex items-start text-xs text-text-3">
               <div className="italic">{technicianNotes}</div>
             </div>
           )}
@@ -200,7 +200,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
       )}
 
       {/* Validation Notes */}
-      <div className="space-y-3 border-t border-border-default pt-4">
+      <div className="space-y-3 border-t border-border pt-4">
         <Textarea
           label="Validation Notes"
           value={comments}

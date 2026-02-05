@@ -27,9 +27,9 @@ export const FilterHelpIcon: React.FC<FilterHelpIconProps> = ({ helpText, classN
         type="button"
         className={cn(
           'flex items-center justify-center w-7 h-7 shrink-0 rounded-md transition-colors',
-          'text-text-muted hover:text-action-primary hover:bg-action-primary-muted-bg',
-          'focus:outline-none focus:ring-2 focus:ring-action-primary/30',
-          isOpen && 'text-action-primary bg-action-primary-muted-bg',
+          'text-text-muted hover:text-primary hover:bg-primary-muted',
+          'focus:outline-none focus:ring-2 focus:ring-primary/30',
+          isOpen && 'text-primary bg-primary-muted',
           className
         )}
         aria-label="Filter help"
@@ -39,6 +39,6 @@ export const FilterHelpIcon: React.FC<FilterHelpIconProps> = ({ helpText, classN
     )}
     className="max-w-[260px] p-3"
   >
-    {() => <p className="text-xs text-text-secondary">{helpText}</p>}
+    {() => <p className="text-xs text-text-2">{helpText}</p>}
   </Popover>
 );

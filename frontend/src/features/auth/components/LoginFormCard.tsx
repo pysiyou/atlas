@@ -66,10 +66,10 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
           {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-3 mb-8">
             <div className="w-11 h-11 bg-auth-accent rounded flex items-center justify-center shadow-md shadow-black/20">
-              <Icon name={ICONS.ui.appLogo} className="w-6 h-6 text-auth-text-primary" />
+              <Icon name={ICONS.ui.appLogo} className="w-6 h-6 text-auth-text" />
             </div>
             <div>
-              <h1 className="font-display text-2xl text-auth-text-primary">{company.company.name}</h1>
+              <h1 className="font-display text-2xl text-auth-text">{company.company.name}</h1>
               <p className="font-body text-auth-text-light text-xs tracking-wider uppercase">
                 {company.company.subtitle}
               </p>
@@ -78,17 +78,17 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
 
           {/* Form header */}
           <div className="mb-8">
-            <h2 className="font-display text-3xl sm:text-4xl text-auth-text-primary mb-2">Welcome back</h2>
-            <p className="font-body text-auth-text-secondary text-[15px]">
+            <h2 className="font-display text-3xl sm:text-4xl text-auth-text mb-2">Welcome back</h2>
+            <p className="font-body text-auth-text-2 text-[15px]">
               Sign in to continue to your dashboard
             </p>
           </div>
 
           {/* Error message display */}
           {error && (
-            <div className="mb-6 p-4 bg-auth-error-bg border border-auth-error-border rounded-lg animate-[shake_0.5s_ease-in-out]">
+            <div className="mb-6 p-4 bg-auth-error border border-auth-error-border rounded-lg animate-[shake_0.5s_ease-in-out]">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-auth-error-bg-light flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-auth-error-light flex items-center justify-center flex-shrink-0">
                   <Icon name={ICONS.actions.alertCircle} className="h-4 w-4 text-auth-error-icon" />
                 </div>
                 <p className="font-body text-sm text-auth-error-text">{error}</p>
@@ -102,7 +102,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <div className="space-y-2">
               <label
                 htmlFor="username"
-                className="block font-body text-sm font-medium text-auth-text-secondary"
+                className="block font-body text-sm font-medium text-auth-text-2"
               >
                 Username
               </label>
@@ -123,7 +123,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                     onErrorDismiss();
                   }}
                   placeholder="Enter your username"
-                  className="font-body block w-full pl-12 pr-4 py-3.5 bg-auth-input-bg border border-auth-border rounded-lg text-auth-text-primary placeholder-auth-text-muted focus:outline-none focus:ring-2 focus:ring-auth-input-border-focus focus:ring-opacity-50 focus:border-auth-input-border-focus hover:bg-auth-panel-hover transition-all duration-200"
+                  className="font-body block w-full pl-12 pr-4 py-3.5 bg-auth-input border border-auth-border rounded-lg text-auth-text placeholder-auth-text-muted focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:border-auth-input-focus hover:bg-auth-panel-hover transition-all duration-200"
                   required
                 />
               </div>
@@ -133,7 +133,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="block font-body text-sm font-medium text-auth-text-secondary"
+                className="block font-body text-sm font-medium text-auth-text-2"
               >
                 Password
               </label>
@@ -153,7 +153,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                     onErrorDismiss();
                   }}
                   placeholder="Enter your password"
-                  className="font-body block w-full pl-12 pr-12 py-3.5 bg-auth-input-bg border border-auth-border rounded-lg text-auth-text-primary placeholder-auth-text-muted focus:outline-none focus:ring-2 focus:ring-auth-input-border-focus focus:ring-opacity-50 focus:border-auth-input-border-focus hover:bg-auth-panel-hover transition-all duration-200"
+                  className="font-body block w-full pl-12 pr-12 py-3.5 bg-auth-input border border-auth-border rounded-lg text-auth-text placeholder-auth-text-muted focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:border-auth-input-focus hover:bg-auth-panel-hover transition-all duration-200"
                   required
                 />
                 <button
@@ -171,7 +171,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="relative w-full mt-2 font-body font-semibold py-4 px-6 rounded-lg text-auth-text-primary overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-auth-input-border-focus focus:ring-opacity-50 focus:ring-offset-2 focus:ring-offset-auth-panel"
+              className="relative w-full mt-2 font-body font-semibold py-4 px-6 rounded-lg text-auth-text overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:ring-offset-2 focus:ring-offset-auth-panel"
             >
               <div className="absolute inset-0 bg-auth-accent transition-all duration-300 hover:bg-auth-accent-hover" />
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer" />

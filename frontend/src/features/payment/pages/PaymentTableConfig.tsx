@@ -66,7 +66,7 @@ export const createPaymentTableConfig = (
 
   const renderPatientName = (item: OrderPaymentDetails) => (
     <div className="min-w-0">
-      <div className="text-text-primary truncate">{item.patientName || 'N/A'}</div>
+      <div className="text-text truncate">{item.patientName || 'N/A'}</div>
       <div className={DATA_ID_SECONDARY}>{displayId.patient(item.patientId)}</div>
     </div>
   );
@@ -78,10 +78,10 @@ export const createPaymentTableConfig = (
     const activeCount = activeTests.length;
     return (
       <div className="min-w-0">
-        <div className="font-medium truncate font-mono text-xs text-text-primary">
+        <div className="font-medium truncate font-mono text-xs text-text">
           {activeTests.map(t => t.testCode ?? t.testName).join('/')}
         </div>
-        <div className="text-xs text-text-tertiary truncate">
+        <div className="text-xs text-text-3 truncate">
           {activeCount} test{activeCount !== 1 ? 's' : ''}
         </div>
       </div>
@@ -106,7 +106,7 @@ export const createPaymentTableConfig = (
   };
 
   const renderOrderDate = (item: OrderPaymentDetails) => (
-    <span className="text-xs text-text-tertiary truncate block">{formatDate(item.orderDate)}</span>
+    <span className="text-xs text-text-3 truncate block">{formatDate(item.orderDate)}</span>
   );
 
   const renderAction = (item: OrderPaymentDetails) => (

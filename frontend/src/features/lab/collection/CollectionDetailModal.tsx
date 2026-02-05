@@ -203,7 +203,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
     <LabDetailModal
       isOpen={isOpen}
       onClose={onClose}
-      title={<span className="font-mono text-action-primary tracking-wide">{displayId.sample(sample.sampleId)}</span>}
+      title={<span className="font-mono text-primary tracking-wide">{displayId.sample(sample.sampleId)}</span>}
       subtitle={`${patientName} - ${sample.sampleType.toUpperCase()}`}
       headerBadges={headerBadges}
       contextInfo={{ patientName, patientId, orderId }}
@@ -212,7 +212,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
         <>
           {/* Barcode */}
           {(isCollected || isRejected) && sample.sampleId && (
-            <div className="flex items-center justify-center bg-surface-canvas rounded p-4 border border-border-default mt-2">
+            <div className="flex items-center justify-center bg-canvas rounded p-4 border border-border mt-2">
               <Barcode
                 value={displayId.sample(sample.sampleId)}
                 height={40}
@@ -227,7 +227,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
             <CollectionInfoLine
               collectedAt={collectedAt}
               collectedBy={collectedBy}
-              className="text-xs text-text-tertiary mt-1"
+              className="text-xs text-text-3 mt-1"
             />
           )}
         </>

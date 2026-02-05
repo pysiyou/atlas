@@ -46,13 +46,13 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
         {/* Header with Order ID and Payment Status */}
         <div className="px-4 py-2.5 border-b border-dashed border-border-strong">
           <div className="flex justify-between items-center">
-            <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
-              Order <span className="font-mono text-action-primary">{displayId.order(order.orderId)}</span>
+            <span className="text-xs font-semibold text-text-2 uppercase tracking-wider">
+              Order <span className="font-mono text-primary">{displayId.order(order.orderId)}</span>
             </span>
             <Badge variant={order.paymentStatus} size="xs" />
           </div>
           {order.patientName && (
-            <p className="text-[11px] text-text-tertiary mt-0.5 truncate">{order.patientName}</p>
+            <p className="text-[11px] text-text-3 mt-0.5 truncate">{order.patientName}</p>
           )}
         </div>
 
@@ -67,31 +67,31 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
                 >
                   <span className="flex items-center gap-2 min-w-0 flex-1">
                     <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
-                    <span className="text-text-secondary truncate">
+                    <span className="text-text-2 truncate">
                       {test.testName || test.testCode || 'Test'}
                       {test.testCode && test.testName !== test.testCode && (
-                        <span className="text-action-primary font-mono ml-1">({test.testCode})</span>
+                        <span className="text-primary font-mono ml-1">({test.testCode})</span>
                       )}
                     </span>
                   </span>
-                  <span className="font-medium text-text-primary tabular-nums shrink-0">
+                  <span className="font-medium text-text tabular-nums shrink-0">
                     {formatCurrency(test.priceAtOrder)}
                   </span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-xs text-text-tertiary italic">No items</p>
+            <p className="text-xs text-text-3 italic">No items</p>
           )}
         </div>
 
         {/* Total Footer: pt compensates for items list py-2 (8px) + divider so total above = SectionContainer pb (16px) + footer pb */}
         <div className="border-t border-dashed border-border-strong shrink-0" />
         <div className="shrink-0 flex justify-between items-center px-4 pt-4">
-          <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
+          <span className="text-xs font-semibold text-text-2 uppercase tracking-wider">
             Total
           </span>
-          <span className="text-sm font-bold text-action-primary tabular-nums">
+          <span className="text-sm font-bold text-primary tabular-nums">
             {formatCurrency(activeTotal)}
           </span>
         </div>
