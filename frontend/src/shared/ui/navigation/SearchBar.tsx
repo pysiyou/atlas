@@ -7,6 +7,7 @@ import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from '../display/Icon';
 import { ICONS } from '@/utils';
 import { cn } from '@/utils';
+import { inputWrapper, inputInner, inputText } from '../forms/inputStyles';
 
 interface SearchBarProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   onSearch?: (value: string) => void;
@@ -20,33 +21,21 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   ...props
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onSearch) {
-      onSearch(e.target.value);
-    }
-    if (props.onChange) {
-      props.onChange(e);
-    }
+    if (onSearch) onSearch(e.target.value);
+    props.onChange?.(e);
   };
 
-  const sizeClasses = size === 'sm' ? 'h-[34px]' : 'py-2';
   const iconClasses = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4';
 
   return (
-    <div className={cn('group relative flex items-center gap-2 h-[34px] px-3 bg-surface-default border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-action-primary transition-colors duration-200', className)}>
-      {/* Column 1: Left Icon */}
+    <div className={cn(inputWrapper, className)}>
       <Icon
         name={ICONS.actions.search}
-        className={cn('text-text-muted group-hover:text-action-primary transition-colors', iconClasses, 'shrink-0')}
+        className={cn('text-text-muted group-hover:text-action-primary transition-colors shrink-0', iconClasses)}
       />
-      
-      {/* Column 2: Input - flexible middle */}
       <input
         type="text"
-        className={cn(
-          'flex-1 min-w-0 text-xs font-medium text-text-primary bg-transparent border-0 outline-none',
-          'placeholder:font-normal placeholder:text-text-muted',
-          sizeClasses === 'h-[34px]' ? 'py-0' : ''
-        )}
+        className={cn(inputInner, inputText, 'font-medium')}
         {...props}
         onChange={handleChange}
       />

@@ -8,8 +8,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Popover, Button, Icon, Alert, Badge, FooterInfo } from '@/shared/ui';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
-import { formatCurrency } from '@/utils';
-import { displayId } from '@/utils';
+import { cn, formatCurrency, displayId } from '@/utils';
+import { inputBase } from '@/shared/ui/forms/inputStyles';
 import type { Order } from '@/types';
 import {
   getEnabledPaymentMethods,
@@ -211,7 +211,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                 type="button"
                 onClick={() => setPaymentMethod(method.value)}
                 className={`
-                  relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
+                  relative flex items-center gap-2.5 p-3 rounded border
                   ${
                     isSelected
                       ? 'bg-surface-default border-action-primary border-2'
@@ -235,7 +235,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                 {/* Checkmark indicator in top-right */}
                 <div
                   className={`
-                    absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
+                    absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center
                     ${isSelected ? 'bg-action-success' : 'bg-transparent border-2 border-border-strong'}
                   `}
                 >
@@ -258,7 +258,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
           placeholder="Add optional notes..."
           value={notes}
           onChange={e => setNotes(e.target.value)}
-          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent"
+          className={cn(inputBase, 'resize-none')}
         />
       </div>
 

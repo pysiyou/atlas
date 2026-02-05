@@ -9,6 +9,7 @@ import { Icon } from '../display/Icon';
 import { Popover } from '../overlay/Popover';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
+import { inputTrigger, inputTriggerOpen, inputError } from './inputStyles';
 import { DateFilterCalendar } from '@/features/order/components/DateFilterCalendar';
 import { DateFilterHeader } from '@/features/order/components/DateFilterHeader';
 // useDateFilterNavigation removed - logic inlined below
@@ -149,17 +150,15 @@ export const DateInput: React.FC<DateInputProps> = ({
         trigger={({ isOpen }: { isOpen: boolean }) => (
           <div
             className={cn(
-              'flex items-center gap-2 px-3 py-2 bg-surface-default border rounded cursor-pointer transition-colors w-full',
-              isOpen
-                ? 'border-action-primary ring-2 ring-action-primary ring-opacity-20'
-                : error
-                  ? 'border-border-error'
-                  : 'border-border-default',
+              inputTrigger,
+              'w-full',
+              isOpen && inputTriggerOpen,
+              error && inputError,
               disabled && 'bg-neutral-100 cursor-not-allowed'
             )}
           >
-            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted shrink-0" />
-            <div className="flex-1 text-xs truncate">
+            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted group-hover:text-action-primary transition-colors shrink-0" />
+            <div className="flex-1 min-w-0 text-xs text-text-primary truncate">
               {dateValue ? (
                 <span className="text-text-primary">{format(dateValue, 'dd MMM yyyy')}</span>
               ) : (

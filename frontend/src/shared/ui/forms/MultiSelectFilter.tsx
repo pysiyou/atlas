@@ -18,6 +18,7 @@ import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import { Badge } from '../display/Badge';
 import { Icon, type IconName } from '../display/Icon';
+import { inputTrigger, inputTriggerOpen } from './inputStyles';
 
 /**
  * Option item for the filter
@@ -208,8 +209,9 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       trigger={({ isOpen }: { isOpen: boolean }) => (
         <div
           className={cn(
-            'group h-[34px] px-3 bg-surface-default border border-border-strong rounded-md flex items-center gap-2 cursor-pointer transition-colors text-xs',
-            isOpen ? 'border-action-primary' : 'hover:bg-surface-hover',
+            inputTrigger,
+            'text-xs',
+            isOpen && inputTriggerOpen,
             className
           )}
         >

@@ -7,6 +7,7 @@ import React from 'react';
 import { Popover } from '@/shared/ui';
 import { Icon, type IconName } from '@/shared/ui';
 import { Badge } from '@/shared/ui';
+import { inputTrigger, inputTriggerOpen } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
 import type { SingleSelectFilterControl } from '../types';
 import { ICONS } from '@/utils';
@@ -85,11 +86,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       showBackdrop={false}
       trigger={({ isOpen }) => (
         <div
-          className={cn(
-            'group h-[34px] px-3 bg-surface-default border border-border-strong rounded-md hover:bg-surface-hover focus:outline-none focus:border-action-primary transition-colors duration-200 cursor-pointer flex items-center justify-between gap-2',
-            isOpen && 'border-action-primary',
-            className
-          )}
+          className={cn(inputTrigger, 'justify-between', isOpen && inputTriggerOpen, className)}
         >
           {/* Column 1: Left Icon */}
           {config.icon && (

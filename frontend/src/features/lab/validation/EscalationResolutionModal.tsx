@@ -6,7 +6,8 @@
 
 import React, { useState, useCallback } from 'react';
 import { Button, Popover, SectionContainer } from '@/shared/ui';
-import { displayId } from '@/utils';
+import { cn, displayId } from '@/utils';
+import { inputBase } from '@/shared/ui/forms/inputStyles';
 import { ValidationForm } from './ValidationForm';
 import {
   LabDetailModal,
@@ -166,7 +167,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
                     </label>
                     <textarea
                       id="escalation-force-validate-notes"
-                      className="w-full border border-border-default rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface-default text-text-primary placeholder:text-text-disabled"
+                      className={cn(inputBase, 'min-h-[80px] resize-none')}
                       placeholder="e.g. Supervisor override after review"
                       value={validationNotesForceValidate}
                       onChange={e => setValidationNotesForceValidate(e.target.value)}
@@ -209,7 +210,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
                     </label>
                     <textarea
                       id="escalation-authorize-retest-reason"
-                      className="w-full border border-border-default rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface-default text-text-primary placeholder:text-text-disabled"
+                      className={cn(inputBase, 'min-h-[80px] resize-none')}
                       placeholder="e.g. One more run with senior tech"
                       value={reasonAuthorizeRetest}
                       onChange={e => setReasonAuthorizeRetest(e.target.value)}
@@ -257,7 +258,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
                     </label>
                     <textarea
                       id="escalation-final-reject-reason"
-                      className="w-full border border-border-default rounded px-2 py-1.5 text-sm min-h-[80px] bg-surface-default text-text-primary placeholder:text-text-disabled"
+                      className={cn(inputBase, 'min-h-[80px] resize-none')}
                       placeholder="e.g. Sample compromised; request new collection"
                       value={reasonFinalReject}
                       onChange={e => setReasonFinalReject(e.target.value)}

@@ -135,7 +135,7 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
     const isSuperseded = item.status === 'superseded';
     return (
       <div
-        className="p-3 border border-border-default rounded-lg hover:bg-surface-hover cursor-pointer transition-colors"
+        className="p-3 border border-border-default rounded-lg hover:bg-surface-hover cursor-pointer"
         onClick={onClick}
         role="button"
         tabIndex={0}

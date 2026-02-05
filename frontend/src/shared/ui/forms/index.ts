@@ -11,3 +11,4 @@ export * from './DateInput';
 export * from './TagInput';
 export * from './CheckboxList';
 export * from './MultiSelectFilter';
+export * from './inputStyles';

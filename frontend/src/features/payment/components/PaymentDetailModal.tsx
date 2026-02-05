@@ -15,8 +15,8 @@
 import React, { useState, useCallback } from 'react';
 import { Modal, Icon, Badge, Button, Alert, FooterInfo } from '@/shared/ui';
 import { PaymentErrorBoundary } from '@/shared/components';
-import { formatDate, formatCurrency } from '@/utils';
-import { displayId } from '@/utils';
+import { cn, formatDate, formatCurrency, displayId } from '@/utils';
+import { inputBase } from '@/shared/ui/forms/inputStyles';
 import { useCreatePayment } from '@/hooks/queries/usePayments';
 import {
   getEnabledPaymentMethods,
@@ -324,7 +324,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
                   disabled={submitting}
-                  className="w-full px-4 py-3 text-sm border border-border-strong rounded-lg focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent resize-none disabled:opacity-50 disabled:bg-surface-canvas"
+                  className={cn(inputBase, 'resize-none disabled:opacity-50 disabled:bg-surface-canvas')}
                 />
               </div>
             )}

@@ -11,7 +11,8 @@ import { PopoverForm } from '../components/PopoverForm';
 import type { ContainerType } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS } from '@/types';
 import type { SampleRequirement } from '@/utils';
-import { ICONS, getContainerIcon } from '@/utils';
+import { cn, ICONS, getContainerIcon } from '@/utils';
+import { inputBase, inputError } from '@/shared/ui/forms/inputStyles';
 
 interface CollectionPopoverContentProps {
   requirement: SampleRequirement;
@@ -121,13 +122,12 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             inputMode="decimal"
             value={volume}
             onChange={e => setVolume(Number(e.target.value))}
-            className={`w-full pl-3 pr-8 py-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent transition-all placeholder-text-muted ${
-              volume < minimumVolume
-                ? 'border-border-error'
-                : volume > 100
-                  ? 'border-feedback-warning-border-strong'
-                  : 'border-border-strong'
-            }`}
+            className={cn(
+              inputBase,
+              'pr-8',
+              volume < minimumVolume && inputError,
+              volume > 100 && 'border-feedback-warning-border-strong focus:ring-2 focus:ring-feedback-warning-border focus:ring-opacity-20'
+            )}
             placeholder="0.0"
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-text-disabled pointer-events-none">
@@ -256,7 +256,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           placeholder="Add optional notes..."
           value={notes}
           onChange={e => setNotes(e.target.value)}
-          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent"
+          className={cn(inputBase, 'resize-none')}
         />
       </div>
     </PopoverForm>

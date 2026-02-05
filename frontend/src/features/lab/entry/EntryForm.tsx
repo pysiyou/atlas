@@ -4,6 +4,7 @@
 
 import React, { useCallback, useState } from 'react';
 import { Button, Textarea, Popover, Icon } from '@/shared/ui';
+import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
 import type { Test, TestParameter, Patient } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '@/utils';
@@ -90,10 +91,9 @@ const SelectParameterInput: React.FC<{
         <div
           id={inputId}
           className={cn(
-            'flex items-center gap-2 px-3 py-2.5 bg-surface-default border rounded cursor-pointer transition-colors w-full min-h-[42px]',
-            isOpen
-              ? 'border-action-primary ring-2 ring-action-primary ring-opacity-20'
-              : 'border-border-strong hover:border-border-hover'
+            inputTrigger,
+            'min-h-[42px] w-full',
+            isOpen && inputTriggerOpen
           )}
         >
           {/* Content */}
@@ -210,7 +210,7 @@ const ParameterInput: React.FC<{
       <input
         {...commonProps}
         type="text"
-        className="block w-full px-3 py-2.5 border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs text-text-primary placeholder:text-text-muted transition-shadow bg-surface-default"
+        className={cn(inputBase, 'block')}
         placeholder="Enter text result..."
       />
     );
@@ -226,12 +226,7 @@ const ParameterInput: React.FC<{
       min={limit?.min}
       max={limit?.max}
       inputMode="decimal"
-      className={cn(
-        "block w-full pl-3 pr-12 py-2.5 border rounded focus:outline-none focus:ring-2 focus:border-transparent disabled:bg-neutral-100 disabled:cursor-not-allowed text-xs text-text-primary placeholder:text-text-muted transition-shadow relative z-10 bg-surface-default",
-        hasError
-          ? 'border-border-error focus:ring-action-danger/20'
-          : "border-border-strong focus:ring-action-primary"
-      )}
+      className={cn(inputBase, 'block pr-12 relative z-10', hasError && inputError)}
       placeholder="--"
     />
   );

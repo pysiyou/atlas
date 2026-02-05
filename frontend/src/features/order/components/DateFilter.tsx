@@ -7,6 +7,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { format, isSameDay, isAfter, isBefore, startOfDay, endOfDay } from 'date-fns';
 import { Popover } from '@/shared/ui/overlay/Popover';
 import { Icon } from '@/shared/ui';
+import { inputTrigger, inputTriggerOpen } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import { DateFilterCalendar } from './DateFilterCalendar';
@@ -278,18 +279,12 @@ export const DateFilter: React.FC<DateFilterProps> = ({
         }
         return (
         <div
-          className={cn(
-            'flex items-center gap-2 px-3 py-2 bg-surface-default border rounded cursor-pointer transition-colors w-full h-9',
-            isOpen
-              ? 'border-action-primary ring-2 ring-action-primary ring-opacity-20'
-              : 'border-border-default hover:border-border-strong',
-            className
-          )}
+          className={cn(inputTrigger, 'w-full', isOpen && inputTriggerOpen, className)}
         >
-          <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted shrink-0" />
-          <div className="flex-1 text-xs truncate">
+          <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted group-hover:text-action-primary transition-colors shrink-0" />
+          <div className="flex-1 min-w-0 text-xs text-text-primary truncate">
             {value ? (
-              <span className="text-text">
+              <span className="text-text-primary">
                 {format(value[0], 'MMM dd')} - {format(value[1], 'MMM dd')}
               </span>
             ) : (

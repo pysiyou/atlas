@@ -11,9 +11,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Icon } from '@/shared/ui';
 import type { Test } from '@/types';
-import { ICONS, formatCurrency } from '@/utils';
+import { cn, ICONS, formatCurrency } from '@/utils';
 import { getBadgeAppearance } from '@/shared/theme/theme';
 import { TAG_STYLES } from '@/shared/ui/display/badge-colors';
+import { inputContainerBase, inputContainerError } from '@/shared/ui/forms/inputStyles';
 
 interface TestSelectorProps {
   selectedTests: string[];
@@ -55,18 +56,14 @@ const TestSearchTagInput: React.FC<{
       </div>
 
       <div
-        className={[
-          'relative',
-          'w-full pl-10 pr-3 py-2.5 border rounded',
-          'bg-surface-default transition-colors',
-          'focus-within:ring-2 focus-within:ring-action-primary focus-within:border-transparent',
-          error ? 'border-border-error' : 'border-border-strong',
-          'flex flex-wrap gap-2 items-center',
-          'min-h-[42px]',
-        ].join(' ')}
+        className={cn(
+          inputContainerBase,
+          'group relative pl-10 pr-3 py-2.5 flex flex-wrap gap-2 items-center min-h-[42px]',
+          error && inputContainerError
+        )}
       >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-start pt-2.5 pointer-events-none">
-          <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-text-muted" />
+          <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-text-muted group-hover:text-action-primary transition-colors" />
         </div>
 
         {selectedTags.map(({ code, name }) => (

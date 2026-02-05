@@ -11,6 +11,7 @@ import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import { getBadgeAppearance } from '@/shared/theme/theme';
 import { TAG_STYLES } from '../display/badge-colors';
+import { inputContainerBase, inputContainerError } from './inputStyles';
 
 export interface TagInputProps {
   /** Current tags as an array of strings */
@@ -126,13 +127,9 @@ export const TagInput: React.FC<TagInputProps> = ({
       {/* Tags Container */}
       <div
         className={cn(
-          'w-full px-3 py-2.5 border rounded',
-          'bg-surface-default transition-colors',
-          'flex flex-wrap gap-2 items-center',
-          'min-h-[42px]',
-          error
-            ? 'border-border-error focus-within:ring-2 focus-within:ring-action-primary focus-within:border-transparent'
-            : 'border-border-strong focus-within:ring-2 focus-within:ring-action-primary focus-within:border-transparent'
+          inputContainerBase,
+          'px-3 py-2.5 flex flex-wrap gap-2 items-center min-h-[42px]',
+          error && inputContainerError
         )}
       >
         {/* Existing Tags */}

@@ -96,7 +96,7 @@ export const OrderDetail: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col p-6 transition-all duration-300">
+    <div className="h-full flex flex-col p-6">
       <OrderHeader
         order={order}
         invoice={invoice}

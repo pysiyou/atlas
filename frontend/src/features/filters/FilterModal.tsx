@@ -12,6 +12,7 @@ import { CheckboxList } from '@/shared/ui';
 import { Icon, FooterInfo } from '@/shared/ui';
 import { ICONS } from '@/utils';
 import { cn } from '@/utils';
+import { inputContainerBase, inputInner, inputText } from '@/shared/ui/forms/inputStyles';
 import { QuickFilters } from './QuickFilters';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
 
@@ -69,13 +70,13 @@ const ModalSearchInput: React.FC<{
   }, [onChange]);
 
   return (
-    <div className="relative w-full flex items-center h-10 px-4 bg-surface-default border border-border-default rounded-lg focus-within:border-action-primary transition-colors">
+    <div className={cn(inputContainerBase, 'flex items-center h-10 px-4')}>
       <input
         type="text"
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-muted"
+        className={cn(inputInner, inputText)}
       />
       {localValue && (
         <button

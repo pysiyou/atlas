@@ -8,6 +8,7 @@
 import React, { useState, useEffect } from 'react';
 import { Popover } from '@/shared/ui';
 import { Icon } from '@/shared/ui';
+import { inputTrigger, inputTriggerOpen } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 
@@ -82,16 +83,8 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
       showBackdrop={false}
       trigger={({ isOpen }) => (
         <div
-          className={cn(
-            'group relative flex items-center gap-2 w-full h-[34px] px-3',
-            'bg-surface-default border border-border-strong rounded-md cursor-pointer transition-colors duration-200',
-            isOpen
-              ? 'border-action-primary'
-              : 'hover:bg-surface-hover',
-            className
-          )}
+          className={cn(inputTrigger, 'w-full', isOpen && inputTriggerOpen, className)}
         >
-          {/* Column 1: Left Icon */}
           <Icon
             name={ICONS.dataFields.hourglass}
             className={cn(
@@ -99,9 +92,9 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               isOpen ? 'text-action-primary' : 'text-text-muted group-hover:text-action-primary'
             )}
           />
-          
-          {/* Column 2: Content - flexible middle */}
-          <div className={cn('flex-1 min-w-0 text-xs font-medium truncate whitespace-nowrap overflow-hidden', 'font-medium')}>{renderTriggerContent()}</div>
+          <div className="flex-1 min-w-0 text-xs font-medium text-text-primary truncate whitespace-nowrap overflow-hidden">
+            {renderTriggerContent()}
+          </div>
 
           {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
           <div className="flex items-center gap-1 shrink-0">

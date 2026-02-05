@@ -174,8 +174,6 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
             className={`
               ${colors.bg} ${colors.border}
               border rounded-lg p-3
-              transition-all duration-200
-              hover:shadow-sm
             `}
           >
             <div className="flex items-center gap-2 mb-2 min-w-0">

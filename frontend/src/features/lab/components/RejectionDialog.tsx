@@ -24,7 +24,8 @@ import { PopoverForm, RadioCard } from './PopoverForm';
 import { useRejectionManager } from '../hooks/useRejectionManager';
 import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
-import { ICONS } from '@/utils';
+import { cn, ICONS } from '@/utils';
+import { inputBase } from '@/shared/ui/forms/inputStyles';
 
 export type RejectionDialogLayout = 'popover' | 'modal';
 
@@ -244,7 +245,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
           }
           value={reason}
           onChange={e => setReason(e.target.value)}
-          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent"
+          className={cn(inputBase, 'resize-none')}
         />
       </div>
     </>

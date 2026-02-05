@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Icon } from '@/shared/ui';
+import { inputWrapper, inputInner, inputText } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 
@@ -104,20 +105,17 @@ export const SearchControl: React.FC<SearchControlProps> = ({
   }, []);
 
   return (
-    <div className={cn('group relative w-full flex items-center gap-2 h-[34px] px-3 bg-surface-default border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-action-primary transition-colors duration-200', className)}>
-      {/* Column 1: Left Icon */}
+    <div className={cn(inputWrapper, className)}>
       <Icon
         name={ICONS.actions.search}
         className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-action-primary transition-colors"
       />
-
-      {/* Column 2: Input - flexible middle */}
       <input
         type="text"
         placeholder={placeholder}
         value={localValue}
         onChange={handleChange}
-        className="flex-1 min-w-0 text-xs font-medium text-text-primary bg-transparent border-0 outline-none py-0 placeholder:font-normal placeholder:text-text-muted"
+        className={cn(inputInner, inputText, 'font-medium')}
       />
 
       {/* Column 3: Right Icons (loading/clear) */}

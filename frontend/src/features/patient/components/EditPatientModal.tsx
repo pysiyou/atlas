@@ -47,7 +47,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
             type="button"
             onClick={() => onTabChange(tab.id)}
             className={`
-              relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 cursor-pointer
+              relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium cursor-pointer
               ${
                 isActive
                   ? 'bg-surface-default text-action-primary shadow-sm shadow-1 ring-1 ring-black/5'

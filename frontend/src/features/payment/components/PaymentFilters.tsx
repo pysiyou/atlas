@@ -11,6 +11,7 @@ import { Modal } from '@/shared/ui';
 import { MultiSelectFilter } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
 import { DateFilter } from '@/features/order/components/DateFilter';
+import { inputWrapper, inputInner, inputText, inputContainerBase } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -194,11 +195,7 @@ const SearchInput: React.FC<{
   }, [onChange]);
 
   return (
-    <div
-      className={cn(
-        'group relative w-full flex items-center gap-2 h-[34px] px-3 bg-surface-default border border-border-strong rounded-md hover:bg-surface-hover focus-within:outline-none focus-within:border-action-primary transition-colors duration-200'
-      )}
-    >
+    <div className={cn(inputWrapper)}>
       <Icon
         name={ICONS.actions.search}
         className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-action-primary transition-colors"
@@ -208,7 +205,7 @@ const SearchInput: React.FC<{
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className="flex-1 min-w-0 text-xs font-medium bg-transparent border-0 outline-none py-0 placeholder:font-normal placeholder:text-text-muted"
+        className={cn(inputInner, inputText, 'font-medium')}
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
@@ -365,13 +362,13 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {/* Search Section */}
               <div className="mb-6">
-                <div className="relative w-full flex items-center h-10 px-4 bg-surface-default border border-border-default rounded-lg focus-within:border-action-primary transition-colors">
+                <div className={cn(inputContainerBase, 'flex items-center h-10 px-4')}>
                   <input
                     type="text"
                     placeholder="Search payments..."
                     value={searchQuery}
                     onChange={e => onSearchChange(e.target.value)}
-                    className="flex-1 min-w-0 text-sm bg-transparent border-0 outline-none placeholder:text-text-muted"
+                    className={cn(inputInner, inputText)}
                   />
                   {searchQuery && (
                     <button

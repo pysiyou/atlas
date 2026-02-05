@@ -43,7 +43,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER order_test_updated_at_trigger
     BEFORE UPDATE ON order_tests
     FOR EACH ROW
-    EXECUTE FUNCTION update_order_test_updated_at();
+    EXECUTE PROCEDURE update_order_test_updated_at();
 
 -- Verify migration
 -- Expected: All rows should have both timestamps, updated_at >= created_at

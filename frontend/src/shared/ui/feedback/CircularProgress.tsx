@@ -56,7 +56,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
-            className={`transition-all duration-1000 ease-out ${progressColorClass}`}
+            className={progressColorClass}
           />
         </svg>
       </div>

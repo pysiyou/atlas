@@ -7,9 +7,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Popover, IconButton, Alert, Badge, FooterInfo } from '@/shared/ui';
 import { PopoverForm, CheckboxCard } from '../components/PopoverForm';
-import { displayId } from '@/utils';
+import { cn, displayId } from '@/utils';
 import type { RejectionReason } from '@/types';
 import { ICONS } from '@/utils';
+import { inputBase } from '@/shared/ui/forms/inputStyles';
 
 /** Rejection reason options with labels and descriptions */
 const REJECTION_REASONS: { value: RejectionReason; label: string; description: string }[] = [
@@ -204,7 +205,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           placeholder="Additional details..."
           value={notes}
           onChange={e => setNotes(e.target.value)}
-          className="w-full px-3 py-2 text-xs border border-border-strong rounded focus:outline-none focus:ring-2 focus:ring-action-primary focus:border-transparent"
+          className={cn(inputBase, 'resize-none')}
         />
         {reasons.includes('other') && !notes.trim() && (
           <p className="text-xs text-feedback-danger-text mt-1">Required when "Other" is selected</p>

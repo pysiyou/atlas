@@ -8,7 +8,8 @@
 import React from 'react';
 import { Icon, type IconName } from '@/shared/ui';
 import type { VitalSigns } from '@/types/patient';
-import { ICONS } from '@/utils';
+import { cn, ICONS } from '@/utils';
+import { inputBase, inputError } from '@/shared/ui/forms/inputStyles';
 
 export interface VitalsSectionProps {
   /** Current vital signs data */
@@ -221,9 +222,9 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                <Icon name={config.icon} className={`w-4 h-4 shrink-0 ${isNa ? 'text-text-muted/70' : 'text-text-muted'}`} />
+                <Icon name={config.icon} className={cn('w-4 h-4 shrink-0 transition-colors', isNa ? 'text-text-muted/70' : 'text-text-muted group-hover:text-action-primary')} />
               </div>
 
               {isNa ? (
@@ -247,16 +248,13 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     max={config.max}
                     step={config.step}
                     placeholder="--"
-                    className={`
-                      w-full rounded border px-3 py-1.5 text-sm bg-surface-default pl-10
-                      ${error ? 'border-border-error focus:border-border-error focus:ring-2 focus:ring-action-danger focus:ring-opacity-20' : 'border-border-default focus:border-action-primary focus:ring-2 focus:ring-action-primary focus:ring-opacity-20'}
-                      pr-12
-                      [appearance:textfield]
-                      [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0
-                      [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0
-                      ${status ? statusColors.border : ''}
-                      ${status ? statusColors.bg : ''}
-                    `}
+                    className={cn(
+                      inputBase,
+                      'pl-10 pr-12 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0',
+                      error && inputError,
+                      status && statusColors.border,
+                      status && statusColors.bg
+                    )}
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
                     <span className="text-xs text-text-tertiary select-none truncate">{config.unit}</span>

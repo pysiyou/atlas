@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { Button, Icon } from '@/shared/ui';
-import { ICONS } from '@/utils';
+import { cn, ICONS } from '@/utils';
+import { inputBase } from '@/shared/ui/forms/inputStyles';
 import type { DateRangeFilter } from '../types';
 
 export type DateRangePreset = 'thisWeek' | 'last7' | 'last30' | 'last90';
@@ -57,7 +58,7 @@ export const AnalyticsToolbar: React.FC<AnalyticsToolbarProps> = ({
       <select
         value={compareTo}
         onChange={(e) => onCompareToChange(e.target.value as CompareToOption)}
-        className="text-sm border border-border-default rounded-md px-3 py-1.5 bg-surface-default text-text-primary focus:outline-none focus:ring-2 focus:ring-action-primary"
+        className={cn(inputBase, 'cursor-pointer')}
       >
         <option value="none">None</option>
         <option value="lastWeek">Last Week</option>

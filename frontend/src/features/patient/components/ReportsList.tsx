@@ -32,7 +32,7 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
       {reportableOrders.map((order: Order) => (
         <div
           key={order.orderId}
-          className="flex items-center justify-between p-3 hover:bg-surface-canvas transition-colors group"
+          className="flex items-center justify-between p-3 hover:bg-surface-canvas group"
         >
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="w-8 h-8 flex items-center justify-center">

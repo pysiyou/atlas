@@ -2,5 +2,3 @@ export { VennBubbles } from './VennBubbles';
 export type { VennBubblesProps, VennSegment, VennIntersection } from './VennBubbles';
 export { CommandCenterMetricCard } from './CommandCenterMetricCard';
 export type { CommandCenterMetricCardProps } from './CommandCenterMetricCard';
-export { WeeklyActivitiesChart } from './WeeklyActivitiesChart';
-export { LabHistoryTimeline } from './LabHistoryTimeline';

@@ -53,7 +53,7 @@ function buildSimpleViewConfig(): TableViewConfig<Order> {
   ];
   const CardComponent: React.FC<CardComponentProps<Order>> = ({ item, onClick }) => (
     <div
-      className="p-3 border border-border-default rounded-lg hover:bg-surface-hover cursor-pointer transition-colors"
+      className="p-3 border border-border-default rounded-lg hover:bg-surface-hover cursor-pointer"
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -133,7 +133,7 @@ function buildDetailedViewConfig(): TableViewConfig<Order> {
   const compactColumns = fullColumns.slice(0, 3);
   const CardComponent: React.FC<CardComponentProps<Order>> = ({ item, onClick }) => (
     <div
-      className="p-3 border border-border-default rounded-lg hover:bg-surface-hover cursor-pointer transition-colors"
+      className="p-3 border border-border-default rounded-lg hover:bg-surface-hover cursor-pointer"
       onClick={onClick}
       role="button"
       tabIndex={0}

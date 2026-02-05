@@ -53,7 +53,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ progress, isBlocked }) =>
   if (showPulsingDot) {
     return (
       <div className="w-5 h-5 rounded-full border-2 border-action-primary bg-action-primary-muted-bg flex items-center justify-center">
-        <div className="w-2 h-2 rounded-full bg-action-primary animate-pulse" />
+        <div className="w-2 h-2 rounded-full bg-action-primary" />
       </div>
     );
   }
@@ -112,7 +112,7 @@ const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
         return (
           <div
             key={index}
-            className={`w-2 h-2 rounded-full transition-all duration-200 ${
+            className={`w-2 h-2 rounded-full ${
               isCompleted
                 ? 'bg-action-primary ring-2 ring-action-primary ring-opacity-30'
                 : 'bg-transparent ring-1 ring-action-primary'

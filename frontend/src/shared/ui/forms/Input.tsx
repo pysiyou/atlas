@@ -6,19 +6,15 @@
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon, type IconName } from '../display/Icon';
 import { ICONS } from '@/utils';
+import { inputBase, inputError } from './inputStyles';
 
 /**
  * Get input classes based on state
  */
-const getInputClasses = (hasError: boolean, hasIcon: boolean, disabled?: boolean) => {
-  const baseClasses = 'w-full rounded border px-3 py-2 text-xs text-text-primary bg-surface-default transition-colors duration-200 focus:outline-none focus:ring-2 placeholder:text-text-muted';
+const getInputClasses = (hasError: boolean, hasIcon: boolean) => {
   const iconPadding = hasIcon ? 'pl-10' : '';
-  const stateClasses = hasError
-    ? 'border-border-error focus:border-border-error focus:ring-action-danger focus:ring-opacity-20'
-    : 'border-border-default focus:border-action-primary focus:ring-action-primary focus:ring-opacity-20';
-  const disabledClasses = disabled ? 'bg-neutral-100 text-text-disabled cursor-not-allowed' : '';
-  
-  return `${baseClasses} ${iconPadding} ${stateClasses} ${disabledClasses}`;
+  const stateClasses = hasError ? inputError : '';
+  return `${inputBase} ${iconPadding} ${stateClasses}`.trim();
 };
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -76,12 +72,12 @@ export const Input: React.FC<InputProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-text-muted" />
+            <Icon name={displayIcon} className="w-4 h-4 text-text-muted group-hover:text-action-primary transition-colors" />
           </div>
         )}
         <input
           id={inputId}
-          className={`${getInputClasses(!!error, !!displayIcon, props.disabled)} ${className}`}
+          className={`${getInputClasses(!!error, !!displayIcon)} ${className}`}
           {...props}
         />
       </div>
@@ -143,12 +139,12 @@ export const Textarea: React.FC<TextareaProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute top-2.5 left-3 pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-text-muted" />
+            <Icon name={displayIcon} className="w-4 h-4 text-text-muted group-hover:text-action-primary transition-colors" />
           </div>
         )}
         <textarea
           id={inputId}
-          className={`${getInputClasses(!!error, !!displayIcon, props.disabled)} ${className}`}
+          className={`${getInputClasses(!!error, !!displayIcon)} ${className}`}
           rows={4}
           {...props}
         />
@@ -213,12 +209,12 @@ export const Select: React.FC<SelectProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-text-muted" />
+            <Icon name={displayIcon} className="w-4 h-4 text-text-muted group-hover:text-action-primary transition-colors" />
           </div>
         )}
         <select
           id={inputId}
-          className={`${getInputClasses(!!error, !!displayIcon, props.disabled)} cursor-pointer ${className}`}
+          className={`${getInputClasses(!!error, !!displayIcon)} cursor-pointer ${className}`}
           {...props}
         >
           {options.map(option => (

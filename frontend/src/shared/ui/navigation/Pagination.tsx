@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icon } from '../display/Icon';
-import { ICONS } from '@/utils';
+import { cn, ICONS } from '@/utils';
+import { inputBase } from '../forms/inputStyles';
 
 interface PaginationProps {
   currentPage: number;
@@ -68,7 +69,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           <select
             value={pageSize}
             onChange={e => onPageSizeChange(Number(e.target.value))}
-            className="h-8 px-2 pr-8 text-xs bg-surface-default border border-border-default rounded cursor-pointer hover:border-border-strong focus:outline-none focus:border-action-primary focus:ring-2 focus:ring-action-primary/20"
+            className={cn(inputBase, 'cursor-pointer h-8 px-2 pr-8')}
           >
             {pageSizeOptions.map(option => (
               <option key={option} value={option} className="text-xs">
