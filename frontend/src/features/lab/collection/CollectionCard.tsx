@@ -227,6 +227,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
             height={15}
             displayValue={false}
             background="transparent"
+            lineColor="var(--fg)"
             margin={0}
           />
         </div>

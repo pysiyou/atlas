@@ -218,6 +218,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
                 height={40}
                 displayValue={false}
                 background="transparent"
+                lineColor="var(--fg)"
                 margin={0}
               />
             </div>

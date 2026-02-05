@@ -6,7 +6,7 @@
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
 import React, { useState, useCallback, useEffect } from 'react';
-import { Popover, Button, Icon, Alert, Badge, FooterInfo } from '@/shared/ui';
+import { Popover, Button, Icon, Alert, Badge, FooterInfo, PaymentMethodSelector } from '@/shared/ui';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { cn, formatCurrency, displayId } from '@/utils';
 import { inputBase } from '@/shared/ui/forms/inputStyles';
@@ -17,7 +17,6 @@ import {
   type PaymentMethod,
 } from '@/types/billing';
 import { useCreatePayment } from '@/hooks/queries/usePayments';
-import type { IconName } from '@/shared/ui';
 import { ICONS } from '@/utils';
 import { getPaymentErrorMessage } from '@/utils/errorHelpers';
 
@@ -202,52 +201,11 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
         <label className="block text-xs font-medium text-fg-subtle mb-2">
           Payment Method <span className="text-danger-fg">*</span>
         </label>
-        <div className="grid grid-cols-2 gap-2">
-          {PAYMENT_METHODS.map(method => {
-            const isSelected = paymentMethod === method.value;
-            return (
-              <button
-                key={method.value}
-                type="button"
-                onClick={() => setPaymentMethod(method.value)}
-                className={`
-                  relative flex items-center gap-2.5 p-3 rounded border
-                  ${
-                    isSelected
-                      ? 'bg-panel border-brand border-2'
-                      : 'bg-panel border-stroke hover:border-stroke-strong'
-                  }
-                `}
-              >
-                {/* Brand icon on the left */}
-                <Icon
-                  name={method.icon as IconName}
-                  className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-fg-disabled'}`}
-                />
-                {/* Brand label */}
-                <span
-                  className={`flex-1 text-xs font-medium text-left ${
-                    isSelected ? 'text-fg' : 'text-fg-muted'
-                  }`}
-                >
-                  {method.label}
-                </span>
-                {/* Checkmark indicator in top-right */}
-                <div
-                  className={`
-                    absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center
-                    ${isSelected ? 'bg-success' : 'bg-transparent border-2 border-stroke-strong'}
-                  `}
-                >
-                  <Icon
-                    name={ICONS.actions.check}
-                    className={`w-3 h-3 ${isSelected ? 'text-on-success' : 'text-fg-disabled'}`}
-                  />
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        <PaymentMethodSelector
+          methods={PAYMENT_METHODS}
+          value={paymentMethod}
+          onChange={setPaymentMethod}
+        />
       </div>
 
       {/* Notes */}

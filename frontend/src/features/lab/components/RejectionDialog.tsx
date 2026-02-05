@@ -1,18 +1,17 @@
 /**
- * RejectionDialog - Unified dialog for rejecting test results
+ * RejectionDialog - Popover for rejecting test results
  *
  * Provides a consistent interface for all rejection scenarios:
  * - Fetches available actions from the API (dynamic limits)
  * - Displays remaining attempts for each action
  * - Shows escalation warning when all options exhausted
  * - Handles loading, error, and success states
- * - Uses shared Modal when opened from RejectionDialog (trigger).
+ * - Result rejection is popover-only (no modal).
  */
-/* eslint-disable max-lines */
 
 import React, { useState } from 'react';
 import {
-  Modal,
+  Popover,
   IconButton,
   Icon,
   Alert,
@@ -27,8 +26,6 @@ import type { RejectionResult } from '@/types/lab-operations';
 import { cn, ICONS } from '@/utils';
 import { inputBase } from '@/shared/ui/forms/inputStyles';
 
-export type RejectionDialogLayout = 'popover' | 'modal';
-
 interface RejectionDialogContentProps {
   orderId: string | number;
   testCode: string;
@@ -41,8 +38,6 @@ interface RejectionDialogContentProps {
    * validated tests. Rejecting the sample would invalidate those results.
    */
   orderHasValidatedTests?: boolean;
-  /** When 'modal', content is rendered for use inside shared Modal (no PopoverForm wrapper). */
-  layout?: RejectionDialogLayout;
 }
 
 /**
@@ -59,11 +54,9 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   onConfirm,
   onCancel,
   orderHasValidatedTests = false,
-  layout = 'popover',
   // High complexity is necessary for comprehensive rejection logic with multiple conditional branches and state management
   // eslint-disable-next-line complexity
 }) => {
-  const isModal = layout === 'modal';
   const [reason, setReason] = useState('');
   /** User override; when null, we use the derived default from options. */
   const [userOverride, setUserOverride] = useState<ResultRejectionType | null>(null);
@@ -124,13 +117,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   // Loading state
   if (isLoading) {
     return (
-      <div
-        className={
-          isModal
-            ? 'flex flex-col items-center justify-center gap-4 py-8'
-            : 'w-90 md:w-96 bg-panel rounded-lg shadow-xl border border-stroke p-8 flex flex-col items-center justify-center gap-4'
-        }
-      >
+      <div className="w-90 md:w-96 bg-panel rounded-lg shadow-xl border border-stroke p-4 flex flex-col items-center justify-center gap-4">
         <ClaudeLoader size="md" />
         <p className="text-sm text-fg-subtle">Loading rejection options...</p>
       </div>
@@ -140,8 +127,8 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   // Error state
   if (error && !options) {
     return (
-      <div className={isModal ? 'space-y-4' : 'w-90 md:w-96 bg-panel rounded-lg shadow-xl border border-stroke p-4'}>
-        <Alert variant="danger" className="mb-4">
+      <div className="w-90 md:w-96 bg-panel rounded-lg shadow-xl border border-stroke p-4 space-y-4">
+        <Alert variant="danger" className="py-2">
           <p className="font-medium text-xs">Failed to load options</p>
           <p className="text-xxs mt-1">{error}</p>
         </Alert>
@@ -251,35 +238,6 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     </>
   );
 
-  if (isModal) {
-    return (
-      <div className="flex flex-col min-h-0">
-        <div className="p-4 space-y-4 overflow-y-auto flex-1 min-h-0">{body}</div>
-        <div className="px-6 py-4 border-t border-stroke bg-panel shrink-0 flex items-center justify-between gap-2">
-          <FooterInfo
-            icon={ICONS.actions.alertCircle}
-            text={escalationRequired ? 'Escalating to supervisor' : 'Rejecting results'}
-          />
-          <div className="flex gap-2">
-            <Button variant="cancel" size="sm" showIcon={false} onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              showIcon={false}
-              onClick={handleConfirm}
-              disabled={isConfirmDisabled}
-              isLoading={isRejecting}
-            >
-              {escalationRequired ? 'Escalate to Supervisor' : 'Reject'}
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <PopoverForm
       title={escalationRequired ? 'Escalate to Supervisor' : 'Reject Results'}
@@ -322,9 +280,8 @@ interface RejectionDialogProps {
 }
 
 /**
- * RejectionDialog - Opens rejection flow in shared Modal (or Popover when trigger is custom)
+ * RejectionDialog - Opens result rejection flow in a popover.
  *
- * Uses shared Modal for consistency with other feature modals.
  * Shows remaining attempts and disables actions when limits are reached.
  */
 export const RejectionDialog: React.FC<RejectionDialogProps> = ({
@@ -335,34 +292,19 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
   onReject,
   trigger,
   orderHasValidatedTests,
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const subtitle = [testName, testCode ? `(${testCode})` : '', patientName ? `- ${patientName}` : '']
-    .filter(Boolean)
-    .join(' ');
-
-  const openModal = () => setIsOpen(true);
-  const triggerEl =
-    trigger === undefined ? (
-      <IconButton variant="delete" size="sm" title="Reject Results" onClick={openModal} />
-    ) : (
-      <div onClick={openModal} role="button" tabIndex={0} onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), openModal())}>
-        {trigger}
-      </div>
-    );
-
-  return (
-    <>
-      {triggerEl}
-      <Modal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        title="Reject Results"
-        subtitle={subtitle || undefined}
-        size="md"
-      >
+}) => (
+  <Popover
+    placement="bottom-end"
+    offsetValue={8}
+    trigger={
+      trigger ?? (
+        <IconButton variant="delete" size="sm" title="Reject Results" />
+      )
+    }
+  >
+    {({ close }) => (
+      <div data-popover-content onClick={e => e.stopPropagation()}>
         <RejectionDialogContent
-          layout="modal"
           orderId={orderId}
           testCode={testCode}
           testName={testName}
@@ -370,14 +312,14 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
           orderHasValidatedTests={orderHasValidatedTests}
           onConfirm={result => {
             onReject(result);
-            setIsOpen(false);
+            close();
           }}
-          onCancel={() => setIsOpen(false)}
+          onCancel={close}
         />
-      </Modal>
-    </>
-  );
-};
+      </div>
+    )}
+  </Popover>
+);
 
 /**
  * RejectionHistoryBanner - Displays rejection history on cards

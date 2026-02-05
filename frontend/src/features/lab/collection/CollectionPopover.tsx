@@ -144,7 +144,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
         </div>
       </div>
 
-      {/* Container Type */}
+      {/* Container Type - static card + checkmark only on selection (matches PaymentMethodSelector) */}
       <div>
         <label className="block text-xs font-medium text-fg-subtle mb-2">
           Container Type <span className="text-danger-fg">*</span>
@@ -159,39 +159,24 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                 type="button"
                 onClick={() => setSelectedContainerType(option.value as ContainerType)}
                 title={isRequired ? 'Required container type' : 'Not in requirements'}
-                className={`
-                  relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
-                  ${
-                    isSelected
-                      ? 'bg-panel border-brand border-2'
-                      : 'bg-panel border-stroke hover:border-stroke-strong'
-                  }
-                `}
+                className="relative flex items-center gap-2.5 p-3 rounded border border-stroke bg-panel hover:border-stroke-strong transition-colors duration-200 cursor-pointer"
               >
-                {/* Container icon on the left */}
                 <Icon
                   name={getContainerIcon(option.value)}
-                  className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-fg-disabled'}`}
+                  className="w-7 h-7 shrink-0 text-fg-disabled"
                 />
-                {/* Container label */}
-                <span
-                  className={`flex-1 text-xs font-medium text-left ${
-                    isSelected ? 'text-fg' : 'text-fg-muted'
-                  }`}
-                >
+                <span className="flex-1 text-xs font-medium text-left text-fg-muted">
                   {option.name}
                 </span>
-                {/* Checkmark indicator in top-right */}
                 <div
                   className={`
-                    absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                    ${isSelected ? 'bg-success' : 'bg-transparent border-2 border-stroke-strong'}
+                    absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200
+                    ${isSelected ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong'}
                   `}
                 >
-                  <Icon
-                    name={ICONS.actions.check}
-                    className={`w-3 h-3 ${isSelected ? 'text-on-brand' : 'text-fg-disabled'}`}
-                  />
+                  {isSelected && (
+                    <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
+                  )}
                 </div>
               </button>
             );

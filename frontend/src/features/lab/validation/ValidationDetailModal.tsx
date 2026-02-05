@@ -11,7 +11,7 @@
  */
 
 import React from 'react';
-import { Button, Popover, SectionContainer } from '@/shared/ui';
+import { Button, SectionContainer } from '@/shared/ui';
 import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
 import {
@@ -20,7 +20,7 @@ import {
   ModalFooter,
   StatusBadgeRow,
 } from '../components/LabDetailModal';
-import { RejectionDialogContent } from '../components/RejectionDialog';
+import { RejectionDialog } from '../components/RejectionDialog';
 import { EntryRejectionSection } from '../entry/EntryRejectionSection';
 import {
   RetestBadge,
@@ -41,7 +41,7 @@ interface ValidationDetailModalProps {
   onApprove: () => void;
   /**
    * Called when rejection is performed.
-   * When RejectionDialogContent is used, it calls the API directly.
+   * When RejectionDialog is used, it calls the API directly.
    * Passing undefined values signals that the API was already called and
    * the parent should only refresh data.
    */
@@ -160,36 +160,18 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           statusMessage=""
           statusClassName="text-fg-subtle"
         >
-          <Popover
-            placement="top-end"
-            offsetValue={8}
-            trigger={
-              <Button variant="reject" size="md">
-                Reject
-              </Button>
-            }
-          >
-            {({ close }) => (
-              <div data-popover-content onClick={e => e.stopPropagation()}>
-                <RejectionDialogContent
-                  orderId={test.orderId}
-                  testCode={test.testCode}
-                  testName={test.testName}
-                  patientName={test.patientName}
-                  orderHasValidatedTests={orderHasValidatedTests}
-                  onConfirm={() => {
-                    // RejectionDialogContent already calls the API via useRejectionManager.
-                    // Signal to parent to refresh data without making another API call
-                    // by passing undefined values (see ResultValidationView.handleValidate).
-                    onReject(undefined, undefined);
-                    close();
-                    onClose();
-                  }}
-                  onCancel={close}
-                />
-              </div>
-            )}
-          </Popover>
+          <RejectionDialog
+            orderId={test.orderId}
+            testCode={test.testCode}
+            testName={test.testName}
+            patientName={test.patientName}
+            orderHasValidatedTests={orderHasValidatedTests}
+            trigger={<Button variant="reject" size="md">Reject</Button>}
+            onReject={() => {
+              onReject(undefined, undefined);
+              onClose();
+            }}
+          />
           <Button onClick={handleApprove} variant="approve" size="md">
             Approve
           </Button>

@@ -8,7 +8,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Button, IconButton, FooterInfo } from '@/shared/ui';
+import { Button, IconButton, FooterInfo, Icon } from '@/shared/ui';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import { ICONS } from '@/utils';
 
@@ -110,7 +110,9 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
 };
 
 /**
- * RadioCard - Styled radio option card for use in popover forms
+ * RadioCard - Styled radio option card for use in popover forms.
+ *
+ * Matches PaymentMethodSelector: static border and text; only the checkmark appears when selected.
  */
 interface RadioCardProps {
   /** Whether this option is selected */
@@ -121,7 +123,7 @@ interface RadioCardProps {
   label: string;
   /** Description text below the label */
   description: string;
-  /** Color variant when selected */
+  /** Color variant when selected (unused visually; kept for API compatibility) */
   variant?: 'sky' | 'red';
   /** Radio input name for grouping */
   name: string;
@@ -136,77 +138,60 @@ export const RadioCard: React.FC<RadioCardProps> = ({
   onClick,
   label,
   description,
-  variant = 'sky',
   name,
   disabled = false,
   disabledReason,
 }) => {
-  const selectedStyles =
-    variant === 'red'
-      ? 'bg-danger-bg border-danger-border ring-1 ring-danger-border'
-      : 'bg-brand-muted border-brand ring-1 ring-brand';
-
-  const disabledStyles = 'bg-neutral-100 border-stroke cursor-not-allowed opacity-60';
-
-  const labelColor = disabled
-    ? 'text-fg-disabled'
-    : variant === 'red'
-      ? selected
-        ? 'text-danger-fg-strong'
-        : 'text-fg'
-      : selected
-        ? 'text-brand-fg'
-        : 'text-fg';
-
-  const descColor = disabled
-    ? 'text-fg-disabled'
-    : variant === 'red'
-      ? selected
-        ? 'text-danger-fg'
-        : 'text-fg-subtle'
-      : selected
-        ? 'text-brand'
-        : 'text-fg-subtle';
-
-  const radioColor =
-    variant === 'red' ? 'text-danger-fg focus:ring-danger' : 'text-brand focus:ring-brand';
-
   const handleClick = () => {
-    if (!disabled) {
-      onClick();
-    }
+    if (!disabled) onClick();
   };
 
   return (
     <div
-      className={`
-        relative flex items-start p-3 rounded-lg border transition-all duration-200
-        ${
-          disabled
-            ? disabledStyles
-            : selected
-              ? selectedStyles
-              : 'bg-panel border-stroke hover:border-stroke-strong hover:bg-canvas cursor-pointer'
+      role="radio"
+      aria-checked={selected}
+      tabIndex={disabled ? -1 : 0}
+      onKeyDown={e => {
+        if (!disabled && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          onClick();
         }
+      }}
+      className={`
+        relative flex items-start p-3 rounded border border-stroke bg-panel hover:border-stroke-strong transition-colors duration-200
+        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
       `}
       onClick={handleClick}
       title={disabled ? disabledReason : undefined}
     >
-      <div className="flex items-center h-4 mt-0.5">
-        <input
-          type="radio"
-          name={name}
-          checked={selected}
-          onChange={handleClick}
-          disabled={disabled}
-          className={`h-3.5 w-3.5 border-stroke-strong ${radioColor} ${disabled ? 'cursor-not-allowed' : ''}`}
-        />
-      </div>
-      <div className="ml-2.5">
-        <span className={`block text-xs font-medium ${labelColor}`}>{label}</span>
-        <span className={`block text-xxs mt-0.5 ${descColor}`}>{description}</span>
+      <input
+        type="radio"
+        name={name}
+        checked={selected}
+        onChange={handleClick}
+        disabled={disabled}
+        className="sr-only"
+        aria-hidden
+      />
+      <div className="flex-1 min-w-0 pr-8">
+        <span className={`block text-xs font-medium ${disabled ? 'text-fg-disabled' : 'text-fg-muted'}`}>
+          {label}
+        </span>
+        <span className={`block text-xxs mt-0.5 ${disabled ? 'text-fg-disabled' : 'text-fg-subtle'}`}>
+          {description}
+        </span>
         {disabled && disabledReason && (
           <span className="block text-xxs mt-1 text-danger-fg font-medium">{disabledReason}</span>
+        )}
+      </div>
+      <div
+        className={`
+          absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200
+          ${selected ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong'}
+        `}
+      >
+        {selected && (
+          <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
         )}
       </div>
     </div>
@@ -214,7 +199,9 @@ export const RadioCard: React.FC<RadioCardProps> = ({
 };
 
 /**
- * CheckboxCard - Styled checkbox option card for use in popover forms
+ * CheckboxCard - Styled checkbox option card for use in popover forms.
+ *
+ * Matches PaymentMethodSelector / RadioCard: static border and text; only the checkmark appears when checked.
  */
 interface CheckboxCardProps {
   /** Whether this option is checked */
@@ -234,31 +221,38 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
   description,
 }) => (
   <div
-    className={`
-      relative flex items-start p-3 cursor-pointer rounded-lg border transition-all duration-200
-      ${
-        checked
-          ? 'bg-brand-muted border-brand ring-1 ring-brand'
-          : 'bg-panel border-stroke hover:border-stroke-strong hover:bg-canvas'
+    role="checkbox"
+    aria-checked={checked}
+    tabIndex={0}
+    onKeyDown={e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onChange();
       }
-    `}
+    }}
+    className="relative flex items-start p-3 rounded border border-stroke bg-panel hover:border-stroke-strong transition-colors duration-200 cursor-pointer"
     onClick={onChange}
   >
-    <div className="flex items-center h-4 mt-0.5">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-        className="h-3.5 w-3.5 text-brand border-stroke-strong focus:ring-brand rounded"
-      />
+    <input
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      className="sr-only"
+      aria-hidden
+    />
+    <div className="flex-1 min-w-0 pr-8">
+      <span className="block text-xs font-medium text-fg-muted">{label}</span>
+      <span className="block text-xxs mt-0.5 text-fg-subtle">{description}</span>
     </div>
-    <div className="ml-2.5">
-      <span className={`block text-xs font-medium ${checked ? 'text-brand-fg' : 'text-fg'}`}>
-        {label}
-      </span>
-      <span className={`block text-xxs mt-0.5 ${checked ? 'text-brand' : 'text-fg-subtle'}`}>
-        {description}
-      </span>
+    <div
+      className={`
+        absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200
+        ${checked ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong'}
+      `}
+    >
+      {checked && (
+        <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
+      )}
     </div>
   </div>
 );
