@@ -18,7 +18,7 @@ export const ProductivityTable: React.FC<ProductivityTableProps> = ({ data, comp
     if (compact) return empty;
     return (
       <div className="bg-panel border border-stroke rounded-lg p-4">
-        <h3 className="text-sm font-semibold text-fg mb-4">Technician Productivity</h3>
+        <h3 className="text-sm text-fg mb-4">Technician Productivity</h3>
         <div className="flex items-center justify-center h-[200px] text-fg-subtle text-sm">No productivity data available</div>
       </div>
     );
@@ -46,7 +46,7 @@ export const ProductivityTable: React.FC<ProductivityTableProps> = ({ data, comp
           <tbody>
             {data.byTechnician.slice(0, 10).map((tech) => (
               <tr key={tech.userId} className="border-b border-stroke/50 hover:bg-panel-hover">
-                <td className="py-2 px-3 font-medium text-fg">
+                <td className="py-2 px-3 text-fg">
                   {tech.userName}
                 </td>
                 <td className="py-2 px-3 text-right text-fg-muted">
@@ -68,7 +68,7 @@ export const ProductivityTable: React.FC<ProductivityTableProps> = ({ data, comp
   if (compact) return table;
   return (
     <div className="bg-panel border border-stroke rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-fg mb-4">Technician Productivity</h3>
+      <h3 className="text-sm text-fg mb-4">Technician Productivity</h3>
       {table}
     </div>
   );

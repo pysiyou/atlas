@@ -40,7 +40,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
   );
 
   const renderCategory = (test: Test) => (
-    <Badge variant={test.category} size="sm" className="border-none font-medium" />
+    <Badge variant={test.category} size="sm" className="border-none" />
   );
 
   const renderSampleType = (test: Test) => <Badge variant={test.sampleType} size="sm" />;

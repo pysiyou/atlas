@@ -33,7 +33,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
         {/* Avatar: Patient name + Patient ID - positioned at top left */}
         <Avatar
           primaryText={patient.fullName}
-          primaryTextClassName="font-semibold"
+          primaryTextClassName=""
           secondaryText={displayId.patient(patient.id)}
           secondaryTextClassName="font-mono text-brand"
           size="xs"
@@ -56,7 +56,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
           {/* Phone */}
           <div className="flex items-center gap-2">
             <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
-            <span className="text-xs text-fg-muted font-medium truncate">
+            <span className="text-xs text-fg-muted truncate">
               {formatPhoneNumber(patient.phone)}
             </span>
           </div>

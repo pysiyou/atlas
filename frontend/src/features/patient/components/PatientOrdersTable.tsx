@@ -98,7 +98,7 @@ function buildDetailedViewConfig(): TableViewConfig<Order> {
       width: 'lg' as const,
       render: (order: Order) => (
         <div className="min-w-0">
-          <div className="font-medium truncate">
+          <div className="truncate">
             {order.tests.length} test{order.tests.length !== 1 ? 's' : ''}
           </div>
           <div className={`truncate ${DATA_ID_PRIMARY_INLINE}`}>

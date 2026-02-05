@@ -19,7 +19,7 @@ export function TableHeader<T>({
 
   return (
     <div
-      className={`flex items-stretch border-b border-stroke bg-canvas flex items-center font-medium ${TEXT_SIZE[variant]} text-fg-subtle uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
+      className={`flex items-stretch border-b border-stroke bg-canvas flex items-center ${TEXT_SIZE[variant]} text-fg-subtle uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
     >
       {visibleColumns.map(column => {
         const style = columnStyles.get(column.key) || {};

@@ -22,10 +22,10 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
       {/* Header: Test name + code (left) + Price (right) */}
       <div className="flex justify-between items-center mb-3 pb-3 border-b border-stroke">
         <div className="flex flex-col min-w-0">
-          <div className="text-sm font-semibold text-fg break-words">{test.name}</div>
-          <span className="text-xs text-brand font-medium font-mono leading-none">{test.code}</span>
+          <div className="text-sm text-fg break-words">{test.name}</div>
+          <span className="text-xs text-brand font-mono leading-none">{test.code}</span>
         </div>
-        <div className="font-medium text-fg text-lg leading-none">
+        <div className="text-fg text-lg leading-none">
           {formatCurrency(test.price)}
         </div>
       </div>
@@ -54,7 +54,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
         </div>
         {/* Category and Sample Type badges on bottom right */}
         <div className="flex items-center gap-2">
-          <Badge variant={test.category} size="xs" className="border-none font-medium" />
+          <Badge variant={test.category} size="xs" className="border-none" />
           {/* Sample Type badge */}
           <Badge variant={test.sampleType} size="xs" />
         </div>

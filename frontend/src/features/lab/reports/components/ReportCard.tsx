@@ -31,7 +31,7 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
         {/* Avatar: Patient name + Test ID - positioned at top left */}
         <Avatar
           primaryText={test.patientName}
-          primaryTextClassName="font-semibold"
+          primaryTextClassName=""
           secondaryText={displayId.orderTest(test.testId)}
           secondaryTextClassName="font-mono text-brand"
           size="xs"
@@ -43,7 +43,7 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
       {/* Test information */}
       <div className="grow space-y-2">
         <div>
-          <div className="font-medium text-fg text-sm">{test.testName}</div>
+          <div className="text-fg text-sm">{test.testName}</div>
           <div className="text-xs text-brand font-mono">{test.testCode}</div>
         </div>
         <div className="text-xs text-fg-subtle">

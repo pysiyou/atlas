@@ -78,7 +78,7 @@ export const createPaymentTableConfig = (
     const activeCount = activeTests.length;
     return (
       <div className="min-w-0">
-        <div className="font-medium truncate font-mono text-xs text-fg">
+        <div className="truncate font-mono text-xs text-fg">
           {activeTests.map(t => t.testCode ?? t.testName).join('/')}
         </div>
         <div className="text-xs text-fg-subtle truncate">

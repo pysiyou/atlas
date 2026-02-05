@@ -51,7 +51,7 @@ export const createOrderTableConfig = (
 
     return (
       <div className="min-w-0">
-        <div className="font-medium truncate font-mono text-xs text-fg">
+        <div className="truncate font-mono text-xs text-fg">
           {activeTests.map(t => t.testCode).join('/')}
         </div>
         <div className="text-xs text-fg-subtle truncate">
@@ -62,7 +62,7 @@ export const createOrderTableConfig = (
   };
 
   const renderPriority = (order: Order) => (
-    <Badge variant={order.priority} size="sm" className="border-none font-medium" />
+    <Badge variant={order.priority} size="sm" className="border-none" />
   );
 
   const renderStatus = (order: Order) => <Badge variant={order.overallStatus} size="sm" />;

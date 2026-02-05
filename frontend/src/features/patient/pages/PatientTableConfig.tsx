@@ -64,7 +64,7 @@ export const createPatientTableConfig = (
 
   const renderContact = (patient: Patient) => (
     <div className="text-xs min-w-0">
-      <div className="font-medium text-xs text-fg truncate">{formatPhoneNumber(patient.phone)}</div>
+      <div className="text-xs text-fg truncate">{formatPhoneNumber(patient.phone)}</div>
       {patient.email && <div className="text-xs text-fg-subtle truncate">{patient.email}</div>}
     </div>
   );

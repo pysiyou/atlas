@@ -43,7 +43,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
     <div className={`bg-panel border border-stroke rounded-md overflow-hidden ${className}`}>
       {/* Header */}
       <div className="px-4 py-3 border-b border-stroke bg-canvas">
-        <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wide">{title}</h3>
+        <h3 className="text-xs text-fg-muted uppercase tracking-wide">{title}</h3>
       </div>
 
       {/* Content */}

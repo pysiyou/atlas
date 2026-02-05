@@ -57,13 +57,13 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
         {/* Avatar: Patient name + Order ID - positioned at top left */}
         <Avatar
           primaryText={item.patientName || 'N/A'}
-          primaryTextClassName="font-semibold"
+          primaryTextClassName=""
           secondaryText={displayId.order(item.orderId)}
           secondaryTextClassName="font-mono text-brand"
           size="xs"
         />
         {/* Total price on top right */}
-        <div className="font-medium text-fg text-lg">{formatCurrency(item.totalPrice)}</div>
+        <div className="text-fg text-lg">{formatCurrency(item.totalPrice)}</div>
       </div>
 
       {/* Tests list: Show at most 2 tests, third line shows remaining count */}
@@ -78,10 +78,10 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
               >
                 <div className="flex items-center flex-1 min-w-0">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 flex-shrink-0" />
-                  <span className="font-medium mr-1 truncate">{test.testName}</span>
+                  <span className="mr-1 truncate">{test.testName}</span>
                   <span className="text-brand font-mono truncate">{test.testCode}</span>
                 </div>
-                <span className="font-medium text-fg ml-2 flex-shrink-0">
+                <span className="text-fg ml-2 flex-shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>
