@@ -82,14 +82,15 @@ const ListItem: React.FC<{
           className="sr-only"
         />
         {singleSelect ? (
-          // Circular radio button style for single-select
-          isSelected ? (
-            <div className="w-4 h-4 rounded-full border-2 border-brand flex items-center justify-center bg-panel">
-              <div className="w-2 h-2 rounded-full bg-brand" />
-            </div>
-          ) : (
-            <div className="w-4 h-4 rounded-full border-2 border-stroke bg-panel" />
-          )
+          // Same checkmark as PaymentMethodSelector: circle + check when selected
+          <div
+            className={cn(
+              'w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200',
+              isSelected ? 'bg-brand' : 'bg-transparent border-2 border-stroke'
+            )}
+          >
+            {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
+          </div>
         ) : // Square checkbox style for multi-select
         isSelected ? (
           <div className="w-4 h-4 rounded border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150">

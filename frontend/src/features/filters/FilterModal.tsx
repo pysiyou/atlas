@@ -253,14 +253,12 @@ const ModalRadioList: React.FC<{
               />
               <div
                 className={cn(
-                  'w-[18px] h-[18px] rounded-full border flex items-center justify-center transition-colors',
-                  isSelected
-                    ? 'border-brand bg-panel'
-                    : 'border-stroke-strong bg-panel group-hover:border-brand'
+                  'w-5 h-5 rounded-full flex items-center justify-center transition-colors',
+                  isSelected ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong group-hover:border-brand'
                 )}
               >
                 {isSelected && (
-                  <div className="w-2.5 h-2.5 rounded-full bg-brand" />
+                  <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 )}
               </div>
             </div>

@@ -40,16 +40,17 @@ const RadioOption: React.FC<{
         isSelected && 'bg-brand-muted'
       )}
     >
-      {/* Radio button */}
+      {/* Selection indicator - same checkmark as PaymentMethodSelector */}
       <div className="flex-shrink-0 mr-3">
         <input type="radio" checked={isSelected} onChange={onSelect} className="sr-only" />
-        {isSelected ? (
-          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-brand transition-all duration-150">
-            <div className="w-2 h-2 rounded-full bg-panel" />
-          </div>
-        ) : (
-          <div className="w-5 h-5 rounded-full border-2 border-stroke-strong group-hover:border-stroke-hover transition-all duration-150" />
-        )}
+        <div
+          className={cn(
+            'w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150',
+            isSelected ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong group-hover:border-stroke-hover'
+          )}
+        >
+          {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
+        </div>
       </div>
 
       {/* Option label */}
