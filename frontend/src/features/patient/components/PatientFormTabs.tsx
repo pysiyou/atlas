@@ -284,21 +284,21 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
         <div className="space-y-8">
           <div className="space-y-6">
             <div className="pb-1">
-              <div className="text-xs font-medium text-text-3 uppercase tracking-wide mb-1">
+              <div className="text-xs font-medium text-fg-subtle uppercase tracking-wide mb-1">
                 General
               </div>
-              <div className="text-base font-semibold text-text">Identity & Contact</div>
+              <div className="text-base font-semibold text-fg">Identity & Contact</div>
             </div>
             <DemographicsSection formData={formData} errors={flatErrors} onFieldChange={onFieldChange} />
             <AddressSection formData={formData} errors={flatErrors} onFieldChange={onFieldChange} />
           </div>
 
-          <div className="border-t border-border pt-6 space-y-6">
+          <div className="border-t border-stroke pt-6 space-y-6">
             <div className="pb-1">
-              <div className="text-xs font-medium text-text-3 uppercase tracking-wide mb-1">
+              <div className="text-xs font-medium text-fg-subtle uppercase tracking-wide mb-1">
                 Primary Contact
               </div>
-              <div className="text-base font-semibold text-text">Emergency Contact</div>
+              <div className="text-base font-semibold text-fg">Emergency Contact</div>
             </div>
             <EmergencyContactSection
               formData={formData}
@@ -313,10 +313,10 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
       return (
         <div className="space-y-6">
           <div className="pb-1">
-            <div className="text-xs font-medium text-text-3 uppercase tracking-wide mb-1">
+            <div className="text-xs font-medium text-fg-subtle uppercase tracking-wide mb-1">
               Medical Background
             </div>
-            <div className="text-base font-semibold text-text">
+            <div className="text-base font-semibold text-fg">
               History, Conditions & Lifestyle
             </div>
           </div>
@@ -328,11 +328,11 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
       return (
         <div className="space-y-6">
           <div className="pb-1">
-            <div className="text-xs font-medium text-text-3 uppercase tracking-wide mb-1">
+            <div className="text-xs font-medium text-fg-subtle uppercase tracking-wide mb-1">
               Vitals
             </div>
-            <div className="text-base font-semibold text-text">Measurements</div>
-            <div className="text-xs text-text-3 mt-1.5 leading-relaxed">
+            <div className="text-base font-semibold text-fg">Measurements</div>
+            <div className="text-xs text-fg-subtle mt-1.5 leading-relaxed">
               Fill any vitals you have. Hints show typical ranges.
             </div>
           </div>
@@ -356,11 +356,11 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
       return (
         <div className="space-y-6">
           <div className="pb-1">
-            <div className="text-xs font-medium text-text-3 uppercase tracking-wide mb-1">
+            <div className="text-xs font-medium text-fg-subtle uppercase tracking-wide mb-1">
               Affiliation
             </div>
-            <div className="text-base font-semibold text-text">Select Your Plan</div>
-            <div className="text-xs text-text-3 mt-1.5 leading-relaxed">
+            <div className="text-base font-semibold text-fg">Select Your Plan</div>
+            <div className="text-xs text-fg-subtle mt-1.5 leading-relaxed">
               Choose a duration and pricing that works for you
             </div>
           </div>

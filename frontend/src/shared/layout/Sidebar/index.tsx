@@ -73,7 +73,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       variants={sidebarVariants}
       animate={collapsed ? 'collapsed' : 'expanded'}
       initial={false}
-      className="bg-surface border-r border-border flex flex-col overflow-hidden"
+      className="bg-panel border-r border-stroke flex flex-col overflow-hidden"
       style={{ padding: '0' }}
       onClick={e => {
         e.stopPropagation();

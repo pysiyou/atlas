@@ -40,10 +40,10 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
   const filteredRows = providedFilteredRows ?? filterDetailRows(rows);
 
   return (
-    <div className={`bg-surface border border-border rounded-md overflow-hidden ${className}`}>
+    <div className={`bg-panel border border-stroke rounded-md overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="px-4 py-3 border-b border-border bg-canvas">
-        <h3 className="text-xs font-semibold text-text-2 uppercase tracking-wide">{title}</h3>
+      <div className="px-4 py-3 border-b border-stroke bg-canvas">
+        <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wide">{title}</h3>
       </div>
 
       {/* Content */}
@@ -51,7 +51,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
         <table className="w-full">
           <tbody>
             {filteredRows.map((row, idx) => (
-              <tr key={`${row.label}-${idx}`} className="border-b border-border-subtle last:border-b-0">
+              <tr key={`${row.label}-${idx}`} className="border-b border-stroke-subtle last:border-b-0">
                 {/* Label */}
                 <td className="px-4 py-2.5 align-top w-2/5 uppercase">
                   <span className={`block ${DETAIL_LABEL}`}>{row.label}</span>
@@ -66,7 +66,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
             {/* Empty state */}
             {filteredRows.length === 0 && (
               <tr>
-                <td colSpan={2} className="px-4 py-6 text-center text-text-disabled text-sm">
+                <td colSpan={2} className="px-4 py-6 text-center text-fg-disabled text-sm">
                   No data available
                 </td>
               </tr>

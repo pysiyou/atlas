@@ -154,8 +154,8 @@ const getVitalStatus = (
 const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) => {
   if (!status) {
     return {
-      border: 'border-border-strong',
-      text: 'text-text-3',
+      border: 'border-stroke-strong',
+      text: 'text-fg-subtle',
       bg: 'bg-transparent',
     };
   }
@@ -176,7 +176,7 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
     case 'abnormal':
       return {
         border: 'border-danger-border',
-        text: 'text-danger-text',
+        text: 'text-danger-fg',
         bg: 'bg-danger-bg-strong',
       };
   }
@@ -210,26 +210,26 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="flex justify-between items-baseline mb-1 gap-2">
               <label
                 htmlFor={isNa ? undefined : `vital-${fieldName}`}
-                className={`text-xs font-medium truncate min-w-0 ${isNa ? 'text-text-3 cursor-default' : 'text-text-3 cursor-pointer'}`}
+                className={`text-xs font-medium truncate min-w-0 ${isNa ? 'text-fg-subtle cursor-default' : 'text-fg-subtle cursor-pointer'}`}
               >
                 {config.label}
               </label>
               <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
                 {isAbnormal && !isNa && (
-                  <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-danger-text shrink-0" />
+                  <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-danger-fg shrink-0" />
                 )}
-                <span className="text-xxs text-text-3 truncate">Ref: {refRange}</span>
+                <span className="text-xxs text-fg-subtle truncate">Ref: {refRange}</span>
               </div>
             </div>
 
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                <Icon name={config.icon} className={cn('w-4 h-4 shrink-0 transition-colors', isNa ? 'text-text-muted/70' : 'text-text-muted group-hover:text-primary')} />
+                <Icon name={config.icon} className={cn('w-4 h-4 shrink-0 transition-colors', isNa ? 'text-fg-faint/70' : 'text-fg-faint group-hover:text-brand')} />
               </div>
 
               {isNa ? (
                 <div
-                  className="w-full rounded border border-border bg-muted/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-3"
+                  className="w-full rounded border border-stroke bg-muted/30 px-3 py-1.5 text-sm pl-10 pr-12 text-fg-subtle"
                   aria-label={`${config.label} not provided`}
                 >
                   N/A
@@ -257,10 +257,10 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     )}
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
-                    <span className="text-xs text-text-3 select-none truncate">{config.unit}</span>
+                    <span className="text-xs text-fg-subtle select-none truncate">{config.unit}</span>
                   </div>
                   {isAbnormal && (
-                    <div className="absolute -bottom-5 left-0 text-xxs text-danger-text font-medium">
+                    <div className="absolute -bottom-5 left-0 text-xxs text-danger-fg font-medium">
                       Abnormal value
                     </div>
                   )}
@@ -268,7 +268,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
               )}
             </div>
 
-            {error && <p className="mt-1 text-sm text-danger-text">{error}</p>}
+            {error && <p className="mt-1 text-sm text-danger-fg">{error}</p>}
           </div>
         );
       })}

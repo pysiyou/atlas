@@ -125,8 +125,8 @@ export const DemographicsSection: React.FC<
           maxDate={new Date()}
         />
         <div>
-          <label className="block text-xs font-medium text-text-3 mb-1.5">
-            Gender <span className="text-danger-text ml-1">*</span>
+          <label className="block text-xs font-medium text-fg-subtle mb-1.5">
+            Gender <span className="text-danger-fg ml-1">*</span>
           </label>
           <MultiSelectFilter
             label="Gender"
@@ -140,7 +140,7 @@ export const DemographicsSection: React.FC<
             className="w-full"
           />
           {errors.gender && (
-            <p className="mt-1 text-sm text-danger-text">{errors.gender}</p>
+            <p className="mt-1 text-sm text-danger-fg">{errors.gender}</p>
           )}
         </div>
         <Input
@@ -269,45 +269,45 @@ export const AffiliationSection: React.FC<
     <div className="space-y-6">
       {/* Existing Affiliation Info */}
       {hasExistingAffiliation && (
-        <div className="bg-surface border border-border rounded-xl p-5 space-y-4 shadow-sm">
-          <div className="flex items-center justify-between pb-3 border-b border-border-subtle">
-            <span className="text-sm font-semibold text-text">Current Affiliation</span>
+        <div className="bg-panel border border-stroke rounded-xl p-5 space-y-4 shadow-sm">
+          <div className="flex items-center justify-between pb-3 border-b border-stroke-subtle">
+            <span className="text-sm font-semibold text-fg">Current Affiliation</span>
             <Badge variant={isActive ? 'success' : 'danger'} size="sm" className="font-medium">
               {isActive ? 'Active' : 'Expired'}
             </Badge>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <span className="text-xs font-medium text-text-3 uppercase tracking-wide">
+              <span className="text-xs font-medium text-fg-subtle uppercase tracking-wide">
                 Assurance Number
               </span>
-              <p className="font-mono font-semibold text-text text-sm">
+              <p className="font-mono font-semibold text-fg text-sm">
                 {existingAffiliation.assuranceNumber}
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-text-3 uppercase tracking-wide">
+              <span className="text-xs font-medium text-fg-subtle uppercase tracking-wide">
                 Duration
               </span>
-              <p className="font-semibold text-text text-sm">
+              <p className="font-semibold text-fg text-sm">
                 {AFFILIATION_DURATION_OPTIONS.find(
                   opt => opt.value === existingAffiliation.duration
                 )?.label || `${existingAffiliation.duration} Months`}
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-text-3 uppercase tracking-wide">
+              <span className="text-xs font-medium text-fg-subtle uppercase tracking-wide">
                 Start Date
               </span>
-              <p className="font-semibold text-text text-sm">
+              <p className="font-semibold text-fg text-sm">
                 {formatDate(existingAffiliation.startDate)}
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-text-3 uppercase tracking-wide">
+              <span className="text-xs font-medium text-fg-subtle uppercase tracking-wide">
                 Expiry Date
               </span>
-              <p className={`font-semibold text-sm ${isActive ? 'text-text' : 'text-danger-text'}`}>
+              <p className={`font-semibold text-sm ${isActive ? 'text-fg' : 'text-danger-fg'}`}>
                 {formatDate(existingAffiliation.endDate)}
               </p>
             </div>
@@ -317,7 +317,7 @@ export const AffiliationSection: React.FC<
 
       {/* New/Renewal Affiliation Toggle */}
       {!hasExistingAffiliation && (
-        <div className="flex items-center gap-3 p-4 bg-canvas rounded-lg border border-border">
+        <div className="flex items-center gap-3 p-4 bg-canvas rounded-lg border border-stroke">
           <input
             type="checkbox"
             id="hasAffiliation"
@@ -329,11 +329,11 @@ export const AffiliationSection: React.FC<
                 onFieldChange('affiliationDuration', undefined);
               }
             }}
-            className="w-4 h-4 text-primary border-border-strong rounded focus:ring-primary focus:ring-2"
+            className="w-4 h-4 text-brand border-stroke-strong rounded focus:ring-brand focus:ring-2"
           />
           <label
             htmlFor="hasAffiliation"
-            className="text-sm font-medium text-text-2 cursor-pointer"
+            className="text-sm font-medium text-fg-muted cursor-pointer"
           >
             Subscribe to lab affiliation
           </label>
@@ -344,7 +344,7 @@ export const AffiliationSection: React.FC<
       {(formData.hasAffiliation || (hasExistingAffiliation && !isActive)) && (
         <div>
           {errors?.affiliationDuration && (
-            <p className="mb-2 text-sm text-danger-text">{errors.affiliationDuration}</p>
+            <p className="mb-2 text-sm text-danger-fg">{errors.affiliationDuration}</p>
           )}
           <AffiliationPlanSelector
             selectedDuration={formData.affiliationDuration}
@@ -421,8 +421,8 @@ export const EmergencyContactSection: React.FC<
           placeholder="Jane Doe"
         />
         <div>
-          <label className="block text-xs font-medium text-text-3 mb-1.5">
-            Relationship <span className="text-danger-text ml-1">*</span>
+          <label className="block text-xs font-medium text-fg-subtle mb-1.5">
+            Relationship <span className="text-danger-fg ml-1">*</span>
           </label>
           <MultiSelectFilter
             label="Relationship"
@@ -436,7 +436,7 @@ export const EmergencyContactSection: React.FC<
             className="w-full"
           />
           {errors.emergencyContactRelationship && (
-            <p className="mt-1 text-sm text-danger-text">{errors.emergencyContactRelationship}</p>
+            <p className="mt-1 text-sm text-danger-fg">{errors.emergencyContactRelationship}</p>
           )}
         </div>
         <Input
@@ -556,9 +556,9 @@ export const MedicalHistorySection: React.FC<
             name="smoking"
             checked={formData.smoking}
             onChange={e => onFieldChange('smoking', e.target.checked)}
-            className="w-4 h-4 text-primary border-border-strong rounded focus:ring-primary"
+            className="w-4 h-4 text-brand border-stroke-strong rounded focus:ring-brand"
           />
-          <label htmlFor="smoking" className="text-xs font-medium text-text-3">
+          <label htmlFor="smoking" className="text-xs font-medium text-fg-subtle">
             Smoking
           </label>
         </div>
@@ -569,9 +569,9 @@ export const MedicalHistorySection: React.FC<
             name="alcohol"
             checked={formData.alcohol}
             onChange={e => onFieldChange('alcohol', e.target.checked)}
-            className="w-4 h-4 text-primary border-border-strong rounded focus:ring-primary"
+            className="w-4 h-4 text-brand border-stroke-strong rounded focus:ring-brand"
           />
-          <label htmlFor="alcohol" className="text-xs font-medium text-text-3">
+          <label htmlFor="alcohol" className="text-xs font-medium text-fg-subtle">
             Alcohol Use
           </label>
         </div>
@@ -594,20 +594,20 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
 }) => {
   return (
     <div className="space-y-8">
-      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border">
-        <h3 className="text-lg font-semibold text-text mb-4">Patient Demographics</h3>
+      <div className="bg-panel rounded-lg p-6 shadow-sm border border-stroke">
+        <h3 className="text-lg font-semibold text-fg mb-4">Patient Demographics</h3>
         <div className="space-y-4">
           <DemographicsSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
         </div>
       </div>
-      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border">
-        <h3 className="text-lg font-semibold text-text mb-4">Address Information</h3>
+      <div className="bg-panel rounded-lg p-6 shadow-sm border border-stroke">
+        <h3 className="text-lg font-semibold text-fg mb-4">Address Information</h3>
         <div className="space-y-4">
           <AddressSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
         </div>
       </div>
-      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border">
-        <h3 className="text-lg font-semibold text-text mb-4">Lab Affiliation</h3>
+      <div className="bg-panel rounded-lg p-6 shadow-sm border border-stroke">
+        <h3 className="text-lg font-semibold text-fg mb-4">Lab Affiliation</h3>
         <div className="space-y-4">
           <AffiliationSection
             formData={formData}
@@ -618,8 +618,8 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
           />
         </div>
       </div>
-      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border">
-        <h3 className="text-lg font-semibold text-text mb-4">Emergency Contact</h3>
+      <div className="bg-panel rounded-lg p-6 shadow-sm border border-stroke">
+        <h3 className="text-lg font-semibold text-fg mb-4">Emergency Contact</h3>
         <div className="space-y-4">
           <EmergencyContactSection
             formData={formData}
@@ -628,8 +628,8 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
           />
         </div>
       </div>
-      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border">
-        <h3 className="text-lg font-semibold text-text mb-4">Medical History</h3>
+      <div className="bg-panel rounded-lg p-6 shadow-sm border border-stroke">
+        <h3 className="text-lg font-semibold text-fg mb-4">Medical History</h3>
         <div className="space-y-4">
           <MedicalHistorySection formData={formData} onFieldChange={onFieldChange} />
         </div>

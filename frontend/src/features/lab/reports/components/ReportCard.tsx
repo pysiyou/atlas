@@ -27,13 +27,13 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
   return (
     <Card padding="list" hover className="flex flex-col h-full" onClick={onClick}>
       {/* Header: Avatar (top left) + Status (top right) */}
-      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border">
+      <div className="flex justify-between items-start mb-3 pb-3 border-b border-stroke">
         {/* Avatar: Patient name + Test ID - positioned at top left */}
         <Avatar
           primaryText={test.patientName}
           primaryTextClassName="font-semibold"
           secondaryText={displayId.orderTest(test.testId)}
-          secondaryTextClassName="font-mono text-primary"
+          secondaryTextClassName="font-mono text-brand"
           size="xs"
         />
         {/* Status badge on top right */}
@@ -43,10 +43,10 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
       {/* Test information */}
       <div className="grow space-y-2">
         <div>
-          <div className="font-medium text-text text-sm">{test.testName}</div>
-          <div className="text-xs text-primary font-mono">{test.testCode}</div>
+          <div className="font-medium text-fg text-sm">{test.testName}</div>
+          <div className="text-xs text-brand font-mono">{test.testCode}</div>
         </div>
-        <div className="text-xs text-text-3">
+        <div className="text-xs text-fg-subtle">
           Order: <span className="font-mono">{displayId.order(test.orderId)}</span>
         </div>
       </div>
@@ -54,7 +54,7 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
       {/* Bottom section: Order date (left) + Preview button (right) */}
       <div className="flex justify-between items-center mt-auto pt-3">
         {/* Order date on bottom left */}
-        <div className="text-xs text-text-3">{formatDate(test.orderDate)}</div>
+        <div className="text-xs text-fg-subtle">{formatDate(test.orderDate)}</div>
         {/* Preview button on bottom right */}
         <div onClick={e => e.stopPropagation()}>
           <ReportPreviewButton test={test} onPreview={onPreview} size="xs" />

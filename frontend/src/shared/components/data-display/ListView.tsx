@@ -145,8 +145,8 @@ export function ListView<T extends TableDataItem = TableDataItem>({
         <div className="flex items-center justify-between shrink-0">
           {title && (
             <div>
-              <h1 className="text-2xl font-semibold text-text">{title}</h1>
-              {subtitle && <p className="text-sm text-text-3 mt-1">{subtitle}</p>}
+              <h1 className="text-2xl font-semibold text-fg">{title}</h1>
+              {subtitle && <p className="text-sm text-fg-subtle mt-1">{subtitle}</p>}
             </div>
           )}
           {headerActions}
@@ -164,7 +164,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
       )}
 
       {/* Main Content */}
-      <div className="bg-surface rounded-lg border border-border shadow-sm flex flex-col flex-1 min-h-0 overflow-hidden">
+      <div className="bg-panel rounded-lg border border-stroke shadow-sm flex flex-col flex-1 min-h-0 overflow-hidden">
         {/* Filters */}
         {filters}
 

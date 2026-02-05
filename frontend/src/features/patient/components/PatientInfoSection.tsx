@@ -36,58 +36,58 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
       contentClassName="flex flex-col gap-4 flex-1 overflow-y-auto"
     >
       {/* Patient ID Section */}
-      <div className="flex items-start gap-3 pb-3 border-b border-border-strong">
-        <Icon name={ICONS.dataFields.user} className="w-5 h-5 text-text-disabled mt-1" />
+      <div className="flex items-start gap-3 pb-3 border-b border-stroke-strong">
+        <Icon name={ICONS.dataFields.user} className="w-5 h-5 text-fg-disabled mt-1" />
         <div className="flex-1">
-          <div className="text-xs text-text-3 mb-1">Patient ID</div>
-          <div className="font-mono font-medium text-text">{displayId.patient(patient.id)}</div>
+          <div className="text-xs text-fg-subtle mb-1">Patient ID</div>
+          <div className="font-mono font-medium text-fg">{displayId.patient(patient.id)}</div>
         </div>
       </div>
 
       {/* Demographics Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex items-start gap-3">
-          <Icon name={ICONS.dataFields.user} className="w-5 h-5 text-text-disabled mt-1" />
+          <Icon name={ICONS.dataFields.user} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
-            <div className="text-xs text-text-3 mb-1">Full Name</div>
-            <div className="font-medium text-text">{patient.fullName}</div>
+            <div className="text-xs text-fg-subtle mb-1">Full Name</div>
+            <div className="font-medium text-fg">{patient.fullName}</div>
           </div>
         </div>
 
         <div className="flex items-start gap-3">
-          <Icon name={ICONS.dataFields.userHands} className="w-5 h-5 text-text-disabled mt-1" />
+          <Icon name={ICONS.dataFields.userHands} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
-            <div className="text-xs text-text-3 mb-1">Age & Gender</div>
-            <div className="font-medium text-text">
+            <div className="text-xs text-fg-subtle mb-1">Age & Gender</div>
+            <div className="font-medium text-fg">
               {calculateAge(patient.dateOfBirth)} years old •{' '}
               {patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1)}
             </div>
-            <div className="text-xs text-text-3 mt-1">DOB: {formatDate(patient.dateOfBirth)}</div>
+            <div className="text-xs text-fg-subtle mt-1">DOB: {formatDate(patient.dateOfBirth)}</div>
           </div>
         </div>
 
         <div className="flex items-start gap-3">
-          <Icon name={ICONS.dataFields.phone} className="w-5 h-5 text-text-disabled mt-1" />
+          <Icon name={ICONS.dataFields.phone} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
-            <div className="text-xs text-text-3 mb-1">Phone</div>
-            <div className="font-medium text-text">{formatPhoneNumber(patient.phone)}</div>
+            <div className="text-xs text-fg-subtle mb-1">Phone</div>
+            <div className="font-medium text-fg">{formatPhoneNumber(patient.phone)}</div>
           </div>
         </div>
 
         <div className="flex items-start gap-3">
-          <Icon name={ICONS.dataFields.email} className="w-5 h-5 text-text-disabled mt-1" />
+          <Icon name={ICONS.dataFields.email} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
-            <div className="text-xs text-text-3 mb-1">Email</div>
-            <div className="font-medium text-text">{patient.email || 'Not provided'}</div>
+            <div className="text-xs text-fg-subtle mb-1">Email</div>
+            <div className="font-medium text-fg">{patient.email || 'Not provided'}</div>
           </div>
         </div>
 
         <div className="flex items-start gap-3 md:col-span-2">
-          <Icon name={ICONS.dataFields.mapPin} className="w-5 h-5 text-text-disabled mt-1" />
+          <Icon name={ICONS.dataFields.mapPin} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
-            <div className="text-xs text-text-3 mb-1">Address</div>
-            <div className="font-medium text-text">{patient.address.street}</div>
-            <div className="text-xs text-text-3 mt-1">
+            <div className="text-xs text-fg-subtle mb-1">Address</div>
+            <div className="font-medium text-fg">{patient.address.street}</div>
+            <div className="text-xs text-fg-subtle mt-1">
               {patient.address.city}, {patient.address.postalCode}
             </div>
           </div>
@@ -95,32 +95,32 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
       </div>
 
       {/* Emergency Contact Section */}
-      <div className="mt-4 pt-4 border-t border-border">
+      <div className="mt-4 pt-4 border-t border-stroke">
         <div className="flex items-start gap-3">
-          <Icon name={ICONS.dataFields.userHands} className="w-5 h-5 text-text-disabled mt-1" />
+          <Icon name={ICONS.dataFields.userHands} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
-            <div className="text-xs text-text-3 mb-2">Emergency Contact</div>
-            <div className="font-medium text-text">{patient.emergencyContact.fullName}</div>
-            <div className="text-xs text-text-3 mt-1">
+            <div className="text-xs text-fg-subtle mb-2">Emergency Contact</div>
+            <div className="font-medium text-fg">{patient.emergencyContact.fullName}</div>
+            <div className="text-xs text-fg-subtle mt-1">
               {RELATIONSHIP_CONFIG[patient.emergencyContact.relationship]?.label ||
                 patient.emergencyContact.relationship}
             </div>
-            <div className="text-xs text-text-3 mt-1">
+            <div className="text-xs text-fg-subtle mt-1">
               {formatPhoneNumber(patient.emergencyContact.phone)}
             </div>
             {patient.emergencyContact.email && (
-              <div className="text-xs text-text-3 mt-1">{patient.emergencyContact.email}</div>
+              <div className="text-xs text-fg-subtle mt-1">{patient.emergencyContact.email}</div>
             )}
           </div>
         </div>
       </div>
 
       {/* Lab Affiliation Section */}
-      <div className="mt-4 pt-4 border-t border-border">
+      <div className="mt-4 pt-4 border-t border-stroke">
         <div className="flex items-start gap-3">
-          <Icon name={ICONS.ui.shield} className="w-5 h-5 text-text-disabled mt-1" />
+          <Icon name={ICONS.ui.shield} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
-            <div className="text-xs text-text-3 mb-2">Lab Affiliation</div>
+            <div className="text-xs text-fg-subtle mb-2">Lab Affiliation</div>
             {!patient.affiliation ? (
               <Badge variant="default" size="sm" className="border-none font-medium">
                 No Affiliation
@@ -134,22 +134,22 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
                 >
                   {isAffiliationActive(patient.affiliation) ? 'Active' : 'Expired'}
                 </Badge>
-                <div className="text-xs text-text-3">
+                <div className="text-xs text-fg-subtle">
                   Assurance #:{' '}
-                  <span className="font-mono font-medium text-text">
+                  <span className="font-mono font-medium text-fg">
                     {patient.affiliation.assuranceNumber}
                   </span>
                 </div>
-                <div className="text-xs text-text-3">
+                <div className="text-xs text-fg-subtle">
                   Duration:{' '}
-                  <span className="font-medium text-text">
+                  <span className="font-medium text-fg">
                     {getDurationLabel(patient.affiliation.duration)}
                   </span>
                 </div>
-                <div className="text-xs text-text-3">
+                <div className="text-xs text-fg-subtle">
                   Expires:{' '}
                   <span
-                    className={`font-medium ${isAffiliationActive(patient.affiliation) ? 'text-text' : 'text-danger-text'}`}
+                    className={`font-medium ${isAffiliationActive(patient.affiliation) ? 'text-fg' : 'text-danger-fg'}`}
                   >
                     {formatDate(patient.affiliation.endDate)}
                   </span>
@@ -161,25 +161,25 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
       </div>
 
       {/* Registration & Metadata Section */}
-      <div className="mt-4 pt-4 border-t border-border">
+      <div className="mt-4 pt-4 border-t border-stroke">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-start gap-3">
-            <Icon name={ICONS.dataFields.date} className="w-5 h-5 text-text-disabled mt-1" />
+            <Icon name={ICONS.dataFields.date} className="w-5 h-5 text-fg-disabled mt-1" />
             <div className="flex-1">
-              <div className="text-xs text-text-3 mb-1">Registration Date</div>
-              <div className="font-medium text-text">
+              <div className="text-xs text-fg-subtle mb-1">Registration Date</div>
+              <div className="font-medium text-fg">
                 {formatDate(patient.registrationDate)}
               </div>
-              <div className="text-xs text-text-3 mt-1">Registered by: {patient.createdBy}</div>
+              <div className="text-xs text-fg-subtle mt-1">Registered by: {patient.createdBy}</div>
             </div>
           </div>
 
           <div className="flex items-start gap-3">
-            <Icon name={ICONS.dataFields.time} className="w-5 h-5 text-text-disabled mt-1" />
+            <Icon name={ICONS.dataFields.time} className="w-5 h-5 text-fg-disabled mt-1" />
             <div className="flex-1">
-              <div className="text-xs text-text-3 mb-1">Last Updated</div>
-              <div className="font-medium text-text">{formatDate(patient.updatedAt)}</div>
-              <div className="text-xs text-text-3 mt-1">Updated by: {patient.updatedBy}</div>
+              <div className="text-xs text-fg-subtle mb-1">Last Updated</div>
+              <div className="font-medium text-fg">{formatDate(patient.updatedAt)}</div>
+              <div className="text-xs text-fg-subtle mt-1">Updated by: {patient.updatedBy}</div>
             </div>
           </div>
         </div>

@@ -67,7 +67,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
   const renderTriggerContent = () => {
     if (!selectedOption) {
       return (
-        <span className="text-text-3">
+        <span className="text-fg-subtle">
           {config.placeholder || `Select ${config.label.toLowerCase()}...`}
         </span>
       );
@@ -90,7 +90,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
         >
           {/* Column 1: Left Icon */}
           {config.icon && (
-            <Icon name={config.icon as IconName} className="w-4 h-4 text-text-muted group-hover:text-primary shrink-0 transition-colors" />
+            <Icon name={config.icon as IconName} className="w-4 h-4 text-fg-faint group-hover:text-brand shrink-0 transition-colors" />
           )}
 
           {/* Column 2: Content - flexible middle */}
@@ -101,16 +101,16 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
             {value ? (
               <button
                 onClick={handleClear}
-                className="p-0.5 hover:bg-surface-hover rounded transition-colors"
+                className="p-0.5 hover:bg-panel-hover rounded transition-colors"
               >
-                <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-3" />
+                <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-fg-faint hover:text-fg-subtle" />
               </button>
             ) : (
               <div className="w-5 h-5" />
             )}
             <Icon
               name={ICONS.actions.chevronDown}
-              className={cn('w-4 h-4 text-text-muted transition-transform', isOpen && 'rotate-180')}
+              className={cn('w-4 h-4 text-fg-faint transition-transform', isOpen && 'rotate-180')}
             />
           </div>
         </div>
@@ -118,7 +118,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       className=""
     >
       {() => (
-        <div className="bg-surface border border-border rounded-md shadow-lg py-1 max-h-60 overflow-auto">
+        <div className="bg-panel border border-stroke rounded-md shadow-lg py-1 max-h-60 overflow-auto">
           {/* Options list */}
           <div>
             {config.options.map(option => {
@@ -128,7 +128,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   key={option.id}
                   onClick={() => handleSelect(option.id)}
                   className={cn(
-                    'px-3 py-2 text-sm hover:bg-surface-hover cursor-pointer transition-colors duration-150 w-full flex items-center gap-2',
+                    'px-3 py-2 text-sm hover:bg-panel-hover cursor-pointer transition-colors duration-150 w-full flex items-center gap-2',
                     isSelected && 'bg-canvas',
                     'text-left'
                   )}
@@ -136,11 +136,11 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   {/* Check indicator */}
                   <div className="flex items-center justify-center w-4 h-4 shrink-0">
                     {isSelected ? (
-                      <div className="w-4 h-4 rounded bg-primary flex items-center justify-center transition-all duration-150">
-                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-primary-on" />
+                      <div className="w-4 h-4 rounded bg-brand flex items-center justify-center transition-all duration-150">
+                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                       </div>
                     ) : (
-                      <div className="w-4 h-4 rounded border border-border" />
+                      <div className="w-4 h-4 rounded border border-stroke" />
                     )}
                   </div>
 

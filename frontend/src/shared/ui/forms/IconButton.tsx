@@ -111,23 +111,23 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
  * Base style classes for each variant
  */
 const BASE_STYLES: Record<BaseVariant, string> = {
-  primary: 'bg-primary text-primary-on hover:opacity-90 focus:ring-primary',
-  secondary: 'bg-neutral-200 text-secondary-text hover:bg-neutral-300 focus:ring-neutral-500',
-  danger: 'bg-danger text-danger-on hover:opacity-90 focus:ring-danger',
-  success: 'bg-success text-success-on hover:opacity-90 focus:ring-success',
-  warning: 'bg-warning text-warning-on hover:opacity-90 focus:ring-warning',
+  primary: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
+  secondary: 'bg-neutral-200 text-secondary-fg hover:bg-neutral-300 focus:ring-neutral-500',
+  danger: 'bg-danger text-on-danger hover:opacity-90 focus:ring-danger',
+  success: 'bg-success text-on-success hover:opacity-90 focus:ring-success',
+  warning: 'bg-warning text-on-warning hover:opacity-90 focus:ring-warning',
 };
 
 /**
  * IconButton-specific variants (for actions like approve, delete, edit, etc.)
  */
 const ICON_BUTTON_VARIANTS: Record<string, string> = {
-  approve: 'bg-success text-success-on hover:opacity-90 focus:ring-success',
-  delete: 'bg-danger text-danger-on hover:opacity-90 focus:ring-danger',
-  edit: 'bg-primary text-primary-on hover:opacity-90 focus:ring-primary',
-  view: 'bg-neutral-200 text-secondary-text hover:bg-neutral-300 focus:ring-neutral-500',
-  print: 'bg-neutral-200 text-secondary-text hover:bg-neutral-300 focus:ring-neutral-500',
-  add: 'bg-primary text-primary-on hover:opacity-90 focus:ring-primary',
+  approve: 'bg-success text-on-success hover:opacity-90 focus:ring-success',
+  delete: 'bg-danger text-on-danger hover:opacity-90 focus:ring-danger',
+  edit: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
+  view: 'bg-neutral-200 text-secondary-fg hover:bg-neutral-300 focus:ring-neutral-500',
+  print: 'bg-neutral-200 text-secondary-fg hover:bg-neutral-300 focus:ring-neutral-500',
+  add: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
 };
 
 /**

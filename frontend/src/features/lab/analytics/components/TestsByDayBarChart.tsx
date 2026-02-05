@@ -43,7 +43,7 @@ export const TestsByDayBarChart: React.FC<TestsByDayBarChartProps> = ({
 
   if (chartData.length === 0) {
     return (
-      <div className="flex items-center justify-center text-text-3 text-sm" style={{ height }}>
+      <div className="flex items-center justify-center text-fg-subtle text-sm" style={{ height }}>
         No data
       </div>
     );

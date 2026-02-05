@@ -99,47 +99,47 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 
               {/* Row 2: Patient & Order context */}
               <div className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-3 text-sm text-text-2 flex-wrap">
-                  <span className="font-semibold text-text">{contextInfo.patientName}</span>
-                  <span className="text-text-disabled select-none">|</span>
-                  <span className="font-medium text-primary text-xs font-mono tracking-wide whitespace-nowrap">
+                <div className="flex items-center gap-3 text-sm text-fg-muted flex-wrap">
+                  <span className="font-semibold text-fg">{contextInfo.patientName}</span>
+                  <span className="text-fg-disabled select-none">|</span>
+                  <span className="font-medium text-brand text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.patientId === 'number'
                       ? displayId.patient(contextInfo.patientId)
                       : contextInfo.patientId}
                   </span>
                   {contextInfo.patientDob && (
                     <>
-                      <span className="text-text-disabled select-none">|</span>
-                      <span className="text-xs text-text-3 whitespace-nowrap">
+                      <span className="text-fg-disabled select-none">|</span>
+                      <span className="text-xs text-fg-subtle whitespace-nowrap">
                         DOB: {formatDate(contextInfo.patientDob)}
                       </span>
                     </>
                   )}
-                  <span className="text-text-disabled select-none">|</span>
-                  <span className="font-medium text-primary text-xs font-mono tracking-wide whitespace-nowrap">
+                  <span className="text-fg-disabled select-none">|</span>
+                  <span className="font-medium text-brand text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.orderId === 'number'
                       ? displayId.order(contextInfo.orderId)
                       : contextInfo.orderId}
                   </span>
                   {contextInfo.referringPhysician && (
                     <>
-                      <span className="text-text-disabled select-none">|</span>
-                      <span className="text-text-3 whitespace-nowrap">{contextInfo.referringPhysician}</span>
+                      <span className="text-fg-disabled select-none">|</span>
+                      <span className="text-fg-subtle whitespace-nowrap">{contextInfo.referringPhysician}</span>
                     </>
                   )}
                 </div>
 
                 {/* Collection info */}
                 {sampleInfo && sampleInfo.collectedAt && (
-                  <span className="text-xs text-text-3">
+                  <span className="text-xs text-fg-subtle">
                     Sample{' '}
-                    <span className="font-medium text-primary text-xs font-mono tracking-wide">
+                    <span className="font-medium text-brand text-xs font-mono tracking-wide">
                       {typeof sampleInfo.sampleId === 'number'
                         ? displayId.sample(sampleInfo.sampleId)
                         : sampleInfo.sampleId}
                     </span>{' '}
                     collected{' '}
-                    <span className="text-text-2">{formatDate(sampleInfo.collectedAt)}</span>
+                    <span className="text-fg-muted">{formatDate(sampleInfo.collectedAt)}</span>
                     {sampleInfo.collectedBy && (
                       <span> by {getUserName(sampleInfo.collectedBy)}</span>
                     )}
@@ -158,7 +158,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 
         {/* Footer */}
         {(footer || footerInfo) && (
-          <div className="shrink-0 bg-surface border-t border-border px-6 py-4 flex items-center justify-between">
+          <div className="shrink-0 bg-panel border-t border-stroke px-6 py-4 flex items-center justify-between">
             {footerInfo || <FooterInfo icon={ICONS.dataFields.flask} text="Lab workflow" />}
             {footer}
           </div>
@@ -276,12 +276,12 @@ interface ModalFooterProps {
 export const ModalFooter: React.FC<ModalFooterProps> = ({
   statusIcon,
   statusMessage,
-  statusClassName = 'text-text-3',
+  statusClassName = 'text-fg-subtle',
   children,
 }) => (
   <div className="flex items-center justify-between">
     {statusIcon && statusMessage ? (
-      <div className="text-xs text-text-3 flex items-center gap-1.5">
+      <div className="text-xs text-fg-subtle flex items-center gap-1.5">
         <div className="w-3.5 h-3.5 flex items-center justify-center">{statusIcon}</div>
         <span>{statusMessage}</span>
       </div>

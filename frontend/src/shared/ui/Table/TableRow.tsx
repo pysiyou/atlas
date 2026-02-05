@@ -6,9 +6,9 @@ import { ROW_HEIGHTS } from './constants';
  * Table row styles
  */
 const tableRow = {
-  base: 'flex items-center border-b border-border transition-colors duration-200',
+  base: 'flex items-center border-b border-stroke transition-colors duration-200',
   clickable: 'cursor-pointer',
-  hover: 'hover:bg-surface-hover',
+  hover: 'hover:bg-panel-hover',
   striped: 'bg-neutral-50',
 };
 

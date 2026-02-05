@@ -19,13 +19,13 @@ interface FooterInfoProps {
  * FooterInfo component with exact styling from PaymentPopover
  *
  * Style matches:
- * - Container: text-xs text-text-3 flex items-center gap-1.5
+ * - Container: text-xs text-fg-subtle flex items-center gap-1.5
  * - Icon: w-3.5 h-3.5
- * - Text: span (inherits text-text-3 from parent)
+ * - Text: span (inherits text-fg-subtle from parent)
  */
 export const FooterInfo: React.FC<FooterInfoProps> = ({ icon, text }) => (
-  <div className="text-xs text-text-3 flex items-center gap-1.5">
-    <Icon name={icon} className="w-3.5 h-3.5 text-text-muted" />
+  <div className="text-xs text-fg-subtle flex items-center gap-1.5">
+    <Icon name={icon} className="w-3.5 h-3.5 text-fg-faint" />
     {typeof text === 'string' ? <span>{text}</span> : text}
   </div>
 );

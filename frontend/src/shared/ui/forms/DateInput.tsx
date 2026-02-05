@@ -136,10 +136,10 @@ export const DateInput: React.FC<DateInputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-text-3 cursor-pointer truncate min-w-0"
+            className="text-xs font-medium text-fg-subtle cursor-pointer truncate min-w-0"
           >
             {label}
-            {required && <span className="text-danger-text ml-1">*</span>}
+            {required && <span className="text-danger-fg ml-1">*</span>}
           </label>
         </div>
       )}
@@ -157,19 +157,19 @@ export const DateInput: React.FC<DateInputProps> = ({
               disabled && 'bg-neutral-100 cursor-not-allowed'
             )}
           >
-            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted group-hover:text-primary transition-colors shrink-0" />
-            <div className="flex-1 min-w-0 text-xs text-text truncate">
+            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-fg-faint group-hover:text-brand transition-colors shrink-0" />
+            <div className="flex-1 min-w-0 text-xs text-fg truncate">
               {dateValue ? (
-                <span className="text-text">{format(dateValue, 'dd MMM yyyy')}</span>
+                <span className="text-fg">{format(dateValue, 'dd MMM yyyy')}</span>
               ) : (
-                <span className="text-text-muted">{placeholder}</span>
+                <span className="text-fg-faint">{placeholder}</span>
               )}
             </div>
 
             <Icon
               name={ICONS.actions.chevronDown}
               className={cn(
-                'w-4 h-4 text-text-disabled transition-transform shrink-0',
+                'w-4 h-4 text-fg-disabled transition-transform shrink-0',
                 isOpen && 'rotate-180'
               )}
             />
@@ -182,7 +182,7 @@ export const DateInput: React.FC<DateInputProps> = ({
               >
                 <Icon
                   name={ICONS.actions.closeCircle}
-                  className="w-3.5 h-3.5 text-text-disabled hover:text-text-3"
+                  className="w-3.5 h-3.5 text-fg-disabled hover:text-fg-subtle"
                 />
               </button>
             )}
@@ -222,7 +222,7 @@ export const DateInput: React.FC<DateInputProps> = ({
       {/* Hidden input for form compatibility */}
       <input type="hidden" id={inputId} name={name} value={value} />
 
-      {error && <p className="text-xs text-danger-text mt-1">{error}</p>}
+      {error && <p className="text-xs text-danger-fg mt-1">{error}</p>}
     </div>
   );
 };

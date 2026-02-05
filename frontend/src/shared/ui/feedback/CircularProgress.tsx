@@ -21,7 +21,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
   size = 32,
   strokeWidth = 2,
   trackColorClass = 'stroke-neutral-200',
-  progressColorClass = 'stroke-primary',
+  progressColorClass = 'stroke-brand',
   percentage,
   label,
   className = '',
@@ -62,7 +62,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
       </div>
 
       {/* Label */}
-      {label && <span className="text-text-3 text-xs normal-case font-light">{label}</span>}
+      {label && <span className="text-fg-subtle text-xs normal-case font-light">{label}</span>}
     </div>
   );
 };

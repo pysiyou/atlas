@@ -56,8 +56,8 @@ export const OrderForm: React.FC<OrderDetailsFormProps> = ({
       />
 
       <div>
-        <label className="block text-xs font-medium text-text-3 mb-1.5">
-          Priority <span className="text-danger-text">*</span>
+        <label className="block text-xs font-medium text-fg-subtle mb-1.5">
+          Priority <span className="text-danger-fg">*</span>
         </label>
         <MultiSelectFilter
           label="Priority"

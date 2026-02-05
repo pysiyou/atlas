@@ -43,22 +43,22 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
       <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="min-w-0 overflow-hidden">
-            <div className="text-sm font-medium text-text truncate">
+            <div className="text-sm font-medium text-fg truncate">
               {test.testName ?? test.testCode}
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="text-xs text-text-2 font-medium truncate">
+              <div className="text-xs text-fg-muted font-medium truncate">
                 {test.patientName}
               </div>
-              <div className="text-xxs text-text-disabled">•</div>
-              <div className="text-xxs text-primary font-medium font-mono truncate">
+              <div className="text-xxs text-fg-disabled">•</div>
+              <div className="text-xxs text-brand font-medium font-mono truncate">
                 {test.testCode}
               </div>
               {test.sampleId && (
                 <>
-                  <div className="text-xs text-text-disabled">•</div>
+                  <div className="text-xs text-fg-disabled">•</div>
                   <div
-                    className="text-xxs text-primary font-medium font-mono truncate"
+                    className="text-xxs text-brand font-medium font-mono truncate"
                     title={displayId.sample(test.sampleId)}
                   >
                     {displayId.sample(test.sampleId)}
@@ -71,18 +71,18 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
 
         <div className="space-y-1">
           {test.collectedAt && (
-            <div className="text-xs text-text-3">
+            <div className="text-xs text-fg-subtle">
               Collected: {formatDate(test.collectedAt)}
             </div>
           )}
           {test.resultEnteredAt && (
-            <div className="text-xs text-text-3">
+            <div className="text-xs text-fg-subtle">
               Entered: {formatDate(test.resultEnteredAt)}
             </div>
           )}
         </div>
 
-        <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
+        <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-stroke-subtle">
           <div className="flex items-center gap-2">
             <Badge variant="escalated" size="xs" />
             {test.priority && <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="xs" />}
@@ -96,7 +96,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
           <Button
             variant="primary"
             size="sm"
-            icon={<Icon name={ICONS.actions.eye} className="text-primary-on" />}
+            icon={<Icon name={ICONS.actions.eye} className="text-on-brand" />}
             onClick={e => {
               e.stopPropagation();
               onClick();
@@ -112,13 +112,13 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   // Desktop layout (LabCard - same structure as ValidationCard/EntryCard)
   const badges = (
     <>
-      <h3 className="text-sm font-medium text-text">{test.testName ?? test.testCode}</h3>
+      <h3 className="text-sm font-medium text-fg">{test.testName ?? test.testCode}</h3>
       <Badge variant="escalated" size="sm" />
       {test.priority && <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="sm" />}
       {test.sampleType && (
         <Badge variant={test.sampleType as 'blood' | 'urine' | 'other'} size="sm" />
       )}
-      <span className="text-xs text-primary font-mono">{test.testCode}</span>
+      <span className="text-xs text-brand font-mono">{test.testCode}</span>
     </>
   );
 
@@ -127,7 +127,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
       <Button
         variant="primary"
         size="sm"
-        icon={<Icon name={ICONS.actions.eye} className="text-primary-on" />}
+        icon={<Icon name={ICONS.actions.eye} className="text-on-brand" />}
         onClick={e => {
           e.stopPropagation();
           onClick();
@@ -139,8 +139,8 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   );
 
   const additionalInfo = test.resultEnteredAt && (
-    <span className="text-xs text-text-3">
-      Results entered <span className="text-text-2">{formatDate(test.resultEnteredAt)}</span>
+    <span className="text-xs text-fg-subtle">
+      Results entered <span className="text-fg-muted">{formatDate(test.resultEnteredAt)}</span>
       {test.enteredBy && <span> by {getUserName(test.enteredBy)}</span>}
     </span>
   );
@@ -188,16 +188,16 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
     ) : undefined;
 
   const content = (
-    <div className="text-xs text-text-2">
-      <span className="font-mono text-primary">{test.testCode}</span>
+    <div className="text-xs text-fg-muted">
+      <span className="font-mono text-brand">{test.testCode}</span>
       {test.orderId != null && (
         <span className="ml-2">
-          Order <span className="font-mono text-primary">{displayId.order(test.orderId)}</span>
+          Order <span className="font-mono text-brand">{displayId.order(test.orderId)}</span>
         </span>
       )}
       {test.sampleId && (
         <span className="ml-2">
-          Sample <span className="font-mono text-primary">{displayId.sample(test.sampleId)}</span>
+          Sample <span className="font-mono text-brand">{displayId.sample(test.sampleId)}</span>
         </span>
       )}
     </div>

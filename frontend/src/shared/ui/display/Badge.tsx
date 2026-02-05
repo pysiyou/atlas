@@ -34,7 +34,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 /** Base classes for unified appearance (neutral bg, colored text + dot) */
-const UNIFIED_BASE = 'bg-badge border border-border shadow-sm';
+const UNIFIED_BASE = 'bg-badge border border-stroke shadow-sm';
 
 /** Base classes for tinted appearance (colored bg, no border) */
 const TINTED_BASE = '';

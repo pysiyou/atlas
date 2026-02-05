@@ -55,7 +55,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
     <>
       {/* Barcode */}
       {(isCollected || isRejected) && sample.sampleId && (
-        <div className="flex items-center justify-center bg-canvas rounded p-4 border border-border mt-2">
+        <div className="flex items-center justify-center bg-canvas rounded p-4 border border-stroke mt-2">
           <Barcode
             value={displayId.sample(sample.sampleId)}
             height={40}
@@ -71,7 +71,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
         <CollectionInfoLine
           collectedAt={collectedAt}
           collectedBy={collectedBy}
-          className="text-xs text-text-3 mt-1"
+          className="text-xs text-fg-subtle mt-1"
         />
       )}
 
@@ -82,12 +82,12 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
             const testCode = testCodes[i];
             const test = testCode ? getTest(testCode) : undefined;
             return (
-              <li key={testCode || i} className="flex items-center text-xs text-text-2">
+              <li key={testCode || i} className="flex items-center text-xs text-fg-muted">
                 <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mr-2" />
                 <span className="font-medium mr-1">{testName}</span>
-                <span className="text-primary font-mono mr-2">{testCode}</span>
+                <span className="text-brand font-mono mr-2">{testCode}</span>
                 {test?.turnaroundTime && (
-                  <span className="text-text-disabled flex items-center gap-1">
+                  <span className="text-fg-disabled flex items-center gap-1">
                     <Icon name={ICONS.dataFields.time} className="w-2.5 h-2.5" />
                     {test.turnaroundTime}h
                   </span>
@@ -127,7 +127,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
       {/* Collection Notes */}
       {collectionNotes && (
         <SectionContainer title="Collection Notes">
-          <div className="text-sm text-text">{collectionNotes}</div>
+          <div className="text-sm text-fg">{collectionNotes}</div>
         </SectionContainer>
       )}
 

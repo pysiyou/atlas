@@ -37,25 +37,25 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
   <Card variant="default" padding="sm" className={cn('rounded-lg shadow-sm flex flex-col', className)}>
     <div className="flex items-start justify-between gap-2 mb-3">
       <div className="flex items-center gap-2 min-w-0">
-        <Icon name={icon} className="w-5 h-5 text-text-3 shrink-0" />
-        <span className="text-sm font-medium text-text truncate">{title}</span>
+        <Icon name={icon} className="w-5 h-5 text-fg-subtle shrink-0" />
+        <span className="text-sm font-medium text-fg truncate">{title}</span>
       </div>
       <div className="flex items-center gap-1 shrink-0">
-        <button type="button" className="p-1 rounded hover:bg-surface-hover text-text-3" aria-label="More options">
+        <button type="button" className="p-1 rounded hover:bg-panel-hover text-fg-subtle" aria-label="More options">
           <Icon name="menu-dots" className="w-4 h-4" />
         </button>
-        <button type="button" className="p-1 rounded hover:bg-surface-hover text-text-3" aria-label="View details">
+        <button type="button" className="p-1 rounded hover:bg-panel-hover text-fg-subtle" aria-label="View details">
           <Icon name="chevron-right" className="w-4 h-4" />
         </button>
       </div>
     </div>
     <div className="flex items-baseline gap-2 flex-wrap">
-      <span className="text-2xl font-bold text-text">{value}</span>
+      <span className="text-2xl font-bold text-fg">{value}</span>
       {change !== undefined && (
         <span
           className={cn(
             'text-sm font-medium',
-            change.isPositive ? 'text-success-text' : 'text-danger-text'
+            change.isPositive ? 'text-success-text' : 'text-danger-fg'
           )}
         >
           {change.isPositive ? '↑' : '↓'}
@@ -63,9 +63,9 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
         </span>
       )}
     </div>
-    {subtitle && <p className="text-xs text-text-3 mt-0.5">{subtitle}</p>}
+    {subtitle && <p className="text-xs text-fg-subtle mt-0.5">{subtitle}</p>}
     {chartTitle && (
-      <p className="text-xs font-medium text-text-2 mt-3 pb-1 border-b border-dotted border-border">
+      <p className="text-xs font-medium text-fg-muted mt-3 pb-1 border-b border-dotted border-stroke">
         {chartTitle}
       </p>
     )}

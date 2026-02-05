@@ -281,21 +281,21 @@ export const DateFilter: React.FC<DateFilterProps> = ({
         <div
           className={cn(inputTrigger, 'w-full', isOpen && inputTriggerOpen, className)}
         >
-          <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted group-hover:text-primary transition-colors shrink-0" />
-          <div className="flex-1 min-w-0 text-xs text-text truncate">
+          <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-fg-faint group-hover:text-brand transition-colors shrink-0" />
+          <div className="flex-1 min-w-0 text-xs text-fg truncate">
             {value ? (
-              <span className="text-text">
+              <span className="text-fg">
                 {format(value[0], 'MMM dd')} - {format(value[1], 'MMM dd')}
               </span>
             ) : (
-              <span className="text-text-muted">{placeholder}</span>
+              <span className="text-fg-faint">{placeholder}</span>
             )}
           </div>
 
           <Icon
             name={ICONS.actions.chevronDown}
             className={cn(
-              'w-4 h-4 text-text-disabled transition-transform shrink-0',
+              'w-4 h-4 text-fg-disabled transition-transform shrink-0',
               isOpen && 'rotate-180'
             )}
           />
@@ -303,12 +303,12 @@ export const DateFilter: React.FC<DateFilterProps> = ({
           {value && (
             <button
               onClick={handleClear}
-              className="p-0.5 -mr-1 hover:bg-surface-hover rounded transition-colors flex items-center justify-center cursor-pointer"
+              className="p-0.5 -mr-1 hover:bg-panel-hover rounded transition-colors flex items-center justify-center cursor-pointer"
               type="button"
             >
               <Icon
                 name={ICONS.actions.closeCircle}
-                className="w-3.5 h-3.5 text-text-disabled hover:text-text-3"
+                className="w-3.5 h-3.5 text-fg-disabled hover:text-fg-subtle"
               />
             </button>
           )}
@@ -346,7 +346,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
           />
 
           {/* Separator */}
-          <div className="my-3 border-t border-border" />
+          <div className="my-3 border-t border-stroke" />
 
           {/* Quick Presets */}
           <div className="mt-3">
@@ -372,13 +372,13 @@ export const DateFilter: React.FC<DateFilterProps> = ({
 
           {/* Apply Button */}
           {tempStart && (
-            <div className="mt-3 pt-3 border-t border-border">
+            <div className="mt-3 pt-3 border-t border-stroke">
               <button
                 onClick={() => {
                   handleApply();
                   close();
                 }}
-                className="w-full px-3 py-2 bg-primary hover:opacity-90 text-text-inverse text-xs font-medium rounded transition-colors"
+                className="w-full px-3 py-2 bg-brand hover:opacity-90 text-fg-inverse text-xs font-medium rounded transition-colors"
               >
                 Apply
               </button>

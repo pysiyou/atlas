@@ -31,7 +31,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     <div className={cn(inputWrapper, className)}>
       <Icon
         name={ICONS.actions.search}
-        className={cn('text-text-muted group-hover:text-primary transition-colors shrink-0', iconClasses)}
+        className={cn('text-fg-faint group-hover:text-brand transition-colors shrink-0', iconClasses)}
       />
       <input
         type="text"

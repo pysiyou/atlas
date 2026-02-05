@@ -105,16 +105,16 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         {/* Header: Test name */}
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="min-w-0 overflow-hidden">
-            <div className="text-sm font-medium text-text truncate">{test.testName}</div>
-            <div className="flex items-center gap-1.5 text-xs text-text-2">
+            <div className="text-sm font-medium text-fg truncate">{test.testName}</div>
+            <div className="flex items-center gap-1.5 text-xs text-fg-muted">
               <span className="truncate">{patientName}</span>
-              <span className="text-text-3">•</span>
-              <span className="text-primary font-medium font-mono truncate">{test.testCode}</span>
+              <span className="text-fg-subtle">•</span>
+              <span className="text-brand font-medium font-mono truncate">{test.testCode}</span>
               {test.sampleId && (
                 <>
-                  <span className="text-text-3">•</span>
+                  <span className="text-fg-subtle">•</span>
                   <span
-                    className="text-primary font-medium font-mono truncate"
+                    className="text-brand font-medium font-mono truncate"
                     title={displayId.sample(test.sampleId)}
                   >
                     {displayId.sample(test.sampleId)}
@@ -128,14 +128,14 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         {/* Content: Collection date */}
         <div className="space-y-1 ">
             {test.collectedAt && (
-              <div className="text-xs text-text-3 mt-1">
+              <div className="text-xs text-fg-subtle mt-1">
                 Collected: {formatDate(test.collectedAt)}
               </div>
             )}
           </div>
 
         {/* Bottom section: Badges (left) + Enter Results button (right) */}
-        <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
+        <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-stroke-subtle">
           <div className="flex items-center gap-2">
             {test.priority && <Badge variant={test.priority} size="xs" />}
             <Badge variant={test.sampleType} size="xs" />
@@ -163,10 +163,10 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   // Badges ordered by importance for result entry workflow
   const badges = (
     <>
-      <h3 className="text-sm font-medium text-text">{test.testName}</h3>
+      <h3 className="text-sm font-medium text-fg">{test.testName}</h3>
       <Badge variant={test.priority} size="sm" />
       <Badge variant={test.sampleType} size="sm" />
-      <span className="text-xs text-primary font-mono">{test.testCode}</span>
+      <span className="text-xs text-brand font-mono">{test.testCode}</span>
     </>
   );
 
@@ -187,14 +187,14 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <Badge
           key={param.code}
           size="sm"
-          className={results[param.code] ? 'text-primary-text' : 'text-text-3'}
+          className={results[param.code] ? 'text-brand-fg' : 'text-fg-subtle'}
           variant={results[param.code] ? 'primary' : 'default'}
         >
           {param.name}
         </Badge>
       ))}
       {parameterCount > 5 && (
-        <Badge size="sm" variant="default" className="text-text-3">
+        <Badge size="sm" variant="default" className="text-fg-subtle">
           +{parameterCount - 5} more
         </Badge>
       )}
@@ -253,7 +253,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <div className="flex items-center gap-2 flex-wrap">
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection of <span className="font-mono text-primary">{displayId.sample(test.sampleOriginalSampleId)}</span>
+            Recollection of <span className="font-mono text-brand">{displayId.sample(test.sampleOriginalSampleId)}</span>
           </Badge>
         </div>
       );

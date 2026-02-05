@@ -81,10 +81,10 @@ export const SectionContainer: React.FC<SectionContainerProps> = ({
   spacing = 'none',
 }) => {
   // Base styles for wrapper: border, background, rounded corners, overflow hidden to clip content
-  const wrapperStyles = `w-full bg-surface border border-border rounded-md overflow-hidden ${className}`;
+  const wrapperStyles = `w-full bg-panel border border-stroke rounded-md overflow-hidden ${className}`;
 
   // Base styles for header: padding, border-bottom, uppercase text
-  const headerStyles = `w-full px-4 py-3 border-b border-border text-xs text-text-2 uppercase font-semibold tracking-wide flex items-center justify-between bg-canvas ${headerClassName}`;
+  const headerStyles = `w-full px-4 py-3 border-b border-stroke text-xs text-fg-muted uppercase font-semibold tracking-wide flex items-center justify-between bg-canvas ${headerClassName}`;
 
   // Base styles for content: padding, white background (inherits from wrapper)
   // Includes spacing class if specified

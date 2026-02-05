@@ -139,12 +139,12 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       {isRecollection && !isRetest && (
         <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} />
       )}
-      <Badge size="sm" variant="default" className="text-text-2">
+      <Badge size="sm" variant="default" className="text-fg-muted">
         {filledCount} / {totalParams} parameters
       </Badge>
       {turnaroundTime && (
-        <Badge size="sm" variant="default" className="text-text-2 flex items-center gap-1.5">
-          <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-text-3" />
+        <Badge size="sm" variant="default" className="text-fg-muted flex items-center gap-1.5">
+          <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-fg-subtle" />
           {turnaroundTime}h TAT
         </Badge>
       )}
@@ -262,7 +262,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Remaining',
                 value: (
-                  <span className={remainingParams === 0 ? 'text-success-text' : 'text-text-3'}>
+                  <span className={remainingParams === 0 ? 'text-success-text' : 'text-fg-subtle'}>
                     {remainingParams}
                   </span>
                 ),
@@ -272,7 +272,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           {
             title: 'Test Information',
             fields: [
-              { label: 'Test Code', value: <span className="text-primary font-mono">{test.testCode}</span> },
+              { label: 'Test Code', value: <span className="text-brand font-mono">{test.testCode}</span> },
               {
                 label: 'Sample Type',
                 badge: test.sampleType
@@ -281,7 +281,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               },
               {
                 label: 'Sample ID',
-                value: test.sampleId ? <span className="text-primary font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
+                value: test.sampleId ? <span className="text-brand font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
               },
               {
                 label: 'Turnaround Time',

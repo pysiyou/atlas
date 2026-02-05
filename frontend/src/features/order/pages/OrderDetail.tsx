@@ -40,7 +40,7 @@ export const OrderDetail: React.FC = () => {
   if (orderLoading || patientLoading || testsLoading || paymentsLoading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-text-3">Loading...</div>
+        <div className="text-fg-subtle">Loading...</div>
       </div>
     );
   }
@@ -49,7 +49,7 @@ export const OrderDetail: React.FC = () => {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center py-12">
-          <p className="text-text-3">Order not found</p>
+          <p className="text-fg-subtle">Order not found</p>
         </div>
       </div>
     );

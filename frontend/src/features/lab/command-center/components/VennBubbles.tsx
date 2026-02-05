@@ -153,7 +153,7 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
               }} 
             />
           </div>
-          <span className="text-text-3 text-sm font-medium">Loading visualization…</span>
+          <span className="text-fg-subtle text-sm font-medium">Loading visualization…</span>
         </div>
       </div>
     );
@@ -164,10 +164,10 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
       <div className={`${baseClass} items-center justify-center ${className}`}>
         <div className="flex flex-col items-center gap-2 opacity-60">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none" className="opacity-40">
-            <circle cx="18" cy="24" r="12" stroke="currentColor" strokeWidth="2" className="text-text-muted" />
-            <circle cx="30" cy="24" r="12" stroke="currentColor" strokeWidth="2" className="text-text-muted" />
+            <circle cx="18" cy="24" r="12" stroke="currentColor" strokeWidth="2" className="text-fg-faint" />
+            <circle cx="30" cy="24" r="12" stroke="currentColor" strokeWidth="2" className="text-fg-faint" />
           </svg>
-          <span className="text-text-3 text-sm font-medium">{emptyMessage}</span>
+          <span className="text-fg-subtle text-sm font-medium">{emptyMessage}</span>
         </div>
       </div>
     );

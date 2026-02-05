@@ -36,13 +36,13 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
         >
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="w-8 h-8 flex items-center justify-center">
-              <Icon name={ICONS.dataFields.pdf} className="w-full h-full text-danger-text" />
+              <Icon name={ICONS.dataFields.pdf} className="w-full h-full text-danger-fg" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-medium font-mono text-text truncate">
+              <p className="text-xs font-medium font-mono text-fg truncate">
                 Report_{displayId.order(order.orderId)}.pdf
               </p>
-              <p className="text-xs text-text-3 mt-0.5">
+              <p className="text-xs text-fg-subtle mt-0.5">
                 {formatDetailDate(order.orderDate)} • 1.2 MB
               </p>
             </div>

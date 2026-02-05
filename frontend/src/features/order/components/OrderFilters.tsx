@@ -135,8 +135,8 @@ const ModalDateBadges: React.FC<{
             className={cn(
               'px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors',
               isActive
-                ? 'bg-primary border-primary text-text-inverse'
-                : 'bg-surface border-border text-text-2 hover:border-primary hover:bg-primary-muted'
+                ? 'bg-brand border-brand text-fg-inverse'
+                : 'bg-panel border-stroke text-fg-muted hover:border-brand hover:bg-brand-muted'
             )}
           >
             {preset.label}
@@ -189,7 +189,7 @@ const SearchInput: React.FC<{
     <div className={cn(inputWrapper)}>
       <Icon
         name={ICONS.actions.search}
-        className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-primary transition-colors"
+        className="w-3.5 h-3.5 shrink-0 text-fg-faint group-hover:text-brand transition-colors"
       />
       <input
         type="text"
@@ -200,7 +200,7 @@ const SearchInput: React.FC<{
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
-          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <div className="w-4 h-4 border-2 border-brand border-t-transparent rounded-full animate-spin" />
         )}
         {localValue && !isDebouncing && (
           <button
@@ -210,7 +210,7 @@ const SearchInput: React.FC<{
           >
             <Icon
               name={ICONS.actions.closeCircle}
-              className="w-4 h-4 text-text-muted hover:text-text-3"
+              className="w-4 h-4 text-fg-faint hover:text-fg-subtle"
             />
           </button>
         )}
@@ -306,7 +306,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
   if (showModalView) {
     return (
       <>
-        <div className="w-full bg-surface border-b border-border">
+        <div className="w-full bg-panel border-b border-stroke">
           <div className="px-3 py-2 w-full">
             <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
               {/* Search control */}
@@ -348,7 +348,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
           title="Filter"
           size="md"
         >
-          <div className="flex flex-col h-full bg-surface">
+          <div className="flex flex-col h-full bg-panel">
             {/* Filter Controls - Scrollable */}
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {/* Search Section */}
@@ -364,9 +364,9 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
                   {searchQuery && (
                     <button
                       onClick={() => onSearchChange('')}
-                      className="p-0.5 hover:bg-surface-hover rounded transition-colors"
+                      className="p-0.5 hover:bg-panel-hover rounded transition-colors"
                     >
-                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-3" />
+                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-fg-subtle" />
                     </button>
                   )}
                 </div>
@@ -376,29 +376,29 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
               <div className="space-y-5">
                 {/* Date Range Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-text mb-3">Date Range</h4>
+                  <h4 className="text-sm font-semibold text-fg mb-3">Date Range</h4>
                   <ModalDateBadges
                     value={dateRange}
                     onChange={onDateRangeChange}
                   />
-                  <div className="border-b border-border mt-4" />
+                  <div className="border-b border-stroke mt-4" />
                 </div>
 
                 {/* Order Status Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-text mb-3">Order Status</h4>
+                  <h4 className="text-sm font-semibold text-fg mb-3">Order Status</h4>
                   <CheckboxList
                     options={orderStatusOptions}
                     selectedIds={statusFilters}
                     onChange={values => onStatusFiltersChange(values as OrderStatus[])}
                     columns={orderStatusOptions.length > 4 ? 2 : 1}
                   />
-                  <div className="border-b border-border mt-4" />
+                  <div className="border-b border-stroke mt-4" />
                 </div>
 
                 {/* Payment Status Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-text mb-3">Payment Status</h4>
+                  <h4 className="text-sm font-semibold text-fg mb-3">Payment Status</h4>
                   <CheckboxList
                     options={paymentStatusOptions}
                     selectedIds={paymentFilters}
@@ -410,7 +410,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
             </div>
 
             {/* Footer with Filter Button */}
-            <div className="px-5 py-4 border-t border-border bg-surface shrink-0">
+            <div className="px-5 py-4 border-t border-stroke bg-panel shrink-0">
               {activeFilterCount > 0 && (
                 <button
                   onClick={() => {
@@ -418,14 +418,14 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
                     onStatusFiltersChange([]);
                     onPaymentFiltersChange([]);
                   }}
-                  className="w-full mb-3 text-sm text-text-3 hover:text-text-2 transition-colors"
+                  className="w-full mb-3 text-sm text-fg-subtle hover:text-fg-muted transition-colors"
                 >
                   Clear all filters
                 </button>
               )}
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="w-full py-3 bg-primary hover:opacity-90 text-text-inverse font-medium rounded-lg transition-colors"
+                className="w-full py-3 bg-brand hover:opacity-90 text-fg-inverse font-medium rounded-lg transition-colors"
               >
                 Filter
               </button>
@@ -439,7 +439,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
   // Tablet view: 2-column grid
   if (showTwoColumn) {
     return (
-      <div className="w-full bg-surface border-b border-border">
+      <div className="w-full bg-panel border-b border-stroke">
         <div className="px-3 py-2 w-full">
           <div className="grid grid-cols-2 gap-2 items-center w-full">
             {renderFilters()}
@@ -451,7 +451,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
 
   // Desktop view: 4-column grid
   return (
-    <div className="w-full bg-surface border-b border-border">
+    <div className="w-full bg-panel border-b border-stroke">
       <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
         <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">
           {renderFilters()}

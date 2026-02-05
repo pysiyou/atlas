@@ -116,10 +116,10 @@ export const TagInput: React.FC<TagInputProps> = ({
         <div className="flex justify-between items-baseline mb-1.5 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-text-3 cursor-pointer truncate min-w-0"
+            className="text-xs font-medium text-fg-subtle cursor-pointer truncate min-w-0"
           >
             {label}
-            {required && <span className="text-danger-text ml-1">*</span>}
+            {required && <span className="text-danger-fg ml-1">*</span>}
           </label>
         </div>
       )}
@@ -144,7 +144,7 @@ export const TagInput: React.FC<TagInputProps> = ({
             <button
               type="button"
               onClick={() => handleRemoveTag(tag)}
-              className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-primary shrink-0"
+              className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand shrink-0"
               aria-label={`Remove ${tag}`}
             >
               <Icon name={ICONS.actions.closeCircle} className={`w-3 h-3 ${tagStyles.remove}`} />
@@ -160,16 +160,16 @@ export const TagInput: React.FC<TagInputProps> = ({
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={tags.length === 0 ? placeholder : ''}
-          className="flex-1 min-w-[120px] outline-none text-xs text-text placeholder:text-text-muted bg-transparent leading-normal"
+          className="flex-1 min-w-[120px] outline-none text-xs text-fg placeholder:text-fg-faint bg-transparent leading-normal"
           disabled={maxTags !== undefined && tags.length >= maxTags}
         />
       </div>
 
       {/* Error Message */}
-      {error && <p className="text-xs text-danger-text mt-1.5">{error}</p>}
+      {error && <p className="text-xs text-danger-fg mt-1.5">{error}</p>}
 
       {/* Helper Text */}
-      {helperText && !error && <p className="text-xs text-text-3 mt-1.5">{helperText}</p>}
+      {helperText && !error && <p className="text-xs text-fg-subtle mt-1.5">{helperText}</p>}
     </div>
   );
 };

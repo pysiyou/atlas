@@ -103,7 +103,7 @@ const getStatusColors = (status: VitalStatus, appearance: 'unified' | 'tinted') 
     // Unified: neutral background, colored text/icons
     const base = {
       bg: 'bg-badge',
-      border: 'border-border shadow-sm',
+      border: 'border-stroke shadow-sm',
     };
     switch (status) {
       case 'normal':
@@ -111,7 +111,7 @@ const getStatusColors = (status: VitalStatus, appearance: 'unified' | 'tinted') 
       case 'borderline':
         return { ...base, icon: 'text-warning-text-strong', value: 'text-warning-text-strong', dot: 'bg-warning-text-strong' };
       case 'abnormal':
-        return { ...base, icon: 'text-danger-text-strong', value: 'text-danger-text-strong', dot: 'bg-danger-text-strong' };
+        return { ...base, icon: 'text-danger-fg-strong', value: 'text-danger-fg-strong', dot: 'bg-danger-text-strong' };
     }
   }
 
@@ -136,9 +136,9 @@ const getStatusColors = (status: VitalStatus, appearance: 'unified' | 'tinted') 
     case 'abnormal':
       return {
         bg: 'bg-danger-bg',
-        border: 'border-border-error',
-        icon: 'text-danger-text',
-        value: 'text-danger-text',
+        border: 'border-stroke-error',
+        icon: 'text-danger-fg',
+        value: 'text-danger-fg',
         dot: 'bg-danger',
       };
   }
@@ -151,8 +151,8 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
     return (
       <div className="flex items-center justify-center h-full min-h-[200px]">
         <div className="text-center">
-          <Icon name={ICONS.dataFields.stethoscope} className="w-12 h-12 text-text-disabled mx-auto mb-2" />
-          <p className="text-sm text-text-3">No vital signs recorded</p>
+          <Icon name={ICONS.dataFields.stethoscope} className="w-12 h-12 text-fg-disabled mx-auto mb-2" />
+          <p className="text-sm text-fg-subtle">No vital signs recorded</p>
         </div>
       </div>
     );
@@ -178,7 +178,7 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
           >
             <div className="flex items-center gap-2 mb-2 min-w-0">
               <Icon name={config.icon} className={`w-4 h-4 ${colors.icon} shrink-0`} />
-              <span className="text-xs font-medium text-text-3 uppercase tracking-wide whitespace-nowrap truncate">
+              <span className="text-xs font-medium text-fg-subtle uppercase tracking-wide whitespace-nowrap truncate">
                 {config.label}
               </span>
             </div>

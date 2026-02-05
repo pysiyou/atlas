@@ -61,12 +61,12 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
   const { user: currentUser } = useAuthStore();
 
   return (
-    <div className="w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border overflow-hidden flex flex-col max-h-[600px]">
+    <div className="w-90 md:w-96 bg-panel rounded-lg shadow-xl border border-stroke overflow-hidden flex flex-col max-h-[600px]">
       {/* Header */}
-      <div className="px-4 py-3 bg-canvas border-b border-border-subtle flex items-start justify-between">
+      <div className="px-4 py-3 bg-canvas border-b border-stroke-subtle flex items-start justify-between">
         <div className="space-y-0.5">
-          <h4 className="font-medium text-text">{title}</h4>
-          {subtitle && <p className="text-xs text-text-3">{subtitle}</p>}
+          <h4 className="font-medium text-fg">{title}</h4>
+          {subtitle && <p className="text-xs text-fg-subtle">{subtitle}</p>}
           {headerBadges && <div className="flex items-center gap-2 pt-1">{headerBadges}</div>}
         </div>
         <IconButton onClick={onCancel} variant="close" size="sm" title="Close" />
@@ -76,7 +76,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
       <div className="p-4 space-y-4 overflow-y-auto flex-1">{children}</div>
 
       {/* Footer */}
-      <div className="p-3 bg-canvas border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
+      <div className="p-3 bg-canvas border-t border-stroke-subtle flex items-center justify-between gap-2 shrink-0">
         {footerInfo || (
           <FooterInfo
             icon={ICONS.actions.alertCircle}
@@ -144,32 +144,32 @@ export const RadioCard: React.FC<RadioCardProps> = ({
   const selectedStyles =
     variant === 'red'
       ? 'bg-danger-bg border-danger-border ring-1 ring-danger-border'
-      : 'bg-primary-muted border-primary ring-1 ring-primary';
+      : 'bg-brand-muted border-brand ring-1 ring-brand';
 
-  const disabledStyles = 'bg-neutral-100 border-border cursor-not-allowed opacity-60';
+  const disabledStyles = 'bg-neutral-100 border-stroke cursor-not-allowed opacity-60';
 
   const labelColor = disabled
-    ? 'text-text-disabled'
+    ? 'text-fg-disabled'
     : variant === 'red'
       ? selected
-        ? 'text-danger-text-strong'
-        : 'text-text'
+        ? 'text-danger-fg-strong'
+        : 'text-fg'
       : selected
-        ? 'text-primary-text'
-        : 'text-text';
+        ? 'text-brand-fg'
+        : 'text-fg';
 
   const descColor = disabled
-    ? 'text-text-disabled'
+    ? 'text-fg-disabled'
     : variant === 'red'
       ? selected
-        ? 'text-danger-text'
-        : 'text-text-3'
+        ? 'text-danger-fg'
+        : 'text-fg-subtle'
       : selected
-        ? 'text-primary'
-        : 'text-text-3';
+        ? 'text-brand'
+        : 'text-fg-subtle';
 
   const radioColor =
-    variant === 'red' ? 'text-danger-text focus:ring-danger' : 'text-primary focus:ring-primary';
+    variant === 'red' ? 'text-danger-fg focus:ring-danger' : 'text-brand focus:ring-brand';
 
   const handleClick = () => {
     if (!disabled) {
@@ -186,7 +186,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
             ? disabledStyles
             : selected
               ? selectedStyles
-              : 'bg-surface border-border hover:border-border-strong hover:bg-canvas cursor-pointer'
+              : 'bg-panel border-stroke hover:border-stroke-strong hover:bg-canvas cursor-pointer'
         }
       `}
       onClick={handleClick}
@@ -199,14 +199,14 @@ export const RadioCard: React.FC<RadioCardProps> = ({
           checked={selected}
           onChange={handleClick}
           disabled={disabled}
-          className={`h-3.5 w-3.5 border-border-strong ${radioColor} ${disabled ? 'cursor-not-allowed' : ''}`}
+          className={`h-3.5 w-3.5 border-stroke-strong ${radioColor} ${disabled ? 'cursor-not-allowed' : ''}`}
         />
       </div>
       <div className="ml-2.5">
         <span className={`block text-xs font-medium ${labelColor}`}>{label}</span>
         <span className={`block text-xxs mt-0.5 ${descColor}`}>{description}</span>
         {disabled && disabledReason && (
-          <span className="block text-xxs mt-1 text-danger-text font-medium">{disabledReason}</span>
+          <span className="block text-xxs mt-1 text-danger-fg font-medium">{disabledReason}</span>
         )}
       </div>
     </div>
@@ -238,8 +238,8 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
       relative flex items-start p-3 cursor-pointer rounded-lg border transition-all duration-200
       ${
         checked
-          ? 'bg-primary-muted border-primary ring-1 ring-primary'
-          : 'bg-surface border-border hover:border-border-strong hover:bg-canvas'
+          ? 'bg-brand-muted border-brand ring-1 ring-brand'
+          : 'bg-panel border-stroke hover:border-stroke-strong hover:bg-canvas'
       }
     `}
     onClick={onChange}
@@ -249,14 +249,14 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="h-3.5 w-3.5 text-primary border-border-strong focus:ring-primary rounded"
+        className="h-3.5 w-3.5 text-brand border-stroke-strong focus:ring-brand rounded"
       />
     </div>
     <div className="ml-2.5">
-      <span className={`block text-xs font-medium ${checked ? 'text-primary-text' : 'text-text'}`}>
+      <span className={`block text-xs font-medium ${checked ? 'text-brand-fg' : 'text-fg'}`}>
         {label}
       </span>
-      <span className={`block text-xxs mt-0.5 ${checked ? 'text-primary' : 'text-text-3'}`}>
+      <span className={`block text-xxs mt-0.5 ${checked ? 'text-brand' : 'text-fg-subtle'}`}>
         {description}
       </span>
     </div>

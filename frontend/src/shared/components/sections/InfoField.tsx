@@ -47,7 +47,7 @@ export const InfoField: React.FC<InfoFieldProps> = ({
   if (orientation === 'vertical') {
     return (
       <div className={`flex gap-3 ${className}`}>
-        {icon && <Icon name={icon} className="w-4 h-4 text-text-disabled shrink-0" />}
+        {icon && <Icon name={icon} className="w-4 h-4 text-fg-disabled shrink-0" />}
         <div className="min-w-0 flex-1">
           <div className={DETAIL_LABEL}>{label}</div>
           {/* Using div instead of p to support ReactNode values that may contain block elements */}
@@ -61,7 +61,7 @@ export const InfoField: React.FC<InfoFieldProps> = ({
   return (
     <div className={`flex items-center justify-between gap-4 ${className}`}>
       <div className="flex items-center gap-2">
-        {icon && <Icon name={icon} className="w-4 h-4 text-text-3 flex-shrink-0" />}
+        {icon && <Icon name={icon} className="w-4 h-4 text-fg-subtle flex-shrink-0" />}
         <div className={`font-medium whitespace-nowrap ${DETAIL_LABEL}`}>{label}</div>
       </div>
       <div className={`text-right min-w-0 ${DETAIL_VALUE}`}>{value}</div>

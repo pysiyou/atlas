@@ -103,7 +103,7 @@ const Modal = memo(
     const maxWidthClass = size && sizeClasses[size] ? sizeClasses[size] : maxWidth;
 
     const getModalClasses = () => {
-      return 'relative bg-surface border border-border rounded-lg shadow-xl w-full';
+      return 'relative bg-panel border border-stroke rounded-lg shadow-xl w-full';
     };
 
     /**
@@ -184,18 +184,18 @@ const Modal = memo(
                   onClick={handleModalClick}
                 >
                   {/* Header */}
-                  <div className="px-6 py-4 border-b border-border bg-surface flex items-center justify-between shrink-0">
+                  <div className="px-6 py-4 border-b border-stroke bg-panel flex items-center justify-between shrink-0">
                     <div className="flex items-start gap-3 min-w-0">
                       <div className="flex flex-col min-w-0">
                         <h2
                           id="modal-title"
-                          className="text-lg font-semibold text-text truncate"
+                          className="text-lg font-semibold text-fg truncate"
                           title={typeof title === 'string' ? title : undefined}
                         >
                           {title}
                         </h2>
                         {subtitle && (
-                          <span className="text-sm text-text-3 mt-0.5">{subtitle}</span>
+                          <span className="text-sm text-fg-subtle mt-0.5">{subtitle}</span>
                         )}
                       </div>
                     </div>

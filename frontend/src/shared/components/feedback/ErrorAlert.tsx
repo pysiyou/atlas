@@ -85,12 +85,12 @@ export const InlineError: React.FC<{
   if (!error) return null;
 
   return (
-    <div className="flex items-center justify-between p-2 bg-danger-bg border border-border-error/20 rounded text-sm text-danger-text">
+    <div className="flex items-center justify-between p-2 bg-danger-bg border border-stroke-error/20 rounded text-sm text-danger-fg">
       <span>{error.message}</span>
       {onDismiss && (
         <button
           onClick={onDismiss}
-          className="ml-2 text-danger-text hover:text-danger-text/80 font-bold"
+          className="ml-2 text-danger-fg hover:text-danger-fg/80 font-bold"
           aria-label="Dismiss error"
         >
           ×

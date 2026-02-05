@@ -57,15 +57,15 @@ export const Pagination: React.FC<PaginationProps> = ({
   const getPageButtonClasses = (isActive: boolean) => {
     const base = 'min-w-[32px] h-8 px-2 text-xs font-medium rounded transition-colors';
     return isActive
-      ? `${base} bg-primary text-primary-on`
-      : `${base} text-text-2 hover:bg-surface-hover`;
+      ? `${base} bg-brand text-on-brand`
+      : `${base} text-fg-muted hover:bg-panel-hover`;
   };
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 border-t border-border bg-surface">
+    <div className="flex items-center justify-between px-6 py-3 border-t border-stroke bg-panel">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <span className="text-xs text-text-2">Rows per page:</span>
+          <span className="text-xs text-fg-muted">Rows per page:</span>
           <select
             value={pageSize}
             onChange={e => onPageSizeChange(Number(e.target.value))}
@@ -78,7 +78,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             ))}
           </select>
         </div>
-        <span className="text-xs text-text-2">
+        <span className="text-xs text-fg-muted">
           {startItem}-{endItem} of {totalItems}
         </span>
       </div>
@@ -87,7 +87,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="w-8 h-8 flex items-center justify-center rounded transition-colors text-text-2 hover:bg-surface-hover disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-8 h-8 flex items-center justify-center rounded transition-colors text-fg-muted hover:bg-panel-hover disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
         </button>
@@ -96,7 +96,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           {pageNumbers.map((page, index) => (
             <React.Fragment key={index}>
               {page === '...' ? (
-                <span className="px-2 text-xs text-text-disabled">...</span>
+                <span className="px-2 text-xs text-fg-disabled">...</span>
               ) : (
                 <button
                   onClick={() => onPageChange(page as number)}
@@ -112,7 +112,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="w-8 h-8 flex items-center justify-center rounded transition-colors text-text-2 hover:bg-surface-hover disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-8 h-8 flex items-center justify-center rounded transition-colors text-fg-muted hover:bg-panel-hover disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
         </button>

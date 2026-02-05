@@ -27,7 +27,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
   return (
     <div className="flex items-center justify-between mb-4 shrink-0 flex-wrap gap-3">
       <div className="flex items-center gap-3 self-center">
-        <h1 className="text-sm font-bold text-primary font-mono">{displayId.order(order.orderId)}</h1>
+        <h1 className="text-sm font-bold text-brand font-mono">{displayId.order(order.orderId)}</h1>
         <Badge variant={order.priority} size="sm" />
         <Badge variant={order.overallStatus} size="sm" />
       </div>

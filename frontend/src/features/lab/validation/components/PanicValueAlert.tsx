@@ -48,13 +48,13 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0">
           <div className="p-2 bg-danger rounded-full">
-            <Icon name="alert-circle" className="w-5 h-5 text-danger-on" />
+            <Icon name="alert-circle" className="w-5 h-5 text-on-danger" />
           </div>
         </div>
 
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <h4 className="text-sm font-bold text-danger-text-strong uppercase tracking-wide">
+            <h4 className="text-sm font-bold text-danger-fg-strong uppercase tracking-wide">
               ⚠️ PANIC VALUE - Immediate Action Required
             </h4>
             {isAcknowledged && (
@@ -66,8 +66,8 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
 
           <div className="space-y-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-sm font-semibold text-text">{parameterName}:</span>
-              <span className="text-lg font-bold text-danger-text-strong">
+              <span className="text-sm font-semibold text-fg">{parameterName}:</span>
+              <span className="text-lg font-bold text-danger-fg-strong">
                 {value}
                 {unit && <span className="ml-1 text-sm font-normal">{unit}</span>}
               </span>
@@ -76,13 +76,13 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
             <div className="grid grid-cols-2 gap-4 text-xs">
               {referenceRange && (
                 <div>
-                  <span className="text-text-3">Reference Range:</span>
-                  <span className="ml-2 font-medium text-text-2">{referenceRange}</span>
+                  <span className="text-fg-subtle">Reference Range:</span>
+                  <span className="ml-2 font-medium text-fg-muted">{referenceRange}</span>
                 </div>
               )}
               <div>
-                <span className="text-text-3">Critical Threshold:</span>
-                <span className="ml-2 font-medium text-danger-text-strong">
+                <span className="text-fg-subtle">Critical Threshold:</span>
+                <span className="ml-2 font-medium text-danger-fg-strong">
                   {isCriticalLow && criticalLow !== undefined && `< ${criticalLow} ${unit || ''}`}
                   {isCriticalHigh && criticalHigh !== undefined && `> ${criticalHigh} ${unit || ''}`}
                 </span>
@@ -103,7 +103,7 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
           {onAcknowledge && !isAcknowledged && (
             <button
               onClick={onAcknowledge}
-              className="mt-4 px-4 py-2 bg-danger hover:bg-danger-hover text-danger-on text-sm font-semibold rounded transition-colors flex items-center gap-2"
+              className="mt-4 px-4 py-2 bg-danger hover:bg-danger-hover text-on-danger text-sm font-semibold rounded transition-colors flex items-center gap-2"
             >
               <Icon name="check-circle" className="w-4 h-4" />
               Acknowledge Panic Value

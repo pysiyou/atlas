@@ -328,21 +328,21 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
         3: { cellWidth: 20, halign: 'right' }, // Unit - right aligned
       },
       styles: {
-        lineColor: [220, 220, 220], // border-border-subtle
+        lineColor: [220, 220, 220], // border-stroke-subtle
         lineWidth: 0.3,
       },
       headStyles: {
         fillColor: [250, 250, 250], // bg-canvas
-        textColor: [107, 114, 128], // text-text-3
+        textColor: [107, 114, 128], // text-fg-subtle
         fontStyle: 'bold',
         fontSize: 9,
         lineWidth: 0.5,
-        lineColor: [229, 231, 235], // border-border-strong
+        lineColor: [229, 231, 235], // border-stroke-strong
       },
       bodyStyles: {
         fontSize: 9,
         lineWidth: 0.3,
-        lineColor: [220, 220, 220], // border-border-subtle
+        lineColor: [220, 220, 220], // border-stroke-subtle
         textColor: [31, 41, 55], // text-text
       },
       didParseCell: (data) => {
@@ -357,7 +357,7 @@ export function generateLabReport(reportData: ReportData, template: ReportTempla
         
         // Abnormal result values: red and bold
         if (data.section === 'body' && data.column.index === 1 && rowData?.isAbnormal) {
-          data.cell.styles.textColor = [220, 38, 38]; // text-danger-text
+          data.cell.styles.textColor = [220, 38, 38]; // text-danger-fg
           data.cell.styles.fontStyle = 'bold';
         }
         

@@ -30,8 +30,8 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
     return (
       <div className="flex items-center justify-center h-full min-h-[200px]">
         <div className="text-center">
-          <Icon name={ICONS.dataFields.user} className="w-12 h-12 text-text-disabled mx-auto mb-2" />
-          <p className="text-sm text-text-3">Patient Not Found</p>
+          <Icon name={ICONS.dataFields.user} className="w-12 h-12 text-fg-disabled mx-auto mb-2" />
+          <p className="text-sm text-fg-subtle">Patient Not Found</p>
         </div>
       </div>
     );
@@ -43,7 +43,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
         <Avatar
           primaryText={patient.fullName}
           secondaryText={displayId.patient(patient.id)}
-          secondaryTextClassName="font-mono text-primary"
+          secondaryTextClassName="font-mono text-brand"
           size="sm"
         />
       </div>

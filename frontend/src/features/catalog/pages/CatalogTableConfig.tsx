@@ -29,9 +29,9 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
 
   const renderName = (test: Test) => (
     <div className="min-w-0">
-      <div className="text-text truncate">{test.name}</div>
+      <div className="text-fg truncate">{test.name}</div>
       {test.synonyms && test.synonyms.length > 0 && (
-        <div className="text-xs text-text-3 truncate">
+        <div className="text-xs text-fg-subtle truncate">
           {test.synonyms.slice(0, 2).join(', ')}
           {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
         </div>
@@ -47,10 +47,10 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
 
   const renderLoincCodes = (test: Test) => {
     if (!test.loincCodes || test.loincCodes.length === 0) {
-      return <div className="text-xs text-text-disabled truncate">-</div>;
+      return <div className="text-xs text-fg-disabled truncate">-</div>;
     }
     return (
-      <div className="text-xs text-text truncate">
+      <div className="text-xs text-fg truncate">
         {test.loincCodes.join(', ')}
       </div>
     );

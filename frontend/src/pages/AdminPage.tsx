@@ -30,7 +30,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     header: 'Test Name',
     width: 'fill',
     sortable: true,
-    render: (test: Test) => <div className="font-medium text-text truncate">{test.name}</div>,
+    render: (test: Test) => <div className="font-medium text-fg truncate">{test.name}</div>,
   },
   {
     key: 'category',
@@ -38,7 +38,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     width: 'md',
     sortable: true,
     render: (test: Test) => (
-      <span className="text-xs text-text-3 uppercase truncate block">{test.category}</span>
+      <span className="text-xs text-fg-subtle uppercase truncate block">{test.category}</span>
     ),
   },
   {
@@ -57,7 +57,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     width: 'sm',
     sortable: true,
     render: (test: Test) => (
-      <div className="text-xs text-text-3 truncate">{test.turnaroundTime}h</div>
+      <div className="text-xs text-fg-subtle truncate">{test.turnaroundTime}h</div>
     ),
   },
 ];
@@ -78,7 +78,7 @@ const AdminTestTable: React.FC<{ tests: Test[] }> = ({ tests }) => {
       CardComponent: ({ item }: { item: Test }) => (
         <div className="p-3 border rounded">
           <div className="font-medium">{item.name}</div>
-          <div className="text-xs text-text-3">{item.code}</div>
+          <div className="text-xs text-fg-subtle">{item.code}</div>
         </div>
       ),
     }),
@@ -138,7 +138,7 @@ export const Admin: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-text">Administration</h1>
+      <h1 className="text-2xl font-bold text-fg">Administration</h1>
 
       {/* System Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -149,8 +149,8 @@ export const Admin: React.FC = () => {
                 {stat.icon}
               </div>
               <div>
-                <div className="text-sm text-text-3">{stat.label}</div>
-                <div className="text-2xl font-bold text-text">{stat.value}</div>
+                <div className="text-sm text-fg-subtle">{stat.label}</div>
+                <div className="text-2xl font-bold text-fg">{stat.value}</div>
               </div>
             </div>
           </Card>
@@ -159,10 +159,10 @@ export const Admin: React.FC = () => {
 
       {/* Test Catalog */}
       <SectionContainer title="Test Catalog">
-        <div className="text-sm text-text-3 mb-3">{tests.length} total tests</div>
+        <div className="text-sm text-fg-subtle mb-3">{tests.length} total tests</div>
         <AdminTestTable tests={tests.filter(t => t.isActive).slice(0, 10)} />
         {tests.length > 10 && (
-          <div className="text-center py-3 text-sm text-text-3">
+          <div className="text-center py-3 text-sm text-fg-subtle">
             Showing 10 of {tests.length} tests
           </div>
         )}

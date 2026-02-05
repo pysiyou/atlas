@@ -35,10 +35,10 @@ export const OrderCardHeader: React.FC<OrderCardHeaderProps> = ({
   return (
     <div className={className}>
       <div className="flex items-center gap-3 flex-wrap">
-        <h2 className="text-2xl font-bold text-primary font-mono">{displayId.order(orderId)}</h2>
+        <h2 className="text-2xl font-bold text-brand font-mono">{displayId.order(orderId)}</h2>
         <Badge variant={priority} size="sm" />
         <Badge variant={status} size="sm" />
-        <span className="text-sm text-text-3">{formatDate(orderDate)}</span>
+        <span className="text-sm text-fg-subtle">{formatDate(orderDate)}</span>
       </div>
     </div>
   );
@@ -67,9 +67,9 @@ export const OrderMetadata: React.FC<OrderMetadataProps> = ({
     <div className={`flex items-center gap-3 ${className}`}>
       <Avatar primaryText={patientName} size="sm" />
       <div>
-        <div className="font-medium text-text">{patientName}</div>
-        <div className="text-xs text-text-3">
-          <span className="font-mono text-primary">{displayId.patient(patientId)}</span> • {formatDate(orderDate)}
+        <div className="font-medium text-fg">{patientName}</div>
+        <div className="text-xs text-fg-subtle">
+          <span className="font-mono text-brand">{displayId.patient(patientId)}</span> • {formatDate(orderDate)}
           {referringPhysician && ` • ${referringPhysician}`}
         </div>
       </div>
@@ -94,15 +94,15 @@ export const BillingSummaryCard: React.FC<BillingSummaryCardProps> = ({
     <SectionContainer title="Billing Summary">
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-text-3">Subtotal:</span>
+          <span className="text-fg-subtle">Subtotal:</span>
           <span className="font-medium">{formatCurrency(totalPrice)}</span>
         </div>
         <div className="border-t pt-2 flex justify-between">
-          <span className="font-semibold text-text">Total:</span>
-          <span className="font-bold text-xl text-primary">{formatCurrency(totalPrice)}</span>
+          <span className="font-semibold text-fg">Total:</span>
+          <span className="font-bold text-xl text-brand">{formatCurrency(totalPrice)}</span>
         </div>
         <div className="flex justify-between items-center pt-2">
-          <span className="text-sm text-text-3">Payment Status:</span>
+          <span className="text-sm text-fg-subtle">Payment Status:</span>
           <Badge
             variant={
               paymentStatus === 'paid'
@@ -137,16 +137,16 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
       <div className="space-y-3">
         {tests.map((test, index) => {
           return (
-            <div key={index} className="border border-border rounded p-4">
+            <div key={index} className="border border-stroke rounded p-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <div className="font-medium text-text">{test.testName}</div>
-                  <div className="text-sm text-text-3">
-                    <span className="text-primary font-mono">{test.testCode}</span> • {test.sampleType}
+                  <div className="font-medium text-fg">{test.testName}</div>
+                  <div className="text-sm text-fg-subtle">
+                    <span className="text-brand font-mono">{test.testCode}</span> • {test.sampleType}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-medium text-primary">
+                  <div className="font-medium text-brand">
                     {formatCurrency(test.priceAtOrder)}
                   </div>
                   <Badge variant={test.status} size="sm" />
@@ -155,23 +155,23 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
 
               {test.results && (
                 <div className="mt-3 p-3 bg-canvas rounded">
-                  <div className="text-sm font-medium text-text-2 mb-2">Results:</div>
+                  <div className="text-sm font-medium text-fg-muted mb-2">Results:</div>
                   <div className="space-y-1">
                     {Object.entries(test.results).map(([key, result]) => (
                       <div key={key} className="flex justify-between text-sm">
-                        <span className="text-text-3">{key}:</span>
+                        <span className="text-fg-subtle">{key}:</span>
                         <span
                           className={`font-medium ${
                             result.status === 'high' || result.status === 'low'
                               ? 'text-warning-text'
                               : result.status === 'critical'
-                                ? 'text-danger-text'
-                                : 'text-text'
+                                ? 'text-danger-fg'
+                                : 'text-fg'
                           }`}
                         >
                           {result.value} {result.unit}
                           {result.referenceRange && (
-                            <span className="text-text-3 ml-2">
+                            <span className="text-fg-subtle ml-2">
                               (Ref: {result.referenceRange})
                             </span>
                           )}
@@ -183,9 +183,9 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
               )}
 
               {test.validationNotes && (
-                <div className="mt-2 p-2 bg-primary-muted rounded text-sm">
-                  <span className="font-medium text-primary">Validation Notes: </span>
-                  <span className="text-primary">{test.validationNotes}</span>
+                <div className="mt-2 p-2 bg-brand-muted rounded text-sm">
+                  <span className="font-medium text-brand">Validation Notes: </span>
+                  <span className="text-brand">{test.validationNotes}</span>
                 </div>
               )}
             </div>

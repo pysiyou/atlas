@@ -36,7 +36,7 @@ export const PaymentButton: React.FC<PaymentButtonProps> = ({
   if (isPaid) {
     return (
       <div className="flex items-center justify-start">
-        <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-text-disabled" />
+        <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-fg-disabled" />
       </div>
     );
   }

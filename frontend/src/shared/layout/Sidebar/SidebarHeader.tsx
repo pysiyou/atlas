@@ -23,7 +23,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   const company = companyConfig.getConfig();
 
   return (
-    <div className="h-16 border-b border-border flex items-center">
+    <div className="h-16 border-b border-stroke flex items-center">
       {/* Fixed 4rem icon column — no transition, icon stays motionless */}
       <div
         className="w-16 shrink-0 flex items-center justify-center cursor-pointer"
@@ -33,15 +33,15 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
         tabIndex={0}
         onKeyDown={e => e.key === 'Enter' && isCollapsed && onToggleCollapse()}
       >
-        <div className="w-8 h-8 text-primary flex items-center justify-center">
+        <div className="w-8 h-8 text-brand flex items-center justify-center">
           <Icon name={ICONS.ui.appLogo} className="w-full h-full" />
         </div>
       </div>
       {/* Content column — clipped by aside overflow when collapsed */}
       <div className="flex-1 min-w-0 overflow-hidden flex items-center justify-between px-3">
         <div className="min-w-0 overflow-hidden whitespace-nowrap">
-          <h1 className="text-base font-bold text-text truncate">{company.company.displayName}</h1>
-          <p className="text-xs text-text-3">Version {company.company.version}</p>
+          <h1 className="text-base font-bold text-fg truncate">{company.company.displayName}</h1>
+          <p className="text-xs text-fg-subtle">Version {company.company.version}</p>
         </div>
         {onMobileClose ? (
           <IconButton variant="close" size="sm" onClick={onMobileClose} title="Close Sidebar" />

@@ -72,14 +72,14 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
                 className={cn(
                   'w-[18px] h-[18px] rounded-sm border flex items-center justify-center transition-colors duration-200',
                   isSelected
-                    ? 'bg-primary border-primary'
-                    : 'border-border-strong bg-surface group-hover:border-primary'
+                    ? 'bg-brand border-brand'
+                    : 'border-stroke-strong bg-panel group-hover:border-brand'
                 )}
               >
                 {isSelected && (
                   <Icon
                     name={ICONS.actions.check}
-                    className="w-3 h-3 text-text-inverse"
+                    className="w-3 h-3 text-fg-inverse"
                   />
                 )}
               </div>
@@ -88,8 +88,8 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
             {/* Label */}
             <span
               className={cn(
-                'text-sm transition-colors duration-200 group-hover:text-text',
-                isSelected ? 'text-text' : 'text-text-2'
+                'text-sm transition-colors duration-200 group-hover:text-fg',
+                isSelected ? 'text-fg' : 'text-fg-muted'
               )}
             >
               {option.label}

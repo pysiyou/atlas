@@ -46,7 +46,7 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
           <div className="flex items-center gap-1">
             <span
               className={
-                isSuperseded ? 'text-text-disabled line-through font-mono' : DATA_ID_PRIMARY_INLINE
+                isSuperseded ? 'text-fg-disabled line-through font-mono' : DATA_ID_PRIMARY_INLINE
               }
             >
               {test.testCode}
@@ -68,7 +68,7 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
         const name = getTestName(test.testCode, testCatalog);
         const isSuperseded = test.status === 'superseded';
         return (
-          <span className={isSuperseded ? 'text-text-disabled line-through' : 'text-text'}>
+          <span className={isSuperseded ? 'text-fg-disabled line-through' : 'text-fg'}>
             {name}
           </span>
         );
@@ -120,7 +120,7 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
         return (
           <span
             className={
-              isSuperseded ? 'text-text-disabled line-through' : DATA_AMOUNT
+              isSuperseded ? 'text-fg-disabled line-through' : DATA_AMOUNT
             }
           >
             {formatCurrency(test.priceAtOrder)}
@@ -135,22 +135,22 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
     const isSuperseded = item.status === 'superseded';
     return (
       <div
-        className="p-3 border border-border rounded-lg hover:bg-surface-hover cursor-pointer"
+        className="p-3 border border-stroke rounded-lg hover:bg-panel-hover cursor-pointer"
         onClick={onClick}
         role="button"
         tabIndex={0}
         onKeyDown={e => e.key === 'Enter' && onClick?.()}
       >
         <div className="flex items-center justify-between gap-2">
-          <span className={isSuperseded ? 'text-text-disabled line-through font-mono' : DATA_ID_PRIMARY_INLINE}>
+          <span className={isSuperseded ? 'text-fg-disabled line-through font-mono' : DATA_ID_PRIMARY_INLINE}>
             {item.testCode}
           </span>
           <Badge variant={item.status} size="sm" strikethrough={isSuperseded} />
         </div>
-        <div className={`text-sm mt-1 ${isSuperseded ? 'text-text-disabled line-through' : 'text-text'}`}>
+        <div className={`text-sm mt-1 ${isSuperseded ? 'text-fg-disabled line-through' : 'text-fg'}`}>
           {name}
         </div>
-        <div className="text-xs text-text-3 mt-1">{formatCurrency(item.priceAtOrder)}</div>
+        <div className="text-xs text-fg-subtle mt-1">{formatCurrency(item.priceAtOrder)}</div>
       </div>
     );
   };

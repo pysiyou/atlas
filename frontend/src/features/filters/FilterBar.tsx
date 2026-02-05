@@ -18,9 +18,9 @@ import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
 // Style constants for consistent styling
 const filterStyles = {
   controlHeight: 'h-[34px]',
-  container: 'w-full bg-surface border-b border-border',
-  dropdownLabel: 'text-xs font-medium text-text-3 mb-2',
-  dropdownDivider: 'pt-2 border-t border-border',
+  container: 'w-full bg-panel border-b border-stroke',
+  dropdownLabel: 'text-xs font-medium text-fg-subtle mb-2',
+  dropdownDivider: 'pt-2 border-t border-stroke',
 } as const;
 
 /**

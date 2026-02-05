@@ -53,16 +53,16 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
   );
 
   return (
-    <div className="rounded border border-border overflow-hidden">
-      <div className="px-3 py-2.5 border-b border-dashed border-border-strong">
+    <div className="rounded border border-stroke overflow-hidden">
+      <div className="px-3 py-2.5 border-b border-dashed border-stroke-strong">
         <div className="flex justify-between items-center">
-          <span className="text-xs font-semibold text-text-2 uppercase tracking-wider">
-            Order <span className="font-mono text-primary">{displayId.order(order.orderId)}</span>
+          <span className="text-xs font-semibold text-fg-muted uppercase tracking-wider">
+            Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span>
           </span>
           <Badge variant={order.paymentStatus} size="xs" />
         </div>
         {order.patientName && (
-          <p className="text-[11px] text-text-3 mt-0.5 truncate">{order.patientName}</p>
+          <p className="text-[11px] text-fg-subtle mt-0.5 truncate">{order.patientName}</p>
         )}
       </div>
       <div className="px-3 py-2 max-h-32 overflow-y-auto">
@@ -75,29 +75,29 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
               >
                 <span className="flex items-center gap-2 min-w-0 flex-1">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
-                  <span className="text-text-2 truncate">
+                  <span className="text-fg-muted truncate">
                     {test.testName || test.testCode || 'Test'}
                     {test.testCode && test.testName !== test.testCode && (
-                      <span className="text-primary font-mono ml-1">({test.testCode})</span>
+                      <span className="text-brand font-mono ml-1">({test.testCode})</span>
                     )}
                   </span>
                 </span>
-                <span className="font-medium text-text tabular-nums shrink-0">
+                <span className="font-medium text-fg tabular-nums shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-xs text-text-3 italic">No items</p>
+          <p className="text-xs text-fg-subtle italic">No items</p>
         )}
       </div>
-      <div className="border-t border-dashed border-border-strong" />
+      <div className="border-t border-dashed border-stroke-strong" />
       <div className="px-3 py-2.5 flex justify-between items-center">
-        <span className="text-xs font-semibold text-text-2 uppercase tracking-wider">
+        <span className="text-xs font-semibold text-fg-muted uppercase tracking-wider">
           Total
         </span>
-        <span className="text-sm font-bold text-primary tabular-nums">
+        <span className="text-sm font-bold text-brand tabular-nums">
           {formatCurrency(activeTotal)}
         </span>
       </div>
@@ -186,7 +186,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   return (
     <PopoverForm
       title="Process Payment"
-      subtitle={<span>Order <span className="font-mono text-primary">{displayId.order(order.orderId)}</span></span>}
+      subtitle={<span>Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span></span>}
       onCancel={onCancel}
       onConfirm={handleSubmit}
       confirmLabel="Process Payment"
@@ -199,8 +199,8 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Payment Method Selection */}
       <div>
-        <label className="block text-xs font-medium text-text-3 mb-2">
-          Payment Method <span className="text-danger-text">*</span>
+        <label className="block text-xs font-medium text-fg-subtle mb-2">
+          Payment Method <span className="text-danger-fg">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
           {PAYMENT_METHODS.map(method => {
@@ -214,20 +214,20 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                   relative flex items-center gap-2.5 p-3 rounded border
                   ${
                     isSelected
-                      ? 'bg-surface border-primary border-2'
-                      : 'bg-surface border-border hover:border-border-strong'
+                      ? 'bg-panel border-brand border-2'
+                      : 'bg-panel border-stroke hover:border-stroke-strong'
                   }
                 `}
               >
                 {/* Brand icon on the left */}
                 <Icon
                   name={method.icon as IconName}
-                  className={`w-7 h-7 shrink-0 ${isSelected ? 'text-primary' : 'text-text-disabled'}`}
+                  className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-fg-disabled'}`}
                 />
                 {/* Brand label */}
                 <span
                   className={`flex-1 text-xs font-medium text-left ${
-                    isSelected ? 'text-text' : 'text-text-2'
+                    isSelected ? 'text-fg' : 'text-fg-muted'
                   }`}
                 >
                   {method.label}
@@ -236,12 +236,12 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
                 <div
                   className={`
                     absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center
-                    ${isSelected ? 'bg-success' : 'bg-transparent border-2 border-border-strong'}
+                    ${isSelected ? 'bg-success' : 'bg-transparent border-2 border-stroke-strong'}
                   `}
                 >
                   <Icon
                     name={ICONS.actions.check}
-                    className={`w-3 h-3 ${isSelected ? 'text-success-on' : 'text-text-disabled'}`}
+                    className={`w-3 h-3 ${isSelected ? 'text-on-success' : 'text-fg-disabled'}`}
                   />
                 </div>
               </button>
@@ -252,7 +252,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-text-3 mb-1">Notes</label>
+        <label className="block text-xs font-medium text-fg-subtle mb-1">Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."
@@ -293,7 +293,7 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
     <Button
       size={size}
       variant="primary"
-      icon={<Icon name={ICONS.dataFields.wallet} className="text-primary-on" />}
+      icon={<Icon name={ICONS.dataFields.wallet} className="text-on-brand" />}
     >
       PAY
     </Button>

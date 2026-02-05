@@ -15,13 +15,13 @@ export interface DateFilterPresetsProps {
  */
 export const DateFilterPresets: React.FC<DateFilterPresetsProps> = ({ onSelect }) => {
   return (
-    <div className="mt-3 pt-2 border-t border-border-subtle flex items-center justify-between text-xs text-text-3">
+    <div className="mt-3 pt-2 border-t border-stroke-subtle flex items-center justify-between text-xs text-fg-subtle">
       <button
         onClick={() => {
           const today = new Date();
           onSelect(today, today);
         }}
-        className="hover:text-primary font-medium px-1 py-0.5 rounded hover:bg-primary-muted transition-colors cursor-pointer"
+        className="hover:text-brand font-medium px-1 py-0.5 rounded hover:bg-brand-muted transition-colors cursor-pointer"
       >
         Today
       </button>
@@ -30,7 +30,7 @@ export const DateFilterPresets: React.FC<DateFilterPresetsProps> = ({ onSelect }
           const yesterday = subDays(new Date(), 1);
           onSelect(yesterday, yesterday);
         }}
-        className="hover:text-primary font-medium px-1 py-0.5 rounded hover:bg-primary-muted transition-colors cursor-pointer"
+        className="hover:text-brand font-medium px-1 py-0.5 rounded hover:bg-brand-muted transition-colors cursor-pointer"
       >
         Yesterday
       </button>
@@ -40,7 +40,7 @@ export const DateFilterPresets: React.FC<DateFilterPresetsProps> = ({ onSelect }
           const lastWeek = subDays(today, 6);
           onSelect(lastWeek, today);
         }}
-        className="hover:text-primary font-medium px-1 py-0.5 rounded hover:bg-primary-muted transition-colors cursor-pointer"
+        className="hover:text-brand font-medium px-1 py-0.5 rounded hover:bg-brand-muted transition-colors cursor-pointer"
       >
         Last Week
       </button>

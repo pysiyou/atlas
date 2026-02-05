@@ -37,7 +37,7 @@ export const createOrderTableConfig = (
 
   const renderPatientName = (order: Order) => (
     <div className="min-w-0">
-      <div className="text-text truncate">
+      <div className="text-fg truncate">
         {getPatientNameFn(order.patientId)}
       </div>
       <div className={DATA_ID_SECONDARY}>{displayId.patient(order.patientId)}</div>
@@ -51,10 +51,10 @@ export const createOrderTableConfig = (
 
     return (
       <div className="min-w-0">
-        <div className="font-medium truncate font-mono text-xs text-text">
+        <div className="font-medium truncate font-mono text-xs text-fg">
           {activeTests.map(t => t.testCode).join('/')}
         </div>
-        <div className="text-xs text-text-3 truncate">
+        <div className="text-xs text-fg-subtle truncate">
           {activeCount} test{activeCount !== 1 ? 's' : ''}
         </div>
       </div>
@@ -74,7 +74,7 @@ export const createOrderTableConfig = (
   const renderPaymentStatus = (order: Order) => <Badge variant={order.paymentStatus} size="sm" />;
 
   const renderOrderDate = (order: Order) => (
-    <div className="text-xs text-text-3 truncate">{formatDate(order.orderDate)}</div>
+    <div className="text-xs text-fg-subtle truncate">{formatDate(order.orderDate)}</div>
   );
 
   return {

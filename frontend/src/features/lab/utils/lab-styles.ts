@@ -8,13 +8,13 @@ import { TEXT_METADATA, BODY_SECONDARY } from '@/shared/constants';
 // Typography Constants (shared tokens for body/metadata; lab-specific for title/section)
 export const LAB_CARD_TYPOGRAPHY = {
   // Test/Item Names (primary emphasis)
-  title: 'text-sm font-medium text-text',
+  title: 'text-sm font-medium text-fg',
 
   // Section Headers (lab-specific: uppercase/tracking)
-  sectionTitle: 'text-xxs font-medium text-text-3 uppercase tracking-wide',
+  sectionTitle: 'text-xxs font-medium text-fg-subtle uppercase tracking-wide',
 
   // Patient Names (medium emphasis within text-xs context)
-  patientName: 'font-medium text-text',
+  patientName: 'font-medium text-fg',
 
   // Standard Body Text – shared token
   bodyText: BODY_SECONDARY,
@@ -23,14 +23,14 @@ export const LAB_CARD_TYPOGRAPHY = {
   metadata: TEXT_METADATA,
 
   // Separator/Divider Text
-  separator: 'text-text-disabled',
+  separator: 'text-fg-disabled',
 
   // Emphasized Inline Text
-  emphasizedInline: 'text-text-2',
+  emphasizedInline: 'text-fg-muted',
 
   // Flags Text (in red context)
-  flagText: 'text-xs text-danger-text',
-  flagTitle: 'text-xxs font-medium text-danger-text uppercase tracking-wide',
+  flagText: 'text-xs text-danger-fg',
+  flagTitle: 'text-xxs font-medium text-danger-fg uppercase tracking-wide',
 } as const;
 
 // Spacing Constants
@@ -73,10 +73,10 @@ export const LAB_CARD_CONTAINERS = {
 
   // Card base styling (applied via Card component)
   cardBase:
-    'border border-border shadow-sm hover:bg-surface-hover transition-colors duration-200',
+    'border border-stroke shadow-sm hover:bg-panel-hover transition-colors duration-200',
 
   // Content section (gray background)
-  contentSection: 'bg-canvas rounded p-2 border border-border',
+  contentSection: 'bg-canvas rounded p-2 border border-stroke',
 
   // Flags section (red background)
   flagsSection: 'bg-danger-bg rounded p-2 border border-danger-border',
@@ -85,7 +85,7 @@ export const LAB_CARD_CONTAINERS = {
 // List Item Constants
 export const LAB_CARD_LIST_ITEMS = {
   // Test list item
-  testItem: 'flex items-center text-xs text-text-2',
+  testItem: 'flex items-center text-xs text-fg-muted',
 
   // List bullet (gray)
   bullet: 'w-1 h-1 rounded-full bg-neutral-400 mr-2',
@@ -97,19 +97,19 @@ export const LAB_CARD_LIST_ITEMS = {
   testName: 'font-medium mr-1',
 
   // Test code in list
-  testCode: 'text-primary font-mono',
+  testCode: 'text-brand font-mono',
 } as const;
 
 // Context Row Constants (Patient/Order info)
 export const LAB_CARD_CONTEXT = {
   // Container for context row
-  container: 'flex items-center gap-2 text-xs text-text-3 flex-wrap',
+  container: 'flex items-center gap-2 text-xs text-fg-subtle flex-wrap',
 
   // Patient name styling
-  patientName: 'font-medium text-text',
+  patientName: 'font-medium text-fg',
 
   // Separator between items
-  separator: 'text-text-disabled',
+  separator: 'text-fg-disabled',
 } as const;
 
 // Header Row Constants (Badges & Actions)

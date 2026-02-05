@@ -155,5 +155,5 @@ export function formatVolume(volumeInMl: number): string {
  * Uses centralized CONTAINER_COLOR_CONFIG
  */
 export function getContainerIconColor(containerTopColor: ContainerTopColor): string {
-  return CONTAINER_COLOR_CONFIG[containerTopColor]?.textClass || 'text-text-disabled';
+  return CONTAINER_COLOR_CONFIG[containerTopColor]?.textClass || 'text-fg-disabled';
 }

@@ -46,9 +46,6 @@ const COLOR_MAP: Record<string, BadgeColor> = {
   superseded: 'muted',
   resulted: 'success',
   removed: 'muted',
-  // Test status (explicit so all are visible; pending was neutral = low contrast)
-  pending: 'info',
-  'sample-collected': 'info',
 
   // Rejection types
   're-test': 'warning',
@@ -152,28 +149,28 @@ export function resolveColor(variant: string): BadgeColor {
  */
 const UNIFIED_STYLES: Record<BadgeColor, { text: string; dot: string }> = {
   neutral: {
-    text: 'text-text-2',
-    dot: 'bg-text-tertiary',
+    text: 'text-fg-muted',
+    dot: 'bg-fg-subtle',
   },
   primary: {
-    text: 'text-primary',
-    dot: 'bg-primary',
+    text: 'text-brand',
+    dot: 'bg-brand',
   },
   success: {
-    text: 'text-success-text-strong',
-    dot: 'bg-success-text-strong',
+    text: 'text-success-fg-emphasis',
+    dot: 'bg-success-fg-emphasis',
   },
   warning: {
-    text: 'text-warning-text-strong',
-    dot: 'bg-warning-text-strong',
+    text: 'text-warning-fg-emphasis',
+    dot: 'bg-warning-fg-emphasis',
   },
   danger: {
-    text: 'text-danger-text-strong',
-    dot: 'bg-danger-text-strong',
+    text: 'text-danger-fg-emphasis',
+    dot: 'bg-danger-fg-emphasis',
   },
   info: {
-    text: 'text-primary',
-    dot: 'bg-primary',
+    text: 'text-brand',
+    dot: 'bg-brand',
   },
   purple: {
     text: 'text-purple-600',
@@ -200,8 +197,8 @@ const UNIFIED_STYLES: Record<BadgeColor, { text: string; dot: string }> = {
     dot: 'bg-cyan-500',
   },
   muted: {
-    text: 'text-text-3',
-    dot: 'bg-text-muted',
+    text: 'text-fg-subtle',
+    dot: 'bg-fg-faint',
   },
 };
 
@@ -210,19 +207,19 @@ const UNIFIED_STYLES: Record<BadgeColor, { text: string; dot: string }> = {
  * Uses theme semantic tokens where available
  */
 const TINTED_STYLES: Record<BadgeColor, string> = {
-  neutral: 'bg-neutral-200 text-text',
-  primary: 'bg-primary text-primary-on',
-  success: 'bg-success-bg-strong text-success-text-strong',
-  warning: 'bg-warning-bg-strong text-warning-text-strong',
-  danger: 'bg-danger-bg-strong text-danger-text-strong',
-  info: 'bg-primary-muted text-primary-text',
+  neutral: 'bg-neutral-200 text-fg',
+  primary: 'bg-brand text-on-brand',
+  success: 'bg-success-bg-emphasis text-success-fg-emphasis',
+  warning: 'bg-warning-bg-emphasis text-warning-fg-emphasis',
+  danger: 'bg-danger-bg-emphasis text-danger-fg-emphasis',
+  info: 'bg-brand-muted text-brand-fg',
   purple: 'bg-purple-100 text-purple-800',
   pink: 'bg-pink-100 text-pink-800',
   teal: 'bg-teal-100 text-teal-800',
   orange: 'bg-orange-100 text-orange-800',
   indigo: 'bg-indigo-100 text-indigo-800',
   cyan: 'bg-cyan-100 text-cyan-800',
-  muted: 'bg-neutral-200 text-text-3',
+  muted: 'bg-neutral-200 text-fg-subtle',
 };
 
 /**
@@ -309,15 +306,15 @@ export type BadgeVariant = BadgeColor | keyof typeof COLOR_MAP | (string & {});
  */
 export const TAG_STYLES = {
   unified: {
-    container: 'bg-badge border border-border shadow-sm',
-    text: 'text-text',
-    code: 'text-primary',
-    remove: 'text-text-3 hover:text-text-2',
+    container: 'bg-badge border border-stroke shadow-sm',
+    text: 'text-fg',
+    code: 'text-brand',
+    remove: 'text-fg-subtle hover:text-fg-muted',
   },
   tinted: {
-    container: 'bg-primary-muted border border-primary/20',
-    text: 'text-text',
-    code: 'text-primary',
-    remove: 'text-primary/60 hover:text-primary',
+    container: 'bg-brand-muted border border-brand/20',
+    text: 'text-fg',
+    code: 'text-brand',
+    remove: 'text-brand/60 hover:text-brand',
   },
 } as const;

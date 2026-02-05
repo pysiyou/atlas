@@ -37,18 +37,18 @@ const RadioOption: React.FC<{
       className={cn(
         'group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150',
         'hover:bg-canvas/80',
-        isSelected && 'bg-primary-muted'
+        isSelected && 'bg-brand-muted'
       )}
     >
       {/* Radio button */}
       <div className="flex-shrink-0 mr-3">
         <input type="radio" checked={isSelected} onChange={onSelect} className="sr-only" />
         {isSelected ? (
-          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-primary transition-all duration-150">
-            <div className="w-2 h-2 rounded-full bg-surface" />
+          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-brand transition-all duration-150">
+            <div className="w-2 h-2 rounded-full bg-panel" />
           </div>
         ) : (
-          <div className="w-5 h-5 rounded-full border-2 border-border-strong group-hover:border-border-hover transition-all duration-150" />
+          <div className="w-5 h-5 rounded-full border-2 border-stroke-strong group-hover:border-stroke-hover transition-all duration-150" />
         )}
       </div>
 
@@ -56,7 +56,7 @@ const RadioOption: React.FC<{
       <span
         className={cn(
           'text-sm transition-colors',
-          isSelected ? 'text-text font-medium' : 'text-text-3 group-hover:text-text'
+          isSelected ? 'text-fg font-medium' : 'text-fg-subtle group-hover:text-fg'
         )}
       >
         {option}
@@ -99,9 +99,9 @@ const SelectParameterInput: React.FC<{
           {/* Content */}
           <div className="flex-1 text-xs truncate">
             {value ? (
-              <span className="text-text">{value}</span>
+              <span className="text-fg">{value}</span>
             ) : (
-              <span className="text-text-disabled">-- Select --</span>
+              <span className="text-fg-disabled">-- Select --</span>
             )}
           </div>
 
@@ -109,7 +109,7 @@ const SelectParameterInput: React.FC<{
           <Icon
             name={ICONS.actions.chevronDown}
             className={cn(
-              'w-4 h-4 text-text-disabled transition-transform flex-shrink-0',
+              'w-4 h-4 text-fg-disabled transition-transform flex-shrink-0',
               isOpen && 'rotate-180'
             )}
           />
@@ -120,7 +120,7 @@ const SelectParameterInput: React.FC<{
               onClick={handleClear}
               className="p-0.5 -mr-1 hover:bg-neutral-100 rounded transition-colors flex items-center justify-center cursor-pointer flex-shrink-0"
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-disabled hover:text-text-3" />
+              <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-fg-disabled hover:text-fg-subtle" />
             </button>
           )}
         </div>
@@ -279,7 +279,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   if (!testDef?.parameters) return null;
 
   return (
-    <div className="bg-canvas rounded-lg p-4 border border-border-subtle">
+    <div className="bg-canvas rounded-lg p-4 border border-stroke-subtle">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {testDef.parameters.map(param => {
           const value = results[param.code] ?? '';
@@ -294,7 +294,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
               <div className="flex justify-between items-baseline mb-1 gap-2">
                 <label
                   htmlFor={`result-${resultKey}-${param.code}`}
-                  className="text-xxs font-medium text-text-3 cursor-pointer truncate min-w-0"
+                  className="text-xxs font-medium text-fg-subtle cursor-pointer truncate min-w-0"
                 >
                   {param.name}
                 </label>
@@ -302,7 +302,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   <span
                     className={cn(
                       'text-xxs truncate',
-                      isCritical ? 'text-danger-text font-medium animate-pulse' : 'text-text-disabled'
+                      isCritical ? 'text-danger-fg font-medium animate-pulse' : 'text-fg-disabled'
                     )}
                   >
                     Ref: {refRange}
@@ -327,13 +327,13 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 />
                 {valueType !== 'TEXT' && (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0 max-w-[40%]">
-                    <span className="text-xs text-text-disabled select-none truncate">
+                    <span className="text-xs text-fg-disabled select-none truncate">
                       {param.unit || ''}
                     </span>
                   </div>
                 )}
                 {validationErrors[param.code] && (
-                  <div className="absolute -bottom-5 left-0 text-xxs text-danger-text font-medium truncate max-w-full" title={validationErrors[param.code]}>
+                  <div className="absolute -bottom-5 left-0 text-xxs text-danger-fg font-medium truncate max-w-full" title={validationErrors[param.code]}>
                     Invalid value
                   </div>
                 )}
@@ -347,7 +347,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       <div className="mt-4">
         <label
           htmlFor={`notes-${resultKey}`}
-          className="text-xs font-medium text-text-3 mb-1 block"
+          className="text-xs font-medium text-fg-subtle mb-1 block"
         >
           Technician Notes (Optional)
         </label>
@@ -362,9 +362,9 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
       {/* Submit button (card context only) */}
       {!isModal && (
-        <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-canvas border-t border-border-subtle rounded-b flex items-center justify-between">
+        <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-canvas border-t border-stroke-subtle rounded-b flex items-center justify-between">
           {hasValidationErrors && (
-            <span className="text-xxs text-danger-text">
+            <span className="text-xxs text-danger-fg">
               Please correct invalid values before submitting
             </span>
           )}

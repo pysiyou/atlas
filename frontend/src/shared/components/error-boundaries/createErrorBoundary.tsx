@@ -100,16 +100,16 @@ export function createErrorBoundary(options: CreateErrorBoundaryOptions) {
         <div className="p-6">
           <Alert variant="danger" className="mb-4">
             <div className="flex items-start gap-3">
-              <Icon name={ICONS.actions.alertCircle} className="w-5 h-5 text-danger-text shrink-0 mt-0.5" />
+              <Icon name={ICONS.actions.alertCircle} className="w-5 h-5 text-danger-fg shrink-0 mt-0.5" />
               <div className="flex-1">
-                <h3 className="font-semibold text-danger-text-strong mb-1">{name}</h3>
-                <p className="text-sm text-danger-text-strong mb-3">
+                <h3 className="font-semibold text-danger-fg-strong mb-1">{name}</h3>
+                <p className="text-sm text-danger-fg-strong mb-3">
                   {this.props.fallbackMessage ?? defaultMessage}
                 </p>
                 {this.state.error && import.meta.env.DEV && (
                   <details className="mt-2">
-                    <summary className="text-xs text-danger-text cursor-pointer">Error Details</summary>
-                    <pre className="mt-2 text-xs text-danger-text-strong bg-danger-bg p-2 rounded overflow-auto">
+                    <summary className="text-xs text-danger-fg cursor-pointer">Error Details</summary>
+                    <pre className="mt-2 text-xs text-danger-fg-strong bg-danger-bg p-2 rounded overflow-auto">
                       {this.state.error.toString()}
                     </pre>
                   </details>

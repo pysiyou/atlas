@@ -25,7 +25,7 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layou
       <InfoField
         icon={getDataFieldIcon('orderId')}
         label="Order ID"
-        value={<span className="font-mono text-primary">{displayId.order(order.orderId)}</span>}
+        value={<span className="font-mono text-brand">{displayId.order(order.orderId)}</span>}
         orientation="vertical"
       />
       <InfoField

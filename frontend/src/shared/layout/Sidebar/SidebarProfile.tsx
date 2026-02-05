@@ -32,7 +32,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   return (
-    <div className="mt-auto border-t border-border py-4">
+    <div className="mt-auto border-t border-stroke py-4">
       <AnimatePresence>
         {isCollapsed && showProfileMenu && (
           <motion.div
@@ -40,12 +40,12 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute bottom-20 left-20 bg-surface border border-border rounded shadow-lg w-48 overflow-hidden z-50"
+            className="absolute bottom-20 left-20 bg-panel border border-stroke rounded shadow-lg w-48 overflow-hidden z-50"
             onClick={e => e.stopPropagation()}
           >
-            <div className="px-4 py-3 border-b border-border">
-              <p className="text-sm font-medium text-text truncate">{currentUser.name}</p>
-              <p className="text-xs text-text-3 truncate">{formatStatus(currentUser.role)}</p>
+            <div className="px-4 py-3 border-b border-stroke">
+              <p className="text-sm font-medium text-fg truncate">{currentUser.name}</p>
+              <p className="text-xs text-fg-subtle truncate">{formatStatus(currentUser.role)}</p>
             </div>
             <Button
               variant="logout"
@@ -73,8 +73,8 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
         </div>
         <div className="flex-1 min-w-0 overflow-hidden flex items-center justify-between px-3">
           <div className="flex-1 min-w-0 overflow-hidden">
-            <p className="text-sm font-medium text-text truncate">{currentUser.name}</p>
-            <p className="text-xs text-text-3 truncate">{formatStatus(currentUser.role)}</p>
+            <p className="text-sm font-medium text-fg truncate">{currentUser.name}</p>
+            <p className="text-xs text-fg-subtle truncate">{formatStatus(currentUser.role)}</p>
           </div>
           <IconButton
             variant="logout"

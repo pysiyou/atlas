@@ -28,7 +28,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
 }) => {
   return (
     <div className="space-y-3">
-      <div className="text-xs font-medium text-text-3">Payment method</div>
+      <div className="text-xs font-medium text-fg-subtle">Payment method</div>
 
       <div className="grid grid-cols-2 gap-2">
         {paymentMethods.map(method => {
@@ -42,8 +42,8 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
                 relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
                 ${
                   isSelected
-                    ? 'bg-surface border-primary border-2'
-                    : 'bg-surface border-border hover:border-border-strong'
+                    ? 'bg-panel border-brand border-2'
+                    : 'bg-panel border-stroke hover:border-stroke-strong'
                 }
                 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
               `}
@@ -51,11 +51,11 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
             >
               <Icon
                 name={method.icon as IconName}
-                className={`w-7 h-7 shrink-0 ${isSelected ? 'text-primary' : 'text-text-disabled'}`}
+                className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-fg-disabled'}`}
               />
               <span
                 className={`flex-1 text-xs font-medium text-left ${
-                  isSelected ? 'text-text' : 'text-text-2'
+                  isSelected ? 'text-fg' : 'text-fg-muted'
                 }`}
               >
                 {method.label}
@@ -63,12 +63,12 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
               <div
                 className={`
                   absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                  ${isSelected ? 'bg-success' : 'bg-transparent border-2 border-border-strong'}
+                  ${isSelected ? 'bg-success' : 'bg-transparent border-2 border-stroke-strong'}
                 `}
               >
                 <Icon
                   name={ICONS.actions.check}
-                  className={`w-3 h-3 ${isSelected ? 'text-success-on' : 'text-text-disabled'}`}
+                  className={`w-3 h-3 ${isSelected ? 'text-on-success' : 'text-fg-disabled'}`}
                 />
               </div>
             </button>

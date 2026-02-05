@@ -45,8 +45,8 @@ export const Dashboard: React.FC = () => {
       label: 'Total Patients',
       value: patients.length,
       today: todayPatients,
-      icon: <Icon name={ICONS.ui.usersGroup} className="w-8 h-8 text-primary" />,
-      color: 'bg-primary-muted',
+      icon: <Icon name={ICONS.ui.usersGroup} className="w-8 h-8 text-brand" />,
+      color: 'bg-brand-muted',
     },
     {
       label: 'Total Orders',
@@ -58,8 +58,8 @@ export const Dashboard: React.FC = () => {
     {
       label: 'Appointments Today',
       value: todayAppointments,
-      icon: <Icon name={ICONS.dataFields.date} className="w-8 h-8 text-primary" />,
-      color: 'bg-primary-muted',
+      icon: <Icon name={ICONS.dataFields.date} className="w-8 h-8 text-brand" />,
+      color: 'bg-brand-muted',
     },
     {
       label: 'Revenue Today',
@@ -76,8 +76,8 @@ export const Dashboard: React.FC = () => {
       <div className="space-y-6">
         {/* Welcome Header */}
         <div>
-          <h1 className="text-2xl font-bold text-text">Welcome back, {currentUser?.name}!</h1>
-          <p className="text-sm text-text-2 mt-1">
+          <h1 className="text-2xl font-bold text-fg">Welcome back, {currentUser?.name}!</h1>
+          <p className="text-sm text-fg-muted mt-1">
             Here's what's happening today - {formatDate(new Date())}
           </p>
         </div>
@@ -88,8 +88,8 @@ export const Dashboard: React.FC = () => {
             <Card key={index} padding="lg" hover>
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <p className="text-sm text-text-3 mb-1">{stat.label}</p>
-                  <p className="text-3xl font-bold text-text">{stat.value}</p>
+                  <p className="text-sm text-fg-subtle mb-1">{stat.label}</p>
+                  <p className="text-3xl font-bold text-fg">{stat.value}</p>
                   {stat.today !== undefined && (
                     <p className="text-xs text-success-text mt-1">+{stat.today} today</p>
                   )}
@@ -106,8 +106,8 @@ export const Dashboard: React.FC = () => {
             <div className="flex items-center gap-3">
               <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-text" />
               <div>
-                <p className="text-sm font-semibold text-text">Pending Actions</p>
-                <p className="text-xs text-text-2">
+                <p className="text-sm font-semibold text-fg">Pending Actions</p>
+                <p className="text-xs text-fg-muted">
                   {pendingOrders} orders pending completion, {outstandingInvoices} invoices unpaid
                 </p>
               </div>
@@ -122,11 +122,11 @@ export const Dashboard: React.FC = () => {
               recentOrders.map(order => (
                 <div
                   key={order.orderId}
-                  className="flex items-center justify-between p-4 border border-border rounded-md hover:bg-canvas"
+                  className="flex items-center justify-between p-4 border border-stroke rounded-md hover:bg-canvas"
                 >
                   <div>
-                    <p className="text-sm font-semibold text-text">{getPatientName(order.patientId)}</p>
-                    <p className="text-xs text-text-3">
+                    <p className="text-sm font-semibold text-fg">{getPatientName(order.patientId)}</p>
+                    <p className="text-xs text-fg-subtle">
                       <span className="font-mono">{displayId.order(order.orderId)}</span> • {order.tests.length} test(s)
                     </p>
                   </div>
@@ -146,7 +146,7 @@ export const Dashboard: React.FC = () => {
                 </div>
               ))
             ) : (
-              <p className="text-center text-sm text-text-3 py-8">No recent orders</p>
+              <p className="text-center text-sm text-fg-subtle py-8">No recent orders</p>
             )}
           </div>
         </SectionContainer>

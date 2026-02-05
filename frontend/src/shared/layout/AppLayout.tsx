@@ -52,12 +52,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
         <button
           onClick={handleToggleMobileSidebar}
           title="Open Menu"
-          className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center bg-surface border border-border rounded-lg shadow-md hover:bg-surface-hover transition-colors lg:hidden"
+          className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center bg-panel border border-stroke rounded-lg shadow-md hover:bg-panel-hover transition-colors lg:hidden"
           aria-label="Open navigation menu"
         >
           {/* Hamburger Menu Icon */}
           <svg
-            className="w-6 h-6 text-text"
+            className="w-6 h-6 text-fg"
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
