@@ -106,7 +106,7 @@ export const createPatientTableConfig = (
       {
         key: 'contact',
         header: 'Contact',
-        width: 'xl',
+        width: 'fill',
         render: renderContact,
       },
       {
@@ -125,14 +125,14 @@ export const createPatientTableConfig = (
       {
         key: 'affiliation',
         header: 'Affiliation',
-        width: 'md',
+        width: 'lg',
         sortable: true,
         render: renderAffiliation,
       },
       {
         key: 'registrationDate',
         header: 'Registered',
-        width: 'md',
+        width: 'lg',
         sortable: true,
         render: renderRegistrationDate,
       },

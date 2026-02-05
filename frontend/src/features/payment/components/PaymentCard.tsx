@@ -63,7 +63,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
           size="xs"
         />
         {/* Total price on top right */}
-        <div className="font-medium text-action-primary text-lg">{formatCurrency(item.totalPrice)}</div>
+        <div className="font-medium text-text-primary text-lg">{formatCurrency(item.totalPrice)}</div>
       </div>
 
       {/* Tests list: Show at most 2 tests, third line shows remaining count */}
@@ -81,7 +81,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
                   <span className="text-action-primary font-mono truncate">{test.testCode}</span>
                 </div>
-                <span className="font-medium text-action-primary ml-2 flex-shrink-0">
+                <span className="font-medium text-text-primary ml-2 flex-shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>

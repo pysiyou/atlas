@@ -4,16 +4,6 @@ import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import type { Order } from '@/types';
 
-/**
- * OrderTableCard Component
- *
- * Custom mobile card component for order data in table view.
- * Displays order information in a mobile-friendly card layout.
- *
- * @param item - Order data
- * @param index - Index of the order in the list
- * @param onClick - Optional click handler
- */
 export function OrderTableCard({ item: order, onClick }: CardComponentProps<Order>) {
   // Filter out superseded and removed tests - only show active tests
   const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
@@ -34,7 +24,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
           size="xs"
         />
         {/* Total price on top right */}
-        <div className="font-medium text-action-primary text-lg">{formatCurrency(order.totalPrice)}</div>
+        <div className="font-medium text-text-primary text-lg">{formatCurrency(order.totalPrice)}</div>
       </div>
 
       {/* Tests list: Show at most 2 tests, third line shows remaining count */}
@@ -50,9 +40,9 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
                 <div className="flex items-center flex-1 min-w-0">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 shrink-0" />
                   <span className="font-medium mr-1 truncate">{test.testName}</span>
-                  <span className="font-mono text-text-primary truncate">{test.testCode}</span>
+                  <span className="font-mono text-action-primary truncate">{test.testCode}</span>
                 </div>
-                <span className="font-medium text-action-primary ml-2 shrink-0">
+                <span className="font-medium text-text-primary ml-2 shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>
