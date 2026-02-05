@@ -5,7 +5,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Button, Icon } from '@/shared/ui';
+import { Button, CalloutCard, Icon } from '@/shared/ui';
 import { ClaudeLoader } from '@/shared/ui';
 import { useAffiliationPricing } from '@/hooks/queries/useAffiliationPricing';
 import { formatCurrency } from '@/utils';
@@ -100,10 +100,9 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
       {/* Left Column - Text/Information */}
       <div className="space-y-6">
         {showPricingError && (
-          <div className="bg-warning-bg border border-warning-border rounded-lg p-3 mb-4">
-            <p className="text-sm text-warning-text">{error}</p>
-            <p className="text-xs text-fg-subtle mt-1">You can still select a plan. Pricing will be calculated during checkout.</p>
-          </div>
+          <CalloutCard variant="warning" title={error} className="mb-4">
+            You can still select a plan. Pricing will be calculated during checkout.
+          </CalloutCard>
         )}
         <div className="space-y-4">
           <div>

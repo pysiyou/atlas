@@ -221,7 +221,8 @@ class LabOperationsService:
             user_id=user_id,
             before_state=before_state,
             after_state=after_state,
-            metadata={"testCodes": sample.testCodes}
+            metadata={"testCodes": sample.testCodes},
+            comment=collection_notes
         )
 
         self.db.commit()
@@ -298,14 +299,15 @@ class LabOperationsService:
 
         after_state = self._serialize_sample_state(sample)
 
-        # Log audit
+        # Log audit (prefer rejection_notes as comment when provided)
         self.audit.log_sample_rejection(
             sample_id=sample_id,
             user_id=user_id,
             before_state=before_state,
             after_state=after_state,
             rejection_reasons=rejection_reasons,
-            recollection_required=recollection_required
+            recollection_required=recollection_required,
+            comment=rejection_notes
         )
 
         self.db.commit()
@@ -414,7 +416,8 @@ class LabOperationsService:
             new_sample_id=new_sample.sampleId,
             user_id=user_id,
             recollection_reason=recollection_reason,
-            recollection_attempt=recollection_attempt
+            recollection_attempt=recollection_attempt,
+            comment=recollection_reason
         )
 
         self.db.commit()
@@ -584,7 +587,8 @@ class LabOperationsService:
             test_code=test_code,
             test_id=order_test.id,
             user_id=user_id,
-            results=results_serializable
+            results=results_serializable,
+            comment=technician_notes
         )
 
         self.db.commit()

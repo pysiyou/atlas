@@ -30,7 +30,8 @@ class AuditService:
         user_id: int,
         before_state: Optional[Dict[str, Any]] = None,
         after_state: Optional[Dict[str, Any]] = None,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None
     ) -> LabOperationLog:
         """
         Log a laboratory operation.
@@ -43,6 +44,7 @@ class AuditService:
             before_state: State of the entity before the operation (optional)
             after_state: State of the entity after the operation (optional)
             metadata: Additional context-specific data (optional)
+            comment: Optional free-text note for this operation (e.g. rejection reason)
 
         Returns:
             The created LabOperationLog record
@@ -55,7 +57,8 @@ class AuditService:
             performedAt=datetime.now(timezone.utc),
             beforeState=before_state,
             afterState=after_state,
-            operationData=metadata
+            operationData=metadata,
+            comment=comment
         )
 
         self.db.add(log_entry)
@@ -67,7 +70,8 @@ class AuditService:
         user_id: int,
         before_state: Dict[str, Any],
         after_state: Dict[str, Any],
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None
     ) -> LabOperationLog:
         """Log a sample collection operation"""
         return self.log_operation(
@@ -77,7 +81,8 @@ class AuditService:
             user_id=user_id,
             before_state=before_state,
             after_state=after_state,
-            metadata=metadata
+            metadata=metadata,
+            comment=comment
         )
 
     def log_sample_rejection(
@@ -88,7 +93,8 @@ class AuditService:
         after_state: Dict[str, Any],
         rejection_reasons: list[str],
         recollection_required: bool,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None
     ) -> LabOperationLog:
         """Log a sample rejection operation"""
         full_metadata = {
@@ -103,7 +109,8 @@ class AuditService:
             user_id=user_id,
             before_state=before_state,
             after_state=after_state,
-            metadata=full_metadata
+            metadata=full_metadata,
+            comment=comment or ("; ".join(rejection_reasons) if rejection_reasons else None)
         )
 
     def log_recollection_request(
@@ -113,7 +120,8 @@ class AuditService:
         user_id: int,
         recollection_reason: str,
         recollection_attempt: int,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None
     ) -> LabOperationLog:
         """Log a recollection request operation"""
         full_metadata = {
@@ -130,7 +138,8 @@ class AuditService:
             user_id=user_id,
             before_state={"status": "rejected", "sampleId": original_sample_id},
             after_state={"status": "pending", "sampleId": new_sample_id},
-            metadata=full_metadata
+            metadata=full_metadata,
+            comment=comment or recollection_reason
         )
 
     def log_result_entry(
@@ -140,7 +149,8 @@ class AuditService:
         test_id: int,
         user_id: int,
         results: Dict[str, Any],
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None
     ) -> LabOperationLog:
         """Log a result entry operation"""
         full_metadata = {
@@ -155,7 +165,8 @@ class AuditService:
             user_id=user_id,
             before_state={"status": "sample-collected"},
             after_state={"status": "completed", "results": results},
-            metadata=full_metadata
+            metadata=full_metadata,
+            comment=comment
         )
 
     def log_result_validation_approve(
@@ -165,7 +176,8 @@ class AuditService:
         test_id: int,
         user_id: int,
         validation_notes: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None
     ) -> LabOperationLog:
         """Log a result validation approval"""
         full_metadata = {
@@ -181,7 +193,8 @@ class AuditService:
             user_id=user_id,
             before_state={"status": "completed"},
             after_state={"status": "validated"},
-            metadata=full_metadata
+            metadata=full_metadata,
+            comment=comment or validation_notes
         )
 
     def log_result_validation_reject_retest(
@@ -193,7 +206,8 @@ class AuditService:
         user_id: int,
         rejection_reason: str,
         retest_number: int,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None
     ) -> LabOperationLog:
         """Log a result rejection with retest action"""
         full_metadata = {
@@ -213,7 +227,8 @@ class AuditService:
             user_id=user_id,
             before_state={"status": "completed", "testId": original_test_id},
             after_state={"status": "superseded", "retestOrderTestId": new_test_id},
-            metadata=full_metadata
+            metadata=full_metadata,
+            comment=comment or rejection_reason
         )
 
     def log_result_validation_reject_recollect(
@@ -226,7 +241,8 @@ class AuditService:
         user_id: int,
         rejection_reason: str,
         recollection_attempt: int,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None
     ) -> LabOperationLog:
         """Log a result rejection with recollection action"""
         full_metadata = {
@@ -245,7 +261,8 @@ class AuditService:
             user_id=user_id,
             before_state={"status": "completed", "sampleId": sample_id},
             after_state={"status": "pending", "sampleId": new_sample_id},
-            metadata=full_metadata
+            metadata=full_metadata,
+            comment=comment or rejection_reason
         )
 
     def log_result_validation_escalate(
@@ -255,7 +272,8 @@ class AuditService:
         order_test_id: int,
         user_id: int,
         rejection_reason: str,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None
     ) -> LabOperationLog:
         """Log a result validation escalation to supervisor."""
         full_metadata = {
@@ -271,7 +289,8 @@ class AuditService:
             user_id=user_id,
             before_state={"status": "resulted"},
             after_state={"status": "escalated"},
-            metadata=full_metadata
+            metadata=full_metadata,
+            comment=comment or rejection_reason
         )
 
     def log_escalation_resolution_authorize_retest(
@@ -282,7 +301,8 @@ class AuditService:
         new_test_id: int,
         user_id: int,
         reason: str,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None
     ) -> LabOperationLog:
         """Log escalation resolution: authorize re-test (Path 2)."""
         full_metadata = {
@@ -300,7 +320,8 @@ class AuditService:
             user_id=user_id,
             before_state={"status": "escalated"},
             after_state={"status": "superseded", "retestOrderTestId": new_test_id},
-            metadata=full_metadata
+            metadata=full_metadata,
+            comment=comment or reason
         )
 
     def log_escalation_resolution_final_reject(
@@ -312,7 +333,8 @@ class AuditService:
         new_sample_id: int,
         user_id: int,
         rejection_reason: str,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None
     ) -> LabOperationLog:
         """Log escalation resolution: final reject / new sample (Path 3)."""
         full_metadata = {
@@ -330,7 +352,8 @@ class AuditService:
             user_id=user_id,
             before_state={"status": "escalated", "sampleId": sample_id},
             after_state={"status": "rejected", "sampleId": new_sample_id},
-            metadata=full_metadata
+            metadata=full_metadata,
+            comment=comment or rejection_reason
         )
 
     def get_entity_history(

@@ -118,6 +118,18 @@ def apply_migrations():
         """))
         print("  ✓ Order test timestamps and trigger applied")
         
+        # Migration 6: Add comment to lab_operation_logs
+        print("  ⏳ Adding comment column to lab_operation_logs...")
+        conn.execute(text("""
+            ALTER TABLE lab_operation_logs
+            ADD COLUMN IF NOT EXISTS comment VARCHAR(2000) NULL
+        """))
+        conn.execute(text("""
+            COMMENT ON COLUMN lab_operation_logs.comment IS
+            'Optional free-text note for this operation (e.g. rejection reason, validation notes)'
+        """))
+        print("  ✓ Lab operation log comment column applied")
+        
         conn.commit()
     
     print("✓ All migrations applied")

@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Icon, Badge } from '@/shared/ui';
+import { CalloutCard, Icon, Badge } from '@/shared/ui';
 import { cn } from '@/utils';
 
 export interface PanicValueAlertProps {
@@ -89,15 +89,17 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
               </div>
             </div>
 
-            <div className="mt-3 p-3 bg-warning-bg border border-warning-border rounded text-xs">
-              <p className="font-semibold text-warning-text-strong mb-1">📋 Required Actions:</p>
-              <ul className="list-disc list-inside space-y-1 text-warning-text-strong">
-                <li>Immediately notify the ordering physician</li>
-                <li>Verify patient identification</li>
-                <li>Consider retest to confirm result</li>
-                <li>Document notification and time</li>
-              </ul>
-            </div>
+            <CalloutCard
+              variant="warning"
+              title="Required Actions"
+              className="mt-3"
+              items={[
+                'Immediately notify the ordering physician',
+                'Verify patient identification',
+                'Consider retest to confirm result',
+                'Document notification and time',
+              ]}
+            />
           </div>
 
           {onAcknowledge && !isAcknowledged && (

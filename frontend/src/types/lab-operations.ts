@@ -190,6 +190,8 @@ export interface LabOperationRecord {
   performedAt: string;
   beforeState: Record<string, unknown>;
   afterState: Record<string, unknown>;
+  /** Optional free-text comment for this operation (e.g. rejection reason, notes) */
+  comment?: string;
   metadata?: Record<string, unknown>;
 }
 

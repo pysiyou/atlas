@@ -13,7 +13,7 @@
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
 import React, { useState, useCallback } from 'react';
-import { Modal, Icon, Badge, Button, Alert, FooterInfo, PaymentMethodSelector } from '@/shared/ui';
+import { Modal, Icon, Badge, Button, Alert, CalloutCard, FooterInfo, PaymentMethodSelector } from '@/shared/ui';
 import { PaymentErrorBoundary } from '@/shared/components';
 import { cn, formatDate, formatCurrency, displayId } from '@/utils';
 import { inputBase } from '@/shared/ui/forms/inputStyles';
@@ -296,13 +296,9 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
 
             {/* Paid Success Message */}
             {isPaid && (
-              <div className="bg-success-bg border border-success-stroke rounded-lg p-4 flex items-start gap-3">
-                <Icon name={ICONS.actions.checkCircle} className="w-6 h-6 text-success-fg shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-success-fg-emphasis">Payment Complete</p>
-                  <p className="text-xs text-success-fg mt-0.5">This order has been fully paid.</p>
-                </div>
-              </div>
+              <CalloutCard variant="success" title="Payment Complete" className="p-4">
+                This order has been fully paid.
+              </CalloutCard>
             )}
           </div>
 

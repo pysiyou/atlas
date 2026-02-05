@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import { SectionContainer, Badge, Avatar } from '@/shared/ui';
+import { SectionContainer, Badge, Avatar, CalloutCard } from '@/shared/ui';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
 import type { OrderTest, PaymentStatus } from '@/types';
@@ -183,10 +183,9 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
               )}
 
               {test.validationNotes && (
-                <div className="mt-2 p-2 bg-brand-muted rounded text-sm">
-                  <span className="font-medium text-brand">Validation Notes: </span>
-                  <span className="text-brand">{test.validationNotes}</span>
-                </div>
+                <CalloutCard variant="info" title="Validation Notes" className="mt-2">
+                  {test.validationNotes}
+                </CalloutCard>
               )}
             </div>
           );

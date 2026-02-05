@@ -12,6 +12,7 @@ Apply these migrations in numerical order:
 3. `003_add_sample_fk_constraint.sql` - Adds foreign key constraint on OrderTest.sampleId
 4. `004_add_test_status_escalated.sql` - Adds 'escalated' to TestStatus enum (order_tests.status)
 5. `005_add_order_test_timestamps.sql` - Adds created_at and updated_at to order_tests
+6. `006_add_lab_operation_log_comment.sql` - Adds optional comment column to lab_operation_logs
 
 ## How to Apply
 
@@ -27,6 +28,7 @@ psql -h localhost -U your_user -d atlas_db
 \i /path/to/migrations/003_add_sample_fk_constraint.sql
 \i /path/to/migrations/004_add_test_status_escalated.sql
 \i /path/to/migrations/005_add_order_test_timestamps.sql
+\i /path/to/migrations/006_add_lab_operation_log_comment.sql
 ```
 
 ### Using a Migration Tool

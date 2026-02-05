@@ -3,8 +3,7 @@
  */
 
 import React from 'react';
-import { Icon, SectionContainer } from '@/shared/ui';
-import { ICONS } from '@/utils';
+import { CalloutCard, SectionContainer } from '@/shared/ui';
 
 /** Test detail for requirements display */
 export interface TestDetail {
@@ -55,15 +54,9 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
     >
       <div className="space-y-3 pt-2 animate-in fade-in duration-200">
         {activeTest.fastingRequired && (
-          <div className="flex items-start gap-2 p-2 bg-warning-bg border border-warning-border rounded">
-            <span className="w-1.5 h-1.5 rounded-full bg-warning-bg0 mt-1.5 shrink-0" />
-            <div className="flex-1">
-              <div className="text-xs font-medium text-warning-text">Fasting Required</div>
-              <div className="text-xs text-warning-text mt-0.5">
-                Patient must fast before sample collection. Verify fasting status before proceeding.
-              </div>
-            </div>
-          </div>
+          <CalloutCard variant="warning" title="Fasting Required">
+            Patient must fast before sample collection. Verify fasting status before proceeding.
+          </CalloutCard>
         )}
 
         {activeTest.containerDescription && (
@@ -87,19 +80,11 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
         )}
 
         {activeTest.rejectionCriteria && activeTest.rejectionCriteria.length > 0 && (
-          <div className="flex items-start gap-2 p-2 bg-danger-bg border border-danger-border rounded">
-            <Icon name={ICONS.actions.alertCircle} className="w-4 h-4 text-danger-fg mt-0.5 shrink-0" />
-            <div className="flex-1">
-              <div className="text-xs font-medium text-danger-fg-strong mb-1">Rejection Criteria</div>
-              <ul className="list-disc list-inside space-y-0.5">
-                {activeTest.rejectionCriteria.map((criteria, idx) => (
-                  <li key={idx} className="text-xs text-danger-fg-strong">
-                    {criteria}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <CalloutCard
+            variant="danger"
+            title="Rejection Criteria"
+            items={activeTest.rejectionCriteria}
+          />
         )}
 
         {activeTest.minimumVolume && (
