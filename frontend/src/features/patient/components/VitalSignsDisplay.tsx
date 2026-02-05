@@ -107,11 +107,11 @@ const getStatusColors = (status: VitalStatus, appearance: 'unified' | 'tinted') 
     };
     switch (status) {
       case 'normal':
-        return { ...base, icon: 'text-success-text-strong', value: 'text-success-text-strong', dot: 'bg-success-text-strong' };
+        return { ...base, icon: 'text-success-fg-emphasis', value: 'text-success-fg-emphasis', dot: 'bg-success-fg-emphasis' };
       case 'borderline':
-        return { ...base, icon: 'text-warning-text-strong', value: 'text-warning-text-strong', dot: 'bg-warning-text-strong' };
+        return { ...base, icon: 'text-warning-fg-emphasis', value: 'text-warning-fg-emphasis', dot: 'bg-warning-fg-emphasis' };
       case 'abnormal':
-        return { ...base, icon: 'text-danger-fg-strong', value: 'text-danger-fg-strong', dot: 'bg-danger-text-strong' };
+        return { ...base, icon: 'text-danger-fg-emphasis', value: 'text-danger-fg-emphasis', dot: 'bg-danger-bg-emphasis' };
     }
   }
 
@@ -120,26 +120,26 @@ const getStatusColors = (status: VitalStatus, appearance: 'unified' | 'tinted') 
     case 'normal':
       return {
         bg: 'bg-success-bg',
-        border: 'border-success-border',
-        icon: 'text-success-text',
-        value: 'text-success-text',
-        dot: 'bg-success',
+        border: 'border-success-stroke',
+        icon: 'text-success-fg',
+        value: 'text-success-fg',
+        dot: 'bg-success-bg-emphasis',
       };
     case 'borderline':
       return {
         bg: 'bg-warning-bg',
-        border: 'border-warning-border',
-        icon: 'text-warning-text',
-        value: 'text-warning-text',
-        dot: 'bg-warning',
+        border: 'border-warning-stroke',
+        icon: 'text-warning-fg',
+        value: 'text-warning-fg',
+        dot: 'bg-warning-bg-emphasis',
       };
     case 'abnormal':
       return {
         bg: 'bg-danger-bg',
-        border: 'border-stroke-error',
+        border: 'border-danger-stroke',
         icon: 'text-danger-fg',
         value: 'text-danger-fg',
-        dot: 'bg-danger',
+        dot: 'bg-danger-bg-emphasis',
       };
   }
 };
