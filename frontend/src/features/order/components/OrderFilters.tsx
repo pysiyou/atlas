@@ -42,69 +42,9 @@ export interface OrderFiltersProps {
 const orderStatusOptions = createFilterOptions(ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG);
 const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
 
-// Date preset options
-const DATE_PRESETS = [
-  { id: 'today', label: 'Today' },
-  { id: 'yesterday', label: 'Yesterday' },
-  { id: 'last7days', label: 'Last 7 Days' },
-  { id: 'last30days', label: 'Last 30 Days' },
-  { id: 'thisMonth', label: 'This Month' },
-  { id: 'lastMonth', label: 'Last Month' },
-] as const;
+import { DATE_PRESETS, getDateRangeFromPreset, getActivePresetId, type DatePreset } from '@/utils/dateHelpers';
 
-type DatePresetId = (typeof DATE_PRESETS)[number]['id'];
-
-/**
- * Get date range from preset ID
- */
-const getDateRangeFromPreset = (presetId: DatePresetId): [Date, Date] => {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-  switch (presetId) {
-    case 'today':
-      return [today, new Date(today.getTime() + 24 * 60 * 60 * 1000 - 1)];
-    case 'yesterday': {
-      const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
-      return [yesterday, new Date(today.getTime() - 1)];
-    }
-    case 'last7days': {
-      const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-      return [weekAgo, now];
-    }
-    case 'last30days': {
-      const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-      return [monthAgo, now];
-    }
-    case 'thisMonth': {
-      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      return [firstDayOfMonth, now];
-    }
-    case 'lastMonth': {
-      const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      const lastDayLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
-      return [firstDayLastMonth, lastDayLastMonth];
-    }
-    default:
-      return [today, now];
-  }
-};
-
-/**
- * Check if a date range matches a preset
- */
-const getActivePresetId = (dateRange: [Date, Date] | null): DatePresetId | null => {
-  if (!dateRange) return null;
-
-  for (const preset of DATE_PRESETS) {
-    const presetRange = getDateRangeFromPreset(preset.id);
-    // Compare dates (ignoring time for simplicity)
-    const startMatch = dateRange[0].toDateString() === presetRange[0].toDateString();
-    const endMatch = dateRange[1].toDateString() === presetRange[1].toDateString();
-    if (startMatch && endMatch) return preset.id;
-  }
-  return null;
-};
+type DatePresetId = DatePreset;
 
 /**
  * ModalDateBadges - Badge-style date range selector for modal

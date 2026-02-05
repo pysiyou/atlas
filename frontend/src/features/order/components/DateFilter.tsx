@@ -13,6 +13,8 @@ import { ICONS } from '@/utils';
 import { DateFilterCalendar } from './DateFilterCalendar';
 import { DateFilterHeader } from './DateFilterHeader';
 
+import { DATE_PRESETS, getDateRangeFromPreset, getActivePresetId, type DatePreset } from '@/utils/dateHelpers';
+
 interface DateFilterProps {
   value: [Date, Date] | null;
   onChange: (value: [Date, Date] | null) => void;
@@ -20,71 +22,7 @@ interface DateFilterProps {
   className?: string;
 }
 
-// Date preset options
-const DATE_PRESETS = [
-  { id: 'today', label: 'Today' },
-  { id: 'yesterday', label: 'Yesterday' },
-  { id: 'last7days', label: 'Last 7 Days' },
-  { id: 'last30days', label: 'Last 30 Days' },
-  { id: 'thisMonth', label: 'This Month' },
-  { id: 'lastMonth', label: 'Last Month' },
-] as const;
-
-type DatePresetId = (typeof DATE_PRESETS)[number]['id'];
-
-/**
- * Get date range from preset ID
- */
-const getDateRangeFromPreset = (presetId: DatePresetId): [Date, Date] => {
-  const now = new Date();
-  const today = startOfDay(now);
-
-  switch (presetId) {
-    case 'today':
-      return [today, endOfDay(today)];
-    case 'yesterday': {
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      return [startOfDay(yesterday), endOfDay(yesterday)];
-    }
-    case 'last7days': {
-      const weekAgo = new Date(today);
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return [startOfDay(weekAgo), endOfDay(now)];
-    }
-    case 'last30days': {
-      const monthAgo = new Date(today);
-      monthAgo.setDate(monthAgo.getDate() - 30);
-      return [startOfDay(monthAgo), endOfDay(now)];
-    }
-    case 'thisMonth': {
-      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      return [startOfDay(firstDayOfMonth), endOfDay(now)];
-    }
-    case 'lastMonth': {
-      const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      const lastDayLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-      return [startOfDay(firstDayLastMonth), endOfDay(lastDayLastMonth)];
-    }
-    default:
-      return [today, endOfDay(now)];
-  }
-};
-
-/**
- * Check if a date range matches a preset
- */
-const getActivePresetId = (dateRange: [Date, Date] | null): DatePresetId | null => {
-  if (!dateRange) return null;
-
-  for (const preset of DATE_PRESETS) {
-    const presetRange = getDateRangeFromPreset(preset.id);
-    const startMatch = isSameDay(dateRange[0], presetRange[0]);
-    const endMatch = isSameDay(dateRange[1], presetRange[1]);
-    if (startMatch && endMatch) return preset.id;
-  }
-  return null;
-};
+type DatePresetId = DatePreset;
 
 /**
  * DateFilter component with calendar popover and quick presets

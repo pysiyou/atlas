@@ -4,7 +4,7 @@ export type ThemeName = "studio-light" | "github" | "noir-studio";
 export type BadgeAppearance = "unified" | "tinted";
 
 const THEME_ATTRIBUTE = "data-theme";
-const DEFAULT_THEME: ThemeName = "noir-studio";
+const DEFAULT_THEME: ThemeName = "studio-light";
 const STORAGE_KEY = "atlas-theme";
 const VALID_THEMES = new Set<ThemeName>(["studio-light", "github", "noir-studio"]);
 

@@ -10,9 +10,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import type { Order, Patient, PriorityLevel, PaymentMethod } from '@/types';
 import { PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG } from '@/types';
-import { getEnabledPaymentMethods } from '@/types/billing';
-import { Modal, Input, Textarea, MultiSelectFilter, Button, FooterInfo, Icon, Alert } from '@/shared/ui';
-import type { BaseModalProps, IconName } from '@/shared/ui';
+import { Modal, Input, Textarea, MultiSelectFilter, FooterInfo, Icon } from '@/shared/ui';
 import { displayId, ICONS, formatCurrency } from '@/utils';
 import { createFilterOptions } from '@/utils/filtering';
 import { getErrorMessage } from '@/utils/errorHelpers';
@@ -22,6 +20,9 @@ import { useTestCatalog, useTestSearch } from '@/hooks/queries';
 import { useCreatePayment } from '@/hooks/queries/usePayments';
 import { PatientSelect } from './PatientSelect';
 import { TestSelect } from './TestSelect';
+import { OrderModalFooter } from './order-modal/OrderModalFooter';
+import { OrderPaymentSection } from './order-modal/OrderPaymentSection';
+import type { BaseModalProps } from '@/shared/ui';
 
 export interface OrderUpsertModalProps extends BaseModalProps {
   /** Existing order when editing. */
@@ -31,35 +32,6 @@ export interface OrderUpsertModalProps extends BaseModalProps {
   /** Preselected patient ID for create mode. */
   patientId?: string;
 }
-
-const ModalFooter: React.FC<{
-  onClose: () => void;
-  submitLabel: string;
-  isSubmitting: boolean;
-  formId: string;
-  footerInfo?: React.ReactNode;
-  buttonVariant?: 'save' | 'primary';
-  buttonIcon?: React.ReactNode;
-}> = ({ onClose, submitLabel, isSubmitting, formId, footerInfo, buttonVariant = 'save', buttonIcon }) => (
-  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-stroke bg-panel shrink-0 shadow-[var(--shadow-footer)]">
-    {footerInfo}
-    <div className="flex items-center gap-3">
-      <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        type="submit"
-        variant={buttonVariant}
-        form={formId}
-        isLoading={isSubmitting}
-        disabled={isSubmitting}
-        icon={buttonIcon}
-      >
-        {submitLabel}
-      </Button>
-    </div>
-  </div>
-);
 
 export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
   isOpen,
@@ -72,9 +44,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
   const [testSearch, setTestSearch] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | undefined>(undefined);
   const [paymentError, setPaymentError] = useState<string | null>(null);
-
-  // Payment methods
-  const paymentMethods = useMemo(() => getEnabledPaymentMethods(), []);
 
   // Payment mutation
   const { mutate: createPaymentMutation, isPending: isProcessingPayment } = useCreatePayment();
@@ -179,7 +148,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
     () => createFilterOptions(PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG),
     []
   );
-
 
   const modalTitle = mode === 'edit' ? 'Edit Order' : 'New Order';
   const subtitle = useMemo((): React.ReactNode => {
@@ -354,69 +322,18 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
             />
 
             {/* Payment Method - Only in create mode */}
-            {mode === 'create' && (
-              <div>
-                <label className="block text-xs font-medium text-fg-subtle mb-2">
-                  Payment method
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {paymentMethods.map(method => {
-                    const isSelected = paymentMethod === method.value;
-                    return (
-                      <button
-                        key={method.value}
-                        type="button"
-                        disabled={isSubmitting || isProcessingPayment}
-                        onClick={() => {
-                          setPaymentMethod(method.value);
-                          setPaymentError(null);
-                        }}
-                        className={`
-                          relative flex items-center gap-2.5 p-3 rounded border transition-all duration-200
-                          ${
-                            isSelected
-                              ? 'bg-panel border-brand border-2'
-                              : 'bg-panel border-stroke hover:border-stroke-strong'
-                          }
-                          ${isSubmitting || isProcessingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-                        `}
-                      >
-                        <Icon
-                          name={method.icon as IconName}
-                          className={`w-7 h-7 shrink-0 ${isSelected ? 'text-brand' : 'text-fg-disabled'}`}
-                        />
-                        <span
-                          className={`flex-1 text-xs font-medium text-left ${
-                            isSelected ? 'text-fg' : 'text-fg-muted'
-                          }`}
-                        >
-                          {method.label}
-                        </span>
-                        <div
-                          className={`
-                            absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                            ${isSelected ? 'bg-success' : 'bg-transparent border-2 border-stroke-strong'}
-                          `}
-                        >
-                          <Icon
-                            name={ICONS.actions.check}
-                            className={`w-3 h-3 ${isSelected ? 'text-on-brand' : 'text-fg-disabled'}`}
-                          />
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-                {paymentError && (
-                  <Alert variant="danger" className="mt-3 py-3">
-                    <p className="text-sm">{paymentError}</p>
-                  </Alert>
-                )}
-              </div>
-            )}
+            <OrderPaymentSection
+              mode={mode}
+              paymentMethod={paymentMethod}
+              onPaymentMethodChange={setPaymentMethod}
+              isSubmitting={isSubmitting}
+              isProcessingPayment={isProcessingPayment}
+              paymentError={paymentError}
+              onClearError={() => setPaymentError(null)}
+            />
           </div>
 
-          <ModalFooter
+          <OrderModalFooter
             onClose={onClose}
             submitLabel={submitLabel}
             isSubmitting={isSubmitting || isProcessingPayment}
