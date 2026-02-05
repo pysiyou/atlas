@@ -140,7 +140,7 @@ export const VennBubbles: React.FC<VennBubblesProps> = ({
             <div 
               className="absolute inset-0 rounded-full border-4 border-transparent animate-spin" 
               style={{ 
-                borderTopColor: 'var(--primary)',
+                borderTopColor: 'var(--brand)',
                 animationDuration: '1s' 
               }} 
             />

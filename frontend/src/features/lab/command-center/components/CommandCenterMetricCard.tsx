@@ -46,8 +46,8 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
           <div
             className={cn(
               'flex h-11 w-11 shrink-0 items-center justify-center rounded',
-              'bg-(--primary-muted) text-(--primary)',
-              'ring-1 ring-(--primary)/20'
+              'bg-brand-muted text-brand',
+              'ring-1 ring-brand/20'
             )}
           >
             <Icon name={icon} className="h-5 w-5" />
@@ -85,13 +85,13 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
                 name={trendUp ? 'up-trend' : 'down-trend'}
                 className={cn(
                   'h-3.5 w-3.5 shrink-0',
-                  trendUp ? 'text-success-text' : 'text-danger-fg'
+                  trendUp ? 'text-success-fg' : 'text-danger-fg'
                 )}
               />
               <span
                 className={cn(
                   'tabular-nums font-semibold',
-                  trendUp ? 'text-success-text' : 'text-danger-fg'
+                  trendUp ? 'text-success-fg' : 'text-danger-fg'
                 )}
               >
                 {trend.format === 'count' ? trendCount : `${trendCount}%`}
