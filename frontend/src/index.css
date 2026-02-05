@@ -4,16 +4,19 @@
   /* Custom text size */
   --text-xxs: 10px;
 
-  /* Font weights (from theme.css; use font-thin, font-light, font-medium, etc.) */
-  --font-weight-thin: var(--font-weight-thin);
-  --font-weight-extralight: var(--font-weight-extralight);
-  --font-weight-light: var(--font-weight-light);
-  --font-weight-normal: var(--font-weight-normal);
-  --font-weight-medium: var(--font-weight-medium);
-  --font-weight-semibold: var(--font-weight-semibold);
-  --font-weight-bold: var(--font-weight-bold);
-  --font-weight-extrabold: var(--font-weight-extrabold);
-  --font-weight-black: var(--font-weight-black);
+  /* Font family - Nunito as default sans */
+  --font-sans: 'Nunito', sans-serif;
+
+  /* Font weights (aligned with theme.css custom scale) */
+  --font-weight-thin: 200;
+  --font-weight-extralight: 300;
+  --font-weight-light: 400;
+  --font-weight-normal: 500;
+  --font-weight-medium: 600;
+  --font-weight-semibold: 700;
+  --font-weight-bold: 800;
+  --font-weight-extrabold: 900;
+  --font-weight-black: 900;
 
   /* ═══════════════════════════════════════════════════════════════════
      FOREGROUND

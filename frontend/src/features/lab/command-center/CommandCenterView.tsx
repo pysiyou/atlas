@@ -95,7 +95,7 @@ export const CommandCenterView: React.FC = () => {
         className="min-h-0 overflow-hidden grid"
         style={{ gridTemplateColumns: '3fr 5fr' }}
       >
-        <div className={`${rowCellClass} flex flex-col items-start justify-start min-h-0 w-full`}>
+        <div className={`${rowCellClass} flex flex-col items-start justify-start min-h-0 w-full p-2`}>
           <ActivitiesTimeline logs={logs} isLoading={logsLoading} className="w-full" />
         </div>
         <div className={`${rowCellClass} flex flex-col min-h-0 p-2`} />

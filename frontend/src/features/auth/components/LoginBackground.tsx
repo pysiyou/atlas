@@ -52,10 +52,10 @@ export const LoginBackground: React.FC = () => {
           animation: gradient-shift 8s ease infinite;
         }
         .font-display {
-          font-family: 'Nunito', sans-serif;
+          font-family: var(--font-sans);
         }
         .font-body {
-          font-family: 'Nunito', sans-serif;
+          font-family: var(--font-sans);
         }
       `}</style>
 

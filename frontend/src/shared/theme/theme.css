@@ -20,7 +20,7 @@
   --font-weight-bold: 800;
   --font-weight-extrabold: 900;
   --font-weight-black: 900;
-  --font-weight-default: var(--font-weight-thin);
+  --font-weight-default: var(--font-weight-extralight);
 
   /* Brand Palette - Primary action color */
   --primitive-brand-50: #f0f9ff;
