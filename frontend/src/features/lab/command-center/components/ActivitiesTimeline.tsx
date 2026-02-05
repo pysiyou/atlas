@@ -354,7 +354,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
         <div className="flex-1 overflow-auto px-4 space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-panel-hover animate-pulse mt-1.5" />
+              <div className="w-1.5 h-1.5 rounded-full bg-panel-hover animate-pulse mt-1.5" />
               <div className="flex-1 space-y-2">
                 <div className="h-4 bg-panel-hover animate-pulse rounded w-3/4" />
                 <div className="h-3 bg-panel-hover animate-pulse rounded w-16" />
@@ -396,7 +396,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
                 {group.items.map((item) => (
                   <div key={item.id} className="flex items-start gap-3 relative">
                     <div className="w-2 flex justify-center shrink-0 z-10 pt-1.5">
-                      <div className="w-2 h-2 rounded-full bg-neutral-500" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-neutral-500" />
                     </div>
                     <div className="flex-1 min-w-0 space-y-0.5">
                       {item.lines.map((line, lineIdx) => (
@@ -407,7 +407,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
                           {line.map((segment, idx) => {
                             if (segment.type === 'name') {
                               return (
-                                <span key={idx} className="font-medium text-info">
+                                <span key={idx} className="font-medium text-brand">
                                   {segment.value}
                                 </span>
                               );
@@ -428,7 +428,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
                           })}
                         </p>
                       ))}
-                      <p className="text-xs font-extralight text-fg-muted">
+                      <p className="text-xxs font-extralight text-fg-muted">
                         {formatDateTime(item.timestamp)}
                       </p>
                     </div>
