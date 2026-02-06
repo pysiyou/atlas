@@ -12,6 +12,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
+import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/shared/ui/Table';
 import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from './PaymentTableConfig';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
@@ -219,7 +220,7 @@ export const PaymentList: React.FC = () => {
         }
         pagination={true}
         pageSize={20}
-        pageSizeOptions={[10, 20, 50, 100]}
+        pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL}
       />
 
       {/* Payment Detail Modal */}

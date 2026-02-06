@@ -1,11 +1,9 @@
 from sqlalchemy import text
 from app.database import engine, Base, SessionLocal
 from db_scripts.generate_users import generate_users
-from db_scripts.generate_patients import generate_patients
 from db_scripts.generate_tests import generate_tests
-from db_scripts.generate_orders import generate_orders
-from db_scripts.generate_payments import generate_payments
 from db_scripts.seed_affiliation_pricing import seed_affiliation_pricing
+from db_scripts.seed_lis_6months import seed_lis_6months
 
 def apply_migrations():
     """Apply database migrations for compliance features"""
@@ -167,27 +165,20 @@ def init_db():
         # Seed affiliation pricing
         seed_affiliation_pricing(db)
         
-        # 4. Generate Catalog Data
+        # 4. Generate catalog data
         generate_tests(db)
         
-        # 5. Generate Patient Data
-        # Generate random patients
-        generate_patients(db, count=10)
-
-        # 6. Generate Order Data
-        generate_orders(db)
-        
-        # 7. Generate Payment Data
-        generate_payments(db)
+        # 5. Seed LIS 6-month history (50 patients, orders, samples, workflows, lab_operation_logs)
+        seed_lis_6months(db, commit=True)
         
         print("\n" + "="*60)
         print("✅ Database initialization complete!")
         print("="*60)
-        print("\n📊 Test Data Summary:")
+        print("\n📊 Seed Data Summary:")
         print("  • Users: 4 (admin, receptionist, lab tech, lab tech plus)")
-        print("  • Patients: 10")
-        print("  • Tests in catalog: 87")
-        print("  • Orders: 10 (no tests in ready-for-validation state)")
+        print("  • Patients: 50 (registration spread over 6 months)")
+        print("  • Tests in catalog: from test-catalog.json")
+        print("  • Orders / samples / workflows: LIS 6-month seed (scenarios: completed, pending, escalated, etc.)")
         print("\n🔒 Security Features:")
         print("  ✓ Result immutability trigger active")
         print("  ✓ Audit log append-only")

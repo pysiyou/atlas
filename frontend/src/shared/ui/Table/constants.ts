@@ -73,8 +73,13 @@ export const TEXT_SIZE: Record<TableVariant, string> = {
  */
 export const DEFAULT_LOADING_ROWS = 5;
 
+/** Sentinel for "show all" rows (no pagination slice) */
+export const SHOW_ALL_PAGE_SIZE = -1;
+
 /**
  * Default pagination options
  */
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
+/** Page size options including "All" for client-side tables */
+export const DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL = [...DEFAULT_PAGE_SIZE_OPTIONS, SHOW_ALL_PAGE_SIZE];

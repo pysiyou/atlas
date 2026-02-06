@@ -20,10 +20,10 @@ export type { PaginatedResponse, PaginationMeta };
 
 export const patientAPI = {
   /**
-   * Get all patients (non-paginated for backward compatibility)
+   * Get all patients (requests up to backend max so tables can show full list)
    */
   async getAll(): Promise<Patient[]> {
-    return apiClient.get<Patient[]>('/patients');
+    return apiClient.get<Patient[]>('/patients', { limit: '1000' });
   },
 
   /**

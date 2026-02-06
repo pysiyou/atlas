@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import type { PaginationConfig } from '../types';
-import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE_OPTIONS } from '../constants';
+import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE_OPTIONS, SHOW_ALL_PAGE_SIZE } from '../constants';
 
 interface UseTablePaginationOptions<T> {
   data: T[];
@@ -41,8 +41,9 @@ export const useTablePagination = <T = Record<string, unknown>>({
 
   const pageSize = isExternallyControlled ? externalPagination.pageSize : internalPageSize;
   const totalItems = isExternallyControlled ? externalPagination.totalItems : data.length;
+  const showAll = !isExternallyControlled && pageSize === SHOW_ALL_PAGE_SIZE;
 
-  const totalPages = Math.ceil(totalItems / pageSize) || 1;
+  const totalPages = showAll || pageSize <= 0 ? 1 : Math.ceil(totalItems / pageSize) || 1;
 
   // Compute effective internal page - reset to 1 if out of bounds
   // This avoids setState in effect which causes cascading renders
@@ -88,13 +89,11 @@ export const useTablePagination = <T = Record<string, unknown>>({
   );
 
   /**
-   * Paginate data for client-side pagination
+   * Paginate data for client-side pagination; when showAll, return full data.
    */
   const paginatedData = useMemo(() => {
-    if (!enabled || isExternallyControlled) {
-      return data;
-    }
-
+    if (!enabled || isExternallyControlled) return data;
+    if (pageSize === SHOW_ALL_PAGE_SIZE) return data;
     const startIndex = (currentPage - 1) * pageSize;
     return data.slice(startIndex, startIndex + pageSize);
   }, [data, enabled, isExternallyControlled, currentPage, pageSize]);

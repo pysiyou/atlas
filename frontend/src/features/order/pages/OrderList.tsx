@@ -12,6 +12,7 @@ import { useOrdersList, usePatientNameLookup, useTestNameLookup } from '@/hooks/
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
+import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/shared/ui/Table';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { OrderFilters } from '../components/OrderFilters';
 import { createOrderTableConfig } from './OrderTableConfig';
@@ -146,7 +147,7 @@ export const OrderList: React.FC = () => {
       }
       pagination={true}
       pageSize={20}
-      pageSizeOptions={[10, 20, 50, 100]}
+      pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL}
     />
   );
 };

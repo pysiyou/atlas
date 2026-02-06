@@ -39,10 +39,10 @@ export interface OrdersFilter {
 
 export const orderAPI = {
   /**
-   * Get all orders (non-paginated for backward compatibility)
+   * Get all orders (requests up to backend max so tables can show full list)
    */
   async getAll(): Promise<Order[]> {
-    return apiClient.get<Order[]>('/orders');
+    return apiClient.get<Order[]>('/orders', { limit: '1000' });
   },
 
   /**

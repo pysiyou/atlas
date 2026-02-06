@@ -10,6 +10,7 @@ import { Table, EmptyState } from '@/shared/ui';
 import { LoadingState } from '../feedback/LoadingState';
 import { ErrorAlert } from '../feedback/ErrorAlert';
 import type { TableViewConfig } from '@/shared/ui/Table';
+import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/shared/ui/Table';
 import { ICONS } from '@/utils';
 
 // TableDataItem accepts any object-like type (interfaces, types, classes)
@@ -130,7 +131,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
   onDismissError,
   pagination = true,
   pageSize = 20,
-  pageSizeOptions = [10, 20, 50, 100],
+  pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL,
   className = '',
 }: ListViewProps<T>) {
   // Show loading state on initial load

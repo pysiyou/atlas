@@ -19,6 +19,7 @@ import {
 } from '@/hooks/queries';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
+import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/shared/ui/Table';
 import { createReportTableConfig } from './ReportTableConfig';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { ReportFilters } from '../components/ReportFilters';
@@ -297,7 +298,7 @@ export const ReportList: React.FC = () => {
         }
         pagination={true}
         pageSize={20}
-        pageSizeOptions={[10, 20, 50, 100]}
+        pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL}
       />
 
       {/* Report Preview Modal */}

@@ -12,6 +12,7 @@ import type { Order } from '@/types';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
+import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/shared/ui/Table';
 import { useModal } from '@/shared/context/ModalContext';
 import { PatientFilters, type AffiliationStatus } from '../components/PatientFilters';
 import { createPatientTableConfig } from './PatientTableConfig';
@@ -150,7 +151,7 @@ export const PatientList: React.FC = () => {
         }
         pagination={true}
         pageSize={20}
-        pageSizeOptions={[10, 20, 50, 100]}
+        pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL}
       />
 
       <EditPatientModal

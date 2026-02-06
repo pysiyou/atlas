@@ -12,6 +12,9 @@ interface PaginationProps {
   pageSizeOptions?: number[];
 }
 
+/** Sentinel for "show all" rows; must match Table constants SHOW_ALL_PAGE_SIZE */
+const SHOW_ALL = -1;
+
 export const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalItems,
@@ -20,9 +23,10 @@ export const Pagination: React.FC<PaginationProps> = ({
   onPageSizeChange,
   pageSizeOptions = [10, 20, 50, 100],
 }) => {
-  const totalPages = Math.ceil(totalItems / pageSize);
-  const startItem = (currentPage - 1) * pageSize + 1;
-  const endItem = Math.min(currentPage * pageSize, totalItems);
+  const showAll = pageSize === SHOW_ALL;
+  const totalPages = showAll ? 1 : Math.ceil(totalItems / pageSize) || 1;
+  const startItem = showAll ? 1 : (currentPage - 1) * pageSize + 1;
+  const endItem = showAll ? totalItems : Math.min(currentPage * pageSize, totalItems);
 
   // Generate page numbers
   const getPageNumbers = () => {
@@ -73,7 +77,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           >
             {pageSizeOptions.map(option => (
               <option key={option} value={option} className="text-xs">
-                {option}
+                {option === SHOW_ALL ? 'All' : option}
               </option>
             ))}
           </select>

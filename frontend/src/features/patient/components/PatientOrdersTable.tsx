@@ -6,7 +6,7 @@
 import React, { useMemo } from 'react';
 import { Table, Badge, EmptyState } from '@/shared/ui';
 import type { TableViewConfig, CardComponentProps } from '@/shared/ui/Table';
-import { DATA_AMOUNT, DATA_ID_PRIMARY, DATA_ID_PRIMARY_INLINE } from '@/shared/constants';
+import { DATA_AMOUNT, DATA_ID_PRIMARY } from '@/shared/constants';
 import { displayId } from '@/utils';
 import type { Order } from '@/types/order';
 import { formatDetailDate, formatOrderPrice } from '../utils/patient-formatters';
@@ -95,18 +95,21 @@ function buildDetailedViewConfig(): TableViewConfig<Order> {
     {
       key: 'tests',
       header: 'Tests',
-      width: 'lg' as const,
-      render: (order: Order) => (
-        <div className="min-w-0">
-          <div className="truncate">
-            {order.tests.length} test{order.tests.length !== 1 ? 's' : ''}
+      width: 'fill' as const,
+      render: (order: Order) => {
+        const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
+        const activeCount = activeTests.length;
+        return (
+          <div className="min-w-0">
+            <div className="truncate font-mono text-xs text-fg">
+              {activeTests.map(t => t.testCode).join('/')}
+            </div>
+            <div className="text-xs text-fg-subtle truncate">
+              {activeCount} test{activeCount !== 1 ? 's' : ''}
+            </div>
           </div>
-          <div className={`truncate ${DATA_ID_PRIMARY_INLINE}`}>
-            {order.tests.slice(0, 2).map(t => t.testName || t.testCode).join(', ')}
-            {order.tests.length > 2 && ` +${order.tests.length - 2} more`}
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       key: 'overallStatus',

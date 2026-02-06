@@ -54,10 +54,10 @@ interface RejectAndRecollectRequest {
 
 export const sampleAPI = {
   /**
-   * Get all samples with optional filters (non-paginated for backward compatibility)
+   * Get all samples with optional filters (requests up to backend max so tables can show full list)
    */
   async getAll(params?: GetSamplesParams): Promise<Sample[]> {
-    const queryParams: Record<string, string> = {};
+    const queryParams: Record<string, string> = { limit: '1000' };
     if (params?.orderId) queryParams.orderId = params.orderId;
     if (params?.status) queryParams.status = params.status;
     if (params?.skip) queryParams.skip = String(params.skip);

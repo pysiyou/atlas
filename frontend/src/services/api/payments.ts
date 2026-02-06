@@ -19,20 +19,17 @@ export interface PaymentFilters {
 }
 
 /**
- * Get all payments with optional filters
+ * Get all payments with optional filters (requests up to backend max so tables can show full list)
  */
 export const getPayments = async (filters?: PaymentFilters): Promise<Payment[]> => {
   const params = new URLSearchParams();
+  params.append('limit', String(filters?.limit ?? 1000));
 
   if (filters?.orderId) params.append('orderId', filters.orderId);
   if (filters?.paymentMethod) params.append('paymentMethod', filters.paymentMethod);
   if (filters?.skip !== undefined) params.append('skip', filters.skip.toString());
-  if (filters?.limit !== undefined) params.append('limit', filters.limit.toString());
 
-  const queryString = params.toString();
-  const url = queryString ? `/payments?${queryString}` : '/payments';
-
-  return apiClient.get<Payment[]>(url);
+  return apiClient.get<Payment[]>(`/payments?${params.toString()}`);
 };
 
 /**
