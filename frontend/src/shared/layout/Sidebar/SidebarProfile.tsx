@@ -61,32 +61,31 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
       </AnimatePresence>
 
       <div
-        className="flex items-center cursor-pointer"
+        className="flex items-center gap-2 px-3 cursor-pointer"
         onClick={() => isCollapsed && setShowProfileMenu(!showProfileMenu)}
         title={isCollapsed ? 'Click for options' : undefined}
         role="button"
         tabIndex={0}
         onKeyDown={e => e.key === 'Enter' && isCollapsed && setShowProfileMenu(prev => !prev)}
       >
-        <div className="w-16 shrink-0 flex items-center justify-center">
-          <Avatar primaryText={currentUser.name} src={defaultAvatar} size="md" />
-        </div>
-        <div className="flex-1 min-w-0 overflow-hidden flex items-center justify-between px-3">
-          <div className="flex-1 min-w-0 overflow-hidden">
-            <p className="text-sm font-medium text-fg truncate">{currentUser.name}</p>
-            <p className="text-xs text-fg-subtle truncate">{formatStatus(currentUser.role)}</p>
-          </div>
-          <IconButton
-            variant="logout"
-            size="sm"
-            onClick={e => {
-              e.stopPropagation();
-              onLogout();
-            }}
-            title="Logout"
-            className="ml-2"
-          />
-        </div>
+        <Avatar
+          primaryText={currentUser.name}
+          secondaryText={formatStatus(currentUser.role)}
+          src={defaultAvatar}
+          size="md"
+          avatarOnly={isCollapsed}
+          className={isCollapsed ? 'shrink-0' : 'flex-1 min-w-0'}
+        />
+        <IconButton
+          variant="logout"
+          size="sm"
+          onClick={e => {
+            e.stopPropagation();
+            onLogout();
+          }}
+          title="Logout"
+          className="shrink-0"
+        />
       </div>
 
       <AnimatePresence>
