@@ -19,6 +19,7 @@ Usage (from backend directory):
 from __future__ import annotations
 
 import argparse
+import math
 import random
 import sys
 import time
@@ -31,13 +32,17 @@ import requests
 # Configuration
 # ---------------------------------------------------------------------------
 SIMULATION_DAYS = 730  # 2 years
-NUM_PATIENTS = 75  # 50-100 patients
 TARGET_ORDERS_PER_DAY = 10
 MIN_ORDERS_PER_PATIENT = 1
 MAX_ORDERS_PER_PATIENT = 10
 MIN_TESTS_PER_ORDER = 1
 MAX_TESTS_PER_ORDER = 5
-NUM_ORDERS_PAID = 80  # Number of orders to mark as paid during simulation
+PAID_ORDER_PERCENTAGE = 0.6  # 60% of orders get a payment
+
+# Auto-calculate patient count to hit ~TARGET_ORDERS_PER_DAY
+_AVG_ORDERS_PER_PATIENT = (MIN_ORDERS_PER_PATIENT + MAX_ORDERS_PER_PATIENT) / 2
+_TOTAL_ORDERS_NEEDED = TARGET_ORDERS_PER_DAY * SIMULATION_DAYS
+NUM_PATIENTS = math.ceil(_TOTAL_ORDERS_NEEDED / _AVG_ORDERS_PER_PATIENT)  # ~1327
 
 # Workflow destiny weights
 DESTINY_NORMAL = 0.80
@@ -929,6 +934,7 @@ def simulate_history(
     base_url: str,
     seed: Optional[int] = None,
     num_patients: int = NUM_PATIENTS,
+    daily_volume: int = TARGET_ORDERS_PER_DAY,
 ) -> None:
     """
     Generate 2 years of realistic lab history by calling backend APIs.
@@ -942,9 +948,10 @@ def simulate_history(
     print("=" * 70)
     print("  Atlas Lab - 2-Year History Simulation")
     print("=" * 70)
-    print(f"  Period:   {start_date.strftime('%Y-%m-%d')} to {now.strftime('%Y-%m-%d')}")
-    print(f"  Patients: {num_patients}")
-    print(f"  Seed:     {seed or 'random'}")
+    print(f"  Period:        {start_date.strftime('%Y-%m-%d')} to {now.strftime('%Y-%m-%d')}")
+    print(f"  Patients:      {num_patients}")
+    print(f"  Target volume: ~{daily_volume} orders/day")
+    print(f"  Seed:          {seed or 'random'}")
     print("=" * 70)
 
     # ---- Step 1: Authenticate ----
@@ -987,7 +994,7 @@ def simulate_history(
     print("\n[4/5] Running simulation...")
     executor = WorkflowExecutor(client, rng)
     start_time = time.time()
-    token_refresh_interval = 100  # refresh tokens every N orders to avoid expiry
+    token_refresh_interval = 500  # refresh tokens every N orders to avoid expiry
     orders_created_for_payment: List[tuple] = []  # (order_id, total_price, order_date)
 
     for pi, plan in enumerate(patient_plans):
@@ -1140,7 +1147,7 @@ def simulate_history(
                 + executor.stats["tests_escalated"]
                 + executor.stats["tests_pending"]
             )
-            if executor.stats["orders"] % 50 == 0:
+            if executor.stats["orders"] % 500 == 0:
                 elapsed = time.time() - start_time
                 print(
                     f"  Progress: {executor.stats['orders']}/{total_orders} orders, "
@@ -1149,8 +1156,8 @@ def simulate_history(
                     f"{elapsed:.0f}s elapsed"
                 )
 
-    # ---- Step 4b: Mark first NUM_ORDERS_PAID orders as paid ----
-    to_mark_paid = min(NUM_ORDERS_PAID, len(orders_created_for_payment))
+    # ---- Step 4b: Mark a percentage of orders as paid ----
+    to_mark_paid = int(len(orders_created_for_payment) * PAID_ORDER_PERCENTAGE)
     if to_mark_paid > 0:
         print(f"\n  Marking {to_mark_paid} orders as paid...")
         for order_id, total_price, order_date in orders_created_for_payment[:to_mark_paid]:
@@ -1208,10 +1215,21 @@ def main() -> None:
     parser.add_argument(
         "--patients",
         type=int,
-        default=NUM_PATIENTS,
-        help=f"Number of patients to create (default: {NUM_PATIENTS})",
+        default=None,
+        help="Override number of patients (auto-calculated from daily volume if omitted)",
+    )
+    parser.add_argument(
+        "--daily-volume",
+        type=int,
+        default=TARGET_ORDERS_PER_DAY,
+        help=f"Target orders per day (default: {TARGET_ORDERS_PER_DAY})",
     )
     args = parser.parse_args()
+
+    # Auto-calculate patient count from target daily volume
+    if args.patients is None:
+        avg_orders = (MIN_ORDERS_PER_PATIENT + MAX_ORDERS_PER_PATIENT) / 2
+        args.patients = math.ceil(args.daily_volume * SIMULATION_DAYS / avg_orders)
 
     # Quick health check
     try:
@@ -1228,6 +1246,7 @@ def main() -> None:
         base_url=args.base_url,
         seed=args.seed,
         num_patients=args.patients,
+        daily_volume=args.daily_volume,
     )
 
 
