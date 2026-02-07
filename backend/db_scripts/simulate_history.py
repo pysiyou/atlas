@@ -37,6 +37,7 @@ MIN_ORDERS_PER_PATIENT = 1
 MAX_ORDERS_PER_PATIENT = 10
 MIN_TESTS_PER_ORDER = 1
 MAX_TESTS_PER_ORDER = 5
+NUM_ORDERS_PAID = 80  # Number of orders to mark as paid during simulation
 
 # Workflow destiny weights
 DESTINY_NORMAL = 0.80
@@ -334,6 +335,36 @@ class LabAPIClient:
             resp = self.session.get(self._url("/tests"), headers=self._headers("admin"))
         if resp.status_code != 200:
             raise RuntimeError(f"Get tests failed: {resp.status_code}")
+        return resp.json()
+
+    # ---- Order payment ----
+    def update_order_payment(
+        self,
+        order_id: int,
+        payment_status: str,
+        amount_paid: Optional[float],
+        sim_date: datetime,
+    ) -> Dict:
+        """PATCH /orders/{orderId}/payment — set payment status and optionally record payment amount."""
+        payload: Dict[str, Any] = {"paymentStatus": payment_status}
+        if amount_paid is not None and amount_paid > 0:
+            payload["amountPaid"] = amount_paid
+        resp = self.session.patch(
+            self._url(f"/orders/{order_id}/payment"),
+            json=payload,
+            headers=self._headers("receptionist", sim_date),
+        )
+        if resp.status_code == 401:
+            self.refresh_token("receptionist")
+            resp = self.session.patch(
+                self._url(f"/orders/{order_id}/payment"),
+                json=payload,
+                headers=self._headers("receptionist", sim_date),
+            )
+        if resp.status_code not in (200, 201):
+            raise RuntimeError(
+                f"Update order payment {order_id} failed: {resp.status_code} {resp.text[:300]}"
+            )
         return resp.json()
 
     # ---- Order Detail ----
@@ -957,6 +988,7 @@ def simulate_history(
     executor = WorkflowExecutor(client, rng)
     start_time = time.time()
     token_refresh_interval = 100  # refresh tokens every N orders to avoid expiry
+    orders_created_for_payment: List[tuple] = []  # (order_id, total_price, order_date)
 
     for pi, plan in enumerate(patient_plans):
         reg_date = plan["reg_date"]
@@ -994,7 +1026,9 @@ def simulate_history(
             try:
                 order_resp = client.create_order(patient_id, selected_tests, order_date)
                 order_id = order_resp["orderId"]
+                total_price = order_resp.get("totalPrice", 0.0)
                 executor.stats["orders"] += 1
+                orders_created_for_payment.append((order_id, total_price, order_date))
             except Exception as e:
                 print(f"  [ERROR] Order for patient {patient_id}: {e}")
                 executor.stats["errors"] += 1
@@ -1115,6 +1149,18 @@ def simulate_history(
                     f"{elapsed:.0f}s elapsed"
                 )
 
+    # ---- Step 4b: Mark first NUM_ORDERS_PAID orders as paid ----
+    to_mark_paid = min(NUM_ORDERS_PAID, len(orders_created_for_payment))
+    if to_mark_paid > 0:
+        print(f"\n  Marking {to_mark_paid} orders as paid...")
+        for order_id, total_price, order_date in orders_created_for_payment[:to_mark_paid]:
+            try:
+                pay_at = order_date + timedelta(hours=rng.uniform(1, 24))
+                client.update_order_payment(order_id, "paid", total_price, pay_at)
+            except Exception as e:
+                print(f"  [ERROR] Mark order {order_id} paid: {e}")
+                executor.stats["errors"] += 1
+
     # ---- Step 5: Summary ----
     elapsed = time.time() - start_time
     print("\n" + "=" * 70)
@@ -1123,6 +1169,7 @@ def simulate_history(
     print(f"  Duration:            {elapsed:.1f}s")
     print(f"  Patients created:    {executor.stats['patients']}")
     print(f"  Orders created:      {executor.stats['orders']}")
+    print(f"  Orders marked paid:  {to_mark_paid}")
     print(f"  Tests - Normal:      {executor.stats['tests_normal']}")
     print(f"  Tests - Tech Reject: {executor.stats['tests_tech_reject']}")
     print(f"  Tests - Sample Rej:  {executor.stats['tests_sample_reject']}")
