@@ -204,11 +204,11 @@ class LabOperationsService:
         sample.updatedBy = str(user_id)  # Convert to string as per model requirement
 
         # Update associated order tests
-        # Exclude SUPERSEDED and REMOVED tests - they were replaced by retests or removed from order and should not be modified
+        # Exclude SUPERSEDED, REMOVED, and VALIDATED tests - validated results are immutable (PostgreSQL trigger)
         order_tests = self.db.query(OrderTest).filter(
             OrderTest.orderId == sample.orderId,
             OrderTest.testCode.in_(sample.testCodes),
-            OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED])
+            OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED])
         ).all()
 
         for order_test in order_tests:
@@ -289,11 +289,11 @@ class LabOperationsService:
         sample.updatedBy = str(user_id)  # Convert to string as per model requirement
 
         # Update associated order tests
-        # Exclude SUPERSEDED and REMOVED tests - they were replaced by retests or removed from order and should not be modified
+        # Exclude SUPERSEDED, REMOVED, and VALIDATED tests - validated results are immutable (PostgreSQL trigger)
         order_tests = self.db.query(OrderTest).filter(
             OrderTest.orderId == sample.orderId,
             OrderTest.testCode.in_(sample.testCodes),
-            OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED])
+            OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED])
         ).all()
 
         for order_test in order_tests:
@@ -392,13 +392,13 @@ class LabOperationsService:
         original_sample.updatedBy = str(user_id)  # Convert to string as per model requirement
 
         # Update order tests to point to new sample
-        # IMPORTANT: Exclude SUPERSEDED and REMOVED tests - these were replaced by retests or removed from order and should
-        # not be revived. Only update active tests that need the new sample.
+        # IMPORTANT: Exclude SUPERSEDED, REMOVED, and VALIDATED tests - these were replaced by retests,
+        # removed from order, or already validated (immutable). Only update active tests that need the new sample.
         if update_order_tests:
             order_tests = self.db.query(OrderTest).filter(
                 OrderTest.orderId == original_sample.orderId,
                 OrderTest.testCode.in_(original_sample.testCodes),
-                OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED])  # Don't revive superseded or removed tests
+                OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED])
             ).all()
 
             for test in order_tests:
