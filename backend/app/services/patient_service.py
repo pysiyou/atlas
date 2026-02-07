@@ -91,6 +91,7 @@ class PatientService:
             if patient_data.medicalHistory
             else MedicalHistory().model_dump()
         )
+        reg_date = patient_data.registrationDate if patient_data.registrationDate is not None else get_now()
         patient = Patient(
             fullName=patient_data.fullName,
             dateOfBirth=patient_data.dateOfBirth,
@@ -104,10 +105,14 @@ class PatientService:
             medicalHistory=medical_history_data,
             affiliation=patient_data.affiliation.model_dump() if patient_data.affiliation else None,
             vitalSigns=patient_data.vitalSigns.model_dump() if patient_data.vitalSigns else None,
-            registrationDate=get_now(),
+            registrationDate=reg_date,
             createdBy=user_id,
             updatedBy=user_id,
         )
+        if patient_data.createdAt is not None:
+            patient.createdAt = patient_data.createdAt
+        if patient_data.updatedAt is not None:
+            patient.updatedAt = patient_data.updatedAt
         self.db.add(patient)
         self.db.commit()
         self.db.refresh(patient)
@@ -123,7 +128,7 @@ class PatientService:
         ALLOWED = {
             "fullName", "dateOfBirth", "gender", "phone", "email",
             "height", "weight", "address", "emergencyContact", "medicalHistory", "affiliation",
-            "vitalSigns",
+            "vitalSigns", "updatedAt",
         }
         update_data = patient_data.model_dump(exclude_unset=True)
         for field, value in update_data.items():

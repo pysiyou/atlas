@@ -85,6 +85,8 @@ def create_user(
         email=user_data.email,
         phone=user_data.phone,
     )
+    if user_data.createdAt is not None:
+        user.createdAt = user_data.createdAt
 
     try:
         db.add(user)

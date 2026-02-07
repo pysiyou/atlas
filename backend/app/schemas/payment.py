@@ -11,6 +11,7 @@ class PaymentCreate(BaseModel):
     amount: float = Field(gt=0, description="Payment amount must be greater than 0")
     paymentMethod: PaymentMethod
     notes: str | None = None
+    paidAt: datetime | None = None
 
 
 class PaymentResponse(BaseModel):

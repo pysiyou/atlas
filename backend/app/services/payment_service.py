@@ -67,12 +67,13 @@ class PaymentService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Payment amount (${payment_data.amount:.2f}) exceeds remaining balance (${remaining:.2f})",
             )
+        paid_at = payment_data.paidAt if payment_data.paidAt is not None else get_now()
         payment = Payment(
             orderId=payment_data.orderId,
             invoiceId=None,
             amount=payment_data.amount,
             paymentMethod=payment_data.paymentMethod,
-            paidAt=get_now(),
+            paidAt=paid_at,
             receivedBy=str(user_id),
             receiptGenerated=False,
             notes=payment_data.notes if payment_data.notes is not None else "",

@@ -44,9 +44,10 @@ class OrderService:
             total_price += test.price
             test_entries.append((test.code, test.price))
 
+        order_date = order_data.orderDate if order_data.orderDate is not None else get_now()
         order = Order(
             patientId=order_data.patientId,
-            orderDate=get_now(),
+            orderDate=order_date,
             totalPrice=total_price,
             paymentStatus=PaymentStatus.UNPAID,
             overallStatus=OrderStatus.ORDERED,
@@ -57,6 +58,10 @@ class OrderService:
             patientPrepInstructions=order_data.patientPrepInstructions,
             createdBy=user_id,
         )
+        if order_data.createdAt is not None:
+            order.createdAt = order_data.createdAt
+        if order_data.updatedAt is not None:
+            order.updatedAt = order_data.updatedAt
         try:
             self.db.add(order)
             self.db.flush()
@@ -171,7 +176,8 @@ class OrderService:
 
         for field, value in update_data.items():
             setattr(order, field, value)
-        order.updatedAt = get_now()
+        if order_data.updatedAt is None:
+            order.updatedAt = get_now()
 
         # Cascade priority change to all samples for this order (bulk update)
         if "priority" in update_data:
@@ -213,6 +219,7 @@ class OrderService:
                 notes="",
             )
             self.db.add(payment_record)
+        # updatedAt left as set by client if provided via order update; else already get_now() in caller if needed
         order.updatedAt = get_now()
         self.db.commit()
         self.db.refresh(order)
