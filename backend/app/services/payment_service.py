@@ -73,9 +73,9 @@ class PaymentService:
             amount=payment_data.amount,
             paymentMethod=payment_data.paymentMethod,
             paidAt=get_now(),
-            receivedBy=user_id,
+            receivedBy=str(user_id),
             receiptGenerated=False,
-            notes=payment_data.notes,
+            notes=payment_data.notes if payment_data.notes is not None else "",
         )
         self.db.add(payment)
         new_total_paid = total_paid + payment_data.amount

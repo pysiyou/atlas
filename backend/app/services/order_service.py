@@ -208,9 +208,9 @@ class OrderService:
                 amount=amount_paid,
                 paymentMethod=PaymentMethod.CASH,
                 paidAt=get_now(),
-                receivedBy=user_id,
+                receivedBy=str(user_id),
                 receiptGenerated=False,
-                notes=None,
+                notes="",
             )
             self.db.add(payment_record)
         order.updatedAt = get_now()

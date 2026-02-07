@@ -342,33 +342,35 @@ class LabAPIClient:
             raise RuntimeError(f"Get tests failed: {resp.status_code}")
         return resp.json()
 
-    # ---- Order payment ----
-    def update_order_payment(
+    # ---- Payments (normal workflow: POST /payments → PaymentService creates Payment + updates order) ----
+    def create_payment(
         self,
         order_id: int,
-        payment_status: str,
-        amount_paid: Optional[float],
+        amount: float,
         sim_date: datetime,
+        payment_method: str = "cash",
     ) -> Dict:
-        """PATCH /orders/{orderId}/payment — set payment status and optionally record payment amount."""
-        payload: Dict[str, Any] = {"paymentStatus": payment_status}
-        if amount_paid is not None and amount_paid > 0:
-            payload["amountPaid"] = amount_paid
-        resp = self.session.patch(
-            self._url(f"/orders/{order_id}/payment"),
+        """POST /payments — create payment record; PaymentService updates orders.payment_status when fully paid."""
+        payload: Dict[str, Any] = {
+            "orderId": order_id,
+            "amount": amount,
+            "paymentMethod": payment_method,
+        }
+        resp = self.session.post(
+            self._url("/payments"),
             json=payload,
             headers=self._headers("receptionist", sim_date),
         )
         if resp.status_code == 401:
             self.refresh_token("receptionist")
-            resp = self.session.patch(
-                self._url(f"/orders/{order_id}/payment"),
+            resp = self.session.post(
+                self._url("/payments"),
                 json=payload,
                 headers=self._headers("receptionist", sim_date),
             )
         if resp.status_code not in (200, 201):
             raise RuntimeError(
-                f"Update order payment {order_id} failed: {resp.status_code} {resp.text[:300]}"
+                f"Create payment for order {order_id} failed: {resp.status_code} {resp.text[:300]}"
             )
         return resp.json()
 
@@ -1159,13 +1161,13 @@ def simulate_history(
     # ---- Step 4b: Mark a percentage of orders as paid ----
     to_mark_paid = int(len(orders_created_for_payment) * PAID_ORDER_PERCENTAGE)
     if to_mark_paid > 0:
-        print(f"\n  Marking {to_mark_paid} orders as paid...")
+        print(f"\n  Recording payments for {to_mark_paid} orders (POST /payments)...")
         for order_id, total_price, order_date in orders_created_for_payment[:to_mark_paid]:
             try:
                 pay_at = order_date + timedelta(hours=rng.uniform(1, 24))
-                client.update_order_payment(order_id, "paid", total_price, pay_at)
+                client.create_payment(order_id, total_price, pay_at)
             except Exception as e:
-                print(f"  [ERROR] Mark order {order_id} paid: {e}")
+                print(f"  [ERROR] Create payment for order {order_id}: {e}")
                 executor.stats["errors"] += 1
 
     # ---- Step 5: Summary ----
