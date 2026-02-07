@@ -636,6 +636,19 @@ class WorkflowExecutor:
             self.client.collect_sample(sample_id, sim_date)
             self.collected_samples.add(sample_id)
 
+    def _find_pending_sample_for_test(self, order_id: int, test_code: str) -> Optional[Dict]:
+        """Find the pending sample that contains the given test_code."""
+        samples = self.client.get_samples(order_id)
+        # Prefer a pending recollection sample containing this test
+        for s in samples:
+            if s.get("status") == "pending" and test_code in s.get("testCodes", []):
+                return s
+        # Fallback: any pending sample (older orders may have simpler structure)
+        for s in samples:
+            if s.get("status") == "pending":
+                return s
+        return None
+
     def _ensure_sample_collected(self, order_id: int, test_code: str, sim_date: datetime) -> None:
         """Re-collect the sample for a test if a shared-sample recollection reset it to PENDING.
 
@@ -754,20 +767,9 @@ class WorkflowExecutor:
             self.stats["tests_sample_reject"] += 1
             return
 
-        # Collect the new sample
+        # Collect the new sample (find the one containing this test)
         t += timedelta(hours=self.rng.uniform(4, 24))
-        samples = self.client.get_samples(order_id)
-        new_sample = None
-        for s in samples:
-            if s.get("status") == "pending" and s.get("isRecollection"):
-                new_sample = s
-                break
-        if not new_sample:
-            for s in samples:
-                if s.get("status") == "pending":
-                    new_sample = s
-                    break
-
+        new_sample = self._find_pending_sample_for_test(order_id, test_code)
         if new_sample:
             new_sid = new_sample["sampleId"]
             self.client.collect_sample(new_sid, t)
@@ -828,15 +830,10 @@ class WorkflowExecutor:
                 recollect_succeeded = False
                 break
 
-            # Collect the new sample
+            # Collect the new sample (find the one containing this test)
             t += timedelta(hours=self.rng.uniform(4, 12))
             try:
-                samples = self.client.get_samples(order_id)
-                new_sample = None
-                for s in samples:
-                    if s.get("status") == "pending":
-                        new_sample = s
-                        break
+                new_sample = self._find_pending_sample_for_test(order_id, test_code)
                 if new_sample:
                     new_sid = new_sample["sampleId"]
                     self.client.collect_sample(new_sid, t)
@@ -1020,45 +1017,68 @@ def simulate_history(
             # Determine "Pending" logic based on order age
             days_ago = (now - order_date).days
 
-            # Process each test in the order
+            # Assign destinies upfront for all tests, then enforce shared-sample constraints:
+            # Only ONE disruptive workflow (sample_rejection/escalation) per shared sample.
+            # This prevents re-collect on one test from disrupting another test on the same sample.
+            test_destinies: Dict[str, str] = {}
+            samples_with_disruptive: set = set()  # sample_ids that already have a disruptive workflow
+
             for test_code in selected_tests:
                 sample_id = test_to_sample.get(test_code)
                 if not sample_id:
                     continue
 
-                result_items = result_items_by_code.get(test_code, [])
-
-                # Apply pending/resolution rules:
-                # - Today/Yesterday (0-1 days): stop workflow early (leave pending)
-                # - 2-7 days: 50% chance of being pending at various stages
-                # - Older than 7 days: must be fully resolved
                 if days_ago <= 1:
-                    stop_at = rng.choice(["pending_collection", "pending_result", "pending_validation"])
-                    try:
-                        executor.run_pending_workflow(
-                            order_id, test_code, sample_id, result_items, order_date, stop_at
-                        )
-                    except Exception as e:
-                        print(f"  [ERROR] Pending workflow {order_id}/{test_code}: {e}")
-                        executor.stats["errors"] += 1
+                    test_destinies[test_code] = "pending_early"
                     continue
-
                 if days_ago <= 7 and rng.random() < 0.3:
-                    # 30% of tests from recent week are still pending
-                    stop_at = rng.choice(["pending_result", "pending_validation"])
-                    try:
-                        executor.run_pending_workflow(
-                            order_id, test_code, sample_id, result_items, order_date, stop_at
-                        )
-                    except Exception as e:
-                        print(f"  [ERROR] Pending workflow {order_id}/{test_code}: {e}")
-                        executor.stats["errors"] += 1
+                    test_destinies[test_code] = "pending_recent"
                     continue
 
                 destiny = pick_destiny(rng)
 
+                # If this is a disruptive workflow and the shared sample already has one,
+                # downgrade to tech_rejection (still interesting, but doesn't touch the sample)
+                if destiny in ("sample_rejection", "escalation"):
+                    if sample_id in samples_with_disruptive:
+                        destiny = "tech_rejection"
+                    else:
+                        samples_with_disruptive.add(sample_id)
+
+                test_destinies[test_code] = destiny
+
+            # Process tests in two passes:
+            # Pass 1: non-disruptive (normal, tech_rejection, pending) — these complete cleanly
+            # Pass 2: disruptive (sample_rejection, escalation) — may re-collect shared samples
+            pass1 = []
+            pass2 = []
+            for test_code in selected_tests:
+                destiny = test_destinies.get(test_code)
+                if not destiny:
+                    continue
+                if destiny in ("sample_rejection", "escalation"):
+                    pass2.append((test_code, destiny))
+                else:
+                    pass1.append((test_code, destiny))
+
+            for test_code, destiny in pass1 + pass2:
+                sample_id = test_to_sample.get(test_code)
+                if not sample_id:
+                    continue
+                result_items = result_items_by_code.get(test_code, [])
+
                 try:
-                    if destiny == "normal":
+                    if destiny == "pending_early":
+                        stop_at = rng.choice(["pending_collection", "pending_result", "pending_validation"])
+                        executor.run_pending_workflow(
+                            order_id, test_code, sample_id, result_items, order_date, stop_at
+                        )
+                    elif destiny == "pending_recent":
+                        stop_at = rng.choice(["pending_result", "pending_validation"])
+                        executor.run_pending_workflow(
+                            order_id, test_code, sample_id, result_items, order_date, stop_at
+                        )
+                    elif destiny == "normal":
                         executor.run_normal_workflow(
                             order_id, test_code, sample_id, result_items, order_date
                         )
