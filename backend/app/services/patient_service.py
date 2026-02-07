@@ -1,7 +1,7 @@
 """
 Patient business logic. Router delegates list/get/search/create/update to this service.
 """
-from datetime import datetime, timezone
+from app.utils.time_utils import get_now
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
@@ -104,7 +104,7 @@ class PatientService:
             medicalHistory=medical_history_data,
             affiliation=patient_data.affiliation.model_dump() if patient_data.affiliation else None,
             vitalSigns=patient_data.vitalSigns.model_dump() if patient_data.vitalSigns else None,
-            registrationDate=datetime.now(timezone.utc),
+            registrationDate=get_now(),
             createdBy=user_id,
             updatedBy=user_id,
         )

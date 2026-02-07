@@ -6,6 +6,8 @@ Ensures critical results are promptly communicated to ordering physicians.
 """
 from datetime import datetime, timezone
 from typing import Optional, List, Dict, Any
+
+from app.utils.time_utils import get_now
 from dataclasses import dataclass
 from sqlalchemy.orm import Session
 
@@ -93,7 +95,7 @@ class CriticalNotificationService:
         Returns:
             CriticalNotification object
         """
-        now = datetime.now(timezone.utc)
+        now = get_now()
 
         # Update OrderTest with notification info
         order_test.criticalNotificationSent = True
@@ -146,7 +148,7 @@ class CriticalNotificationService:
         if not order_test.criticalNotificationSent:
             return False
 
-        order_test.criticalAcknowledgedAt = datetime.now(timezone.utc)
+        order_test.criticalAcknowledgedAt = get_now()
         # Store acknowledgment info in the notification record
         # (criticalNotifiedTo already has the notification target)
 

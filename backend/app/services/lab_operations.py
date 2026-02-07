@@ -6,6 +6,8 @@ Coordinates state machine validation, audit logging, and business logic.
 """
 from datetime import datetime, timezone
 from typing import Tuple, List, Optional, Dict, Any
+
+from app.utils.time_utils import get_now
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
@@ -192,7 +194,7 @@ class LabOperationsService:
 
         # Update sample
         sample.status = SampleStatus.COLLECTED
-        sample.collectedAt = datetime.now(timezone.utc)
+        sample.collectedAt = get_now()
         sample.collectedBy = str(user_id)  # Convert to string as per model requirement
         sample.collectedVolume = collected_volume
         sample.actualContainerType = container_type
@@ -264,7 +266,7 @@ class LabOperationsService:
 
         # Create rejection record
         rejection_record = {
-            "rejectedAt": datetime.now(timezone.utc).isoformat(),
+            "rejectedAt": get_now().isoformat(),
             "rejectedBy": str(user_id),  # Convert to string as per schema requirement
             "rejectionReasons": rejection_reasons,
             "rejectionNotes": rejection_notes,
@@ -279,7 +281,7 @@ class LabOperationsService:
 
         # Update sample
         sample.status = SampleStatus.REJECTED
-        sample.rejectedAt = datetime.now(timezone.utc)
+        sample.rejectedAt = get_now()
         sample.rejectedBy = str(user_id)  # Convert to string as per schema requirement
         sample.rejectionReasons = rejection_reasons
         sample.rejectionNotes = rejection_notes
@@ -377,7 +379,7 @@ class LabOperationsService:
             recollectionReason=recollection_reason,
             recollectionAttempt=recollection_attempt,
             rejectionHistory=original_sample.rejectionHistory or [],
-            createdAt=datetime.now(timezone.utc),
+            createdAt=get_now(),
             createdBy=str(user_id),  # Convert to string as per model requirement
             updatedBy=str(user_id)  # Convert to string as per model requirement
         )
@@ -556,7 +558,7 @@ class LabOperationsService:
 
         # Update results
         order_test.results = results_serializable
-        order_test.resultEnteredAt = datetime.now(timezone.utc)
+        order_test.resultEnteredAt = get_now()
         order_test.enteredBy = str(user_id)  # Convert to string as per model requirement
         order_test.technicianNotes = technician_notes
         order_test.status = TestStatus.RESULTED
@@ -626,7 +628,7 @@ class LabOperationsService:
             raise LabOperationError(reason)
 
         # Update validation
-        order_test.resultValidatedAt = datetime.now(timezone.utc)
+        order_test.resultValidatedAt = get_now()
         order_test.validatedBy = str(user_id)  # Convert to string as per model requirement
         order_test.validationNotes = validation_notes
         order_test.status = TestStatus.VALIDATED
@@ -712,7 +714,7 @@ class LabOperationsService:
         if not can_validate:
             raise LabOperationError(reason)
 
-        order_test.resultValidatedAt = datetime.now(timezone.utc)
+        order_test.resultValidatedAt = get_now()
         order_test.validatedBy = str(user_id)
         order_test.validationNotes = validation_notes
         order_test.status = TestStatus.VALIDATED
@@ -745,7 +747,7 @@ class LabOperationsService:
         TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.SUPERSEDED)
 
         rejection_record = {
-            "rejectedAt": datetime.now(timezone.utc).isoformat(),
+            "rejectedAt": get_now().isoformat(),
             "rejectedBy": str(user_id),
             "rejectionReason": reason,
             "rejectionType": "authorize_retest"
@@ -755,7 +757,7 @@ class LabOperationsService:
         original_test.resultRejectionHistory.append(rejection_record)
         flag_modified(original_test, 'resultRejectionHistory')
 
-        original_test.resultValidatedAt = datetime.now(timezone.utc)
+        original_test.resultValidatedAt = get_now()
         original_test.validatedBy = str(user_id)
         original_test.validationNotes = reason
 
@@ -826,7 +828,7 @@ class LabOperationsService:
             raise LabOperationError(reject_reason)
 
         rejection_record = {
-            "rejectedAt": datetime.now(timezone.utc).isoformat(),
+            "rejectedAt": get_now().isoformat(),
             "rejectedBy": str(user_id),
             "rejectionReason": rejection_reason,
             "rejectionType": "re-collect"
@@ -838,7 +840,7 @@ class LabOperationsService:
 
         # Transition ESCALATED -> REJECTED before reject_and_recollect (which does REJECTED -> PENDING)
         rejection_notes = f"Final reject (escalation resolution): {rejection_reason}"
-        original_test.resultValidatedAt = datetime.now(timezone.utc)
+        original_test.resultValidatedAt = get_now()
         original_test.validatedBy = str(user_id)
         original_test.validationNotes = rejection_notes
         original_test.status = TestStatus.REJECTED

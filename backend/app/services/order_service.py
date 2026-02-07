@@ -4,6 +4,8 @@ Order business logic. Router delegates create/update/payment to this service.
 from datetime import datetime, timezone
 from typing import Any
 
+from app.utils.time_utils import get_now
+
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, selectinload, joinedload
 from sqlalchemy.exc import SQLAlchemyError
@@ -44,7 +46,7 @@ class OrderService:
 
         order = Order(
             patientId=order_data.patientId,
-            orderDate=datetime.now(timezone.utc),
+            orderDate=get_now(),
             totalPrice=total_price,
             paymentStatus=PaymentStatus.UNPAID,
             overallStatus=OrderStatus.ORDERED,
@@ -169,13 +171,13 @@ class OrderService:
 
         for field, value in update_data.items():
             setattr(order, field, value)
-        order.updatedAt = datetime.now(timezone.utc)
+        order.updatedAt = get_now()
 
         # Cascade priority change to all samples for this order (bulk update)
         if "priority" in update_data:
             self.db.query(Sample).filter(Sample.orderId == order_id).update({
                 Sample.priority: order.priority,
-                Sample.updatedAt: datetime.now(timezone.utc),
+                Sample.updatedAt: get_now(),
                 Sample.updatedBy: str(user_id)
             }, synchronize_session="fetch")
 
@@ -205,13 +207,13 @@ class OrderService:
                 invoiceId=None,
                 amount=amount_paid,
                 paymentMethod=PaymentMethod.CASH,
-                paidAt=datetime.now(timezone.utc),
+                paidAt=get_now(),
                 receivedBy=user_id,
                 receiptGenerated=False,
                 notes=None,
             )
             self.db.add(payment_record)
-        order.updatedAt = datetime.now(timezone.utc)
+        order.updatedAt = get_now()
         self.db.commit()
         self.db.refresh(order)
         return self._order_with_relations(order.orderId)

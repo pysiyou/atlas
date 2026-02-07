@@ -4,6 +4,8 @@ Handles creation of recollection samples - reusable from both sample rejection a
 """
 from datetime import datetime, timezone
 from sqlalchemy.orm import Session
+
+from app.utils.time_utils import get_now
 from sqlalchemy.orm.attributes import flag_modified
 from app.models.sample import Sample
 from app.models.order import OrderTest
@@ -44,7 +46,7 @@ def reject_sample_for_recollection(
     
     # Create sample rejection record
     sample_rejection_record = {
-        "rejectedAt": datetime.now(timezone.utc).isoformat(),
+        "rejectedAt": get_now().isoformat(),
         "rejectedBy": str(rejected_by),  # Convert to string as per schema requirement
         "rejectionReasons": rejection_reasons,
         "rejectionNotes": rejection_reason,
@@ -59,7 +61,7 @@ def reject_sample_for_recollection(
     
     # Update sample status to rejected
     sample.status = SampleStatus.REJECTED
-    sample.rejectedAt = datetime.now(timezone.utc)
+    sample.rejectedAt = get_now()
     sample.rejectedBy = str(rejected_by)  # Convert to string as per schema requirement
     sample.rejectionReasons = rejection_reasons
     sample.rejectionNotes = rejection_reason
@@ -130,7 +132,7 @@ def create_recollection_sample(
         rejectionHistory=original_sample.rejectionHistory or [],
         
         # Metadata
-        createdAt=datetime.now(timezone.utc),
+        createdAt=get_now(),
         createdBy=str(created_by),  # Convert to string as per model requirement
         updatedBy=str(created_by)  # Convert to string as per model requirement
     )

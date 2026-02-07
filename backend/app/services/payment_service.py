@@ -4,6 +4,8 @@ Payment business logic. Router delegates create to this service.
 from datetime import datetime, timezone
 from typing import Optional
 
+from app.utils.time_utils import get_now
+
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, joinedload, selectinload
 
@@ -70,7 +72,7 @@ class PaymentService:
             invoiceId=None,
             amount=payment_data.amount,
             paymentMethod=payment_data.paymentMethod,
-            paidAt=datetime.now(timezone.utc),
+            paidAt=get_now(),
             receivedBy=user_id,
             receiptGenerated=False,
             notes=payment_data.notes,

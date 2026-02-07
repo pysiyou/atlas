@@ -6,6 +6,8 @@ Used by LabOperationsService to keep lab_operations.py focused on orchestration.
 """
 from datetime import datetime, timezone
 from typing import Tuple, List, Optional, Callable
+
+from app.utils.time_utils import get_now
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
 from pydantic import BaseModel
@@ -163,7 +165,7 @@ class LabRejectionHandler:
         current_retest_number = original_test.retestNumber or 0
 
         rejection_record = {
-            "rejectedAt": datetime.now(timezone.utc).isoformat(),
+            "rejectedAt": get_now().isoformat(),
             "rejectedBy": str(user_id),
             "rejectionReason": rejection_reason,
             "rejectionType": "re-test"
@@ -173,7 +175,7 @@ class LabRejectionHandler:
         original_test.resultRejectionHistory.append(rejection_record)
         flag_modified(original_test, 'resultRejectionHistory')
 
-        original_test.resultValidatedAt = datetime.now(timezone.utc)
+        original_test.resultValidatedAt = get_now()
         original_test.validatedBy = str(user_id)
         original_test.validationNotes = rejection_reason
 
@@ -232,7 +234,7 @@ class LabRejectionHandler:
         TestStateMachine.validate_transition(TestStatus.RESULTED, TestStatus.ESCALATED)
 
         rejection_record = {
-            "rejectedAt": datetime.now(timezone.utc).isoformat(),
+            "rejectedAt": get_now().isoformat(),
             "rejectedBy": str(user_id),
             "rejectionReason": rejection_reason,
             "rejectionType": "escalate"
@@ -282,7 +284,7 @@ class LabRejectionHandler:
             raise LabOperationError(reason)
 
         rejection_record = {
-            "rejectedAt": datetime.now(timezone.utc).isoformat(),
+            "rejectedAt": get_now().isoformat(),
             "rejectedBy": str(user_id),
             "rejectionReason": rejection_reason,
             "rejectionType": "re-collect"
@@ -292,7 +294,7 @@ class LabRejectionHandler:
         original_test.resultRejectionHistory.append(rejection_record)
         flag_modified(original_test, 'resultRejectionHistory')
 
-        original_test.resultValidatedAt = datetime.now(timezone.utc)
+        original_test.resultValidatedAt = get_now()
         original_test.validatedBy = str(user_id)
         original_test.validationNotes = rejection_reason
 

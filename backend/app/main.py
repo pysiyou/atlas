@@ -9,6 +9,7 @@ from app.database import engine, Base
 from app.core.cache import get_redis, close_redis
 from app.middleware import CacheHeadersMiddleware
 from app.middleware.error_handlers import register_exception_handlers
+from app.middleware.simulation import SimulationTimeMiddleware, is_simulation_mode
 
 # Import routers
 from app.api.v1 import auth, patients, tests, orders, samples, results, users, payments, affiliations, critical_values, analyzer, audit
@@ -50,6 +51,10 @@ app.add_middleware(
 
 # HTTP caching headers middleware
 app.add_middleware(CacheHeadersMiddleware)
+
+# Simulation time middleware (only active when SIMULATION_MODE=true)
+if is_simulation_mode():
+    app.add_middleware(SimulationTimeMiddleware)
 
 # Register global exception handlers
 register_exception_handlers(app)
