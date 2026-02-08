@@ -42,7 +42,7 @@ export const orderAPI = {
    * Get all orders (requests up to backend max so tables can show full list)
    */
   async getAll(): Promise<Order[]> {
-    return apiClient.get<Order[]>('/orders', { limit: '1000' });
+    return apiClient.get<Order[]>('/orders', { limit: '10000' });
   },
 
   /**

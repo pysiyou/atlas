@@ -5,8 +5,8 @@ from typing import Annotated
 from fastapi import Query, Depends
 
 # Pagination defaults: list endpoints return full list up to MAX_PAGE_SIZE when no limit given
-DEFAULT_PAGE_SIZE = 1000
-MAX_PAGE_SIZE = 1000
+DEFAULT_PAGE_SIZE = 10000
+MAX_PAGE_SIZE = 10000
 
 
 def pagination_params(

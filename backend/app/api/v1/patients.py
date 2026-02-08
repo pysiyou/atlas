@@ -23,7 +23,7 @@ def search_patients(
     current_user: User = Depends(get_current_user)
 ):
     """Search patients by name, id, or phone. Returns list (no pagination)."""
-    return PatientService(db).search(q, limit=100)
+    return PatientService(db).search(q, limit=10000)
 
 
 @router.get("/patients")

@@ -382,7 +382,7 @@ class AuditService:
         self,
         user_id: int,
         operation_types: Optional[list[LabOperationType]] = None,
-        limit: int = 100
+        limit: int = 10000
     ) -> list[LabOperationLog]:
         """
         Get operations performed by a user.

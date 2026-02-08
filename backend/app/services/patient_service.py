@@ -39,7 +39,7 @@ class PatientService:
     def get_list(
         self,
         skip: int = 0,
-        limit: int = 100,
+        limit: int = 10000,
         search: str | None = None,
         paginated: bool = False,
     ) -> tuple[list[dict], int]:
@@ -59,7 +59,7 @@ class PatientService:
         data = [serialize_patient(p) for p in patients]
         return data, total
 
-    def search(self, q: str, limit: int = 100) -> list[dict]:
+    def search(self, q: str, limit: int = 10000) -> list[dict]:
         search_term = f"%{q.lower()}%"
         patients = (
             self.db.query(Patient)

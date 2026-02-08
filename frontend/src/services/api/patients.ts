@@ -23,7 +23,7 @@ export const patientAPI = {
    * Get all patients (requests up to backend max so tables can show full list)
    */
   async getAll(): Promise<Patient[]> {
-    return apiClient.get<Patient[]>('/patients', { limit: '1000' });
+    return apiClient.get<Patient[]>('/patients', { limit: '10000' });
   },
 
   /**

@@ -261,7 +261,7 @@ async def get_pending_samples(
     # In a real implementation, you'd filter by analyzer capabilities
     pending_tests = db.query(OrderTest).filter(
         OrderTest.status == TestStatus.SAMPLE_COLLECTED
-    ).limit(100).all()
+    ).limit(10000).all()
 
     results = []
     for test in pending_tests:

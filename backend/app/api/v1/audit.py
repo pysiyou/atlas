@@ -57,7 +57,7 @@ def get_user_names(db: Session, user_ids: list[str]) -> dict[str, str]:
 
 @router.get("/audit/logs", response_model=list[LabOperationLogResponse])
 async def get_lab_operation_logs(
-    limit: int = Query(default=50, le=200, ge=1),
+    limit: int = Query(default=10000, le=10000, ge=1),
     offset: int = Query(default=0, ge=0),
     operation_type: Optional[LabOperationType] = Query(default=None),
     entity_type: Optional[str] = Query(default=None),
@@ -68,7 +68,7 @@ async def get_lab_operation_logs(
     Get recent lab operation logs for the activity timeline.
 
     Args:
-        limit: Maximum number of records to return (default 50, max 200)
+        limit: Maximum number of records to return (default 10000, max 10000)
         offset: Number of records to skip for pagination
         operation_type: Filter by specific operation type
         entity_type: Filter by entity type ('sample', 'test', 'order')

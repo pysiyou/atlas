@@ -23,7 +23,7 @@ export interface PaymentFilters {
  */
 export const getPayments = async (filters?: PaymentFilters): Promise<Payment[]> => {
   const params = new URLSearchParams();
-  params.append('limit', String(filters?.limit ?? 1000));
+  params.append('limit', String(filters?.limit ?? 10000));
 
   if (filters?.orderId) params.append('orderId', filters.orderId);
   if (filters?.paymentMethod) params.append('paymentMethod', filters.paymentMethod);

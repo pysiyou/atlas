@@ -12,7 +12,7 @@ class PaginationMeta(BaseModel):
     """Pagination metadata."""
 
     page: int = Field(..., ge=1, description="Current page number (1-indexed)")
-    pageSize: int = Field(..., ge=1, le=1000, description="Number of items per page")
+    pageSize: int = Field(..., ge=1, le=10000, description="Number of items per page")
     total: int = Field(..., ge=0, description="Total number of items")
     totalPages: int = Field(..., ge=0, description="Total number of pages")
     hasNext: bool = Field(..., description="Whether there are more pages")
