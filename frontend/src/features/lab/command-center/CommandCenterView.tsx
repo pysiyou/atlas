@@ -15,6 +15,7 @@ import {
   ActivitiesTimeline,
   ActivityTrendChart,
   StackedBarChart,
+  DistributionPieChart,
 } from './components';
 import { ICONS } from '@/utils';
 
@@ -115,7 +116,18 @@ export const CommandCenterView: React.FC = () => {
             data={activityLoading ? [] : stackedBarData}
           />
         </div>
-        <div className={`${rowCellClass} flex flex-col min-h-0 p-2`} />
+        <div className={`${rowCellClass} flex flex-col items-stretch min-h-0 p-2 min-w-0`}>
+          <DistributionPieChart
+            title="Distribution by Category"
+            subTitle="this year"
+            data={[
+              { name: 'Hematology', value: 400 },
+              { name: 'Chemistry', value: 300 },
+              { name: 'Microbiology', value: 300 },
+              { name: 'Immunology', value: 200 },
+            ]}
+          />
+        </div>
       </div>
     </div>
   );
