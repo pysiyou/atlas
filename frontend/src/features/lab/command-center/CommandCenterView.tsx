@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { useCommandCenterRow1Metrics, useLabOperationLogs, useTestsReceivedAndValidatedByDay } from './hooks';
-import { CommandCenterMetricCard, ActivitiesTimeline, ActivityTrendChart } from './components';
+import { CommandCenterMetricCard, ActivitiesTimeline, ActivityTrendChart, SimpleBarChart } from './components';
 import { ICONS } from '@/utils';
 
 const rowCellClass =
@@ -77,7 +77,28 @@ export const CommandCenterView: React.FC = () => {
         className="min-h-0 overflow-hidden grid"
         style={{ gridTemplateColumns: '3fr 5fr' }}
       >
-        <div className={`${rowCellClass} flex flex-col min-h-0 p-2`} />
+        <div className={`${rowCellClass} flex flex-col min-h-0 p-2`}>
+          <SimpleBarChart
+            title="Activity by day"
+            subTitle="this year"
+            valueLabel="EUR"
+            valueFormatter={(val) => `€${val.toLocaleString()}`}
+            data={[
+              { label: 'Jan', value: 4500 },
+              { label: 'Feb', value: 3200 },
+              { label: 'Mar', value: 4100 },
+              { label: 'Apr', value: 4800 },
+              { label: 'May', value: 3500 },
+              { label: 'Jun', value: 4200 },
+              { label: 'Jul', value: 3800 },
+              { label: 'Aug', value: 3500 },
+              { label: 'Sep', value: 4100 },
+              { label: 'Oct', value: 3200 },
+              { label: 'Nov', value: 3800 },
+              { label: 'Dec', value: 4200 },
+            ]}
+          />
+        </div>
         <div className={`${rowCellClass} flex flex-col min-h-0 p-2`} />
       </div>
     </div>
