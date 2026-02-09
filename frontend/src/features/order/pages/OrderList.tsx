@@ -126,6 +126,7 @@ export const OrderList: React.FC = () => {
       headerActions={
         <Button
           variant="add"
+          size="sm"
           onClick={() => {
             openModal(ModalType.NEW_ORDER, {});
           }}

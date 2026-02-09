@@ -60,26 +60,26 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   const getPageButtonClasses = (isActive: boolean) => {
     const base =
-      'min-w-[32px] h-8 px-2.5 text-xs font-medium rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-panel';
+      'min-w-[26px] h-6 px-1.5 text-[11px] font-medium rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-panel';
     return isActive
       ? `${base} bg-brand text-on-brand`
       : `${base} text-fg border border-stroke bg-panel hover:border-stroke-hover hover:bg-panel-hover`;
   };
 
   const navButtonClass =
-    'w-8 h-8 flex items-center justify-center rounded-md border border-transparent text-fg-muted transition-colors hover:bg-panel-hover hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-panel disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-fg-muted';
+    'w-6 h-6 flex items-center justify-center rounded border border-transparent text-fg-muted transition-colors hover:bg-panel-hover hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-panel disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-fg-muted';
 
   return (
-    <div className="flex items-center justify-between gap-4 px-4 py-3 border-t border-stroke bg-panel">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 whitespace-nowrap">
-          <span className="text-xs text-fg-muted">Rows per page</span>
+    <div className="flex items-center justify-between gap-3 px-3 py-2 border-t border-stroke bg-panel">
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 whitespace-nowrap">
+          <span className="text-[11px] text-fg-muted">Rows per page</span>
           <select
             value={pageSize}
             onChange={e => onPageSizeChange(Number(e.target.value))}
             className={cn(
               inputBase,
-              'cursor-pointer h-8 w-14 pl-2.5 pr-7 text-center appearance-none'
+              'cursor-pointer h-6 w-12 min-h-0 pt-0.5 pb-0 leading-5 pl-5 pr-5 text-center text-xxs appearance-none'
             )}
             aria-label="Rows per page"
           >
@@ -90,7 +90,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             ))}
           </select>
         </div>
-        <span className="text-xs text-fg-muted tabular-nums">
+        <span className="text-[11px] text-fg-muted tabular-nums">
           {startItem}–{endItem} of {totalItems}
         </span>
       </div>
@@ -103,14 +103,14 @@ export const Pagination: React.FC<PaginationProps> = ({
           className={navButtonClass}
           aria-label="Previous page"
         >
-          <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
+          <Icon name={ICONS.actions.chevronLeft} className="w-3.5 h-3.5" />
         </button>
 
         <div className="flex items-center gap-0.5 mx-0.5">
           {pageNumbers.map((page, index) => (
             <React.Fragment key={index}>
               {page === '...' ? (
-                <span className="min-w-[24px] text-center text-xs text-fg-disabled" aria-hidden>
+                <span className="min-w-[20px] text-center text-[11px] text-fg-disabled" aria-hidden>
                   …
                 </span>
               ) : (
@@ -135,7 +135,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           className={navButtonClass}
           aria-label="Next page"
         >
-          <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
+          <Icon name={ICONS.actions.chevronRight} className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>
