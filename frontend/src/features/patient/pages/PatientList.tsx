@@ -133,7 +133,7 @@ export const PatientList: React.FC = () => {
         onRowClick={(patient: Patient) => navigate(`/patients/${patient.id}`)}
         title="Patients"
         headerActions={
-          <Button variant="add" onClick={() => setIsCreateModalOpen(true)}>
+          <Button variant="add" size="sm" onClick={() => setIsCreateModalOpen(true)}>
             New Patient
           </Button>
         }
