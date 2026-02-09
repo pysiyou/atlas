@@ -215,6 +215,7 @@
   --chart-danger: var(--primitive-danger-500);
   --chart-accent: var(--primitive-info-500);
   --chart-accent-muted: var(--primitive-info-400);
+  --chart-warning: var(--primitive-warning-500);
 
   /* ═══════════════════════════════════════════════════════════════════
      OVERLAY
