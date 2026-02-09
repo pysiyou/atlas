@@ -3,40 +3,17 @@
  * Row 1: Sampling (X of total), Result entry, Validation. Totals = completed today + still pending; trend = count-based (e.g. "X more samples today").
  */
 
-import React, { useMemo } from 'react';
-import { useWorkflowStateCounts, useCommandCenterRow1Metrics, useLabOperationLogs } from './hooks';
-import { VennBubbles, CommandCenterMetricCard, ActivitiesTimeline } from './components';
-import type { VennIntersection } from './components';
-import { createLabSegments } from './utils';
+import React from 'react';
+import { useCommandCenterRow1Metrics, useLabOperationLogs } from './hooks';
+import { CommandCenterMetricCard, ActivitiesTimeline } from './components';
 import { ICONS } from '@/utils';
 
 const rowCellClass =
   'min-h-0 overflow-hidden border-stroke flex items-center justify-center border-r last:border-r-0';
 
 export const CommandCenterView: React.FC = () => {
-  const {
-    samplingPct,
-    entryPct,
-    validationPct,
-    samplingEntryPct,
-    entryValidationPct,
-    samplingValidationPct,
-    isLoading,
-  } = useWorkflowStateCounts();
-
   const row1 = useCommandCenterRow1Metrics();
   const { logs, isLoading: logsLoading } = useLabOperationLogs({ limit: 50, hoursBack: 24 });
-
-  const segments = useMemo(
-    () => createLabSegments(samplingPct, entryPct, validationPct),
-    [samplingPct, entryPct, validationPct]
-  );
-
-  const intersections: VennIntersection[] = useMemo(() => [
-    { segmentIds: ['sampling', 'entry'], value: samplingEntryPct },
-    { segmentIds: ['entry', 'validation'], value: entryValidationPct },
-    { segmentIds: ['sampling', 'validation'], value: samplingValidationPct },
-  ], [samplingEntryPct, entryValidationPct, samplingValidationPct]);
 
   return (
     <div
@@ -80,13 +57,8 @@ export const CommandCenterView: React.FC = () => {
       >
         <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2`} />
         <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2 min-h-0`}>
-          <div className="flex-1 min-h-0 min-w-0 flex flex-col ">
-            <VennBubbles
-              segments={segments}
-              intersections={intersections}
-              isLoading={isLoading}
-              emptyMessage="No operations in progress"
-            />
+          <div className="flex-1 min-h-0 min-w-0 flex flex-col">
+            <ActivitiesTimeline logs={logs} isLoading={logsLoading} className="w-full" />
           </div>
         </div>
       </div>
@@ -95,9 +67,7 @@ export const CommandCenterView: React.FC = () => {
         className="min-h-0 overflow-hidden grid"
         style={{ gridTemplateColumns: '3fr 5fr' }}
       >
-        <div className={`${rowCellClass} flex flex-col items-start justify-start min-h-0 w-full p-2`}>
-          <ActivitiesTimeline logs={logs} isLoading={logsLoading} className="w-full" />
-        </div>
+        <div className={`${rowCellClass} flex flex-col min-h-0 p-2`} />
         <div className={`${rowCellClass} flex flex-col min-h-0 p-2`} />
       </div>
     </div>
