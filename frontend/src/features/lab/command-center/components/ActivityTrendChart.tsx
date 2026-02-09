@@ -7,7 +7,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from 'recharts';
 
 /** Single series: date + value. Dual series: date + received + validated. */
@@ -59,28 +58,56 @@ const CustomTooltip = ({
   dualSeries,
 }: CustomTooltipProps) => {
   if (!active || !payload?.length) return null;
+
+  if (!dualSeries) {
+    const value = payload[0].value ?? 0;
+    return (
+      <div
+        className="px-3 py-2 rounded shadow-lg text-sm min-w-[100px]"
+        style={{
+          backgroundColor: TOOLTIP_BG,
+          border: `1px solid ${TOOLTIP_STROKE}`,
+          color: TOOLTIP_FG,
+        }}
+      >
+        <p className="text-xs font-normal mb-1" style={{ color: TOOLTIP_FG_MUTED }}>{label}</p>
+        <p className="font-bold text-base mt-0.5">{value} <span className="text-xs font-normal text-fg-subtle">{valueLabel}</span></p>
+      </div>
+    );
+  }
+
+  const received = payload.find((p) => p.dataKey === 'received')?.value ?? 0;
+  const validated = payload.find((p) => p.dataKey === 'validated')?.value ?? 0;
+  const gap = received - validated;
+  const items: { dataKey: string; name: string; value: number; color: string }[] = [
+    { dataKey: 'received', name: 'Received', value: received, color: CHART_ACCENT },
+    { dataKey: 'validated', name: 'Validated', value: validated, color: CHART_SUCCESS },
+  ];
+
   return (
     <div
-      className="px-3 py-2 rounded-lg shadow-lg text-sm min-w-[120px]"
+      className="px-3 py-2 rounded shadow-lg text-sm min-w-[120px]"
       style={{
         backgroundColor: TOOLTIP_BG,
         border: `1px solid ${TOOLTIP_STROKE}`,
         color: TOOLTIP_FG,
       }}
     >
-      <p className="text-xs font-normal mb-1" style={{ color: TOOLTIP_FG_MUTED }}>{label}</p>
-      {dualSeries ? (
-        <>
-          <p className="font-medium" style={{ color: CHART_ACCENT }}>Received: {payload.find((p) => p.dataKey === 'received')?.value ?? 0}</p>
-          <p className="font-medium" style={{ color: CHART_SUCCESS }}>Validated: {payload.find((p) => p.dataKey === 'validated')?.value ?? 0}</p>
-          <p className="text-xs mt-1" style={{ color: TOOLTIP_FG_MUTED }}>
-            Gap: {(payload.find((p) => p.dataKey === 'received')?.value ?? 0) -
-              (payload.find((p) => p.dataKey === 'validated')?.value ?? 0)}
-          </p>
-        </>
-      ) : (
-        <p className="font-bold text-base mt-0.5">{payload[0].value} {valueLabel}</p>
-      )}
+      <p className="text-xs font-normal mb-2" style={{ color: TOOLTIP_FG_MUTED }}>{label}</p>
+      <ul className="space-y-1">
+        {items.map((p) => (
+          <li key={p.dataKey} className="flex items-center justify-between gap-3">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: p.color }} />
+              <span className="text-xs">{p.name}</span>
+            </span>
+            <span className="font-medium text-sm">{p.value}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="text-xs font-medium mt-2 pt-2 border-t border-stroke">
+        Gap: {gap} <span className="text-fg-subtle font-normal">{valueLabel}</span>
+      </p>
     </div>
   );
 };
@@ -152,12 +179,6 @@ export const ActivityTrendChart: React.FC<ActivityTrendChartProps> = ({
             />
             {dual ? (
               <>
-                <Legend
-                  wrapperStyle={{ fontSize: 11 }}
-                  formatter={(value) => <span style={{ color: 'var(--fg-subtle)' }}>{value}</span>}
-                  iconType="circle"
-                  iconSize={8}
-                />
                 <Area
                   type="monotone"
                   dataKey="validated"
