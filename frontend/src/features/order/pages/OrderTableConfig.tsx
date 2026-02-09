@@ -1,9 +1,3 @@
-/**
- * Order Table Configuration
- *
- * Multi-view table configuration for order list.
- * Defines separate column sets for full table, compact table, and mobile card view.
- */
 
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge } from '@/shared/ui';

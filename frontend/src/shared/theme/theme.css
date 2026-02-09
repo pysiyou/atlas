@@ -628,6 +628,35 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+   Filter chip (modal date badges, quick filters, active badges)
+   ───────────────────────────────────────────────────────────────────────── */
+
+.filter-chip {
+  background-color: var(--panel-hover);
+  border: 1px solid var(--stroke);
+  color: var(--fg-muted);
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.filter-chip:hover {
+  background-color: var(--panel-selected);
+  border-color: var(--stroke-hover);
+  color: var(--fg);
+}
+
+.filter-chip--active {
+  background-color: var(--brand-muted);
+  border-color: var(--brand);
+  color: var(--brand-fg);
+}
+
+.filter-chip--active:hover {
+  background-color: var(--brand-muted);
+  border-color: var(--brand-hover);
+  color: var(--brand-fg);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
    Dark theme: inputs default to theme text color
    ───────────────────────────────────────────────────────────────────────── */
 
