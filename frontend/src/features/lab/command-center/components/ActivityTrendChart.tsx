@@ -38,14 +38,26 @@ function isDualSeries(data: ActivityTrendDataPoint[]): data is { date: string; r
   return data.length > 0 && 'received' in data[0];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface TooltipPayloadItem {
+  dataKey: string;
+  value?: number;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: readonly TooltipPayloadItem[];
+  label?: string | number;
+  valueLabel?: string;
+  dualSeries?: boolean;
+}
+
 const CustomTooltip = ({
   active,
   payload,
   label,
   valueLabel = 'activities',
   dualSeries,
-}: any) => {
+}: CustomTooltipProps) => {
   if (!active || !payload?.length) return null;
   return (
     <div
@@ -59,11 +71,11 @@ const CustomTooltip = ({
       <p className="text-xs font-normal mb-1" style={{ color: TOOLTIP_FG_MUTED }}>{label}</p>
       {dualSeries ? (
         <>
-          <p className="font-medium" style={{ color: CHART_ACCENT }}>Received: {payload.find((p: { dataKey: string }) => p.dataKey === 'received')?.value ?? 0}</p>
-          <p className="font-medium" style={{ color: CHART_SUCCESS }}>Validated: {payload.find((p: { dataKey: string }) => p.dataKey === 'validated')?.value ?? 0}</p>
+          <p className="font-medium" style={{ color: CHART_ACCENT }}>Received: {payload.find((p) => p.dataKey === 'received')?.value ?? 0}</p>
+          <p className="font-medium" style={{ color: CHART_SUCCESS }}>Validated: {payload.find((p) => p.dataKey === 'validated')?.value ?? 0}</p>
           <p className="text-xs mt-1" style={{ color: TOOLTIP_FG_MUTED }}>
-            Gap: {(payload.find((p: { dataKey: string }) => p.dataKey === 'received')?.value ?? 0) -
-              (payload.find((p: { dataKey: string }) => p.dataKey === 'validated')?.value ?? 0)}
+            Gap: {(payload.find((p) => p.dataKey === 'received')?.value ?? 0) -
+              (payload.find((p) => p.dataKey === 'validated')?.value ?? 0)}
           </p>
         </>
       ) : (
