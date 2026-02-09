@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { useCommandCenterRow1Metrics, useLabOperationLogs } from './hooks';
-import { CommandCenterMetricCard, ActivitiesTimeline } from './components';
+import { CommandCenterMetricCard, ActivitiesTimeline, ActivityTrendChart } from './components';
 import { ICONS } from '@/utils';
 
 const rowCellClass =
@@ -55,7 +55,24 @@ export const CommandCenterView: React.FC = () => {
         className="min-h-0 overflow-hidden border-b border-stroke grid"
         style={{ gridTemplateColumns: '2fr 1fr' }}
       >
-        <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2`} />
+        <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2`}>
+          <ActivityTrendChart 
+            title="Activity Trend"
+            trendPercentage={12}
+            data={[
+              { date: '1/01', value: 120 },
+              { date: '2/01', value: 132 },
+              { date: '3/01', value: 101 },
+              { date: '4/01', value: 134 },
+              { date: '5/01', value: 190 },
+              { date: '6/01', value: 120 },
+              { date: '7/01', value: 230 },
+              { date: '8/01', value: 101 },
+              { date: '9/01', value: 134 },
+              { date: '10/01', value: 190 },
+            ]}
+          />
+        </div>
         <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2 min-h-0`}>
           <div className="flex-1 min-h-0 min-w-0 flex flex-col">
             <ActivitiesTimeline logs={logs} isLoading={logsLoading} className="w-full" />
