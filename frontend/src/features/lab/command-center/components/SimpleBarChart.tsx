@@ -61,23 +61,23 @@ export const SimpleBarChart: React.FC<SimpleBarChartProps> = ({
   valueFormatter,
 }) => {
   return (
-    <div className={`flex flex-col h-full bg-panel rounded overflow-hidden shadow-sm ${className}`}>
-      <div className="px-4 pt-4 pb-2 flex flex-row items-center justify-between">
-        <div className="flex items-baseline gap-2">
-          <h3 className="text-base font-medium tracking-tight text-fg">
+    <div className={`flex flex-col h-full w-full min-w-0 min-h-0 bg-panel rounded overflow-hidden shadow-sm ${className}`}>
+      <div className="px-4 pt-4 pb-2 flex flex-row items-center justify-between shrink-0">
+        <div className="flex items-baseline gap-2 min-w-0">
+          <h3 className="text-base font-medium tracking-tight text-fg truncate">
             {title}
           </h3>
           {subTitle && (
-            <span className="text-fg-subtle text-xs tracking-wider before:content-['·'] before:mr-2">
+            <span className="text-fg-subtle text-xs tracking-wider shrink-0 before:content-['·'] before:mr-2">
               {subTitle}
             </span>
           )}
         </div>
-        {/* Optional Menu Icon */}
       </div>
 
-      <div className="flex-1 min-h-0 relative w-full">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="flex-1 min-h-0 min-w-0 relative" style={{ width: '100%' }}>
+        <div className="absolute inset-0">
+          <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
             margin={{ top: 12, right: 8, left: 4, bottom: 4 }}
@@ -88,7 +88,7 @@ export const SimpleBarChart: React.FC<SimpleBarChartProps> = ({
               axisLine={{ stroke: CHART_GRID }}
               tickLine={false}
               tick={{ fontSize: 11, fill: CHART_AXIS }}
-              interval={0}
+              interval="preserveStartEnd"
               dy={6}
             />
             <YAxis
@@ -96,7 +96,7 @@ export const SimpleBarChart: React.FC<SimpleBarChartProps> = ({
               tickLine={false}
               tick={{ fontSize: 11, fill: CHART_AXIS }}
               width={40}
-              tickFormatter={(value) => 
+              tickFormatter={(value) =>
                 new Intl.NumberFormat('en-US', {
                   notation: 'compact',
                   maximumFractionDigits: 1,
@@ -111,10 +111,10 @@ export const SimpleBarChart: React.FC<SimpleBarChartProps> = ({
               dataKey="value"
               fill={CHART_BRAND}
               radius={[4, 4, 0, 0]}
-              barSize={32}
             />
           </BarChart>
-        </ResponsiveContainer>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );
