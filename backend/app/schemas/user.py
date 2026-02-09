@@ -16,7 +16,6 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
-    createdAt: datetime | None = None
 
 
 class UserUpdate(BaseModel):

@@ -6,18 +6,18 @@
 
 /** Primary ID cell: Patient ID, Order ID, Test ID, Code in table cells */
 export const DATA_ID_PRIMARY =
-  'text-xs text-brand font-mono truncate block';
+  'text-xs text-primary font-mono truncate block';
 
 /** Primary ID inline (e.g. inside flex); same as primary but no block */
 export const DATA_ID_PRIMARY_INLINE =
-  'text-xs text-brand font-mono truncate';
+  'text-xs text-primary font-mono truncate';
 
 /** Primary ID when rendered as a clickable control (e.g. button); add hover:underline only */
 export const DATA_ID_PRIMARY_CLICKABLE =
-  'text-xs text-brand font-mono hover:underline truncate block max-w-full';
+  'text-xs text-primary font-mono hover:underline truncate block max-w-full';
 
 /** Secondary ID under a name (e.g. patient ID under patient name, test code under test name) */
-export const DATA_ID_SECONDARY = 'text-xxs text-brand truncate font-mono';
+export const DATA_ID_SECONDARY = 'text-xxs text-fg-subtle  truncate font-mono';
 
 /** Detail row label: consistent scale for field labels in DetailField, InfoField, DetailsTable */
 export const DETAIL_LABEL = 'text-xs text-fg-subtle';

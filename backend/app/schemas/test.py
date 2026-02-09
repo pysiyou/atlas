@@ -36,14 +36,11 @@ class TestCreate(TestBase):
     methodology: str | None = None
     confidence: str | None = None
     notes: str | None = None
-    createdAt: datetime | None = None
-    updatedAt: datetime | None = None
 
 
 class TestUpdate(BaseModel):
     price: float | None = None
     isActive: bool | None = None
-    updatedAt: datetime | None = None
 
 
 class TestResponse(TestBase):

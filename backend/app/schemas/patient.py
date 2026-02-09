@@ -135,10 +135,6 @@ class PatientCreate(PatientBase):
     """Schema for creating a new patient."""
     # Allow partial affiliation input (will be normalized in validator)
     affiliation: Affiliation | AffiliationInput | None = None
-    # Optional date overrides (frontend can set; otherwise server uses get_now()/defaults)
-    registrationDate: datetime | None = None
-    createdAt: datetime | None = None
-    updatedAt: datetime | None = None
 
     @model_validator(mode='before')
     @classmethod
@@ -205,7 +201,6 @@ class PatientUpdate(BaseModel):
     medicalHistory: MedicalHistory | None = None
     affiliation: Affiliation | AffiliationInput | None = None
     vitalSigns: VitalSigns | None = None
-    updatedAt: datetime | None = None
 
     @model_validator(mode='before')
     @classmethod

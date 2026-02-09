@@ -4,8 +4,6 @@ Order business logic. Router delegates create/update/payment to this service.
 from datetime import datetime, timezone
 from typing import Any
 
-from app.utils.time_utils import get_now
-
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, selectinload, joinedload
 from sqlalchemy.exc import SQLAlchemyError
@@ -44,10 +42,9 @@ class OrderService:
             total_price += test.price
             test_entries.append((test.code, test.price))
 
-        order_date = order_data.orderDate if order_data.orderDate is not None else get_now()
         order = Order(
             patientId=order_data.patientId,
-            orderDate=order_date,
+            orderDate=datetime.now(timezone.utc),
             totalPrice=total_price,
             paymentStatus=PaymentStatus.UNPAID,
             overallStatus=OrderStatus.ORDERED,
@@ -58,10 +55,6 @@ class OrderService:
             patientPrepInstructions=order_data.patientPrepInstructions,
             createdBy=user_id,
         )
-        if order_data.createdAt is not None:
-            order.createdAt = order_data.createdAt
-        if order_data.updatedAt is not None:
-            order.updatedAt = order_data.updatedAt
         try:
             self.db.add(order)
             self.db.flush()
@@ -176,14 +169,13 @@ class OrderService:
 
         for field, value in update_data.items():
             setattr(order, field, value)
-        if order_data.updatedAt is None:
-            order.updatedAt = get_now()
+        order.updatedAt = datetime.now(timezone.utc)
 
         # Cascade priority change to all samples for this order (bulk update)
         if "priority" in update_data:
             self.db.query(Sample).filter(Sample.orderId == order_id).update({
                 Sample.priority: order.priority,
-                Sample.updatedAt: get_now(),
+                Sample.updatedAt: datetime.now(timezone.utc),
                 Sample.updatedBy: str(user_id)
             }, synchronize_session="fetch")
 
@@ -213,14 +205,14 @@ class OrderService:
                 invoiceId=None,
                 amount=amount_paid,
                 paymentMethod=PaymentMethod.CASH,
-                paidAt=get_now(),
+                paidAt=datetime.now(timezone.utc),
                 receivedBy=str(user_id),
                 receiptGenerated=False,
                 notes="",
             )
             self.db.add(payment_record)
-        # updatedAt left as set by client if provided via order update; else already get_now() in caller if needed
-        order.updatedAt = get_now()
+        # updatedAt left as set by client if provided via order update; else already datetime.now(timezone.utc) in caller if needed
+        order.updatedAt = datetime.now(timezone.utc)
         self.db.commit()
         self.db.refresh(order)
         return self._order_with_relations(order.orderId)

@@ -7,7 +7,6 @@ Provides a complete audit trail for regulatory requirements.
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 
-from app.utils.time_utils import get_now
 from sqlalchemy.orm import Session
 from app.models.lab_audit import LabOperationLog
 from app.schemas.enums import LabOperationType
@@ -56,7 +55,7 @@ class AuditService:
             entityType=entity_type,
             entityId=entity_id,
             performedBy=str(user_id),
-            performedAt=get_now(),
+            performedAt=datetime.now(timezone.utc),
             beforeState=before_state,
             afterState=after_state,
             operationData=metadata,

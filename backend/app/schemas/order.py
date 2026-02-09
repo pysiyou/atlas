@@ -97,9 +97,6 @@ class OrderCreate(BaseModel):
     clinicalNotes: str | None = Field(None, max_length=2000)
     specialInstructions: list[str] | None = None
     patientPrepInstructions: str | None = Field(None, max_length=1000)
-    orderDate: datetime | None = None
-    createdAt: datetime | None = None
-    updatedAt: datetime | None = None
 
     @field_validator('tests')
     @classmethod
@@ -117,9 +114,6 @@ class OrderUpdate(BaseModel):
   clinicalNotes: str | None = None
   specialInstructions: list[str] | None = None
   tests: list[OrderTestCreate] | None = None  # Optional list of tests to update (add/remove)
-  orderDate: datetime | None = None
-  createdAt: datetime | None = None
-  updatedAt: datetime | None = None
 
 
 class OrderResponse(BaseModel):

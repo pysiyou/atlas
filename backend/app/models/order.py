@@ -59,7 +59,7 @@ class OrderTest(Base):
     priceAtOrder = Column("price_at_order", Float, nullable=False)  # Snapshot for billing
 
     # Sample linkage
-    sampleId = Column("sample_id", Integer, nullable=True)  # Links to Sample
+    sampleId = Column("sample_id", Integer, ForeignKey("samples.sample_id", ondelete="SET NULL"), nullable=True, index=True)
 
     # Results (JSON)
     results = Column(JSON, nullable=True)  # Record<string, TestResult>
