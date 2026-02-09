@@ -8,9 +8,8 @@ import { Popover } from '@/shared/ui';
 import { Icon, type IconName } from '@/shared/ui';
 import { Badge } from '@/shared/ui';
 import { inputTrigger, inputTriggerOpen } from '@/shared/ui/forms/inputStyles';
-import { cn } from '@/utils';
+import { cn, capitalizeLabel, ICONS } from '@/utils';
 import type { SingleSelectFilterControl } from '../types';
-import { ICONS } from '@/utils';
 
 /**
  * Props for SingleSelectControl component
@@ -75,7 +74,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
 
     return (
       <Badge variant={selectedOption.color || 'default'} size="xs">
-        {selectedOption.label.toUpperCase()}
+        {capitalizeLabel(selectedOption.label)}
       </Badge>
     );
   };
@@ -146,7 +145,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
 
                   {/* Badge */}
                   <Badge variant={option.color || 'default'} size="sm">
-                    {option.label.toUpperCase()}
+                    {capitalizeLabel(option.label)}
                   </Badge>
                 </button>
               );

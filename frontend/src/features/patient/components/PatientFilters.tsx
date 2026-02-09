@@ -4,10 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Icon } from '@/shared/ui';
-import { Button } from '@/shared/ui';
-import { Badge } from '@/shared/ui';
-import { Modal } from '@/shared/ui';
+import { Icon, Button, Badge, Modal, FooterInfo } from '@/shared/ui';
 import { MultiSelectFilter } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
 import { AgeFilter } from './AgeFilter';
@@ -408,26 +405,29 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
 
             {/* Footer with Filter Button */}
             <div className="px-5 py-4 border-t border-stroke bg-panel shrink-0">
-              {activeFilterCount > 0 && (
-                <button
-                  onClick={() => {
-                    onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX]);
-                    onSexFiltersChange([]);
-                    onAffiliationStatusFiltersChange([]);
-                  }}
-                  className="w-full mb-3 text-sm text-fg-subtle hover:text-fg-muted transition-colors"
-                >
-                  Clear all filters
-                </button>
-              )}
-              <Button
-                variant="primary"
-                onClick={() => setIsModalOpen(false)}
-                showIcon={false}
-                fullWidth
-              >
-                Filter
-              </Button>
+              <div className="flex items-center justify-between gap-3">
+                <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX]);
+                      onSexFiltersChange([]);
+                      onAffiliationStatusFiltersChange([]);
+                    }}
+                    showIcon={false}
+                  >
+                    Reset
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => setIsModalOpen(false)}
+                    showIcon={false}
+                  >
+                    Filter
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </Modal>

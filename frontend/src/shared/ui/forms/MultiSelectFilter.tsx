@@ -14,8 +14,7 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { Popover } from '../overlay/Popover';
-import { cn } from '@/utils';
-import { ICONS } from '@/utils';
+import { cn, capitalizeLabel, ICONS } from '@/utils';
 import { Badge } from '../display/Badge';
 import { Icon, type IconName } from '../display/Icon';
 import { inputTrigger, inputTriggerOpen } from './inputStyles';
@@ -103,7 +102,7 @@ const ListItem: React.FC<{
 
       {/* Badge */}
       <Badge variant={option.color || 'default'} size="sm">
-        {option.label.toUpperCase()}
+        {capitalizeLabel(option.label)}
       </Badge>
     </label>
   );
@@ -187,7 +186,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       // Show badge for single selection
       return (
         <Badge variant={singleSelectedOption.color || 'default'} size="xs">
-          {singleSelectedOption.label.toUpperCase()}
+          {capitalizeLabel(singleSelectedOption.label)}
         </Badge>
       );
     }

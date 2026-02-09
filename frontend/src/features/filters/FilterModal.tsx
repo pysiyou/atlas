@@ -8,10 +8,10 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Modal, CheckboxList, Icon, FooterInfo, Button } from '@/shared/ui';
-import { ICONS } from '@/utils';
-import { cn } from '@/utils';
+import { ICONS, capitalizeLabel, cn } from '@/utils';
 import { inputContainerBase, inputInner, inputText } from '@/shared/ui/forms/inputStyles';
 import { QuickFilters } from './QuickFilters';
+import { DatePresetBadges } from './DatePresetBadges';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
 
 /**
@@ -173,50 +173,6 @@ const ModalPriceSlider: React.FC<{
   );
 };
 
-import { DATE_PRESETS, getDateRangeFromPreset, getActivePresetId, type DatePreset } from '@/utils/dateHelpers';
-
-type DatePresetId = DatePreset;
-
-/**
- * Modal Date Badges Component
- * Badge-style date range selector for modal
- */
-const ModalDateBadges: React.FC<{
-  value: [Date, Date] | null;
-  onChange: (value: [Date, Date] | null) => void;
-}> = ({ value, onChange }) => {
-  const activePresetId = getActivePresetId(value);
-
-  const handlePresetClick = (presetId: DatePresetId) => {
-    if (activePresetId === presetId) {
-      onChange(null);
-    } else {
-      onChange(getDateRangeFromPreset(presetId));
-    }
-  };
-
-  return (
-    <div className="flex flex-wrap gap-2">
-      {DATE_PRESETS.map(preset => {
-        const isActive = activePresetId === preset.id;
-        return (
-          <button
-            key={preset.id}
-            onClick={() => handlePresetClick(preset.id)}
-            className={cn(
-              'px-2 py-1 text-xxs font-medium rounded cursor-pointer',
-              'filter-chip',
-              isActive && 'filter-chip--active'
-            )}
-          >
-            {preset.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-};
-
 /**
  * Modal Radio List Component
  * Radio button list for single-select in modal
@@ -264,7 +220,7 @@ const ModalRadioList: React.FC<{
               'text-sm transition-colors',
               isSelected ? 'text-fg' : 'text-fg-muted group-hover:text-fg'
             )}>
-              {option.label}
+              {capitalizeLabel(option.label)}
             </span>
           </label>
         );
@@ -289,7 +245,6 @@ export const FilterModal: React.FC<FilterModalProps> = ({
   config,
   filters,
   setFilter,
-  activeBadges,
   onClearAll,
   activePresetId,
   onPresetClick,
@@ -351,7 +306,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
 
       case 'dateRange':
         return (
-          <ModalDateBadges
+          <DatePresetBadges
             value={(filterValue as [Date, Date] | null) || null}
             onChange={value => setFilter(control.key, value)}
           />
@@ -422,19 +377,16 @@ export const FilterModal: React.FC<FilterModalProps> = ({
 
         {/* Footer with Filter Button */}
         <div className="px-5 py-4 border-t border-stroke bg-panel shrink-0">
-          {activeBadges.length > 0 && (
-            <button
-              onClick={onClearAll}
-              className="w-full mb-3 text-sm text-fg-subtle hover:text-fg-muted transition-colors"
-            >
-              Clear all filters
-            </button>
-          )}
           <div className="flex items-center justify-between gap-3">
             <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
-            <Button variant="primary" onClick={handleApplyFilters} showIcon={false}>
-              Filter
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={onClearAll} showIcon={false}>
+                Reset
+              </Button>
+              <Button variant="primary" onClick={handleApplyFilters} showIcon={false}>
+                Filter
+              </Button>
+            </div>
           </div>
         </div>
       </div>

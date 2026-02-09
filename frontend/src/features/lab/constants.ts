@@ -71,9 +71,9 @@ export const LAB_SAMPLE_TYPE_OPTIONS: FilterOption[] = SAMPLE_TYPE_VALUES.map(
 
 /** Sample status for collection: pending, collected, rejected */
 const COLLECTION_STATUS_OPTIONS: FilterOption[] = [
-  { id: 'pending', label: 'PENDING', color: 'pending' },
-  { id: 'collected', label: 'COLLECTED', color: 'collected' },
-  { id: 'rejected', label: 'REJECTED', color: 'rejected' },
+  { id: 'pending', label: 'Pending', color: 'pending' },
+  { id: 'collected', label: 'Collected', color: 'collected' },
+  { id: 'rejected', label: 'Rejected', color: 'rejected' },
 ];
 
 /** Collection filter configuration */

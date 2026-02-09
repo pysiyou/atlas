@@ -27,6 +27,7 @@ export { useFilterState, useFilterPersistence, useQuickFilters } from './hooks';
 export { FilterBar, type FilterBarProps } from './FilterBar';
 export { FilterModal, type FilterModalProps } from './FilterModal';
 export { FilterSection, type FilterSectionProps } from './FilterSection';
+export { DatePresetBadges, type DatePresetBadgesProps } from './DatePresetBadges';
 export { ActiveFilterBadges, type ActiveFilterBadgesProps } from './ActiveFilterBadges';
 export { QuickFilters, type QuickFiltersProps } from './QuickFilters';
 export { FilterFactory, type FilterFactoryProps } from './FilterFactory';
