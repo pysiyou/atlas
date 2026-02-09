@@ -420,12 +420,14 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                   Clear all filters
                 </button>
               )}
-              <button
+              <Button
+                variant="primary"
                 onClick={() => setIsModalOpen(false)}
-                className="w-full py-3 bg-brand hover:opacity-90 text-fg-inverse font-medium rounded-lg transition-colors"
+                showIcon={false}
+                fullWidth
               >
                 Filter
-              </button>
+              </Button>
             </div>
           </div>
         </Modal>
