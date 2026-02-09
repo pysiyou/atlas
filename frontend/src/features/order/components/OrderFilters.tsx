@@ -4,10 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Icon } from '@/shared/ui';
-import { Button } from '@/shared/ui';
-import { Badge } from '@/shared/ui';
-import { Modal } from '@/shared/ui';
+import { Icon, Button, Badge, Modal, FooterInfo } from '@/shared/ui';
 import { MultiSelectFilter } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
 import { DateFilter } from './DateFilter';
@@ -22,6 +19,7 @@ import {
   PAYMENT_STATUS_CONFIG,
 } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
+import { DatePresetBadges } from '@/features/filters';
 import type { OrderStatus, PaymentStatus } from '@/types';
 
 /**
@@ -41,51 +39,6 @@ export interface OrderFiltersProps {
 // Prepare filter options
 const orderStatusOptions = createFilterOptions(ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG);
 const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
-
-import { DATE_PRESETS, getDateRangeFromPreset, getActivePresetId, type DatePreset } from '@/utils/dateHelpers';
-
-type DatePresetId = DatePreset;
-
-/**
- * ModalDateBadges - Badge-style date range selector for modal
- */
-const ModalDateBadges: React.FC<{
-  value: [Date, Date] | null;
-  onChange: (value: [Date, Date] | null) => void;
-}> = ({ value, onChange }) => {
-  const activePresetId = getActivePresetId(value);
-
-  const handlePresetClick = (presetId: DatePresetId) => {
-    if (activePresetId === presetId) {
-      // Deselect if already selected
-      onChange(null);
-    } else {
-      onChange(getDateRangeFromPreset(presetId));
-    }
-  };
-
-  return (
-    <div className="flex flex-wrap gap-2">
-      {DATE_PRESETS.map(preset => {
-        const isActive = activePresetId === preset.id;
-        return (
-          <button
-            key={preset.id}
-            onClick={() => handlePresetClick(preset.id)}
-            className={cn(
-              'px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors',
-              isActive
-                ? 'bg-brand border-brand text-fg-inverse'
-                : 'bg-panel border-stroke text-fg-muted hover:border-brand hover:bg-brand-muted'
-            )}
-          >
-            {preset.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-};
 
 /**
  * SearchInput - Simple debounced search input
@@ -317,7 +270,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
                 {/* Date Range Section */}
                 <div className="w-full">
                   <h4 className="text-sm font-semibold text-fg mb-3">Date Range</h4>
-                  <ModalDateBadges
+                  <DatePresetBadges
                     value={dateRange}
                     onChange={onDateRangeChange}
                   />
@@ -351,24 +304,29 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
 
             {/* Footer with Filter Button */}
             <div className="px-5 py-4 border-t border-stroke bg-panel shrink-0">
-              {activeFilterCount > 0 && (
-                <button
-                  onClick={() => {
-                    onDateRangeChange(null);
-                    onStatusFiltersChange([]);
-                    onPaymentFiltersChange([]);
-                  }}
-                  className="w-full mb-3 text-sm text-fg-subtle hover:text-fg-muted transition-colors"
-                >
-                  Clear all filters
-                </button>
-              )}
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="w-full py-3 bg-brand hover:opacity-90 text-fg-inverse font-medium rounded-lg transition-colors"
-              >
-                Filter
-              </button>
+              <div className="flex items-center justify-between gap-3">
+                <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      onDateRangeChange(null);
+                      onStatusFiltersChange([]);
+                      onPaymentFiltersChange([]);
+                    }}
+                    showIcon={false}
+                  >
+                    Reset
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => setIsModalOpen(false)}
+                    showIcon={false}
+                  >
+                    Filter
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </Modal>

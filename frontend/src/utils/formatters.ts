@@ -118,3 +118,13 @@ export function formatTurnaroundTime(hours: number): string {
   const weeks = Math.round(hours / 168);
   return `${weeks} week${weeks > 1 ? 's' : ''}`;
 }
+
+/**
+ * Capitalize a label for display (first letter uppercase, rest lowercase).
+ * Used for filter option labels and enum display in modals.
+ */
+export function capitalizeLabel(s: string | undefined | null): string {
+  if (!s || typeof s !== 'string') return '';
+  const t = s.trim();
+  return t.length === 0 ? '' : t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
+}

@@ -631,15 +631,16 @@
    Filter chip (modal date badges, quick filters, active badges)
    ───────────────────────────────────────────────────────────────────────── */
 
+/* Default: neutral like sidebar/table inactive; hover: same as sidebar nav & table row */
 .filter-chip {
-  background-color: var(--panel-hover);
+  background-color: var(--panel);
   border: 1px solid var(--stroke);
   color: var(--fg-muted);
   transition: background-color 0.15s, border-color 0.15s, color 0.15s;
 }
 
 .filter-chip:hover {
-  background-color: var(--panel-selected);
+  background-color: var(--panel-hover);
   border-color: var(--stroke-hover);
   color: var(--fg);
 }
