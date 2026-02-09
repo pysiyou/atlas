@@ -22,7 +22,7 @@ import { ICONS } from '@/utils';
 const rowCellClass =
   'min-h-0 overflow-hidden border-stroke flex items-center justify-center border-r last:border-r-0';
 
-const LAST_DAYS = 15;
+const LAST_DAYS = 10;
 
 const ACTIVITY_STACKED_SEGMENTS = [
   { dataKey: 'sampling', color: 'var(--chart-brand)', name: 'Sampling' },

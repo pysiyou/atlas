@@ -109,7 +109,7 @@ export const createOrderTableConfig = (
       {
         key: 'overallStatus',
         header: 'Status',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderStatus,
       },
@@ -159,7 +159,7 @@ export const createOrderTableConfig = (
       {
         key: 'overallStatus',
         header: 'Status',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderStatus,
       },
@@ -202,7 +202,7 @@ export const createOrderTableConfig = (
       {
         key: 'overallStatus',
         header: 'Status',
-        width: 'sm',
+        width: 'md',
         sortable: true,
         render: renderStatus,
       },
