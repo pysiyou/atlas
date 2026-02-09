@@ -85,11 +85,14 @@ export const ActivityTrendChart: React.FC<ActivityTrendChartProps> = ({
 
   return (
     <div className={`flex flex-col h-full bg-panel rounded overflow-hidden shadow-sm ${className}`}>
-      <div className="p-4 flex flex-row items-center justify-between space-y-0 pb-2">
-        <div className="flex flex-col space-y-1">
-          <h3 className="font-semibold leading-none tracking-tight text-fg">
-            {title} <span className="ml-2 text-sm font-normal text-fg-subtle">| {subTitle}</span>
+      <div className="px-4 pt-4 pb-2 flex flex-row items-center justify-between">
+        <div className="flex items-baseline gap-2">
+          <h3 className="text-base font-medium tracking-tight text-fg">
+            {title}
           </h3>
+          <span className="text-fg-subtle text-xs tracking-wider before:content-['·'] before:mr-2">
+            {subTitle}
+          </span>
         </div>
       </div>
 
