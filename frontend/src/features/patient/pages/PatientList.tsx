@@ -108,7 +108,7 @@ export const PatientList: React.FC = () => {
     }
 
     return filtered;
-  }, [preFilteredPatients, ageRange, affiliationStatusFilters]);
+  }, [preFilteredPatients, ageRange, affiliationStatusFilters, isAffiliationActive]);
 
   // Memoize table config to prevent recreation on every render
   const patientTableConfig = useMemo(() => {

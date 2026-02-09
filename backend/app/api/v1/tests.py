@@ -150,14 +150,7 @@ def create_test(
         )
 
     create_dict = test_data.model_dump()
-    for key in ("createdAt", "updatedAt"):
-        if create_dict.get(key) is None:
-            create_dict.pop(key, None)
     test = Test(**create_dict)
-    if test_data.createdAt is not None:
-        test.createdAt = test_data.createdAt
-    if test_data.updatedAt is not None:
-        test.updatedAt = test_data.updatedAt
 
     try:
         db.add(test)
@@ -198,8 +191,6 @@ def update_test(
     update_data = test_data.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(test, field, value)
-    if test_data.updatedAt is not None:
-        test.updatedAt = test_data.updatedAt
 
     try:
         db.commit()
