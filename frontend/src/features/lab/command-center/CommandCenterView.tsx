@@ -82,10 +82,10 @@ export const CommandCenterView: React.FC = () => {
           />
         </div>
       </div>
-      {/* Row 2: 2/3 + 1/3 */}
+      {/* Row 2: 3 equal columns */}
       <div
         className="min-h-0 overflow-hidden border-b border-stroke grid"
-        style={{ gridTemplateColumns: '2fr 1fr' }}
+        style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
       >
         <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2`}>
           <ActivityTrendChart
@@ -95,17 +95,6 @@ export const CommandCenterView: React.FC = () => {
             valueLabel="tests"
           />
         </div>
-        <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2 min-h-0`}>
-          <div className="flex-1 min-h-0 min-w-0 flex flex-col">
-            <ActivitiesTimeline logs={logs} isLoading={logsLoading} className="w-full" />
-          </div>
-        </div>
-      </div>
-      {/* Row 3: 3/8 + 5/8 */}
-      <div
-        className="min-h-0 overflow-hidden grid"
-        style={{ gridTemplateColumns: '3fr 5fr' }}
-      >
         <div className={`${rowCellClass} flex flex-col items-stretch min-h-0 p-2 min-w-0`}>
           <StackedBarChart
             title="Activity by day"
@@ -128,6 +117,18 @@ export const CommandCenterView: React.FC = () => {
             ]}
           />
         </div>
+      </div>
+      {/* Row 3: 3/8 + 5/8 */}
+      <div
+        className="min-h-0 overflow-hidden grid"
+        style={{ gridTemplateColumns: '3fr 5fr' }}
+      >
+        <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2 min-h-0`}>
+          <div className="flex-1 min-h-0 min-w-0 flex flex-col">
+            <ActivitiesTimeline logs={logs} isLoading={logsLoading} className="w-full" />
+          </div>
+        </div>
+        <div className={rowCellClass} />
       </div>
     </div>
   );
