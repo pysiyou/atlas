@@ -1,12 +1,10 @@
 /**
  * SidebarHeader Component
- * Logo and app title section of the sidebar
- * Fixed 4rem icon column; content column clips on collapse (no inner animation)
+ * App name (two-tone when configured) and close/collapse button. No logo.
  */
 
 import React from 'react';
-import { Icon, IconButton } from '@/shared/ui';
-import { ICONS } from '@/utils';
+import { IconButton } from '@/shared/ui';
 import { companyConfig } from '@/config';
 
 interface SidebarHeaderProps {
@@ -20,40 +18,40 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   onToggleCollapse,
   onMobileClose,
 }) => {
-  const company = companyConfig.getConfig();
+  const { company, branding } = companyConfig.getConfig();
+  const displayName = company.displayName;
+  const splitAt = branding.appNamePart2Start;
+  const part1 = splitAt != null && splitAt > 0 && splitAt < displayName.length
+    ? displayName.slice(0, splitAt)
+    : null;
+  const part2 = part1 != null ? displayName.slice(splitAt!) : null;
+
+  const handleButtonClick = () => {
+    if (onMobileClose) onMobileClose();
+    else onToggleCollapse();
+  };
 
   return (
-    <div className="h-16 border-b border-stroke flex items-center">
-      {/* Fixed 4rem icon column — no transition, icon stays motionless */}
-      <div
-        className="w-16 shrink-0 flex items-center justify-center cursor-pointer"
-        onClick={() => isCollapsed && onToggleCollapse()}
-        title={isCollapsed ? 'Expand Sidebar' : undefined}
-        role="button"
-        tabIndex={0}
-        onKeyDown={e => e.key === 'Enter' && isCollapsed && onToggleCollapse()}
-      >
-        <div className="w-8 h-8 text-brand flex items-center justify-center">
-          <Icon name={ICONS.ui.appLogo} className="w-full h-full" />
-        </div>
+    <div className="h-16 border-b border-stroke flex items-center justify-between px-4">
+      <div className="min-w-0 overflow-hidden">
+        <h1 className="text-2xl font-bold truncate">
+          {part1 != null && part2 != null ? (
+            <>
+              <span className="text-brand">{part1}</span>
+              <span className="bg-brand text-on-brand py-0.5 px-1">{part2}</span>
+            </>
+          ) : (
+            <span className="text-brand">{displayName}</span>
+          )}
+        </h1>
       </div>
-      {/* Content column — clipped by aside overflow when collapsed */}
-      <div className="flex-1 min-w-0 overflow-hidden flex items-center justify-between px-3">
-        <div className="min-w-0 overflow-hidden whitespace-nowrap">
-          <h1 className="text-base font-bold text-fg truncate">{company.company.displayName}</h1>
-          <p className="text-xs text-fg-subtle">Version {company.company.version}</p>
-        </div>
-        {onMobileClose ? (
-          <IconButton variant="close" size="sm" onClick={onMobileClose} title="Close Sidebar" />
-        ) : (
-          <IconButton
-            variant="collapse"
-            size="sm"
-            onClick={onToggleCollapse}
-            title="Collapse Sidebar"
-          />
-        )}
-      </div>
+      <IconButton
+        variant="sidebarClose"
+        size="sm"
+        onClick={handleButtonClick}
+        title={onMobileClose ? 'Close Sidebar' : 'Collapse Sidebar'}
+        className="w-8 h-8 shrink-0"
+      />
     </div>
   );
 };

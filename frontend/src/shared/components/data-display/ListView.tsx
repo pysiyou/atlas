@@ -6,7 +6,7 @@
  */
 
 import { type ReactNode } from 'react';
-import { Table, EmptyState } from '@/shared/ui';
+import { Table, EmptyState, PageHeaderBar } from '@/shared/ui';
 import { LoadingState } from '../feedback/LoadingState';
 import { ErrorAlert } from '../feedback/ErrorAlert';
 import type { TableViewConfig } from '@/shared/ui/Table';
@@ -142,16 +142,10 @@ export function ListView<T extends TableDataItem = TableDataItem>({
   return (
     <div className={`min-h-0 flex-1 flex flex-col p-4 gap-6 overflow-hidden ${className}`}>
       {/* Header */}
-      {(title || headerActions) && (
-        <div className="flex items-center justify-between shrink-0">
-          {title && (
-            <div>
-              <h1 className="text-2xl font-semibold text-fg">{title}</h1>
-              {subtitle && <p className="text-sm text-fg-subtle mt-1">{subtitle}</p>}
-            </div>
-          )}
+      {(title != null || headerActions != null) && (
+        <PageHeaderBar title={title ?? ''} subtitle={subtitle}>
           {headerActions}
-        </div>
+        </PageHeaderBar>
       )}
 
       {/* Error Alert */}

@@ -109,6 +109,8 @@ export type IconName =
   | 'blood'
   | 'up-trend'
   | 'down-trend'
+  | 'double-arrow-left'
+  | 'double-arrow-right'
 
 interface IconProps {
   /** Name of the icon to display (must match SVG filename without .svg extension) */

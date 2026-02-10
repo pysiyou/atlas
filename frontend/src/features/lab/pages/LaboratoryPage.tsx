@@ -10,7 +10,7 @@ import { ValidationView } from '../validation/ValidationView';
 import { EscalationView } from '../validation/EscalationView';
 import { CommandCenterView } from '@/features/lab/command-center';
 import { useAuthStore } from '@/shared/stores/auth.store';
-import { Icon } from '@/shared/ui';
+import { Icon, PageHeaderBar } from '@/shared/ui';
 import { ICONS } from '@/utils';
 
 type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation' | 'dashboard';
@@ -60,8 +60,7 @@ export const Laboratory: React.FC = () => {
   return (
     <div className="h-full flex flex-col p-4 space-y-6 min-w-0 overflow-hidden">
       {/* Page Header: title with tabs on the right */}
-      <div className="shrink-0 flex items-center justify-between gap-4 flex-wrap min-w-0">
-        <h1 className="text-2xl font-bold text-fg">{pageTitle}</h1>
+      <PageHeaderBar title={pageTitle}>
         <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">
           {tabs.map(tab => {
             const isActive = activeTab === tab.id;
@@ -88,7 +87,7 @@ export const Laboratory: React.FC = () => {
             );
           })}
         </div>
-      </div>
+      </PageHeaderBar>
 
       {/* Main Content Card */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-panel rounded border border-stroke shadow-sm overflow-hidden">
