@@ -1,6 +1,6 @@
 
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge, Avatar } from '@/shared/ui';
+import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
@@ -30,25 +30,16 @@ export const createPatientTableConfig = (
   );
 
   const renderName = (patient: Patient) => (
-    <div className="flex items-center gap-3 min-w-0">
-      <Avatar
-        primaryText={patient.fullName}
-        size="sm"
-        avatarOnly
-        rounded="full"
-        className="shrink-0"
-      />
-      <div className="min-w-0">
-        <div className="text-fg truncate">{patient.fullName}</div>
-        <div className="text-xs text-fg-subtle truncate">
-          {calculateAge(patient.dateOfBirth)} years old
-        </div>
+    <div className="min-w-0">
+      <div className="text-fg truncate">{patient.fullName}</div>
+      <div className="text-xs text-fg-subtle truncate">
+        {calculateAge(patient.dateOfBirth)} years old
       </div>
     </div>
   );
 
   const renderGender = (patient: Patient) => (
-    <Badge variant={patient.gender} size="xs" />
+    <Badge variant={patient.gender} size="sm" />
   );
 
   const renderLastOrder = (patient: Patient) => {
@@ -99,6 +90,13 @@ export const createPatientTableConfig = (
   return {
     fullColumns: [
       {
+        key: 'id',
+        header: 'Patient ID',
+        width: 'sm',
+        sortable: true,
+        render: renderId,
+      },
+      {
         key: 'fullName',
         header: 'Name',
         width: 'fill',
@@ -117,13 +115,6 @@ export const createPatientTableConfig = (
         width: 'sm',
         sortable: true,
         render: renderGender,
-      },
-      {
-        key: 'id',
-        header: 'Patient ID',
-        width: 'sm',
-        sortable: true,
-        render: renderId,
       },
       {
         key: 'lastOrder',
@@ -148,6 +139,13 @@ export const createPatientTableConfig = (
     ],
     mediumColumns: [
       {
+        key: 'id',
+        header: 'Patient ID',
+        width: 'sm', // 200px - matches full view
+        sortable: true,
+        render: renderId,
+      },
+      {
         key: 'fullName',
         header: 'Name',
         width: 'fill', // Same as full view
@@ -167,13 +165,6 @@ export const createPatientTableConfig = (
         sortable: true,
         render: renderGender,
       },
-      {
-        key: 'id',
-        header: 'Patient ID',
-        width: 'sm', // 200px - matches full view
-        sortable: true,
-        render: renderId,
-      },
       // {
       //   key: 'lastOrder',
       //   header: 'Last Order',
@@ -182,6 +173,13 @@ export const createPatientTableConfig = (
       // },
     ],
     compactColumns: [
+      {
+        key: 'id',
+        header: 'ID',
+        width: 'sm', // 200px fixed - matches full view ID
+        sortable: true,
+        render: renderId,
+      },
       {
         key: 'fullName',
         header: 'Name',
@@ -194,13 +192,6 @@ export const createPatientTableConfig = (
         header: 'Contact',
         width: 'fill',
         render: renderContact,
-      },
-      {
-        key: 'id',
-        header: 'ID',
-        width: 'sm', // 200px fixed - matches full view ID
-        sortable: true,
-        render: renderId,
       },
     ],
     CardComponent: PatientCard,
