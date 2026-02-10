@@ -1,6 +1,6 @@
 
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge } from '@/shared/ui';
+import { Badge, Avatar } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
@@ -30,16 +30,25 @@ export const createPatientTableConfig = (
   );
 
   const renderName = (patient: Patient) => (
-    <div className="min-w-0">
-      <div className="text-fg truncate">{patient.fullName}</div>
-      <div className="text-xs text-fg-subtle truncate">
-        {calculateAge(patient.dateOfBirth)} years old
+    <div className="flex items-center gap-3 min-w-0">
+      <Avatar
+        primaryText={patient.fullName}
+        size="sm"
+        avatarOnly
+        rounded="full"
+        className="shrink-0"
+      />
+      <div className="min-w-0">
+        <div className="text-fg truncate">{patient.fullName}</div>
+        <div className="text-xs text-fg-subtle truncate">
+          {calculateAge(patient.dateOfBirth)} years old
+        </div>
       </div>
     </div>
   );
 
   const renderGender = (patient: Patient) => (
-    <Badge variant={patient.gender} size="sm" />
+    <Badge variant={patient.gender} size="xs" />
   );
 
   const renderLastOrder = (patient: Patient) => {
