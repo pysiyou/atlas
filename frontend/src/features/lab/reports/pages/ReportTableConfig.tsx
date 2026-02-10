@@ -33,7 +33,7 @@ export const createReportTableConfig = (
 ): TableViewConfig<ValidatedTest> => {
   // Shared render functions
   const renderTestId = (test: ValidatedTest) => (
-    <span className={DATA_ID_PRIMARY}>{displayId.orderTest(test.testId)}</span>
+    <span className={`${DATA_ID_PRIMARY} font-normal`}>{displayId.orderTest(test.testId)}</span>
   );
 
   const renderOrderId = (test: ValidatedTest) => (
@@ -42,34 +42,34 @@ export const createReportTableConfig = (
         e.stopPropagation();
         navigate(`/orders/${test.orderId}`);
       }}
-      className={DATA_ID_PRIMARY_CLICKABLE}
+      className={`${DATA_ID_PRIMARY_CLICKABLE} font-normal`}
     >
       {displayId.order(test.orderId)}
     </button>
   );
 
   const renderPatientName = (test: ValidatedTest) => (
-    <div className="min-w-0">
-      <div className="text-fg truncate">{test.patientName}</div>
-      <div className={DATA_ID_SECONDARY}>{displayId.patient(test.patientId)}</div>
+    <div className="min-w-0 font-normal">
+      <div className="text-fg truncate font-normal capitalize">{test.patientName}</div>
+      <div className={`${DATA_ID_SECONDARY} font-normal`}>{displayId.patient(test.patientId)}</div>
     </div>
   );
 
   const renderTestName = (test: ValidatedTest) => (
-    <div className="min-w-0">
-      <div className="text-fg truncate">{test.testName}</div>
-      <div className={DATA_ID_SECONDARY}>{test.testCode}</div>
+    <div className="min-w-0 font-normal">
+      <div className="text-fg truncate font-normal">{test.testName}</div>
+      <div className={`${DATA_ID_SECONDARY} font-normal`}>{test.testCode}</div>
     </div>
   );
 
   const renderOrderDate = (test: ValidatedTest) => (
-    <span className="text-xs text-fg-subtle truncate block">{formatDate(test.orderDate)}</span>
+    <span className="text-xs text-fg-subtle truncate block font-normal">{formatDate(test.orderDate)}</span>
   );
 
   const renderStatus = () => <Badge variant="validated" size="sm" />;
 
   const renderAction = (test: ValidatedTest) => (
-    <div onClick={e => e.stopPropagation()}>
+    <div className="font-normal" onClick={e => e.stopPropagation()}>
       <ReportPreviewButton test={test} onPreview={onPreview} />
     </div>
   );
@@ -112,7 +112,7 @@ export const createReportTableConfig = (
       {
         key: 'orderDate',
         header: 'Date',
-        width: 'md',
+        width: 'lg',
         sortable: true,
         render: renderOrderDate,
       },
