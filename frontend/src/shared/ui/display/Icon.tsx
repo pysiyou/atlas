@@ -111,6 +111,8 @@ export type IconName =
   | 'down-trend'
   | 'double-arrow-left'
   | 'double-arrow-right'
+  | 'sun'
+  | 'moon'
 
 interface IconProps {
   /** Name of the icon to display (must match SVG filename without .svg extension) */
