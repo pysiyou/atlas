@@ -17,29 +17,22 @@ import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from './PaymentTableConfig';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
 import { useOrdersList, usePaymentsList } from '@/hooks/queries';
+import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 import type { Order, Payment, PaymentStatus, PaymentMethod } from '@/types';
-import type { OrderPaymentDetails } from '../types';
+import type { OrderPaymentView } from '../types';
 
-/** Cross-reference orders with payment data for list/table display. */
-function createOrderPaymentDetailsList(orders: Order[], payments: Payment[]): OrderPaymentDetails[] {
+/** Cross-reference orders with payment data for list/table display. Uses Map for O(n+m) join. */
+function buildOrderPaymentViews(orders: Order[], payments: Payment[]): OrderPaymentView[] {
+  const paymentByOrder = new Map(payments.map(p => [p.orderId, p]));
   return orders.map(order => {
-    const payment = payments.find(p => p.orderId === order.orderId);
+    const payment = paymentByOrder.get(order.orderId);
     return {
-      orderId: order.orderId,
-      orderDate: order.orderDate,
-      patientId: order.patientId,
-      patientName: order.patientName,
-      tests: order.tests,
-      totalPrice: order.totalPrice,
-      paymentStatus: order.paymentStatus,
+      order,
       paymentMethod: payment?.paymentMethod,
       paymentDate: payment?.paidAt,
-      order,
-      payment,
     };
   });
 }
-import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 
 /**
  * PaymentList Component
@@ -58,7 +51,7 @@ export const PaymentList: React.FC = () => {
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
 
   // State for payment detail modal
-  const [selectedOrder, setSelectedOrder] = useState<OrderPaymentDetails | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderPaymentView | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Use shared query hooks - data is cached and shared across components
@@ -83,27 +76,32 @@ export const PaymentList: React.FC = () => {
     : null;
 
   // Cross-reference orders with payment data using centralized helper
-  const orderPaymentDetailsList = useMemo(
-    () => createOrderPaymentDetailsList(orders, payments),
+  const orderPaymentViews = useMemo(
+    () => buildOrderPaymentViews(orders, payments),
     [orders, payments]
   );
 
-  // Use shared filtering hook for search and status filters
+  // Use shared filtering hook for search (status/sort handled manually below for nested access)
   const {
-    filteredItems: preFilteredOrders,
+    filteredItems: searchFilteredOrders,
     searchQuery,
     setSearchQuery,
-    statusFilters,
-    setStatusFilters,
-  } = useFiltering<OrderPaymentDetails, PaymentStatus>(orderPaymentDetailsList, {
-    searchFields: item => [item.orderId.toString(), item.patientName || ''],
-    statusField: 'paymentStatus',
-    defaultSort: { field: 'orderDate', direction: 'desc' },
+  } = useFiltering<OrderPaymentView>(orderPaymentViews, {
+    searchFields: item => [item.order.orderId.toString(), item.order.patientName || ''],
   });
 
-  // Apply payment method and date range filters
+  // Status, method, and date range filters + sorting
+  const [statusFilters, setStatusFilters] = useState<PaymentStatus[]>([]);
+
   const filteredOrders = useMemo(() => {
-    let filtered = preFilteredOrders;
+    let filtered = searchFilteredOrders;
+
+    // Apply payment status filter
+    if (statusFilters.length > 0) {
+      filtered = filtered.filter(item =>
+        (statusFilters as string[]).includes(item.order.paymentStatus)
+      );
+    }
 
     // Apply date range filter
     if (dateRange) {
@@ -114,7 +112,7 @@ export const PaymentList: React.FC = () => {
       startDate.setHours(0, 0, 0, 0);
 
       filtered = filtered.filter(item => {
-        const orderDate = new Date(item.orderDate);
+        const orderDate = new Date(item.order.orderDate);
         return orderDate >= startDate && orderDate <= endDate;
       });
     }
@@ -126,8 +124,13 @@ export const PaymentList: React.FC = () => {
       );
     }
 
+    // Sort by order date descending
+    filtered = [...filtered].sort((a, b) =>
+      b.order.orderDate.localeCompare(a.order.orderDate)
+    );
+
     return filtered;
-  }, [preFilteredOrders, dateRange, methodFilters]);
+  }, [searchFilteredOrders, statusFilters, dateRange, methodFilters]);
 
   /**
    * Handles successful payment - invalidates caches to refresh the data
@@ -150,7 +153,7 @@ export const PaymentList: React.FC = () => {
   /**
    * Opens the payment detail modal for a specific order
    */
-  const handleRowClick = useCallback((item: OrderPaymentDetails) => {
+  const handleRowClick = useCallback((item: OrderPaymentView) => {
     setSelectedOrder(item);
     setIsModalOpen(true);
   }, []);

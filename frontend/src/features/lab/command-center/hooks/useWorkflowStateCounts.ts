@@ -5,6 +5,7 @@
 
 import { useMemo } from 'react';
 import { useOrdersList } from '@/hooks/queries';
+import { isActiveTest } from '@/utils/orderUtils';
 
 export interface WorkflowStateCounts {
   sampling: number;
@@ -31,7 +32,7 @@ export function useWorkflowStateCounts(): WorkflowStateCounts {
 
     (orders ?? []).forEach((order) => {
       order.tests.forEach((test) => {
-        if (test.status === 'superseded' || test.status === 'removed') return;
+        if (!isActiveTest(test)) return;
         if (test.status === 'pending') {
           sampling += 1;
           return;

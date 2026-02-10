@@ -2,11 +2,11 @@ import { Badge, Avatar } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils';
+import { getActiveTests } from '@/utils/orderUtils';
 import type { Order } from '@/types';
 
 export function OrderTableCard({ item: order, onClick }: CardComponentProps<Order>) {
-  // Filter out superseded and removed tests - only show active tests
-  const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
+  const activeTests = getActiveTests(order.tests);
 
   return (
     <div

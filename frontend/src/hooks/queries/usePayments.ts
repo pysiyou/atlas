@@ -195,8 +195,9 @@ export function useCreatePayment() {
       const orderIdStr = typeof variables.orderId === 'string' ? variables.orderId : String(variables.orderId);
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.byOrder(orderIdStr) });
-      // Also invalidate orders since payment status may have changed
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      // Also invalidate the specific order and lists since payment status may have changed
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
     },
   });
 }

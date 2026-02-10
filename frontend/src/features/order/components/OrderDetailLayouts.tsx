@@ -6,7 +6,7 @@
 import React from 'react';
 import { SectionContainer, IconButton } from '@/shared/ui';
 import { PaymentPopover } from '@/features/payment/components/PaymentPopover';
-import type { Order, OrderTest, Patient, Test, Invoice } from '@/types';
+import type { Order, OrderTest, Patient, Invoice } from '@/types';
 import { OrderInfoSection } from './OrderInfoSection';
 import { PatientInfoSection } from './PatientInfoSection';
 import { TestsTable } from './TestsTable';
@@ -18,7 +18,6 @@ interface LayoutProps {
   order: Order;
   patient: Patient | null;
   invoice: Invoice | null;
-  testCatalog: Test[];
   activeTests: OrderTest[];
   supersededCount: number;
   onViewPatient: () => void;
@@ -35,7 +34,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
   order,
   patient,
   invoice,
-  testCatalog,
   activeTests,
   supersededCount,
   onViewPatient,
@@ -86,7 +84,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
       >
         <TestsTable
           tests={order.tests}
-          testCatalog={testCatalog}
+
           supersededCount={supersededCount}
           variant="simple"
         />
@@ -112,7 +110,6 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
   order,
   patient,
   invoice,
-  testCatalog,
   activeTests,
   supersededCount,
   onViewPatient,
@@ -173,7 +170,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
       >
         <TestsTable
           tests={order.tests}
-          testCatalog={testCatalog}
+
           supersededCount={supersededCount}
           variant="detailed"
         />
@@ -189,7 +186,6 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
   order,
   patient,
   invoice,
-  testCatalog,
   activeTests,
   supersededCount,
   onViewPatient,
@@ -238,7 +234,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
         >
           <TestsTable
             tests={order.tests}
-            testCatalog={testCatalog}
+  
             supersededCount={supersededCount}
             variant="detailed"
           />

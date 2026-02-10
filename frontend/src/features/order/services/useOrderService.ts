@@ -18,7 +18,7 @@ export function useOrderService() {
       return orderSchema.parse(response) as Order;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
       toast.success('Order created successfully');
     },
     onError: (error) => {
@@ -35,7 +35,7 @@ export function useOrderService() {
     },
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(String(id)) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
       queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
       toast.success('Order updated successfully');
     },

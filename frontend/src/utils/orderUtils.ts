@@ -82,6 +82,21 @@ export const createRepeatTest = (
   results: null,
 });
 
+/** A test is "active" if it has not been superseded or removed. */
+export const isActiveTest = (test: OrderTest): boolean =>
+  test.status !== 'superseded' && test.status !== 'removed';
+
+/** Returns only the active (non-superseded, non-removed) tests from an array. */
+export const getActiveTests = (tests: OrderTest[]): OrderTest[] =>
+  tests.filter(isActiveTest);
+
+/** Sums priceAtOrder for active tests only. */
+export const getActiveTotal = (tests: OrderTest[]): number =>
+  getActiveTests(tests).reduce(
+    (sum, t) => sum + (typeof t.priceAtOrder === 'number' ? t.priceAtOrder : 0),
+    0,
+  );
+
 /**
  * Filters orders that have tests needing collection
  */

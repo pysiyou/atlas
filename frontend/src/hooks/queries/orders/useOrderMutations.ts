@@ -19,7 +19,7 @@ export function useCreateOrder() {
   return useMutation({
     mutationFn: (order: Partial<Order>) => orderAPI.create(order),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
       queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
     },
   });
@@ -87,7 +87,7 @@ export function useDeleteOrder() {
       return orderAPI.delete(orderIdStr);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
     },
     onError: (error) => {
       toast.error({
