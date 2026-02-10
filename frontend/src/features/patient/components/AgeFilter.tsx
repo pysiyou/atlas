@@ -5,10 +5,9 @@
  * Features smooth animations, refined visual design, and enhanced micro-interactions.
  */
 
-import React, { useState, useEffect } from 'react';
-import { Popover } from '@/shared/ui';
-import { Icon } from '@/shared/ui';
-import { inputTrigger, inputTriggerOpen, filterTriggerText } from '@/shared/ui/forms/inputStyles';
+import React from 'react';
+import { Popover, Icon, FilterTriggerShell } from '@/shared/ui';
+import { useRangeValue } from '@/hooks/useRangeValue';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 
@@ -29,12 +28,9 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   placeholder = 'Filter by Age',
   className,
 }) => {
-  const [localValue, setLocalValue] = useState<[number, number]>(value);
-
-  // Sync local value when prop changes
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
+  const { localValue, setLocalValue, handleClear } = useRangeValue(value, onChange, {
+    defaultRange: [min, max],
+  });
 
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newMin = Math.min(Number(e.target.value), localValue[1] - 1);
@@ -50,17 +46,8 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
     onChange(newValue);
   };
 
-  // Calculate percentages for visual track
   const minPercent = ((localValue[0] - min) / (max - min)) * 100;
   const maxPercent = ((localValue[1] - min) / (max - min)) * 100;
-
-  /**
-   * Clear the filter and reset to default range
-   */
-  const handleClear = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onChange([min, max]);
-  };
 
   /**
    * Render the trigger button content
@@ -77,50 +64,30 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
     );
   };
 
+  const showClear = value[0] !== min || value[1] !== max;
+
   return (
     <Popover
       placement="bottom-start"
       showBackdrop={false}
       trigger={({ isOpen }) => (
-        <div
-          className={cn(inputTrigger, 'w-full', isOpen && inputTriggerOpen, className)}
-        >
-          <Icon
-            name={ICONS.dataFields.hourglass}
-            className={cn(
-              'w-4 h-4 shrink-0 transition-colors',
-              isOpen ? 'text-brand' : 'text-fg-faint group-hover:text-brand'
-            )}
-          />
-          <div className={cn('flex-1 min-w-0 truncate whitespace-nowrap overflow-hidden', filterTriggerText)}>
-            {renderTriggerContent()}
-          </div>
-
-          {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
-          <div className="flex items-center gap-1 shrink-0">
-            {value && (value[0] !== min || value[1] !== max) ? (
-              <button
-                onClick={handleClear}
-                className={cn('p-0.5 rounded hover:bg-brand-muted transition-colors group/clear')}
-                aria-label="Clear age filter"
-              >
-                <Icon 
-                  name={ICONS.actions.closeCircle} 
-                  className={cn('w-3.5 h-3.5 text-fg-faint', 'group-hover/clear:text-brand')} 
-                />
-              </button>
-            ) : (
-              <div className="w-[18px]" />
-            )}
+        <FilterTriggerShell
+          isOpen={isOpen}
+          leftIcon={
             <Icon
-              name={ICONS.actions.chevronDown}
+              name={ICONS.dataFields.hourglass}
               className={cn(
-                'w-3.5 h-3.5 text-fg-faint transition-transform duration-200',
-                isOpen && cn('rotate-180', 'text-brand')
+                'w-4 h-4 shrink-0 transition-colors',
+                isOpen ? 'text-brand' : 'text-fg-faint group-hover:text-brand'
               )}
             />
-          </div>
-        </div>
+          }
+          showClear={showClear}
+          onClear={handleClear}
+          className={className}
+        >
+          {renderTriggerContent()}
+        </FilterTriggerShell>
       )}
       className="p-6 w-[320px]"
     >

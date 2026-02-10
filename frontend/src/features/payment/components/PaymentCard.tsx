@@ -2,30 +2,7 @@ import { Badge, Avatar } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils';
-// OrderPaymentDetails type
-type OrderPaymentDetails = {
-  orderId: number;
-  orderDate: string;
-  patientId: number;
-  patientName: string;
-  tests: Array<{
-    testName: string;
-    priceAtOrder: number;
-    status?: string;
-    testCode?: string;
-  }>;
-  totalPrice: number;
-  paymentStatus: string;
-  paymentMethod?: string;
-  paymentDate?: string;
-  order: any;
-  payment?: {
-    paymentId: number;
-    paymentMethod: string;
-    amount: number;
-    paidAt: string;
-  };
-};
+import type { OrderPaymentDetails } from '../types';
 import { PaymentButton } from './PaymentButton';
 import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 

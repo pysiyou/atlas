@@ -4,10 +4,8 @@
  */
 
 import React from 'react';
-import { Popover } from '@/shared/ui';
-import { Icon, type IconName } from '@/shared/ui';
-import { Badge } from '@/shared/ui';
-import { inputTrigger, inputTriggerOpen, filterTriggerText } from '@/shared/ui/forms/inputStyles';
+import { Popover, Icon, Badge, FilterTriggerShell } from '@/shared/ui';
+import type { IconName } from '@/shared/ui';
 import { cn, uppercaseLabel, ICONS } from '@/utils';
 import type { SingleSelectFilterControl } from '../types';
 
@@ -84,35 +82,19 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       placement="bottom-start"
       showBackdrop={false}
       trigger={({ isOpen }) => (
-        <div
-          className={cn(inputTrigger, 'justify-between', isOpen && inputTriggerOpen, className)}
+        <FilterTriggerShell
+          isOpen={isOpen}
+          leftIcon={
+            config.icon ? (
+              <Icon name={config.icon as IconName} className="w-4 h-4 text-fg-faint group-hover:text-brand shrink-0 transition-colors" />
+            ) : undefined
+          }
+          showClear={!!value}
+          onClear={handleClear}
+          className={className}
         >
-          {/* Column 1: Left Icon */}
-          {config.icon && (
-            <Icon name={config.icon as IconName} className="w-4 h-4 text-fg-faint group-hover:text-brand shrink-0 transition-colors" />
-          )}
-
-          {/* Column 2: Content - flexible middle */}
-          <div className={cn('flex-1 min-w-0', filterTriggerText)}>{renderTriggerContent()}</div>
-
-          {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
-          <div className="flex items-center gap-1 shrink-0">
-            {value ? (
-              <button
-                onClick={handleClear}
-                className="p-0.5 hover:bg-panel-hover rounded transition-colors"
-              >
-                <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-fg-faint hover:text-fg-subtle" />
-              </button>
-            ) : (
-              <div className="w-5 h-5" />
-            )}
-            <Icon
-              name={ICONS.actions.chevronDown}
-              className={cn('w-4 h-4 text-fg-faint transition-transform', isOpen && 'rotate-180')}
-            />
-          </div>
-        </div>
+          {renderTriggerContent()}
+        </FilterTriggerShell>
       )}
       className=""
     >

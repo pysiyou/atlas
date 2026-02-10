@@ -1,6 +1,6 @@
 /**
  * Date Filter Helper Utilities
- * Functions for generating calendar dates and formatting
+ * Functions for generating calendar dates, formatting, and date predicates.
  */
 
 import {
@@ -15,6 +15,10 @@ import {
   eachYearOfInterval,
   addYears,
   subYears,
+  isBefore,
+  isAfter,
+  isSameDay,
+  startOfDay,
 } from 'date-fns';
 
 /**
@@ -72,3 +76,37 @@ export const MONTH_LABELS = [
   'Nov',
   'Dec',
 ];
+
+/** Whether the date is outside the allowed min/max range (for disabling in calendar). */
+export function isDateDisabled(date: Date, min: Date, max: Date): boolean {
+  return isBefore(date, min) || isAfter(date, max);
+}
+
+/** Whether the date is the range start or end (for highlighting). */
+export function isSelectedDate(
+  date: Date,
+  tempStart: Date | null,
+  tempEnd: Date | null
+): boolean {
+  if (!tempStart) return false;
+  if (tempEnd) {
+    return isSameDay(date, tempStart) || isSameDay(date, tempEnd);
+  }
+  return isSameDay(date, tempStart);
+}
+
+/** Whether the date is strictly between start and end (for range highlight). */
+export function isDateInRange(
+  date: Date,
+  tempStart: Date | null,
+  tempEnd: Date | null
+): boolean {
+  if (!tempStart || !tempEnd) return false;
+  const dateStart = startOfDay(date);
+  return (
+    (isAfter(dateStart, tempStart) || isSameDay(dateStart, tempStart)) &&
+    (isBefore(dateStart, tempEnd) || isSameDay(dateStart, tempEnd)) &&
+    !isSameDay(dateStart, tempStart) &&
+    !isSameDay(dateStart, tempEnd)
+  );
+}

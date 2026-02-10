@@ -11,6 +11,8 @@ export * from './DateInput';
 export * from './TagInput';
 export * from './Checkbox';
 export * from './CheckboxList';
+export * from './DateFilter';
+export * from './FilterTriggerShell';
 export * from './MultiSelectFilter';
 export * from './PaymentMethodSelector';
 export * from './inputStyles';

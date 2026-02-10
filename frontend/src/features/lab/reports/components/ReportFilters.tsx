@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Icon, Button, Badge, Modal, FooterInfo } from '@/shared/ui';
-import { DateFilter } from '@/features/order/components/DateFilter';
+import { DateFilter } from '@/shared/ui';
 import { inputWrapper, inputInner, inputText, inputContainerBase } from '@/shared/ui/forms/inputStyles';
 import { cn, ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';

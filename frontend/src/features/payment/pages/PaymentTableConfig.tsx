@@ -12,31 +12,8 @@ import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { DATA_AMOUNT, DATA_ID_PRIMARY_CLICKABLE, DATA_ID_SECONDARY } from '@/shared/constants';
 import { PaymentButton } from '../components/PaymentButton';
-// OrderPaymentDetails type
-type OrderPaymentDetails = {
-  orderId: number;
-  orderDate: string;
-  patientId: number;
-  patientName: string;
-  tests: Array<{
-    testName: string;
-    priceAtOrder: number;
-    status?: string;
-    testCode?: string;
-  }>;
-  totalPrice: number;
-  paymentStatus: string;
-  paymentMethod?: string;
-  paymentDate?: string;
-  order: any;
-  payment?: {
-    paymentId: number;
-    paymentMethod: string;
-    amount: number;
-    paidAt: string;
-  };
-};
 import { PaymentCard } from '../components/PaymentCard';
+import type { OrderPaymentDetails } from '../types';
 
 /**
  * Create payment table configuration with full, compact, and card views

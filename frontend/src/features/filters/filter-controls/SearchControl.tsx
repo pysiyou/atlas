@@ -3,7 +3,7 @@
  * Enhanced search input with debouncing and keyboard shortcuts
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Icon } from '@/shared/ui';
 import { inputWrapper, inputInner, inputText } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
@@ -45,6 +45,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
 }) => {
   const [localValue, setLocalValue] = useState(value);
   const [isDebouncing, setIsDebouncing] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Sync local value when prop changes
   useEffect(() => {
@@ -85,21 +86,15 @@ export const SearchControl: React.FC<SearchControlProps> = ({
     onChange('');
   }, [onChange]);
 
-  /**
-   * Keyboard shortcut handler (Cmd+K / Ctrl+K)
-   */
+  /** Keyboard shortcut (Cmd+K / Ctrl+K) focuses this control's input. */
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-        if (input) {
-          input.focus();
-          input.select();
-        }
+        inputRef.current?.focus();
+        inputRef.current?.select();
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
@@ -111,6 +106,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
         className="w-3.5 h-3.5 shrink-0 text-fg-faint group-hover:text-brand transition-colors"
       />
       <input
+        ref={inputRef}
         type="text"
         placeholder={placeholder}
         value={localValue}

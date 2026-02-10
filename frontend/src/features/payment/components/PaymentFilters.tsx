@@ -7,7 +7,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Icon, Button, Badge, Modal, FooterInfo } from '@/shared/ui';
 import { MultiSelectFilter } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
-import { DateFilter } from '@/features/order/components/DateFilter';
+import { DateFilter } from '@/shared/ui';
 import { inputWrapper, inputInner, inputText, inputContainerBase } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';

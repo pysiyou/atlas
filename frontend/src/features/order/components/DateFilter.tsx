@@ -4,15 +4,18 @@
  */
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { format, isSameDay, isAfter, isBefore, startOfDay, endOfDay } from 'date-fns';
-import { Popover } from '@/shared/ui/overlay/Popover';
-import { Icon } from '@/shared/ui';
-import { inputTrigger, inputTriggerOpen, filterTriggerText } from '@/shared/ui/forms/inputStyles';
+import { format, isSameDay, isBefore, startOfDay, endOfDay } from 'date-fns';
+import { Popover, Icon, FilterTriggerShell } from '@/shared/ui';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import { DateFilterCalendar } from './DateFilterCalendar';
 import { DateFilterHeader } from './DateFilterHeader';
-
+import { useCalendarNavigation } from '../hooks/useCalendarNavigation';
+import {
+  isDateDisabled as isDateDisabledHelper,
+  isSelectedDate,
+  isDateInRange,
+} from '../utils/dateFilterHelpers';
 import { DATE_PRESETS, getDateRangeFromPreset, getActivePresetId, type DatePreset } from '@/utils/dateHelpers';
 
 interface DateFilterProps {
@@ -33,10 +36,8 @@ export const DateFilter: React.FC<DateFilterProps> = ({
   placeholder = 'Filter by date range',
   className,
 }) => {
-  // Current month for calendar navigation
-  const [currentMonth, setCurrentMonth] = useState<Date>(value?.[0] || new Date());
-  const [view, setView] = useState<'days' | 'months' | 'years'>('days');
-  
+  const navigation = useCalendarNavigation(value?.[0] || new Date());
+
   // Track popover open state
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const prevOpenRef = useRef(false);
@@ -69,48 +70,8 @@ export const DateFilter: React.FC<DateFilterProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPopoverOpen]);
 
-  // Default date constraints
   const minDate = useMemo(() => new Date(1900, 0, 1), []);
   const maxDate = useMemo(() => new Date(2100, 11, 31), []);
-
-  // Navigation logic
-  const navigation = useMemo(() => ({
-    currentMonth,
-    view,
-    navigatePrevious: () => {
-      if (view === 'days') {
-        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
-      } else if (view === 'months') {
-        setCurrentMonth(new Date(currentMonth.getFullYear() - 1, currentMonth.getMonth(), 1));
-      } else {
-        setCurrentMonth(new Date(currentMonth.getFullYear() - 10, currentMonth.getMonth(), 1));
-      }
-    },
-    navigateNext: () => {
-      if (view === 'days') {
-        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
-      } else if (view === 'months') {
-        setCurrentMonth(new Date(currentMonth.getFullYear() + 1, currentMonth.getMonth(), 1));
-      } else {
-        setCurrentMonth(new Date(currentMonth.getFullYear() + 10, currentMonth.getMonth(), 1));
-      }
-    },
-    navigateToToday: () => {
-      setCurrentMonth(new Date());
-      setView('days');
-    },
-    toggleView: () => {
-      setView(view === 'days' ? 'months' : view === 'months' ? 'years' : 'days');
-    },
-    selectMonth: (month: number) => {
-      setCurrentMonth(new Date(currentMonth.getFullYear(), month, 1));
-      setView('days');
-    },
-    selectYear: (year: number) => {
-      setCurrentMonth(new Date(year, currentMonth.getMonth(), 1));
-      setView('months');
-    },
-  }), [currentMonth, view]);
 
   /**
    * Handle date click for range selection
@@ -167,35 +128,12 @@ export const DateFilter: React.FC<DateFilterProps> = ({
     onChange(null);
   };
 
-  /**
-   * Check if date is disabled
-   */
-  const isDateDisabled = (date: Date): boolean => {
-    return isBefore(date, minDate) || isAfter(date, maxDate);
-  };
-
-  /**
-   * Check if date is selected (start or end)
-   */
-  const isSelected = (date: Date): boolean => {
-    if (!tempStart) return false;
-    if (tempEnd) {
-      return isSameDay(date, tempStart) || isSameDay(date, tempEnd);
-    }
-    return isSameDay(date, tempStart);
-  };
-
-  /**
-   * Check if date is in range
-   */
-  const isInRange = (date: Date): boolean => {
-    if (!tempStart || !tempEnd) return false;
-    const dateStart = startOfDay(date);
-    return (isAfter(dateStart, tempStart) || isSameDay(dateStart, tempStart)) &&
-           (isBefore(dateStart, tempEnd) || isSameDay(dateStart, tempEnd)) &&
-           !isSameDay(dateStart, tempStart) &&
-           !isSameDay(dateStart, tempEnd);
-  };
+  const isDateDisabled = (date: Date) =>
+    isDateDisabledHelper(date, minDate, maxDate);
+  const isSelected = (date: Date) =>
+    isSelectedDate(date, tempStart, tempEnd);
+  const isInRange = (date: Date) =>
+    isDateInRange(date, tempStart, tempEnd);
 
   // Current range value for calendar
   const calendarValue: [Date, Date] | null = tempStart && tempEnd 
@@ -211,16 +149,19 @@ export const DateFilter: React.FC<DateFilterProps> = ({
       placement="bottom-start"
       showBackdrop={false}
       trigger={({ isOpen }: { isOpen: boolean }) => {
-        // Defer sync to avoid setState during Popover's render (React forbids updating DateFilter while Popover is rendering)
         if (isOpen !== isPopoverOpen) {
           queueMicrotask(() => setIsPopoverOpen(isOpen));
         }
         return (
-        <div
-          className={cn(inputTrigger, 'w-full', isOpen && inputTriggerOpen, className)}
-        >
-          <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-fg-faint group-hover:text-brand transition-colors shrink-0" />
-          <div className={cn('flex-1 min-w-0 truncate', filterTriggerText)}>
+          <FilterTriggerShell
+            isOpen={isOpen}
+            leftIcon={
+              <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-fg-faint group-hover:text-brand transition-colors shrink-0" />
+            }
+            showClear={!!value}
+            onClear={handleClear}
+            className={className}
+          >
             {value ? (
               <span>
                 {format(value[0], 'MMM dd')} - {format(value[1], 'MMM dd')}
@@ -228,29 +169,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
             ) : (
               <span className="text-fg-faint">{placeholder}</span>
             )}
-          </div>
-
-          <Icon
-            name={ICONS.actions.chevronDown}
-            className={cn(
-              'w-4 h-4 text-fg-disabled transition-transform shrink-0',
-              isOpen && 'rotate-180'
-            )}
-          />
-
-          {value && (
-            <button
-              onClick={handleClear}
-              className="p-0.5 -mr-1 hover:bg-panel-hover rounded transition-colors flex items-center justify-center cursor-pointer"
-              type="button"
-            >
-              <Icon
-                name={ICONS.actions.closeCircle}
-                className="w-3.5 h-3.5 text-fg-disabled hover:text-fg-subtle"
-              />
-            </button>
-          )}
-        </div>
+          </FilterTriggerShell>
         );
       }}
       className="p-0 w-[320px]"
@@ -259,8 +178,8 @@ export const DateFilter: React.FC<DateFilterProps> = ({
         <div className="p-3">
           {/* Calendar Header */}
           <DateFilterHeader
-            currentMonth={currentMonth}
-            view={view}
+            currentMonth={navigation.currentMonth}
+            view={navigation.view}
             onPrevClick={navigation.navigatePrevious}
             onNextClick={navigation.navigateNext}
             onTitleClick={navigation.toggleView}
@@ -270,10 +189,10 @@ export const DateFilter: React.FC<DateFilterProps> = ({
 
           {/* Calendar */}
           <DateFilterCalendar
-            currentMonth={currentMonth}
-            setCurrentMonth={setCurrentMonth}
-            view={view}
-            setView={setView}
+            currentMonth={navigation.currentMonth}
+            setCurrentMonth={navigation.setCurrentMonth}
+            view={navigation.view}
+            setView={navigation.setView}
             value={calendarValue}
             minDate={minDate}
             maxDate={maxDate}

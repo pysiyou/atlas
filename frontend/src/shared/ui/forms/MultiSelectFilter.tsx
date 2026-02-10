@@ -17,7 +17,7 @@ import { Popover } from '../overlay/Popover';
 import { cn, uppercaseLabel, ICONS } from '@/utils';
 import { Badge } from '../display/Badge';
 import { Icon, type IconName } from '../display/Icon';
-import { inputTrigger, inputTriggerOpen, filterTriggerText } from './inputStyles';
+import { FilterTriggerShell } from './FilterTriggerShell';
 
 /**
  * Option item for the filter
@@ -207,51 +207,24 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       placement="bottom-start"
       showBackdrop={false}
       trigger={({ isOpen }: { isOpen: boolean }) => (
-        <div
-          className={cn(
-            inputTrigger,
-            filterTriggerText,
-            isOpen && inputTriggerOpen,
-            className
-          )}
+        <FilterTriggerShell
+          isOpen={isOpen}
+          leftIcon={
+            icon ? (
+              <Icon name={icon} className="w-4 h-4 text-fg-faint group-hover:text-brand shrink-0 transition-colors" />
+            ) : undefined
+          }
+          showClear={selectedIds.length > 0}
+          onClear={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleClear(e);
+          }}
+          onClearMouseDown={e => e.stopPropagation()}
+          className={className}
         >
-          {/* Column 1: Left Icon */}
-          {icon && <Icon name={icon} className="w-4 h-4 text-fg-faint group-hover:text-brand flex-shrink-0 transition-colors" />}
-
-          {/* Column 2: Content - flexible middle */}
-          <div className="flex-1 min-w-0 overflow-hidden">
-            {renderTriggerContent()}
-          </div>
-
-          {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
-          <div className="flex items-center gap-1 flex-shrink-0">
-            {selectedIds.length > 0 ? (
-              <button
-                type="button"
-                onClick={e => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleClear(e);
-                }}
-                onMouseDown={e => {
-                  // Prevent popover from opening when clicking clear button
-                  // But don't prevent default on the button itself to allow onClick to fire
-                  e.stopPropagation();
-                }}
-                className="p-0.5 -mr-1 hover:bg-neutral-100 rounded transition-colors flex items-center justify-center"
-                aria-label="Clear selection"
-              >
-                <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-fg-faint" />
-              </button>
-            ) : (
-              <div className="w-4" />
-            )}
-            <Icon
-              name={ICONS.actions.chevronDown}
-              className={cn('w-4 h-4 text-fg-faint transition-transform', isOpen && 'rotate-180')}
-            />
-          </div>
-        </div>
+          <div className="overflow-hidden">{renderTriggerContent()}</div>
+        </FilterTriggerShell>
       )}
       className="min-w-[200px]"
     >

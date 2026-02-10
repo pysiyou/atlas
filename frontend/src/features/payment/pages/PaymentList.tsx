@@ -17,33 +17,11 @@ import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from './PaymentTableConfig';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
 import { useOrdersList, usePaymentsList } from '@/hooks/queries';
-// OrderPaymentDetails type
-type OrderPaymentDetails = {
-  orderId: number;
-  orderDate: string;
-  patientId: number;
-  patientName: string;
-  tests: Array<{
-    testName: string;
-    priceAtOrder: number;
-    status?: string;
-    testCode?: string;
-  }>;
-  totalPrice: number;
-  paymentStatus: string;
-  paymentMethod?: string;
-  paymentDate?: string;
-  order: any;
-  payment?: {
-    paymentId: number;
-    paymentMethod: string;
-    amount: number;
-    paidAt: string;
-  };
-};
+import type { Order, Payment, PaymentStatus, PaymentMethod } from '@/types';
+import type { OrderPaymentDetails } from '../types';
 
-// Helper function to create combined list
-const createOrderPaymentDetailsList = (orders: any[], payments: any[]): OrderPaymentDetails[] => {
+/** Cross-reference orders with payment data for list/table display. */
+function createOrderPaymentDetailsList(orders: Order[], payments: Payment[]): OrderPaymentDetails[] {
   return orders.map(order => {
     const payment = payments.find(p => p.orderId === order.orderId);
     return {
@@ -60,8 +38,7 @@ const createOrderPaymentDetailsList = (orders: any[], payments: any[]): OrderPay
       payment,
     };
   });
-};
-import type { PaymentStatus, PaymentMethod } from '@/types';
+}
 import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 
 /**

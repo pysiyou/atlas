@@ -5,11 +5,10 @@
  */
 import { API_CONFIG } from '@/config/api';
 import { logger } from '@/utils/logger';
+import type { ApiError } from '@/shared/schemas/error.schema';
 
-export interface APIError {
-  message: string;
-  status?: number;
-}
+/** Re-export for consumers; matches shared ApiError (message, status, code, field, details). */
+export type APIError = ApiError;
 
 type TokenGetter = () => string | null;
 type RefreshHandler = () => Promise<string | null>;
@@ -60,10 +59,11 @@ class APIClient {
         try {
           return text ? JSON.parse(text) : ({} as T);
         } catch (parseError) {
-          throw {
+          const err: ApiError = {
             message: (parseError as Error).message || 'Invalid response',
             status: response.status,
-          } as APIError;
+          };
+          throw err;
         }
       }
 
@@ -91,17 +91,19 @@ class APIClient {
         // Use statusText
       }
 
-      throw { message, status: response.status } as APIError;
+      const err: ApiError = { message, status: response.status };
+      throw err;
     } catch (error) {
       clearTimeout(timeoutId);
 
-      if ((error as APIError).status) {
+      if (error && typeof error === 'object' && 'status' in error) {
         throw error;
       }
 
       const err = error as Error;
       logger.error('API request failed', err);
-      throw { message: err.message || 'Network error' } as APIError;
+      const apiErr: ApiError = { message: err.message || 'Network error' };
+      throw apiErr;
     }
   }
 
