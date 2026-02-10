@@ -14,6 +14,8 @@ export interface AvatarProps {
   primaryTextClassName?: string;
   /** If true, only shows the avatar circle without text labels */
   avatarOnly?: boolean;
+  /** Shape: 'default' = rounded square, 'full' = circle */
+  rounded?: 'default' | 'full';
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
@@ -26,12 +28,14 @@ export const Avatar: React.FC<AvatarProps> = ({
   secondaryTextClassName = '',
   primaryTextClassName = '',
   avatarOnly = false,
+  rounded = 'default',
 }) => {
   const [imageError, setImageError] = useState(false);
+  const shapeClass = rounded === 'full' ? 'rounded-full' : 'rounded';
 
   const sizeClasses = {
     xxs: 'w-6 h-6 text-[8px]',
-    xs: 'w-7 h-7 text-[8px]',
+    xs: 'w-7 h-7 text-xs',
     sm: 'w-8 h-8 text-xs',
     md: 'w-10 h-10 text-sm',
     lg: 'w-12 h-12 text-base',
@@ -78,12 +82,12 @@ export const Avatar: React.FC<AvatarProps> = ({
         <img
           src={src}
           alt={primaryText}
-          className={`rounded object-cover block shrink-0 ${sizeClasses[size]}`}
+          className={`${shapeClass} object-cover block shrink-0 ${sizeClasses[size]}`}
           onError={() => setImageError(true)}
         />
       ) : (
         <div
-          className={`rounded bg-brand flex items-center justify-center text-on-brand font-semibold shrink-0 ${sizeClasses[size]}`}
+          className={`${shapeClass} bg-brand flex items-center justify-center text-on-brand font-normal shrink-0 ${sizeClasses[size]}`}
         >
           {getInitials(primaryText)}
         </div>
@@ -92,7 +96,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       {/* Primary and secondary text */}
       {hasText && (
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
-          <div className={`font-medium text-fg truncate ${textSizeClasses[size].primary} ${primaryTextClassName}`}>
+          <div className={`font-normal text-fg truncate ${textSizeClasses[size].primary} ${primaryTextClassName}`}>
             {primaryText}
           </div>
           {secondaryText && (
