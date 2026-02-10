@@ -219,7 +219,7 @@ export const Select: React.FC<SelectProps> = ({
         >
           {options.map(option => (
             <option key={option.value} value={option.value}>
-              {option.label}
+              {option.label.toUpperCase()}
             </option>
           ))}
         </select>

@@ -128,3 +128,11 @@ export function capitalizeLabel(s: string | undefined | null): string {
   const t = s.trim();
   return t.length === 0 ? '' : t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
 }
+
+/**
+ * Uppercase a label for display in dropdowns and select menus (enum-style options).
+ */
+export function uppercaseLabel(s: string | undefined | null): string {
+  if (!s || typeof s !== 'string') return '';
+  return s.trim().toUpperCase();
+}

@@ -46,7 +46,7 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
             className="w-7 h-7 shrink-0 text-fg-disabled"
           />
           <span className="flex-1 text-xs font-medium text-left text-fg-muted">
-            {method.label}
+            {method.label.toUpperCase()}
           </span>
           <div
             className={`

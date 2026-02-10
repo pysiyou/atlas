@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { Icon } from '../display/Icon';
-import { cn, capitalizeLabel, ICONS } from '@/utils';
+import { cn, uppercaseLabel, ICONS } from '@/utils';
 
 /**
  * Props for CheckboxList component
@@ -89,7 +89,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
                 isSelected ? 'text-fg' : 'text-fg-muted'
               )}
             >
-              {capitalizeLabel(option.label)}
+              {uppercaseLabel(option.label)}
             </span>
           </label>
         );
