@@ -13,3 +13,4 @@ export * from './DetailRow';
 export * from './DetailField';
 export * from './DetailFieldGroup';
 export * from './detailsTableUtils';
+export * from './PageHeaderBar';

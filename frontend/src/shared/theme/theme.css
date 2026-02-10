@@ -218,6 +218,13 @@
   --chart-warning: var(--primitive-warning-500);
 
   /* ═══════════════════════════════════════════════════════════════════
+     SIDEBAR
+     Usage: sidebar header close/collapse button
+     ═══════════════════════════════════════════════════════════════════ */
+  --sidebar-close-bg: var(--primitive-neutral-200);
+  --sidebar-close-fg: var(--primitive-neutral-800);
+
+  /* ═══════════════════════════════════════════════════════════════════
      OVERLAY
      Usage: bg-overlay (modal backdrop)
      ═══════════════════════════════════════════════════════════════════ */

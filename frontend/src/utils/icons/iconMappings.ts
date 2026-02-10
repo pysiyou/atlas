@@ -149,6 +149,8 @@ export const ICONS = {
     printer: 'printer' as IconName,
     menuDots: 'menu-dots' as IconName,
     logout: 'log-out' as IconName,
+    doubleArrowLeft: 'double-arrow-left' as IconName,
+    doubleArrowRight: 'double-arrow-right' as IconName,
   },
 
   // UI Elements

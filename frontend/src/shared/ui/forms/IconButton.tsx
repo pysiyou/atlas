@@ -38,6 +38,7 @@ type SemanticVariant =
   | 'previous'
   | 'expand'
   | 'collapse'
+  | 'sidebarClose'
   | 'menu'
   | 'search'
   | 'filter'
@@ -98,6 +99,7 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   previous: { style: 'secondary', icon: ICONS.actions.chevronLeft },
   expand: { style: 'secondary', icon: ICONS.actions.chevronDown },
   collapse: { style: 'secondary', icon: ICONS.actions.chevronLeft },
+  sidebarClose: { style: 'secondary', icon: ICONS.actions.doubleArrowLeft },
   menu: { style: 'primary', icon: ICONS.actions.menuDots },
 
   // User actions
@@ -128,6 +130,8 @@ const ICON_BUTTON_VARIANTS: Record<string, string> = {
   view: 'bg-neutral-200 text-secondary-fg hover:bg-neutral-300 focus:ring-neutral-500',
   print: 'bg-neutral-200 text-secondary-fg hover:bg-neutral-300 focus:ring-neutral-500',
   add: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
+  sidebarClose:
+    'bg-[var(--sidebar-close-bg)] text-[var(--sidebar-close-fg)] hover:opacity-90 focus:ring-neutral-500',
 };
 
 /**
@@ -229,7 +233,7 @@ export const IconButton = memo(
             ${variantStyle}
             ${SIZE_STYLES[size]}
             ${ICON_SIZE_STYLES[size]}
-            rounded-full
+            ${variant === 'sidebarClose' ? 'rounded-xl' : 'rounded-full'}
             transition-all duration-200
             disabled:opacity-50 disabled:cursor-not-allowed
             hover:scale-105 active:scale-95

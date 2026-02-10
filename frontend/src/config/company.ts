@@ -28,6 +28,8 @@ export interface CompanyBranding {
   logoPath: string;
   primaryColor: string;
   secondaryColor: string;
+  /** Character index at which to split displayName for two-tone header (e.g. 3 for "FIN" + "TRACKR"). Omit for single-style name. */
+  appNamePart2Start?: number;
 }
 
 export interface CompanyFeature {
