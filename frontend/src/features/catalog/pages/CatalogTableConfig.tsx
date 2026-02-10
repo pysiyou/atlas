@@ -24,14 +24,14 @@ import { CatalogCard } from '../components/CatalogCard';
 export const createCatalogTableConfig = (_navigate: NavigateFunction): TableViewConfig<Test> => {
   // Shared render functions
   const renderCode = (test: Test) => (
-    <span className={DATA_ID_PRIMARY}>{test.code}</span>
+    <span className={`${DATA_ID_PRIMARY} font-normal`}>{test.code}</span>
   );
 
   const renderName = (test: Test) => (
-    <div className="min-w-0">
-      <div className="text-fg truncate">{test.name}</div>
+    <div className="min-w-0 font-normal">
+      <div className="text-fg truncate font-normal">{test.name}</div>
       {test.synonyms && test.synonyms.length > 0 && (
-        <div className="text-xs text-fg-subtle truncate">
+        <div className="text-xs text-fg-subtle truncate font-normal">
           {test.synonyms.slice(0, 2).join(', ')}
           {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
         </div>
@@ -47,17 +47,17 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
 
   const renderLoincCodes = (test: Test) => {
     if (!test.loincCodes || test.loincCodes.length === 0) {
-      return <div className="text-xs text-fg-disabled truncate">-</div>;
+      return <div className="text-xs text-fg-disabled truncate font-normal">-</div>;
     }
     return (
-      <div className="text-xs text-fg truncate">
+      <div className="text-xs text-fg truncate font-normal">
         {test.loincCodes.join(', ')}
       </div>
     );
   };
 
   const renderPrice = (test: Test) => (
-    <div className={`${DATA_AMOUNT} truncate`}>{formatCurrency(test.price)}</div>
+    <div className={`${DATA_AMOUNT} truncate font-normal`}>{formatCurrency(test.price)}</div>
   );
 
   return {

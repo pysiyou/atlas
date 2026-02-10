@@ -58,16 +58,16 @@ export const createPaymentTableConfig = (
         e.stopPropagation();
         navigate(`/orders/${item.orderId}`);
       }}
-      className={DATA_ID_PRIMARY_CLICKABLE}
+      className={`${DATA_ID_PRIMARY_CLICKABLE} font-normal`}
     >
       {displayId.order(item.orderId)}
     </button>
   );
 
   const renderPatientName = (item: OrderPaymentDetails) => (
-    <div className="min-w-0">
-      <div className="text-fg truncate">{item.patientName || 'N/A'}</div>
-      <div className={DATA_ID_SECONDARY}>{displayId.patient(item.patientId)}</div>
+    <div className="min-w-0 font-normal">
+      <div className="text-fg truncate font-normal capitalize">{item.patientName || 'N/A'}</div>
+      <div className={`${DATA_ID_SECONDARY} font-normal`}>{displayId.patient(item.patientId)}</div>
     </div>
   );
 
@@ -77,11 +77,11 @@ export const createPaymentTableConfig = (
     );
     const activeCount = activeTests.length;
     return (
-      <div className="min-w-0">
-        <div className="truncate font-mono text-xs text-fg">
+      <div className="min-w-0 font-normal">
+        <div className="truncate font-mono text-xs text-fg font-normal">
           {activeTests.map(t => t.testCode ?? t.testName).join('/')}
         </div>
-        <div className="text-xs text-fg-subtle truncate">
+        <div className="text-xs text-fg-subtle truncate font-normal">
           {activeCount} test{activeCount !== 1 ? 's' : ''}
         </div>
       </div>
@@ -89,7 +89,7 @@ export const createPaymentTableConfig = (
   };
 
   const renderTotalPrice = (item: OrderPaymentDetails) => (
-    <span className={`${DATA_AMOUNT} truncate block`}>{formatCurrency(item.totalPrice)}</span>
+    <span className={`${DATA_AMOUNT} truncate block font-normal`}>{formatCurrency(item.totalPrice)}</span>
   );
 
   const renderPaymentStatus = (item: OrderPaymentDetails) => (
@@ -106,11 +106,11 @@ export const createPaymentTableConfig = (
   };
 
   const renderOrderDate = (item: OrderPaymentDetails) => (
-    <span className="text-xs text-fg-subtle truncate block">{formatDate(item.orderDate)}</span>
+    <span className="text-xs text-fg-subtle truncate block font-normal">{formatDate(item.orderDate)}</span>
   );
 
   const renderAction = (item: OrderPaymentDetails) => (
-    <div className="flex items-center" onClick={e => e.stopPropagation()}>
+    <div className="flex items-center font-normal" onClick={e => e.stopPropagation()}>
       <PaymentButton order={item.order} onPaymentSuccess={onPaymentSuccess} />
     </div>
   );
@@ -162,7 +162,7 @@ export const createPaymentTableConfig = (
       {
         key: 'orderDate',
         header: 'Date',
-        width: 'md',
+        width: 'lg',
         sortable: true,
         render: renderOrderDate,
       },

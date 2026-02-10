@@ -26,15 +26,15 @@ export const createOrderTableConfig = (
 ): TableViewConfig<Order> => {
   // Shared render functions
   const renderOrderId = (order: Order) => (
-    <span className={DATA_ID_PRIMARY}>{displayId.order(order.orderId)}</span>
+    <span className={`${DATA_ID_PRIMARY} font-normal`}>{displayId.order(order.orderId)}</span>
   );
 
   const renderPatientName = (order: Order) => (
-    <div className="min-w-0">
-      <div className="text-fg truncate">
+    <div className="min-w-0 font-normal">
+      <div className="text-fg truncate font-normal capitalize">
         {getPatientNameFn(order.patientId)}
       </div>
-      <div className={DATA_ID_SECONDARY}>{displayId.patient(order.patientId)}</div>
+      <div className={`${DATA_ID_SECONDARY} font-normal`}>{displayId.patient(order.patientId)}</div>
     </div>
   );
 
@@ -44,11 +44,11 @@ export const createOrderTableConfig = (
     const activeCount = activeTests.length;
 
     return (
-      <div className="min-w-0">
-        <div className="truncate font-mono text-xs text-fg">
+      <div className="min-w-0 font-normal">
+        <div className="truncate font-mono text-xs text-fg font-normal">
           {activeTests.map(t => t.testCode).join('/')}
         </div>
-        <div className="text-xs text-fg-subtle truncate">
+        <div className="text-xs text-fg-subtle truncate font-normal">
           {activeCount} test{activeCount !== 1 ? 's' : ''}
         </div>
       </div>
@@ -62,13 +62,13 @@ export const createOrderTableConfig = (
   const renderStatus = (order: Order) => <Badge variant={order.overallStatus} size="sm" />;
 
   const renderTotalPrice = (order: Order) => (
-    <div className={`${DATA_AMOUNT} truncate`}>{formatCurrency(order.totalPrice)}</div>
+    <div className={`${DATA_AMOUNT} truncate font-normal`}>{formatCurrency(order.totalPrice)}</div>
   );
 
   const renderPaymentStatus = (order: Order) => <Badge variant={order.paymentStatus} size="sm" />;
 
   const renderOrderDate = (order: Order) => (
-    <div className="text-xs text-fg-subtle truncate">{formatDate(order.orderDate)}</div>
+    <div className="text-xs text-fg-subtle truncate font-normal">{formatDate(order.orderDate)}</div>
   );
 
   return {
@@ -124,7 +124,7 @@ export const createOrderTableConfig = (
       {
         key: 'orderDate',
         header: 'Date',
-        width: 'md',
+        width: 'lg',
         sortable: true,
         render: renderOrderDate,
       },
