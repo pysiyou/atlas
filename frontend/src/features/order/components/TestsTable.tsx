@@ -193,6 +193,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
     <Table<OrderTest>
       data={visibleTests}
       viewConfig={viewConfig}
+      striped
       getRowKey={(t, i) => t.id ?? i}
       rowClassName={rowClassName}
       pagination={false}

@@ -89,6 +89,7 @@ const AdminTestTable: React.FC<{ tests: Test[] }> = ({ tests }) => {
     <Table<Test>
       data={tests}
       viewConfig={viewConfig}
+      striped
       emptyMessage="No tests available"
       pagination={false}
     />

@@ -169,6 +169,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
             <Table
               data={items}
               viewConfig={viewConfig}
+              striped
               emptyMessage={
                 emptyState || (
                   <EmptyState
