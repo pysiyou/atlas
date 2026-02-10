@@ -113,13 +113,13 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
             </p>
           </div>
 
-          {/* Included Features */}
+          {/* Included Features - icons follow theme (brand) */}
           <div className="space-y-3">
             <h4 className="text-sm font-semibold text-fg">What's Included</h4>
             <div className="space-y-2.5">
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success-bg flex items-center justify-center mt-0.5">
-                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-success-text" />
+                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-brand flex items-center justify-center mt-0.5">
+                  <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-fg">Priority Lab Services</span>
@@ -127,8 +127,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success-bg flex items-center justify-center mt-0.5">
-                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-success-text" />
+                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-brand flex items-center justify-center mt-0.5">
+                  <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-fg">Discounted Test Pricing</span>
@@ -136,8 +136,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success-bg flex items-center justify-center mt-0.5">
-                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-success-text" />
+                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-brand flex items-center justify-center mt-0.5">
+                  <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-fg">Assurance Number</span>
@@ -145,8 +145,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success-bg flex items-center justify-center mt-0.5">
-                  <Icon name={ICONS.actions.check} className="w-3.5 h-3.5 text-success-text" />
+                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-brand flex items-center justify-center mt-0.5">
+                  <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
                   <span className="text-sm font-medium text-fg">
@@ -181,7 +181,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 key={plan.duration}
                 onClick={() => handlePlanSelect(plan.duration)}
                 className={`
-                  relative border-2 rounded-xl p-5 cursor-pointer transition-all duration-200
+                  group relative border-2 rounded-xl p-5 cursor-pointer transition-all duration-200
                   ${
                     isSelected
                       ? 'border-brand bg-brand-muted shadow-sm'
@@ -198,22 +198,21 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   </div>
                 )}
 
-                {/* Radio Button and Plan Details */}
+                {/* Circular single-select indicator - theme matches Checkbox (brand, border-stroke) */}
                 <div className="flex items-start gap-4">
-                  {/* Radio Button */}
                   <div className="mt-0.5 flex-shrink-0">
                     <div
                       className={`
-                        w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all
+                        w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-150
                         ${
                           isSelected
-                            ? 'border-success bg-success'
-                            : 'border-stroke-strong bg-panel'
+                            ? 'border-brand bg-brand'
+                            : 'border-stroke bg-panel group-hover:border-brand'
                         }
                       `}
                     >
                       {isSelected && (
-                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-fg-inverse" />
+                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                       )}
                     </div>
                   </div>

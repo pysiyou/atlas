@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Button } from '@/shared/ui';
+import { Badge, Button, Checkbox } from '@/shared/ui';
 import type { AffiliationDuration } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
@@ -75,26 +75,17 @@ export const AffiliationSection: React.FC<
 
       {/* New/Renewal Affiliation Toggle */}
       {!hasExistingAffiliation && (
-        <div className="flex items-center gap-3 p-4 bg-canvas rounded-lg border border-stroke">
-          <input
-            type="checkbox"
+        <div className="p-4 bg-canvas rounded-lg border border-stroke">
+          <Checkbox
             id="hasAffiliation"
             name="hasAffiliation"
             checked={formData.hasAffiliation}
-            onChange={e => {
-              onFieldChange('hasAffiliation', e.target.checked);
-              if (!e.target.checked) {
-                onFieldChange('affiliationDuration', undefined);
-              }
+            onChange={v => {
+              onFieldChange('hasAffiliation', v);
+              if (!v) onFieldChange('affiliationDuration', undefined);
             }}
-            className="w-4 h-4 text-brand border-stroke-strong rounded focus:ring-brand focus:ring-2"
+            label="Subscribe to lab affiliation"
           />
-          <label
-            htmlFor="hasAffiliation"
-            className="text-sm font-medium text-fg-muted cursor-pointer"
-          >
-            Subscribe to lab affiliation
-          </label>
         </div>
       )}
 
