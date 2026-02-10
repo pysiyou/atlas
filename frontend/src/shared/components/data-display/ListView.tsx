@@ -140,8 +140,8 @@ export function ListView<T extends TableDataItem = TableDataItem>({
   }
 
   return (
-    <div className={`min-h-0 flex-1 flex flex-col p-4 gap-6 overflow-hidden ${className}`}>
-      {/* Header */}
+    <div className={`min-h-0 flex-1 flex flex-col p-2 gap-2 overflow-hidden ${className}`}>
+      {/* Header row (fixed height via PageHeaderBar) */}
       {(title != null || headerActions != null) && (
         <PageHeaderBar title={title ?? ''} subtitle={subtitle}>
           {headerActions}

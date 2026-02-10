@@ -69,15 +69,18 @@ export const PatientDetail: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col p-6">
-      <PatientHeader
-        patient={patient}
-        isLarge={isLarge}
-        onEdit={handleEdit}
-        onNewOrder={handleNewOrder}
-      />
-
-      {renderContent()}
+    <div className="h-full flex flex-col p-2 gap-4 overflow-hidden">
+      <div className="shrink-0 h-14 min-h-14 max-h-14 flex items-center">
+        <PatientHeader
+          patient={patient}
+          isLarge={isLarge}
+          onEdit={handleEdit}
+          onNewOrder={handleNewOrder}
+        />
+      </div>
+      <div className="flex-1 min-h-0 overflow-hidden">
+        {renderContent()}
+      </div>
 
       {patient && (
         <EditPatientModal
