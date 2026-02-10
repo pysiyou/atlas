@@ -4,10 +4,11 @@
  */
 
 import React from 'react';
-import { Icon } from '@/shared/ui';
+import { Icon, EmptyState } from '@/shared/ui';
 import type { IconName } from '@/shared/ui';
 import type { VitalSigns } from '@/types/patient';
 import { ICONS } from '@/utils';
+import { DEFAULT_EMPTY_DESCRIPTION } from '@/shared/constants';
 import { getBadgeAppearance } from '@/shared/theme/theme';
 
 export interface VitalSignsDisplayProps {
@@ -144,24 +145,28 @@ const getStatusColors = (status: VitalStatus, appearance: 'unified' | 'tinted') 
   }
 };
 
+const hasAnyVital = (vs: VitalSigns | null | undefined): boolean => {
+  if (!vs) return false;
+  return VITAL_SIGNS_CONFIG.some(config => vs[config.key] != null);
+};
+
 export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns }) => {
   const appearance = getBadgeAppearance();
 
-  if (!vitalSigns) {
+  if (!hasAnyVital(vitalSigns)) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[200px]">
-        <div className="text-center">
-          <Icon name={ICONS.dataFields.stethoscope} className="w-12 h-12 text-fg-disabled mx-auto mb-2" />
-          <p className="text-sm text-fg-subtle">No vital signs recorded</p>
-        </div>
-      </div>
+      <EmptyState
+        icon={ICONS.dataFields.stethoscope}
+        title="No vital signs recorded"
+        description={DEFAULT_EMPTY_DESCRIPTION}
+      />
     );
   }
 
   return (
     <div className="grid grid-cols-2 gap-3">
       {VITAL_SIGNS_CONFIG.map(config => {
-        const value = vitalSigns[config.key];
+        const value = vitalSigns![config.key];
         // Skip if value is undefined or null (partial vital signs)
         if (value === undefined || value === null) return null;
 

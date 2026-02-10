@@ -4,6 +4,9 @@
  */
 
 import React from 'react';
+import { EmptyState } from '@/shared/ui';
+import { DEFAULT_EMPTY_DESCRIPTION } from '@/shared/constants';
+import { ICONS } from '@/utils';
 import type { ProductivityMetrics } from '../types';
 
 interface ProductivityTableProps {
@@ -12,14 +15,22 @@ interface ProductivityTableProps {
   compact?: boolean;
 }
 
+const emptyContent = (
+  <EmptyState
+    variant="compact"
+    icon={ICONS.dataFields.document}
+    title="No productivity data"
+    description={DEFAULT_EMPTY_DESCRIPTION}
+  />
+);
+
 export const ProductivityTable: React.FC<ProductivityTableProps> = ({ data, compact = false }) => {
   if (data.byTechnician.length === 0) {
-    const empty = <div className="flex items-center justify-center py-8 text-fg-subtle text-sm">No productivity data available</div>;
-    if (compact) return empty;
+    if (compact) return <div className="flex items-center justify-center min-h-[120px]">{emptyContent}</div>;
     return (
       <div className="bg-panel border border-stroke rounded-lg p-4">
         <h3 className="text-sm text-fg mb-4">Technician Productivity</h3>
-        <div className="flex items-center justify-center h-[200px] text-fg-subtle text-sm">No productivity data available</div>
+        <div className="flex items-center justify-center min-h-[200px]">{emptyContent}</div>
       </div>
     );
   }

@@ -4,9 +4,10 @@
  */
 
 import React from 'react';
-import { SectionContainer, Badge, Icon } from '@/shared/ui';
+import { SectionContainer, Badge, Icon, EmptyState } from '@/shared/ui';
 import type { Patient } from '@/types';
 import { formatFamilyHistory } from '../utils/patient-formatters';
+import { DEFAULT_EMPTY_DESCRIPTION } from '@/shared/constants';
 import { ICONS } from '@/utils';
 
 interface MedicalHistoryCardProps {
@@ -134,7 +135,11 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
         medicalHistory.allergies.length === 0 &&
         medicalHistory.previousSurgeries.length === 0 &&
         formatFamilyHistory(medicalHistory.familyHistory) === 'None' && (
-          <div className="text-center py-8 text-fg-disabled text-sm">No medical history recorded</div>
+          <EmptyState
+            icon={ICONS.dataFields.medicalKit}
+            title="No medical history recorded"
+            description={DEFAULT_EMPTY_DESCRIPTION}
+          />
         )}
     </SectionContainer>
   );

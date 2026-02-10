@@ -14,6 +14,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { format } from 'date-fns';
+import { EmptyState } from '@/shared/ui';
+import { ICONS } from '@/utils';
 
 const BAR_COLOR = 'var(--chart-success)';
 const AXIS_COLOR = 'var(--chart-axis)';
@@ -43,8 +45,12 @@ export const TestsByDayBarChart: React.FC<TestsByDayBarChartProps> = ({
 
   if (chartData.length === 0) {
     return (
-      <div className="flex items-center justify-center text-fg-subtle text-sm" style={{ height }}>
-        No data
+      <div className="flex items-center justify-center" style={{ height }}>
+        <EmptyState
+          variant="compact"
+          icon={ICONS.dataFields.document}
+          title="No data"
+        />
       </div>
     );
   }
