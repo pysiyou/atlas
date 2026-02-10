@@ -12,6 +12,10 @@ import { ErrorAlert } from '../feedback/ErrorAlert';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/shared/ui/Table';
 import { ICONS } from '@/utils';
+import {
+  DEFAULT_EMPTY_DESCRIPTION_SEARCH,
+  EMPTY_ICON_SEARCH,
+} from '@/shared/constants';
 
 // TableDataItem accepts any object-like type (interfaces, types, classes)
 // Using a union type to accept both Record types and regular object types
@@ -173,9 +177,9 @@ export function ListView<T extends TableDataItem = TableDataItem>({
               emptyMessage={
                 emptyState || (
                   <EmptyState
-                    icon={ICONS.actions.search}
+                    icon={EMPTY_ICON_SEARCH}
                     title={`No ${title || 'Items'} Found`}
-                    description="Try adjusting your search or filters to find what you're looking for."
+                    description={DEFAULT_EMPTY_DESCRIPTION_SEARCH}
                   />
                 )
               }
@@ -191,9 +195,9 @@ export function ListView<T extends TableDataItem = TableDataItem>({
               <div className="h-full flex items-center justify-center">
                 {emptyState || (
                   <EmptyState
-                    icon={ICONS.actions.search}
+                    icon={EMPTY_ICON_SEARCH}
                     title={`No ${title || 'Items'} Found`}
-                    description="Try adjusting your search or filters to find what you're looking for."
+                    description={DEFAULT_EMPTY_DESCRIPTION_SEARCH}
                   />
                 )}
               </div>
@@ -213,9 +217,9 @@ export function ListView<T extends TableDataItem = TableDataItem>({
               <div className="h-full flex items-center justify-center">
                 {emptyState || (
                   <EmptyState
-                    icon={ICONS.actions.search}
+                    icon={EMPTY_ICON_SEARCH}
                     title={`No ${title || 'Items'} Found`}
-                    description="Try adjusting your search or filters to find what you're looking for."
+                    description={DEFAULT_EMPTY_DESCRIPTION_SEARCH}
                   />
                 )}
               </div>

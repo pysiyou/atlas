@@ -7,6 +7,7 @@ import { EmptyState } from '../display/EmptyState';
 import type { IconName } from '../display/Icon';
 import type { ColumnConfig, SortConfig, PaginationConfig, TableVariant } from './types';
 import { ICONS } from '@/utils';
+import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/shared/constants';
 import { useTableSort } from './hooks/useTableSort';
 import { useTablePagination } from './hooks/useTablePagination';
 import { DEFAULT_LOADING_ROWS } from './constants';
@@ -186,14 +187,14 @@ export function TableCore<T = Record<string, unknown>>({
         <EmptyState
           icon={(emptyIcon || ICONS.dataFields.document) as IconName}
           title={emptyMessage}
-          description="Try adjusting filters or add new items."
+          description={DEFAULT_EMPTY_DESCRIPTION}
         />
       ) : (
         emptyMessage ?? (
           <EmptyState
             icon={(emptyIcon || ICONS.dataFields.document) as IconName}
-            title="No data available"
-            description="Try adjusting filters or add new items."
+            title={DEFAULT_EMPTY_TITLE}
+            description={DEFAULT_EMPTY_DESCRIPTION}
           />
         )
       );

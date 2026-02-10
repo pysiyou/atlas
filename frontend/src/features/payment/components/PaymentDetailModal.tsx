@@ -23,7 +23,6 @@ import {
   getDefaultPaymentMethod,
   type PaymentMethod,
 } from '@/types/billing';
-import type { IconName } from '@/shared/ui';
 import { getPaymentErrorMessage } from '@/utils/errorHelpers';
 // OrderPaymentDetails type
 type OrderPaymentDetails = {

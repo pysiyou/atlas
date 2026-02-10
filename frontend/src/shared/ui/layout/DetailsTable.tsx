@@ -7,7 +7,9 @@
  */
 
 import React from 'react';
-import { DETAIL_LABEL, DETAIL_VALUE } from '@/shared/constants';
+import { EmptyState } from '@/shared/ui';
+import { DETAIL_LABEL, DETAIL_VALUE, DEFAULT_EMPTY_TITLE } from '@/shared/constants';
+import { ICONS } from '@/utils';
 import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';
 
 /** Re-export for consumers */
@@ -66,8 +68,12 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
             {/* Empty state */}
             {filteredRows.length === 0 && (
               <tr>
-                <td colSpan={2} className="px-4 py-6 text-center text-fg-disabled text-sm">
-                  No data available
+                <td colSpan={2} className="px-4 py-4">
+                  <EmptyState
+                    variant="compact"
+                    icon={ICONS.dataFields.document}
+                    title={DEFAULT_EMPTY_TITLE}
+                  />
                 </td>
               </tr>
             )}

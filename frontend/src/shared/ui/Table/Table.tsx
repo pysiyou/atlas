@@ -98,8 +98,23 @@ export function Table<T = Record<string, unknown>>({
     return breakpoint === 'lg';
   }, [breakpoint]);
 
-  // Card view for mobile (xs/sm)
+  // Card view for mobile (xs/sm) – show empty state when no data (TableCore handles it)
   if (shouldShowCard) {
+    if (paginatedData.length === 0) {
+      return (
+        <div className={embedded ? 'flex flex-col h-full min-h-0' : 'bg-panel rounded-lg border border-stroke shadow-sm flex flex-col h-full min-h-0'}>
+          <TableCore<T>
+            data={[]}
+            columns={viewConfig.fullColumns}
+            pagination={false}
+            variant={variant}
+            embedded={true}
+            emptyMessage={emptyMessage}
+            emptyIcon={emptyIcon}
+          />
+        </div>
+      );
+    }
     return (
       <div className={embedded ? 'flex flex-col h-full min-h-0' : 'bg-panel rounded-lg border border-stroke shadow-sm flex flex-col h-full min-h-0'}>
         <div className="flex-1 min-h-0 overflow-y-auto p-4">
