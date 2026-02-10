@@ -676,3 +676,20 @@
 [data-theme="noir-studio"] select {
   color: var(--fg);
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Theme switch: smooth transition only while changing theme
+   ───────────────────────────────────────────────────────────────────────── */
+
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color 0.4s ease-out,
+    color 0.4s ease-out,
+    border-color 0.4s ease-out,
+    fill 0.4s ease-out,
+    stroke 0.4s ease-out,
+    box-shadow 0.4s ease-out !important;
+}
