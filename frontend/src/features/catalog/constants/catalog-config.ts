@@ -4,6 +4,7 @@
  */
 
 import type { FilterConfig } from '@/features/filters';
+import { SHARED_FILTER_PLACEHOLDERS } from '@/features/filters';
 import type { TestCategory } from '@/types';
 import { PRICE_RANGE } from '@/shared/constants';
 import { ICONS } from '@/utils';
@@ -116,7 +117,7 @@ export const catalogFilterConfig: FilterConfig = {
         options: categoryFilterOptions,
         selectAllLabel: 'All categories',
         icon: ICONS.ui.category,
-        placeholder: 'Select test categories',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.testCategory,
         helpText: 'Filter by test category (e.g. Hematology, Biochemistry).',
       },
       {
@@ -126,14 +127,14 @@ export const catalogFilterConfig: FilterConfig = {
         options: sampleTypeFilterOptions,
         selectAllLabel: 'All sample types',
         icon: ICONS.dataFields.sampleCollection,
-        placeholder: 'Select sample types',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.sampleType,
         helpText: 'Filter by required specimen type for the test.',
       },
       {
         type: 'priceRange',
         key: 'priceRange',
         label: 'Price Range',
-        placeholder: 'Filter by price range',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.priceRange,
         min: PRICE_RANGE.MIN,
         max: PRICE_RANGE.MAX,
         currency: '',

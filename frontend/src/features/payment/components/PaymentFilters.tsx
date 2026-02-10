@@ -14,7 +14,7 @@ import { ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
-import { DatePresetBadges } from '@/features/filters';
+import { DatePresetBadges, PAYMENT_FILTER_PLACEHOLDERS } from '@/features/filters';
 import { getEnabledPaymentMethods } from '@/types/billing';
 import type { PaymentStatus, PaymentMethod } from '@/types';
 
@@ -100,7 +100,7 @@ const SearchInput: React.FC<{
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className={cn(inputInner, inputText, 'font-normal')}
+        className={cn(inputInner, inputText)}
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
@@ -162,7 +162,7 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
         <SearchInput
           value={searchQuery}
           onChange={onSearchChange}
-          placeholder="Search payments by transaction ID, patient name, or reference..."
+          placeholder={PAYMENT_FILTER_PLACEHOLDERS.searchLong}
         />
       </div>
 
@@ -171,7 +171,7 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
         <DateFilter
           value={dateRange}
           onChange={onDateRangeChange}
-          placeholder="Filter by date range"
+          placeholder={PAYMENT_FILTER_PLACEHOLDERS.dateRange}
           className="w-full"
         />
       </div>
@@ -183,7 +183,7 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
           options={statusOptions}
           selectedIds={statusFilters}
           onChange={values => onStatusFiltersChange(values as PaymentStatus[])}
-          placeholder="Select payment status"
+          placeholder={PAYMENT_FILTER_PLACEHOLDERS.paymentStatus}
           selectAllLabel="All statuses"
           icon={ICONS.actions.infoCircle}
           className="w-full"
@@ -197,7 +197,7 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
           options={methodOptions}
           selectedIds={methodFilters}
           onChange={values => onMethodFiltersChange(values as PaymentMethod[])}
-          placeholder="Select payment method"
+          placeholder={PAYMENT_FILTER_PLACEHOLDERS.paymentMethod}
           selectAllLabel="All methods"
           icon={ICONS.dataFields.wallet}
           className="w-full"
@@ -218,7 +218,7 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
                 <SearchInput
                   value={searchQuery}
                   onChange={onSearchChange}
-                  placeholder="Search payments..."
+                  placeholder={PAYMENT_FILTER_PLACEHOLDERS.search}
                 />
               </div>
 
@@ -260,7 +260,7 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
                 <div className={cn(inputContainerBase, 'flex items-center h-10 px-4')}>
                   <input
                     type="text"
-                    placeholder="Search payments..."
+                    placeholder={PAYMENT_FILTER_PLACEHOLDERS.search}
                     value={searchQuery}
                     onChange={e => onSearchChange(e.target.value)}
                     className={cn(inputInner, inputText)}

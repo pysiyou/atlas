@@ -9,7 +9,7 @@ import { DateFilter } from '@/features/order/components/DateFilter';
 import { inputWrapper, inputInner, inputText, inputContainerBase } from '@/shared/ui/forms/inputStyles';
 import { cn, ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { DatePresetBadges } from '@/features/filters';
+import { DatePresetBadges, REPORT_FILTER_PLACEHOLDERS } from '@/features/filters';
 
 /**
  * Props interface for ReportFilters component
@@ -70,7 +70,7 @@ const SearchInput: React.FC<{
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className={cn(inputInner, inputText, 'font-normal')}
+        className={cn(inputInner, inputText)}
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
@@ -124,7 +124,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
         <SearchInput
           value={searchQuery}
           onChange={onSearchChange}
-          placeholder="Search by test ID, order ID, patient name, or test name..."
+          placeholder={REPORT_FILTER_PLACEHOLDERS.searchLong}
         />
       </div>
 
@@ -133,7 +133,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
         <DateFilter
           value={dateRange}
           onChange={onDateRangeChange}
-          placeholder="Filter by date range"
+          placeholder={REPORT_FILTER_PLACEHOLDERS.dateRange}
           className="w-full"
         />
       </div>
@@ -152,7 +152,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
                 <SearchInput
                   value={searchQuery}
                   onChange={onSearchChange}
-                  placeholder="Search reports..."
+                  placeholder={REPORT_FILTER_PLACEHOLDERS.search}
                 />
               </div>
 
@@ -194,7 +194,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
                 <div className={cn(inputContainerBase, 'flex items-center h-10 px-4')}>
                   <input
                     type="text"
-                    placeholder="Search reports..."
+                    placeholder={REPORT_FILTER_PLACEHOLDERS.search}
                     value={searchQuery}
                     onChange={e => onSearchChange(e.target.value)}
                     className={cn(inputInner, inputText)}

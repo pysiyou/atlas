@@ -17,7 +17,7 @@ import { Popover } from '../overlay/Popover';
 import { cn, uppercaseLabel, ICONS } from '@/utils';
 import { Badge } from '../display/Badge';
 import { Icon, type IconName } from '../display/Icon';
-import { inputTrigger, inputTriggerOpen } from './inputStyles';
+import { inputTrigger, inputTriggerOpen, filterTriggerText } from './inputStyles';
 
 /**
  * Option item for the filter
@@ -179,7 +179,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   // Render the trigger content
   const renderTriggerContent = () => {
     if (selectedIds.length === 0) {
-      return <span className="text-fg-subtle whitespace-nowrap overflow-hidden truncate">{placeholder || `Select ${label}...`}</span>;
+      return <span className="text-fg-faint whitespace-nowrap overflow-hidden truncate">{placeholder || `Select ${label}...`}</span>;
     }
 
     if (singleSelectedOption) {
@@ -193,7 +193,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
 
     // Show count for multiple selections – single line so truncate works
     return (
-      <span className="text-fg-muted truncate block whitespace-nowrap">
+      <span className="text-fg truncate block whitespace-nowrap">
         <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full text-on-brand text-xxs font-normal align-middle mr-1 bg-brand">
           {selectedIds.length}
         </span>
@@ -210,7 +210,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
         <div
           className={cn(
             inputTrigger,
-            'text-xs',
+            filterTriggerText,
             isOpen && inputTriggerOpen,
             className
           )}

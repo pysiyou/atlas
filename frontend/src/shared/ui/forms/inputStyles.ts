@@ -7,9 +7,12 @@
 const inputBorderFocusWithin =
   'border border-stroke rounded transition-colors duration-200 hover:border-stroke-hover focus-within:outline-none focus-within:border-brand focus-within:ring-1 focus-within:ring-brand focus-within:ring-opacity-20';
 
-/** Text and placeholder — same for all inputs */
+/** Text and placeholder — same for all inputs and filter trigger content */
 export const inputText =
-  'text-xs text-fg placeholder:text-fg-faint placeholder:font-normal';
+  'text-xs text-fg font-normal placeholder:text-fg-faint placeholder:font-normal';
+
+/** Filter trigger/dropdown content (date, select, price, age) — same as input text */
+export const filterTriggerText = 'text-xs text-fg font-normal';
 
 /** Full classes for a standalone <input> (e.g. Input.tsx) */
 export const inputBase =

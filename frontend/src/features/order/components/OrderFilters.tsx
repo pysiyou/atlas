@@ -19,7 +19,7 @@ import {
   PAYMENT_STATUS_CONFIG,
 } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
-import { DatePresetBadges } from '@/features/filters';
+import { DatePresetBadges, ORDER_FILTER_PLACEHOLDERS } from '@/features/filters';
 import type { OrderStatus, PaymentStatus } from '@/types';
 
 /**
@@ -89,7 +89,7 @@ const SearchInput: React.FC<{
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className={cn(inputInner, inputText, 'font-normal')}
+        className={cn(inputInner, inputText)}
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
@@ -151,7 +151,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
         <SearchInput
           value={searchQuery}
           onChange={onSearchChange}
-          placeholder="Search orders by ID, patient name, or details..."
+          placeholder={ORDER_FILTER_PLACEHOLDERS.searchLong}
         />
       </div>
 
@@ -160,7 +160,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
         <DateFilter
           value={dateRange}
           onChange={onDateRangeChange}
-          placeholder="Filter by date range"
+          placeholder={ORDER_FILTER_PLACEHOLDERS.dateRange}
           className="w-full"
         />
       </div>
@@ -172,7 +172,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
           options={orderStatusOptions}
           selectedIds={statusFilters}
           onChange={values => onStatusFiltersChange(values as OrderStatus[])}
-          placeholder="Select order status"
+          placeholder={ORDER_FILTER_PLACEHOLDERS.orderStatus}
           selectAllLabel="All statuses"
           icon={ICONS.actions.infoCircle}
           className="w-full"
@@ -186,7 +186,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
           options={paymentStatusOptions}
           selectedIds={paymentFilters}
           onChange={values => onPaymentFiltersChange(values as PaymentStatus[])}
-          placeholder="Select payment status"
+          placeholder={ORDER_FILTER_PLACEHOLDERS.paymentStatus}
           selectAllLabel="All payment statuses"
           icon={ICONS.dataFields.wallet}
           className="w-full"
@@ -207,7 +207,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
                 <SearchInput
                   value={searchQuery}
                   onChange={onSearchChange}
-                  placeholder="Search orders..."
+                  placeholder={ORDER_FILTER_PLACEHOLDERS.search}
                 />
               </div>
 
@@ -249,7 +249,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
                 <div className={cn(inputContainerBase, 'flex items-center h-10 px-4')}>
                   <input
                     type="text"
-                    placeholder="Search orders..."
+                    placeholder={ORDER_FILTER_PLACEHOLDERS.search}
                     value={searchQuery}
                     onChange={e => onSearchChange(e.target.value)}
                     className={cn(inputInner, inputText)}

@@ -7,7 +7,7 @@ import React from 'react';
 import { Popover } from '@/shared/ui';
 import { Icon, type IconName } from '@/shared/ui';
 import { Badge } from '@/shared/ui';
-import { inputTrigger, inputTriggerOpen } from '@/shared/ui/forms/inputStyles';
+import { inputTrigger, inputTriggerOpen, filterTriggerText } from '@/shared/ui/forms/inputStyles';
 import { cn, uppercaseLabel, ICONS } from '@/utils';
 import type { SingleSelectFilterControl } from '../types';
 
@@ -66,7 +66,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
   const renderTriggerContent = () => {
     if (!selectedOption) {
       return (
-        <span className="text-fg-subtle">
+        <span className="text-fg-faint">
           {config.placeholder || `Select ${config.label.toLowerCase()}...`}
         </span>
       );
@@ -93,7 +93,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
           )}
 
           {/* Column 2: Content - flexible middle */}
-          <div className="flex-1 min-w-0 text-xs font-normal">{renderTriggerContent()}</div>
+          <div className={cn('flex-1 min-w-0', filterTriggerText)}>{renderTriggerContent()}</div>
 
           {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
           <div className="flex items-center gap-1 shrink-0">
