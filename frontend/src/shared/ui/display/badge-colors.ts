@@ -49,7 +49,7 @@ const COLOR_MAP: Record<string, BadgeColor> = {
 
   // Rejection types
   're-test': 'warning',
-  're-collect': 'orange',
+  're-collect': 'primary',
   authorize_retest: 'success',
 
   // Sample status

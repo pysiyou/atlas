@@ -1,5 +1,5 @@
 import React from 'react';
-import { Textarea, TagInput } from '@/shared/ui';
+import { Textarea, TagInput, Checkbox } from '@/shared/ui';
 import type { PatientFormSectionProps } from './types';
 
 export const MedicalHistorySection: React.FC<
@@ -80,32 +80,20 @@ export const MedicalHistorySection: React.FC<
         rows={3}
       />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-        <div className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            id="smoking"
-            name="smoking"
-            checked={formData.smoking}
-            onChange={e => onFieldChange('smoking', e.target.checked)}
-            className="w-4 h-4 text-brand border-stroke-strong rounded focus:ring-brand"
-          />
-          <label htmlFor="smoking" className="text-xs font-medium text-fg-subtle">
-            Smoking
-          </label>
-        </div>
-        <div className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            id="alcohol"
-            name="alcohol"
-            checked={formData.alcohol}
-            onChange={e => onFieldChange('alcohol', e.target.checked)}
-            className="w-4 h-4 text-brand border-stroke-strong rounded focus:ring-brand"
-          />
-          <label htmlFor="alcohol" className="text-xs font-medium text-fg-subtle">
-            Alcohol Use
-          </label>
-        </div>
+        <Checkbox
+          id="smoking"
+          name="smoking"
+          checked={formData.smoking}
+          onChange={v => onFieldChange('smoking', v)}
+          label="Smoking"
+        />
+        <Checkbox
+          id="alcohol"
+          name="alcohol"
+          checked={formData.alcohol}
+          onChange={v => onFieldChange('alcohol', v)}
+          label="Alcohol Use"
+        />
       </div>
     </div>
   );
