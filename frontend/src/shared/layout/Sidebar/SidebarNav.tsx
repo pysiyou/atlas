@@ -43,7 +43,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               <div className="w-16 shrink-0 flex items-center justify-center">
                 <div className="w-5 h-5 flex items-center justify-center">{item.icon}</div>
               </div>
-              <span className="flex-1 min-w-0 overflow-hidden truncate px-3" title={item.label}>
+              <span className="flex-1 min-w-0 overflow-hidden truncate" title={item.label}>
                 {item.label}
               </span>
             </NavLink>
@@ -62,7 +62,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               <div className="w-16 shrink-0 flex items-center justify-center">
                 <div className="w-5 h-5 flex items-center justify-center">{item.icon}</div>
               </div>
-              <span className="flex-1 min-w-0 overflow-hidden truncate px-3 text-left">
+              <span className="flex-1 min-w-0 overflow-hidden truncate text-left">
                 {item.label}
               </span>
             </button>

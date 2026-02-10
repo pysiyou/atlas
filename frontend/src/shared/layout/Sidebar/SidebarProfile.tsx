@@ -49,7 +49,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
                 avatarOnly
               />
             </div>
-            <div className="flex-1 min-w-0 overflow-hidden px-3">
+            <div className="flex-1 min-w-0 overflow-hidden">
               <p className="text-sm font-medium text-fg truncate">{currentUser.name}</p>
               <p className="text-xs text-fg-subtle truncate">{formatStatus(currentUser.role)}</p>
             </div>
