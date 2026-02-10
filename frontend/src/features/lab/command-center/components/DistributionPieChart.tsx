@@ -36,8 +36,18 @@ const COLORS = [
   'var(--chart-accent)',
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CustomTooltip = ({ active, payload }: any) => {
+interface TooltipPayloadItem {
+  name: string;
+  value: number;
+  payload?: { fill?: string };
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayloadItem[];
+}
+
+const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
   if (!active || !payload?.length) return null;
   const data = payload[0];
 
@@ -51,9 +61,9 @@ const CustomTooltip = ({ active, payload }: any) => {
       }}
     >
       <div className="flex items-center gap-2 mb-1">
-        <span 
-          className="block w-2 h-2 rounded-full" 
-          style={{ backgroundColor: data.payload.fill }} 
+        <span
+          className="block w-2 h-2 rounded-full"
+          style={{ backgroundColor: data.payload?.fill ?? 'var(--fg)' }}
         />
         <p className="text-xs font-normal" style={{ color: TOOLTIP_FG_MUTED }}>
           {data.name}
@@ -67,8 +77,7 @@ const CustomTooltip = ({ active, payload }: any) => {
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const renderLegendText = (value: string, _entry: any) => {
+const renderLegendText = (value: string, _entry: { payload?: unknown }) => {
   return <span style={{ color: 'var(--fg)', fontSize: '13px', marginLeft: '4px' }}>{value}</span>;
 };
 

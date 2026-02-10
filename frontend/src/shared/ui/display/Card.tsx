@@ -32,6 +32,7 @@ export const Card: React.FC<CardProps> = ({
   hover = false,
   onClick,
 }) => {
+  // md and lg intentionally share p-4; use 'list' for tighter padding
   const paddingClasses = {
     none: '',
     list: 'p-3',

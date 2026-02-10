@@ -141,16 +141,12 @@ const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
   </div>
 );
 
-/** Form body: alerts, action cards, reason textarea */
-interface RejectionDialogFormBodyProps {
+/** Grouped state for form body (readability and future prop additions). */
+export interface RejectionFormState {
   error: string | null;
   escalationRequired: boolean;
   selectedType: ResultRejectionType;
-  onSelectType: (type: ResultRejectionType) => void;
   reason: string;
-  onReasonChange: (value: string) => void;
-  isActionEnabled: (action: 're-test' | 're-collect') => boolean;
-  getDisabledReason: (action: 're-test' | 're-collect') => string | null;
   isRecollectBlocked: boolean;
   recollectBlockedReason: string | null;
   retestAttemptsRemaining: number;
@@ -158,21 +154,37 @@ interface RejectionDialogFormBodyProps {
   orderHasValidatedTests: boolean;
 }
 
+/** Grouped actions for form body. */
+export interface RejectionFormActions {
+  onSelectType: (type: ResultRejectionType) => void;
+  onReasonChange: (value: string) => void;
+  isActionEnabled: (action: 're-test' | 're-collect') => boolean;
+  getDisabledReason: (action: 're-test' | 're-collect') => string | null;
+}
+
+interface RejectionDialogFormBodyProps {
+  state: RejectionFormState;
+  actions: RejectionFormActions;
+}
+
 export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = ({
-  error,
-  escalationRequired,
-  selectedType,
-  onSelectType,
-  reason,
-  onReasonChange,
-  isActionEnabled,
-  getDisabledReason,
-  isRecollectBlocked,
-  recollectBlockedReason,
-  retestAttemptsRemaining,
-  recollectionAttemptsRemaining,
-  orderHasValidatedTests,
-}) => (
+  state,
+  actions,
+}) => {
+  const {
+    error,
+    escalationRequired,
+    selectedType,
+    reason,
+    isRecollectBlocked,
+    recollectBlockedReason,
+    retestAttemptsRemaining,
+    recollectionAttemptsRemaining,
+    orderHasValidatedTests,
+  } = state;
+  const { onSelectType, onReasonChange, isActionEnabled, getDisabledReason } = actions;
+
+  return (
   <>
     {error && (
       <Alert variant="danger" className="py-2">
@@ -236,7 +248,8 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
       />
     </div>
   </>
-);
+  );
+};
 
 interface RejectionDialogContentProps {
   orderId: string | number;
@@ -333,19 +346,23 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text={copy.footerInfo} />}
     >
       <RejectionDialogFormBody
-        error={error}
-        escalationRequired={escalationRequired}
-        selectedType={selectedType}
-        onSelectType={type => setUserOverride(type)}
-        reason={reason}
-        onReasonChange={setReason}
-        isActionEnabled={isActionEnabled}
-        getDisabledReason={getDisabledReason}
-        isRecollectBlocked={isRecollectBlocked}
-        recollectBlockedReason={recollectBlockedReason}
-        retestAttemptsRemaining={retestAttemptsRemaining}
-        recollectionAttemptsRemaining={recollectionAttemptsRemaining}
-        orderHasValidatedTests={orderHasValidatedTests}
+        state={{
+          error,
+          escalationRequired,
+          selectedType,
+          reason,
+          isRecollectBlocked,
+          recollectBlockedReason,
+          retestAttemptsRemaining,
+          recollectionAttemptsRemaining,
+          orderHasValidatedTests,
+        }}
+        actions={{
+          onSelectType: setUserOverride,
+          onReasonChange: setReason,
+          isActionEnabled,
+          getDisabledReason,
+        }}
       />
     </PopoverForm>
   );

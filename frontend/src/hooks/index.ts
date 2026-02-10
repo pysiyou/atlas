@@ -21,6 +21,12 @@ export * from './queries';
 // useAuth removed - use useAuthStore from @/shared/stores/auth.store
 
 // =============================================================================
+// Form / UI Hooks
+// =============================================================================
+export { useRangeValue } from './useRangeValue';
+export type { UseRangeValueOptions, UseRangeValueReturn } from './useRangeValue';
+
+// =============================================================================
 // Responsive Layout Hooks (import from @/hooks/useBreakpoint or @/utils/filtering directly)
 // =============================================================================
 export { useResponsiveLayout } from './useResponsiveLayout';

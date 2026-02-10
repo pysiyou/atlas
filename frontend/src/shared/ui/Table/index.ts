@@ -21,6 +21,10 @@ export type {
   CardComponentProps,
 } from './types';
 
+// Column helpers (for building table configs with less duplication)
+export { createColumn, pickColumns } from './columnHelpers';
+export type { CreateColumnOptions } from './columnHelpers';
+
 // Constants (for use in column definitions and pagination)
 export {
   SIZE_PRESETS,

@@ -24,30 +24,7 @@ import {
   type PaymentMethod,
 } from '@/types/billing';
 import { getPaymentErrorMessage } from '@/utils/errorHelpers';
-// OrderPaymentDetails type
-type OrderPaymentDetails = {
-  orderId: number;
-  orderDate: string;
-  patientId: number;
-  patientName: string;
-  tests: Array<{
-    testName: string;
-    priceAtOrder: number;
-    status?: string;
-    testCode?: string;
-  }>;
-  totalPrice: number;
-  paymentStatus: string;
-  paymentMethod?: string;
-  paymentDate?: string;
-  order: any;
-  payment?: {
-    paymentId: number;
-    paymentMethod: string;
-    amount: number;
-    paidAt: string;
-  };
-};
+import type { OrderPaymentDetails } from '../types';
 import { ICONS } from '@/utils';
 
 interface PaymentDetailModalProps {
