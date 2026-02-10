@@ -115,7 +115,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
         placeholder={placeholder}
         value={localValue}
         onChange={handleChange}
-        className={cn(inputInner, inputText, 'font-normal')}
+        className={cn(inputInner, inputText)}
       />
 
       {/* Column 3: Right Icons (loading/clear) */}

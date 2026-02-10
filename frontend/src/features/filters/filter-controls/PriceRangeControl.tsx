@@ -6,7 +6,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Popover } from '@/shared/ui';
 import { Icon } from '@/shared/ui';
-import { inputTrigger, inputTriggerOpen } from '@/shared/ui/forms/inputStyles';
+import { inputTrigger, inputTriggerOpen, filterTriggerText } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
 import type { PriceRangeFilterControl } from '../types';
 import { ICONS } from '@/utils';
@@ -134,10 +134,10 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-fg-subtle">{config.placeholder || 'Filter by price range'}</span>;
+      return <span className="text-fg-faint">{config.placeholder || 'Filter by price range'}</span>;
     }
     return (
-      <span className="text-fg-muted font-normal">
+      <span className="text-fg font-normal">
         {formatPrice(start)} - {formatPrice(end)}
       </span>
     );
@@ -155,7 +155,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
           <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-fg-faint group-hover:text-brand shrink-0 transition-colors" />
           
           {/* Column 2: Content - flexible middle */}
-          <div className="flex-1 min-w-0 text-xs font-normal">{renderTriggerContent()}</div>
+          <div className={cn('flex-1 min-w-0', filterTriggerText)}>{renderTriggerContent()}</div>
 
           {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
           <div className="flex items-center gap-1 shrink-0">

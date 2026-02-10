@@ -7,7 +7,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { format, isSameDay, isAfter, isBefore, startOfDay, endOfDay } from 'date-fns';
 import { Popover } from '@/shared/ui/overlay/Popover';
 import { Icon } from '@/shared/ui';
-import { inputTrigger, inputTriggerOpen } from '@/shared/ui/forms/inputStyles';
+import { inputTrigger, inputTriggerOpen, filterTriggerText } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import { DateFilterCalendar } from './DateFilterCalendar';
@@ -220,9 +220,9 @@ export const DateFilter: React.FC<DateFilterProps> = ({
           className={cn(inputTrigger, 'w-full', isOpen && inputTriggerOpen, className)}
         >
           <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-fg-faint group-hover:text-brand transition-colors shrink-0" />
-          <div className="flex-1 min-w-0 text-xs text-fg truncate">
+          <div className={cn('flex-1 min-w-0 truncate', filterTriggerText)}>
             {value ? (
-              <span className="text-fg">
+              <span>
                 {format(value[0], 'MMM dd')} - {format(value[1], 'MMM dd')}
               </span>
             ) : (

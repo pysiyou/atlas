@@ -7,6 +7,7 @@
 
 import type { SampleStatus, TestStatus, PriorityLevel } from '@/types';
 import type { FilterConfig } from '@/features/filters';
+import { SHARED_FILTER_PLACEHOLDERS } from '@/features/filters';
 import type { FilterOption } from '@/utils/filtering';
 import { createFilterOptions } from '@/utils/filtering';
 import {
@@ -95,7 +96,7 @@ export const collectionFilterConfig: FilterConfig = {
         type: 'dateRange',
         key: 'dateRange',
         label: 'Date Range',
-        placeholder: 'Filter by date range',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.dateRange,
         icon: ICONS.dataFields.date,
         helpText: 'Filter samples by collection or order date range.',
       },
@@ -106,7 +107,7 @@ export const collectionFilterConfig: FilterConfig = {
         options: LAB_SAMPLE_TYPE_OPTIONS,
         selectAllLabel: 'All sample types',
         icon: ICONS.dataFields.sampleCollection,
-        placeholder: 'Select sample type',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.sampleType,
         helpText: 'Filter by specimen type (e.g. blood, urine, swab).',
       },
       {
@@ -116,7 +117,7 @@ export const collectionFilterConfig: FilterConfig = {
         options: COLLECTION_STATUS_OPTIONS,
         selectAllLabel: 'All statuses',
         icon: ICONS.sampleStatus,
-        placeholder: 'Select status',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.status,
         helpText: 'Filter by collection status: Pending, Collected, or Rejected.',
       },
     ],
@@ -159,7 +160,7 @@ export const entryFilterConfig: FilterConfig = {
         type: 'dateRange',
         key: 'dateRange',
         label: 'Date Range',
-        placeholder: 'Filter by date range',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.dateRange,
         icon: ICONS.dataFields.date,
         helpText: 'Filter by order or result date range.',
       },
@@ -170,7 +171,7 @@ export const entryFilterConfig: FilterConfig = {
         options: LAB_SAMPLE_TYPE_OPTIONS,
         selectAllLabel: 'All sample types',
         icon: ICONS.dataFields.sampleCollection,
-        placeholder: 'Select sample type',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.sampleType,
         helpText: 'Filter by specimen type (e.g. blood, urine).',
       },
       {
@@ -180,7 +181,7 @@ export const entryFilterConfig: FilterConfig = {
         options: entryStatusOptions,
         selectAllLabel: 'All statuses',
         icon: ICONS.testStatus,
-        placeholder: 'Select status',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.status,
         helpText: 'Filter by test status: Sample Collected or In Progress.',
       },
     ],
@@ -224,7 +225,7 @@ export const validationFilterConfig: FilterConfig = {
         type: 'dateRange',
         key: 'dateRange',
         label: 'Date Range',
-        placeholder: 'Filter by date range',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.dateRange,
         icon: ICONS.dataFields.date,
         helpText: 'Filter by order or validation date range.',
       },
@@ -235,7 +236,7 @@ export const validationFilterConfig: FilterConfig = {
         options: LAB_SAMPLE_TYPE_OPTIONS,
         selectAllLabel: 'All sample types',
         icon: ICONS.dataFields.sampleCollection,
-        placeholder: 'Select sample type',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.sampleType,
         helpText: 'Filter by specimen type (e.g. blood, urine).',
       },
       {
@@ -245,7 +246,7 @@ export const validationFilterConfig: FilterConfig = {
         options: priorityOptions,
         selectAllLabel: 'All statuses',
         icon: ICONS.priority,
-        placeholder: 'Select status',
+        placeholder: SHARED_FILTER_PLACEHOLDERS.status,
         helpText: 'Filter by priority level: Low, Medium, High, or Urgent.',
       },
     ],

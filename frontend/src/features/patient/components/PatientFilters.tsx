@@ -15,6 +15,7 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
+import { PATIENT_FILTER_PLACEHOLDERS } from '@/features/filters';
 import type { Gender } from '@/types';
 
 /**
@@ -133,7 +134,7 @@ const SearchInput: React.FC<{
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-}> = ({ value, onChange, placeholder = 'Search...' }) => {
+}> = ({ value, onChange, placeholder = PATIENT_FILTER_PLACEHOLDERS.search }) => {
   const [localValue, setLocalValue] = useState(value);
   const [isDebouncing, setIsDebouncing] = useState(false);
 
@@ -248,7 +249,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
         <SearchInput
           value={searchQuery}
           onChange={onSearchChange}
-          placeholder="Search patients by name, ID, phone, or email..."
+          placeholder={PATIENT_FILTER_PLACEHOLDERS.searchLong}
         />
       </div>
 
@@ -259,7 +260,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
           onChange={onAgeRangeChange}
           min={AGE_RANGE_MIN}
           max={AGE_RANGE_MAX}
-          placeholder="Filter by age range"
+          placeholder={PATIENT_FILTER_PLACEHOLDERS.ageRange}
           className="w-full"
         />
       </div>
@@ -271,7 +272,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
           options={genderOptions}
           selectedIds={sexFilters}
           onChange={values => onSexFiltersChange(values as Gender[])}
-          placeholder="Select sex/gender"
+          placeholder={PATIENT_FILTER_PLACEHOLDERS.sex}
           selectAllLabel="All genders"
           icon={ICONS.dataFields.userHands}
           className="w-full"
@@ -285,7 +286,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
           options={affiliationStatusOptions}
           selectedIds={affiliationStatusFilters}
           onChange={values => onAffiliationStatusFiltersChange(values as AffiliationStatus[])}
-          placeholder="Select affiliation status"
+          placeholder={PATIENT_FILTER_PLACEHOLDERS.affiliationStatus}
           selectAllLabel="All statuses"
           icon={ICONS.actions.infoCircle}
           className="w-full"
@@ -306,7 +307,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                 <SearchInput
                   value={searchQuery}
                   onChange={onSearchChange}
-                  placeholder="Search patients..."
+                  placeholder={PATIENT_FILTER_PLACEHOLDERS.search}
                 />
               </div>
 
@@ -348,7 +349,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                 <div className={cn(inputContainerBase, 'flex items-center h-10 px-4')}>
                   <input
                     type="text"
-                    placeholder="Search patients..."
+                    placeholder={PATIENT_FILTER_PLACEHOLDERS.search}
                     value={searchQuery}
                     onChange={e => onSearchChange(e.target.value)}
                     className={cn(inputInner, inputText, 'whitespace-nowrap overflow-hidden')}

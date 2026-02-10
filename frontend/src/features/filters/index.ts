@@ -3,6 +3,15 @@
  * Shared filter components and utilities
  */
 
+// Constants (placeholders and order by context)
+export {
+  ORDER_FILTER_PLACEHOLDERS,
+  PATIENT_FILTER_PLACEHOLDERS,
+  PAYMENT_FILTER_PLACEHOLDERS,
+  REPORT_FILTER_PLACEHOLDERS,
+  SHARED_FILTER_PLACEHOLDERS,
+} from './constants';
+
 // Types
 export type {
   FilterControlType,

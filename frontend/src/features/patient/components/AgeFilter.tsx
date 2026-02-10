@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from 'react';
 import { Popover } from '@/shared/ui';
 import { Icon } from '@/shared/ui';
-import { inputTrigger, inputTriggerOpen } from '@/shared/ui/forms/inputStyles';
+import { inputTrigger, inputTriggerOpen, filterTriggerText } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 
@@ -68,10 +68,10 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-fg-subtle">{placeholder}</span>;
+      return <span className="text-fg-faint">{placeholder}</span>;
     }
     return (
-      <span className={cn('text-fg-muted', 'font-normal')}>
+      <span className="text-fg font-normal">
         {start} - {end}
       </span>
     );
@@ -92,7 +92,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               isOpen ? 'text-brand' : 'text-fg-faint group-hover:text-brand'
             )}
           />
-          <div className="flex-1 min-w-0 text-xs font-normal text-fg truncate whitespace-nowrap overflow-hidden">
+          <div className={cn('flex-1 min-w-0 truncate whitespace-nowrap overflow-hidden', filterTriggerText)}>
             {renderTriggerContent()}
           </div>
 
