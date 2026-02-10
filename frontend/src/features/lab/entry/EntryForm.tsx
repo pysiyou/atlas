@@ -60,7 +60,7 @@ const RadioOption: React.FC<{
           isSelected ? 'text-fg font-medium' : 'text-fg-subtle group-hover:text-fg'
         )}
       >
-        {option}
+        {option.toUpperCase()}
       </span>
     </label>
   );
@@ -100,7 +100,7 @@ const SelectParameterInput: React.FC<{
           {/* Content */}
           <div className="flex-1 text-xs truncate">
             {value ? (
-              <span className="text-fg">{value}</span>
+              <span className="text-fg">{value.toUpperCase()}</span>
             ) : (
               <span className="text-fg-disabled">-- Select --</span>
             )}

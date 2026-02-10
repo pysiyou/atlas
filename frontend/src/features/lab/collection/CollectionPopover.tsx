@@ -166,7 +166,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   className="w-7 h-7 shrink-0 text-fg-disabled"
                 />
                 <span className="flex-1 text-xs font-medium text-left text-fg-muted">
-                  {option.name}
+                  {option.name.toUpperCase()}
                 </span>
                 <div
                   className={`
@@ -212,7 +212,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                       ? 'opacity-100 hover:scale-105 hover:shadow-sm ring-2 ring-success-stroke'
                       : 'opacity-60 hover:opacity-80 hover:scale-105 hover:shadow-sm'
                 }`}
-                title={`${option.name}${isRequired ? ' (Required)' : ''}`}
+                title={`${option.name.toUpperCase()}${isRequired ? ' (Required)' : ''}`}
               />
             );
           })}

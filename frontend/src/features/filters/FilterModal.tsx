@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Modal, CheckboxList, Icon, FooterInfo, Button } from '@/shared/ui';
-import { ICONS, capitalizeLabel, cn } from '@/utils';
+import { ICONS, uppercaseLabel, cn } from '@/utils';
 import { inputContainerBase, inputInner, inputText } from '@/shared/ui/forms/inputStyles';
 import { QuickFilters } from './QuickFilters';
 import { DatePresetBadges } from './DatePresetBadges';
@@ -220,7 +220,7 @@ const ModalRadioList: React.FC<{
               'text-sm transition-colors',
               isSelected ? 'text-fg' : 'text-fg-muted group-hover:text-fg'
             )}>
-              {capitalizeLabel(option.label)}
+              {uppercaseLabel(option.label)}
             </span>
           </label>
         );
