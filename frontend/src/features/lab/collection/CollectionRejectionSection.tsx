@@ -149,7 +149,7 @@ export const CollectionRejectionSection: React.FC<SingleRejectionProps> = ({
               onClick={() => setActiveIndex(index)}
               className={`px-2 py-0.5 text-xs rounded ${
                 activeIndex === index
-                  ? 'bg-neutral-200 text-fg font-medium'
+                  ? 'bg-neutral-200 text-fg font-normal'
                   : 'text-fg-subtle hover:bg-neutral-100'
               }`}
             >

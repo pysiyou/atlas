@@ -49,7 +49,7 @@ const TestSearchTagInput: React.FC<{
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-test-search"
-          className="text-xs font-medium text-fg-subtle cursor-pointer truncate min-w-0"
+          className="text-xs font-normal text-fg-subtle cursor-pointer truncate min-w-0"
         >
           Tests
         </label>
@@ -71,10 +71,10 @@ const TestSearchTagInput: React.FC<{
             key={code}
             className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
           >
-            <span className={`text-xs font-medium truncate min-w-0 ${tagStyles.text}`}>
+            <span className={`text-xs font-normal truncate min-w-0 ${tagStyles.text}`}>
               {name}
             </span>
-            <span className={`text-xxs font-semibold font-mono shrink-0 ${tagStyles.code}`}>
+            <span className={`text-xxs font-normal font-mono shrink-0 ${tagStyles.code}`}>
               {code}
             </span>
             <button
@@ -190,7 +190,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         </div>
 
         <div className="shrink-0 pb-[2px]">
-          <div className="text-base font-semibold text-brand">
+          <div className="text-base font-normal text-brand">
             {selectedTests.length} {selectedTests.length === 1 ? 'test' : 'tests'}
           </div>
         </div>
@@ -211,7 +211,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         >
           {/* Header row */}
           <div className="px-4 py-2.5 bg-canvas/70 border-b border-stroke/70 flex items-center justify-between">
-            <div className="text-xs font-medium text-fg-subtle">Matching tests</div>
+            <div className="text-xs font-normal text-fg-subtle">Matching tests</div>
             <div className="text-xs text-fg-subtle">{visibleTests.length} result(s)</div>
           </div>
 
@@ -241,17 +241,17 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className={`shrink-0 text-xs font-semibold font-mono px-2 py-0.5 rounded ${tagStyles.container} ${tagStyles.code}`}>
+                        <span className={`shrink-0 text-xs font-normal font-mono px-2 py-0.5 rounded ${tagStyles.container} ${tagStyles.code}`}>
                           {code}
                         </span>
-                        <span className="shrink-0 text-xs font-medium px-2 py-0.5 rounded truncate">
+                        <span className="shrink-0 text-xs font-normal px-2 py-0.5 rounded truncate">
                           {safeName}
                         </span>
                       </div>
                     </div>
 
                     <div className="shrink-0 flex items-center gap-2">
-                      <div className={`text-xs font-semibold px-2 py-1 rounded ${tagStyles.container} ${tagStyles.code}`}>
+                      <div className={`text-xs font-normal px-2 py-1 rounded ${tagStyles.container} ${tagStyles.code}`}>
                         {formatCurrency(price)}
                       </div>
                       {isSelected && (

@@ -99,7 +99,7 @@ const TestDots: React.FC<TestDotsProps> = ({ progress }) => {
   if (!showDots) {
     // For many tests, show count instead of dots
     return (
-      <span className="ml-2 text-xs text-fg-subtle font-medium">
+      <span className="ml-2 text-xs text-fg-subtle font-normal">
         {completed}/{total}
       </span>
     );
@@ -274,7 +274,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
               {/* Left: Label with dots, and Timestamp */}
               <div className="flex flex-col flex-1 min-w-0">
                 <div className="flex items-center">
-                  <p className={`text-xxs uppercase font-semibold ${getLabelColor()}`}>{step.label}</p>
+                  <p className={`text-xxs uppercase font-normal ${getLabelColor()}`}>{step.label}</p>
                   {/* Test completion dots */}
                   {showTestDots && <TestDots progress={progress} />}
                 </div>

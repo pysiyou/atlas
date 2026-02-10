@@ -85,7 +85,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
             return (
               <li key={testCode || i} className="flex items-center text-xs text-fg-muted">
                 <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mr-2" />
-                <span className="font-medium mr-1">{testName}</span>
+                <span className="font-normal mr-1">{testName}</span>
                 <span className="text-brand font-mono mr-2">{testCode}</span>
                 {test?.turnaroundTime && (
                   <span className="text-fg-disabled flex items-center gap-1">

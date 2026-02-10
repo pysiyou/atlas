@@ -83,7 +83,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         />
       ) : (
         <div
-          className={`rounded bg-brand flex items-center justify-center text-on-brand font-semibold shrink-0 ${sizeClasses[size]}`}
+          className={`rounded bg-brand flex items-center justify-center text-on-brand font-normal shrink-0 ${sizeClasses[size]}`}
         >
           {getInitials(primaryText)}
         </div>
@@ -92,7 +92,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       {/* Primary and secondary text */}
       {hasText && (
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
-          <div className={`font-medium text-fg truncate ${textSizeClasses[size].primary} ${primaryTextClassName}`}>
+          <div className={`font-normal text-fg truncate ${textSizeClasses[size].primary} ${primaryTextClassName}`}>
             {primaryText}
           </div>
           {secondaryText && (

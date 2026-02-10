@@ -67,7 +67,7 @@ export const OrderMetadata: React.FC<OrderMetadataProps> = ({
     <div className={`flex items-center gap-3 ${className}`}>
       <Avatar primaryText={patientName} size="sm" />
       <div>
-        <div className="font-medium text-fg">{patientName}</div>
+        <div className="font-normal text-fg">{patientName}</div>
         <div className="text-xs text-fg-subtle">
           <span className="font-mono text-brand">{displayId.patient(patientId)}</span> • {formatDate(orderDate)}
           {referringPhysician && ` • ${referringPhysician}`}
@@ -95,11 +95,11 @@ export const BillingSummaryCard: React.FC<BillingSummaryCardProps> = ({
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span className="text-fg-subtle">Subtotal:</span>
-          <span className="font-medium">{formatCurrency(totalPrice)}</span>
+          <span className="font-normal">{formatCurrency(totalPrice)}</span>
         </div>
         <div className="border-t pt-2 flex justify-between">
-          <span className="font-semibold text-fg">Total:</span>
-          <span className="font-bold text-xl text-brand">{formatCurrency(totalPrice)}</span>
+          <span className="font-normal text-fg">Total:</span>
+          <span className="font-normal text-xl text-brand">{formatCurrency(totalPrice)}</span>
         </div>
         <div className="flex justify-between items-center pt-2">
           <span className="text-sm text-fg-subtle">Payment Status:</span>
@@ -112,7 +112,7 @@ export const BillingSummaryCard: React.FC<BillingSummaryCardProps> = ({
                   : 'default'
             }
             size="sm"
-            className="border-none font-medium"
+            className="border-none font-normal"
           >
             {paymentStatus.toUpperCase()}
           </Badge>
@@ -140,13 +140,13 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
             <div key={index} className="border border-stroke rounded p-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <div className="font-medium text-fg">{test.testName}</div>
+                  <div className="font-normal text-fg">{test.testName}</div>
                   <div className="text-sm text-fg-subtle">
                     <span className="text-brand font-mono">{test.testCode}</span> • {test.sampleType}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-medium text-brand">
+                  <div className="font-normal text-brand">
                     {formatCurrency(test.priceAtOrder)}
                   </div>
                   <Badge variant={test.status} size="sm" />
@@ -155,13 +155,13 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
 
               {test.results && (
                 <div className="mt-3 p-3 bg-canvas rounded">
-                  <div className="text-sm font-medium text-fg-muted mb-2">Results:</div>
+                  <div className="text-sm font-normal text-fg-muted mb-2">Results:</div>
                   <div className="space-y-1">
                     {Object.entries(test.results).map(([key, result]) => (
                       <div key={key} className="flex justify-between text-sm">
                         <span className="text-fg-subtle">{key}:</span>
                         <span
-                          className={`font-medium ${
+                          className={`font-normal ${
                             result.status === 'high' || result.status === 'low'
                               ? 'text-warning-text'
                               : result.status === 'critical'

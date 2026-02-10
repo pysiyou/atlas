@@ -46,7 +46,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
         {/* Header with Order ID and Payment Status */}
         <div className="px-4 py-2.5 border-b border-dashed border-stroke-strong">
           <div className="flex justify-between items-center">
-            <span className="text-xs font-semibold text-fg-muted uppercase tracking-wider">
+            <span className="text-xs font-normal text-fg-muted uppercase tracking-wider">
               Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span>
             </span>
             <Badge variant={order.paymentStatus} size="xs" />
@@ -74,7 +74,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
                       )}
                     </span>
                   </span>
-                  <span className="font-medium text-fg tabular-nums shrink-0">
+                  <span className="font-normal text-fg tabular-nums shrink-0">
                     {formatCurrency(test.priceAtOrder)}
                   </span>
                 </li>
@@ -88,10 +88,10 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
         {/* Total Footer: pt compensates for items list py-2 (8px) + divider so total above = SectionContainer pb (16px) + footer pb */}
         <div className="border-t border-dashed border-stroke-strong shrink-0" />
         <div className="shrink-0 flex justify-between items-center px-4 pt-4">
-          <span className="text-xs font-semibold text-fg-muted uppercase tracking-wider">
+          <span className="text-xs font-normal text-fg-muted uppercase tracking-wider">
             Total
           </span>
-          <span className="text-sm font-bold text-brand tabular-nums">
+          <span className="text-sm font-normal text-brand tabular-nums">
             {formatCurrency(activeTotal)}
           </span>
         </div>

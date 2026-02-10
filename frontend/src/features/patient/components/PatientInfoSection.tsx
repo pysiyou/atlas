@@ -40,7 +40,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
         <Icon name={ICONS.dataFields.user} className="w-5 h-5 text-fg-disabled mt-1" />
         <div className="flex-1">
           <div className="text-xs text-fg-subtle mb-1">Patient ID</div>
-          <div className="font-mono font-medium text-fg">{displayId.patient(patient.id)}</div>
+          <div className="font-mono font-normal text-fg">{displayId.patient(patient.id)}</div>
         </div>
       </div>
 
@@ -50,7 +50,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           <Icon name={ICONS.dataFields.user} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
             <div className="text-xs text-fg-subtle mb-1">Full Name</div>
-            <div className="font-medium text-fg">{patient.fullName}</div>
+            <div className="font-normal text-fg">{patient.fullName}</div>
           </div>
         </div>
 
@@ -58,7 +58,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           <Icon name={ICONS.dataFields.userHands} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
             <div className="text-xs text-fg-subtle mb-1">Age & Gender</div>
-            <div className="font-medium text-fg">
+            <div className="font-normal text-fg">
               {calculateAge(patient.dateOfBirth)} years old •{' '}
               {patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1)}
             </div>
@@ -70,7 +70,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           <Icon name={ICONS.dataFields.phone} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
             <div className="text-xs text-fg-subtle mb-1">Phone</div>
-            <div className="font-medium text-fg">{formatPhoneNumber(patient.phone)}</div>
+            <div className="font-normal text-fg">{formatPhoneNumber(patient.phone)}</div>
           </div>
         </div>
 
@@ -78,7 +78,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           <Icon name={ICONS.dataFields.email} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
             <div className="text-xs text-fg-subtle mb-1">Email</div>
-            <div className="font-medium text-fg">{patient.email || 'Not provided'}</div>
+            <div className="font-normal text-fg">{patient.email || 'Not provided'}</div>
           </div>
         </div>
 
@@ -86,7 +86,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           <Icon name={ICONS.dataFields.mapPin} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
             <div className="text-xs text-fg-subtle mb-1">Address</div>
-            <div className="font-medium text-fg">{patient.address.street}</div>
+            <div className="font-normal text-fg">{patient.address.street}</div>
             <div className="text-xs text-fg-subtle mt-1">
               {patient.address.city}, {patient.address.postalCode}
             </div>
@@ -100,7 +100,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           <Icon name={ICONS.dataFields.userHands} className="w-5 h-5 text-fg-disabled mt-1" />
           <div className="flex-1">
             <div className="text-xs text-fg-subtle mb-2">Emergency Contact</div>
-            <div className="font-medium text-fg">{patient.emergencyContact.fullName}</div>
+            <div className="font-normal text-fg">{patient.emergencyContact.fullName}</div>
             <div className="text-xs text-fg-subtle mt-1">
               {RELATIONSHIP_CONFIG[patient.emergencyContact.relationship]?.label ||
                 patient.emergencyContact.relationship}
@@ -122,7 +122,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
           <div className="flex-1">
             <div className="text-xs text-fg-subtle mb-2">Lab Affiliation</div>
             {!patient.affiliation ? (
-              <Badge variant="default" size="sm" className="border-none font-medium">
+              <Badge variant="default" size="sm" className="border-none font-normal">
                 No Affiliation
               </Badge>
             ) : (
@@ -130,26 +130,26 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
                 <Badge
                   variant={isAffiliationActive(patient.affiliation) ? 'success' : 'danger'}
                   size="sm"
-                  className="border-none font-medium"
+                  className="border-none font-normal"
                 >
                   {isAffiliationActive(patient.affiliation) ? 'Active' : 'Expired'}
                 </Badge>
                 <div className="text-xs text-fg-subtle">
                   Assurance #:{' '}
-                  <span className="font-mono font-medium text-fg">
+                  <span className="font-mono font-normal text-fg">
                     {patient.affiliation.assuranceNumber}
                   </span>
                 </div>
                 <div className="text-xs text-fg-subtle">
                   Duration:{' '}
-                  <span className="font-medium text-fg">
+                  <span className="font-normal text-fg">
                     {getDurationLabel(patient.affiliation.duration)}
                   </span>
                 </div>
                 <div className="text-xs text-fg-subtle">
                   Expires:{' '}
                   <span
-                    className={`font-medium ${isAffiliationActive(patient.affiliation) ? 'text-fg' : 'text-danger-fg'}`}
+                    className={`font-normal ${isAffiliationActive(patient.affiliation) ? 'text-fg' : 'text-danger-fg'}`}
                   >
                     {formatDate(patient.affiliation.endDate)}
                   </span>
@@ -167,7 +167,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
             <Icon name={ICONS.dataFields.date} className="w-5 h-5 text-fg-disabled mt-1" />
             <div className="flex-1">
               <div className="text-xs text-fg-subtle mb-1">Registration Date</div>
-              <div className="font-medium text-fg">
+              <div className="font-normal text-fg">
                 {formatDate(patient.registrationDate)}
               </div>
               <div className="text-xs text-fg-subtle mt-1">Registered by: {patient.createdBy}</div>
@@ -178,7 +178,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
             <Icon name={ICONS.dataFields.time} className="w-5 h-5 text-fg-disabled mt-1" />
             <div className="flex-1">
               <div className="text-xs text-fg-subtle mb-1">Last Updated</div>
-              <div className="font-medium text-fg">{formatDate(patient.updatedAt)}</div>
+              <div className="font-normal text-fg">{formatDate(patient.updatedAt)}</div>
               <div className="text-xs text-fg-subtle mt-1">Updated by: {patient.updatedBy}</div>
             </div>
           </div>

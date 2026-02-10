@@ -118,7 +118,7 @@ const ModalAgeSlider: React.FC<{
       </div>
 
       {/* Age labels */}
-      <div className="flex justify-between text-lg font-medium text-fg">
+      <div className="flex justify-between text-lg font-normal text-fg">
         <span>{localValue[0]} years</span>
         <span>{localValue[1]} years</span>
       </div>
@@ -175,7 +175,7 @@ const SearchInput: React.FC<{
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className={cn(inputInner, inputText, 'font-medium whitespace-nowrap overflow-hidden')}
+        className={cn(inputInner, inputText, 'font-normal whitespace-nowrap overflow-hidden')}
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (

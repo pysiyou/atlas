@@ -89,7 +89,7 @@ const SearchInput: React.FC<{
         placeholder={placeholder}
         value={localValue}
         onChange={e => setLocalValue(e.target.value)}
-        className={cn(inputInner, inputText, 'font-medium')}
+        className={cn(inputInner, inputText, 'font-normal')}
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (

@@ -57,7 +57,7 @@ export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
       <button
         onClick={onTitleClick}
         className={cn(
-          'text-sm font-semibold text-fg-muted hover:bg-canvas px-2 py-1 rounded transition-colors cursor-pointer',
+          'text-sm font-normal text-fg-muted hover:bg-canvas px-2 py-1 rounded transition-colors cursor-pointer',
           view === 'years' && 'pointer-events-none hover:bg-transparent cursor-default'
         )}
       >

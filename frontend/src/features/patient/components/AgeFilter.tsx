@@ -71,7 +71,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
       return <span className="text-fg-subtle">{placeholder}</span>;
     }
     return (
-      <span className={cn('text-fg-muted', 'font-medium')}>
+      <span className={cn('text-fg-muted', 'font-normal')}>
         {start} - {end}
       </span>
     );
@@ -92,7 +92,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               isOpen ? 'text-brand' : 'text-fg-faint group-hover:text-brand'
             )}
           />
-          <div className="flex-1 min-w-0 text-xs font-medium text-fg truncate whitespace-nowrap overflow-hidden">
+          <div className="flex-1 min-w-0 text-xs font-normal text-fg truncate whitespace-nowrap overflow-hidden">
             {renderTriggerContent()}
           </div>
 
@@ -166,7 +166,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           </div>
 
           {/* Age labels */}
-          <div className="flex justify-between text-lg font-medium text-fg">
+          <div className="flex justify-between text-lg font-normal text-fg">
             <span>{localValue[0]} years</span>
             <span>{localValue[1]} years</span>
           </div>

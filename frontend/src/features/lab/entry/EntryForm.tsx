@@ -57,7 +57,7 @@ const RadioOption: React.FC<{
       <span
         className={cn(
           'text-sm transition-colors',
-          isSelected ? 'text-fg font-medium' : 'text-fg-subtle group-hover:text-fg'
+          isSelected ? 'text-fg font-normal' : 'text-fg-subtle group-hover:text-fg'
         )}
       >
         {option.toUpperCase()}
@@ -295,7 +295,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
               <div className="flex justify-between items-baseline mb-1 gap-2">
                 <label
                   htmlFor={`result-${resultKey}-${param.code}`}
-                  className="text-xxs font-medium text-fg-subtle cursor-pointer truncate min-w-0"
+                  className="text-xxs font-normal text-fg-subtle cursor-pointer truncate min-w-0"
                 >
                   {param.name}
                 </label>
@@ -303,7 +303,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   <span
                     className={cn(
                       'text-xxs truncate',
-                      isCritical ? 'text-danger-fg font-medium animate-pulse' : 'text-fg-disabled'
+                      isCritical ? 'text-danger-fg font-normal animate-pulse' : 'text-fg-disabled'
                     )}
                   >
                     Ref: {refRange}
@@ -334,7 +334,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   </div>
                 )}
                 {validationErrors[param.code] && (
-                  <div className="absolute -bottom-5 left-0 text-xxs text-danger-fg font-medium truncate max-w-full" title={validationErrors[param.code]}>
+                  <div className="absolute -bottom-5 left-0 text-xxs text-danger-fg font-normal truncate max-w-full" title={validationErrors[param.code]}>
                     Invalid value
                   </div>
                 )}
@@ -348,7 +348,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       <div className="mt-4">
         <label
           htmlFor={`notes-${resultKey}`}
-          className="text-xs font-medium text-fg-subtle mb-1 block"
+          className="text-xs font-normal text-fg-subtle mb-1 block"
         >
           Technician Notes (Optional)
         </label>

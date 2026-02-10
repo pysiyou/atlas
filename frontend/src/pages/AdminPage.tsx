@@ -30,7 +30,7 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     header: 'Test Name',
     width: 'fill',
     sortable: true,
-    render: (test: Test) => <div className="font-medium text-fg truncate">{test.name}</div>,
+    render: (test: Test) => <div className="font-normal text-fg truncate">{test.name}</div>,
   },
   {
     key: 'category',
@@ -77,7 +77,7 @@ const AdminTestTable: React.FC<{ tests: Test[] }> = ({ tests }) => {
       compactColumns: columns.slice(0, 3), // Code, Name, Category
       CardComponent: ({ item }: { item: Test }) => (
         <div className="p-3 border rounded">
-          <div className="font-medium">{item.name}</div>
+          <div className="font-normal">{item.name}</div>
           <div className="text-xs text-fg-subtle">{item.code}</div>
         </div>
       ),
@@ -151,7 +151,7 @@ export const Admin: React.FC = () => {
               </div>
               <div>
                 <div className="text-sm text-fg-subtle">{stat.label}</div>
-                <div className="text-2xl font-bold text-fg">{stat.value}</div>
+                <div className="text-2xl font-normal text-fg">{stat.value}</div>
               </div>
             </div>
           </Card>

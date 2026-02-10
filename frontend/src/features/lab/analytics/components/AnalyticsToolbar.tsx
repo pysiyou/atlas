@@ -45,7 +45,7 @@ export const AnalyticsToolbar: React.FC<AnalyticsToolbarProps> = ({
         <select
           value={dateRangePreset}
           onChange={(e) => onDateRangePreset(e.target.value as DateRangePreset)}
-          className="bg-transparent text-sm font-medium py-2 pl-2 pr-8 focus:outline-none cursor-pointer text-brand-fg"
+          className="bg-transparent text-sm font-normal py-2 pl-2 pr-8 focus:outline-none cursor-pointer text-brand-fg"
         >
           {PRESET_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>

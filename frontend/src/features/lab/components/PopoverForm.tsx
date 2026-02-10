@@ -174,14 +174,14 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         aria-hidden
       />
       <div className="flex-1 min-w-0 pr-8">
-        <span className={`block text-xs font-medium ${disabled ? 'text-fg-disabled' : 'text-fg-muted'}`}>
+        <span className={`block text-xs font-normal ${disabled ? 'text-fg-disabled' : 'text-fg-muted'}`}>
           {label}
         </span>
         <span className={`block text-xxs mt-0.5 ${disabled ? 'text-fg-disabled' : 'text-fg-subtle'}`}>
           {description}
         </span>
         {disabled && disabledReason && (
-          <span className="block text-xxs mt-1 text-danger-fg font-medium">{disabledReason}</span>
+          <span className="block text-xxs mt-1 text-danger-fg font-normal">{disabledReason}</span>
         )}
       </div>
       <div
@@ -241,7 +241,7 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
       aria-hidden
     />
     <div className="flex-1 min-w-0 pr-8">
-      <span className="block text-xs font-medium text-fg-muted">{label}</span>
+      <span className="block text-xs font-normal text-fg-muted">{label}</span>
       <span className="block text-xxs mt-0.5 text-fg-subtle">{description}</span>
     </div>
     <div

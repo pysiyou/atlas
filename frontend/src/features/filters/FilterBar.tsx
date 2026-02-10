@@ -19,7 +19,7 @@ import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
 const filterStyles = {
   controlHeight: 'h-[34px]',
   container: 'w-full bg-panel border-b border-stroke',
-  dropdownLabel: 'text-xs font-medium text-fg-subtle mb-2',
+  dropdownLabel: 'text-xs font-normal text-fg-subtle mb-2',
   dropdownDivider: 'pt-2 border-t border-stroke',
 } as const;
 

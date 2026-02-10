@@ -62,7 +62,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
       </div>
 
       {/* Label */}
-      {label && <span className="text-fg-subtle text-xs normal-case font-light">{label}</span>}
+      {label && <span className="text-fg-subtle text-xs normal-case font-normal">{label}</span>}
     </div>
   );
 };

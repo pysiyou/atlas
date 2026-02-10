@@ -38,7 +38,7 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
     <div className="flex items-start justify-between gap-2 mb-3">
       <div className="flex items-center gap-2 min-w-0">
         <Icon name={icon} className="w-5 h-5 text-fg-subtle shrink-0" />
-        <span className="text-sm font-medium text-fg truncate">{title}</span>
+        <span className="text-sm font-normal text-fg truncate">{title}</span>
       </div>
       <div className="flex items-center gap-1 shrink-0">
         <button type="button" className="p-1 rounded hover:bg-panel-hover text-fg-subtle" aria-label="More options">
@@ -50,11 +50,11 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
       </div>
     </div>
     <div className="flex items-baseline gap-2 flex-wrap">
-      <span className="text-2xl font-bold text-fg">{value}</span>
+      <span className="text-2xl font-normal text-fg">{value}</span>
       {change !== undefined && (
         <span
           className={cn(
-            'text-sm font-medium',
+            'text-sm font-normal',
             change.isPositive ? 'text-success-text' : 'text-danger-fg'
           )}
         >
@@ -65,7 +65,7 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
     </div>
     {subtitle && <p className="text-xs text-fg-subtle mt-0.5">{subtitle}</p>}
     {chartTitle && (
-      <p className="text-xs font-medium text-fg-muted mt-3 pb-1 border-b border-dotted border-stroke">
+      <p className="text-xs font-normal text-fg-muted mt-3 pb-1 border-b border-dotted border-stroke">
         {chartTitle}
       </p>
     )}

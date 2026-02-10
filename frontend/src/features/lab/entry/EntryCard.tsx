@@ -105,16 +105,16 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         {/* Header: Test name */}
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="min-w-0 overflow-hidden">
-            <div className="text-sm font-medium text-fg truncate">{test.testName}</div>
+            <div className="text-sm font-normal text-fg truncate">{test.testName}</div>
             <div className="flex items-center gap-1.5 text-xs text-fg-muted">
               <span className="truncate capitalize">{patientName}</span>
               <span className="text-fg-subtle">•</span>
-              <span className="text-brand font-medium font-mono truncate">{test.testCode}</span>
+              <span className="text-brand font-normal font-mono truncate">{test.testCode}</span>
               {test.sampleId && (
                 <>
                   <span className="text-fg-subtle">•</span>
                   <span
-                    className="text-brand font-medium font-mono truncate"
+                    className="text-brand font-normal font-mono truncate"
                     title={displayId.sample(test.sampleId)}
                   >
                     {displayId.sample(test.sampleId)}
@@ -207,7 +207,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       return (
         <Alert variant="warning" className="py-2">
           <div className="space-y-0.5">
-            <p className="font-medium text-xs">Re-test Required (#{retestNumber})</p>
+            <p className="font-normal text-xs">Re-test Required (#{retestNumber})</p>
             <p className="text-xxs opacity-90 leading-tight">
               Previous rejection: {lastRejection.rejectionReason}
             </p>
@@ -219,7 +219,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       return (
         <Alert variant="warning" className="py-2">
           <div className="space-y-0.5">
-            <p className="font-medium text-xs">Sample Recollection #{sampleRecollectionAttempt}</p>
+            <p className="font-normal text-xs">Sample Recollection #{sampleRecollectionAttempt}</p>
             <p className="text-xxs opacity-90 leading-tight">
               Previous sample rejected: {lastSampleRejection.rejectionNotes || 'See history'}
             </p>

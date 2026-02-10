@@ -93,7 +93,7 @@ const closeHoverStyle = (
 };
 
 const titleStyle: React.CSSProperties = {
-  fontWeight: 600,
+  fontWeight: 400,
   fontSize: '0.875rem',
   color: 'var(--toast-fg)',
   whiteSpace: 'pre-line',

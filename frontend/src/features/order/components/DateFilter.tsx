@@ -296,7 +296,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                     key={preset.id}
                     onClick={() => handlePresetClick(preset.id, close)}
                     className={cn(
-                      'px-2 py-1 text-xxs font-medium rounded cursor-pointer transition-colors',
+                      'px-2 py-1 text-xxs font-normal rounded cursor-pointer transition-colors',
                       'filter-chip',
                       isActive && 'filter-chip--active'
                     )}
@@ -316,7 +316,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                   handleApply();
                   close();
                 }}
-                className="w-full px-3 py-2 bg-brand hover:opacity-90 text-fg-inverse text-xs font-medium rounded transition-colors"
+                className="w-full px-3 py-2 bg-brand hover:opacity-90 text-fg-inverse text-xs font-normal rounded transition-colors"
               >
                 Apply
               </button>

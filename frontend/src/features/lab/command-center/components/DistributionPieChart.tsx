@@ -59,7 +59,7 @@ const CustomTooltip = ({ active, payload }: any) => {
           {data.name}
         </p>
       </div>
-      <p className="font-bold text-base ml-4">
+      <p className="font-normal text-base ml-4">
         {data.value.toLocaleString()} 
         <span className="text-xs font-normal text-fg-subtle ml-1">tests</span>
       </p>

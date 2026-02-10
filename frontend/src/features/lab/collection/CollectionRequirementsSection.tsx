@@ -42,7 +42,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
               onClick={() => setActiveTestCode(test.code)}
               className={`px-2 py-1 text-xs rounded transition-colors font-mono ${
                 activeTestCode === test.code
-                  ? 'bg-brand-muted text-brand font-medium'
+                  ? 'bg-brand-muted text-brand font-normal'
                   : 'bg-neutral-100 text-brand hover:bg-neutral-200'
               }`}
             >
@@ -63,7 +63,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           <div className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
             <div className="flex-1">
-              <div className="text-xs font-medium text-fg-subtle mb-1">Container Specifications</div>
+              <div className="text-xs font-normal text-fg-subtle mb-1">Container Specifications</div>
               <div className="text-xs text-fg-subtle">{activeTest.containerDescription}</div>
             </div>
           </div>
@@ -73,7 +73,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           <div className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
             <div className="flex-1">
-              <div className="text-xs font-medium text-fg-subtle mb-1">Collection Instructions</div>
+              <div className="text-xs font-normal text-fg-subtle mb-1">Collection Instructions</div>
               <div className="text-xs text-fg-subtle">{activeTest.collectionNotes}</div>
             </div>
           </div>
@@ -89,7 +89,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
 
         {activeTest.minimumVolume && (
           <div className="flex items-center gap-2 text-xs text-fg-subtle">
-            <span className="font-medium">Minimum Volume:</span>
+            <span className="font-normal">Minimum Volume:</span>
             <span>{activeTest.minimumVolume} mL</span>
           </div>
         )}

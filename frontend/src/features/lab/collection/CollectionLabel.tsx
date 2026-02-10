@@ -72,7 +72,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
         <div class="label-wrapper">
           <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-1.5 p-2 border border-dashed border-stroke-strong print:border-none print:max-w-full print:p-0">
             <!-- Patient Name -->
-            <div class="text-sm font-bold text-center text-fg leading-snug w-full">
+            <div class="text-sm font-normal text-center text-fg leading-snug w-full">
               ${patientName}
             </div>
 
@@ -82,7 +82,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
             </div>
 
             <!-- Container Info -->
-            <div class="w-full text-xxs font-bold text-center text-fg bg-neutral-100 rounded px-2 py-1 print:py-0.5">
+            <div class="w-full text-xxs font-normal text-center text-fg bg-neutral-100 rounded px-2 py-1 print:py-0.5">
               ${containerType.toUpperCase()}: ${colorName.toUpperCase()}
             </div>
 

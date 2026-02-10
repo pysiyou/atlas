@@ -161,7 +161,7 @@ export const TabsList: React.FC<TabsListProps> = ({
 
   // Helper functions for inline class generation
   const getTabButtonClasses = (variant: 'underline' | 'pills', isActive: boolean) => {
-    const base = 'relative px-4 py-2 text-sm font-medium transition-colors duration-200 whitespace-nowrap flex items-center gap-2';
+    const base = 'relative px-4 py-2 text-sm font-normal transition-colors duration-200 whitespace-nowrap flex items-center gap-2';
     if (variant === 'underline') {
       return `${base} ${isActive ? 'text-brand' : 'text-fg-muted hover:text-fg'}`;
     }
@@ -169,7 +169,7 @@ export const TabsList: React.FC<TabsListProps> = ({
   };
 
   const getTabCountBadgeClasses = (variant: 'underline' | 'pills', isActive: boolean) => {
-    const base = 'inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-medium';
+    const base = 'inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-normal';
     if (variant === 'underline') {
       return `${base} ${isActive ? 'bg-brand-muted text-brand-fg' : 'bg-neutral-100 text-fg-subtle'}`;
     }

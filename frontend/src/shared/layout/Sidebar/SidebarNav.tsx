@@ -23,7 +23,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   const handleNavClick = () => onNavigate?.();
 
   const getNavLinkClasses = (isActive: boolean) => {
-    const base = 'flex items-center py-3 text-sm font-medium rounded-none border-l-2 border-transparent';
+    const base = 'flex items-center py-3 text-sm font-normal rounded-none border-l-2 border-transparent';
     return isActive
       ? `${base} border-l-brand text-brand`
       : `${base} text-fg-muted hover:bg-panel-hover hover:text-fg`;
@@ -57,7 +57,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             <button
               key={index}
               disabled
-              className="w-full flex items-center py-3 text-sm font-medium text-fg-disabled rounded cursor-not-allowed"
+              className="w-full flex items-center py-3 text-sm font-normal text-fg-disabled rounded cursor-not-allowed"
               title={item.label}
             >
               <div className="w-16 shrink-0 flex items-center justify-center">

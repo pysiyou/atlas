@@ -136,7 +136,7 @@ export const DateInput: React.FC<DateInputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-fg-subtle cursor-pointer truncate min-w-0"
+            className="text-xs font-normal text-fg-subtle cursor-pointer truncate min-w-0"
           >
             {label}
             {required && <span className="text-danger-fg ml-1">*</span>}

@@ -121,7 +121,7 @@ export const EntityCard: React.FC<EntityCardProps> = ({
             <div className="pt-3 border-t border-stroke">
               <div className={`bg-canvas rounded-md p-3 border border-stroke-subtle ${contentClassName}`}>
                 {contentTitle && (
-                  <div className="text-xs font-medium text-fg-subtle uppercase tracking-wide mb-2">
+                  <div className="text-xs font-normal text-fg-subtle uppercase tracking-wide mb-2">
                     {contentTitle}
                   </div>
                 )}

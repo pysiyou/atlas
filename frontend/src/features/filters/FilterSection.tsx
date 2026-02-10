@@ -68,7 +68,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
         <div className="flex items-center gap-1.5">
           <h3 className="text-xs font-semibold text-fg-subtle uppercase tracking-wide">{title}</h3>
           {activeCount > 0 && (
-            <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full bg-brand text-on-brand text-xxs font-medium">
+            <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full bg-brand text-on-brand text-xxs font-normal">
               {activeCount}
             </span>
           )}

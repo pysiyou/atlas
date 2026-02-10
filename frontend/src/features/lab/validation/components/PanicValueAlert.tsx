@@ -66,8 +66,8 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
 
           <div className="space-y-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-sm font-semibold text-fg">{parameterName}:</span>
-              <span className="text-lg font-bold text-danger-fg-strong">
+              <span className="text-sm font-normal text-fg">{parameterName}:</span>
+              <span className="text-lg font-normal text-danger-fg-strong">
                 {value}
                 {unit && <span className="ml-1 text-sm font-normal">{unit}</span>}
               </span>
@@ -77,12 +77,12 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
               {referenceRange && (
                 <div>
                   <span className="text-fg-subtle">Reference Range:</span>
-                  <span className="ml-2 font-medium text-fg-muted">{referenceRange}</span>
+                  <span className="ml-2 font-normal text-fg-muted">{referenceRange}</span>
                 </div>
               )}
               <div>
                 <span className="text-fg-subtle">Critical Threshold:</span>
-                <span className="ml-2 font-medium text-danger-fg-strong">
+                <span className="ml-2 font-normal text-danger-fg-strong">
                   {isCriticalLow && criticalLow !== undefined && `< ${criticalLow} ${unit || ''}`}
                   {isCriticalHigh && criticalHigh !== undefined && `> ${criticalHigh} ${unit || ''}`}
                 </span>
@@ -105,7 +105,7 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
           {onAcknowledge && !isAcknowledged && (
             <button
               onClick={onAcknowledge}
-              className="mt-4 px-4 py-2 bg-danger hover:bg-danger-hover text-on-danger text-sm font-semibold rounded transition-colors flex items-center gap-2"
+              className="mt-4 px-4 py-2 bg-danger hover:bg-danger-hover text-on-danger text-sm font-normal rounded transition-colors flex items-center gap-2"
             >
               <Icon name="check-circle" className="w-4 h-4" />
               Acknowledge Panic Value

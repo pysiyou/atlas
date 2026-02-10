@@ -129,7 +129,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     return (
       <div className="w-90 md:w-96 bg-panel rounded-lg shadow-xl border border-stroke p-4 space-y-4">
         <Alert variant="danger" className="py-2">
-          <p className="font-medium text-xs">Failed to load options</p>
+          <p className="font-normal text-xs">Failed to load options</p>
           <p className="text-xxs mt-1">{error}</p>
         </Alert>
         <div className="flex justify-end gap-2">
@@ -168,7 +168,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       {escalationRequired && (
         <Alert variant="danger" className="py-2">
           <div className="space-y-0.5">
-            <p className="font-medium text-xs">Escalation Required</p>
+            <p className="font-normal text-xs">Escalation Required</p>
             <p className="text-xxs opacity-90 leading-tight">
               All rejection options have been exhausted. Please escalate to your supervisor.
             </p>
@@ -180,7 +180,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       {!escalationRequired && (
         <Alert variant="warning" className="py-2">
           <div className="space-y-0.5">
-            <p className="font-medium text-xs">Action Required</p>
+            <p className="font-normal text-xs">Action Required</p>
             <p className="text-xxs opacity-90 leading-tight">
               You are rejecting results. Please specify the required follow-up action.
             </p>
@@ -191,7 +191,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       {/* Action Type Selection */}
       {!escalationRequired && (
         <div>
-          <label className="block text-xs font-medium text-fg-subtle mb-1">Follow-up Action</label>
+          <label className="block text-xs font-normal text-fg-subtle mb-1">Follow-up Action</label>
           <div className="grid grid-cols-1 gap-2">
             <RadioCard
               name="rejection-type"
@@ -219,7 +219,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
 
       {/* Rejection / Escalation Reason */}
       <div>
-        <label className="block text-xs font-medium text-fg-subtle mb-1">
+        <label className="block text-xs font-normal text-fg-subtle mb-1">
           {escalationRequired ? 'Reason for escalation' : 'Rejection Reason'}{' '}
           <span className="text-danger-fg">*</span>
         </label>
@@ -366,7 +366,7 @@ export const RejectionHistoryBanner: React.FC<RejectionHistoryBannerProps> = ({
     <div className="mt-2 px-2 py-1.5 bg-warning-bg border border-warning-border rounded text-warning-text">
       <div className="flex items-center gap-1.5">
         <Icon name={ICONS.actions.loading} className="w-3 h-3" />
-        <span className="text-xxs font-medium">{message}</span>
+        <span className="text-xxs font-normal">{message}</span>
       </div>
       {rejectionReason && (
         <p className="text-xxs mt-0.5 opacity-80 line-clamp-2">

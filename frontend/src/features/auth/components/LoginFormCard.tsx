@@ -102,7 +102,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <div className="space-y-2">
               <label
                 htmlFor="username"
-                className="block font-body text-sm font-medium text-auth-fg-muted"
+                className="block font-body text-sm font-normal text-auth-fg-muted"
               >
                 Username
               </label>
@@ -133,7 +133,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="block font-body text-sm font-medium text-auth-fg-muted"
+                className="block font-body text-sm font-normal text-auth-fg-muted"
               >
                 Password
               </label>
@@ -171,7 +171,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="relative w-full mt-2 font-body font-semibold py-4 px-6 rounded-lg text-auth-fg overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:ring-offset-2 focus:ring-offset-auth-panel"
+              className="relative w-full mt-2 font-body font-normal py-4 px-6 rounded-lg text-auth-fg overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:ring-offset-2 focus:ring-offset-auth-panel"
             >
               <div className="absolute inset-0 bg-auth-accent transition-all duration-300 hover:bg-auth-accent-hover" />
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer" />

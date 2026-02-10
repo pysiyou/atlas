@@ -94,7 +94,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
           </div>
           <p className="font-body text-sm text-auth-fg-muted">
             {company.marketing.trustIndicator.text}{' '}
-            <span className="text-auth-fg-light font-semibold">{company.marketing.trustIndicator.count}</span>{' '}
+            <span className="text-auth-fg-light font-normal">{company.marketing.trustIndicator.count}</span>{' '}
             {company.marketing.trustIndicator.audience}
           </p>
         </div>

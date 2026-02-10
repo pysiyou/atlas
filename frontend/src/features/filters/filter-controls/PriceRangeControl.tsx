@@ -137,7 +137,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
       return <span className="text-fg-subtle">{config.placeholder || 'Filter by price range'}</span>;
     }
     return (
-      <span className="text-fg-muted font-medium">
+      <span className="text-fg-muted font-normal">
         {formatPrice(start)} - {formatPrice(end)}
       </span>
     );
@@ -155,7 +155,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
           <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-fg-faint group-hover:text-brand shrink-0 transition-colors" />
           
           {/* Column 2: Content - flexible middle */}
-          <div className="flex-1 min-w-0 text-xs font-medium">{renderTriggerContent()}</div>
+          <div className="flex-1 min-w-0 text-xs font-normal">{renderTriggerContent()}</div>
 
           {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
           <div className="flex items-center gap-1 shrink-0">
@@ -180,7 +180,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
     >
       {() => (
         <div className="space-y-4">
-          <div className="flex items-center justify-between text-sm font-medium text-fg-subtle">
+          <div className="flex items-center justify-between text-sm font-normal text-fg-subtle">
             <span>{formatPrice(localValue[0])}</span>
             <span>{formatPrice(localValue[1])}</span>
           </div>

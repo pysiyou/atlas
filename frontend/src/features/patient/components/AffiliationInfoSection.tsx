@@ -24,7 +24,7 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
     <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
       <div className="col-span-2">
         <div className="text-xs text-fg-subtle mb-0.5">Assurance Number</div>
-        <div className="font-mono font-medium text-fg">{affiliation.assuranceNumber}</div>
+        <div className="font-mono font-normal text-fg">{affiliation.assuranceNumber}</div>
       </div>
 
       <div>
@@ -46,7 +46,7 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
 
       <div>
         <div className="text-xs text-fg-subtle mb-0.5">End Date</div>
-        <div className={`font-medium ${isActive ? 'text-fg' : 'text-danger-fg'}`}>
+        <div className={`font-normal ${isActive ? 'text-fg' : 'text-danger-fg'}`}>
           {formatDate(affiliation.endDate)}
         </div>
       </div>

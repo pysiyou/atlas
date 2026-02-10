@@ -55,7 +55,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
     <div className="rounded border border-stroke overflow-hidden">
       <div className="px-3 py-2.5 border-b border-dashed border-stroke-strong">
         <div className="flex justify-between items-center">
-          <span className="text-xs font-semibold text-fg-muted uppercase tracking-wider">
+          <span className="text-xs font-normal text-fg-muted uppercase tracking-wider">
             Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span>
           </span>
           <Badge variant={order.paymentStatus} size="xs" />
@@ -81,7 +81,7 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
                     )}
                   </span>
                 </span>
-                <span className="font-medium text-fg tabular-nums shrink-0">
+                <span className="font-normal text-fg tabular-nums shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </li>
@@ -93,10 +93,10 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
       </div>
       <div className="border-t border-dashed border-stroke-strong" />
       <div className="px-3 py-2.5 flex justify-between items-center">
-        <span className="text-xs font-semibold text-fg-muted uppercase tracking-wider">
+        <span className="text-xs font-normal text-fg-muted uppercase tracking-wider">
           Total
         </span>
-        <span className="text-sm font-bold text-brand tabular-nums">
+        <span className="text-sm font-normal text-brand tabular-nums">
           {formatCurrency(activeTotal)}
         </span>
       </div>
@@ -198,7 +198,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Payment Method Selection */}
       <div>
-        <label className="block text-xs font-medium text-fg-subtle mb-2">
+        <label className="block text-xs font-normal text-fg-subtle mb-2">
           Payment Method <span className="text-danger-fg">*</span>
         </label>
         <PaymentMethodSelector
@@ -210,7 +210,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-fg-subtle mb-1">Notes</label>
+        <label className="block text-xs font-normal text-fg-subtle mb-1">Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."

@@ -100,9 +100,9 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
               {/* Row 2: Patient & Order context */}
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-3 text-sm text-fg-muted flex-wrap">
-                  <span className="font-semibold text-fg">{contextInfo.patientName}</span>
+                  <span className="font-normal text-fg">{contextInfo.patientName}</span>
                   <span className="text-fg-disabled select-none">|</span>
-                  <span className="font-medium text-brand text-xs font-mono tracking-wide whitespace-nowrap">
+                  <span className="font-normal text-brand text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.patientId === 'number'
                       ? displayId.patient(contextInfo.patientId)
                       : contextInfo.patientId}
@@ -116,7 +116,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                     </>
                   )}
                   <span className="text-fg-disabled select-none">|</span>
-                  <span className="font-medium text-brand text-xs font-mono tracking-wide whitespace-nowrap">
+                  <span className="font-normal text-brand text-xs font-mono tracking-wide whitespace-nowrap">
                     {typeof contextInfo.orderId === 'number'
                       ? displayId.order(contextInfo.orderId)
                       : contextInfo.orderId}
@@ -133,7 +133,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 {sampleInfo && sampleInfo.collectedAt && (
                   <span className="text-xs text-fg-subtle">
                     Sample{' '}
-                    <span className="font-medium text-brand text-xs font-mono tracking-wide">
+                    <span className="font-normal text-brand text-xs font-mono tracking-wide">
                       {typeof sampleInfo.sampleId === 'number'
                         ? displayId.sample(sampleInfo.sampleId)
                         : sampleInfo.sampleId}

@@ -165,7 +165,7 @@ const ModalPriceSlider: React.FC<{
       </div>
 
       {/* Price labels */}
-      <div className="flex justify-between text-lg font-medium text-fg">
+      <div className="flex justify-between text-lg font-normal text-fg">
         <span>{currency}{localValue[0]}</span>
         <span>{currency}{localValue[1]}</span>
       </div>

@@ -107,7 +107,7 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
 /**
  * Base classes applied to all buttons
  */
-const BASE_CLASSES = 'inline-flex items-center justify-center gap-1.5 font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap';
+const BASE_CLASSES = 'inline-flex items-center justify-center gap-1.5 font-normal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap';
 
 /**
  * Base style classes for each variant

@@ -88,7 +88,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
             {import.meta.env.DEV && this.state.error && (
               <div className="mt-4 p-3 bg-neutral-100 rounded text-xs font-mono text-fg overflow-auto max-h-40">
-                <p className="font-semibold mb-1">Error Details:</p>
+                <p className="font-normal mb-1">Error Details:</p>
                 <p>{this.state.error.message}</p>
                 {this.state.error.stack && (
                   <pre className="mt-2 text-xs whitespace-pre-wrap">{this.state.error.stack}</pre>

@@ -106,7 +106,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       {/* Volume Input */}
       <div>
         <div className="flex items-center justify-between mb-1">
-          <label className="block text-xs font-medium text-fg-subtle">
+          <label className="block text-xs font-normal text-fg-subtle">
             Volume Collected <span className="text-danger-fg">*</span>
           </label>
           {minimumVolume > 0 && (
@@ -130,7 +130,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             )}
             placeholder="0.0"
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-fg-disabled pointer-events-none">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-normal text-fg-disabled pointer-events-none">
             mL
           </span>
         </div>
@@ -146,7 +146,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Type - static card + checkmark only on selection (matches PaymentMethodSelector) */}
       <div>
-        <label className="block text-xs font-medium text-fg-subtle mb-2">
+        <label className="block text-xs font-normal text-fg-subtle mb-2">
           Container Type <span className="text-danger-fg">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -165,7 +165,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   name={getContainerIcon(option.value)}
                   className="w-7 h-7 shrink-0 text-fg-disabled"
                 />
-                <span className="flex-1 text-xs font-medium text-left text-fg-muted">
+                <span className="flex-1 text-xs font-normal text-left text-fg-muted">
                   {option.name.toUpperCase()}
                 </span>
                 <div
@@ -194,7 +194,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Color */}
       <div>
-        <label className="block text-xs font-medium text-fg-subtle mb-1">
+        <label className="block text-xs font-normal text-fg-subtle mb-1">
           Container Color <span className="text-danger-fg">*</span>
         </label>
         <div className="flex gap-3">
@@ -235,7 +235,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-fg-subtle mb-1">Notes</label>
+        <label className="block text-xs font-normal text-fg-subtle mb-1">Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."

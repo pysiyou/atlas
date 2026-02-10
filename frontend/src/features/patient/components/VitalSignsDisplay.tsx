@@ -183,17 +183,17 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
           >
             <div className="flex items-center gap-2 mb-2 min-w-0">
               <Icon name={config.icon} className={`w-4 h-4 ${colors.icon} shrink-0`} />
-              <span className="text-xs font-medium text-fg-subtle uppercase tracking-wide whitespace-nowrap truncate">
+              <span className="text-xs font-normal text-fg-subtle uppercase tracking-wide whitespace-nowrap truncate">
                 {config.label}
               </span>
             </div>
 
             <div className="flex items-baseline justify-between gap-2">
               <div className="flex items-baseline gap-1 min-w-0">
-                <span className={`text-xl font-bold ${colors.value} leading-none`}>
+                <span className={`text-xl font-normal ${colors.value} leading-none`}>
                   {value.toFixed(config.key === 'temperature' ? 1 : 0)}
                 </span>
-                <span className={`text-xs font-medium ${colors.value} opacity-70`}>
+                <span className={`text-xs font-normal ${colors.value} opacity-70`}>
                   {config.unit}
                 </span>
               </div>
