@@ -114,7 +114,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
         <div className="flex justify-between items-start mb-3 pb-3 border-b border-stroke">
           <Avatar
             primaryText={patientName}
-            primaryTextClassName="font-semibold"
+            primaryTextClassName="font-semibold capitalize"
             secondaryText={displayId.order(order.orderId)}
             secondaryTextClassName="text-brand font-mono"
             size="xs"
@@ -196,7 +196,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   // Build badges (ordered by importance)
   const badges = (
     <>
-      <h3 className="text-sm font-medium text-fg">{patientName}</h3>
+      <h3 className="text-sm font-medium text-fg capitalize">{patientName}</h3>
       {sample.priority && <Badge variant={sample.priority} size="sm" />}
       <Badge variant={sample.sampleType} size="sm" />
       <Badge size="sm" variant="default" className="text-fg-subtle">

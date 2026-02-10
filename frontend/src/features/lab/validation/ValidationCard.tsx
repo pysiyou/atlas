@@ -176,7 +176,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
           <div className="min-w-0 overflow-hidden">
             <div className="text-sm font-medium text-fg truncate">{test.testName}</div>
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="text-xs text-fg-muted font-medium truncate">{patientName}</div>
+              <div className="text-xs text-fg-muted font-medium truncate capitalize">{patientName}</div>
               <div className="text-xxs text-fg-disabled">•</div>
               <div className="text-xxs text-brand font-medium font-mono truncate">
                 {test.testCode}

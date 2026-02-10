@@ -14,7 +14,7 @@ export const LAB_CARD_TYPOGRAPHY = {
   sectionTitle: 'text-xxs font-medium text-fg-subtle uppercase tracking-wide',
 
   // Patient Names (medium emphasis within text-xs context)
-  patientName: 'font-medium text-fg',
+  patientName: 'font-medium text-fg capitalize',
 
   // Standard Body Text – shared token
   bodyText: BODY_SECONDARY,
@@ -73,7 +73,7 @@ export const LAB_CARD_CONTAINERS = {
 
   // Card base styling (applied via Card component)
   cardBase:
-    'border border-stroke shadow-sm hover:bg-panel-hover transition-colors duration-200',
+    'shadow-sm hover:bg-panel-hover transition-colors duration-200',
 
   // Content section (gray background)
   contentSection: 'bg-canvas rounded p-2 border border-stroke',
@@ -106,7 +106,7 @@ export const LAB_CARD_CONTEXT = {
   container: 'flex items-center gap-2 text-xs text-fg-subtle flex-wrap',
 
   // Patient name styling
-  patientName: 'font-medium text-fg',
+  patientName: 'font-medium text-fg capitalize',
 
   // Separator between items
   separator: 'text-fg-disabled',

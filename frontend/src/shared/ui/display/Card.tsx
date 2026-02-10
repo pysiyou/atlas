@@ -36,8 +36,8 @@ export const Card: React.FC<CardProps> = ({
     none: '',
     list: 'p-3',
     sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8',
+    md: 'p-4',
+    lg: 'p-4',
   };
 
   const baseClasses = 'bg-panel rounded-md border border-stroke duration-200';

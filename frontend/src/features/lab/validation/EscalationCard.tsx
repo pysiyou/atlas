@@ -47,7 +47,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
               {test.testName ?? test.testCode}
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="text-xs text-fg-muted font-medium truncate">
+              <div className="text-xs text-fg-muted font-medium truncate capitalize">
                 {test.patientName}
               </div>
               <div className="text-xxs text-fg-disabled">•</div>

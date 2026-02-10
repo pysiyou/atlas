@@ -31,7 +31,7 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
         {/* Avatar: Patient name + Test ID - positioned at top left */}
         <Avatar
           primaryText={test.patientName}
-          primaryTextClassName=""
+          primaryTextClassName="capitalize"
           secondaryText={displayId.orderTest(test.testId)}
           secondaryTextClassName="font-mono text-brand"
           size="xs"

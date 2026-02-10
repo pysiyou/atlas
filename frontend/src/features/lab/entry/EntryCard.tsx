@@ -107,7 +107,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
           <div className="min-w-0 overflow-hidden">
             <div className="text-sm font-medium text-fg truncate">{test.testName}</div>
             <div className="flex items-center gap-1.5 text-xs text-fg-muted">
-              <span className="truncate">{patientName}</span>
+              <span className="truncate capitalize">{patientName}</span>
               <span className="text-fg-subtle">•</span>
               <span className="text-brand font-medium font-mono truncate">{test.testCode}</span>
               {test.sampleId && (
