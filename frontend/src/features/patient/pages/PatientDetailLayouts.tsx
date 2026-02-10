@@ -8,7 +8,6 @@ import { SectionContainer, IconButton } from '@/shared/ui';
 import type { Patient, Order } from '@/types';
 import { GeneralInfoSection } from '../components/GeneralInfoSection';
 import { MedicalHistorySectionDisplay } from '../components/MedicalHistorySectionDisplay';
-import { VitalSignsDisplay } from '../components/VitalSignsDisplay';
 import { PatientOrdersTable } from '../components/PatientOrdersTable';
 import { ReportsList } from '../components/ReportsList';
 
@@ -31,14 +30,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-canvas">
-      <SectionContainer
-        title="Vital Signs"
-        className="shrink-0 bg-panel"
-        contentClassName="overflow-visible"
-      >
-        <VitalSignsDisplay vitalSigns={patient.vitalSigns} />
-      </SectionContainer>
-
       <SectionContainer
         title="General Info"
         className="shrink-0 bg-panel"
@@ -77,8 +68,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 };
 
 /**
- * MediumScreenLayout - 2x2 grid + full-width row for medium screens.
- * Rows use content height; page scrolls when content exceeds viewport.
+ * MediumScreenLayout - Row 1: General Info | Medical History; Row 2: Reports (full width); Row 3: Related Orders (full width).
  */
 export const MediumScreenLayout: React.FC<LayoutProps> = ({
   patient,
@@ -88,22 +78,6 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className="grid grid-cols-2 gap-4 w-full pb-6">
-      <SectionContainer
-        title="Vital Signs"
-        className="bg-panel"
-        contentClassName="overflow-visible"
-      >
-        <VitalSignsDisplay vitalSigns={patient.vitalSigns} />
-      </SectionContainer>
-
-      <SectionContainer
-        title="Reports"
-        className="bg-panel"
-        contentClassName="overflow-visible flex flex-col"
-      >
-        <ReportsList orders={orders} />
-      </SectionContainer>
-
       <SectionContainer
         title="General Info"
         className="bg-panel"
@@ -121,6 +95,14 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
       </SectionContainer>
 
       <SectionContainer
+        title="Reports"
+        className="bg-panel col-span-2"
+        contentClassName="overflow-visible flex flex-col"
+      >
+        <ReportsList orders={orders} />
+      </SectionContainer>
+
+      <SectionContainer
         title="Related Orders"
         className="bg-panel col-span-2"
         contentClassName="p-0 overflow-visible"
@@ -134,7 +116,8 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 };
 
 /**
- * LargeScreenLayout - 3-column grid layout for large screens
+ * LargeScreenLayout - Row 1: General Info | Medical History | Reports; Row 2: Related Orders (full width).
+ * Vital Signs section hidden for future release.
  */
 export const LargeScreenLayout: React.FC<LayoutProps> = ({
   patient,
@@ -144,62 +127,44 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div
-      className="flex-1 grid grid-cols-3 gap-4 min-h-0 h-full"
+      className="flex-1 grid grid-cols-3 grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
       style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
     >
-      <div
-        className="col-span-2 grid grid-cols-2 grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
-        style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
+      <SectionContainer
+        title="General Info"
+        className="h-full flex flex-col min-h-0"
+        contentClassName="flex-1 min-h-0 overflow-y-auto"
       >
-        <SectionContainer
-          title="General Info"
-          className="h-full flex flex-col min-h-0"
-          contentClassName="flex-1 min-h-0 overflow-y-auto"
-        >
-          <GeneralInfoSection patient={patient} layout="column" />
-        </SectionContainer>
+        <GeneralInfoSection patient={patient} layout="column" />
+      </SectionContainer>
 
-        <SectionContainer
-          title="Medical History"
-          className="h-full flex flex-col min-h-0"
-          contentClassName="flex-1 min-h-0 overflow-y-auto"
-        >
-          <MedicalHistorySectionDisplay patient={patient} layout="column" />
-        </SectionContainer>
-
-        <SectionContainer
-          title="Related Orders"
-          className="h-full flex flex-col col-span-2 min-h-0"
-          contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
-          headerClassName="!py-1.5"
-          headerRight={
-            <IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />
-          }
-        >
-          <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} variant="detailed" />
-        </SectionContainer>
-      </div>
-
-      <div
-        className="col-span-1 grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
-        style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
+      <SectionContainer
+        title="Medical History"
+        className="h-full flex flex-col min-h-0"
+        contentClassName="flex-1 min-h-0 overflow-y-auto"
       >
-        <SectionContainer
-          title="Vital Signs"
-          className="h-full flex flex-col min-h-0"
-          contentClassName="flex-1 min-h-0 overflow-y-auto"
-        >
-          <VitalSignsDisplay vitalSigns={patient.vitalSigns} />
-        </SectionContainer>
+        <MedicalHistorySectionDisplay patient={patient} layout="column" />
+      </SectionContainer>
 
-        <SectionContainer
-          title="Reports"
-          className="h-full flex flex-col min-h-0"
-          contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
-        >
-          <ReportsList orders={orders} />
-        </SectionContainer>
-      </div>
+      <SectionContainer
+        title="Reports"
+        className="h-full flex flex-col min-h-0"
+        contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
+      >
+        <ReportsList orders={orders} />
+      </SectionContainer>
+
+      <SectionContainer
+        title="Related Orders"
+        className="h-full flex flex-col col-span-3 min-h-0"
+        contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
+        headerClassName="!py-1.5"
+        headerRight={
+          <IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />
+        }
+      >
+        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} variant="detailed" />
+      </SectionContainer>
     </div>
   );
 };
