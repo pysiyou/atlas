@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { UserCog, Settings, Bell, Box, Shield } from 'lucide-react';
+import { UserCog, Settings, Bell } from 'lucide-react';
 import { ROUTES } from '@/config';
 import { Icon } from '@/shared/ui';
 import type { MenuItem, SettingsItem } from './types';
@@ -79,15 +79,7 @@ export const settingsItems: SettingsItem[] = [
   {
     label: 'Notification & Alerts',
     icon: React.createElement(Bell, { size: 20 }),
-  },
-  {
-    label: 'Integrations',
-    icon: React.createElement(Box, { size: 20 }),
-  },
-  {
-    label: 'Security & Privacy',
-    icon: React.createElement(Shield, { size: 20 }),
-  },
+  }
 ];
 
 /**

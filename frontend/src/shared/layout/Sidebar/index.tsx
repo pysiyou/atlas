@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNav } from './SidebarNav';
+import { ThemeSwitch } from './ThemeSwitch';
 import { SidebarProfile } from './SidebarProfile';
 import { getFilteredMenuItems, settingsItems } from './menuConfig';
 import type { MenuItem, SettingsItem } from './types';
@@ -90,6 +91,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
         isCollapsed={collapsed}
         onNavigate={isMobile ? onMobileClose : undefined}
       />
+      <ThemeSwitch isCollapsed={collapsed} />
       {currentUser && (
         <SidebarProfile currentUser={currentUser} isCollapsed={collapsed} onLogout={onLogout} />
       )}
@@ -200,6 +202,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 // Re-export sub-components for flexibility
 export { SidebarHeader } from './SidebarHeader';
 export { SidebarNav } from './SidebarNav';
+export { ThemeSwitch } from './ThemeSwitch';
 export { SidebarProfile } from './SidebarProfile';
 // eslint-disable-next-line react-refresh/only-export-components
 export { menuItems, settingsItems, getFilteredMenuItems } from './menuConfig';
