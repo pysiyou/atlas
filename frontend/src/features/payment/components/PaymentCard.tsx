@@ -2,7 +2,7 @@ import { Badge, Avatar } from '@/shared/ui';
 import type { CardComponentProps } from '@/shared/ui/Table';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils';
-import type { OrderPaymentDetails } from '../types';
+import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
 import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 
@@ -11,16 +11,12 @@ import { useInvalidatePayments } from '@/hooks/queries/usePayments';
  *
  * Custom mobile card component for payment data.
  * Displays payment information in a mobile-friendly card layout.
- *
- * @param item - OrderPaymentDetails data
- * @param index - Index of the item in the list
- * @param onClick - Optional click handler
  */
-export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDetails>) {
+export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentView>) {
   const { invalidateAll } = useInvalidatePayments();
+  const { order } = item;
 
   const handlePaymentSuccess = () => {
-    // Invalidate payment and order caches to refresh the data
     invalidateAll();
   };
 
@@ -33,22 +29,22 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
       <div className="pb-3 border-b border-stroke flex justify-between items-center">
         {/* Avatar: Patient name + Order ID - positioned at top left */}
         <Avatar
-          primaryText={item.patientName || 'N/A'}
+          primaryText={order.patientName || 'N/A'}
           primaryTextClassName=""
-          secondaryText={displayId.order(item.orderId)}
+          secondaryText={displayId.order(order.orderId)}
           secondaryTextClassName="font-mono text-brand"
           size="xs"
         />
         {/* Total price on top right */}
-        <div className="text-fg text-lg">{formatCurrency(item.totalPrice)}</div>
+        <div className="text-fg text-lg">{formatCurrency(order.totalPrice)}</div>
       </div>
 
       {/* Tests list: Show at most 2 tests, third line shows remaining count */}
       <div className="space-y-2 pt-3">
-        {item.tests && item.tests.length > 0 && (
+        {order.tests && order.tests.length > 0 && (
           <div className="space-y-1">
             {/* Display first 2 tests */}
-            {item.tests.slice(0, 2).map((test, index) => (
+            {order.tests.slice(0, 2).map((test, index) => (
               <div
                 key={test.testCode || index}
                 className="flex items-center justify-between text-xs text-fg-muted"
@@ -64,9 +60,9 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
               </div>
             ))}
             {/* Third line: Show remaining tests count if more than 2 */}
-            {item.tests.length > 2 && (
+            {order.tests.length > 2 && (
               <div className="text-xs text-fg-subtle">
-                +{item.tests.length - 2} more test{item.tests.length - 2 !== 1 ? 's' : ''}
+                +{order.tests.length - 2} more test{order.tests.length - 2 !== 1 ? 's' : ''}
               </div>
             )}
           </div>
@@ -77,14 +73,14 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentDe
       <div className="flex justify-between items-center pt-3">
         {/* Date on bottom left - show payment date if paid, otherwise order date */}
         <div className="text-xs text-fg-subtle">
-          {item.paymentDate ? formatDate(item.paymentDate) : formatDate(item.orderDate)}
+          {item.paymentDate ? formatDate(item.paymentDate) : formatDate(order.orderDate)}
         </div>
         {/* Payment method or Payment button on bottom right */}
-        {item.paymentMethod && item.paymentStatus !== 'unpaid' ? (
+        {item.paymentMethod && order.paymentStatus !== 'unpaid' ? (
           <Badge variant={item.paymentMethod} size="xs" />
-        ) : item.paymentStatus === 'unpaid' ? (
+        ) : order.paymentStatus === 'unpaid' ? (
           <div onClick={e => e.stopPropagation()}>
-            <PaymentButton order={item.order} size="xs" onPaymentSuccess={handlePaymentSuccess} />
+            <PaymentButton order={order} size="xs" onPaymentSuccess={handlePaymentSuccess} />
           </div>
         ) : null}
       </div>

@@ -6,7 +6,8 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks';
-import { useOrder, usePatient, useTestCatalog, usePaymentsByOrder } from '@/hooks/queries';
+import { useOrder, usePatient } from '@/hooks/queries';
+import { getActiveTests } from '@/utils/orderUtils';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { Invoice } from '@/types';
 import { OrderHeader } from '../components/OrderHeader';
@@ -27,9 +28,6 @@ export const OrderDetail: React.FC = () => {
   const { patient: patientData, isLoading: patientLoading } = usePatient(
     order?.patientId.toString()
   );
-  const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();
-  const { isLoading: paymentsLoading } = usePaymentsByOrder(id);
-
   // Normalize patient to Patient | null (not undefined)
   const patient = patientData ?? null;
 
@@ -37,7 +35,7 @@ export const OrderDetail: React.FC = () => {
   const invoice: Invoice | null = null;
 
   // Loading state
-  if (orderLoading || patientLoading || testsLoading || paymentsLoading) {
+  if (orderLoading || patientLoading) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-fg-subtle">Loading...</div>
@@ -56,7 +54,7 @@ export const OrderDetail: React.FC = () => {
   }
 
   // Calculate active vs superseded test counts for display
-  const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
+  const activeTests = getActiveTests(order.tests);
   const supersededCount = order.tests.length - activeTests.length;
 
   // Event handlers
@@ -77,7 +75,6 @@ export const OrderDetail: React.FC = () => {
       order,
       patient,
       invoice,
-      testCatalog,
       activeTests,
       supersededCount,
       onViewPatient: handleViewPatient,

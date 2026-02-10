@@ -1,26 +1,16 @@
 /**
  * Payment feature types.
- * Single source of truth for OrderPaymentDetails used by PaymentList, PaymentTableConfig, PaymentCard, PaymentDetailModal.
+ * OrderPaymentView: Order is the single source of truth, enriched with payment info.
+ * Used by PaymentList, PaymentTableConfig, PaymentCard, PaymentDetailModal.
  */
 
 import type { Order } from '@/types';
-import type { Payment } from '@/types';
 
-export interface OrderPaymentDetails {
-  orderId: number;
-  orderDate: string;
-  patientId: number;
-  patientName: string;
-  tests: Array<{
-    testName: string;
-    priceAtOrder: number;
-    status?: string;
-    testCode?: string;
-  }>;
-  totalPrice: number;
-  paymentStatus: string;
-  paymentMethod?: string;
-  paymentDate?: string;
+export interface OrderPaymentView {
+  /** The order — single source of truth for orderId, patientName, tests, etc. */
   order: Order;
-  payment?: Payment;
+  /** Payment method from the most recent payment (if any). */
+  paymentMethod?: string;
+  /** Payment date from the most recent payment (if any). */
+  paymentDate?: string;
 }

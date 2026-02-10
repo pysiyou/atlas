@@ -9,6 +9,7 @@ import type { TableViewConfig, CardComponentProps } from '@/shared/ui/Table';
 import { DATA_AMOUNT, DATA_ID_PRIMARY_INLINE } from '@/shared/constants';
 import { formatCurrency } from '@/utils';
 import { getTestName, getTestSampleType } from '@/utils/typeHelpers';
+import { useTestCatalog } from '@/hooks/queries';
 import type { OrderTest, Test } from '@/types';
 import { ICONS } from '@/utils';
 import { getBadgeAppearance } from '@/shared/theme/theme';
@@ -16,7 +17,6 @@ import { TAG_STYLES } from '@/shared/ui/display/badge-colors';
 
 export interface TestsTableProps {
   tests: OrderTest[];
-  testCatalog: Test[];
   supersededCount?: number;
   variant?: 'simple' | 'detailed';
 }
@@ -165,9 +165,9 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
 
 export const TestsTable: React.FC<TestsTableProps> = ({
   tests,
-  testCatalog,
   variant = 'simple',
 }) => {
+  const { tests: testCatalog = [] } = useTestCatalog();
   const visibleTests = useMemo(
     () => tests.filter(t => t.status !== 'removed'),
     [tests]

@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { useOrdersList, useSamplesList } from '@/hooks/queries';
 import type { OrderTest } from '@/types';
 import type { Sample } from '@/types';
+import { isActiveTest } from '@/utils/orderUtils';
 
 const DATE_FORMAT_OPTIONS: Intl.DateTimeFormatOptions = { month: 'numeric', day: 'numeric' };
 
@@ -83,7 +84,7 @@ export function useTestsReceivedAndValidatedByDay(days: number = 15): UseTestsRe
     (orders ?? []).forEach((order) => {
       const orderDateKey = order.orderDate?.split('T')[0];
       (order.tests ?? []).forEach((test) => {
-        if (test.status === 'superseded' || test.status === 'removed') return;
+        if (!isActiveTest(test)) return;
         if (orderDateKey && orderDateKey in dailyReceived) {
           dailyReceived[orderDateKey] += 1;
         }
@@ -159,7 +160,7 @@ export function useActivityByDay(days: number = 15): UseActivityByDayResult {
 
     (orders ?? []).forEach((order) => {
       (order.tests ?? []).forEach((test) => {
-        if (test.status === 'superseded' || test.status === 'removed') return;
+        if (!isActiveTest(test)) return;
         const enteredAt = getResultEnteredAt(test);
         if (enteredAt) {
           const key = enteredAt.split('T')[0];

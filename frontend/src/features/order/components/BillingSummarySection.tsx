@@ -7,6 +7,7 @@ import React from 'react';
 import { Badge, Button, Icon } from '@/shared/ui';
 import { formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
+import { getActiveTests, getActiveTotal } from '@/utils/orderUtils';
 import type { Order, Invoice } from '@/types';
 import { ICONS } from '@/utils';
 
@@ -29,15 +30,8 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
   invoice,
   onViewInvoice,
 }) => {
-  // Exclude superseded and removed tests - only active tests count toward billing
-  const activeTests =
-    order.tests?.filter(
-      t => t.status !== 'superseded' && t.status !== 'removed'
-    ) ?? [];
-  const activeTotal = activeTests.reduce(
-    (sum, t) => sum + (typeof t.priceAtOrder === 'number' ? t.priceAtOrder : 0),
-    0
-  );
+  const activeTests = getActiveTests(order.tests ?? []);
+  const activeTotal = getActiveTotal(order.tests ?? []);
 
   return (
     <div className="flex flex-col justify-between h-full">

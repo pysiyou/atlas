@@ -1,4 +1,5 @@
 import type { Order } from '@/types';
+import { getActiveTests } from '@/utils/orderUtils';
 
 /**
  * Timeline steps for order progress visualization.
@@ -61,9 +62,7 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
     isStarted: false,
   };
 
-  // Filter out superseded and removed tests - only count active tests toward progress
-  // Superseded tests have been replaced by retests and removed tests have been removed from order
-  const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
+  const activeTests = getActiveTests(order.tests);
   const total = activeTests.length;
 
   if (total === 0) {
@@ -142,8 +141,7 @@ export const getOverallOrderProgress = (order: Order): number => {
     superseded: 0, // Superseded tests don't count toward progress
   };
 
-  // Filter out superseded and removed tests from progress calculation
-  const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
+  const activeTests = getActiveTests(order.tests);
   if (activeTests.length === 0) return 0;
 
   const totalWeight = activeTests.reduce((sum, test) => {

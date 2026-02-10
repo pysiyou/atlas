@@ -4,6 +4,7 @@ import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
+import { getActiveTests } from '@/utils/orderUtils';
 import type { Order } from '@/types';
 import { DATA_AMOUNT, DATA_ID_PRIMARY, DATA_ID_SECONDARY } from '@/shared/constants';
 import { OrderTableCard } from '../components/OrderTableCard';
@@ -39,8 +40,7 @@ export const createOrderTableConfig = (
   );
 
   const renderTests = (order: Order) => {
-    // Filter out superseded and removed tests - only count active tests
-    const activeTests = order.tests.filter(t => t.status !== 'superseded' && t.status !== 'removed');
+    const activeTests = getActiveTests(order.tests);
     const activeCount = activeTests.length;
 
     return (

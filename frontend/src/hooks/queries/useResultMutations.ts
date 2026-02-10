@@ -77,8 +77,10 @@ export function useEnterResults() {
       const orderIdStr = typeof orderId === 'number' ? orderId.toString() : orderId;
       return resultAPI.enterResults(orderIdStr, testCode, { results, technicianNotes });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+    onSuccess: (_, variables) => {
+      const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
       queryClient.invalidateQueries({ queryKey: queryKeys.results.all });
     },
   });
@@ -107,8 +109,10 @@ export function useValidateResults() {
         validationNotes,
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+    onSuccess: (_, variables) => {
+      const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
       queryClient.invalidateQueries({ queryKey: queryKeys.results.all });
     },
   });
@@ -140,8 +144,10 @@ export function useRejectResults() {
         rejectionType,
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+    onSuccess: (_, variables) => {
+      const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
       queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.results.all });
     },
@@ -163,8 +169,12 @@ export function useValidateBulk() {
       items: Array<{ orderId: number; testCode: string }>;
       validationNotes?: string;
     }) => resultAPI.validateBulk(items, validationNotes),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
+      const uniqueOrderIds = new Set(variables.items.map(i => String(i.orderId)));
+      uniqueOrderIds.forEach(id => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(id) });
+      });
       queryClient.invalidateQueries({ queryKey: queryKeys.results.all });
     },
   });
@@ -199,8 +209,10 @@ export function useResolveEscalation() {
         rejectionReason,
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+    onSuccess: (_, variables) => {
+      const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
       queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.results.all });
     },

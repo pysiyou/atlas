@@ -16,6 +16,7 @@ import React, { useState, useCallback } from 'react';
 import { Modal, Icon, Badge, Button, Alert, CalloutCard, FooterInfo, PaymentMethodSelector } from '@/shared/ui';
 import { PaymentErrorBoundary } from '@/shared/components';
 import { cn, formatDate, formatCurrency, displayId } from '@/utils';
+import { getActiveTests, getActiveTotal } from '@/utils/orderUtils';
 import { inputBase } from '@/shared/ui/forms/inputStyles';
 import { useCreatePayment } from '@/hooks/queries/usePayments';
 import {
@@ -24,7 +25,8 @@ import {
   type PaymentMethod,
 } from '@/types/billing';
 import { getPaymentErrorMessage } from '@/utils/errorHelpers';
-import type { OrderPaymentDetails } from '../types';
+import type { OrderPaymentView } from '../types';
+import type { Order } from '@/types';
 import { ICONS } from '@/utils';
 
 interface PaymentDetailModalProps {
@@ -32,8 +34,8 @@ interface PaymentDetailModalProps {
   isOpen: boolean;
   /** Handler to close the modal */
   onClose: () => void;
-  /** Order payment details to display and process payment for */
-  order: OrderPaymentDetails | null;
+  /** Order payment view to display and process payment for */
+  order: OrderPaymentView | null;
   /** Callback invoked on successful payment */
   onPaymentSuccess?: () => void;
 }
@@ -49,50 +51,44 @@ const PAYMENT_METHODS = getEnabledPaymentMethods();
  * Excludes superseded and removed tests; only active tests are shown and
  * included in the total.
  */
-const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => {
-  const activeTests =
-    order.tests?.filter(
-      t => t.status !== 'superseded' && t.status !== 'removed'
-    ) ?? [];
-  const activeTotal = activeTests.reduce(
-    (sum, t) => sum + (typeof t.priceAtOrder === 'number' ? t.priceAtOrder : 0),
-    0
-  );
+const PaymentReceipt: React.FC<{ sourceOrder: Order; paymentDate?: string; paymentMethod?: string }> = ({ sourceOrder, paymentDate, paymentMethod }) => {
+  const activeTests = getActiveTests(sourceOrder.tests ?? []);
+  const activeTotal = getActiveTotal(sourceOrder.tests ?? []);
 
   return (
     <div className="rounded-lg border border-stroke overflow-hidden bg-panel">
       {/* Receipt Header */}
       <div className="px-6 py-4 border-b border-dashed border-stroke-strong bg-canvas">
         <div className="flex justify-between items-center mb-2">
-          {order.patientName ? (
-            <p className="text-sm font-normal text-fg-muted">{order.patientName}</p>
+          {sourceOrder.patientName ? (
+            <p className="text-sm font-normal text-fg-muted">{sourceOrder.patientName}</p>
           ) : (
             <p className="text-sm text-fg-subtle italic">No patient name</p>
           )}
           <div className="flex items-center gap-2">
-            <Badge variant={order.paymentStatus} size="sm" />
-            {order.paymentMethod && (
-              <Badge variant={order.paymentMethod} size="sm" />
+            <Badge variant={sourceOrder.paymentStatus} size="sm" />
+            {paymentMethod && (
+              <Badge variant={paymentMethod} size="sm" />
             )}
           </div>
         </div>
         <div className="space-y-1.5">
           <div className="flex items-center text-xs">
             <span className="text-fg-subtle w-28">Order Number:</span>
-            <span className="text-brand font-normal font-mono">{displayId.order(order.orderId)}</span>
+            <span className="text-brand font-normal font-mono">{displayId.order(sourceOrder.orderId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-fg-subtle w-28">Patient Number:</span>
-            <span className="text-brand font-normal font-mono">{displayId.patient(order.patientId)}</span>
+            <span className="text-brand font-normal font-mono">{displayId.patient(sourceOrder.patientId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-fg-subtle w-28">Order Date:</span>
-            <span className="text-fg-muted font-normal">{formatDate(order.orderDate)}</span>
+            <span className="text-fg-muted font-normal">{formatDate(sourceOrder.orderDate)}</span>
           </div>
-          {order.paymentDate && (
+          {paymentDate && (
             <div className="flex items-center text-xs">
               <span className="text-fg-subtle w-28">Payment Date:</span>
-              <span className="text-fg-muted font-normal">{formatDate(order.paymentDate)}</span>
+              <span className="text-fg-muted font-normal">{formatDate(paymentDate)}</span>
             </div>
           )}
         </div>
@@ -154,7 +150,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
 export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   isOpen,
   onClose,
-  order,
+  order: view,
   onPaymentSuccess,
 }) => {
   // Use mutation hook for payment creation
@@ -165,37 +161,38 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   const [notes, setNotes] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
+  const sourceOrder = view?.order;
+
   // Reset form state when modal opens or order changes
-  // This is a common pattern for resetting form state when a modal opens
   React.useEffect(() => {
     if (isOpen) {
       setPaymentMethod(getDefaultPaymentMethod());
       setNotes('');
       setError(null);
     }
-  }, [isOpen, order?.orderId]);
+  }, [isOpen, sourceOrder?.orderId]);
 
   // Check if order is already paid
-  const isPaid = order?.paymentStatus === 'paid';
+  const isPaid = sourceOrder?.paymentStatus === 'paid';
 
   /**
    * Handles payment submission
    */
   const handlePayment = useCallback(() => {
-    if (!order || isPaid) return;
+    if (!sourceOrder || isPaid) return;
 
     setError(null);
 
     // Validate amount
-    if (order.totalPrice <= 0) {
+    if (sourceOrder.totalPrice <= 0) {
       setError('Invalid order amount');
       return;
     }
 
     // Build payment request - schema validates and transforms orderId
     const paymentData = {
-      orderId: order.orderId, // Can be string or number, schema transforms to number
-      amount: order.totalPrice,
+      orderId: sourceOrder.orderId,
+      amount: sourceOrder.totalPrice,
       paymentMethod,
       notes: notes.trim() || undefined,
     };
@@ -203,7 +200,6 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
     // Use mutation hook which handles cache invalidation automatically
     createPaymentMutation(paymentData, {
       onSuccess: () => {
-        // Invoke success callback and close modal
         onPaymentSuccess?.();
         onClose();
       },
@@ -211,10 +207,10 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         setError(getPaymentErrorMessage(err, 'Failed to process payment'));
       },
     });
-  }, [order, isPaid, paymentMethod, notes, createPaymentMutation, onPaymentSuccess, onClose]);
+  }, [sourceOrder, isPaid, paymentMethod, notes, createPaymentMutation, onPaymentSuccess, onClose]);
 
   // Don't render if no order
-  if (!order) return null;
+  if (!view || !sourceOrder) return null;
 
   return (
     <PaymentErrorBoundary>
@@ -222,7 +218,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         title="Process Payment"
-        subtitle={<span>Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span></span>}
+        subtitle={<span>Order <span className="font-mono text-brand">{displayId.order(sourceOrder.orderId)}</span></span>}
         size="xl"
         disableClose={submitting}
         closeOnBackdropClick={!submitting}
@@ -231,7 +227,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
           {/* Scrollable content area */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {/* Receipt-style Order Summary */}
-            <PaymentReceipt order={order} />
+            <PaymentReceipt sourceOrder={sourceOrder} paymentDate={view.paymentDate} paymentMethod={view.paymentMethod} />
 
             {/* Payment Method Selection - Only show if not paid */}
             {!isPaid && (
@@ -301,7 +297,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                 isLoading={submitting}
                 icon={!submitting ? <Icon name={ICONS.dataFields.wallet} /> : undefined}
               >
-                {submitting ? 'Processing...' : `Pay ${formatCurrency(order.totalPrice)}`}
+                {submitting ? 'Processing...' : `Pay ${formatCurrency(sourceOrder.totalPrice)}`}
               </Button>
             )}
             </div>

@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { useOrdersList, useSamplesList } from '@/hooks/queries';
 import type { Order, OrderTest } from '@/types';
 import type { Sample } from '@/types';
+import { isActiveTest } from '@/utils/orderUtils';
 
 /** True if iso timestamp falls on the user's local calendar today. */
 const isToday = (iso: string | undefined): boolean => {
@@ -23,9 +24,6 @@ const isToday = (iso: string | undefined): boolean => {
 
 const isCollectedSample = (s: Sample): s is Sample & { collectedAt: string } =>
   s.status === 'collected' && 'collectedAt' in s && typeof (s as Sample & { collectedAt?: string }).collectedAt === 'string';
-
-const isActiveTest = (test: OrderTest): boolean =>
-  test.status !== 'superseded' && test.status !== 'removed';
 
 /** Read result-entered timestamp; supports camelCase and snake_case (API may return either). */
 const getResultEnteredAt = (test: OrderTest & { result_entered_at?: string }): string | undefined =>

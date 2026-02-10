@@ -10,7 +10,7 @@
  * - CollectionInfoLine for sample metadata
  */
 
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import type { ContainerType, RejectedSample, RejectionReason } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import Barcode from 'react-barcode';
@@ -24,7 +24,6 @@ import { buildCollectionDetailGridSections } from './CollectionDetailGridSection
 import { CollectionDetailContent } from './CollectionDetailContent';
 import {
   useSampleLookup,
-  useTestNameLookup,
   useTestCatalog,
   usePatientNameLookup,
   useOrderLookup,
@@ -62,11 +61,15 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
 }) => {
   const { getUserName } = useUserLookup();
   const { getSample } = useSampleLookup();
-  const { getTest } = useTestNameLookup();
   const { getPatientName } = usePatientNameLookup();
   const { getOrder } = useOrderLookup();
-  const { tests } = useTestCatalog();
+  const { tests = [] } = useTestCatalog();
   const rejectSampleMutation = useRejectSample();
+
+  const getTest = useCallback(
+    (code: string) => tests.find(t => t.code === code),
+    [tests],
+  );
 
   const sample = sampleId ? getSample(sampleId) : pendingSampleDisplay?.sample;
   const order = pendingSampleDisplay?.order || (sample ? getOrder(sample.orderId) : undefined);
@@ -76,14 +79,14 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
     if (!sample?.testCodes) return [];
     const seen = new Set<string>();
     return sample.testCodes
-      .map(code => getTest(code))
+      .map(code => tests.find(t => t.code === code))
       .filter((test): test is NonNullable<typeof test> => test !== undefined)
       .filter(test => {
         if (seen.has(test.code)) return false;
         seen.add(test.code);
         return true;
       });
-  }, [sample, getTest]);
+  }, [sample, tests]);
 
   if (!sample) return null;
 
@@ -93,7 +96,8 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   const rejectedSample = isRejected ? (sample as RejectedSample) : null;
 
   const patientId = order?.patientId || 0;
-  const patientName = order ? getPatientName(order.patientId) : 'Unknown';
+  const patientName = pendingSampleDisplay?.patient?.name
+    || (order ? getPatientName(order.patientId) : 'Unknown');
   const orderId = sample.orderId;
   const testNames = sample.testCodes ? getTestNames(sample.testCodes, tests) : [];
 

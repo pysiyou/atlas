@@ -8,12 +8,13 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
+import { getActiveTests } from '@/utils/orderUtils';
 import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { DATA_AMOUNT, DATA_ID_PRIMARY_CLICKABLE, DATA_ID_SECONDARY } from '@/shared/constants';
 import { PaymentButton } from '../components/PaymentButton';
 import { PaymentCard } from '../components/PaymentCard';
-import type { OrderPaymentDetails } from '../types';
+import type { OrderPaymentView } from '../types';
 
 /**
  * Create payment table configuration with full, compact, and card views
@@ -27,31 +28,29 @@ import type { OrderPaymentDetails } from '../types';
 export const createPaymentTableConfig = (
   navigate: NavigateFunction,
   onPaymentSuccess?: () => void
-): TableViewConfig<OrderPaymentDetails> => {
+): TableViewConfig<OrderPaymentView> => {
   // Shared render functions
-  const renderOrderId = (item: OrderPaymentDetails) => (
+  const renderOrderId = (item: OrderPaymentView) => (
     <button
       onClick={e => {
         e.stopPropagation();
-        navigate(`/orders/${item.orderId}`);
+        navigate(`/orders/${item.order.orderId}`);
       }}
       className={`${DATA_ID_PRIMARY_CLICKABLE} font-normal`}
     >
-      {displayId.order(item.orderId)}
+      {displayId.order(item.order.orderId)}
     </button>
   );
 
-  const renderPatientName = (item: OrderPaymentDetails) => (
+  const renderPatientName = (item: OrderPaymentView) => (
     <div className="min-w-0 font-normal">
-      <div className="text-fg truncate font-normal capitalize">{item.patientName || 'N/A'}</div>
-      <div className={`${DATA_ID_SECONDARY} font-normal`}>{displayId.patient(item.patientId)}</div>
+      <div className="text-fg truncate font-normal capitalize">{item.order.patientName || 'N/A'}</div>
+      <div className={`${DATA_ID_SECONDARY} font-normal`}>{displayId.patient(item.order.patientId)}</div>
     </div>
   );
 
-  const renderTests = (item: OrderPaymentDetails) => {
-    const activeTests = (item.tests ?? []).filter(
-      t => t.status !== 'superseded' && t.status !== 'removed'
-    );
+  const renderTests = (item: OrderPaymentView) => {
+    const activeTests = getActiveTests(item.order.tests ?? []);
     const activeCount = activeTests.length;
     return (
       <div className="min-w-0 font-normal">
@@ -65,28 +64,28 @@ export const createPaymentTableConfig = (
     );
   };
 
-  const renderTotalPrice = (item: OrderPaymentDetails) => (
-    <span className={`${DATA_AMOUNT} truncate block font-normal`}>{formatCurrency(item.totalPrice)}</span>
+  const renderTotalPrice = (item: OrderPaymentView) => (
+    <span className={`${DATA_AMOUNT} truncate block font-normal`}>{formatCurrency(item.order.totalPrice)}</span>
   );
 
-  const renderPaymentStatus = (item: OrderPaymentDetails) => (
-    <Badge variant={item.paymentStatus} size="sm" />
+  const renderPaymentStatus = (item: OrderPaymentView) => (
+    <Badge variant={item.order.paymentStatus} size="sm" />
   );
 
-  const renderPaymentMethod = (item: OrderPaymentDetails) => {
+  const renderPaymentMethod = (item: OrderPaymentView) => {
     // If order has not been paid yet (unpaid status or no payment method), keep it empty
-    if (!item.paymentMethod || item.paymentStatus === 'unpaid') {
+    if (!item.paymentMethod || item.order.paymentStatus === 'unpaid') {
       return null;
     }
     // Display payment method as a badge
     return <Badge variant={item.paymentMethod} size="sm" />;
   };
 
-  const renderOrderDate = (item: OrderPaymentDetails) => (
-    <span className="text-xs text-fg-subtle truncate block font-normal">{formatDate(item.orderDate)}</span>
+  const renderOrderDate = (item: OrderPaymentView) => (
+    <span className="text-xs text-fg-subtle truncate block font-normal">{formatDate(item.order.orderDate)}</span>
   );
 
-  const renderAction = (item: OrderPaymentDetails) => (
+  const renderAction = (item: OrderPaymentView) => (
     <div className="flex items-center font-normal" onClick={e => e.stopPropagation()}>
       <PaymentButton order={item.order} onPaymentSuccess={onPaymentSuccess} />
     </div>

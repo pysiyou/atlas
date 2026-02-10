@@ -9,6 +9,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Popover, Button, Icon, Alert, Badge, FooterInfo, PaymentMethodSelector } from '@/shared/ui';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { cn, formatCurrency, displayId } from '@/utils';
+import { getActiveTests, getActiveTotal } from '@/utils/orderUtils';
 import { inputBase } from '@/shared/ui/forms/inputStyles';
 import type { Order } from '@/types';
 import {
@@ -42,14 +43,8 @@ const PAYMENT_METHODS = getEnabledPaymentMethods();
  * tests; only active tests are shown and included in the total.
  */
 const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
-  const activeTests =
-    order.tests?.filter(
-      t => t.status !== 'superseded' && t.status !== 'removed'
-    ) ?? [];
-  const activeTotal = activeTests.reduce(
-    (sum, t) => sum + (typeof t.priceAtOrder === 'number' ? t.priceAtOrder : 0),
-    0
-  );
+  const activeTests = getActiveTests(order.tests ?? []);
+  const activeTotal = getActiveTotal(order.tests ?? []);
 
   return (
     <div className="rounded border border-stroke overflow-hidden">
