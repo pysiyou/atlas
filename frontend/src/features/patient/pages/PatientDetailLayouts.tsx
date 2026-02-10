@@ -53,7 +53,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         headerClassName="!py-1.5"
         headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
       >
-        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} variant="simple" />
+        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </SectionContainer>
 
       <SectionContainer
@@ -109,7 +109,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         headerClassName="!py-1.5"
         headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
       >
-        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} variant="detailed" />
+        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </SectionContainer>
     </div>
   );
@@ -163,7 +163,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           <IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />
         }
       >
-        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} variant="detailed" />
+        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </SectionContainer>
     </div>
   );
