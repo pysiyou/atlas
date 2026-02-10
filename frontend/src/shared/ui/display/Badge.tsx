@@ -84,7 +84,7 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <span
       className={cn(
-        'inline-flex items-center font-medium rounded whitespace-nowrap',
+        'inline-flex items-center font-normal rounded whitespace-nowrap',
         SIZES[size],
         isContainer ? containerStyle : [
           appearance === 'unified' ? UNIFIED_BASE : TINTED_BASE,

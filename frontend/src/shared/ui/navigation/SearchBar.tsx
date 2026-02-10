@@ -35,7 +35,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       />
       <input
         type="text"
-        className={cn(inputInner, inputText, 'font-medium')}
+        className={cn(inputInner, inputText, 'font-normal')}
         {...props}
         onChange={handleChange}
       />

@@ -71,7 +71,7 @@ const CustomTooltip = ({
         }}
       >
         <p className="text-xs font-normal mb-1" style={{ color: TOOLTIP_FG_MUTED }}>{label}</p>
-        <p className="font-bold text-base mt-0.5">{value} <span className="text-xs font-normal text-fg-subtle">{valueLabel}</span></p>
+        <p className="font-normal text-base mt-0.5">{value} <span className="text-xs font-normal text-fg-subtle">{valueLabel}</span></p>
       </div>
     );
   }
@@ -101,11 +101,11 @@ const CustomTooltip = ({
               <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: p.color }} />
               <span className="text-xs">{p.name}</span>
             </span>
-            <span className="font-medium text-sm">{p.value}</span>
+            <span className="font-normal text-sm">{p.value}</span>
           </li>
         ))}
       </ul>
-      <p className="text-xs font-medium mt-2 pt-2 border-t border-stroke">
+      <p className="text-xs font-normal mt-2 pt-2 border-t border-stroke">
         Gap: {gap} <span className="text-fg-subtle font-normal">{valueLabel}</span>
       </p>
     </div>
@@ -137,7 +137,7 @@ export const ActivityTrendChart: React.FC<ActivityTrendChartProps> = ({
 
       <div className="flex-1 min-h-0 relative w-full">
         {trendPercentage !== undefined && (
-          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-panel border border-stroke text-fg px-2 py-1 rounded text-sm font-medium z-10 shadow-sm">
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-panel border border-stroke text-fg px-2 py-1 rounded text-sm font-normal z-10 shadow-sm">
             {trendPercentage > 0 ? '+' : ''}{trendPercentage}%
           </div>
         )}

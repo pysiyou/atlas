@@ -42,7 +42,7 @@ const PatientSearchTagInput: React.FC<{
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-patient-search"
-          className="text-xs font-medium text-fg-subtle cursor-pointer truncate min-w-0"
+          className="text-xs font-normal text-fg-subtle cursor-pointer truncate min-w-0"
         >
           Patient
         </label>
@@ -68,10 +68,10 @@ const PatientSearchTagInput: React.FC<{
               avatarOnly={true}
               className="shrink-0"
             />
-            <span className={`text-xs font-medium truncate min-w-0 capitalize ${tagStyles.text}`}>
+            <span className={`text-xs font-normal truncate min-w-0 capitalize ${tagStyles.text}`}>
               {selectedPatient.fullName}
             </span>
-            <span className={`text-xxs font-semibold font-mono shrink-0 ${tagStyles.code}`}>
+            <span className={`text-xxs font-normal font-mono shrink-0 ${tagStyles.code}`}>
               {displayId.patient(selectedPatient.id)}
             </span>
             {!disabled && (
@@ -214,14 +214,14 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                           className="shrink-0"
                         />
                         {/* Patient name */}
-                        <span className="text-xs font-medium text-fg truncate capitalize">
+                        <span className="text-xs font-normal text-fg truncate capitalize">
                           {patient.fullName}
                         </span>
                       </div>
 
                       <div className="shrink-0 flex items-center gap-2">
                         {/* Patient ID on the right */}
-                        <span className="text-[11px] font-semibold font-mono text-brand">
+                        <span className="text-[11px] font-normal font-mono text-brand">
                           {displayId.patient(patient.id)}
                         </span>
                         {/* Check icon if selected */}

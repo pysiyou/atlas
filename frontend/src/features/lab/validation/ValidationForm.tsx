@@ -172,7 +172,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
                   <span className="text-xs text-fg-subtle text-left" title={key}>
                     {key}:
                   </span>
-                  <span className={`text-sm font-medium text-left ${valueColor}`}>
+                  <span className={`text-sm font-normal text-left ${valueColor}`}>
                     {resultValue}
                     {unit && <span className="text-fg-subtle font-normal ml-1">{unit}</span>}
                   </span>
@@ -188,7 +188,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
         <div className="mb-6 space-y-2 bg-canvas/50 rounded-md p-3 border border-stroke-subtle">
           {hasFlags && (
             <div className="flex items-start text-xs text-danger-fg">
-              <div className="font-medium">{flags.join(', ')}</div>
+              <div className="font-normal">{flags.join(', ')}</div>
             </div>
           )}
           {technicianNotes && (

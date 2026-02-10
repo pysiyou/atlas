@@ -43,22 +43,22 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
       <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="min-w-0 overflow-hidden">
-            <div className="text-sm font-medium text-fg truncate">
+            <div className="text-sm font-normal text-fg truncate">
               {test.testName ?? test.testCode}
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="text-xs text-fg-muted font-medium truncate capitalize">
+              <div className="text-xs text-fg-muted font-normal truncate capitalize">
                 {test.patientName}
               </div>
               <div className="text-xxs text-fg-disabled">•</div>
-              <div className="text-xxs text-brand font-medium font-mono truncate">
+              <div className="text-xxs text-brand font-normal font-mono truncate">
                 {test.testCode}
               </div>
               {test.sampleId && (
                 <>
                   <div className="text-xs text-fg-disabled">•</div>
                   <div
-                    className="text-xxs text-brand font-medium font-mono truncate"
+                    className="text-xxs text-brand font-normal font-mono truncate"
                     title={displayId.sample(test.sampleId)}
                   >
                     {displayId.sample(test.sampleId)}
@@ -169,7 +169,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
     hasRejectionHistory && lastRejection ? (
       <Alert variant="warning" className="py-2">
         <div className="space-y-0.5">
-          <p className="font-medium text-xs">
+          <p className="font-normal text-xs">
             {isRetest
               ? `Re-test #${test.retestNumber ?? 0} - Previous Result Rejected`
               : `Re-collect #${rejectionHistory.length} - Previous Sample Rejected`}

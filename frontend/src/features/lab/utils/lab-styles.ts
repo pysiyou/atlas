@@ -13,8 +13,8 @@ export const LAB_CARD_TYPOGRAPHY = {
   // Section Headers (lab-specific: uppercase/tracking)
   sectionTitle: 'text-xxs font-medium text-fg-subtle uppercase tracking-wide',
 
-  // Patient Names (medium emphasis within text-xs context)
-  patientName: 'font-medium text-fg capitalize',
+  // Patient Names (within text-xs context)
+  patientName: 'font-normal text-fg capitalize',
 
   // Standard Body Text – shared token
   bodyText: BODY_SECONDARY,
@@ -94,7 +94,7 @@ export const LAB_CARD_LIST_ITEMS = {
   bulletRed: 'w-1 h-1 rounded-full bg-danger-text mr-2',
 
   // Test name in list
-  testName: 'font-medium mr-1',
+  testName: 'font-normal mr-1',
 
   // Test code in list
   testCode: 'text-brand font-mono',
@@ -106,7 +106,7 @@ export const LAB_CARD_CONTEXT = {
   container: 'flex items-center gap-2 text-xs text-fg-subtle flex-wrap',
 
   // Patient name styling
-  patientName: 'font-medium text-fg capitalize',
+  patientName: 'font-normal text-fg capitalize',
 
   // Separator between items
   separator: 'text-fg-disabled',

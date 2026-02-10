@@ -249,7 +249,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
             fields: [
               {
                 label: 'Total Parameters',
-                value: <span className="font-semibold">{totalParams}</span>,
+                value: <span className="font-normal">{totalParams}</span>,
               },
               {
                 label: 'Filled',

@@ -56,7 +56,7 @@ export const EmergencyContactSection: React.FC<
           placeholder="Jane Doe"
         />
         <div>
-          <label className="block text-xs font-medium text-fg-subtle mb-1.5">
+          <label className="block text-xs font-normal text-fg-subtle mb-1.5">
             Relationship <span className="text-danger-fg ml-1">*</span>
           </label>
           <MultiSelectFilter

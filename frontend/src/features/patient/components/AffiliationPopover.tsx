@@ -23,7 +23,7 @@ export const AffiliationPopover: React.FC<AffiliationPopoverProps> = ({ affiliat
       {() => (
         <div className="flex flex-col w-full max-w-xs">
           <div className="p-4">
-            <h3 className="text-sm font-medium text-fg mb-3 border-b border-stroke-subtle pb-2">
+            <h3 className="text-sm font-normal text-fg mb-3 border-b border-stroke-subtle pb-2">
               Affiliation Details
             </h3>
             <AffiliationInfo affiliation={affiliation} />

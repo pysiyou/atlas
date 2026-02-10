@@ -60,7 +60,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
         {orders.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <Icon name={ICONS.dataFields.document} className="w-12 h-12 text-fg-disabled mb-4" />
-            <p className="text-fg-subtle font-medium mb-2">No orders found</p>
+            <p className="text-fg-subtle font-normal mb-2">No orders found</p>
             <p className="text-sm text-fg-subtle mb-4">Create a new order for this patient</p>
             <Button size="sm" variant="create" onClick={onCreateOrder}>
               Create Order
@@ -77,7 +77,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold text-fg text-sm font-mono">
+                      <span className="font-normal text-fg text-sm font-mono">
                         {displayId.order(order.orderId)}
                       </span>
                       <Badge variant={order.overallStatus} size="sm" />
@@ -87,7 +87,7 @@ export const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-semibold text-brand text-sm">
+                    <div className="font-normal text-brand text-sm">
                       {formatCurrency(order.totalPrice)}
                     </div>
                     <div className="text-xs text-fg-subtle">

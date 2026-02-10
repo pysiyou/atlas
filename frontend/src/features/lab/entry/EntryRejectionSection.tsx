@@ -140,7 +140,7 @@ export const EntryRejectionSection: React.FC<EntryRejectionSectionProps> = ({
             onClick={() => setActiveIndex(index)}
             className={`px-2 py-0.5 text-xs rounded ${
               activeIndex === index
-                ? 'bg-neutral-200 text-fg font-medium'
+                ? 'bg-neutral-200 text-fg font-normal'
                 : 'text-fg-subtle hover:bg-neutral-100'
             }`}
           >
@@ -181,7 +181,7 @@ export const ResultRejectionBanner: React.FC<ResultRejectionBannerProps> = ({
 
   return (
     <div className="text-xs text-fg-subtle">
-      <span className="font-medium">
+      <span className="font-normal">
         {typeLabel} #{retestNumber}
       </span>
       {rejection.rejectionReason && (

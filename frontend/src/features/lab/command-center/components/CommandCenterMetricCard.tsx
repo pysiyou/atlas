@@ -57,19 +57,19 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
             <div className="flex min-w-0 items-baseline gap-2">
               <span
                 className={cn(
-                  'truncate tabular-nums font-bold leading-tight text-fg',
+                  'truncate tabular-nums font-normal leading-tight text-fg',
                   'text-base sm:text-xl'
                 )}
               >
                 {displayPrimary}
               </span>
               {displaySecondary != null && displaySecondary !== '' && (
-                <span className="shrink-0 text-xs font-medium text-fg-subtle">
+                <span className="shrink-0 text-xs font-normal text-fg-subtle">
                   out of {displaySecondary}
                 </span>
               )}
             </div>
-            <span className="truncate text-xs font-medium text-fg-subtle">
+            <span className="truncate text-xs font-normal text-fg-subtle">
               {title}
             </span>
           </div>
@@ -80,7 +80,7 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
         {/* Trend line: bottom-left, small margin */}
         <div className="shrink-0 text-left m-2 sm:m-2.5">
           {trend != null ? (
-            <p className="flex items-center gap-1.5 truncate text-xs font-medium">
+            <p className="flex items-center gap-1.5 truncate text-xs font-normal">
               <Icon
                 name={trendUp ? 'up-trend' : 'down-trend'}
                 className={cn(
@@ -90,7 +90,7 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
               />
               <span
                 className={cn(
-                  'tabular-nums font-semibold',
+                  'tabular-nums font-normal',
                   trendUp ? 'text-success-fg' : 'text-danger-fg'
                 )}
               >

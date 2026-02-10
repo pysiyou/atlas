@@ -73,7 +73,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
   value,
   className = '',
   labelClassName = DETAIL_LABEL,
-  valueClassName = `font-medium text-right ${DETAIL_VALUE}`,
+  valueClassName = `font-normal text-right ${DETAIL_VALUE}`,
   variant = 'default',
   timestamp,
   user,

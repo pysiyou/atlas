@@ -90,7 +90,7 @@ export const Dashboard: React.FC = () => {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <p className="text-sm text-fg-subtle mb-1">{stat.label}</p>
-                  <p className="text-3xl font-bold text-fg">{stat.value}</p>
+                  <p className="text-3xl font-normal text-fg">{stat.value}</p>
                   {stat.today !== undefined && (
                     <p className="text-xs text-success-text mt-1">+{stat.today} today</p>
                   )}
@@ -107,7 +107,7 @@ export const Dashboard: React.FC = () => {
             <div className="flex items-center gap-3">
               <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-text" />
               <div>
-                <p className="text-sm font-semibold text-fg">Pending Actions</p>
+                <p className="text-sm font-normal text-fg">Pending Actions</p>
                 <p className="text-xs text-fg-muted">
                   {pendingOrders} orders pending completion, {outstandingInvoices} invoices unpaid
                 </p>
@@ -126,7 +126,7 @@ export const Dashboard: React.FC = () => {
                   className="flex items-center justify-between p-4 border border-stroke rounded-md hover:bg-canvas"
                 >
                   <div>
-                    <p className="text-sm font-semibold text-fg">{getPatientName(order.patientId)}</p>
+                    <p className="text-sm font-normal text-fg">{getPatientName(order.patientId)}</p>
                     <p className="text-xs text-fg-subtle">
                       <span className="font-mono">{displayId.order(order.orderId)}</span> • {order.tests.length} test(s)
                     </p>
@@ -140,7 +140,7 @@ export const Dashboard: React.FC = () => {
                           : 'info'
                     }
                     size="sm"
-                    className="border-none font-medium"
+                    className="border-none font-normal"
                   >
                     {order.overallStatus}
                   </Badge>

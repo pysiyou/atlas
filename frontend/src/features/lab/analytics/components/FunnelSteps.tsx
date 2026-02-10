@@ -45,16 +45,16 @@ export const FunnelSteps: React.FC<FunnelStepsProps> = ({ funnel, stepChanges = 
         const change = stepChanges[step.key];
         return (
           <li key={step.key} className="flex items-center justify-between gap-2">
-            <span className="text-fg font-medium">{step.label}</span>
+            <span className="text-fg font-normal">{step.label}</span>
             <span className="text-fg-muted">
               {counts[i].toLocaleString()} sessions
             </span>
             <span className="flex items-center gap-1">
-              <span className="text-fg font-medium">{pctFromPrev[i]}%</span>
+              <span className="text-fg font-normal">{pctFromPrev[i]}%</span>
               {change !== undefined && (
                 <span
                   className={cn(
-                    'text-xs font-medium',
+                    'text-xs font-normal',
                     change.isPositive ? 'text-success-text' : 'text-danger-fg'
                   )}
                 >

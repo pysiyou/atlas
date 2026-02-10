@@ -57,7 +57,7 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
     <Alert variant="danger" onClose={onDismiss} className={className}>
       <div className="flex flex-col gap-2">
         <div>
-          <p className="font-medium">{error.message}</p>
+          <p className="font-normal">{error.message}</p>
           {error.operation && (
             <p className="text-sm opacity-80 mt-1">Failed operation: {error.operation}</p>
           )}
@@ -90,7 +90,7 @@ export const InlineError: React.FC<{
       {onDismiss && (
         <button
           onClick={onDismiss}
-          className="ml-2 text-danger-fg hover:text-danger-fg/80 font-bold"
+          className="ml-2 text-danger-fg hover:text-danger-fg/80 font-normal"
           aria-label="Dismiss error"
         >
           ×

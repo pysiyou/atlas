@@ -109,7 +109,7 @@ const CustomTooltip = ({
         }}
       >
         <p className="text-xs font-normal mb-1" style={{ color: TOOLTIP_FG_MUTED }}>{label}</p>
-        <p className="font-bold text-base mt-0.5">{value} <span className="text-xs font-normal text-fg-subtle">{valueLabel}</span></p>
+        <p className="font-normal text-base mt-0.5">{value} <span className="text-xs font-normal text-fg-subtle">{valueLabel}</span></p>
       </div>
     );
   }
@@ -134,11 +134,11 @@ const CustomTooltip = ({
               <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: p.color ?? CHART_BRAND }} />
               <span className="text-xs">{p.name || p.dataKey}</span>
             </span>
-            <span className="font-medium text-sm">{fmt(p.value)}</span>
+            <span className="font-normal text-sm">{fmt(p.value)}</span>
           </li>
         ))}
       </ul>
-      <p className="text-xs font-medium mt-2 pt-2 border-t border-stroke">
+      <p className="text-xs font-normal mt-2 pt-2 border-t border-stroke">
         Total: {fmt(total)} <span className="text-fg-subtle font-normal">{valueLabel}</span>
       </p>
     </div>

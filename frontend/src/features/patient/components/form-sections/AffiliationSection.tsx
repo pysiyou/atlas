@@ -29,43 +29,43 @@ export const AffiliationSection: React.FC<
       {hasExistingAffiliation && (
         <div className="bg-panel border border-stroke rounded-xl p-5 space-y-4 shadow-sm">
           <div className="flex items-center justify-between pb-3 border-b border-stroke-subtle">
-            <span className="text-sm font-semibold text-fg">Current Affiliation</span>
-            <Badge variant={isActive ? 'success' : 'danger'} size="sm" className="font-medium">
+            <span className="text-sm font-normal text-fg">Current Affiliation</span>
+            <Badge variant={isActive ? 'success' : 'danger'} size="sm" className="font-normal">
               {isActive ? 'Active' : 'Expired'}
             </Badge>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <span className="text-xs font-medium text-fg-subtle uppercase tracking-wide">
+              <span className="text-xs font-normal text-fg-subtle uppercase tracking-wide">
                 Assurance Number
               </span>
-              <p className="font-mono font-semibold text-fg text-sm">
+              <p className="font-mono font-normal text-fg text-sm">
                 {existingAffiliation.assuranceNumber}
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-fg-subtle uppercase tracking-wide">
+              <span className="text-xs font-normal text-fg-subtle uppercase tracking-wide">
                 Duration
               </span>
-              <p className="font-semibold text-fg text-sm">
+              <p className="font-normal text-fg text-sm">
                 {AFFILIATION_DURATION_OPTIONS.find(
                   opt => opt.value === existingAffiliation.duration
                 )?.label || `${existingAffiliation.duration} Months`}
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-fg-subtle uppercase tracking-wide">
+              <span className="text-xs font-normal text-fg-subtle uppercase tracking-wide">
                 Start Date
               </span>
-              <p className="font-semibold text-fg text-sm">
+              <p className="font-normal text-fg text-sm">
                 {formatDate(existingAffiliation.startDate)}
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-medium text-fg-subtle uppercase tracking-wide">
+              <span className="text-xs font-normal text-fg-subtle uppercase tracking-wide">
                 Expiry Date
               </span>
-              <p className={`font-semibold text-sm ${isActive ? 'text-fg' : 'text-danger-fg'}`}>
+              <p className={`font-normal text-sm ${isActive ? 'text-fg' : 'text-danger-fg'}`}>
                 {formatDate(existingAffiliation.endDate)}
               </p>
             </div>

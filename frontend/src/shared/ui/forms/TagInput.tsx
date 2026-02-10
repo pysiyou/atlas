@@ -116,7 +116,7 @@ export const TagInput: React.FC<TagInputProps> = ({
         <div className="flex justify-between items-baseline mb-1.5 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-fg-subtle cursor-pointer truncate min-w-0"
+            className="text-xs font-normal text-fg-subtle cursor-pointer truncate min-w-0"
           >
             {label}
             {required && <span className="text-danger-fg ml-1">*</span>}
@@ -138,7 +138,7 @@ export const TagInput: React.FC<TagInputProps> = ({
             key={`${tag}-${index}`}
             className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
           >
-            <span className={`text-xs font-medium truncate min-w-0 ${tagStyles.text}`}>
+            <span className={`text-xs font-normal truncate min-w-0 ${tagStyles.text}`}>
               {tag}
             </span>
             <button

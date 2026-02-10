@@ -210,7 +210,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="flex justify-between items-baseline mb-1 gap-2">
               <label
                 htmlFor={isNa ? undefined : `vital-${fieldName}`}
-                className={`text-xs font-medium truncate min-w-0 ${isNa ? 'text-fg-subtle cursor-default' : 'text-fg-subtle cursor-pointer'}`}
+                className={`text-xs font-normal truncate min-w-0 ${isNa ? 'text-fg-subtle cursor-default' : 'text-fg-subtle cursor-pointer'}`}
               >
                 {config.label}
               </label>
@@ -260,7 +260,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     <span className="text-xs text-fg-subtle select-none truncate">{config.unit}</span>
                   </div>
                   {isAbnormal && (
-                    <div className="absolute -bottom-5 left-0 text-xxs text-danger-fg font-medium">
+                    <div className="absolute -bottom-5 left-0 text-xxs text-danger-fg font-normal">
                       Abnormal value
                     </div>
                   )}

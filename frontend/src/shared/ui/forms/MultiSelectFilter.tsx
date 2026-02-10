@@ -194,7 +194,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
     // Show count for multiple selections – single line so truncate works
     return (
       <span className="text-fg-muted truncate block whitespace-nowrap">
-        <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full text-on-brand text-xxs font-medium align-middle mr-1 bg-brand">
+        <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full text-on-brand text-xxs font-normal align-middle mr-1 bg-brand">
           {selectedIds.length}
         </span>
         selected
@@ -292,7 +292,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
                       </div>
                     )}
                   </div>
-                  <span className="text-xs font-medium text-fg">
+                  <span className="text-xs font-normal text-fg">
                     {allSelected ? 'Deselect all' : selectAllLabel}
                   </span>
                 </label>

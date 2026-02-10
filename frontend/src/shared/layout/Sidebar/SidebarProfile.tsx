@@ -50,7 +50,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
               />
             </div>
             <div className="flex-1 min-w-0 overflow-hidden">
-              <p className="text-sm font-medium text-fg truncate">{currentUser.name}</p>
+              <p className="text-sm font-normal text-fg truncate">{currentUser.name}</p>
               <p className="text-xs text-fg-subtle truncate">{formatStatus(currentUser.role)}</p>
             </div>
           </div>
@@ -59,7 +59,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
         {({ close }) => (
           <>
             <div className="px-4 py-3 border-b border-stroke">
-              <p className="text-sm font-medium text-fg truncate">{currentUser.name}</p>
+              <p className="text-sm font-normal text-fg truncate">{currentUser.name}</p>
               <p className="text-xs text-fg-subtle truncate">{formatStatus(currentUser.role)}</p>
             </div>
             <Button

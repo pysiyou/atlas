@@ -60,7 +60,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   const getPageButtonClasses = (isActive: boolean) => {
     const base =
-      'min-w-[26px] h-6 px-1.5 text-[11px] font-medium rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-panel';
+      'min-w-[26px] h-6 px-1.5 text-[11px] font-normal rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-panel';
     return isActive
       ? `${base} bg-brand text-on-brand`
       : `${base} text-fg border border-stroke bg-panel hover:border-stroke-hover hover:bg-panel-hover`;

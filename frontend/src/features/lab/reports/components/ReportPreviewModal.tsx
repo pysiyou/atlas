@@ -62,7 +62,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
               
               {/* Company Subtitle */}
               {companyConfig.getConfig().company.subtitle && (
-                <p className="text-xs text-fg font-semibold">{companyConfig.getConfig().company.subtitle}</p>
+                <p className="text-xs text-fg font-normal">{companyConfig.getConfig().company.subtitle}</p>
               )}
               
               {/* Address Lines */}
@@ -104,17 +104,17 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
               <div className="grid grid-cols-2 gap-2">
                 {/* Left Sub-column: Patient Demographics */}
                 <div className="space-y-0.5">
-                  <p className="text-base font-bold text-fg">{reportData.patientName}</p>
+                  <p className="text-base font-normal text-fg">{reportData.patientName}</p>
                   {reportData.patientAge && (
                     <div className="flex gap-2">
                       <span className="text-xs text-fg-muted min-w-[50px] truncate">Age:</span>
-                      <span className="text-xs font-bold text-fg">{reportData.patientAge}</span>
+                      <span className="text-xs font-normal text-fg">{reportData.patientAge}</span>
                     </div>
                   )}
                   {reportData.patientGender && (
                     <div className="flex gap-2">
                       <span className="text-xs text-fg-muted min-w-[50px] truncate">Gender:</span>
-                      <span className="text-xs font-bold text-fg">{reportData.patientGender.toUpperCase()}</span>
+                      <span className="text-xs font-normal text-fg">{reportData.patientGender.toUpperCase()}</span>
                     </div>
                   )}
                   {/* Phone or Email - show phone if available, otherwise show email */}
@@ -127,7 +127,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                       return (
                         <div className="flex gap-2">
                           <span className="text-xs text-fg-muted min-w-[50px] truncate">Phone:</span>
-                          <span className="text-xs font-bold text-fg">{orderExtended.patientPhone}</span>
+                          <span className="text-xs font-normal text-fg">{orderExtended.patientPhone}</span>
                         </div>
                       );
                     }
@@ -135,7 +135,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                       return (
                         <div className="flex gap-2">
                           <span className="text-xs text-fg-muted min-w-[50px] truncate">Email:</span>
-                          <span className="text-xs font-bold text-fg">{orderExtended.patientEmail}</span>
+                          <span className="text-xs font-normal text-fg">{orderExtended.patientEmail}</span>
                         </div>
                       );
                     }
@@ -145,11 +145,11 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                 
                 {/* Right Sub-column: Processing Details */}
                 <div className="space-y-0.5">
-                  <p className="text-base font-bold text-fg">Processing Details</p>
+                  <p className="text-base font-normal text-fg">Processing Details</p>
                   {reportData.timestamps?.collectedAt || reportData.sampleCollection?.collectedAt ? (
                     <div className="flex gap-2">
                       <span className="text-xs text-fg-muted min-w-[60px] truncate">Sample:</span>
-                      <span className="text-xs font-bold text-fg">
+                      <span className="text-xs font-normal text-fg">
                         {format(new Date(reportData.timestamps?.collectedAt || reportData.sampleCollection?.collectedAt || ''), 'yyyy-MM-dd hh:mm a')}
                       </span>
                     </div>
@@ -157,14 +157,14 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                   {reportData.timestamps?.reportedAt ? (
                     <div className="flex gap-2">
                       <span className="text-xs text-fg-muted min-w-[60px] truncate">Results:</span>
-                      <span className="text-xs font-bold text-fg">
+                      <span className="text-xs font-normal text-fg">
                         {format(new Date(reportData.timestamps.reportedAt), 'yyyy-MM-dd hh:mm a')}
                       </span>
                     </div>
                   ) : (
                     <div className="flex gap-2">
                       <span className="text-xs text-fg-muted min-w-[60px] truncate">Results:</span>
-                      <span className="text-xs font-bold text-fg">
+                      <span className="text-xs font-normal text-fg">
                         {format(new Date(), 'yyyy-MM-dd hh:mm a')}
                       </span>
                     </div>
@@ -172,7 +172,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                   {reportData.testResults[0] && (
                     <div className="flex gap-2">
                       <span className="text-xs text-fg-muted min-w-[60px] truncate">Verified by:</span>
-                      <span className="text-xs font-bold text-fg">
+                      <span className="text-xs font-normal text-fg">
                         {(() => {
                           const testResult = reportData.testResults[0];
                           if (!testResult) return 'N/A';
@@ -219,10 +219,10 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="bg-canvas border-b border-stroke-strong">
-                      <th className="px-6 py-3 text-left font-medium text-fg-subtle uppercase tracking-wider">Investigation</th>
-                      <th className="px-6 py-3 text-left font-medium text-fg-subtle uppercase tracking-wider">Result</th>
-                      <th className="px-6 py-3 text-left font-medium text-fg-subtle uppercase tracking-wider">Reference Value</th>
-                      <th className="px-6 py-3 text-right font-medium text-fg-subtle uppercase tracking-wider">Unit</th>
+                      <th className="px-6 py-3 text-left font-normal text-fg-subtle uppercase tracking-wider">Investigation</th>
+                      <th className="px-6 py-3 text-left font-normal text-fg-subtle uppercase tracking-wider">Result</th>
+                      <th className="px-6 py-3 text-left font-normal text-fg-subtle uppercase tracking-wider">Reference Value</th>
+                      <th className="px-6 py-3 text-right font-normal text-fg-subtle uppercase tracking-wider">Unit</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -253,22 +253,22 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                         >
                           <td className={cn(
                             'px-6 py-3 text-fg',
-                            isSectionHeader && 'font-bold'
+                            isSectionHeader && 'font-normal'
                           )}>
                             {isSectionHeader ? (
                               param.name
                             ) : (
                               <div className="min-w-0">
-                                <div className="font-bold text-fg truncate">{param.name}</div>
+                                <div className="font-normal text-fg truncate">{param.name}</div>
                                 {param.code && (
-                                  <div className="text-xs font-medium truncate">{param.code}</div>
+                                  <div className="text-xs font-normal truncate">{param.code}</div>
                                 )}
                               </div>
                             )}
                           </td>
                           <td className={cn(
                             'px-6 py-3 text-left',
-                            isAbnormal ? 'text-danger-fg font-bold' : 'text-fg'
+                            isAbnormal ? 'text-danger-fg font-normal' : 'text-fg'
                           )}>
                             {param.value}
                           </td>
@@ -294,7 +294,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                   <p>Interpretation: {test.validationNotes}</p>
                 )}
                 <p>Thanks for Reference</p>
-                <p className="text-center font-bold mt-4">****End of Report****</p>
+                <p className="text-center font-normal mt-4">****End of Report****</p>
               </div>
             </div>
           ))}

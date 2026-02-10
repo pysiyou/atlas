@@ -347,7 +347,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                   text={`Editing ${displayId.order(order.orderId)}`}
                 />
               ) : (
-                <div className="text-base font-semibold text-brand">
+                <div className="text-base font-normal text-brand">
                   Total: {formatCurrency(totalPrice)}
                 </div>
               )

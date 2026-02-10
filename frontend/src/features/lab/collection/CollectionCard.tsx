@@ -114,7 +114,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
         <div className="flex justify-between items-start mb-3 pb-3 border-b border-stroke">
           <Avatar
             primaryText={patientName}
-            primaryTextClassName="font-semibold capitalize"
+            primaryTextClassName="font-normal capitalize"
             secondaryText={displayId.order(order.orderId)}
             secondaryTextClassName="text-brand font-mono"
             size="xs"
@@ -322,7 +322,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
           return (
             <Alert variant="warning" className="py-2">
               <div className="space-y-0.5">
-                <p className="font-medium text-xs">Recollection Required</p>
+                <p className="font-normal text-xs">Recollection Required</p>
                 <p className="text-xxs opacity-90 leading-tight">
                   {reasonsText
                     ? `Reason: ${reasonsText}.`

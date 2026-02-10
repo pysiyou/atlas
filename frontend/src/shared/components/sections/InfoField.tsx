@@ -51,7 +51,7 @@ export const InfoField: React.FC<InfoFieldProps> = ({
         <div className="min-w-0 flex-1">
           <div className={DETAIL_LABEL}>{label}</div>
           {/* Using div instead of p to support ReactNode values that may contain block elements */}
-          <div className={`font-medium mt-0.5 leading-relaxed ${DETAIL_VALUE}`}>{value}</div>
+          <div className={`font-normal mt-0.5 leading-relaxed ${DETAIL_VALUE}`}>{value}</div>
         </div>
       </div>
     );
@@ -62,7 +62,7 @@ export const InfoField: React.FC<InfoFieldProps> = ({
     <div className={`flex items-center justify-between gap-4 ${className}`}>
       <div className="flex items-center gap-2">
         {icon && <Icon name={icon} className="w-4 h-4 text-fg-subtle flex-shrink-0" />}
-        <div className={`font-medium whitespace-nowrap ${DETAIL_LABEL}`}>{label}</div>
+        <div className={`font-normal whitespace-nowrap ${DETAIL_LABEL}`}>{label}</div>
       </div>
       <div className={`text-right min-w-0 ${DETAIL_VALUE}`}>{value}</div>
     </div>

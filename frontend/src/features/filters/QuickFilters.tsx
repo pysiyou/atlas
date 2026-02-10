@@ -50,7 +50,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
             key={preset.id}
             onClick={() => onPresetClick(preset.id)}
             className={cn(
-              'inline-flex items-center gap-1 px-2 py-1 rounded text-xxs font-medium cursor-pointer',
+              'inline-flex items-center gap-1 px-2 py-1 rounded text-xxs font-normal cursor-pointer',
               'filter-chip',
               isActive && 'filter-chip--active'
             )}

@@ -379,7 +379,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
           <div key={group.label} className="px-4 pb-4">
             <div className="flex items-center gap-3 py-3">
               <div className="flex-1 h-px bg-stroke" />
-              <span className="text-xs font-extralight text-fg-muted tracking-wider">
+              <span className="text-xs font-normal text-fg-muted tracking-wider">
                 {group.label}
               </span>
               <div className="flex-1 h-px bg-stroke" />
@@ -405,7 +405,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
                           {line.map((segment, idx) => {
                             if (segment.type === 'name') {
                               return (
-                                <span key={idx} className="font-medium text-brand">
+                                <span key={idx} className="font-normal text-brand">
                                   {segment.value}
                                 </span>
                               );
@@ -426,7 +426,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
                           })}
                         </p>
                       ))}
-                      <p className="text-xxs font-extralight text-fg-muted">
+                      <p className="text-xxs font-normal text-fg-muted">
                         {formatDateTime(item.timestamp)}
                       </p>
                     </div>

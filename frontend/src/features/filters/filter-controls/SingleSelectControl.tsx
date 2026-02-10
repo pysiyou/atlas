@@ -93,7 +93,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
           )}
 
           {/* Column 2: Content - flexible middle */}
-          <div className="flex-1 min-w-0 text-xs font-medium">{renderTriggerContent()}</div>
+          <div className="flex-1 min-w-0 text-xs font-normal">{renderTriggerContent()}</div>
 
           {/* Column 3: Right Icons (clear + chevron) - close icon always reserves space */}
           <div className="flex items-center gap-1 shrink-0">

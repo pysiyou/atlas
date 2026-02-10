@@ -88,7 +88,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
       <div className="px-6 py-4 border-b border-dashed border-stroke-strong bg-canvas">
         <div className="flex justify-between items-center mb-2">
           {order.patientName ? (
-            <p className="text-sm font-semibold text-fg-muted">{order.patientName}</p>
+            <p className="text-sm font-normal text-fg-muted">{order.patientName}</p>
           ) : (
             <p className="text-sm text-fg-subtle italic">No patient name</p>
           )}
@@ -102,20 +102,20 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
         <div className="space-y-1.5">
           <div className="flex items-center text-xs">
             <span className="text-fg-subtle w-28">Order Number:</span>
-            <span className="text-brand font-medium font-mono">{displayId.order(order.orderId)}</span>
+            <span className="text-brand font-normal font-mono">{displayId.order(order.orderId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-fg-subtle w-28">Patient Number:</span>
-            <span className="text-brand font-medium font-mono">{displayId.patient(order.patientId)}</span>
+            <span className="text-brand font-normal font-mono">{displayId.patient(order.patientId)}</span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-fg-subtle w-28">Order Date:</span>
-            <span className="text-fg-muted font-medium">{formatDate(order.orderDate)}</span>
+            <span className="text-fg-muted font-normal">{formatDate(order.orderDate)}</span>
           </div>
           {order.paymentDate && (
             <div className="flex items-center text-xs">
               <span className="text-fg-subtle w-28">Payment Date:</span>
-              <span className="text-fg-muted font-medium">{formatDate(order.paymentDate)}</span>
+              <span className="text-fg-muted font-normal">{formatDate(order.paymentDate)}</span>
             </div>
           )}
         </div>
@@ -141,7 +141,7 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
                     )}
                   </span>
                 </span>
-                <span className="font-medium text-fg tabular-nums shrink-0">
+                <span className="font-normal text-fg tabular-nums shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </li>
@@ -155,10 +155,10 @@ const PaymentReceipt: React.FC<{ order: OrderPaymentDetails }> = ({ order }) => 
       {/* Receipt Footer with Total (sum of active tests only) */}
       <div className="border-t border-dashed border-stroke-strong" />
       <div className="px-6 py-4 flex justify-between items-center bg-canvas">
-        <span className="text-sm font-semibold text-fg-muted uppercase tracking-wider">
+        <span className="text-sm font-normal text-fg-muted uppercase tracking-wider">
           Total
         </span>
-        <span className="text-lg font-bold text-fg tabular-nums">
+        <span className="text-lg font-normal text-fg tabular-nums">
           {formatCurrency(activeTotal)}
         </span>
       </div>
@@ -259,7 +259,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             {/* Payment Method Selection - Only show if not paid */}
             {!isPaid && (
               <div>
-                <label className="block text-sm font-medium text-fg-muted mb-3">
+                <label className="block text-sm font-normal text-fg-muted mb-3">
                   Payment Method <span className="text-danger-fg">*</span>
                 </label>
                 <PaymentMethodSelector
@@ -274,7 +274,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             {/* Notes - Only show if not paid */}
             {!isPaid && (
               <div>
-                <label className="block text-sm font-medium text-fg-muted mb-2">Notes</label>
+                <label className="block text-sm font-normal text-fg-muted mb-2">Notes</label>
                 <textarea
                   rows={3}
                   placeholder="Add optional notes..."

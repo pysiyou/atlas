@@ -138,7 +138,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       {rejectionHistoryCount > 1 ? (
         <Alert variant="danger" className="py-2">
           <div className="space-y-0.5">
-            <p className="font-medium text-xs">Multiple Rejections Detected</p>
+            <p className="font-normal text-xs">Multiple Rejections Detected</p>
             <p className="text-xxs opacity-90 leading-tight">
               This sample has been rejected {rejectionHistoryCount} times already. Consider
               escalating to supervisor.
@@ -148,7 +148,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       ) : (
         <Alert variant="warning" className="py-2">
           <div className="space-y-0.5">
-            <p className="font-medium text-xs">Action Required</p>
+            <p className="font-normal text-xs">Action Required</p>
             <p className="text-xxs opacity-90 leading-tight">
               {patientName
                 ? `Sample for ${patientName} will be marked as rejected.`
@@ -160,7 +160,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
       {/* Rejection Reasons */}
       <div className="space-y-2">
-        <label className="block text-xs font-medium text-fg-subtle">Rejection Reasons</label>
+        <label className="block text-xs font-normal text-fg-subtle">Rejection Reasons</label>
         <div className="border border-stroke rounded-md max-h-[200px] overflow-y-auto">
           {REJECTION_REASONS.map(r => (
             <label
@@ -176,7 +176,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
                 />
               </div>
               <div className="ml-2 text-xs">
-                <div className="font-medium text-fg">{r.label}</div>
+                <div className="font-normal text-fg">{r.label}</div>
                 <div className="text-fg-subtle">{r.description}</div>
               </div>
             </label>
@@ -186,7 +186,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
       {/* Recollection Toggle */}
       <div>
-        <label className="block text-xs font-medium text-fg-subtle mb-1">Next Step</label>
+        <label className="block text-xs font-normal text-fg-subtle mb-1">Next Step</label>
         <CheckboxCard
           checked={requireRecollection}
           onChange={() => setRequireRecollection(!requireRecollection)}
@@ -197,7 +197,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-fg-subtle mb-1">
+        <label className="block text-xs font-normal text-fg-subtle mb-1">
           Notes {reasons.includes('other') && <span className="text-danger-fg">*</span>}
         </label>
         <textarea
