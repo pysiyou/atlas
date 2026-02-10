@@ -58,7 +58,7 @@ export const Laboratory: React.FC = () => {
   const pageTitle = activeTabConfig?.label ?? 'Laboratory';
 
   return (
-    <div className="h-full flex flex-col p-2 gap-2 min-w-0 overflow-hidden">
+    <div className="min-h-full flex flex-col p-2 gap-2 min-w-0">
       {/* Page Header: title with tabs on the right */}
       <PageHeaderBar title={pageTitle}>
         <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">

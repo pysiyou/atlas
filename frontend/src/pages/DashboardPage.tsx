@@ -72,7 +72,7 @@ export const Dashboard: React.FC = () => {
   const recentOrders = orders.slice(-5).reverse();
 
   return (
-    <div className="h-full flex flex-col p-2 gap-2 overflow-hidden">
+    <div className="min-h-full flex flex-col p-2 gap-2">
       {/* Fixed header row */}
       <div className="shrink-0 h-14 min-h-14 max-h-14 flex flex-col justify-center">
         <h1 className="text-xl font-bold text-fg truncate">Welcome back, {currentUser?.name}!</h1>

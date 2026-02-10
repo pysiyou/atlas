@@ -78,7 +78,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
       />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">{children}</main>
+      <main className="flex-1 flex flex-col min-h-0 min-w-0 overflow-auto">{children}</main>
     </div>
   );
 };

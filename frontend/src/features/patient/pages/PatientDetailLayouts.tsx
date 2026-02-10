@@ -20,7 +20,8 @@ interface LayoutProps {
 }
 
 /**
- * SmallScreenLayout - Single column stack layout for small screens
+ * SmallScreenLayout - Single column stack layout for small screens.
+ * Uses theme tokens (bg-canvas, bg-panel, border-stroke) so theme applies correctly.
  */
 export const SmallScreenLayout: React.FC<LayoutProps> = ({
   patient,
@@ -29,7 +30,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
   onNewOrder,
 }) => {
   return (
-    <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6">
+    <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-canvas">
       <SectionContainer
         title="Vital Signs"
         className="shrink-0 bg-panel"
@@ -56,7 +57,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Related Orders"
-        className="shrink-0"
+        className="shrink-0 bg-panel"
         contentClassName="p-0 overflow-visible"
         headerClassName="!py-1.5"
         headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
@@ -64,7 +65,11 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} variant="simple" />
       </SectionContainer>
 
-      <SectionContainer title="Reports" className="" contentClassName="overflow-visible">
+      <SectionContainer
+        title="Reports"
+        className="bg-panel"
+        contentClassName="overflow-visible"
+      >
         <ReportsList orders={orders} />
       </SectionContainer>
     </div>
@@ -72,7 +77,8 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 };
 
 /**
- * MediumScreenLayout - 2x2 grid layout for medium screens
+ * MediumScreenLayout - 2x2 grid + full-width row for medium screens.
+ * Rows use content height; page scrolls when content exceeds viewport.
  */
 export const MediumScreenLayout: React.FC<LayoutProps> = ({
   patient,
@@ -81,43 +87,43 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
   onNewOrder,
 }) => {
   return (
-    <div className="flex-1 grid grid-cols-2 grid-rows-3 gap-4 min-h-0 h-full">
+    <div className="grid grid-cols-2 gap-4 w-full pb-6">
       <SectionContainer
         title="Vital Signs"
-        className="h-full flex flex-col min-h-0 bg-panel"
-        contentClassName="flex-1 min-h-0 overflow-y-auto"
+        className="bg-panel"
+        contentClassName="overflow-visible"
       >
         <VitalSignsDisplay vitalSigns={patient.vitalSigns} />
       </SectionContainer>
 
       <SectionContainer
         title="Reports"
-        className="h-full flex flex-col min-h-0 bg-panel"
-        contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
+        className="bg-panel"
+        contentClassName="overflow-visible flex flex-col"
       >
         <ReportsList orders={orders} />
       </SectionContainer>
 
       <SectionContainer
         title="General Info"
-        className="h-full flex flex-col min-h-0 bg-panel"
-        contentClassName="flex-1 min-h-0 overflow-y-auto"
+        className="bg-panel"
+        contentClassName="overflow-visible"
       >
         <GeneralInfoSection patient={patient} layout="column" />
       </SectionContainer>
 
       <SectionContainer
         title="Medical History"
-        className="h-full flex flex-col min-h-0 bg-panel"
-        contentClassName="flex-1 min-h-0 overflow-y-auto"
+        className="bg-panel"
+        contentClassName="overflow-visible"
       >
         <MedicalHistorySectionDisplay patient={patient} layout="column" />
       </SectionContainer>
 
       <SectionContainer
         title="Related Orders"
-        className="h-full flex flex-col min-h-0 bg-panel col-span-2"
-        contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
+        className="bg-panel col-span-2"
+        contentClassName="p-0 overflow-visible"
         headerClassName="!py-1.5"
         headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
       >

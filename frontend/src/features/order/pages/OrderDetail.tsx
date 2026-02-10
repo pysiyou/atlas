@@ -96,16 +96,19 @@ export const OrderDetail: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col p-6">
-      <OrderHeader
-        order={order}
-        invoice={invoice}
-        isLarge={isLarge}
-        onViewInvoice={handleViewInvoice}
-        onEdit={order.overallStatus === 'ordered' ? handleEdit : undefined}
-      />
-
-      {renderContent()}
+    <div className="min-h-full flex flex-col p-6 gap-4">
+      <div className="shrink-0">
+        <OrderHeader
+          order={order}
+          invoice={invoice}
+          isLarge={isLarge}
+          onViewInvoice={handleViewInvoice}
+          onEdit={order.overallStatus === 'ordered' ? handleEdit : undefined}
+        />
+      </div>
+      <div className="flex-1 min-h-0 overflow-auto">
+        {renderContent()}
+      </div>
     </div>
   );
 };
