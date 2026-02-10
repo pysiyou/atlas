@@ -99,13 +99,6 @@ export const createPatientTableConfig = (
   return {
     fullColumns: [
       {
-        key: 'id',
-        header: 'Patient ID',
-        width: 'sm',
-        sortable: true,
-        render: renderId,
-      },
-      {
         key: 'fullName',
         header: 'Name',
         width: 'fill',
@@ -124,6 +117,13 @@ export const createPatientTableConfig = (
         width: 'sm',
         sortable: true,
         render: renderGender,
+      },
+      {
+        key: 'id',
+        header: 'Patient ID',
+        width: 'sm',
+        sortable: true,
+        render: renderId,
       },
       {
         key: 'lastOrder',
@@ -148,13 +148,6 @@ export const createPatientTableConfig = (
     ],
     mediumColumns: [
       {
-        key: 'id',
-        header: 'Patient ID',
-        width: 'sm', // 200px - matches full view
-        sortable: true,
-        render: renderId,
-      },
-      {
         key: 'fullName',
         header: 'Name',
         width: 'fill', // Same as full view
@@ -174,6 +167,13 @@ export const createPatientTableConfig = (
         sortable: true,
         render: renderGender,
       },
+      {
+        key: 'id',
+        header: 'Patient ID',
+        width: 'sm', // 200px - matches full view
+        sortable: true,
+        render: renderId,
+      },
       // {
       //   key: 'lastOrder',
       //   header: 'Last Order',
@@ -182,13 +182,6 @@ export const createPatientTableConfig = (
       // },
     ],
     compactColumns: [
-      {
-        key: 'id',
-        header: 'ID',
-        width: 'sm', // 200px fixed - matches full view ID
-        sortable: true,
-        render: renderId,
-      },
       {
         key: 'fullName',
         header: 'Name',
@@ -201,6 +194,13 @@ export const createPatientTableConfig = (
         header: 'Contact',
         width: 'fill',
         render: renderContact,
+      },
+      {
+        key: 'id',
+        header: 'ID',
+        width: 'sm', // 200px fixed - matches full view ID
+        sortable: true,
+        render: renderId,
       },
     ],
     CardComponent: PatientCard,
