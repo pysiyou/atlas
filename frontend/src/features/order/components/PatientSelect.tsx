@@ -68,7 +68,7 @@ const PatientSearchTagInput: React.FC<{
               avatarOnly={true}
               className="shrink-0"
             />
-            <span className={`text-xs font-medium truncate min-w-0 ${tagStyles.text}`}>
+            <span className={`text-xs font-medium truncate min-w-0 capitalize ${tagStyles.text}`}>
               {selectedPatient.fullName}
             </span>
             <span className={`text-xxs font-semibold font-mono shrink-0 ${tagStyles.code}`}>
@@ -214,7 +214,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                           className="shrink-0"
                         />
                         {/* Patient name */}
-                        <span className="text-xs font-medium text-fg truncate">
+                        <span className="text-xs font-medium text-fg truncate capitalize">
                           {patient.fullName}
                         </span>
                       </div>
