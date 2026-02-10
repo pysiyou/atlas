@@ -174,6 +174,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
     <Table<Order>
       data={orders}
       viewConfig={viewConfig}
+      striped
       onRowClick={(order) => onOrderClick(String(order.orderId))}
       getRowKey={(order) => order.orderId}
       pagination={false}

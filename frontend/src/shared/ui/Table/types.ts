@@ -136,7 +136,7 @@ export interface TableProps<T> {
   // === Visual Options ===
   /** Table density variant */
   variant?: TableVariant;
-  /** Show alternating row backgrounds */
+  /** Alternating row background (striped rows). When true, even/odd rows use distinct bg colors. */
   striped?: boolean;
   /** Show cell borders */
   bordered?: boolean;

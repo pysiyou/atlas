@@ -9,7 +9,9 @@ const tableRow = {
   base: 'flex items-center border-b border-stroke transition-colors duration-200',
   clickable: 'cursor-pointer',
   hover: 'hover:bg-panel-hover',
-  striped: 'bg-neutral-50',
+  /** Alternation: even row panel, odd row tint */
+  stripedEven: 'bg-panel',
+  stripedOdd: 'bg-neutral-50',
 };
 
 /**
@@ -30,12 +32,12 @@ export function TableRow<T>({
       {data.map((item, index) => {
         const rowKey = getRowKey ? getRowKey(item, index) : index;
         const isClickable = !!onRowClick;
-        const isStriped = striped && index % 2 === 0;
+        const stripeClass = striped ? (index % 2 === 0 ? tableRow.stripedEven : tableRow.stripedOdd) : '';
 
         return (
           <div
             key={rowKey}
-            className={`${tableRow.base} ${isClickable ? `${tableRow.clickable} ${tableRow.hover}` : ''} ${isStriped ? tableRow.striped : ''} ${rowClassName ? rowClassName(item, index) : ''}`}
+            className={`${tableRow.base} ${isClickable ? `${tableRow.clickable} ${tableRow.hover}` : ''} ${stripeClass} ${rowClassName ? rowClassName(item, index) : ''}`}
             style={{ height: `${ROW_HEIGHTS[variant]}px` }}
             onClick={() => onRowClick?.(item, index)}
           >
