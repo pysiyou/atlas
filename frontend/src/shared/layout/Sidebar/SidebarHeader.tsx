@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { IconButton } from '@/shared/ui';
+import { Icon, IconButton } from '@/shared/ui';
+import { ICONS } from '@/utils';
 import { companyConfig } from '@/config';
 
 interface SidebarHeaderProps {
@@ -48,8 +49,9 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
       <IconButton
         variant="sidebarClose"
         size="sm"
+        icon={<Icon name={isCollapsed ? ICONS.actions.doubleArrowRight : ICONS.actions.doubleArrowLeft} />}
         onClick={handleButtonClick}
-        title={onMobileClose ? 'Close Sidebar' : 'Collapse Sidebar'}
+        title={onMobileClose ? 'Close Sidebar' : isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
         className="w-8 h-8 shrink-0"
       />
     </div>

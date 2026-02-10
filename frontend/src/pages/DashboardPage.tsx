@@ -72,16 +72,17 @@ export const Dashboard: React.FC = () => {
   const recentOrders = orders.slice(-5).reverse();
 
   return (
-    <div className="h-full overflow-y-auto p-6">
-      <div className="space-y-6">
-        {/* Welcome Header */}
-        <div>
-          <h1 className="text-2xl font-bold text-fg">Welcome back, {currentUser?.name}!</h1>
-          <p className="text-sm text-fg-muted mt-1">
-            Here's what's happening today - {formatDate(new Date())}
-          </p>
-        </div>
-
+    <div className="h-full flex flex-col p-2 gap-2 overflow-hidden">
+      {/* Fixed header row */}
+      <div className="shrink-0 h-14 min-h-14 max-h-14 flex flex-col justify-center">
+        <h1 className="text-xl font-bold text-fg truncate">Welcome back, {currentUser?.name}!</h1>
+        <p className="text-sm text-fg-muted truncate">
+          Here's what's happening today - {formatDate(new Date())}
+        </p>
+      </div>
+      {/* Content row */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="space-y-6">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
@@ -150,6 +151,7 @@ export const Dashboard: React.FC = () => {
             )}
           </div>
         </SectionContainer>
+        </div>
       </div>
     </div>
   );

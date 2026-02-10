@@ -11,9 +11,10 @@ import { ICONS } from '@/utils';
 
 export const Appointments: React.FC = () => {
   return (
-    <div className="min-h-0 flex-1 flex flex-col p-4 gap-6 overflow-hidden">
+    <div className="min-h-0 flex-1 flex flex-col p-2 gap-2 overflow-hidden">
       <PageHeaderBar title="Appointments" />
-      <SectionContainer title="Coming Soon">
+      <div className="flex-1 min-h-0 overflow-auto">
+        <SectionContainer title="Coming Soon">
         <div className="text-center py-8">
           <Icon name={ICONS.dataFields.date} className="w-16 h-16 mx-auto mb-4 text-fg-disabled" />
           <p className="text-sm text-fg">
@@ -24,6 +25,7 @@ export const Appointments: React.FC = () => {
           </p>
         </div>
       </SectionContainer>
+      </div>
     </div>
   );
 };

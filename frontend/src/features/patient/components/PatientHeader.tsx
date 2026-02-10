@@ -25,7 +25,7 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
 }) => {
   const { isAffiliationActive } = usePatientService();
   return (
-    <div className="flex items-center justify-between mb-4 shrink-0 flex-wrap gap-3">
+    <div className="flex items-center justify-between w-full shrink-0 flex-nowrap gap-3">
       <div className="flex items-center gap-2 self-center">
         <Avatar primaryText={patient.fullName} size="sm" />
         {isAffiliationActive(patient.affiliation) && (
