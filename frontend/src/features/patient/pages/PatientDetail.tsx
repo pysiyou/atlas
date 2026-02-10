@@ -69,7 +69,7 @@ export const PatientDetail: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col p-2 gap-4 overflow-hidden">
+    <div className="min-h-full flex flex-col p-2 gap-4">
       <div className="shrink-0 h-14 min-h-14 max-h-14 flex items-center">
         <PatientHeader
           patient={patient}
@@ -78,7 +78,7 @@ export const PatientDetail: React.FC = () => {
           onNewOrder={handleNewOrder}
         />
       </div>
-      <div className="flex-1 min-h-0 overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-auto">
         {renderContent()}
       </div>
 

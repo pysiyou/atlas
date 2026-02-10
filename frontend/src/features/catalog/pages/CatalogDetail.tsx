@@ -157,7 +157,7 @@ export const CatalogDetail: React.FC = () => {
   }
 
   return (
-    <div className="h-full flex flex-col p-6 overflow-hidden">
+    <div className="min-h-full flex flex-col p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 shrink-0">
         <div className="flex items-center gap-2">
