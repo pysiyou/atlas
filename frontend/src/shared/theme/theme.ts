@@ -25,6 +25,9 @@ export function getActiveTheme(): ThemeName {
   return stored && isValidTheme(stored) ? stored : DEFAULT_THEME;
 }
 
+const THEME_TRANSITION_CLASS = "theme-transitioning";
+const THEME_TRANSITION_MS = 420;
+
 export function setTheme(theme: ThemeName): void {
   if (!isValidTheme(theme)) {
     console.warn(
@@ -32,8 +35,13 @@ export function setTheme(theme: ThemeName): void {
     );
     theme = DEFAULT_THEME;
   }
-  document.documentElement.setAttribute(THEME_ATTRIBUTE, theme);
-  localStorage.setItem(STORAGE_KEY, theme);
+  const root = document.documentElement;
+  root.classList.add(THEME_TRANSITION_CLASS);
+  requestAnimationFrame(() => {
+    root.setAttribute(THEME_ATTRIBUTE, theme);
+    localStorage.setItem(STORAGE_KEY, theme);
+    setTimeout(() => root.classList.remove(THEME_TRANSITION_CLASS), THEME_TRANSITION_MS);
+  });
 }
 
 export function initializeTheme(): void {
