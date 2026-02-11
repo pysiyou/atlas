@@ -14,7 +14,7 @@
  */
 import React, { useState, useCallback } from 'react';
 import { Modal, Icon, Badge, Button, Alert, CalloutCard, FooterInfo, PaymentMethodSelector } from '@/shared/ui';
-import { PaymentErrorBoundary } from '@/shared/components';
+import { ErrorBoundary } from '@/shared/components';
 import { cn, formatDate, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/utils/orderUtils';
 import { inputBase } from '@/shared/ui/inputStyles';
@@ -213,7 +213,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   if (!view || !sourceOrder) return null;
 
   return (
-    <PaymentErrorBoundary>
+    <ErrorBoundary>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -304,6 +304,6 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
           </div>
         </div>
       </Modal>
-    </PaymentErrorBoundary>
+    </ErrorBoundary>
   );
 };

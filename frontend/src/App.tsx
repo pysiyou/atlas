@@ -14,7 +14,6 @@ import {
   AppToastBar,
   DataLoader,
   ErrorBoundary,
-  FeatureErrorBoundary,
   LoadingState,
 } from '@/shared/components';
 import { AuthRehydrationGate } from '@/shared/components/AuthRehydrationGate';
@@ -59,10 +58,9 @@ const PageLoadingFallback: React.FC = () => (
  */
 interface ProtectedFeatureRouteProps {
   children: React.ReactNode;
-  featureName: string;
 }
 
-const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children, featureName }) => {
+const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuthStore();
 
   if (isLoading) return <PageLoadingFallback />;
@@ -70,7 +68,7 @@ const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children,
 
   return (
     <DashboardLayout>
-      <FeatureErrorBoundary featureName={featureName}>{children}</FeatureErrorBoundary>
+      <ErrorBoundary homeHref="/dashboard">{children}</ErrorBoundary>
     </DashboardLayout>
   );
 };
@@ -92,12 +90,12 @@ const AppRoutes: React.FC = () => {
           }
         />
 
-        {/* Protected Routes with Feature Error Boundaries and Code Splitting */}
+        {/* Protected Routes with Code Splitting */}
         <Route
           path={ROUTES.DASHBOARD}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Dashboard">
+              <ProtectedFeatureRoute>
                 <Dashboard />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -107,7 +105,7 @@ const AppRoutes: React.FC = () => {
           path={`${ROUTES.PATIENTS}/*`}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Patients">
+              <ProtectedFeatureRoute>
                 <Patients />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -117,7 +115,7 @@ const AppRoutes: React.FC = () => {
           path={`${ROUTES.ORDERS}/*`}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Orders">
+              <ProtectedFeatureRoute>
                 <Orders />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -127,7 +125,7 @@ const AppRoutes: React.FC = () => {
           path={`${ROUTES.CATALOG}/*`}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Catalog">
+              <ProtectedFeatureRoute>
                 <Catalog />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -137,7 +135,7 @@ const AppRoutes: React.FC = () => {
           path={ROUTES.LABORATORY}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Laboratory">
+              <ProtectedFeatureRoute>
                 <Laboratory />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -147,7 +145,7 @@ const AppRoutes: React.FC = () => {
           path={ROUTES.APPOINTMENTS}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Appointments">
+              <ProtectedFeatureRoute>
                 <Appointments />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -157,7 +155,7 @@ const AppRoutes: React.FC = () => {
           path={ROUTES.PAYMENTS}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Payments">
+              <ProtectedFeatureRoute>
                 <Payments />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -167,7 +165,7 @@ const AppRoutes: React.FC = () => {
           path={`${ROUTES.REPORTS}/*`}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Reports">
+              <ProtectedFeatureRoute>
                 <Reports />
               </ProtectedFeatureRoute>
             </Suspense>
@@ -177,7 +175,7 @@ const AppRoutes: React.FC = () => {
           path={ROUTES.ADMIN}
           element={
             <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute featureName="Admin">
+              <ProtectedFeatureRoute>
                 <Admin />
               </ProtectedFeatureRoute>
             </Suspense>

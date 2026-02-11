@@ -21,7 +21,7 @@ import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowV
 import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters, useLabTestsFromOrders } from '../hooks';
 import { validationFilterConfig } from '../constants';
-import { DataErrorBoundary, LoadingState } from '@/shared/components';
+import { ErrorBoundary, LoadingState } from '@/shared/components';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
 import { resultAPI } from '@/services/api';
@@ -325,14 +325,14 @@ export const ValidationView: React.FC = () => {
   const hasNoItems = allTests.length === 0;
   if (isLoading && hasNoItems) {
     return (
-      <DataErrorBoundary>
+      <ErrorBoundary>
         <LoadingState message="Loading validation..." fullScreen />
-      </DataErrorBoundary>
+      </ErrorBoundary>
     );
   }
 
   return (
-    <DataErrorBoundary>
+    <ErrorBoundary>
       <LabWorkflowView
         items={filteredTests}
         renderCard={test => {
@@ -405,6 +405,6 @@ export const ValidationView: React.FC = () => {
           ) : undefined
         }
       />
-    </DataErrorBoundary>
+    </ErrorBoundary>
   );
 };

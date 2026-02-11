@@ -20,7 +20,7 @@ import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowV
 import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters, useLabTestsFromOrders } from '../hooks';
 import { entryFilterConfig } from '../constants';
-import { DataErrorBoundary, LoadingState } from '@/shared/components';
+import { ErrorBoundary, LoadingState } from '@/shared/components';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { resultAPI } from '@/services/api';
@@ -286,22 +286,22 @@ export const EntryView: React.FC = () => {
   const hasNoItems = allTests.length === 0;
   if (isLoading && hasNoItems) {
     return (
-      <DataErrorBoundary>
+      <ErrorBoundary>
         <LoadingState message="Loading result entry..." fullScreen />
-      </DataErrorBoundary>
+      </ErrorBoundary>
     );
   }
 
   if (!orders || !testCatalog) {
     return (
-      <DataErrorBoundary>
+      <ErrorBoundary>
         <LoadingState message="Loading result entry..." fullScreen />
-      </DataErrorBoundary>
+      </ErrorBoundary>
     );
   }
 
   return (
-    <DataErrorBoundary>
+    <ErrorBoundary>
       <LabWorkflowView
         items={filteredTests}
         renderCard={(test, idx, filtered) => {
@@ -350,6 +350,6 @@ export const EntryView: React.FC = () => {
           />
         }
       />
-    </DataErrorBoundary>
+    </ErrorBoundary>
   );
 };

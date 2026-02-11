@@ -43,7 +43,8 @@ type SemanticVariant =
   | 'refresh'
   | 'back'
   | 'logout'
-  | 'remove';
+  | 'remove'
+  | 'home';
 
 /**
  * All available button variants
@@ -83,6 +84,7 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   back: { style: 'outline', icon: ICONS.actions.arrowLeft },
   previous: { style: 'outline', icon: ICONS.actions.chevronLeft },
   next: { style: 'primary', icon: ICONS.actions.chevronRight },
+  home: { style: 'primary', icon: ICONS.actions.home },
 
   // Destructive actions
   delete: { style: 'danger', icon: ICONS.actions.delete },
