@@ -1,6 +1,5 @@
 /**
  * useCalendarNavigation - Calendar month/view navigation for date pickers.
- * Encapsulates currentMonth, view (days/months/years), and navigation actions.
  */
 
 import { useState, useCallback } from 'react';
@@ -26,33 +25,21 @@ export function useCalendarNavigation(initialMonth: Date): UseCalendarNavigation
 
   const navigatePrevious = useCallback(() => {
     if (view === 'days') {
-      setCurrentMonth(
-        new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
-      );
+      setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
     } else if (view === 'months') {
-      setCurrentMonth(
-        new Date(currentMonth.getFullYear() - 1, currentMonth.getMonth(), 1)
-      );
+      setCurrentMonth(new Date(currentMonth.getFullYear() - 1, currentMonth.getMonth(), 1));
     } else {
-      setCurrentMonth(
-        new Date(currentMonth.getFullYear() - 10, currentMonth.getMonth(), 1)
-      );
+      setCurrentMonth(new Date(currentMonth.getFullYear() - 10, currentMonth.getMonth(), 1));
     }
   }, [currentMonth, view]);
 
   const navigateNext = useCallback(() => {
     if (view === 'days') {
-      setCurrentMonth(
-        new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)
-      );
+      setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
     } else if (view === 'months') {
-      setCurrentMonth(
-        new Date(currentMonth.getFullYear() + 1, currentMonth.getMonth(), 1)
-      );
+      setCurrentMonth(new Date(currentMonth.getFullYear() + 1, currentMonth.getMonth(), 1));
     } else {
-      setCurrentMonth(
-        new Date(currentMonth.getFullYear() + 10, currentMonth.getMonth(), 1)
-      );
+      setCurrentMonth(new Date(currentMonth.getFullYear() + 10, currentMonth.getMonth(), 1));
     }
   }, [currentMonth, view]);
 

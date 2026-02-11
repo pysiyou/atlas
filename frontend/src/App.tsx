@@ -29,7 +29,7 @@ import { PublicRoute } from '@/shared/routes/PublicRoute';
 // Lazy-loaded Pages (code-split by route)
 const Dashboard = lazy(() => import('@/pages/DashboardPage').then(m => ({ default: m.Dashboard })));
 const Patients = lazy(() => import('@/pages/PatientsPage').then(m => ({ default: m.Patients })));
-const Orders = lazy(() => import('@/pages/OrdersPage').then(m => ({ default: m.Orders })));
+const Orders = lazy(() => import('@/pages').then(m => ({ default: m.OrdersPage })));
 const Catalog = lazy(() => import('@/pages/CatalogPage').then(m => ({ default: m.Catalog })));
 const Laboratory = lazy(() =>
   import('@/pages/LaboratoryPage').then(m => ({ default: m.Laboratory }))

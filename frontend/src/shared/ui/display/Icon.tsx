@@ -4,6 +4,10 @@
  * Loads and displays SVG icons dynamically from the public/icons directory.
  * Follows the same pattern as cargoplan software for consistency.
  *
+ * Security: SVG content is injected via dangerouslySetInnerHTML. Only app-controlled
+ * paths (public/icons/*.svg) are loaded; never use user-supplied or remote URLs.
+ * Adding dynamic or user-controlled SVG sources would require sanitization.
+ *
  * Usage:
  *   <Icon name="check" className="w-4 h-4" />
  *   <Icon name="alert-circle" className="w-5 h-5 text-red-500" />
@@ -180,6 +184,8 @@ export const Icon: React.FC<IconProps> = ({ name, className = '', fallback, size
   // Handle size prop - convert to Tailwind classes if number provided
   const sizeClass = typeof size === 'number' ? `w-${size} h-${size}` : size || '';
 
+  // Security: dangerouslySetInnerHTML is used only for SVG loaded from app-controlled paths
+  // (/icons/*.svg). Content is never user-supplied; XSS risk is minimal.
   return (
     <span
       className={`inline-block ${sizeClass} ${className} [&>svg]:w-full [&>svg]:h-full [&>svg]:shrink-0`}

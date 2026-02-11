@@ -165,6 +165,9 @@ export const queryKeys = {
 } as const;
 
 /**
- * Type helper to extract query key types
+ * Query key prefixes for static data (no refetch on window focus).
+ * Used by query client refetchOnWindowFocus; add new static domains here.
  */
+export const STATIC_QUERY_KEY_PREFIXES = ['tests', 'users', 'affiliations'] as const;
+
 export type QueryKeys = typeof queryKeys;

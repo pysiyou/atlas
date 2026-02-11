@@ -1,8 +1,6 @@
 /**
  * DateFilter and calendar subcomponents.
- * Re-exported from order feature so filters/lab/payment can depend on shared instead of order.
+ * Implementation lives in ./date-filter so shared does not depend on features.
  */
 
-export { DateFilter } from '@/features/order/components/DateFilter';
-export { DateFilterCalendar } from '@/features/order/components/DateFilterCalendar';
-export { DateFilterHeader } from '@/features/order/components/DateFilterHeader';
+export { DateFilter, DateFilterCalendar, DateFilterHeader, DateFilterPresets } from './date-filter';

@@ -7,6 +7,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Icon, Button, Badge, Modal, FooterInfo } from '@/shared/ui';
 import { MultiSelectFilter } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
+import { ModalRangeSlider } from '@/shared/ui/forms';
 import { AgeFilter } from './AgeFilter';
 import { inputWrapper, inputInner, inputText, inputContainerBase } from '@/shared/ui/forms/inputStyles';
 import { cn } from '@/utils';
@@ -45,90 +46,7 @@ const affiliationStatusOptions = [
 ];
 
 /**
- * ModalAgeSlider - Dual-thumb slider for age range in modal
- */
-const ModalAgeSlider: React.FC<{
-  value: [number, number];
-  onChange: (value: [number, number]) => void;
-  min: number;
-  max: number;
-}> = ({ value, onChange, min, max }) => {
-  const [localValue, setLocalValue] = useState<[number, number]>(value);
-
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
-
-  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newMin = Math.min(Number(e.target.value), localValue[1] - 1);
-    const newValue: [number, number] = [newMin, localValue[1]];
-    setLocalValue(newValue);
-    onChange(newValue);
-  };
-
-  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newMax = Math.max(Number(e.target.value), localValue[0] + 1);
-    const newValue: [number, number] = [localValue[0], newMax];
-    setLocalValue(newValue);
-    onChange(newValue);
-  };
-
-  // Calculate percentages for visual track
-  const minPercent = ((localValue[0] - min) / (max - min)) * 100;
-  const maxPercent = ((localValue[1] - min) / (max - min)) * 100;
-
-  return (
-    <div className="w-full">
-      <p className="text-sm text-fg-subtle mb-4">Move the slider to filter by age</p>
-
-      {/* Slider Track */}
-      <div className="relative h-1 mb-6">
-        {/* Background track */}
-        <div className="absolute inset-0 bg-border rounded-full" />
-
-        {/* Active track */}
-        <div
-          className="absolute h-full bg-brand rounded-full"
-          style={{
-            left: `${minPercent}%`,
-            width: `${maxPercent - minPercent}%`,
-          }}
-        />
-
-        {/* Min thumb */}
-        <input
-          type="range"
-          min={min}
-          max={max}
-          value={localValue[0]}
-          onChange={handleMinChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
-          style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
-        />
-
-        {/* Max thumb */}
-        <input
-          type="range"
-          min={min}
-          max={max}
-          value={localValue[1]}
-          onChange={handleMaxChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
-          style={{ zIndex: 4 }}
-        />
-      </div>
-
-      {/* Age labels */}
-      <div className="flex justify-between text-lg font-normal text-fg">
-        <span>{localValue[0]} years</span>
-        <span>{localValue[1]} years</span>
-      </div>
-    </div>
-  );
-};
-
-/**
- * SearchInput - Simple debounced search input
+ * SearchInput - Simple debounced search input (inline bar style)
  */
 const SearchInput: React.FC<{
   value: string;
@@ -370,11 +288,13 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                 {/* Age Range Section */}
                 <div className="w-full">
                   <h4 className="text-sm font-semibold text-fg mb-3">Age Range</h4>
-                  <ModalAgeSlider
+                  <ModalRangeSlider
                     value={ageRange}
                     onChange={onAgeRangeChange}
                     min={AGE_RANGE_MIN}
                     max={AGE_RANGE_MAX}
+                    hint="Move the slider to filter by age"
+                    formatLabel={v => `${v} years`}
                   />
                   <div className="border-b border-stroke mt-4" />
                 </div>

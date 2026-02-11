@@ -1,244 +1,28 @@
 /**
  * FilterModal Component
  * Modal interface for filters on small screens
- *
- * Displays all filter controls in a modal dialog for small screen devices.
- * Provides a clean, scrollable interface with all filters and quick filters.
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Modal, CheckboxList, Icon, FooterInfo, Button } from '@/shared/ui';
-import { ICONS, uppercaseLabel, cn } from '@/utils';
-import { inputContainerBase, inputInner, inputText } from '@/shared/ui/forms/inputStyles';
+import React from 'react';
+import { Modal, CheckboxList, FooterInfo, Button } from '@/shared/ui';
+import { ICONS } from '@/utils';
 import { QuickFilters } from './QuickFilters';
 import { DatePresetBadges } from './DatePresetBadges';
+import { ModalSearchInput, ModalPriceSlider, ModalRadioList } from './FilterModalControls';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
 
-/**
- * Props for FilterModal component
- */
 export interface FilterModalProps {
-  /** Whether the modal is open */
   isOpen: boolean;
-  /** Callback to close the modal */
   onClose: () => void;
-  /** Filter configuration */
   config: FilterConfig;
-  /** Current filter values */
   filters: FilterValues;
-  /** Callback to set a filter value */
   setFilter: (key: string, value: unknown) => void;
-  /** Active filter badges (used for Clear All visibility) */
   activeBadges: ActiveFilterBadge[];
-  /** Callback to clear all filters */
   onClearAll: () => void;
-  /** Currently active quick filter preset ID */
   activePresetId: string | null;
-  /** Callback when a quick filter preset is clicked */
   onPresetClick: (presetId: string) => void;
 }
 
-/**
- * Modal Search Input Component
- * Clean search input for modal filter
- */
-const ModalSearchInput: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-}> = ({ value, onChange, placeholder = 'Company, skill, tag...' }) => {
-  const [localValue, setLocalValue] = useState(value);
-
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (localValue !== value) {
-        onChange(localValue);
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [localValue, value, onChange]);
-
-  const handleClear = useCallback(() => {
-    setLocalValue('');
-    onChange('');
-  }, [onChange]);
-
-  return (
-    <div className={cn(inputContainerBase, 'flex items-center h-10 px-4')}>
-      <input
-        type="text"
-        placeholder={placeholder}
-        value={localValue}
-        onChange={e => setLocalValue(e.target.value)}
-        className={cn(inputInner, inputText)}
-      />
-      {localValue && (
-        <button
-          onClick={handleClear}
-          className="p-0.5 hover:bg-panel-hover rounded transition-colors flex items-center justify-center cursor-pointer"
-        >
-          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-fg-subtle" />
-        </button>
-      )}
-    </div>
-  );
-};
-
-/**
- * Modal Price Range Slider Component
- * Dual-thumb slider for price range in modal
- */
-const ModalPriceSlider: React.FC<{
-  value: [number, number];
-  onChange: (value: [number, number]) => void;
-  min: number;
-  max: number;
-  currency?: string;
-}> = ({ value, onChange, min, max, currency = '$' }) => {
-  const [localValue, setLocalValue] = useState<[number, number]>(value);
-
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
-
-  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newMin = Math.min(Number(e.target.value), localValue[1] - 1);
-    const newValue: [number, number] = [newMin, localValue[1]];
-    setLocalValue(newValue);
-    onChange(newValue);
-  };
-
-  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newMax = Math.max(Number(e.target.value), localValue[0] + 1);
-    const newValue: [number, number] = [localValue[0], newMax];
-    setLocalValue(newValue);
-    onChange(newValue);
-  };
-
-  // Calculate percentages for visual track
-  const minPercent = ((localValue[0] - min) / (max - min)) * 100;
-  const maxPercent = ((localValue[1] - min) / (max - min)) * 100;
-
-  return (
-    <div className="w-full">
-      <p className="text-sm text-fg-subtle mb-4">Move the slider to change prices</p>
-
-      {/* Slider Track */}
-      <div className="relative h-1 mb-6">
-        {/* Background track */}
-        <div className="absolute inset-0 bg-stroke rounded-full" />
-
-        {/* Active track */}
-        <div
-          className="absolute h-full bg-brand rounded-full"
-          style={{
-            left: `${minPercent}%`,
-            width: `${maxPercent - minPercent}%`,
-          }}
-        />
-
-        {/* Min thumb */}
-        <input
-          type="range"
-          min={min}
-          max={max}
-          value={localValue[0]}
-          onChange={handleMinChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-panel [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-panel [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
-          style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
-        />
-
-        {/* Max thumb */}
-        <input
-          type="range"
-          min={min}
-          max={max}
-          value={localValue[1]}
-          onChange={handleMaxChange}
-          className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-panel [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-panel [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
-          style={{ zIndex: 4 }}
-        />
-      </div>
-
-      {/* Price labels */}
-      <div className="flex justify-between text-lg font-normal text-fg">
-        <span>{currency}{localValue[0]}</span>
-        <span>{currency}{localValue[1]}</span>
-      </div>
-    </div>
-  );
-};
-
-/**
- * Modal Radio List Component
- * Radio button list for single-select in modal
- */
-const ModalRadioList: React.FC<{
-  options: { id: string; label: string }[];
-  selectedId: string | null;
-  onChange: (id: string | null) => void;
-  columns?: 1 | 2;
-}> = ({ options, selectedId, onChange, columns = 1 }) => {
-  const handleSelect = (id: string) => {
-    onChange(selectedId === id ? null : id);
-  };
-
-  return (
-    <div className={cn(
-      columns === 2 ? 'grid grid-cols-2 gap-x-6 gap-y-2' : 'space-y-2'
-    )}>
-      {options.map(option => {
-        const isSelected = selectedId === option.id;
-        return (
-          <label
-            key={option.id}
-            className="flex items-center gap-3 cursor-pointer group py-1 transition-colors"
-          >
-            <div className="relative flex items-center justify-center shrink-0">
-              <input
-                type="radio"
-                checked={isSelected}
-                onChange={() => handleSelect(option.id)}
-                className="sr-only"
-              />
-              <div
-                className={cn(
-                  'w-5 h-5 rounded-full flex items-center justify-center transition-colors',
-                  isSelected ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong group-hover:border-brand'
-                )}
-              >
-                {isSelected && (
-                  <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
-                )}
-              </div>
-            </div>
-            <span className={cn(
-              'text-sm transition-colors',
-              isSelected ? 'text-fg' : 'text-fg-muted group-hover:text-fg'
-            )}>
-              {uppercaseLabel(option.label)}
-            </span>
-          </label>
-        );
-      })}
-    </div>
-  );
-};
-
-/**
- * FilterModal Component
- *
- * Provides a modal interface for filters on small screens with:
- * - Clean white card styling
- * - Bold section headers with line separators
- * - Yellow/gold Filter button
- *
- * @component
- */
 export const FilterModal: React.FC<FilterModalProps> = ({
   isOpen,
   onClose,

@@ -5,9 +5,12 @@
  * - Static: Test catalog, users (rarely changes) - Infinity cache
  * - Semi-static: Patients (occasional changes) - 5 min stale time
  * - Dynamic: Orders, samples, payments (frequent changes) - 30s stale time
+ *
+ * refetchOnWindowFocus skips queries whose key prefix is in STATIC_QUERY_KEY_PREFIXES (see keys.ts).
  */
 
 import { QueryClient } from '@tanstack/react-query';
+import { STATIC_QUERY_KEY_PREFIXES } from './keys';
 
 /**
  * Cache configuration presets for different data tiers
@@ -68,11 +71,9 @@ export function createQueryClient(): QueryClient {
         ...cacheConfig.dynamic,
         // Smart window focus refetch - only if data is stale enough
         refetchOnWindowFocus: (query) => {
-          // Skip refetch for static data
           const queryKey = query.queryKey;
           if (Array.isArray(queryKey) && typeof queryKey[0] === 'string') {
-            const firstKey = queryKey[0];
-            if (['tests', 'users', 'affiliations'].includes(firstKey)) {
+            if (STATIC_QUERY_KEY_PREFIXES.includes(queryKey[0] as (typeof STATIC_QUERY_KEY_PREFIXES)[number])) {
               return false;
             }
           }

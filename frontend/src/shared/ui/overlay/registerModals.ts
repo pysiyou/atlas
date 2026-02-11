@@ -1,7 +1,6 @@
 /**
  * Modal Registration
- * Registers all modals with the registry
- * Import this file once at app startup
+ * Registers all modals with the registry. getProps receives typed props per ModalType.
  */
 
 import { ModalType } from '@/shared/context/ModalContext';
@@ -11,133 +10,60 @@ import { EntryDetailModal } from '@/features/lab/entry/EntryDetailModal';
 import { ValidationDetailModal } from '@/features/lab/validation/ValidationDetailModal';
 import { EscalationResolutionModal } from '@/features/lab/validation/EscalationResolutionModal';
 import { OrderUpsertModal } from '@/features/order/components/OrderUpsertModal';
-import type { ContainerType, Order, SampleDisplay, Test, TestWithContext } from '@/types';
 
 // Register Collection Detail Modal (Sample Detail)
 registerModal(ModalType.SAMPLE_DETAIL, CollectionDetailModal, (props, baseProps, helpers) => {
-  const { sampleId, pendingSampleDisplay, onCollect } = props as {
-    sampleId?: string;
-    pendingSampleDisplay?: SampleDisplay;
-    onCollect?: (
-      display: SampleDisplay,
-      volume: number,
-      notes?: string,
-      selectedColor?: string,
-      containerType?: ContainerType
-    ) => void;
-  };
-
-  if (sampleId) {
-    const sample = helpers.getSample(sampleId);
+  if ('sampleId' in props && props.sampleId) {
+    const sample = helpers.getSample(props.sampleId);
     if (!sample) return null;
-    return { ...baseProps, sampleId };
+    return { ...baseProps, sampleId: props.sampleId };
   }
-
-  if (pendingSampleDisplay) {
-    return { ...baseProps, pendingSampleDisplay, onCollect };
+  if ('pendingSampleDisplay' in props && props.pendingSampleDisplay) {
+    return { ...baseProps, pendingSampleDisplay: props.pendingSampleDisplay, onCollect: props.onCollect };
   }
-
   return null;
 });
 
 // Register Entry Detail Modal (Result Detail)
-registerModal(ModalType.RESULT_DETAIL, EntryDetailModal, (props, baseProps) => {
-  const {
-    test,
-    testDef,
-    resultKey,
-    results,
-    technicianNotes,
-    isComplete,
-    onResultsChange,
-    onNotesChange,
-    onSave,
-  } = props as {
-    test: TestWithContext;
-    testDef: Test | undefined;
-    resultKey: string;
-    results: Record<string, string>;
-    technicianNotes: string;
-    isComplete: boolean;
-    onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
-    onNotesChange: (resultKey: string, notes: string) => void;
-    onSave: (finalResults?: Record<string, string>, finalNotes?: string) => void;
-  };
-
-  return {
-    ...baseProps,
-    test: test as TestWithContext,
-    testDef,
-    resultKey,
-    results,
-    technicianNotes,
-    isComplete,
-    onResultsChange,
-    onNotesChange,
-    onSave,
-  };
-});
+registerModal(ModalType.RESULT_DETAIL, EntryDetailModal, (props, baseProps) => ({
+  ...baseProps,
+  test: props.test,
+  testDef: props.testDef,
+  resultKey: props.resultKey,
+  results: props.results,
+  technicianNotes: props.technicianNotes,
+  isComplete: props.isComplete,
+  onResultsChange: props.onResultsChange,
+  onNotesChange: props.onNotesChange,
+  onSave: props.onSave,
+}));
 
 // Register Validation Detail Modal
-registerModal(ModalType.VALIDATION_DETAIL, ValidationDetailModal, (props, baseProps) => {
-  const {
-    test,
-    commentKey,
-    comments,
-    onCommentsChange,
-    onApprove,
-    onReject,
-    orderHasValidatedTests,
-  } = props as {
-    test: TestWithContext;
-    commentKey: string;
-    comments: string;
-    onCommentsChange: (commentKey: string, comments: string) => void;
-    onApprove: () => void;
-    onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
-    /** When true, re-collect option is blocked due to validated tests in the order */
-    orderHasValidatedTests?: boolean;
-  };
-
-  return {
-    ...baseProps,
-    test: test as TestWithContext,
-    commentKey,
-    comments,
-    onCommentsChange,
-    onApprove,
-    onReject,
-    orderHasValidatedTests,
-  };
-});
+registerModal(ModalType.VALIDATION_DETAIL, ValidationDetailModal, (props, baseProps) => ({
+  ...baseProps,
+  test: props.test,
+  commentKey: props.commentKey,
+  comments: props.comments,
+  onCommentsChange: props.onCommentsChange,
+  onApprove: props.onApprove,
+  onReject: props.onReject,
+  orderHasValidatedTests: props.orderHasValidatedTests,
+}));
 
 // Register Escalation Resolution Modal (admin/labtech_plus only)
-registerModal(ModalType.ESCALATION_RESOLUTION_DETAIL, EscalationResolutionModal, (props, baseProps) => {
-  const { test, onResolved } = props as {
-    test: TestWithContext;
-    onResolved: () => void | Promise<void>;
-  };
-  return {
-    ...baseProps,
-    test: test as TestWithContext,
-    onResolved,
-  };
-});
+registerModal(ModalType.ESCALATION_RESOLUTION_DETAIL, EscalationResolutionModal, (props, baseProps) => ({
+  ...baseProps,
+  test: props.test,
+  onResolved: props.onResolved,
+}));
 
 // Register New Order / Edit Order Modal (OrderUpsertModal)
-registerModal(ModalType.NEW_ORDER, OrderUpsertModal, (props, baseProps) => {
-  const { patientId, order, mode } = props as {
-    patientId?: string;
-    order?: Order;
-    mode?: 'create' | 'edit';
-  };
-  return {
-    ...baseProps,
-    patientId,
-    order,
-    mode: mode ?? (order ? 'edit' : 'create'),
-  };
-});
+registerModal(ModalType.NEW_ORDER, OrderUpsertModal, (props, baseProps) => ({
+  ...baseProps,
+  patientId: props.patientId,
+  order: props.order,
+  mode: props.mode ?? (props.order ? 'edit' : 'create'),
+}));
 
 // Export a function to ensure this file is imported
 export function initializeModalRegistry(): void {

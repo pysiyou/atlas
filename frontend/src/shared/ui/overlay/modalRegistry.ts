@@ -1,11 +1,12 @@
 /**
  * Modal Registry
- * Maps modal types to their component configurations
- * Makes adding new modals scalable without modifying ModalRenderer
+ * Maps modal types to their component configurations.
+ * getProps receives typed modalProps per ModalType via ModalPropsMap.
  */
 
 import type { ComponentType } from 'react';
 import { ModalType } from '@/shared/context/ModalContext';
+import type { ModalPropsMap } from '@/shared/context/modalTypes';
 
 /**
  * Base props that all modals receive
@@ -16,17 +17,16 @@ export interface BaseModalProps {
 }
 
 /**
- * Registry entry for a modal
+ * Registry entry: component + getProps. At runtime getProps receives Record<string, unknown>;
+ * registerModal types getProps per ModalType for type-safe registration.
  */
-interface ModalRegistryEntry<P extends BaseModalProps = BaseModalProps> {
-  /** The modal component */
-  component: ComponentType<P>;
-  /** Function to extract component props from modal context props */
+export interface ModalRegistryEntry {
+  component: ComponentType<BaseModalProps>;
   getProps: (
     modalProps: Record<string, unknown>,
     baseProps: BaseModalProps,
     helpers: ModalHelpers
-  ) => P | null;
+  ) => BaseModalProps | null;
 }
 
 /**
@@ -36,35 +36,23 @@ export interface ModalHelpers {
   getSample: (sampleId: string) => unknown;
 }
 
-// Type-safe registry - using generic ModalRegistryEntry to allow various modal prop types
-type ModalRegistry = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in ModalType]?: ModalRegistryEntry<any>;
-};
-
-const registry: ModalRegistry = {};
+const registry: Partial<Record<ModalType, ModalRegistryEntry>> = {};
 
 /**
- * Register a modal component
- * Note: getProps return type is loosened to avoid strict type inference issues
- * with complex modal prop types. The runtime behavior is correct.
+ * Register a modal. getProps is typed to receive ModalPropsMap[T] for type-safe registration.
  */
-export function registerModal<P extends BaseModalProps>(
-  type: ModalType,
+export function registerModal<T extends ModalType, P extends BaseModalProps>(
+  type: T,
   component: ComponentType<P>,
   getProps: (
-    modalProps: Record<string, unknown>,
+    modalProps: ModalPropsMap[T],
     baseProps: BaseModalProps,
     helpers: ModalHelpers
   ) => P | null
 ): void {
   registry[type] = {
     component: component as ComponentType<BaseModalProps>,
-    getProps: getProps as (
-      modalProps: Record<string, unknown>,
-      baseProps: BaseModalProps,
-      helpers: ModalHelpers
-    ) => BaseModalProps | null,
+    getProps: getProps as ModalRegistryEntry['getProps'],
   };
 }
 

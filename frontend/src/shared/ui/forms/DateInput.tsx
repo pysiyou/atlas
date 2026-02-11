@@ -10,8 +10,7 @@ import { Popover } from '../overlay/Popover';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import { inputTrigger, inputTriggerOpen, inputError } from './inputStyles';
-import { DateFilterCalendar } from '@/features/order/components/DateFilterCalendar';
-import { DateFilterHeader } from '@/features/order/components/DateFilterHeader';
+import { DateFilterCalendar, DateFilterHeader } from './date-filter';
 // useDateFilterNavigation removed - logic inlined below
 
 interface DateInputProps {
