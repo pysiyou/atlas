@@ -46,7 +46,7 @@ function ResultGrid({
           const valueColor = abnormal
             ? isCritical(status)
               ? 'text-danger-fg'
-              : 'text-warning-text'
+              : 'text-warning-fg'
             : 'text-text-primary';
 
           return (
@@ -84,7 +84,7 @@ function ResultGrid({
         const valueColor = abnormal
           ? isCritical(status)
             ? 'text-danger-fg'
-            : 'text-warning-text'
+            : 'text-warning-fg'
           : 'text-text-primary';
 
         return (
@@ -338,7 +338,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasRejectionHistory ? 'border-warning-border-strong' : ''}
+      className={hasRejectionHistory ? 'border-warning-stroke-emphasis' : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,

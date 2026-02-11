@@ -163,21 +163,21 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
   switch (status) {
     case 'normal':
       return {
-        border: 'border-success-border',
-        text: 'text-success-text',
-        bg: 'bg-success-bg-strong',
+        border: 'border-success-stroke',
+        text: 'text-success-fg',
+        bg: 'bg-success-bg-emphasis',
       };
     case 'borderline':
       return {
-        border: 'border-warning-border',
-        text: 'text-warning-text',
-        bg: 'bg-warning-bg-strong',
+        border: 'border-warning-stroke',
+        text: 'text-warning-fg',
+        bg: 'bg-warning-bg-emphasis',
       };
     case 'abnormal':
       return {
-        border: 'border-danger-border',
+        border: 'border-danger-stroke',
         text: 'text-danger-fg',
-        bg: 'bg-danger-bg-strong',
+        bg: 'bg-danger-bg-emphasis',
       };
   }
 };
@@ -229,7 +229,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               {isNa ? (
                 <div
-                  className="w-full rounded border border-border-default bg-muted/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-tertiary"
+                  className="w-full rounded border border-border-default bg-neutral-100/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-tertiary"
                   aria-label={`${config.label} not provided`}
                 >
                   N/A

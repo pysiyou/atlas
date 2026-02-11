@@ -264,7 +264,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasAnyRejectionHistory ? 'border-warning-border-strong' : ''}
+      className={hasAnyRejectionHistory ? 'border-warning-stroke-emphasis' : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,

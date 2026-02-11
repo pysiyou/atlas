@@ -41,8 +41,8 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
       className={cn(
         'border-l-4 rounded p-4 animate-pulse',
         isAcknowledged
-? 'bg-danger-bg border-danger-border'
-            : 'bg-danger-bg-strong border-danger-border-strong shadow-lg'
+? 'bg-danger-bg border-danger-stroke'
+            : 'bg-danger-bg-emphasis border-danger-stroke-emphasis shadow-lg'
       )}
     >
       <div className="flex items-start gap-3">
@@ -54,7 +54,7 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
 
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <h4 className="text-sm font-bold text-danger-fg-strong uppercase tracking-wide">
+            <h4 className="text-sm font-bold text-danger-fg-emphasis uppercase tracking-wide">
               ⚠️ PANIC VALUE - Immediate Action Required
             </h4>
             {isAcknowledged && (
@@ -67,7 +67,7 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
           <div className="space-y-2">
             <div className="flex items-baseline gap-2">
               <span className="text-sm font-normal text-text-primary">{parameterName}:</span>
-              <span className="text-lg font-normal text-danger-fg-strong">
+              <span className="text-lg font-normal text-danger-fg-emphasis">
                 {value}
                 {unit && <span className="ml-1 text-sm font-normal">{unit}</span>}
               </span>
@@ -82,7 +82,7 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
               )}
               <div>
                 <span className="text-text-tertiary">Critical Threshold:</span>
-                <span className="ml-2 font-normal text-danger-fg-strong">
+                <span className="ml-2 font-normal text-danger-fg-emphasis">
                   {isCriticalLow && criticalLow !== undefined && `< ${criticalLow} ${unit || ''}`}
                   {isCriticalHigh && criticalHigh !== undefined && `> ${criticalHigh} ${unit || ''}`}
                 </span>

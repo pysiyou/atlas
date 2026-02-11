@@ -145,7 +145,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
       {/* Right side: Actions */}
       <div className="flex items-center gap-3">
         {criticalSelectedCount > 0 && selectedCount > 0 && (
-          <span className="text-xs text-warning-text">
+          <span className="text-xs text-warning-fg">
             {criticalSelectedCount} critical skipped
           </span>
         )}

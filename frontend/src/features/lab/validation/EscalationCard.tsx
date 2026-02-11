@@ -206,7 +206,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasRejectionHistory ? 'border-warning-border-strong' : ''}
+      className={hasRejectionHistory ? 'border-warning-stroke-emphasis' : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,

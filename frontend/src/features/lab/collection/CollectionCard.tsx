@@ -356,7 +356,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   return (
     <LabCard
       onClick={handleCardClick}
-      className={isRejected ? 'border-warning-border-strong' : ''}
+      className={isRejected ? 'border-warning-stroke-emphasis' : ''}
       context={{
         orderId: order.orderId,
         referringPhysician: order.referringPhysician,

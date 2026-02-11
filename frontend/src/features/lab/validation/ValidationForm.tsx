@@ -154,7 +154,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
               const valueColor = abnormal
                 ? isCritical(status)
                   ? 'text-danger-fg'
-                  : 'text-warning-text'
+                  : 'text-warning-fg'
                 : 'text-text-primary';
               
               return (

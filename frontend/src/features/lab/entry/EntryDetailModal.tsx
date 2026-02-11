@@ -254,7 +254,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Filled',
                 value: (
-                  <span className={isComplete ? 'text-success-text' : 'text-warning-text'}>
+                  <span className={isComplete ? 'text-success-fg' : 'text-warning-fg'}>
                     {filledCount}
                   </span>
                 ),
@@ -262,7 +262,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Remaining',
                 value: (
-                  <span className={remainingParams === 0 ? 'text-success-text' : 'text-text-tertiary'}>
+                  <span className={remainingParams === 0 ? 'text-success-fg' : 'text-text-tertiary'}>
                     {remainingParams}
                   </span>
                 ),

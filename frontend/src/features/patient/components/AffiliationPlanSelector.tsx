@@ -253,7 +253,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                       <div className="space-y-1">
                         <div className="text-sm text-text-tertiary">Price not available</div>
                         {isSelected && (
-                          <div className="text-xs text-warning-text">Pricing will be calculated during checkout</div>
+                          <div className="text-xs text-warning-fg">Pricing will be calculated during checkout</div>
                         )}
                       </div>
                     )}

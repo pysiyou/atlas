@@ -30,12 +30,12 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
 }) => {
   const colorClasses = {
     brand: 'bg-brand-muted text-brand',
-    success: 'bg-success-bg text-success-text',
-    warning: 'bg-warning-bg text-warning-text',
+    success: 'bg-success-bg text-success-fg',
+    warning: 'bg-warning-bg text-warning-fg',
     danger: 'bg-danger-bg text-danger-fg',
   };
 
-  const trendColor = trend && trend.value >= 0 ? 'text-success-text' : 'text-danger-fg';
+  const trendColor = trend && trend.value >= 0 ? 'text-success-fg' : 'text-danger-fg';
 
   return (
     <Card variant="metric" padding="sm" className="rounded-lg">

@@ -163,7 +163,7 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
                         <span
                           className={`font-normal ${
                             result.status === 'high' || result.status === 'low'
-                              ? 'text-warning-text'
+                              ? 'text-warning-fg'
                               : result.status === 'critical'
                                 ? 'text-danger-fg'
                                 : 'text-text-primary'
