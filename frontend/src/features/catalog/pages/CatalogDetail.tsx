@@ -9,12 +9,11 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useTest } from '@/hooks/queries';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
-import { EmptyState, BalancedDetailsLayout } from '@/shared/ui';
-import { LoadingState } from '@/shared/components';
-import { formatCurrency, formatTurnaroundTime } from '@/utils';
+import { BalancedDetailsLayout } from '@/shared/ui';
 import type { TableInput } from '@/shared/ui';
+import { DetailPageShell, DetailPageHeader, LoadingState } from '@/shared/components';
+import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDetailDate } from '@/shared/utils/data';
-import { ICONS } from '@/utils';
 import { formatArrayWithFallback, formatBooleanWithFallback, capitalize } from '../utils/catalog-formatters';
 
 /**
@@ -49,18 +48,17 @@ export const CatalogDetail: React.FC = () => {
     return <LoadingState message="Loading test details..." fullScreen />;
   }
 
-  // Show error or not found state
+  // Error or not found: use shell for consistent padding and EmptyState
   if (isError || !test) {
     return (
-      <div className="h-full flex flex-col p-6">
-        <div className="flex-1 flex items-center justify-center">
-          <EmptyState
-            icon={ICONS.actions.alertCircle}
-            title="Test Not Found"
-            description={`The test with code "${testCode}" could not be found in the catalog.`}
-          />
-        </div>
-      </div>
+      <DetailPageShell
+        header={<DetailPageHeader title="Test" />}
+        notFound
+        notFoundTitle="Test Not Found"
+        notFoundDescription={testCode != null ? `The test with code "${testCode}" could not be found in the catalog.` : undefined}
+      >
+        {null}
+      </DetailPageShell>
     );
   }
 
@@ -157,21 +155,10 @@ export const CatalogDetail: React.FC = () => {
   }
 
   return (
-    <div className="min-h-full flex flex-col p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4 shrink-0">
-        <div className="flex items-center gap-2">
-          <div>
-            <h1 className="text-sm font-medium text-fg">{test.name}</h1>
-            <p className="text-xs text-brand font-mono">{test.code}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content - Balanced Layout */}
-      <div className="flex-1 overflow-y-auto min-h-0">
-        <BalancedDetailsLayout tables={tables} columns={getColumnCount()} className="pb-6" />
-      </div>
-    </div>
+    <DetailPageShell
+      header={<DetailPageHeader title={test.name} subtitle={test.code} />}
+    >
+      <BalancedDetailsLayout tables={tables} columns={getColumnCount()} className="pb-6" />
+    </DetailPageShell>
   );
 };

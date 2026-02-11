@@ -80,6 +80,32 @@
   /* Info Palette (Purple accent) */
   --primitive-info-400: #a78bfa;
   --primitive-info-500: #8b5cf6;
+
+  /* Extended badge palettes (purple, pink, teal, orange, indigo, cyan) */
+  --primitive-purple-100: #f3e8ff;
+  --primitive-purple-500: #a855f7;
+  --primitive-purple-600: #9333ea;
+  --primitive-purple-800: #6b21a8;
+  --primitive-pink-100: #fce7f3;
+  --primitive-pink-500: #ec4899;
+  --primitive-pink-600: #db2777;
+  --primitive-pink-800: #9d174d;
+  --primitive-teal-100: #ccfbf1;
+  --primitive-teal-500: #14b8a6;
+  --primitive-teal-600: #0d9488;
+  --primitive-teal-800: #115e59;
+  --primitive-orange-100: #ffedd5;
+  --primitive-orange-500: #f97316;
+  --primitive-orange-600: #ea580c;
+  --primitive-orange-800: #9a3412;
+  --primitive-indigo-100: #e0e7ff;
+  --primitive-indigo-500: #6366f1;
+  --primitive-indigo-600: #4f46e5;
+  --primitive-indigo-800: #3730a3;
+  --primitive-cyan-100: #cffafe;
+  --primitive-cyan-500: #06b6d4;
+  --primitive-cyan-600: #0891b2;
+  --primitive-cyan-800: #155e75;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -195,6 +221,23 @@
      ═══════════════════════════════════════════════════════════════════ */
   --info: var(--primitive-info-500);
   --info-muted: var(--primitive-info-400);
+
+  /* ═══════════════════════════════════════════════════════════════════
+     EXTENDED BADGE COLORS (theme-responsive)
+     Usage: text-purple-fg-emphasis, bg-purple-bg-emphasis (badges)
+     ═══════════════════════════════════════════════════════════════════ */
+  --purple-fg-emphasis: var(--primitive-purple-600);
+  --purple-bg-emphasis: var(--primitive-purple-100);
+  --pink-fg-emphasis: var(--primitive-pink-600);
+  --pink-bg-emphasis: var(--primitive-pink-100);
+  --teal-fg-emphasis: var(--primitive-teal-600);
+  --teal-bg-emphasis: var(--primitive-teal-100);
+  --orange-fg-emphasis: var(--primitive-orange-600);
+  --orange-bg-emphasis: var(--primitive-orange-100);
+  --indigo-fg-emphasis: var(--primitive-indigo-600);
+  --indigo-bg-emphasis: var(--primitive-indigo-100);
+  --cyan-fg-emphasis: var(--primitive-cyan-600);
+  --cyan-bg-emphasis: var(--primitive-cyan-100);
 
   /* ═══════════════════════════════════════════════════════════════════
      BADGE
@@ -353,6 +396,31 @@
   --primitive-info-500: #1F6FEB;
   --primitive-info-400: #58a0ff;
 
+  --primitive-purple-100: #2d1b4e;
+  --primitive-purple-500: #a371f7;
+  --primitive-purple-600: #8957e6;
+  --primitive-purple-800: #c4b5fd;
+  --primitive-pink-100: #3d1f35;
+  --primitive-pink-500: #db61a2;
+  --primitive-pink-600: #e35998;
+  --primitive-pink-800: #f778ba;
+  --primitive-teal-100: #0d3d38;
+  --primitive-teal-500: #2ea5a0;
+  --primitive-teal-600: #3db9b3;
+  --primitive-teal-800: #99f6e4;
+  --primitive-orange-100: #3d2a0a;
+  --primitive-orange-500: #d29922;
+  --primitive-orange-600: #e3a82b;
+  --primitive-orange-800: #f0c674;
+  --primitive-indigo-100: #252541;
+  --primitive-indigo-500: #6e6efb;
+  --primitive-indigo-600: #818cf8;
+  --primitive-indigo-800: #a5b4fc;
+  --primitive-cyan-100: #0d3d45;
+  --primitive-cyan-500: #39c5cf;
+  --primitive-cyan-600: #56d4dd;
+  --primitive-cyan-800: #a5f3fc;
+
   /* Semantic token overrides for dark theme */
   --fg: var(--primitive-neutral-900);
   --fg-muted: var(--primitive-neutral-700);
@@ -399,6 +467,19 @@
   --on-warning: var(--primitive-neutral-950);
   --warning-fg: var(--primitive-warning-500);
   --warning-fg-emphasis: var(--primitive-warning-600);
+
+  --purple-fg-emphasis: var(--primitive-purple-500);
+  --purple-bg-emphasis: var(--primitive-purple-100);
+  --pink-fg-emphasis: var(--primitive-pink-500);
+  --pink-bg-emphasis: var(--primitive-pink-100);
+  --teal-fg-emphasis: var(--primitive-teal-500);
+  --teal-bg-emphasis: var(--primitive-teal-100);
+  --orange-fg-emphasis: var(--primitive-orange-500);
+  --orange-bg-emphasis: var(--primitive-orange-100);
+  --indigo-fg-emphasis: var(--primitive-indigo-500);
+  --indigo-bg-emphasis: var(--primitive-indigo-100);
+  --cyan-fg-emphasis: var(--primitive-cyan-500);
+  --cyan-bg-emphasis: var(--primitive-cyan-100);
 
   --badge: var(--primitive-neutral-200);
 
@@ -529,6 +610,31 @@
   --primitive-info-500: #1F6FEB;
   --primitive-info-400: #58a0ff;
 
+  --primitive-purple-100: #2a1a3d;
+  --primitive-purple-500: #9f67e8;
+  --primitive-purple-600: #b794f6;
+  --primitive-purple-800: #ddd6fe;
+  --primitive-pink-100: #3d1f33;
+  --primitive-pink-500: #e879a9;
+  --primitive-pink-600: #f472b6;
+  --primitive-pink-800: #fbcfe8;
+  --primitive-teal-100: #0f3d38;
+  --primitive-teal-500: #2dd4bf;
+  --primitive-teal-600: #5eead4;
+  --primitive-teal-800: #99f6e4;
+  --primitive-orange-100: #3d2a0f;
+  --primitive-orange-500: #fb923c;
+  --primitive-orange-600: #fdba74;
+  --primitive-orange-800: #fed7aa;
+  --primitive-indigo-100: #28264a;
+  --primitive-indigo-500: #818cf8;
+  --primitive-indigo-600: #a5b4fc;
+  --primitive-indigo-800: #c7d2fe;
+  --primitive-cyan-100: #0f3d45;
+  --primitive-cyan-500: #22d3ee;
+  --primitive-cyan-600: #67e8f9;
+  --primitive-cyan-800: #a5f3fc;
+
   /* Semantic token overrides for dark theme */
   --fg: var(--primitive-neutral-900);
   --fg-muted: var(--primitive-neutral-700);
@@ -575,6 +681,19 @@
   --on-warning: var(--primitive-neutral-950);
   --warning-fg: var(--primitive-warning-500);
   --warning-fg-emphasis: var(--primitive-warning-600);
+
+  --purple-fg-emphasis: var(--primitive-purple-500);
+  --purple-bg-emphasis: var(--primitive-purple-100);
+  --pink-fg-emphasis: var(--primitive-pink-500);
+  --pink-bg-emphasis: var(--primitive-pink-100);
+  --teal-fg-emphasis: var(--primitive-teal-500);
+  --teal-bg-emphasis: var(--primitive-teal-100);
+  --orange-fg-emphasis: var(--primitive-orange-500);
+  --orange-bg-emphasis: var(--primitive-orange-100);
+  --indigo-fg-emphasis: var(--primitive-indigo-500);
+  --indigo-bg-emphasis: var(--primitive-indigo-100);
+  --cyan-fg-emphasis: var(--primitive-cyan-500);
+  --cyan-bg-emphasis: var(--primitive-cyan-100);
 
   --badge: var(--primitive-neutral-200);
 

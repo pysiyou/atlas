@@ -15,3 +15,6 @@ export * from './sections';
 
 // Data Display Components (List/Detail/Card)
 export * from './data-display';
+
+// Layouts (detail page shell and header)
+export * from './layouts';

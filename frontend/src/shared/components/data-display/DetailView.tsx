@@ -2,12 +2,11 @@
  * DetailView - Unified detail view component
  *
  * Provides a consistent detail page layout with flexible section organization.
- * Used across all entity detail pages (Patient, Order, etc.).
+ * Composes DetailPageShell and DetailPageHeader; keeps sections/customLayout/breadcrumbs API.
  */
 
 import React, { type ReactNode } from 'react';
-import { LoadingState } from '../feedback/LoadingState';
-import { ErrorAlert } from '../feedback/ErrorAlert';
+import { DetailPageShell, DetailPageHeader } from '../layouts';
 import { SectionGrid } from '../sections';
 
 export type DetailViewLayout = 'single' | 'two-column' | 'three-column' | 'custom';
@@ -30,7 +29,6 @@ export interface DetailSection {
 }
 
 export interface DetailViewProps {
-  // Header
   /** Page title */
   title: string;
   /** Page subtitle */
@@ -39,22 +37,16 @@ export interface DetailViewProps {
   badges?: ReactNode;
   /** Header action buttons */
   actions?: ReactNode;
-
-  // Layout
   /** Layout type */
   layout?: DetailViewLayout;
   /** Sections to display */
   sections: DetailSection[];
   /** Custom layout component (for 'custom' layout type) */
   customLayout?: ReactNode;
-
-  // Navigation
   /** Back button handler */
   onBack?: () => void;
   /** Breadcrumb items */
   breadcrumbs?: Array<{ label: string; onClick?: () => void }>;
-
-  // State
   /** Loading state */
   loading?: boolean;
   /** Error state */
@@ -63,30 +55,9 @@ export interface DetailViewProps {
   onRetry?: () => void;
   /** Error dismiss handler */
   onDismissError?: () => void;
-
-  // Additional props
-  /** Additional CSS classes */
   className?: string;
 }
 
-/**
- * DetailView component
- *
- * @example
- * ```tsx
- * <DetailView
- *   title="John Doe"
- *   subtitle="Patient Details"
- *   badges={<Badge variant="active" />}
- *   actions={<Button>Edit</Button>}
- *   layout="two-column"
- *   sections={[
- *     { id: 'info', title: 'General Info', content: <InfoSection /> },
- *     { id: 'history', title: 'Medical History', content: <HistorySection /> },
- *   ]}
- * />
- * ```
- */
 export const DetailView: React.FC<DetailViewProps> = ({
   title,
   subtitle,
@@ -103,27 +74,34 @@ export const DetailView: React.FC<DetailViewProps> = ({
   onDismissError,
   className = '',
 }) => {
-  // Show loading state
   if (loading) {
-    return <LoadingState message="Loading details..." fullScreen />;
+    return (
+      <DetailPageShell
+        header={<DetailPageHeader title={title} />}
+        loading
+        loadingMessage="Loading details..."
+      >
+        {null}
+      </DetailPageShell>
+    );
   }
 
-  // Sort sections by order
-  const sortedSections = [...sections].sort((a, b) => (a.order || 0) - (b.order || 0));
-
-  // Determine grid columns based on layout
+  const sortedSections = [...sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   const gridColumns =
     layout === 'single' ? 1 : layout === 'two-column' ? 2 : layout === 'three-column' ? 3 : 1;
 
-  return (
-    <div className={`h-full flex flex-col p-6 ${className}`}>
-      {/* Breadcrumbs */}
-      {breadcrumbs && breadcrumbs.length > 0 && (
+  const header = (
+    <>
+      {breadcrumbs != null && breadcrumbs.length > 0 && (
         <div className="flex items-center gap-2 text-sm text-fg-subtle mb-4">
           {breadcrumbs.map((crumb, index) => (
             <React.Fragment key={index}>
-              {crumb.onClick ? (
-                <button onClick={crumb.onClick} className="hover:text-fg transition-colors cursor-pointer">
+              {crumb.onClick != null ? (
+                <button
+                  type="button"
+                  onClick={crumb.onClick}
+                  className="hover:text-fg transition-colors cursor-pointer"
+                >
                   {crumb.label}
                 </button>
               ) : (
@@ -134,59 +112,54 @@ export const DetailView: React.FC<DetailViewProps> = ({
           ))}
         </div>
       )}
-
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4 shrink-0">
-        <div className="flex items-center gap-4">
-          {onBack && (
-            <button
-              onClick={onBack}
-              className="p-2 hover:bg-neutral-100 rounded-md transition-colors cursor-pointer"
-              aria-label="Go back"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-          )}
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-sm font-medium text-fg">{title}</h1>
-              {badges}
-            </div>
-            {subtitle && <p className="text-xs text-fg-subtle mt-1">{subtitle}</p>}
-          </div>
-        </div>
-        {actions && <div className="flex items-center gap-3">{actions}</div>}
-      </div>
-
-      {/* Error Alert */}
-      {error && (
-        <ErrorAlert error={error} onDismiss={onDismissError} onRetry={onRetry} className="mb-4" />
-      )}
-
-      {/* Main Content */}
-      <div className="flex-1 min-h-0 overflow-y-auto">
-        {layout === 'custom' && customLayout ? (
-          customLayout
-        ) : (
-          <SectionGrid columns={gridColumns} gap="md">
-            {sortedSections.map(section => (
-              <div
-                key={section.id}
-                className={section.span && section.span > 1 ? `col-span-${section.span}` : ''}
-              >
-                {section.content}
-              </div>
-            ))}
-          </SectionGrid>
+      <div className="flex items-center gap-4 shrink-0">
+        {onBack != null && (
+          <button
+            type="button"
+            onClick={onBack}
+            className="p-2 hover:bg-neutral-100 rounded-md transition-colors cursor-pointer"
+            aria-label="Go back"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
         )}
+        <DetailPageHeader title={title} subtitle={subtitle} badges={badges} actions={actions} />
       </div>
-    </div>
+    </>
+  );
+
+  const content =
+    layout === 'custom' && customLayout != null ? (
+      customLayout
+    ) : (
+      <SectionGrid columns={gridColumns} gap="md">
+        {sortedSections.map(section => (
+          <div
+            key={section.id}
+            className={section.span != null && section.span > 1 ? `col-span-${section.span}` : ''}
+          >
+            {section.content}
+          </div>
+        ))}
+      </SectionGrid>
+    );
+
+  return (
+    <DetailPageShell
+      header={header}
+      error={error}
+      onRetry={onRetry}
+      onDismissError={onDismissError}
+      className={className}
+    >
+      {content}
+    </DetailPageShell>
   );
 };
