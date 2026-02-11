@@ -25,8 +25,8 @@ interface DistributionPieChartProps {
 
 const TOOLTIP_BG = 'var(--chart-tooltip)';
 const TOOLTIP_STROKE = 'var(--chart-tooltip-stroke)';
-const TOOLTIP_FG = 'var(--fg)';
-const TOOLTIP_FG_MUTED = 'var(--fg-subtle)';
+const TOOLTIP_FG = 'var(--text)';
+const TOOLTIP_FG_MUTED = 'var(--text-tertiary)';
 
 const COLORS = [
   'var(--chart-brand)',
@@ -63,7 +63,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
       <div className="flex items-center gap-2 mb-1">
         <span
           className="block w-2 h-2 rounded-full"
-          style={{ backgroundColor: data.payload?.fill ?? 'var(--fg)' }}
+          style={{ backgroundColor: data.payload?.fill ?? 'var(--text)' }}
         />
         <p className="text-xs font-normal" style={{ color: TOOLTIP_FG_MUTED }}>
           {data.name}
@@ -71,14 +71,14 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
       </div>
       <p className="font-normal text-base ml-4">
         {data.value.toLocaleString()} 
-        <span className="text-xs font-normal text-fg-subtle ml-1">tests</span>
+        <span className="text-xs font-normal text-text-tertiary ml-1">tests</span>
       </p>
     </div>
   );
 };
 
 const renderLegendText = (value: string, _entry: { payload?: unknown }) => {
-  return <span style={{ color: 'var(--fg)', fontSize: '13px', marginLeft: '4px' }}>{value}</span>;
+  return <span style={{ color: 'var(--text)', fontSize: '13px', marginLeft: '4px' }}>{value}</span>;
 };
 
 export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
@@ -90,14 +90,14 @@ export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
   outerRadius = '80%',
 }) => {
   return (
-    <div className={`flex flex-col h-full w-full min-w-0 min-h-0 bg-panel rounded overflow-hidden shadow-sm ${className}`}>
+    <div className={`flex flex-col h-full w-full min-w-0 min-h-0 bg-surface rounded overflow-hidden shadow-sm ${className}`}>
       <div className="px-4 pt-4 pb-2 flex flex-row items-center justify-between shrink-0">
         <div className="flex items-baseline gap-2 min-w-0">
-          <h3 className="text-base font-medium tracking-tight text-fg truncate">
+          <h3 className="text-base font-medium tracking-tight text-text-primary truncate">
             {title}
           </h3>
           {subTitle && (
-            <span className="text-fg-subtle text-xs tracking-wider shrink-0 before:content-['·'] before:mr-2">
+            <span className="text-text-tertiary text-xs tracking-wider shrink-0 before:content-['·'] before:mr-2">
               {subTitle}
             </span>
           )}
@@ -123,7 +123,7 @@ export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
                   <Cell
                     key={`cell-${index}`}
                     fill={entry.color || COLORS[index % COLORS.length]}
-                    stroke="var(--panel)"
+                    stroke="var(--surface)"
                     strokeWidth={2}
                   />
                 ))}
@@ -139,7 +139,7 @@ export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
                 wrapperStyle={{ right: 0, paddingRight: '16px' }}
               />
               <text x="40%" y="50%" textAnchor="middle" dominantBaseline="middle">
-                <tspan x="40%" dy="-0.5em" fontSize="24" fill="var(--fg)" fontWeight="bold" />
+                <tspan x="40%" dy="-0.5em" fontSize="24" fill="var(--text)" fontWeight="bold" />
               </text>
             </PieChart>
           </ResponsiveContainer>

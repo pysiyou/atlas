@@ -345,17 +345,17 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
 
   if (isLoading) {
     return (
-      <div className={`flex flex-col h-full bg-panel ${className}`}>
+      <div className={`flex flex-col h-full bg-surface ${className}`}>
         <div className="px-4 py-3">
-          <div className="h-5 w-16 bg-panel-hover animate-pulse rounded" />
+          <div className="h-5 w-16 bg-surface-hover animate-pulse rounded" />
         </div>
         <div className="flex-1 overflow-auto px-4 space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-start gap-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-panel-hover animate-pulse mt-1.5" />
+              <div className="w-1.5 h-1.5 rounded-full bg-surface-hover animate-pulse mt-1.5" />
               <div className="flex-1 space-y-2">
-                <div className="h-4 bg-panel-hover animate-pulse rounded w-3/4" />
-                <div className="h-3 bg-panel-hover animate-pulse rounded w-16" />
+                <div className="h-4 bg-surface-hover animate-pulse rounded w-3/4" />
+                <div className="h-3 bg-surface-hover animate-pulse rounded w-16" />
               </div>
             </div>
           ))}
@@ -366,20 +366,20 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
 
   if (groupedActivities.length === 0) {
     return (
-      <div className={`flex flex-col items-center justify-center h-full text-fg-muted bg-panel ${className}`}>
+      <div className={`flex flex-col items-center justify-center h-full text-text-secondary bg-surface ${className}`}>
         <p className="text-sm">No recent activity</p>
       </div>
     );
   }
 
   return (
-    <div className={`flex flex-col h-full ${className} bg-panel`}>
+    <div className={`flex flex-col h-full ${className} bg-surface`}>
       <div className="flex-1 overflow-auto">
         {groupedActivities.map((group) => (
           <div key={group.label} className="px-4 pb-4">
             <div className="flex items-center gap-3 py-3">
               <div className="flex-1 h-px bg-stroke" />
-              <span className="text-xs font-normal text-fg-muted tracking-wider">
+              <span className="text-xs font-normal text-text-secondary tracking-wider">
                 {group.label}
               </span>
               <div className="flex-1 h-px bg-stroke" />
@@ -400,7 +400,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
                       {item.lines.map((line, lineIdx) => (
                         <p
                           key={lineIdx}
-                          className="text-sm text-fg leading-relaxed flex flex-wrap items-center gap-x-1.5 gap-y-1"
+                          className="text-sm text-text-primary leading-relaxed flex flex-wrap items-center gap-x-1.5 gap-y-1"
                         >
                           {line.map((segment, idx) => {
                             if (segment.type === 'name') {
@@ -426,7 +426,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
                           })}
                         </p>
                       ))}
-                      <p className="text-xxs font-normal text-fg-muted">
+                      <p className="text-xxs font-normal text-text-secondary">
                         {formatDateTime(item.timestamp)}
                       </p>
                     </div>

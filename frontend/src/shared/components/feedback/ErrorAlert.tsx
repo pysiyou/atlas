@@ -85,7 +85,7 @@ export const InlineError: React.FC<{
   if (!error) return null;
 
   return (
-    <div className="flex items-center justify-between p-2 bg-danger-bg border border-stroke-error/20 rounded text-sm text-danger-fg">
+    <div className="flex items-center justify-between p-2 bg-danger-bg border border-border-error/20 rounded text-sm text-danger-fg">
       <span>{error.message}</span>
       {onDismiss && (
         <button

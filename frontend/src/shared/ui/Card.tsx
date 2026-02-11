@@ -20,7 +20,7 @@ interface CardProps {
 
 const VARIANT_CLASSES: Record<CardVariant, string> = {
   default: '',
-  lab: 'shadow-sm hover:bg-panel-hover transition-colors duration-200',
+  lab: 'shadow-sm hover:bg-surface-hover transition-colors duration-200',
   metric: 'hover:border-brand hover:border-opacity-50 transition-colors duration-200',
 };
 
@@ -41,7 +41,7 @@ export const Card: React.FC<CardProps> = ({
     lg: 'p-4',
   };
 
-  const baseClasses = 'bg-panel rounded-md border border-stroke duration-200';
+  const baseClasses = 'bg-surface rounded-md border border-border-default duration-200';
   const hoverClass = hover ? 'cursor-pointer' : '';
   const variantClass = VARIANT_CLASSES[variant];
 
@@ -78,10 +78,10 @@ interface CardHeaderProps {
 
 export const CardHeader: React.FC<CardHeaderProps> = ({ title, subtitle, action }) => {
   return (
-    <div className="flex items-start justify-between mb-4 pb-4 border-b border-stroke">
+    <div className="flex items-start justify-between mb-4 pb-4 border-b border-border-default">
       <div>
-        <h3 className="text-lg font-semibold text-fg">{title}</h3>
-        {subtitle && <p className="text-sm text-fg-subtle mt-1">{subtitle}</p>}
+        <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
+        {subtitle && <p className="text-sm text-text-tertiary mt-1">{subtitle}</p>}
       </div>
       {action && <div>{action}</div>}
     </div>

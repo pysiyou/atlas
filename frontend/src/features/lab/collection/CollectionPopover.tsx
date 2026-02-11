@@ -106,7 +106,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       {/* Volume Input */}
       <div>
         <div className="flex items-center justify-between mb-1">
-          <label className="block text-xs font-normal text-fg-subtle">
+          <label className="block text-xs font-normal text-text-tertiary">
             Volume Collected <span className="text-danger-fg">*</span>
           </label>
           {minimumVolume > 0 && (
@@ -130,7 +130,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             )}
             placeholder="0.0"
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-normal text-fg-disabled pointer-events-none">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-normal text-text-disabled pointer-events-none">
             mL
           </span>
         </div>
@@ -146,7 +146,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Type - static card + checkmark only on selection (matches PaymentMethodSelector) */}
       <div>
-        <label className="block text-xs font-normal text-fg-subtle mb-2">
+        <label className="block text-xs font-normal text-text-tertiary mb-2">
           Container Type <span className="text-danger-fg">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -159,19 +159,19 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                 type="button"
                 onClick={() => setSelectedContainerType(option.value as ContainerType)}
                 title={isRequired ? 'Required container type' : 'Not in requirements'}
-                className="relative flex items-center gap-2.5 p-3 rounded border border-stroke bg-panel hover:border-stroke-strong transition-colors duration-200 cursor-pointer"
+                className="relative flex items-center gap-2.5 p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200 cursor-pointer"
               >
                 <Icon
                   name={getContainerIcon(option.value)}
-                  className="w-7 h-7 shrink-0 text-fg-disabled"
+                  className="w-7 h-7 shrink-0 text-text-disabled"
                 />
-                <span className="flex-1 text-xs font-normal text-left text-fg-muted">
+                <span className="flex-1 text-xs font-normal text-left text-text-secondary">
                   {option.label.toUpperCase()}
                 </span>
                 <div
                   className={`
                     absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200
-                    ${isSelected ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong'}
+                    ${isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
                   `}
                 >
                   {isSelected && (
@@ -194,7 +194,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Color */}
       <div>
-        <label className="block text-xs font-normal text-fg-subtle mb-1">
+        <label className="block text-xs font-normal text-text-tertiary mb-1">
           Container Color <span className="text-danger-fg">*</span>
         </label>
         <div className="flex gap-3">
@@ -239,7 +239,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-normal text-fg-subtle mb-1">Notes</label>
+        <label className="block text-xs font-normal text-text-tertiary mb-1">Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."

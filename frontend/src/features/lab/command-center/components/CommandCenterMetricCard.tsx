@@ -34,10 +34,10 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
       variant="default"
       padding="none"
       className={cn(
-        'relative flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-stroke-subtle',
-        'bg-panel shadow-sm',
+        'relative flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-border-subtle',
+        'bg-surface shadow-sm',
         'transition-all duration-200 ease-out',
-        'hover:border-stroke-hover hover:shadow-md'
+        'hover:border-border-hover hover:shadow-md'
       )}
     >
       <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden">
@@ -57,19 +57,19 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
             <div className="flex min-w-0 items-baseline gap-2">
               <span
                 className={cn(
-                  'truncate tabular-nums font-normal leading-tight text-fg',
+                  'truncate tabular-nums font-normal leading-tight text-text-primary',
                   'text-base sm:text-xl'
                 )}
               >
                 {displayPrimary}
               </span>
               {displaySecondary != null && displaySecondary !== '' && (
-                <span className="shrink-0 text-xs font-normal text-fg-subtle">
+                <span className="shrink-0 text-xs font-normal text-text-tertiary">
                   out of {displaySecondary}
                 </span>
               )}
             </div>
-            <span className="truncate text-xs font-normal text-fg-subtle">
+            <span className="truncate text-xs font-normal text-text-tertiary">
               {title}
             </span>
           </div>
@@ -96,10 +96,10 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
               >
                 {trend.format === 'count' ? trendCount : `${trendCount}%`}
               </span>
-              <span className="text-fg-subtle font-normal">{trend.label}</span>
+              <span className="text-text-tertiary font-normal">{trend.label}</span>
             </p>
           ) : (
-            <p className="text-xs text-fg-subtle">—</p>
+            <p className="text-xs text-text-tertiary">—</p>
           )}
         </div>
       </div>

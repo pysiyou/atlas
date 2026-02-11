@@ -28,7 +28,7 @@ interface LayoutProps {
 
 /**
  * SmallScreenLayout - Single column stack layout for small screens.
- * Uses theme tokens (bg-canvas, bg-panel) so theme applies correctly.
+ * Uses theme tokens (bg-surface-page, bg-surface) so theme applies correctly.
  */
 export const SmallScreenLayout: React.FC<LayoutProps> = ({
   order,
@@ -41,10 +41,10 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
   onPaymentSuccess,
 }) => {
   return (
-    <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-canvas">
+    <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
       <SectionContainer
         title="Order Information"
-        className="shrink-0 bg-panel"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
       >
         <OrderInfoSection order={order} layout="grid" />
@@ -52,7 +52,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Patient Information"
-        className="shrink-0 bg-panel"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
         headerRight={
           patient && (
@@ -65,7 +65,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Order Progress"
-        className="shrink-0 bg-panel"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible p-0"
         headerClassName="!py-1.5"
         headerRight={<OrderCircularProgress order={order} />}
@@ -79,7 +79,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
             ? `Tests (${activeTests.length} active)`
             : `Tests (${order.tests.length})`
         }
-        className="shrink-0 bg-panel"
+        className="shrink-0 bg-surface"
         contentClassName="p-0 overflow-visible"
       >
         <TestsTable
@@ -92,7 +92,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Billing Summary"
-        className="shrink-0 bg-panel"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
         headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
       >
@@ -120,7 +120,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
     <div className="grid grid-cols-2 gap-4 w-full pb-6">
       <SectionContainer
         title="Order Information"
-        className="bg-panel"
+        className="bg-surface"
         contentClassName="overflow-visible"
       >
         <OrderInfoSection order={order} layout="column" />
@@ -128,7 +128,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Patient Information"
-        className="bg-panel"
+        className="bg-surface"
         contentClassName="overflow-visible"
         headerClassName="!py-1.5"
         headerRight={
@@ -142,7 +142,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Order Progress"
-        className="bg-panel"
+        className="bg-surface"
         contentClassName="overflow-visible p-0"
         headerClassName="!py-1.5"
         headerRight={<OrderCircularProgress order={order} />}
@@ -152,7 +152,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Billing Summary"
-        className="bg-panel"
+        className="bg-surface"
         contentClassName="overflow-visible flex flex-col"
         headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
       >
@@ -165,7 +165,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
             ? `Tests (${activeTests.length} active)`
             : `Tests (${order.tests.length})`
         }
-        className="bg-panel col-span-2"
+        className="bg-surface col-span-2"
         contentClassName="p-0 overflow-visible"
       >
         <TestsTable

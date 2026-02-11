@@ -17,15 +17,15 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
   return (
     <div
       onClick={onClick}
-      className="bg-panel border border-stroke rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
+      className="bg-surface border border-border-default rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Test name + code (left) + Price (right) */}
-      <div className="flex justify-between items-center mb-3 pb-3 border-b border-stroke">
+      <div className="flex justify-between items-center mb-3 pb-3 border-b border-border-default">
         <div className="flex flex-col min-w-0">
-          <div className="text-sm text-fg break-words">{test.name}</div>
+          <div className="text-sm text-text-primary break-words">{test.name}</div>
           <span className="text-xs text-brand font-mono leading-none">{test.code}</span>
         </div>
-        <div className="text-fg text-lg leading-none">
+        <div className="text-text-primary text-lg leading-none">
           {formatCurrency(test.price)}
         </div>
       </div>
@@ -34,14 +34,14 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
       <div className="grow">
         <div className="space-y-1">
           {test.synonyms && test.synonyms.length > 0 && (
-            <div className="text-xs text-fg-muted truncate">
+            <div className="text-xs text-text-secondary truncate">
               {test.synonyms.slice(0, 2).join(', ')}
               {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
             </div>
           )}
           {/* Sample volume - shown if available */}
           {test.sampleVolume && (
-            <div className="text-xs text-fg-muted">Volume: {test.sampleVolume}</div>
+            <div className="text-xs text-text-secondary">Volume: {test.sampleVolume}</div>
           )}
         </div>
       </div>
@@ -49,7 +49,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
       {/* Bottom section: Turnaround time (left) + Category + Sample Type badges (right) */}
       <div className="flex justify-between items-center mt-auto pt-3">
         {/* Turnaround time on bottom left */}
-        <div className="text-xs text-fg-subtle">
+        <div className="text-xs text-text-tertiary">
           TAT: {formatTurnaroundTime(test.turnaroundTime)}
         </div>
         {/* Category and Sample Type badges on bottom right */}

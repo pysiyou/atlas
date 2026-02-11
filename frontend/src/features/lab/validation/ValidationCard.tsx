@@ -47,27 +47,27 @@ function ResultGrid({
             ? isCritical(status)
               ? 'text-danger-fg'
               : 'text-warning-text'
-            : 'text-fg';
+            : 'text-text-primary';
 
           return (
             <div
               key={key}
               className="grid grid-cols-[1fr_auto] items-baseline whitespace-nowrap"
             >
-              <span className="text-xs text-fg-subtle" title={key}>
+              <span className="text-xs text-text-tertiary" title={key}>
                 {key}:
               </span>
               <span className={`text-xs font-normal text-left ${valueColor}`}>
                 {resultValue}
                 {unit && (
-                  <span className="text-fg-subtle font-normal ml-0.5 text-[9px]">{unit}</span>
+                  <span className="text-text-tertiary font-normal ml-0.5 text-[9px]">{unit}</span>
                 )}
               </span>
             </div>
           );
         })}
         {remainingCount > 0 && (
-          <div className="text-xs text-fg-subtle col-span-full pt-0.5">
+          <div className="text-xs text-text-tertiary col-span-full pt-0.5">
             +{remainingCount} more
           </div>
         )}
@@ -85,19 +85,19 @@ function ResultGrid({
           ? isCritical(status)
             ? 'text-danger-fg'
             : 'text-warning-text'
-          : 'text-fg';
+          : 'text-text-primary';
 
         return (
           <div
             key={key}
             className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
           >
-            <span className="text-xs text-fg-subtle text-right" title={key}>
+            <span className="text-xs text-text-tertiary text-right" title={key}>
               {key}:
             </span>
             <span className={`text-sm font-normal text-left ${valueColor}`}>
               {resultValue}
-              {unit && <span className="text-fg-subtle font-normal ml-1">{unit}</span>}
+              {unit && <span className="text-text-tertiary font-normal ml-1">{unit}</span>}
             </span>
           </div>
         );
@@ -174,16 +174,16 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
         {/* Header: Test name + Patient name, Test code, Sample ID */}
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="min-w-0 overflow-hidden">
-            <div className="text-sm font-normal text-fg truncate">{test.testName}</div>
+            <div className="text-sm font-normal text-text-primary truncate">{test.testName}</div>
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="text-xs text-fg-muted font-normal truncate capitalize">{patientName}</div>
-              <div className="text-xxs text-fg-disabled">•</div>
+              <div className="text-xs text-text-secondary font-normal truncate capitalize">{patientName}</div>
+              <div className="text-xxs text-text-disabled">•</div>
               <div className="text-xxs text-brand font-normal font-mono truncate">
                 {test.testCode}
               </div>
               {test.sampleId && (
                 <>
-                  <div className="text-xs text-fg-disabled">•</div>
+                  <div className="text-xs text-text-disabled">•</div>
                   <div
                     className="text-xxs text-brand font-normal font-mono truncate"
                     title={displayId.sample(test.sampleId)}
@@ -203,7 +203,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
               <ResultGrid results={test.results} flagStatusMap={flagStatusMap} compact />
             </div>
             {test.resultEnteredAt && (
-              <div className="text-xs text-fg-subtle">
+              <div className="text-xs text-text-tertiary">
                 Entered: {formatDate(test.resultEnteredAt)}
               </div>
             )}
@@ -211,7 +211,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
         </div>
 
         {/* Bottom section: Badges (left) + Approve/Reject buttons (right) */}
-        <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-stroke-subtle">
+        <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
           <div className="flex items-center gap-2">
             {hasFlags && (
               <Badge variant="danger" size="xs">
@@ -255,7 +255,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   // Desktop layout (LabCard)
   const badges = (
     <>
-      <h3 className="text-sm font-medium text-fg">{test.testName}</h3>
+      <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
       <Badge variant={test.priority} size="sm" />
       <Badge variant={test.sampleType} size="sm" />
       <span className="text-xs text-brand font-mono">{test.testCode}</span>
@@ -285,8 +285,8 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   );
 
   const additionalInfo = test.resultEnteredAt && (
-    <span className="text-xs text-fg-subtle">
-      Results entered <span className="text-fg-muted">{formatDate(test.resultEnteredAt)}</span>
+    <span className="text-xs text-text-tertiary">
+      Results entered <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
       {test.enteredBy && <span> by {getUserName(test.enteredBy)}</span>}
     </span>
   );

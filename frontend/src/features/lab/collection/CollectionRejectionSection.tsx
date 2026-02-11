@@ -48,32 +48,32 @@ const RejectionRecordDisplay: React.FC<RejectionRecordDisplayProps> = ({
       {/* Reasons */}
       {reasonLabels && (
         <div className="flex">
-          <span className="text-fg-subtle w-16 shrink-0">Reasons</span>
-          <span className="text-fg">{reasonLabels}</span>
+          <span className="text-text-tertiary w-16 shrink-0">Reasons</span>
+          <span className="text-text-primary">{reasonLabels}</span>
         </div>
       )}
 
       {/* Notes */}
       {notes && (
         <div className="flex">
-          <span className="text-fg-subtle w-16 shrink-0">Notes</span>
-          <span className="text-fg">{notes}</span>
+          <span className="text-text-tertiary w-16 shrink-0">Notes</span>
+          <span className="text-text-primary">{notes}</span>
         </div>
       )}
 
       {/* Rejected by */}
       {rejectedBy && (
         <div className="flex">
-          <span className="text-fg-subtle w-16 shrink-0">By</span>
-          <span className="text-fg">{getUserName(rejectedBy)}</span>
+          <span className="text-text-tertiary w-16 shrink-0">By</span>
+          <span className="text-text-primary">{getUserName(rejectedBy)}</span>
         </div>
       )}
 
       {/* Date */}
       {rejectedAt && (
         <div className="flex">
-          <span className="text-fg-subtle w-16 shrink-0">Date</span>
-          <span className="text-fg">{formatDate(rejectedAt)}</span>
+          <span className="text-text-tertiary w-16 shrink-0">Date</span>
+          <span className="text-text-primary">{formatDate(rejectedAt)}</span>
         </div>
       )}
     </div>
@@ -149,8 +149,8 @@ export const CollectionRejectionSection: React.FC<SingleRejectionProps> = ({
               onClick={() => setActiveIndex(index)}
               className={`px-2 py-0.5 text-xs rounded ${
                 activeIndex === index
-                  ? 'bg-neutral-200 text-fg font-normal'
-                  : 'text-fg-subtle hover:bg-neutral-100'
+                  ? 'bg-neutral-200 text-text-primary font-normal'
+                  : 'text-text-tertiary hover:bg-neutral-100'
               }`}
             >
               {index + 1}

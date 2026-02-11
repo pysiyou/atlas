@@ -139,12 +139,12 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       {isRecollection && !isRetest && (
         <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} />
       )}
-      <Badge size="sm" variant="default" className="text-fg-muted">
+      <Badge size="sm" variant="default" className="text-text-secondary">
         {filledCount} / {totalParams} parameters
       </Badge>
       {turnaroundTime && (
-        <Badge size="sm" variant="default" className="text-fg-muted flex items-center gap-1.5">
-          <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-fg-subtle" />
+        <Badge size="sm" variant="default" className="text-text-secondary flex items-center gap-1.5">
+          <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-text-tertiary" />
           {turnaroundTime}h TAT
         </Badge>
       )}
@@ -262,7 +262,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Remaining',
                 value: (
-                  <span className={remainingParams === 0 ? 'text-success-text' : 'text-fg-subtle'}>
+                  <span className={remainingParams === 0 ? 'text-success-text' : 'text-text-tertiary'}>
                     {remainingParams}
                   </span>
                 ),

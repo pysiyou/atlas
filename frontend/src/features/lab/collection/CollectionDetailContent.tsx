@@ -55,13 +55,13 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
     <>
       {/* Barcode */}
       {(isCollected || isRejected) && sample.sampleId && (
-        <div className="flex items-center justify-center bg-canvas rounded p-4 border border-stroke mt-2">
+        <div className="flex items-center justify-center bg-surface-page rounded p-4 border border-border-default mt-2">
           <Barcode
             value={displayId.sample(sample.sampleId)}
             height={40}
             displayValue={false}
             background="transparent"
-            lineColor="var(--fg)"
+            lineColor="var(--text)"
             margin={0}
           />
         </div>
@@ -72,7 +72,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
         <CollectionInfoLine
           collectedAt={collectedAt}
           collectedBy={collectedBy}
-          className="text-xs text-fg-subtle mt-1"
+          className="text-xs text-text-tertiary mt-1"
         />
       )}
 
@@ -83,12 +83,12 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
             const testCode = testCodes[i];
             const test = testCode ? getTest(testCode) : undefined;
             return (
-              <li key={testCode || i} className="flex items-center text-xs text-fg-muted">
+              <li key={testCode || i} className="flex items-center text-xs text-text-secondary">
                 <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mr-2" />
                 <span className="font-normal mr-1">{testName}</span>
                 <span className="text-brand font-mono mr-2">{testCode}</span>
                 {test?.turnaroundTime && (
-                  <span className="text-fg-disabled flex items-center gap-1">
+                  <span className="text-text-disabled flex items-center gap-1">
                     <Icon name={ICONS.dataFields.time} className="w-2.5 h-2.5" />
                     {test.turnaroundTime}h
                   </span>
@@ -128,7 +128,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
       {/* Collection Notes */}
       {collectionNotes && (
         <SectionContainer title="Collection Notes">
-          <div className="text-sm text-fg">{collectionNotes}</div>
+          <div className="text-sm text-text-primary">{collectionNotes}</div>
         </SectionContainer>
       )}
 

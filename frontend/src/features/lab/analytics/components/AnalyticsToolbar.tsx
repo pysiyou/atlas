@@ -54,7 +54,7 @@ export const AnalyticsToolbar: React.FC<AnalyticsToolbarProps> = ({
           ))}
         </select>
       </div>
-      <span className="text-sm text-fg-subtle">Compare to</span>
+      <span className="text-sm text-text-tertiary">Compare to</span>
       <select
         value={compareTo}
         onChange={(e) => onCompareToChange(e.target.value as CompareToOption)}

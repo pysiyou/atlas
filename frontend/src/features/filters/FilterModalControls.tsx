@@ -40,11 +40,11 @@ export const ModalRadioList: React.FC<{
         <label key={option.id} className="flex items-center gap-3 cursor-pointer group py-1 transition-colors">
           <div className="relative flex items-center justify-center shrink-0">
             <input type="radio" checked={isSelected} onChange={() => onChange(selectedId === option.id ? null : option.id)} className="sr-only" />
-            <div className={cn('w-5 h-5 rounded-full flex items-center justify-center transition-colors', isSelected ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong group-hover:border-brand')}>
+            <div className={cn('w-5 h-5 rounded-full flex items-center justify-center transition-colors', isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong group-hover:border-brand')}>
               {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
             </div>
           </div>
-          <span className={cn('text-sm transition-colors', isSelected ? 'text-fg' : 'text-fg-muted group-hover:text-fg')}>{uppercaseLabel(option.label)}</span>
+          <span className={cn('text-sm transition-colors', isSelected ? 'text-text-primary' : 'text-text-secondary group-hover:text-text-primary')}>{uppercaseLabel(option.label)}</span>
         </label>
       );
     })}

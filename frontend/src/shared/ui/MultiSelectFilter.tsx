@@ -68,8 +68,8 @@ const ListItem: React.FC<{
     <label
       className={cn(
         'flex items-center gap-3 px-3 py-2 text-sm cursor-pointer',
-        'hover:bg-panel-hover transition-colors',
-        isSelected && 'bg-panel'
+        'hover:bg-surface-hover transition-colors',
+        isSelected && 'bg-surface'
       )}
     >
       {/* Checkbox/Radio */}
@@ -85,7 +85,7 @@ const ListItem: React.FC<{
           <div
             className={cn(
               'w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200',
-              isSelected ? 'bg-brand' : 'bg-transparent border-2 border-stroke'
+              isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-default'
             )}
           >
             {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
@@ -96,7 +96,7 @@ const ListItem: React.FC<{
             <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
           </div>
         ) : (
-          <div className="w-4 h-4 rounded border-2 border-stroke bg-panel transition-all duration-150" />
+          <div className="w-4 h-4 rounded border-2 border-border-default bg-surface transition-all duration-150" />
         )}
       </div>
 
@@ -179,7 +179,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   // Render the trigger content
   const renderTriggerContent = () => {
     if (selectedIds.length === 0) {
-      return <span className="text-fg-faint whitespace-nowrap overflow-hidden truncate">{placeholder || `Select ${label}...`}</span>;
+      return <span className="text-text-muted whitespace-nowrap overflow-hidden truncate">{placeholder || `Select ${label}...`}</span>;
     }
 
     if (singleSelectedOption) {
@@ -193,7 +193,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
 
     // Show count for multiple selections – single line so truncate works
     return (
-      <span className="text-fg truncate block whitespace-nowrap">
+      <span className="text-text-primary truncate block whitespace-nowrap">
         <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full text-on-brand text-xxs font-normal align-middle mr-1 bg-brand">
           {selectedIds.length}
         </span>
@@ -211,7 +211,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
           isOpen={isOpen}
           leftIcon={
             icon ? (
-              <Icon name={icon} className="w-4 h-4 text-fg-faint group-hover:text-brand shrink-0 transition-colors" />
+              <Icon name={icon} className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors" />
             ) : undefined
           }
           showClear={selectedIds.length > 0}
@@ -229,7 +229,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       className="min-w-[200px]"
     >
       {() => (
-        <div className="bg-panel border border-stroke rounded-md shadow-lg py-2">
+        <div className="bg-surface border border-border-default rounded-md shadow-lg py-2">
           {/* Options list */}
           <div className="max-h-[300px] overflow-y-auto">
             {options.map(option => (
@@ -245,7 +245,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
 
           {/* Footer actions - Select all / Deselect all (multi-select) */}
           {showSelectAll && !singleSelect && options.length > 0 && (
-            <div className="border-t border-stroke mt-2 pt-2">
+            <div className="border-t border-border-default mt-2 pt-2">
               <div className="px-3 py-2">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <div className="flex items-center justify-center">
@@ -265,7 +265,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
                       </div>
                     )}
                   </div>
-                  <span className="text-xs font-normal text-fg">
+                  <span className="text-xs font-normal text-text-primary">
                     {allSelected ? 'Deselect all' : selectAllLabel}
                   </span>
                 </label>

@@ -47,9 +47,9 @@ export const ModalDebouncedSearch: React.FC<ModalDebouncedSearchProps> = ({
       {localValue && (
         <button
           onClick={handleClear}
-          className="p-0.5 hover:bg-panel-hover rounded transition-colors flex items-center justify-center cursor-pointer"
+          className="p-0.5 hover:bg-surface-hover rounded transition-colors flex items-center justify-center cursor-pointer"
         >
-          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-fg-subtle" />
+          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
         </button>
       )}
     </div>

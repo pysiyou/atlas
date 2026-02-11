@@ -60,20 +60,20 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   const getPageButtonClasses = (isActive: boolean) => {
     const base =
-      'min-w-[26px] h-6 px-1.5 text-[11px] font-normal rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-panel';
+      'min-w-[26px] h-6 px-1.5 text-[11px] font-normal rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-surface';
     return isActive
       ? `${base} bg-brand text-on-brand`
-      : `${base} text-fg border border-stroke bg-panel hover:border-stroke-hover hover:bg-panel-hover`;
+      : `${base} text-text-primary border border-border-default bg-surface hover:border-border-hover hover:bg-surface-hover`;
   };
 
   const navButtonClass =
-    'w-6 h-6 flex items-center justify-center rounded border border-transparent text-fg-muted transition-colors hover:bg-panel-hover hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-panel disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-fg-muted';
+    'w-6 h-6 flex items-center justify-center rounded border border-transparent text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-surface disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary';
 
   return (
-    <div className="flex items-center justify-between gap-3 px-3 py-2 border-t border-stroke bg-panel">
+    <div className="flex items-center justify-between gap-3 px-3 py-2 border-t border-border-default bg-surface">
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1.5 whitespace-nowrap">
-          <span className="text-[11px] text-fg-muted">Rows per page</span>
+          <span className="text-[11px] text-text-secondary">Rows per page</span>
           <select
             value={pageSize}
             onChange={e => onPageSizeChange(Number(e.target.value))}
@@ -90,7 +90,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             ))}
           </select>
         </div>
-        <span className="text-[11px] text-fg-muted tabular-nums">
+        <span className="text-[11px] text-text-secondary tabular-nums">
           {startItem}–{endItem} of {totalItems}
         </span>
       </div>
@@ -110,7 +110,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           {pageNumbers.map((page, index) => (
             <React.Fragment key={index}>
               {page === '...' ? (
-                <span className="min-w-[20px] text-center text-[11px] text-fg-disabled" aria-hidden>
+                <span className="min-w-[20px] text-center text-[11px] text-text-disabled" aria-hidden>
                   …
                 </span>
               ) : (

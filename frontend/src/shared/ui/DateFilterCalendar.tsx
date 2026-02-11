@@ -45,7 +45,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
       <>
         <div className="grid grid-cols-7 gap-1 mb-1">
           {WEEKDAY_LABELS.map(day => (
-            <div key={day} className="text-center text-xs text-fg-disabled py-1">{day}</div>
+            <div key={day} className="text-center text-xs text-text-disabled py-1">{day}</div>
           ))}
         </div>
         <div className="grid grid-cols-7 gap-1">
@@ -63,8 +63,8 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                 className={cn(
                   'h-8 w-8 text-xs rounded-full flex items-center justify-center transition-colors relative cursor-pointer',
                   disabled && 'opacity-30 cursor-not-allowed',
-                  !isCurrentMonth && 'text-fg-disabled',
-                  isCurrentMonth && !selected && !inRange && !disabled && 'text-fg-muted hover:bg-neutral-100',
+                  !isCurrentMonth && 'text-text-disabled',
+                  isCurrentMonth && !selected && !inRange && !disabled && 'text-text-secondary hover:bg-neutral-100',
                   isToday && !selected && !inRange && !disabled && 'font-normal text-brand bg-brand-muted',
                   inRange && !selected && 'bg-brand-muted text-brand rounded-none',
                   value && isSameDay(day, value[0]) && !isSameDay(value[0], value[1]) && 'rounded-l-full rounded-r-none',
@@ -96,7 +96,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                 'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
                 disabled && 'opacity-30 cursor-not-allowed',
                 !disabled && isSameMonth(month, new Date()) && 'text-brand font-normal bg-brand-muted',
-                !disabled && isSameMonth(month, currentMonth) ? 'bg-brand-muted text-brand' : 'hover:bg-neutral-100 text-fg-muted',
+                !disabled && isSameMonth(month, currentMonth) ? 'bg-brand-muted text-brand' : 'hover:bg-neutral-100 text-text-secondary',
                 !disabled && 'hover:bg-neutral-100'
               )}
             >
@@ -126,7 +126,7 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
               'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
               disabled && 'opacity-30 cursor-not-allowed',
               !disabled && year.getFullYear() === new Date().getFullYear() && 'text-brand font-normal bg-brand-muted',
-              !disabled && year.getFullYear() === currentMonth.getFullYear() ? 'bg-brand-muted text-brand' : 'hover:bg-neutral-100 text-fg-muted',
+              !disabled && year.getFullYear() === currentMonth.getFullYear() ? 'bg-brand-muted text-brand' : 'hover:bg-neutral-100 text-text-secondary',
               !disabled && 'hover:bg-neutral-100'
             )}
           >

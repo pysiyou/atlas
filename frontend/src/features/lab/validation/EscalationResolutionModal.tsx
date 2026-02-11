@@ -137,7 +137,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         <EntryInfoLine enteredAt={test.resultEnteredAt} enteredBy={test.enteredBy} />
       }
       footer={
-        <ModalFooter statusMessage="" statusClassName="text-fg-subtle">
+        <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
           <Popover
             placement="top-end"
             offsetValue={8}

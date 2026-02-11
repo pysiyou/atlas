@@ -50,7 +50,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
           role="status"
           aria-label="Loading"
         />
-        {message && <p className="mt-3 text-sm text-fg-subtle">{message}</p>}
+        {message && <p className="mt-3 text-sm text-text-tertiary">{message}</p>}
       </div>
     </div>
   );

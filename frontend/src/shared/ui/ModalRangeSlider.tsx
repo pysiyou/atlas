@@ -50,7 +50,7 @@ export const ModalRangeSlider: React.FC<ModalRangeSliderProps> = ({
 
   return (
     <div className="w-full">
-      {hint && <p className="text-sm text-fg-subtle mb-4">{hint}</p>}
+      {hint && <p className="text-sm text-text-tertiary mb-4">{hint}</p>}
       <div className="relative h-1 mb-6">
         <div className="absolute inset-0 bg-border rounded-full" />
         <div
@@ -76,7 +76,7 @@ export const ModalRangeSlider: React.FC<ModalRangeSliderProps> = ({
           style={{ zIndex: 4 }}
         />
       </div>
-      <div className="flex justify-between text-lg font-normal text-fg">
+      <div className="flex justify-between text-lg font-normal text-text-primary">
         <span>{formatLabel(localValue[0])}</span>
         <span>{formatLabel(localValue[1])}</span>
       </div>

@@ -38,7 +38,7 @@ export const OrderCardHeader: React.FC<OrderCardHeaderProps> = ({
         <h2 className="text-2xl font-bold text-brand font-mono">{displayId.order(orderId)}</h2>
         <Badge variant={priority} size="sm" />
         <Badge variant={status} size="sm" />
-        <span className="text-sm text-fg-subtle">{formatDate(orderDate)}</span>
+        <span className="text-sm text-text-tertiary">{formatDate(orderDate)}</span>
       </div>
     </div>
   );
@@ -67,8 +67,8 @@ export const OrderMetadata: React.FC<OrderMetadataProps> = ({
     <div className={`flex items-center gap-3 ${className}`}>
       <Avatar primaryText={patientName} size="sm" />
       <div>
-        <div className="font-normal text-fg">{patientName}</div>
-        <div className="text-xs text-fg-subtle">
+        <div className="font-normal text-text-primary">{patientName}</div>
+        <div className="text-xs text-text-tertiary">
           <span className="font-mono text-brand">{displayId.patient(patientId)}</span> • {formatDate(orderDate)}
           {referringPhysician && ` • ${referringPhysician}`}
         </div>
@@ -94,15 +94,15 @@ export const BillingSummaryCard: React.FC<BillingSummaryCardProps> = ({
     <SectionContainer title="Billing Summary">
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-fg-subtle">Subtotal:</span>
+          <span className="text-text-tertiary">Subtotal:</span>
           <span className="font-normal">{formatCurrency(totalPrice)}</span>
         </div>
         <div className="border-t pt-2 flex justify-between">
-          <span className="font-normal text-fg">Total:</span>
+          <span className="font-normal text-text-primary">Total:</span>
           <span className="font-normal text-xl text-brand">{formatCurrency(totalPrice)}</span>
         </div>
         <div className="flex justify-between items-center pt-2">
-          <span className="text-sm text-fg-subtle">Payment Status:</span>
+          <span className="text-sm text-text-tertiary">Payment Status:</span>
           <Badge
             variant={
               paymentStatus === 'paid'
@@ -137,11 +137,11 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
       <div className="space-y-3">
         {tests.map((test, index) => {
           return (
-            <div key={index} className="border border-stroke rounded p-4">
+            <div key={index} className="border border-border-default rounded p-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <div className="font-normal text-fg">{test.testName}</div>
-                  <div className="text-sm text-fg-subtle">
+                  <div className="font-normal text-text-primary">{test.testName}</div>
+                  <div className="text-sm text-text-tertiary">
                     <span className="text-brand font-mono">{test.testCode}</span> • {test.sampleType}
                   </div>
                 </div>
@@ -154,24 +154,24 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
               </div>
 
               {test.results && (
-                <div className="mt-3 p-3 bg-canvas rounded">
-                  <div className="text-sm font-normal text-fg-muted mb-2">Results:</div>
+                <div className="mt-3 p-3 bg-surface-page rounded">
+                  <div className="text-sm font-normal text-text-secondary mb-2">Results:</div>
                   <div className="space-y-1">
                     {Object.entries(test.results).map(([key, result]) => (
                       <div key={key} className="flex justify-between text-sm">
-                        <span className="text-fg-subtle">{key}:</span>
+                        <span className="text-text-tertiary">{key}:</span>
                         <span
                           className={`font-normal ${
                             result.status === 'high' || result.status === 'low'
                               ? 'text-warning-text'
                               : result.status === 'critical'
                                 ? 'text-danger-fg'
-                                : 'text-fg'
+                                : 'text-text-primary'
                           }`}
                         >
                           {result.value} {result.unit}
                           {result.referenceRange && (
-                            <span className="text-fg-subtle ml-2">
+                            <span className="text-text-tertiary ml-2">
                               (Ref: {result.referenceRange})
                             </span>
                           )}

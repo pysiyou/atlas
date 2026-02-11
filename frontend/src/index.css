@@ -19,35 +19,35 @@
   --font-weight-black: 900;
 
   /* ═══════════════════════════════════════════════════════════════════
-     FOREGROUND
+     TEXT (Foreground)
      ═══════════════════════════════════════════════════════════════════ */
-  --color-fg: var(--fg);
-  --color-fg-muted: var(--fg-muted);
-  --color-fg-subtle: var(--fg-subtle);
-  --color-fg-faint: var(--fg-faint);
-  --color-fg-disabled: var(--fg-disabled);
-  --color-fg-inverse: var(--fg-inverse);
+  --color-text-primary: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  --color-text-disabled: var(--text-disabled);
+  --color-text-inverse: var(--text-inverse);
 
   /* ═══════════════════════════════════════════════════════════════════
-     CANVAS & PANEL
+     SURFACE
      ═══════════════════════════════════════════════════════════════════ */
-  --color-canvas: var(--canvas);
-  --color-panel: var(--panel);
-  --color-panel-hover: var(--panel-hover);
-  --color-panel-selected: var(--panel-selected);
-  --color-panel-raised: var(--panel-raised);
+  --color-surface-page: var(--surface-page);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-selected: var(--surface-selected);
+  --color-surface-elev: var(--surface-elev);
   --color-surface-report: var(--surface-report);
 
   /* ═══════════════════════════════════════════════════════════════════
-     STROKE
+     BORDER
      ═══════════════════════════════════════════════════════════════════ */
-  --color-stroke: var(--stroke);
-  --color-stroke-muted: var(--stroke-muted);
-  --color-stroke-subtle: var(--stroke-muted);
-  --color-stroke-strong: var(--stroke-strong);
-  --color-stroke-hover: var(--stroke-hover);
-  --color-stroke-focus: var(--stroke-focus);
-  --color-stroke-error: var(--stroke-error);
+  --color-border-default: var(--border);
+  --color-stroke: var(--border); /* compatibility: bg-stroke, etc. */
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-border-hover: var(--border-hover);
+  --color-border-focus: var(--border-focus);
+  --color-border-error: var(--border-error);
 
   /* ═══════════════════════════════════════════════════════════════════
      BRAND
@@ -57,13 +57,6 @@
   --color-brand-muted: var(--brand-muted);
   --color-brand-fg: var(--brand-fg);
   --color-on-brand: var(--on-brand);
-
-  /* ═══════════════════════════════════════════════════════════════════
-     SECONDARY
-     ═══════════════════════════════════════════════════════════════════ */
-  --color-secondary: var(--secondary);
-  --color-secondary-hover: var(--secondary-hover);
-  --color-secondary-fg: var(--secondary-fg);
 
   /* ═══════════════════════════════════════════════════════════════════
      DANGER
@@ -105,7 +98,37 @@
      INFO
      ═══════════════════════════════════════════════════════════════════ */
   --color-info: var(--info);
-  --color-info-muted: var(--info-muted);
+  --color-info-bg: var(--info-bg);
+  --color-info-bg-emphasis: var(--info-bg-emphasis);
+  --color-info-fg: var(--info-fg);
+  --color-info-fg-emphasis: var(--info-fg-emphasis);
+  --color-info-stroke: var(--info-stroke);
+  --color-on-info: var(--on-info);
+  --color-success-hover: var(--success-hover);
+  --color-success-stroke-emphasis: var(--success-stroke-emphasis);
+  --color-warning-hover: var(--warning-hover);
+
+  /* ═══════════════════════════════════════════════════════════════════
+     TONE SYSTEM (badges/alerts)
+     ═══════════════════════════════════════════════════════════════════ */
+  --color-tone-neutral-bg: var(--tone-neutral-bg);
+  --color-tone-neutral-text: var(--tone-neutral-text);
+  --color-tone-neutral-border: var(--tone-neutral-border);
+  --color-tone-info-bg: var(--tone-info-bg);
+  --color-tone-info-text: var(--tone-info-text);
+  --color-tone-info-border: var(--tone-info-border);
+  --color-tone-success-bg: var(--tone-success-bg);
+  --color-tone-success-text: var(--tone-success-text);
+  --color-tone-success-border: var(--tone-success-border);
+  --color-tone-warning-bg: var(--tone-warning-bg);
+  --color-tone-warning-text: var(--tone-warning-text);
+  --color-tone-warning-border: var(--tone-warning-border);
+  --color-tone-danger-bg: var(--tone-danger-bg);
+  --color-tone-danger-text: var(--tone-danger-text);
+  --color-tone-danger-border: var(--tone-danger-border);
+  --color-tone-accent-bg: var(--tone-accent-bg);
+  --color-tone-accent-text: var(--tone-accent-text);
+  --color-tone-accent-border: var(--tone-accent-border);
 
   /* ═══════════════════════════════════════════════════════════════════
      EXTENDED BADGE COLORS (theme-responsive)
@@ -135,7 +158,10 @@
   --color-chart-axis: var(--chart-axis);
   --color-chart-tooltip: var(--chart-tooltip);
   --color-chart-tooltip-stroke: var(--chart-tooltip-stroke);
+  --color-chart-tooltip-border: var(--chart-tooltip-border);
   --color-chart-brand: var(--chart-brand);
+  --color-chart-primary: var(--chart-primary);
+  --color-chart-accent-light: var(--chart-accent-light);
   --color-chart-success: var(--chart-success);
   --color-chart-danger: var(--chart-danger);
   --color-chart-accent: var(--chart-accent);
@@ -169,6 +195,10 @@
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
   --shadow-footer: var(--shadow-footer);
+  --shadow-1: var(--shadow-1);
+  --shadow-2: var(--shadow-2);
+  --shadow-3: var(--shadow-3);
+  --opacity-disabled: var(--state-disabled-opacity);
 
   /* ═══════════════════════════════════════════════════════════════════
      FOCUS
@@ -201,6 +231,7 @@
   --color-auth-fg-subtle: var(--auth-text-muted);
   --color-auth-fg-light: var(--auth-text-light);
   --color-auth-accent: var(--auth-accent);
+  --color-auth-accent-medium: var(--auth-accent-medium);
   --color-auth-accent-hover: var(--auth-accent-hover);
   --color-auth-stroke: var(--auth-border);
   --color-auth-stroke-muted: var(--auth-border-light);
@@ -227,7 +258,7 @@ body {
 
 /* RSuite DateRangePicker Overrides */
 .rs-picker-toggle {
-  @apply !border-stroke-strong !rounded !py-2 !px-3 !h-[42px] !flex !items-center;
+  @apply !border-border-strong !rounded !py-2 !px-3 !h-[42px] !flex !items-center;
 }
 
 .rs-picker-toggle:hover {

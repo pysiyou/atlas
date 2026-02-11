@@ -114,11 +114,11 @@ const BASE_CLASSES = 'inline-flex items-center justify-center gap-1.5 font-norma
  */
 const BASE_STYLES: Record<BaseVariant, string> = {
   primary: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
-  secondary: 'bg-secondary text-secondary-fg hover:bg-secondary-hover focus:ring-neutral-500',
+  secondary: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
   danger: 'bg-danger text-on-danger hover:opacity-90 focus:ring-danger',
   success: 'bg-success text-on-success hover:opacity-90 focus:ring-success',
   warning: 'bg-warning text-on-warning hover:opacity-90 focus:ring-warning',
-  outline: 'border-2 border-stroke-strong bg-transparent text-fg-muted hover:bg-panel-hover focus:ring-neutral-500',
+  outline: 'border-2 border-border-strong bg-transparent text-text-secondary hover:bg-surface-hover focus:ring-neutral-500',
 };
 
 /**

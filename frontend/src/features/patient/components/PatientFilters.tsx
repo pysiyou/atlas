@@ -87,7 +87,7 @@ const SearchInput: React.FC<{
     <div className={cn(inputWrapper)}>
       <Icon
         name={ICONS.actions.search}
-        className="w-3.5 h-3.5 shrink-0 text-fg-faint group-hover:text-brand transition-colors"
+        className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-brand transition-colors"
       />
       <input
         type="text"
@@ -110,7 +110,7 @@ const SearchInput: React.FC<{
             onClick={handleClear}
             className={cn(
               'p-0.5',
-              'hover:bg-panel-hover',
+              'hover:bg-surface-hover',
               'rounded',
               'transition-colors duration-200',
               'flex items-center justify-center cursor-pointer'
@@ -119,7 +119,7 @@ const SearchInput: React.FC<{
           >
             <Icon
               name={ICONS.actions.closeCircle}
-              className={cn('w-4 h-4', 'text-fg-faint', 'hover:text-fg-subtle')}
+              className={cn('w-4 h-4', 'text-text-muted', 'hover:text-text-tertiary')}
             />
           </button>
         )}
@@ -217,7 +217,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   if (showModalView) {
     return (
       <>
-        <div className={cn('w-full bg-panel border-b', 'border-stroke')}>
+        <div className={cn('w-full bg-surface border-b', 'border-border-default')}>
           <div className="px-3 py-2 w-full">
             <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
               {/* Search control */}
@@ -259,7 +259,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
           title="Filter"
           size="md"
         >
-          <div className="flex flex-col h-full bg-panel">
+          <div className="flex flex-col h-full bg-surface">
             {/* Filter Controls - Scrollable */}
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {/* Search Section */}
@@ -275,9 +275,9 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                   {searchQuery && (
                     <button
                       onClick={() => onSearchChange('')}
-                      className="p-0.5 hover:bg-panel-hover rounded transition-colors"
+                      className="p-0.5 hover:bg-surface-hover rounded transition-colors"
                     >
-                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-fg-subtle" />
+                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
                     </button>
                   )}
                 </div>
@@ -287,7 +287,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
               <div className="space-y-5">
                 {/* Age Range Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-fg mb-3">Age Range</h4>
+                  <h4 className="text-sm font-semibold text-text-primary mb-3">Age Range</h4>
                   <ModalRangeSlider
                     value={ageRange}
                     onChange={onAgeRangeChange}
@@ -296,24 +296,24 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                     hint="Move the slider to filter by age"
                     formatLabel={v => `${v} years`}
                   />
-                  <div className="border-b border-stroke mt-4" />
+                  <div className="border-b border-border-default mt-4" />
                 </div>
 
                 {/* Sex Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-fg mb-3">Sex</h4>
+                  <h4 className="text-sm font-semibold text-text-primary mb-3">Sex</h4>
                   <CheckboxList
                     options={genderOptions}
                     selectedIds={sexFilters}
                     onChange={values => onSexFiltersChange(values as Gender[])}
                     columns={genderOptions.length > 4 ? 2 : 1}
                   />
-                  <div className="border-b border-stroke mt-4" />
+                  <div className="border-b border-border-default mt-4" />
                 </div>
 
                 {/* Affiliation Status Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-fg mb-3">Affiliation Status</h4>
+                  <h4 className="text-sm font-semibold text-text-primary mb-3">Affiliation Status</h4>
                   <CheckboxList
                     options={affiliationStatusOptions}
                     selectedIds={affiliationStatusFilters}
@@ -325,7 +325,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
             </div>
 
             {/* Footer with Filter Button */}
-            <div className="px-5 py-4 border-t border-stroke bg-panel shrink-0">
+            <div className="px-5 py-4 border-t border-border-default bg-surface shrink-0">
               <div className="flex items-center justify-between gap-3">
                 <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
                 <div className="flex items-center gap-2">
@@ -359,7 +359,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   // Tablet view: 2-column grid
   if (showTwoColumn) {
     return (
-      <div className={cn('w-full bg-panel border-b', 'border-stroke')}>
+      <div className={cn('w-full bg-surface border-b', 'border-border-default')}>
         <div className="px-3 py-2 w-full">
           <div className="grid grid-cols-2 gap-2 items-center w-full">
             {renderFilters()}
@@ -371,7 +371,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
 
   // Desktop view: 4-column grid
   return (
-    <div className={cn('w-full bg-panel border-b', 'border-stroke')}>
+    <div className={cn('w-full bg-surface border-b', 'border-border-default')}>
       <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
         <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">
           {renderFilters()}

@@ -32,7 +32,7 @@ interface TestSelectorProps {
  *
  * Selected tests are shown as removable tags inside the input box, while the
  * input text remains controlled by the parent (used to drive the results list).
- * Tags match the patient tag styling (bg-brand-muted, border-stroke) but without avatars.
+ * Tags match the patient tag styling (bg-brand-muted, border-border-default) but without avatars.
  */
 const TestSearchTagInput: React.FC<{
   selectedTags: Array<{ code: string; name: string }>;
@@ -49,7 +49,7 @@ const TestSearchTagInput: React.FC<{
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-test-search"
-          className="text-xs font-normal text-fg-subtle cursor-pointer truncate min-w-0"
+          className="text-xs font-normal text-text-tertiary cursor-pointer truncate min-w-0"
         >
           Tests
         </label>
@@ -63,7 +63,7 @@ const TestSearchTagInput: React.FC<{
         )}
       >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-start pt-2.5 pointer-events-none">
-          <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-fg-faint group-hover:text-brand transition-colors" />
+          <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors" />
         </div>
 
         {selectedTags.map(({ code, name }) => (
@@ -96,7 +96,7 @@ const TestSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedTags.length === 0 ? 'Search by code or name…' : ''}
-          className="flex-1 min-w-[120px] outline-none text-xs text-fg placeholder:text-fg-faint bg-transparent leading-normal"
+          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-normal"
           autoComplete="off"
         />
       </div>
@@ -200,23 +200,23 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
       {isPopoverOpen && hasSearch && (
         <div
           className={[
-            'mt-1 text-fg',
-            'border border-stroke/80',
+            'mt-1 text-text-primary',
+            'border border-border-default/80',
             'rounded',
             'overflow-hidden',
-            'bg-panel',
+            'bg-surface',
             'shadow-md',
             'ring-1 ring-black/5',
           ].join(' ')}
         >
           {/* Header row */}
-          <div className="px-4 py-2.5 bg-canvas/70 border-b border-stroke/70 flex items-center justify-between">
-            <div className="text-xs font-normal text-fg-subtle">Matching tests</div>
-            <div className="text-xs text-fg-subtle">{visibleTests.length} result(s)</div>
+          <div className="px-4 py-2.5 bg-surface-page/70 border-b border-border-default/70 flex items-center justify-between">
+            <div className="text-xs font-normal text-text-tertiary">Matching tests</div>
+            <div className="text-xs text-text-tertiary">{visibleTests.length} result(s)</div>
           </div>
 
           {visibleTests.length === 0 ? (
-            <div className="px-4 py-3 text-xs text-fg-subtle">No tests found</div>
+            <div className="px-4 py-3 text-xs text-text-tertiary">No tests found</div>
           ) : (
             <div className="max-h-[320px] overflow-y-auto divide-y divide-border-subtle">
               {visibleTests.map(test => {
@@ -231,12 +231,12 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                     type="button"
                     onClick={() => onToggleTest(code)}
                     className={[
-                      'w-full text-left px-4 py-3 text-fg',
+                      'w-full text-left px-4 py-3 text-text-primary',
                       'transition-colors',
                       'flex items-center justify-between gap-4',
-                      'hover:bg-panel-hover',
-                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30 focus-visible:bg-panel-hover',
-                      isSelected ? 'bg-success-bg' : 'bg-panel',
+                      'hover:bg-surface-hover',
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30 focus-visible:bg-surface-hover',
+                      isSelected ? 'bg-success-bg' : 'bg-surface',
                     ].join(' ')}
                   >
                     <div className="min-w-0">

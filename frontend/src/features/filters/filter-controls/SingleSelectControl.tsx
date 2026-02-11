@@ -64,7 +64,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
   const renderTriggerContent = () => {
     if (!selectedOption) {
       return (
-        <span className="text-fg-faint">
+        <span className="text-text-muted">
           {config.placeholder || `Select ${config.label.toLowerCase()}...`}
         </span>
       );
@@ -86,7 +86,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
           isOpen={isOpen}
           leftIcon={
             config.icon ? (
-              <Icon name={config.icon as IconName} className="w-4 h-4 text-fg-faint group-hover:text-brand shrink-0 transition-colors" />
+              <Icon name={config.icon as IconName} className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors" />
             ) : undefined
           }
           showClear={!!value}
@@ -99,7 +99,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       className=""
     >
       {() => (
-        <div className="bg-panel border border-stroke rounded-md shadow-lg py-1 max-h-60 overflow-auto">
+        <div className="bg-surface border border-border-default rounded-md shadow-lg py-1 max-h-60 overflow-auto">
           {/* Options list */}
           <div>
             {config.options.map(option => {
@@ -109,8 +109,8 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   key={option.id}
                   onClick={() => handleSelect(option.id)}
                   className={cn(
-                    'px-3 py-2 text-sm hover:bg-panel-hover cursor-pointer transition-colors duration-150 w-full flex items-center gap-2',
-                    isSelected && 'bg-canvas',
+                    'px-3 py-2 text-sm hover:bg-surface-hover cursor-pointer transition-colors duration-150 w-full flex items-center gap-2',
+                    isSelected && 'bg-surface-page',
                     'text-left'
                   )}
                 >
@@ -121,7 +121,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                         <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                       </div>
                     ) : (
-                      <div className="w-4 h-4 rounded border border-stroke" />
+                      <div className="w-4 h-4 rounded border border-border-default" />
                     )}
                   </div>
 

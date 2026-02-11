@@ -153,7 +153,7 @@ export function TableCore<T = Record<string, unknown>>({
 
   const containerClasses = embedded
     ? 'flex flex-col flex-1 min-h-0'
-    : 'bg-panel rounded-lg border border-stroke shadow-sm flex flex-col h-full';
+    : 'bg-surface rounded-lg border border-border-default shadow-sm flex flex-col h-full';
 
   // Loading state
   if (loading) {

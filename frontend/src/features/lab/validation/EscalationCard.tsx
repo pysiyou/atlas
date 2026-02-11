@@ -43,20 +43,20 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
       <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="min-w-0 overflow-hidden">
-            <div className="text-sm font-normal text-fg truncate">
+            <div className="text-sm font-normal text-text-primary truncate">
               {test.testName ?? test.testCode}
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="text-xs text-fg-muted font-normal truncate capitalize">
+              <div className="text-xs text-text-secondary font-normal truncate capitalize">
                 {test.patientName}
               </div>
-              <div className="text-xxs text-fg-disabled">•</div>
+              <div className="text-xxs text-text-disabled">•</div>
               <div className="text-xxs text-brand font-normal font-mono truncate">
                 {test.testCode}
               </div>
               {test.sampleId && (
                 <>
-                  <div className="text-xs text-fg-disabled">•</div>
+                  <div className="text-xs text-text-disabled">•</div>
                   <div
                     className="text-xxs text-brand font-normal font-mono truncate"
                     title={displayId.sample(test.sampleId)}
@@ -71,18 +71,18 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
 
         <div className="space-y-1">
           {test.collectedAt && (
-            <div className="text-xs text-fg-subtle">
+            <div className="text-xs text-text-tertiary">
               Collected: {formatDate(test.collectedAt)}
             </div>
           )}
           {test.resultEnteredAt && (
-            <div className="text-xs text-fg-subtle">
+            <div className="text-xs text-text-tertiary">
               Entered: {formatDate(test.resultEnteredAt)}
             </div>
           )}
         </div>
 
-        <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-stroke-subtle">
+        <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
           <div className="flex items-center gap-2">
             <Badge variant="escalated" size="xs" />
             {test.priority && <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="xs" />}
@@ -112,7 +112,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   // Desktop layout (LabCard - same structure as ValidationCard/EntryCard)
   const badges = (
     <>
-      <h3 className="text-sm font-medium text-fg">{test.testName ?? test.testCode}</h3>
+      <h3 className="text-sm font-medium text-text-primary">{test.testName ?? test.testCode}</h3>
       <Badge variant="escalated" size="sm" />
       {test.priority && <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="sm" />}
       {test.sampleType && (
@@ -139,8 +139,8 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   );
 
   const additionalInfo = test.resultEnteredAt && (
-    <span className="text-xs text-fg-subtle">
-      Results entered <span className="text-fg-muted">{formatDate(test.resultEnteredAt)}</span>
+    <span className="text-xs text-text-tertiary">
+      Results entered <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
       {test.enteredBy && <span> by {getUserName(test.enteredBy)}</span>}
     </span>
   );
@@ -188,7 +188,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
     ) : undefined;
 
   const content = (
-    <div className="text-xs text-fg-muted">
+    <div className="text-xs text-text-secondary">
       <span className="font-mono text-brand">{test.testCode}</span>
       {test.orderId != null && (
         <span className="ml-2">

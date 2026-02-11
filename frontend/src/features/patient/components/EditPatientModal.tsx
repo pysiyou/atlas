@@ -50,8 +50,8 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
               relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal cursor-pointer
               ${
                 isActive
-                  ? 'bg-panel text-brand shadow-sm ring-1 ring-black/5'
-                  : 'text-fg-subtle hover:text-fg hover:bg-neutral-200/50'
+                  ? 'bg-surface text-brand shadow-sm ring-1 ring-black/5'
+                  : 'text-text-tertiary hover:text-text-primary hover:bg-neutral-200/50'
               }
             `}
           >
@@ -88,7 +88,7 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
   formId,
   footerInfo,
 }) => (
-  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-stroke bg-panel shrink-0 shadow-[var(--shadow-footer)]">
+  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]">
     {footerInfo}
     <div className="flex items-center gap-3">
       <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>
@@ -226,7 +226,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         title={modalTitle}
         maxWidth="max-w-3xl"
       >
-        <div className="flex flex-col h-full bg-canvas">
+        <div className="flex flex-col h-full bg-surface-page">
           <div className="flex-1 overflow-y-auto px-6 py-5">
             <form id="patient-form" onSubmit={handleFormSubmit} className="max-w-full">
               <TabNavigation
@@ -236,7 +236,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                 formProgress={formProgress}
               />
 
-              <div className="rounded-lg border border-stroke bg-panel p-6">
+              <div className="rounded-lg border border-border-default bg-surface p-6">
                 <PatientFormTabs
                   activeTab={activeTab}
                   register={register}

@@ -93,21 +93,21 @@ export const DetailView: React.FC<DetailViewProps> = ({
   const header = (
     <>
       {breadcrumbs != null && breadcrumbs.length > 0 && (
-        <div className="flex items-center gap-2 text-sm text-fg-subtle mb-4">
+        <div className="flex items-center gap-2 text-sm text-text-tertiary mb-4">
           {breadcrumbs.map((crumb, index) => (
             <React.Fragment key={index}>
               {crumb.onClick != null ? (
                 <button
                   type="button"
                   onClick={crumb.onClick}
-                  className="hover:text-fg transition-colors cursor-pointer"
+                  className="hover:text-text-primary transition-colors cursor-pointer"
                 >
                   {crumb.label}
                 </button>
               ) : (
-                <span className="text-fg">{crumb.label}</span>
+                <span className="text-text-primary">{crumb.label}</span>
               )}
-              {index < breadcrumbs.length - 1 && <span className="text-fg-disabled">/</span>}
+              {index < breadcrumbs.length - 1 && <span className="text-text-disabled">/</span>}
             </React.Fragment>
           ))}
         </div>

@@ -24,13 +24,13 @@ export const PageHeaderBar: React.FC<PageHeaderBarProps> = ({
 }) => {
   return (
     <header
-      className={`shrink-0 h-12 min-h-12 max-h-12 w-full flex items-center justify-between gap-4 flex-nowrap py-2 px-4 rounded bg-panel border border-stroke ${className}`}
+      className={`shrink-0 h-12 min-h-12 max-h-12 w-full flex items-center justify-between gap-4 flex-nowrap py-2 px-4 rounded bg-surface border border-border-default ${className}`}
       role="banner"
     >
       <div className="min-w-0 flex-1 flex flex-col justify-center">
-        <h1 className="text-lg font-light text-fg truncate leading-tight">{title}</h1>
+        <h1 className="text-lg font-light text-text-primary truncate leading-tight">{title}</h1>
         {subtitle != null && (
-          <p className="text-sm text-fg-subtle truncate leading-tight">{subtitle}</p>
+          <p className="text-sm text-text-tertiary truncate leading-tight">{subtitle}</p>
         )}
       </div>
       {children != null && <div className="flex items-center gap-2 shrink-0">{children}</div>}

@@ -218,13 +218,13 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
         <>
           {/* Barcode */}
           {(isCollected || isRejected) && sample.sampleId && (
-            <div className="flex items-center justify-center bg-canvas rounded p-4 border border-stroke mt-2">
+            <div className="flex items-center justify-center bg-surface-page rounded p-4 border border-border-default mt-2">
               <Barcode
                 value={displayId.sample(sample.sampleId)}
                 height={40}
                 displayValue={false}
                 background="transparent"
-                lineColor="var(--fg)"
+                lineColor="var(--text)"
                 margin={0}
               />
             </div>
@@ -234,7 +234,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
             <CollectionInfoLine
               collectedAt={collectedAt}
               collectedBy={collectedBy}
-              className="text-xs text-fg-subtle mt-1"
+              className="text-xs text-text-tertiary mt-1"
             />
           )}
         </>

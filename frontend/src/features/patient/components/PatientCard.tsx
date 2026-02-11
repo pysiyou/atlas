@@ -26,10 +26,10 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
   return (
     <div
       onClick={onClick}
-      className="bg-panel border border-stroke rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
+      className="bg-surface border border-border-default rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Avatar (top left) + Gender badge (top right) */}
-      <div className="flex justify-between items-start mb-3 pb-3 border-b border-stroke">
+      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
         {/* Avatar: Patient name + Patient ID - positioned at top left */}
         <Avatar
           primaryText={patient.fullName}
@@ -48,7 +48,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
           {/* Age */}
           <div className="flex items-center gap-2">
             <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
-            <span className="text-xs text-fg-muted truncate">
+            <span className="text-xs text-text-secondary truncate">
               {calculateAge(patient.dateOfBirth)} years old
             </span>
           </div>
@@ -56,7 +56,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
           {/* Phone */}
           <div className="flex items-center gap-2">
             <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
-            <span className="text-xs text-fg-muted truncate">
+            <span className="text-xs text-text-secondary truncate">
               {formatPhoneNumber(patient.phone)}
             </span>
           </div>
@@ -65,7 +65,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
           {patient.email && (
             <div className="flex items-center gap-2">
               <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
-              <span className="text-xs text-fg-muted truncate">
+              <span className="text-xs text-text-secondary truncate">
                 {patient.email}
               </span>
             </div>

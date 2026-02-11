@@ -26,7 +26,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
     const base = 'flex items-center py-3 text-sm font-normal rounded-none border-l-2 border-transparent';
     return isActive
       ? `${base} border-l-brand text-brand`
-      : `${base} text-fg-muted hover:bg-panel-hover hover:text-fg`;
+      : `${base} text-text-secondary hover:bg-surface-hover hover:text-text-primary`;
   };
 
   return (
@@ -51,13 +51,13 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
       </nav>
 
       {/* 2. Settings items */}
-      <div className="mt-4 pt-4 border-t border-stroke">
+      <div className="mt-4 pt-4 border-t border-border-default">
         <div className="space-y-1" role="group" aria-label="Settings">
           {settingsItems.map((item, index) => (
             <button
               key={index}
               disabled
-              className="w-full flex items-center py-3 text-sm font-normal text-fg-disabled rounded cursor-not-allowed"
+              className="w-full flex items-center py-3 text-sm font-normal text-text-disabled rounded cursor-not-allowed"
               title={item.label}
             >
               <div className="w-16 shrink-0 flex items-center justify-center">

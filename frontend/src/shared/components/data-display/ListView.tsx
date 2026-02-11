@@ -163,7 +163,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
       )}
 
       {/* Main Content */}
-      <div className="bg-panel rounded-lg border border-stroke shadow-sm flex flex-col flex-1 min-h-0 overflow-hidden">
+      <div className="bg-surface rounded-lg border border-border-default shadow-sm flex flex-col flex-1 min-h-0 overflow-hidden">
         {/* Filters */}
         {filters}
 

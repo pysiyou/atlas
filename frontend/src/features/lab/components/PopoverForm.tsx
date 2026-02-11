@@ -61,12 +61,12 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
   const { user: currentUser } = useAuthStore();
 
   return (
-    <div className="w-90 md:w-96 bg-panel rounded-lg shadow-xl border border-stroke overflow-hidden flex flex-col max-h-[600px]">
+    <div className="w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border-default overflow-hidden flex flex-col max-h-[600px]">
       {/* Header */}
-      <div className="px-4 py-3 bg-canvas border-b border-stroke-subtle flex items-start justify-between">
+      <div className="px-4 py-3 bg-surface-page border-b border-border-subtle flex items-start justify-between">
         <div className="space-y-0.5">
-          <h4 className="font-medium text-fg">{title}</h4>
-          {subtitle && <p className="text-xs text-fg-subtle">{subtitle}</p>}
+          <h4 className="font-medium text-text-primary">{title}</h4>
+          {subtitle && <p className="text-xs text-text-tertiary">{subtitle}</p>}
           {headerBadges && <div className="flex items-center gap-2 pt-1">{headerBadges}</div>}
         </div>
         <IconButton onClick={onCancel} variant="close" size="sm" title="Close" />
@@ -76,7 +76,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
       <div className="p-4 space-y-4 overflow-y-auto flex-1">{children}</div>
 
       {/* Footer */}
-      <div className="p-3 bg-canvas border-t border-stroke-subtle flex items-center justify-between gap-2 shrink-0">
+      <div className="p-3 bg-surface-page border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
         {footerInfo || (
           <FooterInfo
             icon={ICONS.actions.alertCircle}
@@ -158,7 +158,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         }
       }}
       className={`
-        relative flex items-start p-3 rounded border border-stroke bg-panel hover:border-stroke-strong transition-colors duration-200
+        relative flex items-start p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
       `}
       onClick={handleClick}
@@ -174,10 +174,10 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         aria-hidden
       />
       <div className="flex-1 min-w-0 pr-8">
-        <span className={`block text-xs font-normal ${disabled ? 'text-fg-disabled' : 'text-fg-muted'}`}>
+        <span className={`block text-xs font-normal ${disabled ? 'text-text-disabled' : 'text-text-secondary'}`}>
           {label}
         </span>
-        <span className={`block text-xxs mt-0.5 ${disabled ? 'text-fg-disabled' : 'text-fg-subtle'}`}>
+        <span className={`block text-xxs mt-0.5 ${disabled ? 'text-text-disabled' : 'text-text-tertiary'}`}>
           {description}
         </span>
         {disabled && disabledReason && (
@@ -187,7 +187,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
       <div
         className={`
           absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200
-          ${selected ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong'}
+          ${selected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
         `}
       >
         {selected && (
@@ -230,7 +230,7 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
         onChange();
       }
     }}
-    className="relative flex items-start p-3 rounded border border-stroke bg-panel hover:border-stroke-strong transition-colors duration-200 cursor-pointer"
+    className="relative flex items-start p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200 cursor-pointer"
     onClick={onChange}
   >
     <input
@@ -241,13 +241,13 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
       aria-hidden
     />
     <div className="flex-1 min-w-0 pr-8">
-      <span className="block text-xs font-normal text-fg-muted">{label}</span>
-      <span className="block text-xxs mt-0.5 text-fg-subtle">{description}</span>
+      <span className="block text-xs font-normal text-text-secondary">{label}</span>
+      <span className="block text-xxs mt-0.5 text-text-tertiary">{description}</span>
     </div>
     <div
       className={`
         absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200
-        ${checked ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong'}
+        ${checked ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
       `}
     >
       {checked && (

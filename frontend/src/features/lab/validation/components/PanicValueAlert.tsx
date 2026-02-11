@@ -66,7 +66,7 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
 
           <div className="space-y-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-sm font-normal text-fg">{parameterName}:</span>
+              <span className="text-sm font-normal text-text-primary">{parameterName}:</span>
               <span className="text-lg font-normal text-danger-fg-strong">
                 {value}
                 {unit && <span className="ml-1 text-sm font-normal">{unit}</span>}
@@ -76,12 +76,12 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
             <div className="grid grid-cols-2 gap-4 text-xs">
               {referenceRange && (
                 <div>
-                  <span className="text-fg-subtle">Reference Range:</span>
-                  <span className="ml-2 font-normal text-fg-muted">{referenceRange}</span>
+                  <span className="text-text-tertiary">Reference Range:</span>
+                  <span className="ml-2 font-normal text-text-secondary">{referenceRange}</span>
                 </div>
               )}
               <div>
-                <span className="text-fg-subtle">Critical Threshold:</span>
+                <span className="text-text-tertiary">Critical Threshold:</span>
                 <span className="ml-2 font-normal text-danger-fg-strong">
                   {isCriticalLow && criticalLow !== undefined && `< ${criticalLow} ${unit || ''}`}
                   {isCriticalHigh && criticalHigh !== undefined && `> ${criticalHigh} ${unit || ''}`}
