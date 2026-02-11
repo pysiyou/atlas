@@ -108,6 +108,22 @@
   --color-info-muted: var(--info-muted);
 
   /* ═══════════════════════════════════════════════════════════════════
+     EXTENDED BADGE COLORS (theme-responsive)
+     ═══════════════════════════════════════════════════════════════════ */
+  --color-purple-fg-emphasis: var(--purple-fg-emphasis);
+  --color-purple-bg-emphasis: var(--purple-bg-emphasis);
+  --color-pink-fg-emphasis: var(--pink-fg-emphasis);
+  --color-pink-bg-emphasis: var(--pink-bg-emphasis);
+  --color-teal-fg-emphasis: var(--teal-fg-emphasis);
+  --color-teal-bg-emphasis: var(--teal-bg-emphasis);
+  --color-orange-fg-emphasis: var(--orange-fg-emphasis);
+  --color-orange-bg-emphasis: var(--orange-bg-emphasis);
+  --color-indigo-fg-emphasis: var(--indigo-fg-emphasis);
+  --color-indigo-bg-emphasis: var(--indigo-bg-emphasis);
+  --color-cyan-fg-emphasis: var(--cyan-fg-emphasis);
+  --color-cyan-bg-emphasis: var(--cyan-bg-emphasis);
+
+  /* ═══════════════════════════════════════════════════════════════════
      BADGE
      ═══════════════════════════════════════════════════════════════════ */
   --color-badge: var(--badge);

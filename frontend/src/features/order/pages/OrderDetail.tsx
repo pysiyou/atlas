@@ -10,6 +10,7 @@ import { useOrder, usePatient } from '@/hooks/queries';
 import { getActiveTests } from '@/utils/orderUtils';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import type { Invoice } from '@/types';
+import { DetailPageShell, DetailPageHeader } from '@/shared/components';
 import { OrderHeader } from '../components/OrderHeader';
 import {
   SmallScreenLayout,
@@ -23,54 +24,26 @@ export const OrderDetail: React.FC = () => {
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
   const { openModal } = useModal();
 
-  // Use TanStack Query hooks
   const { order, isLoading: orderLoading } = useOrder(id);
   const { patient: patientData, isLoading: patientLoading } = usePatient(
     order?.patientId.toString()
   );
-  // Normalize patient to Patient | null (not undefined)
   const patient = patientData ?? null;
-
-  // Invoice UI stubbed until backend API exists. TODO: Add invoice API endpoint when available.
   const invoice: Invoice | null = null;
 
-  // Loading state
-  if (orderLoading || patientLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-fg-subtle">Loading...</div>
-      </div>
-    );
-  }
+  const activeTests = order != null ? getActiveTests(order.tests) : [];
+  const supersededCount = order != null ? order.tests.length - activeTests.length : 0;
 
-  if (!order) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-center py-12">
-          <p className="text-fg-subtle">Order not found</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Calculate active vs superseded test counts for display
-  const activeTests = getActiveTests(order.tests);
-  const supersededCount = order.tests.length - activeTests.length;
-
-  // Event handlers
-  const handleViewPatient = () => navigate(`/patients/${order.patientId}`);
-  const handleViewInvoice = () => {
-    // Invoice functionality stubbed until API is ready. TODO: Implement when invoice API exists.
-  };
+  const handleViewPatient = () => navigate(`/patients/${order?.patientId}`);
+  const handleViewInvoice = () => { /* Stubbed until API */ };
   const handleEdit = () => {
-    // Only allow editing orders in 'ordered' status
-    if (order.overallStatus === 'ordered') {
+    if (order?.overallStatus === 'ordered') {
       openModal(ModalType.NEW_ORDER, { order, mode: 'edit' });
     }
   };
 
-  // Render appropriate layout based on screen size
   const renderContent = () => {
+    if (order == null || patient === undefined) return null;
     const layoutProps = {
       order,
       patient,
@@ -80,32 +53,33 @@ export const OrderDetail: React.FC = () => {
       onViewPatient: handleViewPatient,
       onViewInvoice: handleViewInvoice,
     };
-
-    if (isSmall) {
-      return <SmallScreenLayout {...layoutProps} />;
-    }
-
-    if (isMedium) {
-      return <MediumScreenLayout {...layoutProps} />;
-    }
-
+    if (isSmall) return <SmallScreenLayout {...layoutProps} />;
+    if (isMedium) return <MediumScreenLayout {...layoutProps} />;
     return <LargeScreenLayout {...layoutProps} />;
   };
 
+  const header = order != null ? (
+    <OrderHeader
+      order={order}
+      invoice={invoice}
+      isLarge={isLarge}
+      onViewInvoice={handleViewInvoice}
+      onEdit={order.overallStatus === 'ordered' ? handleEdit : undefined}
+    />
+  ) : (
+    <DetailPageHeader title="Order" />
+  );
+
   return (
-    <div className="min-h-full flex flex-col p-6 gap-4">
-      <div className="shrink-0">
-        <OrderHeader
-          order={order}
-          invoice={invoice}
-          isLarge={isLarge}
-          onViewInvoice={handleViewInvoice}
-          onEdit={order.overallStatus === 'ordered' ? handleEdit : undefined}
-        />
-      </div>
-      <div className="flex-1 min-h-0 overflow-auto">
-        {renderContent()}
-      </div>
-    </div>
+    <DetailPageShell
+      header={header}
+      loading={orderLoading || patientLoading}
+      loadingMessage="Loading order..."
+      notFound={!order}
+      notFoundTitle="Order Not Found"
+      notFoundDescription="The order could not be found."
+    >
+      {renderContent()}
+    </DetailPageShell>
   );
 };

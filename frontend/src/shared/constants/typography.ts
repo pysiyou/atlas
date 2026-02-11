@@ -33,3 +33,12 @@ export const TEXT_METADATA = 'text-xs text-fg-subtle';
 
 /** Body text secondary (e.g. descriptions, list content) */
 export const BODY_SECONDARY = 'text-xs text-fg-muted';
+
+/** Detail page title (h1); consistent across Patient/Order/Catalog headers */
+export const DETAIL_TITLE = 'text-sm font-medium text-fg';
+
+/** Detail page subtitle (under title) */
+export const DETAIL_SUBTITLE = 'text-xs text-fg-subtle';
+
+/** List/page title (matches PageHeaderBar) */
+export const PAGE_TITLE = 'text-lg font-light text-fg';
