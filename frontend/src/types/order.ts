@@ -3,20 +3,20 @@
  */
 
 // Import types from enums for local use
-import type { TestStatus as TestStatusType } from './enums/test-status';
-import type { OrderStatus as OrderStatusType } from './enums/order-status';
-import type { PriorityLevel as PriorityLevelType } from './enums/priority-level';
-import type { PaymentStatus as PaymentStatusType } from './enums/payment-status';
+import type { TestStatus as TestStatusType } from '@/shared/types/enums';
+import type { OrderStatus as OrderStatusType } from '@/shared/types/enums';
+import type { PriorityLevel as PriorityLevelType } from '@/shared/types/enums';
+import type { PaymentStatus as PaymentStatusType } from '@/shared/types/enums';
 
 // Re-export types (Single Source of Truth)
-export type { TestStatus } from './enums/test-status';
-export type { OrderStatus } from './enums/order-status';
-export type { PriorityLevel } from './enums/priority-level';
-export type { PaymentStatus } from './enums/payment-status';
+export type { TestStatus } from '@/shared/types/enums';
+export type { OrderStatus } from '@/shared/types/enums';
+export type { PriorityLevel } from '@/shared/types/enums';
+export type { PaymentStatus } from '@/shared/types/enums';
 
 // Re-export the VALUES arrays for backwards compatibility
-export { ORDER_STATUS_VALUES } from './enums/order-status';
-export { PAYMENT_STATUS_VALUES } from './enums/payment-status';
+export { ORDER_STATUS_VALUES } from '@/shared/types/enums';
+export { PAYMENT_STATUS_VALUES } from '@/shared/types/enums';
 
 // Local type aliases for use in this file
 type TestStatus = TestStatusType;
@@ -59,6 +59,16 @@ export interface TestResult {
   unit?: string;
   referenceRange?: string;
   status: ResultStatus;
+}
+
+export interface ResultRejectionRecord {
+  id: number;
+  resultId: number;
+  type: ResultRejectionType; // 're-test' | 're-collect' | 'escalate' ...
+  reason: string;
+  notes?: string;
+  rejectedAt: string;
+  rejectedBy: string; // User ID
 }
 
 export interface OrderTest {

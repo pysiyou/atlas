@@ -75,7 +75,7 @@ export const createMockOrder = (overrides?: Partial<Order>): Order => {
     orderDate: createdAt,
     tests,
     totalPrice,
-    paymentStatus: faker.helpers.arrayElement(['unpaid', 'paid']) as 'unpaid' | 'paid',
+    paymentStatus: faker.helpers.arrayElement(['pending', 'paid']),
     overallStatus: faker.helpers.arrayElement(['ordered', 'in-progress', 'completed']) as
       | 'ordered'
       | 'in-progress'

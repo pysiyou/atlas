@@ -7,7 +7,7 @@
 import React, { useState, useCallback } from 'react';
 import { Button, Popover, SectionContainer } from '@/shared/ui';
 import { cn, displayId } from '@/utils';
-import { inputBase } from '@/shared/ui/forms/inputStyles';
+import { inputBase } from '@/shared/ui/inputStyles';
 import { ValidationForm } from './ValidationForm';
 import {
   LabDetailModal,

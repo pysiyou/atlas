@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Icon, type IconName } from './display/Icon';
+import { Icon, type IconName } from './Icon';
 
 interface FooterInfoProps {
   /** Icon name to display */

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, Icon } from '@/shared/ui';
 import { cn, displayId } from '@/utils';
-import { inputContainerBase, inputContainerError } from '@/shared/ui/forms/inputStyles';
+import { inputContainerBase, inputContainerError } from '@/shared/ui/inputStyles';
 import type { Patient } from '@/types';
 import { ICONS } from '@/utils';
 import { getBadgeAppearance } from '@/shared/theme/theme';
-import { TAG_STYLES } from '@/shared/ui/display/badge-colors';
+import { TAG_STYLES } from '@/shared/ui/badgeHelpers';
 
 interface PatientSelectorProps {
   selectedPatient: Patient | null;

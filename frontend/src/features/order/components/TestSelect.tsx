@@ -13,8 +13,8 @@ import { Icon } from '@/shared/ui';
 import type { Test } from '@/types';
 import { cn, ICONS, formatCurrency } from '@/utils';
 import { getBadgeAppearance } from '@/shared/theme/theme';
-import { TAG_STYLES } from '@/shared/ui/display/badge-colors';
-import { inputContainerBase, inputContainerError } from '@/shared/ui/forms/inputStyles';
+import { TAG_STYLES } from '@/shared/ui/badgeHelpers';
+import { inputContainerBase, inputContainerError } from '@/shared/ui/inputStyles';
 
 interface TestSelectorProps {
   selectedTests: string[];

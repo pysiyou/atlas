@@ -1,4 +1,4 @@
-import { Skeleton } from '../feedback/Skeleton';
+import { Skeleton } from '../Skeleton';
 import type { TableSkeletonProps } from './types';
 import { useColumnStyles } from './hooks/useColumnWidth';
 import { ROW_HEIGHTS, CELL_PADDING, TEXT_SIZE } from './constants';

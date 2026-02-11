@@ -1,24 +1,24 @@
 // Sample Types - Physical sample entity
 
 // Import types from enums for local use
-import type { SampleType as SampleTypeEnum } from './enums/sample-type';
+import type { SampleType as SampleTypeEnum } from '@/shared/types/enums';
 import type {
   ContainerType as ContainerTypeEnum,
   ContainerTopColor as ContainerTopColorEnum,
-} from './enums/container';
-import type { RejectionReason as RejectionReasonEnum } from './enums/rejection-reason';
+} from '@/shared/types/enums';
+import type { RejectionReason as RejectionReasonEnum } from '@/shared/types/enums';
 
 // Re-export types (Single Source of Truth)
-export type { SampleType } from './enums/sample-type';
-export type { SampleStatus } from './enums/sample-status';
-export type { ContainerType, ContainerTopColor } from './enums/container';
-export type { RejectionReason } from './enums/rejection-reason';
+export type { SampleType } from '@/shared/types/enums';
+export type { SampleStatus } from '@/shared/types/enums';
+export type { ContainerType, ContainerTopColor } from '@/shared/types/enums';
+export type { RejectionReason } from '@/shared/types/enums';
 
 // Re-export the VALUES arrays for backwards compatibility
-export { SAMPLE_TYPE_VALUES } from './enums/sample-type';
-export { SAMPLE_STATUS_VALUES } from './enums/sample-status';
-export { CONTAINER_TYPE_VALUES, CONTAINER_COLOR_VALUES } from './enums/container';
-export { REJECTION_REASON_VALUES } from './enums/rejection-reason';
+export { SAMPLE_TYPE_VALUES } from '@/shared/types/enums';
+export { SAMPLE_STATUS_VALUES } from '@/shared/types/enums';
+export { CONTAINER_TYPE_VALUES, CONTAINER_COLOR_VALUES } from '@/shared/types/enums';
+export { REJECTION_REASON_VALUES } from '@/shared/types/enums';
 
 // Local type aliases for use in this file
 type SampleType = SampleTypeEnum;

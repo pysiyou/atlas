@@ -33,7 +33,7 @@ export const ContainerInfo: React.FC<ContainerInfoProps> = ({
   size = 'sm',
 }) => {
   const colorName = containerColor
-    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.name || 'N/A'
+    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
     : 'N/A';
 
   const iconSize = size === 'sm' ? 'w-6 h-6' : 'w-7 h-7';

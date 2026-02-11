@@ -6,7 +6,7 @@
 import React from 'react';
 import { Icon } from '@/shared/ui';
 import { ICONS, uppercaseLabel, cn } from '@/utils';
-import { ModalDebouncedSearch, ModalRangeSlider } from '@/shared/ui/forms';
+import { ModalDebouncedSearch, ModalRangeSlider } from '@/shared/ui';
 
 export const ModalSearchInput = ModalDebouncedSearch;
 

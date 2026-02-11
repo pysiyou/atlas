@@ -9,7 +9,7 @@ import React from 'react';
 import { Badge, Card, Icon, IconButton, Alert, Avatar } from '@/shared/ui';
 import Barcode from 'react-barcode';
 import type { ContainerType, RejectedSample } from '@/types';
-import { CONTAINER_COLOR_OPTIONS } from '@/types';
+import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { usePatientNameLookup, useTestCatalog, useRejectSample } from '@/hooks/queries';
 import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
@@ -67,7 +67,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   const hasContainerInfo = (isCollected || isRejected) && 'actualContainerColor' in sample;
   const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
   const colorName = containerColor
-    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.name || 'N/A'
+    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
     : 'N/A';
   const containerType =
     hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
@@ -207,7 +207,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
       {(isCollected || isRejected) && containerColor && (
         <span
           className="flex items-center"
-          title={`Container: ${effectiveContainerType}, Color: ${colorName}`}
+          title={`Container: ${CONTAINER_CONFIG[effectiveContainerType]?.label || effectiveContainerType}, Color: ${colorName}`}
         >
           <Icon
             name={getContainerIcon(effectiveContainerType)}

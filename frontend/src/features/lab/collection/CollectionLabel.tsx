@@ -20,7 +20,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
   const containerType = sample.actualContainerType;
 
   const colorName =
-    CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerTopColor)?.name || 'N/A';
+    CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerTopColor)?.label || 'N/A';
 
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString();
