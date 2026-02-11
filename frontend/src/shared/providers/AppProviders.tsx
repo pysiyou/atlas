@@ -37,10 +37,10 @@ function composeProviders(
  * NOTE: All data providers have been removed - all consumers migrated to TanStack Query hooks.
  * NOTE: AuthProvider removed - replaced by Zustand useAuthStore
  * Remaining providers:
- * - ModalProvider: Active - manages modal state (to be replaced by useModalStore)
+ * - ModalProvider: Active - manages modal state
  */
 const featureProviders = [
-  ModalProvider, // Active - manages modal state (to be replaced by useModalStore)
+  ModalProvider,
 ];
 
 const ComposedProviders = composeProviders(featureProviders);

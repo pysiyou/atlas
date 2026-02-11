@@ -24,8 +24,3 @@ export * from './PatientSelect';
 export * from './PaymentSection';
 export * from './TestSelect';
 
-// Filter components
-export * from './DateFilter';
-export * from './DateFilterCalendar';
-export * from './DateFilterHeader';
-export * from './DateFilterPresets';

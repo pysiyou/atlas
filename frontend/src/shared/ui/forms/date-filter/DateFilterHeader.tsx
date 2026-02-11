@@ -1,6 +1,5 @@
 /**
- * DateFilterHeader Component
- * Renders the calendar header with navigation buttons and title
+ * DateFilterHeader - Calendar header with navigation and title.
  */
 
 import React from 'react';
@@ -8,9 +7,8 @@ import { format } from 'date-fns';
 import { Icon } from '@/shared/ui';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
-// CalendarView type (previously from useDateFilterState)
-type CalendarView = 'days' | 'months' | 'years';
-import { generateCalendarYears } from '../utils/dateFilterHelpers';
+import { generateCalendarYears } from './dateFilterHelpers';
+import type { CalendarView } from './useCalendarNavigation';
 
 export interface DateFilterHeaderProps {
   currentMonth: Date;
@@ -22,9 +20,6 @@ export interface DateFilterHeaderProps {
   isNextDisabled: boolean;
 }
 
-/**
- * Renders the header with prev/next buttons and clickable title
- */
 export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
   currentMonth,
   view,
@@ -34,9 +29,6 @@ export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
   isPrevDisabled,
   isNextDisabled,
 }) => {
-  /**
-   * Get formatted title based on current view
-   */
   const getTitle = (): string => {
     if (view === 'days') return format(currentMonth, 'MMMM yyyy');
     if (view === 'months') return format(currentMonth, 'yyyy');
@@ -53,7 +45,6 @@ export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
       >
         <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
       </button>
-
       <button
         onClick={onTitleClick}
         className={cn(
@@ -63,7 +54,6 @@ export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
       >
         {getTitle()}
       </button>
-
       <button
         onClick={onNextClick}
         disabled={isNextDisabled}

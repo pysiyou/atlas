@@ -2,7 +2,7 @@
  * Modal Context - Global modal state management
  *
  * Provides a centralized way to open and close modals throughout the application.
- * Similar to the cargoplan modal system.
+ * openModal is typed per ModalType via ModalPropsMap.
  */
 
 import React, {
@@ -13,6 +13,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import type { ModalPropsMap } from './modalTypes';
 
 /**
  * Available modal types in the application
@@ -31,12 +32,13 @@ export const ModalType = {
 export type ModalType = (typeof ModalType)[keyof typeof ModalType];
 
 /**
- * Modal context interface
+ * Modal context interface.
+ * openModal(type, props) is typed so props must match ModalPropsMap[type].
  */
 interface ModalContextType {
   modalType: ModalType | null;
   modalProps: Record<string, unknown> | null;
-  openModal: (type: ModalType, props?: Record<string, unknown>) => void;
+  openModal: <T extends ModalType>(type: T, props?: ModalPropsMap[T]) => void;
   closeModal: () => void;
 }
 
@@ -77,11 +79,11 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [modalProps, setModalProps] = useState<Record<string, unknown> | null>(null);
 
   /**
-   * Open a modal with the specified type and props
+   * Open a modal with the specified type and props (typed per ModalType).
    */
-  const openModal = useCallback((type: ModalType, props?: Record<string, unknown>) => {
+  const openModal = useCallback(<T extends ModalType>(type: T, props?: ModalPropsMap[T]) => {
     setModalType(type);
-    setModalProps(props || null);
+    setModalProps((props ?? null) as Record<string, unknown> | null);
   }, []);
 
   /**

@@ -1,19 +1,17 @@
 /**
- * DateFilterCalendar Component
- * Renders the calendar grid for days, months, or years view
+ * DateFilterCalendar - Renders the calendar grid for days, months, or years view.
  */
 
 import React from 'react';
 import { format, isSameMonth, isSameDay, isBefore, isAfter, endOfMonth, setYear } from 'date-fns';
 import { cn } from '@/utils';
-// CalendarView type (previously from useDateFilterState)
-type CalendarView = 'days' | 'months' | 'years';
 import {
   generateCalendarDays,
   generateCalendarMonths,
   generateCalendarYears,
   WEEKDAY_LABELS,
-} from '../utils/dateFilterHelpers';
+} from './dateFilterHelpers';
+import type { CalendarView } from './useCalendarNavigation';
 
 export interface DateFilterCalendarProps {
   currentMonth: Date;
@@ -29,9 +27,6 @@ export interface DateFilterCalendarProps {
   isInRange: (date: Date) => boolean;
 }
 
-/**
- * Renders the calendar grid based on current view (days/months/years)
- */
 export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
   currentMonth,
   setCurrentMonth,
@@ -50,12 +45,9 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
       <>
         <div className="grid grid-cols-7 gap-1 mb-1">
           {WEEKDAY_LABELS.map(day => (
-            <div key={day} className="text-center text-xs text-fg-disabled py-1">
-              {day}
-            </div>
+            <div key={day} className="text-center text-xs text-fg-disabled py-1">{day}</div>
           ))}
         </div>
-
         <div className="grid grid-cols-7 gap-1">
           {generateCalendarDays(currentMonth).map(day => {
             const isCurrentMonth = isSameMonth(day, currentMonth);
@@ -63,7 +55,6 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
             const inRange = isInRange(day);
             const isToday = isSameDay(day, new Date());
             const disabled = isDateDisabled(day);
-
             return (
               <button
                 key={day.toISOString()}
@@ -73,25 +64,11 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
                   'h-8 w-8 text-xs rounded-full flex items-center justify-center transition-colors relative cursor-pointer',
                   disabled && 'opacity-30 cursor-not-allowed',
                   !isCurrentMonth && 'text-fg-disabled',
-                  isCurrentMonth &&
-                    !selected &&
-                    !inRange &&
-                    !disabled &&
-                    'text-fg-muted hover:bg-neutral-100',
-                  isToday &&
-                    !selected &&
-                    !inRange &&
-                    !disabled &&
-                    'font-normal text-brand bg-brand-muted',
+                  isCurrentMonth && !selected && !inRange && !disabled && 'text-fg-muted hover:bg-neutral-100',
+                  isToday && !selected && !inRange && !disabled && 'font-normal text-brand bg-brand-muted',
                   inRange && !selected && 'bg-brand-muted text-brand rounded-none',
-                  value &&
-                    isSameDay(day, value[0]) &&
-                    !isSameDay(value[0], value[1]) &&
-                    'rounded-l-full rounded-r-none',
-                  value &&
-                    isSameDay(day, value[1]) &&
-                    !isSameDay(value[0], value[1]) &&
-                    'rounded-r-full rounded-l-none',
+                  value && isSameDay(day, value[0]) && !isSameDay(value[0], value[1]) && 'rounded-l-full rounded-r-none',
+                  value && isSameDay(day, value[1]) && !isSameDay(value[0], value[1]) && 'rounded-r-full rounded-l-none',
                   selected && 'bg-brand text-on-brand hover:bg-brand-hover z-10'
                 )}
               >
@@ -113,19 +90,13 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
           return (
             <button
               key={month.toISOString()}
-              onClick={() => {
-                if (disabled) return;
-                setCurrentMonth(month);
-                setView('days');
-              }}
+              onClick={() => { if (!disabled) { setCurrentMonth(month); setView('days'); } }}
               disabled={disabled}
               className={cn(
                 'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
                 disabled && 'opacity-30 cursor-not-allowed',
                 !disabled && isSameMonth(month, new Date()) && 'text-brand font-normal bg-brand-muted',
-                !disabled && isSameMonth(month, currentMonth)
-                  ? 'bg-brand-muted text-brand'
-                  : 'hover:bg-neutral-100 text-fg-muted',
+                !disabled && isSameMonth(month, currentMonth) ? 'bg-brand-muted text-brand' : 'hover:bg-neutral-100 text-fg-muted',
                 !disabled && 'hover:bg-neutral-100'
               )}
             >
@@ -154,12 +125,8 @@ export const DateFilterCalendar: React.FC<DateFilterCalendarProps> = ({
             className={cn(
               'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
               disabled && 'opacity-30 cursor-not-allowed',
-              !disabled &&
-                year.getFullYear() === new Date().getFullYear() &&
-                'text-brand font-normal bg-brand-muted',
-              !disabled && year.getFullYear() === currentMonth.getFullYear()
-                ? 'bg-brand-muted text-brand'
-                : 'hover:bg-neutral-100 text-fg-muted',
+              !disabled && year.getFullYear() === new Date().getFullYear() && 'text-brand font-normal bg-brand-muted',
+              !disabled && year.getFullYear() === currentMonth.getFullYear() ? 'bg-brand-muted text-brand' : 'hover:bg-neutral-100 text-fg-muted',
               !disabled && 'hover:bg-neutral-100'
             )}
           >

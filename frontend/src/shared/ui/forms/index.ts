@@ -15,4 +15,6 @@ export * from './DateFilter';
 export * from './FilterTriggerShell';
 export * from './MultiSelectFilter';
 export * from './PaymentMethodSelector';
+export * from './ModalRangeSlider';
+export * from './ModalDebouncedSearch';
 export * from './inputStyles';

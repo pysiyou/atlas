@@ -96,7 +96,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   const rejectedSample = isRejected ? (sample as RejectedSample) : null;
 
   const patientId = order?.patientId || 0;
-  const patientName = pendingSampleDisplay?.patient?.name
+  const patientName = pendingSampleDisplay?.patient?.fullName
     || (order ? getPatientName(order.patientId) : 'Unknown');
   const orderId = sample.orderId;
   const testNames = sample.testCodes ? getTestNames(sample.testCodes, tests) : [];
