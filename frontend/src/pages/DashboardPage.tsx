@@ -52,7 +52,7 @@ export const Dashboard: React.FC = () => {
       label: 'Total Orders',
       value: orders.length,
       today: todayOrders,
-      icon: <Icon name={ICONS.dataFields.document} className="w-8 h-8 text-success-text" />,
+      icon: <Icon name={ICONS.dataFields.document} className="w-8 h-8 text-success-fg" />,
       color: 'bg-success-bg',
     },
     {
@@ -64,7 +64,7 @@ export const Dashboard: React.FC = () => {
     {
       label: 'Revenue Today',
       value: formatCurrency(todayRevenue),
-      icon: <Icon name={ICONS.dataFields.dollarSign} className="w-8 h-8 text-warning-text" />,
+      icon: <Icon name={ICONS.dataFields.dollarSign} className="w-8 h-8 text-warning-fg" />,
       color: 'bg-warning-bg',
     },
   ];
@@ -92,7 +92,7 @@ export const Dashboard: React.FC = () => {
                   <p className="text-sm text-text-tertiary mb-1">{stat.label}</p>
                   <p className="text-3xl font-normal text-text-primary">{stat.value}</p>
                   {stat.today !== undefined && (
-                    <p className="text-xs text-success-text mt-1">+{stat.today} today</p>
+                    <p className="text-xs text-success-fg mt-1">+{stat.today} today</p>
                   )}
                 </div>
                 <div className={`p-3 rounded ${stat.color}`}>{stat.icon}</div>
@@ -105,7 +105,7 @@ export const Dashboard: React.FC = () => {
         {pendingOrders > 0 && (
           <Card padding="md">
             <div className="flex items-center gap-3">
-              <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-text" />
+              <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-fg" />
               <div>
                 <p className="text-sm font-normal text-text-primary">Pending Actions</p>
                 <p className="text-xs text-text-secondary">

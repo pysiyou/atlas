@@ -79,7 +79,7 @@ export const LAB_CARD_CONTAINERS = {
   contentSection: 'bg-surface-page rounded p-2 border border-border-default',
 
   // Flags section (red background)
-  flagsSection: 'bg-danger-bg rounded p-2 border border-danger-border',
+  flagsSection: 'bg-danger-bg rounded p-2 border border-danger-stroke',
 } as const;
 
 // List Item Constants

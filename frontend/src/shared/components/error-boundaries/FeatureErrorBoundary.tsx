@@ -95,7 +95,7 @@ export class FeatureErrorBoundary extends Component<
 
               {/* Show error details in development */}
               {import.meta.env.DEV && error && (
-                <div className="bg-danger-bg-strong rounded p-3 text-xs font-mono overflow-auto max-h-32">
+                <div className="bg-danger-bg-emphasis rounded p-3 text-xs font-mono overflow-auto max-h-32">
                   <p className="font-normal mb-1">Error:</p>
                   <p>{error.message}</p>
                 </div>

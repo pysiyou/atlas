@@ -105,7 +105,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
             ? `Cannot reject - ${validatedCount} test${validatedCount > 1 ? 's' : ''} already validated`
             : ''
         }
-        statusClassName={hasValidatedTests ? 'text-warning-text' : 'text-text-tertiary'}
+        statusClassName={hasValidatedTests ? 'text-warning-fg' : 'text-text-tertiary'}
       >
         {/* Print button - functionality handled by parent component */}
         {hasValidatedTests ? (

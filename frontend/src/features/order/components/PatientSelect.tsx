@@ -226,7 +226,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         </span>
                         {/* Check icon if selected */}
                         {isSelected && (
-                          <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-success-text" />
+                          <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-success-fg" />
                         )}
                       </div>
                     </button>

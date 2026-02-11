@@ -55,7 +55,7 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
         <span
           className={cn(
             'text-sm font-normal',
-            change.isPositive ? 'text-success-text' : 'text-danger-fg'
+            change.isPositive ? 'text-success-fg' : 'text-danger-fg'
           )}
         >
           {change.isPositive ? '↑' : '↓'}

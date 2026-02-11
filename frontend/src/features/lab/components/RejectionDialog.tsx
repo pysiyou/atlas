@@ -345,7 +345,7 @@ export const RejectionHistoryBanner: React.FC<RejectionHistoryBannerProps> = ({
   if (!message) return null;
 
   return (
-    <div className="mt-2 px-2 py-1.5 bg-warning-bg border border-warning-border rounded text-warning-text">
+    <div className="mt-2 px-2 py-1.5 bg-warning-bg border border-warning-stroke rounded text-warning-fg">
       <div className="flex items-center gap-1.5">
         <Icon name={ICONS.actions.loading} className="w-3 h-3" />
         <span className="text-xxs font-normal">{message}</span>

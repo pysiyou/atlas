@@ -255,7 +255,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                         {formatCurrency(price)}
                       </div>
                       {isSelected && (
-                        <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-success-text" />
+                        <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-success-fg" />
                       )}
                     </div>
                   </button>
