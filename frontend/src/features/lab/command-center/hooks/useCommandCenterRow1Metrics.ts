@@ -5,7 +5,7 @@
 
 import { useMemo } from 'react';
 import { useOrdersList, useSamplesList } from '@/hooks/queries';
-import type { Order, OrderTest } from '@/types';
+import type { Order, OrderTest, ResultRejectionRecord } from '@/types';
 import type { Sample } from '@/types';
 import { isActiveTest } from '@/utils/orderUtils';
 
@@ -41,6 +41,8 @@ export interface CommandCenterRow1Metrics {
   samplingTotal: number;
   /** Count of samples created today (trend: "X more samples today"). */
   samplesCreatedToday: number;
+  /** Samples created today as % of sampling total (for trend display). */
+  samplesCreatedTodayPct: number;
   resultEnteredToday: number;
   /** Tests still in result-entry queue (sample-collected or in-progress only). */
   resultStillNeedingEntry: number;
@@ -48,6 +50,8 @@ export interface CommandCenterRow1Metrics {
   resultTotal: number;
   /** Tests whose sample was collected today (entered result-entry queue today). */
   resultEntryQueueEnteredToday: number;
+  /** Result-entry queue entered today as % of result total (for trend display). */
+  resultEntryQueueEnteredTodayPct: number;
   validatedToday: number;
   /** Tests still needing validation (status === 'resulted'). */
   validationTotal: number;
@@ -55,6 +59,14 @@ export interface CommandCenterRow1Metrics {
   validationTotalDisplay: number;
   /** Tests that had result entered today (entered validation queue today). */
   validationQueueEnteredToday: number;
+  /** Validation queue entered today as % of validation total (for trend display). */
+  validationQueueEnteredTodayPct: number;
+  /** Tests with status === 'rejected'. */
+  rejectedTotal: number;
+  /** Rejected tests whose most recent rejection (resultRejectionHistory) was today. */
+  rejectedToday: number;
+  /** Rejected today as % of rejected total (for trend display). */
+  rejectedTodayPct: number;
   isLoading: boolean;
 }
 
@@ -69,6 +81,8 @@ export function useCommandCenterRow1Metrics(): CommandCenterRow1Metrics {
     let validatedToday = 0;
     let validationTotal = 0;
     let resultEntryQueueEnteredToday = 0;
+    let rejectedTotal = 0;
+    let rejectedToday = 0;
 
     const orderList = orders ?? [];
     const sampleList = samples ?? [];
@@ -106,24 +120,44 @@ export function useCommandCenterRow1Metrics(): CommandCenterRow1Metrics {
         if (isToday(validatedAt)) {
           validatedToday += 1;
         }
+        if (test.status === 'rejected') {
+          rejectedTotal += 1;
+          const history = test.resultRejectionHistory;
+          const lastRejectedAt =
+            history?.length
+              ? (history[history.length - 1] as ResultRejectionRecord).rejectedAt
+              : undefined;
+          if (lastRejectedAt && isToday(lastRejectedAt)) {
+            rejectedToday += 1;
+          }
+        }
       });
     });
     const resultTotal = resultEnteredToday + resultStillNeedingEntry;
     const validationTotalDisplay = validatedToday + validationTotal;
+
+    const safePct = (num: number, denom: number) =>
+      denom > 0 ? (num / denom) * 100 : 0;
 
     return {
       samplingDoneToday,
       samplesStillPending,
       samplingTotal,
       samplesCreatedToday,
+      samplesCreatedTodayPct: safePct(samplesCreatedToday, samplingTotal),
       resultEnteredToday,
       resultStillNeedingEntry,
       resultTotal,
       resultEntryQueueEnteredToday,
+      resultEntryQueueEnteredTodayPct: safePct(resultEntryQueueEnteredToday, resultTotal),
       validatedToday,
       validationTotal,
       validationTotalDisplay,
       validationQueueEnteredToday: resultEnteredToday,
+      validationQueueEnteredTodayPct: safePct(resultEnteredToday, validationTotalDisplay),
+      rejectedTotal,
+      rejectedToday,
+      rejectedTodayPct: safePct(rejectedToday, rejectedTotal),
       isLoading,
     };
   }, [orders, samples, ordersLoading, samplesLoading]);

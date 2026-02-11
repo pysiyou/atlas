@@ -52,15 +52,15 @@ export const CommandCenterView: React.FC = () => {
       className="flex-1 min-h-0 overflow-hidden grid"
       style={{ gridTemplateRows: '20fr 40fr 40fr' }}
     >
-      {/* Row 1: Pending sample / result entry / validation — bottom-left; today's grow top-right */}
-      <div className="min-h-0 overflow-hidden border-b border-border-default grid grid-cols-3">
+      {/* Row 1: Pending sample / result entry / validation / rejected — bottom-left; today's grow top-right */}
+      <div className="min-h-0 overflow-hidden border-b border-border-default grid grid-cols-4">
         <div className={`${rowCellClass} flex items-stretch p-2`}>
           <CommandCenterMetricCard
             title="Pending samples"
             primaryValue={row1.isLoading ? '—' : row1.samplesStillPending}
             secondaryValue={undefined}
             icon={ICONS.dataFields.flask}
-            trend={{ value: row1.samplesCreatedToday, label: 'more samples today' }}
+            trend={{ value: row1.samplesCreatedTodayPct, label: 'more samples today' }}
           />
         </div>
         <div className={`${rowCellClass} flex items-stretch p-2`}>
@@ -69,7 +69,7 @@ export const CommandCenterView: React.FC = () => {
             primaryValue={row1.isLoading ? '—' : row1.resultStillNeedingEntry}
             secondaryValue={undefined}
             icon={ICONS.dataFields.notebook}
-            trend={{ value: row1.resultEntryQueueEnteredToday, label: 'entered result-entry today' }}
+            trend={{ value: row1.resultEntryQueueEnteredTodayPct, label: 'entered result-entry today' }}
           />
         </div>
         <div className={`${rowCellClass} flex items-stretch p-2`}>
@@ -78,7 +78,16 @@ export const CommandCenterView: React.FC = () => {
             primaryValue={row1.isLoading ? '—' : row1.validationTotal}
             secondaryValue={undefined}
             icon={ICONS.ui.shieldCheck}
-            trend={{ value: row1.validationQueueEnteredToday, label: 'entered validation today' }}
+            trend={{ value: row1.validationQueueEnteredTodayPct, label: 'entered validation today' }}
+          />
+        </div>
+        <div className={`${rowCellClass} flex items-stretch p-2`}>
+          <CommandCenterMetricCard
+            title="Rejected tests"
+            primaryValue={row1.isLoading ? '—' : row1.rejectedTotal}
+            secondaryValue={undefined}
+            icon={ICONS.actions.closeCircle}
+            trend={{ value: row1.rejectedTodayPct, label: 'rejected today' }}
           />
         </div>
       </div>
