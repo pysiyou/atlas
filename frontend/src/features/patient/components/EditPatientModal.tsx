@@ -10,7 +10,7 @@ import type { Patient } from '@/types';
 import { Button, Modal, CircularProgress, FooterInfo } from '@/shared/ui';
 import { ICONS } from '@/utils';
 import { displayId } from '@/utils';
-import { FormErrorBoundary } from '@/shared/components';
+import { ErrorBoundary } from '@/shared/components';
 import { patientFormSchema, type PatientFormInput } from '../schemas/patient.schema';
 import { usePatientService } from '../services/usePatientService';
 import { patientToFormInput } from '../utils/form-transformers';
@@ -219,7 +219,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   const formProgress = useMemo(() => calculateFormProgressV2(formValues), [formValues]);
 
   return (
-    <FormErrorBoundary>
+    <ErrorBoundary>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -276,6 +276,6 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
           />
         </div>
       </Modal>
-    </FormErrorBoundary>
+    </ErrorBoundary>
   );
 };

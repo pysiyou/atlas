@@ -28,7 +28,7 @@ import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters } from '../hooks/useLabWorkflowFilters';
 import { createSampleSearchFilter } from '../utils/lab-helpers';
 import { collectionFilterConfig } from '../constants';
-import { DataErrorBoundary, LoadingState } from '@/shared/components';
+import { ErrorBoundary, LoadingState } from '@/shared/components';
 import type { SampleDisplay } from '../types';
 
 export const CollectionView: React.FC = () => {
@@ -180,14 +180,14 @@ export const CollectionView: React.FC = () => {
   const hasNoItems = allSampleDisplays.length === 0;
   if (isLoading && hasNoItems) {
     return (
-      <DataErrorBoundary>
+      <ErrorBoundary>
         <LoadingState message="Loading collection..." fullScreen />
-      </DataErrorBoundary>
+      </ErrorBoundary>
     );
   }
 
   return (
-    <DataErrorBoundary>
+    <ErrorBoundary>
       <LabWorkflowView
         items={filteredDisplays}
         renderCard={display => (
@@ -213,6 +213,6 @@ export const CollectionView: React.FC = () => {
           />
         }
       />
-    </DataErrorBoundary>
+    </ErrorBoundary>
   );
 };

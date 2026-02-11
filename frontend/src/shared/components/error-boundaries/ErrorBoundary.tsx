@@ -5,12 +5,16 @@
 
 import { Component, type ReactNode, type ErrorInfo } from 'react';
 import { logger } from '@/utils/logger';
-import { Button } from '@/shared/ui';
+import { ErrorFallback } from './ErrorFallback';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  /** Target for "Go Home" button (default '/') */
+  homeHref?: string;
+  /** Called after reset (e.g. to refetch data) */
+  onRetry?: () => void;
 }
 
 interface ErrorBoundaryState {
@@ -45,75 +49,21 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   handleReset = (): void => {
-    this.setState({
-      hasError: false,
-      error: null,
-    });
+    this.setState({ hasError: false, error: null });
+    this.props.onRetry?.();
   };
 
   render(): ReactNode {
     if (this.state.hasError) {
-      // Custom fallback UI if provided
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
-
-      // Default fallback UI
+      if (this.props.fallback) return this.props.fallback;
       return (
-        <div className="min-h-screen flex items-center justify-center bg-surface-page px-4">
-          <div className="max-w-md w-full bg-surface rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-center w-12 h-12 mx-auto bg-danger-bg-emphasis rounded-full">
-              <svg
-                className="w-6 h-6 text-danger-fg"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
-            </div>
-
-            <h2 className="mt-4 text-xl font-semibold text-center text-text-primary">
-              Something went wrong
-            </h2>
-
-            <p className="mt-2 text-sm text-center text-text-tertiary">
-              We're sorry, but something unexpected happened. Please try refreshing the page.
-            </p>
-
-            {import.meta.env.DEV && this.state.error && (
-              <div className="mt-4 p-3 bg-neutral-100 rounded text-xs font-mono text-text-primary overflow-auto max-h-40">
-                <p className="font-normal mb-1">Error Details:</p>
-                <p>{this.state.error.message}</p>
-                {this.state.error.stack && (
-                  <pre className="mt-2 text-xs whitespace-pre-wrap">{this.state.error.stack}</pre>
-                )}
-              </div>
-            )}
-
-            <div className="mt-6 flex gap-3">
-              <Button onClick={this.handleReset} variant="retry" size="md" className="flex-1">
-                Try Again
-              </Button>
-              <Button
-                onClick={() => (window.location.href = '/')}
-                variant="back"
-                size="md"
-                className="flex-1"
-              >
-                Go Home
-              </Button>
-            </div>
-          </div>
-        </div>
+        <ErrorFallback
+          error={this.state.error}
+          onRetry={this.handleReset}
+          homeHref={this.props.homeHref ?? '/'}
+        />
       );
     }
-
     return this.props.children;
   }
 }

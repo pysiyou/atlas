@@ -8,8 +8,7 @@ import React from 'react';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import { usePatientsList, useOrdersList, useTestCatalog, useSamplesList } from '@/hooks/queries';
 import { SkeletonPage } from '@/shared/ui';
-import { Alert } from '@/shared/ui';
-import { Button } from '@/shared/ui';
+import { ErrorFallback } from '@/shared/components/error-boundaries/ErrorFallback';
 
 interface DataLoaderProps {
   children: React.ReactNode;
@@ -100,26 +99,15 @@ export const DataLoader: React.FC<DataLoaderProps> = ({ children, showLoadingSke
     );
   }
 
-  // Show error state if any provider has errors
+  // Show error state if any provider has errors (same layout as ErrorBoundary)
   if (isAuthenticated && errors.length > 0 && !isLoading) {
+    const message = errors.map(e => e?.message ?? 'Unknown error').join('; ');
     return (
-      <div className="h-screen flex items-center justify-center p-8">
-        <div className="max-w-md w-full">
-          <Alert variant="danger">
-            <div className="space-y-4">
-              <p className="font-normal">Failed to load application data</p>
-              <ul className="text-sm list-disc list-inside space-y-1">
-                {errors.map((err, index) => (
-                  <li key={index}>{err?.message || 'Unknown error'}</li>
-                ))}
-              </ul>
-              <Button onClick={handleRetry} variant="retry">
-                Retry
-              </Button>
-            </div>
-          </Alert>
-        </div>
-      </div>
+      <ErrorFallback
+        error={new Error(message)}
+        onRetry={() => void handleRetry()}
+        homeHref="/dashboard"
+      />
     );
   }
 

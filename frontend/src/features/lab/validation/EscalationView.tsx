@@ -13,7 +13,7 @@ import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowV
 import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters } from '../hooks/useLabWorkflowFilters';
 import { validationFilterConfig } from '../constants';
-import { DataErrorBoundary } from '@/shared/components';
+import { ErrorBoundary } from '@/shared/components';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
 
@@ -70,7 +70,7 @@ export const EscalationView: React.FC = () => {
   }
 
   return (
-    <DataErrorBoundary>
+    <ErrorBoundary>
       <LabWorkflowView
         items={filteredTests}
         renderCard={test => (
@@ -98,6 +98,6 @@ export const EscalationView: React.FC = () => {
           />
         }
       />
-    </DataErrorBoundary>
+    </ErrorBoundary>
   );
 };

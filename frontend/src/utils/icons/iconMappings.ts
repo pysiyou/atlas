@@ -101,6 +101,7 @@ export const ICONS = {
 
   // Actions - user interactions
   actions: {
+    home: 'home' as IconName,
     // View/Read
     view: 'eye' as IconName,
     eye: 'eye' as IconName,
