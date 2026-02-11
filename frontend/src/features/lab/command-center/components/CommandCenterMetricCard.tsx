@@ -1,6 +1,5 @@
 /**
- * CommandCenterMetricCard - KPI card: icon circle left, label + value right, trend line below (delta in accent).
- * Matches reference: white card, soft shadow, no progress bar.
+ * CommandCenterMetricCard - KPI card: icon + trend row, value + title + optional menu.
  */
 
 import React from 'react';
@@ -13,93 +12,69 @@ export interface CommandCenterMetricCardProps {
   primaryValue: number | string | null | undefined;
   secondaryValue: number | string | null | undefined;
   icon: IconName;
-  trend?: { value: number; label: string; format?: 'pct' | 'count' };
+  trend?: { value: number; label: string };
   showMenu?: boolean;
 }
 
 export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = ({
   title,
   primaryValue,
-  secondaryValue,
+  secondaryValue: _secondaryValue,
   icon,
   trend,
+  showMenu = false,
 }) => {
-  const displayPrimary = primaryValue ?? 0;
-  const displaySecondary = secondaryValue ?? 0;
+  const primary = primaryValue ?? 0;
   const trendCount = trend != null ? Math.abs(trend.value ?? 0) : 0;
   const trendUp = (trend?.value ?? 0) >= 0;
+  const trendText = trend != null ? `${trendCount.toFixed(1)} %` : '';
 
   return (
     <Card
       variant="default"
       padding="none"
-      className={cn(
-        'relative flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-border-subtle',
-        'bg-surface shadow-sm',
-        'transition-all duration-200 ease-out',
-        'hover:border-border-hover hover:shadow-md'
-      )}
+      className="relative flex h-full min-h-0 w-full flex-col overflow-hidden rounded border 
+      border-border-subtle bg-neutral-800 text-text-inverse shadow-sm transition-all duration-200 
+      ease-out hover:border-border-hover hover:shadow-md"
     >
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden">
-        {/* Row: icon circle (left) | label + value (right) */}
-        <div className="flex min-w-0 shrink-0 items-center gap-4 p-4 sm:p-5">
-          <div
-            className={cn(
-              'flex h-11 w-11 shrink-0 items-center justify-center rounded',
-              'bg-brand-muted text-brand',
-              'ring-1 ring-brand/20'
-            )}
-          >
-            <Icon name={icon} className="h-5 w-5" />
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden p-3">
+        <div className="flex shrink-0 items-start justify-between gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-brand-muted text-brand ring-1 ring-brand/20">
+            <Icon name={icon} className="h-7 w-7" />
           </div>
-
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5 pt-0.5">
-            <div className="flex min-w-0 items-baseline gap-2">
-              <span
-                className={cn(
-                  'truncate tabular-nums font-normal leading-tight text-text-primary',
-                  'text-base sm:text-xl'
-                )}
-              >
-                {displayPrimary}
-              </span>
-              {displaySecondary != null && displaySecondary !== '' && (
-                <span className="shrink-0 text-xs font-normal text-text-tertiary">
-                  out of {displaySecondary}
-                </span>
-              )}
+          {trend != null ? (
+            <div className="flex flex-col items-end gap-0">
+              <p className="flex items-center gap-1.5 text-base font-normal">
+                <Icon
+                  name={trendUp ? 'up-trend' : 'down-trend'}
+                  className={cn('h-7 w-7 shrink-0', trendUp ? 'text-success-fg' : 'text-danger-fg')}
+                />
+                <span className="tabular-nums text-text-primary">{trendText}</span>
+              </p>
+              <span className="text-xs font-normal text-text-muted">{trend.label}</span>
             </div>
-            <span className="truncate text-xs font-normal text-text-tertiary">
-              {title}
-            </span>
-          </div>
+          ) : (
+            <span className="text-xs text-text-muted">---</span>
+          )}
         </div>
 
         <div className="min-h-0 flex-1" aria-hidden />
 
-        {/* Trend line: bottom-left, small margin */}
-        <div className="shrink-0 text-left m-2 sm:m-2.5">
-          {trend != null ? (
-            <p className="flex items-center gap-1.5 truncate text-xs font-normal">
-              <Icon
-                name={trendUp ? 'up-trend' : 'down-trend'}
-                className={cn(
-                  'h-3.5 w-3.5 shrink-0',
-                  trendUp ? 'text-success-fg' : 'text-danger-fg'
-                )}
-              />
-              <span
-                className={cn(
-                  'tabular-nums font-normal',
-                  trendUp ? 'text-success-fg' : 'text-danger-fg'
-                )}
-              >
-                {trend.format === 'count' ? trendCount : `${trendCount}%`}
-              </span>
-              <span className="text-text-tertiary font-normal">{trend.label}</span>
-            </p>
-          ) : (
-            <p className="text-xs text-text-tertiary">—</p>
+        <div className="flex shrink-0 items-end justify-between gap-0">
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <span className="truncate text-xl tabular-nums font-normal leading-tight text-white">
+              {primary}
+            </span>
+            <span className="truncate text-xs font-normal text-text-muted">{title}</span>
+          </div>
+          {showMenu && (
+            <button
+              type="button"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-text-muted hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+              aria-label="More options"
+            >
+              <Icon name="menu-dots" className="h-5 w-5" />
+            </button>
           )}
         </div>
       </div>

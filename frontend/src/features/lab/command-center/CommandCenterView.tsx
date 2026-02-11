@@ -1,6 +1,6 @@
 /**
  * CommandCenterView - Lab Command Center 3-row layout (20% / 40% / 40%).
- * Row 1: Sampling (X of total), Result entry, Validation. Totals = completed today + still pending; trend = count-based (e.g. "X more samples today").
+ * Row 1: Pending samples, Pending result entry, Pending validation (totals); trend = today's grow (count-based).
  */
 
 import React from 'react';
@@ -52,33 +52,33 @@ export const CommandCenterView: React.FC = () => {
       className="flex-1 min-h-0 overflow-hidden grid"
       style={{ gridTemplateRows: '20fr 40fr 40fr' }}
     >
-      {/* Row 1: Sampling (X of total), Result entry, Validation — totals = completed + pending; trend = count-based */}
+      {/* Row 1: Pending sample / result entry / validation — bottom-left; today's grow top-right */}
       <div className="min-h-0 overflow-hidden border-b border-border-default grid grid-cols-3">
         <div className={`${rowCellClass} flex items-stretch p-2`}>
           <CommandCenterMetricCard
-            title="Sampled today"
-            primaryValue={row1.isLoading ? '—' : row1.samplingDoneToday}
-            secondaryValue={row1.isLoading ? '—' : row1.samplingTotal}
+            title="Pending samples"
+            primaryValue={row1.isLoading ? '—' : row1.samplesStillPending}
+            secondaryValue={undefined}
             icon={ICONS.dataFields.flask}
-            trend={{ value: row1.samplesCreatedToday, label: 'more samples today', format: 'count' }}
+            trend={{ value: row1.samplesCreatedToday, label: 'more samples today' }}
           />
         </div>
         <div className={`${rowCellClass} flex items-stretch p-2`}>
           <CommandCenterMetricCard
-            title="Result entry"
-            primaryValue={row1.isLoading ? '—' : row1.resultEnteredToday}
-            secondaryValue={row1.isLoading ? '—' : row1.resultTotal}
+            title="Pending result entry"
+            primaryValue={row1.isLoading ? '—' : row1.resultStillNeedingEntry}
+            secondaryValue={undefined}
             icon={ICONS.dataFields.notebook}
-            trend={{ value: row1.resultEntryQueueEnteredToday, label: 'entered result-entry today', format: 'count' }}
+            trend={{ value: row1.resultEntryQueueEnteredToday, label: 'entered result-entry today' }}
           />
         </div>
         <div className={`${rowCellClass} flex items-stretch p-2`}>
           <CommandCenterMetricCard
-            title="Validation"
-            primaryValue={row1.isLoading ? '—' : row1.validatedToday}
-            secondaryValue={row1.isLoading ? '—' : row1.validationTotalDisplay}
+            title="Pending validation"
+            primaryValue={row1.isLoading ? '—' : row1.validationTotal}
+            secondaryValue={undefined}
             icon={ICONS.ui.shieldCheck}
-            trend={{ value: row1.validationQueueEnteredToday, label: 'entered validation today', format: 'count' }}
+            trend={{ value: row1.validationQueueEnteredToday, label: 'entered validation today' }}
           />
         </div>
       </div>
