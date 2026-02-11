@@ -5,7 +5,7 @@ export const affiliationSchema = z.object({
   assuranceNumber: z.string().min(1),
   startDate: dateStringSchema,
   endDate: dateStringSchema,
-  duration: z.union([z.literal(6), z.literal(12), z.literal(24)]),
+  duration: z.union([z.literal(1), z.literal(3), z.literal(6), z.literal(12), z.literal(999)]),
 }).refine(
   (data) => new Date(data.endDate) > new Date(data.startDate),
   { message: 'End date must be after start date', path: ['endDate'] }
@@ -19,7 +19,7 @@ export const affiliationFormSchema = z
     assuranceNumber: z.string().min(1).nullish(),
     startDate: dateStringSchema.nullish(),
     endDate: dateStringSchema.nullish(),
-    duration: z.union([z.literal(6), z.literal(12), z.literal(24)]).nullish(),
+    duration: z.union([z.literal(1), z.literal(3), z.literal(6), z.literal(12), z.literal(999)]).nullish(),
   })
   .refine(
     (data) =>

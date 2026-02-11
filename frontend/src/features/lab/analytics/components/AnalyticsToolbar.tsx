@@ -6,7 +6,7 @@
 import React from 'react';
 import { Button, Icon } from '@/shared/ui';
 import { cn, ICONS } from '@/utils';
-import { inputBase } from '@/shared/ui/forms/inputStyles';
+import { inputBase } from '@/shared/ui/inputStyles';
 import type { DateRangeFilter } from '../types';
 
 export type DateRangePreset = 'thisWeek' | 'last7' | 'last30' | 'last90';

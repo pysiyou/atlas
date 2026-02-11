@@ -9,7 +9,7 @@ import React from 'react';
 import { Icon, type IconName } from '@/shared/ui';
 import type { VitalSigns } from '@/types/patient';
 import { cn, ICONS } from '@/utils';
-import { inputBase, inputError } from '@/shared/ui/forms/inputStyles';
+import { inputBase, inputError } from '@/shared/ui/inputStyles';
 
 export interface VitalsSectionProps {
   /** Current vital signs data */

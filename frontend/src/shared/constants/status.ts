@@ -21,7 +21,11 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
  */
 export const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
   unpaid: 'Unpaid',
+  pending: 'Pending',
+  partial: 'Partial',
   paid: 'Paid',
+  refunded: 'Refunded',
+  cancelled: 'Cancelled',
 };
 
 /**

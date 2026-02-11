@@ -4,7 +4,7 @@
 
 import React, { useCallback, useState } from 'react';
 import { Button, Textarea, Popover, Icon } from '@/shared/ui';
-import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/shared/ui/forms/inputStyles';
+import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/shared/ui/inputStyles';
 import { cn } from '@/utils';
 import type { Test, TestParameter, Patient } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '@/utils';

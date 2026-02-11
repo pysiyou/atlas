@@ -3,7 +3,7 @@
  * Shows recent lab operations grouped by date with Badge components for entities.
  */
 import React, { useMemo } from 'react';
-import { Badge } from '@/shared/ui/display/Badge';
+import { Badge } from '@/shared/ui/Badge';
 import { displayId } from '@/utils/ids/idDisplay';
 import type { LabOperationRecord, LabOperationType } from '@/types/lab-operations';
 

@@ -104,12 +104,14 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   const hasContainerInfo = (isCollected || isRejected) && 'actualContainerColor' in sample;
   const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
   const colorName = containerColor
-    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.name || 'N/A'
+    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
     : 'N/A';
   const containerType =
-    hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
+    hasContainerInfo && 'actualContainerType' in sample
+      ? sample.actualContainerType
+      : sample.requiredContainerTypes?.[0]; // Fallback to first required for pending or defaults
   const effectiveContainerType: ContainerType =
-    containerType ||
+    (containerType as ContainerType) ||
     (sample.sampleType === 'urine' || sample.sampleType === 'stool' ? 'cup' : 'tube');
 
   // Handle reject sample

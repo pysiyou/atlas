@@ -10,7 +10,7 @@ import { Popover, Button, Icon, Alert, Badge, FooterInfo, PaymentMethodSelector 
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { cn, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/utils/orderUtils';
-import { inputBase } from '@/shared/ui/forms/inputStyles';
+import { inputBase } from '@/shared/ui/inputStyles';
 import type { Order } from '@/types';
 import {
   getEnabledPaymentMethods,

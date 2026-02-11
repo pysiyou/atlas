@@ -9,10 +9,10 @@ import { toast } from '@/shared/components/feedback';
 import { Popover, Button, Icon, FooterInfo } from '@/shared/ui';
 import { PopoverForm } from '../components/PopoverForm';
 import type { ContainerType } from '@/types';
-import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS } from '@/types';
+import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import type { SampleRequirement } from '@/utils';
 import { cn, ICONS, getContainerIcon } from '@/utils';
-import { inputBase, inputError } from '@/shared/ui/forms/inputStyles';
+import { inputBase, inputError } from '@/shared/ui/inputStyles';
 
 interface CollectionPopoverContentProps {
   requirement: SampleRequirement;
@@ -166,7 +166,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   className="w-7 h-7 shrink-0 text-fg-disabled"
                 />
                 <span className="flex-1 text-xs font-normal text-left text-fg-muted">
-                  {option.name.toUpperCase()}
+                  {option.label.toUpperCase()}
                 </span>
                 <div
                   className={`
@@ -201,18 +201,22 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           {CONTAINER_COLOR_OPTIONS.map(option => {
             const isRequired = requirement.containerTopColors.includes(option.value);
             const isSelected = selectedColor === option.value;
+            // Get text class from config or fallback
+            // We use type assertion since we know the value is a valid ContainerType key if it's in options
+            const colorClass = CONTAINER_CONFIG[option.value as ContainerType]?.textClass || 'text-gray-500';
+            
             return (
               <button
                 key={option.value}
                 onClick={() => setSelectedColor(option.value)}
-                className={`w-8 h-8 rounded-full transition-all duration-200 ${option.colorClass} ${
+                className={`w-8 h-8 rounded-full transition-all duration-200 ${colorClass.replace('text-', 'bg-')} ${
                   isSelected
                     ? 'scale-110 ring-2 ring-offset-2 ring-brand shadow-md'
                     : isRequired
                       ? 'opacity-100 hover:scale-105 hover:shadow-sm ring-2 ring-success-stroke'
                       : 'opacity-60 hover:opacity-80 hover:scale-105 hover:shadow-sm'
                 }`}
-                title={`${option.name.toUpperCase()}${isRequired ? ' (Required)' : ''}`}
+                title={`${option.label.toUpperCase()}${isRequired ? ' (Required)' : ''}`}
               />
             );
           })}

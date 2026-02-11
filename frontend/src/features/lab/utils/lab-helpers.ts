@@ -46,7 +46,7 @@ export const getEffectiveContainerType = (
 };
 
 // Import ResultStatus from enums (single source of truth)
-import type { ResultStatus } from '@/types/enums/result-status';
+import type { ResultStatus } from '@/shared/types/enums';
 export type { ResultStatus };
 
 const ABNORMAL_STATUSES: ResultStatus[] = [

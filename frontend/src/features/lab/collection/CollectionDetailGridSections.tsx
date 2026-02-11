@@ -5,7 +5,7 @@
 
 import { Badge } from '@/shared/ui';
 import type { ContainerType, Sample } from '@/types';
-import { CONTAINER_COLOR_OPTIONS } from '@/types';
+import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { formatVolume } from '@/utils';
 import type { DetailGridSectionConfig } from '../components/LabDetailModal';
 
@@ -112,7 +112,7 @@ export const buildCollectionDetailGridSections = ({
               <div className="flex flex-wrap gap-1 justify-end">
                 {requirement.containerTypes.map((type, idx) => (
                   <Badge key={idx} size="sm" variant="primary" className="capitalize">
-                    {type}
+                    {CONTAINER_CONFIG[type]?.label || type}
                   </Badge>
                 ))}
               </div>
@@ -125,7 +125,7 @@ export const buildCollectionDetailGridSections = ({
               <div className="flex flex-wrap gap-1 justify-end">
                 {requirement.containerTopColors.map((color, idx) => (
                   <Badge key={idx} size="sm" variant={`container-${color}` as never}>
-                    {CONTAINER_COLOR_OPTIONS.find(opt => opt.value === color)?.name || color} Top
+                    {CONTAINER_COLOR_OPTIONS.find(opt => opt.value === color)?.label || color} Top
                   </Badge>
                 ))}
               </div>

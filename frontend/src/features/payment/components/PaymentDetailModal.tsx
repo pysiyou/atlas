@@ -17,7 +17,7 @@ import { Modal, Icon, Badge, Button, Alert, CalloutCard, FooterInfo, PaymentMeth
 import { PaymentErrorBoundary } from '@/shared/components';
 import { cn, formatDate, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/utils/orderUtils';
-import { inputBase } from '@/shared/ui/forms/inputStyles';
+import { inputBase } from '@/shared/ui/inputStyles';
 import { useCreatePayment } from '@/hooks/queries/usePayments';
 import {
   getEnabledPaymentMethods,

@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Icon } from '@/shared/ui';
-import { inputWrapper, inputInner, inputText } from '@/shared/ui/forms/inputStyles';
+import { inputWrapper, inputInner, inputText } from '@/shared/ui/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 

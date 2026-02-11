@@ -3,7 +3,7 @@
  */
 
 // Import type from enum (Single Source of Truth)
-export type { UserRole } from './enums/user-role';
+export type { UserRole } from '@/shared/types/enums';
 
 // Re-export values for backwards compatibility
 export {
@@ -11,10 +11,10 @@ export {
   USER_ROLE_CONFIG,
   USER_ROLE_OPTIONS,
   ALL_ROLES,
-} from './enums/user-role';
+} from '@/shared/types/enums';
 
 // Import for local use
-import type { UserRole } from './enums/user-role';
+import type { UserRole } from '@/shared/types/enums';
 
 export interface User {
   id: number;

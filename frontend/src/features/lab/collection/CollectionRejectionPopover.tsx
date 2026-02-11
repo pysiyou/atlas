@@ -10,7 +10,7 @@ import { PopoverForm, CheckboxCard } from '../components/PopoverForm';
 import { cn, displayId } from '@/utils';
 import type { RejectionReason } from '@/types';
 import { ICONS } from '@/utils';
-import { inputBase } from '@/shared/ui/forms/inputStyles';
+import { inputBase } from '@/shared/ui/inputStyles';
 
 /** Rejection reason options with labels and descriptions */
 const REJECTION_REASONS: { value: RejectionReason; label: string; description: string }[] = [
@@ -21,28 +21,28 @@ const REJECTION_REASONS: { value: RejectionReason; label: string; description: s
     description: 'Sample clotted when anticoagulant was required',
   },
   {
-    value: 'qns',
+    value: 'insufficient-volume',
     label: 'Quantity Not Sufficient (QNS)',
     description: 'Insufficient volume for testing',
   },
   {
-    value: 'wrong_container',
+    value: 'wrong-container',
     label: 'Wrong Container',
     description: 'Collected in incorrect tube type',
   },
   {
-    value: 'labeling_error',
+    value: 'mislabeled',
     label: 'Labeling Error',
     description: 'Missing or incorrect patient identification',
   },
   {
-    value: 'transport_delay',
+    value: 'incorrect-storage',
     label: 'Transport Delay',
     description: 'Exceeded acceptable transport time',
   },
   { value: 'contaminated', label: 'Contaminated', description: 'Visible contamination present' },
-  { value: 'lipemic', label: 'Lipemic', description: 'Lipemia interferes with testing' },
-  { value: 'icteric', label: 'Icteric', description: 'Jaundice interferes with testing' },
+  { value: 'expired', label: 'Expired', description: 'Sample past expiration time' },
+  { value: 'damaged-container', label: 'Damaged Container', description: 'Container integrity compromised' },
   { value: 'other', label: 'Other', description: 'Other reason (specify in notes)' },
 ];
 

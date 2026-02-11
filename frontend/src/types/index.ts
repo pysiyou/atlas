@@ -1,19 +1,20 @@
 /**
- * Central export for all types
+ * Central type exports
  */
 
-// Export all enums from the SSOT (Single Source of Truth)
-export * from './enums';
+// Export all enums from consolidated source
+export * from '@/shared/types/enums';
 
-export * from './user';
-export * from './patient';
-export * from './test';
-export * from './order';
-export * from './sample';
-export * from './aliquot';
-export * from './appointment';
-export * from './billing';
-export * from './lab-operations';
+// Export type interfaces (not enums) to avoid conflicts
+export type { Patient, Address, EmergencyContact, MedicalHistory, VitalSigns, Affiliation } from './patient';
+export type { Order, OrderTest, TestResult, ResultRejectionType, ResultRejectionRecord } from './order';
+export type { Sample, PendingSample, CollectedSample, RejectedSample, RejectionRecord } from './sample';
+export { isCollectedSample } from './sample'; // Export value (function)
+export type { Aliquot, AliquotPlan } from './aliquot';
+export type { Appointment } from './appointment';
+export type { User, AuthUser } from './user';
+export type { Test, TestCategory, TestParameter, CatalogReferenceRange, CriticalRange, ResultItem, TestWithContext } from './test';
+export type { Payment, PaymentMethod, Invoice } from './billing';
 
-// Re-export types from feature-specific files
-export type { SampleDisplay, SampleRequirement } from '@/features/lab/types';
+// Note: Container and AffiliationDuration are already in consolidated enums
+export type { SampleDisplay } from '../features/lab/types';

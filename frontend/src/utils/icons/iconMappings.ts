@@ -206,8 +206,15 @@ export const ICONS = {
 /**
  * Helper to get container icon based on type
  */
-export const getContainerIcon = (type: 'tube' | 'cup'): IconName => {
-  return type === 'cup' ? ICONS.container.cup : ICONS.container.tube;
+import type { ContainerType } from '@/types';
+
+/**
+ * Helper to get container icon based on type
+ */
+export const getContainerIcon = (type: ContainerType | string): IconName => {
+  const lowerType = type.toLowerCase();
+  const isCup = lowerType === 'cup' || lowerType.includes('cup') || lowerType.includes('stool');
+  return isCup ? ICONS.container.cup : ICONS.container.tube;
 };
 
 /**

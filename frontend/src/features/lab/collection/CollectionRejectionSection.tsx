@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { REJECTION_REASON_CONFIG } from '@/types/enums/rejection-reason';
+import { REJECTION_REASON_CONFIG } from '@/shared/types/enums';
 import { formatDate } from '@/utils';
 import { SectionContainer } from '@/shared/ui';
 import type { RejectionRecord } from '@/types';

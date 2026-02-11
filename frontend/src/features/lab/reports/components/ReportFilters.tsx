@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Icon, Button, Badge, Modal, FooterInfo } from '@/shared/ui';
 import { DateFilter } from '@/shared/ui';
-import { inputWrapper, inputInner, inputText, inputContainerBase } from '@/shared/ui/forms/inputStyles';
+import { inputWrapper, inputInner, inputText, inputContainerBase } from '@/shared/ui/inputStyles';
 import { cn, ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { DatePresetBadges, REPORT_FILTER_PLACEHOLDERS } from '@/features/filters';

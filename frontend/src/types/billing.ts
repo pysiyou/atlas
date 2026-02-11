@@ -68,18 +68,29 @@ export interface InvoiceItem {
 }
 
 export interface Invoice {
-  invoiceId: number; // Integer ID, displayed as INV{id}
+  // Identities
+  invoiceId: number; // Primary ID, displayed as INV{id}
+  id?: number; // Alias for compatibility
   orderId: number;
   patientId: number;
-  patientName: string;
+  patientName?: string;
+
+  // Status
+  status: 'pending' | 'paid' | 'overdue' | 'cancelled' | 'unpaid';
+  paymentStatus?: 'unpaid' | 'paid'; // Deprecated alias
+
+  // Financials
   items: InvoiceItem[];
   subtotal: number;
-  discount: number; // percentage or fixed amount
+  discount: number;
   tax: number;
   total: number;
-  paymentStatus: 'unpaid' | 'paid';
+  totalAmount?: number; // Alias
   amountPaid: number;
+  paidAmount?: number; // Alias
   amountDue: number;
+
+  // Dates
   createdAt: string;
   dueDate?: string;
 }

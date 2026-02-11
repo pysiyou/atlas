@@ -1,10 +1,10 @@
 import { useMemo, type ReactNode } from 'react';
-import { Pagination } from '../navigation/Pagination';
+import { Pagination } from '../Pagination';
 import { TableHeader } from './TableHeader';
 import { TableRow } from './TableRow';
 import { TableSkeleton } from './TableSkeleton';
-import { EmptyState } from '../display/EmptyState';
-import type { IconName } from '../display/Icon';
+import { EmptyState } from '../EmptyState';
+import type { IconName } from '../Icon';
 import type { ColumnConfig, SortConfig, PaginationConfig, TableVariant } from './types';
 import { ICONS } from '@/utils';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/shared/constants';

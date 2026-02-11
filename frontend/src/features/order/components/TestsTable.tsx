@@ -13,7 +13,7 @@ import { useTestCatalog } from '@/hooks/queries';
 import type { OrderTest, Test } from '@/types';
 import { ICONS } from '@/utils';
 import { getBadgeAppearance } from '@/shared/theme/theme';
-import { TAG_STYLES } from '@/shared/ui/display/badge-colors';
+import { TAG_STYLES } from '@/shared/ui/badgeHelpers';
 
 export interface TestsTableProps {
   tests: OrderTest[];
