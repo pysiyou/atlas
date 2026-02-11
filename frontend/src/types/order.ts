@@ -7,12 +7,16 @@ import type { TestStatus as TestStatusType } from '@/shared/types/enums';
 import type { OrderStatus as OrderStatusType } from '@/shared/types/enums';
 import type { PriorityLevel as PriorityLevelType } from '@/shared/types/enums';
 import type { PaymentStatus as PaymentStatusType } from '@/shared/types/enums';
+import type { ResultStatus as ResultStatusType } from '@/shared/types/enums';
+import type { ValidationDecision as ValidationDecisionType } from '@/shared/types/enums';
 
 // Re-export types (Single Source of Truth)
 export type { TestStatus } from '@/shared/types/enums';
 export type { OrderStatus } from '@/shared/types/enums';
 export type { PriorityLevel } from '@/shared/types/enums';
 export type { PaymentStatus } from '@/shared/types/enums';
+export type { ResultStatus } from '@/shared/types/enums';
+export type { ValidationDecision } from '@/shared/types/enums';
 
 // Re-export the VALUES arrays for backwards compatibility
 export { ORDER_STATUS_VALUES } from '@/shared/types/enums';
@@ -23,16 +27,8 @@ type TestStatus = TestStatusType;
 type OrderStatus = OrderStatusType;
 type PriorityLevel = PriorityLevelType;
 type PaymentStatus = PaymentStatusType;
-
-export type ResultStatus =
-  | 'normal'
-  | 'high'
-  | 'low'
-  | 'critical'
-  | 'critical-high'
-  | 'critical-low';
-
-export type ValidationDecision = 'approved' | 'rejected' | 'repeat-required';
+type ResultStatus = ResultStatusType;
+type ValidationDecision = ValidationDecisionType;
 
 /**
  * Type for result rejection during validation.

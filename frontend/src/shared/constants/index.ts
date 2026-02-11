@@ -4,7 +4,6 @@
  */
 
 export * from './emptyState';
-export * from './status';
 export * from './typography';
 export * from './validation';
 export * from './ui';

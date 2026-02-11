@@ -1,7 +1,7 @@
 /**
- * Formatting Utilities
- * Common formatting functions for dates, currency, phone numbers, etc.
- * formatDate and formatCurrency are consolidated in @/shared/utils/data; re-exported here for @/utils consumers.
+ * Formatting Utilities (app-level facade)
+ * Canonical date/currency/array formatters live in @/shared/utils/data; this module re-exports
+ * formatDate and formatCurrency for @/utils consumers and adds app-specific helpers (phone, age, initials).
  */
 
 import { parseISO, isValid } from 'date-fns';
