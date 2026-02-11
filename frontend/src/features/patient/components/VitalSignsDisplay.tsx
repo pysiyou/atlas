@@ -104,7 +104,7 @@ const getStatusColors = (status: VitalStatus, appearance: 'unified' | 'tinted') 
     // Unified: neutral background, colored text/icons
     const base = {
       bg: 'bg-badge',
-      border: 'border-stroke shadow-sm',
+      border: 'border-border-default shadow-sm',
     };
     switch (status) {
       case 'normal':
@@ -183,7 +183,7 @@ export const VitalSignsDisplay: React.FC<VitalSignsDisplayProps> = ({ vitalSigns
           >
             <div className="flex items-center gap-2 mb-2 min-w-0">
               <Icon name={config.icon} className={`w-4 h-4 ${colors.icon} shrink-0`} />
-              <span className="text-xs font-normal text-fg-subtle uppercase tracking-wide whitespace-nowrap truncate">
+              <span className="text-xs font-normal text-text-tertiary uppercase tracking-wide whitespace-nowrap truncate">
                 {config.label}
               </span>
             </div>

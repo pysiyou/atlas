@@ -40,20 +40,20 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
 }) => {
   return (
     <div className="space-y-8">
-      <div className="bg-panel rounded-lg p-6 shadow-sm border border-stroke">
-        <h3 className="text-lg font-semibold text-fg mb-4">Patient Demographics</h3>
+      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border-default">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">Patient Demographics</h3>
         <div className="space-y-4">
           <DemographicsSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
         </div>
       </div>
-      <div className="bg-panel rounded-lg p-6 shadow-sm border border-stroke">
-        <h3 className="text-lg font-semibold text-fg mb-4">Address Information</h3>
+      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border-default">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">Address Information</h3>
         <div className="space-y-4">
           <AddressSection formData={formData} errors={errors} onFieldChange={onFieldChange} />
         </div>
       </div>
-      <div className="bg-panel rounded-lg p-6 shadow-sm border border-stroke">
-        <h3 className="text-lg font-semibold text-fg mb-4">Lab Affiliation</h3>
+      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border-default">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">Lab Affiliation</h3>
         <div className="space-y-4">
           <AffiliationSection
             formData={formData}
@@ -64,8 +64,8 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
           />
         </div>
       </div>
-      <div className="bg-panel rounded-lg p-6 shadow-sm border border-stroke">
-        <h3 className="text-lg font-semibold text-fg mb-4">Emergency Contact</h3>
+      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border-default">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">Emergency Contact</h3>
         <div className="space-y-4">
           <EmergencyContactSection
             formData={formData}
@@ -74,8 +74,8 @@ export const PatientFormSections: React.FC<PatientFormSectionsProps> = ({
           />
         </div>
       </div>
-      <div className="bg-panel rounded-lg p-6 shadow-sm border border-stroke">
-        <h3 className="text-lg font-semibold text-fg mb-4">Medical History</h3>
+      <div className="bg-surface rounded-lg p-6 shadow-sm border border-border-default">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">Medical History</h3>
         <div className="space-y-4">
           <MedicalHistorySection formData={formData} onFieldChange={onFieldChange} />
         </div>

@@ -55,10 +55,10 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-fg-faint">{placeholder}</span>;
+      return <span className="text-text-muted">{placeholder}</span>;
     }
     return (
-      <span className="text-fg font-normal">
+      <span className="text-text-primary font-normal">
         {start} - {end}
       </span>
     );
@@ -78,7 +78,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               name={ICONS.dataFields.hourglass}
               className={cn(
                 'w-4 h-4 shrink-0 transition-colors',
-                isOpen ? 'text-brand' : 'text-fg-faint group-hover:text-brand'
+                isOpen ? 'text-brand' : 'text-text-muted group-hover:text-brand'
               )}
             />
           }
@@ -93,7 +93,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
     >
       {() => (
         <div className="w-full">
-          <p className="text-sm text-fg-subtle mb-4">Move the slider to filter by age</p>
+          <p className="text-sm text-text-tertiary mb-4">Move the slider to filter by age</p>
 
           {/* Slider Track */}
           <div className="relative h-1 mb-6">
@@ -133,7 +133,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           </div>
 
           {/* Age labels */}
-          <div className="flex justify-between text-lg font-normal text-fg">
+          <div className="flex justify-between text-lg font-normal text-text-primary">
             <span>{localValue[0]} years</span>
             <span>{localValue[1]} years</span>
           </div>

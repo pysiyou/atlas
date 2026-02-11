@@ -47,17 +47,17 @@ export const FilterTriggerShell: React.FC<FilterTriggerShellProps> = ({
           type="button"
           onClick={onClear}
           onMouseDown={onClearMouseDown}
-          className="p-0.5 hover:bg-panel-hover rounded transition-colors"
+          className="p-0.5 hover:bg-surface-hover rounded transition-colors"
           aria-label="Clear"
         >
-          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-fg-faint hover:text-fg-subtle" />
+          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-tertiary" />
         </button>
       ) : (
         <div className="w-5 h-5" aria-hidden />
       )}
       <Icon
         name={ICONS.actions.chevronDown}
-        className={cn('w-4 h-4 text-fg-faint transition-transform', isOpen && 'rotate-180')}
+        className={cn('w-4 h-4 text-text-muted transition-transform', isOpen && 'rotate-180')}
       />
     </div>
   </div>

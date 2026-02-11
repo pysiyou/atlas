@@ -20,9 +20,9 @@ export const RejectionChart: React.FC<RejectionChartProps> = ({ data }) => {
 
   if (chartData.length === 0) {
     return (
-      <div className="bg-panel border border-stroke rounded-lg p-4">
-        <h3 className="text-sm font-semibold text-fg mb-4">Top Rejection Reasons</h3>
-        <div className="flex items-center justify-center h-[250px] text-fg-subtle text-sm">
+      <div className="bg-surface border border-border-default rounded-lg p-4">
+        <h3 className="text-sm font-semibold text-text-primary mb-4">Top Rejection Reasons</h3>
+        <div className="flex items-center justify-center h-[250px] text-text-tertiary text-sm">
           No rejections in selected period
         </div>
       </div>
@@ -30,8 +30,8 @@ export const RejectionChart: React.FC<RejectionChartProps> = ({ data }) => {
   }
 
   return (
-    <div className="bg-panel border border-stroke rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-fg mb-4">Top Rejection Reasons</h3>
+    <div className="bg-surface border border-border-default rounded-lg p-4">
+      <h3 className="text-sm font-semibold text-text-primary mb-4">Top Rejection Reasons</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={chartData} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />

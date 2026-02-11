@@ -23,10 +23,10 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
   return (
     <div
       onClick={onClick}
-      className="bg-panel border border-stroke rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
+      className="bg-surface border border-border-default rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
     >
       {/* Header: Avatar (top left) + Total Price (top right) */}
-      <div className="pb-3 border-b border-stroke flex justify-between items-center">
+      <div className="pb-3 border-b border-border-default flex justify-between items-center">
         {/* Avatar: Patient name + Order ID - positioned at top left */}
         <Avatar
           primaryText={order.patientName || 'N/A'}
@@ -36,7 +36,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
           size="xs"
         />
         {/* Total price on top right */}
-        <div className="text-fg text-lg">{formatCurrency(order.totalPrice)}</div>
+        <div className="text-text-primary text-lg">{formatCurrency(order.totalPrice)}</div>
       </div>
 
       {/* Tests list: Show at most 2 tests, third line shows remaining count */}
@@ -47,21 +47,21 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
             {order.tests.slice(0, 2).map((test, index) => (
               <div
                 key={test.testCode || index}
-                className="flex items-center justify-between text-xs text-fg-muted"
+                className="flex items-center justify-between text-xs text-text-secondary"
               >
                 <div className="flex items-center flex-1 min-w-0">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 flex-shrink-0" />
                   <span className="mr-1 truncate">{test.testName}</span>
                   <span className="text-brand font-mono truncate">{test.testCode}</span>
                 </div>
-                <span className="text-fg ml-2 flex-shrink-0">
+                <span className="text-text-primary ml-2 flex-shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>
             ))}
             {/* Third line: Show remaining tests count if more than 2 */}
             {order.tests.length > 2 && (
-              <div className="text-xs text-fg-subtle">
+              <div className="text-xs text-text-tertiary">
                 +{order.tests.length - 2} more test{order.tests.length - 2 !== 1 ? 's' : ''}
               </div>
             )}
@@ -72,7 +72,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
       {/* Bottom section: Date (left) + Payment method/button (right) */}
       <div className="flex justify-between items-center pt-3">
         {/* Date on bottom left - show payment date if paid, otherwise order date */}
-        <div className="text-xs text-fg-subtle">
+        <div className="text-xs text-text-tertiary">
           {item.paymentDate ? formatDate(item.paymentDate) : formatDate(order.orderDate)}
         </div>
         {/* Payment method or Payment button on bottom right */}

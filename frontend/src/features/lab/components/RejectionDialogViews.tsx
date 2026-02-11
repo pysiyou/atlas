@@ -14,11 +14,11 @@ export const RejectionDialogLoadingView: React.FC = () => (
   <div
     className={cn(
       REJECTION_DIALOG_LAYOUT.widthClass,
-      'bg-panel rounded-lg shadow-xl border border-stroke p-4 flex flex-col items-center justify-center gap-4'
+      'bg-surface rounded-lg shadow-xl border border-border-default p-4 flex flex-col items-center justify-center gap-4'
     )}
   >
     <ClaudeLoader size="md" />
-    <p className="text-sm text-fg-subtle">{REJECTION_DIALOG_COPY.loading.message}</p>
+    <p className="text-sm text-text-tertiary">{REJECTION_DIALOG_COPY.loading.message}</p>
   </div>
 );
 
@@ -36,7 +36,7 @@ export const RejectionDialogErrorView: React.FC<RejectionDialogErrorViewProps> =
   <div
     className={cn(
       REJECTION_DIALOG_LAYOUT.widthClass,
-      'bg-panel rounded-lg shadow-xl border border-stroke p-4 space-y-4'
+      'bg-surface rounded-lg shadow-xl border border-border-default p-4 space-y-4'
     )}
   >
     <Alert variant="danger" className="py-2">
@@ -78,7 +78,7 @@ export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
   orderHasValidatedTests,
 }) => (
   <div>
-    <label className="block text-xs font-normal text-fg-subtle mb-1">
+    <label className="block text-xs font-normal text-text-tertiary mb-1">
       {REJECTION_DIALOG_COPY.actions.followUpLabel}
     </label>
     <div className="grid grid-cols-1 gap-2">

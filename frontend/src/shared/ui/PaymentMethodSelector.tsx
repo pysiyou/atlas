@@ -37,21 +37,21 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
           disabled={disabled}
           onClick={() => onChange(method.value)}
           className={`
-            relative flex items-center gap-2.5 p-3 rounded border border-stroke bg-panel hover:border-stroke-strong transition-colors duration-200
+            relative flex items-center gap-2.5 p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           `}
         >
           <Icon
             name={method.icon as IconName}
-            className="w-7 h-7 shrink-0 text-fg-disabled"
+            className="w-7 h-7 shrink-0 text-text-disabled"
           />
-          <span className="flex-1 text-xs font-normal text-left text-fg-muted">
+          <span className="flex-1 text-xs font-normal text-left text-text-secondary">
             {method.label.toUpperCase()}
           </span>
           <div
             className={`
               absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200
-              ${isSelected ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong'}
+              ${isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
             `}
           >
             {isSelected && (

@@ -40,11 +40,11 @@ export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({ isCollapsed }) => {
 
   if (isCollapsed) {
     return (
-      <div className="flex items-center justify-center py-3 border-t border-stroke">
+      <div className="flex items-center justify-center py-3 border-t border-border-default">
         <button
           type="button"
           onClick={toggle}
-          className="p-2 rounded-lg bg-panel-hover text-fg-muted hover:text-fg hover:bg-panel-hover/80 transition-colors"
+          className="p-2 rounded-lg bg-surface-hover text-text-secondary hover:text-text-primary hover:bg-surface-hover/80 transition-colors"
           title={isLight ? 'Switch to dark theme' : 'Switch to light theme'}
           aria-label={isLight ? 'Switch to dark theme' : 'Switch to light theme'}
         >
@@ -55,24 +55,24 @@ export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({ isCollapsed }) => {
   }
 
   return (
-    <div className="border-t border-stroke px-4 py-4 flex justify-center">
+    <div className="border-t border-border-default px-4 py-4 flex justify-center">
       <button
         type="button"
         onClick={toggle}
-        className="relative w-24 h-8 rounded-full bg-stroke/60 border border-stroke/80 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-panel shadow-inner"
+        className="relative w-24 h-8 rounded-full bg-border-default/60 border border-border-default/80 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface shadow-inner"
         aria-pressed={!isLight}
         aria-label={isLight ? 'Dark mode' : 'Light mode'}
       >
         <div className="absolute inset-0 flex">
-          <span className="flex-1 flex items-center justify-center text-fg-muted/70 [&>svg]:w-3.5 [&>svg]:h-3.5" aria-hidden>
+          <span className="flex-1 flex items-center justify-center text-text-secondary/70 [&>svg]:w-3.5 [&>svg]:h-3.5" aria-hidden>
             <Icon name="sun" className="w-4 h-4" />
           </span>
-          <span className="flex-1 flex items-center justify-center text-fg-muted/70 [&>svg]:w-3.5 [&>svg]:h-3.5" aria-hidden>
+          <span className="flex-1 flex items-center justify-center text-text-secondary/70 [&>svg]:w-3.5 [&>svg]:h-3.5" aria-hidden>
             <Icon name="moon" className="w-4 h-4" />
           </span>
         </div>
         <motion.span
-          className="absolute top-0.5 bottom-0.5 w-11 rounded-full bg-fg flex items-center justify-center shadow-sm ring-1 ring-black/5 text-panel [&>svg]:w-3 [&>svg]:h-3"
+          className="absolute top-0.5 bottom-0.5 w-11 rounded-full bg-text-primary flex items-center justify-center shadow-sm ring-1 ring-black/5 text-surface [&>svg]:w-3 [&>svg]:h-3"
           initial={false}
           animate={{ left: isLight ? '4px' : 'calc(100% - 4px - 2.75rem)' }}
           transition={{

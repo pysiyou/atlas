@@ -64,7 +64,7 @@ export const DemographicsSection: React.FC<
           maxDate={new Date()}
         />
         <div>
-          <label className="block text-xs font-normal text-fg-subtle mb-1.5">
+          <label className="block text-xs font-normal text-text-tertiary mb-1.5">
             Gender <span className="text-danger-fg ml-1">*</span>
           </label>
           <MultiSelectFilter

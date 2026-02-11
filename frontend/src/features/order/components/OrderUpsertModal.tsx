@@ -191,7 +191,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
       subtitle={subtitle}
       size="2xl"
     >
-      <div className="flex flex-col h-full bg-canvas">
+      <div className="flex flex-col h-full bg-surface-page">
         <form
           id="order-form"
           onSubmit={handleSubmit}

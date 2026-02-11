@@ -102,7 +102,7 @@ export function Table<T = Record<string, unknown>>({
   if (shouldShowCard) {
     if (paginatedData.length === 0) {
       return (
-        <div className={embedded ? 'flex flex-col h-full min-h-0' : 'bg-panel rounded-lg border border-stroke shadow-sm flex flex-col h-full min-h-0'}>
+        <div className={embedded ? 'flex flex-col h-full min-h-0' : 'bg-surface rounded-lg border border-border-default shadow-sm flex flex-col h-full min-h-0'}>
           <TableCore<T>
             data={[]}
             columns={viewConfig.fullColumns}
@@ -116,7 +116,7 @@ export function Table<T = Record<string, unknown>>({
       );
     }
     return (
-      <div className={embedded ? 'flex flex-col h-full min-h-0' : 'bg-panel rounded-lg border border-stroke shadow-sm flex flex-col h-full min-h-0'}>
+      <div className={embedded ? 'flex flex-col h-full min-h-0' : 'bg-surface rounded-lg border border-border-default shadow-sm flex flex-col h-full min-h-0'}>
         <div className="flex-1 min-h-0 overflow-y-auto p-4">
           <CardGrid<T>
             data={paginatedData as T[]}
@@ -149,7 +149,7 @@ export function Table<T = Record<string, unknown>>({
       : viewConfig.fullColumns;
 
   return (
-    <div className={embedded ? 'flex flex-col h-full min-h-0' : 'bg-panel rounded-lg border border-stroke shadow-sm flex flex-col h-full min-h-0'}>
+    <div className={embedded ? 'flex flex-col h-full min-h-0' : 'bg-surface rounded-lg border border-border-default shadow-sm flex flex-col h-full min-h-0'}>
       <TableCore<T>
         data={paginatedData as T[]}
         columns={activeColumns}

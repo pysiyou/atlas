@@ -28,13 +28,13 @@ const VARIANT_STYLES: Record<
   { container: string; title: string; body: string; dot: string }
 > = {
   neutral: {
-    container: 'bg-neutral-100 border border-stroke',
-    title: 'text-fg-subtle font-medium',
-    body: 'text-fg-subtle',
+    container: 'bg-neutral-100 border border-border-default',
+    title: 'text-text-tertiary font-medium',
+    body: 'text-text-tertiary',
     dot: 'bg-neutral-400',
   },
   info: {
-    container: 'bg-brand-muted border border-stroke-focus',
+    container: 'bg-brand-muted border border-border-focus',
     title: 'text-brand-fg font-medium',
     body: 'text-brand-fg',
     dot: 'bg-brand',

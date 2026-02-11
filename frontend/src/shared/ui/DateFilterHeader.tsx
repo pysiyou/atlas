@@ -41,14 +41,14 @@ export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
       <button
         onClick={onPrevClick}
         disabled={isPrevDisabled}
-        className="p-1 hover:bg-neutral-100 rounded text-fg-subtle disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+        className="p-1 hover:bg-neutral-100 rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
       >
         <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
       </button>
       <button
         onClick={onTitleClick}
         className={cn(
-          'text-sm font-normal text-fg-muted hover:bg-canvas px-2 py-1 rounded transition-colors cursor-pointer',
+          'text-sm font-normal text-text-secondary hover:bg-surface-page px-2 py-1 rounded transition-colors cursor-pointer',
           view === 'years' && 'pointer-events-none hover:bg-transparent cursor-default'
         )}
       >
@@ -57,7 +57,7 @@ export const DateFilterHeader: React.FC<DateFilterHeaderProps> = ({
       <button
         onClick={onNextClick}
         disabled={isNextDisabled}
-        className="p-1 hover:bg-neutral-100 rounded text-fg-subtle disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+        className="p-1 hover:bg-neutral-100 rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
       >
         <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
       </button>

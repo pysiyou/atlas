@@ -44,7 +44,7 @@ export const createPaymentTableConfig = (
 
   const renderPatientName = (item: OrderPaymentView) => (
     <div className="min-w-0 font-normal">
-      <div className="text-fg truncate font-normal capitalize">{item.order.patientName || 'N/A'}</div>
+      <div className="text-text-primary truncate font-normal capitalize">{item.order.patientName || 'N/A'}</div>
       <div className={`${DATA_ID_SECONDARY} font-normal`}>{displayId.patient(item.order.patientId)}</div>
     </div>
   );
@@ -54,10 +54,10 @@ export const createPaymentTableConfig = (
     const activeCount = activeTests.length;
     return (
       <div className="min-w-0 font-normal">
-        <div className="truncate font-mono text-xs text-fg font-normal">
+        <div className="truncate font-mono text-xs text-text-primary font-normal">
           {activeTests.map(t => t.testCode ?? t.testName).join('/')}
         </div>
-        <div className="text-xs text-fg-subtle truncate font-normal">
+        <div className="text-xs text-text-tertiary truncate font-normal">
           {activeCount} test{activeCount !== 1 ? 's' : ''}
         </div>
       </div>
@@ -82,7 +82,7 @@ export const createPaymentTableConfig = (
   };
 
   const renderOrderDate = (item: OrderPaymentView) => (
-    <span className="text-xs text-fg-subtle truncate block font-normal">{formatDate(item.order.orderDate)}</span>
+    <span className="text-xs text-text-tertiary truncate block font-normal">{formatDate(item.order.orderDate)}</span>
   );
 
   const renderAction = (item: OrderPaymentView) => (

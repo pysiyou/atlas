@@ -25,7 +25,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
   disabled = false,
 }) => (
   <div className="space-y-3">
-    <div className="text-xs font-normal text-fg-subtle">Payment method</div>
+    <div className="text-xs font-normal text-text-tertiary">Payment method</div>
     <PaymentMethodSelector
       methods={paymentMethods}
       value={paymentMethod}

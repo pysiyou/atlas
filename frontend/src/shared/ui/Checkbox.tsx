@@ -47,8 +47,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       <div
         className={cn(
           'w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-150',
-          checked ? 'bg-brand border-brand' : 'border-stroke bg-panel group-hover:border-brand',
-          disabled && 'group-hover:border-stroke'
+          checked ? 'bg-brand border-brand' : 'border-border-default bg-surface group-hover:border-brand',
+          disabled && 'group-hover:border-border-default'
         )}
       >
         {checked && (
@@ -59,8 +59,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     <span
       className={cn(
         'text-sm transition-colors duration-200',
-        checked ? 'text-fg' : 'text-fg-muted',
-        !disabled && 'group-hover:text-fg'
+        checked ? 'text-text-primary' : 'text-text-secondary',
+        !disabled && 'group-hover:text-text-primary'
       )}
     >
       {label}

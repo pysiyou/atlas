@@ -130,7 +130,7 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
     )}
 
     <div>
-      <label className="block text-xs font-normal text-fg-subtle mb-1">
+      <label className="block text-xs font-normal text-text-tertiary mb-1">
         {escalationRequired
           ? REJECTION_DIALOG_COPY.escalation.reasonLabel
           : REJECTION_DIALOG_COPY.reject.reasonLabel}{' '}

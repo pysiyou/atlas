@@ -19,7 +19,7 @@ export function TableHeader<T>({
 
   return (
     <div
-      className={`flex items-stretch border-b border-stroke bg-canvas flex items-center ${TEXT_SIZE[variant]} text-fg-subtle uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
+      className={`flex items-stretch border-b border-border-default bg-surface-page flex items-center ${TEXT_SIZE[variant]} text-text-tertiary uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
     >
       {visibleColumns.map(column => {
         const style = columnStyles.get(column.key) || {};
@@ -33,7 +33,7 @@ export function TableHeader<T>({
               ${HEADER_PADDING[variant]} 
               text-xxs flex items-center justify-start gap-2 whitespace-nowrap
               ${isSortable ? 'cursor-pointer hover:bg-neutral-100 select-none' : ''}
-              ${isActiveSort ? 'text-fg bg-neutral-100' : ''}
+              ${isActiveSort ? 'text-text-primary bg-neutral-100' : ''}
               ${column.headerClassName || ''}
             `.trim()}
             style={style}

@@ -49,14 +49,14 @@ export const TableActionItem: React.FC<TableActionItemProps> = ({
       onClick={() => {
         onClick();
       }}
-      className={`w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-canvas transition-colors cursor-pointer ${
-        variant === 'danger' ? 'text-danger-fg hover:bg-danger-bg' : 'text-fg-muted'
+      className={`w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-surface-page transition-colors cursor-pointer ${
+        variant === 'danger' ? 'text-danger-fg hover:bg-danger-bg' : 'text-text-secondary'
       }`}
     >
       {icon && (
         <span
           className={`inline-flex w-5 h-5 shrink-0 items-center justify-center ${
-            variant === 'danger' ? 'text-danger-fg' : 'text-fg-subtle'
+            variant === 'danger' ? 'text-danger-fg' : 'text-text-tertiary'
           }`}
         >
           {icon}

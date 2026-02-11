@@ -92,12 +92,12 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
   if (selectedCount === 0) {
     return (
       <div className="mb-3">
-        <label className="inline-flex items-center gap-2 cursor-pointer text-sm text-fg-subtle">
+        <label className="inline-flex items-center gap-2 cursor-pointer text-sm text-text-tertiary">
           <input
             type="checkbox"
             checked={false}
             onChange={handleToggleAll}
-            className="w-4 h-4 text-brand border-stroke-strong rounded focus:ring-2 focus:ring-brand/20"
+            className="w-4 h-4 text-brand border-border-strong rounded focus:ring-2 focus:ring-brand/20"
           />
           <span>Select all {totalCount} items</span>
         </label>
@@ -121,22 +121,22 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
               }
             }}
             onChange={handleToggleAll}
-            className="w-4 h-4 text-brand border-stroke-strong rounded focus:ring-2 focus:ring-brand/20"
+            className="w-4 h-4 text-brand border-border-strong rounded focus:ring-2 focus:ring-brand/20"
           />
-          <span className="text-sm text-fg-subtle">
+          <span className="text-sm text-text-tertiary">
             {allSelected ? 'Deselect all' : 'Select all'}
           </span>
         </label>
 
         {/* Selection count */}
-        <span className="text-sm text-fg-subtle">
+        <span className="text-sm text-text-tertiary">
           {selectedCount} selected
         </span>
 
         {/* Clear button */}
         <button
           onClick={handleClearSelection}
-          className="text-sm text-fg-subtle hover:text-fg-muted"
+          className="text-sm text-text-tertiary hover:text-text-secondary"
         >
           Clear
         </button>
@@ -197,7 +197,7 @@ export const ValidationCheckbox: React.FC<ValidationCheckboxProps> = ({
       onChange={handleChange}
       disabled={disabled}
       className={cn(
-        'w-4 h-4 text-brand border-stroke-strong rounded focus:ring-2 focus:ring-brand/20',
+        'w-4 h-4 text-brand border-border-strong rounded focus:ring-2 focus:ring-brand/20',
         disabled && 'opacity-50 cursor-not-allowed'
       )}
       onClick={e => e.stopPropagation()}

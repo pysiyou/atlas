@@ -71,7 +71,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
                   'w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-150',
                   isSelected
                     ? 'bg-brand border-brand'
-                    : 'border-stroke bg-panel group-hover:border-brand'
+                    : 'border-border-default bg-surface group-hover:border-brand'
                 )}
               >
                 {isSelected && (
@@ -85,8 +85,8 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
 
             <span
               className={cn(
-                'text-sm transition-colors duration-200 group-hover:text-fg',
-                isSelected ? 'text-fg' : 'text-fg-muted'
+                'text-sm transition-colors duration-200 group-hover:text-text-primary',
+                isSelected ? 'text-text-primary' : 'text-text-secondary'
               )}
             >
               {uppercaseLabel(option.label)}

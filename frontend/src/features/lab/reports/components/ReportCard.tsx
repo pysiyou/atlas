@@ -27,7 +27,7 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
   return (
     <Card padding="list" hover className="flex flex-col h-full" onClick={onClick}>
       {/* Header: Avatar (top left) + Status (top right) */}
-      <div className="flex justify-between items-start mb-3 pb-3 border-b border-stroke">
+      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
         {/* Avatar: Patient name + Test ID - positioned at top left */}
         <Avatar
           primaryText={test.patientName}
@@ -43,10 +43,10 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
       {/* Test information */}
       <div className="grow space-y-2">
         <div>
-          <div className="text-fg text-sm">{test.testName}</div>
+          <div className="text-text-primary text-sm">{test.testName}</div>
           <div className="text-xs text-brand font-mono">{test.testCode}</div>
         </div>
-        <div className="text-xs text-fg-subtle">
+        <div className="text-xs text-text-tertiary">
           Order: <span className="font-mono">{displayId.order(test.orderId)}</span>
         </div>
       </div>
@@ -54,7 +54,7 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
       {/* Bottom section: Order date (left) + Preview button (right) */}
       <div className="flex justify-between items-center mt-auto pt-3">
         {/* Order date on bottom left */}
-        <div className="text-xs text-fg-subtle">{formatDate(test.orderDate)}</div>
+        <div className="text-xs text-text-tertiary">{formatDate(test.orderDate)}</div>
         {/* Preview button on bottom right */}
         <div onClick={e => e.stopPropagation()}>
           <ReportPreviewButton test={test} onPreview={onPreview} size="xs" />

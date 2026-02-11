@@ -19,8 +19,8 @@ export const TATChart: React.FC<TATChartProps> = ({ data }) => {
   ];
 
   return (
-    <div className="bg-panel border border-stroke rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-fg mb-4">TAT Breakdown by Stage</h3>
+    <div className="bg-surface border border-border-default rounded-lg p-4">
+      <h3 className="text-sm font-semibold text-text-primary mb-4">TAT Breakdown by Stage</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />

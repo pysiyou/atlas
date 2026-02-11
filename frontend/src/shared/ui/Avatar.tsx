@@ -92,11 +92,11 @@ export const Avatar: React.FC<AvatarProps> = ({
       {/* Primary and secondary text */}
       {hasText && (
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
-          <div className={`font-normal text-fg truncate ${textSizeClasses[size].primary} ${primaryTextClassName}`}>
+          <div className={`font-normal text-text-primary truncate ${textSizeClasses[size].primary} ${primaryTextClassName}`}>
             {primaryText}
           </div>
           {secondaryText && (
-            <div className={`${secondaryTextClassName ? '' : 'text-fg-subtle'} truncate ${textSizeClasses[size].secondary} ${secondaryTextClassName}`}>
+            <div className={`${secondaryTextClassName ? '' : 'text-text-tertiary'} truncate ${textSizeClasses[size].secondary} ${secondaryTextClassName}`}>
               {secondaryText}
             </div>
           )}

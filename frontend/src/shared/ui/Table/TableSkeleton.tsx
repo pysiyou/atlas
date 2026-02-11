@@ -15,7 +15,7 @@ export function TableSkeleton({ columns, rows, variant }: TableSkeletonProps) {
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={rowIndex}
-          className="flex items-center border-b border-stroke"
+          className="flex items-center border-b border-border-default"
           style={{ height: `${ROW_HEIGHTS[variant]}px` }}
         >
           {columns.map(column => {

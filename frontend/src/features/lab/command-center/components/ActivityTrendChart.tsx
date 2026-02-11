@@ -30,8 +30,8 @@ const CHART_GRID = 'var(--chart-grid)';
 const CHART_AXIS = 'var(--chart-axis)';
 const TOOLTIP_BG = 'var(--chart-tooltip)';
 const TOOLTIP_STROKE = 'var(--chart-tooltip-stroke)';
-const TOOLTIP_FG = 'var(--fg)';
-const TOOLTIP_FG_MUTED = 'var(--fg-subtle)';
+const TOOLTIP_FG = 'var(--text)';
+const TOOLTIP_FG_MUTED = 'var(--text-tertiary)';
 
 function isDualSeries(data: ActivityTrendDataPoint[]): data is { date: string; received: number; validated: number }[] {
   return data.length > 0 && 'received' in data[0];
@@ -71,7 +71,7 @@ const CustomTooltip = ({
         }}
       >
         <p className="text-xs font-normal mb-1" style={{ color: TOOLTIP_FG_MUTED }}>{label}</p>
-        <p className="font-normal text-base mt-0.5">{value} <span className="text-xs font-normal text-fg-subtle">{valueLabel}</span></p>
+        <p className="font-normal text-base mt-0.5">{value} <span className="text-xs font-normal text-text-tertiary">{valueLabel}</span></p>
       </div>
     );
   }
@@ -105,8 +105,8 @@ const CustomTooltip = ({
           </li>
         ))}
       </ul>
-      <p className="text-xs font-normal mt-2 pt-2 border-t border-stroke">
-        Gap: {gap} <span className="text-fg-subtle font-normal">{valueLabel}</span>
+      <p className="text-xs font-normal mt-2 pt-2 border-t border-border-default">
+        Gap: {gap} <span className="text-text-tertiary font-normal">{valueLabel}</span>
       </p>
     </div>
   );
@@ -123,13 +123,13 @@ export const ActivityTrendChart: React.FC<ActivityTrendChartProps> = ({
   const dual = isDualSeries(data);
 
   return (
-    <div className={`flex flex-col h-full bg-panel rounded overflow-hidden shadow-sm ${className}`}>
+    <div className={`flex flex-col h-full bg-surface rounded overflow-hidden shadow-sm ${className}`}>
       <div className="px-4 pt-4 pb-2 flex flex-row items-center justify-between">
         <div className="flex items-baseline gap-2">
-          <h3 className="text-base font-medium tracking-tight text-fg">
+          <h3 className="text-base font-medium tracking-tight text-text-primary">
             {title}
           </h3>
-          <span className="text-fg-subtle text-xs tracking-wider before:content-['·'] before:mr-2">
+          <span className="text-text-tertiary text-xs tracking-wider before:content-['·'] before:mr-2">
             {subTitle}
           </span>
         </div>
@@ -137,7 +137,7 @@ export const ActivityTrendChart: React.FC<ActivityTrendChartProps> = ({
 
       <div className="flex-1 min-h-0 relative w-full">
         {trendPercentage !== undefined && (
-          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-panel border border-stroke text-fg px-2 py-1 rounded text-sm font-normal z-10 shadow-sm">
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-surface border border-border-default text-text-primary px-2 py-1 rounded text-sm font-normal z-10 shadow-sm">
             {trendPercentage > 0 ? '+' : ''}{trendPercentage}%
           </div>
         )}

@@ -131,10 +131,10 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-fg-faint">{config.placeholder || 'Filter by price range'}</span>;
+      return <span className="text-text-muted">{config.placeholder || 'Filter by price range'}</span>;
     }
     return (
-      <span className="text-fg font-normal">
+      <span className="text-text-primary font-normal">
         {formatPrice(start)} - {formatPrice(end)}
       </span>
     );
@@ -150,7 +150,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
         <FilterTriggerShell
           isOpen={isOpen}
           leftIcon={
-            <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-fg-faint group-hover:text-brand shrink-0 transition-colors" />
+            <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors" />
           }
           showClear={showClear}
           onClear={handleClear}
@@ -163,7 +163,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
     >
       {() => (
         <div className="space-y-4">
-          <div className="flex items-center justify-between text-sm font-normal text-fg-subtle">
+          <div className="flex items-center justify-between text-sm font-normal text-text-tertiary">
             <span>{formatPrice(localValue[0])}</span>
             <span>{formatPrice(localValue[1])}</span>
           </div>
@@ -183,20 +183,20 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
 
             {/* Min Handle */}
             <div
-              className="absolute w-5 h-5 bg-panel border-2 border-brand rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30"
+              className="absolute w-5 h-5 bg-surface border-2 border-brand rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30"
               style={{ left: `calc(${getPercentage(localValue[0])}% - 10px)` }}
               onMouseDown={onMouseDown('min')}
             />
 
             {/* Max Handle */}
             <div
-              className="absolute w-5 h-5 bg-panel border-2 border-brand rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30"
+              className="absolute w-5 h-5 bg-surface border-2 border-brand rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30"
               style={{ left: `calc(${getPercentage(localValue[1])}% - 10px)` }}
               onMouseDown={onMouseDown('max')}
             />
           </div>
 
-          <div className="flex justify-between items-center text-xs text-fg-disabled">
+          <div className="flex justify-between items-center text-xs text-text-disabled">
             <span>{formatPrice(min)}</span>
             <span>{formatPrice(max)}</span>
           </div>

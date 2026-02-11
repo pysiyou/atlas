@@ -158,7 +158,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       footer={
         <ModalFooter
           statusMessage=""
-          statusClassName="text-fg-subtle"
+          statusClassName="text-text-tertiary"
         >
           <RejectionDialog
             orderId={test.orderId}

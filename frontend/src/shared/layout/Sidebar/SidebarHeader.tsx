@@ -33,7 +33,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   };
 
   return (
-    <div className="h-16 border-b border-stroke flex items-center justify-between px-4">
+    <div className="h-16 border-b border-border-default flex items-center justify-between px-4">
       <div className="min-w-0 overflow-hidden">
         <h1 className="text-2xl font-bold truncate">
           {part1 != null && part2 != null ? (

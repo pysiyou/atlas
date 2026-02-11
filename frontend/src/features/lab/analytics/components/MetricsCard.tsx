@@ -41,18 +41,18 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
     <Card variant="metric" padding="sm" className="rounded-lg">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-xs font-normal text-fg-subtle uppercase tracking-wide mb-1">
+          <p className="text-xs font-normal text-text-tertiary uppercase tracking-wide mb-1">
             {title}
           </p>
-          <p className="text-2xl font-normal text-fg mb-1">{value}</p>
+          <p className="text-2xl font-normal text-text-primary mb-1">{value}</p>
           {subtitle && (
-            <p className="text-xs text-fg-muted">{subtitle}</p>
+            <p className="text-xs text-text-secondary">{subtitle}</p>
           )}
           {trend && (
             <div className={cn('flex items-center gap-1 mt-2 text-xs font-normal', trendColor)}>
               <Icon name={trend.value >= 0 ? 'arrow-up' : 'arrow-down'} className="w-3 h-3" />
               <span>{Math.abs(trend.value)}%</span>
-              <span className="text-fg-subtle">{trend.label}</span>
+              <span className="text-text-tertiary">{trend.label}</span>
             </div>
           )}
         </div>

@@ -105,11 +105,11 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 flex-wrap px-3 py-1.5 bg-canvas border-b border-stroke',
+        'flex items-center gap-1.5 flex-wrap px-3 py-1.5 bg-surface-page border-b border-border-default',
         className
       )}
     >
-      <div className="flex items-center gap-1 text-xxs font-normal text-fg-subtle">
+      <div className="flex items-center gap-1 text-xxs font-normal text-text-tertiary">
         <Icon name={ICONS.actions.filter} className="w-3 h-3" />
         <span>Active:</span>
       </div>

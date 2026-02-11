@@ -36,7 +36,7 @@ const RadioOption: React.FC<{
     <label
       className={cn(
         'group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150',
-        'hover:bg-canvas/80',
+        'hover:bg-surface-page/80',
         isSelected && 'bg-brand-muted'
       )}
     >
@@ -46,7 +46,7 @@ const RadioOption: React.FC<{
         <div
           className={cn(
             'w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150',
-            isSelected ? 'bg-brand' : 'bg-transparent border-2 border-stroke-strong group-hover:border-stroke-hover'
+            isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong group-hover:border-border-hover'
           )}
         >
           {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
@@ -57,7 +57,7 @@ const RadioOption: React.FC<{
       <span
         className={cn(
           'text-sm transition-colors',
-          isSelected ? 'text-fg font-normal' : 'text-fg-subtle group-hover:text-fg'
+          isSelected ? 'text-text-primary font-normal' : 'text-text-tertiary group-hover:text-text-primary'
         )}
       >
         {option.toUpperCase()}
@@ -100,9 +100,9 @@ const SelectParameterInput: React.FC<{
           {/* Content */}
           <div className="flex-1 text-xs truncate">
             {value ? (
-              <span className="text-fg">{value.toUpperCase()}</span>
+              <span className="text-text-primary">{value.toUpperCase()}</span>
             ) : (
-              <span className="text-fg-disabled">-- Select --</span>
+              <span className="text-text-disabled">-- Select --</span>
             )}
           </div>
 
@@ -110,7 +110,7 @@ const SelectParameterInput: React.FC<{
           <Icon
             name={ICONS.actions.chevronDown}
             className={cn(
-              'w-4 h-4 text-fg-disabled transition-transform flex-shrink-0',
+              'w-4 h-4 text-text-disabled transition-transform flex-shrink-0',
               isOpen && 'rotate-180'
             )}
           />
@@ -121,7 +121,7 @@ const SelectParameterInput: React.FC<{
               onClick={handleClear}
               className="p-0.5 -mr-1 hover:bg-neutral-100 rounded transition-colors flex items-center justify-center cursor-pointer flex-shrink-0"
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-fg-disabled hover:text-fg-subtle" />
+              <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-disabled hover:text-text-tertiary" />
             </button>
           )}
         </div>
@@ -280,7 +280,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   if (!testDef?.parameters) return null;
 
   return (
-    <div className="bg-canvas rounded-lg p-4 border border-stroke-subtle">
+    <div className="bg-surface-page rounded-lg p-4 border border-border-subtle">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {testDef.parameters.map(param => {
           const value = results[param.code] ?? '';
@@ -295,7 +295,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
               <div className="flex justify-between items-baseline mb-1 gap-2">
                 <label
                   htmlFor={`result-${resultKey}-${param.code}`}
-                  className="text-xxs font-normal text-fg-subtle cursor-pointer truncate min-w-0"
+                  className="text-xxs font-normal text-text-tertiary cursor-pointer truncate min-w-0"
                 >
                   {param.name}
                 </label>
@@ -303,7 +303,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   <span
                     className={cn(
                       'text-xxs truncate',
-                      isCritical ? 'text-danger-fg font-normal animate-pulse' : 'text-fg-disabled'
+                      isCritical ? 'text-danger-fg font-normal animate-pulse' : 'text-text-disabled'
                     )}
                   >
                     Ref: {refRange}
@@ -328,7 +328,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 />
                 {valueType !== 'TEXT' && (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0 max-w-[40%]">
-                    <span className="text-xs text-fg-disabled select-none truncate">
+                    <span className="text-xs text-text-disabled select-none truncate">
                       {param.unit || ''}
                     </span>
                   </div>
@@ -348,7 +348,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       <div className="mt-4">
         <label
           htmlFor={`notes-${resultKey}`}
-          className="text-xs font-normal text-fg-subtle mb-1 block"
+          className="text-xs font-normal text-text-tertiary mb-1 block"
         >
           Technician Notes (Optional)
         </label>
@@ -363,7 +363,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
       {/* Submit button (card context only) */}
       {!isModal && (
-        <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-canvas border-t border-stroke-subtle rounded-b flex items-center justify-between">
+        <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-surface-page border-t border-border-subtle rounded-b flex items-center justify-between">
           {hasValidationErrors && (
             <span className="text-xxs text-danger-fg">
               Please correct invalid values before submitting

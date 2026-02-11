@@ -49,8 +49,8 @@ const CHART_SUCCESS = 'var(--chart-success)';
 const CHART_WARNING = 'var(--primitive-warning-500)';
 const TOOLTIP_BG = 'var(--chart-tooltip)';
 const TOOLTIP_STROKE = 'var(--chart-tooltip-stroke)';
-const TOOLTIP_FG = 'var(--fg)';
-const TOOLTIP_FG_MUTED = 'var(--fg-subtle)';
+const TOOLTIP_FG = 'var(--text)';
+const TOOLTIP_FG_MUTED = 'var(--text-tertiary)';
 
 const SEGMENT_GAP = 2;
 const BAR_RADIUS = 4;
@@ -109,7 +109,7 @@ const CustomTooltip = ({
         }}
       >
         <p className="text-xs font-normal mb-1" style={{ color: TOOLTIP_FG_MUTED }}>{label}</p>
-        <p className="font-normal text-base mt-0.5">{value} <span className="text-xs font-normal text-fg-subtle">{valueLabel}</span></p>
+        <p className="font-normal text-base mt-0.5">{value} <span className="text-xs font-normal text-text-tertiary">{valueLabel}</span></p>
       </div>
     );
   }
@@ -138,8 +138,8 @@ const CustomTooltip = ({
           </li>
         ))}
       </ul>
-      <p className="text-xs font-normal mt-2 pt-2 border-t border-stroke">
-        Total: {fmt(total)} <span className="text-fg-subtle font-normal">{valueLabel}</span>
+      <p className="text-xs font-normal mt-2 pt-2 border-t border-border-default">
+        Total: {fmt(total)} <span className="text-text-tertiary font-normal">{valueLabel}</span>
       </p>
     </div>
   );
@@ -165,14 +165,14 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
     : [];
 
   return (
-    <div className={`flex flex-col h-full w-full min-w-0 min-h-0 bg-panel rounded overflow-hidden shadow-sm ${className}`}>
+    <div className={`flex flex-col h-full w-full min-w-0 min-h-0 bg-surface rounded overflow-hidden shadow-sm ${className}`}>
       <div className="px-4 pt-4 pb-2 flex flex-row items-center justify-between shrink-0">
         <div className="flex items-baseline gap-2 min-w-0">
-          <h3 className="text-base font-medium tracking-tight text-fg truncate">
+          <h3 className="text-base font-medium tracking-tight text-text-primary truncate">
             {title}
           </h3>
           {subTitle && (
-            <span className="text-fg-subtle text-xs tracking-wider shrink-0 before:content-['·'] before:mr-2">
+            <span className="text-text-tertiary text-xs tracking-wider shrink-0 before:content-['·'] before:mr-2">
               {subTitle}
             </span>
           )}

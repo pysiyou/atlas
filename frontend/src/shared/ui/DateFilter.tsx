@@ -114,7 +114,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
           <FilterTriggerShell
             isOpen={isOpen}
             leftIcon={
-              <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-fg-faint group-hover:text-brand transition-colors shrink-0" />
+              <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors shrink-0" />
             }
             showClear={!!value}
             onClear={handleClear}
@@ -123,7 +123,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
             {value ? (
               <span>{format(value[0], 'MMM dd')} - {format(value[1], 'MMM dd')}</span>
             ) : (
-              <span className="text-fg-faint">{placeholder}</span>
+              <span className="text-text-muted">{placeholder}</span>
             )}
           </FilterTriggerShell>
         );
@@ -154,7 +154,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
             isSelected={isSelected}
             isInRange={isInRange}
           />
-          <div className="my-3 border-t border-stroke" />
+          <div className="my-3 border-t border-border-default" />
           <div className="mt-3">
             <div className="flex flex-wrap gap-2">
               {DATE_PRESETS.map(preset => {
@@ -176,10 +176,10 @@ export const DateFilter: React.FC<DateFilterProps> = ({
             </div>
           </div>
           {tempStart && (
-            <div className="mt-3 pt-3 border-t border-stroke">
+            <div className="mt-3 pt-3 border-t border-border-default">
               <button
                 onClick={() => { handleApply(); close(); }}
-                className="w-full px-3 py-2 bg-brand hover:opacity-90 text-fg-inverse text-xs font-normal rounded transition-colors"
+                className="w-full px-3 py-2 bg-brand hover:opacity-90 text-text-inverse text-xs font-normal rounded transition-colors"
               >
                 Apply
               </button>

@@ -47,16 +47,16 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
   const activeTotal = getActiveTotal(order.tests ?? []);
 
   return (
-    <div className="rounded border border-stroke overflow-hidden">
-      <div className="px-3 py-2.5 border-b border-dashed border-stroke-strong">
+    <div className="rounded border border-border-default overflow-hidden">
+      <div className="px-3 py-2.5 border-b border-dashed border-border-strong">
         <div className="flex justify-between items-center">
-          <span className="text-xs font-normal text-fg-muted uppercase tracking-wider">
+          <span className="text-xs font-normal text-text-secondary uppercase tracking-wider">
             Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span>
           </span>
           <Badge variant={order.paymentStatus} size="xs" />
         </div>
         {order.patientName && (
-          <p className="text-[11px] text-fg-subtle mt-0.5 truncate">{order.patientName}</p>
+          <p className="text-[11px] text-text-tertiary mt-0.5 truncate">{order.patientName}</p>
         )}
       </div>
       <div className="px-3 py-2 max-h-32 overflow-y-auto">
@@ -69,26 +69,26 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
               >
                 <span className="flex items-center gap-2 min-w-0 flex-1">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
-                  <span className="text-fg-muted truncate">
+                  <span className="text-text-secondary truncate">
                     {test.testName || test.testCode || 'Test'}
                     {test.testCode && test.testName !== test.testCode && (
                       <span className="text-brand font-mono ml-1">({test.testCode})</span>
                     )}
                   </span>
                 </span>
-                <span className="font-normal text-fg tabular-nums shrink-0">
+                <span className="font-normal text-text-primary tabular-nums shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-xs text-fg-subtle italic">No items</p>
+          <p className="text-xs text-text-tertiary italic">No items</p>
         )}
       </div>
-      <div className="border-t border-dashed border-stroke-strong" />
+      <div className="border-t border-dashed border-border-strong" />
       <div className="px-3 py-2.5 flex justify-between items-center">
-        <span className="text-xs font-normal text-fg-muted uppercase tracking-wider">
+        <span className="text-xs font-normal text-text-secondary uppercase tracking-wider">
           Total
         </span>
         <span className="text-sm font-normal text-brand tabular-nums">
@@ -193,7 +193,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Payment Method Selection */}
       <div>
-        <label className="block text-xs font-normal text-fg-subtle mb-2">
+        <label className="block text-xs font-normal text-text-tertiary mb-2">
           Payment Method <span className="text-danger-fg">*</span>
         </label>
         <PaymentMethodSelector
@@ -205,7 +205,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-normal text-fg-subtle mb-1">Notes</label>
+        <label className="block text-xs font-normal text-text-tertiary mb-1">Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."

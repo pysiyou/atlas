@@ -46,18 +46,18 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-canvas">
+    <div className="flex h-screen overflow-hidden bg-surface-page">
       {/* Mobile Menu Button - Only visible on mobile */}
       {isMobile && (
         <button
           onClick={handleToggleMobileSidebar}
           title="Open Menu"
-          className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center bg-panel border border-stroke rounded-lg shadow-md hover:bg-panel-hover transition-colors lg:hidden"
+          className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center bg-surface border border-border-default rounded-lg shadow-md hover:bg-surface-hover transition-colors lg:hidden"
           aria-label="Open navigation menu"
         >
           {/* Hamburger Menu Icon */}
           <svg
-            className="w-6 h-6 text-fg"
+            className="w-6 h-6 text-text-primary"
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"

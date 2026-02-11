@@ -35,10 +35,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   const iconWrapperClasses = isCompact
     ? 'w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center mb-3'
     : 'w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-4';
-  const iconClasses = isCompact ? 'w-5 h-5 text-fg-disabled' : 'w-8 h-8 text-fg-disabled';
+  const iconClasses = isCompact ? 'w-5 h-5 text-text-disabled' : 'w-8 h-8 text-text-disabled';
   const titleClasses = isCompact
-    ? 'text-sm font-normal text-fg mb-1'
-    : 'text-base font-normal text-fg mb-2';
+    ? 'text-sm font-normal text-text-primary mb-1'
+    : 'text-base font-normal text-text-primary mb-2';
 
   return (
     <div className={`${containerClasses} ${className}`}>
@@ -47,7 +47,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       </div>
       <p className={titleClasses}>{title}</p>
       {description != null && description !== '' && (
-        <p className="text-sm text-fg-subtle mb-4 max-w-md">{description}</p>
+        <p className="text-sm text-text-tertiary mb-4 max-w-md">{description}</p>
       )}
       {action && <div className="mt-2">{action}</div>}
     </div>

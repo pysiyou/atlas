@@ -111,7 +111,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
     return (
       <Card padding="list" hover className="flex flex-col h-full" onClick={() => handleCardClick()}>
         {/* Header: Avatar (top left) + Status badge (top right) */}
-        <div className="flex justify-between items-start mb-3 pb-3 border-b border-stroke">
+        <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
           <Avatar
             primaryText={patientName}
             primaryTextClassName="font-normal capitalize"
@@ -137,14 +137,14 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
         {/* Content: Volume, tests */}
         <div className="grow">
           <div className="space-y-1">
-            <div className="text-xs text-fg-subtle">
+            <div className="text-xs text-text-tertiary">
               {isPending
                 ? `${formatVolume(requirement.totalVolume)} required`
                 : collectedVolume !== undefined
                   ? `${formatVolume(collectedVolume)} ${isRejected ? 'was collected' : 'collected'}`
                   : null}
             </div>
-            <div className="text-xs text-fg-muted">
+            <div className="text-xs text-text-secondary">
               {testCount} test{testCount !== 1 ? 's' : ''}: {testNames.slice(0, 2).join(', ')}
               {testCount > 2 && ` +${testCount - 2} more`}
             </div>
@@ -196,10 +196,10 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
   // Build badges (ordered by importance)
   const badges = (
     <>
-      <h3 className="text-sm font-medium text-fg capitalize">{patientName}</h3>
+      <h3 className="text-sm font-medium text-text-primary capitalize">{patientName}</h3>
       {sample.priority && <Badge variant={sample.priority} size="sm" />}
       <Badge variant={sample.sampleType} size="sm" />
-      <Badge size="sm" variant="default" className="text-fg-subtle">
+      <Badge size="sm" variant="default" className="text-text-tertiary">
         {isPending
           ? `${formatVolume(requirement.totalVolume)} required`
           : `${formatVolume(collectedVolume!)} ${isRejected ? 'was collected' : 'collected'}`}
@@ -216,7 +216,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
         </span>
       )}
       {getCollectionRequirements(sample.sampleType).isDerived && (
-        <Badge size="sm" variant="default" className="text-fg-subtle">
+        <Badge size="sm" variant="default" className="text-text-tertiary">
           {getCollectionRequirements(sample.sampleType).label}
         </Badge>
       )}
@@ -227,7 +227,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
             height={15}
             displayValue={false}
             background="transparent"
-            lineColor="var(--fg)"
+            lineColor="var(--text)"
             margin={0}
           />
         </div>
@@ -341,13 +341,13 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
         {isRecollection && sample.originalSampleId && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection of <span className="font-mono text-fg-inverse">{displayId.sample(sample.originalSampleId)}</span>
+            Recollection of <span className="font-mono text-text-inverse">{displayId.sample(sample.originalSampleId)}</span>
           </Badge>
         )}
         {rejectedSample?.recollectionSampleId && (
           <Badge size="sm" variant="info" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection requested: <span className="font-mono text-fg-inverse">{displayId.sample(rejectedSample.recollectionSampleId)}</span>
+            Recollection requested: <span className="font-mono text-text-inverse">{displayId.sample(rejectedSample.recollectionSampleId)}</span>
           </Badge>
         )}
       </div>

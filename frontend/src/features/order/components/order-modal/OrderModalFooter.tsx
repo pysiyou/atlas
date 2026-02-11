@@ -20,7 +20,7 @@ export const OrderModalFooter: React.FC<OrderModalFooterProps> = ({
   buttonVariant = 'save',
   buttonIcon,
 }) => (
-  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-stroke bg-panel shrink-0 shadow-[var(--shadow-footer)]">
+  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]">
     {footerInfo}
     <div className="flex items-center gap-3">
       <Button type="button" variant="cancel" showIcon={true} onClick={onClose}>

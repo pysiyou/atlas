@@ -18,7 +18,7 @@ interface AlertProps {
  * Alert variant styles
  */
 const VARIANT_STYLES = {
-  info: 'bg-brand-muted border-stroke-focus text-brand-fg',
+  info: 'bg-brand-muted border-border-focus text-brand-fg',
   success: 'bg-success-bg border-success-stroke text-success-fg-emphasis',
   warning: 'bg-warning-bg border-warning-stroke text-warning-fg-emphasis',
   danger: 'bg-danger-bg border-danger-stroke text-danger-fg-emphasis',

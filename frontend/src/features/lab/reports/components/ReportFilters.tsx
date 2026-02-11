@@ -63,7 +63,7 @@ const SearchInput: React.FC<{
     <div className={cn(inputWrapper)}>
       <Icon
         name={ICONS.actions.search}
-        className="w-3.5 h-3.5 shrink-0 text-fg-faint group-hover:text-brand transition-colors"
+        className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-brand transition-colors"
       />
       <input
         type="text"
@@ -79,12 +79,12 @@ const SearchInput: React.FC<{
         {localValue && !isDebouncing && (
           <button
             onClick={handleClear}
-            className="p-0.5 hover:bg-canvas rounded transition-colors flex items-center justify-center cursor-pointer"
+            className="p-0.5 hover:bg-surface-page rounded transition-colors flex items-center justify-center cursor-pointer"
             aria-label="Clear search"
           >
             <Icon
               name={ICONS.actions.closeCircle}
-              className="w-4 h-4 text-fg-faint hover:text-fg-subtle"
+              className="w-4 h-4 text-text-muted hover:text-text-tertiary"
             />
           </button>
         )}
@@ -144,7 +144,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
   if (showModalView) {
     return (
       <>
-        <div className="w-full bg-panel border-b border-stroke">
+        <div className="w-full bg-surface border-b border-border-default">
           <div className="px-3 py-2 w-full">
             <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
               {/* Search control */}
@@ -186,7 +186,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           title="Filter"
           size="md"
         >
-          <div className="flex flex-col h-full bg-panel">
+          <div className="flex flex-col h-full bg-surface">
             {/* Filter Controls - Scrollable */}
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {/* Search Section */}
@@ -202,9 +202,9 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
                   {searchQuery && (
                     <button
                       onClick={() => onSearchChange('')}
-                      className="p-0.5 hover:bg-panel-hover rounded transition-colors"
+                      className="p-0.5 hover:bg-surface-hover rounded transition-colors"
                     >
-                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-fg-subtle" />
+                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
                     </button>
                   )}
                 </div>
@@ -214,7 +214,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
               <div className="space-y-5">
                 {/* Date Range Section */}
                 <div className="w-full">
-                  <h4 className="text-sm font-semibold text-fg mb-3">Date Range</h4>
+                  <h4 className="text-sm font-semibold text-text-primary mb-3">Date Range</h4>
                   <DatePresetBadges
                     value={dateRange}
                     onChange={onDateRangeChange}
@@ -224,7 +224,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
             </div>
 
             {/* Footer with Filter Button */}
-            <div className="px-5 py-4 border-t border-stroke bg-panel shrink-0">
+            <div className="px-5 py-4 border-t border-border-default bg-surface shrink-0">
               <div className="flex items-center justify-between gap-3">
                 <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
                 <div className="flex items-center gap-2">
@@ -253,7 +253,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
 
   // Desktop/Tablet view: 2-column grid
   return (
-    <div className="w-full bg-panel border-b border-stroke">
+    <div className="w-full bg-surface border-b border-border-default">
       <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
         <div className="grid grid-cols-2 gap-3 lg:gap-4 items-center w-full">
           {renderFilters()}

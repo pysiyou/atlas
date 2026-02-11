@@ -20,7 +20,7 @@ import {
 import { ICONS } from '@/utils';
 
 const rowCellClass =
-  'min-h-0 overflow-hidden border-stroke flex items-center justify-center border-r last:border-r-0';
+  'min-h-0 overflow-hidden border-border-default flex items-center justify-center border-r last:border-r-0';
 
 const LAST_DAYS = 10;
 
@@ -53,7 +53,7 @@ export const CommandCenterView: React.FC = () => {
       style={{ gridTemplateRows: '20fr 40fr 40fr' }}
     >
       {/* Row 1: Sampling (X of total), Result entry, Validation — totals = completed + pending; trend = count-based */}
-      <div className="min-h-0 overflow-hidden border-b border-stroke grid grid-cols-3">
+      <div className="min-h-0 overflow-hidden border-b border-border-default grid grid-cols-3">
         <div className={`${rowCellClass} flex items-stretch p-2`}>
           <CommandCenterMetricCard
             title="Sampled today"
@@ -84,7 +84,7 @@ export const CommandCenterView: React.FC = () => {
       </div>
       {/* Row 2: 3 equal columns */}
       <div
-        className="min-h-0 overflow-hidden border-b border-stroke grid"
+        className="min-h-0 overflow-hidden border-b border-border-default grid"
         style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
       >
         <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2`}>

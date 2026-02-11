@@ -114,7 +114,7 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
  */
 const BASE_STYLES: Record<BaseVariant, string> = {
   primary: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
-  secondary: 'bg-neutral-200 text-secondary-fg hover:bg-neutral-300 focus:ring-neutral-500',
+  secondary: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
   danger: 'bg-danger text-on-danger hover:opacity-90 focus:ring-danger',
   success: 'bg-success text-on-success hover:opacity-90 focus:ring-success',
   warning: 'bg-warning text-on-warning hover:opacity-90 focus:ring-warning',
@@ -127,11 +127,11 @@ const ICON_BUTTON_VARIANTS: Record<string, string> = {
   approve: 'bg-success text-on-success hover:opacity-90 focus:ring-success',
   delete: 'bg-danger text-on-danger hover:opacity-90 focus:ring-danger',
   edit: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
-  view: 'bg-neutral-200 text-secondary-fg hover:bg-neutral-300 focus:ring-neutral-500',
-  print: 'bg-neutral-200 text-secondary-fg hover:bg-neutral-300 focus:ring-neutral-500',
+  view: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
+  print: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
   add: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
   sidebarClose:
-    'bg-[var(--sidebar-close-bg)] text-[var(--sidebar-close-fg)] hover:opacity-90 focus:ring-neutral-500',
+    'bg-surface-hover text-text-secondary hover:opacity-90 focus:ring-neutral-500',
 };
 
 /**

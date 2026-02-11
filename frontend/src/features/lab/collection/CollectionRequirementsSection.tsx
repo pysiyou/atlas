@@ -63,8 +63,8 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           <div className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
             <div className="flex-1">
-              <div className="text-xs font-normal text-fg-subtle mb-1">Container Specifications</div>
-              <div className="text-xs text-fg-subtle">{activeTest.containerDescription}</div>
+              <div className="text-xs font-normal text-text-tertiary mb-1">Container Specifications</div>
+              <div className="text-xs text-text-tertiary">{activeTest.containerDescription}</div>
             </div>
           </div>
         )}
@@ -73,8 +73,8 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           <div className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
             <div className="flex-1">
-              <div className="text-xs font-normal text-fg-subtle mb-1">Collection Instructions</div>
-              <div className="text-xs text-fg-subtle">{activeTest.collectionNotes}</div>
+              <div className="text-xs font-normal text-text-tertiary mb-1">Collection Instructions</div>
+              <div className="text-xs text-text-tertiary">{activeTest.collectionNotes}</div>
             </div>
           </div>
         )}
@@ -88,7 +88,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
         )}
 
         {activeTest.minimumVolume && (
-          <div className="flex items-center gap-2 text-xs text-fg-subtle">
+          <div className="flex items-center gap-2 text-xs text-text-tertiary">
             <span className="font-normal">Minimum Volume:</span>
             <span>{activeTest.minimumVolume} mL</span>
           </div>

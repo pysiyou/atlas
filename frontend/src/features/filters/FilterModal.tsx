@@ -99,7 +99,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
       default:
         // For other control types (ageRange), fall back to label only
         return (
-          <div className="text-sm text-fg-subtle italic">
+          <div className="text-sm text-text-tertiary italic">
             Use the main filter bar for this filter type
           </div>
         );
@@ -113,7 +113,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
       title="Filter"
       size="md"
     >
-      <div className="flex flex-col h-full bg-panel">
+      <div className="flex flex-col h-full bg-surface">
         {/* Filter Controls - Scrollable */}
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {/* Search Control */}
@@ -144,14 +144,14 @@ export const FilterModal: React.FC<FilterModalProps> = ({
               {allFilterControls.map((control, index) => (
                 <div key={control.key} className="w-full">
                   {/* Filter Label */}
-                  <h4 className="text-sm font-semibold text-fg mb-3">
+                  <h4 className="text-sm font-semibold text-text-primary mb-3">
                     {control.label}
                   </h4>
                   {/* Filter Options */}
                   {renderModalControl(control)}
                   {/* Separator line (except for last item) */}
                   {index < allFilterControls.length - 1 && (
-                    <div className="border-b border-stroke mt-4" />
+                    <div className="border-b border-border-default mt-4" />
                   )}
                 </div>
               ))}
@@ -160,7 +160,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
         </div>
 
         {/* Footer with Filter Button */}
-        <div className="px-5 py-4 border-t border-stroke bg-panel shrink-0">
+        <div className="px-5 py-4 border-t border-border-default bg-surface shrink-0">
           <div className="flex items-center justify-between gap-3">
             <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
             <div className="flex items-center gap-2">

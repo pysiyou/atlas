@@ -25,7 +25,7 @@ export function resolveColor(variant: string): BadgeColor {
 }
 
 const UNIFIED_STYLES: Record<BadgeColor, { text: string; dot: string }> = {
-  neutral: { text: 'text-fg-muted', dot: 'bg-fg-subtle' },
+  neutral: { text: 'text-text-secondary', dot: 'bg-text-tertiary' },
   primary: { text: 'text-brand', dot: 'bg-brand' },
   success: { text: 'text-success-fg-emphasis', dot: 'bg-success-fg-emphasis' },
   warning: { text: 'text-warning-fg-emphasis', dot: 'bg-warning-fg-emphasis' },
@@ -37,11 +37,11 @@ const UNIFIED_STYLES: Record<BadgeColor, { text: string; dot: string }> = {
   orange: { text: 'text-orange-fg-emphasis', dot: 'bg-orange-fg-emphasis' },
   indigo: { text: 'text-indigo-fg-emphasis', dot: 'bg-indigo-fg-emphasis' },
   cyan: { text: 'text-cyan-fg-emphasis', dot: 'bg-cyan-fg-emphasis' },
-  muted: { text: 'text-fg-subtle', dot: 'bg-fg-faint' },
+  muted: { text: 'text-text-tertiary', dot: 'bg-text-muted' },
 };
 
 const TINTED_STYLES: Record<BadgeColor, string> = {
-  neutral: 'bg-neutral-200 text-fg',
+  neutral: 'bg-neutral-200 text-text-primary',
   primary: 'bg-brand text-on-brand',
   success: 'bg-success-bg-emphasis text-success-fg-emphasis',
   warning: 'bg-warning-bg-emphasis text-warning-fg-emphasis',
@@ -53,7 +53,7 @@ const TINTED_STYLES: Record<BadgeColor, string> = {
   orange: 'bg-orange-bg-emphasis text-orange-fg-emphasis',
   indigo: 'bg-indigo-bg-emphasis text-indigo-fg-emphasis',
   cyan: 'bg-cyan-bg-emphasis text-cyan-fg-emphasis',
-  muted: 'bg-neutral-200 text-fg-subtle',
+  muted: 'bg-neutral-200 text-text-tertiary',
 };
 
 export function getColorStyles(color: BadgeColor, appearance: 'unified' | 'tinted') {
@@ -114,14 +114,14 @@ export type BadgeVariant = BadgeColor | keyof typeof COLOR_MAP | (string & {});
 
 export const TAG_STYLES = {
   unified: {
-    container: 'bg-badge border border-stroke shadow-sm',
-    text: 'text-fg',
+    container: 'bg-badge border border-border-default shadow-sm',
+    text: 'text-text-primary',
     code: 'text-brand',
-    remove: 'text-fg-subtle hover:text-fg-muted',
+    remove: 'text-text-tertiary hover:text-text-secondary',
   },
   tinted: {
     container: 'bg-brand-muted border border-brand/20',
-    text: 'text-fg',
+    text: 'text-text-primary',
     code: 'text-brand',
     remove: 'text-brand/60 hover:text-brand',
   },

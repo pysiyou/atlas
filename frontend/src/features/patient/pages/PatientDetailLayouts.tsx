@@ -20,7 +20,7 @@ interface LayoutProps {
 
 /**
  * SmallScreenLayout - Single column stack layout for small screens.
- * Uses theme tokens (bg-canvas, bg-panel, border-stroke) so theme applies correctly.
+ * Uses theme tokens (bg-surface-page, bg-surface, border-border-default) so theme applies correctly.
  */
 export const SmallScreenLayout: React.FC<LayoutProps> = ({
   patient,
@@ -29,10 +29,10 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
   onNewOrder,
 }) => {
   return (
-    <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-canvas">
+    <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
       <SectionContainer
         title="General Info"
-        className="shrink-0 bg-panel"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
       >
         <GeneralInfoSection patient={patient} layout="grid" />
@@ -40,7 +40,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Medical History"
-        className="shrink-0 bg-panel"
+        className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
       >
         <MedicalHistorySectionDisplay patient={patient} layout="grid" />
@@ -48,7 +48,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Related Orders"
-        className="shrink-0 bg-panel"
+        className="shrink-0 bg-surface"
         contentClassName="p-0 overflow-visible"
         headerClassName="!py-1.5"
         headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
@@ -58,7 +58,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Reports"
-        className="bg-panel"
+        className="bg-surface"
         contentClassName="overflow-visible"
       >
         <ReportsList orders={orders} />
@@ -80,7 +80,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
     <div className="grid grid-cols-2 gap-4 w-full pb-6">
       <SectionContainer
         title="General Info"
-        className="bg-panel"
+        className="bg-surface"
         contentClassName="overflow-visible"
       >
         <GeneralInfoSection patient={patient} layout="column" />
@@ -88,7 +88,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Medical History"
-        className="bg-panel"
+        className="bg-surface"
         contentClassName="overflow-visible"
       >
         <MedicalHistorySectionDisplay patient={patient} layout="column" />
@@ -96,7 +96,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Reports"
-        className="bg-panel col-span-2"
+        className="bg-surface col-span-2"
         contentClassName="overflow-visible flex flex-col"
       >
         <ReportsList orders={orders} />
@@ -104,7 +104,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <SectionContainer
         title="Related Orders"
-        className="bg-panel col-span-2"
+        className="bg-surface col-span-2"
         contentClassName="p-0 overflow-visible"
         headerClassName="!py-1.5"
         headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}

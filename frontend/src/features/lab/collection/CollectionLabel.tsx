@@ -68,21 +68,21 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
           }
         </style>
       </head>
-      <body class="bg-panel m-0 p-0">
+      <body class="bg-surface m-0 p-0">
         <div class="label-wrapper">
-          <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-1.5 p-2 border border-dashed border-stroke-strong print:border-none print:max-w-full print:p-0">
+          <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-1.5 p-2 border border-dashed border-border-strong print:border-none print:max-w-full print:p-0">
             <!-- Patient Name -->
-            <div class="text-sm font-normal text-center text-fg leading-snug w-full">
+            <div class="text-sm font-normal text-center text-text-primary leading-snug w-full">
               ${patientName}
             </div>
 
             <!-- Patient ID and Sample Type -->
-            <div class="text-xxs text-fg-subtle text-center leading-tight">
+            <div class="text-xxs text-text-tertiary text-center leading-tight">
               ${patientIdDisplay} | ${sampleType.toUpperCase()}
             </div>
 
             <!-- Container Info -->
-            <div class="w-full text-xxs font-normal text-center text-fg bg-neutral-100 rounded px-2 py-1 print:py-0.5">
+            <div class="w-full text-xxs font-normal text-center text-text-primary bg-neutral-100 rounded px-2 py-1 print:py-0.5">
               ${containerType.toUpperCase()}: ${colorName.toUpperCase()}
             </div>
 
@@ -92,12 +92,12 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
             </div>
 
             <!-- Sample ID -->
-            <div class="text-xxs text-fg-subtle text-center leading-tight">
+            <div class="text-xxs text-text-tertiary text-center leading-tight">
               ${sampleIdDisplay}
             </div>
 
             <!-- Date and Time -->
-            <div class="text-[9px] text-fg-subtle text-center leading-tight">
+            <div class="text-[9px] text-text-tertiary text-center leading-tight">
               ${formattedDate} ${formattedTime}
             </div>
           </div>

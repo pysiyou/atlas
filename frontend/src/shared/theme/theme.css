@@ -115,42 +115,37 @@
 
 :root {
   /* ═══════════════════════════════════════════════════════════════════
-     FOREGROUND (Text & Icons)
-     Usage: text-fg, text-fg-muted, text-fg-subtle, etc.
+     TEXT (Foreground / Text & Icons)
+     Usage: text-primary, text-secondary, text-tertiary, text-muted, etc.
      ═══════════════════════════════════════════════════════════════════ */
-  --fg: var(--primitive-neutral-900);              /* Primary text */
-  --fg-muted: var(--primitive-neutral-600);        /* Secondary text */
-  --fg-subtle: var(--primitive-neutral-500);       /* Tertiary text */
-  --fg-faint: var(--primitive-neutral-400);        /* Placeholder, hints */
-  --fg-disabled: var(--primitive-neutral-300);     /* Disabled state */
-  --fg-inverse: var(--primitive-neutral-0);        /* Text on dark bg */
+  --text: var(--primitive-neutral-900);              /* Primary text */
+  --text-secondary: var(--primitive-neutral-600);    /* Secondary text */
+  --text-tertiary: var(--primitive-neutral-500);    /* Tertiary text */
+  --text-muted: var(--primitive-neutral-400);       /* Placeholder, hints */
+  --text-disabled: var(--primitive-neutral-300);    /* Disabled state */
+  --text-inverse: var(--primitive-neutral-0);       /* Text on dark bg */
 
   /* ═══════════════════════════════════════════════════════════════════
-     CANVAS (Page Background)
-     Usage: bg-canvas
+     SURFACE (Page & Component Backgrounds)
+     Usage: bg-surface-page, bg-surface, bg-surface-hover, bg-surface-selected
      ═══════════════════════════════════════════════════════════════════ */
-  --canvas: var(--primitive-neutral-50);
-
-  /* ═══════════════════════════════════════════════════════════════════
-     PANEL (Component Backgrounds)
-     Usage: bg-panel, bg-panel-hover, bg-panel-selected
-     ═══════════════════════════════════════════════════════════════════ */
-  --panel: var(--primitive-neutral-0);             /* Default component bg */
-  --panel-hover: var(--primitive-neutral-50);      /* Hover state */
-  --panel-selected: var(--primitive-brand-100);    /* Selected state */
-  --panel-raised: var(--primitive-neutral-0);      /* Elevated surface */
+  --surface-page: var(--primitive-neutral-50);     /* Page/app background */
+  --surface: var(--primitive-neutral-0);          /* Default component bg */
+  --surface-hover: var(--primitive-neutral-50);    /* Hover state */
+  --surface-selected: var(--primitive-brand-100);  /* Selected state */
+  --surface-elev: var(--primitive-neutral-0);      /* Elevated surface */
   --surface-report: #e0f2f7;                       /* Report background (light) */
 
   /* ═══════════════════════════════════════════════════════════════════
-     STROKE (Borders & Dividers)
-     Usage: border-stroke, border-stroke-muted, border-stroke-strong
+     BORDER (Borders & Dividers)
+     Usage: border-default, border-subtle, border-strong
      ═══════════════════════════════════════════════════════════════════ */
-  --stroke: var(--primitive-neutral-200);          /* Default border */
-  --stroke-muted: var(--primitive-neutral-100);    /* Subtle divider */
-  --stroke-strong: var(--primitive-neutral-300);   /* Emphasized border */
-  --stroke-hover: var(--primitive-neutral-300);    /* Border on hover */
-  --stroke-focus: var(--primitive-brand-600);      /* Focus ring color */
-  --stroke-error: var(--primitive-danger-600);     /* Error state border */
+  --border: var(--primitive-neutral-200);          /* Default border */
+  --border-subtle: var(--primitive-neutral-100);   /* Subtle divider */
+  --border-strong: var(--primitive-neutral-300);   /* Emphasized border */
+  --border-hover: var(--primitive-neutral-300);   /* Border on hover */
+  --border-focus: var(--primitive-brand-600);     /* Focus ring color */
+  --border-error: var(--primitive-danger-600);    /* Error state border */
 
   /* ═══════════════════════════════════════════════════════════════════
      BRAND (Primary Action)
@@ -161,14 +156,6 @@
   --brand-muted: var(--primitive-brand-100);       /* Muted background */
   --brand-fg: var(--primitive-brand-800);          /* Text on muted bg */
   --on-brand: var(--primitive-neutral-0);          /* Text ON brand bg */
-
-  /* ═══════════════════════════════════════════════════════════════════
-     SECONDARY (Less Prominent Actions)
-     Usage: bg-secondary, text-secondary-fg
-     ═══════════════════════════════════════════════════════════════════ */
-  --secondary: var(--primitive-neutral-200);
-  --secondary-hover: var(--primitive-neutral-300);
-  --secondary-fg: var(--primitive-neutral-900);
 
   /* ═══════════════════════════════════════════════════════════════════
      DANGER (Destructive Actions)
@@ -220,7 +207,16 @@
      Usage: bg-info, text-info-fg
      ═══════════════════════════════════════════════════════════════════ */
   --info: var(--primitive-info-500);
-  --info-muted: var(--primitive-info-400);
+  --info-bg: rgba(139, 92, 246, 0.08);
+  --info-bg-emphasis: rgba(139, 92, 246, 0.15);
+  --info-fg: var(--primitive-info-500);
+  --info-fg-emphasis: var(--primitive-info-400);
+  --info-stroke: rgba(139, 92, 246, 0.25);
+  --on-info: var(--primitive-neutral-0);
+  /* Success/warning gaps */
+  --success-hover: var(--primitive-success-700);
+  --success-stroke-emphasis: var(--primitive-success-600);
+  --warning-hover: var(--primitive-warning-600);
 
   /* ═══════════════════════════════════════════════════════════════════
      EXTENDED BADGE COLORS (theme-responsive)
@@ -258,14 +254,10 @@
   --chart-danger: var(--primitive-danger-500);
   --chart-accent: var(--primitive-info-500);
   --chart-accent-muted: var(--primitive-info-400);
+  --chart-tooltip-border: var(--chart-tooltip-stroke);
+  --chart-primary: var(--chart-brand);
+  --chart-accent-light: var(--chart-accent-muted);
   --chart-warning: var(--primitive-warning-500);
-
-  /* ═══════════════════════════════════════════════════════════════════
-     SIDEBAR
-     Usage: sidebar header close/collapse button
-     ═══════════════════════════════════════════════════════════════════ */
-  --sidebar-close-bg: var(--primitive-neutral-200);
-  --sidebar-close-fg: var(--primitive-neutral-800);
 
   /* ═══════════════════════════════════════════════════════════════════
      OVERLAY
@@ -281,14 +273,39 @@
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-footer: 0 -1px 3px rgba(0, 0, 0, 0.04);
-  --shadow-glow: 0 0 15px var(--brand);
+  --shadow-1: var(--shadow-sm);
+  --shadow-2: var(--shadow-md);
+  --shadow-3: var(--shadow-lg);
+  --state-disabled-opacity: 0.5;
+
+  /* ═══════════════════════════════════════════════════════════════════
+     TONE SYSTEM (Unified feedback pattern for badges/alerts)
+     Usage: bg-tone-danger-bg, text-tone-danger-text, border-tone-danger-border
+     ═══════════════════════════════════════════════════════════════════ */
+  --tone-neutral-bg: var(--surface-hover);
+  --tone-neutral-text: var(--text-secondary);
+  --tone-neutral-border: var(--border);
+  --tone-info-bg: var(--info-bg);
+  --tone-info-text: var(--info-fg);
+  --tone-info-border: var(--info-stroke);
+  --tone-success-bg: var(--success-bg);
+  --tone-success-text: var(--success-fg);
+  --tone-success-border: var(--success-stroke);
+  --tone-warning-bg: var(--warning-bg);
+  --tone-warning-text: var(--warning-fg);
+  --tone-warning-border: var(--warning-stroke);
+  --tone-danger-bg: var(--danger-bg);
+  --tone-danger-text: var(--danger-fg);
+  --tone-danger-border: var(--danger-stroke);
+  --tone-accent-bg: var(--brand-muted);
+  --tone-accent-text: var(--brand-fg);
+  --tone-accent-border: var(--brand);
 
   /* ═══════════════════════════════════════════════════════════════════
      FOCUS
      Usage: ring-focus (focus ring color)
      ═══════════════════════════════════════════════════════════════════ */
   --focus: var(--primitive-brand-600);
-  --focus-offset: var(--panel);
 
   /* ═══════════════════════════════════════════════════════════════════
      TOAST
@@ -317,6 +334,7 @@
   --auth-text-muted: #6b7280;
   --auth-text-light: #7a9ba8;
   --auth-accent: #3d5a66;
+  --auth-accent-medium: #4a6b78;
   --auth-accent-hover: #4a6b78;
   --auth-border: #2d3548;
   --auth-border-light: #3a4455;
@@ -422,35 +440,31 @@
   --primitive-cyan-800: #a5f3fc;
 
   /* Semantic token overrides for dark theme */
-  --fg: var(--primitive-neutral-900);
-  --fg-muted: var(--primitive-neutral-700);
-  --fg-subtle: var(--primitive-neutral-600);
-  --fg-faint: var(--primitive-neutral-500);
-  --fg-disabled: var(--primitive-neutral-400);
-  --fg-inverse: var(--primitive-neutral-0);
+  --text: var(--primitive-neutral-900);
+  --text-secondary: var(--primitive-neutral-700);
+  --text-tertiary: var(--primitive-neutral-600);
+  --text-muted: var(--primitive-neutral-500);
+  --text-disabled: var(--primitive-neutral-400);
+  --text-inverse: var(--primitive-neutral-0);
 
-  --canvas: var(--primitive-neutral-50);
-  --panel: var(--primitive-neutral-0);
-  --panel-hover: var(--primitive-neutral-100);
-  --panel-selected: var(--primitive-neutral-200);
-  --panel-raised: var(--primitive-neutral-100);
+  --surface-page: var(--primitive-neutral-50);
+  --surface: var(--primitive-neutral-0);
+  --surface-hover: var(--primitive-neutral-100);
+  --surface-selected: var(--primitive-neutral-200);
+  --surface-elev: var(--primitive-neutral-100);
   --surface-report: var(--primitive-neutral-50);
 
-  --stroke: var(--primitive-neutral-200);
-  --stroke-muted: var(--primitive-neutral-100);
-  --stroke-strong: var(--primitive-neutral-300);
-  --stroke-hover: var(--primitive-neutral-300);
-  --stroke-focus: var(--primitive-brand-500);
-  --stroke-error: var(--primitive-danger-500);
+  --border: var(--primitive-neutral-200);
+  --border-subtle: var(--primitive-neutral-100);
+  --border-strong: var(--primitive-neutral-300);
+  --border-hover: var(--primitive-neutral-300);
+  --border-focus: var(--primitive-brand-500);
+  --border-error: var(--primitive-danger-500);
 
   --brand: var(--primitive-brand-500);
   --brand-hover: var(--primitive-brand-400);
   --brand-fg: var(--primitive-brand-300);
   --on-brand: var(--primitive-neutral-900);
-
-  --secondary: var(--primitive-neutral-200);
-  --secondary-hover: var(--primitive-neutral-300);
-  --secondary-fg: var(--primitive-neutral-900);
 
   --danger: var(--primitive-danger-500);
   --danger-hover: var(--primitive-danger-600);
@@ -467,6 +481,16 @@
   --on-warning: var(--primitive-neutral-950);
   --warning-fg: var(--primitive-warning-500);
   --warning-fg-emphasis: var(--primitive-warning-600);
+  --warning-hover: var(--primitive-warning-600);
+
+  --info-bg: rgba(31, 111, 235, 0.15);
+  --info-bg-emphasis: rgba(31, 111, 235, 0.25);
+  --info-fg: var(--primitive-info-500);
+  --info-fg-emphasis: var(--primitive-info-400);
+  --info-stroke: rgba(31, 111, 235, 0.30);
+  --on-info: var(--primitive-neutral-900);
+  --success-hover: var(--primitive-success-600);
+  --success-stroke-emphasis: var(--primitive-success-500);
 
   --purple-fg-emphasis: var(--primitive-purple-500);
   --purple-bg-emphasis: var(--primitive-purple-100);
@@ -513,6 +537,7 @@
   --auth-text-muted: var(--primitive-neutral-500);
   --auth-text-light: var(--primitive-neutral-600);
   --auth-accent: var(--primitive-brand-500);
+  --auth-accent-medium: var(--primitive-brand-600);
   --auth-accent-hover: var(--primitive-brand-400);
   --auth-border: var(--primitive-neutral-200);
   --auth-border-light: var(--primitive-neutral-300);
@@ -625,35 +650,31 @@
   --primitive-cyan-800: #a5f3fc;
 
   /* Semantic token overrides for dark theme */
-  --fg: var(--primitive-neutral-900);
-  --fg-muted: var(--primitive-neutral-700);
-  --fg-subtle: var(--primitive-neutral-600);
-  --fg-faint: var(--primitive-neutral-500);
-  --fg-disabled: var(--primitive-neutral-400);
-  --fg-inverse: var(--primitive-neutral-0);
+  --text: var(--primitive-neutral-900);
+  --text-secondary: var(--primitive-neutral-700);
+  --text-tertiary: var(--primitive-neutral-600);
+  --text-muted: var(--primitive-neutral-500);
+  --text-disabled: var(--primitive-neutral-400);
+  --text-inverse: var(--primitive-neutral-0);
 
-  --canvas: var(--primitive-neutral-50);
-  --panel: var(--primitive-neutral-0);
-  --panel-hover: var(--primitive-neutral-100);
-  --panel-selected: var(--primitive-neutral-200);
-  --panel-raised: var(--primitive-neutral-100);
+  --surface-page: var(--primitive-neutral-50);
+  --surface: var(--primitive-neutral-0);
+  --surface-hover: var(--primitive-neutral-100);
+  --surface-selected: var(--primitive-neutral-200);
+  --surface-elev: var(--primitive-neutral-100);
   --surface-report: var(--primitive-neutral-50);
 
-  --stroke: var(--primitive-neutral-200);
-  --stroke-muted: var(--primitive-neutral-100);
-  --stroke-strong: var(--primitive-neutral-300);
-  --stroke-hover: var(--primitive-neutral-300);
-  --stroke-focus: var(--primitive-brand-500);
-  --stroke-error: var(--primitive-danger-500);
+  --border: var(--primitive-neutral-200);
+  --border-subtle: var(--primitive-neutral-100);
+  --border-strong: var(--primitive-neutral-300);
+  --border-hover: var(--primitive-neutral-300);
+  --border-focus: var(--primitive-brand-500);
+  --border-error: var(--primitive-danger-500);
 
   --brand: var(--primitive-brand-500);
   --brand-hover: var(--primitive-brand-400);
   --brand-fg: var(--primitive-brand-300);
   --on-brand: var(--primitive-neutral-900);
-
-  --secondary: var(--primitive-neutral-200);
-  --secondary-hover: var(--primitive-neutral-300);
-  --secondary-fg: var(--primitive-neutral-900);
 
   --danger: var(--primitive-danger-500);
   --danger-hover: var(--primitive-danger-600);
@@ -670,6 +691,16 @@
   --on-warning: var(--primitive-neutral-950);
   --warning-fg: var(--primitive-warning-500);
   --warning-fg-emphasis: var(--primitive-warning-600);
+  --warning-hover: var(--primitive-warning-600);
+
+  --info-bg: rgba(31, 111, 235, 0.15);
+  --info-bg-emphasis: rgba(31, 111, 235, 0.25);
+  --info-fg: var(--primitive-info-500);
+  --info-fg-emphasis: var(--primitive-info-400);
+  --info-stroke: rgba(31, 111, 235, 0.30);
+  --on-info: var(--primitive-neutral-900);
+  --success-hover: var(--primitive-success-600);
+  --success-stroke-emphasis: var(--primitive-success-500);
 
   --purple-fg-emphasis: var(--primitive-purple-500);
   --purple-bg-emphasis: var(--primitive-purple-100);
@@ -694,7 +725,6 @@
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
   --shadow-md: 0 4px 12px var(--primitive-neutral-0);
   --shadow-lg: 0 12px 32px var(--primitive-neutral-0);
-  --shadow-glow: 0 0 18px var(--brand);
 
   --toast-bg: var(--primitive-neutral-200);
   --toast-fg: var(--primitive-neutral-900);
@@ -717,6 +747,7 @@
   --auth-text-muted: var(--primitive-neutral-500);
   --auth-text-light: var(--primitive-neutral-600);
   --auth-accent: var(--primitive-brand-500);
+  --auth-accent-medium: var(--primitive-brand-600);
   --auth-accent-hover: var(--primitive-brand-400);
   --auth-border: var(--primitive-neutral-200);
   --auth-border-light: var(--primitive-neutral-300);
@@ -748,16 +779,16 @@
 
 /* Default: neutral like sidebar/table inactive; hover: same as sidebar nav & table row */
 .filter-chip {
-  background-color: var(--panel);
-  border: 1px solid var(--stroke);
-  color: var(--fg-muted);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
   transition: background-color 0.15s, border-color 0.15s, color 0.15s;
 }
 
 .filter-chip:hover {
-  background-color: var(--panel-hover);
-  border-color: var(--stroke-hover);
-  color: var(--fg);
+  background-color: var(--surface-hover);
+  border-color: var(--border-hover);
+  color: var(--text);
 }
 
 .filter-chip--active {
@@ -782,7 +813,7 @@
 [data-theme="noir-studio"] input,
 [data-theme="noir-studio"] textarea,
 [data-theme="noir-studio"] select {
-  color: var(--fg);
+  color: var(--text);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────

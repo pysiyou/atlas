@@ -56,14 +56,14 @@ const PaymentReceipt: React.FC<{ sourceOrder: Order; paymentDate?: string; payme
   const activeTotal = getActiveTotal(sourceOrder.tests ?? []);
 
   return (
-    <div className="rounded-lg border border-stroke overflow-hidden bg-panel">
+    <div className="rounded-lg border border-border-default overflow-hidden bg-surface">
       {/* Receipt Header */}
-      <div className="px-6 py-4 border-b border-dashed border-stroke-strong bg-canvas">
+      <div className="px-6 py-4 border-b border-dashed border-border-strong bg-surface-page">
         <div className="flex justify-between items-center mb-2">
           {sourceOrder.patientName ? (
-            <p className="text-sm font-normal text-fg-muted">{sourceOrder.patientName}</p>
+            <p className="text-sm font-normal text-text-secondary">{sourceOrder.patientName}</p>
           ) : (
-            <p className="text-sm text-fg-subtle italic">No patient name</p>
+            <p className="text-sm text-text-tertiary italic">No patient name</p>
           )}
           <div className="flex items-center gap-2">
             <Badge variant={sourceOrder.paymentStatus} size="sm" />
@@ -74,21 +74,21 @@ const PaymentReceipt: React.FC<{ sourceOrder: Order; paymentDate?: string; payme
         </div>
         <div className="space-y-1.5">
           <div className="flex items-center text-xs">
-            <span className="text-fg-subtle w-28">Order Number:</span>
+            <span className="text-text-tertiary w-28">Order Number:</span>
             <span className="text-brand font-normal font-mono">{displayId.order(sourceOrder.orderId)}</span>
           </div>
           <div className="flex items-center text-xs">
-            <span className="text-fg-subtle w-28">Patient Number:</span>
+            <span className="text-text-tertiary w-28">Patient Number:</span>
             <span className="text-brand font-normal font-mono">{displayId.patient(sourceOrder.patientId)}</span>
           </div>
           <div className="flex items-center text-xs">
-            <span className="text-fg-subtle w-28">Order Date:</span>
-            <span className="text-fg-muted font-normal">{formatDate(sourceOrder.orderDate)}</span>
+            <span className="text-text-tertiary w-28">Order Date:</span>
+            <span className="text-text-secondary font-normal">{formatDate(sourceOrder.orderDate)}</span>
           </div>
           {paymentDate && (
             <div className="flex items-center text-xs">
-              <span className="text-fg-subtle w-28">Payment Date:</span>
-              <span className="text-fg-muted font-normal">{formatDate(paymentDate)}</span>
+              <span className="text-text-tertiary w-28">Payment Date:</span>
+              <span className="text-text-secondary font-normal">{formatDate(paymentDate)}</span>
             </div>
           )}
         </div>
@@ -106,7 +106,7 @@ const PaymentReceipt: React.FC<{ sourceOrder: Order; paymentDate?: string; payme
                 <span className="flex items-start gap-2.5 min-w-0 flex-1">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0 mt-1.5" />
                   <span className="flex flex-col min-w-0 flex-1">
-                    <span className="text-fg-muted truncate">
+                    <span className="text-text-secondary truncate">
                       {test.testName || test.testCode || 'Test'}
                     </span>
                     {test.testCode && test.testName !== test.testCode && (
@@ -114,24 +114,24 @@ const PaymentReceipt: React.FC<{ sourceOrder: Order; paymentDate?: string; payme
                     )}
                   </span>
                 </span>
-                <span className="font-normal text-fg tabular-nums shrink-0">
+                <span className="font-normal text-text-primary tabular-nums shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-fg-subtle italic">No items</p>
+          <p className="text-sm text-text-tertiary italic">No items</p>
         )}
       </div>
 
       {/* Receipt Footer with Total (sum of active tests only) */}
-      <div className="border-t border-dashed border-stroke-strong" />
-      <div className="px-6 py-4 flex justify-between items-center bg-canvas">
-        <span className="text-sm font-normal text-fg-muted uppercase tracking-wider">
+      <div className="border-t border-dashed border-border-strong" />
+      <div className="px-6 py-4 flex justify-between items-center bg-surface-page">
+        <span className="text-sm font-normal text-text-secondary uppercase tracking-wider">
           Total
         </span>
-        <span className="text-lg font-normal text-fg tabular-nums">
+        <span className="text-lg font-normal text-text-primary tabular-nums">
           {formatCurrency(activeTotal)}
         </span>
       </div>
@@ -223,7 +223,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         disableClose={submitting}
         closeOnBackdropClick={!submitting}
       >
-        <div className="flex flex-col h-full bg-canvas">
+        <div className="flex flex-col h-full bg-surface-page">
           {/* Scrollable content area */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {/* Receipt-style Order Summary */}
@@ -232,7 +232,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             {/* Payment Method Selection - Only show if not paid */}
             {!isPaid && (
               <div>
-                <label className="block text-sm font-normal text-fg-muted mb-3">
+                <label className="block text-sm font-normal text-text-secondary mb-3">
                   Payment Method <span className="text-danger-fg">*</span>
                 </label>
                 <PaymentMethodSelector
@@ -247,14 +247,14 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             {/* Notes - Only show if not paid */}
             {!isPaid && (
               <div>
-                <label className="block text-sm font-normal text-fg-muted mb-2">Notes</label>
+                <label className="block text-sm font-normal text-text-secondary mb-2">Notes</label>
                 <textarea
                   rows={3}
                   placeholder="Add optional notes..."
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
                   disabled={submitting}
-                  className={cn(inputBase, 'resize-none disabled:opacity-50 disabled:bg-canvas')}
+                  className={cn(inputBase, 'resize-none disabled:opacity-50 disabled:bg-surface-page')}
                 />
               </div>
             )}
@@ -275,7 +275,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-stroke bg-panel shrink-0">
+          <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0">
             <FooterInfo icon={ICONS.dataFields.wallet} text={isPaid ? 'Payment complete' : 'Processing payment'} />
             <div className="flex items-center gap-3">
             <Button

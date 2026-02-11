@@ -26,7 +26,7 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
   const placement: PopoverPlacement = isCollapsed ? 'right-start' : 'top';
 
   return (
-    <div className="mt-auto border-t border-stroke py-4">
+    <div className="mt-auto border-t border-border-default py-4">
       <Popover
         placement={placement}
         offsetValue={8}
@@ -50,17 +50,17 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
               />
             </div>
             <div className="flex-1 min-w-0 overflow-hidden">
-              <p className="text-sm font-normal text-fg truncate">{currentUser.name}</p>
-              <p className="text-xs text-fg-subtle truncate">{formatStatus(currentUser.role)}</p>
+              <p className="text-sm font-normal text-text-primary truncate">{currentUser.name}</p>
+              <p className="text-xs text-text-tertiary truncate">{formatStatus(currentUser.role)}</p>
             </div>
           </div>
         }
       >
         {({ close }) => (
           <>
-            <div className="px-4 py-3 border-b border-stroke">
-              <p className="text-sm font-normal text-fg truncate">{currentUser.name}</p>
-              <p className="text-xs text-fg-subtle truncate">{formatStatus(currentUser.role)}</p>
+            <div className="px-4 py-3 border-b border-border-default">
+              <p className="text-sm font-normal text-text-primary truncate">{currentUser.name}</p>
+              <p className="text-xs text-text-tertiary truncate">{formatStatus(currentUser.role)}</p>
             </div>
             <Button
               variant="logout"

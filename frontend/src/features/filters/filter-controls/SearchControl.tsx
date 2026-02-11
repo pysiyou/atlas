@@ -103,7 +103,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
     <div className={cn(inputWrapper, className)}>
       <Icon
         name={ICONS.actions.search}
-        className="w-3.5 h-3.5 shrink-0 text-fg-faint group-hover:text-brand transition-colors"
+        className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-brand transition-colors"
       />
       <input
         ref={inputRef}
@@ -122,10 +122,10 @@ export const SearchControl: React.FC<SearchControlProps> = ({
         {localValue && !isDebouncing && (
           <button
             onClick={handleClear}
-            className="p-0.5 hover:bg-panel-hover rounded transition-colors duration-200 flex items-center justify-center cursor-pointer"
+            className="p-0.5 hover:bg-surface-hover rounded transition-colors duration-200 flex items-center justify-center cursor-pointer"
             aria-label="Clear search"
           >
-            <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-fg-faint hover:text-fg-subtle" />
+            <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-tertiary" />
           </button>
         )}
       </div>
