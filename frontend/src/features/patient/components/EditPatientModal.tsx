@@ -65,7 +65,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
       percentage={formProgress.percentage}
       trackColorClass="stroke-border-default"
       progressColorClass={
-        formProgress.percentage === 100 ? 'stroke-success' : 'stroke-primary'
+        formProgress.percentage === 100 ? 'stroke-success' : 'stroke-brand'
       }
       label={`${formProgress.filled}/${formProgress.total}`}
       className="h-7"

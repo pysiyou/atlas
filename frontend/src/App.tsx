@@ -211,11 +211,11 @@ const App: React.FC = () => {
                 duration: 3000,
                 success: {
                   duration: 3000,
-                  iconTheme: { primary: 'var(--success)', secondary: 'var(--neutral)' },
+                  iconTheme: { primary: 'var(--success)', secondary: 'var(--success-bg)' },
                 },
                 error: {
                   duration: 4000,
-                  iconTheme: { primary: 'var(--danger)', secondary: 'var(--neutral)' },
+                  iconTheme: { primary: 'var(--danger)', secondary: 'var(--danger-bg)' },
                 },
               }}
             >
