@@ -17,4 +17,4 @@ export type { Test, TestCategory, TestParameter, CatalogReferenceRange, Critical
 export type { Payment, PaymentMethod, Invoice } from './billing';
 
 // Note: Container and AffiliationDuration are already in consolidated enums
-export type { SampleDisplay } from '../features/lab/types';
+// SampleDisplay is a lab feature type; import from @/features/lab/types

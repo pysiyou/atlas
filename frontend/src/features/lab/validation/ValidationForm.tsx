@@ -5,14 +5,7 @@
 import React, { useMemo, useState } from 'react';
 import { Textarea } from '@/shared/ui';
 import { PanicValueAlert } from './components/PanicValueAlert';
-
-type ResultStatus =
-  | 'normal'
-  | 'high'
-  | 'low'
-  | 'critical'
-  | 'critical-high'
-  | 'critical-low';
+import type { ResultStatus } from '@/shared/types/enums';
 
 const ABNORMAL_STATUSES: ResultStatus[] = [
   'high',

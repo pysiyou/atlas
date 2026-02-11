@@ -4,7 +4,8 @@
  */
 
 import type { ModalType } from './ModalContext';
-import type { Order, Test, TestWithContext, SampleDisplay, ContainerType } from '@/types';
+import type { Order, Test, TestWithContext, ContainerType } from '@/types';
+import type { SampleDisplay } from '@/features/lab/types';
 
 /** Payload for opening the sample/collection detail modal by sample id. */
 export interface SampleDetailByIdProps {
