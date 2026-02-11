@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { ChartContainer } from './ChartContainer';
 
 /** Single series: date + value. Dual series: date + received + validated. */
 export type ActivityTrendDataPoint =
@@ -135,14 +136,16 @@ export const ActivityTrendChart: React.FC<ActivityTrendChartProps> = ({
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 relative w-full">
+      <div className="flex-1 min-h-[180px] relative w-full">
         {trendPercentage !== undefined && (
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-surface border border-border-default text-text-primary px-2 py-1 rounded text-sm font-normal z-10 shadow-sm">
             {trendPercentage > 0 ? '+' : ''}{trendPercentage}%
           </div>
         )}
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
+        <ChartContainer className="absolute inset-0">
+          {({ width, height }) => (
+            <ResponsiveContainer width={width} height={height}>
+              <AreaChart
             data={data}
             margin={{ top: 12, right: 8, left: 4, bottom: 4 }}
           >
@@ -215,7 +218,9 @@ export const ActivityTrendChart: React.FC<ActivityTrendChartProps> = ({
               />
             )}
           </AreaChart>
-        </ResponsiveContainer>
+            </ResponsiveContainer>
+          )}
+        </ChartContainer>
       </div>
     </div>
   );
