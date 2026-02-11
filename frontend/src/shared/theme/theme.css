@@ -545,17 +545,6 @@
 
 [data-theme="noir-studio"] {
   /* Primitive overrides for noir-studio theme */
-  /* --primitive-brand-50: #fdf4f0;
-  --primitive-brand-100: #fce8e0;
-  --primitive-brand-200: #f8d0c0;
-  --primitive-brand-300: #f0a88a;
-  --primitive-brand-400: #e68a5c;
-  --primitive-brand-500: #da7756;
-  --primitive-brand-600: #c46544;
-  --primitive-brand-700: #a35238;
-  --primitive-brand-800: #82432e;
-  --primitive-brand-900: #6b3826;
-  --primitive-brand-950: #3d1f16; */
 
   --primitive-brand-50: #d6edfc;
   --primitive-brand-100: #b3dff9;
