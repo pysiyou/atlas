@@ -20,7 +20,9 @@ import {
 import { ICONS } from '@/utils';
 
 const rowCellClass =
-  'min-h-0 overflow-hidden border-border-default flex items-center justify-center border-r last:border-r-0';
+  'min-h-0 min-w-[180px] overflow-hidden border-border-default flex items-center justify-center border-r last:border-r-0';
+const chartCellClass =
+  'min-h-0 min-w-[240px] overflow-hidden border-border-default flex items-center justify-center border-r last:border-r-0';
 
 const LAST_DAYS = 10;
 
@@ -49,11 +51,11 @@ export const CommandCenterView: React.FC = () => {
 
   return (
     <div
-      className="flex-1 min-h-0 overflow-hidden grid"
+      className="flex-1 min-h-0 min-w-[720px] overflow-hidden grid"
       style={{ gridTemplateRows: '20fr 40fr 40fr' }}
     >
       {/* Row 1: Pending sample / result entry / validation / rejected — bottom-left; today's grow top-right */}
-      <div className="min-h-0 overflow-hidden border-b border-border-default grid grid-cols-4">
+      <div className="min-h-0 min-w-0 overflow-hidden border-b border-border-default grid grid-cols-4">
         <div className={`${rowCellClass} flex items-stretch p-2`}>
           <CommandCenterMetricCard
             title="Pending samples"
@@ -93,10 +95,10 @@ export const CommandCenterView: React.FC = () => {
       </div>
       {/* Row 2: 3 equal columns */}
       <div
-        className="min-h-0 overflow-hidden border-b border-border-default grid"
+        className="min-h-0 min-w-0 overflow-hidden border-b border-border-default grid"
         style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
       >
-        <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2`}>
+        <div className={`${chartCellClass} flex flex-col items-stretch justify-stretch p-2 min-w-0`}>
           <ActivityTrendChart
             title="Received vs validated"
             subTitle={`last ${LAST_DAYS} days`}
@@ -104,7 +106,7 @@ export const CommandCenterView: React.FC = () => {
             valueLabel="tests"
           />
         </div>
-        <div className={`${rowCellClass} flex flex-col items-stretch min-h-0 p-2 min-w-0`}>
+        <div className={`${chartCellClass} flex flex-col items-stretch min-h-0 p-2 min-w-0`}>
           <StackedBarChart
             title="Activity by day"
             subTitle={`last ${LAST_DAYS} days`}
@@ -114,7 +116,7 @@ export const CommandCenterView: React.FC = () => {
             data={activityLoading ? [] : stackedBarData}
           />
         </div>
-        <div className={`${rowCellClass} flex flex-col items-stretch min-h-0 p-2 min-w-0`}>
+        <div className={`${chartCellClass} flex flex-col items-stretch min-h-0 p-2 min-w-0`}>
           <DistributionPieChart
             title="Distribution by Category"
             subTitle="this year"
@@ -129,10 +131,10 @@ export const CommandCenterView: React.FC = () => {
       </div>
       {/* Row 3: 3/8 + 5/8 */}
       <div
-        className="min-h-0 overflow-hidden grid"
+        className="min-h-0 min-w-0 overflow-hidden grid"
         style={{ gridTemplateColumns: '3fr 5fr' }}
       >
-        <div className={`${rowCellClass} flex flex-col items-stretch! justify-stretch! p-2 min-h-0`}>
+        <div className={`${rowCellClass} flex min-w-[260px] flex-col items-stretch justify-stretch p-2 min-h-0`}>
           <div className="flex-1 min-h-0 min-w-0 flex flex-col">
             <ActivitiesTimeline logs={logs} isLoading={logsLoading} className="w-full" />
           </div>

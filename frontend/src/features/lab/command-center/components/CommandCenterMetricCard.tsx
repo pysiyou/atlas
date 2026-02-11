@@ -33,7 +33,7 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
     <Card
       variant="default"
       padding="none"
-      className="relative flex h-full min-h-0 w-full flex-col overflow-hidden rounded border 
+      className="relative flex h-full min-h-0 min-w-[160px] w-full flex-col overflow-hidden rounded border 
       border-border-subtle bg-neutral-800 text-text-inverse shadow-sm transition-all duration-200 
       ease-out hover:border-border-hover hover:shadow-md"
     >
