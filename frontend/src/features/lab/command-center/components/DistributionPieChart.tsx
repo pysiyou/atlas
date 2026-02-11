@@ -7,6 +7,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { ChartContainer } from './ChartContainer';
 
 export interface DistributionDataPoint {
   name: string;
@@ -104,46 +105,48 @@ export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 min-w-0 relative" style={{ width: '100%' }}>
-        <div className="absolute inset-0">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                cx="40%"
-                cy="50%"
-                innerRadius={innerRadius}
-                outerRadius={outerRadius}
-                paddingAngle={4}
-                dataKey="value"
-                stroke="none"
-                cornerRadius={4}
-              >
-                {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={entry.color || COLORS[index % COLORS.length]}
-                    stroke="var(--surface)"
-                    strokeWidth={2}
-                  />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
-              <Legend
-                layout="vertical"
-                verticalAlign="middle"
-                align="right"
-                iconType="circle"
-                iconSize={10}
-                formatter={renderLegendText}
-                wrapperStyle={{ right: 0, paddingRight: '16px' }}
-              />
-              <text x="40%" y="50%" textAnchor="middle" dominantBaseline="middle">
-                <tspan x="40%" dy="-0.5em" fontSize="24" fill="var(--text)" fontWeight="bold" />
-              </text>
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+      <div className="flex-1 min-h-[180px] min-w-0 relative" style={{ width: '100%' }}>
+        <ChartContainer className="absolute inset-0">
+          {({ width, height }) => (
+            <ResponsiveContainer width={width} height={height}>
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="40%"
+                  cy="50%"
+                  innerRadius={innerRadius}
+                  outerRadius={outerRadius}
+                  paddingAngle={4}
+                  dataKey="value"
+                  stroke="none"
+                  cornerRadius={4}
+                >
+                  {data.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.color || COLORS[index % COLORS.length]}
+                      stroke="var(--surface)"
+                      strokeWidth={2}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
+                <Legend
+                  layout="vertical"
+                  verticalAlign="middle"
+                  align="right"
+                  iconType="circle"
+                  iconSize={10}
+                  formatter={renderLegendText}
+                  wrapperStyle={{ right: 0, paddingRight: '16px' }}
+                />
+                <text x="40%" y="50%" textAnchor="middle" dominantBaseline="middle">
+                  <tspan x="40%" dy="-0.5em" fontSize="24" fill="var(--text)" fontWeight="bold" />
+                </text>
+              </PieChart>
+            </ResponsiveContainer>
+          )}
+        </ChartContainer>
         <div className="absolute left-[40%] top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
           {/* Center text overlay placeholder */}
         </div>

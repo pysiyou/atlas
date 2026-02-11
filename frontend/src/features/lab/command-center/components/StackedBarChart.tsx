@@ -10,6 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { ChartContainer } from './ChartContainer';
 
 /** Single bar: one value per label. */
 export interface BarChartDataPoint {
@@ -179,10 +180,11 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 min-w-0 relative" style={{ width: '100%' }}>
-        <div className="absolute inset-0">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
+      <div className="flex-1 min-h-[180px] min-w-0 relative" style={{ width: '100%' }}>
+        <ChartContainer className="absolute inset-0">
+          {({ width, height }) => (
+            <ResponsiveContainer width={width} height={height}>
+              <BarChart
               data={chartData}
               margin={{ top: 12, right: 8, left: 4, bottom: 4 }}
             >
@@ -236,9 +238,10 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
                   radius={[BAR_RADIUS, BAR_RADIUS, 0, 0]}
                 />
               )}
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </ChartContainer>
       </div>
     </div>
   );

@@ -570,7 +570,6 @@
 
 [data-theme="noir-studio"] {
   /* Primitive overrides for noir-studio theme */
-
   --primitive-brand-50: #d6edfc;
   --primitive-brand-100: #b3dff9;
   --primitive-brand-200: #7dc6f2;
@@ -772,6 +771,9 @@
   --danger-bg: rgba(218, 54, 51, 0.15);
   --auth-error-bg: rgba(218, 54, 51, 0.15);
 }
+
+
+
 
 /* ─────────────────────────────────────────────────────────────────────────
    Filter chip (modal date badges, quick filters, active badges)
