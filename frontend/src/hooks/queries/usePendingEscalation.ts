@@ -12,13 +12,14 @@ import { useAuthStore } from '@/shared/stores/auth.store';
 import type { PendingEscalationItem } from '@/types/lab-operations';
 
 export function usePendingEscalation() {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const { isAuthenticated, isLoading: isRestoring, hasRole } = useAuthStore();
   const queryClient = useQueryClient();
+  const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
 
   const query = useQuery({
     queryKey: queryKeys.results.pendingEscalation(),
     queryFn: () => resultAPI.getPendingEscalation(),
-    enabled: isAuthenticated && !isRestoring,
+    enabled: isAuthenticated && !isRestoring && canResolveEscalation,
     ...cacheConfig.dynamic,
   });
 

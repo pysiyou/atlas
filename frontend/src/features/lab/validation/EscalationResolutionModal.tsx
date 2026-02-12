@@ -19,6 +19,7 @@ import { PopoverForm } from '../components/PopoverForm';
 import { EntryRejectionSection } from '../entry/EntryRejectionSection';
 import { EntryInfoLine } from '../components/StatusBadges';
 import { useResolveEscalation } from '@/hooks/queries/useResultMutations';
+import { useAuthStore } from '@/shared/stores/auth.store';
 import { toast } from '@/shared/components/feedback';
 import type { TestWithContext } from '@/types';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
@@ -40,13 +41,15 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   const [reasonAuthorizeRetest, setReasonAuthorizeRetest] = useState('');
   const [reasonFinalReject, setReasonFinalReject] = useState('');
 
-  // Use TanStack Query mutation for escalation resolution
+  const { hasRole } = useAuthStore();
+  const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
+
   const resolveEscalation = useResolveEscalation();
   const resolving = resolveEscalation.isPending;
 
   const resolve = useCallback(
     async (action: EscalationResolutionAction, rejectionReasonOrNotes?: string) => {
-      if (resolving) return;
+      if (!canResolveEscalation || resolving) return;
 
       const messages: Record<EscalationResolutionAction, string> = {
         force_validate: 'Results force-validated.',
@@ -93,7 +96,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         }
       );
     },
-    [test.orderId, test.testCode, onResolved, onClose, resolving, resolveEscalation]
+    [test.orderId, test.testCode, onResolved, onClose, resolving, resolveEscalation, canResolveEscalation]
   );
 
   const handleForceValidate = useCallback(
@@ -138,6 +141,10 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       }
       footer={
         <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
+          {!canResolveEscalation ? (
+            <p className="text-sm text-text-tertiary">You do not have permission to resolve escalations.</p>
+          ) : (
+            <>
           <Popover
             placement="top-end"
             offsetValue={8}
@@ -269,6 +276,8 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
               </div>
             )}
           </Popover>
+            </>
+          )}
         </ModalFooter>
       }
     >

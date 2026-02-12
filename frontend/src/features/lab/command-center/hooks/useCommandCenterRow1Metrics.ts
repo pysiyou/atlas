@@ -1,13 +1,21 @@
 /**
  * useCommandCenterRow1Metrics - Row 1 KPIs with trend = % growth vs yesterday.
  * Primary values: pending counts. Trend value: (todayCount - yesterdayCount) / yesterdayCount * 100.
+ * "Pending samples" count matches Collection tab: only samples that have order, patient, and requirements.
  */
 
 import { useMemo } from 'react';
-import { useOrdersList, useSamplesList } from '@/hooks/queries';
+import {
+  useOrdersList,
+  useSamplesList,
+  useOrderLookup,
+  useTestCatalog,
+  usePatientNameLookup,
+} from '@/hooks/queries';
 import type { Order, OrderTest, ResultRejectionRecord } from '@/types';
 import type { Sample } from '@/types';
 import { isActiveTest } from '@/utils/orderUtils';
+import { calculateRequiredSamples } from '@/utils';
 
 const TREND_LABEL = 'vs yesterday';
 
@@ -70,6 +78,9 @@ export interface CommandCenterRow1Metrics {
 export function useCommandCenterRow1Metrics(): CommandCenterRow1Metrics {
   const { orders, isLoading: ordersLoading } = useOrdersList();
   const { samples, isLoading: samplesLoading } = useSamplesList();
+  const { getOrder } = useOrderLookup();
+  const { tests } = useTestCatalog();
+  const { getPatient } = usePatientNameLookup();
   const isLoading = ordersLoading || samplesLoading;
 
   return useMemo(() => {
@@ -81,17 +92,34 @@ export function useCommandCenterRow1Metrics(): CommandCenterRow1Metrics {
 
     const orderList = orders ?? [];
     const sampleList = samples ?? [];
+    const testCatalog = tests ?? [];
 
-    // Card 1: samples collected today / yesterday (by collectedAt)
-    let samplesCollectedToday = 0;
-    let samplesCollectedYesterday = 0;
+    // Card 1: Pending count aligned with Collection tab (only samples with order, patient, requirements)
     let samplesStillPending = 0;
     let samplesUrgentCount = 0;
     sampleList.forEach((s) => {
-      if (s.status === 'pending') {
-        samplesStillPending += 1;
-        if (s.priority === 'urgent') samplesUrgentCount += 1;
-      }
+      if (s.status !== 'pending') return;
+      const order = getOrder(s.orderId);
+      if (!order) return;
+      const patient = getPatient(order.patientId);
+      if (!patient) return;
+      const testsForSample = order.tests.filter(t => s.testCodes?.includes(t.testCode));
+      if (testsForSample.length === 0) return;
+      const requirements = calculateRequiredSamples(
+        testsForSample,
+        testCatalog,
+        order.priority,
+        order.orderId
+      );
+      if (requirements.length === 0) return;
+      samplesStillPending += 1;
+      if (s.priority === 'urgent') samplesUrgentCount += 1;
+    });
+
+    // Card 1: samples collected today / yesterday (by collectedAt) for trend
+    let samplesCollectedToday = 0;
+    let samplesCollectedYesterday = 0;
+    sampleList.forEach((s) => {
       if (!isCollectedSample(s)) return;
       if (isOnDate(s.collectedAt, todayKey)) samplesCollectedToday += 1;
       else if (isOnDate(s.collectedAt, yesterdayKey)) samplesCollectedYesterday += 1;
@@ -159,5 +187,5 @@ export function useCommandCenterRow1Metrics(): CommandCenterRow1Metrics {
       trendLabel: TREND_LABEL,
       isLoading,
     };
-  }, [orders, samples, isLoading]);
+  }, [orders, samples, getOrder, getPatient, tests, isLoading]);
 }
