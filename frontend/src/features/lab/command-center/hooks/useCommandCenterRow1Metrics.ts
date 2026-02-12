@@ -147,7 +147,7 @@ export function useCommandCenterRow1Metrics(): CommandCenterRow1Metrics {
       (order.tests ?? []).forEach((test) => {
         if (!isActiveTest(test)) return;
 
-        if (test.status === 'sample-collected' || test.status === 'in-progress') {
+        if (test.status === 'sample-collected') {
           if (test.sampleId != null && rejectedSampleIds.has(test.sampleId)) return;
           resultStillNeedingEntry += 1;
           if (isUrgent) resultUrgentCount += 1;
