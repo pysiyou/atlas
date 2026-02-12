@@ -14,6 +14,8 @@ export interface CommandCenterMetricCardProps {
   icon: IconName;
   trend?: { value: number; label: string };
   showMenu?: boolean;
+  /** Count of urgent items in this metric; shown bottom-right only when > 0 */
+  urgentCount?: number;
 }
 
 export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = ({
@@ -23,6 +25,7 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
   icon,
   trend,
   showMenu = false,
+  urgentCount = 0,
 }) => {
   const primary = primaryValue ?? 0;
   const trendCount = trend != null ? Math.abs(trend.value ?? 0) : 0;
@@ -67,15 +70,22 @@ export const CommandCenterMetricCard: React.FC<CommandCenterMetricCardProps> = (
             </span>
             <span className="truncate text-xs font-normal text-text-muted">{title}</span>
           </div>
-          {showMenu && (
-            <button
-              type="button"
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-text-muted hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
-              aria-label="More options"
-            >
-              <Icon name="menu-dots" className="h-5 w-5" />
-            </button>
-          )}
+          <div className="flex shrink-0 items-center gap-1.5">
+            {urgentCount > 0 && (
+              <span className="rounded bg-danger/20 px-1.5 py-0.5 text-xs font-medium tabular-nums text-danger-fg">
+                {urgentCount} urgent
+              </span>
+            )}
+            {showMenu && (
+              <button
+                type="button"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-text-muted hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                aria-label="More options"
+              >
+                <Icon name="menu-dots" className="h-5 w-5" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </Card>

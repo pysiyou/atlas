@@ -1,6 +1,6 @@
 /**
- * useCommandCenterRow1Metrics - Row 1 KPIs: sampling done today, result (entry), validation.
- * Uses today's date (local date string) and filters orders/samples by date.
+ * useCommandCenterRow1Metrics - Row 1 KPIs with trend = % growth vs yesterday.
+ * Primary values: pending counts. Trend value: (todayCount - yesterdayCount) / yesterdayCount * 100.
  */
 
 import { useMemo } from 'react';
@@ -9,64 +9,61 @@ import type { Order, OrderTest, ResultRejectionRecord } from '@/types';
 import type { Sample } from '@/types';
 import { isActiveTest } from '@/utils/orderUtils';
 
-/** True if iso timestamp falls on the user's local calendar today. */
-const isToday = (iso: string | undefined): boolean => {
+const TREND_LABEL = 'vs yesterday';
+
+function getDateKey(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+/** True if iso timestamp's calendar date equals dateKey (YYYY-MM-DD). */
+function isOnDate(iso: string | undefined, dateKey: string): boolean {
   if (!iso || typeof iso !== 'string') return false;
   try {
-    const date = new Date(iso);
-    const y = date.getFullYear(), m = date.getMonth(), d = date.getDate();
-    const now = new Date();
-    return y === now.getFullYear() && m === now.getMonth() && d === now.getDate();
+    const datePart = iso.split('T')[0];
+    return datePart === dateKey;
   } catch {
     return false;
   }
-};
+}
+
+/** Percentage change vs yesterday: (today - yesterday) / yesterday * 100. Returns 0 if yesterday === 0. */
+function pctGrowthVsYesterday(todayCount: number, yesterdayCount: number): number {
+  if (yesterdayCount <= 0) return 0;
+  return (todayCount - yesterdayCount) / yesterdayCount * 100;
+}
 
 const isCollectedSample = (s: Sample): s is Sample & { collectedAt: string } =>
   s.status === 'collected' && 'collectedAt' in s && typeof (s as Sample & { collectedAt?: string }).collectedAt === 'string';
 
-/** Read result-entered timestamp; supports camelCase and snake_case (API may return either). */
 const getResultEnteredAt = (test: OrderTest & { result_entered_at?: string }): string | undefined =>
   test.resultEnteredAt ?? test.result_entered_at;
-/** Read validation timestamp; supports camelCase and snake_case (API may return either). */
 const getResultValidatedAt = (test: OrderTest & { result_validated_at?: string }): string | undefined =>
   test.resultValidatedAt ?? test.result_validated_at;
 
+function getLastRejectedAt(test: OrderTest): string | undefined {
+  const history = test.resultRejectionHistory;
+  if (!history?.length) return undefined;
+  return (history[history.length - 1] as ResultRejectionRecord).rejectedAt;
+}
+
 export interface CommandCenterRow1Metrics {
-  /** Samples collected today (from samples with collectedAt today). */
-  samplingDoneToday: number;
-  /** Samples still pending collection (status === 'pending'). */
   samplesStillPending: number;
-  /** Total for sampling card: completed today + still pending (sample units). */
-  samplingTotal: number;
-  /** Count of samples created today (trend: "X more samples today"). */
-  samplesCreatedToday: number;
-  /** Samples created today as % of sampling total (for trend display). */
-  samplesCreatedTodayPct: number;
-  resultEnteredToday: number;
-  /** Tests still in result-entry queue (sample-collected or in-progress only). */
   resultStillNeedingEntry: number;
-  /** Total for results card: entered today + still needing entry. */
-  resultTotal: number;
-  /** Tests whose sample was collected today (entered result-entry queue today). */
-  resultEntryQueueEnteredToday: number;
-  /** Result-entry queue entered today as % of result total (for trend display). */
-  resultEntryQueueEnteredTodayPct: number;
-  validatedToday: number;
-  /** Tests still needing validation (status === 'resulted'). */
   validationTotal: number;
-  /** Total for validation card: validated today + still needing validation. */
-  validationTotalDisplay: number;
-  /** Tests that had result entered today (entered validation queue today). */
-  validationQueueEnteredToday: number;
-  /** Validation queue entered today as % of validation total (for trend display). */
-  validationQueueEnteredTodayPct: number;
-  /** Tests with status === 'rejected'. */
   rejectedTotal: number;
-  /** Rejected tests whose most recent rejection (resultRejectionHistory) was today. */
-  rejectedToday: number;
-  /** Rejected today as % of rejected total (for trend display). */
-  rejectedTodayPct: number;
+  samplesUrgentCount: number;
+  resultUrgentCount: number;
+  validationUrgentCount: number;
+  rejectedUrgentCount: number;
+  /** Trend: % growth vs yesterday (samples collected). */
+  trendSamplesCollected: number;
+  /** Trend: % growth vs yesterday (results entered). */
+  trendResultEntered: number;
+  /** Trend: % growth vs yesterday (validated). */
+  trendValidated: number;
+  /** Trend: % growth vs yesterday (rejected). */
+  trendRejected: number;
+  trendLabel: string;
   isLoading: boolean;
 }
 
@@ -76,89 +73,91 @@ export function useCommandCenterRow1Metrics(): CommandCenterRow1Metrics {
   const isLoading = ordersLoading || samplesLoading;
 
   return useMemo(() => {
-    let resultEnteredToday = 0;
-    let resultStillNeedingEntry = 0;
-    let validatedToday = 0;
-    let validationTotal = 0;
-    let resultEntryQueueEnteredToday = 0;
-    let rejectedTotal = 0;
-    let rejectedToday = 0;
+    const now = new Date();
+    const todayKey = getDateKey(now);
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayKey = getDateKey(yesterday);
 
     const orderList = orders ?? [];
     const sampleList = samples ?? [];
 
-    // Sampling: all counts in SAMPLE units (not tests). One sample can map to multiple tests.
-    const samplesCollectedToday = sampleList.filter(
-      (s): s is Sample & { collectedAt: string } => isCollectedSample(s) && isToday(s.collectedAt)
-    );
-    const samplingDoneToday = samplesCollectedToday.length;
-    const samplesStillPending = sampleList.filter((s) => s.status === 'pending').length;
-    const samplingTotal = samplingDoneToday + samplesStillPending;
-    const samplesCreatedToday = sampleList.filter((s) => isToday(s.createdAt)).length;
-    const collectedTodaySampleIds = new Set(samplesCollectedToday.map((s) => s.sampleId));
+    // Card 1: samples collected today / yesterday (by collectedAt)
+    let samplesCollectedToday = 0;
+    let samplesCollectedYesterday = 0;
+    let samplesStillPending = 0;
+    let samplesUrgentCount = 0;
+    sampleList.forEach((s) => {
+      if (s.status === 'pending') {
+        samplesStillPending += 1;
+        if (s.priority === 'urgent') samplesUrgentCount += 1;
+      }
+      if (!isCollectedSample(s)) return;
+      if (isOnDate(s.collectedAt, todayKey)) samplesCollectedToday += 1;
+      else if (isOnDate(s.collectedAt, yesterdayKey)) samplesCollectedYesterday += 1;
+    });
+
+    // Card 2–4: iterate order tests once
+    let resultEnteredToday = 0;
+    let resultEnteredYesterday = 0;
+    let resultStillNeedingEntry = 0;
+    let resultUrgentCount = 0;
+    let validatedToday = 0;
+    let validatedYesterday = 0;
+    let validationTotal = 0;
+    let validationUrgentCount = 0;
+    let rejectedToday = 0;
+    let rejectedYesterday = 0;
+    let rejectedTotal = 0;
+    let rejectedUrgentCount = 0;
 
     orderList.forEach((order: Order) => {
+      const isUrgent = order.priority === 'urgent';
       (order.tests ?? []).forEach((test) => {
         if (!isActiveTest(test)) return;
 
-        const inEntry = test.status === 'sample-collected' || test.status === 'in-progress';
-        const inValidation = test.status === 'resulted';
-        if (inEntry) {
+        if (test.status === 'sample-collected' || test.status === 'in-progress') {
           resultStillNeedingEntry += 1;
+          if (isUrgent) resultUrgentCount += 1;
         }
-        if (inValidation) {
+        if (test.status === 'resulted') {
           validationTotal += 1;
-        }
-        if (test.sampleId != null && collectedTodaySampleIds.has(test.sampleId)) {
-          resultEntryQueueEnteredToday += 1;
-        }
-        const enteredAt = getResultEnteredAt(test);
-        if (isToday(enteredAt)) {
-          resultEnteredToday += 1;
-        }
-        const validatedAt = getResultValidatedAt(test);
-        if (isToday(validatedAt)) {
-          validatedToday += 1;
+          if (isUrgent) validationUrgentCount += 1;
         }
         if (test.status === 'rejected') {
           rejectedTotal += 1;
-          const history = test.resultRejectionHistory;
-          const lastRejectedAt =
-            history?.length
-              ? (history[history.length - 1] as ResultRejectionRecord).rejectedAt
-              : undefined;
-          if (lastRejectedAt && isToday(lastRejectedAt)) {
-            rejectedToday += 1;
-          }
+          if (isUrgent) rejectedUrgentCount += 1;
         }
+
+        const enteredAt = getResultEnteredAt(test);
+        if (isOnDate(enteredAt, todayKey)) resultEnteredToday += 1;
+        else if (isOnDate(enteredAt, yesterdayKey)) resultEnteredYesterday += 1;
+
+        const validatedAt = getResultValidatedAt(test);
+        if (isOnDate(validatedAt, todayKey)) validatedToday += 1;
+        else if (isOnDate(validatedAt, yesterdayKey)) validatedYesterday += 1;
+
+        const lastRejectedAt = getLastRejectedAt(test);
+        if (isOnDate(lastRejectedAt, todayKey)) rejectedToday += 1;
+        else if (isOnDate(lastRejectedAt, yesterdayKey)) rejectedYesterday += 1;
       });
     });
-    const resultTotal = resultEnteredToday + resultStillNeedingEntry;
-    const validationTotalDisplay = validatedToday + validationTotal;
-
-    const safePct = (num: number, denom: number) =>
-      denom > 0 ? (num / denom) * 100 : 0;
 
     return {
-      samplingDoneToday,
       samplesStillPending,
-      samplingTotal,
-      samplesCreatedToday,
-      samplesCreatedTodayPct: safePct(samplesCreatedToday, samplingTotal),
-      resultEnteredToday,
       resultStillNeedingEntry,
-      resultTotal,
-      resultEntryQueueEnteredToday,
-      resultEntryQueueEnteredTodayPct: safePct(resultEntryQueueEnteredToday, resultTotal),
-      validatedToday,
       validationTotal,
-      validationTotalDisplay,
-      validationQueueEnteredToday: resultEnteredToday,
-      validationQueueEnteredTodayPct: safePct(resultEnteredToday, validationTotalDisplay),
       rejectedTotal,
-      rejectedToday,
-      rejectedTodayPct: safePct(rejectedToday, rejectedTotal),
+      samplesUrgentCount,
+      resultUrgentCount,
+      validationUrgentCount,
+      rejectedUrgentCount,
+      trendSamplesCollected: pctGrowthVsYesterday(samplesCollectedToday, samplesCollectedYesterday),
+      trendResultEntered: pctGrowthVsYesterday(resultEnteredToday, resultEnteredYesterday),
+      trendValidated: pctGrowthVsYesterday(validatedToday, validatedYesterday),
+      trendRejected: pctGrowthVsYesterday(rejectedToday, rejectedYesterday),
+      trendLabel: TREND_LABEL,
       isLoading,
     };
-  }, [orders, samples, ordersLoading, samplesLoading]);
+  }, [orders, samples, isLoading]);
 }
