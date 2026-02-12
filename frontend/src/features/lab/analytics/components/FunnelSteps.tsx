@@ -34,8 +34,8 @@ export const FunnelSteps: React.FC<FunnelStepsProps> = ({ funnel, stepChanges = 
   const pctFromPrev = [
     percentOf(funnel.orders, funnel.orders),
     percentOf(funnel.collected, funnel.orders),
-    percentOf(funnel.entered, funnel.collected || 1),
-    percentOf(funnel.validated, funnel.entered || 1),
+    percentOf(funnel.entered, funnel.collected),
+    percentOf(funnel.validated, funnel.entered),
   ];
   const counts = [funnel.orders, funnel.collected, funnel.entered, funnel.validated];
 

@@ -10,6 +10,7 @@ import { formatDate } from '@/utils';
 import { useUserLookup } from '@/hooks/queries';
 import { Badge, SectionContainer } from '@/shared/ui';
 import type { ResultRejectionRecord } from '@/types';
+import { getResultRejectionType } from '@/types/order';
 
 /**
  * Props for a single rejection record display
@@ -34,14 +35,14 @@ const RejectionRecordDisplay: React.FC<ResultRejectionRecordDisplayProps> = ({
       {/* Type - displayed as badge */}
       <div className="flex items-center">
         <span className="text-text-tertiary w-16 shrink-0">Type</span>
-        <Badge variant={record.rejectionType} size="xs" />
+        <Badge variant={getResultRejectionType(record) ?? 'neutral'} size="xs" />
       </div>
 
       {/* Reason */}
-      {record.rejectionReason && (
+      {(record.rejectionReason ?? record.reason) && (
         <div className="flex">
           <span className="text-text-tertiary w-16 shrink-0">Reason</span>
-          <span className="text-text-primary">{record.rejectionReason}</span>
+          <span className="text-text-primary">{record.rejectionReason ?? record.reason}</span>
         </div>
       )}
 
@@ -172,20 +173,22 @@ export const ResultRejectionBanner: React.FC<ResultRejectionBannerProps> = ({
   rejection,
   retestNumber,
 }) => {
+  const rt = getResultRejectionType(rejection);
   const typeLabel =
-    rejection.rejectionType === 'authorize_retest'
+    rt === 'authorize_retest'
       ? 'Authorize re-test'
-      : rejection.rejectionType === 're-test'
+      : rt === 're-test'
         ? 'Re-test'
         : 'Re-collect';
+  const reason = rejection.rejectionReason ?? rejection.reason;
 
   return (
     <div className="text-xs text-text-tertiary">
       <span className="font-normal">
         {typeLabel} #{retestNumber}
       </span>
-      {rejection.rejectionReason && (
-        <span className="text-text-tertiary"> · {rejection.rejectionReason}</span>
+      {reason && (
+        <span className="text-text-tertiary"> · {reason}</span>
       )}
     </div>
   );

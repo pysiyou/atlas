@@ -16,6 +16,7 @@ export type ActivityTrendDataPoint =
   | { date: string; received: number; validated: number };
 
 interface ActivityTrendChartProps {
+  /** Either all single-series ({ date, value }) or all dual-series ({ date, received, validated }). Type is inferred from the first point when non-empty. */
   data: ActivityTrendDataPoint[];
   title?: string;
   subTitle?: string;
@@ -34,6 +35,7 @@ const TOOLTIP_STROKE = 'var(--chart-tooltip-stroke)';
 const TOOLTIP_FG = 'var(--text)';
 const TOOLTIP_FG_MUTED = 'var(--text-tertiary)';
 
+/** Series type is determined by the first data point; do not mix single- and dual-series shapes in one array. */
 function isDualSeries(data: ActivityTrendDataPoint[]): data is { date: string; received: number; validated: number }[] {
   return data.length > 0 && 'received' in data[0];
 }

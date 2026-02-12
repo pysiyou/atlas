@@ -30,9 +30,12 @@ export function formatDisplayId(entityType: EntityType, id: number | null | unde
   if (id === null || id === undefined) {
     return '-';
   }
+  const n = Number(id);
+  if (!Number.isInteger(n) || n < 0) {
+    return '-';
+  }
   const prefix = ID_PREFIXES[entityType];
-  // Zero-pad the ID to 4 digits
-  const paddedId = id.toString().padStart(4, '0');
+  const paddedId = n.toString().padStart(4, '0');
   return `${prefix}${paddedId}`;
 }
 

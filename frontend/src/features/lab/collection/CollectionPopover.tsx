@@ -137,7 +137,10 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             type="text"
             inputMode="decimal"
             value={volume}
-            onChange={e => setVolume(Number(e.target.value))}
+            onChange={e => {
+              const v = Number(e.target.value);
+              setVolume(Number.isNaN(v) ? minimumVolume : v);
+            }}
             className={cn(
               inputBase,
               'pr-8',

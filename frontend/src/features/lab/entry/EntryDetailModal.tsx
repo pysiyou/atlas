@@ -20,6 +20,7 @@ import {
   ModalFooter,
   StatusBadgeRow,
 } from '../components/LabDetailModal';
+import { getResultRejectionType } from '@/types/order';
 import { ICONS } from '@/utils';
 import {
   CollectionInfoLine,
@@ -89,7 +90,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const rejectionHistory = test.resultRejectionHistory || [];
   const hasRejectionHistory = rejectionHistory.length > 0;
   const lastRejection = hasRejectionHistory ? rejectionHistory[rejectionHistory.length - 1] : null;
-  const isRecollection = lastRejection?.rejectionType === 're-collect';
+  const isRecollection = lastRejection ? getResultRejectionType(lastRejection) === 're-collect' : false;
 
   const handleLocalResultChange = (key: string, paramCode: string, value: string) => {
     setLocalResults(prev => ({ ...prev, [paramCode]: value }));

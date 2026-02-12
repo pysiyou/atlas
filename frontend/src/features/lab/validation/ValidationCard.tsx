@@ -13,6 +13,7 @@ import { useUserLookup, usePatientNameLookup } from '@/hooks/queries';
 import { LabCard } from '../components/LabCard';
 import { RejectionDialog } from '../components';
 import type { TestWithContext } from '@/types';
+import { getResultRejectionType } from '@/types/order';
 import { ICONS } from '@/utils';
 import {
   type ResultStatus,
@@ -143,7 +144,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   const lastRejection = rejectionHistory.at(-1) ?? null;
   const hasRejectionHistory = rejectionHistory.length > 0;
   const isRetest = test.isRetest === true;
-  const isRecollection = lastRejection?.rejectionType === 're-collect';
+  const isRecollection = lastRejection ? getResultRejectionType(lastRejection) === 're-collect' : false;
   const hasFlags = test.flags && test.flags.length > 0;
 
   const handleCardClick = () => {

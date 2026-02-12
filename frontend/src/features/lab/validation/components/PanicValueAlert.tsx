@@ -29,10 +29,11 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
   isAcknowledged = false,
 }) => {
   const numericValue = typeof value === 'string' ? parseFloat(value) : value;
-  const isCriticalLow = criticalLow !== undefined && numericValue < criticalLow;
-  const isCriticalHigh = criticalHigh !== undefined && numericValue > criticalHigh;
+  const isNumeric = !Number.isNaN(numericValue);
+  const isCriticalLow = isNumeric && criticalLow !== undefined && numericValue < criticalLow;
+  const isCriticalHigh = isNumeric && criticalHigh !== undefined && numericValue > criticalHigh;
 
-  if (!isCriticalLow && !isCriticalHigh) {
+  if (isNumeric && !isCriticalLow && !isCriticalHigh) {
     return null;
   }
 
@@ -83,8 +84,13 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
               <div>
                 <span className="text-text-tertiary">Critical Threshold:</span>
                 <span className="ml-2 font-normal text-danger-fg-emphasis">
-                  {isCriticalLow && criticalLow !== undefined && `< ${criticalLow} ${unit || ''}`}
-                  {isCriticalHigh && criticalHigh !== undefined && `> ${criticalHigh} ${unit || ''}`}
+                  {!isNumeric
+                    ? '—'
+                    : isCriticalLow && criticalLow !== undefined
+                      ? `< ${criticalLow} ${unit || ''}`
+                      : isCriticalHigh && criticalHigh !== undefined
+                        ? `> ${criticalHigh} ${unit || ''}`
+                        : '—'}
                 </span>
               </div>
             </div>

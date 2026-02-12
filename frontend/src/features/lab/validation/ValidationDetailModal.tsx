@@ -22,6 +22,7 @@ import {
 } from '../components/LabDetailModal';
 import { RejectionDialog } from '../components/RejectionDialog';
 import { EntryRejectionSection } from '../entry/EntryRejectionSection';
+import { getResultRejectionType } from '@/types/order';
 import {
   RetestBadge,
   RecollectionAttemptBadge,
@@ -89,7 +90,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   const hasRejectionHistory = rejectionHistory.length > 0;
   // For re-collect, the last rejection type will be 're-collect'
   const lastRejection = hasRejectionHistory ? rejectionHistory[rejectionHistory.length - 1] : null;
-  const isRecollection = lastRejection?.rejectionType === 're-collect';
+  const isRecollection = lastRejection ? getResultRejectionType(lastRejection) === 're-collect' : false;
 
   /**
    * Build header badges using centralized badge components
