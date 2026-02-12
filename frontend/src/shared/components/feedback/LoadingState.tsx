@@ -2,27 +2,22 @@
  * LoadingState - Standardized loading UI component
  *
  * Provides a consistent loading indicator across the application.
- * Supports different sizes and full-screen mode.
+ * Supports different sizes and full-screen mode. Uses ClaudeLoader (radiating-arms animation).
  */
 
 import React from 'react';
+import { ClaudeLoader } from '@/shared/ui';
 
 export interface LoadingStateProps {
   /** Loading message to display */
   message?: string;
-  /** Size of the spinner */
+  /** Size of the loader */
   size?: 'sm' | 'md' | 'lg';
   /** Whether to display in full-screen mode */
   fullScreen?: boolean;
   /** Additional CSS classes */
   className?: string;
 }
-
-const SIZE_CLASSES = {
-  sm: 'w-6 h-6 border-2',
-  md: 'w-10 h-10 border-3',
-  lg: 'w-16 h-16 border-4',
-};
 
 /**
  * LoadingState component
@@ -45,11 +40,9 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   return (
     <div className={`${containerClasses} ${className}`}>
       <div className="text-center">
-        <div
-          className={`inline-block animate-spin rounded-full border-brand border-t-transparent ${SIZE_CLASSES[size]}`}
-          role="status"
-          aria-label="Loading"
-        />
+        <div role="status" aria-label="Loading">
+          <ClaudeLoader size={size} color="var(--success-fg)" />
+        </div>
         {message && <p className="mt-3 text-sm text-text-tertiary">{message}</p>}
       </div>
     </div>

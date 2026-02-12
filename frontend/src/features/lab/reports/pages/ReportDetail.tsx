@@ -12,6 +12,7 @@ import type { ReportData, ValidatedTest } from '../types';
 import { formatDate } from '@/utils';
 import { companyConfig } from '@/config';
 import { toast } from '@/shared/components/feedback';
+import { LoadingState } from '@/shared/components';
 
 export const ReportDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -75,13 +76,8 @@ export const ReportDetail: React.FC = () => {
     }
   }, [ordersLoading, patientsLoading, testsLoading, validatedTest, navigate]);
 
-  // Loading state
   if (ordersLoading || patientsLoading || testsLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-text-tertiary">Loading...</div>
-      </div>
-    );
+    return <LoadingState message="Loading report..." fullScreen size="lg" />;
   }
 
   // If test not found after loading, return null (useEffect will redirect)

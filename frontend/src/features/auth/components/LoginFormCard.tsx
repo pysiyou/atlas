@@ -4,7 +4,7 @@
  */
 
 import React, { useRef, useEffect } from 'react';
-import { Icon } from '@/shared/ui';
+import { Icon, ClaudeLoader } from '@/shared/ui';
 import { ICONS } from '@/utils';
 import { companyConfig } from '@/config';
 
@@ -178,7 +178,9 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
               <span className="relative flex items-center justify-center">
                 {isSubmitting ? (
                   <>
-                    <Icon name={ICONS.actions.loading} className="animate-spin -ml-1 mr-3 h-5 w-5" />
+                    <span className="-ml-1 mr-3 inline-flex shrink-0">
+                      <ClaudeLoader size="xs" color="currentColor" />
+                    </span>
                     Signing in...
                   </>
                 ) : (

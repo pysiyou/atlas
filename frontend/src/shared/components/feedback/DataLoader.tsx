@@ -7,12 +7,12 @@
 import React from 'react';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import { usePatientsList, useOrdersList, useTestCatalog, useSamplesList } from '@/hooks/queries';
-import { SkeletonPage } from '@/shared/ui';
+import { LoadingState } from '@/shared/components/feedback/LoadingState';
 import { ErrorFallback } from '@/shared/components/error-boundaries/ErrorFallback';
 
 interface DataLoaderProps {
   children: React.ReactNode;
-  /** Show loading skeleton while data is being fetched */
+  /** Show full-screen loading (ClaudeLoader) while data is being fetched; if false, children render and queries show their own loading states */
   showLoadingSkeleton?: boolean;
 }
 
@@ -88,15 +88,8 @@ export const DataLoader: React.FC<DataLoaderProps> = ({ children, showLoadingSke
     await Promise.all([refetchPatients(), refetchOrders(), refetchTests(), refetchSamples()]);
   };
 
-  // Show loading skeleton during initial load
   if (isAuthenticated && isLoading && showLoadingSkeleton) {
-    return (
-      <div className="h-screen flex flex-col">
-        <div className="flex-1 overflow-hidden">
-          <SkeletonPage />
-        </div>
-      </div>
-    );
+    return <LoadingState message="Loading..." fullScreen size="lg" />;
   }
 
   // Show error state if any provider has errors (same layout as ErrorBoundary)

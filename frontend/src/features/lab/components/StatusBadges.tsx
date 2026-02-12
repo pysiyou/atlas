@@ -10,7 +10,7 @@
  */
 
 import React from 'react';
-import { Badge, Icon } from '@/shared/ui';
+import { Badge, Icon, ClaudeLoader } from '@/shared/ui';
 import { formatDate, getContainerIconColor } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/hooks/queries';
@@ -280,7 +280,7 @@ export const RecollectionAttemptBadge: React.FC<RecollectionAttemptBadgeProps> =
   showIcon = false,
 }) => (
   <Badge size={size} variant="warning" className={`flex items-center gap-1 ${className}`}>
-    {showIcon && <Icon name={ICONS.actions.loading} className="w-3 h-3" />}
+    {showIcon && <ClaudeLoader size="xs" color="currentColor" />}
     RE-COLLECT #{attemptNumber}
   </Badge>
 );

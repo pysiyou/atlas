@@ -38,17 +38,25 @@ interface CollectionCardProps {
     selectedColor?: string,
     containerType?: ContainerType
   ) => void;
+  /** When true, collect mutation is in progress (show loading in collection popover) */
+  isCollecting?: boolean;
   /** When true, renders mobile-optimized layout */
   isMobile?: boolean;
 }
 
 // High complexity and large function are necessary for comprehensive collection card with multiple statuses, actions, and conditional rendering
 // eslint-disable-next-line max-lines-per-function, complexity
-export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onCollect, isMobile = false }) => {
+export const CollectionCard: React.FC<CollectionCardProps> = ({
+  display,
+  onCollect,
+  isCollecting = false,
+  isMobile = false,
+}) => {
   const { openModal } = useModal();
   const { getPatientName } = usePatientNameLookup();
   const { tests } = useTestCatalog();
   const rejectSampleMutation = useRejectSample();
+  const isRejecting = rejectSampleMutation.isPending;
 
   const { sample, order, requirement } = display;
   if (!sample || !requirement) return null;
@@ -174,6 +182,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
                 onConfirm={(volume, notes, color, containerType) =>
                   onCollect(display, volume, notes, color, containerType)
                 }
+                isSubmitting={isCollecting}
               />
             </div>
           ) : (
@@ -272,6 +281,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({ display, onColle
                   patientName={patientName}
                   isRecollection={isRecollection}
                   rejectionHistoryCount={sample.rejectionHistory?.length || 0}
+                  isSubmitting={isRejecting}
                   onReject={async (reasons, notes, requireRecollection) => {
                     try {
                       await rejectSampleMutation.mutateAsync({

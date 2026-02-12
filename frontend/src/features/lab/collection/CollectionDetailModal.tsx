@@ -10,7 +10,7 @@
  * - CollectionInfoLine for sample metadata
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import type { ContainerType, RejectedSample, RejectionReason } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import Barcode from 'react-barcode';
@@ -65,6 +65,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   const { getOrder } = useOrderLookup();
   const { tests = [] } = useTestCatalog();
   const rejectSampleMutation = useRejectSample();
+  const [isPopoverSubmitting, setIsPopoverSubmitting] = useState(false);
 
   const getTest = useCallback(
     (code: string) => tests.find(t => t.code === code),
@@ -185,6 +186,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
       onCollect={onCollect}
       onReject={handleReject}
       onClose={onClose}
+      onPopoverSubmittingChange={setIsPopoverSubmitting}
     />
   );
 
@@ -209,6 +211,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
     <LabDetailModal
       isOpen={isOpen}
       onClose={onClose}
+      disableClose={isPopoverSubmitting}
       title={<span className="font-mono text-brand tracking-wide">{displayId.sample(sample.sampleId)}</span>}
       subtitle={`${patientName} - ${sample.sampleType.toUpperCase()}`}
       headerBadges={headerBadges}

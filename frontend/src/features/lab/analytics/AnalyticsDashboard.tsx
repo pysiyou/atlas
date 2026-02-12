@@ -13,6 +13,7 @@ import { TATTrendChart } from './components/TATTrendChart';
 import { FunnelSteps } from './components/FunnelSteps';
 import { TestsByDayBarChart } from './components/TestsByDayBarChart';
 import { ProductivityTable } from './components/ProductivityTable';
+import { LoadingState } from '@/shared/components';
 import { ICONS } from '@/utils';
 import { format, subDays } from 'date-fns';
 import type { DateRangeFilter, PeriodChange } from './types';
@@ -147,7 +148,7 @@ export const AnalyticsDashboard: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-text-tertiary">Loading analytics...</div>
+        <LoadingState message="Loading analytics..." size="md" />
       </div>
     );
   }

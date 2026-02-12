@@ -4,6 +4,7 @@
  */
 import React, { useMemo } from 'react';
 import { Badge } from '@/shared/ui/Badge';
+import { ClaudeLoader } from '@/shared/ui';
 import { displayId } from '@/utils/ids/idDisplay';
 import type { LabOperationRecord, LabOperationType } from '@/types/lab-operations';
 
@@ -346,19 +347,9 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
   if (isLoading) {
     return (
       <div className={`flex flex-col h-full bg-surface ${className}`}>
-        <div className="px-4 py-3">
-          <div className="h-5 w-16 bg-surface-hover animate-pulse rounded" />
-        </div>
-        <div className="flex-1 overflow-auto px-4 space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="flex items-start gap-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-surface-hover animate-pulse mt-1.5" />
-              <div className="flex-1 space-y-2">
-                <div className="h-4 bg-surface-hover animate-pulse rounded w-3/4" />
-                <div className="h-3 bg-surface-hover animate-pulse rounded w-16" />
-              </div>
-            </div>
-          ))}
+        <div className="flex-1 flex flex-col items-center justify-center gap-3 px-4 py-8">
+          <ClaudeLoader size="sm" color="var(--success-fg)" />
+          <p className="text-sm text-text-tertiary">Loading activities...</p>
         </div>
       </div>
     );

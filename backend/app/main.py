@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base
 from app.core.cache import get_redis, close_redis
-from app.middleware import CacheHeadersMiddleware
+from app.middleware import CacheHeadersMiddleware, DelayMiddleware
 from app.middleware.error_handlers import register_exception_handlers
 
 # Import routers
@@ -50,6 +50,8 @@ app.add_middleware(
 
 # HTTP caching headers middleware
 app.add_middleware(CacheHeadersMiddleware)
+# Optional artificial delay for API v1 (for testing loading UI). Add last so it runs first.
+app.add_middleware(DelayMiddleware)
 
 # Register global exception handlers
 register_exception_handlers(app)

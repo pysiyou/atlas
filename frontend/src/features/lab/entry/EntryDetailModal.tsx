@@ -66,6 +66,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   // Local state for immediate UI feedback
   const [localResults, setLocalResults] = useState<Record<string, string>>(() => initialResults);
   const [localNotes, setLocalNotes] = useState<string>(() => initialTechnicianNotes);
+  const [isSaving, setIsSaving] = useState(false);
 
   const filledCount = useMemo(
     () => Object.values(localResults).filter(v => v?.trim()).length,
@@ -102,17 +103,25 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     onNotesChange(key, notes);
   };
 
-  const handleSave = () => {
-    if (isComplete) {
-      onSave(localResults, localNotes);
+  const handleSave = async () => {
+    if (!isComplete) return;
+    setIsSaving(true);
+    try {
+      await Promise.resolve(onSave(localResults, localNotes));
       onClose();
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  const handleSaveAndNext = () => {
-    if (isComplete && onNext) {
-      onSave(localResults, localNotes);
+  const handleSaveAndNext = async () => {
+    if (!isComplete || !onNext) return;
+    setIsSaving(true);
+    try {
+      await Promise.resolve(onSave(localResults, localNotes));
       onNext();
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -166,6 +175,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       title={test.testName}
       subtitle={`${test.testCode} - ${test.patientName}`}
       modalKey={resultKey}
+      disableClose={isSaving}
       headerBadges={
         <StatusBadgeRow
           sampleType={test.sampleType}
@@ -198,14 +208,14 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       }
       footer={
         <ModalFooter statusMessage="">
-          <Button onClick={onClose} variant="cancel" size="md">
+          <Button onClick={onClose} variant="cancel" size="md" disabled={isSaving}>
             Cancel
           </Button>
-          <Button onClick={handleSave} variant="save" size="md" disabled={!isComplete}>
+          <Button onClick={handleSave} variant="save" size="md" disabled={!isComplete} isLoading={isSaving}>
             Save
           </Button>
           {onNext && (
-            <Button onClick={handleSaveAndNext} variant="save" size="md" disabled={!isComplete}>
+            <Button onClick={handleSaveAndNext} variant="save" size="md" disabled={!isComplete} isLoading={isSaving}>
               Save & Next
             </Button>
           )}

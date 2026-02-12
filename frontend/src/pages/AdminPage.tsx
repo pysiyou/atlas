@@ -6,6 +6,7 @@
 import React, { useMemo } from 'react';
 import { usePatientsList, useOrdersList, useTestCatalog } from '@/hooks/queries';
 import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/shared/ui';
+import { LoadingState } from '@/shared/components';
 import { DATA_AMOUNT, DATA_ID_PRIMARY } from '@/shared/constants';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
@@ -102,7 +103,7 @@ export const Admin: React.FC = () => {
   const { tests, isLoading: testsLoading } = useTestCatalog();
 
   if (patientsLoading || ordersLoading || testsLoading) {
-    return <div>Loading...</div>;
+    return <LoadingState message="Loading administration..." fullScreen size="lg" />;
   }
 
   // Calculate total revenue from orders (billing context removed)

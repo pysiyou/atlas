@@ -47,13 +47,15 @@ const REJECTION_REASONS: { value: RejectionReason; label: string; description: s
 ];
 
 interface CollectionRejectionPopoverContentProps {
-  onConfirm: (reasons: RejectionReason[], notes: string, requireRecollection: boolean) => void;
+  onConfirm: (reasons: RejectionReason[], notes: string, requireRecollection: boolean) => void | Promise<void>;
   onCancel: () => void;
   sampleId: string;
   sampleType?: string;
   patientName?: string;
   isRecollection?: boolean;
   rejectionHistoryCount?: number;
+  /** When true, confirm button shows loading (e.g. reject mutation in progress) */
+  isSubmitting?: boolean;
 }
 
 const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverContentProps> = ({
@@ -64,20 +66,24 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
   patientName,
   isRecollection = false,
   rejectionHistoryCount = 0,
+  isSubmitting: isSubmittingProp,
 }) => {
   const [reasons, setReasons] = useState<RejectionReason[]>([]);
   const [notes, setNotes] = useState('');
   const [requireRecollection, setRequireRecollection] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [localSubmitting, setLocalSubmitting] = useState(false);
 
   const isValid = reasons.length > 0 && (!reasons.includes('other') || notes.trim());
+  const isSubmitting = isSubmittingProp ?? localSubmitting;
 
   const handleConfirm = useCallback(async () => {
     if (!isValid) return;
-    setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 300));
-    onConfirm(reasons, notes, requireRecollection);
-    setIsSubmitting(false);
+    setLocalSubmitting(true);
+    try {
+      await onConfirm(reasons, notes, requireRecollection);
+    } finally {
+      setLocalSubmitting(false);
+    }
   }, [isValid, reasons, notes, requireRecollection, onConfirm]);
 
   const toggleReason = (value: RejectionReason) => {
@@ -232,6 +238,8 @@ interface CollectionRejectionPopoverProps {
     notes: string,
     requireRecollection: boolean
   ) => Promise<void> | void;
+  /** When true, confirm button shows loading (e.g. reject mutation in progress) */
+  isSubmitting?: boolean;
   /** Custom trigger element (uses default icon button if not provided) */
   trigger?: React.ReactNode;
 }
@@ -243,6 +251,7 @@ export const CollectionRejectionPopover: React.FC<CollectionRejectionPopoverProp
   isRecollection,
   rejectionHistoryCount,
   onReject,
+  isSubmitting = false,
   trigger,
 }) => (
   <Popover
@@ -259,6 +268,7 @@ export const CollectionRejectionPopover: React.FC<CollectionRejectionPopoverProp
           isRecollection={isRecollection}
           rejectionHistoryCount={rejectionHistoryCount}
           onCancel={close}
+          isSubmitting={isSubmitting}
           onConfirm={async (reasons, notes, requireRecollection) => {
             await onReject(reasons, notes, requireRecollection);
             close();

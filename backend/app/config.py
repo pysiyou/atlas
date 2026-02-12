@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     REPORTS_DIR: str = "./storage/reports"
     UPLOADS_DIR: str = "./storage/uploads"
 
+    # Optional artificial delay for testing loading UI (ms). Set to 0 to disable.
+    ARTIFICIAL_DELAY_MS: int = Field(default=0, description="Optional delay in ms for all API v1 requests (for testing loading UI)")
+
     # Redis Cache
     REDIS_URL: str = Field(default="redis://localhost:6379/0", description="Redis connection URL")
     CACHE_ENABLED: bool = Field(default=True, description="Enable/disable Redis caching")

@@ -41,8 +41,9 @@ interface CollectionPopoverContentProps {
     notes?: string,
     color?: string,
     containerType?: ContainerType
-  ) => void;
+  ) => void | Promise<void>;
   onCancel: () => void;
+  isSubmitting?: boolean;
 }
 
 // eslint-disable-next-line max-lines-per-function -- form sections (quantity, container type, color, notes) kept in one component for cohesion
@@ -52,6 +53,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   testName,
   onConfirm,
   onCancel,
+  isSubmitting = false,
 }) => {
   const minimumVolume = requirement.totalVolume;
   const [volume, setVolume] = useState<number>(minimumVolume);
@@ -69,7 +71,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   const isValid =
     Boolean(selectedColor && selectedContainerType) && volume >= minimumVolume;
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     if (!selectedColor) {
       toast.error({
         title: 'Please select the top color',
@@ -91,7 +93,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       });
       return;
     }
-    onConfirm(volume, notes || undefined, selectedColor, selectedContainerType);
+    await Promise.resolve(onConfirm(volume, notes || undefined, selectedColor, selectedContainerType));
   }, [selectedColor, selectedContainerType, volume, notes, minimumVolume, onConfirm]);
 
   useEffect(() => {
@@ -117,6 +119,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       confirmLabel="Confirm"
       confirmVariant="primary"
       disabled={!isValid}
+      isSubmitting={isSubmitting}
       footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text="Collecting sample" />}
     >
       {/* Required quantity (volume) */}
@@ -255,6 +258,10 @@ interface CollectionPopoverProps {
     color?: string,
     containerType?: ContainerType
   ) => void;
+  /** When true, confirm button shows loading (e.g. collect mutation in progress) */
+  isSubmitting?: boolean;
+  /** Called when submitting state changes (e.g. so parent modal can set disableClose) */
+  onSubmittingChange?: (submitting: boolean) => void;
   /** Custom trigger element (uses default button if not provided) */
   trigger?: React.ReactNode;
 }
@@ -265,32 +272,50 @@ export const CollectionPopover: React.FC<CollectionPopoverProps> = ({
   testName,
   isRecollection = false,
   onConfirm,
+  isSubmitting = false,
+  onSubmittingChange,
   trigger,
-}) => (
-  <Popover
-    placement="bottom-end"
-    offsetValue={8}
-    trigger={
-      trigger || (
-        <Button variant="primary" size="xs" icon={<Icon name={ICONS.dataFields.flask} className="text-on-brand" />}>
-          {isRecollection ? 'RECOLLECT' : 'COLLECT'}
-        </Button>
-      )
-    }
-  >
-    {({ close }) => (
-      <div data-popover-content onClick={e => e.stopPropagation()}>
-        <CollectionPopoverContent
-          requirement={requirement}
-          patientName={patientName}
-          testName={testName}
-          onConfirm={(volume, notes, color, containerType) => {
-            onConfirm(volume, notes, color, containerType);
-            close();
-          }}
-          onCancel={close}
-        />
-      </div>
-    )}
-  </Popover>
-);
+}) => {
+  const [localSubmitting, setLocalSubmitting] = useState(false);
+  const effectiveSubmitting = isSubmitting || localSubmitting;
+
+  React.useEffect(() => {
+    onSubmittingChange?.(effectiveSubmitting);
+  }, [effectiveSubmitting, onSubmittingChange]);
+
+  return (
+    <Popover
+      placement="bottom-end"
+      offsetValue={8}
+      preventClose={effectiveSubmitting}
+      trigger={
+        trigger || (
+          <Button variant="primary" size="xs" icon={<Icon name={ICONS.dataFields.flask} className="text-on-brand" />}>
+            {isRecollection ? 'RECOLLECT' : 'COLLECT'}
+          </Button>
+        )
+      }
+    >
+      {({ close }) => (
+        <div data-popover-content onClick={e => e.stopPropagation()}>
+          <CollectionPopoverContent
+            requirement={requirement}
+            patientName={patientName}
+            testName={testName}
+            onConfirm={async (volume, notes, color, containerType) => {
+              setLocalSubmitting(true);
+              try {
+                await Promise.resolve(onConfirm(volume, notes, color, containerType));
+                close();
+              } finally {
+                setLocalSubmitting(false);
+              }
+            }}
+            onCancel={close}
+            isSubmitting={effectiveSubmitting}
+          />
+        </div>
+      )}
+    </Popover>
+  );
+};
