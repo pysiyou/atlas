@@ -143,6 +143,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
         patientName: test.patientName,
         patientId: test.patientId,
         orderId: test.orderId,
+        referringPhysician: test.referringPhysician,
       }}
       sampleInfo={
         test.sampleId && test.collectedAt
