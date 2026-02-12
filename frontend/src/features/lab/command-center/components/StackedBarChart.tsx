@@ -202,6 +202,7 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
                 tickLine={false}
                 tick={{ fontSize: 11, fill: CHART_AXIS }}
                 width={40}
+                domain={[0, 'auto']}
                 tickFormatter={(value) =>
                   new Intl.NumberFormat('en-US', {
                     notation: 'compact',
