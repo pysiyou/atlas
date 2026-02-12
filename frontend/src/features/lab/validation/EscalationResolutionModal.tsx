@@ -126,6 +126,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         patientName: test.patientName,
         patientId: test.patientId,
         orderId: test.orderId,
+        referringPhysician: test.referringPhysician,
       }}
       sampleInfo={
         test.sampleId && test.collectedAt

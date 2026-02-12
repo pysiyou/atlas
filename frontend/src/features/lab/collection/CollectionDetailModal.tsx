@@ -212,7 +212,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
       title={<span className="font-mono text-brand tracking-wide">{displayId.sample(sample.sampleId)}</span>}
       subtitle={`${patientName} - ${sample.sampleType.toUpperCase()}`}
       headerBadges={headerBadges}
-      contextInfo={{ patientName, patientId, orderId }}
+      contextInfo={{ patientName, patientId, orderId, referringPhysician: order?.referringPhysician }}
       footer={footerContent}
       additionalContextInfo={
         <>

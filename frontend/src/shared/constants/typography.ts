@@ -23,7 +23,7 @@ export const DATA_ID_SECONDARY = 'text-xxs text-text-tertiary  truncate font-mon
 export const DETAIL_LABEL = 'text-xs text-text-tertiary';
 
 /** Detail row value: consistent scale for field values */
-export const DETAIL_VALUE = 'text-sm text-text-primary';
+export const DETAIL_VALUE = 'text-xs text-text-primary';
 
 /** Amount/currency cell: consistent styling for price and amount columns */
 export const DATA_AMOUNT = 'text-sm text-text-primary';
