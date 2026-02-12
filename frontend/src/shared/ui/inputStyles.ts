@@ -22,9 +22,7 @@ export const inputBase =
 export const inputInner = 'flex-1 min-w-0 bg-transparent border-0 outline-none py-0';
 
 /** Wrapper for search/filter input (icon + input in one box) */
-export const inputWrapper =
-  'group relative w-full flex items-center gap-2 h-[34px] px-3 bg-surface ' +
-  inputBorderFocusWithin;
+export const inputWrapper = `group relative w-full flex items-center gap-2 h-[34px] px-3 bg-surface ${inputBorderFocusWithin}`;
 
 /** Trigger for filter dropdowns (MultiSelect, SingleSelect, Date, PriceRange) — same border/text/hover; open state applied via inputTriggerOpen */
 export const inputTrigger =

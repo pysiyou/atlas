@@ -146,7 +146,7 @@ const PaymentReceipt: React.FC<{ sourceOrder: Order; paymentDate?: string; payme
  * method selection directly in the modal. Larger version of the payment popover.
  */
 // Large component is necessary for comprehensive payment detail modal with order info, test list, payment method selection, and processing
-// eslint-disable-next-line max-lines-per-function
+ 
 export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   isOpen,
   onClose,

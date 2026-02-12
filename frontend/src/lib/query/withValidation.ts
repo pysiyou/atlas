@@ -178,10 +178,8 @@ export function createValidatedArrayQueryFn<T>(
  * });
  * ```
  */
-import type { ZodType } from 'zod';
-
 export function createValidatedSelector<TInput, TOutput>(
-  schema: ZodType<TOutput, any, any>
+  schema: ZodSchema<TOutput>
 ): (data: TInput) => TOutput {
   return (data: TInput) => {
     const result = schema.safeParse(data);
