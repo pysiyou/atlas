@@ -9,6 +9,7 @@ import {
   useLabOperationLogs,
   useTestsReceivedAndValidatedByDay,
   useActivityByDay,
+  useDistributionByCategory,
 } from './hooks';
 import {
   CommandCenterMetricCard,
@@ -38,6 +39,8 @@ export const CommandCenterView: React.FC = () => {
   const { data: testsReceivedAndValidatedData, isLoading: trendLoading } = useTestsReceivedAndValidatedByDay(LAST_DAYS);
   const { data: activityByDayData, isLoading: activityLoading } = useActivityByDay(LAST_DAYS);
 
+  const { data: distributionByCategoryData, isLoading: distributionLoading } = useDistributionByCategory();
+
   const stackedBarData = React.useMemo(
     () =>
       activityByDayData.map((p) => ({
@@ -54,7 +57,7 @@ export const CommandCenterView: React.FC = () => {
       className="flex-1 min-h-0 min-w-[720px] overflow-hidden grid"
       style={{ gridTemplateRows: '20fr 40fr 40fr' }}
     >
-      {/* Row 1: Pending sample / result entry / validation / rejected — bottom-left; today's grow top-right */}
+      {/* Row 1: Pending counts; trend = % growth vs yesterday */}
       <div className="min-h-0 min-w-0 overflow-hidden border-b border-border-default grid grid-cols-4">
         <div className={`${rowCellClass} flex items-stretch p-2`}>
           <CommandCenterMetricCard
@@ -62,7 +65,8 @@ export const CommandCenterView: React.FC = () => {
             primaryValue={row1.isLoading ? '—' : row1.samplesStillPending}
             secondaryValue={undefined}
             icon={ICONS.dataFields.flask}
-            trend={{ value: row1.samplesCreatedTodayPct, label: 'more samples today' }}
+            trend={{ value: row1.trendSamplesCollected, label: row1.trendLabel }}
+            urgentCount={row1.samplesUrgentCount}
           />
         </div>
         <div className={`${rowCellClass} flex items-stretch p-2`}>
@@ -71,7 +75,8 @@ export const CommandCenterView: React.FC = () => {
             primaryValue={row1.isLoading ? '—' : row1.resultStillNeedingEntry}
             secondaryValue={undefined}
             icon={ICONS.dataFields.notebook}
-            trend={{ value: row1.resultEntryQueueEnteredTodayPct, label: 'entered result-entry today' }}
+            trend={{ value: row1.trendResultEntered, label: row1.trendLabel }}
+            urgentCount={row1.resultUrgentCount}
           />
         </div>
         <div className={`${rowCellClass} flex items-stretch p-2`}>
@@ -80,7 +85,8 @@ export const CommandCenterView: React.FC = () => {
             primaryValue={row1.isLoading ? '—' : row1.validationTotal}
             secondaryValue={undefined}
             icon={ICONS.ui.shieldCheck}
-            trend={{ value: row1.validationQueueEnteredTodayPct, label: 'entered validation today' }}
+            trend={{ value: row1.trendValidated, label: row1.trendLabel }}
+            urgentCount={row1.validationUrgentCount}
           />
         </div>
         <div className={`${rowCellClass} flex items-stretch p-2`}>
@@ -89,7 +95,8 @@ export const CommandCenterView: React.FC = () => {
             primaryValue={row1.isLoading ? '—' : row1.rejectedTotal}
             secondaryValue={undefined}
             icon={ICONS.actions.closeCircle}
-            trend={{ value: row1.rejectedTodayPct, label: 'rejected today' }}
+            trend={{ value: row1.trendRejected, label: row1.trendLabel }}
+            urgentCount={row1.rejectedUrgentCount}
           />
         </div>
       </div>
@@ -120,12 +127,7 @@ export const CommandCenterView: React.FC = () => {
           <DistributionPieChart
             title="Distribution by Category"
             subTitle="this year"
-            data={[
-              { name: 'Hematology', value: 400 },
-              { name: 'Chemistry', value: 300 },
-              { name: 'Microbiology', value: 300 },
-              { name: 'Immunology', value: 200 },
-            ]}
+            data={distributionLoading ? [] : distributionByCategoryData}
           />
         </div>
       </div>
