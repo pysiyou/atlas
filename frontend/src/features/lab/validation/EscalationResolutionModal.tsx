@@ -150,7 +150,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             placement="top-end"
             offsetValue={8}
             trigger={
-              <Button variant="approve" size="md" disabled={resolving}>
+              <Button variant="approve" size="md" disabled={resolving} isLoading={resolving}>
                 Force Validate
               </Button>
             }
@@ -190,7 +190,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             placement="top-end"
             offsetValue={8}
             trigger={
-              <Button variant="secondary" size="md" disabled={resolving}>
+              <Button variant="secondary" size="md" disabled={resolving} isLoading={resolving}>
                 Authorize Re-test
               </Button>
             }
@@ -233,7 +233,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             placement="top-end"
             offsetValue={8}
             trigger={
-              <Button variant="reject" size="md" disabled={resolving}>
+              <Button variant="reject" size="md" disabled={resolving} isLoading={resolving}>
                 Final Reject / New Sample
               </Button>
             }

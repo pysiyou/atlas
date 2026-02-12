@@ -318,7 +318,11 @@ export const ValidationView: React.FC = () => {
   );
 
   if (ordersLoading || testsLoading) {
-    return <div>Loading...</div>;
+    return (
+      <ErrorBoundary>
+        <LoadingState message="Loading validation..." fullScreen size="lg" />
+      </ErrorBoundary>
+    );
   }
 
   const isLoading = ordersLoading || testsLoading;
@@ -351,6 +355,7 @@ export const ValidationView: React.FC = () => {
               handleValidate(test.orderId, test.testCode, false, reason, type),
             onClick: () => openValidationModal(test),
             orderHasValidatedTests: hasValidatedTests,
+            isApproving: isValidating[commentKey],
           };
 
           // Desktop: checkbox + card when id present, else card only

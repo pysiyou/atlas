@@ -10,7 +10,7 @@
  * - EntryInfoLine for result entry metadata
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, SectionContainer } from '@/shared/ui';
 import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
@@ -70,11 +70,18 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   // High complexity is necessary for comprehensive validation logic with multiple conditional branches and state management
   // eslint-disable-next-line complexity
 }) => {
+  const [isApproving, setIsApproving] = useState(false);
+
   if (!test.results) return null;
 
-  const handleApprove = () => {
-    onApprove();
-    onClose();
+  const handleApprove = async () => {
+    setIsApproving(true);
+    try {
+      await Promise.resolve(onApprove());
+      onClose();
+    } finally {
+      setIsApproving(false);
+    }
   };
 
   // Flags and rejection state
@@ -174,7 +181,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               onClose();
             }}
           />
-          <Button onClick={handleApprove} variant="approve" size="md">
+          <Button onClick={handleApprove} variant="approve" size="md" isLoading={isApproving}>
             Approve
           </Button>
         </ModalFooter>

@@ -73,6 +73,8 @@ export interface PopoverProps {
   className?: string;
   /** Show backdrop overlay (default: true) */
   showBackdrop?: boolean;
+  /** When true, prevents closing via backdrop click or escape (e.g. while submitting) */
+  preventClose?: boolean;
 }
 
 // Global style for hiding scrollbars
@@ -146,6 +148,7 @@ export const Popover: React.FC<PopoverProps> = ({
   noBorder = false,
   className = '',
   showBackdrop = true,
+  preventClose = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -195,11 +198,11 @@ export const Popover: React.FC<PopoverProps> = ({
     return () => clearTimeout(timeoutId);
   }, [isOpen, update, refs.floating]);
 
-  // Floating UI interactions
+  // Floating UI interactions - disable dismiss (outside click, escape) when preventClose
   const { getReferenceProps, getFloatingProps } = useInteractions([
     useClick(context),
     useRole(context),
-    useDismiss(context),
+    useDismiss(context, { enabled: !preventClose }),
   ]);
 
   return (
@@ -225,7 +228,7 @@ export const Popover: React.FC<PopoverProps> = ({
                     backgroundColor: 'rgba(0, 0, 0, 0.3)',
                     backdropFilter: 'blur(2px)',
                   }}
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => { if (!preventClose) setIsOpen(false); }}
                 />
               )}
 

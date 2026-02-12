@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Icon } from '@/shared/ui';
+import { Icon, ClaudeLoader } from '@/shared/ui';
 import { inputWrapper, inputInner, inputText } from '@/shared/ui/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
@@ -117,7 +117,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
       {/* Column 3: Right Icons (loading/clear) */}
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
-          <div className="w-4 h-4 border-2 border-brand border-t-transparent rounded-full animate-spin" />
+          <ClaudeLoader size="xs" color="var(--brand)" />
         )}
         {localValue && !isDebouncing && (
           <button

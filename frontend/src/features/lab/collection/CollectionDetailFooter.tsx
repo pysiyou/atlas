@@ -43,6 +43,8 @@ interface CollectionDetailFooterProps {
     requireRecollection?: boolean
   ) => Promise<void>;
   onClose: () => void;
+  /** Called when the collect popover submitting state changes (so modal can set disableClose) */
+  onPopoverSubmittingChange?: (submitting: boolean) => void;
 }
 
 /**
@@ -62,6 +64,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
   onCollect,
   onReject,
   onClose,
+  onPopoverSubmittingChange,
 }) => {
   // For pending samples - show collect button
   if (isPending && pendingSampleDisplay && onCollect) {
@@ -78,10 +81,11 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
           patientName={patientName}
           testName={testNames.join(', ')}
           isRecollection={isRecollection}
-          onConfirm={(volume, notes, color, ct) => {
-            onCollect(pendingSampleDisplay, volume, notes, color, ct);
+          onConfirm={async (volume, notes, color, ct) => {
+            await Promise.resolve(onCollect(pendingSampleDisplay, volume, notes, color, ct));
             onClose();
           }}
+          onSubmittingChange={onPopoverSubmittingChange}
           trigger={
             <Button variant="primary" size="md" icon={<Icon name={ICONS.dataFields.flask} />}>
               {isRecollection ? 'Recollect Sample' : 'Collect Sample'}

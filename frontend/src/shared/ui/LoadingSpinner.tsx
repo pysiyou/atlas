@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
-export type ClaudeLoaderSize = 'sm' | 'md' | 'lg';
+export type ClaudeLoaderSize = 'xs' | 'sm' | 'md' | 'lg';
 
 export interface ClaudeLoaderProps {
   size?: ClaudeLoaderSize;
@@ -10,6 +10,7 @@ export interface ClaudeLoaderProps {
 }
 
 const SIZE_MAP: Record<ClaudeLoaderSize, number> = {
+  xs: 16,
   sm: 32,
   md: 64,
   lg: 96,

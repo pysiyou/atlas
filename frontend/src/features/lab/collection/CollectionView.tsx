@@ -194,7 +194,12 @@ export const CollectionView: React.FC = () => {
       <LabWorkflowView
         items={filteredDisplays}
         renderCard={display => (
-          <CollectionCard display={display} onCollect={handleCollect} isMobile={isMobile} />
+          <CollectionCard
+            display={display}
+            onCollect={handleCollect}
+            isCollecting={collectSampleMutation.isPending}
+            isMobile={isMobile}
+          />
         )}
         getItemKey={(display, idx) =>
           `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`

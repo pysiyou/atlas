@@ -10,7 +10,7 @@
  */
 
 import React, { useState } from 'react';
-import { Popover, IconButton, Icon, Alert, FooterInfo } from '@/shared/ui';
+import { Popover, IconButton, Icon, Alert, FooterInfo, ClaudeLoader } from '@/shared/ui';
 import { PopoverForm } from './PopoverForm';
 import { useRejectionManager } from '../hooks/useRejectionManager';
 import { useRejectionDialogState } from '../hooks/useRejectionDialogState';
@@ -347,7 +347,7 @@ export const RejectionHistoryBanner: React.FC<RejectionHistoryBannerProps> = ({
   return (
     <div className="mt-2 px-2 py-1.5 bg-warning-bg border border-warning-stroke rounded text-warning-fg">
       <div className="flex items-center gap-1.5">
-        <Icon name={ICONS.actions.loading} className="w-3 h-3" />
+        <ClaudeLoader size="xs" color="currentColor" />
         <span className="text-xxs font-normal">{message}</span>
       </div>
       {rejectionReason && (

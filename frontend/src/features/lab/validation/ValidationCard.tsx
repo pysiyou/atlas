@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Badge, Card, Icon, IconButton, Alert } from '@/shared/ui';
+import { Badge, Button, Card, Icon, Alert } from '@/shared/ui';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
@@ -117,6 +117,8 @@ interface ValidationCardProps {
   onClick?: () => void;
   /** When true, re-collect is disabled (order has validated tests). */
   orderHasValidatedTests?: boolean;
+  /** When true, approve action is in progress (show loading on approve button) */
+  isApproving?: boolean;
   /** When true, renders mobile-optimized layout */
   isMobile?: boolean;
 }
@@ -130,6 +132,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   onReject,
   onClick,
   orderHasValidatedTests = false,
+  isApproving = false,
   isMobile = false,
 }) => {
   const { openModal } = useModal();
@@ -238,15 +241,18 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
                 onReject={handleRejectionResult}
               />
             </div>
-            <IconButton
+            <Button
               variant="approve"
               size="sm"
               title="Approve Results"
+              isLoading={isApproving}
               onClick={e => {
                 e.stopPropagation();
                 onApprove();
               }}
-            />
+            >
+              Approve
+            </Button>
           </div>
         </div>
       </Card>
@@ -273,15 +279,18 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
         orderHasValidatedTests={orderHasValidatedTests}
         onReject={handleRejectionResult}
       />
-      <IconButton
+      <Button
+        variant="approve"
+        size="sm"
+        title="Approve Results"
+        isLoading={isApproving}
         onClick={e => {
           e.stopPropagation();
           onApprove();
         }}
-        variant="approve"
-        size="sm"
-        title="Approve Results"
-      />
+      >
+        Approve
+      </Button>
     </div>
   );
 

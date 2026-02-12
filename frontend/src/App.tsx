@@ -44,17 +44,16 @@ const Admin = lazy(() => import('@/pages/AdminPage').then(m => ({ default: m.Adm
 import { ROUTES } from '@/config';
 
 /**
- * Loading fallback component for route transitions
+ * Loading fallback for route transitions (lazy chunk load) and auth rehydration.
+ * Same message as DataLoader so refresh shows one consistent "Loading..." state.
  */
 const PageLoadingFallback: React.FC = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <LoadingState message="Loading page..." />
-  </div>
+  <LoadingState message="Loading..." fullScreen size="lg" />
 );
 
 /**
  * Wrapper for protected routes. AuthRehydrationGate (mounted once in app) clears
- * isLoading after one frame so we never stick on "Loading page...".
+ * isLoading after one frame so we never stick on loading.
  */
 interface ProtectedFeatureRouteProps {
   children: React.ReactNode;

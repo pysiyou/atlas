@@ -69,7 +69,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
           {subtitle && <p className="text-xs text-text-tertiary">{subtitle}</p>}
           {headerBadges && <div className="flex items-center gap-2 pt-1">{headerBadges}</div>}
         </div>
-        <IconButton onClick={onCancel} variant="close" size="sm" title="Close" />
+        <IconButton onClick={onCancel} variant="close" size="sm" title="Close" disabled={isSubmitting} />
       </div>
 
       {/* Body - scrollable content area */}

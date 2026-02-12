@@ -57,6 +57,8 @@ interface LabDetailModalProps {
   footer?: ReactNode;
   /** Footer info icon and text (defaults to lab workflow) */
   footerInfo?: ReactNode;
+  /** When true, prevents closing via header close button, backdrop click, or Escape (e.g. while saving) */
+  disableClose?: boolean;
 }
 
 /**
@@ -75,6 +77,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
   children,
   footer,
   footerInfo,
+  disableClose = false,
 }) => {
   const { getUserName } = useUserLookup();
 
@@ -86,6 +89,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
       title={title}
       subtitle={subtitle}
       size="3xl"
+      disableClose={disableClose}
     >
       <div className="flex flex-col h-full bg-surface-page">
         <div className="flex-1 overflow-y-auto p-6 space-y-4">

@@ -8,9 +8,8 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { Button, Icon } from '@/shared/ui';
+import { Button, ClaudeLoader } from '@/shared/ui';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils';
 
 interface BulkValidationItem {
   id: number;
@@ -158,7 +157,9 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
         >
           {isProcessing ? (
             <>
-              <Icon name={ICONS.actions.loading} className="w-4 h-4 mr-2 animate-spin" />
+              <span className="mr-2 inline-flex shrink-0">
+              <ClaudeLoader size="xs" color="currentColor" />
+            </span>
               Processing...
             </>
           ) : (

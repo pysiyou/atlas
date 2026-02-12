@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Icon, Button, Badge, Modal, FooterInfo } from '@/shared/ui';
+import { Icon, Button, Badge, Modal, FooterInfo, ClaudeLoader } from '@/shared/ui';
 import { MultiSelectFilter } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
 import { DateFilter } from '@/shared/ui';
@@ -93,7 +93,7 @@ const SearchInput: React.FC<{
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
-          <div className="w-4 h-4 border-2 border-brand border-t-transparent rounded-full animate-spin" />
+          <ClaudeLoader size="xs" color="var(--brand)" />
         )}
         {localValue && !isDebouncing && (
           <button
