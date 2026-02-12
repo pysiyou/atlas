@@ -1,7 +1,7 @@
 /**
  * CollectionPopover - Popover for collecting samples
  *
- * Allows lab staff to record collection details: volume, container type, and color.
+ * Technician selects container type (tube or cup), top color, required quantity, and optional notes.
  */
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
@@ -9,10 +9,28 @@ import { toast } from '@/shared/components/feedback';
 import { Popover, Button, Icon, FooterInfo } from '@/shared/ui';
 import { PopoverForm } from '../components/PopoverForm';
 import type { ContainerType } from '@/types';
-import { CONTAINER_COLOR_OPTIONS, CONTAINER_TYPE_OPTIONS, CONTAINER_CONFIG } from '@/types';
+import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';
 import type { SampleRequirement } from '@/utils';
 import { cn, ICONS, getContainerIcon } from '@/utils';
 import { inputBase, inputError } from '@/shared/ui/inputStyles';
+
+/** Container type choices for collection: tube or cup only */
+const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = [
+  { value: 'tube', label: 'Tube' },
+  { value: 'cup', label: 'Cup' },
+];
+
+/** Static bg classes so Tailwind includes them (dynamic classes get purged). */
+const COLLECTION_TOP_COLOR_BG: Record<
+  'red-top' | 'yellow-top' | 'green-top' | 'black-top' | 'blue-top',
+  string
+> = {
+  'red-top': 'bg-red-600',
+  'yellow-top': 'bg-yellow-600',
+  'green-top': 'bg-green-600',
+  'black-top': 'bg-gray-900',
+  'blue-top': 'bg-blue-600',
+};
 
 interface CollectionPopoverContentProps {
   requirement: SampleRequirement;
@@ -27,8 +45,7 @@ interface CollectionPopoverContentProps {
   onCancel: () => void;
 }
 
-// Large component is necessary for comprehensive collection popover with requirement display, rejection options, and form handling
-// eslint-disable-next-line max-lines-per-function
+// eslint-disable-next-line max-lines-per-function -- form sections (quantity, container type, color, notes) kept in one component for cohesion
 const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   requirement,
   patientName,
@@ -37,11 +54,10 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   onCancel,
 }) => {
   const minimumVolume = requirement.totalVolume;
-  const [volume, setVolume] = useState<number>(requirement.totalVolume);
+  const [volume, setVolume] = useState<number>(minimumVolume);
   const [notes, setNotes] = useState('');
   const [selectedColor, setSelectedColor] = useState<string>('');
 
-  // Default container type based on sample type
   const defaultContainerType: ContainerType = useMemo(() => {
     const sampleType = requirement.sampleType?.toLowerCase() || '';
     return sampleType === 'urine' || sampleType === 'stool' ? 'cup' : 'tube';
@@ -50,20 +66,21 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   const [selectedContainerType, setSelectedContainerType] =
     useState<ContainerType>(defaultContainerType);
 
-  const isValid = selectedColor && selectedContainerType && volume >= minimumVolume;
+  const isValid =
+    Boolean(selectedColor && selectedContainerType) && volume >= minimumVolume;
 
   const handleSubmit = useCallback(() => {
     if (!selectedColor) {
       toast.error({
-        title: 'Please select the container color',
-        subtitle: 'Select the container cap color to match the actual sample container used.',
+        title: 'Please select the top color',
+        subtitle: 'Select the container cap color used for this sample.',
       });
       return;
     }
     if (!selectedContainerType) {
       toast.error({
         title: 'Please select the container type',
-        subtitle: 'Select the container type (cup or tube) used for this sample.',
+        subtitle: 'Select tube or cup used for this sample.',
       });
       return;
     }
@@ -74,10 +91,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       });
       return;
     }
-    onConfirm(volume, notes, selectedColor, selectedContainerType);
-  }, [selectedColor, selectedContainerType, volume, minimumVolume, notes, onConfirm]);
+    onConfirm(volume, notes || undefined, selectedColor, selectedContainerType);
+  }, [selectedColor, selectedContainerType, volume, notes, minimumVolume, onConfirm]);
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter' && !e.shiftKey) {
@@ -103,11 +119,11 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       disabled={!isValid}
       footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text="Collecting sample" />}
     >
-      {/* Volume Input */}
+      {/* Required quantity (volume) */}
       <div>
         <div className="flex items-center justify-between mb-1">
           <label className="block text-xs font-normal text-text-tertiary">
-            Volume Collected <span className="text-danger-fg">*</span>
+            Required Quantity <span className="text-danger-fg">*</span>
           </label>
           {minimumVolume > 0 && (
             <div className="text-xxs text-warning-fg bg-warning-bg px-2 py-0.5 rounded border border-warning-stroke flex items-center gap-1">
@@ -125,8 +141,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             className={cn(
               inputBase,
               'pr-8',
-              volume < minimumVolume && inputError,
-              volume > 100 && 'border-warning-stroke-emphasis focus:ring-2 focus:ring-warning-stroke focus:ring-opacity-20'
+              volume < minimumVolume && inputError
             )}
             placeholder="0.0"
           />
@@ -134,31 +149,21 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             mL
           </span>
         </div>
-        <div className="h-6 mt-1.5">
-          <div
-            className={`text-xs text-warning-fg flex items-center gap-1.5 bg-warning-bg p-1.5 rounded border border-warning-stroke transition-opacity duration-200 ${volume > 100 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-          >
-            <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
-            Unusually high volume - please verify
-          </div>
-        </div>
       </div>
 
-      {/* Container Type - static card + checkmark only on selection (matches PaymentMethodSelector) */}
+      {/* Container Type: tube or cup only */}
       <div>
         <label className="block text-xs font-normal text-text-tertiary mb-2">
           Container Type <span className="text-danger-fg">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
-          {CONTAINER_TYPE_OPTIONS.map(option => {
-            const isRequired = requirement.containerTypes.includes(option.value as ContainerType);
+          {COLLECTION_CONTAINER_OPTIONS.map(option => {
             const isSelected = selectedContainerType === option.value;
             return (
               <button
                 key={option.value}
                 type="button"
-                onClick={() => setSelectedContainerType(option.value as ContainerType)}
-                title={isRequired ? 'Required container type' : 'Not in requirements'}
+                onClick={() => setSelectedContainerType(option.value)}
                 className="relative flex items-center gap-2.5 p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200 cursor-pointer"
               >
                 <Icon
@@ -166,7 +171,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                   className="w-7 h-7 shrink-0 text-text-disabled"
                 />
                 <span className="flex-1 text-xs font-normal text-left text-text-secondary">
-                  {option.label.toUpperCase()}
+                  {option.label}
                 </span>
                 <div
                   className={`
@@ -182,58 +187,37 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             );
           })}
         </div>
-        <div className="h-6 mt-1.5">
-          <div
-            className={`text-xs text-warning-fg flex items-center gap-1.5 bg-warning-bg p-1.5 rounded border border-warning-stroke transition-opacity duration-200 ${selectedContainerType && !requirement.containerTypes.includes(selectedContainerType) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-          >
-            <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
-            Warning: Selected container type not in requirements
-          </div>
-        </div>
       </div>
 
-      {/* Container Color */}
+      {/* Top color: list of coloured circles */}
       <div>
         <label className="block text-xs font-normal text-text-tertiary mb-1">
-          Container Color <span className="text-danger-fg">*</span>
+          Top Color <span className="text-danger-fg">*</span>
         </label>
-        <div className="flex gap-3">
-          {CONTAINER_COLOR_OPTIONS.map(option => {
-            const isRequired = requirement.containerTopColors.includes(option.value);
-            const isSelected = selectedColor === option.value;
-            // Get text class from config or fallback
-            // We use type assertion since we know the value is a valid ContainerType key if it's in options
-            const colorClass = CONTAINER_CONFIG[option.value as ContainerType]?.textClass || 'text-gray-500';
-            
+        <div className="flex flex-wrap gap-3">
+          {COLLECTION_TOP_COLOR_VALUES.map(value => {
+            const isSelected = selectedColor === value;
+            const config = CONTAINER_CONFIG[value];
+            const bgClass =
+              value in COLLECTION_TOP_COLOR_BG
+                ? COLLECTION_TOP_COLOR_BG[value as keyof typeof COLLECTION_TOP_COLOR_BG]
+                : 'bg-gray-500';
             return (
               <button
-                key={option.value}
-                onClick={() => setSelectedColor(option.value)}
-                className={`w-8 h-8 rounded-full transition-all duration-200 ${colorClass.replace('text-', 'bg-')} ${
+                key={value}
+                type="button"
+                onClick={() => setSelectedColor(value)}
+                className={cn(
+                  'w-8 h-8 rounded-full transition-all duration-200',
+                  bgClass,
                   isSelected
                     ? 'scale-110 ring-2 ring-offset-2 ring-brand shadow-md'
-                    : isRequired
-                      ? 'opacity-100 hover:scale-105 hover:shadow-sm ring-2 ring-success-stroke'
-                      : 'opacity-60 hover:opacity-80 hover:scale-105 hover:shadow-sm'
-                }`}
-                title={`${option.label.toUpperCase()}${isRequired ? ' (Required)' : ''}`}
+                    : 'opacity-80 hover:opacity-100 hover:scale-105 hover:shadow-sm'
+                )}
+                title={config?.label ?? value}
               />
             );
           })}
-        </div>
-        <div className="h-6 mt-1.5">
-          <div
-            className={`text-xs flex items-center gap-1.5 p-1.5 rounded border transition-opacity duration-200 ${
-              !selectedColor
-                ? 'opacity-100 text-warning-fg bg-warning-bg border-warning-stroke'
-                : selectedColor && !requirement.containerTopColors.includes(selectedColor as never)
-                  ? 'opacity-100 text-warning-fg bg-warning-bg border-warning-stroke'
-                  : 'opacity-0 pointer-events-none border-transparent'
-            }`}
-          >
-            <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
-            {!selectedColor ? 'Selection required' : 'Warning: Selected color not in requirements'}
-          </div>
         </div>
       </div>
 
