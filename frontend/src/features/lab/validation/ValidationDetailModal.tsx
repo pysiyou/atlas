@@ -10,8 +10,9 @@
  * - EntryInfoLine for result entry metadata
  */
 
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
 import { Button, SectionContainer } from '@/shared/ui';
+import { useAsyncHandler } from '@/hooks';
 import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
 import {
@@ -70,19 +71,15 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   // High complexity is necessary for comprehensive validation logic with multiple conditional branches and state management
   // eslint-disable-next-line complexity
 }) => {
-  const [isApproving, setIsApproving] = useState(false);
+  const approveHandler = useCallback(async () => {
+    await onApprove();
+    onClose();
+  }, [onApprove, onClose]);
+  const { execute: handleApprove, isPending: isApproving } = useAsyncHandler(approveHandler, {
+    minDisplayMs: 100,
+  });
 
   if (!test.results) return null;
-
-  const handleApprove = async () => {
-    setIsApproving(true);
-    try {
-      await Promise.resolve(onApprove());
-      onClose();
-    } finally {
-      setIsApproving(false);
-    }
-  };
 
   // Flags and rejection state
   const hasFlags = test.flags && test.flags.length > 0;

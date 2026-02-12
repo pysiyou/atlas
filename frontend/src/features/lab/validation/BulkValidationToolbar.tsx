@@ -8,7 +8,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { Button, ClaudeLoader } from '@/shared/ui';
+import { Button } from '@/shared/ui';
 import { cn } from '@/utils';
 
 interface BulkValidationItem {
@@ -154,17 +154,9 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
           disabled={approvableSelected.length === 0 || isProcessing}
           variant="approve"
           size="sm"
+          isLoading={isProcessing}
         >
-          {isProcessing ? (
-            <>
-              <span className="mr-2 inline-flex shrink-0">
-              <ClaudeLoader size="xs" color="currentColor" />
-            </span>
-              Processing...
-            </>
-          ) : (
-            `Approve (${approvableSelected.length})`
-          )}
+          {isProcessing ? 'Processing...' : `Approve (${approvableSelected.length})`}
         </Button>
       </div>
     </div>

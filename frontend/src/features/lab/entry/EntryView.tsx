@@ -8,10 +8,10 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import {
   useOrdersList,
-  useInvalidateOrders,
   useTestCatalog,
   useTestNameLookup,
 } from '@/hooks/queries';
+import { useEnterResults } from '@/hooks/queries/useResultMutations';
 import { checkReferenceRangeWithDemographics } from '@/utils';
 import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
@@ -24,13 +24,11 @@ import { entryFilterConfig } from '../constants';
 import { ErrorBoundary, LoadingState } from '@/shared/components';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { resultAPI } from '@/services/api';
 
 // Large component is necessary for comprehensive entry view with filtering, sorting, card rendering, and result entry functionality
 // eslint-disable-next-line max-lines-per-function
 export const EntryView: React.FC = () => {
   const { orders, isLoading: ordersLoading } = useOrdersList();
-  const { invalidateAll: invalidateOrders } = useInvalidateOrders();
   const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();
   const { getTest } = useTestNameLookup();
   const { openModal } = useModal();
@@ -38,7 +36,7 @@ export const EntryView: React.FC = () => {
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
   const [results, setResults] = useState<Record<string, Record<string, string>>>({});
   const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
-  const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
+  const enterMutation = useEnterResults();
 
   const allTests = useLabTestsFromOrders({
     orders,
@@ -103,10 +101,7 @@ export const EntryView: React.FC = () => {
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
       const resultKey = `${orderIdStr}-${testCode}`;
 
-      // Prevent concurrent submissions
-      if (isSaving[resultKey]) {
-        return;
-      }
+      if (enterMutation.isPending) return;
 
       const testResults = finalResults || results[resultKey];
       if (!testResults || Object.keys(testResults).length === 0) {
@@ -127,7 +122,7 @@ export const EntryView: React.FC = () => {
       }
 
       const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
-      const formattedResults: Record<string, TestResult> = {};
+      const formattedResults: Record<string, unknown> = {};
       const testItem = allTests.find(t => t.orderId === numericOrderId && t.testCode === testCode);
       if (!testItem) {
         toast.error({
@@ -138,9 +133,9 @@ export const EntryView: React.FC = () => {
       }
       const patient = testItem.patient;
 
-      testDef.parameters.forEach(param => {
+      for (const param of testDef.parameters) {
         const value = testResults[param.code];
-        if (!value) return;
+        if (!value) continue;
 
         let status: TestResult['status'] = 'normal';
         let processedValue: string | number = value;
@@ -174,23 +169,19 @@ export const EntryView: React.FC = () => {
           referenceRange: param.referenceRange,
           status,
         };
-      });
-
-      setIsSaving(prev => ({ ...prev, [resultKey]: true }));
+      }
 
       try {
-        const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-        await resultAPI.enterResults(orderIdStr, testCode, {
+        await enterMutation.mutateAsync({
+          orderId: orderIdStr,
+          testCode,
           results: formattedResults,
           technicianNotes: finalNotes || technicianNotes[resultKey] || undefined,
         });
-        await invalidateOrders();
         toast.success({
           title: 'Results saved successfully',
           subtitle: 'The results have been saved and the order has been updated. You can continue with other tests.',
         });
-
-        // Clear local state
         setResults(prev => {
           const n = { ...prev };
           delete n[resultKey];
@@ -207,8 +198,7 @@ export const EntryView: React.FC = () => {
           title: 'Failed to save results. Please try again.',
           subtitle: 'The results could not be saved. Check your connection and try again.',
         });
-      } finally {
-        setIsSaving(prev => ({ ...prev, [resultKey]: false }));
+        throw error;
       }
     },
     [
@@ -217,9 +207,8 @@ export const EntryView: React.FC = () => {
       allTests,
       testCatalog,
       orders,
-      isSaving,
       getTest,
-      invalidateOrders,
+      enterMutation,
     ]
   );
 

@@ -12,6 +12,11 @@ import {
   useOrderLookup,
   useTestCatalog,
 } from '@/hooks/queries';
+import {
+  useValidateResults,
+  useRejectResults,
+  useValidateBulk,
+} from '@/hooks/queries/useResultMutations';
 import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
 import { ValidationCard } from './ValidationCard';
@@ -24,7 +29,6 @@ import { validationFilterConfig } from '../constants';
 import { ErrorBoundary, LoadingState } from '@/shared/components';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
-import { resultAPI } from '@/services/api';
 import { orderHasValidatedTests } from '@/features/order/utils';
 import { getErrorMessage, isLikelyNetworkOrTimeout } from '@/utils/errorHelpers';
 
@@ -45,8 +49,11 @@ export const ValidationView: React.FC = () => {
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
   const [comments, setComments] = useState<Record<string, string>>({});
-  const [isValidating, setIsValidating] = useState<Record<string, boolean>>({});
-  const [isBulkProcessing, setIsBulkProcessing] = useState(false);
+  const [pendingValidateKey, setPendingValidateKey] = useState<string | null>(null);
+
+  const validateMutation = useValidateResults();
+  const rejectMutation = useRejectResults();
+  const bulkMutation = useValidateBulk();
 
   const allTests = useLabTestsFromOrders({
     orders,
@@ -100,16 +107,12 @@ export const ValidationView: React.FC = () => {
   } = useBulkSelection(ENABLE_BULK_VALIDATION ? filteredTestsWithId : []);
 
   /**
-   * Handle bulk approval of selected tests
-   * Uses the bulk validation endpoint for efficient processing
+   * Handle bulk approval via useValidateBulk. Returns Promise so toolbar can await.
    */
-  const handleBulkApprove = useCallback(async (testIds: number[]) => {
-    if (testIds.length === 0) return;
+  const handleBulkApprove = useCallback(
+    async (testIds: number[]): Promise<void> => {
+      if (testIds.length === 0) return;
 
-    setIsBulkProcessing(true);
-
-    try {
-      // Map test IDs to bulk validation items
       const items = testIds
         .map(testId => {
           const test = allTests.find(t => t.id === testId);
@@ -125,60 +128,49 @@ export const ValidationView: React.FC = () => {
         return;
       }
 
-      // Call bulk validation endpoint
-      const response = await resultAPI.validateBulk(items, 'Bulk approved');
-
-      await invalidateOrders();
-
-      const results = response?.results ?? [];
-      const successCount = response?.successCount ?? 0;
-      const failureCount = response?.failureCount ?? 0;
-
-      if (failureCount === 0) {
-        toast.success({
-          title: `Successfully approved ${successCount} result(s)`,
-          subtitle: 'All selected results have been approved and the orders have been updated.',
+      try {
+        const response = await bulkMutation.mutateAsync({
+          items,
+          validationNotes: 'Bulk approved',
         });
-      } else {
-        const failedItems = results
-          .filter(r => !r.success)
-          .map(r => `${r.testCode} (Order ${r.orderId})`)
-          .join(', ');
+        const results = response?.results ?? [];
+        const successCount = response?.successCount ?? 0;
+        const failureCount = response?.failureCount ?? 0;
+        if (failureCount === 0) {
+          toast.success({
+            title: `Successfully approved ${successCount} result(s)`,
+            subtitle: 'All selected results have been approved and the orders have been updated.',
+          });
+        } else {
+          const failedItems = results
+            .filter(r => !r.success)
+            .map(r => `${r.testCode} (Order ${r.orderId})`)
+            .join(', ');
+          toast.error({
+            title: `Approved ${successCount}, failed ${failureCount}${failedItems ? `: ${failedItems}` : ''}`,
+            subtitle: 'Some results could not be approved. Check the failed items and try again if needed.',
+          });
+        }
+        setSelectedIds(new Set());
+      } catch (error) {
+        logger.error('Error in bulk validation', error instanceof Error ? error : undefined);
         toast.error({
-          title: `Approved ${successCount}, failed ${failureCount}${failedItems ? `: ${failedItems}` : ''}`,
-          subtitle: 'Some results could not be approved. Check the failed items and try again if needed.',
+          title: 'Failed to approve results. Please try again.',
+          subtitle: 'The bulk approval request failed. Check your connection and try again.',
         });
       }
-
-      // Clear selection
-      setSelectedIds(new Set());
-    } catch (error) {
-      logger.error('Error in bulk validation', error instanceof Error ? error : undefined);
-      toast.error({
-        title: 'Failed to approve results. Please try again.',
-        subtitle: 'The bulk approval request failed. Check your connection and try again.',
-      });
-    } finally {
-      setIsBulkProcessing(false);
-    }
-  }, [allTests, invalidateOrders, setSelectedIds]);
+    },
+    [allTests, bulkMutation, setSelectedIds]
+  );
 
   const handleCommentsChange = useCallback((commentKey: string, value: string) => {
     setComments(prev => ({ ...prev, [commentKey]: value }));
   }, []);
 
   /**
-   * Handle validation (approval or rejection) of test results.
-   *
-   * @param orderId - Order ID
-   * @param testCode - Test code
-   * @param approve - True for approval, false for rejection
-   * @param rejectionNotes - Reason for rejection (if rejecting)
-   * @param rejectionType - Type of rejection action (if rejecting)
-   *
-   * NOTE: When called with approve=false and BOTH rejectionNotes and rejectionType
-   * are undefined, this indicates the rejection was already performed by the
-   * RejectionDialog and we only need to refresh the data.
+   * Handle validation (approval or rejection) via useValidateResults / useRejectResults.
+   * Returns a Promise so modals can await and close on success. When approve=false and
+   * both rejectionNotes and rejectionType are undefined, RejectionDialog already called the API.
    */
   const handleValidate = useCallback(
     async (
@@ -187,98 +179,110 @@ export const ValidationView: React.FC = () => {
       approve: boolean,
       rejectionNotes?: string,
       rejectionType?: 're-test' | 're-collect'
-    ) => {
+    ): Promise<void> => {
       if (ordersLoading) return;
 
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
       const commentKey = `${orderIdStr}-${testCode}`;
+      const clearPending = () => setPendingValidateKey(null);
 
-      // Prevent concurrent validations
-      if (isValidating[commentKey]) {
-        return;
-      }
-
-      setIsValidating(prev => ({ ...prev, [commentKey]: true }));
-
-      try {
-        if (approve) {
-          // Use validate endpoint for approvals
-          await resultAPI.validateResults(orderIdStr, testCode, {
-            decision: 'approved',
+      if (approve) {
+        setPendingValidateKey(commentKey);
+        try {
+          await validateMutation.mutateAsync({
+            orderId: orderIdStr,
+            testCode,
             validationNotes: comments[commentKey] || undefined,
           });
-          await invalidateOrders();
           toast.success({
             title: 'Results approved',
             subtitle: 'These results have been approved and are now final. The order status has been updated.',
           });
-        } else {
-          // Check if the rejection was already performed by the RejectionDialog.
-          // When both rejectionNotes and rejectionType are undefined, the dialog
-          // already called the API and we only need to refresh the data.
-          const alreadyRejected = rejectionNotes === undefined && rejectionType === undefined;
-
-          if (alreadyRejected) {
-            // Rejection was already performed by RejectionDialog - just refresh
-            await invalidateOrders();
-            toast.success({
-              title: 'Results rejected',
-              subtitle: 'These results have been rejected. A re-test or new sample may have been requested.',
+          setComments(prev => {
+            const n = { ...prev };
+            delete n[commentKey];
+            return n;
+          });
+        } catch (error) {
+          logger.error('Error validating results', error instanceof Error ? error : undefined);
+          if (isLikelyNetworkOrTimeout(error)) {
+            toast.error({
+              title: 'Action may have completed',
+              subtitle: 'The request did not complete. Please refresh the page to see the latest status.',
             });
           } else {
-            // Legacy path: rejection not yet performed, we need to call the API
-            if (!rejectionNotes) {
-              const confirmed = window.confirm('Are you sure you want to reject these results?');
-              if (!confirmed) {
-                setIsValidating(prev => ({ ...prev, [commentKey]: false }));
-                return;
-              }
-            }
-
-            const rejectType = rejectionType || 're-test'; // Default to re-test
-            await resultAPI.rejectResults(orderIdStr, testCode, {
-              rejectionReason: rejectionNotes || 'Rejected by validator',
-              rejectionType: rejectType,
-            });
-            await invalidateOrders();
-
-            const message =
-              rejectType === 're-collect'
-                ? 'Sample rejected - new collection required'
-                : 'Results rejected - re-test created';
             toast.error({
-              title: message,
-              subtitle: 'The rejection has been recorded. Follow up on re-test or recollection as needed.',
+              title: `Failed to validate results: ${getErrorMessage(error, 'Unknown error')}`,
+              subtitle: 'The validation request failed. Please try again or contact support if the issue persists.',
             });
           }
+          throw error;
+        } finally {
+          clearPending();
         }
+        return;
+      }
 
-        // Clear local state
+      const alreadyRejected = rejectionNotes === undefined && rejectionType === undefined;
+      if (alreadyRejected) {
+        await invalidateOrders();
+        toast.success({
+          title: 'Results rejected',
+          subtitle: 'These results have been rejected. A re-test or new sample may have been requested.',
+        });
+        setComments(prev => {
+          const n = { ...prev };
+          delete n[commentKey];
+          return n;
+        });
+        return;
+      }
+
+      if (!rejectionNotes) {
+        const confirmed = window.confirm('Are you sure you want to reject these results?');
+        if (!confirmed) return;
+      }
+      const rejectType = rejectionType || 're-test';
+      setPendingValidateKey(commentKey);
+      try {
+        await rejectMutation.mutateAsync({
+          orderId: orderIdStr,
+          testCode,
+          rejectionReason: rejectionNotes || 'Rejected by validator',
+          rejectionType: rejectType,
+        });
+        const message =
+          rejectType === 're-collect'
+            ? 'Sample rejected - new collection required'
+            : 'Results rejected - re-test created';
+        toast.error({
+          title: message,
+          subtitle: 'The rejection has been recorded. Follow up on re-test or recollection as needed.',
+        });
         setComments(prev => {
           const n = { ...prev };
           delete n[commentKey];
           return n;
         });
       } catch (error) {
-        logger.error('Error validating results', error instanceof Error ? error : undefined);
-        await invalidateOrders();
+        logger.error('Error rejecting results', error instanceof Error ? error : undefined);
         if (isLikelyNetworkOrTimeout(error)) {
           toast.error({
             title: 'Action may have completed',
             subtitle: 'The request did not complete. Please refresh the page to see the latest status.',
           });
         } else {
-          const errorMessage = getErrorMessage(error, 'Unknown error');
           toast.error({
-            title: `Failed to validate results: ${errorMessage}`,
-            subtitle: 'The validation request failed. Please try again or contact support if the issue persists.',
+            title: `Failed to reject results: ${getErrorMessage(error, 'Unknown error')}`,
+            subtitle: 'Please try again or contact support if the issue persists.',
           });
         }
+        throw error;
       } finally {
-        setIsValidating(prev => ({ ...prev, [commentKey]: false }));
+        clearPending();
       }
     },
-    [comments, ordersLoading, isValidating, invalidateOrders]
+    [comments, ordersLoading, invalidateOrders, validateMutation, rejectMutation]
   );
 
   const openValidationModal = useCallback(
@@ -355,7 +359,8 @@ export const ValidationView: React.FC = () => {
               handleValidate(test.orderId, test.testCode, false, reason, type),
             onClick: () => openValidationModal(test),
             orderHasValidatedTests: hasValidatedTests,
-            isApproving: isValidating[commentKey],
+            isApproving:
+              (validateMutation.isPending || rejectMutation.isPending) && pendingValidateKey === commentKey,
           };
 
           // Desktop: checkbox + card when id present, else card only
@@ -368,7 +373,7 @@ export const ValidationView: React.FC = () => {
                     id={test.id}
                     isSelected={isSelected(test.id)}
                     onToggle={toggleItem}
-                    disabled={isBulkProcessing}
+                    disabled={bulkMutation.isPending}
                   />
                 </div>
                 <div className="flex-1">
@@ -404,7 +409,7 @@ export const ValidationView: React.FC = () => {
               selectedIds={selectedIds}
               onSelectionChange={setSelectedIds}
               onBulkApprove={handleBulkApprove}
-              isProcessing={isBulkProcessing}
+              isProcessing={bulkMutation.isPending}
               enabled={ENABLE_BULK_VALIDATION}
             />
           ) : undefined

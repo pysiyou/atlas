@@ -9,8 +9,9 @@
  * - CollectionInfoLine for sample metadata
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Badge, Button, Icon, SectionContainer, CircularProgress } from '@/shared/ui';
+import { useAsyncHandler } from '@/hooks';
 import { displayId } from '@/utils';
 import { EntryForm } from './EntryForm';
 import { EntryRejectionSection } from './EntryRejectionSection';
@@ -40,7 +41,7 @@ interface EntryDetailModalProps {
   isComplete: boolean;
   onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
   onNotesChange: (resultKey: string, notes: string) => void;
-  onSave: (finalResults?: Record<string, string>, finalNotes?: string) => void;
+  onSave: (finalResults?: Record<string, string>, finalNotes?: string) => void | Promise<void>;
   onNext?: () => void;
   onPrev?: () => void;
 }
@@ -63,10 +64,25 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   // High complexity is necessary for comprehensive result entry logic with validation, conditional rendering, and state management
   // eslint-disable-next-line complexity
 }) => {
-  // Local state for immediate UI feedback
   const [localResults, setLocalResults] = useState<Record<string, string>>(() => initialResults);
   const [localNotes, setLocalNotes] = useState<string>(() => initialTechnicianNotes);
-  const [isSaving, setIsSaving] = useState(false);
+
+  const saveThenClose = useAsyncHandler(
+    useCallback(async () => {
+      await Promise.resolve(onSave(localResults, localNotes));
+      onClose();
+    }, [onSave, localResults, localNotes, onClose]),
+    { minDisplayMs: 100 }
+  );
+  const saveThenNext = useAsyncHandler(
+    useCallback(async () => {
+      if (!onNext) return;
+      await Promise.resolve(onSave(localResults, localNotes));
+      onNext();
+    }, [onSave, localResults, localNotes, onNext]),
+    { minDisplayMs: 100 }
+  );
+  const isSaving = saveThenClose.isPending || saveThenNext.isPending;
 
   const filledCount = useMemo(
     () => Object.values(localResults).filter(v => v?.trim()).length,
@@ -103,26 +119,14 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     onNotesChange(key, notes);
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!isComplete) return;
-    setIsSaving(true);
-    try {
-      await Promise.resolve(onSave(localResults, localNotes));
-      onClose();
-    } finally {
-      setIsSaving(false);
-    }
+    saveThenClose.execute();
   };
 
-  const handleSaveAndNext = async () => {
+  const handleSaveAndNext = () => {
     if (!isComplete || !onNext) return;
-    setIsSaving(true);
-    try {
-      await Promise.resolve(onSave(localResults, localNotes));
-      onNext();
-    } finally {
-      setIsSaving(false);
-    }
+    saveThenNext.execute();
   };
 
   /**
@@ -220,7 +224,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
             </Button>
           )}
           {onPrev && (
-            <Button onClick={onPrev} variant="previous" size="md">
+            <Button onClick={onPrev} variant="previous" size="md" disabled={isSaving}>
               Previous
             </Button>
           )}

@@ -23,6 +23,8 @@ export * from './queries';
 // =============================================================================
 // Form / UI Hooks
 // =============================================================================
+export { useAsyncHandler } from './useAsyncHandler';
+export type { UseAsyncHandlerOptions, UseAsyncHandlerReturn } from './useAsyncHandler';
 export { useRangeValue } from './useRangeValue';
 export type { UseRangeValueOptions, UseRangeValueReturn } from './useRangeValue';
 
