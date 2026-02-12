@@ -52,12 +52,20 @@ export function useLabTestsFromOrders({
       return true;
     };
 
+    /** Exclude tests whose sample was rejected at collection (defense in depth). */
+    const excludeRejectedSample = (test: OrderTest) => {
+      if (!test.sampleId) return true;
+      const sample = getSample(test.sampleId);
+      return sample?.status !== 'rejected';
+    };
+
     return orders.flatMap(order => {
       const patient = includePatient ? getPatient(order.patientId) : undefined;
       const patientName = getPatientName(order.patientId);
 
       return (order.tests ?? [])
         .filter(testFilter)
+        .filter(excludeRejectedSample)
         .map(test => {
           const testName = getTest(test.testCode)?.name || test.testCode;
           const sampleType = getTestSampleType(test.testCode, testCatalog);
