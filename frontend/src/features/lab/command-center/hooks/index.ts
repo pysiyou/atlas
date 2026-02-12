@@ -13,3 +13,5 @@ export type {
   UseActivityByDayResult,
   ActivityByDayPoint,
 } from './useTestsReceivedByDay';
+export { useDistributionByCategory } from './useDistributionByCategory';
+export type { DistributionByCategoryPoint } from './useDistributionByCategory';
