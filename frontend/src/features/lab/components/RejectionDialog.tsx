@@ -10,7 +10,7 @@
  */
 
 import React, { useState } from 'react';
-import { Popover, IconButton, Icon, Alert, FooterInfo, ClaudeLoader } from '@/shared/ui';
+import { Popover, IconButton, Alert, FooterInfo, ClaudeLoader } from '@/shared/ui';
 import { PopoverForm } from './PopoverForm';
 import { useRejectionManager } from '../hooks/useRejectionManager';
 import { useRejectionDialogState } from '../hooks/useRejectionDialogState';

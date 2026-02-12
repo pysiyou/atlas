@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Badge, Button, Checkbox } from '@/shared/ui';
+import { useAsyncHandler } from '@/hooks';
 import type { AffiliationDuration } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
@@ -14,6 +15,12 @@ export const AffiliationSection: React.FC<
   >
 > = ({ formData, errors, onFieldChange, existingAffiliation, onRenew }) => {
   const { isAffiliationActive } = usePatientService();
+  const renewHandler = useCallback(async () => {
+    await Promise.resolve(onRenew?.());
+  }, [onRenew]);
+  const { execute: handleRenew, isPending: isRenewing } = useAsyncHandler(renewHandler, {
+    minDisplayMs: 100,
+  });
   const hasExistingAffiliation = !!existingAffiliation;
   const isActive = isAffiliationActive(existingAffiliation);
 
@@ -107,8 +114,16 @@ export const AffiliationSection: React.FC<
 
       {/* Show renew button for expired affiliations if not already showing plan selector */}
       {hasExistingAffiliation && !isActive && !formData.hasAffiliation && onRenew && (
-        <Button type="button" onClick={onRenew} variant="primary" size="md" fullWidth>
-          Renew Affiliation
+        <Button
+          type="button"
+          onClick={handleRenew}
+          variant="primary"
+          size="md"
+          fullWidth
+          disabled={isRenewing}
+          isLoading={isRenewing}
+        >
+          {isRenewing ? 'Renewing...' : 'Renew Affiliation'}
         </Button>
       )}
     </div>
