@@ -1,7 +1,8 @@
 /**
  * EntryView - Main view for result entry workflow
  *
- * Displays tests awaiting result entry (status: sample-collected or in-progress).
+ * Displays tests awaiting result entry (status: sample-collected only).
+ * Backend enter_results accepts only SAMPLE_COLLECTED; in-progress is not supported.
  */
 
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
@@ -42,7 +43,7 @@ export const EntryView: React.FC = () => {
   const allTests = useLabTestsFromOrders({
     orders,
     testCatalog,
-    statusFilter: ['sample-collected', 'in-progress'],
+    statusFilter: ['sample-collected'],
     includePatient: true,
   });
 

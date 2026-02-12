@@ -93,6 +93,9 @@ export function useCommandCenterRow1Metrics(): CommandCenterRow1Metrics {
     const orderList = orders ?? [];
     const sampleList = samples ?? [];
     const testCatalog = tests ?? [];
+    const rejectedSampleIds = new Set(
+      sampleList.filter((s) => s.status === 'rejected').map((s) => s.sampleId)
+    );
 
     // Card 1: Pending count aligned with Collection tab (only samples with order, patient, requirements)
     let samplesStillPending = 0;
@@ -145,6 +148,7 @@ export function useCommandCenterRow1Metrics(): CommandCenterRow1Metrics {
         if (!isActiveTest(test)) return;
 
         if (test.status === 'sample-collected' || test.status === 'in-progress') {
+          if (test.sampleId != null && rejectedSampleIds.has(test.sampleId)) return;
           resultStillNeedingEntry += 1;
           if (isUrgent) resultUrgentCount += 1;
         }
