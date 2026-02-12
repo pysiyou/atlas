@@ -288,7 +288,9 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   const additionalInfo = test.resultEnteredAt && (
     <span className="text-xs text-text-tertiary">
       Results entered <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
-      {test.enteredBy && <span> by {getUserName(test.enteredBy)}</span>}
+      {test.enteredBy && (
+      <> by <span className="text-text-secondary">{getUserName(test.enteredBy)}</span></>
+    )}
     </span>
   );
 

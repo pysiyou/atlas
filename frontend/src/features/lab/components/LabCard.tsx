@@ -101,7 +101,7 @@ export const LabCard: React.FC<LabCardProps> = ({
               {context.referringPhysician && (
                 <>
                   <span className={LAB_CARD_CONTEXT.separator}>|</span>
-                  <span>{context.referringPhysician}</span>
+                  <span className={LAB_CARD_CONTEXT.patientName}>{context.referringPhysician}</span>
                 </>
               )}
             </div>
@@ -117,7 +117,9 @@ export const LabCard: React.FC<LabCardProps> = ({
                 <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
                   {formatDate(sampleInfo.collectedAt)}
                 </span>
-                {sampleInfo.collectedBy && <span> by {getUserName(sampleInfo.collectedBy)}</span>}
+                {sampleInfo.collectedBy && (
+                <> by <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>{getUserName(sampleInfo.collectedBy)}</span></>
+              )}
               </span>
             )}
 

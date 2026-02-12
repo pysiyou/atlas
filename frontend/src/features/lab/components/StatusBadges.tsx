@@ -83,7 +83,7 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
         </>
       )}
       collected <span className="text-text-secondary">{formatDate(collectedAt)}</span>
-      {collectedBy && <span> by {getUserName(collectedBy)}</span>}
+      {collectedBy && <> by <span className="text-text-secondary">{getUserName(collectedBy)}</span></>}
     </span>
   );
 };
@@ -230,7 +230,7 @@ export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
   return (
     <span className={className}>
       Results entered <span className="text-text-secondary">{formatDate(enteredAt)}</span>
-      {enteredBy && <span> by {getUserName(enteredBy)}</span>}
+      {enteredBy && <> by <span className="text-text-secondary">{getUserName(enteredBy)}</span></>}
     </span>
   );
 };
