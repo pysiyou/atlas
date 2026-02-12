@@ -240,6 +240,15 @@ export const CONTAINER_OPTIONS = CONTAINER_VALUES.map(value => ({
   label: CONTAINER_CONFIG[value].label,
 }));
 
+/** Top colors shown in sample collection popover (subset of CONTAINER_VALUES). */
+export const COLLECTION_TOP_COLOR_VALUES: (keyof typeof CONTAINER_CONFIG)[] = [
+  'red-top',
+  'yellow-top',
+  'green-top',
+  'black-top',
+  'blue-top',
+];
+
 export const CONTAINER_FILTER_OPTIONS = [
   { value: 'all' as const, label: 'All Containers' },
   ...CONTAINER_OPTIONS,
