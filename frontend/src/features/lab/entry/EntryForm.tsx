@@ -24,6 +24,13 @@ interface EntryFormProps {
   isModal?: boolean;
 }
 
+/** Title-case for option labels (first letter of each word capitalized) */
+const capitalizeOption = (s: string): string =>
+  s
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+
 /**
  * RadioOption - Individual radio option in the select popover
  */
@@ -60,7 +67,7 @@ const RadioOption: React.FC<{
           isSelected ? 'text-text-primary font-normal' : 'text-text-tertiary group-hover:text-text-primary'
         )}
       >
-        {option.toUpperCase()}
+        {capitalizeOption(option)}
       </span>
     </label>
   );
@@ -93,14 +100,14 @@ const SelectParameterInput: React.FC<{
           id={inputId}
           className={cn(
             inputTrigger,
-            'min-h-[42px] w-full',
+            'w-full',
             isOpen && inputTriggerOpen
           )}
         >
           {/* Content */}
           <div className="flex-1 text-xs truncate">
             {value ? (
-              <span className="text-text-primary">{value.toUpperCase()}</span>
+              <span className="text-text-primary">{capitalizeOption(value)}</span>
             ) : (
               <span className="text-text-disabled">-- Select --</span>
             )}
@@ -211,7 +218,7 @@ const ParameterInput: React.FC<{
       <input
         {...commonProps}
         type="text"
-        className={cn(inputBase, 'block')}
+        className={cn(inputBase, 'block h-[34px]')}
         placeholder="Enter text result..."
       />
     );
@@ -229,7 +236,7 @@ const ParameterInput: React.FC<{
       min={limit?.min}
       max={limit?.max}
       inputMode="decimal"
-      className={cn(inputBase, 'block pr-12 relative z-10', noSpinner, hasError && inputError)}
+      className={cn(inputBase, 'block h-[34px] pr-12 relative z-10', noSpinner, hasError && inputError)}
       placeholder="--"
     />
   );
