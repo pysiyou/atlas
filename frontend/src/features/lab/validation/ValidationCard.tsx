@@ -55,10 +55,10 @@ function ResultGrid({
               key={key}
               className="grid grid-cols-[1fr_auto] items-baseline whitespace-nowrap"
             >
-              <span className="text-xs text-text-tertiary" title={key}>
+              <span className="text-xxs text-text-tertiary" title={key}>
                 {key}:
               </span>
-              <span className={`text-xs font-normal text-left ${valueColor}`}>
+              <span className={`text-xxs font-normal text-left ${valueColor}`}>
                 {resultValue}
                 {unit && (
                   <span className="text-text-tertiary font-normal ml-0.5 text-[9px]">{unit}</span>
@@ -68,7 +68,7 @@ function ResultGrid({
           );
         })}
         {remainingCount > 0 && (
-          <div className="text-xs text-text-tertiary col-span-full pt-0.5">
+          <div className="text-xxs text-text-tertiary col-span-full pt-0.5">
             +{remainingCount} more
           </div>
         )}
@@ -93,12 +93,12 @@ function ResultGrid({
             key={key}
             className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
           >
-            <span className="text-xs text-text-tertiary text-right" title={key}>
+            <span className="text-xxs text-text-tertiary text-right" title={key}>
               {key}:
             </span>
-            <span className={`text-sm font-normal text-left ${valueColor}`}>
+            <span className={`text-xs font-normal text-left ${valueColor}`}>
               {resultValue}
-              {unit && <span className="text-text-tertiary font-normal ml-1">{unit}</span>}
+              {unit && <span className="text-text-tertiary font-normal ml-1 text-xxs">{unit}</span>}
             </span>
           </div>
         );
