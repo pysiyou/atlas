@@ -173,7 +173,7 @@ export const ActivityTrendChart: React.FC<ActivityTrendChartProps> = ({
               tickLine={{ stroke: CHART_GRID }}
               tick={{ fontSize: 11, fill: CHART_AXIS }}
               width={32}
-              domain={['dataMin - 5', 'dataMax + 5']}
+              domain={[0, 'auto']}
               tickFormatter={(v) => String(v)}
             />
             <Tooltip
