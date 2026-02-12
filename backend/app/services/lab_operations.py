@@ -621,6 +621,12 @@ class LabOperationsService:
         """
         order_test = self._get_validatable_order_test(order_id, test_code)
 
+        if order_test.status == TestStatus.ESCALATED:
+            raise LabOperationError(
+                "Escalated tests must be resolved via the Escalation resolution endpoint (admin/lab-technician-plus only).",
+                status_code=403
+            )
+
         # Validate state transition
         can_validate, reason = TestStateMachine.can_validate(order_test.status)
         if not can_validate:

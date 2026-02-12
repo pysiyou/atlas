@@ -16,7 +16,7 @@ from app.models.order import Order, OrderTest
 from app.models.sample import Sample
 from app.models.billing import Payment
 from app.schemas.order import OrderCreate, OrderUpdate, OrderResponse, OrderDetailResponse
-from app.schemas.enums import OrderStatus, PaymentStatus, TestStatus
+from app.schemas.enums import OrderStatus, PaymentStatus
 from app.schemas.pagination import create_paginated_response, skip_to_page
 from app.services.audit_service import AuditService
 from app.services.order_status_updater import update_order_status
@@ -31,8 +31,7 @@ router = APIRouter()
 
 
 class OrderTestStatusUpdate(BaseModel):
-    """Body for PATCH /orders/{orderId}/tests/{testCode}"""
-    status: TestStatus = Field(..., description="New test status")
+    """Body for PATCH /orders/{orderId}/tests/{testCode}. Only notes; status is controlled by lab workflow endpoints."""
     technicianNotes: Optional[str] = None
     validationNotes: Optional[str] = None
 
@@ -204,8 +203,8 @@ def update_order_test_status(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Update test status within an order. Optionally update technicianNotes or validationNotes.
-    Recomputes order overall status after update.
+    Update technicianNotes or validationNotes for an order test. Test status is controlled
+    only by lab workflow endpoints (collect, enter results, validate/reject, resolve escalation).
     """
     order = db.query(Order).filter(Order.orderId == orderId).options(
         selectinload(Order.tests).joinedload(OrderTest.test),
@@ -222,14 +221,12 @@ def update_order_test_status(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Test {testCode} not found in order {orderId}"
         )
-    order_test.status = body.status
     if body.technicianNotes is not None:
         order_test.technicianNotes = body.technicianNotes
     if body.validationNotes is not None:
         order_test.validationNotes = body.validationNotes
 
     try:
-        update_order_status(db, orderId)
         db.commit()
         db.refresh(order)
     except HTTPException:
