@@ -21,6 +21,7 @@ import { logger } from '@/utils/logger';
 import { getErrorMessage, getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errorHelpers';
 import type { ContainerType, ContainerTopColor, SampleStatus } from '@/types';
 import { calculateRequiredSamples } from '@/utils';
+import { isActiveTest } from '@/utils/orderUtils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';
 import { LabWorkflowView } from '../components/LabWorkflowView';
@@ -54,7 +55,9 @@ export const CollectionView: React.FC = () => {
       const patient = getPatient(order.patientId);
       if (!patient) return;
 
-      const testsForSample = order.tests.filter(t => sample.testCodes.includes(t.testCode));
+      const testsForSample = order.tests.filter(
+        t => sample.testCodes.includes(t.testCode) && isActiveTest(t)
+      );
       if (testsForSample.length > 0) {
         const requirements = calculateRequiredSamples(
           testsForSample,
