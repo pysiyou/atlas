@@ -16,6 +16,52 @@ import type { PaginatedResponse, PaginationMeta } from './orders';
 
 export type { PaginatedResponse, PaginationMeta };
 
+/** Backend ContainerTopColor enum values (API expects these, not frontend display keys like "red-top"). */
+const BACKEND_COLOR_VALUES = [
+  'red',
+  'purple',
+  'blue',
+  'green',
+  'gray',
+  'yellow',
+  'light-blue',
+  'pink',
+  'white',
+  'black',
+  'orange',
+  'clear',
+] as const;
+
+/** Map frontend container keys (e.g. red-top) to backend actualContainerColor enum. */
+const FRONTEND_TO_BACKEND_COLOR: Record<string, (typeof BACKEND_COLOR_VALUES)[number]> = {
+  'red-top': 'red',
+  'lavender-top': 'purple',
+  'green-top': 'green',
+  'blue-top': 'blue',
+  'royal-blue-top': 'blue',
+  'yellow-top': 'yellow',
+  'gray-top': 'gray',
+  'light-blue-top': 'light-blue',
+  'pink-top': 'pink',
+  'black-top': 'black',
+  'orange-top': 'orange',
+  'white-top': 'white',
+  'clear-top': 'clear',
+  'gold-top': 'yellow',
+  'tiger-top': 'orange',
+  'tan-top': 'orange',
+};
+
+function toBackendContainerColor(
+  frontendColor: ContainerTopColor | string
+): (typeof BACKEND_COLOR_VALUES)[number] {
+  const mapped = FRONTEND_TO_BACKEND_COLOR[frontendColor];
+  if (mapped) return mapped;
+  if (BACKEND_COLOR_VALUES.includes(frontendColor as (typeof BACKEND_COLOR_VALUES)[number]))
+    return frontendColor as (typeof BACKEND_COLOR_VALUES)[number];
+  return 'red';
+}
+
 interface GetSamplesParams {
   orderId?: string;
   status?: SampleStatus;
@@ -98,10 +144,19 @@ export const sampleAPI = {
   },
 
   /**
-   * Collect a sample
+   * Collect a sample.
+   * Maps frontend container color keys (e.g. red-top) to backend enum (e.g. red).
    */
   async collect(sampleId: string, data: CollectSampleRequest): Promise<Sample> {
-    return apiClient.patch<Sample>(`/samples/${sampleId}/collect`, data);
+    const body = {
+      collectedVolume: data.collectedVolume,
+      actualContainerType: data.actualContainerType,
+      actualContainerColor: toBackendContainerColor(data.actualContainerColor),
+      ...(data.collectionNotes != null && data.collectionNotes !== ''
+        ? { collectionNotes: data.collectionNotes }
+        : {}),
+    };
+    return apiClient.patch<Sample>(`/samples/${sampleId}/collect`, body);
   },
 
   /**
