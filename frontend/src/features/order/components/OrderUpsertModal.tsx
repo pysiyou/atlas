@@ -102,7 +102,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
   // Watch form values for calculations and display
   const formValues = watch();
   const selectedPatientId = formValues.patientId;
-  const selectedTestCodes = formValues.testCodes || [];
+  const testCodes = formValues.testCodes;
 
   // Patient data
   const { patients } = usePatientsList();
@@ -115,15 +115,16 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
   // Test data
   const { tests } = useTestCatalog();
   const { results: filteredTests } = useTestSearch(testSearch);
-  
-  // Calculate total price from selected tests
+
+  // Calculate total price from selected tests (codes inside useMemo to satisfy exhaustive-deps)
   const totalPrice = useMemo(() => {
+    const selectedTestCodes = testCodes ?? [];
     if (!selectedTestCodes.length) return 0;
     return selectedTestCodes.reduce((sum, code) => {
       const test = tests.find(t => t.code === code);
       return sum + (test?.price || 0);
     }, 0);
-  }, [selectedTestCodes, tests]);
+  }, [testCodes, tests]);
 
   // Preselect patient when initialPatientId is provided
   useEffect(() => {
@@ -135,11 +136,13 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
     }
   }, [mode, initialPatientId, patients, selectedPatientId, setValue]);
 
-  // Reset payment method when modal opens/closes
+  // Reset payment state when create modal opens (intentional sync from open state)
   useEffect(() => {
     if (isOpen && mode === 'create') {
+      /* eslint-disable react-hooks/set-state-in-effect -- reset on open is intentional */
       setPaymentMethod(undefined);
       setPaymentError(null);
+      /* eslint-enable react-hooks/set-state-in-effect */
     }
   }, [isOpen, mode]);
 

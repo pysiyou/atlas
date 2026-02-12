@@ -16,7 +16,7 @@ export const Orders: React.FC = () => {
   const NewOrderRedirect = () => {
     React.useEffect(() => {
       openModal(ModalType.NEW_ORDER);
-    }, [openModal]);
+    }, []);
     return <Navigate to="/orders" replace />;
   };
 

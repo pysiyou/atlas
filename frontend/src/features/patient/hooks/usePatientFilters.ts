@@ -78,7 +78,7 @@ export function usePatientFilters({ patients }: UsePatientFiltersOptions) {
     }
 
     return filtered;
-  }, [preFilteredPatients, ageRange, affiliationStatusFilters]);
+  }, [preFilteredPatients, ageRange, affiliationStatusFilters, isAffiliationActive]);
 
   return {
     // Filtered results

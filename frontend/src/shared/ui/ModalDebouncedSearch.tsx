@@ -23,7 +23,9 @@ export const ModalDebouncedSearch: React.FC<ModalDebouncedSearchProps> = ({
   debounceMs = 300,
 }) => {
   const [localValue, setLocalValue] = useState(value);
-  useEffect(() => setLocalValue(value), [value]);
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
   useEffect(() => {
     const t = setTimeout(() => {
       if (localValue !== value) onChange(localValue);

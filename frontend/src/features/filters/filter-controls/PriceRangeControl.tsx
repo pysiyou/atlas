@@ -31,7 +31,7 @@ export interface PriceRangeControlProps {
  * @component
  */
 // Large component is necessary for price range slider with dual handles, validation, formatting, and popover UI
-// eslint-disable-next-line max-lines-per-function
+ 
 export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   value,
   onChange,

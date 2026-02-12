@@ -51,8 +51,10 @@ export const DateFilter: React.FC<DateFilterProps> = ({
     if (isPopoverOpen && !prevOpenRef.current) {
       valueSnapshotRef.current = value;
       if (value) {
+        /* eslint-disable react-hooks/set-state-in-effect -- sync temp range when popover opens */
         setTempStart(startOfDay(value[0]));
         setTempEnd(endOfDay(value[1]));
+        /* eslint-enable react-hooks/set-state-in-effect */
       } else {
         setTempStart(null);
         setTempEnd(null);
