@@ -215,31 +215,7 @@ export function useResolveEscalation() {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
       queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.results.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
     },
   });
-}
-
-/**
- * Hook to fetch tests pending escalation resolution.
- * Only available for admin/labtech_plus roles.
- */
-export function usePendingEscalation() {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
-
-  const query = useQuery({
-    queryKey: queryKeys.results.pendingEscalation(),
-    queryFn: () => resultAPI.getPendingEscalation(),
-    enabled: isAuthenticated && !isRestoring,
-    ...cacheConfig.dynamic,
-  });
-
-  return {
-    tests: query.data ?? [],
-    isLoading: query.isLoading,
-    isPending: query.isPending,
-    isFetching: query.isFetching,
-    isError: query.isError,
-    error: query.error,
-    refetch: query.refetch,
-  };
 }
