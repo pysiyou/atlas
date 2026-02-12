@@ -18,7 +18,7 @@ import {
 import { queryKeys } from '@/lib/query';
 import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
-import { getErrorMessage, isLikelyNetworkOrTimeout } from '@/utils/errorHelpers';
+import { getErrorMessage, getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errorHelpers';
 import type { ContainerType, ContainerTopColor, SampleStatus } from '@/types';
 import { calculateRequiredSamples } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -158,7 +158,7 @@ export const CollectionView: React.FC = () => {
         subtitle: 'The sample has been recorded and the order has been updated. You can continue with the next sample.',
       });
     } catch (error) {
-      logger.error('Error collecting sample', error instanceof Error ? error : undefined);
+      logger.error('Error collecting sample', getErrorDetails(error));
       queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
       if (isLikelyNetworkOrTimeout(error)) {
