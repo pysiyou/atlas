@@ -15,6 +15,12 @@ function getDateKey(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
+/** Format YYYY-MM-DD key as local date string (avoids UTC midnight shifting day in some timezones). */
+function formatDateKey(key: string): string {
+  const d = new Date(key + 'T00:00:00');
+  return d.toLocaleDateString(undefined, DATE_FORMAT_OPTIONS);
+}
+
 const getResultEnteredAt = (t: OrderTest & { result_entered_at?: string }): string | undefined =>
   t.resultEnteredAt ?? t.result_entered_at;
 const getResultValidatedAt = (t: OrderTest & { result_validated_at?: string }): string | undefined =>
@@ -48,10 +54,11 @@ export interface UseTestsReceivedAndValidatedResult {
 }
 
 /**
- * @param days Number of calendar days (e.g. 15 = last 15 days including today)
+ * @param days Number of calendar days (e.g. 15 = last 15 days including today). Clamped to 1–365.
  */
 export function useTestsReceivedByDay(days: number = 15): UseTestsReceivedByDayResult {
-  const result = useTestsReceivedAndValidatedByDay(days);
+  const safeDays = Math.max(1, Math.min(days, 365));
+  const result = useTestsReceivedAndValidatedByDay(safeDays);
   const data: TestsReceivedByDayPoint[] = result.data.map((p) => ({
     dateKey: p.dateKey,
     date: p.date,
@@ -63,16 +70,18 @@ export function useTestsReceivedByDay(days: number = 15): UseTestsReceivedByDayR
 /**
  * Returns received and validated (delivered) test counts per day for the last N days.
  * Received = tests by order date; validated = tests by resultValidatedAt date.
+ * @param days Clamped to 1–365.
  */
 export function useTestsReceivedAndValidatedByDay(days: number = 15): UseTestsReceivedAndValidatedResult {
   const { orders, isLoading } = useOrdersList();
+  const safeDays = Math.max(1, Math.min(days, 365));
 
   const data = useMemo((): TestsReceivedAndValidatedPoint[] => {
     const now = new Date();
     const dailyReceived: Record<string, number> = {};
     const dailyValidated: Record<string, number> = {};
 
-    for (let i = days - 1; i >= 0; i--) {
+    for (let i = safeDays - 1; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(d.getDate() - i);
       d.setHours(0, 0, 0, 0);
@@ -99,16 +108,13 @@ export function useTestsReceivedAndValidatedByDay(days: number = 15): UseTestsRe
     });
 
     const sortedKeys = Object.keys(dailyReceived).sort();
-    return sortedKeys.map((key) => {
-      const d = new Date(key);
-      return {
-        dateKey: key,
-        date: d.toLocaleDateString(undefined, DATE_FORMAT_OPTIONS),
-        received: dailyReceived[key] ?? 0,
-        validated: dailyValidated[key] ?? 0,
-      };
-    });
-  }, [orders, days]);
+    return sortedKeys.map((key) => ({
+      dateKey: key,
+      date: formatDateKey(key),
+      received: dailyReceived[key] ?? 0,
+      validated: dailyValidated[key] ?? 0,
+    }));
+  }, [orders, safeDays]);
 
   return { data, isLoading };
 }
@@ -130,11 +136,13 @@ export interface UseActivityByDayResult {
 /**
  * Returns per-day activity for stacked bar: sampling count, result entered count, validated count.
  * Sampling = samples collected that day (collectedAt). Result entered / validated = tests by resultEnteredAt / resultValidatedAt.
+ * @param days Clamped to 1–365.
  */
 export function useActivityByDay(days: number = 15): UseActivityByDayResult {
   const { orders, isLoading: ordersLoading } = useOrdersList();
   const { samples, isLoading: samplesLoading } = useSamplesList();
   const isLoading = ordersLoading || samplesLoading;
+  const safeDays = Math.max(1, Math.min(days, 365));
 
   const data = useMemo((): ActivityByDayPoint[] => {
     const now = new Date();
@@ -142,7 +150,7 @@ export function useActivityByDay(days: number = 15): UseActivityByDayResult {
     const dailyResultEntered: Record<string, number> = {};
     const dailyValidated: Record<string, number> = {};
 
-    for (let i = days - 1; i >= 0; i--) {
+    for (let i = safeDays - 1; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(d.getDate() - i);
       d.setHours(0, 0, 0, 0);
@@ -175,17 +183,14 @@ export function useActivityByDay(days: number = 15): UseActivityByDayResult {
     });
 
     const sortedKeys = Object.keys(dailySampling).sort();
-    return sortedKeys.map((key) => {
-      const d = new Date(key);
-      return {
-        dateKey: key,
-        date: d.toLocaleDateString(undefined, DATE_FORMAT_OPTIONS),
-        sampling: dailySampling[key] ?? 0,
-        resultEntered: dailyResultEntered[key] ?? 0,
+    return sortedKeys.map((key) => ({
+      dateKey: key,
+      date: formatDateKey(key),
+      sampling: dailySampling[key] ?? 0,
+      resultEntered: dailyResultEntered[key] ?? 0,
         validated: dailyValidated[key] ?? 0,
-      };
-    });
-  }, [orders, samples, days]);
+    }));
+  }, [orders, samples, safeDays]);
 
   return { data, isLoading };
 }

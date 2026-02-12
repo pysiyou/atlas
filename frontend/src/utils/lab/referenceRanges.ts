@@ -32,14 +32,14 @@ const parseReferenceRange = (range: string): ParsedRange => {
     };
   }
 
-  // Check for range (e.g., "13.5-17.5")
-  if (range.includes('-')) {
-    const [minStr, maxStr] = range.split('-');
-    return {
-      min: parseFloat(minStr),
-      max: parseFloat(maxStr),
-      type: 'range',
-    };
+  // Check for numeric range (e.g. "13.5-17.5"). Require two simple decimals so "1e-2" or "E-Coli" are not treated as range.
+  const rangeMatch = range.match(/^\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*$/);
+  if (rangeMatch) {
+    const min = parseFloat(rangeMatch[1]);
+    const max = parseFloat(rangeMatch[2]);
+    if (Number.isFinite(min) && Number.isFinite(max)) {
+      return { min, max, type: 'range' };
+    }
   }
 
   return { type: 'text' };
@@ -52,6 +52,8 @@ const parseReferenceRange = (range: string): ParsedRange => {
  * @returns Status: 'normal', 'high', 'low', or 'critical'
  */
 export const checkReferenceRange = (value: number, referenceRange: string): ResultStatus => {
+  if (Number.isNaN(value)) return 'normal';
+
   const parsed = parseReferenceRange(referenceRange);
 
   if (parsed.type === 'text') {
@@ -59,17 +61,23 @@ export const checkReferenceRange = (value: number, referenceRange: string): Resu
   }
 
   if (parsed.type === 'less-than') {
-    if (parsed.max === undefined) return 'normal';
+    if (parsed.max === undefined || Number.isNaN(parsed.max)) return 'normal';
     return value < parsed.max ? 'normal' : 'high';
   }
 
   if (parsed.type === 'greater-than') {
-    if (parsed.min === undefined) return 'normal';
+    if (parsed.min === undefined || Number.isNaN(parsed.min)) return 'normal';
     return value > parsed.min ? 'normal' : 'low';
   }
 
   if (parsed.type === 'range') {
-    if (parsed.min === undefined || parsed.max === undefined) return 'normal';
+    if (
+      parsed.min === undefined ||
+      parsed.max === undefined ||
+      Number.isNaN(parsed.min) ||
+      Number.isNaN(parsed.max)
+    )
+      return 'normal';
 
     if (value < parsed.min) {
       // Check if critically low (less than 50% of minimum)
@@ -220,18 +228,10 @@ export function checkReferenceRangeWithDemographics(
     const range = getPatientSpecificRange(parameter.catalogReferenceRange, patient);
 
     if (range.low !== undefined && value < range.low) {
-      // Check if critically low (less than 50% of minimum)
-      if (parameter.criticalLow !== undefined && value < parameter.criticalLow) {
-        return 'critical';
-      }
       return 'low';
     }
 
     if (range.high !== undefined && value > range.high) {
-      // Check if critically high (more than 150% of maximum)
-      if (parameter.criticalHigh !== undefined && value > parameter.criticalHigh) {
-        return 'critical';
-      }
       return 'high';
     }
 

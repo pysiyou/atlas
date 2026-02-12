@@ -7,7 +7,7 @@ export const testParameterSchema = z.object({
   unit: z.string().optional(),
   referenceRange: z.string().optional(),
   flags: z.array(z.string()).optional(),
-  status: z.enum(['normal', 'high', 'low', 'critical']).optional(),
+  status: z.enum(['normal', 'high', 'low', 'critical', 'critical-high', 'critical-low']).optional(),
 });
 
 export const testResultSchema = z.object({

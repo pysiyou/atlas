@@ -34,7 +34,7 @@ export const updateOrderTestStatus = (
   status: TestStatus,
   additionalData?: Partial<OrderTest>
 ): Order => {
-  const updatedTests = order.tests.map(test =>
+  const updatedTests = (order.tests ?? []).map(test =>
     test.testCode === testCode ? { ...test, status, ...additionalData } : test
   );
 
@@ -101,7 +101,7 @@ export const getActiveTotal = (tests: OrderTest[]): number =>
  * Filters orders that have tests needing collection
  */
 export const getOrdersNeedingCollection = (orders: Order[]): Order[] =>
-  orders.filter(order => order.tests.some(test => test.status === 'pending'));
+  orders.filter(order => (order.tests ?? []).some(test => test.status === 'pending'));
 
 /**
  * Gets all test-order pairs that need collection
@@ -112,7 +112,7 @@ export const getAllTestsNeedingCollection = (
   const result: { order: Order; test: OrderTest }[] = [];
 
   orders.forEach(order => {
-    order.tests.forEach(test => {
+    (order.tests ?? []).forEach(test => {
       if (test.status === 'pending') {
         result.push({ order, test });
       }

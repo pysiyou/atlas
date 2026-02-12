@@ -31,7 +31,7 @@ export function useWorkflowStateCounts(): WorkflowStateCounts {
     let validation = 0;
 
     (orders ?? []).forEach((order) => {
-      order.tests.forEach((test) => {
+      (order.tests ?? []).forEach((test) => {
         if (!isActiveTest(test)) return;
         if (test.status === 'pending') {
           sampling += 1;

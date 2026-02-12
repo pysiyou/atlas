@@ -163,9 +163,12 @@ export function validatePhysiologicValue(itemCode: string, value: string | numbe
     numValue = value;
   }
 
-  if (isNaN(numValue)) {
-    // Not a number, can't validate
-    return { isValid: true };
+  if (Number.isNaN(numValue)) {
+    return {
+      isValid: false,
+      error: 'Value is not a valid number.',
+      limit,
+    };
   }
 
   if (numValue < limit.min) {

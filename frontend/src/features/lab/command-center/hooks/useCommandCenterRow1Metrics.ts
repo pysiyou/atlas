@@ -43,7 +43,7 @@ const getResultValidatedAt = (test: OrderTest & { result_validated_at?: string }
 function getLastRejectedAt(test: OrderTest): string | undefined {
   const history = test.resultRejectionHistory;
   if (!history?.length) return undefined;
-  return (history[history.length - 1] as ResultRejectionRecord).rejectedAt;
+  return (history[history.length - 1] as ResultRejectionRecord)?.rejectedAt;
 }
 
 export interface CommandCenterRow1Metrics {

@@ -90,6 +90,7 @@ export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
   innerRadius = '60%',
   outerRadius = '80%',
 }) => {
+  const pieData = data.filter((d) => d.value > 0);
   return (
     <div className={`flex flex-col h-full w-full min-w-0 min-h-0 bg-surface rounded overflow-hidden shadow-sm ${className}`}>
       <div className="px-4 pt-4 pb-2 flex flex-row items-center justify-between shrink-0">
@@ -111,7 +112,7 @@ export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
             <ResponsiveContainer width={width} height={height}>
               <PieChart>
                 <Pie
-                  data={data}
+                  data={pieData}
                   cx="40%"
                   cy="50%"
                   innerRadius={innerRadius}
@@ -121,7 +122,7 @@ export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
                   stroke="none"
                   cornerRadius={4}
                 >
-                  {data.map((entry, index) => (
+                  {pieData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={entry.color || COLORS[index % COLORS.length]}

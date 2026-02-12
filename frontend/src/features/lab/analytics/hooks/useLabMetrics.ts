@@ -5,6 +5,7 @@
 
 import { useMemo } from 'react';
 import { useOrdersList, useSamplesList, useUsersList } from '@/hooks/queries';
+import { getResultRejectionType } from '@/types/order';
 import type {
   LabAnalytics,
   TATMetrics,
@@ -86,7 +87,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     const breakdowns = { orderToCollection: [] as number[], collectionToEntry: [] as number[], entryToValidation: [] as number[] };
 
     filteredOrders.forEach(order => {
-      order.tests.forEach(test => {
+      (order.tests ?? []).forEach(test => {
         if (test.resultValidatedAt) {
           // Total TAT
           const totalTAT = minutesBetween(order.orderDate, test.resultValidatedAt);
@@ -115,7 +116,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     const dailyTAT: Record<string, number[]> = {};
     const dailyCompliance: Record<string, number> = {};
     filteredOrders.forEach(order => {
-      order.tests.forEach(test => {
+      (order.tests ?? []).forEach(test => {
         if (test.resultValidatedAt) {
           const totalTAT = minutesBetween(order.orderDate, test.resultValidatedAt);
           const dateKey = test.resultValidatedAt.split('T')[0];
@@ -160,14 +161,14 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
 
     filteredOrders.forEach(order => {
       // Priority breakdown
-      byPriority[order.priority] = (byPriority[order.priority] || 0) + order.tests.length;
+      byPriority[order.priority] = (byPriority[order.priority] || 0) + (order.tests ?? []).length;
 
       // Daily trend
       const dateKey = order.orderDate.split('T')[0];
-      dailyCounts[dateKey] = (dailyCounts[dateKey] || 0) + order.tests.length;
+      dailyCounts[dateKey] = (dailyCounts[dateKey] || 0) + (order.tests ?? []).length;
 
       // Category breakdown (would need test catalog data for accurate category)
-      order.tests.forEach(_test => {
+      (order.tests ?? []).forEach(_test => {
         const category = 'General'; // Placeholder - would need catalog lookup
         byCategory[category] = (byCategory[category] || 0) + 1;
       });
@@ -216,11 +217,12 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     let recollectCount = 0;
     
     filteredOrders.forEach(order => {
-      order.tests.forEach(test => {
+      (order.tests ?? []).forEach(test => {
         if (test.resultRejectionHistory && test.resultRejectionHistory.length > 0) {
           test.resultRejectionHistory.forEach(rejection => {
-            if (rejection.rejectionType === 're-test') retestCount++;
-            if (rejection.rejectionType === 're-collect') recollectCount++;
+            const rt = getResultRejectionType(rejection);
+            if (rt === 're-test') retestCount++;
+            if (rt === 're-collect') recollectCount++;
           });
         }
       });
@@ -253,7 +255,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     const testCounts: Record<string, { testName: string; count: number }> = {};
 
     filteredOrders.forEach(order => {
-      order.tests.forEach(test => {
+      (order.tests ?? []).forEach(test => {
         if (test.hasCriticalValues) {
           total++;
           testCounts[test.testCode] = {
@@ -299,7 +301,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     const technicianStats: Record<number, { resultsEntered: number; validations: number }> = {};
 
     filteredOrders.forEach(order => {
-      order.tests.forEach(test => {
+      (order.tests ?? []).forEach(test => {
         if (test.enteredBy) {
           const userId = typeof test.enteredBy === 'string' ? parseInt(test.enteredBy) : test.enteredBy;
           if (!technicianStats[userId]) {
@@ -357,7 +359,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     let oldestValidation: string | undefined;
 
     filteredOrders.forEach(order => {
-      order.tests.forEach(test => {
+      (order.tests ?? []).forEach(test => {
         if (test.status === 'sample-collected') {
           pendingEntry++;
           const sample = filteredSamples.find(s => s.sampleId === test.sampleId);
@@ -399,7 +401,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     let validated = 0;
     filteredOrders.forEach(order => {
       ordersCount++;
-      order.tests.forEach(test => {
+      (order.tests ?? []).forEach(test => {
         const sample = filteredSamples?.find(s => s.sampleId === test.sampleId);
         const isCollected = sample && 'collectedAt' in sample && sample.collectedAt;
         if (isCollected) collected++;

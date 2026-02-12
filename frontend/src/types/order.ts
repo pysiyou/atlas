@@ -42,12 +42,23 @@ export type ResultRejectionType = 're-test' | 're-collect' | 'escalate' | 'autho
 /**
  * Record of a result rejection event during validation.
  * Stored in resultRejectionHistory array on OrderTest.
+ * API may send either rejectionType/rejectionReason (camelCase) or type/reason.
  */
 export interface ResultRejectionRecord {
+  id?: number;
+  resultId?: number;
   rejectedAt: string;
   rejectedBy: string;
-  rejectionReason: string;
-  rejectionType: ResultRejectionType;
+  rejectionType?: ResultRejectionType;
+  type?: ResultRejectionType;
+  rejectionReason?: string;
+  reason?: string;
+  notes?: string;
+}
+
+/** Reads rejection type from either API shape (rejectionType or type). */
+export function getResultRejectionType(record: ResultRejectionRecord): ResultRejectionType | undefined {
+  return record.rejectionType ?? record.type;
 }
 
 export interface TestResult {
@@ -55,16 +66,6 @@ export interface TestResult {
   unit?: string;
   referenceRange?: string;
   status: ResultStatus;
-}
-
-export interface ResultRejectionRecord {
-  id: number;
-  resultId: number;
-  type: ResultRejectionType; // 're-test' | 're-collect' | 'escalate' ...
-  reason: string;
-  notes?: string;
-  rejectedAt: string;
-  rejectedBy: string; // User ID
 }
 
 export interface OrderTest {
