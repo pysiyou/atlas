@@ -242,9 +242,9 @@ export const validationFilterConfig: FilterConfig = {
       {
         type: 'multiSelect',
         key: 'status',
-        label: 'Status',
+        label: 'Priority',
         options: priorityOptions,
-        selectAllLabel: 'All statuses',
+        selectAllLabel: 'All priorities',
         icon: ICONS.priority,
         placeholder: SHARED_FILTER_PLACEHOLDERS.status,
         helpText: 'Filter by priority level: Low, Medium, High, or Urgent.',

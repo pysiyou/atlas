@@ -202,6 +202,10 @@ export function useResolveEscalation() {
       validationNotes?: string;
       rejectionReason?: string;
     }) => {
+      const { hasRole } = useAuthStore.getState();
+      if (!hasRole(['administrator', 'lab-technician-plus'])) {
+        throw new Error('You do not have permission to resolve escalations.');
+      }
       const orderIdStr = typeof orderId === 'number' ? orderId.toString() : orderId;
       return resultAPI.resolveEscalation(orderIdStr, testCode, {
         action,
