@@ -1,17 +1,11 @@
 /**
- * CommandCenterView - Lab Command Center 3-row layout (20% / 40% / 40%).
- * Row 1: single column, horizontal scroll for metric cards.
+ * CommandCenterView - Lab Command Center 2-row layout (charts + timeline).
+ * Single data source: useCommandCenterData (one loading state, one type).
  */
 
 import React from 'react';
+import { useCommandCenterData } from './hooks';
 import {
-  useLabOperationLogs,
-  useTestsReceivedAndValidatedByDay,
-  useActivityByDay,
-  useDistributionByCategory,
-} from './hooks';
-import {
-  CommandCenterMetricCard,
   ActivitiesTimeline,
   ActivityTrendChart,
   StackedBarChart,
@@ -32,49 +26,59 @@ const ACTIVITY_STACKED_SEGMENTS = [
 ];
 
 export const CommandCenterView: React.FC = () => {
-  const { logs, isLoading: logsLoading } = useLabOperationLogs({ limit: 50, hoursBack: 24 });
-  const { data: testsReceivedAndValidatedData, isLoading: trendLoading } = useTestsReceivedAndValidatedByDay(LAST_DAYS);
-  const { data: activityByDayData, isLoading: activityLoading } = useActivityByDay(LAST_DAYS);
-
-  const { data: distributionByCategoryData, isLoading: distributionLoading } = useDistributionByCategory();
+  const {
+    isLoading,
+    logs,
+    receivedValidatedByDay,
+    activityByDay,
+    distributionByStage,
+  } = useCommandCenterData({ lastDays: LAST_DAYS, logsLimit: 50, logsHoursBack: 24 });
 
   const stackedBarData = React.useMemo(
     () =>
-      activityByDayData.map((p) => ({
+      activityByDay.map((p) => ({
         label: p.date,
         sampling: p.sampling,
         resultEntered: p.resultEntered,
         validated: p.validated,
       })),
-    [activityByDayData]
+    [activityByDay]
   );
 
   return (
     <div
       className="flex-1 min-h-0 min-w-[720px] overflow-hidden grid"
-      style={{ gridTemplateRows: '10fr 40fr 50fr' }}
+      style={{ gridTemplateRows: '4fr 6fr' }}
     >
-      {/* Row 1: single column, horizontal scroll for metric cards */}
-      <div className="min-h-0 min-w-0 overflow-x-auto overflow-y-hidden border-b border-border-default">
-        <div className="flex h-full items-stretch gap-2 p-2 w-max min-w-full">
-          <CommandCenterMetricCard
-            title="Price"
-            primaryValue="31"
-            changeValue="+234,43"
-            trend="down"
-          />
-        </div>
-      </div>
-      {/* Row 2: 3 equal columns */}
+      {/* Row 1: pie chart col 1, timeline col 2 */}
       <div
         className="min-h-0 min-w-0 overflow-hidden border-b border-border-default grid"
-        style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
+        style={{ gridTemplateColumns: '1fr 1fr' }}
       >
         <div className={`${chartCellClass} flex flex-col items-stretch justify-stretch p-2 min-w-0`}>
+          <DistributionPieChart
+            title="Distribution by stage"
+            subTitle="this year"
+            valueLabel="tests"
+            data={isLoading ? [] : distributionByStage}
+          />
+        </div>
+        <div className={`${rowCellClass} flex min-w-0 flex-col items-stretch justify-stretch p-2 min-h-0`}>
+          <div className="flex-1 min-h-0 min-w-0 flex flex-col">
+            <ActivitiesTimeline logs={logs} isLoading={isLoading} className="w-full" />
+          </div>
+        </div>
+      </div>
+      {/* Row 2: trend chart, stacked bar */}
+      <div
+        className="min-h-0 min-w-0 overflow-hidden grid"
+        style={{ gridTemplateColumns: '1fr 1fr' }}
+      >
+        <div className={`${chartCellClass} flex flex-col items-stretch min-h-0 p-2 min-w-0`}>
           <ActivityTrendChart
             title="Received vs validated"
             subTitle={`last ${LAST_DAYS} days`}
-            data={trendLoading ? [] : testsReceivedAndValidatedData}
+            data={isLoading ? [] : receivedValidatedByDay}
             valueLabel="tests"
           />
         </div>
@@ -85,28 +89,9 @@ export const CommandCenterView: React.FC = () => {
             valueLabel=""
             valueFormatter={(val) => val.toLocaleString()}
             segments={ACTIVITY_STACKED_SEGMENTS}
-            data={activityLoading ? [] : stackedBarData}
+            data={isLoading ? [] : stackedBarData}
           />
         </div>
-        <div className={`${chartCellClass} flex flex-col items-stretch min-h-0 p-2 min-w-0`}>
-          <DistributionPieChart
-            title="Distribution by Category"
-            subTitle="this year"
-            data={distributionLoading ? [] : distributionByCategoryData}
-          />
-        </div>
-      </div>
-      {/* Row 3: 3/8 + 5/8 */}
-      <div
-        className="min-h-0 min-w-0 overflow-hidden grid"
-        style={{ gridTemplateColumns: '3fr 5fr' }}
-      >
-        <div className={`${rowCellClass} flex min-w-[260px] flex-col items-stretch justify-stretch p-2 min-h-0`}>
-          <div className="flex-1 min-h-0 min-w-0 flex flex-col">
-            <ActivitiesTimeline logs={logs} isLoading={logsLoading} className="w-full" />
-          </div>
-        </div>
-        <div className={rowCellClass} />
       </div>
     </div>
   );
