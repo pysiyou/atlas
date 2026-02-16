@@ -1,11 +1,10 @@
 /**
  * CommandCenterView - Lab Command Center 3-row layout (20% / 40% / 40%).
- * Row 1: Pending samples, Pending result entry, Pending validation (totals); trend = today's grow (count-based).
+ * Row 1: single column, horizontal scroll for metric cards.
  */
 
 import React from 'react';
 import {
-  useCommandCenterRow1Metrics,
   useLabOperationLogs,
   useTestsReceivedAndValidatedByDay,
   useActivityByDay,
@@ -18,7 +17,6 @@ import {
   StackedBarChart,
   DistributionPieChart,
 } from './components';
-import { ICONS } from '@/utils';
 
 const rowCellClass =
   'min-h-0 min-w-[180px] overflow-hidden border-border-default flex items-center justify-center border-r last:border-r-0';
@@ -34,7 +32,6 @@ const ACTIVITY_STACKED_SEGMENTS = [
 ];
 
 export const CommandCenterView: React.FC = () => {
-  const row1 = useCommandCenterRow1Metrics();
   const { logs, isLoading: logsLoading } = useLabOperationLogs({ limit: 50, hoursBack: 24 });
   const { data: testsReceivedAndValidatedData, isLoading: trendLoading } = useTestsReceivedAndValidatedByDay(LAST_DAYS);
   const { data: activityByDayData, isLoading: activityLoading } = useActivityByDay(LAST_DAYS);
@@ -55,48 +52,16 @@ export const CommandCenterView: React.FC = () => {
   return (
     <div
       className="flex-1 min-h-0 min-w-[720px] overflow-hidden grid"
-      style={{ gridTemplateRows: '20fr 40fr 40fr' }}
+      style={{ gridTemplateRows: '10fr 40fr 50fr' }}
     >
-      {/* Row 1: Pending counts; trend = % growth vs yesterday */}
-      <div className="min-h-0 min-w-0 overflow-hidden border-b border-border-default grid grid-cols-4">
-        <div className={`${rowCellClass} flex items-stretch p-2`}>
+      {/* Row 1: single column, horizontal scroll for metric cards */}
+      <div className="min-h-0 min-w-0 overflow-x-auto overflow-y-hidden border-b border-border-default">
+        <div className="flex h-full items-stretch gap-2 p-2 w-max min-w-full">
           <CommandCenterMetricCard
-            title="Pending samples"
-            primaryValue={row1.isLoading ? '—' : row1.samplesStillPending}
-            secondaryValue={undefined}
-            icon={ICONS.dataFields.flask}
-            trend={{ value: row1.trendSamplesCollected, label: row1.trendLabel }}
-            urgentCount={row1.samplesUrgentCount}
-          />
-        </div>
-        <div className={`${rowCellClass} flex items-stretch p-2`}>
-          <CommandCenterMetricCard
-            title="Pending result entry"
-            primaryValue={row1.isLoading ? '—' : row1.resultStillNeedingEntry}
-            secondaryValue={undefined}
-            icon={ICONS.dataFields.notebook}
-            trend={{ value: row1.trendResultEntered, label: row1.trendLabel }}
-            urgentCount={row1.resultUrgentCount}
-          />
-        </div>
-        <div className={`${rowCellClass} flex items-stretch p-2`}>
-          <CommandCenterMetricCard
-            title="Pending validation"
-            primaryValue={row1.isLoading ? '—' : row1.validationTotal}
-            secondaryValue={undefined}
-            icon={ICONS.ui.shieldCheck}
-            trend={{ value: row1.trendValidated, label: row1.trendLabel }}
-            urgentCount={row1.validationUrgentCount}
-          />
-        </div>
-        <div className={`${rowCellClass} flex items-stretch p-2`}>
-          <CommandCenterMetricCard
-            title="Rejected tests"
-            primaryValue={row1.isLoading ? '—' : row1.rejectedTotal}
-            secondaryValue={undefined}
-            icon={ICONS.actions.closeCircle}
-            trend={{ value: row1.trendRejected, label: row1.trendLabel }}
-            urgentCount={row1.rejectedUrgentCount}
+            title="Price"
+            primaryValue="31"
+            changeValue="+234,43"
+            trend="down"
           />
         </div>
       </div>
