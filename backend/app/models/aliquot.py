@@ -48,3 +48,4 @@ class Aliquot(Base):
     # Metadata
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
     createdBy = Column("created_by", String, nullable=False)
+    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

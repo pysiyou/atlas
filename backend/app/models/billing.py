@@ -32,6 +32,7 @@ class Invoice(Base):
 
     # Dates
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
+    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     dueDate = Column("due_date", DateTime(timezone=True), nullable=True)
 
 
@@ -51,6 +52,8 @@ class Payment(Base):
         "receipt_generated", Boolean, default=False, server_default=text("false")
     )
     notes = Column(String, nullable=True)
+    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
+    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     # Relationship for eager loading
     order = relationship("Order", back_populates="payments", foreign_keys=[orderId])
@@ -77,3 +80,5 @@ class InsuranceClaim(Base):
 
     denialReason = Column("denial_reason", String, nullable=True)
     notes = Column(String, nullable=True)
+    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
+    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

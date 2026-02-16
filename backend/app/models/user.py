@@ -18,3 +18,4 @@ class User(Base):
     email = Column(String, nullable=True)
     phone = Column(String, nullable=True)
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
+    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

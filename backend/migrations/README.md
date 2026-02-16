@@ -14,6 +14,7 @@ Apply these migrations in numerical order:
 5. `005_add_order_test_timestamps.sql` - Adds created_at and updated_at to order_tests
 6. `006_add_lab_operation_log_comment.sql` - Adds optional comment column to lab_operation_logs
 7. `007_fill_payments_columns.sql` - Backfill and set defaults for payments.receipt_generated and notes
+8. `008_updated_at_all_tables.sql` - Add updated_at to all tables; DB triggers so every UPDATE sets updated_at (ORM, raw SQL, or cascading)
 
 ## How to Apply
 
@@ -31,6 +32,7 @@ psql -h localhost -U your_user -d atlas_db
 \i /path/to/migrations/005_add_order_test_timestamps.sql
 \i /path/to/migrations/006_add_lab_operation_log_comment.sql
 \i /path/to/migrations/007_fill_payments_columns.sql
+\i /path/to/migrations/008_updated_at_all_tables.sql
 ```
 
 ### Using a Migration Tool

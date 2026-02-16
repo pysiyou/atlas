@@ -25,3 +25,4 @@ class LabOperationLog(Base):
     operationData = Column("operation_data", JSON, nullable=True)  # Additional context-specific data
     comment = Column("comment", String(2000), nullable=True)  # Optional free-text note for this operation
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
+    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
