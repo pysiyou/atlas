@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Icon, ClaudeLoader } from '@/shared/ui';
-import { inputWrapper, inputInner, inputText } from '@/shared/ui/inputStyles';
+import { inputWrapper, inputInner, inputText, inputClearButton } from '@/shared/ui/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 
@@ -122,7 +122,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
         {localValue && !isDebouncing && (
           <button
             onClick={handleClear}
-            className="p-0.5 hover:bg-surface-hover rounded transition-colors duration-200 flex items-center justify-center cursor-pointer"
+            className={cn(inputClearButton, 'hover:bg-surface-hover duration-200')}
             aria-label="Clear search"
           >
             <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-tertiary" />

@@ -9,7 +9,7 @@ import { Icon } from './Icon';
 import { Popover } from './Popover';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
-import { inputTrigger, inputTriggerOpen, inputError } from './inputStyles';
+import { inputTrigger, inputTriggerOpen, inputError, inputClearButton } from './inputStyles';
 import { DateFilterCalendar } from './DateFilterCalendar';
 import { DateFilterHeader } from './DateFilterHeader';
 // useDateFilterNavigation removed - logic inlined below
@@ -177,7 +177,7 @@ export const DateInput: React.FC<DateInputProps> = ({
             {dateValue && !disabled && (
               <button
                 onClick={handleClear}
-                className="p-0.5 -mr-1 hover:bg-neutral-100 rounded transition-colors flex items-center justify-center cursor-pointer"
+                className={cn(inputClearButton, '-mr-1 hover:bg-neutral-100')}
                 type="button"
               >
                 <Icon

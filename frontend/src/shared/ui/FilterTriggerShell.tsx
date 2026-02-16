@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Icon } from '@/shared/ui/Icon';
-import { inputTrigger, inputTriggerOpen, filterTriggerText } from './inputStyles';
+import { inputTrigger, inputTriggerOpen, filterTriggerText, inputClearButton } from './inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 
@@ -47,7 +47,7 @@ export const FilterTriggerShell: React.FC<FilterTriggerShellProps> = ({
           type="button"
           onClick={onClear}
           onMouseDown={onClearMouseDown}
-          className="p-0.5 hover:bg-surface-hover rounded transition-colors"
+          className={cn(inputClearButton, 'hover:bg-surface-hover')}
           aria-label="Clear"
         >
           <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-tertiary" />

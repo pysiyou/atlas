@@ -31,6 +31,10 @@ export const inputTrigger =
 /** Trigger open state (border + ring) */
 export const inputTriggerOpen = 'border-brand ring-1 ring-brand ring-opacity-20';
 
+/** Clear (close-circle) button inside input/trigger — keeps icon vertically centered with other icons */
+export const inputClearButton =
+  'flex items-center justify-center leading-none p-0.5 rounded transition-colors cursor-pointer';
+
 /** Error state for inputs */
 export const inputError =
   'border-border-error focus:border-border-error focus:ring-danger focus:ring-opacity-20';

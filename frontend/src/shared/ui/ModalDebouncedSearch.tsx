@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Icon } from '@/shared/ui';
 import { ICONS, cn } from '@/utils';
-import { inputContainerBase, inputInner, inputText } from './inputStyles';
+import { inputContainerBase, inputInner, inputText, inputClearButton } from './inputStyles';
 
 export interface ModalDebouncedSearchProps {
   value: string;
@@ -49,7 +49,7 @@ export const ModalDebouncedSearch: React.FC<ModalDebouncedSearchProps> = ({
       {localValue && (
         <button
           onClick={handleClear}
-          className="p-0.5 hover:bg-surface-hover rounded transition-colors flex items-center justify-center cursor-pointer"
+          className={cn(inputClearButton, 'hover:bg-surface-hover')}
         >
           <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
         </button>

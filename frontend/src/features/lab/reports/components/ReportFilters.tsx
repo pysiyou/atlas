@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Icon, Button, Badge, Modal, FooterInfo, ClaudeLoader } from '@/shared/ui';
 import { DateFilter } from '@/shared/ui';
-import { inputWrapper, inputInner, inputText, inputContainerBase } from '@/shared/ui/inputStyles';
+import { inputWrapper, inputInner, inputText, inputContainerBase, inputClearButton } from '@/shared/ui/inputStyles';
 import { cn, ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { DatePresetBadges, REPORT_FILTER_PLACEHOLDERS } from '@/features/filters';
@@ -79,7 +79,7 @@ const SearchInput: React.FC<{
         {localValue && !isDebouncing && (
           <button
             onClick={handleClear}
-            className="p-0.5 hover:bg-surface-page rounded transition-colors flex items-center justify-center cursor-pointer"
+            className={cn(inputClearButton, 'hover:bg-surface-page')}
             aria-label="Clear search"
           >
             <Icon
@@ -202,7 +202,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
                   {searchQuery && (
                     <button
                       onClick={() => onSearchChange('')}
-                      className="p-0.5 hover:bg-surface-hover rounded transition-colors"
+                      className={cn(inputClearButton, 'hover:bg-surface-hover')}
                     >
                       <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
                     </button>

@@ -8,7 +8,7 @@ import { Icon, Button, Badge, Modal, FooterInfo, ClaudeLoader } from '@/shared/u
 import { MultiSelectFilter } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
 import { DateFilter } from '@/shared/ui';
-import { inputWrapper, inputInner, inputText, inputContainerBase } from '@/shared/ui/inputStyles';
+import { inputWrapper, inputInner, inputText, inputContainerBase, inputClearButton } from '@/shared/ui/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -109,7 +109,7 @@ const SearchInput: React.FC<{
         {localValue && !isDebouncing && (
           <button
             onClick={handleClear}
-            className="p-0.5 hover:bg-surface-hover rounded transition-colors duration-200 flex items-center justify-center cursor-pointer"
+            className={cn(inputClearButton, 'hover:bg-surface-hover duration-200')}
             aria-label="Clear search"
           >
             <Icon
@@ -268,7 +268,7 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
                   {searchQuery && (
                     <button
                       onClick={() => onSearchChange('')}
-                      className="p-0.5 hover:bg-surface-hover rounded transition-colors"
+                      className={cn(inputClearButton, 'hover:bg-surface-hover')}
                     >
                       <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
                     </button>
