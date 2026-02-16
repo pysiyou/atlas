@@ -26,7 +26,9 @@ import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowV
 import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters, useLabTestsFromOrders } from '../hooks';
 import { validationFilterConfig } from '../constants';
-import { ErrorBoundary, LoadingState } from '@/shared/components';
+import { ErrorBoundary } from '@/shared/components';
+import { SectionLoadingBoundary } from '@/shared/loading';
+import { useMinDisplay } from '@/hooks/useMinDisplay';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
 import { orderHasValidatedTests } from '@/features/order/utils';
@@ -321,27 +323,17 @@ export const ValidationView: React.FC = () => {
     [filteredTestsWithId]
   );
 
-  if (ordersLoading || testsLoading) {
-    return (
-      <ErrorBoundary>
-        <LoadingState message="Loading validation..." fullScreen size="lg" />
-      </ErrorBoundary>
-    );
-  }
-
-  const isLoading = ordersLoading || testsLoading;
-  const hasNoItems = allTests.length === 0;
-  if (isLoading && hasNoItems) {
-    return (
-      <ErrorBoundary>
-        <LoadingState message="Loading validation..." fullScreen />
-      </ErrorBoundary>
-    );
-  }
+  const sectionLoading = useMinDisplay(ordersLoading || testsLoading, 500);
 
   return (
     <ErrorBoundary>
-      <LabWorkflowView
+      <SectionLoadingBoundary
+        scopeId="validation-table"
+        loading={sectionLoading}
+        message="Loading validation..."
+        size="lg"
+      >
+        <LabWorkflowView
         items={filteredTests}
         renderCard={test => {
           const commentKey = `${test.orderId}-${test.testCode}`;
@@ -415,6 +407,7 @@ export const ValidationView: React.FC = () => {
           ) : undefined
         }
       />
+      </SectionLoadingBoundary>
     </ErrorBoundary>
   );
 };

@@ -15,6 +15,7 @@ import { QueryProvider } from '@/lib/query';
 // - See @/hooks/queries for replacement hooks
 // - AppointmentsProvider and BillingProvider removed - API not yet implemented
 import { ModalProvider } from '@/shared/context/ModalContext';
+import { LoadingScopeProvider } from '@/shared/loading';
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -40,6 +41,7 @@ function composeProviders(
  * - ModalProvider: Active - manages modal state
  */
 const featureProviders = [
+  LoadingScopeProvider,
   ModalProvider,
 ];
 
@@ -68,4 +70,4 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => (
 /**
  * Re-export individual providers for cases where selective provision is needed
  */
-export { QueryProvider, ModalProvider };
+export { QueryProvider, ModalProvider, LoadingScopeProvider };

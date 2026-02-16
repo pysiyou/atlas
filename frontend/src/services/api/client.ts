@@ -33,10 +33,19 @@ class APIClient {
     method: string,
     endpoint: string,
     data?: unknown,
-    isRetry = false
+    options?: { signal?: AbortSignal; isRetry?: boolean }
   ): Promise<T> {
+    const { signal: externalSignal, isRetry = false } = options ?? {};
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+    if (externalSignal) {
+      if (externalSignal.aborted) {
+        clearTimeout(timeoutId);
+        throw Object.assign(new Error('Aborted'), { name: 'AbortError' });
+      }
+      externalSignal.addEventListener('abort', () => controller.abort());
+    }
 
     const headers: Record<string, string> = { ...this.headers };
     const token = this.getToken();
@@ -71,7 +80,7 @@ class APIClient {
       if (response.status === 401 && !isRetry) {
         const newToken = await this.refreshToken();
         if (newToken) {
-          return this.request<T>(method, endpoint, data, true);
+          return this.request<T>(method, endpoint, data, { isRetry: true });
         }
       }
 
@@ -107,29 +116,48 @@ class APIClient {
     }
   }
 
-  async get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
+  async get<T>(
+    endpoint: string,
+    params?: Record<string, string>,
+    options?: { signal?: AbortSignal }
+  ): Promise<T> {
     let url = endpoint;
     if (params) {
       const searchParams = new URLSearchParams(params);
       url = `${endpoint}?${searchParams.toString()}`;
     }
-    return this.request<T>('GET', url);
+    return this.request<T>('GET', url, undefined, options);
   }
 
-  async post<T>(endpoint: string, data?: unknown): Promise<T> {
-    return this.request<T>('POST', endpoint, data);
+  async post<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: { signal?: AbortSignal }
+  ): Promise<T> {
+    return this.request<T>('POST', endpoint, data, options);
   }
 
-  async put<T>(endpoint: string, data?: unknown): Promise<T> {
-    return this.request<T>('PUT', endpoint, data);
+  async put<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: { signal?: AbortSignal }
+  ): Promise<T> {
+    return this.request<T>('PUT', endpoint, data, options);
   }
 
-  async patch<T>(endpoint: string, data?: unknown): Promise<T> {
-    return this.request<T>('PATCH', endpoint, data);
+  async patch<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: { signal?: AbortSignal }
+  ): Promise<T> {
+    return this.request<T>('PATCH', endpoint, data, options);
   }
 
-  async delete<T>(endpoint: string): Promise<T> {
-    return this.request<T>('DELETE', endpoint);
+  async delete<T>(
+    endpoint: string,
+    options?: { signal?: AbortSignal }
+  ): Promise<T> {
+    return this.request<T>('DELETE', endpoint, undefined, options);
   }
 }
 

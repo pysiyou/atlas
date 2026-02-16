@@ -41,8 +41,8 @@ export const orderAPI = {
   /**
    * Get all orders (requests up to backend max so tables can show full list)
    */
-  async getAll(): Promise<Order[]> {
-    return apiClient.get<Order[]>('/orders', { limit: '10000' });
+  async getAll(options?: { signal?: AbortSignal }): Promise<Order[]> {
+    return apiClient.get<Order[]>('/orders', { limit: '10000' }, options);
   },
 
   /**
@@ -63,8 +63,8 @@ export const orderAPI = {
   /**
    * Get order by ID
    */
-  async getById(orderId: string): Promise<Order | null> {
-    return apiClient.get<Order>(`/orders/${orderId}`);
+  async getById(orderId: string, options?: { signal?: AbortSignal }): Promise<Order | null> {
+    return apiClient.get<Order>(`/orders/${orderId}`, undefined, options);
   },
 
   /**

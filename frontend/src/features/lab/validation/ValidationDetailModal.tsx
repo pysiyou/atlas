@@ -12,7 +12,7 @@
 
 import React, { useCallback } from 'react';
 import { Button, SectionContainer } from '@/shared/ui';
-import { useAsyncHandler } from '@/hooks';
+import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
 import {
@@ -71,12 +71,16 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   // High complexity is necessary for comprehensive validation logic with multiple conditional branches and state management
   // eslint-disable-next-line complexity
 }) => {
-  const approveHandler = useCallback(async () => {
-    await onApprove();
-    onClose();
-  }, [onApprove, onClose]);
-  const { execute: handleApprove, isPending: isApproving } = useAsyncHandler(approveHandler, {
-    minDisplayMs: 100,
+  const approveHandler = useCallback(
+    async (_signal: AbortSignal) => {
+      await onApprove();
+      onClose();
+    },
+    [onApprove, onClose]
+  );
+  const { execute: handleApprove, isPending: isApproving } = useAsyncAction(approveHandler, {
+    minDisplayMs: 500,
+    scope: 'inline',
   });
 
   if (!test.results) return null;

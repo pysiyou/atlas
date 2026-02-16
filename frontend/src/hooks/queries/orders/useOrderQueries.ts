@@ -36,7 +36,7 @@ export function useOrdersList(filters?: OrdersFilters) {
 
   const query = useQuery({
     queryKey: queryKeys.orders.list(filters),
-    queryFn: () => orderAPI.getAll(),
+    queryFn: ({ signal }) => orderAPI.getAll({ signal }),
     enabled: isAuthenticated && !isRestoring,
     ...cacheConfig.dynamic,
   });
@@ -80,8 +80,8 @@ export function useOrder(orderId: string | undefined) {
 
   const query = useQuery({
     queryKey: queryKeys.orders.byId(orderId ?? ''),
-    queryFn: async () => {
-      const data = await orderAPI.getById(orderId!);
+    queryFn: async ({ signal }) => {
+      const data = await orderAPI.getById(orderId!, { signal });
       if (!data) throw new Error('Order not found');
       return data;
     },
