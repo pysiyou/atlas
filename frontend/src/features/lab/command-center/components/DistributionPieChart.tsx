@@ -204,19 +204,19 @@ export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
               </div>
             </div>
           </div>
-          {/* Segment labels (dot, name, %) below/beside donut */}
-          <div className="shrink-0 px-2 pb-2 flex flex-wrap gap-x-4 gap-y-1 justify-center">
+          {/* Segment labels: 2 columns × 2 rows, left-aligned */}
+          <div className="shrink-0 px-2 pb-2 grid grid-cols-2 gap-x-4 gap-y-1.5 justify-items-start">
             {segmentLabels.map((item, index) => (
               <div
                 key={item.name}
-                className="flex items-center gap-1.5 text-text-primary"
+                className="flex items-center gap-1.5 text-text-primary w-full min-w-0 justify-start"
               >
                 <span
                   className="shrink-0 w-2 h-2 rounded-full"
                   style={{ backgroundColor: item.color ?? COLORS[index % COLORS.length] }}
                 />
-                <span className="text-xs font-medium">{item.name}</span>
-                <span className="text-xs text-text-tertiary">{item.percent}%</span>
+                <span className="text-xs font-medium truncate">{item.name}</span>
+                <span className="text-xs text-text-tertiary shrink-0">{item.percent}%</span>
               </div>
             ))}
           </div>
