@@ -74,28 +74,3 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
     </Alert>
   );
 };
-
-/**
- * Inline error display for smaller contexts
- */
-export const InlineError: React.FC<{
-  error: ContextError | null;
-  onDismiss?: () => void;
-}> = ({ error, onDismiss }) => {
-  if (!error) return null;
-
-  return (
-    <div className="flex items-center justify-between p-2 bg-danger-bg border border-border-error/20 rounded text-sm text-danger-fg">
-      <span>{error.message}</span>
-      {onDismiss && (
-        <button
-          onClick={onDismiss}
-          className="ml-2 text-danger-fg hover:text-danger-fg/80 font-normal"
-          aria-label="Dismiss error"
-        >
-          ×
-        </button>
-      )}
-    </div>
-  );
-};

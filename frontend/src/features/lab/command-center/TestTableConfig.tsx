@@ -95,16 +95,16 @@ export function createTestTableConfig(
     fullColumns: [
       { key: 'testId', header: 'Test ID', width: 'sm', sortable: true, render: renderTestId },
       { key: 'orderId', header: 'Order ID', width: 'sm', sortable: true, render: renderOrderId },
-      { key: 'patientName', header: 'Patient', width: 'fill', sortable: true, render: renderPatientName },
       { key: 'testName', header: 'Test', width: 'fill', sortable: true, render: renderTestName },
+      { key: 'patientName', header: 'Patient', width: 'fill', sortable: true, render: renderPatientName },
       { key: 'priority', header: 'Priority', width: 'sm', sortable: true, render: renderPriority },
       { key: 'status', header: 'Status', width: 'md', sortable: true, render: renderStatus },
       { key: 'orderDate', header: 'Date', width: 'lg', sortable: true, render: renderOrderDate },
     ],
     mediumColumns: [
       { key: 'testId', header: 'Test ID', width: 'sm', sortable: true, render: renderTestId },
-      { key: 'patientName', header: 'Patient', width: 'fill', sortable: true, render: renderPatientName },
       { key: 'testName', header: 'Test', width: 'fill', sortable: true, render: renderTestName },
+      { key: 'patientName', header: 'Patient', width: 'fill', sortable: true, render: renderPatientName },
       { key: 'priority', header: 'Priority', width: 'sm', sortable: true, render: renderPriority },
       { key: 'status', header: 'Status', width: 'sm', sortable: true, render: renderStatus },
       { key: 'orderDate', header: 'Date', width: 'lg', sortable: true, render: renderOrderDate },
