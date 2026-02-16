@@ -2,14 +2,12 @@
 /**
  * DnaHelixLoader – Animated DNA double-helix loading indicator.
  *
- * Two strands (red primary, orange secondary) follow opposing sine waves
- * with per-pair phase offsets, creating a realistic twisting helix.
- * Depth is conveyed through scale + opacity (compositor-friendly, 60 fps).
- * Teal connectors dynamically stretch between strand endpoints.
+ * Each "rung" is a thin dotted bar that rotates around the X-axis with a
+ * staggered delay, creating a travelling 3D helix wave. Coloured dots sit
+ * at each end to represent the two strands. The whole assembly is tilted
+ * –20° on the Z-axis for the classic DNA lean.
  *
- * Implementation: Pure CSS @keyframes with 16-step sine tables – no JS
- * animation runtime. All animated properties (transform, opacity) are
- * GPU-composited. z-index toggles handle strand-crossover layering.
+ * Pure CSS 3D transforms · compositor-only animation → locked 60 fps.
  */
 
 import React, { useId, useMemo } from 'react';
@@ -18,49 +16,31 @@ import React, { useId, useMemo } from 'react';
    TUNING
    ═══════════════════════════════════════════════════════════════════════ */
 
-const PAIR_COUNT = 10;
-const PERIOD = 2.2; // seconds per full rotation
-const TWISTS = 1.5; // visible wavelengths across the width
-
-// Depth-perception range
-const SCALE_FRONT = 1.3;
-const SCALE_BACK = 0.35;
-const OP_FRONT = 1;
-const OP_BACK = 0.28;
-
-/* ═══════════════════════════════════════════════════════════════════════
-   PRE-COMPUTED SINE TABLE (16 steps → buttery-smooth curve)
-   ═══════════════════════════════════════════════════════════════════════ */
-
-const K = 16;
-const _a = Array.from({ length: K + 1 }, (_, i) => (i / K) * Math.PI * 2);
-const _sin = _a.map(Math.sin);
-const _cos = _a.map(Math.cos);
-const _pct = Array.from({ length: K + 1 }, (_, i) =>
-  +((i / K) * 100).toFixed(3),
-);
+const BAR_COUNT = 16;
+const PERIOD = 3; // seconds per full rotation
+const DELAY_STEP = 0.15; // seconds between each bar
 
 /* ═══════════════════════════════════════════════════════════════════════
    SIZE PRESETS
-   d = dot diameter, a = amplitude, g = gap, l = line width
+   d = dot diameter   h = bar height   g = margin per side   l = line width
    ═══════════════════════════════════════════════════════════════════════ */
 
 interface Cfg {
   d: number;
-  a: number;
+  h: number;
   g: number;
   l: number;
 }
 
 const SIZES: Record<string, Cfg> = {
-  xs: { d: 5, a: 7, g: 2, l: 1 },
-  sm: { d: 8, a: 11, g: 3, l: 1.5 },
-  md: { d: 12, a: 17, g: 5, l: 2 },
-  lg: { d: 17, a: 25, g: 8, l: 2.5 },
+  xs: { d: 4, h: 24, g: 2, l: 1 },
+  sm: { d: 6, h: 36, g: 3, l: 1 },
+  md: { d: 8, h: 50, g: 5, l: 1 },
+  lg: { d: 10, h: 70, g: 7, l: 1 },
 };
 
 /* ═══════════════════════════════════════════════════════════════════════
-   COLORS (CSS variable → hardcoded fallback)
+   COLORS (CSS variable with hardcoded fallback)
    ═══════════════════════════════════════════════════════════════════════ */
 
 const DNA_HELIX_COLORS = {
@@ -73,38 +53,9 @@ const DNA_HELIX_COLORS = {
    CSS KEYFRAME BUILDER
    ═══════════════════════════════════════════════════════════════════════ */
 
-const lrp = (lo: number, hi: number, t: number) => lo + (hi - lo) * t;
-
-function buildSheet(id: string, amp: number): string {
-  // Strand keyframe: maps sine/cosine to translateY + scale + opacity + z
-  const strand = (inv: boolean) => {
-    let f = '';
-    for (let i = 0; i <= K; i++) {
-      const c = inv ? -_cos[i] : _cos[i]; // depth factor
-      const t = (c + 1) / 2; // 0 = back, 1 = front
-      const y = ((inv ? 1 : -1) * _sin[i] * amp).toFixed(2);
-      const s = lrp(SCALE_BACK, SCALE_FRONT, t).toFixed(3);
-      const o = lrp(OP_BACK, OP_FRONT, t).toFixed(3);
-      const z = c > 0.05 ? 3 : c < -0.05 ? 1 : 2;
-      f += `${_pct[i]}%{transform:translateY(${y}px) scale(${s});opacity:${o};z-index:${z}}`;
-    }
-    return f;
-  };
-
-  // Connector keyframe: scaleY tracks |sin| (stretch between dots)
-  let cf = '';
-  for (let i = 0; i <= K; i++) {
-    const as = Math.abs(_sin[i]);
-    const sy = (as * 0.85 + 0.15).toFixed(3); // min 15 % visible
-    const co = (0.15 + 0.6 * as).toFixed(3); // opacity ramp
-    cf += `${_pct[i]}%{transform:scaleY(${sy});opacity:${co}}`;
-  }
-
+function buildSheet(id: string): string {
   return [
-    `@keyframes ${id}A{${strand(false)}}`,
-    `@keyframes ${id}B{${strand(true)}}`,
-    `@keyframes ${id}C{${cf}}`,
-    // Freeze at current phase for users who prefer reduced motion
+    `@keyframes ${id}R{0%{transform:rotateX(0deg)}100%{transform:rotateX(360deg)}}`,
     `@media(prefers-reduced-motion:reduce){[data-dna="${id}"] *{animation-play-state:paused!important}}`,
   ].join('');
 }
@@ -134,16 +85,13 @@ export const DnaHelixLoader: React.FC<DnaHelixLoaderProps> = ({
   connectorColor = DNA_HELIX_COLORS.connector,
 }) => {
   const id = 'dna' + useId().replace(/:/g, '');
-  const { d, a, g, l } = SIZES[size] ?? SIZES.md;
+  const { d, h, g, l } = SIZES[size] ?? SIZES.md;
   const pri = color ?? primaryNodeColor;
   const sec = color ?? secondaryNodeColor;
   const lin = color ?? connectorColor;
 
-  const css = useMemo(() => buildSheet(id, a), [id, a]);
+  const css = useMemo(() => buildSheet(id), [id]);
 
-  const w = PAIR_COUNT * d + (PAIR_COUNT - 1) * g;
-  const h = Math.ceil((a + (d * SCALE_FRONT) / 2) * 2) + 4;
-  const step = (PERIOD * TWISTS) / PAIR_COUNT;
   const timing = `${PERIOD}s linear infinite`;
 
   return (
@@ -154,78 +102,60 @@ export const DnaHelixLoader: React.FC<DnaHelixLoaderProps> = ({
       className={className}
       style={{
         position: 'relative',
-        width: w,
-        height: h,
         display: 'flex',
-        alignItems: 'center',
         justifyContent: 'center',
-        gap: g,
+        alignItems: 'center',
+        transformStyle: 'preserve-3d',
+        transform: 'rotateZ(-20deg)',
       }}
     >
       <style>{css}</style>
 
-      {Array.from({ length: PAIR_COUNT }, (_, i) => {
-        // Negative delay → every pair starts already in-phase (no staggered pop-in)
-        const del = `-${(i * step).toFixed(3)}s`;
+      {Array.from({ length: BAR_COUNT }, (_, i) => {
+        const del = `-${(i * DELAY_STEP).toFixed(2)}s`;
 
         return (
           <div
             key={i}
-            style={{ position: 'relative', width: d, height: h, flexShrink: 0 }}
+            style={{
+              position: 'relative',
+              width: l,
+              height: h,
+              border: `${l}px dotted ${lin}`,
+              boxShadow: `0 0 ${Math.round(h * 0.15)}px ${lin}`,
+              background: 'transparent',
+              margin: `0 ${g}px`,
+              animation: `${id}R ${timing}`,
+              animationDelay: del,
+            }}
           >
-            {/* ── connector ── */}
+            {/* ── Top dot (primary / red) ── */}
             <div
               style={{
                 position: 'absolute',
+                top: -d / 2,
                 left: '50%',
-                top: '50%',
-                width: l,
-                height: a * 2,
-                marginLeft: -l / 2,
-                marginTop: -a,
-                backgroundColor: lin,
-                borderRadius: l,
-                transformOrigin: 'center',
-                animation: `${id}C ${timing}`,
-                animationDelay: del,
-                zIndex: 2,
-                willChange: 'transform, opacity',
-              }}
-            />
-
-            {/* ── strand A (primary / red-coral) ── */}
-            <div
-              style={{
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
+                marginLeft: -d / 2,
                 width: d,
                 height: d,
-                marginLeft: -d / 2,
-                marginTop: -d / 2,
-                borderRadius: '50%',
                 backgroundColor: pri,
-                animation: `${id}A ${timing}`,
-                animationDelay: del,
-                willChange: 'transform, opacity',
+                borderRadius: '50%',
+                boxShadow: `0 0 ${Math.round(d * 1.5)}px ${pri}`,
               }}
             />
 
-            {/* ── strand B (secondary / orange-amber) ── */}
+            {/* ── Bottom dot (secondary / orange) ── */}
             <div
               style={{
                 position: 'absolute',
+                bottom: -d / 2,
                 left: '50%',
-                top: '50%',
+                marginLeft: -d / 2,
                 width: d,
                 height: d,
-                marginLeft: -d / 2,
-                marginTop: -d / 2,
-                borderRadius: '50%',
                 backgroundColor: sec,
-                animation: `${id}B ${timing}`,
-                animationDelay: del,
-                willChange: 'transform, opacity',
+                borderRadius: '50%',
+                boxShadow: `0 0 ${Math.round(d * 1.2)}px ${sec}`,
               }}
             />
           </div>
