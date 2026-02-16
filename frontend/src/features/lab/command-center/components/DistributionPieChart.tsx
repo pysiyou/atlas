@@ -191,15 +191,15 @@ function ChartSection({
 interface AssetListRowProps {
   item: ListItemWithPercent;
   index: number;
-  valueLabel: string;
+  total: number;
 }
 
-function AssetListRow({ item, index, valueLabel }: AssetListRowProps) {
+function AssetListRow({ item, index, total }: AssetListRowProps) {
   const color = item.color ?? COLORS[index % COLORS.length];
   return (
     <div className="flex items-center gap-3 py-3 min-w-0 border-b border-border-default last:border-b-0">
       <div
-        className="shrink-0 w-9 h-9 rounded flex items-center justify-center"
+        className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
         style={{
           backgroundColor: `color-mix(in srgb, ${color} 24%, transparent)`,
           color,
@@ -217,17 +217,15 @@ function AssetListRow({ item, index, valueLabel }: AssetListRowProps) {
             >
               {item.change >= 0 ? '+' : ''}
               {item.change.toFixed(2)}
-              <span style={{ color: item.change >= 0 ? CHART_SUCCESS : CHART_DANGER }}>
-                <Icon name={item.change >= 0 ? 'up-trend' : 'down-trend'} className="w-3.5 h-3.5" />
-              </span>
+              <Icon name={item.change >= 0 ? 'up-trend' : 'down-trend'} className="w-3.5 h-3.5" />
             </span>
           ) : (
             <span className="text-xs shrink-0 text-text-tertiary">—</span>
           )}
         </div>
-        <div className="flex items-center gap-2 text-xs text-text-tertiary">
-          <span className="tabular-nums">{item.value.toLocaleString()} {valueLabel}</span>
-          <span className="tabular-nums">{item.value.toLocaleString()}</span>
+        <div className="flex items-center gap-2 text-xs text-text-tertiary tabular-nums">
+          <span>{item.value.toLocaleString()}</span>
+          <span>{total.toLocaleString()}</span>
         </div>
       </div>
     </div>
@@ -236,10 +234,10 @@ function AssetListRow({ item, index, valueLabel }: AssetListRowProps) {
 
 interface AssetListSectionProps {
   listItems: ListItemWithPercent[];
-  valueLabel: string;
+  total: number;
 }
 
-function AssetListSection({ listItems, valueLabel }: AssetListSectionProps) {
+function AssetListSection({ listItems, total }: AssetListSectionProps) {
   return (
     <div className="flex-1 min-w-0 flex flex-col border-l border-border-default overflow-hidden">
       <div className="shrink-0 flex flex-col py-2 pr-3 pl-3 overflow-y-auto">
@@ -247,7 +245,7 @@ function AssetListSection({ listItems, valueLabel }: AssetListSectionProps) {
           <p className="text-sm py-2 text-text-tertiary">No data</p>
         ) : (
           listItems.map((item, index) => (
-            <AssetListRow key={item.name} item={item} index={index} valueLabel={valueLabel} />
+            <AssetListRow key={item.name} item={item} index={index} total={total} />
           ))
         )}
       </div>
@@ -316,7 +314,7 @@ export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
           innerRadius={innerRadius}
           outerRadius={outerRadius}
         />
-        <AssetListSection listItems={listItems} valueLabel={valueLabel} />
+        <AssetListSection listItems={listItems} total={total} />
       </div>
     </div>
   );
