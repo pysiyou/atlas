@@ -1,48 +1,41 @@
 /**
- * CommandCenterView - Lab Command Center 2-row layout (charts + timeline).
- * Single data source: useCommandCenterData (one loading state, one type).
+ * CommandCenterView - Lab Command Center 2-row layout (charts + timeline, test table).
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useOrdersList, usePatientNameLookup } from '@/hooks/queries';
+import { Table } from '@/shared/ui/Table';
 import { useCommandCenterData } from './hooks';
-import {
-  ActivitiesTimeline,
-  ActivityTrendChart,
-  StackedBarChart,
-  DistributionPieChart,
-} from './components';
+import { buildLabTestRows } from './types';
+import { createTestTableConfig } from './TestTableConfig';
+import { ActivitiesTimeline, DistributionPieChart } from './components';
 
 const rowCellClass =
   'min-h-0 min-w-[180px] overflow-hidden border-border-default flex items-center justify-center border-r last:border-r-0';
 const chartCellClass =
   'min-h-0 min-w-[240px] overflow-hidden border-border-default flex items-center justify-center border-r last:border-r-0';
 
-const LAST_DAYS = 10;
-
-const ACTIVITY_STACKED_SEGMENTS = [
-  { dataKey: 'sampling', color: 'var(--chart-brand)', name: 'Sampling' },
-  { dataKey: 'resultEntered', color: 'var(--chart-success)', name: 'Result entered' },
-  { dataKey: 'validated', color: 'var(--primitive-warning-500)', name: 'Validated' },
-];
+const TEST_TABLE_LIMIT = 50;
 
 export const CommandCenterView: React.FC = () => {
+  const navigate = useNavigate();
+  const { orders, isLoading: ordersLoading } = useOrdersList();
+  const { getPatientName } = usePatientNameLookup();
   const {
-    isLoading,
+    isLoading: commandCenterLoading,
     logs,
-    receivedValidatedByDay,
-    activityByDay,
     distributionByStage,
-  } = useCommandCenterData({ lastDays: LAST_DAYS, logsLimit: 50, logsHoursBack: 24 });
+  } = useCommandCenterData({ lastDays: 10, logsLimit: 50, logsHoursBack: 24 });
 
-  const stackedBarData = React.useMemo(
-    () =>
-      activityByDay.map((p) => ({
-        label: p.date,
-        sampling: p.sampling,
-        resultEntered: p.resultEntered,
-        validated: p.validated,
-      })),
-    [activityByDay]
+  const labTestRows = useMemo(
+    () => buildLabTestRows(orders, getPatientName, TEST_TABLE_LIMIT),
+    [orders, getPatientName]
+  );
+
+  const testTableConfig = useMemo(
+    () => createTestTableConfig(navigate, getPatientName),
+    [navigate, getPatientName]
   );
 
   return (
@@ -60,36 +53,30 @@ export const CommandCenterView: React.FC = () => {
             title="Distribution by stage"
             subTitle="this year"
             valueLabel="tests"
-            data={isLoading ? [] : distributionByStage}
+            data={commandCenterLoading ? [] : distributionByStage}
           />
         </div>
         <div className={`${rowCellClass} flex min-w-0 flex-col items-stretch justify-stretch p-2 min-h-0`}>
           <div className="flex-1 min-h-0 min-w-0 flex flex-col">
-            <ActivitiesTimeline logs={logs} isLoading={isLoading} className="w-full" />
+            <ActivitiesTimeline logs={logs} isLoading={commandCenterLoading} className="w-full" />
           </div>
         </div>
       </div>
-      {/* Row 2: trend chart, stacked bar */}
-      <div
-        className="min-h-0 min-w-0 overflow-hidden grid"
-        style={{ gridTemplateColumns: '1fr 1fr' }}
-      >
-        <div className={`${chartCellClass} flex flex-col items-stretch min-h-0 p-2 min-w-0`}>
-          <ActivityTrendChart
-            title="Received vs validated"
-            subTitle={`last ${LAST_DAYS} days`}
-            data={isLoading ? [] : receivedValidatedByDay}
-            valueLabel="tests"
-          />
-        </div>
-        <div className={`${chartCellClass} flex flex-col items-stretch min-h-0 p-2 min-w-0`}>
-          <StackedBarChart
-            title="Activity by day"
-            subTitle={`last ${LAST_DAYS} days`}
-            valueLabel=""
-            valueFormatter={(val) => val.toLocaleString()}
-            segments={ACTIVITY_STACKED_SEGMENTS}
-            data={isLoading ? [] : stackedBarData}
+      {/* Row 2: single column - test table */}
+      <div className="min-h-0 min-w-0 overflow-hidden flex flex-col">
+        <div className="flex-1 min-h-0 min-w-0 flex flex-col p-2">
+          <Table
+            data={labTestRows}
+            viewConfig={testTableConfig}
+            getRowKey={(row) => row.testId}
+            onRowClick={(row) => navigate(`/orders/${row.orderId}`)}
+            embedded
+            striped
+            stickyHeader
+            maxHeight="100%"
+            loading={ordersLoading}
+            emptyMessage="No tests"
+            ariaLabel="Lab tests"
           />
         </div>
       </div>
