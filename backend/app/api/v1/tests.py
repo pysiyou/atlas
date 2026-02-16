@@ -81,6 +81,7 @@ def get_tests(
     if category:
         query = query.filter(Test.category == category)
 
+    query = query.order_by(Test.updatedAt.desc())
     tests = query.offset(skip).limit(limit).all()
 
     # Serialize and cache
@@ -123,11 +124,16 @@ def search_tests(
     Search tests by name or synonym
     """
     search_term = f"%{q.lower()}%"
-    tests = db.query(Test).filter(
-        (Test.name.ilike(search_term)) |
-        (Test.displayName.ilike(search_term)) |
-        (Test.code.ilike(search_term))
-    ).all()
+    tests = (
+        db.query(Test)
+        .filter(
+            (Test.name.ilike(search_term))
+            | (Test.displayName.ilike(search_term))
+            | (Test.code.ilike(search_term))
+        )
+        .order_by(Test.updatedAt.desc())
+        .all()
+    )
     return tests
 
 

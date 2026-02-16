@@ -42,14 +42,14 @@ export const orderAPI = {
    * Get all orders (requests up to backend max so tables can show full list)
    */
   async getAll(options?: { signal?: AbortSignal }): Promise<Order[]> {
-    return apiClient.get<Order[]>('/orders', { limit: '10000' }, options);
+    return apiClient.get<Order[]>('/orders', { limit: '10000', sort: 'updatedAt' }, options);
   },
 
   /**
    * Get orders with pagination
    */
   async getPaginated(filters?: OrdersFilter): Promise<PaginatedResponse<Order>> {
-    const params: Record<string, string> = { paginated: 'true' };
+    const params: Record<string, string> = { paginated: 'true', sort: 'updatedAt' };
 
     if (filters?.patientId) params.patientId = filters.patientId;
     if (filters?.status) params.status = filters.status;
@@ -71,7 +71,7 @@ export const orderAPI = {
    * Get orders by patient ID
    */
   async getByPatientId(patientId: string): Promise<Order[]> {
-    return apiClient.get<Order[]>('/orders', { patientId });
+    return apiClient.get<Order[]>('/orders', { patientId, sort: 'updatedAt' });
   },
 
   /**

@@ -104,7 +104,7 @@ class LabOperationsService:
                 OrderTest.testCode == test_code,
                 OrderTest.status.in_([TestStatus.RESULTED, TestStatus.ESCALATED]),
             )
-            .order_by(OrderTest.id.desc())
+            .order_by(OrderTest.updatedAt.desc())
             .first()
         )
         if not order_test:

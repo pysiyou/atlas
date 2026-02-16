@@ -79,7 +79,7 @@ def get_samples(
     if sampleStatus:
         query = query.filter(Sample.status == sampleStatus)
 
-    query = query.order_by(Sample.createdAt.desc())
+    query = query.order_by(Sample.updatedAt.desc())
 
     # Get total count for pagination (before offset/limit)
     total = query.count() if paginated else 0
@@ -111,7 +111,12 @@ def get_pending_samples(
     """
     Get all pending sample collections.
     """
-    samples = db.query(Sample).filter(Sample.status == SampleStatus.PENDING).all()
+    samples = (
+        db.query(Sample)
+        .filter(Sample.status == SampleStatus.PENDING)
+        .order_by(Sample.updatedAt.desc())
+        .all()
+    )
     return samples
 
 

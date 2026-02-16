@@ -110,7 +110,7 @@ def get_all_critical_values(
         else:
             query = query.filter(OrderTest.criticalAcknowledgedAt == None)
 
-    tests = query.order_by(OrderTest.resultEnteredAt.desc()).all()
+    tests = query.order_by(OrderTest.updatedAt.desc()).all()
 
     results = []
     for test in tests:

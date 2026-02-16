@@ -54,7 +54,7 @@ def get_orders(
     order_status: OrderStatus | None = Query(None, alias="status"),
     paymentStatus: PaymentStatus | None = Query(None, alias="paymentStatus"),
     sort: Literal["createdAt", "updatedAt"] = Query(
-        "createdAt", description="Sort by createdAt (default) or updatedAt (last modified)"
+        "updatedAt", description="Sort by updatedAt (default, last modified) or createdAt"
     ),
     paginated: bool = Query(False, description="Return paginated response with total count"),
     db: Session = Depends(get_db),
@@ -63,7 +63,7 @@ def get_orders(
     """
     Get all orders with optional filters.
     Query params: paginated: If true, returns {data: [...], pagination: {...}} format.
-    sort: createdAt (default) or updatedAt for last-modified ordering.
+    sort: updatedAt (default) or createdAt for ordering.
     """
     skip = pagination["skip"]
     limit = pagination["limit"]

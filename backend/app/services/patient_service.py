@@ -53,7 +53,7 @@ class PatientService:
                     Patient.phone.contains(search),
                 )
             )
-        query = query.order_by(Patient.createdAt.desc())
+        query = query.order_by(Patient.updatedAt.desc())
         total = query.count() if paginated else 0
         patients = query.offset(skip).limit(limit).all()
         data = [serialize_patient(p) for p in patients]
@@ -70,7 +70,7 @@ class PatientService:
                     Patient.phone.contains(q),
                 )
             )
-            .order_by(Patient.createdAt.desc())
+            .order_by(Patient.updatedAt.desc())
             .limit(limit)
             .all()
         )
