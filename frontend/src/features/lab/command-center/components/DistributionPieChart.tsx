@@ -20,6 +20,8 @@ export interface DistributionDataPoint {
   color?: string;
   /** Optional change for trend (e.g. +0.37). When set, shows green/red with arrow. */
   change?: number;
+  /** ISO datetime of last operation for this segment (e.g. last validation). */
+  lastSeenAt?: string;
 }
 
 interface DistributionPieChartProps {
@@ -199,7 +201,7 @@ function AssetListRow({ item, index, total }: AssetListRowProps) {
   return (
     <div className="flex items-center gap-3 py-3 min-w-0 border-b border-border-default last:border-b-0">
       <div
-        className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
+        className="shrink-0 w-9 h-9 rounded-md flex items-center justify-center"
         style={{
           backgroundColor: `color-mix(in srgb, ${color} 24%, transparent)`,
           color,
@@ -208,7 +210,7 @@ function AssetListRow({ item, index, total }: AssetListRowProps) {
         <Icon name={getStageIcon(item.name)} className="w-5 h-5 [&>svg]:shrink-0" />
       </div>
       <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center justify-between gap-2 min-w-0">
           <span className="text-sm font-semibold truncate text-text-primary">{item.name}</span>
           {item.change != null ? (
             <span
@@ -223,9 +225,16 @@ function AssetListRow({ item, index, total }: AssetListRowProps) {
             <span className="text-xs shrink-0 text-text-tertiary">—</span>
           )}
         </div>
-        <div className="flex items-center gap-2 text-xs text-text-tertiary tabular-nums">
-          <span>{item.value.toLocaleString()}</span>
-          <span>{total.toLocaleString()}</span>
+        <div className="flex items-center justify-between gap-2 text-xs text-text-tertiary tabular-nums min-w-0">
+          <span>{item.value.toLocaleString()} over {total.toLocaleString()}</span>
+          {item.lastSeenAt ? (
+            <span className="shrink-0 text-text-tertiary">
+              {new Date(item.lastSeenAt).toLocaleString(undefined, {
+                dateStyle: 'short',
+                timeStyle: 'short',
+              })}
+            </span>
+          ) : null}
         </div>
       </div>
     </div>
