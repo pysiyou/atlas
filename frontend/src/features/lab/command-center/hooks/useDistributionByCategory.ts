@@ -1,6 +1,6 @@
 /**
  * useDistributionByCategory - Validated tests count by category (this year).
- * For DistributionPieChart: aggregates order tests with status validated and resultValidatedAt in current year.
+ * For DonutChart: aggregates order tests with status validated and resultValidatedAt in current year.
  */
 
 import { useMemo } from 'react';

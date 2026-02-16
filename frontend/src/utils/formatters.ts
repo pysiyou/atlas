@@ -6,7 +6,7 @@
 
 import { parseISO, isValid } from 'date-fns';
 
-export { formatDate } from '@/shared/utils/data/dateFormatters';
+export { formatDate, formatRelativeDateLabel, formatRelativeDateTime } from '@/shared/utils/data/dateFormatters';
 export { formatCurrency } from '@/shared/utils/data/currencyFormatters';
 
 /**

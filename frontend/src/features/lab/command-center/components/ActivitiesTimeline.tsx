@@ -6,6 +6,7 @@ import React, { useMemo } from 'react';
 import { Badge } from '@/shared/ui/Badge';
 import { ClaudeLoader } from '@/shared/ui';
 import { displayId } from '@/utils/ids/idDisplay';
+import { formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
 import type { LabOperationRecord, LabOperationType } from '@/types/lab-operations';
 
 export interface ActivitiesTimelineProps {
@@ -288,41 +289,11 @@ function formatOperationType(type: LabOperationType): string {
     .join(' ');
 }
 
-function formatDateTime(date: Date): string {
-  const time = date.toLocaleString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  });
-  return `${getDateLabel(date)}, ${time}`;
-}
-
-function getDateLabel(date: Date): string {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-  if (dateOnly.getTime() === today.getTime()) {
-    return 'Today';
-  }
-  if (dateOnly.getTime() === yesterday.getTime()) {
-    return 'Yesterday';
-  }
-  return date.toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'short',
-    day: 'numeric',
-  });
-}
-
 function groupByDate(items: ActivityItem[]): GroupedActivities[] {
   const groups = new Map<string, ActivityItem[]>();
 
   for (const item of items) {
-    const label = getDateLabel(item.timestamp);
+    const label = formatRelativeDateLabel(item.timestamp);
     const existing = groups.get(label) || [];
     existing.push(item);
     groups.set(label, existing);
@@ -418,7 +389,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
                         </p>
                       ))}
                       <p className="text-xxs font-normal text-text-secondary">
-                        {formatDateTime(item.timestamp)}
+                        {formatRelativeDateTime(item.timestamp)}
                       </p>
                     </div>
                   </div>

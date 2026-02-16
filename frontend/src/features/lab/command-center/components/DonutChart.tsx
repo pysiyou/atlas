@@ -1,5 +1,6 @@
 /**
- * DistributionPieChart - Matches Portfolio Overview: donut + center total, segment labels, asset-style list.
+ * DonutChart - Donut with center total, segment labels, optional detail list.
+ * Use valueLabel for units (e.g. "tests", "orders"). Pass getItemIcon for list row icons when needed.
  */
 
 import React, { useMemo } from 'react';
@@ -11,25 +12,29 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { ChartContainer } from './ChartContainer';
-import { Icon } from '@/shared/ui';
-import { ICONS } from '@/utils/icons';
+import { Icon, type IconName } from '@/shared/ui';
+import { formatRelativeDateTime } from '@/utils';
 
-export interface DistributionDataPoint {
+export interface DonutChartSegment {
   name: string;
   value: number;
   color?: string;
-  /** Optional change for trend (e.g. +0.37). When set, shows green/red with arrow. */
+  /** Optional trend value (e.g. +0.37). When set, shows green/red with arrow. */
   change?: number;
-  /** ISO datetime of last operation for this segment (e.g. last validation). */
+  /** Optional ISO datetime for list row (e.g. last seen, last updated). */
   lastSeenAt?: string;
 }
 
-interface DistributionPieChartProps {
-  data: DistributionDataPoint[];
+export interface DonutChartProps {
+  data: DonutChartSegment[];
   title?: string;
   subTitle?: string;
   valueLabel?: string;
   showHeader?: boolean;
+  /** When false, only pie + segment labels (no right-hand list). Default true. */
+  showListSection?: boolean;
+  /** Optional icon per item for list rows. Omit for no icon (colored dot only). */
+  getItemIcon?: (item: DonutChartSegment) => IconName | undefined;
   className?: string;
   innerRadius?: number | string;
   outerRadius?: number | string;
@@ -51,73 +56,41 @@ const COLORS = [
 const CHART_SUCCESS = 'var(--chart-success)';
 const CHART_DANGER = 'var(--chart-danger)';
 
-/** Same icons as Laboratory tabs (Sample Collection, Result Entry, Validation, Escalation) */
-const STAGE_ICONS: Record<string, (typeof ICONS.dataFields)['flask']> = {
-  Sample: ICONS.dataFields.flask,
-  Result: ICONS.dataFields.notebook,
-  Validation: ICONS.ui.shieldCheck,
-  Scalation: ICONS.actions.alertCircle,
-};
-
-function getStageIcon(stageName: string): (typeof ICONS.dataFields)['flask'] {
-  return STAGE_ICONS[stageName] ?? ICONS.dataFields.flask;
-}
-
-interface TooltipPayloadItem {
-  name: string;
-  value: number;
-  payload?: { fill?: string };
-}
-
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: TooltipPayloadItem[];
+  payload?: { name: string; value: number; payload?: { fill?: string } }[];
+  valueLabel: string;
 }
 
-const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
+const CustomTooltip = ({ active, payload, valueLabel }: CustomTooltipProps) => {
   if (!active || !payload?.length) return null;
-  const data = payload[0];
+  const d = payload[0];
   return (
-    <div
-      className="px-3 py-2 rounded shadow-lg text-sm min-w-[120px]"
-      style={{
-        backgroundColor: TOOLTIP_BG,
-        border: `1px solid ${TOOLTIP_STROKE}`,
-        color: TOOLTIP_FG,
-      }}
-    >
+    <div className="px-3 py-2 rounded shadow-lg text-sm min-w-[120px]" style={{ backgroundColor: TOOLTIP_BG, border: `1px solid ${TOOLTIP_STROKE}`, color: TOOLTIP_FG }}>
       <div className="flex items-center gap-2 mb-1">
-        <span
-          className="block w-2 h-2 rounded-full"
-          style={{ backgroundColor: data.payload?.fill ?? 'var(--text)' }}
-        />
-        <p className="text-xs font-normal" style={{ color: TOOLTIP_FG_MUTED }}>
-          {data.name}
-        </p>
+        <span className="block w-2 h-2 rounded-full" style={{ backgroundColor: d.payload?.fill ?? 'var(--text)' }} />
+        <p className="text-xs font-normal" style={{ color: TOOLTIP_FG_MUTED }}>{d.name}</p>
       </div>
-      <p className="font-normal text-base ml-4">
-        {data.value.toLocaleString()}
-        <span className="text-xs font-normal text-text-tertiary ml-1">tests</span>
-      </p>
+      <p className="font-normal text-base ml-4">{d.value.toLocaleString()} <span className="text-xs font-normal text-text-tertiary ml-1">{valueLabel}</span></p>
     </div>
   );
 };
 
-interface ListItemWithPercent extends DistributionDataPoint {
+interface SegmentWithPercent extends DonutChartSegment {
   percent: number;
 }
 
-/** Minimal shape for pie segments (no percent required). */
-type PieSegment = Pick<DistributionDataPoint, 'name' | 'value'> & { color?: string };
+type PieSegment = Pick<DonutChartSegment, 'name' | 'value'> & { color?: string };
 
 interface ChartSectionProps {
   pieData: PieSegment[];
   total: number;
-  segmentLabels: ListItemWithPercent[];
+  segmentLabels: SegmentWithPercent[];
   valueLabel: string;
   subTitle?: string;
   innerRadius: number | string;
   outerRadius: number | string;
+  widthPercent?: number;
 }
 
 function ChartSection({
@@ -128,9 +101,10 @@ function ChartSection({
   subTitle,
   innerRadius,
   outerRadius,
+  widthPercent = 52,
 }: ChartSectionProps) {
   return (
-    <div className="shrink-0 flex flex-col min-w-0" style={{ width: '52%' }}>
+    <div className="shrink-0 flex flex-col min-w-0" style={{ width: `${widthPercent}%` }}>
       <div className="flex-1 min-h-0 relative flex items-center">
         <div className="absolute inset-0">
           <ChartContainer className="h-full w-full">
@@ -157,7 +131,7 @@ function ChartSection({
                       />
                     ))}
                   </Pie>
-                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
+                  <Tooltip content={<CustomTooltip valueLabel={valueLabel} />} cursor={{ fill: 'transparent' }} />
                 </PieChart>
               </ResponsiveContainer>
             )}
@@ -190,14 +164,16 @@ function ChartSection({
   );
 }
 
-interface AssetListRowProps {
-  item: ListItemWithPercent;
+interface DetailListRowProps {
+  item: SegmentWithPercent;
   index: number;
   total: number;
+  getItemIcon?: (item: DonutChartSegment) => IconName | undefined;
 }
 
-function AssetListRow({ item, index, total }: AssetListRowProps) {
+function DetailListRow({ item, index, total, getItemIcon }: DetailListRowProps) {
   const color = item.color ?? COLORS[index % COLORS.length];
+  const iconName = getItemIcon?.(item);
   return (
     <div className="flex items-center gap-3 py-3 min-w-0 border-b border-border-default last:border-b-0">
       <div
@@ -207,7 +183,11 @@ function AssetListRow({ item, index, total }: AssetListRowProps) {
           color,
         }}
       >
-        <Icon name={getStageIcon(item.name)} className="w-5 h-5 [&>svg]:shrink-0" />
+        {iconName ? (
+          <Icon name={iconName} className="w-5 h-5 [&>svg]:shrink-0" />
+        ) : (
+          <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
+        )}
       </div>
       <div className="flex-1 min-w-0 flex flex-col gap-0.5">
         <div className="flex items-center justify-between gap-2 min-w-0">
@@ -228,12 +208,7 @@ function AssetListRow({ item, index, total }: AssetListRowProps) {
         <div className="flex items-center justify-between gap-2 text-xs text-text-tertiary tabular-nums min-w-0">
           <span>{item.value.toLocaleString()} over {total.toLocaleString()}</span>
           {item.lastSeenAt ? (
-            <span className="shrink-0 text-text-tertiary">
-              {new Date(item.lastSeenAt).toLocaleString(undefined, {
-                dateStyle: 'short',
-                timeStyle: 'short',
-              })}
-            </span>
+            <span className="shrink-0 text-text-tertiary">{formatRelativeDateTime(item.lastSeenAt)}</span>
           ) : null}
         </div>
       </div>
@@ -241,12 +216,13 @@ function AssetListRow({ item, index, total }: AssetListRowProps) {
   );
 }
 
-interface AssetListSectionProps {
-  listItems: ListItemWithPercent[];
+interface DetailListSectionProps {
+  listItems: SegmentWithPercent[];
   total: number;
+  getItemIcon?: (item: DonutChartSegment) => IconName | undefined;
 }
 
-function AssetListSection({ listItems, total }: AssetListSectionProps) {
+function DetailListSection({ listItems, total, getItemIcon }: DetailListSectionProps) {
   return (
     <div className="flex-1 min-w-0 flex flex-col border-l border-border-default overflow-hidden">
       <div className="shrink-0 flex flex-col py-2 pr-3 pl-3 overflow-y-auto">
@@ -254,7 +230,13 @@ function AssetListSection({ listItems, total }: AssetListSectionProps) {
           <p className="text-sm py-2 text-text-tertiary">No data</p>
         ) : (
           listItems.map((item, index) => (
-            <AssetListRow key={item.name} item={item} index={index} total={total} />
+            <DetailListRow
+              key={item.name}
+              item={item}
+              index={index}
+              total={total}
+              getItemIcon={getItemIcon}
+            />
           ))
         )}
       </div>
@@ -262,37 +244,23 @@ function AssetListSection({ listItems, total }: AssetListSectionProps) {
   );
 }
 
-export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
+export const DonutChart: React.FC<DonutChartProps> = ({
   data,
   title = 'Distribution',
   subTitle,
-  valueLabel = 'tests',
+  valueLabel = 'items',
   showHeader = false,
+  showListSection = true,
+  getItemIcon,
   className = '',
   innerRadius = '55%',
   outerRadius = '85%',
 }) => {
-  const { pieData, total, listItems, segmentLabels } = useMemo(() => {
+  const { pieData, total, listItems } = useMemo(() => {
     const sum = data.reduce((a, b) => a + b.value, 0);
-    const withColor = data.map((d, i) => ({
-      ...d,
-      color: d.color ?? COLORS[i % COLORS.length],
-    }));
-    const pieDataFiltered = withColor.filter((d) => d.value > 0);
-    const listItems = withColor.map((d) => ({
-      ...d,
-      percent: sum > 0 ? Math.round((d.value / sum) * 100) : 0,
-    }));
-    const segmentLabels = withColor.map((d) => ({
-      ...d,
-      percent: sum > 0 ? Math.round((d.value / sum) * 100) : 0,
-    }));
-    return {
-      pieData: pieDataFiltered,
-      total: sum,
-      listItems,
-      segmentLabels,
-    };
+    const withColor = data.map((d, i) => ({ ...d, color: d.color ?? COLORS[i % COLORS.length] }));
+    const withPercent = withColor.map((d) => ({ ...d, percent: sum > 0 ? Math.round((d.value / sum) * 100) : 0 }));
+    return { pieData: withColor.filter((d) => d.value > 0), total: sum, listItems: withPercent };
   }, [data]);
 
   return (
@@ -317,13 +285,16 @@ export const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
         <ChartSection
           pieData={pieData}
           total={total}
-          segmentLabels={segmentLabels}
+          segmentLabels={listItems}
           valueLabel={valueLabel}
           subTitle={subTitle}
           innerRadius={innerRadius}
           outerRadius={outerRadius}
+          widthPercent={showListSection ? 52 : 100}
         />
-        <AssetListSection listItems={listItems} total={total} />
+        {showListSection && (
+          <DetailListSection listItems={listItems} total={total} getItemIcon={getItemIcon} />
+        )}
       </div>
     </div>
   );
