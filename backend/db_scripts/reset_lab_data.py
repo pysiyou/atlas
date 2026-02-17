@@ -5,12 +5,19 @@ Cleans the entire database of lab-generated data while preserving
 system configuration (users, test catalog, affiliation pricing).
 
 Usage (from backend directory):
-  PYTHONPATH=. poetry run python db_scripts/reset_lab_data.py
-  PYTHONPATH=. poetry run python db_scripts/reset_lab_data.py --include-config   # also wipe users/tests
+  poetry run python db_scripts/reset_lab_data.py
+  poetry run python db_scripts/reset_lab_data.py --include-config   # also wipe users/tests
 """
 from __future__ import annotations
 
 import argparse
+import sys
+from pathlib import Path
+
+# Ensure backend root is on path so "app" resolves when run as script
+_backend_root = Path(__file__).resolve().parent.parent
+if str(_backend_root) not in sys.path:
+    sys.path.insert(0, str(_backend_root))
 
 from sqlalchemy import text
 from app.database import engine, SessionLocal

@@ -209,9 +209,9 @@ function DetailListRow({ item, index, total, getItemIcon }: DetailListRowProps) 
         </div>
         <div className="flex items-center justify-between gap-2 text-xs text-text-tertiary tabular-nums min-w-0">
           <span>{item.value.toLocaleString()} over {total.toLocaleString()}</span>
-          {item.lastSeenAt ? (
-            <span className="shrink-0 text-text-tertiary">{formatRelativeDateTime(item.lastSeenAt)}</span>
-          ) : null}
+          <span className="shrink-0 text-text-tertiary">
+            {item.lastSeenAt ? formatRelativeDateTime(item.lastSeenAt) : '—'}
+          </span>
         </div>
       </div>
     </div>
