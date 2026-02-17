@@ -318,9 +318,11 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
   if (isLoading) {
     return (
       <div className={`flex flex-col h-full bg-surface ${className}`}>
-        <div className="flex-1 flex flex-col items-center justify-center gap-3 px-4 py-8">
-          <ClaudeLoader size="sm" color="var(--success-fg)" />
-          <p className="text-sm text-text-tertiary">Loading activities...</p>
+        <div className="flex-1 flex flex-col items-center justify-center gap-4 px-4 py-10">
+          <div className="rounded-full bg-surface-hover p-3 shadow-sm">
+            <ClaudeLoader size="sm" color="var(--success-fg)" />
+          </div>
+          <p className="text-sm text-text-tertiary font-medium">Loading activities...</p>
         </div>
       </div>
     );
@@ -328,75 +330,80 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
 
   if (groupedActivities.length === 0) {
     return (
-      <div className={`flex flex-col items-center justify-center h-full text-text-secondary bg-surface ${className}`}>
-        <p className="text-sm">No recent activity</p>
+      <div className={`flex flex-col items-center justify-center h-full bg-surface ${className}`}>
+        <div className="w-10 h-10 rounded-full bg-surface-hover flex items-center justify-center mb-3">
+          <span className="text-text-disabled text-lg" aria-hidden>◇</span>
+        </div>
+        <p className="text-sm text-text-secondary font-medium">No recent activity</p>
+        <p className="text-xxs text-text-tertiary mt-0.5">Activity will appear here</p>
       </div>
     );
   }
 
   return (
-    <div className={`flex flex-col h-full ${className} bg-surface`}>
-      <div className="flex-1 overflow-auto">
+    <div className={`flex flex-col h-full bg-surface ${className}`}>
+      <div className="flex-1 overflow-auto scroll-smooth">
         {groupedActivities.map((group) => (
-          <div key={group.label} className="px-4 pb-4">
-            <div className="flex items-center gap-3 py-3">
-              <div className="flex-1 h-px bg-stroke" />
-              <span className="text-xs font-normal text-text-secondary tracking-wider">
+          <section key={group.label} className="px-4 pb-6 first:pt-1">
+            <div className="flex items-center gap-3 py-3 sticky top-0 z-1 bg-surface/95 backdrop-blur-[2px]">
+              <div className="flex-1 h-px bg-stroke/80 min-w-0" />
+              <span className="text-xxs font-medium text-text-tertiary uppercase tracking-widest shrink-0">
                 {group.label}
               </span>
-              <div className="flex-1 h-px bg-stroke" />
+              <div className="flex-1 h-px bg-stroke/80 min-w-0" />
             </div>
             <div className="relative">
-              {/* Vertical line centered in the dot column (w-2 = 8px, center at 4px) */}
-              <div className="absolute left-0 top-3 bottom-3 w-2 flex justify-center pointer-events-none" aria-hidden>
-                <div className="w-px h-full bg-stroke" />
-              </div>
-
-              <div className="space-y-4">
+              {/* Vertical line centered under the dot column (10px wide, center at 5px) */}
+              <div
+                className="absolute top-4 bottom-4 w-px bg-gradient-to-b from-stroke via-stroke/60 to-stroke pointer-events-none"
+                aria-hidden
+                style={{ left: '5px', transform: 'translateX(-50%)' }}
+              />
+              <ul className="space-y-0 list-none">
                 {group.items.map((item) => (
-                  <div key={item.id} className="flex items-start gap-3 relative">
-                    <div className="w-2 flex justify-center shrink-0 z-10 pt-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-neutral-500" />
+                  <li key={item.id} className="flex items-start gap-3 relative">
+                    <div className="w-[10px] flex justify-center shrink-0 z-10 pt-[7px]">
+                      <div
+                        className="w-2 h-2 rounded-full border-2 border-surface bg-brand shrink-0 ring-2 ring-surface"
+                        aria-hidden
+                      />
                     </div>
-                    <div className="flex-1 min-w-0 space-y-0.5">
-                      {item.lines.map((line, lineIdx) => (
-                        <p
-                          key={lineIdx}
-                          className="text-sm text-text-primary leading-relaxed flex flex-wrap items-center gap-x-1.5 gap-y-1"
-                        >
-                          {line.map((segment, idx) => {
-                            if (segment.type === 'name') {
-                              return (
-                                <span key={idx} className="font-normal text-brand">
-                                  {segment.value}
-                                </span>
-                              );
-                            }
-                            if (segment.type === 'badge') {
-                              return (
-                                <Badge
-                                  key={idx}
-                                  variant={segment.variant}
-                                  size="xs"
-                                  className={segment.isId ? 'font-mono' : undefined}
-                                >
-                                  {segment.value}
-                                </Badge>
-                              );
-                            }
-                            return <span key={idx}>{segment.value}</span>;
-                          })}
-                        </p>
-                      ))}
-                      <p className="text-xxs font-normal text-text-secondary">
+                    <div className="flex-1 min-w-0 pt-0.5 pb-4">
+                      <p className="text-sm text-text-primary leading-[1.45] flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
+                        {item.lines.flatMap((line, lineIdx) =>
+                          lineIdx === 0
+                            ? line.map((segment, idx) => ({ segment, key: `${lineIdx}-${idx}` }))
+                            : [{ segment: { type: 'text' as const, value: ' ' }, key: `space-${lineIdx}` }, ...line.map((segment, idx) => ({ segment, key: `${lineIdx}-${idx}` }))]
+                        ).map(({ segment, key }) =>
+                          segment.type === 'name' ? (
+                            <span key={key} className="font-medium text-brand">
+                              {segment.value}
+                            </span>
+                          ) : segment.type === 'badge' ? (
+                            <Badge
+                              key={key}
+                              variant={segment.variant}
+                              size="xs"
+                              className={segment.isId ? 'font-mono' : undefined}
+                            >
+                              {segment.value}
+                            </Badge>
+                          ) : (
+                            <span key={key} className="text-text-secondary">
+                              {segment.value}
+                            </span>
+                          )
+                        )}
+                      </p>
+                      <p className="text-xxs font-normal text-text-tertiary mt-1.5 tabular-nums">
                         {formatRelativeDateTime(item.timestamp)}
                       </p>
                     </div>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
-          </div>
+          </section>
         ))}
       </div>
     </div>
