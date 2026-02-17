@@ -16,16 +16,16 @@ import React, { useId, useMemo } from 'react';
    TUNING
    ═══════════════════════════════════════════════════════════════════════ */
 
-const BAR_COUNT = 14;
 const PERIOD = 4.2; // seconds per full rotation — slower, calmer
 const DELAY_STEP = 0.18;
 
 /* ═══════════════════════════════════════════════════════════════════════
    SIZE PRESETS
-   d = dot diameter   h = bar height   g = margin per side   l = line width
+   b = bar count   d = dot diameter   h = bar height   g = margin   l = line width
    ═══════════════════════════════════════════════════════════════════════ */
 
 interface Cfg {
+  b: number;
   d: number;
   h: number;
   g: number;
@@ -33,10 +33,10 @@ interface Cfg {
 }
 
 const SIZES: Record<string, Cfg> = {
-  xs: { d: 2, h: 8, g: 1, l: 1 },
-  sm: { d: 4, h: 24, g: 2, l: 1 },   // was xs
-  md: { d: 6, h: 36, g: 3, l: 1 },   // was sm
-  lg: { d: 8, h: 50, g: 5, l: 1 },   // was md (lg removed)
+  xs: { b: 6, d: 2, h: 8, g: 1, l: 1 },
+  sm: { b: 10, d: 4, h: 24, g: 2, l: 1 },
+  md: { b: 14, d: 6, h: 36, g: 3, l: 1 },
+  lg: { b: 18, d: 8, h: 50, g: 5, l: 1 },
 };
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -85,7 +85,7 @@ export const DnaHelixLoader: React.FC<DnaHelixLoaderProps> = ({
   connectorColor = DNA_HELIX_COLORS.connector,
 }) => {
   const id = `dna${useId().replace(/:/g, '')}`;
-  const { d, h, g, l } = SIZES[size] ?? SIZES.md;
+  const { b: barCount, d, h, g, l } = SIZES[size] ?? SIZES.md;
   const pri = color ?? primaryNodeColor;
   const sec = color ?? secondaryNodeColor;
   const lin = color ?? connectorColor;
@@ -111,7 +111,7 @@ export const DnaHelixLoader: React.FC<DnaHelixLoaderProps> = ({
     >
       <style>{css}</style>
 
-      {Array.from({ length: BAR_COUNT }, (_, i) => {
+      {Array.from({ length: barCount }, (_, i) => {
         const del = `-${(i * DELAY_STEP).toFixed(2)}s`;
 
         return (
