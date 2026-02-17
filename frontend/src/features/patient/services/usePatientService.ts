@@ -18,8 +18,9 @@ export function usePatientService() {
       const response = await apiClient.post<Patient>('/patients', transformed);
       return patientSchema.parse(response);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.patients.all });
+      await queryClient.refetchQueries({ queryKey: queryKeys.patients.lists() });
       toast.success('Patient created successfully');
     },
     onError: (error) => {
@@ -35,9 +36,10 @@ export function usePatientService() {
       const response = await apiClient.put<Patient>(`/patients/${id}`, transformed);
       return patientSchema.parse(response);
     },
-    onSuccess: (_, { id }) => {
+    onSuccess: async (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.patients.byId(String(id)) });
       queryClient.invalidateQueries({ queryKey: queryKeys.patients.all });
+      await queryClient.refetchQueries({ queryKey: queryKeys.patients.lists() });
       toast.success('Patient updated successfully');
     },
     onError: (error) => {

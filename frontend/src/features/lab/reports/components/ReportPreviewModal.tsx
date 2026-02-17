@@ -37,6 +37,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
       title="Report Preview"
       subtitle={`${reportData.patientName} - ${reportData.testResults.map(t => t.testName).join(', ')}`}
       size="3xl"
+      disableClose={isGenerating}
     >
       <div className="flex flex-col h-full bg-surface-page">
         {/* Preview Content - Scrollable */}
