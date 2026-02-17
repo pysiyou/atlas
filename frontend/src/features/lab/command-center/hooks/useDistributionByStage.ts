@@ -64,6 +64,7 @@ export function useDistributionByStage(): {
     let collectionArrivals = 0;
     let resultsArrivals = 0;
     let validationArrivals = 0;
+    let escalationArrivals = 0;
     let lastCollectionEntry = '';
     let lastResultsEntry = '';
     let lastValidationEntry = '';
@@ -103,6 +104,7 @@ export function useDistributionByStage(): {
             break;
           case 'escalated':
             escalation++;
+            if (isTodayLocal(test.updatedAt)) escalationArrivals++;
             if (test.updatedAt && test.updatedAt > lastEscalationEntry)
               lastEscalationEntry = test.updatedAt;
             break;
@@ -133,7 +135,7 @@ export function useDistributionByStage(): {
       },
       Escalation: {
         value: escalation,
-        arrivedToday: 0,
+        arrivedToday: escalationArrivals,
         lastSeenAt: lastEscalationEntry || undefined,
       },
     };
