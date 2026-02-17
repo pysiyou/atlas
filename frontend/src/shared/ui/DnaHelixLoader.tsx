@@ -33,10 +33,10 @@ interface Cfg {
 }
 
 const SIZES: Record<string, Cfg> = {
-  xs: { d: 4, h: 24, g: 2, l: 1 },
-  sm: { d: 6, h: 36, g: 3, l: 1 },
-  md: { d: 8, h: 50, g: 5, l: 1 },
-  lg: { d: 10, h: 70, g: 7, l: 1 },
+  xs: { d: 2, h: 8, g: 1, l: 1 },
+  sm: { d: 4, h: 24, g: 2, l: 1 },   // was xs
+  md: { d: 6, h: 36, g: 3, l: 1 },   // was sm
+  lg: { d: 8, h: 50, g: 5, l: 1 },   // was md (lg removed)
 };
 
 /* ═══════════════════════════════════════════════════════════════════════
