@@ -10,6 +10,7 @@
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
+import { invalidatePatientQueries } from '@/lib/query/invalidate';
 import { patientAPI } from '@/services/api/patients';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import type { Patient } from '@/types';
@@ -317,8 +318,7 @@ export function useCreatePatient() {
   return useMutation({
     mutationFn: (patient: Patient) => patientAPI.create(patient),
     onSuccess: () => {
-      // Invalidate and refetch patients list
-      queryClient.invalidateQueries({ queryKey: queryKeys.patients.all });
+      invalidatePatientQueries(queryClient);
     },
   });
 }
@@ -345,9 +345,7 @@ export function useUpdatePatient() {
     },
     onSuccess: (_, variables) => {
       const idStr = typeof variables.id === 'string' ? variables.id : variables.id.toString();
-      // Invalidate specific patient and list
-      queryClient.invalidateQueries({ queryKey: queryKeys.patients.byId(idStr) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.patients.lists() });
+      invalidatePatientQueries(queryClient, { patientId: idStr });
     },
   });
 }
@@ -367,7 +365,7 @@ export function useDeletePatient() {
       return patientAPI.delete(numericId.toString());
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.patients.all });
+      invalidatePatientQueries(queryClient);
     },
   });
 }

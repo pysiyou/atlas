@@ -13,6 +13,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys, cacheConfig } from '@/lib/query';
+import { invalidateResultQueries } from '@/lib/query/invalidate';
 import { resultAPI } from '@/services/api';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import type { ValidationDecision, ResultRejectionType } from '@/types';
@@ -79,9 +80,7 @@ export function useEnterResults() {
     },
     onSuccess: (_, variables) => {
       const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.results.all });
+      invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
     },
   });
 }
@@ -111,9 +110,7 @@ export function useValidateResults() {
     },
     onSuccess: (_, variables) => {
       const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.results.all });
+      invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
     },
   });
 }
@@ -146,10 +143,7 @@ export function useRejectResults() {
     },
     onSuccess: (_, variables) => {
       const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.results.all });
+      invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: true });
     },
   });
 }
@@ -169,13 +163,8 @@ export function useValidateBulk() {
       items: Array<{ orderId: number; testCode: string }>;
       validationNotes?: string;
     }) => resultAPI.validateBulk(items, validationNotes),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
-      const uniqueOrderIds = new Set(variables.items.map(i => String(i.orderId)));
-      uniqueOrderIds.forEach(id => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(id) });
-      });
-      queryClient.invalidateQueries({ queryKey: queryKeys.results.all });
+    onSuccess: () => {
+      invalidateResultQueries(queryClient, { samples: false });
     },
   });
 }
@@ -215,11 +204,11 @@ export function useResolveEscalation() {
     },
     onSuccess: (_, variables) => {
       const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.results.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
+      invalidateResultQueries(queryClient, {
+        orderId: orderIdStr,
+        samples: true,
+        pendingEscalation: true,
+      });
     },
   });
 }

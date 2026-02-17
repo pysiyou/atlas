@@ -11,6 +11,18 @@ export { getQueryClient, createQueryClient, resetQueryClient, cacheConfig } from
 export { queryKeys } from './keys';
 export type { QueryKeys } from './keys';
 
+// Invalidation helpers
+export {
+  invalidateOrderQueries,
+  invalidatePatientQueries,
+  invalidateResultQueries,
+} from './invalidate';
+export type {
+  InvalidateOrderOptions,
+  InvalidatePatientOptions,
+  InvalidateResultOptions,
+} from './invalidate';
+
 // Provider component
 export { QueryProvider } from './QueryProvider';
 

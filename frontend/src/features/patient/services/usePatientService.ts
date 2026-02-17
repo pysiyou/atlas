@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { patientSchema, patientCreateSchema, patientUpdateSchema, type Patient } from '../schemas/patient.schema';
 import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
+import { invalidatePatientQueries } from '@/lib/query/invalidate';
 import { toast } from '@/shared/components/feedback';
 import { getErrorMessage } from '@/utils/errorHelpers';
 import type { Affiliation, AffiliationDuration } from '@/types';
@@ -19,7 +20,7 @@ export function usePatientService() {
       return patientSchema.parse(response);
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.patients.all });
+      invalidatePatientQueries(queryClient);
       await queryClient.refetchQueries({ queryKey: queryKeys.patients.lists() });
       toast.success('Patient created successfully');
     },
@@ -36,10 +37,8 @@ export function usePatientService() {
       const response = await apiClient.put<Patient>(`/patients/${id}`, transformed);
       return patientSchema.parse(response);
     },
-    onSuccess: async (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.patients.byId(String(id)) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.patients.all });
-      await queryClient.refetchQueries({ queryKey: queryKeys.patients.lists() });
+    onSuccess: (_, { id }) => {
+      invalidatePatientQueries(queryClient, { patientId: id });
       toast.success('Patient updated successfully');
     },
     onError: (error) => {

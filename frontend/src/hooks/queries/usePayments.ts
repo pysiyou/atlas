@@ -10,6 +10,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
+import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import {
   getPayments,
   getPayment,
@@ -191,13 +192,8 @@ export function useCreatePayment() {
       return createPayment(validated);
     },
     onSuccess: (_, variables) => {
-      // Invalidate payments list and order-specific payments
       const orderIdStr = typeof variables.orderId === 'string' ? variables.orderId : String(variables.orderId);
-      queryClient.invalidateQueries({ queryKey: queryKeys.payments.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.payments.byOrder(orderIdStr) });
-      // Also invalidate the specific order and lists since payment status may have changed
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
+      invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
     },
   });
 }

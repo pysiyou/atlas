@@ -165,6 +165,18 @@ export const queryKeys = {
 } as const;
 
 /**
+ * Cache invalidation rules (use invalidateOrderQueries, invalidatePatientQueries, invalidateResultQueries from ./invalidate):
+ *
+ * - After any ORDER mutation: invalidate queryKeys.orders.all; if order or samples change, also invalidate samples.all
+ *   (and payments.all when payment status changes).
+ * - After any PATIENT mutation: invalidate queryKeys.patients.all.
+ * - After RESULT mutations (entry/validate/reject): invalidate orders.all, samples.all (when relevant), results.all;
+ *   when resolving escalation also invalidate results.pendingEscalation().
+ * - After PAYMENT mutations: invalidate payments.all and orders.all.
+ * - Billing / aliquots / appointments: when adding mutations, invalidate the corresponding *.all and cross-entity keys.
+ */
+
+/**
  * Query key prefixes for static data (no refetch on window focus).
  * Used by query client refetchOnWindowFocus; add new static domains here.
  */

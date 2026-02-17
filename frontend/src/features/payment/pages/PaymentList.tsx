@@ -17,7 +17,6 @@ import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from './PaymentTableConfig';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
 import { useOrdersList, usePaymentsList } from '@/hooks/queries';
-import { useInvalidatePayments } from '@/hooks/queries/usePayments';
 import type { Order, Payment, PaymentStatus, PaymentMethod } from '@/types';
 import type { OrderPaymentView } from '../types';
 
@@ -46,7 +45,6 @@ function buildOrderPaymentViews(orders: Order[], payments: Payment[]): OrderPaym
  */
 export const PaymentList: React.FC = () => {
   const navigate = useNavigate();
-  const { invalidateAll } = useInvalidatePayments();
   const [methodFilters, setMethodFilters] = useState<PaymentMethod[]>([]);
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
 
@@ -133,17 +131,16 @@ export const PaymentList: React.FC = () => {
   }, [searchFilteredOrders, statusFilters, dateRange, methodFilters]);
 
   /**
-   * Handles successful payment - invalidates caches to refresh the data
+   * Handles successful payment (modal or table). Cache is invalidated by useCreatePayment; refetch for immediate update.
    */
-  const handleTablePaymentSuccess = useCallback(() => {
-    invalidateAll();
+  const handlePaymentSuccess = useCallback(() => {
     refetch();
-  }, [invalidateAll, refetch]);
+  }, [refetch]);
 
   // Memoize table config to prevent recreation on every render
   const paymentTableConfig = useMemo(
-    () => createPaymentTableConfig(navigate, handleTablePaymentSuccess),
-    [navigate, handleTablePaymentSuccess]
+    () => createPaymentTableConfig(navigate, handlePaymentSuccess),
+    [navigate, handlePaymentSuccess]
   );
 
   const handleDismissError = () => {
@@ -165,14 +162,6 @@ export const PaymentList: React.FC = () => {
     setIsModalOpen(false);
     setSelectedOrder(null);
   }, []);
-
-  /**
-   * Handles successful payment from modal - invalidates caches and refetches data
-   */
-  const handlePaymentSuccess = useCallback(() => {
-    invalidateAll();
-    refetch();
-  }, [invalidateAll, refetch]);
 
   return (
     <>

@@ -5,6 +5,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
+import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import { orderAPI } from '@/services/api/orders';
 import { getErrorMessage } from '@/utils/errorHelpers';
 import { toast } from '@/shared/components/feedback';
@@ -19,8 +20,7 @@ export function useCreateOrder() {
   return useMutation({
     mutationFn: (order: Partial<Order>) => orderAPI.create(order),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
+      invalidateOrderQueries(queryClient, { samples: true });
     },
   });
 }
@@ -39,8 +39,7 @@ export function useUpdateOrder() {
     onMutate: async ({ orderId, updates }) => {
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
 
-      await queryClient.cancelQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
-      await queryClient.cancelQueries({ queryKey: queryKeys.orders.lists() });
+      await queryClient.cancelQueries({ queryKey: queryKeys.orders.all });
 
       const previousOrder = queryClient.getQueryData<Order>(queryKeys.orders.byId(orderIdStr));
 
@@ -68,9 +67,7 @@ export function useUpdateOrder() {
     onSettled: (_, __, variables) => {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
+      invalidateOrderQueries(queryClient, { orderId: orderIdStr, samples: true });
     },
   });
 }
@@ -87,7 +84,7 @@ export function useDeleteOrder() {
       return orderAPI.delete(orderIdStr);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
+      invalidateOrderQueries(queryClient, { samples: true });
     },
     onError: (error) => {
       toast.error({
@@ -122,8 +119,7 @@ export function useUpdateTestStatus() {
     onSuccess: (_, variables) => {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
+      invalidateOrderQueries(queryClient, { orderId: orderIdStr, samples: true });
     },
   });
 }
@@ -150,9 +146,7 @@ export function useUpdatePaymentStatus() {
     onSuccess: (_, variables) => {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.payments.all });
+      invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
     },
   });
 }
@@ -179,8 +173,7 @@ export function useMarkTestCritical() {
     onSuccess: (_, variables) => {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
+      invalidateOrderQueries(queryClient, { orderId: orderIdStr, samples: false });
     },
   });
 }

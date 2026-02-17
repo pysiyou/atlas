@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { orderCreateSchema, orderUpdateSchema, orderSchema } from '../schemas/order.schema';
 import type { Order } from '@/types';
 import { apiClient } from '@/services/api/client';
-import { queryKeys } from '@/lib/query/keys';
+import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import { toast } from '@/shared/components/feedback';
 import { getErrorMessage } from '@/utils/errorHelpers';
 import { formInputToPayload } from '../utils/form-transformers';
@@ -18,7 +18,7 @@ export function useOrderService() {
       return orderSchema.parse(response) as Order;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
+      invalidateOrderQueries(queryClient, { samples: true });
       toast.success('Order created successfully');
     },
     onError: (error) => {
@@ -34,9 +34,7 @@ export function useOrderService() {
       return orderSchema.parse(response) as Order;
     },
     onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(String(id)) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.lists() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
+      invalidateOrderQueries(queryClient, { orderId: id, samples: true });
       toast.success('Order updated successfully');
     },
     onError: (error) => {
