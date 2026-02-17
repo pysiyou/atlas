@@ -160,6 +160,8 @@ interface RejectionDialogContentProps {
   onConfirm: (result: RejectionResult) => void;
   onCancel: () => void;
   orderHasValidatedTests?: boolean;
+  /** Notify parent when submitting state changes (for preventClose). */
+  onSubmittingChange?: (submitting: boolean) => void;
 }
 
 /** Orchestrator: loading → error → form. No long JSX, no inline copy. */
@@ -171,6 +173,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   onConfirm,
   onCancel,
   orderHasValidatedTests = false,
+  onSubmittingChange,
 }) => {
   const [reason, setReason] = useState('');
 
@@ -206,6 +209,10 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     orderHasValidatedTests,
     reason,
   });
+
+  React.useEffect(() => {
+    onSubmittingChange?.(isRejecting);
+  }, [isRejecting, onSubmittingChange]);
 
   const handleConfirm = async () => {
     if (!reason.trim()) return;
@@ -287,34 +294,40 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
   onReject,
   trigger,
   orderHasValidatedTests,
-}) => (
-  <Popover
-    placement="bottom-end"
-    offsetValue={REJECTION_DIALOG_LAYOUT.popoverOffset}
-    trigger={
-      trigger ?? (
-        <IconButton variant="delete" size="sm" title={REJECTION_DIALOG_COPY.triggerTitle} />
-      )
-    }
-  >
-    {({ close }) => (
-      <div data-popover-content onClick={e => e.stopPropagation()}>
-        <RejectionDialogContent
-          orderId={orderId}
-          testCode={testCode}
-          testName={testName}
-          patientName={patientName}
-          orderHasValidatedTests={orderHasValidatedTests}
-          onConfirm={result => {
-            onReject(result);
-            close();
-          }}
-          onCancel={close}
-        />
-      </div>
-    )}
-  </Popover>
-);
+}) => {
+  const [effectiveSubmitting, setEffectiveSubmitting] = useState(false);
+
+  return (
+    <Popover
+      placement="bottom-end"
+      offsetValue={REJECTION_DIALOG_LAYOUT.popoverOffset}
+      preventClose={effectiveSubmitting}
+      trigger={
+        trigger ?? (
+          <IconButton variant="delete" size="sm" title={REJECTION_DIALOG_COPY.triggerTitle} />
+        )
+      }
+    >
+      {({ close }) => (
+        <div data-popover-content onClick={e => e.stopPropagation()}>
+          <RejectionDialogContent
+            orderId={orderId}
+            testCode={testCode}
+            testName={testName}
+            patientName={patientName}
+            orderHasValidatedTests={orderHasValidatedTests}
+            onSubmittingChange={setEffectiveSubmitting}
+            onConfirm={result => {
+              onReject(result);
+              close();
+            }}
+            onCancel={close}
+          />
+        </div>
+      )}
+    </Popover>
+  );
+};
 
 interface RejectionHistoryBannerProps {
   isRetest?: boolean;

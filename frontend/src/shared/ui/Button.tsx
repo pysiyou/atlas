@@ -13,7 +13,7 @@
 
 import React, { type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from './Icon';
-import { DnaHelixLoader } from './DnaHelixLoader';
+import { DnaHelixLoader, type DnaHelixLoaderSize } from './DnaHelixLoader';
 import { ICONS } from '@/utils';
 
 /**
@@ -110,7 +110,7 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
 /**
  * Base classes applied to all buttons
  */
-const BASE_CLASSES = 'inline-flex items-center justify-center gap-1.5 font-normal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap';
+const BASE_CLASSES = 'inline-flex shrink-0 items-center justify-center gap-1.5 font-normal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap overflow-hidden';
 
 /**
  * Base style classes for each variant
@@ -144,13 +144,8 @@ const ICON_SIZES: Record<ButtonSize, string> = {
   lg: 'w-5 h-5',
 };
 
-/** DnaHelixLoader size for button loading state */
-const LOADER_SIZES: Record<ButtonSize, 'xs' | 'sm'> = {
-  xs: 'xs',
-  sm: 'xs',
-  md: 'sm',
-  lg: 'sm',
-};
+/** Always use smallest loader so it stays inside button; size does not change. */
+const BUTTON_LOADER_SIZE: DnaHelixLoaderSize = 'xs';
 
 /**
  * Check if a variant is a semantic variant (has bundled icon)
@@ -194,6 +189,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
   /** Whether button is in loading state */
   isLoading?: boolean;
+  /** When true, keep button text visible alongside loader when loading (default: false = loader only) */
+  showTextWhenLoading?: boolean;
 }
 
 /**
@@ -211,6 +208,7 @@ export const Button: React.FC<ButtonProps> = ({
   showIcon = true,
   fullWidth = false,
   isLoading = false,
+  showTextWhenLoading = false,
   className = '',
   disabled,
   ...props
@@ -248,21 +246,8 @@ export const Button: React.FC<ButtonProps> = ({
 
   const iconWrapperClass = `inline-flex items-center justify-center shrink-0 ${ICON_SIZES[size]}`;
 
-  const content = isLoading ? (
-    <>
-      {(iconPosition === 'left' && shouldShowIcon) || (!shouldShowIcon && children) ? (
-        <span className={iconWrapperClass}>
-          <DnaHelixLoader size={LOADER_SIZES[size]} color="currentColor" />
-        </span>
-      ) : null}
-      {children}
-      {iconPosition === 'right' && shouldShowIcon ? (
-        <span className={iconWrapperClass}>
-          <DnaHelixLoader size={LOADER_SIZES[size]} color="currentColor" />
-        </span>
-      ) : null}
-    </>
-  ) : (
+  const showText = isLoading ? showTextWhenLoading : true;
+  const normalContent = (
     <>
       {iconPosition === 'left' && shouldShowIcon && (
         <span className={iconWrapperClass}>{renderIconElement()}</span>
@@ -272,6 +257,32 @@ export const Button: React.FC<ButtonProps> = ({
         <span className={iconWrapperClass}>{renderIconElement()}</span>
       )}
     </>
+  );
+
+  const loaderEl = (
+    <span className="inline-flex shrink-0 items-center justify-center">
+      <DnaHelixLoader size={BUTTON_LOADER_SIZE} color="currentColor" />
+    </span>
+  );
+  const content = isLoading ? (
+    showText ? (
+      <>
+        {(iconPosition === 'left' && shouldShowIcon) || !shouldShowIcon ? loaderEl : null}
+        {children}
+        {iconPosition === 'right' && shouldShowIcon ? loaderEl : null}
+      </>
+    ) : (
+      <span className="relative inline-flex items-center justify-center gap-1.5">
+        <span className="absolute inset-0 flex items-center justify-center">
+          {loaderEl}
+        </span>
+        <span className="invisible" aria-hidden>
+          {normalContent}
+        </span>
+      </span>
+    )
+  ) : (
+    normalContent
   );
 
   return (

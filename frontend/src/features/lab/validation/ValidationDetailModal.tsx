@@ -139,6 +139,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       onClose={onClose}
       title={test.testName}
       subtitle={`${test.testCode} - ${test.patientName}`}
+      disableClose={isApproving}
       headerBadges={
         <StatusBadgeRow
           sampleType={test.sampleType}

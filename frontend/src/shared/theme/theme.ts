@@ -1,5 +1,19 @@
 export type ThemeName = "studio-light" | "github" | "noir-studio";
 
+/** CSS variable names for DNA Helix loader (defined in theme.css) */
+export const DNA_HELIX_CSS_VARS = {
+  primaryNode: '--dna-helix-primary-node',
+  secondaryNode: '--dna-helix-secondary-node',
+  connector: '--dna-helix-connector',
+} as const;
+
+/** Resolved var() values for DnaHelixLoader default colors */
+export const DNA_HELIX_COLORS = {
+  primaryNode: `var(${DNA_HELIX_CSS_VARS.primaryNode})`,
+  secondaryNode: `var(${DNA_HELIX_CSS_VARS.secondaryNode})`,
+  connector: `var(${DNA_HELIX_CSS_VARS.connector})`,
+} as const;
+
 /** Badge background behaviour: unified = same bg for all; tinted = per-variant bg/text from semantic tokens */
 export type BadgeAppearance = "unified" | "tinted";
 

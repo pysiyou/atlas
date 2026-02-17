@@ -4,7 +4,7 @@
  * Three paths: Force Validate, Authorize Re-test, Final Reject / New Sample.
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Button, Popover, SectionContainer } from '@/shared/ui';
 import { cn, displayId } from '@/utils';
 import { inputBase } from '@/shared/ui/inputStyles';
@@ -47,61 +47,59 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   const resolveEscalation = useResolveEscalation();
   const resolving = resolveEscalation.isPending;
 
-  const resolve = useCallback(
-    async (action: EscalationResolutionAction, rejectionReasonOrNotes?: string) => {
-      if (!canResolveEscalation || resolving) return;
-
-      const messages: Record<EscalationResolutionAction, string> = {
-        force_validate: 'Results force-validated.',
-        authorize_retest: 'Authorized re-test created.',
-        final_reject: 'Sample rejected; new sample requested.',
-      };
-
-      resolveEscalation.mutate(
-        {
-          orderId: test.orderId,
-          testCode: test.testCode,
-          action,
-          validationNotes: action === 'force_validate' ? rejectionReasonOrNotes?.trim() : undefined,
-          rejectionReason:
-            action === 'authorize_retest'
-              ? rejectionReasonOrNotes?.trim() || 'Authorized re-test (escalation resolution)'
-              : action === 'final_reject'
-                ? (rejectionReasonOrNotes ?? '').trim()
-                : undefined,
-        },
-        {
-          onSuccess: async () => {
-            await onResolved();
-            onClose();
-            toast.success({
-              title: messages[action] ?? 'Operation completed.',
-              subtitle: 'The escalation has been resolved and the test status updated.',
-            });
-            setValidationNotesForceValidate('');
-            setReasonAuthorizeRetest('');
-            setReasonFinalReject('');
-          },
-          onError: (err) => {
-            const apiError = err as { message?: string };
-            const msg =
-              apiError && typeof apiError === 'object' && typeof apiError.message === 'string'
-                ? apiError.message
-                : 'Failed to resolve escalation.';
-            toast.error({
-              title: msg,
-              subtitle: 'The escalation could not be resolved. Check the details and try again.',
-            });
-          },
-        }
-      );
-    },
-    [test.orderId, test.testCode, onResolved, onClose, resolving, resolveEscalation, canResolveEscalation]
+  const messages: Record<EscalationResolutionAction, string> = useMemo(
+    () => ({
+      force_validate: 'Results force-validated.',
+      authorize_retest: 'Authorized re-test created.',
+      final_reject: 'Sample rejected; new sample requested.',
+    }),
+    []
   );
 
-  const handleForceValidate = useCallback(
-    () => resolve('force_validate', validationNotesForceValidate),
-    [resolve, validationNotesForceValidate]
+  /** Returns a Promise that resolves when the mutation succeeds; popover can await then close. */
+  const resolveAsync = useCallback(
+    (action: EscalationResolutionAction, rejectionReasonOrNotes?: string): Promise<void> => {
+      if (!canResolveEscalation || resolving) return Promise.resolve();
+
+      const variables = {
+        orderId: test.orderId,
+        testCode: test.testCode,
+        action,
+        validationNotes: action === 'force_validate' ? rejectionReasonOrNotes?.trim() : undefined,
+        rejectionReason:
+          action === 'authorize_retest'
+            ? rejectionReasonOrNotes?.trim() || 'Authorized re-test (escalation resolution)'
+            : action === 'final_reject'
+              ? (rejectionReasonOrNotes ?? '').trim()
+              : undefined,
+      };
+
+      return resolveEscalation.mutateAsync(variables, {
+        onSuccess: async () => {
+          await onResolved();
+          onClose();
+          toast.success({
+            title: messages[action] ?? 'Operation completed.',
+            subtitle: 'The escalation has been resolved and the test status updated.',
+          });
+          setValidationNotesForceValidate('');
+          setReasonAuthorizeRetest('');
+          setReasonFinalReject('');
+        },
+        onError: (err) => {
+          const apiError = err as { message?: string };
+          const msg =
+            apiError && typeof apiError === 'object' && typeof apiError.message === 'string'
+              ? apiError.message
+              : 'Failed to resolve escalation.';
+          toast.error({
+            title: msg,
+            subtitle: 'The escalation could not be resolved. Check the details and try again.',
+          });
+        },
+      });
+    },
+    [test.orderId, test.testCode, onResolved, onClose, resolving, resolveEscalation, canResolveEscalation, messages]
   );
 
   const rejectionHistory = test.resultRejectionHistory || [];
@@ -140,6 +138,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       additionalContextInfo={
         <EntryInfoLine enteredAt={test.resultEnteredAt} enteredBy={test.enteredBy} />
       }
+      disableClose={resolving}
       footer={
         <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
           {!canResolveEscalation ? (
@@ -149,6 +148,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           <Popover
             placement="top-end"
             offsetValue={8}
+            preventClose={resolving}
             trigger={
               <Button variant="approve" size="md" disabled={resolving} isLoading={resolving}>
                 Force Validate
@@ -161,8 +161,8 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
                   title="Force Validate"
                   subtitle="Validation notes (optional)"
                   onCancel={close}
-                  onConfirm={() => {
-                    handleForceValidate();
+                  onConfirm={async () => {
+                    await resolveAsync('force_validate', validationNotesForceValidate);
                     close();
                   }}
                   confirmLabel="Confirm"
@@ -189,6 +189,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           <Popover
             placement="top-end"
             offsetValue={8}
+            preventClose={resolving}
             trigger={
               <Button variant="secondary" size="md" disabled={resolving} isLoading={resolving}>
                 Authorize Re-test
@@ -201,8 +202,8 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
                   title="Authorize Re-test"
                   subtitle="Reason (recommended)"
                   onCancel={close}
-                  onConfirm={() => {
-                    resolve(
+                  onConfirm={async () => {
+                    await resolveAsync(
                       'authorize_retest',
                       reasonAuthorizeRetest || 'Authorized re-test (escalation resolution)'
                     );
@@ -232,6 +233,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           <Popover
             placement="top-end"
             offsetValue={8}
+            preventClose={resolving}
             trigger={
               <Button variant="reject" size="md" disabled={resolving} isLoading={resolving}>
                 Final Reject / New Sample
@@ -244,7 +246,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
                   title="Final Reject / New Sample"
                   subtitle="Reason (required)"
                   onCancel={close}
-                  onConfirm={() => {
+                  onConfirm={async () => {
                     if (!reasonFinalReject.trim()) {
                       toast.error({
                         title: 'Please provide a reason for final reject.',
@@ -252,7 +254,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
                       });
                       return;
                     }
-                    resolve('final_reject', reasonFinalReject.trim());
+                    await resolveAsync('final_reject', reasonFinalReject.trim());
                     close();
                   }}
                   confirmLabel="Confirm"

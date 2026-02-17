@@ -225,6 +225,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         onClose={onClose}
         title={modalTitle}
         maxWidth="max-w-3xl"
+        disableClose={isPendingMutation}
       >
         <div className="flex flex-col h-full bg-surface-page">
           <div className="flex-1 overflow-y-auto px-6 py-5">

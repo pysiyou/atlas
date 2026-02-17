@@ -177,12 +177,9 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer" />
               <span className="relative flex items-center justify-center">
                 {isSubmitting ? (
-                  <>
-                    <span className="-ml-1 mr-3 inline-flex shrink-0">
-                      <DnaHelixLoader size="xs" color="currentColor" />
-                    </span>
-                    Signing in...
-                  </>
+                  <span className="inline-flex shrink-0">
+                    <DnaHelixLoader size="xs" color="currentColor" />
+                  </span>
                 ) : (
                   'Sign In'
                 )}

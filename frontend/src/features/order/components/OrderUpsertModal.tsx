@@ -193,6 +193,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
       title={modalTitle}
       subtitle={subtitle}
       size="2xl"
+      disableClose={isSubmitting || isProcessingPayment}
     >
       <div className="flex flex-col h-full bg-surface-page">
         <form

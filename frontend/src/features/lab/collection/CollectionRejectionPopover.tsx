@@ -257,6 +257,7 @@ export const CollectionRejectionPopover: React.FC<CollectionRejectionPopoverProp
   <Popover
     placement="bottom-end"
     offsetValue={8}
+    preventClose={isSubmitting}
     trigger={trigger || <IconButton variant="delete" size="sm" title="Reject Sample" />}
   >
     {({ close }) => (

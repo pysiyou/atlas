@@ -295,9 +295,9 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                 onClick={handlePayment}
                 disabled={submitting}
                 isLoading={submitting}
-                icon={!submitting ? <Icon name={ICONS.dataFields.wallet} /> : undefined}
+                icon={<Icon name={ICONS.dataFields.wallet} />}
               >
-                {submitting ? 'Processing...' : `Pay ${formatCurrency(sourceOrder.totalPrice)}`}
+                {`Pay ${formatCurrency(sourceOrder.totalPrice)}`}
               </Button>
             )}
             </div>

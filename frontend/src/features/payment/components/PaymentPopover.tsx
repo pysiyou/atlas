@@ -5,7 +5,7 @@
  * Uses the shared PopoverForm component for consistent styling with other lab popovers.
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Popover, Button, Icon, Alert, Badge, FooterInfo, PaymentMethodSelector } from '@/shared/ui';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { cn, formatCurrency, displayId } from '@/utils';
@@ -101,9 +101,13 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
 
 interface PaymentPopoverContentProps {
   order: Order;
-  onConfirm: () => void;
   onCancel: () => void;
-  onSuccess?: () => void;
+  /** Submitting state from parent (for preventClose). */
+  submitting: boolean;
+  /** Error message from parent (mutation onError). */
+  error: string | null;
+  /** Submit handler from parent (mutation runs in wrapper). */
+  onSubmit: (paymentData: { orderId: string | number; amount: number; paymentMethod: PaymentMethod; notes?: string }) => void;
 }
 
 /**
@@ -113,54 +117,28 @@ interface PaymentPopoverContentProps {
  */
 const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   order,
-  onConfirm,
   onCancel,
-  onSuccess,
+  submitting,
+  error,
+  onSubmit,
 }) => {
-  // Form state - use default payment method from centralized config
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
   const [notes, setNotes] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
-
-  // Use mutation hook for payment creation
-  const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
 
   // Amount is fixed to the order's total price
   const amount = order.totalPrice;
   const isValid = amount > 0;
 
-  /**
-   * Handles form submission and payment creation
-   */
   const handleSubmit = useCallback(() => {
-    setError(null);
+    if (amount <= 0) return;
 
-    // Validate amount
-    if (amount <= 0) {
-      setError('Amount must be greater than 0');
-      return;
-    }
-
-    // Build payment request - schema validates and transforms orderId
-    const paymentData = {
-      orderId: order.orderId, // Can be string or number, schema transforms to number
+    onSubmit({
+      orderId: order.orderId,
       amount,
       paymentMethod,
       notes: notes.trim() || undefined,
-    };
-
-    // Use mutation hook which handles cache invalidation automatically
-    createPaymentMutation(paymentData, {
-      onSuccess: () => {
-        // Invoke success callback and close popover
-        onSuccess?.();
-        onConfirm();
-      },
-      onError: (err: unknown) => {
-        setError(getPaymentErrorMessage(err, 'Failed to process payment'));
-      },
     });
-  }, [amount, paymentMethod, notes, order.orderId, createPaymentMutation, onSuccess, onConfirm]);
+  }, [amount, paymentMethod, notes, order.orderId, onSubmit]);
 
   // Keyboard shortcuts for submit (Enter) and cancel (Escape)
   useEffect(() => {
@@ -237,6 +215,31 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
   size = 'sm',
   trigger,
 }) => {
+  const [error, setError] = useState<string | null>(null);
+  const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
+
+  const handleSubmit = useCallback(
+    (paymentData: { orderId: string | number; amount: number; paymentMethod: PaymentMethod; notes?: string }) => {
+      if (paymentData.amount <= 0) {
+        setError('Amount must be greater than 0');
+        return;
+      }
+      setError(null);
+      createPaymentMutation(paymentData, {
+        onSuccess: () => {
+          onSuccess?.();
+          closeRef.current?.();
+        },
+        onError: (err: unknown) => {
+          setError(getPaymentErrorMessage(err, 'Failed to process payment'));
+        },
+      });
+    },
+    [createPaymentMutation, onSuccess]
+  );
+
+  const closeRef = useRef<(() => void) | null>(null);
+
   const isPaid = order.paymentStatus === 'paid';
   if (isPaid && trigger == null) {
     return <Badge variant="paid" size="sm" />;
@@ -256,17 +259,22 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
       placement="bottom-end"
       offsetValue={8}
       trigger={trigger ?? defaultTrigger}
+      preventClose={submitting}
     >
-      {({ close }) => (
-        <div data-popover-content onClick={e => e.stopPropagation()}>
-          <PaymentPopoverContent
-            order={order}
-            onConfirm={close}
-            onCancel={close}
-            onSuccess={onSuccess}
-          />
-        </div>
-      )}
+      {({ close }) => {
+        closeRef.current = close;
+        return (
+          <div data-popover-content onClick={e => e.stopPropagation()}>
+            <PaymentPopoverContent
+              order={order}
+              onCancel={close}
+              submitting={submitting}
+              error={error}
+              onSubmit={handleSubmit}
+            />
+          </div>
+        );
+      }}
     </Popover>
   );
 };

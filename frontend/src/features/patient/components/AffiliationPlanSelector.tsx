@@ -274,9 +274,10 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               fullWidth
               onClick={onAction}
               disabled={loading}
+              isLoading={loading}
               className="font-normal bg-brand hover:bg-brand-hover text-on-brand rounded-lg py-3 text-base shadow-sm"
             >
-              {loading ? 'Processing...' : getActionText()}
+              {getActionText()}
             </Button>
             <p className="text-xs text-text-tertiary text-center mt-2">
               All subscription auto renews until canceled
