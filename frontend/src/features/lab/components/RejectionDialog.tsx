@@ -360,7 +360,7 @@ export const RejectionHistoryBanner: React.FC<RejectionHistoryBannerProps> = ({
   return (
     <div className="mt-2 px-2 py-1.5 bg-warning-bg border border-warning-stroke rounded text-warning-fg">
       <div className="flex items-center gap-1.5">
-        <DnaHelixLoader size="xs" color="currentColor" />
+        <DnaHelixLoader size="xs" />
         <span className="text-xxs font-normal">{message}</span>
       </div>
       {rejectionReason && (

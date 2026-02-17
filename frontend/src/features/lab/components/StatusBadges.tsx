@@ -280,7 +280,7 @@ export const RecollectionAttemptBadge: React.FC<RecollectionAttemptBadgeProps> =
   showIcon = false,
 }) => (
   <Badge size={size} variant="warning" className={`flex items-center gap-1 ${className}`}>
-    {showIcon && <DnaHelixLoader size="xs" color="currentColor" />}
+    {showIcon && <DnaHelixLoader size="xs" />}
     RE-COLLECT #{attemptNumber}
   </Badge>
 );

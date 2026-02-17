@@ -178,7 +178,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
               <span className="relative flex items-center justify-center">
                 {isSubmitting ? (
                   <span className="inline-flex shrink-0">
-                    <DnaHelixLoader size="xs" color="currentColor" />
+                    <DnaHelixLoader size="xs" />
                   </span>
                 ) : (
                   'Sign In'

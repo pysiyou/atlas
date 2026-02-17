@@ -261,7 +261,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   const loaderEl = (
     <span className="inline-flex shrink-0 items-center justify-center">
-      <DnaHelixLoader size={BUTTON_LOADER_SIZE} color="currentColor" />
+      <DnaHelixLoader size={BUTTON_LOADER_SIZE} />
     </span>
   );
   const content = isLoading ? (

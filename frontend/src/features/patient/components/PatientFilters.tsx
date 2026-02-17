@@ -98,7 +98,7 @@ const SearchInput: React.FC<{
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
-          <DnaHelixLoader size="xs" color="var(--brand)" />
+          <DnaHelixLoader size="xs" />
         )}
         {localValue && !isDebouncing && (
           <button

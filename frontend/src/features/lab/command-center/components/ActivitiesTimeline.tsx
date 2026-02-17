@@ -86,7 +86,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
       <div className={`flex flex-col h-full bg-surface ${className}`}>
         <div className="flex-1 flex flex-col items-center justify-center gap-4 px-4 py-10">
           <div className="rounded-full bg-surface-hover p-3 shadow-sm">
-            <DnaHelixLoader size="sm" color="var(--success-fg)" />
+            <DnaHelixLoader size="sm" />
           </div>
           <p className="text-sm text-text-tertiary font-medium">Loading activities...</p>
         </div>
