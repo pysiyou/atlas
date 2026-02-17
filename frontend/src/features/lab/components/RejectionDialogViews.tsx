@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Alert, Button, ClaudeLoader } from '@/shared/ui';
+import { Alert, Button, DnaHelixLoader } from '@/shared/ui';
 import { RadioCard } from './PopoverForm';
 import type { ResultRejectionType } from '@/types';
 import { cn } from '@/utils';
@@ -17,7 +17,7 @@ export const RejectionDialogLoadingView: React.FC = () => (
       'bg-surface rounded-lg shadow-xl border border-border-default p-4 flex flex-col items-center justify-center gap-4'
     )}
   >
-    <ClaudeLoader size="md" />
+    <DnaHelixLoader size="md" />
     <p className="text-sm text-text-tertiary">{REJECTION_DIALOG_COPY.loading.message}</p>
   </div>
 );

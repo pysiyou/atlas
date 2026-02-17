@@ -6,7 +6,7 @@
 
 import React, { useMemo } from 'react';
 import { Button, CalloutCard, Icon } from '@/shared/ui';
-import { ClaudeLoader } from '@/shared/ui';
+import { DnaHelixLoader } from '@/shared/ui';
 import { useAffiliationPricing } from '@/hooks/queries/useAffiliationPricing';
 import { formatCurrency } from '@/utils';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
@@ -86,7 +86,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
   if (isLoadingPricing) {
     return (
       <div className="flex items-center justify-center py-8">
-        <ClaudeLoader size="md" />
+        <DnaHelixLoader size="md" />
         <span className="ml-3 text-sm text-text-tertiary">Loading plans...</span>
       </div>
     );

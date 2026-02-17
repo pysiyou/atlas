@@ -29,7 +29,6 @@ export * from './Icon';
 export * from './IconButton';
 export * from './Input';
 export * from './inputStyles';
-export * from './LoadingSpinner';
 export * from './misc';
 export * from './Modal';
 export * from './ModalDebouncedSearch';

@@ -4,7 +4,7 @@
  */
 
 import React, { useRef, useEffect } from 'react';
-import { Icon, ClaudeLoader } from '@/shared/ui';
+import { Icon, DnaHelixLoader } from '@/shared/ui';
 import { ICONS } from '@/utils';
 import { companyConfig } from '@/config';
 
@@ -179,7 +179,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                 {isSubmitting ? (
                   <>
                     <span className="-ml-1 mr-3 inline-flex shrink-0">
-                      <ClaudeLoader size="xs" color="currentColor" />
+                      <DnaHelixLoader size="xs" color="currentColor" />
                     </span>
                     Signing in...
                   </>

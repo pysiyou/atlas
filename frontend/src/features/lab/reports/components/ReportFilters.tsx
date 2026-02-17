@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Icon, Button, Badge, Modal, FooterInfo, ClaudeLoader } from '@/shared/ui';
+import { Icon, Button, Badge, Modal, FooterInfo, DnaHelixLoader } from '@/shared/ui';
 import { DateFilter } from '@/shared/ui';
 import { inputWrapper, inputInner, inputText, inputContainerBase, inputClearButton } from '@/shared/ui/inputStyles';
 import { cn, ICONS } from '@/utils';
@@ -74,7 +74,7 @@ const SearchInput: React.FC<{
       />
       <div className="flex items-center gap-1 shrink-0">
         {isDebouncing && (
-          <ClaudeLoader size="xs" color="var(--brand)" />
+          <DnaHelixLoader size="xs" color="var(--brand)" />
         )}
         {localValue && !isDebouncing && (
           <button

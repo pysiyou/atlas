@@ -12,7 +12,7 @@ import { ErrorFallback } from '@/shared/components/error-boundaries/ErrorFallbac
 
 interface DataLoaderProps {
   children: React.ReactNode;
-  /** Show full-screen loading (ClaudeLoader) while data is being fetched; if false, children render and queries show their own loading states */
+  /** Show full-screen loading (DnaHelixLoader) while data is being fetched; if false, children render and queries show their own loading states */
   showLoadingSkeleton?: boolean;
 }
 

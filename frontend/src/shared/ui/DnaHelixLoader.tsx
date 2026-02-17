@@ -16,9 +16,9 @@ import React, { useId, useMemo } from 'react';
    TUNING
    ═══════════════════════════════════════════════════════════════════════ */
 
-const BAR_COUNT = 16;
-const PERIOD = 3; // seconds per full rotation
-const DELAY_STEP = 0.15; // seconds between each bar
+const BAR_COUNT = 14;
+const PERIOD = 4.2; // seconds per full rotation — slower, calmer
+const DELAY_STEP = 0.18;
 
 /* ═══════════════════════════════════════════════════════════════════════
    SIZE PRESETS
@@ -84,7 +84,7 @@ export const DnaHelixLoader: React.FC<DnaHelixLoaderProps> = ({
   secondaryNodeColor = DNA_HELIX_COLORS.secondaryNode,
   connectorColor = DNA_HELIX_COLORS.connector,
 }) => {
-  const id = 'dna' + useId().replace(/:/g, '');
+  const id = `dna${useId().replace(/:/g, '')}`;
   const { d, h, g, l } = SIZES[size] ?? SIZES.md;
   const pri = color ?? primaryNodeColor;
   const sec = color ?? secondaryNodeColor;
@@ -122,14 +122,13 @@ export const DnaHelixLoader: React.FC<DnaHelixLoaderProps> = ({
               width: l,
               height: h,
               border: `${l}px dotted ${lin}`,
-              boxShadow: `0 0 ${Math.round(h * 0.15)}px ${lin}`,
               background: 'transparent',
               margin: `0 ${g}px`,
               animation: `${id}R ${timing}`,
               animationDelay: del,
             }}
           >
-            {/* ── Top dot (primary / red) ── */}
+            {/* Top strand node */}
             <div
               style={{
                 position: 'absolute',
@@ -140,11 +139,10 @@ export const DnaHelixLoader: React.FC<DnaHelixLoaderProps> = ({
                 height: d,
                 backgroundColor: pri,
                 borderRadius: '50%',
-                boxShadow: `0 0 ${Math.round(d * 1.5)}px ${pri}`,
+                boxShadow: `0 1px 2px rgba(0,0,0,0.06)`,
               }}
             />
-
-            {/* ── Bottom dot (secondary / orange) ── */}
+            {/* Bottom strand node */}
             <div
               style={{
                 position: 'absolute',
@@ -155,7 +153,7 @@ export const DnaHelixLoader: React.FC<DnaHelixLoaderProps> = ({
                 height: d,
                 backgroundColor: sec,
                 borderRadius: '50%',
-                boxShadow: `0 0 ${Math.round(d * 1.2)}px ${sec}`,
+                boxShadow: `0 1px 2px rgba(0,0,0,0.06)`,
               }}
             />
           </div>

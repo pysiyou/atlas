@@ -13,7 +13,7 @@
 
 import React, { type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from './Icon';
-import { ClaudeLoader } from './LoadingSpinner';
+import { DnaHelixLoader } from './DnaHelixLoader';
 import { ICONS } from '@/utils';
 
 /**
@@ -144,7 +144,7 @@ const ICON_SIZES: Record<ButtonSize, string> = {
   lg: 'w-5 h-5',
 };
 
-/** ClaudeLoader size for button loading state */
+/** DnaHelixLoader size for button loading state */
 const LOADER_SIZES: Record<ButtonSize, 'xs' | 'sm'> = {
   xs: 'xs',
   sm: 'xs',
@@ -252,13 +252,13 @@ export const Button: React.FC<ButtonProps> = ({
     <>
       {(iconPosition === 'left' && shouldShowIcon) || (!shouldShowIcon && children) ? (
         <span className={iconWrapperClass}>
-          <ClaudeLoader size={LOADER_SIZES[size]} color="currentColor" armCount={8} />
+          <DnaHelixLoader size={LOADER_SIZES[size]} color="currentColor" />
         </span>
       ) : null}
       {children}
       {iconPosition === 'right' && shouldShowIcon ? (
         <span className={iconWrapperClass}>
-          <ClaudeLoader size={LOADER_SIZES[size]} color="currentColor" armCount={8} />
+          <DnaHelixLoader size={LOADER_SIZES[size]} color="currentColor" />
         </span>
       ) : null}
     </>
