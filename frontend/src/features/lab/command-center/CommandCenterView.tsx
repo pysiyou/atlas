@@ -16,8 +16,8 @@ import type { DonutChartSegment } from './components';
 
 /** Lab pipeline stage → icon. */
 const STAGE_ICONS: Record<string, IconName> = {
-  Pending: ICONS.dataFields.flask,
-  Collected: ICONS.dataFields.sampleCollection,
+  Pending: ICONS.dataFields.clock,
+  Collected: ICONS.dataFields.flask,
   Resulted: ICONS.dataFields.notebook,
   Validated: ICONS.ui.shieldCheck,
 };

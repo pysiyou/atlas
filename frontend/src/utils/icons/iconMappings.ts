@@ -97,6 +97,7 @@ export const ICONS = {
     sampleCollection: 'sample-collection' as IconName,
     notebook: 'notebook' as IconName,
     checklist: 'checklist' as IconName,
+    clock: 'clock' as IconName,
   },
 
   // Actions - user interactions

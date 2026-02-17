@@ -72,9 +72,9 @@ const CustomTooltip = ({ active, payload, valueLabel }: CustomTooltipProps) => {
     <div className="px-3 py-2 rounded shadow-lg text-sm min-w-[120px]" style={{ backgroundColor: TOOLTIP_BG, border: `1px solid ${TOOLTIP_STROKE}`, color: TOOLTIP_FG }}>
       <div className="flex items-center gap-2 mb-1">
         <span className="block w-2 h-2 rounded-full" style={{ backgroundColor: d.payload?.fill ?? 'var(--text)' }} />
-        <p className="text-xs font-normal" style={{ color: TOOLTIP_FG_MUTED }}>{d.name}</p>
+        <p className="text-xs" style={{ color: TOOLTIP_FG_MUTED }}>{d.name}</p>
       </div>
-      <p className="font-normal text-base ml-4">{d.value.toLocaleString()} <span className="text-xs font-normal text-text-tertiary ml-1">{valueLabel}</span></p>
+      <p className="text-base ml-4">{d.value.toLocaleString()} <span className="text-xs text-text-tertiary ml-1">{valueLabel}</span></p>
     </div>
   );
 };
@@ -142,7 +142,7 @@ function ChartSection({
         </div>
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
           <div className="absolute top-1/2 left-[45%] -translate-x-1/2 -translate-y-1/2 text-center z-10">
-            <p className="text-2xl font-bold tabular-nums text-text-primary">{total.toLocaleString()}</p>
+            <p className="text-2xl tabular-nums text-text-primary">{total.toLocaleString()}</p>
             <p className="text-xs mt-0.5 text-text-tertiary">Total {valueLabel}:</p>
             {subTitle && (
               <p className="text-xs mt-0.5" style={{ color: CHART_SUCCESS }}>{subTitle}</p>
@@ -160,7 +160,7 @@ function ChartSection({
               className="shrink-0 w-2 h-2 rounded-full"
               style={{ backgroundColor: item.color ?? COLORS[index % COLORS.length] }}
             />
-            <span className="text-xs font-medium truncate">{item.name}</span>
+            <span className="text-xs truncate">{item.name}</span>
             <span className="text-xs text-text-tertiary shrink-0">{item.percent}%</span>
           </div>
         ))}
@@ -198,10 +198,10 @@ function DetailListRow({ item, index, getItemIcon }: DetailListRowProps) {
       </div>
       <div className="flex-1 min-w-0 flex flex-col gap-0.5">
         <div className="flex items-center justify-between gap-2 min-w-0">
-          <span className="text-sm font-semibold truncate text-text-primary">{item.name}</span>
+          <span className="text-sm truncate text-text-primary">{item.name}</span>
           {hasArrivals ? (
             <span
-              className="flex items-center gap-0.5 text-xs font-medium shrink-0"
+              className="flex items-center gap-0.5 text-xs shrink-0"
               style={{ color: CHART_SUCCESS }}
             >
               +{item.arrivedToday}
@@ -278,10 +278,10 @@ export const DonutChart: React.FC<DonutChartProps> = ({
       {showHeader && (
         <div className="flex items-center justify-between px-4 pt-4 pb-2 shrink-0">
           <div className="flex items-center gap-2 min-w-0">
-            <h3 className="text-lg font-bold truncate text-text-primary">{title}</h3>
+            <h3 className="text-lg truncate text-text-primary">{title}</h3>
             <button
               type="button"
-              className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium transition-opacity hover:opacity-80 bg-surface-hover text-text-tertiary"
+              className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm transition-opacity hover:opacity-80 bg-surface-hover text-text-tertiary"
               aria-label="Help"
             >
               ?
