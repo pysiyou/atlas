@@ -14,12 +14,12 @@ import { createTestTableConfig } from './TestTableConfig';
 import { ActivitiesTimeline, DonutChart } from './components';
 import type { DonutChartSegment } from './components';
 
-/** Lab pipeline stage → icon. */
+/** Lab pipeline stage (active tests) → icon. */
 const STAGE_ICONS: Record<string, IconName> = {
-  Pending: ICONS.dataFields.clock,
-  Collected: ICONS.dataFields.flask,
-  Resulted: ICONS.dataFields.notebook,
-  Validated: ICONS.ui.shieldCheck,
+  Collection: ICONS.dataFields.clock,
+  Results: ICONS.dataFields.flask,
+  Validation: ICONS.dataFields.notebook,
+  Escalation: ICONS.ui.shieldCheck,
 };
 
 const rowCellClass =

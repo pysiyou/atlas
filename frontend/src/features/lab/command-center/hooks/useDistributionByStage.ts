@@ -1,12 +1,8 @@
 /**
- * useDistributionByStage - Current lab pipeline: Pending, Collected, Resulted, Validated (today).
+ * useDistributionByStage - Active (incomplete) tests by state: COLLECTION, RESULTS, VALIDATION, ESCALATION.
  *
- * For each stage computes:
- *   value        – donut slice count (tests currently in that state; validated = today only)
- *   doneToday    – operations completed today for the *next* transition
- *   totalNeeded  – doneToday + remaining (full workload for that transition)
- *   arrivedToday – new items that entered *this* queue today (trend)
- *   lastSeenAt   – most-recent operation timestamp for the corresponding transition
+ * Active = not superseded, not removed, not validated.
+ * For each stage: value (count), arrivedToday (tests moved to that state today), lastSeenAt (last time an item entered this stage).
  */
 
 import { useMemo } from 'react';
@@ -17,24 +13,31 @@ export interface DistributionByStagePoint {
   name: string;
   value: number;
   color?: string;
-  doneToday: number;
-  totalNeeded: number;
+  /** Tests that entered this state today (trend). */
   arrivedToday: number;
+  /** Last time an item entered this stage (ISO datetime). */
   lastSeenAt?: string;
 }
 
-const STAGE_ORDER = ['Pending', 'Collected', 'Resulted', 'Validated'] as const;
+const STAGE_ORDER = ['Collection', 'Results', 'Validation', 'Escalation'] as const;
 
-const STAGE_COLORS: Record<string, string> = {
-  Pending: 'var(--chart-warning)',
-  Collected: 'var(--chart-brand)',
-  Resulted: 'var(--chart-accent)',
-  Validated: 'var(--chart-success)',
+const STAGE_COLORS: Record<(typeof STAGE_ORDER)[number], string> = {
+  Collection: 'var(--chart-warning)',
+  Results: 'var(--chart-brand)',
+  Validation: 'var(--chart-accent)',
+  Escalation: 'var(--chart-danger)',
 };
 
-/** YYYY-MM-DD for a Date (local timezone). */
-function dateKey(d: Date): string {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+/** True if the ISO datetime falls on today in the user's local timezone. */
+function isTodayLocal(isoString: string | undefined): boolean {
+  if (!isoString) return false;
+  const d = new Date(isoString);
+  const t = new Date();
+  return (
+    d.getFullYear() === t.getFullYear() &&
+    d.getMonth() === t.getMonth() &&
+    d.getDate() === t.getDate()
+  );
 }
 
 export function useDistributionByStage(): {
@@ -46,9 +49,6 @@ export function useDistributionByStage(): {
   const isLoading = ordersLoading || samplesLoading;
 
   const data = useMemo((): DistributionByStagePoint[] => {
-    const todayKey = dateKey(new Date());
-
-    // ── sample collection lookup ──────────────────────────────────────
     const sampleCollectedAt = new Map<number, string>();
     (samples ?? []).forEach((s) => {
       if (s.status !== 'pending' && 'collectedAt' in s) {
@@ -57,118 +57,84 @@ export function useDistributionByStage(): {
       }
     });
 
-    // ── counters ──────────────────────────────────────────────────────
-    let pending = 0;
-    let collected = 0;
-    let resulted = 0;
-    let validatedToday = 0;
-
-    // operations completed today (across *all* current statuses)
-    let collectionsToday = 0;
-    let resultsToday = 0;
-    let validationsToday = 0;
-
-    // new items entering each queue today (only tests still in that queue)
+    let collection = 0;
+    let results = 0;
+    let validation = 0;
+    let escalation = 0;
     let collectionArrivals = 0;
-    let resultArrivals = 0;
+    let resultsArrivals = 0;
     let validationArrivals = 0;
-
-    // most-recent operation timestamps
-    let lastCollection = '';
-    let lastResultEntry = '';
-    let lastValidation = '';
+    let lastCollectionEntry = '';
+    let lastResultsEntry = '';
+    let lastValidationEntry = '';
+    let lastEscalationEntry = '';
 
     (orders ?? []).forEach((order) => {
       (order.tests ?? []).forEach((test) => {
         if (!isActiveTest(test)) return;
-        if (test.status === 'rejected') return;
+        if (test.status === 'validated') return;
 
         const sampleCA =
           test.sampleId != null ? sampleCollectedAt.get(test.sampleId) : undefined;
-        const wasCollectedToday = sampleCA ? sampleCA.startsWith(todayKey) : false;
-        const wasResultedToday = test.resultEnteredAt
-          ? test.resultEnteredAt.startsWith(todayKey)
-          : false;
-        const wasValidatedToday = test.resultValidatedAt
-          ? test.resultValidatedAt.startsWith(todayKey)
-          : false;
+        const wasCollectedToday = sampleCA ? isTodayLocal(sampleCA) : false;
+        const wasResultedToday = isTodayLocal(test.resultEnteredAt);
 
-        // ── donut segment counts ────────────────────────────────────
         switch (test.status) {
           case 'pending':
-            pending++;
-            // trend: test created today → new arrival in collection queue
-            if (test.createdAt?.startsWith(todayKey)) collectionArrivals++;
+          case 'rejected':
+            collection++;
+            if (isTodayLocal(test.createdAt)) collectionArrivals++;
+            {
+              const enteredAt = test.createdAt ?? test.updatedAt ?? '';
+              if (enteredAt && enteredAt > lastCollectionEntry) lastCollectionEntry = enteredAt;
+            }
             break;
-
           case 'sample-collected':
           case 'in-progress':
-            collected++;
-            // trend: collected today → new arrival in result-entry queue
-            if (wasCollectedToday) resultArrivals++;
+            results++;
+            if (wasCollectedToday) resultsArrivals++;
+            if (sampleCA && sampleCA > lastResultsEntry) lastResultsEntry = sampleCA;
             break;
-
           case 'resulted':
-            resulted++;
-            // trend: resulted today → new arrival in validation queue
+            validation++;
             if (wasResultedToday) validationArrivals++;
+            if (test.resultEnteredAt && test.resultEnteredAt > lastValidationEntry)
+              lastValidationEntry = test.resultEnteredAt;
             break;
-
-          case 'validated':
-            if (wasValidatedToday) validatedToday++;
+          case 'escalated':
+            escalation++;
+            if (test.updatedAt && test.updatedAt > lastEscalationEntry)
+              lastEscalationEntry = test.updatedAt;
             break;
-
-          // escalated & others excluded from donut
           default:
             break;
         }
-
-        // ── operations done today (regardless of current status) ────
-        if (wasCollectedToday) collectionsToday++;
-        if (wasResultedToday) resultsToday++;
-        if (wasValidatedToday) validationsToday++;
-
-        // ── last-seen timestamps (overall, not just today) ──────────
-        if (sampleCA && sampleCA > lastCollection) lastCollection = sampleCA;
-        if (test.resultEnteredAt && test.resultEnteredAt > lastResultEntry)
-          lastResultEntry = test.resultEnteredAt;
-        if (test.resultValidatedAt && test.resultValidatedAt > lastValidation)
-          lastValidation = test.resultValidatedAt;
       });
     });
 
-    // ── assemble stages ─────────────────────────────────────────────
     const metrics: Record<
       (typeof STAGE_ORDER)[number],
       Omit<DistributionByStagePoint, 'name' | 'color'>
     > = {
-      Pending: {
-        value: pending,
-        doneToday: collectionsToday,
-        totalNeeded: pending + collectionsToday,
+      Collection: {
+        value: collection,
         arrivedToday: collectionArrivals,
-        lastSeenAt: lastCollection || undefined,
+        lastSeenAt: lastCollectionEntry || undefined,
       },
-      Collected: {
-        value: collected,
-        doneToday: resultsToday,
-        totalNeeded: collected + resultsToday,
-        arrivedToday: resultArrivals,
-        lastSeenAt: lastResultEntry || undefined,
+      Results: {
+        value: results,
+        arrivedToday: resultsArrivals,
+        lastSeenAt: lastResultsEntry || undefined,
       },
-      Resulted: {
-        value: resulted,
-        doneToday: validationsToday,
-        totalNeeded: resulted + validationsToday,
+      Validation: {
+        value: validation,
         arrivedToday: validationArrivals,
-        lastSeenAt: lastValidation || undefined,
+        lastSeenAt: lastValidationEntry || undefined,
       },
-      Validated: {
-        value: validatedToday,
-        doneToday: validatedToday,
-        totalNeeded: validatedToday,
-        arrivedToday: validatedToday,
-        lastSeenAt: lastValidation || undefined,
+      Escalation: {
+        value: escalation,
+        arrivedToday: 0,
+        lastSeenAt: lastEscalationEntry || undefined,
       },
     };
 
