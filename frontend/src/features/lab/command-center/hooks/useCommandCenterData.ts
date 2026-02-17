@@ -12,6 +12,13 @@ export interface CommandCenterData {
   isLoading: boolean;
   logs: LabOperationRecord[];
   distributionByStage: DistributionByStagePoint[];
+  logsError: boolean;
+  logsErrorDetail: Error | null;
+  refetchLogs: () => void;
+  logsTotal: number | undefined;
+  logsHasMore: boolean;
+  logsLoadMore: () => void;
+  logsLoadingMore: boolean;
 }
 
 export interface UseCommandCenterDataOptions {
@@ -24,7 +31,17 @@ export function useCommandCenterData(
 ): CommandCenterData {
   const { logsLimit = 50, logsHoursBack = 24 } = options;
 
-  const { logs, isLoading: logsLoading } = useLabOperationLogs({
+  const {
+    logs,
+    total: logsTotal,
+    isLoading: logsLoading,
+    isLoadingMore: logsLoadingMore,
+    isError: logsError,
+    error: logsErrorDetail,
+    refetch: refetchLogs,
+    loadMore: logsLoadMore,
+    hasMore: logsHasMore,
+  } = useLabOperationLogs({
     limit: logsLimit,
     hoursBack: logsHoursBack,
   });
@@ -37,5 +54,12 @@ export function useCommandCenterData(
     isLoading,
     logs,
     distributionByStage,
+    logsError,
+    logsErrorDetail: logsErrorDetail ?? null,
+    refetchLogs,
+    logsTotal,
+    logsHasMore,
+    logsLoadMore,
+    logsLoadingMore,
   };
 }

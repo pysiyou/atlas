@@ -1,9 +1,13 @@
 /**
- * Hook to fetch lab operation logs for the activity timeline
+ * Hook to fetch lab operation logs for the activity timeline.
+ * Supports Load more (offset pagination) and total count; caps at MAX_ACCUMULATED_LOGS.
  */
+import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { auditAPI, type GetLogsParams } from '@/services/api/audit';
 import type { LabOperationRecord } from '@/types/lab-operations';
+
+const MAX_ACCUMULATED_LOGS = 200;
 
 export interface UseLabOperationLogsOptions extends GetLogsParams {
   enabled?: boolean;
@@ -11,31 +15,84 @@ export interface UseLabOperationLogsOptions extends GetLogsParams {
 
 export interface UseLabOperationLogsResult {
   logs: LabOperationRecord[];
+  total: number | undefined;
   isLoading: boolean;
+  isLoadingMore: boolean;
   isError: boolean;
   error: Error | null;
   refetch: () => void;
+  loadMore: () => void;
+  hasMore: boolean;
 }
 
 export function useLabOperationLogs(
   options: UseLabOperationLogsOptions = {}
 ): UseLabOperationLogsResult {
-  const { enabled = true, ...params } = options;
+  const { enabled = true, limit = 50, ...restParams } = options;
+  const params = { ...restParams, limit };
 
-  const query = useQuery({
-    queryKey: ['labOperationLogs', params],
-    queryFn: () => auditAPI.getLogs(params),
+  const [offset, setOffset] = useState(0);
+  const [accumulatedLogs, setAccumulatedLogs] = useState<LabOperationRecord[]>([]);
+
+  const countParams = {
+    hoursBack: params.hoursBack,
+    operationType: params.operationType,
+    entityType: params.entityType,
+  };
+
+  const countQuery = useQuery({
+    queryKey: ['labOperationLogsCount', countParams],
+    queryFn: () => auditAPI.getCount(countParams),
     enabled,
-    staleTime: 30_000, // 30 seconds
-    gcTime: 5 * 60_000, // 5 minutes
-    refetchInterval: 60_000, // Refetch every minute for near-realtime updates
+    staleTime: 60_000,
   });
 
+  const logsQuery = useQuery({
+    queryKey: ['labOperationLogs', { ...params, offset }],
+    queryFn: () => auditAPI.getLogs({ ...params, offset }),
+    enabled,
+    staleTime: 30_000,
+    gcTime: 5 * 60_000,
+    refetchInterval: offset === 0 ? 60_000 : false,
+  });
+
+  const page = logsQuery.data ?? [];
+  const total = countQuery.data;
+
+  useEffect(() => {
+    if (!logsQuery.isSuccess) return;
+    if (offset === 0) {
+      setAccumulatedLogs(page);
+    } else {
+      setAccumulatedLogs((prev) => [...prev, ...page]);
+    }
+  }, [offset, logsQuery.isSuccess, logsQuery.dataUpdatedAt]);
+
+  const refetch = useCallback(() => {
+    setOffset(0);
+    setAccumulatedLogs([]);
+    countQuery.refetch();
+    logsQuery.refetch();
+  }, [countQuery, logsQuery]);
+
+  const loadMore = useCallback(() => {
+    setOffset((prev) => prev + limit);
+  }, [limit]);
+
+  const hasMore =
+    total !== undefined &&
+    accumulatedLogs.length < total &&
+    accumulatedLogs.length < MAX_ACCUMULATED_LOGS;
+
   return {
-    logs: query.data ?? [],
-    isLoading: query.isLoading,
-    isError: query.isError,
-    error: query.error,
-    refetch: query.refetch,
+    logs: accumulatedLogs,
+    total,
+    isLoading: logsQuery.isLoading && offset === 0,
+    isLoadingMore: offset > 0 && logsQuery.isFetching,
+    isError: logsQuery.isError,
+    error: logsQuery.error ?? null,
+    refetch,
+    loadMore,
+    hasMore,
   };
 }

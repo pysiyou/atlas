@@ -3,294 +3,32 @@
  * Shows recent lab operations grouped by date with Badge components for entities.
  */
 import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Badge } from '@/shared/ui/Badge';
 import { ClaudeLoader } from '@/shared/ui';
-import { displayId } from '@/utils/ids/idDisplay';
 import { formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
-import type { LabOperationRecord, LabOperationType } from '@/types/lab-operations';
+import type { LabOperationRecord } from '@/types/lab-operations';
+import { buildActivityItem, type ActivityItemResult } from './activityFormatters';
 
 export interface ActivitiesTimelineProps {
   logs: LabOperationRecord[];
   isLoading?: boolean;
+  isError?: boolean;
+  error?: Error | null;
+  onRetry?: () => void;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
+  isLoadingMore?: boolean;
   className?: string;
-}
-
-interface ActivitySegment {
-  type: 'text' | 'badge' | 'name';
-  value: string;
-  variant?: string;
-  /** Whether this segment displays an ID (uses font-mono) */
-  isId?: boolean;
-}
-
-/** Each activity can have multiple lines of segments */
-interface ActivityItem {
-  id: number;
-  lines: ActivitySegment[][];
-  timestamp: Date;
 }
 
 interface GroupedActivities {
   label: string;
-  items: ActivityItem[];
+  items: ActivityItemResult[];
 }
 
-/**
- * Format name to show first and last name only
- * "John Michael Smith" -> "John Smith"
- * "Jane Doe" -> "Jane Doe"
- * "Admin" -> "Admin"
- */
-function formatPerformerName(name: string): string {
-  if (!name) return 'System';
-  const parts = name.trim().split(/\s+/);
-  if (parts.length <= 2) return name;
-  return `${parts[0]} ${parts[parts.length - 1]}`;
-}
-
-/**
- * Transform a lab operation record into display lines
- * Order-related: Line 1: {user} changed the status of {order}, Line 2: from {status1} to {status2}
- */
-function transformLogToActivity(log: LabOperationRecord): ActivityItem {
-  const lines: ActivitySegment[][] = [];
-  const opType = log.operationType;
-  const performer = formatPerformerName(log.performedByName || log.performedBy || 'System');
-
-  switch (opType) {
-    case 'order_status_change': {
-      const beforeStatus = log.beforeState?.status as string | undefined;
-      const afterStatus = log.afterState?.status as string | undefined;
-      // Line 1: {user} changed the status of {order}
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'changed the status of' },
-        { type: 'badge', value: displayId.order(log.entityId), variant: 'primary', isId: true },
-      ]);
-      // Line 2: from {status1} to {status2}
-      const line2: ActivitySegment[] = [{ type: 'text', value: 'from' }];
-      if (beforeStatus) {
-        line2.push({ type: 'badge', value: beforeStatus.toUpperCase(), variant: beforeStatus });
-      }
-      line2.push({ type: 'text', value: 'to' });
-      if (afterStatus) {
-        line2.push({ type: 'badge', value: afterStatus.toUpperCase(), variant: afterStatus });
-      }
-      lines.push(line2);
-      break;
-    }
-    case 'sample_collect': {
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'collected sample' },
-        { type: 'badge', value: displayId.sample(log.entityId), variant: 'collected', isId: true },
-      ]);
-      break;
-    }
-    case 'sample_reject': {
-      const line1: ActivitySegment[] = [
-        { type: 'name', value: performer },
-        { type: 'text', value: 'rejected sample' },
-        { type: 'badge', value: displayId.sample(log.entityId), variant: 'rejected', isId: true },
-      ];
-      lines.push(line1);
-      if (log.comment) {
-        lines.push([{ type: 'badge', value: log.comment, variant: 'muted' }]);
-      }
-      break;
-    }
-    case 'sample_recollection_request': {
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'requested recollection for' },
-        { type: 'badge', value: displayId.sample(log.entityId), variant: 'pending', isId: true },
-      ]);
-      break;
-    }
-    case 'result_entry': {
-      const testCode = log.operationData?.testCode as string | undefined;
-      const orderId = log.operationData?.orderId as number | undefined;
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'entered results for' },
-        { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'in-progress', isId: true },
-      ]);
-      if (orderId) {
-        lines.push([
-          { type: 'text', value: 'in' },
-          { type: 'badge', value: displayId.order(orderId), variant: 'primary', isId: true },
-        ]);
-      }
-      break;
-    }
-    case 'result_validation_approve': {
-      const testCode = log.operationData?.testCode as string | undefined;
-      const orderId = log.operationData?.orderId as number | undefined;
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'validated' },
-        { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'validated', isId: true },
-      ]);
-      if (orderId) {
-        lines.push([
-          { type: 'text', value: 'in' },
-          { type: 'badge', value: displayId.order(orderId), variant: 'primary', isId: true },
-        ]);
-      }
-      break;
-    }
-    case 'result_validation_reject_retest': {
-      const testCode = log.operationData?.testCode as string | undefined;
-      const orderId = log.operationData?.orderId as number | undefined;
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'rejected' },
-        { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'rejected', isId: true },
-        ...(orderId ? [
-          { type: 'text' as const, value: 'in' },
-          { type: 'badge' as const, value: displayId.order(orderId), variant: 'primary', isId: true },
-        ] : []),
-      ]);
-      lines.push([
-        { type: 'text', value: 'ordered' },
-        { type: 'badge', value: 'retest', variant: 're-test' },
-      ]);
-      break;
-    }
-    case 'result_validation_reject_recollect': {
-      const testCode = log.operationData?.testCode as string | undefined;
-      const orderId = log.operationData?.orderId as number | undefined;
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'rejected' },
-        { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'rejected', isId: true },
-        ...(orderId ? [
-          { type: 'text' as const, value: 'in' },
-          { type: 'badge' as const, value: displayId.order(orderId), variant: 'primary', isId: true },
-        ] : []),
-      ]);
-      lines.push([
-        { type: 'text', value: 'requested' },
-        { type: 'badge', value: 'recollection', variant: 're-collect' },
-      ]);
-      break;
-    }
-    case 'result_validation_escalate': {
-      const testCode = log.operationData?.testCode as string | undefined;
-      const orderId = log.operationData?.orderId as number | undefined;
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'escalated' },
-        { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'escalated', isId: true },
-        ...(orderId ? [
-          { type: 'text' as const, value: 'in' },
-          { type: 'badge' as const, value: displayId.order(orderId), variant: 'primary', isId: true },
-        ] : []),
-      ]);
-      break;
-    }
-    case 'escalation_resolution_authorize_retest': {
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'resolved escalation' },
-      ]);
-      lines.push([{ type: 'badge', value: 'authorized retest', variant: 'authorize_retest' }]);
-      break;
-    }
-    case 'escalation_resolution_final_reject': {
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'resolved escalation' },
-      ]);
-      lines.push([{ type: 'badge', value: 'final rejection', variant: 'rejected' }]);
-      break;
-    }
-    case 'test_added': {
-      const testCode = log.operationData?.testCode as string | undefined;
-      const orderId = (log.operationData?.orderId as number) || log.entityId;
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'added' },
-        { type: 'badge', value: testCode || 'test', variant: 'success', isId: !!testCode },
-        { type: 'text', value: 'to' },
-        { type: 'badge', value: displayId.order(orderId), variant: 'primary', isId: true },
-      ]);
-      break;
-    }
-    case 'test_removed': {
-      const testCode = log.operationData?.testCode as string | undefined;
-      const orderId = (log.operationData?.orderId as number) || log.entityId;
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'removed' },
-        { type: 'badge', value: testCode || 'test', variant: 'muted', isId: !!testCode },
-        { type: 'text', value: 'from' },
-        { type: 'badge', value: displayId.order(orderId), variant: 'primary', isId: true },
-      ]);
-      break;
-    }
-    case 'critical_value_detected': {
-      const testCode = log.operationData?.testCode as string | undefined;
-      lines.push([
-        { type: 'badge', value: 'Critical value', variant: 'critical' },
-        { type: 'text', value: 'detected in' },
-        { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'info', isId: true },
-      ]);
-      break;
-    }
-    case 'critical_value_notified': {
-      const notifiedTo = log.operationData?.notifiedTo as string | undefined;
-      const line1: ActivitySegment[] = [
-        { type: 'name', value: performer },
-        { type: 'text', value: 'sent' },
-        { type: 'badge', value: 'critical value', variant: 'critical' },
-        { type: 'text', value: 'notification' },
-      ];
-      if (notifiedTo) {
-        line1.push({ type: 'text', value: `to ${notifiedTo}` });
-      }
-      lines.push(line1);
-      break;
-    }
-    case 'critical_value_acknowledged': {
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: 'acknowledged' },
-        { type: 'badge', value: 'critical value', variant: 'critical' },
-      ]);
-      break;
-    }
-    default: {
-      // Generic fallback - use appropriate ID formatter based on entity type
-      const entityDisplayId = log.entityType === 'order'
-        ? displayId.order(log.entityId)
-        : log.entityType === 'sample'
-        ? displayId.sample(log.entityId)
-        : displayId.orderTest(log.entityId);
-      lines.push([
-        { type: 'name', value: performer },
-        { type: 'text', value: formatOperationType(opType).toLowerCase() },
-        { type: 'badge', value: entityDisplayId, variant: 'neutral', isId: true },
-      ]);
-    }
-  }
-
-  return {
-    id: log.id,
-    lines,
-    timestamp: new Date(log.performedAt),
-  };
-}
-
-function formatOperationType(type: LabOperationType): string {
-  return type
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
-function groupByDate(items: ActivityItem[]): GroupedActivities[] {
-  const groups = new Map<string, ActivityItem[]>();
+function groupByDate(items: ActivityItemResult[]): GroupedActivities[] {
+  const groups = new Map<string, ActivityItemResult[]>();
 
   for (const item of items) {
     const label = formatRelativeDateLabel(item.timestamp);
@@ -308,12 +46,40 @@ function groupByDate(items: ActivityItem[]): GroupedActivities[] {
 export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
   logs,
   isLoading = false,
+  isError = false,
+  error = null,
+  onRetry,
+  hasMore = false,
+  onLoadMore,
+  isLoadingMore = false,
   className = '',
 }) => {
   const groupedActivities = useMemo(() => {
-    const activities = logs.map(transformLogToActivity);
+    const activities = logs.map(buildActivityItem);
     return groupByDate(activities);
   }, [logs]);
+
+  if (isError) {
+    return (
+      <div className={`flex flex-col h-full bg-surface ${className}`}>
+        <div className="flex-1 flex flex-col items-center justify-center gap-3 px-4 py-8">
+          <p className="text-sm text-text-secondary text-center">Couldn&apos;t load activities</p>
+          {error?.message && (
+            <p className="text-xxs text-text-tertiary text-center max-w-[200px]">{error.message}</p>
+          )}
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="text-sm font-medium text-brand hover:underline focus:outline-none focus:ring-2 focus:ring-brand rounded px-2 py-1"
+            >
+              Retry
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -369,34 +135,53 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
                       />
                     </div>
                     <div className="flex-1 min-w-0 pt-0.5 pb-4">
-                      <p className="text-sm text-text-primary leading-[1.45] flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
-                        {item.lines.flatMap((line, lineIdx) =>
-                          lineIdx === 0
-                            ? line.map((segment, idx) => ({ segment, key: `${lineIdx}-${idx}` }))
-                            : [{ segment: { type: 'text' as const, value: ' ' }, key: `space-${lineIdx}` }, ...line.map((segment, idx) => ({ segment, key: `${lineIdx}-${idx}` }))]
-                        ).map(({ segment, key }) =>
-                          segment.type === 'name' ? (
-                            <span key={key} className="font-medium text-brand">
-                              {segment.value}
-                            </span>
-                          ) : segment.type === 'badge' ? (
-                            <Badge
-                              key={key}
-                              variant={segment.variant}
-                              size="xs"
-                              className={segment.isId ? 'font-mono' : undefined}
-                            >
-                              {segment.value}
-                            </Badge>
-                          ) : (
-                            <span key={key} className="text-text-secondary">
-                              {segment.value}
-                            </span>
-                          )
-                        )}
-                      </p>
+                      <div className="space-y-1">
+                        {item.lines.map((line, lineIdx) => (
+                          <p
+                            key={lineIdx}
+                            className={`text-sm leading-[1.45] flex flex-wrap items-baseline gap-x-1.5 gap-y-1 ${lineIdx === 0 ? 'text-text-primary' : 'text-text-secondary'}`}
+                          >
+                            {line.map((segment, idx) =>
+                              segment.type === 'name' ? (
+                                <span key={idx} className="font-medium text-brand">
+                                  {segment.value}
+                                </span>
+                              ) : segment.type === 'badge' ? (
+                                segment.link ? (
+                                  <Link
+                                    key={idx}
+                                    to={segment.link}
+                                    className="inline-flex hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand rounded"
+                                  >
+                                    <Badge
+                                      variant={segment.variant}
+                                      size="xs"
+                                      className={segment.isId ? 'font-mono' : undefined}
+                                    >
+                                      {segment.value}
+                                    </Badge>
+                                  </Link>
+                                ) : (
+                                  <Badge
+                                    key={idx}
+                                    variant={segment.variant}
+                                    size="xs"
+                                    className={segment.isId ? 'font-mono' : undefined}
+                                  >
+                                    {segment.value}
+                                  </Badge>
+                                )
+                              ) : (
+                                <span key={idx}>{segment.value}</span>
+                              )
+                            )}
+                          </p>
+                        ))}
+                      </div>
                       <p className="text-xxs font-normal text-text-tertiary mt-1.5 tabular-nums">
-                        {formatRelativeDateTime(item.timestamp)}
+                        <time dateTime={item.timestamp.toISOString()}>
+                          {formatRelativeDateTime(item.timestamp)}
+                        </time>
                       </p>
                     </div>
                   </li>
@@ -405,6 +190,18 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
             </div>
           </section>
         ))}
+        {hasMore && onLoadMore && (
+          <div className="px-4 py-3 flex justify-center border-t border-stroke/80">
+            <button
+              type="button"
+              onClick={onLoadMore}
+              disabled={isLoadingMore}
+              className="text-sm font-medium text-brand hover:underline disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-brand rounded px-2 py-1"
+            >
+              {isLoadingMore ? 'Loading…' : 'Load more'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

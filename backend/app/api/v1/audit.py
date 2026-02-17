@@ -4,7 +4,7 @@ Provides access to lab operation logs for activity timeline display.
 """
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import desc, cast, String
+from sqlalchemy import desc, func
 from typing import Optional
 from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel
@@ -103,7 +103,7 @@ async def get_lab_operation_logs(
             entityType=log.entityType,
             entityId=log.entityId,
             performedBy=log.performedBy,
-            performedByName=user_names.get(log.performedBy) or f"User {log.performedBy}",
+            performedByName=user_names.get(log.performedBy),
             performedAt=log.performedAt,
             beforeState=log.beforeState,
             afterState=log.afterState,
@@ -112,3 +112,30 @@ async def get_lab_operation_logs(
         )
         for log in logs
     ]
+
+
+class AuditLogsCountResponse(BaseModel):
+    """Response for total count of logs in the same filter window (for Load more)."""
+    count: int
+
+
+@router.get("/audit/logs/count", response_model=AuditLogsCountResponse)
+async def get_lab_operation_logs_count(
+    operation_type: Optional[LabOperationType] = Query(default=None),
+    entity_type: Optional[str] = Query(default=None),
+    hours_back: Optional[int] = Query(default=24, ge=1, le=168),
+    db: Session = Depends(get_db)
+) -> AuditLogsCountResponse:
+    """
+    Return total count of lab operation logs in the time window with same filters as GET /audit/logs.
+    Used by the client to show "Load more" when total > fetched.
+    """
+    query = db.query(func.count(LabOperationLog.id)).filter(
+        LabOperationLog.performedAt >= (datetime.now(timezone.utc) - timedelta(hours=hours_back))
+    )
+    if operation_type:
+        query = query.filter(LabOperationLog.operationType == operation_type)
+    if entity_type:
+        query = query.filter(LabOperationLog.entityType == entity_type)
+    total = query.scalar() or 0
+    return AuditLogsCountResponse(count=total)

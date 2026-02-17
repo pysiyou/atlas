@@ -37,6 +37,12 @@ export const CommandCenterView: React.FC = () => {
     isLoading: commandCenterLoading,
     logs,
     distributionByStage,
+    logsError,
+    logsErrorDetail,
+    refetchLogs,
+    logsHasMore,
+    logsLoadMore,
+    logsLoadingMore,
   } = useCommandCenterData({ logsLimit: 50, logsHoursBack: 24 });
 
   const labTestRows = useMemo(
@@ -72,7 +78,17 @@ export const CommandCenterView: React.FC = () => {
         </div>
         <div className={`${rowCellClass} flex min-w-0 flex-col items-stretch justify-stretch p-2 min-h-0`}>
           <div className="flex-1 min-h-0 min-w-0 flex flex-col">
-            <ActivitiesTimeline logs={logs} isLoading={commandCenterLoading} className="w-full" />
+            <ActivitiesTimeline
+              logs={logs}
+              isLoading={commandCenterLoading}
+              isError={logsError}
+              error={logsErrorDetail}
+              onRetry={refetchLogs}
+              hasMore={logsHasMore}
+              onLoadMore={logsLoadMore}
+              isLoadingMore={logsLoadingMore}
+              className="w-full"
+            />
           </div>
         </div>
       </div>
