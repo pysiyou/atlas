@@ -1,134 +1,183 @@
 /**
- * useDistributionByStage - Test counts by workflow stage: Sample, Result, Validation, Scalation.
- * Uses order test status; excludes rejected/superseded/removed.
- * change = week-over-week % (last 7 days vs previous 7 days by updatedAt).
+ * useDistributionByStage - Current lab pipeline: Pending, Collected, Resulted, Validated (today).
+ *
+ * For each stage computes:
+ *   value        – donut slice count (tests currently in that state; validated = today only)
+ *   doneToday    – operations completed today for the *next* transition
+ *   totalNeeded  – doneToday + remaining (full workload for that transition)
+ *   arrivedToday – new items that entered *this* queue today (trend)
+ *   lastSeenAt   – most-recent operation timestamp for the corresponding transition
  */
 
 import { useMemo } from 'react';
-import { useOrdersList } from '@/hooks/queries';
+import { useOrdersList, useSamplesList } from '@/hooks/queries';
 import { isActiveTest } from '@/utils/orderUtils';
-import type { OrderTest } from '@/types';
 
 export interface DistributionByStagePoint {
   name: string;
   value: number;
-  /** Week-over-week % change (e.g. 0.37 = +0.37%). Undefined if no previous period. */
-  change?: number;
-  /** ISO datetime of last operation for this stage (e.g. last result entry, last validation). */
+  color?: string;
+  doneToday: number;
+  totalNeeded: number;
+  arrivedToday: number;
   lastSeenAt?: string;
 }
 
-const STAGE_ORDER = ['Sample', 'Result', 'Validation', 'Scalation'] as const;
+const STAGE_ORDER = ['Pending', 'Collected', 'Resulted', 'Validated'] as const;
 
-function stageFromStatus(status: OrderTest['status']): (typeof STAGE_ORDER)[number] | null {
-  switch (status) {
-    case 'pending':
-    case 'sample-collected':
-    case 'in-progress':
-      return 'Sample';
-    case 'resulted':
-      return 'Result';
-    case 'validated':
-      return 'Validation';
-    case 'escalated':
-      return 'Scalation';
-    case 'rejected':
-    case 'superseded':
-    case 'removed':
-      return null;
-    default:
-      return null;
-  }
-}
+const STAGE_COLORS: Record<string, string> = {
+  Pending: 'var(--chart-warning)',
+  Collected: 'var(--chart-brand)',
+  Resulted: 'var(--chart-accent)',
+  Validated: 'var(--chart-success)',
+};
 
-/** YYYY-MM-DD for date at start of day (local). */
-function getDateKey(d: Date): string {
+/** YYYY-MM-DD for a Date (local timezone). */
+function dateKey(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
-
-/** True if iso date string (YYYY-MM-DD or ISO) is within [startKey, endKey] (inclusive). */
-function isInRange(iso: string | undefined, startKey: string, endKey: string): boolean {
-  if (!iso || typeof iso !== 'string') return false;
-  const key = iso.split('T')[0];
-  return key >= startKey && key <= endKey;
 }
 
 export function useDistributionByStage(): {
   data: DistributionByStagePoint[];
   isLoading: boolean;
 } {
-  const { orders, isLoading } = useOrdersList();
+  const { orders, isLoading: ordersLoading } = useOrdersList();
+  const { samples, isLoading: samplesLoading } = useSamplesList();
+  const isLoading = ordersLoading || samplesLoading;
 
   const data = useMemo((): DistributionByStagePoint[] => {
-    const now = new Date();
-    const endCurrent = new Date(now);
-    endCurrent.setDate(endCurrent.getDate() - 1);
-    const startCurrent = new Date(now);
-    startCurrent.setDate(startCurrent.getDate() - 7);
-    const endPrevious = new Date(startCurrent);
-    endPrevious.setDate(endPrevious.getDate() - 1);
-    const startPrevious = new Date(endPrevious);
-    startPrevious.setDate(startPrevious.getDate() - 6);
+    const todayKey = dateKey(new Date());
 
-    const startCurrentKey = getDateKey(startCurrent);
-    const endCurrentKey = getDateKey(endCurrent);
-    const startPreviousKey = getDateKey(startPrevious);
-    const endPreviousKey = getDateKey(endPrevious);
-
-    const countByStage = new Map<string, number>();
-    const currentPeriodByStage = new Map<string, number>();
-    const previousPeriodByStage = new Map<string, number>();
-    const lastSeenByStage = new Map<string, string>();
-    STAGE_ORDER.forEach((s) => {
-      countByStage.set(s, 0);
-      currentPeriodByStage.set(s, 0);
-      previousPeriodByStage.set(s, 0);
+    // ── sample collection lookup ──────────────────────────────────────
+    const sampleCollectedAt = new Map<number, string>();
+    (samples ?? []).forEach((s) => {
+      if (s.status !== 'pending' && 'collectedAt' in s) {
+        const ca = (s as { collectedAt: string }).collectedAt;
+        if (ca) sampleCollectedAt.set(s.sampleId, ca);
+      }
     });
+
+    // ── counters ──────────────────────────────────────────────────────
+    let pending = 0;
+    let collected = 0;
+    let resulted = 0;
+    let validatedToday = 0;
+
+    // operations completed today (across *all* current statuses)
+    let collectionsToday = 0;
+    let resultsToday = 0;
+    let validationsToday = 0;
+
+    // new items entering each queue today (only tests still in that queue)
+    let collectionArrivals = 0;
+    let resultArrivals = 0;
+    let validationArrivals = 0;
+
+    // most-recent operation timestamps
+    let lastCollection = '';
+    let lastResultEntry = '';
+    let lastValidation = '';
 
     (orders ?? []).forEach((order) => {
       (order.tests ?? []).forEach((test) => {
         if (!isActiveTest(test)) return;
-        const stage = stageFromStatus(test.status);
-        if (!stage) return;
-        countByStage.set(stage, (countByStage.get(stage) ?? 0) + 1);
-        const updatedAt = test.updatedAt ?? test.createdAt;
-        if (isInRange(updatedAt, startCurrentKey, endCurrentKey)) {
-          currentPeriodByStage.set(stage, (currentPeriodByStage.get(stage) ?? 0) + 1);
+        if (test.status === 'rejected') return;
+
+        const sampleCA =
+          test.sampleId != null ? sampleCollectedAt.get(test.sampleId) : undefined;
+        const wasCollectedToday = sampleCA ? sampleCA.startsWith(todayKey) : false;
+        const wasResultedToday = test.resultEnteredAt
+          ? test.resultEnteredAt.startsWith(todayKey)
+          : false;
+        const wasValidatedToday = test.resultValidatedAt
+          ? test.resultValidatedAt.startsWith(todayKey)
+          : false;
+
+        // ── donut segment counts ────────────────────────────────────
+        switch (test.status) {
+          case 'pending':
+            pending++;
+            // trend: test created today → new arrival in collection queue
+            if (test.createdAt?.startsWith(todayKey)) collectionArrivals++;
+            break;
+
+          case 'sample-collected':
+          case 'in-progress':
+            collected++;
+            // trend: collected today → new arrival in result-entry queue
+            if (wasCollectedToday) resultArrivals++;
+            break;
+
+          case 'resulted':
+            resulted++;
+            // trend: resulted today → new arrival in validation queue
+            if (wasResultedToday) validationArrivals++;
+            break;
+
+          case 'validated':
+            if (wasValidatedToday) validatedToday++;
+            break;
+
+          // escalated & others excluded from donut
+          default:
+            break;
         }
-        if (isInRange(updatedAt, startPreviousKey, endPreviousKey)) {
-          previousPeriodByStage.set(stage, (previousPeriodByStage.get(stage) ?? 0) + 1);
-        }
-        const candidate =
-          stage === 'Sample'
-            ? updatedAt
-            : stage === 'Result'
-              ? test.resultEnteredAt
-              : stage === 'Validation'
-                ? test.resultValidatedAt
-                : stage === 'Scalation'
-                  ? updatedAt
-                  : undefined;
-        if (candidate) {
-          const prev = lastSeenByStage.get(stage);
-          if (!prev || candidate > prev) lastSeenByStage.set(stage, candidate);
-        }
+
+        // ── operations done today (regardless of current status) ────
+        if (wasCollectedToday) collectionsToday++;
+        if (wasResultedToday) resultsToday++;
+        if (wasValidatedToday) validationsToday++;
+
+        // ── last-seen timestamps (overall, not just today) ──────────
+        if (sampleCA && sampleCA > lastCollection) lastCollection = sampleCA;
+        if (test.resultEnteredAt && test.resultEnteredAt > lastResultEntry)
+          lastResultEntry = test.resultEnteredAt;
+        if (test.resultValidatedAt && test.resultValidatedAt > lastValidation)
+          lastValidation = test.resultValidatedAt;
       });
     });
 
-    return STAGE_ORDER.map((name) => {
-      const value = countByStage.get(name) ?? 0;
-      const curr = currentPeriodByStage.get(name) ?? 0;
-      const prev = previousPeriodByStage.get(name) ?? 0;
-      let change: number | undefined;
-      if (prev > 0) {
-        change = Number((((curr - prev) / prev) * 100).toFixed(2));
-      } else if (curr > 0) {
-        change = 100;
-      }
-      const lastSeenAt = lastSeenByStage.get(name);
-      return { name, value, change, lastSeenAt };
-    });
-  }, [orders]);
+    // ── assemble stages ─────────────────────────────────────────────
+    const metrics: Record<
+      (typeof STAGE_ORDER)[number],
+      Omit<DistributionByStagePoint, 'name' | 'color'>
+    > = {
+      Pending: {
+        value: pending,
+        doneToday: collectionsToday,
+        totalNeeded: pending + collectionsToday,
+        arrivedToday: collectionArrivals,
+        lastSeenAt: lastCollection || undefined,
+      },
+      Collected: {
+        value: collected,
+        doneToday: resultsToday,
+        totalNeeded: collected + resultsToday,
+        arrivedToday: resultArrivals,
+        lastSeenAt: lastResultEntry || undefined,
+      },
+      Resulted: {
+        value: resulted,
+        doneToday: validationsToday,
+        totalNeeded: resulted + validationsToday,
+        arrivedToday: validationArrivals,
+        lastSeenAt: lastValidation || undefined,
+      },
+      Validated: {
+        value: validatedToday,
+        doneToday: validatedToday,
+        totalNeeded: validatedToday,
+        arrivedToday: validatedToday,
+        lastSeenAt: lastValidation || undefined,
+      },
+    };
+
+    return STAGE_ORDER.map((name) => ({
+      name,
+      color: STAGE_COLORS[name],
+      ...metrics[name],
+    }));
+  }, [orders, samples]);
 
   return { data, isLoading };
 }

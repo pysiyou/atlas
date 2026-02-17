@@ -19,9 +19,13 @@ export interface DonutChartSegment {
   name: string;
   value: number;
   color?: string;
-  /** Optional trend value (e.g. +0.37). When set, shows green/red with arrow. */
-  change?: number;
-  /** Optional ISO datetime for list row (e.g. last seen, last updated). */
+  /** Count of new items that arrived today in this phase (trend). */
+  arrivedToday?: number;
+  /** Count of operations completed today in this phase. */
+  doneToday?: number;
+  /** Total operations needed (done + remaining). */
+  totalNeeded?: number;
+  /** ISO datetime of the last operation in this phase. */
   lastSeenAt?: string;
 }
 
@@ -54,7 +58,6 @@ const COLORS = [
 ];
 
 const CHART_SUCCESS = 'var(--chart-success)';
-const CHART_DANGER = 'var(--chart-danger)';
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -141,7 +144,9 @@ function ChartSection({
           <div className="absolute top-1/2 left-[45%] -translate-x-1/2 -translate-y-1/2 text-center z-10">
             <p className="text-2xl font-bold tabular-nums text-text-primary">{total.toLocaleString()}</p>
             <p className="text-xs mt-0.5 text-text-tertiary">Total {valueLabel}:</p>
-            <p className="text-xs mt-0.5" style={{ color: CHART_SUCCESS }}>{subTitle ?? '—'}</p>
+            {subTitle && (
+              <p className="text-xs mt-0.5" style={{ color: CHART_SUCCESS }}>{subTitle}</p>
+            )}
           </div>
         </div>
       </div>
@@ -167,13 +172,15 @@ function ChartSection({
 interface DetailListRowProps {
   item: SegmentWithPercent;
   index: number;
-  total: number;
   getItemIcon?: (item: DonutChartSegment) => IconName | undefined;
 }
 
-function DetailListRow({ item, index, total, getItemIcon }: DetailListRowProps) {
+function DetailListRow({ item, index, getItemIcon }: DetailListRowProps) {
   const color = item.color ?? COLORS[index % COLORS.length];
   const iconName = getItemIcon?.(item);
+  const hasArrivals = item.arrivedToday != null && item.arrivedToday > 0;
+  const hasDoneToday = item.doneToday != null && item.totalNeeded != null;
+
   return (
     <div className="flex items-center gap-3 py-3 min-w-0 border-b border-border-default last:border-b-0">
       <div
@@ -192,21 +199,24 @@ function DetailListRow({ item, index, total, getItemIcon }: DetailListRowProps) 
       <div className="flex-1 min-w-0 flex flex-col gap-0.5">
         <div className="flex items-center justify-between gap-2 min-w-0">
           <span className="text-sm font-semibold truncate text-text-primary">{item.name}</span>
-          {item.change != null ? (
+          {hasArrivals ? (
             <span
               className="flex items-center gap-0.5 text-xs font-medium shrink-0"
-              style={{ color: item.change >= 0 ? CHART_SUCCESS : CHART_DANGER }}
+              style={{ color: CHART_SUCCESS }}
             >
-              {item.change >= 0 ? '+' : ''}
-              {item.change.toFixed(2)}
-              <Icon name={item.change >= 0 ? 'up-trend' : 'down-trend'} className="w-3.5 h-3.5" />
+              +{item.arrivedToday}
+              <Icon name="up-trend" className="w-3.5 h-3.5" />
             </span>
           ) : (
-            <span className="text-xs shrink-0 text-text-tertiary">—</span>
+            <span className="text-xs shrink-0 text-text-tertiary">&mdash;</span>
           )}
         </div>
         <div className="flex items-center justify-between gap-2 text-xs text-text-tertiary tabular-nums min-w-0">
-          <span>{item.value.toLocaleString()} over {total.toLocaleString()}</span>
+          {hasDoneToday ? (
+            <span>{item.doneToday!.toLocaleString()} over {item.totalNeeded!.toLocaleString()}</span>
+          ) : (
+            <span>{item.value.toLocaleString()}</span>
+          )}
           {item.lastSeenAt ? (
             <span className="shrink-0 text-text-tertiary">{formatRelativeDateTime(item.lastSeenAt)}</span>
           ) : null}
@@ -218,11 +228,10 @@ function DetailListRow({ item, index, total, getItemIcon }: DetailListRowProps) 
 
 interface DetailListSectionProps {
   listItems: SegmentWithPercent[];
-  total: number;
   getItemIcon?: (item: DonutChartSegment) => IconName | undefined;
 }
 
-function DetailListSection({ listItems, total, getItemIcon }: DetailListSectionProps) {
+function DetailListSection({ listItems, getItemIcon }: DetailListSectionProps) {
   return (
     <div className="flex-1 min-w-0 flex flex-col border-l border-border-default overflow-hidden">
       <div className="shrink-0 flex flex-col py-2 pr-3 pl-3 overflow-y-auto">
@@ -234,7 +243,6 @@ function DetailListSection({ listItems, total, getItemIcon }: DetailListSectionP
               key={item.name}
               item={item}
               index={index}
-              total={total}
               getItemIcon={getItemIcon}
             />
           ))
@@ -293,7 +301,7 @@ export const DonutChart: React.FC<DonutChartProps> = ({
           widthPercent={showListSection ? 52 : 100}
         />
         {showListSection && (
-          <DetailListSection listItems={listItems} total={total} getItemIcon={getItemIcon} />
+          <DetailListSection listItems={listItems} getItemIcon={getItemIcon} />
         )}
       </div>
     </div>

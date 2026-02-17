@@ -14,12 +14,12 @@ import { createTestTableConfig } from './TestTableConfig';
 import { ActivitiesTimeline, DonutChart } from './components';
 import type { DonutChartSegment } from './components';
 
-/** Lab workflow stage → icon (Sample Collection, Result Entry, Validation, Escalation). */
+/** Lab pipeline stage → icon. */
 const STAGE_ICONS: Record<string, IconName> = {
-  Sample: ICONS.dataFields.flask,
-  Result: ICONS.dataFields.notebook,
-  Validation: ICONS.ui.shieldCheck,
-  Scalation: ICONS.actions.alertCircle,
+  Pending: ICONS.dataFields.flask,
+  Collected: ICONS.dataFields.sampleCollection,
+  Resulted: ICONS.dataFields.notebook,
+  Validated: ICONS.ui.shieldCheck,
 };
 
 const rowCellClass =
@@ -37,7 +37,7 @@ export const CommandCenterView: React.FC = () => {
     isLoading: commandCenterLoading,
     logs,
     distributionByStage,
-  } = useCommandCenterData({ lastDays: 10, logsLimit: 50, logsHoursBack: 24 });
+  } = useCommandCenterData({ logsLimit: 50, logsHoursBack: 24 });
 
   const labTestRows = useMemo(
     () => buildLabTestRows(orders, getPatientName, TEST_TABLE_LIMIT),
@@ -63,8 +63,8 @@ export const CommandCenterView: React.FC = () => {
       >
         <div className={`${chartCellClass} flex flex-col items-stretch justify-stretch p-2 min-w-0`}>
           <DonutChart
-            title="Distribution by stage"
-            subTitle="this year"
+            title="Lab pipeline"
+            subTitle="active"
             valueLabel="tests"
             data={commandCenterLoading ? [] : distributionByStage}
             getItemIcon={getItemIcon}
