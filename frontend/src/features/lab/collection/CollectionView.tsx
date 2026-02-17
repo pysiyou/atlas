@@ -155,11 +155,20 @@ export const CollectionView: React.FC = () => {
         actualContainerColor: selectedColor as ContainerTopColor,
         collectionNotes: notes,
       });
-      await refreshOrders();
       toast.success({
         title: `${(display.sample.sampleType ?? 'sample').toString().toUpperCase()} sample collected`,
         subtitle: 'The sample has been recorded and the order has been updated. You can continue with the next sample.',
       });
+      try {
+        await refreshOrders();
+      } catch (refetchError) {
+        const err = refetchError as Error & { name?: string };
+        if (err?.name !== 'AbortError') {
+          logger.error('Error refreshing orders after collection', getErrorDetails(refetchError));
+        }
+        queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+        queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
+      }
     } catch (error) {
       logger.error('Error collecting sample', getErrorDetails(error));
       queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });

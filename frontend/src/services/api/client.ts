@@ -109,7 +109,11 @@ class APIClient {
         throw error;
       }
 
-      const err = error as Error;
+      const err = error as Error & { name?: string };
+      if (err?.name === 'AbortError') {
+        throw error;
+      }
+
       logger.error('API request failed', err);
       const apiErr: ApiError = { message: err.message || 'Network error' };
       throw apiErr;
