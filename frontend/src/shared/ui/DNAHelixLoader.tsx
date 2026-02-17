@@ -1,4 +1,4 @@
-// src/shared/ui/DnaHelixLoader.tsx
+// src/shared/ui/DNAHelixLoader.tsx
 /**
  * DnaHelixLoader – Animated DNA double-helix loading indicator.
  *
@@ -44,72 +44,67 @@ export interface DnaHelixLoaderProps {
   className?: string;
 }
 
+const rootStyle: React.CSSProperties = {
+  position: 'relative',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  transformStyle: 'preserve-3d',
+  transform: 'rotateZ(0deg)',
+};
+
 export const DnaHelixLoader: React.FC<DnaHelixLoaderProps> = ({ size = 'md', className = '' }) => {
   const id = `dna${useId().replace(/:/g, '')}`;
   const { b: barCount, d, h, g, l } = SIZES[size] ?? SIZES.md;
   const css = useMemo(() => buildSheet(id), [id]);
   const timing = `${PERIOD}s linear infinite`;
-  return (
-    <div
-      role="status"
-      aria-label="Loading"
-      data-dna={id}
-      className={className}
-      style={{
-        position: 'relative',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        transformStyle: 'preserve-3d',
-        transform: 'rotateZ(0deg)',
-      }}
-    >
-      <style>{css}</style>
-      {Array.from({ length: barCount }, (_, i) => {
-        const delay = `-${(i * DELAY_STEP).toFixed(2)}s`;
-        return (
-          <div
-            key={i}
-            style={{
-              position: 'relative',
-              width: l,
-              height: h,
-              border: `${l}px dotted var(--dna-helix-connector)`,
-              background: 'transparent',
-              margin: `0 ${g}px`,
-              animation: `${id}R ${timing}`,
-              animationDelay: delay,
-            }}
-          >
-            <div
-              style={{
-                position: 'absolute',
-                top: -d / 2,
-                left: '50%',
-                marginLeft: -d / 2,
-                width: d,
-                height: d,
-                backgroundColor: 'var(--dna-helix-primary-node)',
-                borderRadius: '50%',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.06)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: -d / 2,
-                left: '50%',
-                marginLeft: -d / 2,
-                width: d,
-                height: d,
-                backgroundColor: 'var(--dna-helix-secondary-node)',
-                borderRadius: '50%',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.06)',
-              }}
-            />
-          </div>
-        );
-      })}
-    </div>
+
+  const bars = Array.from({ length: barCount }, (_, i) => {
+    const delay = `-${(i * DELAY_STEP).toFixed(2)}s`;
+    const barStyle: React.CSSProperties = {
+      position: 'relative',
+      width: l,
+      height: h,
+      border: `${l}px solid var(--dna-helix-connector)`,
+      background: 'transparent',
+      margin: `0 ${g}px`,
+      animation: `${id}R ${timing}`,
+      animationDelay: delay,
+    };
+    const nodeStyle: React.CSSProperties = {
+      position: 'absolute',
+      left: '50%',
+      marginLeft: -d / 2,
+      width: d,
+      height: d,
+      backgroundColor: 'var(--dna-helix-primary-node)',
+      borderRadius: '50%',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.06)',
+    };
+    const topNodeStyle = { ...nodeStyle, top: -d / 2 };
+    const bottomNodeStyle: React.CSSProperties = { ...nodeStyle, bottom: -d / 2, backgroundColor: 'var(--dna-helix-secondary-node)' };
+
+    return React.createElement(
+      'div',
+      { key: i, style: barStyle },
+      React.createElement('div', { style: topNodeStyle }),
+      React.createElement('div', { style: bottomNodeStyle })
+    );
+  });
+
+  const childList: React.ReactNode[] = [
+    React.createElement('style', { key: 'sheet' }, css),
+    ...bars,
+  ];
+  return React.createElement(
+    'div',
+    {
+      role: 'status',
+      'aria-label': 'Loading',
+      'data-dna': id,
+      className,
+      style: rootStyle,
+    },
+    childList
   );
 };

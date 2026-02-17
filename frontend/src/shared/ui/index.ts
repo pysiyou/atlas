@@ -16,7 +16,7 @@ export * from './DateFilterHeader';
 export * from './dateFilterHelpers';
 export * from './DateFilterPresets';
 export * from './DateInput';
-export * from './DnaHelixLoader';
+export * from './DNAHelixLoader';
 export * from './DetailField';
 export * from './DetailFieldGroup';
 export * from './DetailRow';

@@ -13,7 +13,7 @@
 
 import React, { type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from './Icon';
-import { DnaHelixLoader, type DnaHelixLoaderSize } from './DnaHelixLoader';
+import { DnaHelixLoader, type DnaHelixLoaderSize } from './DNAHelixLoader';
 import { ICONS } from '@/utils';
 
 /**
