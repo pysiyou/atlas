@@ -92,10 +92,7 @@ export interface RejectionRequest {
 /**
  * Escalation resolution actions (admin/labtech_plus only)
  */
-export type EscalationResolutionAction =
-  | 'force_validate'
-  | 'authorize_retest'
-  | 'final_reject';
+export type EscalationResolutionAction = 'force_validate' | 'authorize_retest' | 'final_reject';
 
 /**
  * Request body for resolving an escalated test

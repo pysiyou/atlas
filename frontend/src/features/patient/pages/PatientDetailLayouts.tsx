@@ -56,11 +56,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </SectionContainer>
 
-      <SectionContainer
-        title="Reports"
-        className="bg-surface"
-        contentClassName="overflow-visible"
-      >
+      <SectionContainer title="Reports" className="bg-surface" contentClassName="overflow-visible">
         <ReportsList orders={orders} />
       </SectionContainer>
     </div>
@@ -159,9 +155,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
         className="h-full flex flex-col col-span-3 min-h-0"
         contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
         headerClassName="!py-1.5"
-        headerRight={
-          <IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />
-        }
+        headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </SectionContainer>

@@ -5,15 +5,19 @@
 
 import React from 'react';
 import { cn } from '@/utils';
-import { DATE_PRESETS, getDateRangeFromPreset, getActivePresetId, type DatePreset } from '@/utils/dateHelpers';
+import {
+  DATE_PRESETS,
+  getDateRangeFromPreset,
+  getActivePresetId,
+  type DatePreset,
+} from '@/utils/dateHelpers';
 
 export interface DatePresetBadgesProps {
   value: [Date, Date] | null;
   onChange: (value: [Date, Date] | null) => void;
 }
 
-const PRESET_BUTTON_CLASS =
-  'px-2 py-1.5 text-xs rounded cursor-pointer filter-chip';
+const PRESET_BUTTON_CLASS = 'px-2 py-1.5 text-xs rounded cursor-pointer filter-chip';
 
 export const DatePresetBadges: React.FC<DatePresetBadgesProps> = ({ value, onChange }) => {
   const activePresetId = getActivePresetId(value);

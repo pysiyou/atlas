@@ -72,8 +72,7 @@ export const LAB_CARD_CONTAINERS = {
   cardWrapper: 'cursor-pointer',
 
   // Card base styling (applied via Card component)
-  cardBase:
-    'shadow-sm hover:bg-surface-hover transition-colors duration-200',
+  cardBase: 'shadow-sm hover:bg-surface-hover transition-colors duration-200',
 
   // Content section (gray background)
   contentSection: 'bg-surface-page rounded p-2 border border-border-default',

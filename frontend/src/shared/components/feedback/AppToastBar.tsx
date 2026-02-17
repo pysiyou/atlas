@@ -83,10 +83,7 @@ const closeStyle: React.CSSProperties = {
   flexShrink: 0,
 };
 
-const closeHoverStyle = (
-  e: React.MouseEvent<HTMLButtonElement>,
-  over: boolean
-): void => {
+const closeHoverStyle = (e: React.MouseEvent<HTMLButtonElement>, over: boolean): void => {
   const t = e.currentTarget;
   t.style.color = over ? 'var(--toast-fg)' : 'var(--toast-close)';
   t.style.background = over ? 'rgba(255,255,255,0.1)' : 'none';
@@ -134,20 +131,21 @@ const actionButtonStyle: React.CSSProperties = {
 /** Circle-close icon for dismiss button. */
 function CloseCircleIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} width={24} height={24}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      width={24}
+      height={24}
+    >
       <circle cx="12" cy="12" r="10" />
       <path d="M14.5 9.5L9.5 14.5M9.5 9.5l5 5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-function StatusIconSvg({
-  colorVar,
-  children,
-}: {
-  colorVar: string;
-  children: React.ReactNode;
-}) {
+function StatusIconSvg({ colorVar, children }: { colorVar: string; children: React.ReactNode }) {
   return (
     <span
       role="img"
@@ -171,7 +169,14 @@ function StatusIconSvg({
 function SuccessIconSvg() {
   return (
     <StatusIconSvg colorVar="--toast-success">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={24} height={24}>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        width={24}
+        height={24}
+      >
         <circle cx="12" cy="12" r="10" />
         <path d="M8 12l3 3 5-6" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
@@ -183,7 +188,14 @@ function SuccessIconSvg() {
 function InfoIconSvg() {
   return (
     <StatusIconSvg colorVar="--toast-info">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={24} height={24}>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        width={24}
+        height={24}
+      >
         <circle cx="12" cy="12" r="10" />
         <path d="M12 16v-4M12 8h.01" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
@@ -195,7 +207,14 @@ function InfoIconSvg() {
 function WarningIconSvg() {
   return (
     <StatusIconSvg colorVar="--toast-warning">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={24} height={24}>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        width={24}
+        height={24}
+      >
         <circle cx="12" cy="12" r="10" />
         <path d="M12 8v4M12 16h.01" strokeLinecap="round" strokeLinejoin="round" />
         <circle cx="12" cy="16" r="1" fill="currentColor" />
@@ -208,7 +227,14 @@ function WarningIconSvg() {
 function ErrorIconSvg() {
   return (
     <StatusIconSvg colorVar="--toast-danger">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={24} height={24}>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        width={24}
+        height={24}
+      >
         <circle cx="12" cy="12" r="10" />
         <path d="M14.5 9.5L9.5 14.5M9.5 9.5l5 5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
@@ -288,7 +314,7 @@ export const AppToastBar: React.FC<AppToastBarProps> = ({ toast }) => {
   const variant = getEffectiveVariant(toast, raw);
   const isObj = isToastMessageObject(raw);
   const resolvedTitle = isObj
-    ? (raw.title?.trim() || DEFAULT_TITLES[variant])
+    ? raw.title?.trim() || DEFAULT_TITLES[variant]
     : String(raw ?? DEFAULT_TITLES[variant]);
   const subtitle = isObj ? raw.subtitle : undefined;
   const actions = isObj ? raw.actions : undefined;
@@ -304,16 +330,14 @@ export const AppToastBar: React.FC<AppToastBarProps> = ({ toast }) => {
           type="button"
           aria-label="Dismiss"
           style={closeStyle}
-          onMouseEnter={(e) => closeHoverStyle(e, true)}
-          onMouseLeave={(e) => closeHoverStyle(e, false)}
+          onMouseEnter={e => closeHoverStyle(e, true)}
+          onMouseLeave={e => closeHoverStyle(e, false)}
           onClick={() => toastLib.dismiss(toast.id)}
         >
           <CloseCircleIcon />
         </button>
       </div>
-      {subtitle != null && subtitle !== '' && (
-        <div style={subtitleStyle}>{subtitle}</div>
-      )}
+      {subtitle != null && subtitle !== '' && <div style={subtitleStyle}>{subtitle}</div>}
       {actions != null && actions.length > 0 && (
         <div style={actionsRowStyle}>
           {actions.map((a, i) => (

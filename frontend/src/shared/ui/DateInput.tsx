@@ -157,7 +157,10 @@ export const DateInput: React.FC<DateInputProps> = ({
               disabled && 'bg-neutral-100 cursor-not-allowed'
             )}
           >
-            <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors shrink-0" />
+            <Icon
+              name={ICONS.dataFields.date}
+              className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors shrink-0"
+            />
             <div className="flex-1 min-w-0 text-xs text-text-primary truncate">
               {dateValue ? (
                 <span className="text-text-primary">{format(dateValue, 'dd MMM yyyy')}</span>

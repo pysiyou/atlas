@@ -34,7 +34,7 @@ export const orderTestSchema = z.object({
     .positive()
     .nullable()
     .optional()
-    .transform((v) => (v === null ? undefined : v)), // Backend returns null; normalize to undefined
+    .transform(v => (v === null ? undefined : v)), // Backend returns null; normalize to undefined
   results: z.record(z.string(), z.unknown()).nullable().optional(),
   resultEnteredAt: z.string().datetime().nullable().optional(), // Backend returns null
   enteredBy: z.string().nullable().optional(), // Backend returns null
@@ -54,12 +54,17 @@ export const orderTestSchema = z.object({
   retestOfTestId: z.number().int().positive().nullable().optional(), // Backend returns null
   retestNumber: z.number().int().nonnegative().optional(), // Backend returns 0 for original, allow 0
   retestOrderTestId: z.number().int().positive().nullable().optional(), // Backend returns null
-  resultRejectionHistory: z.array(z.object({
-    rejectedAt: z.string(),
-    rejectedBy: z.string(),
-    rejectionReason: z.string(),
-    rejectionType: z.enum(['re-test', 're-collect', 'escalate', 'authorize_retest']),
-  })).nullable().optional(), // Backend returns null
+  resultRejectionHistory: z
+    .array(
+      z.object({
+        rejectedAt: z.string(),
+        rejectedBy: z.string(),
+        rejectionReason: z.string(),
+        rejectionType: z.enum(['re-test', 're-collect', 'escalate', 'authorize_retest']),
+      })
+    )
+    .nullable()
+    .optional(), // Backend returns null
 });
 
 export const orderSchema = z.object({
@@ -91,7 +96,9 @@ export const orderCreateSchema = z.object({
   priority: z.enum(['low', 'medium', 'high', 'urgent']),
   clinicalNotes: z.string().optional(),
   testCodes: z.array(z.string()).min(1, 'At least one test is required'),
-  paymentMethod: z.enum(['cash', 'credit-card', 'debit-card', 'insurance', 'bank-transfer', 'mobile-money']).optional(),
+  paymentMethod: z
+    .enum(['cash', 'credit-card', 'debit-card', 'insurance', 'bank-transfer', 'mobile-money'])
+    .optional(),
 });
 
 // Form schema for UPDATE (all fields optional for partial updates)

@@ -5,12 +5,10 @@
  */
 
 /** Primary ID cell: Patient ID, Order ID, Test ID, Code in table cells. Uses theme --text. */
-export const DATA_ID_PRIMARY =
-  'text-xs text-text-primary font-mono truncate block';
+export const DATA_ID_PRIMARY = 'text-xs text-text-primary font-mono truncate block';
 
 /** Primary ID inline (e.g. inside flex); same as primary but no block */
-export const DATA_ID_PRIMARY_INLINE =
-  'text-xs text-text-primary font-mono truncate';
+export const DATA_ID_PRIMARY_INLINE = 'text-xs text-text-primary font-mono truncate';
 
 /** Primary ID when rendered as a clickable control (e.g. button); add hover:underline only */
 export const DATA_ID_PRIMARY_CLICKABLE =

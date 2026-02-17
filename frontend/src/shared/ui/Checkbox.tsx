@@ -47,13 +47,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       <div
         className={cn(
           'w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-150',
-          checked ? 'bg-brand border-brand' : 'border-border-default bg-surface group-hover:border-brand',
+          checked
+            ? 'bg-brand border-brand'
+            : 'border-border-default bg-surface group-hover:border-brand',
           disabled && 'group-hover:border-border-default'
         )}
       >
-        {checked && (
-          <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
-        )}
+        {checked && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
       </div>
     </div>
     <span

@@ -107,12 +107,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Filter"
-      size="md"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title="Filter" size="md">
       <div className="flex flex-col h-full bg-surface">
         {/* Filter Controls - Scrollable */}
         <div className="flex-1 overflow-y-auto px-5 py-4">
@@ -144,9 +139,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
               {allFilterControls.map((control, index) => (
                 <div key={control.key} className="w-full">
                   {/* Filter Label */}
-                  <h4 className="text-sm font-semibold text-text-primary mb-3">
-                    {control.label}
-                  </h4>
+                  <h4 className="text-sm font-semibold text-text-primary mb-3">{control.label}</h4>
                   {/* Filter Options */}
                   {renderModalControl(control)}
                   {/* Separator line (except for last item) */}

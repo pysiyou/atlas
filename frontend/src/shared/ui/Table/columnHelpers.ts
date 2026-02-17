@@ -28,10 +28,12 @@ export function pickColumns<T>(
   columnMap: Record<string, ColumnConfig<T>>,
   widthOverrides?: Partial<Record<string, ColumnSizePreset | string | number>>
 ): ColumnConfig<T>[] {
-  return columnIds.map(id => {
-    const col = columnMap[id];
-    if (!col) return null;
-    const width = widthOverrides?.[id] ?? col.width;
-    return width !== undefined ? { ...col, width } : col;
-  }).filter((c): c is ColumnConfig<T> => c !== null);
+  return columnIds
+    .map(id => {
+      const col = columnMap[id];
+      if (!col) return null;
+      const width = widthOverrides?.[id] ?? col.width;
+      return width !== undefined ? { ...col, width } : col;
+    })
+    .filter((c): c is ColumnConfig<T> => c !== null);
 }

@@ -12,10 +12,7 @@ import { ErrorAlert } from '../feedback/ErrorAlert';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/shared/ui/Table';
 import { ICONS } from '@/utils';
-import {
-  DEFAULT_EMPTY_DESCRIPTION_SEARCH,
-  EMPTY_ICON_SEARCH,
-} from '@/shared/constants';
+import { DEFAULT_EMPTY_DESCRIPTION_SEARCH, EMPTY_ICON_SEARCH } from '@/shared/constants';
 
 // TableDataItem accepts any object-like type (interfaces, types, classes)
 // Using a union type to accept both Record types and regular object types

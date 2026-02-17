@@ -68,8 +68,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   const [selectedContainerType, setSelectedContainerType] =
     useState<ContainerType>(defaultContainerType);
 
-  const isValid =
-    Boolean(selectedColor && selectedContainerType) && volume >= minimumVolume;
+  const isValid = Boolean(selectedColor && selectedContainerType) && volume >= minimumVolume;
 
   const handleSubmit = useCallback(async () => {
     if (!selectedColor) {
@@ -93,7 +92,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       });
       return;
     }
-    await Promise.resolve(onConfirm(volume, notes || undefined, selectedColor, selectedContainerType));
+    await Promise.resolve(
+      onConfirm(volume, notes || undefined, selectedColor, selectedContainerType)
+    );
   }, [selectedColor, selectedContainerType, volume, notes, minimumVolume, onConfirm]);
 
   useEffect(() => {
@@ -144,11 +145,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
               const v = Number(e.target.value);
               setVolume(Number.isNaN(v) ? minimumVolume : v);
             }}
-            className={cn(
-              inputBase,
-              'pr-8',
-              volume < minimumVolume && inputError
-            )}
+            className={cn(inputBase, 'pr-8', volume < minimumVolume && inputError)}
             placeholder="0.0"
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-normal text-text-disabled pointer-events-none">
@@ -290,7 +287,11 @@ export const CollectionPopover: React.FC<CollectionPopoverProps> = ({
       preventClose={effectiveSubmitting}
       trigger={
         trigger || (
-          <Button variant="primary" size="xs" icon={<Icon name={ICONS.dataFields.flask} className="text-on-brand" />}>
+          <Button
+            variant="primary"
+            size="xs"
+            icon={<Icon name={ICONS.dataFields.flask} className="text-on-brand" />}
+          >
             {isRecollection ? 'RECOLLECT' : 'COLLECT'}
           </Button>
         )

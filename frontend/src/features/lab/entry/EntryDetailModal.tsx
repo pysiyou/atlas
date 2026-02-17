@@ -107,7 +107,9 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const rejectionHistory = test.resultRejectionHistory || [];
   const hasRejectionHistory = rejectionHistory.length > 0;
   const lastRejection = hasRejectionHistory ? rejectionHistory[rejectionHistory.length - 1] : null;
-  const isRecollection = lastRejection ? getResultRejectionType(lastRejection) === 're-collect' : false;
+  const isRecollection = lastRejection
+    ? getResultRejectionType(lastRejection) === 're-collect'
+    : false;
 
   const handleLocalResultChange = (key: string, paramCode: string, value: string) => {
     setLocalResults(prev => ({ ...prev, [paramCode]: value }));
@@ -157,7 +159,11 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
         {filledCount} / {totalParams} parameters
       </Badge>
       {turnaroundTime && (
-        <Badge size="sm" variant="default" className="text-text-secondary flex items-center gap-1.5">
+        <Badge
+          size="sm"
+          variant="default"
+          className="text-text-secondary flex items-center gap-1.5"
+        >
           <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-text-tertiary" />
           {turnaroundTime}h TAT
         </Badge>
@@ -215,11 +221,23 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           <Button onClick={onClose} variant="cancel" size="md" disabled={isSaving}>
             Cancel
           </Button>
-          <Button onClick={handleSave} variant="save" size="md" disabled={!isComplete} isLoading={isSaving}>
+          <Button
+            onClick={handleSave}
+            variant="save"
+            size="md"
+            disabled={!isComplete}
+            isLoading={isSaving}
+          >
             Save
           </Button>
           {onNext && (
-            <Button onClick={handleSaveAndNext} variant="save" size="md" disabled={!isComplete} isLoading={isSaving}>
+            <Button
+              onClick={handleSaveAndNext}
+              variant="save"
+              size="md"
+              disabled={!isComplete}
+              isLoading={isSaving}
+            >
               Save & Next
             </Button>
           )}
@@ -277,7 +295,9 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Remaining',
                 value: (
-                  <span className={remainingParams === 0 ? 'text-success-fg' : 'text-text-tertiary'}>
+                  <span
+                    className={remainingParams === 0 ? 'text-success-fg' : 'text-text-tertiary'}
+                  >
                     {remainingParams}
                   </span>
                 ),
@@ -287,7 +307,10 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           {
             title: 'Test Information',
             fields: [
-              { label: 'Test Code', value: <span className="text-brand font-mono">{test.testCode}</span> },
+              {
+                label: 'Test Code',
+                value: <span className="text-brand font-mono">{test.testCode}</span>,
+              },
               {
                 label: 'Sample Type',
                 badge: test.sampleType
@@ -296,7 +319,9 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               },
               {
                 label: 'Sample ID',
-                value: test.sampleId ? <span className="text-brand font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
+                value: test.sampleId ? (
+                  <span className="text-brand font-mono">{displayId.sample(test.sampleId)}</span>
+                ) : undefined,
               },
               {
                 label: 'Turnaround Time',

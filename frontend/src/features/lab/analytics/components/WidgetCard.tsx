@@ -34,17 +34,29 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
   children,
   className,
 }) => (
-  <Card variant="default" padding="sm" className={cn('rounded-lg shadow-sm flex flex-col', className)}>
+  <Card
+    variant="default"
+    padding="sm"
+    className={cn('rounded-lg shadow-sm flex flex-col', className)}
+  >
     <div className="flex items-start justify-between gap-2 mb-3">
       <div className="flex items-center gap-2 min-w-0">
         <Icon name={icon} className="w-5 h-5 text-text-tertiary shrink-0" />
         <span className="text-sm font-normal text-text-primary truncate">{title}</span>
       </div>
       <div className="flex items-center gap-1 shrink-0">
-        <button type="button" className="p-1 rounded hover:bg-surface-hover text-text-tertiary" aria-label="More options">
+        <button
+          type="button"
+          className="p-1 rounded hover:bg-surface-hover text-text-tertiary"
+          aria-label="More options"
+        >
           <Icon name="menu-dots" className="w-4 h-4" />
         </button>
-        <button type="button" className="p-1 rounded hover:bg-surface-hover text-text-tertiary" aria-label="View details">
+        <button
+          type="button"
+          className="p-1 rounded hover:bg-surface-hover text-text-tertiary"
+          aria-label="View details"
+        >
           <Icon name="chevron-right" className="w-4 h-4" />
         </button>
       </div>

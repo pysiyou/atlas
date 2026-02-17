@@ -63,7 +63,8 @@ export function isFilterValueActive(key: string, value: unknown): boolean {
       if (value[0] instanceof Date && value[1] instanceof Date) return true;
       if (typeof value[0] === 'number' && typeof value[1] === 'number') {
         const isPrice = isPriceRangeKeyOrValue(key, value);
-        if (isPrice) return !(value[0] === DEFAULT_PRICE_RANGE[0] && value[1] === DEFAULT_PRICE_RANGE[1]);
+        if (isPrice)
+          return !(value[0] === DEFAULT_PRICE_RANGE[0] && value[1] === DEFAULT_PRICE_RANGE[1]);
         return !(value[0] === DEFAULT_AGE_RANGE[0] && value[1] === DEFAULT_AGE_RANGE[1]);
       }
     }

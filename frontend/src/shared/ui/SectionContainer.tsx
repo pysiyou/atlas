@@ -97,13 +97,12 @@ export const SectionContainer: React.FC<SectionContainerProps> = ({
         <div className={headerStyles}>
           <div className="flex items-center gap-2 min-w-0">
             {headerLeft && <div>{headerLeft}</div>}
-            {title && (
-              typeof title === 'string' ? (
+            {title &&
+              (typeof title === 'string' ? (
                 <p className="truncate">{title}</p>
               ) : (
                 <div className="truncate">{title}</div>
-              )
-            )}
+              ))}
           </div>
           {(headerRight || headerContent) && (
             <div className="flex items-center shrink-0">{headerRight ?? headerContent}</div>

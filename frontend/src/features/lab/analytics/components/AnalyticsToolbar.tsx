@@ -44,10 +44,10 @@ export const AnalyticsToolbar: React.FC<AnalyticsToolbarProps> = ({
         <Icon name={ICONS.dataFields.date ?? 'calendar'} className="w-4 h-4 ml-2 shrink-0" />
         <select
           value={dateRangePreset}
-          onChange={(e) => onDateRangePreset(e.target.value as DateRangePreset)}
+          onChange={e => onDateRangePreset(e.target.value as DateRangePreset)}
           className="bg-transparent text-sm font-normal py-2 pl-2 pr-8 focus:outline-none cursor-pointer text-brand-fg"
         >
-          {PRESET_OPTIONS.map((opt) => (
+          {PRESET_OPTIONS.map(opt => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>
@@ -57,7 +57,7 @@ export const AnalyticsToolbar: React.FC<AnalyticsToolbarProps> = ({
       <span className="text-sm text-text-tertiary">Compare to</span>
       <select
         value={compareTo}
-        onChange={(e) => onCompareToChange(e.target.value as CompareToOption)}
+        onChange={e => onCompareToChange(e.target.value as CompareToOption)}
         className={cn(inputBase, 'cursor-pointer')}
       >
         <option value="none">None</option>

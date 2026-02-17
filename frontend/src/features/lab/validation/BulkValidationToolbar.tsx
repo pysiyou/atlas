@@ -44,9 +44,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
   // Filter out items with critical values for bulk approve
   const approvableSelected = useMemo(() => {
     if (!enabled) return [];
-    return items.filter(
-      item => selectedIds.has(item.id) && !item.hasCriticalValues
-    );
+    return items.filter(item => selectedIds.has(item.id) && !item.hasCriticalValues);
   }, [items, selectedIds, enabled]);
 
   const criticalSelectedCount = selectedCount - approvableSelected.length;
@@ -65,9 +63,10 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
   const handleBulkApprove = useCallback(async () => {
     if (!enabled || approvableSelected.length === 0) return;
 
-    const confirmMessage = criticalSelectedCount > 0
-      ? `Are you sure you want to approve ${approvableSelected.length} result(s)?\n\nNote: ${criticalSelectedCount} item(s) with critical values will be skipped.`
-      : `Are you sure you want to approve ${approvableSelected.length} result(s)?`;
+    const confirmMessage =
+      criticalSelectedCount > 0
+        ? `Are you sure you want to approve ${approvableSelected.length} result(s)?\n\nNote: ${criticalSelectedCount} item(s) with critical values will be skipped.`
+        : `Are you sure you want to approve ${approvableSelected.length} result(s)?`;
 
     const confirmed = window.confirm(confirmMessage);
 
@@ -128,9 +127,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
         </label>
 
         {/* Selection count */}
-        <span className="text-sm text-text-tertiary">
-          {selectedCount} selected
-        </span>
+        <span className="text-sm text-text-tertiary">{selectedCount} selected</span>
 
         {/* Clear button */}
         <button
@@ -144,9 +141,7 @@ export const BulkValidationToolbar: React.FC<BulkValidationToolbarProps> = ({
       {/* Right side: Actions */}
       <div className="flex items-center gap-3">
         {criticalSelectedCount > 0 && selectedCount > 0 && (
-          <span className="text-xs text-warning-fg">
-            {criticalSelectedCount} critical skipped
-          </span>
+          <span className="text-xs text-warning-fg">{criticalSelectedCount} critical skipped</span>
         )}
 
         <Button
@@ -225,10 +220,7 @@ export function useBulkSelection<T extends { id: number }>(items: T[]) {
     setSelectedIds(new Set());
   }, []);
 
-  const isSelected = useCallback(
-    (id: number) => selectedIds.has(id),
-    [selectedIds]
-  );
+  const isSelected = useCallback((id: number) => selectedIds.has(id), [selectedIds]);
 
   /** Stable key: only changes when the set of item ids actually changes. */
   const itemsIdKey = useMemo(

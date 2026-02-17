@@ -40,7 +40,9 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
         <Icon name={ICONS.dataFields.user} className="w-5 h-5 text-text-disabled mt-1" />
         <div className="flex-1">
           <div className="text-xs text-text-tertiary mb-1">Patient ID</div>
-          <div className="font-mono font-normal text-text-primary">{displayId.patient(patient.id)}</div>
+          <div className="font-mono font-normal text-text-primary">
+            {displayId.patient(patient.id)}
+          </div>
         </div>
       </div>
 
@@ -62,7 +64,9 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
               {calculateAge(patient.dateOfBirth)} years old •{' '}
               {patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1)}
             </div>
-            <div className="text-xs text-text-tertiary mt-1">DOB: {formatDate(patient.dateOfBirth)}</div>
+            <div className="text-xs text-text-tertiary mt-1">
+              DOB: {formatDate(patient.dateOfBirth)}
+            </div>
           </div>
         </div>
 
@@ -109,7 +113,9 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
               {formatPhoneNumber(patient.emergencyContact.phone)}
             </div>
             {patient.emergencyContact.email && (
-              <div className="text-xs text-text-tertiary mt-1">{patient.emergencyContact.email}</div>
+              <div className="text-xs text-text-tertiary mt-1">
+                {patient.emergencyContact.email}
+              </div>
             )}
           </div>
         </div>
@@ -170,7 +176,9 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ patient }) => 
               <div className="font-normal text-text-primary">
                 {formatDate(patient.registrationDate)}
               </div>
-              <div className="text-xs text-text-tertiary mt-1">Registered by: {patient.createdBy}</div>
+              <div className="text-xs text-text-tertiary mt-1">
+                Registered by: {patient.createdBy}
+              </div>
             </div>
           </div>
 

@@ -22,16 +22,16 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
     header: 'Code',
     width: 'sm',
     sortable: true,
-    render: (test: Test) => (
-      <span className={DATA_ID_PRIMARY}>{test.code}</span>
-    ),
+    render: (test: Test) => <span className={DATA_ID_PRIMARY}>{test.code}</span>,
   },
   {
     key: 'name',
     header: 'Test Name',
     width: 'fill',
     sortable: true,
-    render: (test: Test) => <div className="font-normal text-text-primary truncate">{test.name}</div>,
+    render: (test: Test) => (
+      <div className="font-normal text-text-primary truncate">{test.name}</div>
+    ),
   },
   {
     key: 'category',

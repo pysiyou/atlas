@@ -10,7 +10,7 @@ import { ICONS } from '@/utils/icons';
 import type { IconName } from '@/shared/ui';
 import { useCommandCenterData } from './hooks';
 import { buildLabTestRows } from './types';
-import { createTestTableConfig } from './TestTableConfig';
+import { createTestTableConfig } from './testTableConfigFactory';
 import { ActivitiesTimeline, DonutChart } from './components';
 import type { DonutChartSegment } from './components';
 
@@ -67,7 +67,9 @@ export const CommandCenterView: React.FC = () => {
         className="min-h-0 min-w-0 overflow-hidden border-b border-border-default grid"
         style={{ gridTemplateColumns: '1fr 1fr' }}
       >
-        <div className={`${chartCellClass} flex flex-col items-stretch justify-stretch p-2 min-w-0`}>
+        <div
+          className={`${chartCellClass} flex flex-col items-stretch justify-stretch p-2 min-w-0`}
+        >
           <DonutChart
             title="Lab pipeline"
             subTitle="active"
@@ -76,7 +78,9 @@ export const CommandCenterView: React.FC = () => {
             getItemIcon={getItemIcon}
           />
         </div>
-        <div className={`${rowCellClass} flex min-w-0 flex-col items-stretch justify-stretch p-2 min-h-0`}>
+        <div
+          className={`${rowCellClass} flex min-w-0 flex-col items-stretch justify-stretch p-2 min-h-0`}
+        >
           <div className="flex-1 min-h-0 min-w-0 flex flex-col">
             <ActivitiesTimeline
               logs={logs}
@@ -98,8 +102,8 @@ export const CommandCenterView: React.FC = () => {
           <Table
             data={labTestRows}
             viewConfig={testTableConfig}
-            getRowKey={(row) => row.testId}
-            onRowClick={(row) => navigate(`/orders/${row.orderId}`)}
+            getRowKey={row => row.testId}
+            onRowClick={row => navigate(`/orders/${row.orderId}`)}
             embedded
             striped
             stickyHeader

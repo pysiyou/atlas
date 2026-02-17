@@ -19,7 +19,11 @@ registerModal(ModalType.SAMPLE_DETAIL, CollectionDetailModal, (props, baseProps,
     return { ...baseProps, sampleId: props.sampleId };
   }
   if ('pendingSampleDisplay' in props && props.pendingSampleDisplay) {
-    return { ...baseProps, pendingSampleDisplay: props.pendingSampleDisplay, onCollect: props.onCollect };
+    return {
+      ...baseProps,
+      pendingSampleDisplay: props.pendingSampleDisplay,
+      onCollect: props.onCollect,
+    };
   }
   return null;
 });
@@ -51,11 +55,15 @@ registerModal(ModalType.VALIDATION_DETAIL, ValidationDetailModal, (props, basePr
 }));
 
 // Register Escalation Resolution Modal (admin/labtech_plus only)
-registerModal(ModalType.ESCALATION_RESOLUTION_DETAIL, EscalationResolutionModal, (props, baseProps) => ({
-  ...baseProps,
-  test: props.test,
-  onResolved: props.onResolved,
-}));
+registerModal(
+  ModalType.ESCALATION_RESOLUTION_DETAIL,
+  EscalationResolutionModal,
+  (props, baseProps) => ({
+    ...baseProps,
+    test: props.test,
+    onResolved: props.onResolved,
+  })
+);
 
 // Register New Order / Edit Order Modal (OrderUpsertModal)
 registerModal(ModalType.NEW_ORDER, OrderUpsertModal, (props, baseProps) => ({

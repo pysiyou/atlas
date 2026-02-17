@@ -10,7 +10,8 @@ export const DEFAULT_EMPTY_TITLE = 'No data available';
 export const DEFAULT_EMPTY_DESCRIPTION = 'Try adjusting filters or add new items.';
 
 /** Default description for search/filter empty results */
-export const DEFAULT_EMPTY_DESCRIPTION_SEARCH = 'Try adjusting your search or filters to find what you\'re looking for.';
+export const DEFAULT_EMPTY_DESCRIPTION_SEARCH =
+  "Try adjusting your search or filters to find what you're looking for.";
 
 /** Shorter description for filter-only contexts (e.g. LabWorkflowView) */
 export const DEFAULT_EMPTY_DESCRIPTION_FILTERS = 'Try adjusting your search or filters.';

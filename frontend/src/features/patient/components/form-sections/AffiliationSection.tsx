@@ -72,7 +72,9 @@ export const AffiliationSection: React.FC<
               <span className="text-xs font-normal text-text-tertiary uppercase tracking-wide">
                 Expiry Date
               </span>
-              <p className={`font-normal text-sm ${isActive ? 'text-text-primary' : 'text-danger-fg'}`}>
+              <p
+                className={`font-normal text-sm ${isActive ? 'text-text-primary' : 'text-danger-fg'}`}
+              >
                 {formatDate(existingAffiliation.endDate)}
               </p>
             </div>

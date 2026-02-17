@@ -40,13 +40,13 @@ export function useDistributionByCategory(): {
 
   const data = useMemo((): DistributionByCategoryPoint[] => {
     const codeToCategory = new Map<string, string>();
-    catalogTests.forEach((t) => {
+    catalogTests.forEach(t => {
       if (t.code && t.category) codeToCategory.set(t.code, t.category);
     });
 
     const countByCategory = new Map<string, number>();
-    (orders ?? []).forEach((order) => {
-      (order.tests ?? []).forEach((test) => {
+    (orders ?? []).forEach(order => {
+      (order.tests ?? []).forEach(test => {
         if (!isActiveTest(test)) return;
         if (test.status !== 'validated') return;
         const validatedAt = getResultValidatedAt(test);

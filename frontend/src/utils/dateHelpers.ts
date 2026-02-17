@@ -1,4 +1,12 @@
-import { startOfDay, endOfDay, subDays, startOfMonth, endOfMonth, subMonths, isSameDay } from 'date-fns';
+import {
+  startOfDay,
+  endOfDay,
+  subDays,
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  isSameDay,
+} from 'date-fns';
 
 export const DATE_PRESETS = [
   { id: 'today', label: 'Today' },
@@ -9,7 +17,7 @@ export const DATE_PRESETS = [
   { id: 'lastMonth', label: 'Last Month' },
 ] as const;
 
-export type DatePreset = typeof DATE_PRESETS[number]['id'];
+export type DatePreset = (typeof DATE_PRESETS)[number]['id'];
 
 export function getDateRangeFromPreset(preset: DatePreset): [Date, Date] {
   const now = new Date();

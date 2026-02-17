@@ -67,7 +67,7 @@ export const useAuthStore = create<AuthState>()(
           } catch {
             // Ignore logout errors
           }
-          
+
           set({
             user: null,
             token: null,
@@ -94,7 +94,7 @@ export const useAuthStore = create<AuthState>()(
           }
         },
 
-        hasRole: (roles) => {
+        hasRole: roles => {
           const { user } = get();
           if (!user) return false;
           const roleList = Array.isArray(roles) ? roles : [roles];
@@ -104,14 +104,14 @@ export const useAuthStore = create<AuthState>()(
     },
     {
       name: 'auth-storage',
-      partialize: (state) => ({
+      partialize: state => ({
         user: state.user,
         token: state.token,
         refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
       }),
       storage: {
-        getItem: (name) => {
+        getItem: name => {
           try {
             const value = sessionStorage.getItem(name);
             return value ? JSON.parse(value) : null;
@@ -126,7 +126,7 @@ export const useAuthStore = create<AuthState>()(
             // Ignore storage errors
           }
         },
-        removeItem: (name) => {
+        removeItem: name => {
           try {
             sessionStorage.removeItem(name);
           } catch {

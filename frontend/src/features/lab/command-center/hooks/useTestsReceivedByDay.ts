@@ -17,17 +17,20 @@ function getDateKey(d: Date): string {
 
 /** Format YYYY-MM-DD key as local date string (avoids UTC midnight shifting day in some timezones). */
 function formatDateKey(key: string): string {
-  const d = new Date(key + 'T00:00:00');
+  const d = new Date(`${key}T00:00:00`);
   return d.toLocaleDateString(undefined, DATE_FORMAT_OPTIONS);
 }
 
 const getResultEnteredAt = (t: OrderTest & { result_entered_at?: string }): string | undefined =>
   t.resultEnteredAt ?? t.result_entered_at;
-const getResultValidatedAt = (t: OrderTest & { result_validated_at?: string }): string | undefined =>
-  t.resultValidatedAt ?? t.result_validated_at;
+const getResultValidatedAt = (
+  t: OrderTest & { result_validated_at?: string }
+): string | undefined => t.resultValidatedAt ?? t.result_validated_at;
 
 const isCollectedSample = (s: Sample): s is Sample & { collectedAt: string } =>
-  s.status === 'collected' && 'collectedAt' in s && typeof (s as Sample & { collectedAt?: string }).collectedAt === 'string';
+  s.status === 'collected' &&
+  'collectedAt' in s &&
+  typeof (s as Sample & { collectedAt?: string }).collectedAt === 'string';
 
 export interface TestsReceivedByDayPoint {
   date: string;
@@ -59,7 +62,7 @@ export interface UseTestsReceivedAndValidatedResult {
 export function useTestsReceivedByDay(days: number = 15): UseTestsReceivedByDayResult {
   const safeDays = Math.max(1, Math.min(days, 365));
   const result = useTestsReceivedAndValidatedByDay(safeDays);
-  const data: TestsReceivedByDayPoint[] = result.data.map((p) => ({
+  const data: TestsReceivedByDayPoint[] = result.data.map(p => ({
     dateKey: p.dateKey,
     date: p.date,
     value: p.received,
@@ -72,7 +75,9 @@ export function useTestsReceivedByDay(days: number = 15): UseTestsReceivedByDayR
  * Received = tests by order date; validated = tests by resultValidatedAt date.
  * @param days Clamped to 1–365.
  */
-export function useTestsReceivedAndValidatedByDay(days: number = 15): UseTestsReceivedAndValidatedResult {
+export function useTestsReceivedAndValidatedByDay(
+  days: number = 15
+): UseTestsReceivedAndValidatedResult {
   const { orders, isLoading } = useOrdersList();
   const safeDays = Math.max(1, Math.min(days, 365));
 
@@ -90,9 +95,9 @@ export function useTestsReceivedAndValidatedByDay(days: number = 15): UseTestsRe
       dailyValidated[key] = 0;
     }
 
-    (orders ?? []).forEach((order) => {
+    (orders ?? []).forEach(order => {
       const orderDateKey = order.orderDate?.split('T')[0];
-      (order.tests ?? []).forEach((test) => {
+      (order.tests ?? []).forEach(test => {
         if (!isActiveTest(test)) return;
         if (orderDateKey && orderDateKey in dailyReceived) {
           dailyReceived[orderDateKey] += 1;
@@ -108,7 +113,7 @@ export function useTestsReceivedAndValidatedByDay(days: number = 15): UseTestsRe
     });
 
     const sortedKeys = Object.keys(dailyReceived).sort();
-    return sortedKeys.map((key) => ({
+    return sortedKeys.map(key => ({
       dateKey: key,
       date: formatDateKey(key),
       received: dailyReceived[key] ?? 0,
@@ -160,14 +165,14 @@ export function useActivityByDay(days: number = 15): UseActivityByDayResult {
       dailyValidated[key] = 0;
     }
 
-    (samples ?? []).forEach((s) => {
+    (samples ?? []).forEach(s => {
       if (!isCollectedSample(s)) return;
       const dateKey = s.collectedAt.split('T')[0];
       if (dateKey in dailySampling) dailySampling[dateKey] += 1;
     });
 
-    (orders ?? []).forEach((order) => {
-      (order.tests ?? []).forEach((test) => {
+    (orders ?? []).forEach(order => {
+      (order.tests ?? []).forEach(test => {
         if (!isActiveTest(test)) return;
         const enteredAt = getResultEnteredAt(test);
         if (enteredAt) {
@@ -183,12 +188,12 @@ export function useActivityByDay(days: number = 15): UseActivityByDayResult {
     });
 
     const sortedKeys = Object.keys(dailySampling).sort();
-    return sortedKeys.map((key) => ({
+    return sortedKeys.map(key => ({
       dateKey: key,
       date: formatDateKey(key),
       sampling: dailySampling[key] ?? 0,
       resultEntered: dailyResultEntered[key] ?? 0,
-        validated: dailyValidated[key] ?? 0,
+      validated: dailyValidated[key] ?? 0,
     }));
   }, [orders, samples, safeDays]);
 

@@ -141,11 +141,7 @@ export function useOrdersByStatus(status: OrderStatus | undefined) {
  * Use this for large datasets where client-side filtering is not practical.
  * Keeps previous data visible while fetching new page.
  */
-export function usePaginatedOrders(
-  filters?: OrdersFilters,
-  initialPage = 1,
-  pageSize = 20
-) {
+export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pageSize = 20) {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
   const [page, setPage] = useState(initialPage);
 
@@ -173,13 +169,13 @@ export function usePaginatedOrders(
 
   const nextPage = useCallback(() => {
     if (query.data?.pagination.hasNext) {
-      setPage((p) => p + 1);
+      setPage(p => p + 1);
     }
   }, [query.data?.pagination.hasNext]);
 
   const prevPage = useCallback(() => {
     if (query.data?.pagination.hasPrev) {
-      setPage((p) => p - 1);
+      setPage(p => p - 1);
     }
   }, [query.data?.pagination.hasPrev]);
 

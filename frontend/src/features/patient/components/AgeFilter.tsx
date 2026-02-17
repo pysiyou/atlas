@@ -1,6 +1,6 @@
 /**
  * AgeFilter Component
- * 
+ *
  * A modern, polished age range selector with dual-handle slider.
  * Features smooth animations, refined visual design, and enhanced micro-interactions.
  */

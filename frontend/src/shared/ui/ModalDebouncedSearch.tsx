@@ -47,10 +47,7 @@ export const ModalDebouncedSearch: React.FC<ModalDebouncedSearchProps> = ({
         className={cn(inputInner, inputText)}
       />
       {localValue && (
-        <button
-          onClick={handleClear}
-          className={cn(inputClearButton, 'hover:bg-surface-hover')}
-        >
+        <button onClick={handleClear} className={cn(inputClearButton, 'hover:bg-surface-hover')}>
           <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
         </button>
       )}

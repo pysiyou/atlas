@@ -86,7 +86,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           setReasonAuthorizeRetest('');
           setReasonFinalReject('');
         },
-        onError: (err) => {
+        onError: err => {
           const apiError = err as { message?: string };
           const msg =
             apiError && typeof apiError === 'object' && typeof apiError.message === 'string'
@@ -99,7 +99,16 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         },
       });
     },
-    [test.orderId, test.testCode, onResolved, onClose, resolving, resolveEscalation, canResolveEscalation, messages]
+    [
+      test.orderId,
+      test.testCode,
+      onResolved,
+      onClose,
+      resolving,
+      resolveEscalation,
+      canResolveEscalation,
+      messages,
+    ]
   );
 
   const rejectionHistory = test.resultRejectionHistory || [];
@@ -114,11 +123,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       title={test.testName}
       subtitle={`${test.testCode} - ${test.patientName} (Escalated)`}
       headerBadges={
-        <StatusBadgeRow
-          sampleType={test.sampleType}
-          priority={test.priority}
-          status="escalated"
-        />
+        <StatusBadgeRow sampleType={test.sampleType} priority={test.priority} status="escalated" />
       }
       contextInfo={{
         patientName: test.patientName,
@@ -142,143 +147,146 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       footer={
         <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
           {!canResolveEscalation ? (
-            <p className="text-sm text-text-tertiary">You do not have permission to resolve escalations.</p>
+            <p className="text-sm text-text-tertiary">
+              You do not have permission to resolve escalations.
+            </p>
           ) : (
             <>
-          <Popover
-            placement="top-end"
-            offsetValue={8}
-            preventClose={resolving}
-            trigger={
-              <Button variant="approve" size="md" disabled={resolving} isLoading={resolving}>
-                Force Validate
-              </Button>
-            }
-          >
-            {({ close }) => (
-              <div data-popover-content onClick={e => e.stopPropagation()}>
-                <PopoverForm
-                  title="Force Validate"
-                  subtitle="Validation notes (optional)"
-                  onCancel={close}
-                  onConfirm={async () => {
-                    await resolveAsync('force_validate', validationNotesForceValidate);
-                    close();
-                  }}
-                  confirmLabel="Confirm"
-                  confirmVariant="success"
-                  isSubmitting={resolving}
-                >
-                  <div>
-                    <label className="sr-only" htmlFor="escalation-force-validate-notes">
-                      Validation notes
-                    </label>
-                    <textarea
-                      id="escalation-force-validate-notes"
-                      className={cn(inputBase, 'min-h-[80px] resize-none')}
-                      placeholder="e.g. Supervisor override after review"
-                      value={validationNotesForceValidate}
-                      onChange={e => setValidationNotesForceValidate(e.target.value)}
-                      maxLength={1000}
-                    />
+              <Popover
+                placement="top-end"
+                offsetValue={8}
+                preventClose={resolving}
+                trigger={
+                  <Button variant="approve" size="md" disabled={resolving} isLoading={resolving}>
+                    Force Validate
+                  </Button>
+                }
+              >
+                {({ close }) => (
+                  <div data-popover-content onClick={e => e.stopPropagation()}>
+                    <PopoverForm
+                      title="Force Validate"
+                      subtitle="Validation notes (optional)"
+                      onCancel={close}
+                      onConfirm={async () => {
+                        await resolveAsync('force_validate', validationNotesForceValidate);
+                        close();
+                      }}
+                      confirmLabel="Confirm"
+                      confirmVariant="success"
+                      isSubmitting={resolving}
+                    >
+                      <div>
+                        <label className="sr-only" htmlFor="escalation-force-validate-notes">
+                          Validation notes
+                        </label>
+                        <textarea
+                          id="escalation-force-validate-notes"
+                          className={cn(inputBase, 'min-h-[80px] resize-none')}
+                          placeholder="e.g. Supervisor override after review"
+                          value={validationNotesForceValidate}
+                          onChange={e => setValidationNotesForceValidate(e.target.value)}
+                          maxLength={1000}
+                        />
+                      </div>
+                    </PopoverForm>
                   </div>
-                </PopoverForm>
-              </div>
-            )}
-          </Popover>
-          <Popover
-            placement="top-end"
-            offsetValue={8}
-            preventClose={resolving}
-            trigger={
-              <Button variant="secondary" size="md" disabled={resolving} isLoading={resolving}>
-                Authorize Re-test
-              </Button>
-            }
-          >
-            {({ close }) => (
-              <div data-popover-content onClick={e => e.stopPropagation()}>
-                <PopoverForm
-                  title="Authorize Re-test"
-                  subtitle="Reason (recommended)"
-                  onCancel={close}
-                  onConfirm={async () => {
-                    await resolveAsync(
-                      'authorize_retest',
-                      reasonAuthorizeRetest || 'Authorized re-test (escalation resolution)'
-                    );
-                    close();
-                  }}
-                  confirmLabel="Confirm"
-                  confirmVariant="success"
-                  isSubmitting={resolving}
-                >
-                  <div>
-                    <label className="sr-only" htmlFor="escalation-authorize-retest-reason">
-                      Reason
-                    </label>
-                    <textarea
-                      id="escalation-authorize-retest-reason"
-                      className={cn(inputBase, 'min-h-[80px] resize-none')}
-                      placeholder="e.g. One more run with senior tech"
-                      value={reasonAuthorizeRetest}
-                      onChange={e => setReasonAuthorizeRetest(e.target.value)}
-                      maxLength={1000}
-                    />
+                )}
+              </Popover>
+              <Popover
+                placement="top-end"
+                offsetValue={8}
+                preventClose={resolving}
+                trigger={
+                  <Button variant="secondary" size="md" disabled={resolving} isLoading={resolving}>
+                    Authorize Re-test
+                  </Button>
+                }
+              >
+                {({ close }) => (
+                  <div data-popover-content onClick={e => e.stopPropagation()}>
+                    <PopoverForm
+                      title="Authorize Re-test"
+                      subtitle="Reason (recommended)"
+                      onCancel={close}
+                      onConfirm={async () => {
+                        await resolveAsync(
+                          'authorize_retest',
+                          reasonAuthorizeRetest || 'Authorized re-test (escalation resolution)'
+                        );
+                        close();
+                      }}
+                      confirmLabel="Confirm"
+                      confirmVariant="success"
+                      isSubmitting={resolving}
+                    >
+                      <div>
+                        <label className="sr-only" htmlFor="escalation-authorize-retest-reason">
+                          Reason
+                        </label>
+                        <textarea
+                          id="escalation-authorize-retest-reason"
+                          className={cn(inputBase, 'min-h-[80px] resize-none')}
+                          placeholder="e.g. One more run with senior tech"
+                          value={reasonAuthorizeRetest}
+                          onChange={e => setReasonAuthorizeRetest(e.target.value)}
+                          maxLength={1000}
+                        />
+                      </div>
+                    </PopoverForm>
                   </div>
-                </PopoverForm>
-              </div>
-            )}
-          </Popover>
-          <Popover
-            placement="top-end"
-            offsetValue={8}
-            preventClose={resolving}
-            trigger={
-              <Button variant="reject" size="md" disabled={resolving} isLoading={resolving}>
-                Final Reject / New Sample
-              </Button>
-            }
-          >
-            {({ close }) => (
-              <div data-popover-content onClick={e => e.stopPropagation()}>
-                <PopoverForm
-                  title="Final Reject / New Sample"
-                  subtitle="Reason (required)"
-                  onCancel={close}
-                  onConfirm={async () => {
-                    if (!reasonFinalReject.trim()) {
-                      toast.error({
-                        title: 'Please provide a reason for final reject.',
-                        subtitle: 'A reason is required when final rejecting. This will request a new sample from the patient.',
-                      });
-                      return;
-                    }
-                    await resolveAsync('final_reject', reasonFinalReject.trim());
-                    close();
-                  }}
-                  confirmLabel="Confirm"
-                  confirmVariant="danger"
-                  isSubmitting={resolving}
-                  disabled={!reasonFinalReject.trim()}
-                >
-                  <div>
-                    <label className="sr-only" htmlFor="escalation-final-reject-reason">
-                      Reason
-                    </label>
-                    <textarea
-                      id="escalation-final-reject-reason"
-                      className={cn(inputBase, 'min-h-[80px] resize-none')}
-                      placeholder="e.g. Sample compromised; request new collection"
-                      value={reasonFinalReject}
-                      onChange={e => setReasonFinalReject(e.target.value)}
-                      maxLength={1000}
-                    />
+                )}
+              </Popover>
+              <Popover
+                placement="top-end"
+                offsetValue={8}
+                preventClose={resolving}
+                trigger={
+                  <Button variant="reject" size="md" disabled={resolving} isLoading={resolving}>
+                    Final Reject / New Sample
+                  </Button>
+                }
+              >
+                {({ close }) => (
+                  <div data-popover-content onClick={e => e.stopPropagation()}>
+                    <PopoverForm
+                      title="Final Reject / New Sample"
+                      subtitle="Reason (required)"
+                      onCancel={close}
+                      onConfirm={async () => {
+                        if (!reasonFinalReject.trim()) {
+                          toast.error({
+                            title: 'Please provide a reason for final reject.',
+                            subtitle:
+                              'A reason is required when final rejecting. This will request a new sample from the patient.',
+                          });
+                          return;
+                        }
+                        await resolveAsync('final_reject', reasonFinalReject.trim());
+                        close();
+                      }}
+                      confirmLabel="Confirm"
+                      confirmVariant="danger"
+                      isSubmitting={resolving}
+                      disabled={!reasonFinalReject.trim()}
+                    >
+                      <div>
+                        <label className="sr-only" htmlFor="escalation-final-reject-reason">
+                          Reason
+                        </label>
+                        <textarea
+                          id="escalation-final-reject-reason"
+                          className={cn(inputBase, 'min-h-[80px] resize-none')}
+                          placeholder="e.g. Sample compromised; request new collection"
+                          value={reasonFinalReject}
+                          onChange={e => setReasonFinalReject(e.target.value)}
+                          maxLength={1000}
+                        />
+                      </div>
+                    </PopoverForm>
                   </div>
-                </PopoverForm>
-              </div>
-            )}
-          </Popover>
+                )}
+              </Popover>
             </>
           )}
         </ModalFooter>

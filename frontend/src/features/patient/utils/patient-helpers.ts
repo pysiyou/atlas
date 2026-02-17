@@ -91,7 +91,9 @@ export const calculateFormProgress = (formData: PatientFormData): FormProgress =
 /**
  * Calculate form progress for PatientFormInput (schema-based)
  */
-export const calculateFormProgressV2 = (formData: Partial<import('../schemas/patient.schema').PatientFormInput>): FormProgress => {
+export const calculateFormProgressV2 = (
+  formData: Partial<import('../schemas/patient.schema').PatientFormInput>
+): FormProgress => {
   const parameters = [
     formData.fullName,
     formData.dateOfBirth,

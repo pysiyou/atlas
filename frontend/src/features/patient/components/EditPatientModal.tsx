@@ -64,9 +64,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
       size={18}
       percentage={formProgress.percentage}
       trackColorClass="stroke-border-default"
-      progressColorClass={
-        formProgress.percentage === 100 ? 'stroke-success' : 'stroke-brand'
-      }
+      progressColorClass={formProgress.percentage === 100 ? 'stroke-success' : 'stroke-brand'}
       label={`${formProgress.filled}/${formProgress.total}`}
       className="h-7"
     />
@@ -91,7 +89,13 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
   <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]">
     {footerInfo}
     <div className="flex items-center gap-3">
-      <Button type="button" variant="cancel" showIcon={true} onClick={onClose} disabled={isSubmitting}>
+      <Button
+        type="button"
+        variant="cancel"
+        showIcon={true}
+        onClick={onClose}
+        disabled={isSubmitting}
+      >
         Cancel
       </Button>
       <Button
@@ -148,7 +152,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
     if (isPendingMutation) {
       return;
     }
-    
+
     try {
       if (mode === 'edit' && patient) {
         await update.mutateAsync({ id: patient.id, data });
@@ -165,31 +169,32 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
 
   // Handle form submission with validation
   const handleFormSubmit = handleSubmit(
-    async (data) => {
+    async data => {
       await onSubmit(data);
     },
-    (validationErrors) => {
+    validationErrors => {
       // Log validation errors for debugging
       console.error('Form validation errors:', validationErrors);
       console.error('Current form values:', formValues);
-      
+
       // Show toast notification with first error
       const firstErrorPath = Object.keys(validationErrors)[0];
       const firstError = validationErrors[firstErrorPath as keyof typeof validationErrors];
       const errorMessage = firstError?.message || 'Please fix form errors';
-      
+
       // Import toast dynamically to avoid circular dependency
       import('react-hot-toast').then(({ default: toast }) => {
         toast.error(`Validation error: ${errorMessage}`);
       });
-      
+
       // Find first error and scroll to it
       if (firstErrorPath) {
         // Try to find the input field
         const fieldName = firstErrorPath.split('.')[0];
-        const element = document.querySelector(`[name="${fieldName}"]`) || 
-                       document.querySelector(`#${fieldName}`) ||
-                       document.querySelector(`[id*="${fieldName}"]`);
+        const element =
+          document.querySelector(`[name="${fieldName}"]`) ||
+          document.querySelector(`#${fieldName}`) ||
+          document.querySelector(`[id*="${fieldName}"]`);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
@@ -264,9 +269,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                   text={
                     <>
                       Editing{' '}
-                      <span className="text-brand font-mono">
-                        {displayId.patient(patient.id)}
-                      </span>
+                      <span className="text-brand font-mono">{displayId.patient(patient.id)}</span>
                     </>
                   }
                 />

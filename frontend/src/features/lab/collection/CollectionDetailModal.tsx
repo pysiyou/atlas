@@ -67,10 +67,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   const rejectSampleMutation = useRejectSample();
   const [isPopoverSubmitting, setIsPopoverSubmitting] = useState(false);
 
-  const getTest = useCallback(
-    (code: string) => tests.find(t => t.code === code),
-    [tests],
-  );
+  const getTest = useCallback((code: string) => tests.find(t => t.code === code), [tests]);
 
   const sample = sampleId ? getSample(sampleId) : pendingSampleDisplay?.sample;
   const order = pendingSampleDisplay?.order || (sample ? getOrder(sample.orderId) : undefined);
@@ -97,8 +94,9 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   const rejectedSample = isRejected ? (sample as RejectedSample) : null;
 
   const patientId = order?.patientId || 0;
-  const patientName = pendingSampleDisplay?.patient?.fullName
-    || (order ? getPatientName(order.patientId) : 'Unknown');
+  const patientName =
+    pendingSampleDisplay?.patient?.fullName ||
+    (order ? getPatientName(order.patientId) : 'Unknown');
   const orderId = sample.orderId;
   const testNames = sample.testCodes ? getTestNames(sample.testCodes, tests) : [];
 
@@ -133,7 +131,8 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
         title: requireRecollection
           ? 'Sample rejected - recollection will be requested'
           : 'Sample rejected',
-        subtitle: 'The sample has been rejected. Recollection will be requested if you chose that option.',
+        subtitle:
+          'The sample has been rejected. Recollection will be requested if you chose that option.',
       });
       onClose();
     } catch (error) {
@@ -212,10 +211,19 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       disableClose={isPopoverSubmitting}
-      title={<span className="font-mono text-brand tracking-wide">{displayId.sample(sample.sampleId)}</span>}
+      title={
+        <span className="font-mono text-brand tracking-wide">
+          {displayId.sample(sample.sampleId)}
+        </span>
+      }
       subtitle={`${patientName} - ${sample.sampleType.toUpperCase()}`}
       headerBadges={headerBadges}
-      contextInfo={{ patientName, patientId, orderId, referringPhysician: order?.referringPhysician }}
+      contextInfo={{
+        patientName,
+        patientId,
+        orderId,
+        referringPhysician: order?.referringPhysician,
+      }}
       footer={footerContent}
       additionalContextInfo={
         <>

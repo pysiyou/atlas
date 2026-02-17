@@ -44,29 +44,31 @@ export const generateCalendarYears = (currentMonth: Date): Date[] => {
 export const WEEKDAY_LABELS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
 export const MONTH_LABELS = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ];
 
 export function isDateDisabled(date: Date, min: Date, max: Date): boolean {
   return isBefore(date, min) || isAfter(date, max);
 }
 
-export function isSelectedDate(
-  date: Date,
-  tempStart: Date | null,
-  tempEnd: Date | null
-): boolean {
+export function isSelectedDate(date: Date, tempStart: Date | null, tempEnd: Date | null): boolean {
   if (!tempStart) return false;
   if (tempEnd) return isSameDay(date, tempStart) || isSameDay(date, tempEnd);
   return isSameDay(date, tempStart);
 }
 
-export function isDateInRange(
-  date: Date,
-  tempStart: Date | null,
-  tempEnd: Date | null
-): boolean {
+export function isDateInRange(date: Date, tempStart: Date | null, tempEnd: Date | null): boolean {
   if (!tempStart || !tempEnd) return false;
   const dateStart = startOfDay(date);
   return (

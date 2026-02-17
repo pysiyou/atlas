@@ -1,6 +1,6 @@
 /**
  * useOrderForm Hook
- * 
+ *
  * Manages order form state, validation, and submission using React Hook Form + Zod
  */
 
@@ -21,7 +21,12 @@ interface UseOrderFormOptions {
 /**
  * Hook for managing order form state and submission
  */
-export function useOrderForm({ order, mode = 'create', initialPatientId, onSubmitSuccess }: UseOrderFormOptions = {}) {
+export function useOrderForm({
+  order,
+  mode = 'create',
+  initialPatientId,
+  onSubmitSuccess,
+}: UseOrderFormOptions = {}) {
   const { create, update } = useOrderService();
   const isSubmittingRef = useRef(false);
 

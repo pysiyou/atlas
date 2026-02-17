@@ -28,14 +28,13 @@ export function orderToFormInput(order?: Partial<Order>): Partial<OrderFormInput
  * Transform form input to API payload
  * Converts testCodes array to tests array with { testCode } objects
  */
-export function formInputToPayload(
-  formData: Partial<OrderFormInput>
-): Record<string, unknown> {
+export function formInputToPayload(formData: Partial<OrderFormInput>): Record<string, unknown> {
   const payload: Record<string, unknown> = {};
 
   // Copy all fields except testCodes
   if (formData.patientId !== undefined) payload.patientId = formData.patientId;
-  if (formData.referringPhysician !== undefined) payload.referringPhysician = formData.referringPhysician;
+  if (formData.referringPhysician !== undefined)
+    payload.referringPhysician = formData.referringPhysician;
   if (formData.priority !== undefined) payload.priority = formData.priority;
   if (formData.clinicalNotes !== undefined) payload.clinicalNotes = formData.clinicalNotes;
 

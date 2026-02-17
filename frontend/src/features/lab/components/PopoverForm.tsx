@@ -69,7 +69,13 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
           {subtitle && <p className="text-xs text-text-tertiary">{subtitle}</p>}
           {headerBadges && <div className="flex items-center gap-2 pt-1">{headerBadges}</div>}
         </div>
-        <IconButton onClick={onCancel} variant="close" size="sm" title="Close" disabled={isSubmitting} />
+        <IconButton
+          onClick={onCancel}
+          variant="close"
+          size="sm"
+          title="Close"
+          disabled={isSubmitting}
+        />
       </div>
 
       {/* Body - scrollable content area */}
@@ -174,10 +180,14 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         aria-hidden
       />
       <div className="flex-1 min-w-0 pr-8">
-        <span className={`block text-xs font-normal ${disabled ? 'text-text-disabled' : 'text-text-secondary'}`}>
+        <span
+          className={`block text-xs font-normal ${disabled ? 'text-text-disabled' : 'text-text-secondary'}`}
+        >
           {label}
         </span>
-        <span className={`block text-xxs mt-0.5 ${disabled ? 'text-text-disabled' : 'text-text-tertiary'}`}>
+        <span
+          className={`block text-xxs mt-0.5 ${disabled ? 'text-text-disabled' : 'text-text-tertiary'}`}
+        >
           {description}
         </span>
         {disabled && disabledReason && (
@@ -190,9 +200,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
           ${selected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
         `}
       >
-        {selected && (
-          <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
-        )}
+        {selected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
       </div>
     </div>
   );
@@ -233,13 +241,7 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
     className="relative flex items-start p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200 cursor-pointer"
     onClick={onChange}
   >
-    <input
-      type="checkbox"
-      checked={checked}
-      onChange={onChange}
-      className="sr-only"
-      aria-hidden
-    />
+    <input type="checkbox" checked={checked} onChange={onChange} className="sr-only" aria-hidden />
     <div className="flex-1 min-w-0 pr-8">
       <span className="block text-xs font-normal text-text-secondary">{label}</span>
       <span className="block text-xxs mt-0.5 text-text-tertiary">{description}</span>
@@ -250,9 +252,7 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
         ${checked ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
       `}
     >
-      {checked && (
-        <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
-      )}
+      {checked && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
     </div>
   </div>
 );

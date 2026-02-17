@@ -29,7 +29,8 @@ export const EscalationView: React.FC = () => {
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
-  const escalatedTests: (TestWithContext & { hasCriticalValues?: boolean })[] = rawEscalated as unknown as (TestWithContext & { hasCriticalValues?: boolean })[];
+  const escalatedTests: (TestWithContext & { hasCriticalValues?: boolean })[] =
+    rawEscalated as unknown as (TestWithContext & { hasCriticalValues?: boolean })[];
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 

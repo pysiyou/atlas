@@ -42,7 +42,8 @@ export function LabFilters<S = string[]>({
 
   const handleFilterChange = (filters: FilterValues) => {
     if (filters.searchQuery !== undefined) onSearchChange(filters.searchQuery as string);
-    if (filters.dateRange !== undefined) onDateRangeChange(filters.dateRange as [Date, Date] | null);
+    if (filters.dateRange !== undefined)
+      onDateRangeChange(filters.dateRange as [Date, Date] | null);
     if (filters.sampleType !== undefined) onSampleTypeFiltersChange(filters.sampleType as string[]);
     if (filters.status !== undefined) onStatusFiltersChange(filters.status as S);
   };

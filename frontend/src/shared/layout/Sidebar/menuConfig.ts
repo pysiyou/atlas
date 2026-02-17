@@ -79,7 +79,7 @@ export const settingsItems: SettingsItem[] = [
   {
     label: 'Notification & Alerts',
     icon: React.createElement(Bell, { size: 20 }),
-  }
+  },
 ];
 
 /**

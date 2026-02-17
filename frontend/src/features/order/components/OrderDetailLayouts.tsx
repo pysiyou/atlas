@@ -82,12 +82,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         className="shrink-0 bg-surface"
         contentClassName="p-0 overflow-visible"
       >
-        <TestsTable
-          tests={order.tests}
-
-          supersededCount={supersededCount}
-          variant="simple"
-        />
+        <TestsTable tests={order.tests} supersededCount={supersededCount} variant="simple" />
       </SectionContainer>
 
       <SectionContainer
@@ -168,12 +163,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         className="bg-surface col-span-2"
         contentClassName="p-0 overflow-visible"
       >
-        <TestsTable
-          tests={order.tests}
-
-          supersededCount={supersededCount}
-          variant="detailed"
-        />
+        <TestsTable tests={order.tests} supersededCount={supersededCount} variant="detailed" />
       </SectionContainer>
     </div>
   );
@@ -232,12 +222,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           className="h-full flex flex-col col-span-2 min-h-0"
           contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
         >
-          <TestsTable
-            tests={order.tests}
-  
-            supersededCount={supersededCount}
-            variant="detailed"
-          />
+          <TestsTable tests={order.tests} supersededCount={supersededCount} variant="detailed" />
         </SectionContainer>
       </div>
 

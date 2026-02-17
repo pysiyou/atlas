@@ -123,9 +123,7 @@ export const PaymentList: React.FC = () => {
     }
 
     // Sort by order date descending
-    filtered = [...filtered].sort((a, b) =>
-      b.order.orderDate.localeCompare(a.order.orderDate)
-    );
+    filtered = [...filtered].sort((a, b) => b.order.orderDate.localeCompare(a.order.orderDate));
 
     return filtered;
   }, [searchFilteredOrders, statusFilters, dateRange, methodFilters]);

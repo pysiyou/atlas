@@ -190,13 +190,13 @@ export function TableCore<T = Record<string, unknown>>({
           description={DEFAULT_EMPTY_DESCRIPTION}
         />
       ) : (
-        emptyMessage ?? (
+        (emptyMessage ?? (
           <EmptyState
             icon={(emptyIcon || ICONS.dataFields.document) as IconName}
             title={DEFAULT_EMPTY_TITLE}
             description={DEFAULT_EMPTY_DESCRIPTION}
           />
-        )
+        ))
       );
     return <div className={containerClasses}>{emptyContent}</div>;
   }

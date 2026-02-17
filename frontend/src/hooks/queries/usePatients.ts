@@ -76,13 +76,13 @@ export function usePaginatedPatients(search?: string, initialPage = 1, pageSize 
 
   const nextPage = useCallback(() => {
     if (query.data?.pagination.hasNext) {
-      setPage((p) => p + 1);
+      setPage(p => p + 1);
     }
   }, [query.data?.pagination.hasNext]);
 
   const prevPage = useCallback(() => {
     if (query.data?.pagination.hasPrev) {
-      setPage((p) => p - 1);
+      setPage(p => p - 1);
     }
   }, [query.data?.pagination.hasPrev]);
 

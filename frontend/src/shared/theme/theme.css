@@ -123,44 +123,44 @@
      TEXT (Foreground / Text & Icons)
      Usage: text-primary, text-secondary, text-tertiary, text-muted, etc.
      ═══════════════════════════════════════════════════════════════════ */
-  --text: var(--primitive-neutral-900);              /* Primary text */
-  --text-secondary: var(--primitive-neutral-600);    /* Secondary text */
-  --text-tertiary: var(--primitive-neutral-500);    /* Tertiary text */
-  --text-muted: var(--primitive-neutral-400);       /* Placeholder, hints */
-  --text-disabled: var(--primitive-neutral-300);    /* Disabled state */
-  --text-inverse: var(--primitive-neutral-0);       /* Text on dark bg */
+  --text: var(--primitive-neutral-900); /* Primary text */
+  --text-secondary: var(--primitive-neutral-600); /* Secondary text */
+  --text-tertiary: var(--primitive-neutral-500); /* Tertiary text */
+  --text-muted: var(--primitive-neutral-400); /* Placeholder, hints */
+  --text-disabled: var(--primitive-neutral-300); /* Disabled state */
+  --text-inverse: var(--primitive-neutral-0); /* Text on dark bg */
 
   /* ═══════════════════════════════════════════════════════════════════
      SURFACE (Page & Component Backgrounds)
      Usage: bg-surface-page, bg-surface, bg-surface-hover, bg-surface-selected
      ═══════════════════════════════════════════════════════════════════ */
-  --surface-page: var(--primitive-neutral-50);     /* Page/app background */
-  --surface: var(--primitive-neutral-0);          /* Default component bg */
-  --surface-hover: var(--primitive-neutral-50);    /* Hover state */
-  --surface-selected: var(--primitive-brand-100);  /* Selected state */
-  --surface-elev: var(--primitive-neutral-0);      /* Elevated surface */
-  --surface-report: #e0f2f7;                       /* Report background (light) */
+  --surface-page: var(--primitive-neutral-50); /* Page/app background */
+  --surface: var(--primitive-neutral-0); /* Default component bg */
+  --surface-hover: var(--primitive-neutral-50); /* Hover state */
+  --surface-selected: var(--primitive-brand-100); /* Selected state */
+  --surface-elev: var(--primitive-neutral-0); /* Elevated surface */
+  --surface-report: #e0f2f7; /* Report background (light) */
 
   /* ═══════════════════════════════════════════════════════════════════
      BORDER (Borders & Dividers)
      Usage: border-default, border-subtle, border-strong
      ═══════════════════════════════════════════════════════════════════ */
-  --border: var(--primitive-neutral-200);          /* Default border */
-  --border-subtle: var(--primitive-neutral-100);   /* Subtle divider */
-  --border-strong: var(--primitive-neutral-300);   /* Emphasized border */
-  --border-hover: var(--primitive-neutral-300);   /* Border on hover */
-  --border-focus: var(--primitive-brand-600);     /* Focus ring color */
-  --border-error: var(--primitive-danger-600);    /* Error state border */
+  --border: var(--primitive-neutral-200); /* Default border */
+  --border-subtle: var(--primitive-neutral-100); /* Subtle divider */
+  --border-strong: var(--primitive-neutral-300); /* Emphasized border */
+  --border-hover: var(--primitive-neutral-300); /* Border on hover */
+  --border-focus: var(--primitive-brand-600); /* Focus ring color */
+  --border-error: var(--primitive-danger-600); /* Error state border */
 
   /* ═══════════════════════════════════════════════════════════════════
      BRAND (Primary Action)
      Usage: bg-brand, text-brand, border-brand, text-on-brand
      ═══════════════════════════════════════════════════════════════════ */
-  --brand: var(--primitive-brand-600);             /* Primary action */
-  --brand-hover: var(--primitive-brand-700);       /* Hover state */
-  --brand-muted: var(--primitive-brand-100);       /* Muted background */
-  --brand-fg: var(--primitive-brand-800);          /* Text on muted bg */
-  --on-brand: var(--primitive-neutral-0);          /* Text ON brand bg */
+  --brand: var(--primitive-brand-600); /* Primary action */
+  --brand-hover: var(--primitive-brand-700); /* Hover state */
+  --brand-muted: var(--primitive-brand-100); /* Muted background */
+  --brand-fg: var(--primitive-brand-800); /* Text on muted bg */
+  --on-brand: var(--primitive-neutral-0); /* Text ON brand bg */
 
   /* ═══════════════════════════════════════════════════════════════════
      DANGER (Destructive Actions)
@@ -364,37 +364,37 @@
    Primitives change + semantic token overrides
    ───────────────────────────────────────────────────────────────────────── */
 
-[data-theme="github"] {
+[data-theme='github'] {
   /* Primitive overrides for github theme */
   --primitive-brand-50: #eef6ff;
   --primitive-brand-100: #ddecff;
   --primitive-brand-200: #bcdaff;
   --primitive-brand-300: #8bc0ff;
   --primitive-brand-400: #58a0ff;
-  --primitive-brand-500: #1F6FEB;
+  --primitive-brand-500: #1f6feb;
   --primitive-brand-600: #1a5fd4;
   --primitive-brand-700: #144aad;
   --primitive-brand-800: #0f3685;
   --primitive-brand-900: #0c2d6b;
   --primitive-brand-950: #081a42;
 
-  --primitive-neutral-0: #0B0F16;
-  --primitive-neutral-50: #0D1117;
-  --primitive-neutral-100: #161B22;
-  --primitive-neutral-200: #21262D;
-  --primitive-neutral-300: #30363D;
-  --primitive-neutral-400: #484F58;
-  --primitive-neutral-500: #6E7681;
-  --primitive-neutral-600: #8B949E;
-  --primitive-neutral-700: #CACACA;
-  --primitive-neutral-800: #F5F5F5;
-  --primitive-neutral-900: #FFFFFF;
+  --primitive-neutral-0: #0b0f16;
+  --primitive-neutral-50: #0d1117;
+  --primitive-neutral-100: #161b22;
+  --primitive-neutral-200: #21262d;
+  --primitive-neutral-300: #30363d;
+  --primitive-neutral-400: #484f58;
+  --primitive-neutral-500: #6e7681;
+  --primitive-neutral-600: #8b949e;
+  --primitive-neutral-700: #cacaca;
+  --primitive-neutral-800: #f5f5f5;
+  --primitive-neutral-900: #ffffff;
   --primitive-neutral-950: #000000;
 
   --primitive-success-50: #0d2818;
   --primitive-success-100: #134d22;
   --primitive-success-200: #157b2e;
-  --primitive-success-500: #2EA043;
+  --primitive-success-500: #2ea043;
   --primitive-success-600: #238636;
   --primitive-success-700: #196c2e;
   --primitive-success-800: #145c26;
@@ -403,20 +403,20 @@
   --primitive-warning-100: #5c4410;
   --primitive-warning-200: #8b6916;
   --primitive-warning-300: #b88620;
-  --primitive-warning-500: #D29922;
-  --primitive-warning-600: #9E6A03;
+  --primitive-warning-500: #d29922;
+  --primitive-warning-600: #9e6a03;
   --primitive-warning-700: #7d5402;
   --primitive-warning-800: #5c3e02;
 
   --primitive-danger-50: #3d1616;
   --primitive-danger-100: #5c2222;
   --primitive-danger-200: #8b2d2d;
-  --primitive-danger-500: #DA3633;
+  --primitive-danger-500: #da3633;
   --primitive-danger-600: #b62c29;
   --primitive-danger-700: #912320;
   --primitive-danger-800: #6b1a18;
 
-  --primitive-info-500: #1F6FEB;
+  --primitive-info-500: #1f6feb;
   --primitive-info-400: #58a0ff;
 
   --primitive-purple-100: #2d1b4e;
@@ -492,7 +492,7 @@
   --info-bg-emphasis: rgba(31, 111, 235, 0.25);
   --info-fg: var(--primitive-info-500);
   --info-fg-emphasis: var(--primitive-info-400);
-  --info-stroke: rgba(31, 111, 235, 0.30);
+  --info-stroke: rgba(31, 111, 235, 0.3);
   --on-info: var(--primitive-neutral-900);
   --success-hover: var(--primitive-success-600);
   --success-stroke-emphasis: var(--primitive-success-500);
@@ -573,7 +573,7 @@
    Primitives change + semantic token overrides
    ───────────────────────────────────────────────────────────────────────── */
 
-[data-theme="noir-studio"] {
+[data-theme='noir-studio'] {
   /* Primitive overrides for noir-studio theme */
   --primitive-brand-50: #d6edfc;
   --primitive-brand-100: #b3dff9;
@@ -587,18 +587,18 @@
   --primitive-brand-900: #032a46;
   --primitive-brand-950: #021829;
 
-  --primitive-neutral-0: #0D0D0D;
+  --primitive-neutral-0: #0d0d0d;
   --primitive-neutral-50: #121212;
   --primitive-neutral-100: #171717;
   --primitive-neutral-200: #202020;
-  --primitive-neutral-300: #2E2E2E;
-  --primitive-neutral-400: #3D3D3D;
+  --primitive-neutral-300: #2e2e2e;
+  --primitive-neutral-400: #3d3d3d;
   --primitive-neutral-500: #555555;
   --primitive-neutral-600: #777777;
-  --primitive-neutral-700: #A0A0A0;
-  --primitive-neutral-800: #D0D0D0;
-  --primitive-neutral-900: #F5F5F5;
-  --primitive-neutral-950: #FFFFFF;
+  --primitive-neutral-700: #a0a0a0;
+  --primitive-neutral-800: #d0d0d0;
+  --primitive-neutral-900: #f5f5f5;
+  --primitive-neutral-950: #ffffff;
 
   --primitive-success-50: #0d2818;
   --primitive-success-100: #134d22;
@@ -612,7 +612,7 @@
   --primitive-warning-100: #5c4a0c;
   --primitive-warning-200: #8b6f12;
   --primitive-warning-300: #c49418;
-  --primitive-warning-500: #FFC247;
+  --primitive-warning-500: #ffc247;
   --primitive-warning-600: #eab308;
   --primitive-warning-700: #ca8a04;
   --primitive-warning-800: #a16207;
@@ -625,7 +625,7 @@
   --primitive-danger-700: #7a2424;
   --primitive-danger-800: #621d1d;
 
-  --primitive-info-500: #1F6FEB;
+  --primitive-info-500: #1f6feb;
   --primitive-info-400: #58a0ff;
 
   --primitive-purple-100: #2a1a3d;
@@ -701,7 +701,7 @@
   --info-bg-emphasis: rgba(31, 111, 235, 0.25);
   --info-fg: var(--primitive-info-500);
   --info-fg-emphasis: var(--primitive-info-400);
-  --info-stroke: rgba(31, 111, 235, 0.30);
+  --info-stroke: rgba(31, 111, 235, 0.3);
   --on-info: var(--primitive-neutral-900);
   --success-hover: var(--primitive-success-600);
   --success-stroke-emphasis: var(--primitive-success-500);
@@ -777,9 +777,6 @@
   --auth-error-bg: rgba(218, 54, 51, 0.15);
 }
 
-
-
-
 /* ─────────────────────────────────────────────────────────────────────────
    Filter chip (modal date badges, quick filters, active badges)
    ───────────────────────────────────────────────────────────────────────── */
@@ -789,7 +786,10 @@
   background-color: var(--surface);
   border: 1px solid var(--border);
   color: var(--text-secondary);
-  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s;
 }
 
 .filter-chip:hover {
@@ -814,12 +814,12 @@
    Dark theme: inputs default to theme text color
    ───────────────────────────────────────────────────────────────────────── */
 
-[data-theme="github"] input,
-[data-theme="github"] textarea,
-[data-theme="github"] select,
-[data-theme="noir-studio"] input,
-[data-theme="noir-studio"] textarea,
-[data-theme="noir-studio"] select {
+[data-theme='github'] input,
+[data-theme='github'] textarea,
+[data-theme='github'] select,
+[data-theme='noir-studio'] input,
+[data-theme='noir-studio'] textarea,
+[data-theme='noir-studio'] select {
   color: var(--text);
 }
 

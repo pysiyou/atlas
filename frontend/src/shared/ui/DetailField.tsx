@@ -91,7 +91,11 @@ export const DetailField: React.FC<DetailFieldProps> = ({
     // Badge rendering takes priority
     if (badge && badge.value) {
       return (
-        <Badge variant={badge.variant || 'primary'} size={badge.size || 'xs'} className={badge.className}>
+        <Badge
+          variant={badge.variant || 'primary'}
+          size={badge.size || 'xs'}
+          className={badge.className}
+        >
           {badge.value.toUpperCase()}
         </Badge>
       );

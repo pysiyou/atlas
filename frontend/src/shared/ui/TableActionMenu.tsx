@@ -21,11 +21,7 @@ export const TableActionMenu: React.FC<TableActionMenuProps> = ({ children }) =>
         showBackdrop={false}
         className="w-48 py-1"
       >
-        {({ close }: { close: () => void }) => (
-          <div onClick={close}>
-            {children}
-          </div>
-        )}
+        {({ close }: { close: () => void }) => <div onClick={close}>{children}</div>}
       </Popover>
     </div>
   );

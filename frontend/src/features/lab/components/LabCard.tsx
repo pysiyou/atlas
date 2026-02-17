@@ -118,8 +118,14 @@ export const LabCard: React.FC<LabCardProps> = ({
                   {formatDate(sampleInfo.collectedAt)}
                 </span>
                 {sampleInfo.collectedBy && (
-                <> by <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>{getUserName(sampleInfo.collectedBy)}</span></>
-              )}
+                  <>
+                    {' '}
+                    by{' '}
+                    <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
+                      {getUserName(sampleInfo.collectedBy)}
+                    </span>
+                  </>
+                )}
               </span>
             )}
 

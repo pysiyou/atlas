@@ -53,16 +53,32 @@ function getComparisonDateRange(
 }
 
 function computePeriodChange(
-  current: { volume: { total: number }; tat: { averageTAT: number; complianceRate: number }; funnel: { validated: number }; volumeTotal: number },
-  comparison: { volume: { total: number }; tat: { averageTAT: number; complianceRate: number }; funnel: { validated: number }; volumeTotal: number }
+  current: {
+    volume: { total: number };
+    tat: { averageTAT: number; complianceRate: number };
+    funnel: { validated: number };
+    volumeTotal: number;
+  },
+  comparison: {
+    volume: { total: number };
+    tat: { averageTAT: number; complianceRate: number };
+    funnel: { validated: number };
+    volumeTotal: number;
+  }
 ): PeriodChange {
   const pct = (a: number, b: number) =>
     b === 0 ? undefined : Math.round(((a - b) / b) * 100 * 100) / 100;
-  const currValidPct = current.volumeTotal > 0 ? (current.funnel.validated / current.volumeTotal) * 100 : 0;
-  const prevValidPct = comparison.volumeTotal > 0 ? (comparison.funnel.validated / comparison.volumeTotal) * 100 : 0;
+  const currValidPct =
+    current.volumeTotal > 0 ? (current.funnel.validated / current.volumeTotal) * 100 : 0;
+  const prevValidPct =
+    comparison.volumeTotal > 0 ? (comparison.funnel.validated / comparison.volumeTotal) * 100 : 0;
   const tatDelta =
     comparison.tat.averageTAT > 0
-      ? Math.round(((comparison.tat.averageTAT - current.tat.averageTAT) / comparison.tat.averageTAT) * 100 * 100) / 100
+      ? Math.round(
+          ((comparison.tat.averageTAT - current.tat.averageTAT) / comparison.tat.averageTAT) *
+            100 *
+            100
+        ) / 100
       : undefined;
   return {
     totalTests: pct(current.volume.total, comparison.volume.total),

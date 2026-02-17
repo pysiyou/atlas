@@ -72,7 +72,10 @@ export const Input: React.FC<InputProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors" />
+            <Icon
+              name={displayIcon}
+              className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
+            />
           </div>
         )}
         <input
@@ -82,7 +85,9 @@ export const Input: React.FC<InputProps> = ({
         />
       </div>
       {error && <p className="text-danger-fg text-xs mt-1">{error}</p>}
-      {helperTextProp && !error && <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>}
+      {helperTextProp && !error && (
+        <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>
+      )}
     </div>
   );
 };
@@ -139,7 +144,10 @@ export const Textarea: React.FC<TextareaProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute top-2.5 left-3 pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors" />
+            <Icon
+              name={displayIcon}
+              className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
+            />
           </div>
         )}
         <textarea
@@ -150,7 +158,9 @@ export const Textarea: React.FC<TextareaProps> = ({
         />
       </div>
       {error && <p className="text-danger-fg text-xs mt-1">{error}</p>}
-      {helperTextProp && !error && <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>}
+      {helperTextProp && !error && (
+        <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>
+      )}
     </div>
   );
 };
@@ -209,7 +219,10 @@ export const Select: React.FC<SelectProps> = ({
       <div className="relative">
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Icon name={displayIcon} className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors" />
+            <Icon
+              name={displayIcon}
+              className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
+            />
           </div>
         )}
         <select
@@ -225,7 +238,9 @@ export const Select: React.FC<SelectProps> = ({
         </select>
       </div>
       {error && <p className="text-danger-fg text-xs mt-1">{error}</p>}
-      {helperTextProp && !error && <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>}
+      {helperTextProp && !error && (
+        <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>
+      )}
     </div>
   );
 };

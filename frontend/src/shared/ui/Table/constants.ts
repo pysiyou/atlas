@@ -82,4 +82,7 @@ export const SHOW_ALL_PAGE_SIZE = -1;
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 /** Page size options including "All" for client-side tables */
-export const DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL = [...DEFAULT_PAGE_SIZE_OPTIONS, SHOW_ALL_PAGE_SIZE];
+export const DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL = [
+  ...DEFAULT_PAGE_SIZE_OPTIONS,
+  SHOW_ALL_PAGE_SIZE,
+];

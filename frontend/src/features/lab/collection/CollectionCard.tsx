@@ -20,10 +20,7 @@ import { displayId } from '@/utils';
 import { LabCard, TestList } from '../components/LabCard';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
-import {
-  handlePrintCollectionLabel,
-  getEffectiveContainerType,
-} from '../utils/lab-helpers';
+import { handlePrintCollectionLabel, getEffectiveContainerType } from '../utils/lab-helpers';
 import { formatRejectionReasons } from '../utils/lab-formatters';
 import type { SampleDisplay } from '../types';
 import { orderHasValidatedTests } from '@/features/order/utils';
@@ -45,7 +42,7 @@ interface CollectionCardProps {
 }
 
 // High complexity and large function are necessary for comprehensive collection card with multiple statuses, actions, and conditional rendering
-// eslint-disable-next-line max-lines-per-function, complexity
+// eslint-disable-next-line max-lines-per-function
 export const CollectionCard: React.FC<CollectionCardProps> = ({
   display,
   onCollect,
@@ -294,7 +291,8 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                         title: requireRecollection
                           ? 'Sample rejected - recollection will be requested'
                           : 'Sample rejected',
-                        subtitle: 'The sample has been rejected. Recollection will be requested if you chose that option.',
+                        subtitle:
+                          'The sample has been rejected. Recollection will be requested if you chose that option.',
                       });
                     } catch (error) {
                       logger.error(
@@ -303,7 +301,8 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                       );
                       toast.error({
                         title: 'Failed to reject sample',
-                        subtitle: 'The rejection could not be saved. Please try again or check the sample status.',
+                        subtitle:
+                          'The rejection could not be saved. Please try again or check the sample status.',
                       });
                     }
                   }}
@@ -351,13 +350,19 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
         {isRecollection && sample.originalSampleId && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection of <span className="font-mono text-text-inverse">{displayId.sample(sample.originalSampleId)}</span>
+            Recollection of{' '}
+            <span className="font-mono text-text-inverse">
+              {displayId.sample(sample.originalSampleId)}
+            </span>
           </Badge>
         )}
         {rejectedSample?.recollectionSampleId && (
           <Badge size="sm" variant="info" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection requested: <span className="font-mono text-text-inverse">{displayId.sample(rejectedSample.recollectionSampleId)}</span>
+            Recollection requested:{' '}
+            <span className="font-mono text-text-inverse">
+              {displayId.sample(rejectedSample.recollectionSampleId)}
+            </span>
           </Badge>
         )}
       </div>

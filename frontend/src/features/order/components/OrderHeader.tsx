@@ -42,7 +42,13 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
               Edit
             </Button>
           )}
-          <Button variant="print" size="sm" onClick={() => { /* Print */ }}>
+          <Button
+            variant="print"
+            size="sm"
+            onClick={() => {
+              /* Print */
+            }}
+          >
             Print
           </Button>
           {invoice != null && (
@@ -62,7 +68,14 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
               onClick={onEdit}
             />
           )}
-          <IconButton variant="print" size="sm" title="Print" onClick={() => { /* Print */ }} />
+          <IconButton
+            variant="print"
+            size="sm"
+            title="Print"
+            onClick={() => {
+              /* Print */
+            }}
+          />
           {invoice != null && (
             <IconButton
               variant="primary"
@@ -77,10 +90,6 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
     </div>
   );
   return (
-    <DetailPageHeader
-      title={displayId.order(order.orderId)}
-      badges={badges}
-      actions={actions}
-    />
+    <DetailPageHeader title={displayId.order(order.orderId)} badges={badges} actions={actions} />
   );
 };

@@ -5,13 +5,7 @@
 
 import React from 'react';
 import { Button, Icon } from '@/shared/ui';
-import type {
-  ContainerType,
-  Sample,
-  RejectedSample,
-  Order,
-  RejectionReason,
-} from '@/types';
+import type { ContainerType, Sample, RejectedSample, Order, RejectionReason } from '@/types';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import { ModalFooter } from '../components/LabDetailModal';
@@ -71,11 +65,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
     const isRecollection =
       sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0);
     return (
-      <ModalFooter
-        statusIcon={undefined}
-        statusMessage=""
-        statusClassName="text-text-tertiary"
-      >
+      <ModalFooter statusIcon={undefined} statusMessage="" statusClassName="text-text-tertiary">
         <CollectionPopover
           requirement={pendingSampleDisplay.requirement!}
           patientName={patientName}
@@ -103,7 +93,9 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
 
     return (
       <ModalFooter
-        statusIcon={<Icon name={getSampleStatusIcon('collected')} className="w-4 h-4 text-text-disabled" />}
+        statusIcon={
+          <Icon name={getSampleStatusIcon('collected')} className="w-4 h-4 text-text-disabled" />
+        }
         statusMessage={
           hasValidatedTests
             ? `Cannot reject - ${validatedCount} test${validatedCount > 1 ? 's' : ''} already validated`
@@ -144,7 +136,9 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
   if (isRejected) {
     return (
       <ModalFooter
-        statusIcon={<Icon name={getSampleStatusIcon('rejected')} className="w-4 h-4 text-text-disabled" />}
+        statusIcon={
+          <Icon name={getSampleStatusIcon('rejected')} className="w-4 h-4 text-text-disabled" />
+        }
         statusMessage={
           rejectedSample?.recollectionRequired
             ? 'Sample rejected - recollection requested'

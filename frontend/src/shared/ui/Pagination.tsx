@@ -110,7 +110,10 @@ export const Pagination: React.FC<PaginationProps> = ({
           {pageNumbers.map((page, index) => (
             <React.Fragment key={index}>
               {page === '...' ? (
-                <span className="min-w-[20px] text-center text-[11px] text-text-disabled" aria-hidden>
+                <span
+                  className="min-w-[20px] text-center text-[11px] text-text-disabled"
+                  aria-hidden
+                >
                   …
                 </span>
               ) : (

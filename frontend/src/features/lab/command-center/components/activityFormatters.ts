@@ -28,7 +28,7 @@ export function formatPerformerName(name: string): string {
 export function formatOperationType(type: LabOperationType): string {
   return type
     .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
 
@@ -41,13 +41,35 @@ function formatOrderStatusChange(log: LabOperationRecord, performer: string): Ac
     [
       { type: 'name', value: performer },
       { type: 'text', value: 'updated the order status for' },
-      { type: 'badge', value: displayId.order(log.entityId), variant: 'primary', isId: true, link: `/orders/${log.entityId}` },
+      {
+        type: 'badge',
+        value: displayId.order(log.entityId),
+        variant: 'primary',
+        isId: true,
+        link: `/orders/${log.entityId}`,
+      },
     ],
     [
       { type: 'text', value: 'Status transition:' },
-      ...(beforeStatus ? [{ type: 'badge', value: beforeStatus.toUpperCase(), variant: beforeStatus } as ActivitySegment] : []),
+      ...(beforeStatus
+        ? [
+            {
+              type: 'badge',
+              value: beforeStatus.toUpperCase(),
+              variant: beforeStatus,
+            } as ActivitySegment,
+          ]
+        : []),
       ...(beforeStatus && afterStatus ? [{ type: 'text', value: '→' } as ActivitySegment] : []),
-      ...(afterStatus ? [{ type: 'badge', value: afterStatus.toUpperCase(), variant: afterStatus } as ActivitySegment] : []),
+      ...(afterStatus
+        ? [
+            {
+              type: 'badge',
+              value: afterStatus.toUpperCase(),
+              variant: afterStatus,
+            } as ActivitySegment,
+          ]
+        : []),
     ],
   ];
 }
@@ -61,7 +83,13 @@ function formatTestAdded(log: LabOperationRecord, performer: string): ActivityLi
       { type: 'text', value: 'added test' },
       { type: 'badge', value: testCode || 'test', variant: 'success', isId: !!testCode },
       { type: 'text', value: 'to order' },
-      { type: 'badge', value: displayId.order(orderId), variant: 'primary', isId: true, link: `/orders/${orderId}` },
+      {
+        type: 'badge',
+        value: displayId.order(orderId),
+        variant: 'primary',
+        isId: true,
+        link: `/orders/${orderId}`,
+      },
     ],
   ];
 }
@@ -75,7 +103,13 @@ function formatTestRemoved(log: LabOperationRecord, performer: string): Activity
       { type: 'text', value: 'removed test' },
       { type: 'badge', value: testCode || 'test', variant: 'muted', isId: !!testCode },
       { type: 'text', value: 'from order' },
-      { type: 'badge', value: displayId.order(orderId), variant: 'primary', isId: true, link: `/orders/${orderId}` },
+      {
+        type: 'badge',
+        value: displayId.order(orderId),
+        variant: 'primary',
+        isId: true,
+        link: `/orders/${orderId}`,
+      },
     ],
   ];
 }
@@ -89,7 +123,10 @@ function formatSampleCollect(log: LabOperationRecord, performer: string): Activi
       { type: 'text', value: 'collected sample' },
       { type: 'badge', value: displayId.sample(log.entityId), variant: 'collected', isId: true },
     ],
-    [{ type: 'text', value: 'Sample status set to' }, { type: 'badge', value: 'COLLECTED', variant: 'collected' }],
+    [
+      { type: 'text', value: 'Sample status set to' },
+      { type: 'badge', value: 'COLLECTED', variant: 'collected' },
+    ],
   ];
 }
 
@@ -100,22 +137,34 @@ function formatSampleReject(log: LabOperationRecord, performer: string): Activit
       { type: 'text', value: 'rejected sample' },
       { type: 'badge', value: displayId.sample(log.entityId), variant: 'rejected', isId: true },
     ],
-    [{ type: 'text', value: 'Sample status set to' }, { type: 'badge', value: 'REJECTED', variant: 'rejected' }],
+    [
+      { type: 'text', value: 'Sample status set to' },
+      { type: 'badge', value: 'REJECTED', variant: 'rejected' },
+    ],
   ];
   if (log.comment) {
-    lines.push([{ type: 'text', value: 'Reason:' }, { type: 'badge', value: log.comment, variant: 'muted' }]);
+    lines.push([
+      { type: 'text', value: 'Reason:' },
+      { type: 'badge', value: log.comment, variant: 'muted' },
+    ]);
   }
   return lines;
 }
 
-function formatSampleRecollectionRequest(log: LabOperationRecord, performer: string): ActivityLines {
+function formatSampleRecollectionRequest(
+  log: LabOperationRecord,
+  performer: string
+): ActivityLines {
   return [
     [
       { type: 'name', value: performer },
       { type: 'text', value: 'requested a new collection for sample' },
       { type: 'badge', value: displayId.sample(log.entityId), variant: 'pending', isId: true },
     ],
-    [{ type: 'text', value: 'Recollection requested; sample remains' }, { type: 'badge', value: 'PENDING', variant: 'pending' }],
+    [
+      { type: 'text', value: 'Recollection requested; sample remains' },
+      { type: 'badge', value: 'PENDING', variant: 'pending' },
+    ],
   ];
 }
 
@@ -128,13 +177,24 @@ function formatResultEntry(log: LabOperationRecord, performer: string): Activity
     [
       { type: 'name', value: performer },
       { type: 'text', value: 'entered lab results for' },
-      { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'in-progress', isId: true },
+      {
+        type: 'badge',
+        value: testCode || displayId.orderTest(log.entityId),
+        variant: 'in-progress',
+        isId: true,
+      },
     ],
   ];
   if (orderId) {
     lines.push([
       { type: 'text', value: 'Associated order:' },
-      { type: 'badge', value: displayId.order(orderId), variant: 'primary', isId: true, link: `/orders/${orderId}` },
+      {
+        type: 'badge',
+        value: displayId.order(orderId),
+        variant: 'primary',
+        isId: true,
+        link: `/orders/${orderId}`,
+      },
     ]);
   }
   return lines;
@@ -147,31 +207,59 @@ function formatResultValidationApprove(log: LabOperationRecord, performer: strin
     [
       { type: 'name', value: performer },
       { type: 'text', value: 'validated and approved results for' },
-      { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'validated', isId: true },
+      {
+        type: 'badge',
+        value: testCode || displayId.orderTest(log.entityId),
+        variant: 'validated',
+        isId: true,
+      },
     ],
-    [{ type: 'text', value: 'Result status:' }, { type: 'badge', value: 'VALIDATED', variant: 'validated' }],
+    [
+      { type: 'text', value: 'Result status:' },
+      { type: 'badge', value: 'VALIDATED', variant: 'validated' },
+    ],
   ];
   if (orderId) {
     lines.push([
       { type: 'text', value: 'Order:' },
-      { type: 'badge', value: displayId.order(orderId), variant: 'primary', isId: true, link: `/orders/${orderId}` },
+      {
+        type: 'badge',
+        value: displayId.order(orderId),
+        variant: 'primary',
+        isId: true,
+        link: `/orders/${orderId}`,
+      },
     ]);
   }
   return lines;
 }
 
-function formatResultValidationRejectRetest(log: LabOperationRecord, performer: string): ActivityLines {
+function formatResultValidationRejectRetest(
+  log: LabOperationRecord,
+  performer: string
+): ActivityLines {
   const testCode = log.operationData?.testCode as string | undefined;
   const orderId = log.operationData?.orderId as number | undefined;
   return [
     [
       { type: 'name', value: performer },
       { type: 'text', value: 'rejected results for' },
-      { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'rejected', isId: true },
+      {
+        type: 'badge',
+        value: testCode || displayId.orderTest(log.entityId),
+        variant: 'rejected',
+        isId: true,
+      },
       ...(orderId
         ? [
             { type: 'text' as const, value: 'in' },
-            { type: 'badge' as const, value: displayId.order(orderId), variant: 'primary', isId: true, link: `/orders/${orderId}` },
+            {
+              type: 'badge' as const,
+              value: displayId.order(orderId),
+              variant: 'primary',
+              isId: true,
+              link: `/orders/${orderId}`,
+            },
           ]
         : []),
     ],
@@ -183,18 +271,32 @@ function formatResultValidationRejectRetest(log: LabOperationRecord, performer: 
   ];
 }
 
-function formatResultValidationRejectRecollect(log: LabOperationRecord, performer: string): ActivityLines {
+function formatResultValidationRejectRecollect(
+  log: LabOperationRecord,
+  performer: string
+): ActivityLines {
   const testCode = log.operationData?.testCode as string | undefined;
   const orderId = log.operationData?.orderId as number | undefined;
   return [
     [
       { type: 'name', value: performer },
       { type: 'text', value: 'rejected results for' },
-      { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'rejected', isId: true },
+      {
+        type: 'badge',
+        value: testCode || displayId.orderTest(log.entityId),
+        variant: 'rejected',
+        isId: true,
+      },
       ...(orderId
         ? [
             { type: 'text' as const, value: 'in' },
-            { type: 'badge' as const, value: displayId.order(orderId), variant: 'primary', isId: true, link: `/orders/${orderId}` },
+            {
+              type: 'badge' as const,
+              value: displayId.order(orderId),
+              variant: 'primary',
+              isId: true,
+              link: `/orders/${orderId}`,
+            },
           ]
         : []),
     ],
@@ -213,11 +315,22 @@ function formatResultValidationEscalate(log: LabOperationRecord, performer: stri
     [
       { type: 'name', value: performer },
       { type: 'text', value: 'escalated results for' },
-      { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'escalated', isId: true },
+      {
+        type: 'badge',
+        value: testCode || displayId.orderTest(log.entityId),
+        variant: 'escalated',
+        isId: true,
+      },
       ...(orderId
         ? [
             { type: 'text' as const, value: 'in' },
-            { type: 'badge' as const, value: displayId.order(orderId), variant: 'primary', isId: true, link: `/orders/${orderId}` },
+            {
+              type: 'badge' as const,
+              value: displayId.order(orderId),
+              variant: 'primary',
+              isId: true,
+              link: `/orders/${orderId}`,
+            },
           ]
         : []),
     ],
@@ -230,7 +343,10 @@ function formatResultValidationEscalate(log: LabOperationRecord, performer: stri
 
 // ─── Escalation resolution category ──────────────────────────────────────────
 
-function formatEscalationResolutionAuthorizeRetest(log: LabOperationRecord, performer: string): ActivityLines {
+function formatEscalationResolutionAuthorizeRetest(
+  log: LabOperationRecord,
+  performer: string
+): ActivityLines {
   return [
     [
       { type: 'name', value: performer },
@@ -241,7 +357,10 @@ function formatEscalationResolutionAuthorizeRetest(log: LabOperationRecord, perf
   ];
 }
 
-function formatEscalationResolutionFinalReject(log: LabOperationRecord, performer: string): ActivityLines {
+function formatEscalationResolutionFinalReject(
+  log: LabOperationRecord,
+  performer: string
+): ActivityLines {
   return [
     [
       { type: 'name', value: performer },
@@ -260,7 +379,12 @@ function formatCriticalValueDetected(log: LabOperationRecord, _performer: string
     [
       { type: 'badge', value: 'Critical value', variant: 'critical' },
       { type: 'text', value: 'was detected for' },
-      { type: 'badge', value: testCode || displayId.orderTest(log.entityId), variant: 'info', isId: true },
+      {
+        type: 'badge',
+        value: testCode || displayId.orderTest(log.entityId),
+        variant: 'info',
+        isId: true,
+      },
     ],
     [{ type: 'text', value: 'Requires notification per protocol.' }],
   ];
@@ -279,7 +403,10 @@ function formatCriticalValueNotified(log: LabOperationRecord, performer: string)
   return lines;
 }
 
-function formatCriticalValueAcknowledged(log: LabOperationRecord, performer: string): ActivityLines {
+function formatCriticalValueAcknowledged(
+  log: LabOperationRecord,
+  performer: string
+): ActivityLines {
   return [
     [
       { type: 'name', value: performer },

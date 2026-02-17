@@ -4,15 +4,7 @@
  */
 
 import React from 'react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { format } from 'date-fns';
 import { EmptyState } from '@/shared/ui';
 import { ICONS } from '@/utils';
@@ -33,11 +25,8 @@ interface TestsByDayBarChartProps {
   height?: number;
 }
 
-export const TestsByDayBarChart: React.FC<TestsByDayBarChartProps> = ({
-  trend,
-  height = 200,
-}) => {
-  const chartData = trend.map((item) => ({
+export const TestsByDayBarChart: React.FC<TestsByDayBarChartProps> = ({ trend, height = 200 }) => {
+  const chartData = trend.map(item => ({
     date: format(new Date(item.date), 'EEE'),
     count: item.count,
     fullDate: item.date,
@@ -46,11 +35,7 @@ export const TestsByDayBarChart: React.FC<TestsByDayBarChartProps> = ({
   if (chartData.length === 0) {
     return (
       <div className="flex items-center justify-center" style={{ height }}>
-        <EmptyState
-          variant="compact"
-          icon={ICONS.dataFields.document}
-          title="No data"
-        />
+        <EmptyState variant="compact" icon={ICONS.dataFields.document} title="No data" />
       </div>
     );
   }
@@ -64,10 +49,7 @@ export const TestsByDayBarChart: React.FC<TestsByDayBarChartProps> = ({
           tick={{ fill: AXIS_COLOR, fontSize: 12 }}
           tickLine={{ stroke: GRID_STROKE }}
         />
-        <YAxis
-          tick={{ fill: AXIS_COLOR, fontSize: 12 }}
-          tickLine={{ stroke: GRID_STROKE }}
-        />
+        <YAxis tick={{ fill: AXIS_COLOR, fontSize: 12 }} tickLine={{ stroke: GRID_STROKE }} />
         <Tooltip
           contentStyle={{
             backgroundColor: TOOLTIP_BG,
@@ -75,7 +57,10 @@ export const TestsByDayBarChart: React.FC<TestsByDayBarChartProps> = ({
             borderRadius: '8px',
             fontSize: '12px',
           }}
-          formatter={(value: unknown) => [typeof value === 'number' ? `${value} tests` : '—', 'Tests']}
+          formatter={(value: unknown) => [
+            typeof value === 'number' ? `${value} tests` : '—',
+            'Tests',
+          ]}
         />
         <Bar dataKey="count" fill={BAR_COLOR} radius={[4, 4, 0, 0]} />
       </BarChart>

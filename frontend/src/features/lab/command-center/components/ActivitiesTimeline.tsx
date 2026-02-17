@@ -98,7 +98,9 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
     return (
       <div className={`flex flex-col items-center justify-center h-full bg-surface ${className}`}>
         <div className="w-10 h-10 rounded-full bg-surface-hover flex items-center justify-center mb-3">
-          <span className="text-text-disabled text-lg" aria-hidden>◇</span>
+          <span className="text-text-disabled text-lg" aria-hidden>
+            ◇
+          </span>
         </div>
         <p className="text-sm text-text-secondary font-medium">No recent activity</p>
         <p className="text-xxs text-text-tertiary mt-0.5">Activity will appear here</p>
@@ -109,7 +111,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
   return (
     <div className={`flex flex-col h-full bg-surface ${className}`}>
       <div className="flex-1 overflow-auto scroll-smooth">
-        {groupedActivities.map((group) => (
+        {groupedActivities.map(group => (
           <section key={group.label} className="px-4 pb-6 first:pt-1">
             <div className="flex items-center gap-3 py-3 sticky top-0 z-1 bg-surface/95 backdrop-blur-[2px]">
               <div className="flex-1 h-px bg-stroke/80 min-w-0" />
@@ -126,7 +128,7 @@ export const ActivitiesTimeline: React.FC<ActivitiesTimelineProps> = ({
                 style={{ left: '5px', transform: 'translateX(-50%)' }}
               />
               <ul className="space-y-0 list-none">
-                {group.items.map((item) => (
+                {group.items.map(item => (
                   <li key={item.id} className="flex items-start gap-3 relative">
                     <div className="w-[10px] flex justify-center shrink-0 z-10 pt-[7px]">
                       <div

@@ -57,11 +57,16 @@ const PatientSearchTagInput: React.FC<{
         )}
       >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors" />
+          <Icon
+            name={ICONS.dataFields.user}
+            className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
+          />
         </div>
 
         {selectedPatient && (
-          <div className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}>
+          <div
+            className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
+          >
             <Avatar
               primaryText={selectedPatient.fullName}
               size="xxs"
@@ -226,7 +231,10 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         </span>
                         {/* Check icon if selected */}
                         {isSelected && (
-                          <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-success-fg" />
+                          <Icon
+                            name={ICONS.actions.checkCircle}
+                            className="w-5 h-5 text-success-fg"
+                          />
                         )}
                       </div>
                     </button>

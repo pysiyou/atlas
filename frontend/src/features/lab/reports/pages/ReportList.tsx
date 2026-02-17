@@ -71,13 +71,13 @@ export const ReportList: React.FC = () => {
   // Transform orders into individual validated test entries
   const validatedTests = useMemo(() => {
     const tests: ValidatedTest[] = [];
-    
+
     orders.forEach(order => {
       order.tests
         .filter(test => test.status === 'validated' && test.id)
         .forEach(test => {
           const patient = patients?.find(p => p.id === order.patientId);
-          
+
           // Calculate age if DOB available
           let age: number | undefined;
           if (patient?.dateOfBirth) {
@@ -89,7 +89,7 @@ export const ReportList: React.FC = () => {
               age--;
             }
           }
-          
+
           tests.push({
             testId: test.id!,
             testCode: test.testCode,
@@ -105,7 +105,7 @@ export const ReportList: React.FC = () => {
           });
         });
     });
-    
+
     return tests;
   }, [orders, patients, getPatientName]);
 
@@ -159,47 +159,51 @@ export const ReportList: React.FC = () => {
 
     // Get sample collection data if sampleId is available
     const sample = test.sampleId ? getSample(test.sampleId) : undefined;
-    const collectedAt = sample && sample.status === 'collected' 
-      ? (sample as { collectedAt?: string }).collectedAt 
-      : undefined;
-    const collectedBy = sample && sample.status === 'collected' 
-      ? (sample as { collectedBy?: string }).collectedBy 
-      : undefined;
+    const collectedAt =
+      sample && sample.status === 'collected'
+        ? (sample as { collectedAt?: string }).collectedAt
+        : undefined;
+    const collectedBy =
+      sample && sample.status === 'collected'
+        ? (sample as { collectedBy?: string }).collectedBy
+        : undefined;
 
     // Find test in catalog to get parameter names
     const catalogTest = tests.find(t => t.code === test.testCode);
 
-    const testResults = [{
-      testCode: test.testCode,
-      testName: test.testName,
-      parameters: Object.entries(test.results || {}).map(([code, result]) => {
-        // Look up parameter name from catalog
-        const parameter = catalogTest?.parameters?.find(p => p.code === code);
-        const fullName = parameter?.name || code;
-        
-        return {
-          name: fullName,
-          code,
-          value: result.value,
-          unit: result.unit,
-          referenceRange: result.referenceRange,
-          status: result.status,
-          isCritical:
-            result.status === 'critical' ||
-            result.status === 'critical-high' ||
-            result.status === 'critical-low',
-        };
-      }),
-      technicianNotes: test.technicianNotes,
-      validationNotes: test.validationNotes,
-      enteredBy: test.enteredBy?.toString(),
-      validatedBy: test.validatedBy?.toString(),
-      validatedByName: test.validatedBy 
-        ? getUserName(String(test.validatedBy).trim())
-        : undefined,
-      enteredAt: test.resultEnteredAt,
-      validatedAt: test.resultValidatedAt,
-    }];
+    const testResults = [
+      {
+        testCode: test.testCode,
+        testName: test.testName,
+        parameters: Object.entries(test.results || {}).map(([code, result]) => {
+          // Look up parameter name from catalog
+          const parameter = catalogTest?.parameters?.find(p => p.code === code);
+          const fullName = parameter?.name || code;
+
+          return {
+            name: fullName,
+            code,
+            value: result.value,
+            unit: result.unit,
+            referenceRange: result.referenceRange,
+            status: result.status,
+            isCritical:
+              result.status === 'critical' ||
+              result.status === 'critical-high' ||
+              result.status === 'critical-low',
+          };
+        }),
+        technicianNotes: test.technicianNotes,
+        validationNotes: test.validationNotes,
+        enteredBy: test.enteredBy?.toString(),
+        validatedBy: test.validatedBy?.toString(),
+        validatedByName: test.validatedBy
+          ? getUserName(String(test.validatedBy).trim())
+          : undefined,
+        enteredAt: test.resultEnteredAt,
+        validatedAt: test.resultValidatedAt,
+      },
+    ];
 
     // Extend order with patient contact info
     const orderWithPatientInfo = {
@@ -251,14 +255,16 @@ export const ReportList: React.FC = () => {
 
       toast.success({
         title: 'Report downloaded successfully',
-        subtitle: 'The report has been generated and the download should start shortly. Check your downloads folder.',
+        subtitle:
+          'The report has been generated and the download should start shortly. Check your downloads folder.',
       });
       setPreviewTest(null);
     } catch (error) {
       console.error('Error generating report:', error);
       toast.error({
         title: 'Failed to generate report',
-        subtitle: 'The report could not be generated. Please try again or contact support if the issue persists.',
+        subtitle:
+          'The report could not be generated. Please try again or contact support if the issue persists.',
       });
     } finally {
       setIsGenerating(false);

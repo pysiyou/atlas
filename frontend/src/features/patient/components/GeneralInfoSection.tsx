@@ -39,7 +39,12 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
         }
         orientation="vertical"
       />
-      <InfoField icon={ICONS.dataFields.phone} label="Phone Number" value={patient.phone} orientation="vertical" />
+      <InfoField
+        icon={ICONS.dataFields.phone}
+        label="Phone Number"
+        value={patient.phone}
+        orientation="vertical"
+      />
       <InfoField
         icon={ICONS.dataFields.email}
         label="Email"
@@ -58,7 +63,12 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
         value={patient.weight ? `${patient.weight} kg` : 'N/A'}
         orientation="vertical"
       />
-      <InfoField icon={ICONS.dataFields.address} label="Address" value={formatAddress(patient.address)} orientation="vertical" />
+      <InfoField
+        icon={ICONS.dataFields.address}
+        label="Address"
+        value={formatAddress(patient.address)}
+        orientation="vertical"
+      />
       <InfoField
         icon={ICONS.dataFields.phone}
         label="Emergency Contact"

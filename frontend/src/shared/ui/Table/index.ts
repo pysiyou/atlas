@@ -26,11 +26,7 @@ export { createColumn, pickColumns } from './columnHelpers';
 export type { CreateColumnOptions } from './columnHelpers';
 
 // Constants (for use in column definitions and pagination)
-export {
-  SIZE_PRESETS,
-  SHOW_ALL_PAGE_SIZE,
-  DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL,
-} from './constants';
+export { SIZE_PRESETS, SHOW_ALL_PAGE_SIZE, DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from './constants';
 
 // Hooks (for advanced use cases)
 export { useColumnStyles, getColumnStyle } from './hooks/useColumnWidth';

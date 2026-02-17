@@ -3,10 +3,7 @@ export const AFFILIATION_DURATION_VALUES = [1, 3, 6, 12, 999] as const;
 
 export type AffiliationDuration = (typeof AFFILIATION_DURATION_VALUES)[number];
 
-export const AFFILIATION_DURATION_CONFIG: Record<
-  AffiliationDuration,
-  { label: string }
-> = {
+export const AFFILIATION_DURATION_CONFIG: Record<AffiliationDuration, { label: string }> = {
   1: { label: '1 Month' },
   3: { label: '3 Months' },
   6: { label: '6 Months' },

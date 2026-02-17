@@ -42,8 +42,8 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
       className={cn(
         'border-l-4 rounded p-4 animate-pulse',
         isAcknowledged
-? 'bg-danger-bg border-danger-stroke'
-            : 'bg-danger-bg-emphasis border-danger-stroke-emphasis shadow-lg'
+          ? 'bg-danger-bg border-danger-stroke'
+          : 'bg-danger-bg-emphasis border-danger-stroke-emphasis shadow-lg'
       )}
     >
       <div className="flex items-start gap-3">

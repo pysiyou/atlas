@@ -14,7 +14,11 @@ import type { TableInput } from '@/shared/ui';
 import { DetailPageShell, DetailPageHeader, LoadingState } from '@/shared/components';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDetailDate } from '@/shared/utils/data';
-import { formatArrayWithFallback, formatBooleanWithFallback, capitalize } from '../utils/catalog-formatters';
+import {
+  formatArrayWithFallback,
+  formatBooleanWithFallback,
+  capitalize,
+} from '../utils/catalog-formatters';
 
 /**
  * CatalogDetail Component
@@ -55,7 +59,11 @@ export const CatalogDetail: React.FC = () => {
         header={<DetailPageHeader title="Test" />}
         notFound
         notFoundTitle="Test Not Found"
-        notFoundDescription={testCode != null ? `The test with code "${testCode}" could not be found in the catalog.` : undefined}
+        notFoundDescription={
+          testCode != null
+            ? `The test with code "${testCode}" could not be found in the catalog.`
+            : undefined
+        }
       >
         {null}
       </DetailPageShell>
@@ -155,9 +163,7 @@ export const CatalogDetail: React.FC = () => {
   }
 
   return (
-    <DetailPageShell
-      header={<DetailPageHeader title={test.name} subtitle={test.code} />}
-    >
+    <DetailPageShell header={<DetailPageHeader title={test.name} subtitle={test.code} />}>
       <BalancedDetailsLayout tables={tables} columns={getColumnCount()} className="pb-6" />
     </DetailPageShell>
   );

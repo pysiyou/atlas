@@ -17,7 +17,7 @@ export function useMinDisplay(value: boolean, minDisplayMs: number): boolean {
   useEffect(() => {
     if (value) {
       becameFalseAtRef.current = null;
-      setSmoothed(true);
+      queueMicrotask(() => setSmoothed(true));
       return;
     }
 
@@ -30,7 +30,7 @@ export function useMinDisplay(value: boolean, minDisplayMs: number): boolean {
       const remaining = Math.max(0, minDisplayMs - elapsed);
       if (remaining <= 0) {
         becameFalseAtRef.current = null;
-        setSmoothed(false);
+        queueMicrotask(() => setSmoothed(false));
         return;
       }
       const timeoutId = setTimeout(() => {

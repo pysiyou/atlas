@@ -32,7 +32,11 @@ export function TableRow<T>({
       {data.map((item, index) => {
         const rowKey = getRowKey ? getRowKey(item, index) : index;
         const isClickable = !!onRowClick;
-        const stripeClass = striped ? (index % 2 === 0 ? tableRow.stripedEven : tableRow.stripedOdd) : '';
+        const stripeClass = striped
+          ? index % 2 === 0
+            ? tableRow.stripedEven
+            : tableRow.stripedOdd
+          : '';
 
         return (
           <div

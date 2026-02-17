@@ -98,7 +98,9 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   const hasRejectionHistory = rejectionHistory.length > 0;
   // For re-collect, the last rejection type will be 're-collect'
   const lastRejection = hasRejectionHistory ? rejectionHistory[rejectionHistory.length - 1] : null;
-  const isRecollection = lastRejection ? getResultRejectionType(lastRejection) === 're-collect' : false;
+  const isRecollection = lastRejection
+    ? getResultRejectionType(lastRejection) === 're-collect'
+    : false;
 
   /**
    * Build header badges using centralized badge components
@@ -167,17 +169,18 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
         <EntryInfoLine enteredAt={test.resultEnteredAt} enteredBy={test.enteredBy} />
       }
       footer={
-        <ModalFooter
-          statusMessage=""
-          statusClassName="text-text-tertiary"
-        >
+        <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
           <RejectionDialog
             orderId={test.orderId}
             testCode={test.testCode}
             testName={test.testName}
             patientName={test.patientName}
             orderHasValidatedTests={orderHasValidatedTests}
-            trigger={<Button variant="reject" size="md">Reject</Button>}
+            trigger={
+              <Button variant="reject" size="md">
+                Reject
+              </Button>
+            }
             onReject={() => {
               onReject(undefined, undefined);
               onClose();
@@ -225,7 +228,9 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
             fields: [
               {
                 label: 'Sample ID',
-                value: test.sampleId ? <span className="text-brand font-mono">{displayId.sample(test.sampleId)}</span> : undefined,
+                value: test.sampleId ? (
+                  <span className="text-brand font-mono">{displayId.sample(test.sampleId)}</span>
+                ) : undefined,
               },
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
               {
@@ -242,11 +247,15 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
               {
                 label: 'Test Code',
-                value: test.testCode ? <span className="text-brand font-mono">{test.testCode}</span> : undefined,
+                value: test.testCode ? (
+                  <span className="text-brand font-mono">{test.testCode}</span>
+                ) : undefined,
               },
               {
                 label: 'Order ID',
-                value: test.orderId ? <span className="text-brand font-mono">{displayId.order(test.orderId)}</span> : undefined,
+                value: test.orderId ? (
+                  <span className="text-brand font-mono">{displayId.order(test.orderId)}</span>
+                ) : undefined,
               },
             ],
           },

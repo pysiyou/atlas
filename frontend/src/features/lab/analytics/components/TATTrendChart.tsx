@@ -30,13 +30,9 @@ interface TATTrendChartProps {
   height?: number;
 }
 
-export const TATTrendChart: React.FC<TATTrendChartProps> = ({
-  data,
-  mode,
-  height = 200,
-}) => {
+export const TATTrendChart: React.FC<TATTrendChartProps> = ({ data, mode, height = 200 }) => {
   const trend = data.trend ?? [];
-  const chartData = trend.map((item) => ({
+  const chartData = trend.map(item => ({
     date: format(new Date(item.date), 'MMM dd'),
     value: mode === 'tat' ? item.averageTAT : item.complianceRate,
     fullDate: item.date,
@@ -44,7 +40,10 @@ export const TATTrendChart: React.FC<TATTrendChartProps> = ({
 
   if (chartData.length === 0) {
     return (
-      <div className="flex items-center justify-center text-text-tertiary text-sm" style={{ height }}>
+      <div
+        className="flex items-center justify-center text-text-tertiary text-sm"
+        style={{ height }}
+      >
         No trend data
       </div>
     );
@@ -65,7 +64,7 @@ export const TATTrendChart: React.FC<TATTrendChartProps> = ({
         <YAxis
           tick={{ fill: AXIS_COLOR, fontSize: 12 }}
           tickLine={{ stroke: GRID_STROKE }}
-          tickFormatter={(v) => (mode === 'compliance' ? `${v}%` : String(v))}
+          tickFormatter={v => (mode === 'compliance' ? `${v}%` : String(v))}
         />
         <Tooltip
           contentStyle={{
@@ -74,7 +73,10 @@ export const TATTrendChart: React.FC<TATTrendChartProps> = ({
             borderRadius: '8px',
             fontSize: '12px',
           }}
-          formatter={(value: unknown) => [typeof value === 'number' ? value + tooltipSuffix : '—', valueLabel]}
+          formatter={(value: unknown) => [
+            typeof value === 'number' ? value + tooltipSuffix : '—',
+            valueLabel,
+          ]}
         />
         <Line
           type="monotone"

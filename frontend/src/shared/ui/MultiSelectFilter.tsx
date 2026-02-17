@@ -112,7 +112,7 @@ const ListItem: React.FC<{
  * MultiSelectFilter Component
  */
 // Large component is necessary for comprehensive multi-select filter with popover, checkboxes, badges, select all, and clear functionality
- 
+
 export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   label,
   options,
@@ -179,7 +179,11 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   // Render the trigger content
   const renderTriggerContent = () => {
     if (selectedIds.length === 0) {
-      return <span className="text-text-muted whitespace-nowrap overflow-hidden truncate">{placeholder || `Select ${label}...`}</span>;
+      return (
+        <span className="text-text-muted whitespace-nowrap overflow-hidden truncate">
+          {placeholder || `Select ${label}...`}
+        </span>
+      );
     }
 
     if (singleSelectedOption) {
@@ -211,7 +215,10 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
           isOpen={isOpen}
           leftIcon={
             icon ? (
-              <Icon name={icon} className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors" />
+              <Icon
+                name={icon}
+                className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors"
+              />
             ) : undefined
           }
           showClear={selectedIds.length > 0}

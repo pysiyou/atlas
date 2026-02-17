@@ -109,9 +109,10 @@ export function useRejectionManager({
         });
         return result;
       } catch (err) {
-        const status = typeof err === 'object' && err !== null && 'status' in err
-          ? (err as { status?: number }).status
-          : undefined;
+        const status =
+          typeof err === 'object' && err !== null && 'status' in err
+            ? (err as { status?: number }).status
+            : undefined;
         if (typeof status === 'number' && status >= 200 && status < 300) {
           return {
             success: true,

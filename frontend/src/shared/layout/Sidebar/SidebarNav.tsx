@@ -15,15 +15,12 @@ interface SidebarNavProps {
   onNavigate?: () => void;
 }
 
-export const SidebarNav: React.FC<SidebarNavProps> = ({
-  menuItems,
-  settingsItems,
-  onNavigate,
-}) => {
+export const SidebarNav: React.FC<SidebarNavProps> = ({ menuItems, settingsItems, onNavigate }) => {
   const handleNavClick = () => onNavigate?.();
 
   const getNavLinkClasses = (isActive: boolean) => {
-    const base = 'flex items-center py-3 text-sm font-normal rounded-none border-l-2 border-transparent';
+    const base =
+      'flex items-center py-3 text-sm font-normal rounded-none border-l-2 border-transparent';
     return isActive
       ? `${base} border-l-brand text-brand`
       : `${base} text-text-secondary hover:bg-surface-hover hover:text-text-primary`;
@@ -33,7 +30,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
     <div className="flex-1 overflow-y-auto py-4 flex flex-col">
       {/* 1. Menu items */}
       <nav className="flex-1 min-h-0 space-y-1 px-0" aria-label="Main navigation">
-        {menuItems.map((item) => (
+        {menuItems.map(item => (
           <NavLink
             key={item.path}
             to={item.path}

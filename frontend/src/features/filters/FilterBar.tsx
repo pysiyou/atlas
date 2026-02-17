@@ -50,7 +50,7 @@ export interface FilterBarProps {
  * @component
  */
 // Large component is necessary for comprehensive filter bar with multiple filter types, state management, responsive views, and UI rendering
- 
+
 // eslint-disable-next-line max-lines-per-function
 export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, className }) => {
   // Breakpoint detection for responsive views
@@ -151,7 +151,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
   const renderLargeView = () => {
     // Get exactly 3 non-search controls for the grid (first 3 primary filters)
     const gridFilters = nonSearchControls.slice(0, 3);
-    
+
     return (
       <div className={`${filterStyles.container} ${className || ''}`}>
         {/* Filter row - 4 column grid layout */}
@@ -210,7 +210,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
   const renderMediumView = () => {
     // Get exactly 3 non-search controls for the grid (first 3 primary filters)
     const gridFilters = nonSearchControls.slice(0, 3);
-    
+
     return (
       <div className={`${filterStyles.container} ${className || ''}`}>
         {/* Filter row - 4 column grid layout */}
@@ -281,11 +281,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
           {/* Filters button - auto width */}
           {nonSearchControls.length > 0 && (
             <div className="relative flex shrink-0">
-              <Button
-                variant="filter"
-                size="sm"
-                onClick={() => setIsModalOpen(true)}
-              >
+              <Button variant="filter" size="sm" onClick={() => setIsModalOpen(true)}>
                 Filters
               </Button>
               {activeBadges.length > 0 && (

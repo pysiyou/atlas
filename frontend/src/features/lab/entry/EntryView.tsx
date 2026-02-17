@@ -6,11 +6,7 @@
  */
 
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import {
-  useOrdersList,
-  useTestCatalog,
-  useTestNameLookup,
-} from '@/hooks/queries';
+import { useOrdersList, useTestCatalog, useTestNameLookup } from '@/hooks/queries';
 import { useEnterResults } from '@/hooks/queries/useResultMutations';
 import { checkReferenceRangeWithDemographics } from '@/utils';
 import { toast } from '@/shared/components/feedback';
@@ -47,7 +43,10 @@ export const EntryView: React.FC = () => {
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
-  const getOrderDate = useCallback((t: TestWithContext & { orderDate?: string }) => t.orderDate, []);
+  const getOrderDate = useCallback(
+    (t: TestWithContext & { orderDate?: string }) => t.orderDate,
+    []
+  );
   const getSampleType = useCallback((t: TestWithContext) => t.sampleType, []);
   const getStatus = useCallback((t: TestWithContext) => t.status as TestStatus, []);
 
@@ -107,7 +106,8 @@ export const EntryView: React.FC = () => {
       if (!testResults || Object.keys(testResults).length === 0) {
         toast.error({
           title: 'No results to save',
-          subtitle: 'There are no results entered for this test. Enter values in the required fields before saving.',
+          subtitle:
+            'There are no results entered for this test. Enter values in the required fields before saving.',
         });
         return;
       }
@@ -116,7 +116,8 @@ export const EntryView: React.FC = () => {
       if (!testDef?.parameters) {
         toast.error({
           title: 'Test parameters not found',
-          subtitle: 'The test configuration could not be loaded. Refresh the page or contact support.',
+          subtitle:
+            'The test configuration could not be loaded. Refresh the page or contact support.',
         });
         return;
       }
@@ -127,7 +128,8 @@ export const EntryView: React.FC = () => {
       if (!testItem) {
         toast.error({
           title: 'Test not found in current list',
-          subtitle: 'This test could not be found in the current order. The list may have been updated—refresh and try again.',
+          subtitle:
+            'This test could not be found in the current order. The list may have been updated—refresh and try again.',
         });
         return;
       }
@@ -157,7 +159,8 @@ export const EntryView: React.FC = () => {
           if (!param.allowedValues.includes(value)) {
             toast.error({
               title: `${param.name}: Invalid value. Must be one of: ${param.allowedValues.join(', ')}`,
-              subtitle: 'The value entered is not in the allowed list for this parameter. Choose one of the options shown.',
+              subtitle:
+                'The value entered is not in the allowed list for this parameter. Choose one of the options shown.',
             });
             return;
           }
@@ -180,7 +183,8 @@ export const EntryView: React.FC = () => {
         });
         toast.success({
           title: 'Results saved successfully',
-          subtitle: 'The results have been saved and the order has been updated. You can continue with other tests.',
+          subtitle:
+            'The results have been saved and the order has been updated. You can continue with other tests.',
         });
         setResults(prev => {
           const n = { ...prev };
@@ -201,15 +205,7 @@ export const EntryView: React.FC = () => {
         throw error;
       }
     },
-    [
-      results,
-      technicianNotes,
-      allTests,
-      testCatalog,
-      orders,
-      getTest,
-      enterMutation,
-    ]
+    [results, technicianNotes, allTests, testCatalog, orders, getTest, enterMutation]
   );
 
   // Use a ref to store the openTestModal function to avoid circular dependency

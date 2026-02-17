@@ -1,6 +1,6 @@
 /**
  * usePatientValidation Hook
- * 
+ *
  * Provides validation helpers for patient data beyond Zod schema validation
  */
 
@@ -17,25 +17,24 @@ export function usePatientValidation() {
   const validateAge = (dateOfBirth: string): { valid: boolean; error?: string } => {
     const today = new Date();
     const birth = new Date(dateOfBirth);
-    
+
     if (isNaN(birth.getTime())) {
       return { valid: false, error: 'Invalid date of birth' };
     }
-    
+
     const age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
-    const adjustedAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate()) 
-      ? age - 1 
-      : age;
-    
+    const adjustedAge =
+      monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate()) ? age - 1 : age;
+
     if (adjustedAge < 0) {
       return { valid: false, error: 'Date of birth cannot be in the future' };
     }
-    
+
     if (adjustedAge > 150) {
       return { valid: false, error: 'Age exceeds maximum reasonable value' };
     }
-    
+
     return { valid: true };
   };
 

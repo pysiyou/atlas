@@ -116,14 +116,19 @@ export const DateFilter: React.FC<DateFilterProps> = ({
           <FilterTriggerShell
             isOpen={isOpen}
             leftIcon={
-              <Icon name={ICONS.dataFields.date} className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors shrink-0" />
+              <Icon
+                name={ICONS.dataFields.date}
+                className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors shrink-0"
+              />
             }
             showClear={!!value}
             onClear={handleClear}
             className={className}
           >
             {value ? (
-              <span>{format(value[0], 'MMM dd')} - {format(value[1], 'MMM dd')}</span>
+              <span>
+                {format(value[0], 'MMM dd')} - {format(value[1], 'MMM dd')}
+              </span>
             ) : (
               <span className="text-text-muted">{placeholder}</span>
             )}
@@ -180,7 +185,10 @@ export const DateFilter: React.FC<DateFilterProps> = ({
           {tempStart && (
             <div className="mt-3 pt-3 border-t border-border-default">
               <button
-                onClick={() => { handleApply(); close(); }}
+                onClick={() => {
+                  handleApply();
+                  close();
+                }}
                 className="w-full px-3 py-2 bg-brand hover:opacity-90 text-text-inverse text-xs font-normal rounded transition-colors"
               >
                 Apply

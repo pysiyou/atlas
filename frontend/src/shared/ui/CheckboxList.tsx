@@ -48,10 +48,9 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   };
 
   return (
-    <div className={cn(
-      columns === 2 ? 'grid grid-cols-2 gap-x-6 gap-y-2' : 'space-y-2',
-      className
-    )}>
+    <div
+      className={cn(columns === 2 ? 'grid grid-cols-2 gap-x-6 gap-y-2' : 'space-y-2', className)}
+    >
       {options.map(option => {
         const isSelected = selectedIds.includes(option.id);
         return (
@@ -75,10 +74,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
                 )}
               >
                 {isSelected && (
-                  <Icon
-                    name={ICONS.actions.check}
-                    className="w-3 h-3 text-on-brand"
-                  />
+                  <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 )}
               </div>
             </div>

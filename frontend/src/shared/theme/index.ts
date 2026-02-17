@@ -1,6 +1,6 @@
 /**
  * Theme System
- * 
+ *
  * Theme configuration and CSS variables
  */
 

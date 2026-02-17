@@ -31,7 +31,7 @@ export interface PriceRangeControlProps {
  * @component
  */
 // Large component is necessary for price range slider with dual handles, validation, formatting, and popover UI
- 
+
 export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   value,
   onChange,
@@ -131,7 +131,9 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
-      return <span className="text-text-muted">{config.placeholder || 'Filter by price range'}</span>;
+      return (
+        <span className="text-text-muted">{config.placeholder || 'Filter by price range'}</span>
+      );
     }
     return (
       <span className="text-text-primary font-normal">
@@ -150,7 +152,10 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
         <FilterTriggerShell
           isOpen={isOpen}
           leftIcon={
-            <Icon name={ICONS.dataFields.wallet} className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors" />
+            <Icon
+              name={ICONS.dataFields.wallet}
+              className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors"
+            />
           }
           showClear={showClear}
           onClear={handleClear}

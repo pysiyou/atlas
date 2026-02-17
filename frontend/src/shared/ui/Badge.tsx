@@ -62,11 +62,11 @@ export const Badge: React.FC<BadgeProps> = ({
   const { className: colorClass, dotClassName } = getColorStyles(color, appearance);
 
   // Auto-generate label if no children
-  const content = children ?? (
-    variant !== 'neutral' && variant !== 'default'
-      ? DISPLAY_LABELS[normalizedVariant] ?? String(variant).replace(/-/g, ' ').toUpperCase()
-      : null
-  );
+  const content =
+    children ??
+    (variant !== 'neutral' && variant !== 'default'
+      ? (DISPLAY_LABELS[normalizedVariant] ?? String(variant).replace(/-/g, ' ').toUpperCase())
+      : null);
 
   // Auto-pulse for critical variants
   const shouldPulse = pulse ?? CRITICAL_VARIANTS.has(normalizedVariant);
@@ -86,10 +86,9 @@ export const Badge: React.FC<BadgeProps> = ({
       className={cn(
         'inline-flex items-center font-normal rounded whitespace-nowrap',
         SIZES[size],
-        isContainer ? containerStyle : [
-          appearance === 'unified' ? UNIFIED_BASE : TINTED_BASE,
-          colorClass,
-        ],
+        isContainer
+          ? containerStyle
+          : [appearance === 'unified' ? UNIFIED_BASE : TINTED_BASE, colorClass],
         strikethrough && 'line-through',
         shouldPulse && 'animate-pulse',
         className
@@ -97,10 +96,7 @@ export const Badge: React.FC<BadgeProps> = ({
       {...props}
     >
       {showDot && (
-        <span
-          className={cn('w-1.5 h-1.5 rounded-full shrink-0', dotClassName)}
-          aria-hidden
-        />
+        <span className={cn('w-1.5 h-1.5 rounded-full shrink-0', dotClassName)} aria-hidden />
       )}
       {iconElement}
       {content}
@@ -127,6 +123,4 @@ export const StatusBadge: React.FC<Omit<BadgeProps, 'variant'> & { status: strin
 export const PriorityBadge: React.FC<Omit<BadgeProps, 'variant'> & { priority: string }> = ({
   priority,
   ...props
-}) => (
-  <Badge variant={priority} {...props} />
-);
+}) => <Badge variant={priority} {...props} />;

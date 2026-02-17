@@ -21,7 +21,7 @@ export function useOrderService() {
       invalidateOrderQueries(queryClient, { samples: true });
       toast.success('Order created successfully');
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(`Failed to create order: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
@@ -37,13 +37,13 @@ export function useOrderService() {
       invalidateOrderQueries(queryClient, { orderId: id, samples: true });
       toast.success('Order updated successfully');
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(`Failed to update order: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
 
   // Business logic functions
-  
+
   /**
    * Calculate total price from tests
    */
@@ -56,21 +56,21 @@ export function useOrderService() {
    */
   const getOrderStatus = (order: { tests: Array<{ status: string }> }): string => {
     if (order.tests.length === 0) return 'pending';
-    
+
     const statuses = order.tests.map(t => t.status);
-    
+
     // If all tests are validated, order is validated
     if (statuses.every(s => s === 'validated')) return 'validated';
-    
+
     // If any test is validated, order is processing
     if (statuses.some(s => s === 'validated')) return 'processing';
-    
+
     // If any test is in progress, order is processing
     if (statuses.some(s => s === 'in-progress' || s === 'resulted')) return 'processing';
-    
+
     // If any test is collected, order is collected
     if (statuses.some(s => s === 'sample-collected' || s === 'collected')) return 'collected';
-    
+
     return 'pending';
   };
 
@@ -78,7 +78,7 @@ export function useOrderService() {
     // Mutations
     create,
     update,
-    
+
     // Business logic
     calculateTotalPrice,
     getOrderStatus,

@@ -75,7 +75,9 @@ export const Dashboard: React.FC = () => {
     <div className="min-h-full flex flex-col p-2 gap-2">
       {/* Fixed header row */}
       <div className="shrink-0 h-14 min-h-14 max-h-14 flex flex-col justify-center">
-        <h1 className="text-xl font-bold text-text-primary truncate">Welcome back, {currentUser?.name}!</h1>
+        <h1 className="text-xl font-bold text-text-primary truncate">
+          Welcome back, {currentUser?.name}!
+        </h1>
         <p className="text-sm text-text-secondary truncate">
           Here's what's happening today - {formatDate(new Date())}
         </p>
@@ -83,74 +85,77 @@ export const Dashboard: React.FC = () => {
       {/* Content row */}
       <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="space-y-6">
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => (
-            <Card key={index} padding="lg" hover>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <p className="text-sm text-text-tertiary mb-1">{stat.label}</p>
-                  <p className="text-3xl font-normal text-text-primary">{stat.value}</p>
-                  {stat.today !== undefined && (
-                    <p className="text-xs text-success-fg mt-1">+{stat.today} today</p>
-                  )}
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {stats.map((stat, index) => (
+              <Card key={index} padding="lg" hover>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="text-sm text-text-tertiary mb-1">{stat.label}</p>
+                    <p className="text-3xl font-normal text-text-primary">{stat.value}</p>
+                    {stat.today !== undefined && (
+                      <p className="text-xs text-success-fg mt-1">+{stat.today} today</p>
+                    )}
+                  </div>
+                  <div className={`p-3 rounded ${stat.color}`}>{stat.icon}</div>
                 </div>
-                <div className={`p-3 rounded ${stat.color}`}>{stat.icon}</div>
+              </Card>
+            ))}
+          </div>
+
+          {/* Alerts */}
+          {pendingOrders > 0 && (
+            <Card padding="md">
+              <div className="flex items-center gap-3">
+                <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-fg" />
+                <div>
+                  <p className="text-sm font-normal text-text-primary">Pending Actions</p>
+                  <p className="text-xs text-text-secondary">
+                    {pendingOrders} orders pending completion, {outstandingInvoices} invoices unpaid
+                  </p>
+                </div>
               </div>
             </Card>
-          ))}
-        </div>
+          )}
 
-        {/* Alerts */}
-        {pendingOrders > 0 && (
-          <Card padding="md">
-            <div className="flex items-center gap-3">
-              <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-fg" />
-              <div>
-                <p className="text-sm font-normal text-text-primary">Pending Actions</p>
-                <p className="text-xs text-text-secondary">
-                  {pendingOrders} orders pending completion, {outstandingInvoices} invoices unpaid
-                </p>
-              </div>
-            </div>
-          </Card>
-        )}
-
-        {/* Recent Activity */}
-        <SectionContainer title="Recent Orders">
-          <div className="space-y-3">
-            {recentOrders.length > 0 ? (
-              recentOrders.map(order => (
-                <div
-                  key={order.orderId}
-                  className="flex items-center justify-between p-4 border border-border-default rounded-md hover:bg-surface-page"
-                >
-                  <div>
-                    <p className="text-sm font-normal text-text-primary">{getPatientName(order.patientId)}</p>
-                    <p className="text-xs text-text-tertiary">
-                      <span className="font-mono">{displayId.order(order.orderId)}</span> • {order.tests.length} test(s)
-                    </p>
-                  </div>
-                  <Badge
-                    variant={
-                      order.overallStatus === 'completed'
-                        ? 'success'
-                        : order.overallStatus === 'in-progress'
-                          ? 'warning'
-                          : 'info'
-                    }
-                    size="sm"
-                    className="border-none font-normal"
+          {/* Recent Activity */}
+          <SectionContainer title="Recent Orders">
+            <div className="space-y-3">
+              {recentOrders.length > 0 ? (
+                recentOrders.map(order => (
+                  <div
+                    key={order.orderId}
+                    className="flex items-center justify-between p-4 border border-border-default rounded-md hover:bg-surface-page"
                   >
-                    {order.overallStatus}
-                  </Badge>
-                </div>
-              ))
-            ) : (
-              <p className="text-center text-sm text-text-tertiary py-8">No recent orders</p>
-            )}
-          </div>
-        </SectionContainer>
+                    <div>
+                      <p className="text-sm font-normal text-text-primary">
+                        {getPatientName(order.patientId)}
+                      </p>
+                      <p className="text-xs text-text-tertiary">
+                        <span className="font-mono">{displayId.order(order.orderId)}</span> •{' '}
+                        {order.tests.length} test(s)
+                      </p>
+                    </div>
+                    <Badge
+                      variant={
+                        order.overallStatus === 'completed'
+                          ? 'success'
+                          : order.overallStatus === 'in-progress'
+                            ? 'warning'
+                            : 'info'
+                      }
+                      size="sm"
+                      className="border-none font-normal"
+                    >
+                      {order.overallStatus}
+                    </Badge>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-sm text-text-tertiary py-8">No recent orders</p>
+              )}
+            </div>
+          </SectionContainer>
         </div>
       </div>
     </div>

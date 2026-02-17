@@ -128,7 +128,9 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                   {contextInfo.referringPhysician && (
                     <>
                       <span className="text-text-disabled select-none">|</span>
-                      <span className="text-text-primary whitespace-nowrap">{contextInfo.referringPhysician}</span>
+                      <span className="text-text-primary whitespace-nowrap">
+                        {contextInfo.referringPhysician}
+                      </span>
                     </>
                   )}
                 </div>
@@ -143,9 +145,17 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                         : sampleInfo.sampleId}
                     </span>{' '}
                     collected{' '}
-                    <span className="text-text-secondary">{formatDate(sampleInfo.collectedAt)}</span>
+                    <span className="text-text-secondary">
+                      {formatDate(sampleInfo.collectedAt)}
+                    </span>
                     {sampleInfo.collectedBy && (
-                      <> by <span className="text-text-secondary">{getUserName(sampleInfo.collectedBy)}</span></>
+                      <>
+                        {' '}
+                        by{' '}
+                        <span className="text-text-secondary">
+                          {getUserName(sampleInfo.collectedBy)}
+                        </span>
+                      </>
                     )}
                   </span>
                 )}

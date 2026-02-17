@@ -3,7 +3,19 @@ import { nameSchema, phoneSchema, emailSchema } from '@/shared/schemas/common.sc
 
 export const emergencyContactSchema = z.object({
   fullName: nameSchema,
-  relationship: z.enum(['self', 'spouse', 'parent', 'sibling', 'child', 'grandparent', 'grandchild', 'other-relative', 'guardian', 'friend', 'other']),
+  relationship: z.enum([
+    'self',
+    'spouse',
+    'parent',
+    'sibling',
+    'child',
+    'grandparent',
+    'grandchild',
+    'other-relative',
+    'guardian',
+    'friend',
+    'other',
+  ]),
   phone: phoneSchema,
   email: emailSchema,
 });

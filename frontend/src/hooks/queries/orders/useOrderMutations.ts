@@ -86,7 +86,7 @@ export function useDeleteOrder() {
     onSuccess: () => {
       invalidateOrderQueries(queryClient, { samples: true });
     },
-    onError: (error) => {
+    onError: error => {
       toast.error({
         title: 'Failed to delete order',
         subtitle: getErrorMessage(error, 'The order could not be deleted. Please try again.'),

@@ -28,7 +28,7 @@ interface EntryFormProps {
 const capitalizeOption = (s: string): string =>
   s
     .split(/\s+/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
 
 /**
@@ -53,7 +53,9 @@ const RadioOption: React.FC<{
         <div
           className={cn(
             'w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150',
-            isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong group-hover:border-border-hover'
+            isSelected
+              ? 'bg-brand'
+              : 'bg-transparent border-2 border-border-strong group-hover:border-border-hover'
           )}
         >
           {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
@@ -64,7 +66,9 @@ const RadioOption: React.FC<{
       <span
         className={cn(
           'text-sm transition-colors',
-          isSelected ? 'text-text-primary font-normal' : 'text-text-tertiary group-hover:text-text-primary'
+          isSelected
+            ? 'text-text-primary font-normal'
+            : 'text-text-tertiary group-hover:text-text-primary'
         )}
       >
         {capitalizeOption(option)}
@@ -96,14 +100,7 @@ const SelectParameterInput: React.FC<{
       placement="bottom-start"
       showBackdrop={false}
       trigger={({ isOpen }) => (
-        <div
-          id={inputId}
-          className={cn(
-            inputTrigger,
-            'w-full',
-            isOpen && inputTriggerOpen
-          )}
-        >
+        <div id={inputId} className={cn(inputTrigger, 'w-full', isOpen && inputTriggerOpen)}>
           {/* Content */}
           <div className="flex-1 text-xs truncate">
             {value ? (
@@ -128,7 +125,10 @@ const SelectParameterInput: React.FC<{
               onClick={handleClear}
               className="p-0.5 -mr-1 hover:bg-neutral-100 rounded transition-colors flex items-center justify-center cursor-pointer flex-shrink-0"
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-disabled hover:text-text-tertiary" />
+              <Icon
+                name={ICONS.actions.closeCircle}
+                className="w-4 h-4 text-text-disabled hover:text-text-tertiary"
+              />
             </button>
           )}
         </div>
@@ -185,7 +185,9 @@ const ParameterInput: React.FC<{
     onValidationChange?.(result.error);
   }, [param.code, normalizedValue, valueType, onValidationChange]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     onChange(e.target.value);
     // Clear validation error when user starts typing
     if (validationError) {
@@ -236,7 +238,12 @@ const ParameterInput: React.FC<{
       min={limit?.min}
       max={limit?.max}
       inputMode="decimal"
-      className={cn(inputBase, 'block h-[34px] pr-12 relative z-10', noSpinner, hasError && inputError)}
+      className={cn(
+        inputBase,
+        'block h-[34px] pr-12 relative z-10',
+        noSpinner,
+        hasError && inputError
+      )}
       placeholder="--"
     />
   );
@@ -331,7 +338,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   }}
                   inputId={`result-${resultKey}-${param.code}`}
                   validationError={validationErrors[param.code]}
-                  onValidationChange={(error) => handleValidationChange(param.code, error)}
+                  onValidationChange={error => handleValidationChange(param.code, error)}
                 />
                 {valueType !== 'TEXT' && (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0 max-w-[40%]">
@@ -341,7 +348,10 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   </div>
                 )}
                 {validationErrors[param.code] && (
-                  <div className="absolute -bottom-5 left-0 text-xxs text-danger-fg font-normal truncate max-w-full" title={validationErrors[param.code]}>
+                  <div
+                    className="absolute -bottom-5 left-0 text-xxs text-danger-fg font-normal truncate max-w-full"
+                    title={validationErrors[param.code]}
+                  >
                     Invalid value
                   </div>
                 )}

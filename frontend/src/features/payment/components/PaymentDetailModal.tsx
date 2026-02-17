@@ -13,7 +13,16 @@
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
 import React, { useState, useCallback } from 'react';
-import { Modal, Icon, Badge, Button, Alert, CalloutCard, FooterInfo, PaymentMethodSelector } from '@/shared/ui';
+import {
+  Modal,
+  Icon,
+  Badge,
+  Button,
+  Alert,
+  CalloutCard,
+  FooterInfo,
+  PaymentMethodSelector,
+} from '@/shared/ui';
 import { ErrorBoundary } from '@/shared/components';
 import { cn, formatDate, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/utils/orderUtils';
@@ -51,7 +60,11 @@ const PAYMENT_METHODS = getEnabledPaymentMethods();
  * Excludes superseded and removed tests; only active tests are shown and
  * included in the total.
  */
-const PaymentReceipt: React.FC<{ sourceOrder: Order; paymentDate?: string; paymentMethod?: string }> = ({ sourceOrder, paymentDate, paymentMethod }) => {
+const PaymentReceipt: React.FC<{
+  sourceOrder: Order;
+  paymentDate?: string;
+  paymentMethod?: string;
+}> = ({ sourceOrder, paymentDate, paymentMethod }) => {
   const activeTests = getActiveTests(sourceOrder.tests ?? []);
   const activeTotal = getActiveTotal(sourceOrder.tests ?? []);
 
@@ -67,23 +80,27 @@ const PaymentReceipt: React.FC<{ sourceOrder: Order; paymentDate?: string; payme
           )}
           <div className="flex items-center gap-2">
             <Badge variant={sourceOrder.paymentStatus} size="sm" />
-            {paymentMethod && (
-              <Badge variant={paymentMethod} size="sm" />
-            )}
+            {paymentMethod && <Badge variant={paymentMethod} size="sm" />}
           </div>
         </div>
         <div className="space-y-1.5">
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Order Number:</span>
-            <span className="text-brand font-normal font-mono">{displayId.order(sourceOrder.orderId)}</span>
+            <span className="text-brand font-normal font-mono">
+              {displayId.order(sourceOrder.orderId)}
+            </span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Patient Number:</span>
-            <span className="text-brand font-normal font-mono">{displayId.patient(sourceOrder.patientId)}</span>
+            <span className="text-brand font-normal font-mono">
+              {displayId.patient(sourceOrder.patientId)}
+            </span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Order Date:</span>
-            <span className="text-text-secondary font-normal">{formatDate(sourceOrder.orderDate)}</span>
+            <span className="text-text-secondary font-normal">
+              {formatDate(sourceOrder.orderDate)}
+            </span>
           </div>
           {paymentDate && (
             <div className="flex items-center text-xs">
@@ -146,7 +163,7 @@ const PaymentReceipt: React.FC<{ sourceOrder: Order; paymentDate?: string; payme
  * method selection directly in the modal. Larger version of the payment popover.
  */
 // Large component is necessary for comprehensive payment detail modal with order info, test list, payment method selection, and processing
- 
+
 export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   isOpen,
   onClose,
@@ -218,7 +235,12 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         title="Process Payment"
-        subtitle={<span>Order <span className="font-mono text-brand">{displayId.order(sourceOrder.orderId)}</span></span>}
+        subtitle={
+          <span>
+            Order{' '}
+            <span className="font-mono text-brand">{displayId.order(sourceOrder.orderId)}</span>
+          </span>
+        }
         size="xl"
         disableClose={submitting}
         closeOnBackdropClick={!submitting}
@@ -227,7 +249,11 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
           {/* Scrollable content area */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {/* Receipt-style Order Summary */}
-            <PaymentReceipt sourceOrder={sourceOrder} paymentDate={view.paymentDate} paymentMethod={view.paymentMethod} />
+            <PaymentReceipt
+              sourceOrder={sourceOrder}
+              paymentDate={view.paymentDate}
+              paymentMethod={view.paymentMethod}
+            />
 
             {/* Payment Method Selection - Only show if not paid */}
             {!isPaid && (
@@ -254,7 +280,10 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
                   disabled={submitting}
-                  className={cn(inputBase, 'resize-none disabled:opacity-50 disabled:bg-surface-page')}
+                  className={cn(
+                    inputBase,
+                    'resize-none disabled:opacity-50 disabled:bg-surface-page'
+                  )}
                 />
               </div>
             )}
@@ -276,30 +305,33 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
 
           {/* Footer */}
           <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0">
-            <FooterInfo icon={ICONS.dataFields.wallet} text={isPaid ? 'Payment complete' : 'Processing payment'} />
+            <FooterInfo
+              icon={ICONS.dataFields.wallet}
+              text={isPaid ? 'Payment complete' : 'Processing payment'}
+            />
             <div className="flex items-center gap-3">
-            <Button
-              variant={isPaid ? 'close' : 'cancel'}
-              size="md"
-              showIcon={true}
-              onClick={onClose}
-              disabled={submitting}
-            >
-              {isPaid ? 'Close' : 'Cancel'}
-            </Button>
-
-            {!isPaid && (
               <Button
-                variant="primary"
+                variant={isPaid ? 'close' : 'cancel'}
                 size="md"
-                onClick={handlePayment}
+                showIcon={true}
+                onClick={onClose}
                 disabled={submitting}
-                isLoading={submitting}
-                icon={<Icon name={ICONS.dataFields.wallet} />}
               >
-                {`Pay ${formatCurrency(sourceOrder.totalPrice)}`}
+                {isPaid ? 'Close' : 'Cancel'}
               </Button>
-            )}
+
+              {!isPaid && (
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={handlePayment}
+                  disabled={submitting}
+                  isLoading={submitting}
+                  icon={<Icon name={ICONS.dataFields.wallet} />}
+                >
+                  {`Pay ${formatCurrency(sourceOrder.totalPrice)}`}
+                </Button>
+              )}
             </div>
           </div>
         </div>

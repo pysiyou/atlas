@@ -114,10 +114,7 @@ export const orderAPI = {
    * Mark test as having critical values
    */
   async markTestCritical(orderId: string, testCode: string, notifiedTo: string): Promise<Order> {
-    return apiClient.post<Order>(
-      `/orders/${orderId}/tests/${testCode}/critical`,
-      { notifiedTo }
-    );
+    return apiClient.post<Order>(`/orders/${orderId}/tests/${testCode}/critical`, { notifiedTo });
   },
 
   /**

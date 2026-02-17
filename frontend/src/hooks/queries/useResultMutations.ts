@@ -17,10 +17,7 @@ import { invalidateResultQueries } from '@/lib/query/invalidate';
 import { resultAPI } from '@/services/api';
 import { useAuthStore } from '@/shared/stores/auth.store';
 import type { ValidationDecision, ResultRejectionType } from '@/types';
-import type {
-  RejectionResult,
-  EscalationResolveRequest,
-} from '@/types/lab-operations';
+import type { RejectionResult, EscalationResolveRequest } from '@/types/lab-operations';
 
 /**
  * Hook to fetch rejection options for a test.
@@ -79,7 +76,8 @@ export function useEnterResults() {
       return resultAPI.enterResults(orderIdStr, testCode, { results, technicianNotes });
     },
     onSuccess: (_, variables) => {
-      const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
+      const orderIdStr =
+        typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
       invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
     },
   });
@@ -109,7 +107,8 @@ export function useValidateResults() {
       });
     },
     onSuccess: (_, variables) => {
-      const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
+      const orderIdStr =
+        typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
       invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
     },
   });
@@ -142,7 +141,8 @@ export function useRejectResults() {
       });
     },
     onSuccess: (_, variables) => {
-      const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
+      const orderIdStr =
+        typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
       invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: true });
     },
   });
@@ -203,7 +203,8 @@ export function useResolveEscalation() {
       });
     },
     onSuccess: (_, variables) => {
-      const orderIdStr = typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
+      const orderIdStr =
+        typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
       invalidateResultQueries(queryClient, {
         orderId: orderIdStr,
         samples: true,

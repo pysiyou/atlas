@@ -69,7 +69,8 @@ export const OrderMetadata: React.FC<OrderMetadataProps> = ({
       <div>
         <div className="font-normal text-text-primary">{patientName}</div>
         <div className="text-xs text-text-tertiary">
-          <span className="font-mono text-brand">{displayId.patient(patientId)}</span> • {formatDate(orderDate)}
+          <span className="font-mono text-brand">{displayId.patient(patientId)}</span> •{' '}
+          {formatDate(orderDate)}
           {referringPhysician && ` • ${referringPhysician}`}
         </div>
       </div>
@@ -142,13 +143,12 @@ export const TestListCard: React.FC<TestListCardProps> = ({ tests, title }) => {
                 <div>
                   <div className="font-normal text-text-primary">{test.testName}</div>
                   <div className="text-sm text-text-tertiary">
-                    <span className="text-brand font-mono">{test.testCode}</span> • {test.sampleType}
+                    <span className="text-brand font-mono">{test.testCode}</span> •{' '}
+                    {test.sampleType}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-normal text-brand">
-                    {formatCurrency(test.priceAtOrder)}
-                  </div>
+                  <div className="font-normal text-brand">{formatCurrency(test.priceAtOrder)}</div>
                   <Badge variant={test.status} size="sm" />
                 </div>
               </div>

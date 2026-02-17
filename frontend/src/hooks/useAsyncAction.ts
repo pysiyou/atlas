@@ -25,12 +25,7 @@ export function useAsyncAction<T extends unknown[]>(
   handler: (signal: AbortSignal, ...args: T) => void | Promise<void>,
   options: UseAsyncActionOptions = {}
 ): UseAsyncActionReturn<T> {
-  const {
-    minDisplayMs = 0,
-    scope = 'inline',
-    scopeId,
-    onError,
-  } = options;
+  const { minDisplayMs = 0, scope = 'inline', scopeId, onError } = options;
 
   const id = useId();
   const { register, unregister } = useLoadingScopeActions();

@@ -175,11 +175,7 @@ export const ResultRejectionBanner: React.FC<ResultRejectionBannerProps> = ({
 }) => {
   const rt = getResultRejectionType(rejection);
   const typeLabel =
-    rt === 'authorize_retest'
-      ? 'Authorize re-test'
-      : rt === 're-test'
-        ? 'Re-test'
-        : 'Re-collect';
+    rt === 'authorize_retest' ? 'Authorize re-test' : rt === 're-test' ? 'Re-test' : 'Re-collect';
   const reason = rejection.rejectionReason ?? rejection.reason;
 
   return (
@@ -187,9 +183,7 @@ export const ResultRejectionBanner: React.FC<ResultRejectionBannerProps> = ({
       <span className="font-normal">
         {typeLabel} #{retestNumber}
       </span>
-      {reason && (
-        <span className="text-text-tertiary"> · {reason}</span>
-      )}
+      {reason && <span className="text-text-tertiary"> · {reason}</span>}
     </div>
   );
 };

@@ -73,11 +73,7 @@ export function useSamplesList(filters?: SamplesFilters) {
  * @param initialPage - Starting page (default: 1)
  * @param pageSize - Items per page (default: 20)
  */
-export function usePaginatedSamples(
-  filters?: SamplesFilters,
-  initialPage = 1,
-  pageSize = 20
-) {
+export function usePaginatedSamples(filters?: SamplesFilters, initialPage = 1, pageSize = 20) {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
   const [page, setPage] = useState(initialPage);
 
@@ -104,13 +100,13 @@ export function usePaginatedSamples(
 
   const nextPage = useCallback(() => {
     if (query.data?.pagination.hasNext) {
-      setPage((p) => p + 1);
+      setPage(p => p + 1);
     }
   }, [query.data?.pagination.hasNext]);
 
   const prevPage = useCallback(() => {
     if (query.data?.pagination.hasPrev) {
-      setPage((p) => p - 1);
+      setPage(p => p - 1);
     }
   }, [query.data?.pagination.hasPrev]);
 

@@ -70,14 +70,24 @@ export const PHYSIOLOGIC_LIMITS: Record<string, PhysiologicLimit> = {
   PLT: { min: 1, max: 2000, unit: '×10⁹/L', description: 'Platelet count' },
   MCV: { min: 30, max: 200, unit: 'fL', description: 'Mean corpuscular volume' },
   MCH: { min: 10, max: 60, unit: 'pg', description: 'Mean corpuscular hemoglobin' },
-  MCHC: { min: 20, max: 50, unit: 'g/dL', description: 'Mean corpuscular hemoglobin concentration' },
+  MCHC: {
+    min: 20,
+    max: 50,
+    unit: 'g/dL',
+    description: 'Mean corpuscular hemoglobin concentration',
+  },
   RDW: { min: 5, max: 40, unit: '%', description: 'Red cell distribution width' },
 
   // Coagulation
   PT: { min: 5, max: 200, unit: 'seconds', description: 'Prothrombin time' },
   INR: { min: 0.5, max: 20, description: 'International normalized ratio' },
   PTT: { min: 10, max: 250, unit: 'seconds', description: 'Partial thromboplastin time' },
-  aPTT: { min: 10, max: 250, unit: 'seconds', description: 'Activated partial thromboplastin time' },
+  aPTT: {
+    min: 10,
+    max: 250,
+    unit: 'seconds',
+    description: 'Activated partial thromboplastin time',
+  },
 
   // Cardiac markers
   Troponin: { min: 0, max: 1000, unit: 'ng/mL', description: 'Troponin' },
@@ -127,8 +137,10 @@ export function getPhysiologicLimit(itemCode: string): PhysiologicLimit | undefi
 
   // Partial match
   for (const [key, limit] of Object.entries(PHYSIOLOGIC_LIMITS)) {
-    if (key.toLowerCase().includes(itemCode.toLowerCase()) ||
-        itemCode.toLowerCase().includes(key.toLowerCase())) {
+    if (
+      key.toLowerCase().includes(itemCode.toLowerCase()) ||
+      itemCode.toLowerCase().includes(key.toLowerCase())
+    ) {
       return limit;
     }
   }
@@ -145,7 +157,10 @@ export interface ValidationResult {
   limit?: PhysiologicLimit;
 }
 
-export function validatePhysiologicValue(itemCode: string, value: string | number): ValidationResult {
+export function validatePhysiologicValue(
+  itemCode: string,
+  value: string | number
+): ValidationResult {
   const limit = getPhysiologicLimit(itemCode);
 
   if (!limit) {

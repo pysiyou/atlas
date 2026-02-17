@@ -19,9 +19,7 @@ const ABNORMAL_STATUSES: ResultStatus[] = [
  * Build result key -> status from test.flags.
  * Backend stores "itemCode:status" (e.g. "K:critical-high", "Na:low").
  */
-function statusMapFromFlags(
-  flags: string[] | undefined
-): Record<string, ResultStatus> {
+function statusMapFromFlags(flags: string[] | undefined): Record<string, ResultStatus> {
   const map: Record<string, ResultStatus> = {};
   if (!flags?.length) return map;
   const valid = new Set(ABNORMAL_STATUSES);
@@ -29,7 +27,10 @@ function statusMapFromFlags(
     const i = f.indexOf(':');
     if (i === -1) continue;
     const key = f.slice(0, i).trim();
-    const status = f.slice(i + 1).trim().toLowerCase() as ResultStatus;
+    const status = f
+      .slice(i + 1)
+      .trim()
+      .toLowerCase() as ResultStatus;
     if (key && valid.has(status)) map[key] = status;
   }
   return map;
@@ -100,12 +101,12 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   // Detect panic values
   const panicValues = useMemo(() => {
     if (!hasResults) return [];
-    
+
     return Object.entries(results)
       .map(([key, rawValue]) => {
         const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
         if (!isCritical(status)) return null;
-        
+
         return {
           key,
           parameterName: key,
@@ -145,18 +146,14 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
           <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,max-content))] gap-x-12 gap-y-1">
             {Object.entries(results).map(([key, rawValue]) => {
               // Parse the result entry to handle different formats
-              const { resultValue, unit, status } = parseResultEntry(
-                key,
-                rawValue,
-                flagStatusMap
-              );
+              const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
               const abnormal = status !== 'normal';
               const valueColor = abnormal
                 ? isCritical(status)
                   ? 'text-danger-fg'
                   : 'text-warning-fg'
                 : 'text-text-primary';
-              
+
               return (
                 <div
                   key={key}
@@ -207,7 +204,9 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
           placeholder="Add validation notes..."
           rows={2}
         />
-        <span className="text-xs text-text-disabled hidden sm:inline-block">Ctrl+Enter to approve</span>
+        <span className="text-xs text-text-disabled hidden sm:inline-block">
+          Ctrl+Enter to approve
+        </span>
       </div>
     </div>
   );

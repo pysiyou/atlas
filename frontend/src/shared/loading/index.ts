@@ -1,9 +1,9 @@
 export * from './types';
+export { LoadingScopeProvider } from './LoadingScopeContext';
 export {
-  LoadingScopeProvider,
   useIsGlobalLoading,
   useIsSectionLoading,
   useLoadingScopeActions,
-} from './LoadingScopeContext';
+} from './loadingScopeHooks';
 export { SectionLoadingBoundary } from './SectionLoadingBoundary';
 export type { SectionLoadingBoundaryProps } from './SectionLoadingBoundary';

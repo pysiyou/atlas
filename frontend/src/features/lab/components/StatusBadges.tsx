@@ -83,7 +83,12 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
         </>
       )}
       collected <span className="text-text-secondary">{formatDate(collectedAt)}</span>
-      {collectedBy && <> by <span className="text-text-secondary">{getUserName(collectedBy)}</span></>}
+      {collectedBy && (
+        <>
+          {' '}
+          by <span className="text-text-secondary">{getUserName(collectedBy)}</span>
+        </>
+      )}
     </span>
   );
 };
@@ -162,7 +167,8 @@ export const RecollectionBadge: React.FC<RecollectionBadgeProps> = ({
       {formattedRecollectionId && (
         <Badge size="sm" variant="info" className="flex items-center gap-1">
           <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-          Recollection requested: <span className="font-mono text-brand">{formattedRecollectionId}</span>
+          Recollection requested:{' '}
+          <span className="font-mono text-brand">{formattedRecollectionId}</span>
         </Badge>
       )}
     </div>
@@ -199,8 +205,13 @@ interface ResultStatusBadgeProps {
 export const ResultStatusBadge: React.FC<ResultStatusBadgeProps> = ({ status }) => {
   if (status === 'normal') return null;
 
-  const isCritical = status === 'critical' || status === 'critical-high' || status === 'critical-low';
-  const variant = isCritical ? 'critical' : status === 'high' || status === 'low' ? 'warning' : 'default';
+  const isCritical =
+    status === 'critical' || status === 'critical-high' || status === 'critical-low';
+  const variant = isCritical
+    ? 'critical'
+    : status === 'high' || status === 'low'
+      ? 'warning'
+      : 'default';
 
   return (
     <Badge size="xs" variant={variant} pulse={isCritical}>
@@ -230,7 +241,12 @@ export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
   return (
     <span className={className}>
       Results entered <span className="text-text-secondary">{formatDate(enteredAt)}</span>
-      {enteredBy && <> by <span className="text-text-secondary">{getUserName(enteredBy)}</span></>}
+      {enteredBy && (
+        <>
+          {' '}
+          by <span className="text-text-secondary">{getUserName(enteredBy)}</span>
+        </>
+      )}
     </span>
   );
 };

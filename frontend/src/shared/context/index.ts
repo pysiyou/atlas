@@ -1,6 +1,6 @@
 /**
  * Shared Context
- * 
+ *
  * React context providers and factories
  */
 

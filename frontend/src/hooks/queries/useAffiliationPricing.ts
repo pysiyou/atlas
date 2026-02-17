@@ -104,7 +104,7 @@ export function useSelectedAffiliationPrice(duration: AffiliationDuration | unde
     enabled: isAuthenticated && !isRestoring,
     ...cacheConfig.static,
     select: (data: AffiliationPricing[]) =>
-      duration ? data.find(p => p.duration === duration)?.price ?? null : null,
+      duration ? (data.find(p => p.duration === duration)?.price ?? null) : null,
   });
 
   return query.data ?? null;

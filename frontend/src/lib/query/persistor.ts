@@ -58,8 +58,8 @@ export function createPersister() {
     // Throttle writes to localStorage (100ms)
     throttleTime: 100,
     // Custom serializer to handle dates
-    serialize: (data) => JSON.stringify(data),
-    deserialize: (data) => JSON.parse(data),
+    serialize: data => JSON.stringify(data),
+    deserialize: data => JSON.parse(data),
   });
 }
 
@@ -86,7 +86,7 @@ export function persistFilter(persistedClient: PersistedClient): PersistedClient
   const maxAge = PERSIST_MAX_AGE;
 
   // Filter out expired queries
-  const filteredQueries = persistedClient.clientState.queries.filter((query) => {
+  const filteredQueries = persistedClient.clientState.queries.filter(query => {
     const age = now - query.state.dataUpdatedAt;
     return age < maxAge;
   });

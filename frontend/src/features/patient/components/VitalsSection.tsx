@@ -216,7 +216,10 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
               </label>
               <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
                 {isAbnormal && !isNa && (
-                  <Icon name={ICONS.actions.dangerSquare} className="w-3 h-3 text-danger-fg shrink-0" />
+                  <Icon
+                    name={ICONS.actions.dangerSquare}
+                    className="w-3 h-3 text-danger-fg shrink-0"
+                  />
                 )}
                 <span className="text-xxs text-text-tertiary truncate">Ref: {refRange}</span>
               </div>
@@ -224,7 +227,13 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                <Icon name={config.icon} className={cn('w-4 h-4 shrink-0 transition-colors', isNa ? 'text-text-muted/70' : 'text-text-muted group-hover:text-brand')} />
+                <Icon
+                  name={config.icon}
+                  className={cn(
+                    'w-4 h-4 shrink-0 transition-colors',
+                    isNa ? 'text-text-muted/70' : 'text-text-muted group-hover:text-brand'
+                  )}
+                />
               </div>
 
               {isNa ? (
@@ -257,7 +266,9 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     )}
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
-                    <span className="text-xs text-text-tertiary select-none truncate">{config.unit}</span>
+                    <span className="text-xs text-text-tertiary select-none truncate">
+                      {config.unit}
+                    </span>
                   </div>
                   {isAbnormal && (
                     <div className="absolute -bottom-5 left-0 text-xxs text-danger-fg font-normal">

@@ -28,9 +28,7 @@ export const OrderPaymentSection: React.FC<OrderPaymentSectionProps> = ({
 
   return (
     <div>
-      <label className="block text-xs font-normal text-text-tertiary mb-2">
-        Payment method
-      </label>
+      <label className="block text-xs font-normal text-text-tertiary mb-2">Payment method</label>
       <PaymentMethodSelector
         methods={methods}
         value={paymentMethod}

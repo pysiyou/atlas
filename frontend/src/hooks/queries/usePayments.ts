@@ -192,7 +192,8 @@ export function useCreatePayment() {
       return createPayment(validated);
     },
     onSuccess: (_, variables) => {
-      const orderIdStr = typeof variables.orderId === 'string' ? variables.orderId : String(variables.orderId);
+      const orderIdStr =
+        typeof variables.orderId === 'string' ? variables.orderId : String(variables.orderId);
       invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
     },
   });

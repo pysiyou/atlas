@@ -78,9 +78,7 @@ export const DemographicsSection: React.FC<
             icon={ICONS.dataFields.userHands}
             className="w-full"
           />
-          {errors.gender && (
-            <p className="mt-1 text-sm text-danger-fg">{errors.gender}</p>
-          )}
+          {errors.gender && <p className="mt-1 text-sm text-danger-fg">{errors.gender}</p>}
         </div>
         <Input
           label="Phone Number"

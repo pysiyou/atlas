@@ -1,5 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { patientSchema, patientCreateSchema, patientUpdateSchema, type Patient } from '../schemas/patient.schema';
+import {
+  patientSchema,
+  patientCreateSchema,
+  patientUpdateSchema,
+  type Patient,
+} from '../schemas/patient.schema';
 import { apiClient } from '@/services/api/client';
 import { queryKeys } from '@/lib/query/keys';
 import { invalidatePatientQueries } from '@/lib/query/invalidate';
@@ -24,7 +29,7 @@ export function usePatientService() {
       await queryClient.refetchQueries({ queryKey: queryKeys.patients.lists() });
       toast.success('Patient created successfully');
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(`Failed to create patient: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
@@ -41,13 +46,13 @@ export function usePatientService() {
       invalidatePatientQueries(queryClient, { patientId: id });
       toast.success('Patient updated successfully');
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(`Failed to update patient: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
 
   // Business logic functions
-  
+
   /**
    * Calculate age from date of birth
    */
@@ -107,7 +112,7 @@ export function usePatientService() {
     // Mutations
     create,
     update,
-    
+
     // Business logic
     calculateAge,
     isAffiliationActive,

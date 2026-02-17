@@ -40,10 +40,7 @@ function composeProviders(
  * Remaining providers:
  * - ModalProvider: Active - manages modal state
  */
-const featureProviders = [
-  LoadingScopeProvider,
-  ModalProvider,
-];
+const featureProviders = [LoadingScopeProvider, ModalProvider];
 
 const ComposedProviders = composeProviders(featureProviders);
 

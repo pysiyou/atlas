@@ -42,12 +42,20 @@ const REJECTION_REASONS: { value: RejectionReason; label: string; description: s
   },
   { value: 'contaminated', label: 'Contaminated', description: 'Visible contamination present' },
   { value: 'expired', label: 'Expired', description: 'Sample past expiration time' },
-  { value: 'damaged-container', label: 'Damaged Container', description: 'Container integrity compromised' },
+  {
+    value: 'damaged-container',
+    label: 'Damaged Container',
+    description: 'Container integrity compromised',
+  },
   { value: 'other', label: 'Other', description: 'Other reason (specify in notes)' },
 ];
 
 interface CollectionRejectionPopoverContentProps {
-  onConfirm: (reasons: RejectionReason[], notes: string, requireRecollection: boolean) => void | Promise<void>;
+  onConfirm: (
+    reasons: RejectionReason[],
+    notes: string,
+    requireRecollection: boolean
+  ) => void | Promise<void>;
   onCancel: () => void;
   sampleId: string;
   sampleType?: string;

@@ -21,7 +21,6 @@ import { ICONS } from '@/utils';
  */
 type BaseVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'outline' | 'warning';
 
-
 type SemanticVariant =
   | 'save'
   | 'cancel'
@@ -110,7 +109,8 @@ const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
 /**
  * Base classes applied to all buttons
  */
-const BASE_CLASSES = 'inline-flex shrink-0 items-center justify-center gap-1.5 font-normal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap overflow-hidden';
+const BASE_CLASSES =
+  'inline-flex shrink-0 items-center justify-center gap-1.5 font-normal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap overflow-hidden';
 
 /**
  * Base style classes for each variant
@@ -121,7 +121,8 @@ const BASE_STYLES: Record<BaseVariant, string> = {
   danger: 'bg-danger text-on-danger hover:opacity-90 focus:ring-danger',
   success: 'bg-success text-on-success hover:opacity-90 focus:ring-success',
   warning: 'bg-warning text-on-warning hover:opacity-90 focus:ring-warning',
-  outline: 'border-2 border-border-strong bg-transparent text-text-secondary hover:bg-surface-hover focus:ring-neutral-500',
+  outline:
+    'border-2 border-border-strong bg-transparent text-text-secondary hover:bg-surface-hover focus:ring-neutral-500',
 };
 
 /**
@@ -273,9 +274,7 @@ export const Button: React.FC<ButtonProps> = ({
       </>
     ) : (
       <span className="relative inline-flex items-center justify-center gap-1.5">
-        <span className="absolute inset-0 flex items-center justify-center">
-          {loaderEl}
-        </span>
+        <span className="absolute inset-0 flex items-center justify-center">{loaderEl}</span>
         <span className="invisible" aria-hidden>
           {normalContent}
         </span>

@@ -43,12 +43,12 @@ export const TestsOverTimeChart: React.FC<TestsOverTimeChartProps> = ({
   comparisonLabel = 'Comparison',
   height = 200,
 }) => {
-  const dateSet = new Set(trend.map((t) => t.date));
-  comparisonTrend?.forEach((t) => dateSet.add(t.date));
+  const dateSet = new Set(trend.map(t => t.date));
+  comparisonTrend?.forEach(t => dateSet.add(t.date));
   const sortedDates = Array.from(dateSet).sort();
-  const chartData = sortedDates.map((date) => {
-    const curr = trend.find((t) => t.date === date);
-    const comp = comparisonTrend?.find((t) => t.date === date);
+  const chartData = sortedDates.map(date => {
+    const curr = trend.find(t => t.date === date);
+    const comp = comparisonTrend?.find(t => t.date === date);
     return {
       date: format(new Date(date), 'MMM dd'),
       fullDate: date,
@@ -59,7 +59,10 @@ export const TestsOverTimeChart: React.FC<TestsOverTimeChartProps> = ({
 
   if (chartData.length === 0) {
     return (
-      <div className="flex items-center justify-center text-text-tertiary text-sm" style={{ height }}>
+      <div
+        className="flex items-center justify-center text-text-tertiary text-sm"
+        style={{ height }}
+      >
         No trend data
       </div>
     );
@@ -74,10 +77,7 @@ export const TestsOverTimeChart: React.FC<TestsOverTimeChartProps> = ({
           tick={{ fill: AXIS_COLOR, fontSize: 12 }}
           tickLine={{ stroke: GRID_STROKE }}
         />
-        <YAxis
-          tick={{ fill: AXIS_COLOR, fontSize: 12 }}
-          tickLine={{ stroke: GRID_STROKE }}
-        />
+        <YAxis tick={{ fill: AXIS_COLOR, fontSize: 12 }} tickLine={{ stroke: GRID_STROKE }} />
         <Tooltip
           contentStyle={{
             backgroundColor: TOOLTIP_BG,
@@ -92,7 +92,7 @@ export const TestsOverTimeChart: React.FC<TestsOverTimeChartProps> = ({
         />
         {comparisonTrend && comparisonTrend.length > 0 && (
           <Legend
-            formatter={(value) => (value === 'count' ? currentLabel : comparisonLabel)}
+            formatter={value => (value === 'count' ? currentLabel : comparisonLabel)}
             wrapperStyle={{ fontSize: 12 }}
           />
         )}

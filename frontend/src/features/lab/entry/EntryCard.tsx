@@ -127,12 +127,12 @@ export const EntryCard: React.FC<EntryCardProps> = ({
 
         {/* Content: Collection date */}
         <div className="space-y-1 ">
-            {test.collectedAt && (
-              <div className="text-xs text-text-tertiary mt-1">
-                Collected: {formatDate(test.collectedAt)}
-              </div>
-            )}
-          </div>
+          {test.collectedAt && (
+            <div className="text-xs text-text-tertiary mt-1">
+              Collected: {formatDate(test.collectedAt)}
+            </div>
+          )}
+        </div>
 
         {/* Bottom section: Badges (left) + Enter Results button (right) */}
         <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
@@ -253,7 +253,10 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <div className="flex items-center gap-2 flex-wrap">
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection of <span className="font-mono text-brand">{displayId.sample(test.sampleOriginalSampleId)}</span>
+            Recollection of{' '}
+            <span className="font-mono text-brand">
+              {displayId.sample(test.sampleOriginalSampleId)}
+            </span>
           </Badge>
         </div>
       );

@@ -105,9 +105,7 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
       render: (test: OrderTest) => {
         const sampleType = getTestSampleType(test.testCode, testCatalog);
         const isSuperseded = test.status === 'superseded';
-        return (
-          <Badge variant={sampleType as 'default'} size="sm" strikethrough={isSuperseded} />
-        );
+        return <Badge variant={sampleType as 'default'} size="sm" strikethrough={isSuperseded} />;
       },
     },
     {
@@ -118,11 +116,7 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
       render: (test: OrderTest) => {
         const isSuperseded = test.status === 'superseded';
         return (
-          <span
-            className={
-              isSuperseded ? 'text-text-disabled line-through' : DATA_AMOUNT
-            }
-          >
+          <span className={isSuperseded ? 'text-text-disabled line-through' : DATA_AMOUNT}>
             {formatCurrency(test.priceAtOrder)}
           </span>
         );
@@ -142,12 +136,18 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
         onKeyDown={e => e.key === 'Enter' && onClick?.()}
       >
         <div className="flex items-center justify-between gap-2">
-          <span className={isSuperseded ? 'text-text-disabled line-through font-mono' : DATA_ID_PRIMARY_INLINE}>
+          <span
+            className={
+              isSuperseded ? 'text-text-disabled line-through font-mono' : DATA_ID_PRIMARY_INLINE
+            }
+          >
             {item.testCode}
           </span>
           <Badge variant={item.status} size="sm" strikethrough={isSuperseded} />
         </div>
-        <div className={`text-sm mt-1 ${isSuperseded ? 'text-text-disabled line-through' : 'text-text-primary'}`}>
+        <div
+          className={`text-sm mt-1 ${isSuperseded ? 'text-text-disabled line-through' : 'text-text-primary'}`}
+        >
           {name}
         </div>
         <div className="text-xs text-text-tertiary mt-1">{formatCurrency(item.priceAtOrder)}</div>
@@ -163,26 +163,23 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
   };
 }
 
-export const TestsTable: React.FC<TestsTableProps> = ({
-  tests,
-  variant = 'simple',
-}) => {
+export const TestsTable: React.FC<TestsTableProps> = ({ tests, variant = 'simple' }) => {
   const { tests: testCatalog = [] } = useTestCatalog();
-  const visibleTests = useMemo(
-    () => tests.filter(t => t.status !== 'removed'),
-    [tests]
-  );
+  const visibleTests = useMemo(() => tests.filter(t => t.status !== 'removed'), [tests]);
 
   const viewConfig = useMemo(
-    () => (variant === 'detailed' ? createTestsTableConfig(testCatalog) : (() => {
-      const config = createTestsTableConfig(testCatalog);
-      return {
-        ...config,
-        fullColumns: config.compactColumns,
-        mediumColumns: config.compactColumns,
-        compactColumns: config.compactColumns,
-      };
-    })()),
+    () =>
+      variant === 'detailed'
+        ? createTestsTableConfig(testCatalog)
+        : (() => {
+            const config = createTestsTableConfig(testCatalog);
+            return {
+              ...config,
+              fullColumns: config.compactColumns,
+              mediumColumns: config.compactColumns,
+              compactColumns: config.compactColumns,
+            };
+          })(),
     [testCatalog, variant]
   );
 

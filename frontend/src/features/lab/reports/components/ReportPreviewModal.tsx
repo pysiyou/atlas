@@ -55,17 +55,19 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                   />
                 </div>
               </div> */}
-              
+
               {/* Company Name */}
               <h2 className="text-2xl font-bold text-text-primary mb-3">
                 {companyConfig.getName()}
               </h2>
-              
+
               {/* Company Subtitle */}
               {companyConfig.getConfig().company.subtitle && (
-                <p className="text-xs text-text-primary font-normal">{companyConfig.getConfig().company.subtitle}</p>
+                <p className="text-xs text-text-primary font-normal">
+                  {companyConfig.getConfig().company.subtitle}
+                </p>
               )}
-              
+
               {/* Address Lines */}
               <div className="text-xs text-text-secondary space-y-0.5">
                 {companyConfig.getContact().address.street && (
@@ -74,9 +76,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                 {(() => {
                   const { city, state, zipCode } = companyConfig.getContact().address;
                   const parts = [city, state, zipCode].filter(Boolean);
-                  return parts.length > 0 ? (
-                    <p>{parts.join(', ')}</p>
-                  ) : null;
+                  return parts.length > 0 ? <p>{parts.join(', ')}</p> : null;
                 })()}
                 {companyConfig.getContact().address.country && (
                   <p>{companyConfig.getContact().address.country}</p>
@@ -93,78 +93,110 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                     {reportData.testResults.map(t => t.testName).join(', ')} Results ({' '}
                     <span className="text-brand font-mono">
                       {reportData.testResults.map(t => t.testCode).join(', ')}
-                    </span>
-                    {' '})
+                    </span>{' '}
+                    )
                   </>
                 ) : (
                   'Test Results'
                 )}
               </h1>
-              
+
               {/* Patient and Processing Details - Two Sub-columns */}
               <div className="grid grid-cols-2 gap-2">
                 {/* Left Sub-column: Patient Demographics */}
                 <div className="space-y-0.5">
-                  <p className="text-base font-normal text-text-primary">{reportData.patientName}</p>
+                  <p className="text-base font-normal text-text-primary">
+                    {reportData.patientName}
+                  </p>
                   {reportData.patientAge && (
                     <div className="flex gap-2">
-                      <span className="text-xs text-text-secondary min-w-[50px] truncate">Age:</span>
-                      <span className="text-xs font-normal text-text-primary">{reportData.patientAge}</span>
+                      <span className="text-xs text-text-secondary min-w-[50px] truncate">
+                        Age:
+                      </span>
+                      <span className="text-xs font-normal text-text-primary">
+                        {reportData.patientAge}
+                      </span>
                     </div>
                   )}
                   {reportData.patientGender && (
                     <div className="flex gap-2">
-                      <span className="text-xs text-text-secondary min-w-[50px] truncate">Gender:</span>
-                      <span className="text-xs font-normal text-text-primary">{reportData.patientGender.toUpperCase()}</span>
+                      <span className="text-xs text-text-secondary min-w-[50px] truncate">
+                        Gender:
+                      </span>
+                      <span className="text-xs font-normal text-text-primary">
+                        {reportData.patientGender.toUpperCase()}
+                      </span>
                     </div>
                   )}
                   {/* Phone or Email - show phone if available, otherwise show email */}
                   {(() => {
-                    const orderExtended = reportData.order as typeof reportData.order & { 
+                    const orderExtended = reportData.order as typeof reportData.order & {
                       patientPhone?: string;
                       patientEmail?: string;
                     };
                     if (orderExtended.patientPhone) {
                       return (
                         <div className="flex gap-2">
-                          <span className="text-xs text-text-secondary min-w-[50px] truncate">Phone:</span>
-                          <span className="text-xs font-normal text-text-primary">{orderExtended.patientPhone}</span>
+                          <span className="text-xs text-text-secondary min-w-[50px] truncate">
+                            Phone:
+                          </span>
+                          <span className="text-xs font-normal text-text-primary">
+                            {orderExtended.patientPhone}
+                          </span>
                         </div>
                       );
                     }
                     if (orderExtended.patientEmail) {
                       return (
                         <div className="flex gap-2">
-                          <span className="text-xs text-text-secondary min-w-[50px] truncate">Email:</span>
-                          <span className="text-xs font-normal text-text-primary">{orderExtended.patientEmail}</span>
+                          <span className="text-xs text-text-secondary min-w-[50px] truncate">
+                            Email:
+                          </span>
+                          <span className="text-xs font-normal text-text-primary">
+                            {orderExtended.patientEmail}
+                          </span>
                         </div>
                       );
                     }
                     return null;
                   })()}
                 </div>
-                
+
                 {/* Right Sub-column: Processing Details */}
                 <div className="space-y-0.5">
                   <p className="text-base font-normal text-text-primary">Processing Details</p>
-                  {reportData.timestamps?.collectedAt || reportData.sampleCollection?.collectedAt ? (
+                  {reportData.timestamps?.collectedAt ||
+                  reportData.sampleCollection?.collectedAt ? (
                     <div className="flex gap-2">
-                      <span className="text-xs text-text-secondary min-w-[60px] truncate">Sample:</span>
+                      <span className="text-xs text-text-secondary min-w-[60px] truncate">
+                        Sample:
+                      </span>
                       <span className="text-xs font-normal text-text-primary">
-                        {format(new Date(reportData.timestamps?.collectedAt || reportData.sampleCollection?.collectedAt || ''), 'yyyy-MM-dd hh:mm a')}
+                        {format(
+                          new Date(
+                            reportData.timestamps?.collectedAt ||
+                              reportData.sampleCollection?.collectedAt ||
+                              ''
+                          ),
+                          'yyyy-MM-dd hh:mm a'
+                        )}
                       </span>
                     </div>
                   ) : null}
                   {reportData.timestamps?.reportedAt ? (
                     <div className="flex gap-2">
-                      <span className="text-xs text-text-secondary min-w-[60px] truncate">Results:</span>
+                      <span className="text-xs text-text-secondary min-w-[60px] truncate">
+                        Results:
+                      </span>
                       <span className="text-xs font-normal text-text-primary">
                         {format(new Date(reportData.timestamps.reportedAt), 'yyyy-MM-dd hh:mm a')}
                       </span>
                     </div>
                   ) : (
                     <div className="flex gap-2">
-                      <span className="text-xs text-text-secondary min-w-[60px] truncate">Results:</span>
+                      <span className="text-xs text-text-secondary min-w-[60px] truncate">
+                        Results:
+                      </span>
                       <span className="text-xs font-normal text-text-primary">
                         {format(new Date(), 'yyyy-MM-dd hh:mm a')}
                       </span>
@@ -172,25 +204,35 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                   )}
                   {reportData.testResults[0] && (
                     <div className="flex gap-2">
-                      <span className="text-xs text-text-secondary min-w-[60px] truncate">Verified by:</span>
+                      <span className="text-xs text-text-secondary min-w-[60px] truncate">
+                        Verified by:
+                      </span>
                       <span className="text-xs font-normal text-text-primary">
                         {(() => {
                           const testResult = reportData.testResults[0];
                           if (!testResult) return 'N/A';
-                          
+
                           // Try validatedByName first (pre-resolved)
-                          if (testResult.validatedByName && testResult.validatedByName !== 'N/A' && testResult.validatedByName !== 'Unknown') {
+                          if (
+                            testResult.validatedByName &&
+                            testResult.validatedByName !== 'N/A' &&
+                            testResult.validatedByName !== 'Unknown'
+                          ) {
                             return testResult.validatedByName;
                           }
-                          
+
                           // Fall back to resolving from validatedBy ID
                           if (testResult.validatedBy) {
                             const resolvedName = getUserName(String(testResult.validatedBy).trim());
-                            if (resolvedName && resolvedName !== 'N/A' && resolvedName !== 'Unknown') {
+                            if (
+                              resolvedName &&
+                              resolvedName !== 'N/A' &&
+                              resolvedName !== 'Unknown'
+                            ) {
                               return resolvedName;
                             }
                           }
-                          
+
                           // If we have validatedAt but no name, show "N/A"
                           return testResult.validatedAt ? 'N/A' : '-';
                         })()}
@@ -204,101 +246,113 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
 
           {/* Test Results Section */}
           <div className="p-6 space-y-4">
+            {/* Test Results */}
+            {reportData.testResults.map((test, index) => (
+              <div key={index} className="space-y-4">
+                {/* Test Name (centered) */}
+                <div className="text-center">
+                  <h3 className="text-lg font-bold text-text-primary">
+                    {test.testName} ({test.testCode})
+                  </h3>
+                </div>
 
-          {/* Test Results */}
-          {reportData.testResults.map((test, index) => (
-            <div key={index} className="space-y-4">
-              {/* Test Name (centered) */}
-              <div className="text-center">
-                <h3 className="text-lg font-bold text-text-primary">
-                  {test.testName} ({test.testCode})
-                </h3>
-              </div>
+                {/* Parameters Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="bg-surface-page border-b border-border-strong">
+                        <th className="px-6 py-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
+                          Investigation
+                        </th>
+                        <th className="px-6 py-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
+                          Result
+                        </th>
+                        <th className="px-6 py-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
+                          Reference Value
+                        </th>
+                        <th className="px-6 py-3 text-right font-normal text-text-tertiary uppercase tracking-wider">
+                          Unit
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* Primary Sample Type Row */}
+                      <tr className="border-b border-border-subtle hover:bg-surface-page transition-colors">
+                        <td className="px-6 py-3 text-text-primary">Primary Sample Type :</td>
+                        <td className="px-6 py-3 text-left text-text-primary">
+                          {reportData.order.tests[0]?.sampleType?.toUpperCase() || 'N/A'}
+                        </td>
+                        <td className="px-6 py-3 text-left text-text-secondary"></td>
+                        <td className="px-6 py-3 text-right text-text-secondary"></td>
+                      </tr>
 
-              {/* Parameters Table */}
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="bg-surface-page border-b border-border-strong">
-                      <th className="px-6 py-3 text-left font-normal text-text-tertiary uppercase tracking-wider">Investigation</th>
-                      <th className="px-6 py-3 text-left font-normal text-text-tertiary uppercase tracking-wider">Result</th>
-                      <th className="px-6 py-3 text-left font-normal text-text-tertiary uppercase tracking-wider">Reference Value</th>
-                      <th className="px-6 py-3 text-right font-normal text-text-tertiary uppercase tracking-wider">Unit</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {/* Primary Sample Type Row */}
-                    <tr className="border-b border-border-subtle hover:bg-surface-page transition-colors">
-                      <td className="px-6 py-3 text-text-primary">Primary Sample Type :</td>
-                      <td className="px-6 py-3 text-left text-text-primary">
-                        {reportData.order.tests[0]?.sampleType?.toUpperCase() || 'N/A'}
-                      </td>
-                      <td className="px-6 py-3 text-left text-text-secondary"></td>
-                      <td className="px-6 py-3 text-right text-text-secondary"></td>
-                    </tr>
-                    
-                    {test.parameters.map((param, paramIndex) => {
-                      // Check if original parameter name is a section header (all caps, length > 3)
-                      const isSectionHeader = param.name === param.name.toUpperCase() && param.name.length > 3 && !param.name.includes(':');
-                      
-                      // Check if value is abnormal
-                      const isAbnormal = param.status && param.status.toLowerCase() !== 'normal';
+                      {test.parameters.map((param, paramIndex) => {
+                        // Check if original parameter name is a section header (all caps, length > 3)
+                        const isSectionHeader =
+                          param.name === param.name.toUpperCase() &&
+                          param.name.length > 3 &&
+                          !param.name.includes(':');
 
-                      return (
-                        <tr
-                          key={paramIndex}
-                          className={cn(
-                            'border-b border-border-subtle last:border-0 hover:bg-surface-page transition-colors',
-                            isSectionHeader && 'bg-surface-page/50'
-                          )}
-                        >
-                          <td className={cn(
-                            'px-6 py-3 text-text-primary',
-                            isSectionHeader && 'font-normal'
-                          )}>
-                            {isSectionHeader ? (
-                              param.name
-                            ) : (
-                              <div className="min-w-0">
-                                <div className="font-normal text-text-primary truncate">{param.name}</div>
-                                {param.code && (
-                                  <div className="text-xs font-normal truncate">{param.code}</div>
-                                )}
-                              </div>
+                        // Check if value is abnormal
+                        const isAbnormal = param.status && param.status.toLowerCase() !== 'normal';
+
+                        return (
+                          <tr
+                            key={paramIndex}
+                            className={cn(
+                              'border-b border-border-subtle last:border-0 hover:bg-surface-page transition-colors',
+                              isSectionHeader && 'bg-surface-page/50'
                             )}
-                          </td>
-                          <td className={cn(
-                            'px-6 py-3 text-left',
-                            isAbnormal ? 'text-danger-fg font-normal' : 'text-text-primary'
-                          )}>
-                            {param.value}
-                          </td>
-                          <td className="px-6 py-3 text-left text-text-secondary">
-                            {param.referenceRange || ''}
-                          </td>
-                          <td className="px-6 py-3 text-right text-text-secondary">
-                            {param.unit || '-'}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                          >
+                            <td
+                              className={cn(
+                                'px-6 py-3 text-text-primary',
+                                isSectionHeader && 'font-normal'
+                              )}
+                            >
+                              {isSectionHeader ? (
+                                param.name
+                              ) : (
+                                <div className="min-w-0">
+                                  <div className="font-normal text-text-primary truncate">
+                                    {param.name}
+                                  </div>
+                                  {param.code && (
+                                    <div className="text-xs font-normal truncate">{param.code}</div>
+                                  )}
+                                </div>
+                              )}
+                            </td>
+                            <td
+                              className={cn(
+                                'px-6 py-3 text-left',
+                                isAbnormal ? 'text-danger-fg font-normal' : 'text-text-primary'
+                              )}
+                            >
+                              {param.value}
+                            </td>
+                            <td className="px-6 py-3 text-left text-text-secondary">
+                              {param.referenceRange || ''}
+                            </td>
+                            <td className="px-6 py-3 text-right text-text-secondary">
+                              {param.unit || '-'}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
 
-              {/* Instrument and Interpretation */}
-              <div className="space-y-2 text-xs text-text-primary mt-4">
-                {test.technicianNotes && (
-                  <p>Instruments: {test.technicianNotes}</p>
-                )}
-                {test.validationNotes && (
-                  <p>Interpretation: {test.validationNotes}</p>
-                )}
-                <p>Thanks for Reference</p>
-                <p className="text-center font-normal mt-4">****End of Report****</p>
+                {/* Instrument and Interpretation */}
+                <div className="space-y-2 text-xs text-text-primary mt-4">
+                  {test.technicianNotes && <p>Instruments: {test.technicianNotes}</p>}
+                  {test.validationNotes && <p>Interpretation: {test.validationNotes}</p>}
+                  <p>Thanks for Reference</p>
+                  <p className="text-center font-normal mt-4">****End of Report****</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
           </div>
         </div>
 
@@ -308,7 +362,8 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
             icon={ICONS.dataFields.document}
             text={
               <>
-                {companyConfig.getReports().footerText} Generated: {format(new Date(), 'MMM dd, yyyy HH:mm')}
+                {companyConfig.getReports().footerText} Generated:{' '}
+                {format(new Date(), 'MMM dd, yyyy HH:mm')}
               </>
             }
           />

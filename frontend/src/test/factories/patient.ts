@@ -30,13 +30,7 @@ export const createMockEmergencyContact = (
   overrides?: Partial<EmergencyContact>
 ): EmergencyContact => ({
   fullName: faker.person.fullName(),
-  relationship: faker.helpers.arrayElement([
-    'spouse',
-    'parent',
-    'child',
-    'sibling',
-    'other',
-  ]),
+  relationship: faker.helpers.arrayElement(['spouse', 'parent', 'child', 'sibling', 'other']),
   phone: faker.phone.number(),
   email: faker.internet.email(),
   ...overrides,

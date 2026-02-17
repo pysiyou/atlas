@@ -86,7 +86,10 @@ export const CollectionView: React.FC = () => {
   );
 
   const getOrderDate = useCallback((d: SampleDisplay) => d.order.orderDate, []);
-  const getSampleType = useCallback((d: SampleDisplay) => d.requirement?.sampleType ?? d.sample?.sampleType, []);
+  const getSampleType = useCallback(
+    (d: SampleDisplay) => d.requirement?.sampleType ?? d.sample?.sampleType,
+    []
+  );
   const getStatus = useCallback((d: SampleDisplay) => d.sample?.status, []);
 
   const {
@@ -128,7 +131,8 @@ export const CollectionView: React.FC = () => {
     if (!display.sample || !display.requirement) {
       toast.error({
         title: 'Invalid sample data',
-        subtitle: 'The sample or requirement data is missing or invalid. Refresh the page and try again.',
+        subtitle:
+          'The sample or requirement data is missing or invalid. Refresh the page and try again.',
       });
       return;
     }
@@ -157,7 +161,8 @@ export const CollectionView: React.FC = () => {
       });
       toast.success({
         title: `${(display.sample.sampleType ?? 'sample').toString().toUpperCase()} sample collected`,
-        subtitle: 'The sample has been recorded and the order has been updated. You can continue with the next sample.',
+        subtitle:
+          'The sample has been recorded and the order has been updated. You can continue with the next sample.',
       });
       try {
         await refreshOrders();
@@ -176,10 +181,14 @@ export const CollectionView: React.FC = () => {
       if (isLikelyNetworkOrTimeout(error)) {
         toast.error({
           title: 'Action may have completed',
-          subtitle: 'The request did not complete. Please refresh the page to see the latest status.',
+          subtitle:
+            'The request did not complete. Please refresh the page to see the latest status.',
         });
       } else {
-        const message = getErrorMessage(error, 'The collection could not be saved. Check your connection and try again.');
+        const message = getErrorMessage(
+          error,
+          'The collection could not be saved. Check your connection and try again.'
+        );
         toast.error({
           title: 'Failed to collect sample',
           subtitle: message,

@@ -20,7 +20,11 @@ import {
 import { toast } from '@/shared/components/feedback';
 import { logger } from '@/utils/logger';
 import { ValidationCard } from './ValidationCard';
-import { BulkValidationToolbar, useBulkSelection, ValidationCheckbox } from './BulkValidationToolbar';
+import {
+  BulkValidationToolbar,
+  useBulkSelection,
+  ValidationCheckbox,
+} from './BulkValidationToolbar';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { LabFilters } from '../components/LabFilters';
@@ -68,9 +72,15 @@ export const ValidationView: React.FC = () => {
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
-  const getOrderDate = useCallback((t: TestWithContext & { orderDate?: string }) => t.orderDate, []);
+  const getOrderDate = useCallback(
+    (t: TestWithContext & { orderDate?: string }) => t.orderDate,
+    []
+  );
   const getSampleType = useCallback((t: TestWithContext) => t.sampleType, []);
-  const getStatus = useCallback((t: TestWithContext & { hasCriticalValues?: boolean }) => t.priority as PriorityLevel, []);
+  const getStatus = useCallback(
+    (t: TestWithContext & { hasCriticalValues?: boolean }) => t.priority as PriorityLevel,
+    []
+  );
 
   const {
     filteredItems: filteredTests,
@@ -92,21 +102,15 @@ export const ValidationView: React.FC = () => {
 
   /** Filtered tests with numeric id (for bulk selection) */
   const filteredTestsWithId = useMemo(
-    () =>
-      filteredTests.filter(
-        (t): t is typeof t & { id: number } => typeof t.id === 'number'
-      ),
+    () => filteredTests.filter((t): t is typeof t & { id: number } => typeof t.id === 'number'),
     [filteredTests]
   );
 
   // Bulk selection state (over visible/filtered items with id)
   // Only initialize if bulk validation is enabled
-  const {
-    selectedIds,
-    setSelectedIds,
-    toggleItem,
-    isSelected,
-  } = useBulkSelection(ENABLE_BULK_VALIDATION ? filteredTestsWithId : []);
+  const { selectedIds, setSelectedIds, toggleItem, isSelected } = useBulkSelection(
+    ENABLE_BULK_VALIDATION ? filteredTestsWithId : []
+  );
 
   /**
    * Handle bulk approval via useValidateBulk. Returns Promise so toolbar can await.
@@ -150,7 +154,8 @@ export const ValidationView: React.FC = () => {
             .join(', ');
           toast.error({
             title: `Approved ${successCount}, failed ${failureCount}${failedItems ? `: ${failedItems}` : ''}`,
-            subtitle: 'Some results could not be approved. Check the failed items and try again if needed.',
+            subtitle:
+              'Some results could not be approved. Check the failed items and try again if needed.',
           });
         }
         setSelectedIds(new Set());
@@ -198,7 +203,8 @@ export const ValidationView: React.FC = () => {
           });
           toast.success({
             title: 'Results approved',
-            subtitle: 'These results have been approved and are now final. The order status has been updated.',
+            subtitle:
+              'These results have been approved and are now final. The order status has been updated.',
           });
           setComments(prev => {
             const n = { ...prev };
@@ -210,12 +216,14 @@ export const ValidationView: React.FC = () => {
           if (isLikelyNetworkOrTimeout(error)) {
             toast.error({
               title: 'Action may have completed',
-              subtitle: 'The request did not complete. Please refresh the page to see the latest status.',
+              subtitle:
+                'The request did not complete. Please refresh the page to see the latest status.',
             });
           } else {
             toast.error({
               title: `Failed to validate results: ${getErrorMessage(error, 'Unknown error')}`,
-              subtitle: 'The validation request failed. Please try again or contact support if the issue persists.',
+              subtitle:
+                'The validation request failed. Please try again or contact support if the issue persists.',
             });
           }
           throw error;
@@ -230,7 +238,8 @@ export const ValidationView: React.FC = () => {
         await invalidateOrders();
         toast.success({
           title: 'Results rejected',
-          subtitle: 'These results have been rejected. A re-test or new sample may have been requested.',
+          subtitle:
+            'These results have been rejected. A re-test or new sample may have been requested.',
         });
         setComments(prev => {
           const n = { ...prev };
@@ -259,7 +268,8 @@ export const ValidationView: React.FC = () => {
             : 'Results rejected - re-test created';
         toast.error({
           title: message,
-          subtitle: 'The rejection has been recorded. Follow up on re-test or recollection as needed.',
+          subtitle:
+            'The rejection has been recorded. Follow up on re-test or recollection as needed.',
         });
         setComments(prev => {
           const n = { ...prev };
@@ -271,7 +281,8 @@ export const ValidationView: React.FC = () => {
         if (isLikelyNetworkOrTimeout(error)) {
           toast.error({
             title: 'Action may have completed',
-            subtitle: 'The request did not complete. Please refresh the page to see the latest status.',
+            subtitle:
+              'The request did not complete. Please refresh the page to see the latest status.',
           });
         } else {
           toast.error({
@@ -334,79 +345,80 @@ export const ValidationView: React.FC = () => {
         size="lg"
       >
         <LabWorkflowView
-        items={filteredTests}
-        renderCard={test => {
-          const commentKey = `${test.orderId}-${test.testCode}`;
-          // Check if the order has validated tests to block re-collect option
-          const order = getOrder(test.orderId);
-          const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
+          items={filteredTests}
+          renderCard={test => {
+            const commentKey = `${test.orderId}-${test.testCode}`;
+            // Check if the order has validated tests to block re-collect option
+            const order = getOrder(test.orderId);
+            const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
 
-          const cardProps = {
-            test,
-            commentKey,
-            comments: comments[commentKey] || '',
-            onCommentsChange: handleCommentsChange,
-            onApprove: () => handleValidate(test.orderId, test.testCode, true),
-            onReject: (reason?: string, type?: 're-test' | 're-collect') =>
-              handleValidate(test.orderId, test.testCode, false, reason, type),
-            onClick: () => openValidationModal(test),
-            orderHasValidatedTests: hasValidatedTests,
-            isApproving:
-              (validateMutation.isPending || rejectMutation.isPending) && pendingValidateKey === commentKey,
-          };
+            const cardProps = {
+              test,
+              commentKey,
+              comments: comments[commentKey] || '',
+              onCommentsChange: handleCommentsChange,
+              onApprove: () => handleValidate(test.orderId, test.testCode, true),
+              onReject: (reason?: string, type?: 're-test' | 're-collect') =>
+                handleValidate(test.orderId, test.testCode, false, reason, type),
+              onClick: () => openValidationModal(test),
+              orderHasValidatedTests: hasValidatedTests,
+              isApproving:
+                (validateMutation.isPending || rejectMutation.isPending) &&
+                pendingValidateKey === commentKey,
+            };
 
-          // Desktop: checkbox + card when id present, else card only
-          // Only show checkbox if bulk validation is enabled
-          if (!isMobile && typeof test.id === 'number' && ENABLE_BULK_VALIDATION) {
-            return (
-              <div className="flex items-start gap-3">
-                <div className="pt-4">
-                  <ValidationCheckbox
-                    id={test.id}
-                    isSelected={isSelected(test.id)}
-                    onToggle={toggleItem}
-                    disabled={bulkMutation.isPending}
-                  />
+            // Desktop: checkbox + card when id present, else card only
+            // Only show checkbox if bulk validation is enabled
+            if (!isMobile && typeof test.id === 'number' && ENABLE_BULK_VALIDATION) {
+              return (
+                <div className="flex items-start gap-3">
+                  <div className="pt-4">
+                    <ValidationCheckbox
+                      id={test.id}
+                      isSelected={isSelected(test.id)}
+                      onToggle={toggleItem}
+                      disabled={bulkMutation.isPending}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <ValidationCard {...cardProps} isMobile={isMobile} />
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <ValidationCard {...cardProps} isMobile={isMobile} />
-                </div>
-              </div>
-            );
-          }
+              );
+            }
 
-          return <ValidationCard {...cardProps} isMobile={isMobile} />;
-        }}
-        getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
-        emptyIcon="shield-check"
-        emptyTitle="No Pending Validations"
-        emptyDescription="There are no results waiting for validation."
-        filterRow={
-          <LabFilters<PriorityLevel[]>
-            config={validationFilterConfig}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            sampleTypeFilters={sampleTypeFilters}
-            onSampleTypeFiltersChange={setSampleTypeFilters}
-            statusFilters={statusFilters}
-            onStatusFiltersChange={setStatusFilters}
-          />
-        }
-        afterFilterRow={
-          ENABLE_BULK_VALIDATION && !isMobile && filteredTestsWithId.length > 0 ? (
-            <BulkValidationToolbar
-              items={bulkItems}
-              selectedIds={selectedIds}
-              onSelectionChange={setSelectedIds}
-              onBulkApprove={handleBulkApprove}
-              isProcessing={bulkMutation.isPending}
-              enabled={ENABLE_BULK_VALIDATION}
+            return <ValidationCard {...cardProps} isMobile={isMobile} />;
+          }}
+          getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
+          emptyIcon="shield-check"
+          emptyTitle="No Pending Validations"
+          emptyDescription="There are no results waiting for validation."
+          filterRow={
+            <LabFilters<PriorityLevel[]>
+              config={validationFilterConfig}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
+              sampleTypeFilters={sampleTypeFilters}
+              onSampleTypeFiltersChange={setSampleTypeFilters}
+              statusFilters={statusFilters}
+              onStatusFiltersChange={setStatusFilters}
             />
-          ) : undefined
-        }
-      />
+          }
+          afterFilterRow={
+            ENABLE_BULK_VALIDATION && !isMobile && filteredTestsWithId.length > 0 ? (
+              <BulkValidationToolbar
+                items={bulkItems}
+                selectedIds={selectedIds}
+                onSelectionChange={setSelectedIds}
+                onBulkApprove={handleBulkApprove}
+                isProcessing={bulkMutation.isPending}
+                enabled={ENABLE_BULK_VALIDATION}
+              />
+            ) : undefined
+          }
+        />
       </SectionLoadingBoundary>
     </ErrorBoundary>
   );

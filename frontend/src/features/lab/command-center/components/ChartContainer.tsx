@@ -28,13 +28,11 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({
     const el = ref.current;
     if (!el) return;
 
-    const ro = new ResizeObserver((entries) => {
+    const ro = new ResizeObserver(entries => {
       const entry = entries[0];
       if (!entry) return;
       const { width, height } = entry.contentRect;
-      setSize((prev) =>
-        prev.width === width && prev.height === height ? prev : { width, height }
-      );
+      setSize(prev => (prev.width === width && prev.height === height ? prev : { width, height }));
     });
     ro.observe(el);
     return () => ro.disconnect();

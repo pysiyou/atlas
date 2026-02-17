@@ -4,13 +4,7 @@
  */
 
 import React, { useMemo } from 'react';
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { ChartContainer } from './ChartContainer';
 import { Icon, type IconName } from '@/shared/ui';
 
@@ -86,12 +80,27 @@ const CustomTooltip = ({ active, payload, valueLabel }: CustomTooltipProps) => {
   if (!active || !payload?.length) return null;
   const d = payload[0];
   return (
-    <div className="px-3 py-2 rounded shadow-lg text-sm min-w-[120px]" style={{ backgroundColor: TOOLTIP_BG, border: `1px solid ${TOOLTIP_STROKE}`, color: TOOLTIP_FG }}>
+    <div
+      className="px-3 py-2 rounded shadow-lg text-sm min-w-[120px]"
+      style={{
+        backgroundColor: TOOLTIP_BG,
+        border: `1px solid ${TOOLTIP_STROKE}`,
+        color: TOOLTIP_FG,
+      }}
+    >
       <div className="flex items-center gap-2 mb-1">
-        <span className="block w-2 h-2 rounded-full" style={{ backgroundColor: d.payload?.fill ?? 'var(--text)' }} />
-        <p className="text-xs" style={{ color: TOOLTIP_FG_MUTED }}>{d.name}</p>
+        <span
+          className="block w-2 h-2 rounded-full"
+          style={{ backgroundColor: d.payload?.fill ?? 'var(--text)' }}
+        />
+        <p className="text-xs" style={{ color: TOOLTIP_FG_MUTED }}>
+          {d.name}
+        </p>
       </div>
-      <p className="text-base ml-4">{d.value.toLocaleString()} <span className="text-xs text-text-tertiary ml-1">{valueLabel}</span></p>
+      <p className="text-base ml-4">
+        {d.value.toLocaleString()}{' '}
+        <span className="text-xs text-text-tertiary ml-1">{valueLabel}</span>
+      </p>
     </div>
   );
 };
@@ -151,7 +160,10 @@ function ChartSection({
                       />
                     ))}
                   </Pie>
-                  <Tooltip content={<CustomTooltip valueLabel={valueLabel} />} cursor={{ fill: 'transparent' }} />
+                  <Tooltip
+                    content={<CustomTooltip valueLabel={valueLabel} />}
+                    cursor={{ fill: 'transparent' }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             )}
@@ -162,7 +174,9 @@ function ChartSection({
             <p className="text-2xl tabular-nums text-text-primary">{total.toLocaleString()}</p>
             <p className="text-xs mt-0.5 text-text-tertiary">Total {valueLabel}:</p>
             {subTitle && (
-              <p className="text-xs mt-0.5" style={{ color: CHART_SUCCESS }}>{subTitle}</p>
+              <p className="text-xs mt-0.5" style={{ color: CHART_SUCCESS }}>
+                {subTitle}
+              </p>
             )}
           </div>
         </div>
@@ -193,7 +207,7 @@ interface DetailListRowProps {
   getItemIcon?: (item: DonutChartSegment) => IconName | undefined;
 }
 
-function DetailListRow({ item, index, total, getItemIcon }: DetailListRowProps) {
+function DetailListRow({ item, index, total: _total, getItemIcon }: DetailListRowProps) {
   const color = item.color ?? COLORS[index % COLORS.length];
   const iconName = getItemIcon?.(item);
   const hasArrivals = item.arrivedToday != null && item.arrivedToday > 0;
@@ -282,8 +296,11 @@ export const DonutChart: React.FC<DonutChartProps> = ({
   const { pieData, total, listItems } = useMemo(() => {
     const sum = data.reduce((a, b) => a + b.value, 0);
     const withColor = data.map((d, i) => ({ ...d, color: d.color ?? COLORS[i % COLORS.length] }));
-    const withPercent = withColor.map((d) => ({ ...d, percent: sum > 0 ? Math.round((d.value / sum) * 100) : 0 }));
-    return { pieData: withColor.filter((d) => d.value > 0), total: sum, listItems: withPercent };
+    const withPercent = withColor.map(d => ({
+      ...d,
+      percent: sum > 0 ? Math.round((d.value / sum) * 100) : 0,
+    }));
+    return { pieData: withColor.filter(d => d.value > 0), total: sum, listItems: withPercent };
   }, [data]);
 
   return (

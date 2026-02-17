@@ -1,6 +1,6 @@
 /**
  * useOrderFilters Hook
- * 
+ *
  * Manages order filter state and filtering logic
  */
 
@@ -17,7 +17,11 @@ interface UseOrderFiltersOptions {
 /**
  * Hook for managing order filters
  */
-export function useOrderFilters({ orders, patientIdFilter, getPatientName }: UseOrderFiltersOptions) {
+export function useOrderFilters({
+  orders,
+  patientIdFilter,
+  getPatientName,
+}: UseOrderFiltersOptions) {
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
   const [paymentFilters, setPaymentFilters] = useState<PaymentStatus[]>([]);
 
@@ -69,19 +73,19 @@ export function useOrderFilters({ orders, patientIdFilter, getPatientName }: Use
   return {
     // Filtered results
     filteredOrders,
-    
+
     // Search
     searchQuery,
     setSearchQuery,
-    
+
     // Date range
     dateRange,
     setDateRange,
-    
+
     // Status filters
     statusFilters,
     setStatusFilters,
-    
+
     // Payment filters
     paymentFilters,
     setPaymentFilters,

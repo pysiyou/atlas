@@ -23,4 +23,3 @@ export * from './TestsTable';
 export * from './PatientSelect';
 export * from './PaymentSection';
 export * from './TestSelect';
-

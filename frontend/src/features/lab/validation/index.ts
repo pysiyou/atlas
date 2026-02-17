@@ -6,4 +6,8 @@ export { ValidationDetailModal } from './ValidationDetailModal';
 export { ValidationCard } from './ValidationCard';
 export { ValidationView } from './ValidationView';
 export { ValidationForm } from './ValidationForm';
-export { BulkValidationToolbar, useBulkSelection, ValidationCheckbox } from './BulkValidationToolbar';
+export {
+  BulkValidationToolbar,
+  useBulkSelection,
+  ValidationCheckbox,
+} from './BulkValidationToolbar';

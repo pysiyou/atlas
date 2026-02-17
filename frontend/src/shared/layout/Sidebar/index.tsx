@@ -51,7 +51,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   onToggleCollapse,
 }) => {
   const collapsed = isCollapsed && !isMobile;
-  
+
   const sidebarVariants = {
     expanded: {
       width: '16rem', // w-64
@@ -68,7 +68,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       },
     },
   };
-  
+
   return (
     <motion.aside
       variants={sidebarVariants}
@@ -182,12 +182,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
             initial={{ x: '-100%' }}
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
-            transition={{ 
-              duration: 0.3, 
+            transition={{
+              duration: 0.3,
               ease: [0.4, 0, 0.2, 1],
               type: 'spring',
               stiffness: 300,
-              damping: 30
+              damping: 30,
             }}
             className="fixed top-0 left-0 bottom-0 z-50"
           >

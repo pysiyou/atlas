@@ -14,7 +14,11 @@ export interface UseLabWorkflowFiltersOptions<T, S> {
   initialStatusFilters?: S[];
 }
 
-function applyDateRange<T>(out: T[], dateRange: [Date, Date] | null, getOrderDate: (item: T) => string | undefined): T[] {
+function applyDateRange<T>(
+  out: T[],
+  dateRange: [Date, Date] | null,
+  getOrderDate: (item: T) => string | undefined
+): T[] {
   if (!dateRange) return out;
   const [start, end] = dateRange;
   const startDate = new Date(start);
@@ -61,7 +65,17 @@ export function useLabWorkflowFilters<T, S>({
       out = out.filter(item => searchFilterFn(item, searchQuery));
     }
     return out;
-  }, [items, dateRange, sampleTypeFilters, statusFilters, searchQuery, getOrderDate, getSampleType, getStatus, searchFilterFn]);
+  }, [
+    items,
+    dateRange,
+    sampleTypeFilters,
+    statusFilters,
+    searchQuery,
+    getOrderDate,
+    getSampleType,
+    getStatus,
+    searchFilterFn,
+  ]);
 
   return {
     filteredItems,

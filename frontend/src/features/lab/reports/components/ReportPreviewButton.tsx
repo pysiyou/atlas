@@ -28,9 +28,9 @@ export const ReportPreviewButton: React.FC<ReportPreviewButtonProps> = ({
   size = 'sm',
 }) => {
   return (
-    <IconButton 
-      variant="view" 
-      size={size} 
+    <IconButton
+      variant="view"
+      size={size}
       onClick={() => onPreview(test)}
       className="bg-brand text-text-inverse hover:opacity-90"
     />

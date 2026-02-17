@@ -1,6 +1,6 @@
 /**
  * usePatientForm Hook
- * 
+ *
  * Manages patient form state, validation, and submission using React Hook Form + Zod
  */
 
@@ -21,7 +21,11 @@ interface UsePatientFormOptions {
 /**
  * Hook for managing patient form state and submission
  */
-export function usePatientForm({ patient, mode = 'create', onSubmitSuccess }: UsePatientFormOptions = {}) {
+export function usePatientForm({
+  patient,
+  mode = 'create',
+  onSubmitSuccess,
+}: UsePatientFormOptions = {}) {
   const { create, update } = usePatientService();
 
   const defaultValues = useMemo(() => {

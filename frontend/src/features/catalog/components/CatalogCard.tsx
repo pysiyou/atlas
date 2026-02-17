@@ -25,9 +25,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
           <div className="text-sm text-text-primary break-words">{test.name}</div>
           <span className="text-xs text-brand font-mono leading-none">{test.code}</span>
         </div>
-        <div className="text-text-primary text-lg leading-none">
-          {formatCurrency(test.price)}
-        </div>
+        <div className="text-text-primary text-lg leading-none">{formatCurrency(test.price)}</div>
       </div>
 
       {/* Synonyms and volume */}

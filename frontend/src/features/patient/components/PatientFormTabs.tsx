@@ -4,12 +4,16 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import type { UseFormRegister, Control, FieldErrors, UseFormWatch, UseFormSetValue } from 'react-hook-form';
+import type {
+  UseFormRegister,
+  Control,
+  FieldErrors,
+  UseFormWatch,
+  UseFormSetValue,
+} from 'react-hook-form';
 import type { PatientFormInput } from '../schemas/patient.schema';
 import type { Patient } from '@/types';
-import {
-  DemographicsSection,
-} from './form-sections/DemographicsSection';
+import { DemographicsSection } from './form-sections/DemographicsSection';
 import { AddressSection } from './form-sections/AddressSection';
 import { EmergencyContactSection } from './form-sections/EmergencyContactSection';
 import { AffiliationSection } from './form-sections/AffiliationSection';
@@ -37,7 +41,7 @@ function createFormDataAdapter(
   hasAffiliationChecked: boolean
 ) {
   const formValues = watch();
-  
+
   // Map nested React Hook Form structure to flat structure expected by form sections
   return {
     fullName: formValues.fullName || '',
@@ -56,8 +60,8 @@ function createFormDataAdapter(
     emergencyContactRelationship: formValues.emergencyContact?.relationship,
     emergencyContactPhone: formValues.emergencyContact?.phone || '',
     emergencyContactEmail: formValues.emergencyContact?.email || '',
-    chronicConditions: Array.isArray(formValues.medicalHistory?.chronicConditions) 
-      ? formValues.medicalHistory.chronicConditions.join('; ') 
+    chronicConditions: Array.isArray(formValues.medicalHistory?.chronicConditions)
+      ? formValues.medicalHistory.chronicConditions.join('; ')
       : formValues.medicalHistory?.chronicConditions || '',
     currentMedications: Array.isArray(formValues.medicalHistory?.currentMedications)
       ? formValues.medicalHistory.currentMedications.join('; ')
@@ -68,11 +72,12 @@ function createFormDataAdapter(
     previousSurgeries: Array.isArray(formValues.medicalHistory?.previousSurgeries)
       ? formValues.medicalHistory.previousSurgeries.join('; ')
       : formValues.medicalHistory?.previousSurgeries || '',
-    familyHistory: typeof formValues.medicalHistory?.familyHistory === 'string'
-      ? formValues.medicalHistory.familyHistory
-      : Array.isArray(formValues.medicalHistory?.familyHistory)
-        ? formValues.medicalHistory.familyHistory.join('; ')
-        : '',
+    familyHistory:
+      typeof formValues.medicalHistory?.familyHistory === 'string'
+        ? formValues.medicalHistory.familyHistory
+        : Array.isArray(formValues.medicalHistory?.familyHistory)
+          ? formValues.medicalHistory.familyHistory.join('; ')
+          : '',
     smoking: formValues.medicalHistory?.lifestyle?.smoking ?? false,
     alcohol: formValues.medicalHistory?.lifestyle?.alcohol ?? false,
     temperature: formValues.vitalSigns?.temperature?.toString() || '',
@@ -86,7 +91,7 @@ function createFormDataAdapter(
 
 function createErrorsAdapter(errors: FieldErrors<PatientFormInput>): Record<string, string> {
   const flatErrors: Record<string, string> = {};
-  
+
   // Flatten nested errors
   if (errors.fullName) flatErrors.fullName = errors.fullName.message || '';
   if (errors.dateOfBirth) flatErrors.dateOfBirth = errors.dateOfBirth.message || '';
@@ -95,29 +100,39 @@ function createErrorsAdapter(errors: FieldErrors<PatientFormInput>): Record<stri
   if (errors.email) flatErrors.email = errors.email.message || '';
   if (errors.height) flatErrors.height = errors.height.message || '';
   if (errors.weight) flatErrors.weight = errors.weight.message || '';
-  
+
   if (errors.address) {
     if (errors.address.street) flatErrors.street = errors.address.street.message || '';
     if (errors.address.city) flatErrors.city = errors.address.city.message || '';
     if (errors.address.postalCode) flatErrors.postalCode = errors.address.postalCode.message || '';
   }
-  
+
   if (errors.emergencyContact) {
-    if (errors.emergencyContact.fullName) flatErrors.emergencyContactFullName = errors.emergencyContact.fullName.message || '';
-    if (errors.emergencyContact.relationship) flatErrors.emergencyContactRelationship = errors.emergencyContact.relationship.message || '';
-    if (errors.emergencyContact.phone) flatErrors.emergencyContactPhone = errors.emergencyContact.phone.message || '';
-    if (errors.emergencyContact.email) flatErrors.emergencyContactEmail = errors.emergencyContact.email.message || '';
+    if (errors.emergencyContact.fullName)
+      flatErrors.emergencyContactFullName = errors.emergencyContact.fullName.message || '';
+    if (errors.emergencyContact.relationship)
+      flatErrors.emergencyContactRelationship = errors.emergencyContact.relationship.message || '';
+    if (errors.emergencyContact.phone)
+      flatErrors.emergencyContactPhone = errors.emergencyContact.phone.message || '';
+    if (errors.emergencyContact.email)
+      flatErrors.emergencyContactEmail = errors.emergencyContact.email.message || '';
   }
-  
+
   if (errors.vitalSigns) {
-    if (errors.vitalSigns.temperature) flatErrors.temperature = errors.vitalSigns.temperature.message || '';
-    if (errors.vitalSigns.heartRate) flatErrors.heartRate = errors.vitalSigns.heartRate.message || '';
-    if (errors.vitalSigns.systolicBP) flatErrors.systolicBP = errors.vitalSigns.systolicBP.message || '';
-    if (errors.vitalSigns.diastolicBP) flatErrors.diastolicBP = errors.vitalSigns.diastolicBP.message || '';
-    if (errors.vitalSigns.respiratoryRate) flatErrors.respiratoryRate = errors.vitalSigns.respiratoryRate.message || '';
-    if (errors.vitalSigns.oxygenSaturation) flatErrors.oxygenSaturation = errors.vitalSigns.oxygenSaturation.message || '';
+    if (errors.vitalSigns.temperature)
+      flatErrors.temperature = errors.vitalSigns.temperature.message || '';
+    if (errors.vitalSigns.heartRate)
+      flatErrors.heartRate = errors.vitalSigns.heartRate.message || '';
+    if (errors.vitalSigns.systolicBP)
+      flatErrors.systolicBP = errors.vitalSigns.systolicBP.message || '';
+    if (errors.vitalSigns.diastolicBP)
+      flatErrors.diastolicBP = errors.vitalSigns.diastolicBP.message || '';
+    if (errors.vitalSigns.respiratoryRate)
+      flatErrors.respiratoryRate = errors.vitalSigns.respiratoryRate.message || '';
+    if (errors.vitalSigns.oxygenSaturation)
+      flatErrors.oxygenSaturation = errors.vitalSigns.oxygenSaturation.message || '';
   }
-  
+
   return flatErrors;
 }
 
@@ -145,130 +160,256 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
   const effectiveHasAffiliation = hasAffiliationChecked || !!formValues.affiliation;
   const formData = createFormDataAdapter(watch, effectiveHasAffiliation);
   const flatErrors = createErrorsAdapter(errors);
-  
+
   // Handler that maps flat field names to nested React Hook Form structure
   const onFieldChange = (field: string, value: unknown) => {
     // Map flat field names to nested React Hook Form paths
     const fieldMap: Record<string, (val: unknown) => void> = {
-      fullName: (val) => setValue('fullName', val as string),
-      dateOfBirth: (val) => setValue('dateOfBirth', val as string),
-      gender: (val) => {
+      fullName: val => setValue('fullName', val as string),
+      dateOfBirth: val => setValue('dateOfBirth', val as string),
+      gender: val => {
         if (val === 'male' || val === 'female') {
           setValue('gender', val);
         }
       },
-      phone: (val) => setValue('phone', val as string),
-      email: (val) => setValue('email', val as string),
-      height: (val) => setValue('height', val ? parseFloat(val as string) : undefined, { shouldValidate: true }),
-      weight: (val) => setValue('weight', val ? parseFloat(val as string) : undefined, { shouldValidate: true }),
-      street: (val) => {
+      phone: val => setValue('phone', val as string),
+      email: val => setValue('email', val as string),
+      height: val =>
+        setValue('height', val ? parseFloat(val as string) : undefined, { shouldValidate: true }),
+      weight: val =>
+        setValue('weight', val ? parseFloat(val as string) : undefined, { shouldValidate: true }),
+      street: val => {
         const currentAddress = watch('address') || { street: '', city: '', postalCode: '' };
         setValue('address', { ...currentAddress, street: val as string }, { shouldValidate: true });
       },
-      city: (val) => {
+      city: val => {
         const currentAddress = watch('address') || { street: '', city: '', postalCode: '' };
         setValue('address', { ...currentAddress, city: val as string }, { shouldValidate: true });
       },
-      postalCode: (val) => {
+      postalCode: val => {
         const currentAddress = watch('address') || { street: '', city: '', postalCode: '' };
-        setValue('address', { ...currentAddress, postalCode: val as string }, { shouldValidate: true });
+        setValue(
+          'address',
+          { ...currentAddress, postalCode: val as string },
+          { shouldValidate: true }
+        );
       },
-      hasAffiliation: (val) => {
+      hasAffiliation: val => {
         setHasAffiliationChecked(val as boolean);
         if (!val) {
           setValue('affiliation', undefined);
         }
       },
-      affiliationDuration: (val) => {
+      affiliationDuration: val => {
         const currentAffiliation = watch('affiliation');
-        setValue('affiliation', { ...currentAffiliation, duration: val } as PatientFormInput['affiliation'], { shouldValidate: true });
+        setValue(
+          'affiliation',
+          { ...currentAffiliation, duration: val } as PatientFormInput['affiliation'],
+          { shouldValidate: true }
+        );
         // Ensure checkbox is checked when duration is selected
         if (val && !hasAffiliationChecked) {
           setHasAffiliationChecked(true);
         }
       },
-      emergencyContactFullName: (val) => {
-        const currentContact = watch('emergencyContact') || { fullName: '', relationship: 'other' as const, phone: '', email: '' };
-        setValue('emergencyContact', { ...currentContact, fullName: val as string }, { shouldValidate: true });
+      emergencyContactFullName: val => {
+        const currentContact = watch('emergencyContact') || {
+          fullName: '',
+          relationship: 'other' as const,
+          phone: '',
+          email: '',
+        };
+        setValue(
+          'emergencyContact',
+          { ...currentContact, fullName: val as string },
+          { shouldValidate: true }
+        );
       },
-      emergencyContactRelationship: (val) => {
-        const currentContact = watch('emergencyContact') || { fullName: '', relationship: 'other' as const, phone: '', email: '' };
-        setValue('emergencyContact', { ...currentContact, relationship: val as PatientFormInput['emergencyContact']['relationship'] }, { shouldValidate: true });
+      emergencyContactRelationship: val => {
+        const currentContact = watch('emergencyContact') || {
+          fullName: '',
+          relationship: 'other' as const,
+          phone: '',
+          email: '',
+        };
+        setValue(
+          'emergencyContact',
+          {
+            ...currentContact,
+            relationship: val as PatientFormInput['emergencyContact']['relationship'],
+          },
+          { shouldValidate: true }
+        );
       },
-      emergencyContactPhone: (val) => {
-        const currentContact = watch('emergencyContact') || { fullName: '', relationship: 'other' as const, phone: '', email: '' };
-        setValue('emergencyContact', { ...currentContact, phone: val as string }, { shouldValidate: true });
+      emergencyContactPhone: val => {
+        const currentContact = watch('emergencyContact') || {
+          fullName: '',
+          relationship: 'other' as const,
+          phone: '',
+          email: '',
+        };
+        setValue(
+          'emergencyContact',
+          { ...currentContact, phone: val as string },
+          { shouldValidate: true }
+        );
       },
-      emergencyContactEmail: (val) => {
-        const currentContact = watch('emergencyContact') || { fullName: '', relationship: 'other' as const, phone: '', email: '' };
-        setValue('emergencyContact', { ...currentContact, email: val as string }, { shouldValidate: true });
+      emergencyContactEmail: val => {
+        const currentContact = watch('emergencyContact') || {
+          fullName: '',
+          relationship: 'other' as const,
+          phone: '',
+          email: '',
+        };
+        setValue(
+          'emergencyContact',
+          { ...currentContact, email: val as string },
+          { shouldValidate: true }
+        );
       },
-      chronicConditions: (val) => {
-        const conditions = typeof val === 'string' ? val.split(';').map(s => s.trim()).filter(Boolean) : [];
-        setValue('medicalHistory.chronicConditions', conditions.length > 0 ? conditions : undefined, { shouldValidate: true });
+      chronicConditions: val => {
+        const conditions =
+          typeof val === 'string'
+            ? val
+                .split(';')
+                .map(s => s.trim())
+                .filter(Boolean)
+            : [];
+        setValue(
+          'medicalHistory.chronicConditions',
+          conditions.length > 0 ? conditions : undefined,
+          { shouldValidate: true }
+        );
       },
-      currentMedications: (val) => {
-        const medications = typeof val === 'string' ? val.split(';').map(s => s.trim()).filter(Boolean) : [];
-        setValue('medicalHistory.currentMedications', medications.length > 0 ? medications : undefined, { shouldValidate: true });
+      currentMedications: val => {
+        const medications =
+          typeof val === 'string'
+            ? val
+                .split(';')
+                .map(s => s.trim())
+                .filter(Boolean)
+            : [];
+        setValue(
+          'medicalHistory.currentMedications',
+          medications.length > 0 ? medications : undefined,
+          { shouldValidate: true }
+        );
       },
-      allergies: (val) => {
-        const allergies = typeof val === 'string' ? val.split(';').map(s => s.trim()).filter(Boolean) : [];
-        setValue('medicalHistory.allergies', allergies.length > 0 ? allergies : undefined, { shouldValidate: true });
+      allergies: val => {
+        const allergies =
+          typeof val === 'string'
+            ? val
+                .split(';')
+                .map(s => s.trim())
+                .filter(Boolean)
+            : [];
+        setValue('medicalHistory.allergies', allergies.length > 0 ? allergies : undefined, {
+          shouldValidate: true,
+        });
       },
-      previousSurgeries: (val) => {
-        const surgeries = typeof val === 'string' ? val.split(';').map(s => s.trim()).filter(Boolean) : [];
-        setValue('medicalHistory.previousSurgeries', surgeries.length > 0 ? surgeries : undefined, { shouldValidate: true });
+      previousSurgeries: val => {
+        const surgeries =
+          typeof val === 'string'
+            ? val
+                .split(';')
+                .map(s => s.trim())
+                .filter(Boolean)
+            : [];
+        setValue('medicalHistory.previousSurgeries', surgeries.length > 0 ? surgeries : undefined, {
+          shouldValidate: true,
+        });
       },
-      familyHistory: (val) => setValue('medicalHistory.familyHistory', val as string || undefined, { shouldValidate: true }),
-      smoking: (val) => {
-        const currentLifestyle = watch('medicalHistory.lifestyle') || { smoking: false, alcohol: false };
-        setValue('medicalHistory.lifestyle', { ...currentLifestyle, smoking: val as boolean }, { shouldValidate: true });
+      familyHistory: val =>
+        setValue('medicalHistory.familyHistory', (val as string) || undefined, {
+          shouldValidate: true,
+        }),
+      smoking: val => {
+        const currentLifestyle = watch('medicalHistory.lifestyle') || {
+          smoking: false,
+          alcohol: false,
+        };
+        setValue(
+          'medicalHistory.lifestyle',
+          { ...currentLifestyle, smoking: val as boolean },
+          { shouldValidate: true }
+        );
       },
-      alcohol: (val) => {
-        const currentLifestyle = watch('medicalHistory.lifestyle') || { smoking: false, alcohol: false };
-        setValue('medicalHistory.lifestyle', { ...currentLifestyle, alcohol: val as boolean }, { shouldValidate: true });
+      alcohol: val => {
+        const currentLifestyle = watch('medicalHistory.lifestyle') || {
+          smoking: false,
+          alcohol: false,
+        };
+        setValue(
+          'medicalHistory.lifestyle',
+          { ...currentLifestyle, alcohol: val as boolean },
+          { shouldValidate: true }
+        );
       },
-      temperature: (val) => {
+      temperature: val => {
         const currentVitals = watch('vitalSigns') || {};
-        setValue('vitalSigns', {
-          ...currentVitals,
-          temperature: val ? parseFloat(val as string) : undefined,
-        }, { shouldValidate: true });
+        setValue(
+          'vitalSigns',
+          {
+            ...currentVitals,
+            temperature: val ? parseFloat(val as string) : undefined,
+          },
+          { shouldValidate: true }
+        );
       },
-      heartRate: (val) => {
+      heartRate: val => {
         const currentVitals = watch('vitalSigns') || {};
-        setValue('vitalSigns', {
-          ...currentVitals,
-          heartRate: val ? parseInt(val as string, 10) : undefined,
-        }, { shouldValidate: true });
+        setValue(
+          'vitalSigns',
+          {
+            ...currentVitals,
+            heartRate: val ? parseInt(val as string, 10) : undefined,
+          },
+          { shouldValidate: true }
+        );
       },
-      systolicBP: (val) => {
+      systolicBP: val => {
         const currentVitals = watch('vitalSigns') || {};
-        setValue('vitalSigns', {
-          ...currentVitals,
-          systolicBP: val ? parseInt(val as string, 10) : undefined,
-        }, { shouldValidate: true });
+        setValue(
+          'vitalSigns',
+          {
+            ...currentVitals,
+            systolicBP: val ? parseInt(val as string, 10) : undefined,
+          },
+          { shouldValidate: true }
+        );
       },
-      diastolicBP: (val) => {
+      diastolicBP: val => {
         const currentVitals = watch('vitalSigns') || {};
-        setValue('vitalSigns', {
-          ...currentVitals,
-          diastolicBP: val ? parseInt(val as string, 10) : undefined,
-        }, { shouldValidate: true });
+        setValue(
+          'vitalSigns',
+          {
+            ...currentVitals,
+            diastolicBP: val ? parseInt(val as string, 10) : undefined,
+          },
+          { shouldValidate: true }
+        );
       },
-      respiratoryRate: (val) => {
+      respiratoryRate: val => {
         const currentVitals = watch('vitalSigns') || {};
-        setValue('vitalSigns', {
-          ...currentVitals,
-          respiratoryRate: val ? parseInt(val as string, 10) : undefined,
-        }, { shouldValidate: true });
+        setValue(
+          'vitalSigns',
+          {
+            ...currentVitals,
+            respiratoryRate: val ? parseInt(val as string, 10) : undefined,
+          },
+          { shouldValidate: true }
+        );
       },
-      oxygenSaturation: (val) => {
+      oxygenSaturation: val => {
         const currentVitals = watch('vitalSigns') || {};
-        setValue('vitalSigns', {
-          ...currentVitals,
-          oxygenSaturation: val ? parseFloat(val as string) : undefined,
-        }, { shouldValidate: true });
+        setValue(
+          'vitalSigns',
+          {
+            ...currentVitals,
+            oxygenSaturation: val ? parseFloat(val as string) : undefined,
+          },
+          { shouldValidate: true }
+        );
       },
     };
 
@@ -289,7 +430,11 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
               </div>
               <div className="text-base font-normal text-text-primary">Identity & Contact</div>
             </div>
-            <DemographicsSection formData={formData} errors={flatErrors} onFieldChange={onFieldChange} />
+            <DemographicsSection
+              formData={formData}
+              errors={flatErrors}
+              onFieldChange={onFieldChange}
+            />
             <AddressSection formData={formData} errors={flatErrors} onFieldChange={onFieldChange} />
           </div>
 

@@ -274,7 +274,9 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
               {/* Left: Label with dots, and Timestamp */}
               <div className="flex flex-col flex-1 min-w-0">
                 <div className="flex items-center">
-                  <p className={`text-xxs uppercase font-normal ${getLabelColor()}`}>{step.label}</p>
+                  <p className={`text-xxs uppercase font-normal ${getLabelColor()}`}>
+                    {step.label}
+                  </p>
                   {/* Test completion dots */}
                   {showTestDots && <TestDots progress={progress} />}
                 </div>

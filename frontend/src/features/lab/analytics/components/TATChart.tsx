@@ -24,24 +24,29 @@ export const TATChart: React.FC<TATChartProps> = ({ data }) => {
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
-          <XAxis 
-            dataKey="stage" 
+          <XAxis
+            dataKey="stage"
             tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
             tickLine={{ stroke: 'var(--chart-grid)' }}
           />
-          <YAxis 
-            label={{ value: 'Minutes', angle: -90, position: 'insideLeft', style: { fill: 'var(--chart-axis)', fontSize: 12 } }}
+          <YAxis
+            label={{
+              value: 'Minutes',
+              angle: -90,
+              position: 'insideLeft',
+              style: { fill: 'var(--chart-axis)', fontSize: 12 },
+            }}
             tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
             tickLine={{ stroke: 'var(--chart-grid)' }}
           />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: 'var(--chart-tooltip)', 
+          <Tooltip
+            contentStyle={{
+              backgroundColor: 'var(--chart-tooltip)',
               border: '1px solid var(--chart-tooltip-border)',
               borderRadius: '8px',
-              fontSize: '12px'
+              fontSize: '12px',
             }}
-            formatter={(value) => [`${value} min`, 'Time']}
+            formatter={value => [`${value} min`, 'Time']}
           />
           <Bar dataKey="minutes" fill="var(--chart-primary)" radius={[4, 4, 0, 0]} />
         </BarChart>

@@ -130,10 +130,7 @@ export const ActiveFilterBadges: React.FC<ActiveFilterBadgesProps> = ({
                 className="ml-0.5 p-0.5 rounded transition-colors cursor-pointer hover:opacity-70"
                 aria-label={`Remove ${badge.label} filter`}
               >
-                <Icon
-                  name={ICONS.actions.closeCircle}
-                  className="w-2.5 h-2.5"
-                />
+                <Icon name={ICONS.actions.closeCircle} className="w-2.5 h-2.5" />
               </button>
             </div>
           );

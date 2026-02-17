@@ -6,7 +6,15 @@
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/billing.
  */
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { Popover, Button, Icon, Alert, Badge, FooterInfo, PaymentMethodSelector } from '@/shared/ui';
+import {
+  Popover,
+  Button,
+  Icon,
+  Alert,
+  Badge,
+  FooterInfo,
+  PaymentMethodSelector,
+} from '@/shared/ui';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { cn, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/utils/orderUtils';
@@ -107,7 +115,12 @@ interface PaymentPopoverContentProps {
   /** Error message from parent (mutation onError). */
   error: string | null;
   /** Submit handler from parent (mutation runs in wrapper). */
-  onSubmit: (paymentData: { orderId: string | number; amount: number; paymentMethod: PaymentMethod; notes?: string }) => void;
+  onSubmit: (paymentData: {
+    orderId: string | number;
+    amount: number;
+    paymentMethod: PaymentMethod;
+    notes?: string;
+  }) => void;
 }
 
 /**
@@ -158,7 +171,11 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   return (
     <PopoverForm
       title="Process Payment"
-      subtitle={<span>Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span></span>}
+      subtitle={
+        <span>
+          Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span>
+        </span>
+      }
       onCancel={onCancel}
       onConfirm={handleSubmit}
       confirmLabel="Process Payment"
@@ -203,6 +220,39 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   );
 };
 
+/** Inner content wrapper: syncs close to closeRef in an effect to satisfy react-hooks/immutability. */
+const PaymentPopoverContentInner: React.FC<{
+  close: () => void;
+  closeRef: React.MutableRefObject<(() => void) | null>;
+  order: Order;
+  submitting: boolean;
+  error: string | null;
+  onSubmit: (data: {
+    orderId: string | number;
+    amount: number;
+    paymentMethod: PaymentMethod;
+    notes?: string;
+  }) => void;
+}> = ({ close, closeRef, order, submitting, error, onSubmit }) => {
+  useEffect(() => {
+    closeRef.current = close;
+    return () => {
+      closeRef.current = null;
+    };
+  }, [close, closeRef]);
+  return (
+    <div data-popover-content onClick={e => e.stopPropagation()}>
+      <PaymentPopoverContent
+        order={order}
+        onCancel={close}
+        submitting={submitting}
+        error={error}
+        onSubmit={onSubmit}
+      />
+    </div>
+  );
+};
+
 /**
  * PaymentPopover - Popover trigger and container for payment processing
  *
@@ -218,8 +268,15 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
   const [error, setError] = useState<string | null>(null);
   const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
 
+  const closeRef = useRef<(() => void) | null>(null);
+
   const handleSubmit = useCallback(
-    (paymentData: { orderId: string | number; amount: number; paymentMethod: PaymentMethod; notes?: string }) => {
+    (paymentData: {
+      orderId: string | number;
+      amount: number;
+      paymentMethod: PaymentMethod;
+      notes?: string;
+    }) => {
       if (paymentData.amount <= 0) {
         setError('Amount must be greater than 0');
         return;
@@ -238,7 +295,19 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
     [createPaymentMutation, onSuccess]
   );
 
-  const closeRef = useRef<(() => void) | null>(null);
+  const renderContent = useCallback(
+    (close: () => void) => (
+      <PaymentPopoverContentInner
+        close={close}
+        closeRef={closeRef}
+        order={order}
+        submitting={submitting}
+        error={error}
+        onSubmit={handleSubmit}
+      />
+    ),
+    [order, submitting, error, handleSubmit]
+  );
 
   const isPaid = order.paymentStatus === 'paid';
   if (isPaid && trigger == null) {
@@ -254,6 +323,7 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
       PAY
     </Button>
   );
+
   return (
     <Popover
       placement="bottom-end"
@@ -261,20 +331,7 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
       trigger={trigger ?? defaultTrigger}
       preventClose={submitting}
     >
-      {({ close }) => {
-        closeRef.current = close;
-        return (
-          <div data-popover-content onClick={e => e.stopPropagation()}>
-            <PaymentPopoverContent
-              order={order}
-              onCancel={close}
-              submitting={submitting}
-              error={error}
-              onSubmit={handleSubmit}
-            />
-          </div>
-        );
-      }}
+      {({ close }) => renderContent(close)}
     </Popover>
   );
 };

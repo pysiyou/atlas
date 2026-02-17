@@ -57,7 +57,9 @@ export interface ResultRejectionRecord {
 }
 
 /** Reads rejection type from either API shape (rejectionType or type). */
-export function getResultRejectionType(record: ResultRejectionRecord): ResultRejectionType | undefined {
+export function getResultRejectionType(
+  record: ResultRejectionRecord
+): ResultRejectionType | undefined {
   return record.rejectionType ?? record.type;
 }
 

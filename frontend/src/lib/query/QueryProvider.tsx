@@ -61,9 +61,5 @@ export const QueryProvider: React.FC<QueryProviderProps> = ({ children }) => {
   }
 
   // Fallback to standard QueryClientProvider (SSR or no localStorage)
-  return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
-  );
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };

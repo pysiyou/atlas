@@ -13,7 +13,7 @@ interface RejectionChartProps {
 
 export const RejectionChart: React.FC<RejectionChartProps> = ({ data }) => {
   const chartData = data.sampleRejections.topReasons.map(item => ({
-    reason: item.reason.length > 20 ? `${item.reason.substring(0, 20)  }...` : item.reason,
+    reason: item.reason.length > 20 ? `${item.reason.substring(0, 20)}...` : item.reason,
     count: item.count,
     fullReason: item.reason,
   }));
@@ -35,24 +35,24 @@ export const RejectionChart: React.FC<RejectionChartProps> = ({ data }) => {
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={chartData} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
-          <XAxis 
+          <XAxis
             type="number"
             tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
             tickLine={{ stroke: 'var(--chart-grid)' }}
           />
-          <YAxis 
+          <YAxis
             type="category"
-            dataKey="reason" 
+            dataKey="reason"
             width={150}
             tick={{ fill: 'var(--chart-axis)', fontSize: 11 }}
             tickLine={{ stroke: 'var(--chart-grid)' }}
           />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: 'var(--chart-tooltip)', 
+          <Tooltip
+            contentStyle={{
+              backgroundColor: 'var(--chart-tooltip)',
               border: '1px solid var(--chart-tooltip-border)',
               borderRadius: '8px',
-              fontSize: '12px'
+              fontSize: '12px',
             }}
             formatter={(value, _name, props) => [`${value} rejections`, props.payload.fullReason]}
           />

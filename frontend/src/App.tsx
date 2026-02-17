@@ -10,12 +10,7 @@ import { Toaster } from 'react-hot-toast';
 
 // Composed Providers
 import { AppProviders } from '@/shared/providers/AppProviders';
-import {
-  AppToastBar,
-  DataLoader,
-  ErrorBoundary,
-  LoadingState,
-} from '@/shared/components';
+import { AppToastBar, DataLoader, ErrorBoundary, LoadingState } from '@/shared/components';
 import { AuthRehydrationGate } from '@/shared/components/AuthRehydrationGate';
 
 // Eagerly loaded components (small, frequently accessed)
@@ -79,112 +74,112 @@ const ProtectedFeatureRoute: React.FC<ProtectedFeatureRouteProps> = ({ children 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-        {/* Public Routes */}
-        <Route
-          path={ROUTES.LOGIN}
-          element={
-            <PublicRoute>
-              <LoginForm />
-            </PublicRoute>
-          }
-        />
+      {/* Public Routes */}
+      <Route
+        path={ROUTES.LOGIN}
+        element={
+          <PublicRoute>
+            <LoginForm />
+          </PublicRoute>
+        }
+      />
 
-        {/* Protected Routes with Code Splitting */}
-        <Route
-          path={ROUTES.DASHBOARD}
-          element={
-            <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute>
-                <Dashboard />
-              </ProtectedFeatureRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path={`${ROUTES.PATIENTS}/*`}
-          element={
-            <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute>
-                <Patients />
-              </ProtectedFeatureRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path={`${ROUTES.ORDERS}/*`}
-          element={
-            <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute>
-                <Orders />
-              </ProtectedFeatureRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path={`${ROUTES.CATALOG}/*`}
-          element={
-            <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute>
-                <Catalog />
-              </ProtectedFeatureRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path={ROUTES.LABORATORY}
-          element={
-            <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute>
-                <Laboratory />
-              </ProtectedFeatureRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path={ROUTES.APPOINTMENTS}
-          element={
-            <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute>
-                <Appointments />
-              </ProtectedFeatureRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path={ROUTES.PAYMENTS}
-          element={
-            <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute>
-                <Payments />
-              </ProtectedFeatureRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path={`${ROUTES.REPORTS}/*`}
-          element={
-            <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute>
-                <Reports />
-              </ProtectedFeatureRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path={ROUTES.ADMIN}
-          element={
-            <Suspense fallback={<PageLoadingFallback />}>
-              <ProtectedFeatureRoute>
-                <Admin />
-              </ProtectedFeatureRoute>
-            </Suspense>
-          }
-        />
+      {/* Protected Routes with Code Splitting */}
+      <Route
+        path={ROUTES.DASHBOARD}
+        element={
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute>
+              <Dashboard />
+            </ProtectedFeatureRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path={`${ROUTES.PATIENTS}/*`}
+        element={
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute>
+              <Patients />
+            </ProtectedFeatureRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path={`${ROUTES.ORDERS}/*`}
+        element={
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute>
+              <Orders />
+            </ProtectedFeatureRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path={`${ROUTES.CATALOG}/*`}
+        element={
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute>
+              <Catalog />
+            </ProtectedFeatureRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path={ROUTES.LABORATORY}
+        element={
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute>
+              <Laboratory />
+            </ProtectedFeatureRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path={ROUTES.APPOINTMENTS}
+        element={
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute>
+              <Appointments />
+            </ProtectedFeatureRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path={ROUTES.PAYMENTS}
+        element={
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute>
+              <Payments />
+            </ProtectedFeatureRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path={`${ROUTES.REPORTS}/*`}
+        element={
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute>
+              <Reports />
+            </ProtectedFeatureRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path={ROUTES.ADMIN}
+        element={
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProtectedFeatureRoute>
+              <Admin />
+            </ProtectedFeatureRoute>
+          </Suspense>
+        }
+      />
 
-        {/* Default redirect */}
-        <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.LOGIN} replace />} />
-        <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
-      </Routes>
+      {/* Default redirect */}
+      <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.LOGIN} replace />} />
+      <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
+    </Routes>
   );
 };
 
@@ -201,23 +196,23 @@ const App: React.FC = () => {
             <DataLoader>
               <AppRoutes />
               <ModalRenderer />
-            <Toaster
-              position="bottom-right"
-              containerClassName="app-toaster"
-              toastOptions={{
-                duration: 3000,
-                success: {
+              <Toaster
+                position="bottom-right"
+                containerClassName="app-toaster"
+                toastOptions={{
                   duration: 3000,
-                  iconTheme: { primary: 'var(--success)', secondary: 'var(--success-bg)' },
-                },
-                error: {
-                  duration: 4000,
-                  iconTheme: { primary: 'var(--danger)', secondary: 'var(--danger-bg)' },
-                },
-              }}
-            >
-              {(t) => <AppToastBar toast={t} />}
-            </Toaster>
+                  success: {
+                    duration: 3000,
+                    iconTheme: { primary: 'var(--success)', secondary: 'var(--success-bg)' },
+                  },
+                  error: {
+                    duration: 4000,
+                    iconTheme: { primary: 'var(--danger)', secondary: 'var(--danger-bg)' },
+                  },
+                }}
+              >
+                {t => <AppToastBar toast={t} />}
+              </Toaster>
             </DataLoader>
           </AuthRehydrationGate>
         </AppProviders>

@@ -107,7 +107,9 @@ export function formatRelativeDateTime(date: string | Date | undefined | null): 
     let dateLabel: string;
     if (dateOnly.getTime() === today.getTime()) dateLabel = 'Today';
     else if (dateOnly.getTime() === yesterday.getTime()) dateLabel = 'Yesterday';
-    else dateLabel = d.getFullYear() === now.getFullYear() ? format(d, 'd MMM') : format(d, 'd MMM yyyy');
+    else
+      dateLabel =
+        d.getFullYear() === now.getFullYear() ? format(d, 'd MMM') : format(d, 'd MMM yyyy');
     return `${dateLabel}, ${format(d, 'h:mm a')}`;
   } catch {
     return '';

@@ -87,18 +87,18 @@ export function formInputToPayload(
   if (formData.dateOfBirth !== undefined) payload.dateOfBirth = formData.dateOfBirth;
   if (formData.gender !== undefined) payload.gender = formData.gender;
   if (formData.phone !== undefined) payload.phone = formData.phone;
-  
+
   // Email: convert empty string to undefined (backend treats as null)
   if (formData.email !== undefined) {
     payload.email = formData.email === '' ? undefined : formData.email;
   }
-  
+
   if (formData.height !== undefined) payload.height = formData.height;
   if (formData.weight !== undefined) payload.weight = formData.weight;
 
   // Copy nested objects (backend handles validation)
   if (formData.address !== undefined) payload.address = formData.address;
-  
+
   // Emergency contact: clean up empty email
   if (formData.emergencyContact !== undefined) {
     const emergencyContact = { ...formData.emergencyContact };
@@ -116,7 +116,7 @@ export function formInputToPayload(
   // Medical history: ensure familyHistory is array format
   if (formData.medicalHistory !== undefined && formData.medicalHistory !== null) {
     const medicalHistory = { ...formData.medicalHistory };
-    
+
     // Convert familyHistory string to array if needed
     if (typeof medicalHistory.familyHistory === 'string') {
       medicalHistory.familyHistory = medicalHistory.familyHistory
@@ -124,7 +124,7 @@ export function formInputToPayload(
         .map(s => s.trim())
         .filter(Boolean);
     }
-    
+
     payload.medicalHistory = medicalHistory;
   }
 
@@ -133,14 +133,19 @@ export function formInputToPayload(
     // Filter out undefined/null values - only send provided vitals
     const vs = formData.vitalSigns;
     const vitalSigns: Record<string, number> = {};
-    
-    if (vs.temperature !== undefined && vs.temperature !== null) vitalSigns.temperature = vs.temperature;
+
+    if (vs.temperature !== undefined && vs.temperature !== null)
+      vitalSigns.temperature = vs.temperature;
     if (vs.heartRate !== undefined && vs.heartRate !== null) vitalSigns.heartRate = vs.heartRate;
-    if (vs.systolicBP !== undefined && vs.systolicBP !== null) vitalSigns.systolicBP = vs.systolicBP;
-    if (vs.diastolicBP !== undefined && vs.diastolicBP !== null) vitalSigns.diastolicBP = vs.diastolicBP;
-    if (vs.respiratoryRate !== undefined && vs.respiratoryRate !== null) vitalSigns.respiratoryRate = vs.respiratoryRate;
-    if (vs.oxygenSaturation !== undefined && vs.oxygenSaturation !== null) vitalSigns.oxygenSaturation = vs.oxygenSaturation;
-    
+    if (vs.systolicBP !== undefined && vs.systolicBP !== null)
+      vitalSigns.systolicBP = vs.systolicBP;
+    if (vs.diastolicBP !== undefined && vs.diastolicBP !== null)
+      vitalSigns.diastolicBP = vs.diastolicBP;
+    if (vs.respiratoryRate !== undefined && vs.respiratoryRate !== null)
+      vitalSigns.respiratoryRate = vs.respiratoryRate;
+    if (vs.oxygenSaturation !== undefined && vs.oxygenSaturation !== null)
+      vitalSigns.oxygenSaturation = vs.oxygenSaturation;
+
     // Only include vitalSigns if at least one field has a value
     if (Object.keys(vitalSigns).length > 0) {
       payload.vitalSigns = vitalSigns;

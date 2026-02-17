@@ -15,16 +15,19 @@ export const Appointments: React.FC = () => {
       <PageHeaderBar title="Appointments" />
       <div className="flex-1 min-h-0 overflow-auto">
         <SectionContainer title="Coming Soon">
-        <div className="text-center py-8">
-          <Icon name={ICONS.dataFields.date} className="w-16 h-16 mx-auto mb-4 text-text-disabled" />
-          <p className="text-sm text-text-primary">
-            Appointment management will be available once the API is implemented.
-          </p>
-          <p className="text-sm text-text-tertiary mt-2">
-            This feature will use TanStack Query hooks for data management.
-          </p>
-        </div>
-      </SectionContainer>
+          <div className="text-center py-8">
+            <Icon
+              name={ICONS.dataFields.date}
+              className="w-16 h-16 mx-auto mb-4 text-text-disabled"
+            />
+            <p className="text-sm text-text-primary">
+              Appointment management will be available once the API is implemented.
+            </p>
+            <p className="text-sm text-text-tertiary mt-2">
+              This feature will use TanStack Query hooks for data management.
+            </p>
+          </div>
+        </SectionContainer>
       </div>
     </div>
   );

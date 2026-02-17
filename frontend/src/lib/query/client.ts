@@ -70,10 +70,14 @@ export function createQueryClient(): QueryClient {
         // Default to dynamic behavior - most queries are dynamic
         ...cacheConfig.dynamic,
         // Smart window focus refetch - only if data is stale enough
-        refetchOnWindowFocus: (query) => {
+        refetchOnWindowFocus: query => {
           const queryKey = query.queryKey;
           if (Array.isArray(queryKey) && typeof queryKey[0] === 'string') {
-            if (STATIC_QUERY_KEY_PREFIXES.includes(queryKey[0] as (typeof STATIC_QUERY_KEY_PREFIXES)[number])) {
+            if (
+              STATIC_QUERY_KEY_PREFIXES.includes(
+                queryKey[0] as (typeof STATIC_QUERY_KEY_PREFIXES)[number]
+              )
+            ) {
               return false;
             }
           }

@@ -1,6 +1,6 @@
 /**
  * usePatientFilters Hook
- * 
+ *
  * Manages patient filter state and filtering logic
  */
 
@@ -83,19 +83,19 @@ export function usePatientFilters({ patients }: UsePatientFiltersOptions) {
   return {
     // Filtered results
     filteredPatients,
-    
+
     // Search
     searchQuery,
     setSearchQuery,
-    
+
     // Age range
     ageRange,
     setAgeRange,
-    
+
     // Gender/Sex filters
     sexFilters,
     setSexFilters,
-    
+
     // Affiliation status filters
     affiliationStatusFilters,
     setAffiliationStatusFilters,

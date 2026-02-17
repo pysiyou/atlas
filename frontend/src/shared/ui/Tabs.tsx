@@ -44,7 +44,7 @@ export const TAB_INDICATOR_TRANSITION =
   'left 320ms cubic-bezier(0.32, 0.72, 0, 1), width 320ms cubic-bezier(0.32, 0.72, 0, 1)';
 
 // Large component is necessary for comprehensive tabs list with indicator animation, keyboard navigation, and responsive behavior
- 
+
 export const TabsList: React.FC<TabsListProps> = ({
   tabs,
   activeTabId,
@@ -161,7 +161,8 @@ export const TabsList: React.FC<TabsListProps> = ({
 
   // Helper functions for inline class generation
   const getTabButtonClasses = (variant: 'underline' | 'pills', isActive: boolean) => {
-    const base = 'relative px-4 py-2 text-sm font-normal transition-colors duration-200 whitespace-nowrap flex items-center gap-2';
+    const base =
+      'relative px-4 py-2 text-sm font-normal transition-colors duration-200 whitespace-nowrap flex items-center gap-2';
     if (variant === 'underline') {
       return `${base} ${isActive ? 'text-brand' : 'text-text-secondary hover:text-text-primary'}`;
     }
@@ -169,7 +170,8 @@ export const TabsList: React.FC<TabsListProps> = ({
   };
 
   const getTabCountBadgeClasses = (variant: 'underline' | 'pills', isActive: boolean) => {
-    const base = 'inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-normal';
+    const base =
+      'inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-normal';
     if (variant === 'underline') {
       return `${base} ${isActive ? 'bg-brand-muted text-brand-fg' : 'bg-neutral-100 text-text-tertiary'}`;
     }
@@ -196,9 +198,7 @@ export const TabsList: React.FC<TabsListProps> = ({
           >
             {tab.label}
             {tab.count !== undefined && (
-              <span className={getTabCountBadgeClasses(variant, isActive)}>
-                {tab.count}
-              </span>
+              <span className={getTabCountBadgeClasses(variant, isActive)}>{tab.count}</span>
             )}
           </button>
         );

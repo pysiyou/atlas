@@ -63,7 +63,9 @@ export const createReportTableConfig = (
   );
 
   const renderOrderDate = (test: ValidatedTest) => (
-    <span className="text-xs text-text-tertiary truncate block font-normal">{formatDate(test.orderDate)}</span>
+    <span className="text-xs text-text-tertiary truncate block font-normal">
+      {formatDate(test.orderDate)}
+    </span>
   );
 
   const renderStatus = () => <Badge variant="validated" size="sm" />;

@@ -8,7 +8,10 @@ import type { ToastMessageObject } from './AppToastBar';
 
 type ToastMessage = React.ReactElement | string | null | ToastMessageObject;
 
-export const toast = toastLib as Omit<typeof toastLib, 'success' | 'error' | 'loading' | 'custom'> & {
+export const toast = toastLib as Omit<
+  typeof toastLib,
+  'success' | 'error' | 'loading' | 'custom'
+> & {
   (message: ToastMessage, opts?: Parameters<typeof toastLib>[1]): string;
   success(message: ToastMessage, opts?: Parameters<typeof toastLib.success>[1]): string;
   error(message: ToastMessage, opts?: Parameters<typeof toastLib.error>[1]): string;

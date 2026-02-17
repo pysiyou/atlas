@@ -90,7 +90,11 @@ class APIClient {
         const body = await response.json();
         const raw = body.detail ?? body.message;
         if (Array.isArray(raw)) {
-          message = raw.map((d: { msg?: string }) => d?.msg).filter(Boolean).join('; ') || message;
+          message =
+            raw
+              .map((d: { msg?: string }) => d?.msg)
+              .filter(Boolean)
+              .join('; ') || message;
         } else if (typeof raw === 'string') {
           message = raw;
         } else if (raw != null) {
@@ -133,34 +137,19 @@ class APIClient {
     return this.request<T>('GET', url, undefined, options);
   }
 
-  async post<T>(
-    endpoint: string,
-    data?: unknown,
-    options?: { signal?: AbortSignal }
-  ): Promise<T> {
+  async post<T>(endpoint: string, data?: unknown, options?: { signal?: AbortSignal }): Promise<T> {
     return this.request<T>('POST', endpoint, data, options);
   }
 
-  async put<T>(
-    endpoint: string,
-    data?: unknown,
-    options?: { signal?: AbortSignal }
-  ): Promise<T> {
+  async put<T>(endpoint: string, data?: unknown, options?: { signal?: AbortSignal }): Promise<T> {
     return this.request<T>('PUT', endpoint, data, options);
   }
 
-  async patch<T>(
-    endpoint: string,
-    data?: unknown,
-    options?: { signal?: AbortSignal }
-  ): Promise<T> {
+  async patch<T>(endpoint: string, data?: unknown, options?: { signal?: AbortSignal }): Promise<T> {
     return this.request<T>('PATCH', endpoint, data, options);
   }
 
-  async delete<T>(
-    endpoint: string,
-    options?: { signal?: AbortSignal }
-  ): Promise<T> {
+  async delete<T>(endpoint: string, options?: { signal?: AbortSignal }): Promise<T> {
     return this.request<T>('DELETE', endpoint, undefined, options);
   }
 }

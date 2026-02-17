@@ -4,11 +4,7 @@
  */
 
 import { useMemo } from 'react';
-import {
-  useTestNameLookup,
-  useSampleLookup,
-  usePatientNameLookup,
-} from '@/hooks/queries';
+import { useTestNameLookup, useSampleLookup, usePatientNameLookup } from '@/hooks/queries';
 import { getTestSampleType } from '@/utils/typeHelpers';
 import type { Order, OrderTest, TestStatus, TestWithContext } from '@/types';
 import type { Test } from '@/types';
@@ -75,9 +71,8 @@ export function useLabTestsFromOrders({
           const collectedBy = collected ? sample.collectedBy : undefined;
 
           const hasCriticalValues = includeHasCriticalValues
-            ? (test.flags?.some(
-                (f: string) => f.includes('critical') || f.includes('CRITICAL')
-              ) || (test as OrderTest & { hasCriticalValues?: boolean }).hasCriticalValues)
+            ? test.flags?.some((f: string) => f.includes('critical') || f.includes('CRITICAL')) ||
+              (test as OrderTest & { hasCriticalValues?: boolean }).hasCriticalValues
             : undefined;
 
           const base: TestWithContext & { hasCriticalValues?: boolean; patientDob?: string } = {

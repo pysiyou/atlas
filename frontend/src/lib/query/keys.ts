@@ -72,10 +72,20 @@ export const queryKeys = {
   orders: {
     all: ['orders'] as const,
     lists: () => [...queryKeys.orders.all, 'list'] as const,
-    list: (filters?: { patientId?: string; status?: OrderStatus; paymentStatus?: PaymentStatus } & PaginationParams) =>
-      [...queryKeys.orders.lists(), filters] as const,
-    paginated: (params: { patientId?: string; status?: OrderStatus; paymentStatus?: PaymentStatus } & PaginationParams) =>
-      [...queryKeys.orders.all, 'paginated', params] as const,
+    list: (
+      filters?: {
+        patientId?: string;
+        status?: OrderStatus;
+        paymentStatus?: PaymentStatus;
+      } & PaginationParams
+    ) => [...queryKeys.orders.lists(), filters] as const,
+    paginated: (
+      params: {
+        patientId?: string;
+        status?: OrderStatus;
+        paymentStatus?: PaymentStatus;
+      } & PaginationParams
+    ) => [...queryKeys.orders.all, 'paginated', params] as const,
     details: () => [...queryKeys.orders.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.orders.details(), id] as const,
     byPatient: (patientId: string) => [...queryKeys.orders.all, 'patient', patientId] as const,

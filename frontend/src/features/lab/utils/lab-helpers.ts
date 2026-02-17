@@ -68,9 +68,7 @@ export function isCritical(s: ResultStatus): boolean {
  * Build result key -> status from test.flags.
  * Backend stores "itemCode:status" (e.g. "K:critical-high", "Na:low").
  */
-export function statusMapFromFlags(
-  flags: string[] | undefined
-): Record<string, ResultStatus> {
+export function statusMapFromFlags(flags: string[] | undefined): Record<string, ResultStatus> {
   const map: Record<string, ResultStatus> = {};
   if (!flags?.length) return map;
   const valid = new Set(ABNORMAL_STATUSES);
@@ -78,7 +76,10 @@ export function statusMapFromFlags(
     const i = f.indexOf(':');
     if (i === -1) continue;
     const key = f.slice(0, i).trim();
-    const status = f.slice(i + 1).trim().toLowerCase() as ResultStatus;
+    const status = f
+      .slice(i + 1)
+      .trim()
+      .toLowerCase() as ResultStatus;
     if (key && valid.has(status)) map[key] = status;
   }
   return map;

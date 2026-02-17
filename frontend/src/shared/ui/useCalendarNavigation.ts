@@ -49,9 +49,7 @@ export function useCalendarNavigation(initialMonth: Date): UseCalendarNavigation
   }, []);
 
   const toggleView = useCallback(() => {
-    setView(prev =>
-      prev === 'days' ? 'months' : prev === 'months' ? 'years' : 'days'
-    );
+    setView(prev => (prev === 'days' ? 'months' : prev === 'months' ? 'years' : 'days'));
   }, []);
 
   const selectMonth = useCallback((month: number) => {

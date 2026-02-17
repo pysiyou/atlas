@@ -1,6 +1,6 @@
 /**
  * useCatalogFilters Hook
- * 
+ *
  * Manages catalog filter state and filtering logic
  */
 
@@ -65,19 +65,19 @@ export function useCatalogFilters({ tests }: UseCatalogFiltersOptions) {
   return {
     // Filtered results
     filteredTests,
-    
+
     // Search
     searchQuery,
     setSearchQuery,
-    
+
     // Category filters
     categoryFilters,
     setCategoryFilters,
-    
+
     // Sample type filters
     sampleTypeFilters,
     setSampleTypeFilters,
-    
+
     // Price range
     priceRange,
     setPriceRange,

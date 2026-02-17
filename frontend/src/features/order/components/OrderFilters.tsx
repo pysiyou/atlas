@@ -8,7 +8,13 @@ import { Icon, Button, Badge, Modal, FooterInfo, DnaHelixLoader } from '@/shared
 import { MultiSelectFilter } from '@/shared/ui';
 import { CheckboxList } from '@/shared/ui';
 import { DateFilter } from '@/shared/ui';
-import { inputWrapper, inputInner, inputText, inputContainerBase, inputClearButton } from '@/shared/ui/inputStyles';
+import {
+  inputWrapper,
+  inputInner,
+  inputText,
+  inputContainerBase,
+  inputClearButton,
+} from '@/shared/ui/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -92,9 +98,7 @@ const SearchInput: React.FC<{
         className={cn(inputInner, inputText)}
       />
       <div className="flex items-center gap-1 shrink-0">
-        {isDebouncing && (
-          <DnaHelixLoader size="xs" />
-        )}
+        {isDebouncing && <DnaHelixLoader size="xs" />}
         {localValue && !isDebouncing && (
           <button
             onClick={handleClear}
@@ -132,10 +136,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Count active filters for badge
-  const activeFilterCount =
-    (dateRange ? 1 : 0) +
-    statusFilters.length +
-    paymentFilters.length;
+  const activeFilterCount = (dateRange ? 1 : 0) + statusFilters.length + paymentFilters.length;
 
   // Check if we should show modal view (sm and below)
   const showModalView = isBreakpointAtMost(breakpoint, 'sm');
@@ -213,11 +214,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
 
               {/* Filters button */}
               <div className="relative flex shrink-0">
-                <Button
-                  variant="filter"
-                  size="sm"
-                  onClick={() => setIsModalOpen(true)}
-                >
+                <Button variant="filter" size="sm" onClick={() => setIsModalOpen(true)}>
                   Filters
                 </Button>
                 {activeFilterCount > 0 && (
@@ -235,12 +232,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
         </div>
 
         {/* Filter Modal */}
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title="Filter"
-          size="md"
-        >
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Filter" size="md">
           <div className="flex flex-col h-full bg-surface">
             {/* Filter Controls - Scrollable */}
             <div className="flex-1 overflow-y-auto px-5 py-4">
@@ -259,7 +251,10 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
                       onClick={() => onSearchChange('')}
                       className={cn(inputClearButton, 'hover:bg-surface-hover')}
                     >
-                      <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
+                      <Icon
+                        name={ICONS.actions.closeCircle}
+                        className="w-4 h-4 text-text-tertiary"
+                      />
                     </button>
                   )}
                 </div>
@@ -270,10 +265,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
                 {/* Date Range Section */}
                 <div className="w-full">
                   <h4 className="text-sm font-semibold text-text-primary mb-3">Date Range</h4>
-                  <DatePresetBadges
-                    value={dateRange}
-                    onChange={onDateRangeChange}
-                  />
+                  <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
                   <div className="border-b border-border-default mt-4" />
                 </div>
 
@@ -318,11 +310,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
                   >
                     Reset
                   </Button>
-                  <Button
-                    variant="primary"
-                    onClick={() => setIsModalOpen(false)}
-                    showIcon={false}
-                  >
+                  <Button variant="primary" onClick={() => setIsModalOpen(false)} showIcon={false}>
                     Filter
                   </Button>
                 </div>
@@ -339,9 +327,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
     return (
       <div className="w-full bg-surface border-b border-border-default">
         <div className="px-3 py-2 w-full">
-          <div className="grid grid-cols-2 gap-2 items-center w-full">
-            {renderFilters()}
-          </div>
+          <div className="grid grid-cols-2 gap-2 items-center w-full">{renderFilters()}</div>
         </div>
       </div>
     );
@@ -351,9 +337,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
   return (
     <div className="w-full bg-surface border-b border-border-default">
       <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
-        <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">
-          {renderFilters()}
-        </div>
+        <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">{renderFilters()}</div>
       </div>
     </div>
   );

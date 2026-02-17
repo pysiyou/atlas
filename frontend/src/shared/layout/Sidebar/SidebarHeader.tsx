@@ -22,9 +22,10 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   const { company, branding } = companyConfig.getConfig();
   const displayName = company.displayName;
   const splitAt = branding.appNamePart2Start;
-  const part1 = splitAt != null && splitAt > 0 && splitAt < displayName.length
-    ? displayName.slice(0, splitAt)
-    : null;
+  const part1 =
+    splitAt != null && splitAt > 0 && splitAt < displayName.length
+      ? displayName.slice(0, splitAt)
+      : null;
   const part2 = part1 != null ? displayName.slice(splitAt!) : null;
 
   const handleButtonClick = () => {
@@ -49,9 +50,15 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
       <IconButton
         variant="sidebarClose"
         size="sm"
-        icon={<Icon name={isCollapsed ? ICONS.actions.doubleArrowRight : ICONS.actions.doubleArrowLeft} />}
+        icon={
+          <Icon
+            name={isCollapsed ? ICONS.actions.doubleArrowRight : ICONS.actions.doubleArrowLeft}
+          />
+        }
         onClick={handleButtonClick}
-        title={onMobileClose ? 'Close Sidebar' : isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+        title={
+          onMobileClose ? 'Close Sidebar' : isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'
+        }
         className="w-8 h-8 shrink-0"
       />
     </div>

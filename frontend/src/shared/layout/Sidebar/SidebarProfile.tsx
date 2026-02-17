@@ -51,7 +51,9 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
             </div>
             <div className="flex-1 min-w-0 overflow-hidden">
               <p className="text-sm font-normal text-text-primary truncate">{currentUser.name}</p>
-              <p className="text-xs text-text-tertiary truncate">{formatStatus(currentUser.role)}</p>
+              <p className="text-xs text-text-tertiary truncate">
+                {formatStatus(currentUser.role)}
+              </p>
             </div>
           </div>
         }
@@ -60,7 +62,9 @@ export const SidebarProfile: React.FC<SidebarProfileProps> = ({
           <>
             <div className="px-4 py-3 border-b border-border-default">
               <p className="text-sm font-normal text-text-primary truncate">{currentUser.name}</p>
-              <p className="text-xs text-text-tertiary truncate">{formatStatus(currentUser.role)}</p>
+              <p className="text-xs text-text-tertiary truncate">
+                {formatStatus(currentUser.role)}
+              </p>
             </div>
             <Button
               variant="logout"

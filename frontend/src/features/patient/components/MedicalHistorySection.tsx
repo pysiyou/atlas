@@ -29,7 +29,10 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
       {/* Chronic Conditions */}
       {medicalHistory.chronicConditions.length > 0 && (
         <div className="flex items-start gap-3">
-          <Icon name={ICONS.dataFields.health} className="w-5 h-5 text-text-disabled mt-1 shrink-0" />
+          <Icon
+            name={ICONS.dataFields.health}
+            className="w-5 h-5 text-text-disabled mt-1 shrink-0"
+          />
           <div className="flex-1">
             <div className="text-xs text-text-tertiary mb-1">Chronic Conditions</div>
             <div className="flex flex-wrap gap-2">
@@ -46,7 +49,10 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
       {/* Current Medications */}
       {medicalHistory.currentMedications.length > 0 && (
         <div className="flex items-start gap-3">
-          <Icon name={ICONS.dataFields.medicine} className="w-5 h-5 text-text-disabled mt-1 shrink-0" />
+          <Icon
+            name={ICONS.dataFields.medicine}
+            className="w-5 h-5 text-text-disabled mt-1 shrink-0"
+          />
           <div className="flex-1">
             <div className="text-xs text-text-tertiary mb-1">Current Medications</div>
             <div className="flex flex-wrap gap-2">
@@ -80,7 +86,10 @@ export const MedicalHistoryCard: React.FC<MedicalHistoryCardProps> = ({ patient 
       {/* Previous Surgeries */}
       {medicalHistory.previousSurgeries.length > 0 && (
         <div className="flex items-start gap-3">
-          <Icon name={ICONS.dataFields.medicalKit} className="w-5 h-5 text-text-disabled mt-1 shrink-0" />
+          <Icon
+            name={ICONS.dataFields.medicalKit}
+            className="w-5 h-5 text-text-disabled mt-1 shrink-0"
+          />
           <div className="flex-1">
             <div className="text-xs text-text-tertiary mb-1">Previous Surgeries</div>
             <div className="flex flex-wrap gap-2">

@@ -26,9 +26,7 @@ export interface UseCommandCenterDataOptions {
   logsHoursBack?: number;
 }
 
-export function useCommandCenterData(
-  options: UseCommandCenterDataOptions = {}
-): CommandCenterData {
+export function useCommandCenterData(options: UseCommandCenterDataOptions = {}): CommandCenterData {
   const { logsLimit = 50, logsHoursBack = 24 } = options;
 
   const {
@@ -45,8 +43,7 @@ export function useCommandCenterData(
     limit: logsLimit,
     hoursBack: logsHoursBack,
   });
-  const { data: distributionByStage, isLoading: distributionLoading } =
-    useDistributionByStage();
+  const { data: distributionByStage, isLoading: distributionLoading } = useDistributionByStage();
 
   const isLoading = logsLoading || distributionLoading;
 

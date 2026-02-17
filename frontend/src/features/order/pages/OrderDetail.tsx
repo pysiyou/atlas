@@ -35,7 +35,9 @@ export const OrderDetail: React.FC = () => {
   const supersededCount = order != null ? order.tests.length - activeTests.length : 0;
 
   const handleViewPatient = () => navigate(`/patients/${order?.patientId}`);
-  const handleViewInvoice = () => { /* Stubbed until API */ };
+  const handleViewInvoice = () => {
+    /* Stubbed until API */
+  };
   const handleEdit = () => {
     if (order?.overallStatus === 'ordered') {
       openModal(ModalType.NEW_ORDER, { order, mode: 'edit' });
@@ -58,17 +60,18 @@ export const OrderDetail: React.FC = () => {
     return <LargeScreenLayout {...layoutProps} />;
   };
 
-  const header = order != null ? (
-    <OrderHeader
-      order={order}
-      invoice={invoice}
-      isLarge={isLarge}
-      onViewInvoice={handleViewInvoice}
-      onEdit={order.overallStatus === 'ordered' ? handleEdit : undefined}
-    />
-  ) : (
-    <DetailPageHeader title="Order" />
-  );
+  const header =
+    order != null ? (
+      <OrderHeader
+        order={order}
+        invoice={invoice}
+        isLarge={isLarge}
+        onViewInvoice={handleViewInvoice}
+        onEdit={order.overallStatus === 'ordered' ? handleEdit : undefined}
+      />
+    ) : (
+      <DetailPageHeader title="Order" />
+    );
 
   return (
     <DetailPageShell

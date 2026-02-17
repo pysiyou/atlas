@@ -44,8 +44,12 @@ export const createPaymentTableConfig = (
 
   const renderPatientName = (item: OrderPaymentView) => (
     <div className="min-w-0 font-normal">
-      <div className="text-text-primary truncate font-normal capitalize">{item.order.patientName || 'N/A'}</div>
-      <div className={`${DATA_ID_SECONDARY} font-normal`}>{displayId.patient(item.order.patientId)}</div>
+      <div className="text-text-primary truncate font-normal capitalize">
+        {item.order.patientName || 'N/A'}
+      </div>
+      <div className={`${DATA_ID_SECONDARY} font-normal`}>
+        {displayId.patient(item.order.patientId)}
+      </div>
     </div>
   );
 
@@ -65,7 +69,9 @@ export const createPaymentTableConfig = (
   };
 
   const renderTotalPrice = (item: OrderPaymentView) => (
-    <span className={`${DATA_AMOUNT} truncate block font-normal`}>{formatCurrency(item.order.totalPrice)}</span>
+    <span className={`${DATA_AMOUNT} truncate block font-normal`}>
+      {formatCurrency(item.order.totalPrice)}
+    </span>
   );
 
   const renderPaymentStatus = (item: OrderPaymentView) => (
@@ -82,7 +88,9 @@ export const createPaymentTableConfig = (
   };
 
   const renderOrderDate = (item: OrderPaymentView) => (
-    <span className="text-xs text-text-tertiary truncate block font-normal">{formatDate(item.order.orderDate)}</span>
+    <span className="text-xs text-text-tertiary truncate block font-normal">
+      {formatDate(item.order.orderDate)}
+    </span>
   );
 
   const renderAction = (item: OrderPaymentView) => (

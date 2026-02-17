@@ -75,13 +75,7 @@ export function useRejectionDialogState({
 
   const hasReason = reason.trim().length > 0;
   const isConfirmDisabled = useMemo(
-    () =>
-      getIsConfirmDisabled(
-        escalationRequired,
-        hasReason,
-        isActionEnabled,
-        isRecollectBlocked
-      ),
+    () => getIsConfirmDisabled(escalationRequired, hasReason, isActionEnabled, isRecollectBlocked),
     [escalationRequired, hasReason, isActionEnabled, isRecollectBlocked]
   );
 

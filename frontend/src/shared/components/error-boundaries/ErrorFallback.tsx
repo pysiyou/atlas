@@ -13,20 +13,14 @@ export interface ErrorFallbackProps {
   homeHref?: string;
 }
 
-export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
-  error,
-  onRetry,
-  homeHref = '/',
-}) => (
+export const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, onRetry, homeHref = '/' }) => (
   <div className="min-h-screen flex items-center justify-center bg-surface-page px-4">
     <div className="max-w-md w-full bg-surface rounded-lg shadow-lg p-6">
       <div className="flex items-center justify-start gap-3">
         <div className="flex shrink-0 items-center justify-center w-12 h-12 rounded-full">
           <Icon name={ICONS.actions.alertCircle} className="w-6 h-6 text-danger-fg" />
         </div>
-        <h2 className="text-xl font-semibold text-text-primary">
-          Something went wrong
-        </h2>
+        <h2 className="text-xl font-semibold text-text-primary">Something went wrong</h2>
       </div>
 
       <p className="mt-2 text-sm text-center text-text-tertiary">
@@ -37,9 +31,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
         <div className="mt-4 p-3 bg-neutral-100 rounded text-xs font-mono text-text-primary overflow-auto max-h-40">
           <p className="font-normal mb-1">Error Details:</p>
           <p>{error.message}</p>
-          {error.stack && (
-            <pre className="mt-2 text-xs whitespace-pre-wrap">{error.stack}</pre>
-          )}
+          {error.stack && <pre className="mt-2 text-xs whitespace-pre-wrap">{error.stack}</pre>}
         </div>
       )}
 

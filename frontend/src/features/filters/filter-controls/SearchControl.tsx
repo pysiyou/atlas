@@ -116,16 +116,17 @@ export const SearchControl: React.FC<SearchControlProps> = ({
 
       {/* Column 3: Right Icons (loading/clear) */}
       <div className="flex items-center gap-1 shrink-0">
-        {isDebouncing && (
-          <DnaHelixLoader size="xs" />
-        )}
+        {isDebouncing && <DnaHelixLoader size="xs" />}
         {localValue && !isDebouncing && (
           <button
             onClick={handleClear}
             className={cn(inputClearButton, 'hover:bg-surface-hover duration-200')}
             aria-label="Clear search"
           >
-            <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-tertiary" />
+            <Icon
+              name={ICONS.actions.closeCircle}
+              className="w-4 h-4 text-text-muted hover:text-text-tertiary"
+            />
           </button>
         )}
       </div>

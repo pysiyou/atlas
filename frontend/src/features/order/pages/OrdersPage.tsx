@@ -11,7 +11,7 @@ import { OrderDetail } from '@/features/order/pages/OrderDetail';
 
 export const Orders: React.FC = () => {
   const { openModal } = useModal();
-  
+
   // Redirect /new to list and open modal
   const NewOrderRedirect = () => {
     React.useEffect(() => {

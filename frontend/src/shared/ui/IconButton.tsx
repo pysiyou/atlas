@@ -130,8 +130,7 @@ const ICON_BUTTON_VARIANTS: Record<string, string> = {
   view: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
   print: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
   add: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
-  sidebarClose:
-    'bg-surface-hover text-text-secondary hover:opacity-90 focus:ring-neutral-500',
+  sidebarClose: 'bg-surface-hover text-text-secondary hover:opacity-90 focus:ring-neutral-500',
 };
 
 /**
@@ -200,11 +199,10 @@ export const IconButton = memo(
     ({ icon, variant = 'primary', size = 'md', className = '', disabled, ...props }, ref) => {
       // Determine the actual style to apply
       const baseStyle = getBaseStyle(variant);
-      
+
       // Check if this is an IconButton-specific variant
-      const variantStyle = variant in ICON_BUTTON_VARIANTS
-        ? ICON_BUTTON_VARIANTS[variant]
-        : BASE_STYLES[baseStyle];
+      const variantStyle =
+        variant in ICON_BUTTON_VARIANTS ? ICON_BUTTON_VARIANTS[variant] : BASE_STYLES[baseStyle];
 
       // Determine which icon to render
       const defaultIconName = getDefaultIcon(variant);

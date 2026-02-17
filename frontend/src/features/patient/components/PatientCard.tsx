@@ -52,7 +52,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
               {calculateAge(patient.dateOfBirth)} years old
             </span>
           </div>
-          
+
           {/* Phone */}
           <div className="flex items-center gap-2">
             <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
@@ -60,14 +60,12 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
               {formatPhoneNumber(patient.phone)}
             </span>
           </div>
-          
+
           {/* Email */}
           {patient.email && (
             <div className="flex items-center gap-2">
               <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
-              <span className="text-xs text-text-secondary truncate">
-                {patient.email}
-              </span>
+              <span className="text-xs text-text-secondary truncate">{patient.email}</span>
             </div>
           )}
         </div>

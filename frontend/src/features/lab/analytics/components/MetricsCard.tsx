@@ -45,9 +45,7 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
             {title}
           </p>
           <p className="text-2xl font-normal text-text-primary mb-1">{value}</p>
-          {subtitle && (
-            <p className="text-xs text-text-secondary">{subtitle}</p>
-          )}
+          {subtitle && <p className="text-xs text-text-secondary">{subtitle}</p>}
           {trend && (
             <div className={cn('flex items-center gap-1 mt-2 text-xs font-normal', trendColor)}>
               <Icon name={trend.value >= 0 ? 'arrow-up' : 'arrow-down'} className="w-3 h-3" />

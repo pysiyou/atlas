@@ -18,10 +18,7 @@ import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
 import { cn, ICONS } from '@/utils';
 import { inputBase } from '@/shared/ui/inputStyles';
-import {
-  REJECTION_DIALOG_LAYOUT,
-  REJECTION_DIALOG_COPY,
-} from './rejection-dialog-constants';
+import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejection-dialog-constants';
 import {
   RejectionDialogLoadingView,
   RejectionDialogErrorView,
@@ -86,69 +83,69 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
   const { onSelectType, onReasonChange, isActionEnabled, getDisabledReason } = actions;
 
   return (
-  <>
-    {error && (
-      <Alert variant="danger" className="py-2">
-        <p className="text-xs">{error}</p>
-      </Alert>
-    )}
+    <>
+      {error && (
+        <Alert variant="danger" className="py-2">
+          <p className="text-xs">{error}</p>
+        </Alert>
+      )}
 
-    {escalationRequired && (
-      <Alert variant="danger" className="py-2">
-        <div className="space-y-0.5">
-          <p className="font-normal text-xs">{REJECTION_DIALOG_COPY.escalation.warningTitle}</p>
-          <p className="text-xxs opacity-90 leading-tight">
-            {REJECTION_DIALOG_COPY.escalation.warningBody}
-          </p>
-        </div>
-      </Alert>
-    )}
+      {escalationRequired && (
+        <Alert variant="danger" className="py-2">
+          <div className="space-y-0.5">
+            <p className="font-normal text-xs">{REJECTION_DIALOG_COPY.escalation.warningTitle}</p>
+            <p className="text-xxs opacity-90 leading-tight">
+              {REJECTION_DIALOG_COPY.escalation.warningBody}
+            </p>
+          </div>
+        </Alert>
+      )}
 
-    {!escalationRequired && (
-      <Alert variant="warning" className="py-2">
-        <div className="space-y-0.5">
-          <p className="font-normal text-xs">{REJECTION_DIALOG_COPY.reject.warningTitle}</p>
-          <p className="text-xxs opacity-90 leading-tight">
-            {REJECTION_DIALOG_COPY.reject.warningBody}
-          </p>
-        </div>
-      </Alert>
-    )}
+      {!escalationRequired && (
+        <Alert variant="warning" className="py-2">
+          <div className="space-y-0.5">
+            <p className="font-normal text-xs">{REJECTION_DIALOG_COPY.reject.warningTitle}</p>
+            <p className="text-xxs opacity-90 leading-tight">
+              {REJECTION_DIALOG_COPY.reject.warningBody}
+            </p>
+          </div>
+        </Alert>
+      )}
 
-    {!escalationRequired && (
-      <RejectionActionCards
-        selectedType={selectedType}
-        onSelect={onSelectType}
-        isActionEnabled={isActionEnabled}
-        getDisabledReason={getDisabledReason}
-        isRecollectBlocked={isRecollectBlocked}
-        recollectBlockedReason={recollectBlockedReason}
-        retestAttemptsRemaining={retestAttemptsRemaining}
-        recollectionAttemptsRemaining={recollectionAttemptsRemaining}
-        orderHasValidatedTests={orderHasValidatedTests}
-      />
-    )}
+      {!escalationRequired && (
+        <RejectionActionCards
+          selectedType={selectedType}
+          onSelect={onSelectType}
+          isActionEnabled={isActionEnabled}
+          getDisabledReason={getDisabledReason}
+          isRecollectBlocked={isRecollectBlocked}
+          recollectBlockedReason={recollectBlockedReason}
+          retestAttemptsRemaining={retestAttemptsRemaining}
+          recollectionAttemptsRemaining={recollectionAttemptsRemaining}
+          orderHasValidatedTests={orderHasValidatedTests}
+        />
+      )}
 
-    <div>
-      <label className="block text-xs font-normal text-text-tertiary mb-1">
-        {escalationRequired
-          ? REJECTION_DIALOG_COPY.escalation.reasonLabel
-          : REJECTION_DIALOG_COPY.reject.reasonLabel}{' '}
-        <span className="text-danger-fg">*</span>
-      </label>
-      <textarea
-        rows={REJECTION_DIALOG_LAYOUT.reasonTextareaRows}
-        placeholder={
-          escalationRequired
-            ? REJECTION_DIALOG_COPY.escalation.reasonPlaceholder
-            : REJECTION_DIALOG_COPY.reject.reasonPlaceholder
-        }
-        value={reason}
-        onChange={e => onReasonChange(e.target.value)}
-        className={cn(inputBase, 'resize-none')}
-      />
-    </div>
-  </>
+      <div>
+        <label className="block text-xs font-normal text-text-tertiary mb-1">
+          {escalationRequired
+            ? REJECTION_DIALOG_COPY.escalation.reasonLabel
+            : REJECTION_DIALOG_COPY.reject.reasonLabel}{' '}
+          <span className="text-danger-fg">*</span>
+        </label>
+        <textarea
+          rows={REJECTION_DIALOG_LAYOUT.reasonTextareaRows}
+          placeholder={
+            escalationRequired
+              ? REJECTION_DIALOG_COPY.escalation.reasonPlaceholder
+              : REJECTION_DIALOG_COPY.reject.reasonPlaceholder
+          }
+          value={reason}
+          onChange={e => onReasonChange(e.target.value)}
+          className={cn(inputBase, 'resize-none')}
+        />
+      </div>
+    </>
   );
 };
 
@@ -230,13 +227,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
 
   if (isLoading) return <RejectionDialogLoadingView />;
   if (error && !options) {
-    return (
-      <RejectionDialogErrorView
-        error={error}
-        onRetry={handleRetry}
-        onCancel={onCancel}
-      />
-    );
+    return <RejectionDialogErrorView error={error} onRetry={handleRetry} onCancel={onCancel} />;
   }
 
   const copy = escalationRequired ? REJECTION_DIALOG_COPY.escalation : REJECTION_DIALOG_COPY.reject;

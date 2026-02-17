@@ -52,7 +52,7 @@ export function useDistributionByStage(): {
 
   const data = useMemo((): DistributionByStagePoint[] => {
     const sampleCollectedAt = new Map<number, string>();
-    (samples ?? []).forEach((s) => {
+    (samples ?? []).forEach(s => {
       if (s.status !== 'pending' && 'collectedAt' in s) {
         const ca = (s as { collectedAt: string }).collectedAt;
         if (ca) sampleCollectedAt.set(s.sampleId, ca);
@@ -77,13 +77,12 @@ export function useDistributionByStage(): {
     let oldestEscalation = '';
     const now = Date.now();
 
-    (orders ?? []).forEach((order) => {
-      (order.tests ?? []).forEach((test) => {
+    (orders ?? []).forEach(order => {
+      (order.tests ?? []).forEach(test => {
         if (!isActiveTest(test)) return;
         if (test.status === 'validated') return;
 
-        const sampleCA =
-          test.sampleId != null ? sampleCollectedAt.get(test.sampleId) : undefined;
+        const sampleCA = test.sampleId != null ? sampleCollectedAt.get(test.sampleId) : undefined;
         const wasCollectedToday = sampleCA ? isTodayLocal(sampleCA) : false;
         const wasResultedToday = isTodayLocal(test.resultEnteredAt);
 
@@ -165,7 +164,7 @@ export function useDistributionByStage(): {
       },
     };
 
-    return STAGE_ORDER.map((name) => ({
+    return STAGE_ORDER.map(name => ({
       name,
       color: STAGE_COLORS[name],
       ...metrics[name],

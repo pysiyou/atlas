@@ -56,17 +56,20 @@ export function useLabOperationLogs(
     refetchInterval: offset === 0 ? 60_000 : false,
   });
 
-  const page = logsQuery.data ?? [];
   const total = countQuery.data;
 
   useEffect(() => {
-    if (!logsQuery.isSuccess) return;
-    if (offset === 0) {
-      setAccumulatedLogs(page);
-    } else {
-      setAccumulatedLogs((prev) => [...prev, ...page]);
-    }
-  }, [offset, logsQuery.isSuccess, logsQuery.dataUpdatedAt]);
+    if (!logsQuery.isSuccess || logsQuery.data == null) return;
+    const page = logsQuery.data;
+    const apply = () => {
+      if (offset === 0) {
+        setAccumulatedLogs(page);
+      } else {
+        setAccumulatedLogs(prev => [...prev, ...page]);
+      }
+    };
+    queueMicrotask(apply);
+  }, [offset, logsQuery.isSuccess, logsQuery.dataUpdatedAt, logsQuery.data]);
 
   const refetch = useCallback(() => {
     setOffset(0);
@@ -76,7 +79,7 @@ export function useLabOperationLogs(
   }, [countQuery, logsQuery]);
 
   const loadMore = useCallback(() => {
-    setOffset((prev) => prev + limit);
+    setOffset(prev => prev + limit);
   }, [limit]);
 
   const hasMore =

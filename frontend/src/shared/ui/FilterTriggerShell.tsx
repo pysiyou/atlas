@@ -50,7 +50,10 @@ export const FilterTriggerShell: React.FC<FilterTriggerShellProps> = ({
           className={cn(inputClearButton, 'hover:bg-surface-hover')}
           aria-label="Clear"
         >
-          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-muted hover:text-text-tertiary" />
+          <Icon
+            name={ICONS.actions.closeCircle}
+            className="w-4 h-4 text-text-muted hover:text-text-tertiary"
+          />
         </button>
       ) : (
         <div className="w-5 h-5" aria-hidden />

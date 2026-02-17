@@ -86,7 +86,10 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
           isOpen={isOpen}
           leftIcon={
             config.icon ? (
-              <Icon name={config.icon as IconName} className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors" />
+              <Icon
+                name={config.icon as IconName}
+                className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors"
+              />
             ) : undefined
           }
           showClear={!!value}

@@ -63,7 +63,10 @@ const TestSearchTagInput: React.FC<{
         )}
       >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-start pt-2.5 pointer-events-none">
-          <Icon name={ICONS.dataFields.document} className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors" />
+          <Icon
+            name={ICONS.dataFields.document}
+            className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
+          />
         </div>
 
         {selectedTags.map(({ code, name }) => (
@@ -71,9 +74,7 @@ const TestSearchTagInput: React.FC<{
             key={code}
             className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
           >
-            <span className={`text-xs font-normal truncate min-w-0 ${tagStyles.text}`}>
-              {name}
-            </span>
+            <span className={`text-xs font-normal truncate min-w-0 ${tagStyles.text}`}>{name}</span>
             <span className={`text-xxs font-normal font-mono shrink-0 ${tagStyles.code}`}>
               {code}
             </span>
@@ -241,7 +242,9 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className={`shrink-0 text-xs font-normal font-mono px-2 py-0.5 rounded ${tagStyles.container} ${tagStyles.code}`}>
+                        <span
+                          className={`shrink-0 text-xs font-normal font-mono px-2 py-0.5 rounded ${tagStyles.container} ${tagStyles.code}`}
+                        >
                           {code}
                         </span>
                         <span className="shrink-0 text-xs font-normal px-2 py-0.5 rounded truncate">
@@ -251,11 +254,16 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                     </div>
 
                     <div className="shrink-0 flex items-center gap-2">
-                      <div className={`text-xs font-normal px-2 py-1 rounded ${tagStyles.container} ${tagStyles.code}`}>
+                      <div
+                        className={`text-xs font-normal px-2 py-1 rounded ${tagStyles.container} ${tagStyles.code}`}
+                      >
                         {formatCurrency(price)}
                       </div>
                       {isSelected && (
-                        <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-success-fg" />
+                        <Icon
+                          name={ICONS.actions.checkCircle}
+                          className="w-5 h-5 text-success-fg"
+                        />
                       )}
                     </div>
                   </button>

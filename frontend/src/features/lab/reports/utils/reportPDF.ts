@@ -23,23 +23,8 @@ export function generateLabReport(
   const margin = 15;
 
   let yPosition = drawReportHeader(doc, reportData, template, margin);
-  yPosition = drawTestResultsSection(
-    doc,
-    reportData,
-    yPosition,
-    margin,
-    pageWidth,
-    pageHeight
-  );
-  drawSignatureAndPageFooters(
-    doc,
-    reportData,
-    template,
-    yPosition,
-    margin,
-    pageWidth,
-    pageHeight
-  );
+  yPosition = drawTestResultsSection(doc, reportData, yPosition, margin, pageWidth, pageHeight);
+  drawSignatureAndPageFooters(doc, reportData, template, yPosition, margin, pageWidth, pageHeight);
 
   return doc;
 }

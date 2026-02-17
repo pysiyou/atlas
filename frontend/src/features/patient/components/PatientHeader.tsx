@@ -68,11 +68,5 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
       )}
     </div>
   );
-  return (
-    <DetailPageHeader
-      title={patient.fullName}
-      avatar={avatar}
-      actions={actions}
-    />
-  );
+  return <DetailPageHeader title={patient.fullName} avatar={avatar} actions={actions} />;
 };

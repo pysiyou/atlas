@@ -36,7 +36,9 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   const lastRejection = rejectionHistory.at(-1) ?? null;
   const hasRejectionHistory = rejectionHistory.length > 0;
   const isRetest = test.isRetest === true;
-  const isRecollection = lastRejection ? getResultRejectionType(lastRejection) === 're-collect' : false;
+  const isRecollection = lastRejection
+    ? getResultRejectionType(lastRejection) === 're-collect'
+    : false;
 
   // Mobile layout (same structure as ValidationCard/EntryCard)
   if (isMobile) {
@@ -86,8 +88,12 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
         <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
           <div className="flex items-center gap-2">
             <Badge variant="escalated" size="xs" />
-            {test.priority && <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="xs" />}
-            {test.sampleType && <Badge variant={test.sampleType as 'blood' | 'urine' | 'other'} size="xs" />}
+            {test.priority && (
+              <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="xs" />
+            )}
+            {test.sampleType && (
+              <Badge variant={test.sampleType as 'blood' | 'urine' | 'other'} size="xs" />
+            )}
             {(isRetest || hasRejectionHistory) && (
               <Badge variant="warning" size="xs">
                 RE-TEST
@@ -115,7 +121,9 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
     <>
       <h3 className="text-sm font-medium text-text-primary">{test.testName ?? test.testCode}</h3>
       <Badge variant="escalated" size="sm" />
-      {test.priority && <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="sm" />}
+      {test.priority && (
+        <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="sm" />
+      )}
       {test.sampleType && (
         <Badge variant={test.sampleType as 'blood' | 'urine' | 'other'} size="sm" />
       )}
@@ -141,10 +149,14 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
 
   const additionalInfo = test.resultEnteredAt && (
     <span className="text-xs text-text-tertiary">
-      Results entered <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
+      Results entered{' '}
+      <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
       {test.enteredBy && (
-      <> by <span className="text-text-secondary">{getUserName(test.enteredBy)}</span></>
-    )}
+        <>
+          {' '}
+          by <span className="text-text-secondary">{getUserName(test.enteredBy)}</span>
+        </>
+      )}
     </span>
   );
 

@@ -1,4 +1,3 @@
-
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
@@ -68,7 +67,9 @@ export const createOrderTableConfig = (
   const renderPaymentStatus = (order: Order) => <Badge variant={order.paymentStatus} size="sm" />;
 
   const renderOrderDate = (order: Order) => (
-    <div className="text-xs text-text-tertiary truncate font-normal">{formatDate(order.orderDate)}</div>
+    <div className="text-xs text-text-tertiary truncate font-normal">
+      {formatDate(order.orderDate)}
+    </div>
   );
 
   return {

@@ -228,7 +228,9 @@ export const Popover: React.FC<PopoverProps> = ({
                     backgroundColor: 'rgba(0, 0, 0, 0.3)',
                     backdropFilter: 'blur(2px)',
                   }}
-                  onClick={() => { if (!preventClose) setIsOpen(false); }}
+                  onClick={() => {
+                    if (!preventClose) setIsOpen(false);
+                  }}
                 />
               )}
 

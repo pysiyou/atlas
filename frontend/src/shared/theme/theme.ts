@@ -1,51 +1,36 @@
-export type ThemeName = "studio-light" | "github" | "noir-studio";
-
-/** CSS variable names for DNA Helix loader (defined in theme.css) */
-export const DNA_HELIX_CSS_VARS = {
-  primaryNode: '--dna-helix-primary-node',
-  secondaryNode: '--dna-helix-secondary-node',
-  connector: '--dna-helix-connector',
-} as const;
-
-/** Resolved var() values for DnaHelixLoader default colors */
-export const DNA_HELIX_COLORS = {
-  primaryNode: `var(${DNA_HELIX_CSS_VARS.primaryNode})`,
-  secondaryNode: `var(${DNA_HELIX_CSS_VARS.secondaryNode})`,
-  connector: `var(${DNA_HELIX_CSS_VARS.connector})`,
-} as const;
+export type ThemeName = 'studio-light' | 'github' | 'noir-studio';
 
 /** Badge background behaviour: unified = same bg for all; tinted = per-variant bg/text from semantic tokens */
-export type BadgeAppearance = "unified" | "tinted";
+export type BadgeAppearance = 'unified' | 'tinted';
 
-const THEME_ATTRIBUTE = "data-theme";
-const DEFAULT_THEME: ThemeName = "noir-studio";
-const STORAGE_KEY = "atlas-theme";
-const VALID_THEMES = new Set<ThemeName>(["studio-light", "github", "noir-studio"]);
+const THEME_ATTRIBUTE = 'data-theme';
+const DEFAULT_THEME: ThemeName = 'noir-studio';
+const STORAGE_KEY = 'atlas-theme';
+const VALID_THEMES = new Set<ThemeName>(['studio-light', 'github', 'noir-studio']);
 
 const THEME_BADGE_APPEARANCE: Record<ThemeName, BadgeAppearance> = {
-  "studio-light": "tinted",
-  github: "unified",
-  "noir-studio": "unified",
+  'studio-light': 'tinted',
+  github: 'unified',
+  'noir-studio': 'unified',
 };
 
-const isValidTheme = (value: string): value is ThemeName =>
-  VALID_THEMES.has(value as ThemeName);
+const isValidTheme = (value: string): value is ThemeName => VALID_THEMES.has(value as ThemeName);
 
 export function getActiveTheme(): ThemeName {
-  if (typeof document === "undefined") return DEFAULT_THEME;
+  if (typeof document === 'undefined') return DEFAULT_THEME;
   const currentTheme = document.documentElement.getAttribute(THEME_ATTRIBUTE);
   if (currentTheme && isValidTheme(currentTheme)) return currentTheme;
   const stored = localStorage.getItem(STORAGE_KEY);
   return stored && isValidTheme(stored) ? stored : DEFAULT_THEME;
 }
 
-const THEME_TRANSITION_CLASS = "theme-transitioning";
+const THEME_TRANSITION_CLASS = 'theme-transitioning';
 const THEME_TRANSITION_MS = 420;
 
 export function setTheme(theme: ThemeName): void {
   if (!isValidTheme(theme)) {
     console.warn(
-      `Only ${Array.from(VALID_THEMES).join(", ")} themes are supported. Using default.`
+      `Only ${Array.from(VALID_THEMES).join(', ')} themes are supported. Using default.`
     );
     theme = DEFAULT_THEME;
   }
@@ -67,12 +52,12 @@ export function initializeTheme(): void {
   setTheme(DEFAULT_THEME);
 }
 
-export function getRSuiteTheme(): "light" | "dark" {
+export function getRSuiteTheme(): 'light' | 'dark' {
   const active = getActiveTheme();
-  return active === "studio-light" ? "light" : "dark";
+  return active === 'studio-light' ? 'light' : 'dark';
 }
 
 export function getBadgeAppearance(): BadgeAppearance {
   const theme = getActiveTheme();
-  return THEME_BADGE_APPEARANCE[theme] ?? "unified";
+  return THEME_BADGE_APPEARANCE[theme] ?? 'unified';
 }

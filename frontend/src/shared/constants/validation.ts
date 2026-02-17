@@ -45,7 +45,7 @@ export const VALIDATION_MESSAGES = {
   MAX_LENGTH: (max: number) => `Must be no more than ${max} characters`,
   MIN_VALUE: (min: number) => `Must be at least ${min}`,
   MAX_VALUE: (max: number) => `Must be no more than ${max}`,
-  
+
   // Specific field messages (from config/validation.ts)
   REQUIRED_FIELDS: {
     FULL_NAME: 'Full name is required',

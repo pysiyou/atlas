@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { nameSchema, phoneSchema, emailSchema, dateStringSchema } from '@/shared/schemas/common.schema';
+import {
+  nameSchema,
+  phoneSchema,
+  emailSchema,
+  dateStringSchema,
+} from '@/shared/schemas/common.schema';
 import { addressSchema } from './address.schema';
 import { affiliationSchema, affiliationFormSchema } from './affiliation.schema';
 import { emergencyContactSchema } from './emergency-contact.schema';
@@ -11,10 +16,12 @@ export const medicalHistorySchema = z.object({
   allergies: z.array(z.string()).optional(),
   previousSurgeries: z.array(z.string()).optional(),
   familyHistory: z.union([z.string(), z.array(z.string())]).optional(),
-  lifestyle: z.object({
-    smoking: z.boolean().nullish(),
-    alcohol: z.boolean().nullish(),
-  }).nullish(),
+  lifestyle: z
+    .object({
+      smoking: z.boolean().nullish(),
+      alcohol: z.boolean().nullish(),
+    })
+    .nullish(),
 });
 
 export const patientSchema = z.object({

@@ -48,7 +48,11 @@ export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({ isCollapsed }) => {
           title={isLight ? 'Switch to dark theme' : 'Switch to light theme'}
           aria-label={isLight ? 'Switch to dark theme' : 'Switch to light theme'}
         >
-          {isLight ? <Icon name="sun" className="w-4 h-4" /> : <Icon name="moon" className="w-4 h-4" />}
+          {isLight ? (
+            <Icon name="sun" className="w-4 h-4" />
+          ) : (
+            <Icon name="moon" className="w-4 h-4" />
+          )}
         </button>
       </div>
     );
@@ -64,10 +68,16 @@ export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({ isCollapsed }) => {
         aria-label={isLight ? 'Dark mode' : 'Light mode'}
       >
         <div className="absolute inset-0 flex">
-          <span className="flex-1 flex items-center justify-center text-text-secondary/70 [&>svg]:w-3.5 [&>svg]:h-3.5" aria-hidden>
+          <span
+            className="flex-1 flex items-center justify-center text-text-secondary/70 [&>svg]:w-3.5 [&>svg]:h-3.5"
+            aria-hidden
+          >
             <Icon name="sun" className="w-4 h-4" />
           </span>
-          <span className="flex-1 flex items-center justify-center text-text-secondary/70 [&>svg]:w-3.5 [&>svg]:h-3.5" aria-hidden>
+          <span
+            className="flex-1 flex items-center justify-center text-text-secondary/70 [&>svg]:w-3.5 [&>svg]:h-3.5"
+            aria-hidden
+          >
             <Icon name="moon" className="w-4 h-4" />
           </span>
         </div>
@@ -82,7 +92,11 @@ export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({ isCollapsed }) => {
           }}
           aria-hidden
         >
-          {isLight ? <Icon name="sun" className="w-4 h-4" /> : <Icon name="moon" className="w-4 h-4" />}
+          {isLight ? (
+            <Icon name="sun" className="w-4 h-4" />
+          ) : (
+            <Icon name="moon" className="w-4 h-4" />
+          )}
         </motion.span>
       </button>
     </div>

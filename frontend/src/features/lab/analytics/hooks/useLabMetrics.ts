@@ -30,7 +30,10 @@ const minutesBetween = (start: string | undefined, end: string | undefined): num
 };
 
 /** Filter orders by date range (order date) */
-function filterOrdersByRange(orders: ReturnType<typeof useOrdersList>['orders'], range: DateRangeFilter | undefined) {
+function filterOrdersByRange(
+  orders: ReturnType<typeof useOrdersList>['orders'],
+  range: DateRangeFilter | undefined
+) {
   if (!orders || !range) return orders ?? [];
   const start = new Date(range.startDate);
   const end = new Date(range.endDate);
@@ -41,7 +44,10 @@ function filterOrdersByRange(orders: ReturnType<typeof useOrdersList>['orders'],
 }
 
 /** Filter samples by date range (createdAt) */
-function filterSamplesByRange(samples: ReturnType<typeof useSamplesList>['samples'], range: DateRangeFilter | undefined) {
+function filterSamplesByRange(
+  samples: ReturnType<typeof useSamplesList>['samples'],
+  range: DateRangeFilter | undefined
+) {
   if (!samples || !range) return samples ?? [];
   const start = new Date(range.startDate);
   const end = new Date(range.endDate);
@@ -62,10 +68,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
 
   const isLoading = ordersLoading || samplesLoading;
 
-  const filteredOrders = useMemo(
-    () => filterOrdersByRange(orders, dateRange),
-    [orders, dateRange]
-  );
+  const filteredOrders = useMemo(() => filterOrdersByRange(orders, dateRange), [orders, dateRange]);
   const filteredSamples = useMemo(
     () => filterSamplesByRange(samples, dateRange),
     [samples, dateRange]
@@ -84,7 +87,11 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     }
 
     const tatTimes: number[] = [];
-    const breakdowns = { orderToCollection: [] as number[], collectionToEntry: [] as number[], entryToValidation: [] as number[] };
+    const breakdowns = {
+      orderToCollection: [] as number[],
+      collectionToEntry: [] as number[],
+      entryToValidation: [] as number[],
+    };
 
     filteredOrders.forEach(order => {
       (order.tests ?? []).forEach(test => {
@@ -98,19 +105,27 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
           if (sample && 'collectedAt' in sample && sample.collectedAt) {
             breakdowns.orderToCollection.push(minutesBetween(order.orderDate, sample.collectedAt));
             if (test.resultEnteredAt) {
-              breakdowns.collectionToEntry.push(minutesBetween(sample.collectedAt, test.resultEnteredAt));
-              breakdowns.entryToValidation.push(minutesBetween(test.resultEnteredAt, test.resultValidatedAt));
+              breakdowns.collectionToEntry.push(
+                minutesBetween(sample.collectedAt, test.resultEnteredAt)
+              );
+              breakdowns.entryToValidation.push(
+                minutesBetween(test.resultEnteredAt, test.resultValidatedAt)
+              );
             }
           }
         }
       });
     });
 
-    const averageTAT = tatTimes.length > 0 ? tatTimes.reduce((a, b) => a + b, 0) / tatTimes.length : 0;
+    const averageTAT =
+      tatTimes.length > 0 ? tatTimes.reduce((a, b) => a + b, 0) / tatTimes.length : 0;
     const sortedTAT = [...tatTimes].sort((a, b) => a - b);
     const medianTAT = sortedTAT.length > 0 ? sortedTAT[Math.floor(sortedTAT.length / 2)] : 0;
     const targetTAT = 240; // 4 hours
-    const complianceRate = tatTimes.length > 0 ? (tatTimes.filter(t => t <= targetTAT).length / tatTimes.length) * 100 : 0;
+    const complianceRate =
+      tatTimes.length > 0
+        ? (tatTimes.filter(t => t <= targetTAT).length / tatTimes.length) * 100
+        : 0;
 
     // Daily TAT/compliance for trend charts
     const dailyTAT: Record<string, number[]> = {};
@@ -122,7 +137,8 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
           const dateKey = test.resultValidatedAt.split('T')[0];
           if (!dailyTAT[dateKey]) dailyTAT[dateKey] = [];
           dailyTAT[dateKey].push(totalTAT);
-          dailyCompliance[dateKey] = (dailyCompliance[dateKey] ?? 0) + (totalTAT <= targetTAT ? 1 : 0);
+          dailyCompliance[dateKey] =
+            (dailyCompliance[dateKey] ?? 0) + (totalTAT <= targetTAT ? 1 : 0);
         }
       });
     });
@@ -140,9 +156,27 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
       targetTAT,
       complianceRate: Math.round(complianceRate),
       breakdown: {
-        orderToCollection: breakdowns.orderToCollection.length > 0 ? Math.round(breakdowns.orderToCollection.reduce((a, b) => a + b, 0) / breakdowns.orderToCollection.length) : 0,
-        collectionToEntry: breakdowns.collectionToEntry.length > 0 ? Math.round(breakdowns.collectionToEntry.reduce((a, b) => a + b, 0) / breakdowns.collectionToEntry.length) : 0,
-        entryToValidation: breakdowns.entryToValidation.length > 0 ? Math.round(breakdowns.entryToValidation.reduce((a, b) => a + b, 0) / breakdowns.entryToValidation.length) : 0,
+        orderToCollection:
+          breakdowns.orderToCollection.length > 0
+            ? Math.round(
+                breakdowns.orderToCollection.reduce((a, b) => a + b, 0) /
+                  breakdowns.orderToCollection.length
+              )
+            : 0,
+        collectionToEntry:
+          breakdowns.collectionToEntry.length > 0
+            ? Math.round(
+                breakdowns.collectionToEntry.reduce((a, b) => a + b, 0) /
+                  breakdowns.collectionToEntry.length
+              )
+            : 0,
+        entryToValidation:
+          breakdowns.entryToValidation.length > 0
+            ? Math.round(
+                breakdowns.entryToValidation.reduce((a, b) => a + b, 0) /
+                  breakdowns.entryToValidation.length
+              )
+            : 0,
       },
       trend,
     };
@@ -198,7 +232,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     // Sample rejections
     const rejectedSamples = filteredSamples.filter(s => s.status === 'rejected');
     const sampleRejectionReasons: Record<string, number> = {};
-    
+
     rejectedSamples.forEach(sample => {
       if ('rejectionReasons' in sample && sample.rejectionReasons) {
         sample.rejectionReasons.forEach(reason => {
@@ -215,7 +249,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     // Result rejections
     let retestCount = 0;
     let recollectCount = 0;
-    
+
     filteredOrders.forEach(order => {
       (order.tests ?? []).forEach(test => {
         if (test.resultRejectionHistory && test.resultRejectionHistory.length > 0) {
@@ -231,12 +265,16 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     return {
       sampleRejections: {
         total: rejectedSamples.length,
-        rate: filteredSamples.length > 0 ? (rejectedSamples.length / filteredSamples.length) * 100 : 0,
+        rate:
+          filteredSamples.length > 0 ? (rejectedSamples.length / filteredSamples.length) * 100 : 0,
         topReasons: topSampleReasons,
       },
       resultRejections: {
         total: retestCount + recollectCount,
-        rate: volumeMetrics.total > 0 ? ((retestCount + recollectCount) / volumeMetrics.total) * 100 : 0,
+        rate:
+          volumeMetrics.total > 0
+            ? ((retestCount + recollectCount) / volumeMetrics.total) * 100
+            : 0,
         retestCount,
         recollectCount,
       },
@@ -266,7 +304,10 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
           if (test.criticalAcknowledgedAt) {
             acknowledged++;
             if (test.criticalNotifiedAt) {
-              const responseTime = minutesBetween(test.criticalNotifiedAt, test.criticalAcknowledgedAt);
+              const responseTime = minutesBetween(
+                test.criticalNotifiedAt,
+                test.criticalAcknowledgedAt
+              );
               responseTimes.push(responseTime);
             }
           }
@@ -274,9 +315,10 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
       });
     });
 
-    const averageResponseTime = responseTimes.length > 0 
-      ? Math.round(responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length)
-      : 0;
+    const averageResponseTime =
+      responseTimes.length > 0
+        ? Math.round(responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length)
+        : 0;
 
     const byTest = Object.entries(testCounts)
       .map(([testCode, data]) => ({ testCode, testName: data.testName, count: data.count }))
@@ -303,14 +345,16 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     filteredOrders.forEach(order => {
       (order.tests ?? []).forEach(test => {
         if (test.enteredBy) {
-          const userId = typeof test.enteredBy === 'string' ? parseInt(test.enteredBy) : test.enteredBy;
+          const userId =
+            typeof test.enteredBy === 'string' ? parseInt(test.enteredBy) : test.enteredBy;
           if (!technicianStats[userId]) {
             technicianStats[userId] = { resultsEntered: 0, validations: 0 };
           }
           technicianStats[userId].resultsEntered++;
         }
         if (test.validatedBy) {
-          const userId = typeof test.validatedBy === 'string' ? parseInt(test.validatedBy) : test.validatedBy;
+          const userId =
+            typeof test.validatedBy === 'string' ? parseInt(test.validatedBy) : test.validatedBy;
           if (!technicianStats[userId]) {
             technicianStats[userId] = { resultsEntered: 0, validations: 0 };
           }
@@ -319,16 +363,18 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
       });
     });
 
-    const byTechnician = Object.entries(technicianStats).map(([userId, stats]) => {
-      const userIdNum = parseInt(userId);
-      const user = users.find(u => Number(u.id) === userIdNum);
-      return {
-        userId: userIdNum,
-        userName: user?.name || `User ${userId}`,
-        resultsEntered: stats.resultsEntered,
-        validations: stats.validations,
-      };
-    }).sort((a, b) => (b.resultsEntered + b.validations) - (a.resultsEntered + a.validations));
+    const byTechnician = Object.entries(technicianStats)
+      .map(([userId, stats]) => {
+        const userIdNum = parseInt(userId);
+        const user = users.find(u => Number(u.id) === userIdNum);
+        return {
+          userId: userIdNum,
+          userName: user?.name || `User ${userId}`,
+          resultsEntered: stats.resultsEntered,
+          validations: stats.validations,
+        };
+      })
+      .sort((a, b) => b.resultsEntered + b.validations - (a.resultsEntered + a.validations));
 
     const totalResultsEntered = byTechnician.reduce((sum, t) => sum + t.resultsEntered, 0);
     const totalValidations = byTechnician.reduce((sum, t) => sum + t.validations, 0);
@@ -352,7 +398,7 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
     }
 
     const pendingCollection = filteredSamples.filter(s => s.status === 'pending').length;
-    
+
     let pendingEntry = 0;
     let pendingValidation = 0;
     let oldestEntry: string | undefined;
@@ -363,13 +409,21 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
         if (test.status === 'sample-collected') {
           pendingEntry++;
           const sample = filteredSamples.find(s => s.sampleId === test.sampleId);
-          if (sample && 'collectedAt' in sample && sample.collectedAt && (!oldestEntry || sample.collectedAt < oldestEntry)) {
+          if (
+            sample &&
+            'collectedAt' in sample &&
+            sample.collectedAt &&
+            (!oldestEntry || sample.collectedAt < oldestEntry)
+          ) {
             oldestEntry = sample.collectedAt;
           }
         }
         if (test.status === 'resulted' || test.status === 'in-progress') {
           pendingValidation++;
-          if (test.resultEnteredAt && (!oldestValidation || test.resultEnteredAt < oldestValidation)) {
+          if (
+            test.resultEnteredAt &&
+            (!oldestValidation || test.resultEnteredAt < oldestValidation)
+          ) {
             oldestValidation = test.resultEnteredAt;
           }
         }
@@ -413,16 +467,27 @@ export function useLabMetrics(dateRange?: DateRangeFilter) {
   }, [filteredOrders, filteredSamples]);
 
   // Combine all metrics
-  const analytics: LabAnalytics = useMemo(() => ({
-    tat: tatMetrics,
-    volume: volumeMetrics,
-    rejections: rejectionMetrics,
-    criticalValues: criticalValueMetrics,
-    productivity: productivityMetrics,
-    backlog: backlogMetrics,
-    funnel: funnelMetrics,
-    generatedAt: new Date().toISOString(),
-  }), [tatMetrics, volumeMetrics, rejectionMetrics, criticalValueMetrics, productivityMetrics, backlogMetrics, funnelMetrics]);
+  const analytics: LabAnalytics = useMemo(
+    () => ({
+      tat: tatMetrics,
+      volume: volumeMetrics,
+      rejections: rejectionMetrics,
+      criticalValues: criticalValueMetrics,
+      productivity: productivityMetrics,
+      backlog: backlogMetrics,
+      funnel: funnelMetrics,
+      generatedAt: new Date().toISOString(),
+    }),
+    [
+      tatMetrics,
+      volumeMetrics,
+      rejectionMetrics,
+      criticalValueMetrics,
+      productivityMetrics,
+      backlogMetrics,
+      funnelMetrics,
+    ]
+  );
 
   return {
     analytics,

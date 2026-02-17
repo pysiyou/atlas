@@ -13,17 +13,17 @@ export interface ValidatedTest {
   testId: number;
   testCode: string;
   testName: string;
-  
+
   // Order context
   orderId: number;
   orderDate: string;
-  
+
   // Patient context
   patientId: number;
   patientName: string;
   patientAge?: number;
   patientGender?: string;
-  
+
   // Test data
   test: OrderTest;
   order: Order;

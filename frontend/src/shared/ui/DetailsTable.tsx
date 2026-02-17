@@ -42,7 +42,9 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
   const filteredRows = providedFilteredRows ?? filterDetailRows(rows);
 
   return (
-    <div className={`bg-surface border border-border-default rounded-md overflow-hidden ${className}`}>
+    <div
+      className={`bg-surface border border-border-default rounded-md overflow-hidden ${className}`}
+    >
       {/* Header */}
       <div className="px-4 py-3 border-b border-border-default bg-surface-page">
         <h3 className="text-xs text-text-secondary uppercase tracking-wide">{title}</h3>
@@ -53,7 +55,10 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
         <table className="w-full">
           <tbody>
             {filteredRows.map((row, idx) => (
-              <tr key={`${row.label}-${idx}`} className="border-b border-border-subtle last:border-b-0">
+              <tr
+                key={`${row.label}-${idx}`}
+                className="border-b border-border-subtle last:border-b-0"
+              >
                 {/* Label */}
                 <td className="px-4 py-2.5 align-top w-2/5 uppercase">
                   <span className={`block ${DETAIL_LABEL}`}>{row.label}</span>

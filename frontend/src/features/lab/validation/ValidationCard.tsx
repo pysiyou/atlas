@@ -51,10 +51,7 @@ function ResultGrid({
             : 'text-text-primary';
 
           return (
-            <div
-              key={key}
-              className="grid grid-cols-[1fr_auto] items-baseline whitespace-nowrap"
-            >
+            <div key={key} className="grid grid-cols-[1fr_auto] items-baseline whitespace-nowrap">
               <span className="text-xxs text-text-tertiary" title={key}>
                 {key}:
               </span>
@@ -147,7 +144,9 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   const lastRejection = rejectionHistory.at(-1) ?? null;
   const hasRejectionHistory = rejectionHistory.length > 0;
   const isRetest = test.isRetest === true;
-  const isRecollection = lastRejection ? getResultRejectionType(lastRejection) === 're-collect' : false;
+  const isRecollection = lastRejection
+    ? getResultRejectionType(lastRejection) === 're-collect'
+    : false;
   const hasFlags = test.flags && test.flags.length > 0;
 
   const handleCardClick = () => {
@@ -180,7 +179,9 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
           <div className="min-w-0 overflow-hidden">
             <div className="text-sm font-normal text-text-primary truncate">{test.testName}</div>
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="text-xs text-text-secondary font-normal truncate capitalize">{patientName}</div>
+              <div className="text-xs text-text-secondary font-normal truncate capitalize">
+                {patientName}
+              </div>
               <div className="text-xxs text-text-disabled">•</div>
               <div className="text-xxs text-brand font-normal font-mono truncate">
                 {test.testCode}
@@ -296,10 +297,14 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
 
   const additionalInfo = test.resultEnteredAt && (
     <span className="text-xs text-text-tertiary">
-      Results entered <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
+      Results entered{' '}
+      <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
       {test.enteredBy && (
-      <> by <span className="text-text-secondary">{getUserName(test.enteredBy)}</span></>
-    )}
+        <>
+          {' '}
+          by <span className="text-text-secondary">{getUserName(test.enteredBy)}</span>
+        </>
+      )}
     </span>
   );
 

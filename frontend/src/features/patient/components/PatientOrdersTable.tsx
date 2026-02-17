@@ -22,10 +22,7 @@ const EMPTY_MESSAGE = (
   />
 );
 
-export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
-  orders,
-  onOrderClick,
-}) => {
+export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({ orders, onOrderClick }) => {
   const { getPatientName } = usePatientNameLookup();
   const { getTestName } = useTestNameLookup();
 
@@ -39,8 +36,8 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
       data={orders}
       viewConfig={viewConfig}
       striped
-      onRowClick={(order) => onOrderClick(String(order.orderId))}
-      getRowKey={(order) => order.orderId}
+      onRowClick={order => onOrderClick(String(order.orderId))}
+      getRowKey={order => order.orderId}
       pagination={false}
       emptyMessage={EMPTY_MESSAGE}
       embedded

@@ -41,10 +41,7 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           `}
         >
-          <Icon
-            name={method.icon as IconName}
-            className="w-7 h-7 shrink-0 text-text-disabled"
-          />
+          <Icon name={method.icon as IconName} className="w-7 h-7 shrink-0 text-text-disabled" />
           <span className="flex-1 text-xs font-normal text-left text-text-secondary">
             {method.label.toUpperCase()}
           </span>
@@ -54,9 +51,7 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
               ${isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
             `}
           >
-            {isSelected && (
-              <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
-            )}
+            {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
           </div>
         </button>
       );
