@@ -5,7 +5,7 @@
  * Each "rung" is a thin dotted bar that rotates around the X-axis with a
  * staggered delay, creating a travelling 3D helix wave. Coloured dots sit
  * at each end to represent the two strands. The whole assembly is tilted
- * –20° on the Z-axis for the classic DNA lean.
+ * Displayed horizontally (no Z-axis tilt).
  *
  * Pure CSS 3D transforms · compositor-only animation → locked 60 fps.
  */
@@ -106,7 +106,7 @@ export const DnaHelixLoader: React.FC<DnaHelixLoaderProps> = ({
         justifyContent: 'center',
         alignItems: 'center',
         transformStyle: 'preserve-3d',
-        transform: 'rotateZ(-20deg)',
+        transform: 'rotateZ(0deg)',
       }}
     >
       <style>{css}</style>
