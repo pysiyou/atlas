@@ -2,7 +2,7 @@
  * useDistributionByStage - Active (incomplete) tests by state: COLLECTION, RESULTS, VALIDATION, ESCALATION.
  *
  * Active = not superseded, not removed, not validated.
- * For each stage: value (count), arrivedToday (tests moved to that state today), lastSeenAt (last time an item entered this stage).
+ * For each stage: value (count), arrivedToday (trend), avgWaitMs (average wait), oldestEntryAt (oldest item).
  */
 
 import { useMemo } from 'react';
@@ -15,8 +15,10 @@ export interface DistributionByStagePoint {
   color?: string;
   /** Tests that entered this state today (trend). */
   arrivedToday: number;
-  /** Last time an item entered this stage (ISO datetime). */
-  lastSeenAt?: string;
+  /** Average wait time in this stage (milliseconds). */
+  avgWaitMs?: number;
+  /** ISO datetime of the oldest item currently in this stage. */
+  oldestEntryAt?: string;
 }
 
 const STAGE_ORDER = ['Collection', 'Results', 'Validation', 'Escalation'] as const;
@@ -65,10 +67,15 @@ export function useDistributionByStage(): {
     let resultsArrivals = 0;
     let validationArrivals = 0;
     let escalationArrivals = 0;
-    let lastCollectionEntry = '';
-    let lastResultsEntry = '';
-    let lastValidationEntry = '';
-    let lastEscalationEntry = '';
+    let collectionWaitSum = 0;
+    let resultsWaitSum = 0;
+    let validationWaitSum = 0;
+    let escalationWaitSum = 0;
+    let oldestCollection = '';
+    let oldestResults = '';
+    let oldestValidation = '';
+    let oldestEscalation = '';
+    const now = Date.now();
 
     (orders ?? []).forEach((order) => {
       (order.tests ?? []).forEach((test) => {
@@ -82,32 +89,46 @@ export function useDistributionByStage(): {
 
         switch (test.status) {
           case 'pending':
-          case 'rejected':
+          case 'rejected': {
             collection++;
             if (isTodayLocal(test.createdAt)) collectionArrivals++;
-            {
-              const enteredAt = test.createdAt ?? test.updatedAt ?? '';
-              if (enteredAt && enteredAt > lastCollectionEntry) lastCollectionEntry = enteredAt;
+            const enteredAt = test.createdAt ?? test.updatedAt ?? '';
+            if (enteredAt) {
+              collectionWaitSum += now - new Date(enteredAt).getTime();
+              if (!oldestCollection || enteredAt < oldestCollection) oldestCollection = enteredAt;
             }
             break;
+          }
           case 'sample-collected':
-          case 'in-progress':
+          case 'in-progress': {
             results++;
             if (wasCollectedToday) resultsArrivals++;
-            if (sampleCA && sampleCA > lastResultsEntry) lastResultsEntry = sampleCA;
+            if (sampleCA) {
+              resultsWaitSum += now - new Date(sampleCA).getTime();
+              if (!oldestResults || sampleCA < oldestResults) oldestResults = sampleCA;
+            }
             break;
-          case 'resulted':
+          }
+          case 'resulted': {
             validation++;
             if (wasResultedToday) validationArrivals++;
-            if (test.resultEnteredAt && test.resultEnteredAt > lastValidationEntry)
-              lastValidationEntry = test.resultEnteredAt;
+            if (test.resultEnteredAt) {
+              validationWaitSum += now - new Date(test.resultEnteredAt).getTime();
+              if (!oldestValidation || test.resultEnteredAt < oldestValidation)
+                oldestValidation = test.resultEnteredAt;
+            }
             break;
-          case 'escalated':
+          }
+          case 'escalated': {
             escalation++;
             if (isTodayLocal(test.updatedAt)) escalationArrivals++;
-            if (test.updatedAt && test.updatedAt > lastEscalationEntry)
-              lastEscalationEntry = test.updatedAt;
+            if (test.updatedAt) {
+              escalationWaitSum += now - new Date(test.updatedAt).getTime();
+              if (!oldestEscalation || test.updatedAt < oldestEscalation)
+                oldestEscalation = test.updatedAt;
+            }
             break;
+          }
           default:
             break;
         }
@@ -121,22 +142,26 @@ export function useDistributionByStage(): {
       Collection: {
         value: collection,
         arrivedToday: collectionArrivals,
-        lastSeenAt: lastCollectionEntry || undefined,
+        avgWaitMs: collection > 0 ? collectionWaitSum / collection : undefined,
+        oldestEntryAt: oldestCollection || undefined,
       },
       Results: {
         value: results,
         arrivedToday: resultsArrivals,
-        lastSeenAt: lastResultsEntry || undefined,
+        avgWaitMs: results > 0 ? resultsWaitSum / results : undefined,
+        oldestEntryAt: oldestResults || undefined,
       },
       Validation: {
         value: validation,
         arrivedToday: validationArrivals,
-        lastSeenAt: lastValidationEntry || undefined,
+        avgWaitMs: validation > 0 ? validationWaitSum / validation : undefined,
+        oldestEntryAt: oldestValidation || undefined,
       },
       Escalation: {
         value: escalation,
         arrivedToday: escalationArrivals,
-        lastSeenAt: lastEscalationEntry || undefined,
+        avgWaitMs: escalation > 0 ? escalationWaitSum / escalation : undefined,
+        oldestEntryAt: oldestEscalation || undefined,
       },
     };
 

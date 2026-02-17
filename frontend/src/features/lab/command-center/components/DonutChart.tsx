@@ -13,7 +13,6 @@ import {
 } from 'recharts';
 import { ChartContainer } from './ChartContainer';
 import { Icon, type IconName } from '@/shared/ui';
-import { formatRelativeDateTime } from '@/utils';
 
 export interface DonutChartSegment {
   name: string;
@@ -21,8 +20,30 @@ export interface DonutChartSegment {
   color?: string;
   /** Count of items that entered this state today (trend). */
   arrivedToday?: number;
-  /** ISO datetime of the last operation in this phase. */
-  lastSeenAt?: string;
+  /** Average wait time in this stage (milliseconds). */
+  avgWaitMs?: number;
+  /** ISO datetime of the oldest item currently in this stage. */
+  oldestEntryAt?: string;
+}
+
+/** Format a duration in ms to a compact human string. */
+function formatDuration(ms: number): string {
+  if (ms < 60_000) return '<1m';
+  const totalMin = Math.floor(ms / 60_000);
+  if (totalMin < 60) return `${totalMin}m`;
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  if (h < 24) return m > 0 ? `${h}h ${m}m` : `${h}h`;
+  const d = Math.floor(h / 24);
+  const rh = h % 24;
+  return rh > 0 ? `${d}d ${rh}h` : `${d}d`;
+}
+
+/** Format an ISO timestamp as a compact "time ago" string. */
+function formatTimeAgo(iso: string): string {
+  const ms = Date.now() - new Date(iso).getTime();
+  if (ms < 60_000) return 'just now';
+  return `${formatDuration(ms)} ago`;
 }
 
 export interface DonutChartProps {
@@ -208,9 +229,9 @@ function DetailListRow({ item, index, total, getItemIcon }: DetailListRowProps) 
           )}
         </div>
         <div className="flex items-center justify-between gap-2 text-xs text-text-tertiary tabular-nums min-w-0">
-          <span>{item.value.toLocaleString()} over {total.toLocaleString()}</span>
+          <span>{item.avgWaitMs != null ? `avg ${formatDuration(item.avgWaitMs)}` : '—'}</span>
           <span className="shrink-0 text-text-tertiary">
-            {item.lastSeenAt ? formatRelativeDateTime(item.lastSeenAt) : '—'}
+            {item.oldestEntryAt ? `oldest ${formatTimeAgo(item.oldestEntryAt)}` : '—'}
           </span>
         </div>
       </div>
