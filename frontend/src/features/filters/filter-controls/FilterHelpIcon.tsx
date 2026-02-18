@@ -5,8 +5,8 @@
  */
 
 import React from 'react';
-import { Popover } from '@/shared/ui/Popover';
-import { Icon } from '@/shared/ui';
+import { Popover } from '@/components/ui/Popover';
+import { Icon } from '@/components/ui';
 import { ICONS } from '@/utils';
 import { cn } from '@/utils';
 

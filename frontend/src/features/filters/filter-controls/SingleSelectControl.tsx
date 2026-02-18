@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { Popover, Icon, Badge, FilterTriggerShell } from '@/shared/ui';
-import type { IconName } from '@/shared/ui';
+import { Popover, Icon, Badge, FilterTriggerShell } from '@/components/ui';
+import type { IconName } from '@/components/ui';
 import { cn, uppercaseLabel, ICONS } from '@/utils';
 import type { SingleSelectFilterControl } from '../types';
 

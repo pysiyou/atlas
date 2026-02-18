@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { dateStringSchema, positiveIntSchema } from '@/shared/schemas/common.schema';
+import { dateStringSchema, positiveIntSchema } from '@/types/schemas/common.schema';
 
 export const rejectionRecordSchema = z.object({
   rejectedAt: dateStringSchema,

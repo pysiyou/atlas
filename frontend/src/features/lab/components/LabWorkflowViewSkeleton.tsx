@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Skeleton, SkeletonCard } from '@/shared/ui/Skeleton';
+import { Skeleton, SkeletonCard } from '@/components/ui/Skeleton';
 
 const CARD_COUNT = 8;
 

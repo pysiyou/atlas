@@ -1,0 +1,50 @@
+import React, { useMemo } from 'react';
+import type { Order } from '@/types';
+import { CircularProgress } from '@/components/ui';
+import { STATUS_TIMELINE_STEPS, getOrderStepProgress } from '../utils/order-timeline-utils';
+
+interface OrderCircularProgressProps {
+  order: Order;
+}
+
+/**
+ * OrderCircularProgress - Shows overall order progress through all timeline steps.
+ *
+ * Steps: Created, Paid, Sample Collected, Results Entered, Completed
+ *
+ * Progress is calculated as: (completed steps / total steps) * 100
+ */
+export const OrderCircularProgress: React.FC<OrderCircularProgressProps> = ({ order }) => {
+  const { percentage, completedSteps, totalSteps } = useMemo(() => {
+    const total = STATUS_TIMELINE_STEPS.length;
+
+    // Count fully completed steps
+    let completed = 0;
+    for (const step of STATUS_TIMELINE_STEPS) {
+      const progress = getOrderStepProgress(order, step.status);
+      if (progress.isFullyComplete) {
+        completed++;
+      }
+    }
+
+    const pct = Math.round((completed / total) * 100);
+
+    return { percentage: pct, completedSteps: completed, totalSteps: total };
+  }, [order]);
+
+  // Generate label: "X/Y" showing completed steps out of total
+  const label = useMemo(() => {
+    return `${completedSteps}/${totalSteps}`;
+  }, [completedSteps, totalSteps]);
+
+  return (
+    <CircularProgress
+      size={18}
+      percentage={percentage}
+      trackColorClass="stroke-border-default"
+      progressColorClass={percentage === 100 ? 'stroke-success' : 'stroke-brand'}
+      label={label}
+      className="h-7"
+    />
+  );
+};

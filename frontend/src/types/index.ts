@@ -3,7 +3,7 @@
  */
 
 // Export all enums from consolidated source
-export * from '@/shared/types/enums';
+export * from '@/types/enums';
 
 // Export type interfaces (not enums) to avoid conflicts
 export type {

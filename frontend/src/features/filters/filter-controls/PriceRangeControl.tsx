@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Popover, Icon, FilterTriggerShell } from '@/shared/ui';
+import { Popover, Icon, FilterTriggerShell } from '@/components/ui';
 import type { PriceRangeFilterControl } from '../types';
 import { ICONS } from '@/utils';
 

@@ -8,8 +8,8 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Button, IconButton, FooterInfo, Icon } from '@/shared/ui';
-import { useAuthStore } from '@/shared/stores/auth.store';
+import { Button, IconButton, FooterInfo, Icon } from '@/components/ui';
+import { useAuthStore } from '@/app/store';
 import { ICONS } from '@/utils';
 
 interface PopoverFormProps {

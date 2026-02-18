@@ -1,20 +1,35 @@
 /**
- * Central export for all utilities
+ * Global Utilities — barrel export for @/utils
  */
+
+// Data formatters (from shared/utils/data)
+export * from './data';
+
+// Form utilities (from shared/utils/forms)
+export * from './forms/formDataInitializer';
 
 // Core utilities
 export * from './classnames';
+export * from './dateHelpers';
+export * from './errorHelpers';
 export * from './formatters';
 export * from './logger';
-export * from './validation';
-export * from './errorHelpers';
 export * from './orderUtils';
 export * from './statusHelpers';
 export * from './typeHelpers';
+export * from './validation';
 
-// Grouped utilities
-export * from './ids';
-export * from './icons';
-export * from './samples';
-export * from './lab';
+// Filtering
 export * from './filtering';
+
+// Icons
+export * from './icons';
+
+// ID display helpers
+export * from './ids';
+
+// Lab-specific utilities
+export * from './lab';
+
+// Sample utilities
+export * from './samples';

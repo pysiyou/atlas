@@ -4,7 +4,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Card, Badge } from '@/shared/ui';
+import { Card, Badge } from '@/components/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/hooks/queries';

@@ -5,7 +5,7 @@
  */
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/shared/stores/auth.store';
+import { useAuthStore } from '@/app/store';
 import { ROUTES } from '@/config';
 
 const getErrorMessage = (err: unknown): string => {

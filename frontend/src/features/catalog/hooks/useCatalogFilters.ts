@@ -6,7 +6,7 @@
 
 import { useState, useMemo } from 'react';
 import type { Test, TestCategory } from '@/types';
-import { PRICE_RANGE } from '@/shared/constants';
+import { PRICE_RANGE } from '@/utils/constants';
 
 interface UseCatalogFiltersOptions {
   tests: Test[];

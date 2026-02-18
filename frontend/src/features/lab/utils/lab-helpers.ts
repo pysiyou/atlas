@@ -4,10 +4,10 @@
  * Shared utility functions for lab workflow components.
  */
 
-import { toast } from '@/shared/components/feedback';
+import { toast } from '@/components/feedback';
 import { getCollectionRequirements } from '@/utils';
 import { getTestNames } from '@/utils/typeHelpers';
-import { printCollectionLabel } from '../collection/CollectionLabel';
+import { printCollectionLabel } from '@/features/collection/CollectionLabel';
 import type { SampleDisplay } from '../types';
 import type { Test } from '@/types';
 
@@ -46,7 +46,7 @@ export const getEffectiveContainerType = (
 };
 
 // Import ResultStatus from enums (single source of truth)
-import type { ResultStatus } from '@/shared/types/enums';
+import type { ResultStatus } from '@/types/enums';
 export type { ResultStatus };
 
 const ABNORMAL_STATUSES: ResultStatus[] = [

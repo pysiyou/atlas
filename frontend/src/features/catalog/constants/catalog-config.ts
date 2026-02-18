@@ -6,7 +6,7 @@
 import type { FilterConfig } from '@/features/filters';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/features/filters';
 import type { TestCategory } from '@/types';
-import { PRICE_RANGE } from '@/shared/constants';
+import { PRICE_RANGE } from '@/utils/constants';
 import { ICONS } from '@/utils';
 
 /**

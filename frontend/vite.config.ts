@@ -9,16 +9,18 @@ export default defineConfig({
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
     alias: {
+      // Feature-Sliced Design alias — @/* resolves to src/*
+      '@': path.resolve(__dirname, './src'),
+      // Legacy specific aliases preserved for compatibility
       '@/types': path.resolve(__dirname, './src/types'),
       '@/hooks': path.resolve(__dirname, './src/hooks'),
       '@/utils': path.resolve(__dirname, './src/utils'),
       '@/features': path.resolve(__dirname, './src/features'),
-      '@/shared': path.resolve(__dirname, './src/shared'),
-      '@/pages': path.resolve(__dirname, './src/pages'),
-      '@/config': path.resolve(__dirname, './src/config'),
-      '@/services': path.resolve(__dirname, './src/services'),
-      '@/assets': path.resolve(__dirname, './src/assets'),
+      '@/components': path.resolve(__dirname, './src/components'),
+      '@/app': path.resolve(__dirname, './src/app'),
       '@/lib': path.resolve(__dirname, './src/lib'),
+      '@/config': path.resolve(__dirname, './src/config'),
+      '@/assets': path.resolve(__dirname, './src/assets'),
       '@/test': path.resolve(__dirname, './src/test'),
     },
   },

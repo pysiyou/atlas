@@ -6,11 +6,11 @@
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge } from '@/shared/ui';
-import type { TableViewConfig } from '@/shared/ui/Table';
+import { Badge } from '@/components/ui';
+import type { TableViewConfig } from '@/components/ui/Table';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
-import { DATA_AMOUNT, DATA_ID_PRIMARY } from '@/shared/constants';
+import { DATA_AMOUNT, DATA_ID_PRIMARY } from '@/utils/constants';
 import { CatalogCard } from '../components/CatalogCard';
 
 /**

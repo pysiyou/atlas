@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
-import { SkeletonInfoSection } from '@/shared/ui/Skeleton';
+import { SkeletonInfoSection } from '@/components/ui/Skeleton';
 
 const SECTIONS = [
   { title: 'Test Overview', rows: 8 },

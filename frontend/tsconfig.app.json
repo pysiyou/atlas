@@ -26,9 +26,10 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    /* Path Aliases */
+    /* Path Aliases — Feature-Sliced Design */
     "baseUrl": ".",
     "paths": {
+      "@/*": ["./src/*"],
       "@/types": ["./src/types"],
       "@/types/*": ["./src/types/*"],
       "@/hooks": ["./src/hooks"],
@@ -36,14 +37,14 @@
       "@/utils": ["./src/utils"],
       "@/utils/*": ["./src/utils/*"],
       "@/features/*": ["./src/features/*"],
-      "@/shared/*": ["./src/shared/*"],
-      "@/pages": ["./src/pages"],
-      "@/pages/*": ["./src/pages/*"],
+      "@/components": ["./src/components"],
+      "@/components/*": ["./src/components/*"],
+      "@/app": ["./src/app"],
+      "@/app/*": ["./src/app/*"],
+      "@/lib/*": ["./src/lib/*"],
       "@/config": ["./src/config"],
       "@/config/*": ["./src/config/*"],
-      "@/services/*": ["./src/services/*"],
       "@/assets/*": ["./src/assets/*"],
-      "@/lib/*": ["./src/lib/*"],
       "@/test": ["./src/test"],
       "@/test/*": ["./src/test/*"]
     }

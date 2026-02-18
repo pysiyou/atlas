@@ -3,19 +3,19 @@
  */
 
 // Import types from enums for local use
-import type { Gender as GenderType } from '@/shared/types/enums';
-import type { AffiliationDuration as AffiliationDurationType } from '@/shared/types/enums';
-import type { Relationship as RelationshipType } from '@/shared/types/enums';
+import type { Gender as GenderType } from '@/types/enums';
+import type { AffiliationDuration as AffiliationDurationType } from '@/types/enums';
+import type { Relationship as RelationshipType } from '@/types/enums';
 
 // Re-export types (Single Source of Truth)
-export type { Gender } from '@/shared/types/enums';
-export type { AffiliationDuration } from '@/shared/types/enums';
-export type { Relationship } from '@/shared/types/enums';
+export type { Gender } from '@/types/enums';
+export type { AffiliationDuration } from '@/types/enums';
+export type { Relationship } from '@/types/enums';
 
 // Re-export the VALUES arrays for backwards compatibility
-export { GENDER_VALUES } from '@/shared/types/enums';
-export { AFFILIATION_DURATION_VALUES } from '@/shared/types/enums';
-export { RELATIONSHIP_VALUES } from '@/shared/types/enums';
+export { GENDER_VALUES } from '@/types/enums';
+export { AFFILIATION_DURATION_VALUES } from '@/types/enums';
+export { RELATIONSHIP_VALUES } from '@/types/enums';
 
 // Local type aliases for use in this file
 type Gender = GenderType;

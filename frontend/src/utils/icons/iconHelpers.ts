@@ -13,7 +13,7 @@
  *   <Icon name={getDataFieldIcon('user')} />
  */
 
-import type { IconName } from '@/shared/ui';
+import type { IconName } from '@/components/ui';
 import { ICONS } from './iconMappings';
 
 /**

@@ -3,7 +3,7 @@
  * Types for affiliation pricing and plan selection
  */
 
-import type { AffiliationDuration } from '@/shared/types/enums';
+import type { AffiliationDuration } from '@/types/enums';
 
 /**
  * Affiliation pricing information from backend

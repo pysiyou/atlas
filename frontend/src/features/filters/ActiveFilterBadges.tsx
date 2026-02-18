@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Icon } from '@/shared/ui';
+import { Icon } from '@/components/ui';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import type { ActiveFilterBadge } from './types';

@@ -3,7 +3,7 @@
  * Uses shared typography tokens where they match; lab-specific tokens for section titles etc.
  */
 
-import { TEXT_METADATA, BODY_SECONDARY } from '@/shared/constants';
+import { TEXT_METADATA, BODY_SECONDARY } from '@/utils/constants';
 
 // Typography Constants (shared tokens for body/metadata; lab-specific for title/section)
 export const LAB_CARD_TYPOGRAPHY = {

@@ -4,8 +4,8 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Icon, DnaHelixLoader } from '@/shared/ui';
-import { inputWrapper, inputInner, inputText, inputClearButton } from '@/shared/ui/inputStyles';
+import { Icon, DnaHelixLoader } from '@/components/ui';
+import { inputWrapper, inputInner, inputText, inputClearButton } from '@/components/ui/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 

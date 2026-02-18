@@ -4,13 +4,13 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import { CollectionView } from '../collection/CollectionView';
-import { EntryView } from '../entry/EntryView';
-import { ValidationView } from '../validation/ValidationView';
-import { EscalationView } from '../validation/EscalationView';
-import { CommandCenterView } from '@/features/lab/command-center';
-import { useAuthStore } from '@/shared/stores/auth.store';
-import { Icon, PageHeaderBar } from '@/shared/ui';
+import { CollectionView } from '@/features/collection/CollectionView';
+import { EntryView } from '@/features/entry/EntryView';
+import { ValidationView } from '@/features/validation/ValidationView';
+import { EscalationView } from '@/features/validation/EscalationView';
+import { CommandCenterView } from '@/features/command-center';
+import { useAuthStore } from '@/app/store';
+import { Icon, PageHeaderBar } from '@/components/ui';
 import { ICONS } from '@/utils';
 
 type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation' | 'dashboard';

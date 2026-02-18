@@ -4,7 +4,7 @@
  */
 
 import React, { useRef, useEffect } from 'react';
-import { Icon, DnaHelixLoader } from '@/shared/ui';
+import { Icon, DnaHelixLoader } from '@/components/ui';
 import { ICONS } from '@/utils';
 import { companyConfig } from '@/config';
 

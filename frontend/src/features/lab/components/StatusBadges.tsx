@@ -10,7 +10,7 @@
  */
 
 import React from 'react';
-import { Badge, Icon, DnaHelixLoader } from '@/shared/ui';
+import { Badge, Icon, DnaHelixLoader } from '@/components/ui';
 import { formatDate, getContainerIconColor } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/hooks/queries';

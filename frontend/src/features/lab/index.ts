@@ -1,7 +1,14 @@
 /**
  * Lab Feature - Main Exports
  *
- * Organized exports following V2 architecture patterns
+ * Core lab infrastructure shared across workflow features.
+ * Sub-features have been promoted to top-level features:
+ *   - @/features/analytics
+ *   - @/features/collection
+ *   - @/features/command-center
+ *   - @/features/validation
+ *   - @/features/entry
+ *   - @/features/reports
  */
 
 // Schemas
@@ -10,25 +17,19 @@ export * from './schemas';
 // Services
 export * from './services';
 
-// Shared components
+// Shared lab components (LabCard, LabFilters, LabWorkflowView, etc.)
 export * from './components';
 
-// Workflow components
-export * from './collection';
-export * from './entry';
-export * from './validation';
-export * from './command-center';
-
-// Pages
+// Pages (LaboratoryPage router)
 export * from './pages';
 
-// Hooks
+// Hooks (useLabWorkflowFilters, useRejectionManager, etc.)
 export * from './hooks';
 
 // Utils
 export * from './utils';
 
-// Types (workflow-specific display types)
+// Types (SampleDisplay, LabOperationType, etc.)
 export * from './types';
 
 // Constants

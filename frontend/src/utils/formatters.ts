@@ -1,6 +1,6 @@
 /**
  * Formatting Utilities (app-level facade)
- * Canonical date/currency/array formatters live in @/shared/utils/data; this module re-exports
+ * Canonical date/currency/array formatters live in @/utils/data; this module re-exports
  * formatDate and formatCurrency for @/utils consumers and adds app-specific helpers (phone, age, initials).
  */
 
@@ -10,8 +10,8 @@ export {
   formatDate,
   formatRelativeDateLabel,
   formatRelativeDateTime,
-} from '@/shared/utils/data/dateFormatters';
-export { formatCurrency } from '@/shared/utils/data/currencyFormatters';
+} from '@/utils/data/dateFormatters';
+export { formatCurrency } from '@/utils/data/currencyFormatters';
 
 /**
  * Format a phone number to (XXX) XXX-XXXX format

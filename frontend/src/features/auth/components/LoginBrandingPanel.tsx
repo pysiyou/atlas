@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Icon } from '@/shared/ui';
+import { Icon } from '@/components/ui';
 import { ICONS } from '@/utils';
 import { companyConfig } from '@/config';
 

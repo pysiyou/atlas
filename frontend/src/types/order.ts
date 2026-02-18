@@ -3,24 +3,24 @@
  */
 
 // Import types from enums for local use
-import type { TestStatus as TestStatusType } from '@/shared/types/enums';
-import type { OrderStatus as OrderStatusType } from '@/shared/types/enums';
-import type { PriorityLevel as PriorityLevelType } from '@/shared/types/enums';
-import type { PaymentStatus as PaymentStatusType } from '@/shared/types/enums';
-import type { ResultStatus as ResultStatusType } from '@/shared/types/enums';
-import type { ValidationDecision as ValidationDecisionType } from '@/shared/types/enums';
+import type { TestStatus as TestStatusType } from '@/types/enums';
+import type { OrderStatus as OrderStatusType } from '@/types/enums';
+import type { PriorityLevel as PriorityLevelType } from '@/types/enums';
+import type { PaymentStatus as PaymentStatusType } from '@/types/enums';
+import type { ResultStatus as ResultStatusType } from '@/types/enums';
+import type { ValidationDecision as ValidationDecisionType } from '@/types/enums';
 
 // Re-export types (Single Source of Truth)
-export type { TestStatus } from '@/shared/types/enums';
-export type { OrderStatus } from '@/shared/types/enums';
-export type { PriorityLevel } from '@/shared/types/enums';
-export type { PaymentStatus } from '@/shared/types/enums';
-export type { ResultStatus } from '@/shared/types/enums';
-export type { ValidationDecision } from '@/shared/types/enums';
+export type { TestStatus } from '@/types/enums';
+export type { OrderStatus } from '@/types/enums';
+export type { PriorityLevel } from '@/types/enums';
+export type { PaymentStatus } from '@/types/enums';
+export type { ResultStatus } from '@/types/enums';
+export type { ValidationDecision } from '@/types/enums';
 
 // Re-export the VALUES arrays for backwards compatibility
-export { ORDER_STATUS_VALUES } from '@/shared/types/enums';
-export { PAYMENT_STATUS_VALUES } from '@/shared/types/enums';
+export { ORDER_STATUS_VALUES } from '@/types/enums';
+export { PAYMENT_STATUS_VALUES } from '@/types/enums';
 
 // Local type aliases for use in this file
 type TestStatus = TestStatusType;

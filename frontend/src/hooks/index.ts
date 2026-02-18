@@ -18,7 +18,7 @@ export * from './queries';
 // =============================================================================
 // Auth Hooks
 // =============================================================================
-// useAuth removed - use useAuthStore from @/shared/stores/auth.store
+// useAuth removed - use useAuthStore from @/app/store
 
 // =============================================================================
 // Form / UI Hooks

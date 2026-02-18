@@ -9,12 +9,12 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useTest } from '@/hooks/queries';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
-import { BalancedDetailsLayout } from '@/shared/ui';
-import type { TableInput } from '@/shared/ui';
-import { DetailPageShell, DetailPageHeader } from '@/shared/components';
+import { BalancedDetailsLayout } from '@/components/ui';
+import type { TableInput } from '@/components/ui';
+import { DetailPageShell, DetailPageHeader } from '@/components';
 import { CatalogDetailSkeleton } from './CatalogDetailSkeleton';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
-import { formatDetailDate } from '@/shared/utils/data';
+import { formatDetailDate } from '@/utils/data';
 import {
   formatArrayWithFallback,
   formatBooleanWithFallback,

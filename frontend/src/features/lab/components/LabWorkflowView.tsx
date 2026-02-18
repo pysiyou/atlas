@@ -8,13 +8,13 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { SearchBar, EmptyState } from '@/shared/ui';
+import { SearchBar, EmptyState } from '@/components/ui';
 import { useSearch } from '@/utils/filtering';
 import { ICONS } from '@/utils';
 import {
   DEFAULT_EMPTY_TITLE_NO_MATCHES,
   DEFAULT_EMPTY_DESCRIPTION_FILTERS,
-} from '@/shared/constants';
+} from '@/utils/constants';
 
 type IconName = 'search' | 'sample-collection' | 'checklist' | 'shield-check';
 

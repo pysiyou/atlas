@@ -9,7 +9,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { resultAPI } from '@/services/api/results';
+import { resultAPI } from '@/features/validation/api/results';
 import { logger } from '@/utils/logger';
 import { getErrorMessage } from '@/utils/errorHelpers';
 import type {

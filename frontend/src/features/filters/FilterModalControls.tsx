@@ -1,12 +1,12 @@
 /**
  * Modal filter controls: search (shared), price slider (shared range), radio list.
- * Uses shared ModalDebouncedSearch and ModalRangeSlider from @/shared/ui/forms.
+ * Uses shared ModalDebouncedSearch and ModalRangeSlider from @/components/ui/forms.
  */
 
 import React from 'react';
-import { Icon } from '@/shared/ui';
+import { Icon } from '@/components/ui';
 import { ICONS, uppercaseLabel, cn } from '@/utils';
-import { ModalDebouncedSearch, ModalRangeSlider } from '@/shared/ui';
+import { ModalDebouncedSearch, ModalRangeSlider } from '@/components/ui';
 
 export const ModalSearchInput = ModalDebouncedSearch;
 

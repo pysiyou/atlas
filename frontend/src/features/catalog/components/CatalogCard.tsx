@@ -1,5 +1,5 @@
-import { Badge } from '@/shared/ui';
-import type { CardComponentProps } from '@/shared/ui/Table';
+import { Badge } from '@/components/ui';
+import type { CardComponentProps } from '@/components/ui/Table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { Test } from '@/types';
 

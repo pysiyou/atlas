@@ -1,101 +1,39 @@
 /**
- * Query Hooks Module
+ * Backward-compatibility re-exports for @/hooks/queries barrel.
  *
- * Centralized exports for all TanStack Query hooks.
- * Organized by data tier:
- * - Static: Tests, Users (Infinity cache)
- * - Semi-static: Patients (5 min cache)
- * - Dynamic: Orders, Samples, Payments (30s cache)
+ * Files have physically moved to their respective feature api/ folders.
+ * This barrel re-exports everything so existing callsites keep working.
+ * Future work: update callsites to import directly from their feature.
  */
 
-// =============================================================================
-// Static Data Hooks (Infinity Cache)
-// =============================================================================
+// Test Catalog → features/catalog
+export * from '@/features/catalog/api/useTestCatalog';
 
-// Test Catalog
-export {
-  useTestCatalog,
-  useTest,
-  useTestSearch,
-  useTestsByCategory,
-  useActiveTests,
-  useTestNameLookup,
-  useInvalidateTestCatalog,
-} from './useTestCatalog';
+// Users → features/admin
+export * from '@/features/admin/api/useUsers';
 
-// Users
-export { useUsersList, useUsersMap, useUserLookup, useUser, useInvalidateUsers } from './useUsers';
-export type { UserDisplayInfo } from './useUsers';
+// Patients → features/patients
+export * from '@/features/patients/api/usePatients';
 
-// =============================================================================
-// Semi-Static Data Hooks (5 min Cache)
-// =============================================================================
+// Affiliation pricing → features/patients
+export * from '@/features/patients/api/useAffiliationPricing';
 
-// Patients
-export {
-  usePatientsList,
-  usePatient,
-  usePatientSearch,
-  usePatientNameLookup,
-  useCreatePatient,
-  useUpdatePatient,
-  useDeletePatient,
-  useInvalidatePatients,
-} from './usePatients';
+// Patient context → features/patients
+export * from '@/features/patients/api/usePatientContext';
 
-// =============================================================================
-// Dynamic Data Hooks (30s Cache)
-// =============================================================================
+// Orders → features/orders
+export * from '@/features/orders/api/useOrderQueries';
+export * from '@/features/orders/api/useOrderMutations';
+export * from '@/features/orders/utils/useOrderUtils';
 
-// Orders (refactored into focused modules)
-export {
-  // Queries
-  useOrdersList,
-  useOrder,
-  useOrdersByPatient,
-  useOrdersByStatus,
-  // Mutations
-  useCreateOrder,
-  useUpdateOrder,
-  useDeleteOrder,
-  useUpdateTestStatus,
-  useUpdatePaymentStatus,
-  useMarkTestCritical,
-  // Utils
-  useOrderSearch,
-  useOrderLookup,
-  useInvalidateOrders,
-} from './orders';
-export type { OrdersFilters } from './orders';
+// Samples → features/collection
+export * from '@/features/collection/api/useSamples';
 
-// Samples
-export {
-  useSamplesList,
-  useSample,
-  useSamplesByOrder,
-  useSamplesByStatus,
-  usePendingSamples,
-  useSampleLookup,
-  useCollectSample,
-  useRejectSample,
-  useRequestRecollection,
-  useInvalidateSamples,
-} from './useSamples';
-export type { SamplesFilters } from './useSamples';
+// Payments → features/billing
+export * from '@/features/billing/api/usePayments';
 
-// Payments
-export {
-  usePaymentsList,
-  usePayment,
-  usePaymentsByOrder,
-  usePaymentMethodByOrder,
-  useCreatePayment,
-  useInvalidatePayments,
-} from './usePayments';
-export type { PaymentsFilters, CreatePaymentData } from './usePayments';
+// Escalation → features/validation
+export * from '@/features/validation/api/usePendingEscalation';
 
-// Lab results / escalation (role-gated)
-export { usePendingEscalation } from './usePendingEscalation';
-
-// Patient context (superset: Patient + Order statistics)
-export { usePatientContextList } from './usePatientContext';
+// Result mutations → features/validation
+export * from '@/features/validation/api/useResultMutations';

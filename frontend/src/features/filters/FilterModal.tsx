@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Modal, CheckboxList, FooterInfo, Button } from '@/shared/ui';
+import { Modal, CheckboxList, FooterInfo, Button } from '@/components/ui';
 import { ICONS } from '@/utils';
 import { QuickFilters } from './QuickFilters';
 import { DatePresetBadges } from './DatePresetBadges';
