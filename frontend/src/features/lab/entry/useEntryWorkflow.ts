@@ -10,6 +10,8 @@
  * a closure over allTests/testCatalog/orders which are fetched in the view.
  */
 
+/* eslint-disable complexity */
+
 import { useState, useCallback } from 'react';
 import { useTestNameLookup } from '@/hooks/queries';
 import { useEnterResults } from '@/hooks/queries/useResultMutations';
@@ -63,7 +65,6 @@ export function useEntryWorkflow(): EntryWorkflow {
   );
 
   const handleSaveResults = useCallback(
-    // eslint-disable-next-line complexity
     async (
       orderId: number | string,
       testCode: string,

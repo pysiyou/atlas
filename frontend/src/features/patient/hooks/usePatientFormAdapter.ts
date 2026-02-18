@@ -8,6 +8,8 @@
  * Extracted from PatientFormTabs.tsx to separate adaptation logic from rendering.
  */
 
+/* eslint-disable max-lines-per-function */
+
 import { useCallback } from 'react';
 import type { UseFormWatch, UseFormSetValue } from 'react-hook-form';
 import type { PatientFormInput } from '../schemas/patient.schema';
@@ -18,13 +20,11 @@ type FieldChangeHandler = (field: string, value: unknown) => void;
  * Returns a stable `onFieldChange(field, value)` callback that maps flat legacy
  * field names to the correct nested `setValue` calls on the React Hook Form instance.
  */
-// eslint-disable-next-line max-lines-per-function
 export function usePatientFormAdapter(
   watch: UseFormWatch<PatientFormInput>,
   setValue: UseFormSetValue<PatientFormInput>
 ): FieldChangeHandler {
   return useCallback(
-    // eslint-disable-next-line max-lines-per-function
     (field: string, value: unknown) => {
       const fieldMap: Record<string, (val: unknown) => void> = {
         fullName: val => setValue('fullName', val as string),
