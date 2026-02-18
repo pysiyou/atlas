@@ -3,8 +3,9 @@ import { Badge } from '@/shared/ui';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
-import type { Patient, Order } from '@/types';
+import type { PatientContext } from '@/types';
 import { DATA_ID_PRIMARY } from '@/shared/constants';
+
 // Helper function for affiliation status (pure function, no hook needed)
 const isAffiliationActive = (affiliation?: { endDate: string }): boolean => {
   if (!affiliation) return false;
@@ -16,18 +17,23 @@ const isAffiliationActive = (affiliation?: { endDate: string }): boolean => {
 };
 import { PatientCard } from '../components/PatientCard';
 
+/**
+ * createPatientTableConfig — Table config for PatientList.
+ *
+ * Accepts PatientContext (Patient + pre-computed order stats).
+ * No getOrdersByPatient callback needed — order data is already in the superset.
+ */
 // Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
 // eslint-disable-next-line max-lines-per-function
 export const createPatientTableConfig = (
-  _navigate: NavigateFunction,
-  getOrdersByPatient: (patientId: number | string) => Order[]
-): TableViewConfig<Patient> => {
+  _navigate: NavigateFunction
+): TableViewConfig<PatientContext> => {
   // Shared render functions to avoid duplication
-  const renderId = (patient: Patient) => (
+  const renderId = (patient: PatientContext) => (
     <span className={`${DATA_ID_PRIMARY} font-normal`}>{displayId.patient(patient.id)}</span>
   );
 
-  const renderName = (patient: Patient) => (
+  const renderName = (patient: PatientContext) => (
     <div className="min-w-0 font-normal">
       <div className="text-text-primary truncate font-normal capitalize">{patient.fullName}</div>
       <div className="text-xs text-text-tertiary truncate font-normal">
@@ -36,31 +42,27 @@ export const createPatientTableConfig = (
     </div>
   );
 
-  const renderGender = (patient: Patient) => <Badge variant={patient.gender} size="sm" />;
+  const renderGender = (patient: PatientContext) => <Badge variant={patient.gender} size="sm" />;
 
-  const renderLastOrder = (patient: Patient) => {
-    const patientOrders = getOrdersByPatient(patient.id);
-    if (patientOrders.length === 0) {
+  /** Uses pre-computed PatientContext.lastOrderDate — no Order[] lookup needed. */
+  const renderLastOrder = (patient: PatientContext) => {
+    if (patient.orderCount === 0 || !patient.lastOrderDate) {
       return (
         <span className="text-xs text-text-tertiary truncate block font-normal">No orders</span>
       );
     }
 
-    const lastOrder = patientOrders.sort(
-      (a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
-    )[0];
-
     return (
       <div className="min-w-0 font-normal">
-        <div className={`${DATA_ID_PRIMARY} font-normal`}>{displayId.order(lastOrder.orderId)}</div>
+        <div className={`${DATA_ID_PRIMARY} font-normal`}>{patient.orderCount} orders</div>
         <div className="text-xs text-text-tertiary truncate font-normal">
-          {formatDate(lastOrder.orderDate)}
+          Last: {formatDate(patient.lastOrderDate)}
         </div>
       </div>
     );
   };
 
-  const renderContact = (patient: Patient) => (
+  const renderContact = (patient: PatientContext) => (
     <div className="text-xs min-w-0 font-normal">
       <div className="text-xs text-text-primary truncate font-normal">
         {formatPhoneNumber(patient.phone)}
@@ -71,7 +73,7 @@ export const createPatientTableConfig = (
     </div>
   );
 
-  const renderAffiliation = (patient: Patient) => {
+  const renderAffiliation = (patient: PatientContext) => {
     if (!patient.affiliation) {
       return (
         <span className="text-xs text-text-tertiary truncate block font-normal">
@@ -89,7 +91,7 @@ export const createPatientTableConfig = (
     );
   };
 
-  const renderRegistrationDate = (patient: Patient) => (
+  const renderRegistrationDate = (patient: PatientContext) => (
     <div className="text-xs text-text-tertiary truncate font-normal">
       {formatDate(patient.registrationDate)}
     </div>
@@ -173,12 +175,6 @@ export const createPatientTableConfig = (
         sortable: true,
         render: renderGender,
       },
-      // {
-      //   key: 'lastOrder',
-      //   header: 'Last Order',
-      //   width: 'sm', // 100px - shown in medium view
-      //   render: renderLastOrder,
-      // },
     ],
     compactColumns: [
       {

@@ -344,7 +344,7 @@ function formatResultValidationEscalate(log: LabOperationRecord, performer: stri
 // ─── Escalation resolution category ──────────────────────────────────────────
 
 function formatEscalationResolutionAuthorizeRetest(
-  log: LabOperationRecord,
+  _log: LabOperationRecord,
   performer: string
 ): ActivityLines {
   return [
@@ -358,7 +358,7 @@ function formatEscalationResolutionAuthorizeRetest(
 }
 
 function formatEscalationResolutionFinalReject(
-  log: LabOperationRecord,
+  _log: LabOperationRecord,
   performer: string
 ): ActivityLines {
   return [
@@ -404,7 +404,7 @@ function formatCriticalValueNotified(log: LabOperationRecord, performer: string)
 }
 
 function formatCriticalValueAcknowledged(
-  log: LabOperationRecord,
+  _log: LabOperationRecord,
   performer: string
 ): ActivityLines {
   return [

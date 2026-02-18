@@ -96,3 +96,6 @@ export type { PaymentsFilters, CreatePaymentData } from './usePayments';
 
 // Lab results / escalation (role-gated)
 export { usePendingEscalation } from './usePendingEscalation';
+
+// Patient context (superset: Patient + Order statistics)
+export { usePatientContextList } from './usePatientContext';

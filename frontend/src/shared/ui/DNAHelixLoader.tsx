@@ -2,7 +2,7 @@
 /**
  * DnaHelixLoader – Animated DNA double-helix loading indicator.
  *
- * Each "rung" is a thin dotted bar that rotates around the X-axis with a
+ * Each "rung" is a thin bar that rotates around the X-axis with a
  * staggered delay, creating a travelling 3D helix wave. Coloured dots sit
  * at each end to represent the two strands. The whole assembly is tilted
  * Displayed horizontally (no Z-axis tilt).
@@ -96,15 +96,12 @@ export const DnaHelixLoader: React.FC<DnaHelixLoaderProps> = ({ size = 'md', cla
     React.createElement('style', { key: 'sheet' }, css),
     ...bars,
   ];
-  return React.createElement(
-    'div',
-    {
-      role: 'status',
-      'aria-label': 'Loading',
-      'data-dna': id,
-      className,
-      style: rootStyle,
-    },
-    childList
-  );
+  return React.createElement('div', {
+    role: 'status',
+    'aria-label': 'Loading',
+    'data-dna': id,
+    className,
+    style: rootStyle,
+  }, childList);
 };
+

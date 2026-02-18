@@ -180,7 +180,13 @@ export interface TestParameter {
 
 /**
  * Standardized interface for a test with its associated order and patient context.
- * Used in Result Entry and Validation lists.
+ *
+ * This is the canonical "Superset" type for all lab workflow views:
+ * Result Entry, Result Validation, Escalation, and Command Center test table.
+ * Use this type instead of creating feature-specific variants.
+ *
+ * Built by `useLabTestsFromOrders` — the single enrichment hook that joins
+ * Order[] + Sample[] + Patient[] + Test[] into this unified shape.
  */
 export interface TestWithContext {
   orderId: number;
@@ -204,6 +210,18 @@ export interface TestWithContext {
   flags?: string[];
   technicianNotes?: string;
   validationNotes?: string;
+
+  // Order-level fields (set by useLabTestsFromOrders)
+  /** ISO date string of the order — used by CommandCenterView table and sorting. */
+  orderDate?: string;
+
+  // Patient-level fields (set by useLabTestsFromOrders when includePatient=true)
+  /** Patient date of birth — used for demographic reference range checks in EntryView. */
+  patientDob?: string;
+
+  // Derived flags (set by useLabTestsFromOrders when includeHasCriticalValues=true)
+  /** Whether this test has critical values flagged — used by ValidationView. */
+  hasCriticalValues?: boolean;
 
   // Retest tracking fields (for result validation re-test flow)
   isRetest?: boolean;

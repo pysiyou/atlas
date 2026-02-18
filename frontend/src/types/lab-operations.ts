@@ -118,46 +118,6 @@ export interface EscalationResolveResult {
 }
 
 /**
- * Enriched escalation item from GET /results/pending-escalation (order + patient + test + sample context).
- * Maps to TestWithContext for Escalation tab.
- */
-export interface PendingEscalationItem {
-  id: number;
-  orderId: number;
-  orderDate: string;
-  patientId: number;
-  patientName: string;
-  patientDob?: string;
-  testCode: string;
-  testName: string;
-  sampleType: string;
-  status: string;
-  sampleId?: number;
-  results?: Record<string, unknown>;
-  resultEnteredAt?: string;
-  enteredBy?: string;
-  resultValidatedAt?: string;
-  validatedBy?: string;
-  validationNotes?: string;
-  flags?: string[];
-  technicianNotes?: string;
-  hasCriticalValues: boolean;
-  isRetest: boolean;
-  retestOfTestId?: number;
-  retestNumber: number;
-  resultRejectionHistory?: Array<Record<string, unknown>>;
-  priority: string;
-  referringPhysician?: string;
-  collectedAt?: string;
-  collectedBy?: string;
-  sampleIsRecollection?: boolean;
-  sampleOriginalSampleId?: number;
-  sampleRecollectionReason?: string;
-  sampleRecollectionAttempt?: number;
-  sampleRejectionHistory?: Array<Record<string, unknown>>;
-}
-
-/**
  * Request body for combined reject and recollect operation
  */
 export interface RejectAndRecollectRequest {

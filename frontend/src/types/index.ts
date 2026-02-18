@@ -8,6 +8,7 @@ export * from '@/shared/types/enums';
 // Export type interfaces (not enums) to avoid conflicts
 export type {
   Patient,
+  PatientContext,
   Address,
   EmergencyContact,
   MedicalHistory,

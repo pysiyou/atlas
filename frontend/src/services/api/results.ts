@@ -4,13 +4,12 @@
  */
 
 import { apiClient } from './client';
-import type { OrderTest, ValidationDecision, ResultRejectionType } from '@/types';
+import type { OrderTest, ValidationDecision, ResultRejectionType, TestWithContext } from '@/types';
 import type {
   RejectionOptionsResponse,
   RejectionResult,
   EscalationResolveRequest,
   EscalationResolveResult,
-  PendingEscalationItem,
 } from '@/types/lab-operations';
 
 /**
@@ -64,10 +63,10 @@ export const resultAPI = {
 
   /**
    * Get tests pending escalation resolution (admin/labtech_plus only).
-   * Returns enriched list (order + patient + test + sample context) for Escalation tab.
+   * Returns enriched list (order + patient + test + sample context) as TestWithContext[].
    */
-  async getPendingEscalation(): Promise<PendingEscalationItem[]> {
-    return apiClient.get<PendingEscalationItem[]>('/results/pending-escalation');
+  async getPendingEscalation(): Promise<TestWithContext[]> {
+    return apiClient.get<TestWithContext[]>('/results/pending-escalation');
   },
 
   /**

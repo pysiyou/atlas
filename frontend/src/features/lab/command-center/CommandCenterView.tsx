@@ -1,18 +1,19 @@
 /**
  * CommandCenterView - Lab Command Center 2-row layout (charts + timeline, test table).
+ * Uses TestWithContext via useLabTestsFromOrders — the canonical superset for all lab views.
  */
 
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useOrdersList, usePatientNameLookup } from '@/hooks/queries';
+import { useOrdersList, usePatientNameLookup, useTestCatalog } from '@/hooks/queries';
 import { Table } from '@/shared/ui/Table';
 import { ICONS } from '@/utils/icons';
 import type { IconName } from '@/shared/ui';
 import { useCommandCenterData } from './hooks';
-import { buildLabTestRows } from './types';
 import { createTestTableConfig } from './testTableConfigFactory';
 import { ActivitiesTimeline, DonutChart } from './components';
 import type { DonutChartSegment } from './components';
+import { useLabTestsFromOrders } from '../hooks';
 
 /** Lab pipeline stage (active tests) → icon. */
 const STAGE_ICONS: Record<string, IconName> = {
@@ -29,9 +30,19 @@ const chartCellClass =
 
 const TEST_TABLE_LIMIT = 50;
 
+// All statuses that represent active tests in the pipeline
+const ALL_ACTIVE_STATUSES = [
+  'pending',
+  'sample-collected',
+  'completed',
+  'escalated',
+  'in-progress',
+] as const;
+
 export const CommandCenterView: React.FC = () => {
   const navigate = useNavigate();
   const { orders, isLoading: ordersLoading } = useOrdersList();
+  const { tests: testCatalog } = useTestCatalog();
   const { getPatientName } = usePatientNameLookup();
   const {
     isLoading: commandCenterLoading,
@@ -45,10 +56,24 @@ export const CommandCenterView: React.FC = () => {
     logsLoadingMore,
   } = useCommandCenterData({ logsLimit: 50, logsHoursBack: 24 });
 
-  const labTestRows = useMemo(
-    () => buildLabTestRows(orders, getPatientName, TEST_TABLE_LIMIT),
-    [orders, getPatientName]
-  );
+  // Build test rows using the canonical superset hook — no separate LabTestRow type needed
+  const allLabTests = useLabTestsFromOrders({
+    orders,
+    testCatalog,
+    statusFilter: ALL_ACTIVE_STATUSES as unknown as import('@/types').TestStatus[],
+  });
+
+  // Sort by orderDate desc, then orderId/id; limit to TEST_TABLE_LIMIT
+  const labTestRows = useMemo(() => {
+    return [...allLabTests]
+      .sort((a, b) => {
+        const d = new Date(b.orderDate ?? '').getTime() - new Date(a.orderDate ?? '').getTime();
+        if (d !== 0) return d;
+        if (a.orderId !== b.orderId) return b.orderId - a.orderId;
+        return ((b.id as number) ?? 0) - ((a.id as number) ?? 0);
+      })
+      .slice(0, TEST_TABLE_LIMIT);
+  }, [allLabTests]);
 
   const testTableConfig = useMemo(
     () => createTestTableConfig(navigate, getPatientName),
@@ -102,7 +127,7 @@ export const CommandCenterView: React.FC = () => {
           <Table
             data={labTestRows}
             viewConfig={testTableConfig}
-            getRowKey={row => row.testId}
+            getRowKey={row => `${row.orderId}-${row.testCode}-${row.id ?? ''}`}
             onRowClick={row => navigate(`/orders/${row.orderId}`)}
             embedded
             striped

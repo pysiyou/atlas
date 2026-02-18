@@ -2,8 +2,8 @@ import { useMemo, type ReactNode } from 'react';
 import { Pagination } from '../Pagination';
 import { TableHeader } from './TableHeader';
 import { TableRow } from './TableRow';
-import { TableSkeleton } from './TableSkeleton';
 import { EmptyState } from '../EmptyState';
+import { LoadingState } from '@/shared/components';
 import type { IconName } from '../Icon';
 import type { ColumnConfig, SortConfig, PaginationConfig, TableVariant } from './types';
 import { ICONS } from '@/utils';
@@ -112,7 +112,7 @@ export function TableCore<T = Record<string, unknown>>({
   rowClassName,
   getRowKey,
   loading = false,
-  loadingRows = DEFAULT_LOADING_ROWS,
+  loadingRows: _loadingRows = DEFAULT_LOADING_ROWS,
   emptyMessage,
   emptyIcon,
   caption,
@@ -155,26 +155,17 @@ export function TableCore<T = Record<string, unknown>>({
     ? 'flex flex-col flex-1 min-h-0'
     : 'bg-surface rounded-lg border border-border-default shadow-sm flex flex-col h-full';
 
-  // Loading state
+  // Loading state – same DNA helix animation as sections/detail shells
   if (loading) {
     return (
       <div className={containerClasses}>
-        <div className="flex-1 overflow-auto" style={maxHeight ? { maxHeight } : undefined}>
-          {showHeader && (
-            <TableHeader
-              columns={columns}
-              visibleColumns={columns}
-              sort={null}
-              onSort={() => {}}
-              variant={variant}
-              sticky={stickyHeader}
-            />
-          )}
-          <TableSkeleton
-            columns={columns as ColumnConfig<unknown>[]}
-            rows={loadingRows}
-            variant={variant}
-          />
+        <div
+          className="flex flex-1 items-center justify-center min-h-[280px] overflow-auto"
+          style={maxHeight ? { maxHeight } : undefined}
+          aria-busy="true"
+          aria-label="Loading"
+        >
+          <LoadingState message="Loading..." size="md" fullScreen={false} />
         </div>
       </div>
     );

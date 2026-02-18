@@ -97,7 +97,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             subtitle: 'The escalation could not be resolved. Check the details and try again.',
           });
         },
-      });
+      }).then(() => {});
     },
     [
       test.orderId,
@@ -110,6 +110,8 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       messages,
     ]
   );
+
+  const handleForceValidate = () => resolveAsync('force_validate', validationNotesForceValidate);
 
   const rejectionHistory = test.resultRejectionHistory || [];
   const hasRejectionHistory = rejectionHistory.length > 0;

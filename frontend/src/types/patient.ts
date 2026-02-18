@@ -84,3 +84,26 @@ export interface Patient {
   updatedAt: string;
   updatedBy: string; // Backend returns string user ID
 }
+
+/**
+ * PatientContext — Superset type for all patient-facing views.
+ *
+ * Combines the full Patient record with pre-computed order statistics
+ * to avoid redundant Order[] lookups in every component that renders
+ * patient cards, rows, or detail views.
+ *
+ * Built by `usePatientContextList` — joins cached Patient[] + Order[].
+ * No additional API calls required.
+ *
+ * Consumers: PatientList, PatientDetail, PatientTableConfig
+ */
+export interface PatientContext extends Patient {
+  /** Total number of orders for this patient. */
+  orderCount: number;
+  /** Most recent order date (ISO string), or undefined if no orders. */
+  lastOrderDate?: string;
+  /** Most recent order's overall status, or undefined if no orders. */
+  lastOrderStatus?: string;
+  /** Whether the patient has any unpaid orders. */
+  hasUnpaidOrders: boolean;
+}

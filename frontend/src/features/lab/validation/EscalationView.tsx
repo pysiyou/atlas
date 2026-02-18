@@ -29,8 +29,7 @@ export const EscalationView: React.FC = () => {
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
-  const escalatedTests: (TestWithContext & { hasCriticalValues?: boolean })[] =
-    rawEscalated as unknown as (TestWithContext & { hasCriticalValues?: boolean })[];
+  const escalatedTests = rawEscalated;
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
 
@@ -44,9 +43,9 @@ export const EscalationView: React.FC = () => {
     setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
-  } = useLabWorkflowFilters<TestWithContext & { hasCriticalValues?: boolean }, PriorityLevel>({
+  } = useLabWorkflowFilters<TestWithContext, PriorityLevel>({
     items: escalatedTests,
-    getOrderDate: t => (t as { orderDate?: string }).orderDate,
+    getOrderDate: t => t.orderDate,
     getSampleType: t => t.sampleType,
     getStatus: t => t.priority as PriorityLevel,
     searchFilterFn: filterTest,

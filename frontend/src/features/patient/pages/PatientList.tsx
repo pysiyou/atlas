@@ -1,14 +1,13 @@
 /**
- * PatientList - Migrated to use ListView component
+ * PatientList - Uses ListView component with PatientContext superset type.
  *
- * Example migration showing how to use the new ListView component.
- * This demonstrates the pattern for migrating all list views.
+ * PatientContext = Patient + pre-computed order statistics (orderCount, lastOrderDate, etc.)
+ * Built by usePatientContextList — no inline Order[] joins needed here.
  */
 
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePatientsList, useOrdersList } from '@/hooks/queries';
-import type { Order } from '@/types';
+import { usePatientContextList } from '@/hooks/queries';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/shared/components';
 import { Button } from '@/shared/ui';
@@ -17,31 +16,20 @@ import { useModal } from '@/shared/context/ModalContext';
 import { PatientFilters, type AffiliationStatus } from '../components/PatientFilters';
 import { createPatientTableConfig } from './PatientTableConfig';
 import { calculateAge } from '@/utils';
-import type { Patient, Gender } from '@/types';
+import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
 import { usePatientService } from '../services/usePatientService';
 
-/**
- * PatientList component - Migrated to use ListView
- *
- * This is an example migration showing how to use the new ListView component.
- * Benefits:
- * - Reduced code by ~100 lines
- * - Consistent UX with other list views
- * - Built-in loading/error/empty states
- * - Easy to add grid view in the future
- */
 export const PatientList: React.FC = () => {
   const navigate = useNavigate();
   useModal(); // openModal reserved for future use
-  const { patients, isLoading, isError, error: queryError, refetch } = usePatientsList();
-  const { orders } = useOrdersList();
+  const { patients, isLoading, isError, refetch } = usePatientContextList();
   const { isAffiliationActive } = usePatientService();
 
   // Format error for ErrorAlert component
   const error = isError
     ? {
-        message: queryError instanceof Error ? queryError.message : 'Failed to load patients',
+        message: 'Failed to load patients',
         operation: 'load' as const,
       }
     : null;
@@ -52,14 +40,14 @@ export const PatientList: React.FC = () => {
     AffiliationStatus[]
   >([]);
 
-  // Use shared filtering hook
+  // Use shared filtering hook — PatientContext extends Patient so all fields are available
   const {
     filteredItems: preFilteredPatients,
     searchQuery,
     setSearchQuery,
     statusFilters: sexFilters,
     setStatusFilters: setSexFilters,
-  } = useFiltering<Patient, Gender>(patients, {
+  } = useFiltering<PatientContext, Gender>(patients, {
     searchFields: patient => [
       patient.fullName,
       patient.id.toString(),
@@ -69,8 +57,6 @@ export const PatientList: React.FC = () => {
     statusField: 'gender',
     defaultSort: { field: 'registrationDate', direction: 'desc' },
   });
-
-  // Use shared affiliation utility (no need for local function)
 
   // Apply age and affiliation status filters
   const filteredPatients = useMemo(() => {
@@ -110,15 +96,11 @@ export const PatientList: React.FC = () => {
     return filtered;
   }, [preFilteredPatients, ageRange, affiliationStatusFilters, isAffiliationActive]);
 
-  // Memoize table config to prevent recreation on every render
-  const patientTableConfig = useMemo(() => {
-    // Helper function to get orders by patient (for table config)
-    const getOrdersByPatient = (patientId: number | string): Order[] => {
-      const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
-      return orders.filter(o => o.patientId === numericId);
-    };
-    return createPatientTableConfig(navigate, getOrdersByPatient);
-  }, [navigate, orders]);
+  // Memoize table config — PatientContext has pre-computed order stats, no callback needed
+  const patientTableConfig = useMemo(
+    () => createPatientTableConfig(navigate),
+    [navigate]
+  );
 
   return (
     <>
@@ -130,7 +112,7 @@ export const PatientList: React.FC = () => {
         error={error}
         onRetry={refetch}
         onDismissError={() => {}}
-        onRowClick={(patient: Patient) => navigate(`/patients/${patient.id}`)}
+        onRowClick={(patient: PatientContext) => navigate(`/patients/${patient.id}`)}
         title="Patients"
         headerActions={
           <Button variant="add" size="sm" onClick={() => setIsCreateModalOpen(true)}>
