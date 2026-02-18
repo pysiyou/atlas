@@ -6,8 +6,7 @@
  */
 
 import { type ReactNode } from 'react';
-import { Table, EmptyState, PageHeaderBar } from '@/shared/ui';
-import { LoadingState } from '../feedback/LoadingState';
+import { Table, EmptyState, PageHeaderBar, SkeletonCard, SkeletonList } from '@/shared/ui';
 import { ErrorAlert } from '../feedback/ErrorAlert';
 import type { TableViewConfig } from '@/shared/ui/Table';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/shared/ui/Table';
@@ -135,11 +134,6 @@ export function ListView<T extends TableDataItem = TableDataItem>({
   pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL,
   className = '',
 }: ListViewProps<T>) {
-  // Show loading state on initial load
-  if (loading && items.length === 0) {
-    return <LoadingState message={`Loading ${title?.toLowerCase() || 'items'}...`} fullScreen />;
-  }
-
   return (
     <div className={`min-h-0 flex-1 flex flex-col p-2 gap-2 overflow-hidden ${className}`}>
       {/* Header row (fixed height via PageHeaderBar) */}
@@ -188,7 +182,17 @@ export function ListView<T extends TableDataItem = TableDataItem>({
               embedded={true}
             />
           ) : mode === 'grid' && renderItem ? (
-            items.length === 0 ? (
+            loading && items.length === 0 ? (
+              <div className="flex-1 overflow-y-auto">
+                <div className="p-6">
+                  <div className={`grid ${GRID_COLUMN_CLASSES[gridColumns ?? 2]} gap-4`}>
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <SkeletonCard key={i} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : items.length === 0 ? (
               <div className="h-full flex items-center justify-center">
                 {emptyState || (
                   <EmptyState
@@ -210,7 +214,11 @@ export function ListView<T extends TableDataItem = TableDataItem>({
               </div>
             )
           ) : mode === 'list' && renderItem ? (
-            items.length === 0 ? (
+            loading && items.length === 0 ? (
+              <div className="flex-1 overflow-y-auto p-6">
+                <SkeletonList rows={5} />
+              </div>
+            ) : items.length === 0 ? (
               <div className="h-full flex items-center justify-center">
                 {emptyState || (
                   <EmptyState

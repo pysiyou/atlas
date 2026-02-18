@@ -2,7 +2,11 @@
  * ValidationCard - Responsive card component for result validation workflow.
  * Displays test results with approval/rejection actions, retest/recollection info.
  * Supports both desktop (LabCard) and mobile layouts via isMobile prop.
+ *
+ * Refactored: mobile and desktop layouts extracted into named sub-components.
  */
+
+/* eslint-disable max-lines */
 
 import React from 'react';
 import { Badge, Button, Card, Icon, Alert } from '@/shared/ui';
@@ -22,6 +26,8 @@ import {
   parseResultEntry,
 } from '../utils/lab-helpers';
 
+// ─── ResultGrid ───────────────────────────────────────────────────────────────
+
 function ResultGrid({
   results,
   flagStatusMap,
@@ -34,7 +40,6 @@ function ResultGrid({
   const entries = Object.entries(results);
 
   if (compact) {
-    // Mobile: Show up to 8 items (4 per row x 2 rows) for compact display
     const maxVisible = 8;
     const visibleEntries = entries.slice(0, maxVisible);
     const remainingCount = entries.length - maxVisible;
@@ -73,7 +78,6 @@ function ResultGrid({
     );
   }
 
-  // Desktop: Full grid
   return (
     <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,max-content))] gap-x-8 gap-y-1">
       {entries.map(([key, value]) => {
@@ -104,7 +108,9 @@ function ResultGrid({
   );
 }
 
-interface ValidationCardProps {
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface ValidationCardProps {
   test: TestWithContext;
   commentKey: string;
   comments: string;
@@ -120,26 +126,9 @@ interface ValidationCardProps {
   isMobile?: boolean;
 }
 
-export const ValidationCard: React.FC<ValidationCardProps> = ({
-  test,
-  commentKey,
-  comments,
-  onCommentsChange,
-  onApprove,
-  onReject,
-  onClick,
-  orderHasValidatedTests = false,
-  isApproving = false,
-  isMobile = false,
-}) => {
-  const { openModal } = useModal();
-  const { getUserName } = useUserLookup();
-  const { getPatientName } = usePatientNameLookup();
+// ─── Shared derived state helper ──────────────────────────────────────────────
 
-  if (!test.results) return null;
-
-  const resultCount = Object.keys(test.results).length;
-  const patientName = getPatientName(test.patientId);
+function deriveCardState(test: TestWithContext) {
   const rejectionHistory = test.resultRejectionHistory ?? [];
   const lastRejection = rejectionHistory.at(-1) ?? null;
   const hasRejectionHistory = rejectionHistory.length > 0;
@@ -148,119 +137,147 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
     ? getResultRejectionType(lastRejection) === 're-collect'
     : false;
   const hasFlags = test.flags && test.flags.length > 0;
+  const flagStatusMap = statusMapFromFlags(test.flags);
+  return { rejectionHistory, lastRejection, hasRejectionHistory, isRetest, isRecollection, hasFlags, flagStatusMap };
+}
 
-  const handleCardClick = () => {
-    if (onClick) {
-      onClick();
-      return;
-    }
-    openModal(ModalType.VALIDATION_DETAIL, {
-      test,
-      commentKey,
-      comments,
-      onCommentsChange,
-      onApprove,
-      onReject,
-      orderHasValidatedTests,
-    });
-  };
+// ─── ValidationCardMobile ─────────────────────────────────────────────────────
 
-  /** RejectionDialog calls API; we signal parent to refresh only (no second request). */
+function ValidationCardMobile({
+  test,
+  patientName,
+  onApprove,
+  onReject,
+  orderHasValidatedTests,
+  isApproving,
+  handleCardClick,
+}: {
+  test: TestWithContext;
+  patientName: string;
+  onApprove: () => void;
+  onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
+  orderHasValidatedTests: boolean;
+  isApproving: boolean;
+  handleCardClick: () => void;
+}) {
+  const { hasFlags, isRetest, hasRejectionHistory, flagStatusMap } = deriveCardState(test);
   const handleRejectionResult = () => onReject(undefined, undefined);
 
-  const flagStatusMap = statusMapFromFlags(test.flags);
-
-  // Mobile layout
-  if (isMobile) {
-    return (
-      <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
-        {/* Header: Test name + Patient name, Test code, Sample ID */}
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <div className="min-w-0 overflow-hidden">
-            <div className="text-sm font-normal text-text-primary truncate">{test.testName}</div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <div className="text-xs text-text-secondary font-normal truncate capitalize">
-                {patientName}
-              </div>
-              <div className="text-xxs text-text-disabled">•</div>
-              <div className="text-xxs text-brand font-normal font-mono truncate">
-                {test.testCode}
-              </div>
-              {test.sampleId && (
-                <>
-                  <div className="text-xs text-text-disabled">•</div>
-                  <div
-                    className="text-xxs text-brand font-normal font-mono truncate"
-                    title={displayId.sample(test.sampleId)}
-                  >
-                    {displayId.sample(test.sampleId)}
-                  </div>
-                </>
-              )}
+  return (
+    <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
+      {/* Header: Test name + Patient name, Test code, Sample ID */}
+      <div className="flex items-center justify-between gap-2 mb-2">
+        <div className="min-w-0 overflow-hidden">
+          <div className="text-sm font-normal text-text-primary truncate">{test.testName}</div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="text-xs text-text-secondary font-normal truncate capitalize">
+              {patientName}
             </div>
-          </div>
-        </div>
-
-        {/* Content: Results, entry date */}
-        <div className="space-y-2">
-          <div className="space-y-1">
-            <div className="mt-2">
-              <ResultGrid results={test.results} flagStatusMap={flagStatusMap} compact />
+            <div className="text-xxs text-text-disabled">•</div>
+            <div className="text-xxs text-brand font-normal font-mono truncate">
+              {test.testCode}
             </div>
-            {test.resultEnteredAt && (
-              <div className="text-xs text-text-tertiary">
-                Entered: {formatDate(test.resultEnteredAt)}
-              </div>
+            {test.sampleId && (
+              <>
+                <div className="text-xs text-text-disabled">•</div>
+                <div
+                  className="text-xxs text-brand font-normal font-mono truncate"
+                  title={displayId.sample(test.sampleId)}
+                >
+                  {displayId.sample(test.sampleId)}
+                </div>
+              </>
             )}
           </div>
         </div>
+      </div>
 
-        {/* Bottom section: Badges (left) + Approve/Reject buttons (right) */}
-        <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
-          <div className="flex items-center gap-2">
-            {hasFlags && (
-              <Badge variant="danger" size="xs">
-                {test.flags!.length} FLAG{test.flags!.length > 1 ? 'S' : ''}
-              </Badge>
-            )}
-            {test.priority && <Badge variant={test.priority} size="xs" />}
-            <Badge variant={test.sampleType} size="xs" />
-            {(isRetest || hasRejectionHistory) && (
-              <Badge variant="warning" size="xs">
-                RE-TEST
-              </Badge>
-            )}
+      {/* Content: Results, entry date */}
+      <div className="space-y-2">
+        <div className="space-y-1">
+          <div className="mt-2">
+            <ResultGrid results={test.results!} flagStatusMap={flagStatusMap} compact />
           </div>
-          <div className="flex items-center gap-2">
-            <div onClick={e => e.stopPropagation()}>
-              <RejectionDialog
-                orderId={test.orderId}
-                testCode={test.testCode}
-                testName={test.testName}
-                patientName={patientName}
-                orderHasValidatedTests={orderHasValidatedTests}
-                onReject={handleRejectionResult}
-              />
+          {test.resultEnteredAt && (
+            <div className="text-xs text-text-tertiary">
+              Entered: {formatDate(test.resultEnteredAt)}
             </div>
-            <Button
-              variant="approve"
-              size="sm"
-              title="Approve Results"
-              isLoading={isApproving}
-              onClick={e => {
-                e.stopPropagation();
-                onApprove();
-              }}
-            >
-              Approve
-            </Button>
-          </div>
+          )}
         </div>
-      </Card>
-    );
-  }
+      </div>
 
-  // Desktop layout (LabCard)
+      {/* Bottom section: Badges (left) + Approve/Reject buttons (right) */}
+      <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
+        <div className="flex items-center gap-2">
+          {hasFlags && (
+            <Badge variant="danger" size="xs">
+              {test.flags!.length} FLAG{test.flags!.length > 1 ? 'S' : ''}
+            </Badge>
+          )}
+          {test.priority && <Badge variant={test.priority} size="xs" />}
+          <Badge variant={test.sampleType} size="xs" />
+          {(isRetest || hasRejectionHistory) && (
+            <Badge variant="warning" size="xs">
+              RE-TEST
+            </Badge>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <div onClick={e => e.stopPropagation()}>
+            <RejectionDialog
+              orderId={test.orderId}
+              testCode={test.testCode}
+              testName={test.testName}
+              patientName={patientName}
+              orderHasValidatedTests={orderHasValidatedTests}
+              onReject={handleRejectionResult}
+            />
+          </div>
+          <Button
+            variant="approve"
+            size="sm"
+            title="Approve Results"
+            isLoading={isApproving}
+            onClick={e => {
+              e.stopPropagation();
+              onApprove();
+            }}
+          >
+            Approve
+          </Button>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+// ─── ValidationCardDesktop ────────────────────────────────────────────────────
+
+function ValidationCardDesktop({
+  test,
+  onApprove,
+  onReject,
+  orderHasValidatedTests,
+  isApproving,
+  handleCardClick,
+  getUserName,
+}: {
+  test: TestWithContext;
+  onApprove: () => void;
+  onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
+  orderHasValidatedTests: boolean;
+  isApproving: boolean;
+  handleCardClick: () => void;
+  getUserName: (id: string) => string;
+}) {
+  const { rejectionHistory, lastRejection, hasRejectionHistory, isRetest, isRecollection, flagStatusMap } =
+    deriveCardState(test);
+  const handleRejectionResult = () => onReject(undefined, undefined);
+  const resultCount = Object.keys(test.results!).length;
+
+  const showRetestBadge = isRetest && test.retestOfTestId;
+  const showRecollectionBadge = isRecollection && !isRetest;
+
   const badges = (
     <>
       <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
@@ -308,8 +325,6 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
     </span>
   );
 
-  const content = <ResultGrid results={test.results} flagStatusMap={flagStatusMap} />;
-
   const rejectionBanner =
     hasRejectionHistory && lastRejection ? (
       <Alert variant="warning" className="py-2">
@@ -332,8 +347,6 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
       </Alert>
     ) : undefined;
 
-  const showRetestBadge = isRetest && test.retestOfTestId;
-  const showRecollectionBadge = isRecollection && !isRetest;
   const rejectionTrackingInfo =
     hasRejectionHistory && (showRetestBadge || showRecollectionBadge) ? (
       <div className="flex items-center gap-2 flex-wrap">
@@ -375,8 +388,73 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
       badges={badges}
       actions={actions}
       recollectionBanner={rejectionBanner}
-      content={content}
+      content={<ResultGrid results={test.results!} flagStatusMap={flagStatusMap} />}
       contentTitle={`Results (${resultCount})`}
+    />
+  );
+}
+
+// ─── ValidationCard (dispatcher) ─────────────────────────────────────────────
+
+export const ValidationCard: React.FC<ValidationCardProps> = ({
+  test,
+  commentKey,
+  comments,
+  onCommentsChange,
+  onApprove,
+  onReject,
+  onClick,
+  orderHasValidatedTests = false,
+  isApproving = false,
+  isMobile = false,
+}) => {
+  const { openModal } = useModal();
+  const { getUserName } = useUserLookup();
+  const { getPatientName } = usePatientNameLookup();
+
+  if (!test.results) return null;
+
+  const patientName = getPatientName(test.patientId);
+
+  const handleCardClick = () => {
+    if (onClick) {
+      onClick();
+      return;
+    }
+    openModal(ModalType.VALIDATION_DETAIL, {
+      test,
+      commentKey,
+      comments,
+      onCommentsChange,
+      onApprove,
+      onReject,
+      orderHasValidatedTests,
+    });
+  };
+
+  if (isMobile) {
+    return (
+      <ValidationCardMobile
+        test={test}
+        patientName={patientName}
+        onApprove={onApprove}
+        onReject={onReject}
+        orderHasValidatedTests={orderHasValidatedTests}
+        isApproving={isApproving}
+        handleCardClick={handleCardClick}
+      />
+    );
+  }
+
+  return (
+    <ValidationCardDesktop
+      test={test}
+      onApprove={onApprove}
+      onReject={onReject}
+      orderHasValidatedTests={orderHasValidatedTests}
+      isApproving={isApproving}
+      handleCardClick={handleCardClick}
+      getUserName={getUserName}
     />
   );
 };

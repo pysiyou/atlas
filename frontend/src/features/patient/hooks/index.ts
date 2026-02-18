@@ -4,3 +4,4 @@
 
 export * from './usePatientForm';
 export * from './usePatientFilters';
+export * from './usePatientFormAdapter';

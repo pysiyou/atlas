@@ -11,7 +11,8 @@ import { useTest } from '@/hooks/queries';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { BalancedDetailsLayout } from '@/shared/ui';
 import type { TableInput } from '@/shared/ui';
-import { DetailPageShell, DetailPageHeader, LoadingState } from '@/shared/components';
+import { DetailPageShell, DetailPageHeader } from '@/shared/components';
+import { CatalogDetailSkeleton } from './CatalogDetailSkeleton';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDetailDate } from '@/shared/utils/data';
 import {
@@ -47,9 +48,17 @@ export const CatalogDetail: React.FC = () => {
     return 3;
   };
 
-  // Show loading state
+  // Loading: shell + skeleton
   if (isLoading) {
-    return <LoadingState message="Loading test details..." fullScreen />;
+    return (
+      <DetailPageShell
+        header={<DetailPageHeader title="Test" />}
+        loading
+        loadingSkeleton={<CatalogDetailSkeleton />}
+      >
+        {null}
+      </DetailPageShell>
+    );
   }
 
   // Error or not found: use shell for consistent padding and EmptyState

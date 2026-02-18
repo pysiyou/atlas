@@ -29,7 +29,8 @@ import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters } from '../hooks/useLabWorkflowFilters';
 import { createSampleSearchFilter } from '../utils/lab-helpers';
 import { collectionFilterConfig } from '../constants';
-import { ErrorBoundary, LoadingState } from '@/shared/components';
+import { ErrorBoundary } from '@/shared/components';
+import { LabWorkflowViewSkeleton } from '../components/LabWorkflowViewSkeleton';
 import type { SampleDisplay } from '../types';
 
 export const CollectionView: React.FC = () => {
@@ -202,7 +203,7 @@ export const CollectionView: React.FC = () => {
   if (isLoading && hasNoItems) {
     return (
       <ErrorBoundary>
-        <LoadingState message="Loading collection..." fullScreen />
+        <LabWorkflowViewSkeleton />
       </ErrorBoundary>
     );
   }

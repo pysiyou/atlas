@@ -13,7 +13,8 @@ import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowV
 import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters } from '../hooks/useLabWorkflowFilters';
 import { validationFilterConfig } from '../constants';
-import { ErrorBoundary, LoadingState } from '@/shared/components';
+import { ErrorBoundary } from '@/shared/components';
+import { LabWorkflowViewSkeleton } from '../components/LabWorkflowViewSkeleton';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
 
@@ -66,7 +67,7 @@ export const EscalationView: React.FC = () => {
   );
 
   if (isLoading) {
-    return <LoadingState message="Loading escalated tests..." fullScreen size="lg" />;
+    return <LabWorkflowViewSkeleton />;
   }
 
   return (

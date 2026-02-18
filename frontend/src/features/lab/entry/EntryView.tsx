@@ -5,23 +5,21 @@
  * Backend enter_results accepts only SAMPLE_COLLECTED; in-progress is not supported.
  */
 
-import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import React, { useMemo, useCallback, useRef, useEffect } from 'react';
 import { useOrdersList, useTestCatalog, useTestNameLookup } from '@/hooks/queries';
-import { useEnterResults } from '@/hooks/queries/useResultMutations';
-import { checkReferenceRangeWithDemographics } from '@/utils';
-import { toast } from '@/shared/components/feedback';
-import { logger } from '@/utils/logger';
-import type { TestResult, TestStatus, TestWithContext } from '@/types';
+import type { TestWithContext } from '@/types';
 import { EntryCard } from './EntryCard';
 import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
 import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters, useLabTestsFromOrders } from '../hooks';
 import { entryFilterConfig } from '../constants';
-import { ErrorBoundary, LoadingState } from '@/shared/components';
+import { ErrorBoundary } from '@/shared/components';
+import { LabWorkflowViewSkeleton } from '../components/LabWorkflowViewSkeleton';
 import { useModal, ModalType } from '@/shared/context/ModalContext';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
+import { useEntryWorkflow } from './useEntryWorkflow';
+import type { TestStatus } from '@/types';
 
-// Large component is necessary for comprehensive entry view with filtering, sorting, card rendering, and result entry functionality
 // eslint-disable-next-line max-lines-per-function
 export const EntryView: React.FC = () => {
   const { orders, isLoading: ordersLoading } = useOrdersList();
@@ -30,9 +28,15 @@ export const EntryView: React.FC = () => {
   const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
-  const [results, setResults] = useState<Record<string, Record<string, string>>>({});
-  const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
-  const enterMutation = useEnterResults();
+
+  const {
+    results,
+    technicianNotes,
+    handleResultChange,
+    handleNotesChange,
+    areAllParametersFilled,
+    handleSaveResults,
+  } = useEntryWorkflow();
 
   const allTests = useLabTestsFromOrders({
     orders,
@@ -42,7 +46,6 @@ export const EntryView: React.FC = () => {
   });
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
-
   const getOrderDate = useCallback(
     (t: TestWithContext & { orderDate?: string }) => t.orderDate,
     []
@@ -68,147 +71,7 @@ export const EntryView: React.FC = () => {
     searchFilterFn: filterTest,
   });
 
-  const handleResultChange = useCallback((resultKey: string, paramCode: string, value: string) => {
-    setResults(prev => ({
-      ...prev,
-      [resultKey]: { ...(prev[resultKey] || {}), [paramCode]: value ?? '' },
-    }));
-  }, []);
-
-  const handleNotesChange = useCallback((resultKey: string, notes: string) => {
-    setTechnicianNotes(prev => ({ ...prev, [resultKey]: notes ?? '' }));
-  }, []);
-
-  const areAllParametersFilled = useCallback(
-    (resultKey: string, parameterCount: number): boolean => {
-      const testResults = results[resultKey];
-      if (!testResults) return false;
-      return Object.values(testResults).filter(v => v?.trim()).length === parameterCount;
-    },
-    [results]
-  );
-
-  const handleSaveResults = useCallback(
-    async (
-      orderId: number | string,
-      testCode: string,
-      finalResults?: Record<string, string>,
-      finalNotes?: string
-    ) => {
-      if (!testCatalog || !orders) return;
-
-      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      const resultKey = `${orderIdStr}-${testCode}`;
-
-      if (enterMutation.isPending) return;
-
-      const testResults = finalResults || results[resultKey];
-      if (!testResults || Object.keys(testResults).length === 0) {
-        toast.error({
-          title: 'No results to save',
-          subtitle:
-            'There are no results entered for this test. Enter values in the required fields before saving.',
-        });
-        return;
-      }
-
-      const testDef = getTest(testCode);
-      if (!testDef?.parameters) {
-        toast.error({
-          title: 'Test parameters not found',
-          subtitle:
-            'The test configuration could not be loaded. Refresh the page or contact support.',
-        });
-        return;
-      }
-
-      const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
-      const formattedResults: Record<string, unknown> = {};
-      const testItem = allTests.find(t => t.orderId === numericOrderId && t.testCode === testCode);
-      if (!testItem) {
-        toast.error({
-          title: 'Test not found in current list',
-          subtitle:
-            'This test could not be found in the current order. The list may have been updated—refresh and try again.',
-        });
-        return;
-      }
-      const patient = testItem.patient;
-
-      for (const param of testDef.parameters) {
-        const value = testResults[param.code];
-        if (!value) continue;
-
-        let status: TestResult['status'] = 'normal';
-        let processedValue: string | number = value;
-
-        if (param.valueType === 'NUMERIC' || param.type === 'numeric') {
-          const numValue = parseFloat(value);
-          if (!isNaN(numValue)) {
-            processedValue = numValue;
-            status = checkReferenceRangeWithDemographics(numValue, param, patient);
-            if (param.criticalLow !== undefined && numValue < param.criticalLow)
-              status = 'critical';
-            else if (param.criticalHigh !== undefined && numValue > param.criticalHigh)
-              status = 'critical';
-          }
-        } else if (
-          (param.valueType === 'SELECT' || param.type === 'select') &&
-          param.allowedValues
-        ) {
-          if (!param.allowedValues.includes(value)) {
-            toast.error({
-              title: `${param.name}: Invalid value. Must be one of: ${param.allowedValues.join(', ')}`,
-              subtitle:
-                'The value entered is not in the allowed list for this parameter. Choose one of the options shown.',
-            });
-            return;
-          }
-        }
-
-        formattedResults[param.code] = {
-          value: processedValue,
-          unit: param.unit,
-          referenceRange: param.referenceRange,
-          status,
-        };
-      }
-
-      try {
-        await enterMutation.mutateAsync({
-          orderId: orderIdStr,
-          testCode,
-          results: formattedResults,
-          technicianNotes: finalNotes || technicianNotes[resultKey] || undefined,
-        });
-        toast.success({
-          title: 'Results saved successfully',
-          subtitle:
-            'The results have been saved and the order has been updated. You can continue with other tests.',
-        });
-        setResults(prev => {
-          const n = { ...prev };
-          delete n[resultKey];
-          return n;
-        });
-        setTechnicianNotes(prev => {
-          const n = { ...prev };
-          delete n[resultKey];
-          return n;
-        });
-      } catch (error) {
-        logger.error('Error saving results', error instanceof Error ? error : undefined);
-        toast.error({
-          title: 'Failed to save results. Please try again.',
-          subtitle: 'The results could not be saved. Check your connection and try again.',
-        });
-        throw error;
-      }
-    },
-    [results, technicianNotes, allTests, testCatalog, orders, getTest, enterMutation]
-  );
-
-  // Use a ref to store the openTestModal function to avoid circular dependency
+  // openTestModal stays in the view because it needs a closure over allTests/testCatalog/orders
   const openTestModalRef =
     useRef<(test: TestWithContext, filteredTests: TestWithContext[]) => void>(undefined);
 
@@ -225,7 +88,6 @@ export const EntryView: React.FC = () => {
         t => t.orderId === test.orderId && t.testCode === test.testCode
       );
 
-      // Use ref for recursive calls to avoid circular dependency warning
       const onNext =
         currentIndex < filteredTests.length - 1
           ? () => openTestModalRef.current?.(filteredTests[currentIndex + 1], filteredTests)
@@ -245,7 +107,7 @@ export const EntryView: React.FC = () => {
         onResultsChange: handleResultChange,
         onNotesChange: handleNotesChange,
         onSave: (finalResults?: Record<string, string>, finalNotes?: string) =>
-          handleSaveResults(test.orderId, test.testCode, finalResults, finalNotes),
+          handleSaveResults(test.orderId, test.testCode, allTests, testCatalog, orders, finalResults, finalNotes),
         onNext,
         onPrev,
       });
@@ -259,29 +121,22 @@ export const EntryView: React.FC = () => {
       handleResultChange,
       handleNotesChange,
       handleSaveResults,
+      allTests,
+      orders,
       openModal,
     ]
   );
 
-  // Keep ref in sync with the callback
   useEffect(() => {
     openTestModalRef.current = openTestModal;
   }, [openTestModal]);
 
   const isLoading = ordersLoading || testsLoading;
   const hasNoItems = allTests.length === 0;
-  if (isLoading && hasNoItems) {
+  if ((isLoading && hasNoItems) || !orders || !testCatalog) {
     return (
       <ErrorBoundary>
-        <LoadingState message="Loading result entry..." fullScreen />
-      </ErrorBoundary>
-    );
-  }
-
-  if (!orders || !testCatalog) {
-    return (
-      <ErrorBoundary>
-        <LoadingState message="Loading result entry..." fullScreen />
+        <LabWorkflowViewSkeleton />
       </ErrorBoundary>
     );
   }
@@ -306,7 +161,7 @@ export const EntryView: React.FC = () => {
             isComplete,
             onResultsChange: handleResultChange,
             onNotesChange: handleNotesChange,
-            onSave: () => handleSaveResults(test.orderId, test.testCode),
+            onSave: () => handleSaveResults(test.orderId, test.testCode, allTests, testCatalog, orders),
             onClick: () => openTestModal(test, filtered as TestWithContext[]),
           };
 

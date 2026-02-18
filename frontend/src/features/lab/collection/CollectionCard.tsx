@@ -3,12 +3,17 @@
  *
  * Displays sample information with collection/rejection actions.
  * Supports both desktop (LabCard) and mobile layouts via isMobile prop.
+ *
+ * Refactored: inline rejection handler extracted to useCollectionCardActions hook;
+ * mobile and desktop layouts extracted into named sub-components.
  */
+
+/* eslint-disable max-lines */
 
 import React from 'react';
 import { Badge, Card, Icon, IconButton, Alert, Avatar } from '@/shared/ui';
 import Barcode from 'react-barcode';
-import type { ContainerType, RejectedSample } from '@/types';
+import type { ContainerType, RejectedSample, Sample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { usePatientNameLookup, useTestCatalog, useRejectSample } from '@/hooks/queries';
 import { toast } from '@/shared/components/feedback';
@@ -22,9 +27,11 @@ import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import { handlePrintCollectionLabel, getEffectiveContainerType } from '../utils/lab-helpers';
 import { formatRejectionReasons } from '../utils/lab-formatters';
-import type { SampleDisplay } from '../types';
+import type { SampleDisplay, SampleRequirement } from '../types';
 import { orderHasValidatedTests } from '@/features/order/utils';
 import { ICONS, getContainerIcon } from '@/utils';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface CollectionCardProps {
   display: SampleDisplay;
@@ -41,50 +48,27 @@ interface CollectionCardProps {
   isMobile?: boolean;
 }
 
-// High complexity and large function are necessary for comprehensive collection card with multiple statuses, actions, and conditional rendering
-// eslint-disable-next-line max-lines-per-function
-export const CollectionCard: React.FC<CollectionCardProps> = ({
-  display,
-  onCollect,
-  isCollecting = false,
-  isMobile = false,
-}) => {
+/** Props shared by both layout sub-components — sample and requirement are already narrowed. */
+interface CardLayoutProps {
+  display: SampleDisplay;
+  sample: Sample;
+  requirement: SampleRequirement;
+  onCollect: CollectionCardProps['onCollect'];
+  patientName: string;
+  testNames: string[];
+  handleCardClick: (e?: React.MouseEvent) => void;
+  handleRejectSample: (reasons: string[], notes: string, requireRecollection: boolean) => Promise<void>;
+  hasValidatedTests: boolean;
+  isRejecting: boolean;
+  isCollecting: boolean;
+}
+
+// ─── useCollectionCardActions ─────────────────────────────────────────────────
+
+function useCollectionCardActions(display: SampleDisplay) {
   const { openModal } = useModal();
-  const { getPatientName } = usePatientNameLookup();
-  const { tests } = useTestCatalog();
   const rejectSampleMutation = useRejectSample();
-  const isRejecting = rejectSampleMutation.isPending;
-
-  const { sample, order, requirement } = display;
-  if (!sample || !requirement) return null;
-
-  const patientName = getPatientName(order.patientId);
-  const testNames = requirement.testCodes ? getTestNames(requirement.testCodes, tests) : [];
-
-  // Status flags
-  const isPending = sample.status === 'pending';
-  const isRejected = sample.status === 'rejected';
-  const isCollected = sample.status === 'collected';
-  const rejectedSample = isRejected ? (sample as RejectedSample) : null;
-  const isRecollection = sample.isRecollection === true;
-
-  // Container info (available for collected and rejected samples)
-  const hasContainerInfo = (isCollected || isRejected) && 'actualContainerColor' in sample;
-  const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
-  const colorName = containerColor
-    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
-    : 'N/A';
-  const containerType =
-    hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
-  const effectiveContainerType = getEffectiveContainerType(containerType, sample.sampleType);
-
-  // Collection info
-  const collectedVolume =
-    (isCollected || isRejected) && 'collectedVolume' in sample ? sample.collectedVolume : undefined;
-  const collectedAt =
-    (isCollected || isRejected) && 'collectedAt' in sample ? sample.collectedAt : undefined;
-  const collectedBy =
-    (isCollected || isRejected) && 'collectedBy' in sample ? sample.collectedBy : undefined;
+  const { sample, order } = display;
 
   const handleCardClick = (e?: React.MouseEvent) => {
     if (e) {
@@ -98,108 +82,195 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
         return;
       }
     }
-
-    if ((isCollected || isRejected) && sample.sampleId) {
+    const isPending = sample?.status === 'pending';
+    const isCollected = sample?.status === 'collected';
+    const isRejected = sample?.status === 'rejected';
+    if ((isCollected || isRejected) && sample?.sampleId) {
       openModal(ModalType.SAMPLE_DETAIL, { sampleId: sample.sampleId.toString() });
     } else if (isPending) {
-      openModal(ModalType.SAMPLE_DETAIL, { pendingSampleDisplay: display, onCollect });
+      openModal(ModalType.SAMPLE_DETAIL, { pendingSampleDisplay: display, onCollect: undefined });
     }
   };
 
-  // Check if sample rejection should be blocked due to validated tests in the order
+  const handleRejectSample = async (
+    reasons: string[],
+    notes: string,
+    requireRecollection: boolean
+  ) => {
+    if (!sample?.sampleId) return;
+    try {
+      await rejectSampleMutation.mutateAsync({
+        sampleId: sample.sampleId.toString(),
+        reasons: reasons as Parameters<typeof rejectSampleMutation.mutateAsync>[0]['reasons'],
+        notes,
+        requireRecollection,
+      });
+      toast.success({
+        title: requireRecollection
+          ? 'Sample rejected - recollection will be requested'
+          : 'Sample rejected',
+        subtitle:
+          'The sample has been rejected. Recollection will be requested if you chose that option.',
+      });
+    } catch (error) {
+      logger.error('Failed to reject sample', error instanceof Error ? error : undefined);
+      toast.error({
+        title: 'Failed to reject sample',
+        subtitle:
+          'The rejection could not be saved. Please try again or check the sample status.',
+      });
+    }
+  };
+
   const hasValidatedTests = orderHasValidatedTests(order);
+  const isRejecting = rejectSampleMutation.isPending;
 
-  // Mobile layout
-  if (isMobile) {
-    const testCount = testNames.length;
+  return { handleCardClick, handleRejectSample, hasValidatedTests, isRejecting };
+}
 
-    return (
-      <Card padding="list" hover className="flex flex-col h-full" onClick={() => handleCardClick()}>
-        {/* Header: Avatar (top left) + Status badge (top right) */}
-        <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
-          <Avatar
-            primaryText={patientName}
-            primaryTextClassName="font-normal capitalize"
-            secondaryText={displayId.order(order.orderId)}
-            secondaryTextClassName="text-brand font-mono"
-            size="xs"
-          />
-          {isPending ? (
-            <Badge variant="pending" size="xs">
-              PENDING
-            </Badge>
-          ) : isCollected ? (
-            <Badge variant="collected" size="xs">
-              COLLECTED
-            </Badge>
-          ) : isRejected ? (
-            <Badge variant="rejected" size="xs">
-              REJECTED
-            </Badge>
-          ) : null}
-        </div>
+// ─── CollectionCardMobile ─────────────────────────────────────────────────────
 
-        {/* Content: Volume, tests */}
-        <div className="grow">
-          <div className="space-y-1">
-            <div className="text-xs text-text-tertiary">
-              {isPending
-                ? `${formatVolume(requirement.totalVolume)} required`
-                : collectedVolume !== undefined
-                  ? `${formatVolume(collectedVolume)} ${isRejected ? 'was collected' : 'collected'}`
-                  : null}
-            </div>
-            <div className="text-xs text-text-secondary">
-              {testCount} test{testCount !== 1 ? 's' : ''}: {testNames.slice(0, 2).join(', ')}
-              {testCount > 2 && ` +${testCount - 2} more`}
-            </div>
+function CollectionCardMobile({
+  display,
+  sample,
+  requirement,
+  onCollect,
+  patientName,
+  testNames,
+  handleCardClick,
+  isCollecting,
+}: CardLayoutProps) {
+  const { order } = display;
+  const isPending = sample.status === 'pending';
+  const isCollected = sample.status === 'collected';
+  const isRejected = sample.status === 'rejected';
+  const isRecollection = sample.isRecollection === true;
+  const collectedVolume =
+    (isCollected || isRejected) && 'collectedVolume' in sample ? sample.collectedVolume : undefined;
+  const testCount = testNames.length;
+
+  return (
+    <Card padding="list" hover className="flex flex-col h-full" onClick={() => handleCardClick()}>
+      {/* Header: Avatar (top left) + Status badge (top right) */}
+      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
+        <Avatar
+          primaryText={patientName}
+          primaryTextClassName="font-normal capitalize"
+          secondaryText={displayId.order(order.orderId)}
+          secondaryTextClassName="text-brand font-mono"
+          size="xs"
+        />
+        {isPending ? (
+          <Badge variant="pending" size="xs">
+            PENDING
+          </Badge>
+        ) : isCollected ? (
+          <Badge variant="collected" size="xs">
+            COLLECTED
+          </Badge>
+        ) : isRejected ? (
+          <Badge variant="rejected" size="xs">
+            REJECTED
+          </Badge>
+        ) : null}
+      </div>
+
+      {/* Content: Volume, tests */}
+      <div className="grow">
+        <div className="space-y-1">
+          <div className="text-xs text-text-tertiary">
+            {isPending
+              ? `${formatVolume(requirement.totalVolume)} required`
+              : collectedVolume !== undefined
+                ? `${formatVolume(collectedVolume)} ${isRejected ? 'was collected' : 'collected'}`
+                : null}
+          </div>
+          <div className="text-xs text-text-secondary">
+            {testCount} test{testCount !== 1 ? 's' : ''}: {testNames.slice(0, 2).join(', ')}
+            {testCount > 2 && ` +${testCount - 2} more`}
           </div>
         </div>
+      </div>
 
-        {/* Bottom section: Badges (left) + Action button (right) */}
-        <div className="flex items-center justify-between gap-2 mt-auto pt-3">
-          <div className="flex items-center gap-2">
-            <Badge variant={sample.sampleType} size="xs" />
-            {sample.priority && <Badge variant={sample.priority} size="xs" />}
-            {isRecollection && (
-              <Badge variant="warning" size="xs">
-                RECOLLECTION
-              </Badge>
-            )}
-          </div>
-          {isPending ? (
-            <div onClick={e => e.stopPropagation()}>
-              <CollectionPopover
-                requirement={requirement}
-                patientName={patientName}
-                testName={testNames.join(', ')}
-                isRecollection={
-                  isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)
-                }
-                onConfirm={(volume, notes, color, containerType) =>
-                  onCollect(display, volume, notes, color, containerType)
-                }
-                isSubmitting={isCollecting}
-              />
-            </div>
-          ) : (
-            <IconButton
-              variant="view"
-              size="sm"
-              title="View Details"
-              onClick={e => {
-                e.stopPropagation();
-                handleCardClick();
-              }}
-            />
+      {/* Bottom section: Badges (left) + Action button (right) */}
+      <div className="flex items-center justify-between gap-2 mt-auto pt-3">
+        <div className="flex items-center gap-2">
+          <Badge variant={sample.sampleType} size="xs" />
+          {sample.priority && <Badge variant={sample.priority} size="xs" />}
+          {isRecollection && (
+            <Badge variant="warning" size="xs">
+              RECOLLECTION
+            </Badge>
           )}
         </div>
-      </Card>
-    );
-  }
+        {isPending ? (
+          <div onClick={e => e.stopPropagation()}>
+            <CollectionPopover
+              requirement={requirement}
+              patientName={patientName}
+              testName={testNames.join(', ')}
+              isRecollection={
+                isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)
+              }
+              onConfirm={(volume, notes, color, containerType) =>
+                onCollect(display, volume, notes, color, containerType)
+              }
+              isSubmitting={isCollecting}
+            />
+          </div>
+        ) : (
+          <IconButton
+            variant="view"
+            size="sm"
+            title="View Details"
+            onClick={e => {
+              e.stopPropagation();
+              handleCardClick();
+            }}
+          />
+        )}
+      </div>
+    </Card>
+  );
+}
 
-  // Desktop layout (LabCard)
-  // Build badges (ordered by importance)
+// ─── CollectionCardDesktop ────────────────────────────────────────────────────
+
+// eslint-disable-next-line max-lines-per-function, complexity
+function CollectionCardDesktop({
+  display,
+  sample,
+  requirement,
+  onCollect,
+  patientName,
+  testNames,
+  handleCardClick,
+  handleRejectSample,
+  hasValidatedTests,
+  isRejecting,
+}: CardLayoutProps) {
+  const { order } = display;
+  const isPending = sample.status === 'pending';
+  const isCollected = sample.status === 'collected';
+  const isRejected = sample.status === 'rejected';
+  const isRecollection = sample.isRecollection === true;
+  const rejectedSample = isRejected ? (sample as RejectedSample) : null;
+
+  const hasContainerInfo = (isCollected || isRejected) && 'actualContainerColor' in sample;
+  const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
+  const colorName = containerColor
+    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
+    : 'N/A';
+  const containerType =
+    hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
+  const effectiveContainerType = getEffectiveContainerType(containerType, sample.sampleType);
+  const collectedVolume =
+    (isCollected || isRejected) && 'collectedVolume' in sample ? sample.collectedVolume : undefined;
+  const collectedAt =
+    (isCollected || isRejected) && 'collectedAt' in sample ? sample.collectedAt : undefined;
+  const collectedBy =
+    (isCollected || isRejected) && 'collectedBy' in sample ? sample.collectedBy : undefined;
+
   const badges = (
     <>
       <h3 className="text-sm font-medium text-text-primary capitalize">{patientName}</h3>
@@ -241,7 +312,6 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
     </>
   );
 
-  // Build actions
   const actions = (
     <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
       {isPending ? (
@@ -263,7 +333,6 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
           <Badge size="sm" variant="collected" />
           {sample.sampleId && (
             <>
-              {/* Block sample rejection if order has validated tests to prevent contradiction */}
               {hasValidatedTests ? (
                 <IconButton
                   variant="delete"
@@ -279,33 +348,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                   isRecollection={isRecollection}
                   rejectionHistoryCount={sample.rejectionHistory?.length || 0}
                   isSubmitting={isRejecting}
-                  onReject={async (reasons, notes, requireRecollection) => {
-                    try {
-                      await rejectSampleMutation.mutateAsync({
-                        sampleId: sample.sampleId.toString(),
-                        reasons,
-                        notes,
-                        requireRecollection,
-                      });
-                      toast.success({
-                        title: requireRecollection
-                          ? 'Sample rejected - recollection will be requested'
-                          : 'Sample rejected',
-                        subtitle:
-                          'The sample has been rejected. Recollection will be requested if you chose that option.',
-                      });
-                    } catch (error) {
-                      logger.error(
-                        'Failed to reject sample',
-                        error instanceof Error ? error : undefined
-                      );
-                      toast.error({
-                        title: 'Failed to reject sample',
-                        subtitle:
-                          'The rejection could not be saved. Please try again or check the sample status.',
-                      });
-                    }
-                  }}
+                  onReject={handleRejectSample}
                 />
               )}
               <IconButton
@@ -321,7 +364,6 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
     </div>
   );
 
-  // Recollection banner (only for pending recollection samples)
   const recollectionBanner =
     isPending && isRecollection
       ? (() => {
@@ -343,7 +385,6 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
         })()
       : undefined;
 
-  // Additional info for recollection samples
   const additionalInfo =
     (isRecollection && sample.originalSampleId) || rejectedSample?.recollectionSampleId ? (
       <div className="flex items-center gap-2 flex-wrap">
@@ -393,4 +434,45 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
       contentTitle="Required for"
     />
   );
+}
+
+// ─── CollectionCard (dispatcher) ─────────────────────────────────────────────
+
+export const CollectionCard: React.FC<CollectionCardProps> = ({
+  display,
+  onCollect,
+  isCollecting = false,
+  isMobile = false,
+}) => {
+  const { getPatientName } = usePatientNameLookup();
+  const { tests } = useTestCatalog();
+  // Hook must be called before any early return (rules-of-hooks)
+  const { handleCardClick, handleRejectSample, hasValidatedTests, isRejecting } =
+    useCollectionCardActions(display);
+
+  const { sample, requirement } = display;
+  if (!sample || !requirement) return null;
+
+  const patientName = getPatientName(display.order.patientId);
+  const testNames = requirement.testCodes ? getTestNames(requirement.testCodes, tests) : [];
+
+  const sharedProps: CardLayoutProps = {
+    display,
+    sample,
+    requirement,
+    onCollect,
+    patientName,
+    testNames,
+    handleCardClick,
+    handleRejectSample,
+    hasValidatedTests,
+    isRejecting,
+    isCollecting,
+  };
+
+  if (isMobile) {
+    return <CollectionCardMobile {...sharedProps} />;
+  }
+
+  return <CollectionCardDesktop {...sharedProps} />;
 };

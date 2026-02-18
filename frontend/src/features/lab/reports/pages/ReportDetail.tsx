@@ -19,7 +19,8 @@ import type { ReportData, ValidatedTest } from '../types';
 import { formatDate } from '@/utils';
 import { companyConfig } from '@/config';
 import { toast } from '@/shared/components/feedback';
-import { LoadingState } from '@/shared/components';
+import { DetailPageShell, DetailPageHeader } from '@/shared/components';
+import { ReportDetailSkeleton } from './ReportDetailSkeleton';
 
 export const ReportDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -84,7 +85,15 @@ export const ReportDetail: React.FC = () => {
   }, [ordersLoading, patientsLoading, testsLoading, validatedTest, navigate]);
 
   if (ordersLoading || patientsLoading || testsLoading) {
-    return <LoadingState message="Loading report..." fullScreen size="lg" />;
+    return (
+      <DetailPageShell
+        header={<DetailPageHeader title="Report" />}
+        loading
+        loadingSkeleton={<ReportDetailSkeleton />}
+      >
+        {null}
+      </DetailPageShell>
+    );
   }
 
   // If test not found after loading, return null (useEffect will redirect)
