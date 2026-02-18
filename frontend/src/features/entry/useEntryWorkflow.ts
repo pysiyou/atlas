@@ -13,8 +13,10 @@
 /* eslint-disable complexity */
 
 import { useState, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
 import { useEnterResults } from '@/features/validation/api/useResultMutations';
+import { queryKeys } from '@/lib/query';
 import { checkReferenceRangeWithDemographics } from '@/utils';
 import { toast } from '@/components/feedback';
 import { logger } from '@/utils/logger';
@@ -39,6 +41,7 @@ export interface EntryWorkflow {
 }
 
 export function useEntryWorkflow(): EntryWorkflow {
+  const queryClient = useQueryClient();
   const { getTest } = useTestNameLookup();
   const [results, setResults] = useState<Record<string, Record<string, string>>>({});
   const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
@@ -175,6 +178,7 @@ export function useEntryWorkflow(): EntryWorkflow {
           delete n[resultKey];
           return n;
         });
+        await queryClient.refetchQueries({ queryKey: queryKeys.orders.all });
       } catch (error) {
         logger.error('Error saving results', error instanceof Error ? error : undefined);
         toast.error({
@@ -184,7 +188,7 @@ export function useEntryWorkflow(): EntryWorkflow {
         throw error;
       }
     },
-    [results, technicianNotes, getTest, enterMutation]
+    [results, technicianNotes, getTest, enterMutation, queryClient]
   );
 
   return {
