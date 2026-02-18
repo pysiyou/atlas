@@ -210,8 +210,8 @@ export interface TableCellProps {
 /**
  * Props for loading skeleton
  */
-export interface TableSkeletonProps {
-  columns: ColumnConfig<unknown>[];
+export interface TableSkeletonProps<T = unknown> {
+  columns: ColumnConfig<T>[];
   rows: number;
   variant: TableVariant;
 }

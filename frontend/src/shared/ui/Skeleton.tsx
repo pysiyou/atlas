@@ -123,6 +123,28 @@ export const SkeletonCard: React.FC<{
 );
 
 /**
+ * Info section skeleton – label/value rows (e.g. General Info, Order Info).
+ */
+export const SkeletonInfoSection: React.FC<{
+  rows?: number;
+  layout?: 'grid' | 'column';
+  className?: string;
+}> = ({ rows = 5, layout = 'column', className = '' }) => {
+  const containerClass =
+    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-5' : 'flex flex-col gap-3';
+  return (
+    <div className={`${containerClass} ${className}`}>
+      {Array.from({ length: rows }).map((_, i) => (
+        <div key={i} className="flex flex-col gap-1">
+          <Skeleton height={10} width={64} />
+          <Skeleton height={14} width={i % 2 === 0 ? '85%' : '70%'} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+/**
  * List Skeleton
  * Placeholder for list views
  */

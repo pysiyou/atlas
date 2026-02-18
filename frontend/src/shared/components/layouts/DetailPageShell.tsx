@@ -20,10 +20,12 @@ export interface DetailPageShellProps {
   header: ReactNode;
   /** Main content (rendered in scrollable area when not loading/error/notFound) */
   children: ReactNode;
-  /** When true, show full-screen loading instead of content */
+  /** When true, show full-screen loading instead of content (or loadingSkeleton if provided) */
   loading?: boolean;
-  /** Loading message when loading is true */
+  /** Loading message when loading is true (used only when loadingSkeleton is not provided) */
   loadingMessage?: string;
+  /** Optional skeleton to show in place of content when loading; shell still shows header + this in scroll area */
+  loadingSkeleton?: ReactNode;
   /** When set, show ErrorAlert above content (or instead of content if no children yet) */
   error?: DetailPageShellError | null;
   /** Retry handler for error state */
@@ -44,6 +46,7 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   children,
   loading = false,
   loadingMessage = 'Loading...',
+  loadingSkeleton,
   error = null,
   onRetry,
   onDismissError,
@@ -53,6 +56,16 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   className = '',
 }) => {
   if (loading) {
+    if (loadingSkeleton != null) {
+      return (
+        <div className={`min-h-full flex flex-col p-2 gap-4 ${className}`.trim()}>
+          <div className="shrink-0">{header}</div>
+          <div className="flex-1 min-h-0 overflow-auto" aria-busy="true">
+            {loadingSkeleton}
+          </div>
+        </div>
+      );
+    }
     return <LoadingState message={loadingMessage} fullScreen />;
   }
 

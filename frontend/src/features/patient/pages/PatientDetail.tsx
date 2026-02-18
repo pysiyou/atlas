@@ -12,6 +12,7 @@ import { DetailPageShell, DetailPageHeader } from '@/shared/components';
 import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from './PatientDetailLayouts';
+import { PatientDetailSkeleton } from './PatientDetailSkeleton';
 
 export const PatientDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -59,6 +60,7 @@ export const PatientDetail: React.FC = () => {
         header={header}
         loading={patientLoading || ordersLoading}
         loadingMessage="Loading patient..."
+        loadingSkeleton={<PatientDetailSkeleton />}
         notFound={!patient}
         notFoundTitle="Patient Not Found"
         notFoundDescription="The patient could not be found."

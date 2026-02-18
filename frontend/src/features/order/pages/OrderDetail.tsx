@@ -17,6 +17,7 @@ import {
   MediumScreenLayout,
   LargeScreenLayout,
 } from '../components/OrderDetailLayouts';
+import { OrderDetailSkeleton } from './OrderDetailSkeleton';
 
 export const OrderDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -78,6 +79,7 @@ export const OrderDetail: React.FC = () => {
       header={header}
       loading={orderLoading || patientLoading}
       loadingMessage="Loading order..."
+      loadingSkeleton={<OrderDetailSkeleton />}
       notFound={!order}
       notFoundTitle="Order Not Found"
       notFoundDescription="The order could not be found."

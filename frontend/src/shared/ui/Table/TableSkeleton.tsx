@@ -5,9 +5,13 @@ import { ROW_HEIGHTS, CELL_PADDING, TEXT_SIZE } from './constants';
 
 /**
  * Table Skeleton Component
- * Shows loading skeleton for table rows
+ * Shows loading skeleton for table rows; column widths match config.
  */
-export function TableSkeleton({ columns, rows, variant }: TableSkeletonProps) {
+export function TableSkeleton<T = unknown>({
+  columns,
+  rows,
+  variant,
+}: TableSkeletonProps<T>) {
   const columnStyles = useColumnStyles(columns);
 
   return (

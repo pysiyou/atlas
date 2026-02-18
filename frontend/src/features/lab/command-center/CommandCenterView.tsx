@@ -11,7 +11,7 @@ import { ICONS } from '@/utils/icons';
 import type { IconName } from '@/shared/ui';
 import { useCommandCenterData } from './hooks';
 import { createTestTableConfig } from './testTableConfigFactory';
-import { ActivitiesTimeline, DonutChart } from './components';
+import { ActivitiesTimeline, DonutChart, DonutChartSkeleton } from './components';
 import type { DonutChartSegment } from './components';
 import { useLabTestsFromOrders } from '../hooks';
 
@@ -95,13 +95,17 @@ export const CommandCenterView: React.FC = () => {
         <div
           className={`${chartCellClass} flex flex-col items-stretch justify-stretch p-2 min-w-0`}
         >
-          <DonutChart
-            title="Lab pipeline"
-            subTitle="active"
-            valueLabel="tests"
-            data={commandCenterLoading ? [] : distributionByStage}
-            getItemIcon={getItemIcon}
-          />
+          {commandCenterLoading ? (
+            <DonutChartSkeleton />
+          ) : (
+            <DonutChart
+              title="Lab pipeline"
+              subTitle="active"
+              valueLabel="tests"
+              data={distributionByStage}
+              getItemIcon={getItemIcon}
+            />
+          )}
         </div>
         <div
           className={`${rowCellClass} flex min-w-0 flex-col items-stretch justify-stretch p-2 min-h-0`}
