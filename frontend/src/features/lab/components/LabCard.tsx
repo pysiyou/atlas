@@ -7,7 +7,7 @@ import React, { type ReactNode } from 'react';
 import { Card, Badge } from '@/components/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
-import { useUserLookup } from '@/hooks/queries';
+import { useUserLookup } from '@/features/admin/api/useUsers';
 import {
   LAB_CARD_TYPOGRAPHY,
   LAB_CARD_SPACING,

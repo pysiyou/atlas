@@ -2,7 +2,7 @@ import React from 'react';
 import { Badge, type BadgeVariant } from './Badge';
 import { DETAIL_LABEL, DETAIL_VALUE } from '@/utils/constants';
 import { formatDate } from '@/utils';
-import { useUserLookup } from '@/hooks/queries';
+import { useUserLookup } from '@/features/admin/api/useUsers';
 
 /**
  * Badge configuration for DetailField

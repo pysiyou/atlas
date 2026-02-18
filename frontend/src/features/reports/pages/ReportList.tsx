@@ -9,14 +9,11 @@
 
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  useOrdersList,
-  usePatientsList,
-  useTestCatalog,
-  usePatientNameLookup,
-  useSampleLookup,
-  useUserLookup,
-} from '@/hooks/queries';
+import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
+import { useUserLookup } from '@/features/admin/api/useUsers';
+import { usePatientNameLookup, usePatientsList } from '@/features/patients/api/usePatients';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
+import { useSampleLookup } from '@/features/collection/api/useSamples';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/components';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/ui/Table';

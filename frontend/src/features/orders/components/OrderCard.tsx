@@ -1,7 +1,7 @@
 import React, { type ReactNode } from 'react';
 import { Card } from '@/components/ui';
 import { OrderCardHeader, OrderMetadata } from '../pages/OrderDetailComponents';
-import { usePatientNameLookup } from '@/hooks/queries';
+import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import type { Order } from '@/types';
 
 interface OrderCardProps {

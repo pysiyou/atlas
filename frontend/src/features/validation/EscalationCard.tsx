@@ -8,7 +8,7 @@ import React from 'react';
 import { Badge, Card, Button, Alert, Icon } from '@/components/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
-import { useUserLookup } from '@/hooks/queries';
+import { useUserLookup } from '@/features/admin/api/useUsers';
 import { LabCard } from '@/features/lab/components/LabCard';
 import type { TestWithContext } from '@/types';
 import { getResultRejectionType } from '@/types/order';

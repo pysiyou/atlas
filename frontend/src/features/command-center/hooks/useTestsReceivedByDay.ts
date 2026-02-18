@@ -4,7 +4,8 @@
  */
 
 import { useMemo } from 'react';
-import { useOrdersList, useSamplesList } from '@/hooks/queries';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
+import { useSamplesList } from '@/features/collection/api/useSamples';
 import type { OrderTest } from '@/types';
 import type { Sample } from '@/types';
 import { isActiveTest } from '@/utils/orderUtils';

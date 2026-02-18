@@ -15,8 +15,9 @@ import { displayId, ICONS, formatCurrency } from '@/utils';
 import { createFilterOptions } from '@/utils/filtering';
 import { getErrorMessage } from '@/utils/errorHelpers';
 import { useOrderForm } from '../hooks/useOrderForm';
-import { usePatientsList, usePatientSearch } from '@/hooks/queries';
-import { useTestCatalog, useTestSearch } from '@/hooks/queries';
+import { useTestCatalog, useTestSearch } from '@/features/catalog/api/useTestCatalog';
+import { usePatientSearch, usePatientsList } from '@/features/patients/api/usePatients';
+
 import { useCreatePayment } from '@/features/billing/api/usePayments';
 import { PatientSelect } from './PatientSelect';
 import { TestSelect } from './TestSelect';

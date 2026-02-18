@@ -13,7 +13,7 @@
 /* eslint-disable complexity */
 
 import { useState, useCallback } from 'react';
-import { useTestNameLookup } from '@/hooks/queries';
+import { useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
 import { useEnterResults } from '@/features/validation/api/useResultMutations';
 import { checkReferenceRangeWithDemographics } from '@/utils';
 import { toast } from '@/components/feedback';

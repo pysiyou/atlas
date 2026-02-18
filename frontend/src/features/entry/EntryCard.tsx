@@ -11,7 +11,7 @@ import { Badge, Card, Alert, Icon, IconButton } from '@/components/ui';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
-import { usePatientNameLookup } from '@/hooks/queries';
+import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard, ProgressBadge } from '@/features/lab/components/LabCard';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/utils';

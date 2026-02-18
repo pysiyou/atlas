@@ -22,14 +22,11 @@ import { CollectionDetailHeaderBadges } from './CollectionDetailHeaderBadges';
 import { CollectionDetailFooter } from './CollectionDetailFooter';
 import { buildCollectionDetailGridSections } from './CollectionDetailGridSections';
 import { CollectionDetailContent } from './CollectionDetailContent';
-import {
-  useSampleLookup,
-  useTestCatalog,
-  usePatientNameLookup,
-  useOrderLookup,
-  useUserLookup,
-  useRejectSample,
-} from '@/hooks/queries';
+import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
+import { useUserLookup } from '@/features/admin/api/useUsers';
+import { usePatientNameLookup } from '@/features/patients/api/usePatients';
+import { useOrderLookup } from '@/features/orders/utils/useOrderUtils';
+import { useRejectSample, useSampleLookup } from '@/features/collection/api/useSamples';
 import { getTestNames } from '@/utils/typeHelpers';
 import { LabDetailModal } from '@/features/lab/components/LabDetailModal';
 import type { SampleDisplay } from '@/features/lab/types';

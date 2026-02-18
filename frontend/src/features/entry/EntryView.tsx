@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo, useCallback, useRef, useEffect } from 'react';
-import { useOrdersList, useTestCatalog, useTestNameLookup } from '@/hooks/queries';
+import { useTestCatalog, useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import type { TestWithContext } from '@/types';
 import { EntryCard } from './EntryCard';
 import { LabWorkflowView, createLabItemFilter } from '@/features/lab/components/LabWorkflowView';

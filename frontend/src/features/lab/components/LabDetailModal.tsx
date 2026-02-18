@@ -15,7 +15,7 @@ import { ICONS } from '@/utils';
 import type { DetailFieldConfig } from '@/components/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
-import { useUserLookup } from '@/hooks/queries';
+import { useUserLookup } from '@/features/admin/api/useUsers';
 
 interface ContextInfo {
   patientName: string;

@@ -5,7 +5,8 @@
 import React, { useMemo } from 'react';
 import { Table, EmptyState } from '@/components/ui';
 import type { Order } from '@/types/order';
-import { usePatientNameLookup, useTestNameLookup } from '@/hooks/queries';
+import { useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
+import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { createOrderTableConfig } from '@/features/orders/pages/OrderTableConfig';
 import { ICONS } from '@/utils';
 

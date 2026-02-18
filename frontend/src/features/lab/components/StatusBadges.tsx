@@ -13,7 +13,7 @@ import React from 'react';
 import { Badge, Icon, DnaHelixLoader } from '@/components/ui';
 import { formatDate, getContainerIconColor } from '@/utils';
 import { displayId } from '@/utils';
-import { useUserLookup } from '@/hooks/queries';
+import { useUserLookup } from '@/features/admin/api/useUsers';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { getContainerIcon, ICONS } from '@/utils';

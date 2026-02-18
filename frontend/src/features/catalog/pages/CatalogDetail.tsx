@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useTest } from '@/hooks/queries';
+import { useTest } from '@/features/catalog/api/useTestCatalog';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { BalancedDetailsLayout } from '@/components/ui';
 import type { TableInput } from '@/components/ui';

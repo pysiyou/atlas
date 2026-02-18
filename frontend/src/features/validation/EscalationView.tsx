@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
-import { usePendingEscalation, useInvalidateOrders } from '@/hooks/queries';
+import { useInvalidateOrders } from '@/features/orders/utils/useOrderUtils';
+import { usePendingEscalation } from '@/features/validation/api/usePendingEscalation';
 import { EscalationCard } from './EscalationCard';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '@/features/lab/components/LabWorkflowView';

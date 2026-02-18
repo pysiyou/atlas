@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { formatDate } from '@/utils';
-import { useUserLookup } from '@/hooks/queries';
+import { useUserLookup } from '@/features/admin/api/useUsers';
 import { Badge, SectionContainer } from '@/components/ui';
 import type { ResultRejectionRecord } from '@/types';
 import { getResultRejectionType } from '@/types/order';

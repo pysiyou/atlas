@@ -5,14 +5,11 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  useOrdersList,
-  usePatientsList,
-  useTestCatalog,
-  usePatientNameLookup,
-  useSampleLookup,
-  useUserLookup,
-} from '@/hooks/queries';
+import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
+import { useUserLookup } from '@/features/admin/api/useUsers';
+import { usePatientNameLookup, usePatientsList } from '@/features/patients/api/usePatients';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
+import { useSampleLookup } from '@/features/collection/api/useSamples';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import type { ReportData, ValidatedTest } from '../types';

@@ -5,7 +5,8 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
-import { useOrdersList, useTestCatalog } from '@/hooks/queries';
+import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { ValidationCard } from './ValidationCard';
 import {
   BulkValidationToolbar,

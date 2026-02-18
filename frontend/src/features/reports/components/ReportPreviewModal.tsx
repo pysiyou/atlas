@@ -10,7 +10,7 @@ import type { ReportData } from '../types';
 import { format } from 'date-fns';
 import { cn, ICONS } from '@/utils';
 import { companyConfig } from '@/config';
-import { useUserLookup } from '@/hooks/queries';
+import { useUserLookup } from '@/features/admin/api/useUsers';
 
 interface ReportPreviewModalProps {
   isOpen: boolean;

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Avatar } from '@/components/ui';
-import { useUserLookup } from '@/hooks/queries';
+import { useUserLookup } from '@/features/admin/api/useUsers';
 import {
   STATUS_TIMELINE_STEPS,
   getOrderStepProgress,

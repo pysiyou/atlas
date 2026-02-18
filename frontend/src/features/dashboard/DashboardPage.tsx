@@ -5,12 +5,9 @@
 
 import React from 'react';
 import { useAuthStore } from '@/app/store';
-import {
-  usePatientsList,
-  useOrdersList,
-  usePaymentsList,
-  usePatientNameLookup,
-} from '@/hooks/queries';
+import { usePatientNameLookup, usePatientsList } from '@/features/patients/api/usePatients';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
+import { usePaymentsList } from '@/features/billing/api/usePayments';
 import { Card, SectionContainer, Badge, Icon } from '@/components/ui';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils';

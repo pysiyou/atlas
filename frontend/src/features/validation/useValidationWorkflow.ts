@@ -8,10 +8,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import {
-  useInvalidateOrders,
-  useOrderLookup,
-} from '@/hooks/queries';
+import { useInvalidateOrders, useOrderLookup } from '@/features/orders/utils/useOrderUtils';
 import {
   useValidateResults,
   useRejectResults,

@@ -6,7 +6,10 @@
 
 import React from 'react';
 import { useAuthStore } from '@/app/store';
-import { usePatientsList, useOrdersList, useTestCatalog, useSamplesList } from '@/hooks/queries';
+import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
+import { usePatientsList } from '@/features/patients/api/usePatients';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
+import { useSamplesList } from '@/features/collection/api/useSamples';
 import { LoadingState } from '@/components/feedback/LoadingState';
 import { ErrorFallback } from '@/components/error-boundaries/ErrorFallback';
 

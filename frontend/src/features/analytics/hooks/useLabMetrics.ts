@@ -4,7 +4,9 @@
  */
 
 import { useMemo } from 'react';
-import { useOrdersList, useSamplesList, useUsersList } from '@/hooks/queries';
+import { useUsersList } from '@/features/admin/api/useUsers';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
+import { useSamplesList } from '@/features/collection/api/useSamples';
 import { getResultRejectionType } from '@/types/order';
 import type {
   LabAnalytics,

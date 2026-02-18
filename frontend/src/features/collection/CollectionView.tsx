@@ -7,14 +7,11 @@
 import React, { useMemo, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/store';
-import {
-  useOrdersList,
-  useOrderLookup,
-  useTestCatalog,
-  useSamplesList,
-  useCollectSample,
-  usePatientNameLookup,
-} from '@/hooks/queries';
+import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
+import { usePatientNameLookup } from '@/features/patients/api/usePatients';
+import { useOrderLookup } from '@/features/orders/utils/useOrderUtils';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
+import { useCollectSample, useSamplesList } from '@/features/collection/api/useSamples';
 import { queryKeys } from '@/lib/query';
 import { toast } from '@/components/feedback';
 import { logger } from '@/utils/logger';

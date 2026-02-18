@@ -6,7 +6,8 @@
  */
 
 import { useMemo } from 'react';
-import { useOrdersList, useSamplesList } from '@/hooks/queries';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
+import { useSamplesList } from '@/features/collection/api/useSamples';
 import { isActiveTest } from '@/utils/orderUtils';
 
 export interface DistributionByStagePoint {

@@ -8,7 +8,9 @@
 
 import React, { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useOrdersList, usePatientNameLookup, useTestNameLookup } from '@/hooks/queries';
+import { useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
+import { usePatientNameLookup } from '@/features/patients/api/usePatients';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useFiltering } from '@/utils/filtering';
 import { ListView } from '@/components';
 import { Button } from '@/components/ui';
