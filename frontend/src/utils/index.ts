@@ -3,19 +3,31 @@
  */
 
 // Classnames
-export * from './classnames';
+export * from './cn';
+
+// Icons & icon helpers
+export * from '@/config/icons';
 
 // Logger
 export * from './logger';
 
-// Formatting (dates, strings, arrays, currency, IDs)
-export * from './format';
+// Date formatting & ranges
+export * from './date';
+
+// String formatting (phone, age, initials, etc.)
+export * from './string';
+
+// Array & list formatting
+export * from './array';
+
+// Currency formatting
+export * from './currency';
+
+// ID display formatting
+export * from './id';
 
 // Error handling
 export * from './errors';
-
-// Entity lookups
-export * from './lookup';
 
 // Validation (functions + constants)
 export * from './validation';
@@ -24,19 +36,7 @@ export * from './validation';
 export * from './constants';
 
 // Form utilities
-export * from './forms';
+export * from './form';
 
-// Filtering
+// Filtering (pure functions + types; hooks are in @/hooks/useFiltering)
 export * from './filtering';
-
-// Icons
-export * from './icons';
-
-// Lab-specific utilities
-export * from './lab';
-
-// Sample utilities
-export * from './samples';
-
-// Order business logic
-export * from './orderUtils';

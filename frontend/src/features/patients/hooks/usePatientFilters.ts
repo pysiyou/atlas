@@ -5,7 +5,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import { useFiltering } from '@/utils/filtering';
+import { useFiltering } from '@/hooks/useFiltering';
 import { calculateAge } from '@/utils';
 import { usePatientService } from '../services/usePatientService';
 import type { Patient, Gender } from '@/types';

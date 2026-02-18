@@ -5,7 +5,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import { useFiltering } from '@/utils/filtering';
+import { useFiltering } from '@/hooks/useFiltering';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
 
 interface UseOrderFiltersOptions {

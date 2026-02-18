@@ -15,7 +15,7 @@ import { QueryProvider } from '@/lib/query';
 // - See @/hooks/queries for replacement hooks
 // - AppointmentsProvider and BillingProvider removed - API not yet implemented
 import { ModalProvider } from '@/lib/context/ModalContext';
-import { LoadingScopeProvider } from '@/components/loading';
+import { LoadingScopeProvider } from '@/components/feedback';
 
 interface AppProvidersProps {
   children: ReactNode;

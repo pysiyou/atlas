@@ -3,3 +3,4 @@
  */
 
 export * from './catalog-formatters';
+export * from './test-lookup';

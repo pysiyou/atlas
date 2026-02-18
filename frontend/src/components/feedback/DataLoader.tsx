@@ -11,7 +11,7 @@ import { usePatientsList } from '@/features/patients/api/usePatients';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useSamplesList } from '@/features/collection/api/useSamples';
 import { LoadingState } from '@/components/feedback/LoadingState';
-import { ErrorFallback } from '@/components/error-boundaries/ErrorFallback';
+import { ErrorFallback } from '@/components/feedback/ErrorFallback';
 
 interface DataLoaderProps {
   children: React.ReactNode;

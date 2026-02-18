@@ -8,7 +8,7 @@
 import type { Sample, Order, Patient } from '@/types';
 
 // Import SampleRequirement from utils (single source of truth)
-import type { SampleRequirement } from '@/utils';
+import type { SampleRequirement } from './utils';
 export type { SampleRequirement };
 
 /**

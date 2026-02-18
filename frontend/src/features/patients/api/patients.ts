@@ -5,7 +5,7 @@
 
 import { apiClient } from '@/lib/api/client';
 import type { Patient } from '@/types';
-import type { PaginatedResponse, PaginationMeta } from './orders';
+import type { PaginatedResponse, PaginationMeta } from '@/features/orders/api/orders';
 
 /**
  * Filter options for patients list

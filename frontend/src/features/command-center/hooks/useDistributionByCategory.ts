@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 
-import { isActiveTest } from '@/utils/orderUtils';
+import { isActiveTest } from '@/features/orders/utils';
 import type { OrderTest } from '@/types';
 
 export interface DistributionByCategoryPoint {

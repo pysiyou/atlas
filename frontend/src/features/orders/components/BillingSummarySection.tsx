@@ -7,7 +7,7 @@ import React from 'react';
 import { Badge, Button, Icon } from '@/components/ui';
 import { formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
-import { getActiveTests, getActiveTotal } from '@/utils/orderUtils';
+import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
 import type { Order, Invoice } from '@/types';
 import { ICONS } from '@/utils';
 

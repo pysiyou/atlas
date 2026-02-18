@@ -17,7 +17,7 @@ import {
 } from '@/components/ui';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { cn, formatCurrency, displayId } from '@/utils';
-import { getActiveTests, getActiveTotal } from '@/utils/orderUtils';
+import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
 import { inputBase } from '@/components/ui/inputStyles';
 import type { Order } from '@/types';
 import {

@@ -9,7 +9,7 @@ import { calculateAge } from '@/utils';
 import { displayId } from '@/utils';
 import type { Patient } from '@/types';
 import { InfoField } from '@/components/ui/InfoField';
-import { formatOrderDate } from '@/utils/format/dates';
+import { formatOrderDate } from '@/utils/date';
 import { ICONS } from '@/utils';
 
 export interface PatientInfoSectionProps {

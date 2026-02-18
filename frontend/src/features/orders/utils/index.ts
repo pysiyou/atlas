@@ -5,3 +5,4 @@
 export * from './order-timeline-utils';
 export * from './order-formatters';
 export * from './order-helpers';
+export * from './order-calculator';

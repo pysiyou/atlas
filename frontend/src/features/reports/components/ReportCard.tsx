@@ -5,7 +5,7 @@
  * Displays validated test information in a mobile-friendly card layout.
  */
 import { Badge, Card, Avatar } from '@/components/ui';
-import type { CardComponentProps } from '@/components/ui/Table';
+import type { CardComponentProps } from '@/components/ui';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import type { ValidatedTest } from '../types';

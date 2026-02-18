@@ -7,8 +7,8 @@ import { Button, Textarea, Popover, Icon } from '@/components/ui';
 import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/components/ui/inputStyles';
 import { cn } from '@/utils';
 import type { Test, TestParameter, Patient } from '@/types';
-import { formatReferenceRange, isCriticalValue } from '@/utils';
-import { validatePhysiologicValue, getPhysiologicLimit } from '@/utils';
+import { formatReferenceRange, isCriticalValue } from '@/features/lab/utils';
+import { validatePhysiologicValue, getPhysiologicLimit } from '@/features/lab/utils';
 import { ICONS } from '@/utils';
 
 interface EntryFormProps {

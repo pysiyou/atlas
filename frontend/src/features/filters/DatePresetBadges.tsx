@@ -10,7 +10,7 @@ import {
   getDateRangeFromPreset,
   getActivePresetId,
   type DatePreset,
-} from '@/utils/format/dates';
+} from '@/utils/date';
 
 export interface DatePresetBadgesProps {
   value: [Date, Date] | null;

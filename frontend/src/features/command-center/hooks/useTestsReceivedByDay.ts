@@ -8,7 +8,7 @@ import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useSamplesList } from '@/features/collection/api/useSamples';
 import type { OrderTest } from '@/types';
 import type { Sample } from '@/types';
-import { isActiveTest } from '@/utils/orderUtils';
+import { isActiveTest } from '@/features/orders/utils';
 
 const DATE_FORMAT_OPTIONS: Intl.DateTimeFormatOptions = { month: 'numeric', day: 'numeric' };
 

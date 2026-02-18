@@ -5,8 +5,8 @@
  */
 
 import { toast } from '@/components/feedback';
-import { getCollectionRequirements } from '@/utils';
-import { getTestNames } from '@/utils/lookup';
+import { getCollectionRequirements } from './sample-helpers';
+import { getTestNames } from '@/features/catalog/utils';
 import { printCollectionLabel } from '@/features/collection/CollectionLabel';
 import type { SampleDisplay } from '../types';
 import type { Test } from '@/types';

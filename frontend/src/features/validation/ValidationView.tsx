@@ -18,7 +18,7 @@ import { LabFilters } from '@/features/lab/components/LabFilters';
 import { useLabWorkflowFilters, useLabTestsFromOrders } from '@/features/lab/hooks';
 import { validationFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components';
-import { SectionLoadingBoundary } from '@/components/loading';
+import { SectionLoadingBoundary } from '@/components/feedback';
 import { useMinDisplay } from '@/hooks/useMinDisplay';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';

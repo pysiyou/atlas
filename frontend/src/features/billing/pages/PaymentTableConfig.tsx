@@ -8,9 +8,9 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
-import { getActiveTests } from '@/utils/orderUtils';
+import { getActiveTests } from '@/features/orders/utils';
 import { Badge } from '@/components/ui';
-import type { TableViewConfig } from '@/components/ui/Table';
+import type { TableViewConfig } from '@/components/ui';
 import { DATA_AMOUNT, DATA_ID_PRIMARY_CLICKABLE, DATA_ID_SECONDARY } from '@/utils/constants';
 import { PaymentButton } from '../components/PaymentButton';
 import { PaymentCard } from '../components/PaymentCard';

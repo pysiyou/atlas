@@ -1,6 +1,6 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge } from '@/components/ui';
-import type { TableViewConfig } from '@/components/ui/Table';
+import type { TableViewConfig } from '@/components/ui';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
 import type { PatientContext } from '@/types';

@@ -6,7 +6,7 @@
 import React from 'react';
 import { Badge, Icon } from '@/components/ui';
 import type { ContainerType, ContainerTopColor, Sample, RejectedSample } from '@/types';
-import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
+import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/features/lab/utils';
 import { displayId } from '@/utils';
 import { StatusBadgeRow } from '@/features/lab/components/LabDetailModal';
 import { getContainerIcon, ICONS } from '@/utils';

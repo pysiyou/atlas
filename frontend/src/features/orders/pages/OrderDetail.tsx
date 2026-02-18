@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks';
 import { usePatient } from '@/features/patients/api/usePatients';
 import { useOrder } from '@/features/orders/api/useOrderQueries';
-import { getActiveTests } from '@/utils/orderUtils';
+import { getActiveTests } from '@/features/orders/utils';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import type { Invoice } from '@/types';
 import { DetailPageShell, DetailPageHeader } from '@/components';

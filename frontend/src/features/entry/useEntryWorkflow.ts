@@ -17,7 +17,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
 import { useEnterResults } from '@/features/validation/api/useResultMutations';
 import { queryKeys } from '@/lib/query';
-import { checkReferenceRangeWithDemographics } from '@/utils';
+import { checkReferenceRangeWithDemographics } from '@/features/lab/utils';
 import { toast } from '@/components/feedback';
 import { logger } from '@/utils/logger';
 import type { TestResult, TestWithContext, Test, Order } from '@/types';

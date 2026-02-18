@@ -8,10 +8,10 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePatientContextList } from '@/features/patients/api/usePatientContext';
-import { useFiltering } from '@/utils/filtering';
+import { useFiltering } from '@/hooks/useFiltering';
 import { ListView } from '@/components';
 import { Button } from '@/components/ui';
-import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/ui/Table';
+import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/ui';
 import { useModal } from '@/lib/context/ModalContext';
 import { PatientFilters, type AffiliationStatus } from '../components/PatientFilters';
 import { createPatientTableConfig } from './PatientTableConfig';

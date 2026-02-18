@@ -9,7 +9,7 @@ import {
   formatArray,
   formatOrderDate,
   formatCurrency,
-} from '@/utils/format';
+} from '@/utils';
 
 /**
  * Formats a date to a readable string

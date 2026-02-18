@@ -7,7 +7,7 @@
 
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge } from '@/components/ui';
-import type { TableViewConfig } from '@/components/ui/Table';
+import type { TableViewConfig } from '@/components/ui';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { DATA_AMOUNT, DATA_ID_PRIMARY } from '@/utils/constants';

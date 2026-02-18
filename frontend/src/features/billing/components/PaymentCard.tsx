@@ -1,5 +1,5 @@
 import { Badge, Avatar } from '@/components/ui';
-import type { CardComponentProps } from '@/components/ui/Table';
+import type { CardComponentProps } from '@/components/ui';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import type { OrderPaymentView } from '../types';

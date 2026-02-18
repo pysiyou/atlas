@@ -10,17 +10,9 @@ export * from './Badge';
 export * from './badgeHelpers';
 export * from './BalancedDetailsLayout';
 export * from './Button';
-export * from './CalloutCard';
-export * from './Card';
 export * from './Checkbox';
 export * from './CheckboxList';
 export * from './CircularProgress';
-export * from './DateFilter';
-export * from './DateFilterCalendar';
-export * from './DateFilterHeader';
-export * from './dateFilterHelpers';
-export * from './DateFilterPresets';
-export * from './DateInput';
 export * from './DetailField';
 export * from './DetailFieldGroup';
 export * from './DetailRow';
@@ -35,7 +27,6 @@ export * from './IconButton';
 export * from './InfoField';
 export * from './Input';
 export * from './inputStyles';
-export * from './ListView';
 export * from './misc';
 export * from './Modal';
 export * from './ModalDebouncedSearch';
@@ -53,12 +44,41 @@ export * from './SearchBar';
 export * from './SectionContainer';
 export * from './Skeleton';
 export * from './TabbedSectionContainer';
-export * from './Table';
 export * from './TableActionMenu';
 export * from './Tabs';
 export * from './TagInput';
 export * from './types';
-export * from './useCalendarNavigation';
+
+// Re-export from data/ and form/ for backward compat (max-depth-1 restructure)
+export {
+  Table,
+  CardGrid,
+  createColumn,
+  pickColumns,
+  DEFAULT_LOADING_ROWS,
+  SHOW_ALL_PAGE_SIZE,
+  DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL,
+  Card,
+  CardHeader,
+  CalloutCard,
+  ListView,
+} from '../data';
+export type {
+  TableProps,
+  TableViewConfig,
+  CardComponentProps,
+  ColumnConfig,
+  SortConfig,
+  TableVariant,
+  Breakpoint,
+  CardVariant,
+  CalloutVariant,
+  CardProps,
+  ListViewMode,
+  ListViewProps,
+} from '../data';
+export { DatePicker as DateFilter, DateInput } from '../form';
+export type { DatePickerProps, DateInputProps, CalendarView } from '../form';
 
 // Domain-specific UI helpers (kept for backward compat)
 export * from './catalog';

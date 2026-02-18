@@ -1,8 +1,8 @@
 import { Badge, Avatar } from '@/components/ui';
-import type { CardComponentProps } from '@/components/ui/Table';
+import type { CardComponentProps } from '@/components/ui';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils';
-import { getActiveTests } from '@/utils/orderUtils';
+import { getActiveTests } from '@/features/orders/utils';
 import type { Order } from '@/types';
 
 export function OrderTableCard({ item: order, onClick }: CardComponentProps<Order>) {

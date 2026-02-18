@@ -1,6 +1,6 @@
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { Badge, Avatar, IconButton } from '@/components/ui';
-import type { CardComponentProps } from '@/components/ui/Table';
+import type { CardComponentProps } from '@/components/ui';
 import { calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
 import type { Patient } from '@/types';

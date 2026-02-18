@@ -11,7 +11,8 @@
 
 import React from 'react';
 import { Badge, Icon, DnaHelixLoader } from '@/components/ui';
-import { formatDate, getContainerIconColor } from '@/utils';
+import { formatDate } from '@/utils';
+import { getContainerIconColor } from '@/features/lab/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/features/admin/api/useUsers';
 import type { ContainerType, ContainerTopColor } from '@/types';

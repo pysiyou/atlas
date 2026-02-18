@@ -11,7 +11,7 @@ import React, { type ReactNode, useState, useEffect } from 'react';
 import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
 import { Sidebar } from './Sidebar';
 
-interface DashboardLayoutProps {
+export interface DashboardLayoutProps {
   children: ReactNode;
 }
 

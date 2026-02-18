@@ -10,7 +10,7 @@ import { Popover, Button, Icon, FooterInfo } from '@/components/ui';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';
-import type { SampleRequirement } from '@/utils';
+import type { SampleRequirement } from '@/features/lab/utils';
 import { cn, ICONS, getContainerIcon } from '@/utils';
 import { inputBase, inputError } from '@/components/ui/inputStyles';
 

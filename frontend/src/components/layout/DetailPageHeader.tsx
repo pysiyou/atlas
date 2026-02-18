@@ -4,7 +4,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { DETAIL_TITLE, DETAIL_SUBTITLE } from '@/utils/constants/typography';
+import { DETAIL_TITLE, DETAIL_SUBTITLE } from '@/utils/constants';
 
 export interface DetailPageHeaderProps {
   /** Page title (rendered in h1) */

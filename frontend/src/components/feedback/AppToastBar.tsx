@@ -1,14 +1,27 @@
 /**
- * AppToastBar – dark notification card.
- * Row 1: status icon, title, circle-close button. Row 2: secondary text (subtitle).
- * Supports message as string (title only) or ToastMessageObject. Colors from theme --toast-* vars.
+ * Toast – single file: bar component + typed toast API.
+ * Bar: status icon, title, close; optional subtitle and actions. Theme via --toast-* CSS vars.
  */
 
 import React from 'react';
 import toastLib from 'react-hot-toast';
 import { resolveValue, type Toast } from 'react-hot-toast';
 
-/** Rich toast payload: optional title (default per variant if omitted), optional subtitle, actions, variant. */
+type ToastMessage = React.ReactElement | string | null | ToastMessageObject;
+
+/** Typed toast API: message can be string or ToastMessageObject. */
+// eslint-disable-next-line react-refresh/only-export-components -- single file for toast API + component
+export const toast = toastLib as Omit<
+  typeof toastLib,
+  'success' | 'error' | 'loading' | 'custom'
+> & {
+  (message: ToastMessage, opts?: Parameters<typeof toastLib>[1]): string;
+  success(message: ToastMessage, opts?: Parameters<typeof toastLib.success>[1]): string;
+  error(message: ToastMessage, opts?: Parameters<typeof toastLib.error>[1]): string;
+  loading(message: ToastMessage, opts?: Parameters<typeof toastLib.loading>[1]): string;
+  custom(message: ToastMessage, opts?: Parameters<typeof toastLib.custom>[1]): string;
+};
+
 export interface ToastMessageObject {
   title?: string;
   subtitle?: string;
@@ -28,6 +41,8 @@ function isToastMessageObject(m: unknown): m is ToastMessageObject {
   );
 }
 
+type ToastVariant = 'success' | 'error' | 'info' | 'warning' | 'loading';
+
 const DEFAULT_TITLES: Record<ToastVariant, string> = {
   success: 'Success',
   error: 'Error',
@@ -35,265 +50,6 @@ const DEFAULT_TITLES: Record<ToastVariant, string> = {
   warning: 'Warning',
   loading: 'Loading',
 };
-
-type ToastVariant = 'success' | 'error' | 'info' | 'warning' | 'loading';
-
-const barStyle: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'stretch',
-  gap: 0,
-  minWidth: 320,
-  maxWidth: 380,
-  padding: 14,
-  background: 'var(--toast-bg)',
-  color: 'var(--toast-fg)',
-  borderRadius: 12,
-  boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
-  lineHeight: 1.4,
-  pointerEvents: 'auto',
-  fontFamily: 'inherit',
-};
-
-/** Row 1: icon, title, close (circle-close icon). */
-const row1Style: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 12,
-};
-
-const titleWrapStyle: React.CSSProperties = {
-  flex: '1 1 auto',
-  minWidth: 0,
-};
-
-const closeStyle: React.CSSProperties = {
-  width: 24,
-  height: 24,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 0,
-  margin: 0,
-  background: 'none',
-  border: 'none',
-  borderRadius: 6,
-  color: 'var(--toast-close)',
-  cursor: 'pointer',
-  flexShrink: 0,
-};
-
-const closeHoverStyle = (e: React.MouseEvent<HTMLButtonElement>, over: boolean): void => {
-  const t = e.currentTarget;
-  t.style.color = over ? 'var(--toast-fg)' : 'var(--toast-close)';
-  t.style.background = over ? 'rgba(255,255,255,0.1)' : 'none';
-};
-
-const titleStyle: React.CSSProperties = {
-  fontWeight: 400,
-  fontSize: '0.875rem',
-  color: 'var(--toast-fg)',
-  whiteSpace: 'pre-line',
-  margin: 0,
-};
-
-/** Row 2: secondary text. */
-const subtitleStyle: React.CSSProperties = {
-  fontSize: '0.75rem',
-  color: 'var(--toast-fg-muted)',
-  margin: '6px 0 0 0',
-  paddingLeft: 36,
-  display: '-webkit-box',
-  WebkitLineClamp: 2,
-  WebkitBoxOrient: 'vertical' as const,
-  overflow: 'hidden',
-};
-
-const actionsRowStyle: React.CSSProperties = {
-  display: 'flex',
-  flexWrap: 'wrap' as const,
-  gap: '8px 16px',
-  marginTop: 8,
-  paddingLeft: 36,
-};
-
-const actionButtonStyle: React.CSSProperties = {
-  background: 'none',
-  border: 'none',
-  padding: 0,
-  color: 'var(--toast-fg-muted)',
-  fontSize: '0.875rem',
-  cursor: 'pointer',
-  fontFamily: 'inherit',
-  lineHeight: 1.4,
-};
-
-/** Circle-close icon for dismiss button. */
-function CloseCircleIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      width={24}
-      height={24}
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M14.5 9.5L9.5 14.5M9.5 9.5l5 5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function StatusIconSvg({ colorVar, children }: { colorVar: string; children: React.ReactNode }) {
-  return (
-    <span
-      role="img"
-      aria-hidden
-      style={{
-        width: 24,
-        height: 24,
-        flexShrink: 0,
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: `var(${colorVar})`,
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
-/** Outlined circle + checkmark; interior transparent/white, stroke green. */
-function SuccessIconSvg() {
-  return (
-    <StatusIconSvg colorVar="--toast-success">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        width={24}
-        height={24}
-      >
-        <circle cx="12" cy="12" r="10" />
-        <path d="M8 12l3 3 5-6" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </StatusIconSvg>
-  );
-}
-
-/** Outlined circle + i; interior transparent. */
-function InfoIconSvg() {
-  return (
-    <StatusIconSvg colorVar="--toast-info">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        width={24}
-        height={24}
-      >
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 16v-4M12 8h.01" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </StatusIconSvg>
-  );
-}
-
-/** Outlined circle + i; interior transparent. */
-function WarningIconSvg() {
-  return (
-    <StatusIconSvg colorVar="--toast-warning">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        width={24}
-        height={24}
-      >
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 8v4M12 16h.01" strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx="12" cy="16" r="1" fill="currentColor" />
-      </svg>
-    </StatusIconSvg>
-  );
-}
-
-/** Outlined circle + X; interior transparent. */
-function ErrorIconSvg() {
-  return (
-    <StatusIconSvg colorVar="--toast-danger">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        width={24}
-        height={24}
-      >
-        <circle cx="12" cy="12" r="10" />
-        <path d="M14.5 9.5L9.5 14.5M9.5 9.5l5 5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </StatusIconSvg>
-  );
-}
-
-function LoadingIcon() {
-  return (
-    <div
-      role="img"
-      aria-hidden
-      style={{
-        width: 24,
-        height: 24,
-        border: '2px solid var(--toast-fg-muted)',
-        borderRightColor: 'var(--toast-fg)',
-        borderRadius: '50%',
-        flexShrink: 0,
-        animation: 'app-toast-spin 1s linear infinite',
-      }}
-    />
-  );
-}
-
-function ToastIconBlock({
-  variant,
-  customIcon,
-}: {
-  variant: ToastVariant;
-  customIcon?: React.ReactNode;
-}) {
-  if (customIcon !== undefined) {
-    return typeof customIcon === 'string' ? (
-      <span style={{ flexShrink: 0 }}>{customIcon}</span>
-    ) : (
-      <>{customIcon}</>
-    );
-  }
-  if (variant === 'loading') {
-    return <LoadingIcon />;
-  }
-  if (variant === 'success') return <SuccessIconSvg />;
-  if (variant === 'error') return <ErrorIconSvg />;
-  if (variant === 'info') return <InfoIconSvg />;
-  if (variant === 'warning') return <WarningIconSvg />;
-  return null;
-}
-
-const SPIN_KEYFRAMES = `@keyframes app-toast-spin { to { transform: rotate(360deg); } }`;
-const STYLE_ID = 'app-toast-spin-keyframes';
-
-function ensureSpinKeyframes(): void {
-  if (typeof document === 'undefined' || document.getElementById(STYLE_ID)) return;
-  const el = document.createElement('style');
-  el.id = STYLE_ID;
-  el.textContent = SPIN_KEYFRAMES;
-  document.head.appendChild(el);
-}
 
 function getEffectiveVariant(toast: Toast, raw: unknown): ToastVariant {
   if (isToastMessageObject(raw) && raw.variant === 'info') return 'info';
@@ -304,47 +60,147 @@ function getEffectiveVariant(toast: Toast, raw: unknown): ToastVariant {
   return 'success';
 }
 
+const VARIANT_BORDER: Record<ToastVariant, string> = {
+  success: 'border-l-(--toast-success)',
+  error: 'border-l-(--toast-danger)',
+  info: 'border-l-(--toast-info)',
+  warning: 'border-l-(--toast-warning)',
+  loading: 'border-l-(--toast-fg-muted)',
+};
+
+const VARIANT_ICON_COLOR: Record<ToastVariant, string> = {
+  success: 'text-(--toast-success)',
+  error: 'text-(--toast-danger)',
+  info: 'text-(--toast-info)',
+  warning: 'text-(--toast-warning)',
+  loading: 'text-(--toast-fg-muted)',
+};
+
+function ToastIcon({ variant, customIcon }: { variant: ToastVariant; customIcon?: React.ReactNode }) {
+  if (customIcon !== undefined) {
+    return <span className="shrink-0 w-6 h-6 flex items-center justify-center">{customIcon}</span>;
+  }
+  if (variant === 'loading') {
+    return (
+      <span
+        className={`shrink-0 w-6 h-6 rounded-full border-2 border-(--toast-fg-muted) border-t-(--toast-fg) animate-spin ${VARIANT_ICON_COLOR[variant]}`}
+        role="img"
+        aria-hidden
+      />
+    );
+  }
+  const colorClass = VARIANT_ICON_COLOR[variant];
+  if (variant === 'success') {
+    return (
+      <span className={`shrink-0 w-6 h-6 flex items-center justify-center ${colorClass}`} role="img" aria-hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-6 h-6">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M8 12l3 3 5-6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+    );
+  }
+  if (variant === 'error') {
+    return (
+      <span className={`shrink-0 w-6 h-6 flex items-center justify-center ${colorClass}`} role="img" aria-hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-6 h-6">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M14.5 9.5L9.5 14.5M9.5 9.5l5 5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+    );
+  }
+  if (variant === 'info') {
+    return (
+      <span className={`shrink-0 w-6 h-6 flex items-center justify-center ${colorClass}`} role="img" aria-hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-6 h-6">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4M12 8h.01" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+    );
+  }
+  if (variant === 'warning') {
+    return (
+      <span className={`shrink-0 w-6 h-6 flex items-center justify-center ${colorClass}`} role="img" aria-hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-6 h-6">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 8v4M12 16h.01" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="12" cy="16" r="1" fill="currentColor" />
+        </svg>
+      </span>
+    );
+  }
+  return null;
+}
+
+function CloseIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      className="w-6 h-6 pointer-events-none"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M14.5 9.5L9.5 14.5M9.5 9.5l5 5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export interface AppToastBarProps {
   toast: Toast;
 }
 
 export const AppToastBar: React.FC<AppToastBarProps> = ({ toast }) => {
-  ensureSpinKeyframes();
   const raw = resolveValue(toast.message, toast);
   const variant = getEffectiveVariant(toast, raw);
   const isObj = isToastMessageObject(raw);
   const resolvedTitle = isObj
-    ? raw.title?.trim() || DEFAULT_TITLES[variant]
+    ? (raw.title?.trim() || DEFAULT_TITLES[variant])
     : String(raw ?? DEFAULT_TITLES[variant]);
   const subtitle = isObj ? raw.subtitle : undefined;
   const actions = isObj ? raw.actions : undefined;
 
   return (
-    <div style={{ ...barStyle, ...toast.style }} {...toast.ariaProps}>
-      <div style={row1Style}>
-        <ToastIconBlock variant={variant} customIcon={toast.icon} />
-        <div style={titleWrapStyle}>
-          <div style={titleStyle}>{resolvedTitle}</div>
+    <div
+      className={`
+        flex flex-col items-stretch min-w-[320px] max-w-[380px] p-3.5 rounded-xl shadow-lg
+        bg-(--toast-bg) text-(--toast-fg) leading-snug font-sans pointer-events-auto
+        border-l-4 ${VARIANT_BORDER[variant]}
+      `}
+      {...toast.ariaProps}
+    >
+      <div className="flex items-center gap-3">
+        <ToastIcon variant={variant} customIcon={toast.icon} />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-normal text-(--toast-fg) whitespace-pre-line m-0">{resolvedTitle}</p>
         </div>
         <button
           type="button"
           aria-label="Dismiss"
-          style={closeStyle}
-          onMouseEnter={e => closeHoverStyle(e, true)}
-          onMouseLeave={e => closeHoverStyle(e, false)}
-          onClick={() => toastLib.dismiss(toast.id)}
+          className="shrink-0 w-6 h-6 flex items-center justify-center p-0 rounded-md text-(--toast-close) hover:text-(--toast-fg) hover:bg-white/10 cursor-pointer border-0 bg-transparent relative z-10"
+          onClick={(e) => {
+            e.stopPropagation();
+            toastLib.dismiss(toast.id);
+          }}
         >
-          <CloseCircleIcon />
+          <CloseIcon />
         </button>
       </div>
-      {subtitle != null && subtitle !== '' && <div style={subtitleStyle}>{subtitle}</div>}
+      {subtitle != null && subtitle !== '' && (
+        <p className="text-xs text-(--toast-fg-muted) mt-1.5 pl-9 line-clamp-2 overflow-hidden m-0">
+          {subtitle}
+        </p>
+      )}
       {actions != null && actions.length > 0 && (
-        <div style={actionsRowStyle}>
+        <div className="flex flex-wrap gap-2 mt-2 pl-9">
           {actions.map((a, i) => (
             <button
               key={i}
               type="button"
-              style={actionButtonStyle}
+              className="text-sm text-(--toast-fg-muted) hover:text-(--toast-fg) cursor-pointer font-inherit leading-snug p-0 border-0 bg-transparent"
               onClick={() => {
                 a.onClick();
                 toastLib.dismiss(toast.id);

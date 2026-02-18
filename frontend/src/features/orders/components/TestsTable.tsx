@@ -5,10 +5,10 @@
 
 import React, { useMemo } from 'react';
 import { Table, Badge, EmptyState } from '@/components/ui';
-import type { TableViewConfig, CardComponentProps } from '@/components/ui/Table';
+import type { TableViewConfig, CardComponentProps } from '@/components/ui';
 import { DATA_AMOUNT, DATA_ID_PRIMARY_INLINE } from '@/utils/constants';
 import { formatCurrency } from '@/utils';
-import { getTestName, getTestSampleType } from '@/utils/lookup';
+import { getTestName, getTestSampleType } from '@/features/catalog/utils';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import type { OrderTest, Test } from '@/types';
 import { ICONS } from '@/utils';
