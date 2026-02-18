@@ -13,7 +13,7 @@ import { PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG } from '@/types';
 import { Modal, Input, Textarea, MultiSelectFilter, FooterInfo, Icon } from '@/components/ui';
 import { displayId, ICONS, formatCurrency } from '@/utils';
 import { createFilterOptions } from '@/utils/filtering';
-import { getErrorMessage } from '@/utils/errorHelpers';
+import { getErrorMessage } from '@/utils/errors';
 import { useOrderForm } from '../hooks/useOrderForm';
 import { useTestCatalog, useTestSearch } from '@/features/catalog/api/useTestCatalog';
 import { usePatientSearch, usePatientsList } from '@/features/patients/api/usePatients';

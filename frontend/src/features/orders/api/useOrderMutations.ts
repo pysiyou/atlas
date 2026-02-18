@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
 import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import { orderAPI } from '@/features/orders/api/orders';
-import { getErrorMessage } from '@/utils/errorHelpers';
+import { getErrorMessage } from '@/utils/errors';
 import { toast } from '@/components/feedback';
 import type { Order, TestStatus } from '@/types';
 

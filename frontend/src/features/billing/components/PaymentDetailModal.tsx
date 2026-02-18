@@ -33,7 +33,7 @@ import {
   getDefaultPaymentMethod,
   type PaymentMethod,
 } from '@/types/billing';
-import { getPaymentErrorMessage } from '@/utils/errorHelpers';
+import { getPaymentErrorMessage } from '@/utils/errors';
 import type { OrderPaymentView } from '../types';
 import type { Order } from '@/types';
 import { ICONS } from '@/utils';

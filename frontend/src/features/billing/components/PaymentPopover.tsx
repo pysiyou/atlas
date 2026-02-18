@@ -27,7 +27,7 @@ import {
 } from '@/types/billing';
 import { useCreatePayment } from '@/features/billing/api/usePayments';
 import { ICONS } from '@/utils';
-import { getPaymentErrorMessage } from '@/utils/errorHelpers';
+import { getPaymentErrorMessage } from '@/utils/errors';
 
 interface PaymentPopoverProps {
   /** Order to process payment for */

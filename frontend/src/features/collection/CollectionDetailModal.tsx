@@ -27,7 +27,7 @@ import { useUserLookup } from '@/features/admin/api/useUsers';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { useOrderLookup } from '@/features/orders/utils/useOrderUtils';
 import { useRejectSample, useSampleLookup } from '@/features/collection/api/useSamples';
-import { getTestNames } from '@/utils/typeHelpers';
+import { getTestNames } from '@/utils/lookup';
 import { LabDetailModal } from '@/features/lab/components/LabDetailModal';
 import type { SampleDisplay } from '@/features/lab/types';
 

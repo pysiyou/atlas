@@ -3,7 +3,7 @@
  * Pure formatting functions for order data display
  */
 
-import { formatDate, formatCurrency } from '@/utils/data';
+import { formatDate, formatCurrency } from '@/utils/format';
 
 /**
  * Formats order date for display

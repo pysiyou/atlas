@@ -21,7 +21,7 @@ import { useRejectSample } from '@/features/collection/api/useSamples';
 import { toast } from '@/components/feedback';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { getTestNames } from '@/utils/typeHelpers';
+import { getTestNames } from '@/utils/lookup';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/utils';
 import { displayId } from '@/utils';
 import { LabCard, TestList } from '@/features/lab/components/LabCard';

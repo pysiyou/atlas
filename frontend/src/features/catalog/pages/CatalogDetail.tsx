@@ -14,7 +14,7 @@ import type { TableInput } from '@/components/ui';
 import { DetailPageShell, DetailPageHeader } from '@/components';
 import { CatalogDetailSkeleton } from './CatalogDetailSkeleton';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
-import { formatDetailDate } from '@/utils/data';
+import { formatDetailDate } from '@/utils/format';
 import {
   formatArrayWithFallback,
   formatBooleanWithFallback,

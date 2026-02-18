@@ -1,9 +1,8 @@
 /**
- * Shared Constants
- * Centralized constants used across the application
+ * UI & Style Constants — barrel export.
+ * Validation constants live in @/utils/validation.
  */
 
 export * from './emptyState';
 export * from './typography';
-export * from './validation';
 export * from './ui';

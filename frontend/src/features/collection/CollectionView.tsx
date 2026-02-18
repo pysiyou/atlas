@@ -15,7 +15,7 @@ import { useCollectSample, useSamplesList } from '@/features/collection/api/useS
 import { queryKeys } from '@/lib/query';
 import { toast } from '@/components/feedback';
 import { logger } from '@/utils/logger';
-import { getErrorMessage, getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errorHelpers';
+import { getErrorMessage, getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errors';
 import type { ContainerType, ContainerTopColor, SampleStatus } from '@/types';
 import { calculateRequiredSamples } from '@/utils';
 import { isActiveTest } from '@/utils/orderUtils';

@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui';
 import { displayId } from '@/utils';
 import type { Order } from '@/types';
 import { InfoField } from '@/components/ui/InfoField';
-import { formatOrderDate } from '@/utils/data/dateFormatters';
+import { formatOrderDate } from '@/utils/format/dates';
 import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/utils';
 
 export interface OrderInfoSectionProps {

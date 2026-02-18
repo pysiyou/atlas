@@ -3,7 +3,7 @@
  * Activities are grouped by category (Order, Sample, Results & validation, Escalation, Critical value)
  * with consistent, elaborate message structures and copy.
  */
-import { displayId } from '@/utils/ids/idDisplay';
+import { displayId } from '@/utils/format/ids';
 import type { LabOperationRecord, LabOperationType } from '@/types/lab-operations';
 
 export interface ActivitySegment {

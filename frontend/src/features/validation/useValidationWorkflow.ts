@@ -18,7 +18,7 @@ import { toast } from '@/components/feedback';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { orderHasValidatedTests } from '@/features/orders/utils';
-import { getErrorMessage, isLikelyNetworkOrTimeout } from '@/utils/errorHelpers';
+import { getErrorMessage, isLikelyNetworkOrTimeout } from '@/utils/errors';
 import type { TestWithContext } from '@/types';
 
 export interface ValidationWorkflow {

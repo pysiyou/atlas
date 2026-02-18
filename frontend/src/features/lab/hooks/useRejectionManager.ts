@@ -11,7 +11,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { resultAPI } from '@/features/validation/api/results';
 import { logger } from '@/utils/logger';
-import { getErrorMessage } from '@/utils/errorHelpers';
+import { getErrorMessage } from '@/utils/errors';
 import type {
   RejectionOptionsResponse,
   RejectionResult,

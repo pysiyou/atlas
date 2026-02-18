@@ -4,7 +4,7 @@ import type { Order } from '@/types';
 import { apiClient } from '@/lib/api/client';
 import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import { toast } from '@/components/feedback';
-import { getErrorMessage } from '@/utils/errorHelpers';
+import { getErrorMessage } from '@/utils/errors';
 import { formInputToPayload } from '../utils/form-transformers';
 
 export function useOrderService() {

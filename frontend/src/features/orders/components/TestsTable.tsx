@@ -8,7 +8,7 @@ import { Table, Badge, EmptyState } from '@/components/ui';
 import type { TableViewConfig, CardComponentProps } from '@/components/ui/Table';
 import { DATA_AMOUNT, DATA_ID_PRIMARY_INLINE } from '@/utils/constants';
 import { formatCurrency } from '@/utils';
-import { getTestName, getTestSampleType } from '@/utils/typeHelpers';
+import { getTestName, getTestSampleType } from '@/utils/lookup';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import type { OrderTest, Test } from '@/types';
 import { ICONS } from '@/utils';

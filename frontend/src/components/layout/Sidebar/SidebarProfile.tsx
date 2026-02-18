@@ -8,7 +8,7 @@
 import React from 'react';
 import { Avatar, Button, Popover } from '@/components/ui';
 import type { PopoverPlacement } from '@/components/ui';
-import { formatStatus } from '@/utils/statusHelpers';
+import { formatStatus } from '@/utils/format/strings';
 import type { AuthUser } from '@/types';
 import defaultAvatar from '@/assets/images/default-avatar.jpg';
 
