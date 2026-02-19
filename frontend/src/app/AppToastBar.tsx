@@ -1,6 +1,6 @@
 /**
  * Toast – single file: bar component + typed toast API.
- * Bar: status icon, title, close; optional subtitle and actions. Theme via --toast-* CSS vars.
+ * One toast at a time (new replaces existing). Bar: icon + one-line message + close.
  */
 
 import React from 'react';
@@ -9,18 +9,25 @@ import { resolveValue, type Toast } from 'react-hot-toast';
 
 type ToastMessage = React.ReactElement | string | null | ToastMessageObject;
 
-/** Typed toast API: message can be string or ToastMessageObject. */
+/** Dismiss all toasts so only one is active; new toast replaces existing. */
+function dismissThen<T extends (...args: unknown[]) => string>(fn: T): T {
+  return ((...args: Parameters<T>) => {
+    toastLib.dismiss();
+    return fn(...args);
+  }) as T;
+}
+
+/** Typed toast API: one toast at a time; message can be string or ToastMessageObject. */
 // eslint-disable-next-line react-refresh/only-export-components -- single file for toast API + component
-export const toast = toastLib as Omit<
-  typeof toastLib,
-  'success' | 'error' | 'loading' | 'custom'
-> & {
-  (message: ToastMessage, opts?: Parameters<typeof toastLib>[1]): string;
-  success(message: ToastMessage, opts?: Parameters<typeof toastLib.success>[1]): string;
-  error(message: ToastMessage, opts?: Parameters<typeof toastLib.error>[1]): string;
-  loading(message: ToastMessage, opts?: Parameters<typeof toastLib.loading>[1]): string;
-  custom(message: ToastMessage, opts?: Parameters<typeof toastLib.custom>[1]): string;
-};
+export const toast = Object.assign(dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib>[1]) => toastLib(msg, opts)), {
+  success: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.success>[1]) => toastLib.success(msg, opts)),
+  error: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.error>[1]) => toastLib.error(msg, opts)),
+  loading: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.loading>[1]) => toastLib.loading(msg, opts)),
+  custom: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.custom>[1]) => toastLib.custom(msg, opts)),
+  dismiss: toastLib.dismiss,
+  promise: toastLib.promise,
+  remove: toastLib.remove,
+});
 
 export interface ToastMessageObject {
   title?: string;
@@ -160,57 +167,29 @@ export const AppToastBar: React.FC<AppToastBarProps> = ({ toast }) => {
   const resolvedTitle = isObj
     ? (raw.title?.trim() || DEFAULT_TITLES[variant])
     : String(raw ?? DEFAULT_TITLES[variant]);
-  const subtitle = isObj ? raw.subtitle : undefined;
-  const actions = isObj ? raw.actions : undefined;
 
   return (
     <div
       className={`
-        flex flex-col items-stretch min-w-[320px] max-w-[380px] p-3.5 rounded-xl shadow-lg
+        flex items-center gap-3 max-w-[320px] p-3 rounded-lg shadow-lg
         bg-(--toast-bg) text-(--toast-fg) leading-snug font-sans pointer-events-auto
         border-l-4 ${VARIANT_BORDER[variant]}
       `}
       {...toast.ariaProps}
     >
-      <div className="flex items-center gap-3">
-        <ToastIcon variant={variant} customIcon={toast.icon} />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-normal text-(--toast-fg) whitespace-pre-line m-0">{resolvedTitle}</p>
-        </div>
-        <button
-          type="button"
-          aria-label="Dismiss"
-          className="shrink-0 w-6 h-6 flex items-center justify-center p-0 rounded-md text-(--toast-close) hover:text-(--toast-fg) hover:bg-white/10 cursor-pointer border-0 bg-transparent relative z-10"
-          onClick={(e) => {
-            e.stopPropagation();
-            toastLib.dismiss(toast.id);
-          }}
-        >
-          <CloseIcon />
-        </button>
-      </div>
-      {subtitle != null && subtitle !== '' && (
-        <p className="text-xs text-(--toast-fg-muted) mt-1.5 pl-9 line-clamp-2 overflow-hidden m-0">
-          {subtitle}
-        </p>
-      )}
-      {actions != null && actions.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2 pl-9">
-          {actions.map((a, i) => (
-            <button
-              key={i}
-              type="button"
-              className="text-sm text-(--toast-fg-muted) hover:text-(--toast-fg) cursor-pointer font-inherit leading-snug p-0 border-0 bg-transparent"
-              onClick={() => {
-                a.onClick();
-                toastLib.dismiss(toast.id);
-              }}
-            >
-              {a.label}
-            </button>
-          ))}
-        </div>
-      )}
+      <ToastIcon variant={variant} customIcon={toast.icon} />
+      <p className="flex-1 min-w-0 text-sm font-normal text-(--toast-fg) truncate m-0">{resolvedTitle}</p>
+      <button
+        type="button"
+        aria-label="Dismiss"
+        className="shrink-0 w-6 h-6 flex items-center justify-center p-0 rounded-md text-(--toast-close) hover:text-(--toast-fg) hover:bg-white/10 cursor-pointer border-0 bg-transparent relative z-10"
+        onClick={(e) => {
+          e.stopPropagation();
+          toastLib.dismiss(toast.id, toast.toasterId);
+        }}
+      >
+        <CloseIcon />
+      </button>
     </div>
   );
 };
