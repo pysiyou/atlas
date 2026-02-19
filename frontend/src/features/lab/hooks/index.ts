@@ -4,5 +4,6 @@
 
 export * from './useLabWorkflowFilters';
 export * from './useLabTestsFromOrders';
+export * from './useRejectionDialog';
 export * from './useRejectionDialogState';
 export * from './useRejectionManager';

@@ -2,23 +2,15 @@
  * OrderUpsertModal
  *
  * Modal for creating a new order or editing an existing one.
- * - Create: mode === 'create', optional patientId to preselect.
- * - Edit: mode === 'edit', order required.
+ * Logic lives in useOrderUpsertModal; this component is presentational.
  */
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React from 'react';
 import { Controller } from 'react-hook-form';
-import type { Order, Patient, PriorityLevel, PaymentMethod } from '@/types';
-import { PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG } from '@/types';
+import type { Order, Patient, PriorityLevel } from '@/types';
 import { Modal, Input, Textarea, MultiSelectFilter, FooterInfo, Icon } from '@/components';
 import { displayId, ICONS, formatCurrency } from '@/utils';
-import { createFilterOptions } from '@/utils/filtering';
-import { getErrorMessage } from '@/utils/errors';
-import { useOrderForm } from '../hooks/useOrderForm';
-import { useTestCatalog, useTestSearch } from '@/features/catalog/api/useTestCatalog';
-import { usePatientSearch, usePatientsList } from '@/features/patients/api/usePatients';
-
-import { useCreatePayment } from '@/features/billing/api/usePayments';
+import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { PatientSelect } from './PatientSelect';
 import { TestSelect } from './TestSelect';
 import { OrderModalFooter } from './order-modal/OrderModalFooter';
@@ -26,11 +18,8 @@ import { OrderPaymentSection } from './order-modal/OrderPaymentSection';
 import type { BaseModalProps } from '@/components';
 
 export interface OrderUpsertModalProps extends BaseModalProps {
-  /** Existing order when editing. */
   order?: Order;
-  /** 'create' | 'edit' */
   mode: 'create' | 'edit';
-  /** Preselected patient ID for create mode. */
   patientId?: string;
 }
 
@@ -41,151 +30,29 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
   mode,
   patientId,
 }) => {
-  const [patientSearch, setPatientSearch] = useState('');
-  const [testSearch, setTestSearch] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | undefined>(undefined);
-  const [paymentError, setPaymentError] = useState<string | null>(null);
-
-  // Payment mutation
-  const { mutate: createPaymentMutation, isPending: isProcessingPayment } = useCreatePayment();
-
-  // Convert patientId prop (string) to number for hook
-  const initialPatientId = useMemo(() => {
-    if (mode === 'create' && patientId) {
-      const parsed = parseInt(patientId, 10);
-      return isNaN(parsed) ? undefined : parsed;
-    }
-    return undefined;
-  }, [mode, patientId]);
-
-  // Form hook
   const {
     control,
     handleSubmit,
-    watch,
-    formState: { errors: _errors, isSubmitting },
-    setValue,
-  } = useOrderForm({
-    order,
-    mode,
-    initialPatientId,
-    onSubmitSuccess: async (createdOrder?: Order) => {
-      // If payment method is selected and order was created, process payment
-      if (mode === 'create' && paymentMethod && createdOrder && createdOrder.totalPrice > 0) {
-        try {
-          await new Promise<void>((resolve, reject) => {
-            createPaymentMutation(
-              {
-                orderId: createdOrder.orderId.toString(),
-                amount: createdOrder.totalPrice,
-                paymentMethod,
-              },
-              {
-                onSuccess: () => {
-                  resolve();
-                },
-                onError: (err: unknown) => {
-                  setPaymentError(getErrorMessage(err, 'Failed to process payment'));
-                  reject(err);
-                },
-              }
-            );
-          });
-        } catch {
-          // Error already handled in mutation callback
-          return; // Don't close modal if payment fails
-        }
-      }
-      onClose();
-    },
-  });
-
-  // Watch form values for calculations and display
-  const formValues = watch();
-  const selectedPatientId = formValues.patientId;
-  const testCodes = formValues.testCodes;
-
-  // Patient data
-  const { patients } = usePatientsList();
-  const { results: filteredPatients } = usePatientSearch(patientSearch);
-  const selectedPatient = useMemo(
-    () => (selectedPatientId ? patients.find(p => p.id === selectedPatientId) : null),
-    [patients, selectedPatientId]
-  );
-
-  // Test data
-  const { tests } = useTestCatalog();
-  const { results: filteredTests } = useTestSearch(testSearch);
-
-  // Calculate total price from selected tests (codes inside useMemo to satisfy exhaustive-deps)
-  const totalPrice = useMemo(() => {
-    const selectedTestCodes = testCodes ?? [];
-    if (!selectedTestCodes.length) return 0;
-    return selectedTestCodes.reduce((sum, code) => {
-      const test = tests.find(t => t.code === code);
-      return sum + (test?.price || 0);
-    }, 0);
-  }, [testCodes, tests]);
-
-  // Preselect patient when initialPatientId is provided
-  useEffect(() => {
-    if (mode === 'create' && initialPatientId && !selectedPatientId && patients.length > 0) {
-      const patient = patients.find(p => p.id === initialPatientId);
-      if (patient) {
-        setValue('patientId', initialPatientId, { shouldValidate: false });
-      }
-    }
-  }, [mode, initialPatientId, patients, selectedPatientId, setValue]);
-
-  // Reset payment state when create modal opens (intentional sync from open state)
-  useEffect(() => {
-    if (isOpen && mode === 'create') {
-      /* eslint-disable react-hooks/set-state-in-effect -- reset on open is intentional */
-      setPaymentMethod(undefined);
-      setPaymentError(null);
-      /* eslint-enable react-hooks/set-state-in-effect */
-    }
-  }, [isOpen, mode]);
-
-  // Priority options for MultiSelectFilter with badges
-  const priorityOptions = useMemo(
-    () => createFilterOptions(PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG),
-    []
-  );
-
-  const modalTitle = mode === 'edit' ? 'Edit Order' : 'New Order';
-  const subtitle = useMemo((): React.ReactNode => {
-    if (mode === 'edit' && order) {
-      return (
-        <span>
-          Editing order <span className="font-mono">{displayId.order(order.orderId)}</span>
-        </span>
-      );
-    }
-    if (patientId) {
-      return `Creating an order for patient ${patientId}.`;
-    }
-    return 'Select a patient and choose tests to create a new order.';
-  }, [mode, order, patientId]);
-
-  const submitLabel = useMemo(() => {
-    if (isSubmitting || isProcessingPayment) {
-      if (mode === 'edit') {
-        return 'Saving...';
-      }
-      if (paymentMethod) {
-        return 'Processing...';
-      }
-      return 'Creating...';
-    }
-    if (mode === 'edit') {
-      return 'Save Changes';
-    }
-    if (paymentMethod && totalPrice > 0) {
-      return `Pay ${formatCurrency(totalPrice)}`;
-    }
-    return 'Create Order';
-  }, [isSubmitting, isProcessingPayment, mode, paymentMethod, totalPrice]);
+    isSubmitting,
+    selectedPatient,
+    patientSearch,
+    setPatientSearch,
+    filteredPatients,
+    testSearch,
+    setTestSearch,
+    filteredTests,
+    tests,
+    totalPrice,
+    paymentMethod,
+    setPaymentMethod,
+    paymentError,
+    setPaymentError,
+    isProcessingPayment,
+    priorityOptions,
+    modalTitle,
+    subtitle,
+    submitLabel,
+  } = useOrderUpsertModal({ isOpen, order, mode, patientId, onClose });
 
   return (
     <Modal
@@ -199,7 +66,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
       <div className="flex flex-col h-full bg-surface-page">
         <form id="order-form" onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
           <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
-            {/* Patient Selection */}
             <Controller
               name="patientId"
               control={control}
@@ -224,7 +90,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
               )}
             />
 
-            {/* Test Selection */}
             <Controller
               name="testCodes"
               control={control}
@@ -242,10 +107,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                       ? [...current, code]
                       : current.filter(c => c !== code);
                     field.onChange(newValue);
-                    // Clear search input when a test is selected
-                    if (isAdding) {
-                      setTestSearch('');
-                    }
+                    if (isAdding) setTestSearch('');
                   }}
                   error={fieldState.error?.message}
                   tests={tests}
@@ -253,7 +115,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
               )}
             />
 
-            {/* Referring Physician */}
             <Controller
               name="referringPhysician"
               control={control}
@@ -272,7 +133,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
               )}
             />
 
-            {/* Priority */}
             <Controller
               name="priority"
               control={control}
@@ -286,7 +146,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                       options={priorityOptions}
                       selectedIds={selectedPriorityIds}
                       onChange={(selectedIds: string[]) => {
-                        // Single-select mode: use the most recent selection
                         const next =
                           (selectedIds[selectedIds.length - 1] as PriorityLevel | undefined) ||
                           'low';
@@ -306,7 +165,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
               }}
             />
 
-            {/* Clinical Notes */}
             <Controller
               name="clinicalNotes"
               control={control}
@@ -324,7 +182,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
               )}
             />
 
-            {/* Payment Method - Only in create mode */}
             <OrderPaymentSection
               mode={mode}
               paymentMethod={paymentMethod}

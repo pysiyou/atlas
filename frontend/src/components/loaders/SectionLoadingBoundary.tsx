@@ -5,7 +5,6 @@ import React, { type ReactNode } from 'react';
 import { LoadingState } from '@/components/loaders/LoadingState';
 
 export interface SectionLoadingBoundaryProps {
-  scopeId: string;
   loading: boolean;
   children: ReactNode;
   message?: string;
@@ -14,7 +13,6 @@ export interface SectionLoadingBoundaryProps {
 }
 
 export function SectionLoadingBoundary({
-  scopeId: _scopeId,
   loading,
   children,
   message = 'Loading...',

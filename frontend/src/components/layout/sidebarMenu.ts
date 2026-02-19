@@ -29,6 +29,7 @@ export const menuItems: MenuItem[] = [
   { path: ROUTES.CATALOG, label: 'Catalog', icon: React.createElement(Icon, { name: 'book', className: 'w-5 h-5' }), roles: [] },
 ];
 
+/** Placeholder items; shown disabled until those features exist. */
 export const settingsItems: SettingsItem[] = [
   { label: 'User Management', icon: React.createElement(Icon, { name: 'user-cog', className: 'w-5 h-5' }) },
   { label: 'System Settings', icon: React.createElement(Icon, { name: 'settings', className: 'w-5 h-5' }) },

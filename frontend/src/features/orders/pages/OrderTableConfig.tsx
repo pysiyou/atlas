@@ -1,6 +1,7 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge } from '@/components';
 import type { TableViewConfig } from '@/components';
+import { createIdColumn, createBadgeColumn } from '@/components/data-table';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
 import { getActiveTests } from '@/features/orders/utils';
@@ -54,10 +55,6 @@ export const createOrderTableConfig = (
     );
   };
 
-  const renderPriority = (order: Order) => (
-    <Badge variant={order.priority} size="sm" className="border-none" />
-  );
-
   const renderStatus = (order: Order) => <Badge variant={order.overallStatus} size="sm" />;
 
   const renderTotalPrice = (order: Order) => (
@@ -74,13 +71,9 @@ export const createOrderTableConfig = (
 
   return {
     fullColumns: [
-      {
-        key: 'orderId',
-        header: 'Order ID',
-        width: 'sm',
-        sortable: true,
-        render: renderOrderId,
-      },
+      createIdColumn<Order>('orderId', 'Order ID', order => (
+        <span className={`${DATA_ID_PRIMARY} font-normal`}>{displayId.order(order.orderId)}</span>
+      ), { sortable: true }),
       {
         key: 'patientName',
         header: 'Patient',
@@ -94,20 +87,12 @@ export const createOrderTableConfig = (
         width: 'fill',
         render: renderTests,
       },
-      {
-        key: 'priority',
-        header: 'Priority',
-        width: 'sm',
-        sortable: true,
-        render: renderPriority,
-      },
-      {
-        key: 'overallStatus',
-        header: 'Status',
-        width: 'md',
-        sortable: true,
-        render: renderStatus,
-      },
+      createBadgeColumn<Order>('priority', 'Priority', order => (
+        <Badge variant={order.priority} size="sm" className="border-none" />
+      ), { sortable: true, width: 'sm' }),
+      createBadgeColumn<Order>('overallStatus', 'Status', order => (
+        <Badge variant={order.overallStatus} size="sm" />
+      ), { sortable: true, width: 'md' }),
       {
         key: 'totalPrice',
         header: 'Amount',

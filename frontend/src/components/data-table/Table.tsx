@@ -42,6 +42,8 @@ export type {
 } from '@/utils/table';
 export {
   createColumn,
+  createIdColumn,
+  createBadgeColumn,
   pickColumns,
   DEFAULT_LOADING_ROWS,
   SHOW_ALL_PAGE_SIZE,

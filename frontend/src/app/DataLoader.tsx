@@ -13,6 +13,17 @@ import { useSamplesList } from '@/features/collection/api/useSamples';
 import { LoadingState } from '@/components/loaders/LoadingState';
 import { ErrorFallback } from '@/components/loaders/ErrorFallback';
 
+function toErrorEntry(
+  isError: boolean,
+  errorObj: unknown,
+  defaultMessage: string
+): { message: string } | null {
+  if (!isError) return null;
+  return {
+    message: errorObj instanceof Error ? errorObj.message : defaultMessage,
+  };
+}
+
 interface DataLoaderProps {
   children: React.ReactNode;
   /** Show full-screen loading (DnaHelixLoader) while data is being fetched; if false, children render and queries show their own loading states */
@@ -30,65 +41,31 @@ interface DataLoaderProps {
 export const DataLoader: React.FC<DataLoaderProps> = ({ children, showLoadingSkeleton = true }) => {
   const { isAuthenticated } = useAuthStore();
 
-  // Use TanStack Query hooks - they handle loading/error states automatically
-  const {
-    isLoading: patientsLoading,
-    isError: patientsError,
-    error: patientsErrorObj,
-    refetch: refetchPatients,
-  } = usePatientsList();
-  const {
-    isLoading: ordersLoading,
-    isError: ordersError,
-    error: ordersErrorObj,
-    refetch: refetchOrders,
-  } = useOrdersList();
-  const {
-    isLoading: testsLoading,
-    isError: testsError,
-    error: testsErrorObj,
-    refetch: refetchTests,
-  } = useTestCatalog();
-  const {
-    isLoading: samplesLoading,
-    isError: samplesError,
-    error: samplesErrorObj,
-    refetch: refetchSamples,
-  } = useSamplesList();
+  const patientsQuery = usePatientsList();
+  const ordersQuery = useOrdersList();
+  const testsQuery = useTestCatalog();
+  const samplesQuery = useSamplesList();
 
-  // Check if any data is currently loading
-  const isLoading = patientsLoading || ordersLoading || testsLoading || samplesLoading;
+  const isLoading =
+    patientsQuery.isLoading ||
+    ordersQuery.isLoading ||
+    testsQuery.isLoading ||
+    samplesQuery.isLoading;
 
-  // Collect all errors
   const errors = [
-    patientsError
-      ? {
-          message:
-            patientsErrorObj instanceof Error
-              ? patientsErrorObj.message
-              : 'Failed to load patients',
-        }
-      : null,
-    ordersError
-      ? {
-          message:
-            ordersErrorObj instanceof Error ? ordersErrorObj.message : 'Failed to load orders',
-        }
-      : null,
-    testsError
-      ? { message: testsErrorObj instanceof Error ? testsErrorObj.message : 'Failed to load tests' }
-      : null,
-    samplesError
-      ? {
-          message:
-            samplesErrorObj instanceof Error ? samplesErrorObj.message : 'Failed to load samples',
-        }
-      : null,
-  ].filter(Boolean);
+    toErrorEntry(patientsQuery.isError, patientsQuery.error, 'Failed to load patients'),
+    toErrorEntry(ordersQuery.isError, ordersQuery.error, 'Failed to load orders'),
+    toErrorEntry(testsQuery.isError, testsQuery.error, 'Failed to load tests'),
+    toErrorEntry(samplesQuery.isError, samplesQuery.error, 'Failed to load samples'),
+  ].filter(Boolean) as { message: string }[];
 
-  // Retry loading all data
   const handleRetry = async () => {
-    await Promise.all([refetchPatients(), refetchOrders(), refetchTests(), refetchSamples()]);
+    await Promise.all([
+      patientsQuery.refetch(),
+      ordersQuery.refetch(),
+      testsQuery.refetch(),
+      samplesQuery.refetch(),
+    ]);
   };
 
   if (isAuthenticated && isLoading && showLoadingSkeleton) {

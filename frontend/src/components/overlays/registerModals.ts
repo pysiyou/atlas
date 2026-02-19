@@ -1,6 +1,6 @@
 /**
- * Modal Registration
- * Registers all modals with the registry. getProps receives typed props per ModalType.
+ * Modal Registration — single place to register app modals.
+ * Add new modals here: registerModal(ModalType.X, Component, getProps).
  */
 
 import { ModalType } from '@/lib/context/ModalContext';

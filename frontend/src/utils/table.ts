@@ -174,6 +174,26 @@ export function createColumn<T>(
   return { key, header, ...options };
 }
 
+/** Id column with standard width; pass a render that returns the id node (e.g. displayId.order). */
+export function createIdColumn<T>(
+  key: string,
+  header: string,
+  renderId: (item: T) => ReactNode,
+  options: Omit<CreateColumnOptions<T>, 'render'> = {}
+): ColumnConfig<T> {
+  return createColumn(key, header, { ...options, width: options.width ?? 'sm', render: (item) => renderId(item) });
+}
+
+/** Badge column; pass a render that returns the badge node (e.g. <Badge variant={item.status} />). */
+export function createBadgeColumn<T>(
+  key: string,
+  header: string,
+  renderBadge: (item: T) => ReactNode,
+  options: Omit<CreateColumnOptions<T>, 'render'> = {}
+): ColumnConfig<T> {
+  return createColumn(key, header, { ...options, width: options.width ?? 'sm', render: (item) => renderBadge(item) });
+}
+
 export function pickColumns<T>(
   columnIds: string[],
   columnMap: Record<string, ColumnConfig<T>>,

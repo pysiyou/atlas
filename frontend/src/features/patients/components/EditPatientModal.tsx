@@ -1,21 +1,16 @@
 /**
- * EditPatientModal - Using React Hook Form + Zod
- * Complete migration to new architecture
+ * EditPatientModal - Create/edit patient with tabs and progress.
+ * Form logic in useEditPatientForm.
  */
 
-import React, { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
 import type { Patient } from '@/types';
 import { Button, Modal, CircularProgress, FooterInfo } from '@/components';
 import { ICONS } from '@/utils';
 import { displayId } from '@/utils';
 import { ErrorBoundary } from '@/components';
-import { patientFormSchema, type PatientFormInput } from '../schemas/patient.schema';
-import { usePatientService } from '../services/usePatientService';
-import { patientToFormInput } from '../utils/form-transformers';
+import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';
-import { calculateFormProgressV2 } from '../utils/patient-helpers';
 
 interface EditPatientModalProps {
   isOpen: boolean;
@@ -46,14 +41,11 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
             key={tab.id}
             type="button"
             onClick={() => onTabChange(tab.id)}
-            className={`
-              relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal cursor-pointer
-              ${
-                isActive
-                  ? 'bg-surface text-brand shadow-sm ring-1 ring-black/5'
-                  : 'text-text-tertiary hover:text-text-primary hover:bg-neutral-200/50'
-              }
-            `}
+            className={
+              isActive
+                ? 'relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal cursor-pointer bg-surface text-brand shadow-sm ring-1 ring-black/5'
+                : 'relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal cursor-pointer text-text-tertiary hover:text-text-primary hover:bg-neutral-200/50'
+            }
           >
             {tab.label}
           </button>
@@ -89,22 +81,10 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
   <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]">
     {footerInfo}
     <div className="flex items-center gap-3">
-      <Button
-        type="button"
-        variant="cancel"
-        showIcon={true}
-        onClick={onClose}
-        disabled={isSubmitting}
-      >
+      <Button type="button" variant="cancel" showIcon onClick={onClose} disabled={isSubmitting}>
         Cancel
       </Button>
-      <Button
-        type="submit"
-        variant="save"
-        form={formId}
-        isLoading={isSubmitting}
-        disabled={isSubmitting}
-      >
+      <Button type="submit" variant="save" form={formId} isLoading={isSubmitting} disabled={isSubmitting}>
         {submitLabel}
       </Button>
     </div>
@@ -117,111 +97,21 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   patient,
   mode,
 }) => {
-  const [activeTab, setActiveTab] = useState<string>('general');
-  const { create, update } = usePatientService();
-
-  const defaultValues = useMemo(() => {
-    if (mode === 'edit' && patient) {
-      return patientToFormInput(patient) as Partial<PatientFormInput>;
-    }
-    // Create: seed vitalSigns so setValue merges and submit includes it (avoid stale watch + missing key)
-    return { vitalSigns: {} };
-  }, [mode, patient]);
-
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitting },
-    reset,
+    errors,
+    isSubmitting,
+    activeTab,
+    setActiveTab,
+    formProgress,
+    tabs,
+    modalTitle,
+    submitLabel,
     watch,
     setValue,
-  } = useForm<PatientFormInput>({
-    resolver: zodResolver(patientFormSchema),
-    defaultValues,
-    mode: 'onBlur',
-  });
-
-  const formValues = watch();
-
-  // Single source of truth for submission state - React Query's isPending
-  const isPendingMutation = create.isPending || update.isPending;
-
-  const onSubmit = async (data: PatientFormInput) => {
-    // React Query handles deduplication, but we check isPending for UX
-    if (isPendingMutation) {
-      return;
-    }
-
-    try {
-      if (mode === 'edit' && patient) {
-        await update.mutateAsync({ id: patient.id, data });
-      } else {
-        await create.mutateAsync(data);
-      }
-      reset();
-      onClose();
-    } catch (error) {
-      // Error handled by service hook, form state preserved for retry
-      console.error('Form submission error:', error);
-    }
-  };
-
-  // Handle form submission with validation
-  const handleFormSubmit = handleSubmit(
-    async data => {
-      await onSubmit(data);
-    },
-    validationErrors => {
-      // Log validation errors for debugging
-      console.error('Form validation errors:', validationErrors);
-      console.error('Current form values:', formValues);
-
-      // Show toast notification with first error
-      const firstErrorPath = Object.keys(validationErrors)[0];
-      const firstError = validationErrors[firstErrorPath as keyof typeof validationErrors];
-      const errorMessage = firstError?.message || 'Please fix form errors';
-
-      // Import toast dynamically to avoid circular dependency
-      import('react-hot-toast').then(({ default: toast }) => {
-        toast.error(`Validation error: ${errorMessage}`);
-      });
-
-      // Find first error and scroll to it
-      if (firstErrorPath) {
-        // Try to find the input field
-        const fieldName = firstErrorPath.split('.')[0];
-        const element =
-          document.querySelector(`[name="${fieldName}"]`) ||
-          document.querySelector(`#${fieldName}`) ||
-          document.querySelector(`[id*="${fieldName}"]`);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }
-    }
-  );
-
-  const modalTitle = mode === 'edit' ? 'Edit Patient' : 'New Patient';
-  const submitLabel = isSubmitting
-    ? mode === 'edit'
-      ? 'Saving...'
-      : 'Creating...'
-    : mode === 'edit'
-      ? 'Save Changes'
-      : 'Create Patient';
-
-  const tabs = useMemo(
-    () => [
-      { id: 'general', label: 'General Info' },
-      { id: 'medical', label: 'Medical Background' },
-      { id: 'vitals', label: 'Vitals & Stats' },
-      { id: 'affiliation', label: 'Affiliation' },
-    ],
-    []
-  );
-
-  const formProgress = useMemo(() => calculateFormProgressV2(formValues), [formValues]);
+  } = useEditPatientForm({ patient, mode, onClose });
 
   return (
     <ErrorBoundary>
@@ -230,18 +120,17 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         onClose={onClose}
         title={modalTitle}
         maxWidth="max-w-3xl"
-        disableClose={isPendingMutation}
+        disableClose={isSubmitting}
       >
         <div className="flex flex-col h-full bg-surface-page">
           <div className="flex-1 overflow-y-auto px-6 py-5">
-            <form id="patient-form" onSubmit={handleFormSubmit} className="max-w-full">
+            <form id="patient-form" onSubmit={handleSubmit} className="max-w-full">
               <TabNavigation
-                tabs={tabs}
+                tabs={[...tabs]}
                 activeTab={activeTab}
                 onTabChange={setActiveTab}
                 formProgress={formProgress}
               />
-
               <div className="rounded-lg border border-border-default bg-surface p-6">
                 <PatientFormTabs
                   activeTab={activeTab}
@@ -256,11 +145,10 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
               </div>
             </form>
           </div>
-
           <ModalFooter
             onClose={onClose}
             submitLabel={submitLabel}
-            isSubmitting={isPendingMutation}
+            isSubmitting={isSubmitting}
             formId="patient-form"
             footerInfo={
               mode === 'edit' && patient ? (

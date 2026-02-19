@@ -120,7 +120,6 @@ export const ValidationView: React.FC = () => {
   return (
     <ErrorBoundary>
       <SectionLoadingBoundary
-        scopeId="validation-table"
         loading={sectionLoading}
         message="Loading validation..."
         size="lg"

@@ -1,6 +1,6 @@
 /**
- * Shared button configuration and styles.
- * Used by Button and IconButton to ensure consistency.
+ * Shared button configuration and styles for Button and IconButton.
+ * Components may override base style per variant (e.g. IconButton ICON_BUTTON_VARIANTS).
  */
 
 import { ICONS } from '@/utils';
@@ -73,17 +73,7 @@ export const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   cancel: { style: 'danger', icon: ICONS.actions.cross },
   close: { style: 'danger', icon: ICONS.actions.cross },
   back: { style: 'outline', icon: ICONS.actions.arrowLeft },
-  previous: { style: 'outline', icon: ICONS.actions.chevronLeft }, // Button uses outline, IconButton uses secondary. We can override in getBaseStyle if needed or standardize. Standardizing on 'outline' for coherence if possible, but let's check IconButton usage. IconButton usages often expect 'secondary' (gray bg). Button uses 'outline'. Since BaseVariant includes both, let's default to a safe one or keep specific overrides in components.
-  // Actually, let's keep it simple: define the common config here. If a component needs a specific override, it can do so. 
-  // Wait, `previous` in Button is "outline", in IconButton is "secondary".
-  // `next` in Button is "primary", in IconButton is "primary".
-  // `home` in Button is "primary".
-  // Let's stick to the Button config as base, and note exceptions.
-  // Actually, for `previous`, Button is `outline`, IconButton is `secondary`.
-  
-  // NOTE: Some variants might have different base styles in Button vs IconButton.
-  // We will expose the CONFIG, but components can override or we can have specific configs.
-  // For now, let's use the most common one.
+  previous: { style: 'outline', icon: ICONS.actions.chevronLeft },
   next: { style: 'primary', icon: ICONS.actions.chevronRight },
   home: { style: 'primary', icon: ICONS.actions.home },
   expand: { style: 'secondary', icon: ICONS.actions.chevronDown },
@@ -101,7 +91,7 @@ export const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   print: { style: 'secondary', icon: ICONS.actions.printer },
   view: { style: 'secondary', icon: ICONS.actions.view },
   download: { style: 'secondary', icon: ICONS.actions.download },
-  filter: { style: 'primary', icon: ICONS.actions.filter }, // Button: primary. IconButton: secondary.
+  filter: { style: 'primary', icon: ICONS.actions.filter },
   search: { style: 'primary', icon: ICONS.actions.search },
 
   // User actions

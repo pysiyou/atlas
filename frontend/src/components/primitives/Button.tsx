@@ -137,7 +137,12 @@ export const Button: React.FC<ButtonProps> = ({
   const widthClass = fullWidth ? 'w-full' : '';
   const iconWrapperClass = `inline-flex items-center justify-center shrink-0 ${BUTTON_ICON_SIZES[size]}`;
 
-  const showText = isLoading ? showTextWhenLoading : true;
+  const loaderEl = (
+    <span className="inline-flex shrink-0 items-center justify-center">
+      <DnaHelixLoader size={BUTTON_LOADER_SIZE} />
+    </span>
+  );
+
   const normalContent = (
     <>
       {iconPosition === 'left' && shouldShowIcon && (
@@ -150,27 +155,13 @@ export const Button: React.FC<ButtonProps> = ({
     </>
   );
 
-  const loaderEl = (
-    <span className="inline-flex shrink-0 items-center justify-center">
-      <DnaHelixLoader size={BUTTON_LOADER_SIZE} />
-    </span>
-  );
-  
+  const showLoaderLeft = (iconPosition === 'left' && shouldShowIcon) || !shouldShowIcon;
   const content = isLoading ? (
-    showText ? (
-      <>
-        {(iconPosition === 'left' && shouldShowIcon) || !shouldShowIcon ? loaderEl : null}
-        {children}
-        {iconPosition === 'right' && shouldShowIcon ? loaderEl : null}
-      </>
-    ) : (
-      <span className="relative inline-flex items-center justify-center gap-1.5">
-        <span className="absolute inset-0 flex items-center justify-center">{loaderEl}</span>
-        <span className="invisible" aria-hidden>
-          {normalContent}
-        </span>
-      </span>
-    )
+    <span className="inline-flex items-center justify-center gap-1.5">
+      {showLoaderLeft ? loaderEl : null}
+      {showTextWhenLoading ? children : <span className="invisible" aria-hidden>{children}</span>}
+      {iconPosition === 'right' && shouldShowIcon ? loaderEl : null}
+    </span>
   ) : (
     normalContent
   );

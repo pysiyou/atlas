@@ -12,8 +12,7 @@
 import React, { useState } from 'react';
 import { Popover, IconButton, Alert, FooterInfo, DnaHelixLoader } from '@/components';
 import { PopoverForm } from './PopoverForm';
-import { useRejectionManager } from '../hooks/useRejectionManager';
-import { useRejectionDialogState } from '../hooks/useRejectionDialogState';
+import { useRejectionDialog } from '../hooks/useRejectionDialog';
 import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
 import { cn, ICONS } from '@/utils';
@@ -24,17 +23,6 @@ import {
   RejectionDialogErrorView,
   RejectionActionCards,
 } from './RejectionDialogViews';
-
-/** Build subtitle from test/patient context */
-function buildRejectionSubtitle(
-  testName?: string,
-  testCode?: string,
-  patientName?: string
-): string {
-  return [testName, testCode ? `(${testCode})` : '', patientName ? `- ${patientName}` : '']
-    .filter(Boolean)
-    .join(' ');
-}
 
 /** Re-export views for consumers that render them directly */
 export { RejectionDialogLoadingView, RejectionDialogErrorView } from './RejectionDialogViews';
@@ -172,65 +160,43 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   orderHasValidatedTests = false,
   onSubmittingChange,
 }) => {
-  const [reason, setReason] = useState('');
-
-  const manager = useRejectionManager({ orderId, testCode, autoFetch: true });
   const {
-    options,
-    isLoading,
-    isRejecting,
-    error,
-    fetchOptions,
-    rejectWithAction,
-    isActionEnabled,
-    getDisabledReason,
-    retestAttemptsRemaining,
-    recollectionAttemptsRemaining,
-    escalationRequired,
-    clearError,
-  } = manager;
-
-  const {
+    reason,
+    setReason,
     selectedType,
     setUserOverride,
     isRecollectBlocked,
     recollectBlockedReason,
     isConfirmDisabled,
-  } = useRejectionDialogState({
-    manager: {
-      options,
-      isActionEnabled,
-      getDisabledReason,
-      escalationRequired,
-    },
+    isLoading,
+    isRejecting,
+    error,
+    options,
+    escalationRequired,
+    retestAttemptsRemaining,
+    recollectionAttemptsRemaining,
+    orderHasValidatedTests: orderHasValidated,
+    isActionEnabled,
+    getDisabledReason,
+    handleConfirm,
+    handleRetry,
+    subtitle,
+    copy,
+  } = useRejectionDialog({
+    orderId,
+    testCode,
+    testName,
+    patientName,
     orderHasValidatedTests,
-    reason,
+    onConfirm,
+    onCancel,
+    onSubmittingChange,
   });
-
-  React.useEffect(() => {
-    onSubmittingChange?.(isRejecting);
-  }, [isRejecting, onSubmittingChange]);
-
-  const handleConfirm = async () => {
-    if (!reason.trim()) return;
-    const actionType: ResultRejectionType = escalationRequired ? 'escalate' : selectedType;
-    const result = await rejectWithAction(actionType, reason);
-    if (result) onConfirm(result);
-  };
-
-  const handleRetry = () => {
-    clearError();
-    fetchOptions();
-  };
-
-  const subtitle = buildRejectionSubtitle(testName, testCode, patientName);
 
   if (isLoading) return <RejectionDialogLoadingView />;
   if (error && !options) {
     return <RejectionDialogErrorView error={error} onRetry={handleRetry} onCancel={onCancel} />;
   }
-
-  const copy = escalationRequired ? REJECTION_DIALOG_COPY.escalation : REJECTION_DIALOG_COPY.reject;
 
   return (
     <PopoverForm
@@ -254,7 +220,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
           recollectBlockedReason,
           retestAttemptsRemaining,
           recollectionAttemptsRemaining,
-          orderHasValidatedTests,
+          orderHasValidatedTests: orderHasValidated,
         }}
         actions={{
           onSelectType: setUserOverride,

@@ -4,7 +4,7 @@
  * Displays samples awaiting collection with filtering by status.
  */
 
-import React, { useMemo, useCallback } from 'react';
+import React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/store';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
@@ -12,19 +12,17 @@ import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { useOrderLookup } from '@/features/orders/utils/useOrderUtils';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useCollectSample, useSamplesList } from '@/features/collection/api/useSamples';
+import { useCollectionSampleDisplays } from '@/features/collection/hooks/useCollectionSampleDisplays';
 import { queryKeys } from '@/lib/query';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { getErrorMessage, getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errors';
 import type { ContainerType, ContainerTopColor, SampleStatus } from '@/types';
-import { calculateRequiredSamples } from '@/features/lab/utils';
-import { isActiveTest } from '@/features/orders/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';
 import { LabWorkflowView } from '@/features/lab/components/LabWorkflowView';
 import { LabFilters } from '@/features/lab/components/LabFilters';
 import { useLabWorkflowFilters } from '@/features/lab/hooks/useLabWorkflowFilters';
-import { createSampleSearchFilter } from '@/features/lab/utils/lab-helpers';
 import { collectionFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components';
 import { LabWorkflowViewSkeleton } from '@/features/lab/components/LabWorkflowViewSkeleton';
@@ -42,53 +40,14 @@ export const CollectionView: React.FC = () => {
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
-  // Build display objects for all samples
-  const allSampleDisplays = useMemo(() => {
-    const displays: SampleDisplay[] = [];
-
-    samples.forEach(sample => {
-      const order = getOrder(sample.orderId);
-      if (!order) return;
-
-      const patient = getPatient(order.patientId);
-      if (!patient) return;
-
-      const testsForSample = order.tests.filter(
-        t => sample.testCodes.includes(t.testCode) && isActiveTest(t)
-      );
-      if (testsForSample.length > 0) {
-        const requirements = calculateRequiredSamples(
-          testsForSample,
-          tests,
-          order.priority,
-          order.orderId
-        );
-        if (requirements.length > 0) {
-          displays.push({
-            sample,
-            order,
-            patient,
-            priority: sample.priority,
-            requirement: requirements[0],
-          });
-        }
-      }
+  const { displays: allSampleDisplays, filterSample, getOrderDate, getSampleType, getStatus } =
+    useCollectionSampleDisplays({
+      samples,
+      tests,
+      getOrder,
+      getPatient,
+      getPatientName,
     });
-
-    return displays;
-  }, [samples, tests, getPatient, getOrder]);
-
-  const filterSample = useMemo(
-    () => createSampleSearchFilter(getPatientName, tests),
-    [getPatientName, tests]
-  );
-
-  const getOrderDate = useCallback((d: SampleDisplay) => d.order.orderDate, []);
-  const getSampleType = useCallback(
-    (d: SampleDisplay) => d.requirement?.sampleType ?? d.sample?.sampleType,
-    []
-  );
-  const getStatus = useCallback((d: SampleDisplay) => d.sample?.status, []);
 
   const {
     filteredItems: filteredDisplays,

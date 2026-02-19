@@ -6,8 +6,8 @@
 
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
-import { ICONS } from '@/utils';
 import { inputBase, inputError } from '@/components/inputs/inputStyles';
+import { getDefaultIconForField } from './formFieldHelpers';
 import { FormFieldWrapper } from './FormFieldWrapper';
 
 const getInputClasses = (hasError: boolean, hasIcon: boolean) => {
@@ -33,23 +33,7 @@ export const Input: React.FC<InputProps> = ({
   ...props
 }) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
-
-  const getDefaultIcon = (): IconName | undefined => {
-    if (icon !== undefined) return icon;
-    const type = props.type;
-    const name = props.name?.toLowerCase() || '';
-    if (type === 'email' || name.includes('email')) return 'mail';
-    if (type === 'tel' || name.includes('phone')) return 'phone';
-    if (name.includes('height')) return 'ruler';
-    if (name.includes('weight')) return 'weight';
-    if (name.includes('name')) return 'user';
-    if (name.includes('address') || name.includes('street')) return 'map';
-    if (name.includes('city')) return 'city';
-    if (name.includes('postal') || name.includes('zip')) return 'mail';
-    return undefined;
-  };
-
-  const displayIcon = getDefaultIcon();
+  const displayIcon = getDefaultIconForField('input', icon, props.type, props.name);
 
   return (
     <FormFieldWrapper
@@ -96,17 +80,7 @@ export const Textarea: React.FC<TextareaProps> = ({
   ...props
 }) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
-
-  const getDefaultIcon = (): IconName | undefined => {
-    if (icon !== undefined) return icon;
-    const name = props.name?.toLowerCase() || '';
-    if (name.includes('note') || name.includes('comment')) return ICONS.actions.pen;
-    if (name.includes('history') || name.includes('medical')) return ICONS.dataFields.medicalKit;
-    if (name.includes('description')) return ICONS.dataFields.document;
-    return ICONS.dataFields.document;
-  };
-
-  const displayIcon = getDefaultIcon();
+  const displayIcon = getDefaultIconForField('textarea', icon, undefined, props.name);
 
   return (
     <FormFieldWrapper
@@ -155,17 +129,7 @@ export const Select: React.FC<SelectProps> = ({
   ...props
 }) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
-
-  const getDefaultIcon = (): IconName | undefined => {
-    if (icon !== undefined) return icon;
-    const name = props.name?.toLowerCase() || '';
-    if (name.includes('gender')) return ICONS.dataFields.userHands;
-    if (name.includes('relationship')) return ICONS.ui.link;
-    if (name.includes('duration') || name.includes('affiliation')) return ICONS.dataFields.time;
-    return ICONS.actions.infoCircle;
-  };
-
-  const displayIcon = getDefaultIcon();
+  const displayIcon = getDefaultIconForField('select', icon, undefined, props.name);
 
   return (
     <FormFieldWrapper

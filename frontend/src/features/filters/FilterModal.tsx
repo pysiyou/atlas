@@ -4,11 +4,10 @@
  */
 
 import React from 'react';
-import { Modal, CheckboxList, FooterInfo, Button } from '@/components';
+import { Modal, FooterInfo, Button } from '@/components';
 import { ICONS } from '@/utils';
 import { QuickFilters } from './QuickFilters';
-import { DatePresetBadges } from './DatePresetBadges';
-import { ModalSearchInput, ModalPriceSlider, ModalRadioList } from './FilterModalControls';
+import { renderFilterControl } from './utils/renderFilterControl';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
 
 export interface FilterModalProps {
@@ -46,65 +45,10 @@ export const FilterModal: React.FC<FilterModalProps> = ({
     onClose();
   };
 
-  /**
-   * Render a modal-specific filter control
-   */
-  const renderModalControl = (control: (typeof allFilterControls)[0]) => {
-    const filterValue = filters[control.key];
-
-    switch (control.type) {
-      case 'multiSelect':
-        return (
-          <CheckboxList
-            options={control.options}
-            selectedIds={(filterValue as string[]) || []}
-            onChange={value => setFilter(control.key, value)}
-            columns={control.options.length > 4 ? 2 : 1}
-          />
-        );
-
-      case 'singleSelect':
-        return (
-          <ModalRadioList
-            options={control.options}
-            selectedId={(filterValue as string | null) || null}
-            onChange={value => setFilter(control.key, value)}
-            columns={control.options.length > 4 ? 2 : 1}
-          />
-        );
-
-      case 'priceRange': {
-        const min = control.min ?? 0;
-        const max = control.max ?? 10000;
-        const currentValue = (filterValue as [number, number]) || [min, max];
-        return (
-          <ModalPriceSlider
-            value={currentValue}
-            onChange={value => setFilter(control.key, value)}
-            min={min}
-            max={max}
-            currency={control.currency}
-          />
-        );
-      }
-
-      case 'dateRange':
-        return (
-          <DatePresetBadges
-            value={(filterValue as [Date, Date] | null) || null}
-            onChange={value => setFilter(control.key, value)}
-          />
-        );
-
-      default:
-        // For other control types (ageRange), fall back to label only
-        return (
-          <div className="text-sm text-text-tertiary italic">
-            Use the main filter bar for this filter type
-          </div>
-        );
-    }
-  };
+  const renderModalControl = (control: (typeof allFilterControls)[0]) =>
+    renderFilterControl(control, filters[control.key], (value) => setFilter(control.key, value), {
+      variant: 'modal',
+    });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Filter" size="md">
@@ -114,11 +58,12 @@ export const FilterModal: React.FC<FilterModalProps> = ({
           {/* Search Control */}
           {searchControl && (
             <div className="mb-6">
-              <ModalSearchInput
-                value={(filters[searchControl.key] as string) || ''}
-                onChange={value => setFilter(searchControl.key, value)}
-                placeholder={searchControl.placeholder}
-              />
+              {renderFilterControl(
+                searchControl,
+                filters[searchControl.key],
+                (value) => setFilter(searchControl.key, value),
+                { variant: 'modal' }
+              )}
             </div>
           )}
 

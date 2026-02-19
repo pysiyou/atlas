@@ -1,8 +1,9 @@
 /**
  * Modal Renderer
  *
- * Central component that renders the appropriate modal based on the current modal state.
- * Uses a registry pattern for scalable modal management.
+ * Renders the active modal from context. To add a new modal: (1) add its type to ModalType
+ * in ModalContext and ModalPropsMap in modalTypes; (2) register it in registerModals.ts
+ * (single place for all modal registration).
  */
 
 import React, { useMemo, createElement } from 'react';
