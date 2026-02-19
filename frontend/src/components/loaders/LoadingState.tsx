@@ -40,9 +40,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   return (
     <div className={`${containerClasses} ${className}`}>
       <div className="text-center">
-        <div role="status" aria-label="Loading">
-          <DnaHelixLoader size={size} />
-        </div>
+        <DnaHelixLoader size={size} />
         {message && <p className="mt-3 text-sm text-text-tertiary">{message}</p>}
       </div>
     </div>

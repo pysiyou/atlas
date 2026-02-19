@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+
 import { Icon } from '@/components/primitives/Icon';
 import { cn, ICONS } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
@@ -28,11 +29,10 @@ export const Pagination: React.FC<PaginationProps> = ({
   const startItem = showAll ? 1 : (currentPage - 1) * pageSize + 1;
   const endItem = showAll ? totalItems : Math.min(currentPage * pageSize, totalItems);
 
-  // Generate page numbers
-  const getPageNumbers = () => {
+  const pageNumbers = useMemo((): (number | string)[] => {
     const delta = 2;
-    const range = [];
-    const rangeWithDots = [];
+    const range: number[] = [];
+    const rangeWithDots: (number | string)[] = [];
 
     for (let i = 1; i <= totalPages; i++) {
       if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) {
@@ -40,9 +40,9 @@ export const Pagination: React.FC<PaginationProps> = ({
       }
     }
 
-    let l;
+    let l: number | undefined;
     for (const i of range) {
-      if (l) {
+      if (l !== undefined) {
         if (i - l === 2) {
           rangeWithDots.push(l + 1);
         } else if (i - l !== 1) {
@@ -54,9 +54,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     }
 
     return rangeWithDots;
-  };
-
-  const pageNumbers = getPageNumbers();
+  }, [currentPage, totalPages]);
 
   const getPageButtonClasses = (isActive: boolean) => {
     const base =

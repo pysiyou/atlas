@@ -77,16 +77,7 @@ export interface PopoverProps {
   preventClose?: boolean;
 }
 
-// Global style for hiding scrollbars
-const hideScrollbarStyle = `
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-`;
+// Note: .hide-scrollbar CSS lives in index.css — do not inject it per component instance.
 
 /**
  * Props for the FloatingContent inner component
@@ -97,6 +88,7 @@ interface FloatingContentProps {
   floatingProps: Record<string, unknown>;
   noBorder: boolean;
   className: string;
+  duration: number;
   onClose: () => void;
   children: React.ReactNode | ((props: { close: () => void }) => React.ReactNode);
 }
@@ -111,6 +103,7 @@ const FloatingContent: React.FC<FloatingContentProps> = ({
   floatingProps,
   noBorder,
   className,
+  duration,
   onClose,
   children,
 }) => {
@@ -121,7 +114,7 @@ const FloatingContent: React.FC<FloatingContentProps> = ({
         initial={{ opacity: 0, y: 10, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -10, scale: 0.95 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration }}
         className={cn(
           'bg-surface text-text-primary border border-border-default shadow-lg rounded overflow-hidden flex flex-col h-full',
           noBorder && 'border-0',
@@ -149,6 +142,7 @@ export const Popover: React.FC<PopoverProps> = ({
   className = '',
   showBackdrop = true,
   preventClose = false,
+  duration,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -207,7 +201,6 @@ export const Popover: React.FC<PopoverProps> = ({
 
   return (
     <>
-      <style>{hideScrollbarStyle}</style>
       <div ref={refs.setReference} {...getReferenceProps()} className="w-full">
         {typeof trigger === 'function' ? trigger({ isOpen }) : trigger}
       </div>
@@ -241,6 +234,7 @@ export const Popover: React.FC<PopoverProps> = ({
                 floatingProps={getFloatingProps()}
                 noBorder={noBorder}
                 className={className}
+                duration={duration ?? 0.2}
                 onClose={() => setIsOpen(false)}
               >
                 {children}

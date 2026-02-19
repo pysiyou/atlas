@@ -313,3 +313,13 @@ body {
 .rotate-y-180 {
   transform: rotateY(180deg);
 }
+
+/* Scrollbar hiding utility — used by Popover, MultiSelectFilter, etc. */
+/* Applied via className="hide-scrollbar" — do NOT inject this via JS per component. */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

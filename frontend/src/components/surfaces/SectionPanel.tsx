@@ -12,7 +12,8 @@ export interface SectionPanelProps {
   title?: string | React.ReactNode;
   /** Content to display in the section */
   children: React.ReactNode;
-  /** Additional content to display in the header (right side) */
+  /** Additional content to display in the header (right side)
+   * @deprecated Use `headerRight` instead. */
   headerContent?: React.ReactNode;
   /** Additional CSS classes for the wrapper */
   className?: string;
@@ -24,7 +25,7 @@ export interface SectionPanelProps {
   hideHeader?: boolean;
   /** Content to display on the left side of header (before title) */
   headerLeft?: React.ReactNode;
-  /** Content to display on the right side of header (alternative to headerContent) */
+  /** Content to display on the right side of header */
   headerRight?: React.ReactNode;
   /** Data test ID for testing */
   testId?: string;

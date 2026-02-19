@@ -22,8 +22,12 @@ import { ICONS } from '@/utils';
 const LIGHT_THEME: ThemeName = 'studio-light';
 const DARK_THEME: ThemeName = 'noir-studio';
 
-function toSwitchTheme(theme: ThemeName): ThemeName {
-  return theme === LIGHT_THEME ? LIGHT_THEME : DARK_THEME;
+/**
+ * Returns the theme to switch TO (i.e. the opposite of the current one).
+ * Bug fix: previously both branches returned the same value so the toggle was broken.
+ */
+function toSwitchTheme(current: ThemeName): ThemeName {
+  return current === DARK_THEME ? LIGHT_THEME : DARK_THEME;
 }
 
 export interface MenuItem {

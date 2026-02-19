@@ -36,7 +36,16 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
     <div className={`flex items-center gap-1 ${className}`}>
       {/* Circular Progress Bar */}
       <div className="relative" style={{ width: size, height: size }}>
-        <svg className="w-full h-full transform -rotate-90">
+        <svg
+          viewBox={`0 0 ${size} ${size}`}
+          width={size}
+          height={size}
+          className="w-full h-full transform -rotate-90"
+          role="progressbar"
+          aria-valuenow={Math.min(100, Math.max(0, percentage))}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        >
           {/* Background Circle */}
           <circle
             cx={center}
