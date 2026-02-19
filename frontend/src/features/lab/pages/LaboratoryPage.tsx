@@ -19,7 +19,7 @@ export const Laboratory: React.FC = () => {
   const { hasRole } = useAuthStore();
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
 
-  const [activeTab, setActiveTab] = useState<LabTabId>('collection');
+  const [activeTab, setActiveTab] = useState<LabTabId>('dashboard');
 
   const tabs = useMemo((): Array<{ id: LabTabId; label: string; icon: React.ReactNode }> => {
     const base: Array<{ id: LabTabId; label: string; icon: React.ReactNode }> = [
