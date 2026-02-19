@@ -133,9 +133,9 @@ export const TagInput: React.FC<TagInputProps> = ({
         )}
       >
         {/* Existing Tags */}
-        {tags.map((tag, index) => (
+        {tags.map((tag) => (
           <div
-            key={`${tag}-${index}`}
+            key={tag}
             className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
           >
             <span className={`text-xs font-normal truncate min-w-0 ${tagStyles.text}`}>{tag}</span>

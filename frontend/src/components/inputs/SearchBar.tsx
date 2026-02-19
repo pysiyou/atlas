@@ -5,9 +5,14 @@
 
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from '@/components/primitives/Icon';
-import { ICONS } from '@/utils';
-import { cn } from '@/utils';
+import { ICONS, cn } from '@/utils';
 import { inputWrapper, inputInner, inputText } from './inputStyles';
+
+/**
+ * Note: This component is a direct input wrapper.
+ * For search functionality that requires debouncing, implement the debounce logic
+ * in the parent component or use a specialized hook.
+ */
 
 interface SearchBarProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   onSearch?: (value: string) => void;

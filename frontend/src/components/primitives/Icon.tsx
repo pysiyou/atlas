@@ -118,7 +118,11 @@ export type IconName =
   | 'double-arrow-right'
   | 'sun'
   | 'moon'
-  | 'home';
+  | 'home'
+  | 'settings'
+  | 'bell'
+  | 'user-cog'
+  | 'menu';
 
 export interface IconProps {
   /** Name of the icon to display (must match SVG filename without .svg extension) */

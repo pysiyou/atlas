@@ -3,7 +3,7 @@
  * Replaces DateFilter; calendar/header inlined.
  */
 
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import {
   format,
   isSameDay,
@@ -32,7 +32,11 @@ import {
   type DatePreset,
 } from '@/utils/date';
 
+
 export type CalendarView = 'days' | 'months' | 'years';
+
+const MIN_DATE = new Date(1900, 0, 1);
+const MAX_DATE = new Date(2100, 11, 31);
 
 export interface DatePickerProps {
   value: [Date, Date] | null;
@@ -225,7 +229,9 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   const [tempStart, setTempStart] = useState<Date | null>(() => (value?.[0] ? startOfDay(value[0]) : null));
   const [tempEnd, setTempEnd] = useState<Date | null>(() => (value?.[1] ? endOfDay(value[1]) : null));
 
-  useEffect(() => {
+  /* Use useLayoutEffect to update temp state immediately when popover opens, avoiding visible flicker or render loops */
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-compiler/react-compiler
+  useLayoutEffect(() => {
     if (isPopoverOpen && !prevOpenRef.current) {
       valueSnapshotRef.current = value;
       if (value) {
@@ -239,8 +245,9 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     prevOpenRef.current = isPopoverOpen;
   }, [isPopoverOpen, value]);
 
-  const minDate = useMemo(() => new Date(1900, 0, 1), []);
-  const maxDate = useMemo(() => new Date(2100, 11, 31), []);
+  /* Constants are now module-level, no need for useMemo */
+  const minDate = MIN_DATE;
+  const maxDate = MAX_DATE;
 
   const navigatePrevious = () => {
     if (view === 'days') setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));

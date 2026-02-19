@@ -6,18 +6,17 @@
 import React, { useState, useEffect, useCallback, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { NavLink } from 'react-router-dom';
-import { UserCog, Settings, Bell } from 'lucide-react';
 import { useAuthStore } from '@/app/store';
 import { ROUTES } from '@/config';
 import { companyConfig } from '@/config';
 import { Icon, IconButton, Avatar, Button, Popover } from '@/components';
+import { ICONS } from '@/utils';
 import type { PopoverPlacement } from '@/components';
 import { getActiveTheme, setTheme } from '@/components/theme';
 import type { ThemeName } from '@/components/theme';
 import { formatStatus } from '@/utils/string';
 import type { AuthUser } from '@/types';
 import defaultAvatar from '@/assets/images/default-avatar.jpg';
-import { ICONS } from '@/utils';
 
 const LIGHT_THEME: ThemeName = 'studio-light';
 const DARK_THEME: ThemeName = 'noir-studio';
@@ -54,9 +53,9 @@ const menuItems: MenuItem[] = [
 ];
 
 const settingsItems: SettingsItem[] = [
-  { label: 'User Management', icon: React.createElement(UserCog, { size: 20 }) },
-  { label: 'System Settings', icon: React.createElement(Settings, { size: 20 }) },
-  { label: 'Notification & Alerts', icon: React.createElement(Bell, { size: 20 }) },
+  { label: 'User Management', icon: React.createElement(Icon, { name: 'user-cog', className: 'w-5 h-5' }) },
+  { label: 'System Settings', icon: React.createElement(Icon, { name: 'settings', className: 'w-5 h-5' }) },
+  { label: 'Notification & Alerts', icon: React.createElement(Icon, { name: 'bell', className: 'w-5 h-5' }) },
 ];
 
 export function getFilteredMenuItems(): MenuItem[] {
@@ -160,9 +159,9 @@ interface ThemeSwitchProps {
 }
 
 function ThemeSwitch({ isCollapsed }: ThemeSwitchProps) {
-  const [effective, setEffective] = useState<ThemeName>(() => toSwitchTheme(getActiveTheme()));
+  const [effective, setEffective] = useState<ThemeName>(() => getActiveTheme());
   useEffect(() => {
-    const sync = () => setEffective(toSwitchTheme(getActiveTheme()));
+    const sync = () => setEffective(getActiveTheme());
     window.addEventListener('storage', sync);
     return () => window.removeEventListener('storage', sync);
   }, []);

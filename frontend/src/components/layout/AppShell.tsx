@@ -10,6 +10,7 @@
 import React, { type ReactNode, useState, useEffect } from 'react';
 import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
 import { Sidebar } from './Sidebar';
+import { Icon } from '@/components/primitives/Icon';
 
 export interface AppShellProps {
   children: ReactNode;
@@ -49,18 +50,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
           className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center bg-surface border border-border-default rounded-lg shadow-md hover:bg-surface-hover transition-colors lg:hidden"
           aria-label="Open navigation menu"
         >
-          <svg
-            className="w-6 h-6 text-text-primary"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+          <Icon name="menu" className="w-6 h-6 text-text-primary" />        </button>
       )}
 
       {/* Sidebar - Responsive behavior */}
