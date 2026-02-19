@@ -3,7 +3,6 @@
  */
 
 // Main components
-export * from './OrderCard';
 export * from './OrderTableCard';
 export * from './OrderHeader';
 export * from './OrderUpsertModal';
@@ -19,7 +18,5 @@ export * from './PatientInfoSection';
 export * from './TestsTable';
 
 // Form components
-// OrderForm removed - replaced by OrderUpsertModal using useOrderForm hook
 export * from './PatientSelect';
-export * from './PaymentSection';
 export * from './TestSelect';

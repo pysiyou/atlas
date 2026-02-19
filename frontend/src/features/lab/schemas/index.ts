@@ -1,2 +1,1 @@
-export * from './sample.schema';
-export * from './result.schema';
+/** Lab schemas - sample.schema and result.schema removed as unused */

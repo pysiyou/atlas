@@ -3,4 +3,3 @@
  */
 
 export * from './usePatientService';
-export * from './usePatientValidation';

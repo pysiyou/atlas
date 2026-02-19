@@ -3,7 +3,6 @@
  *
  * Core lab infrastructure shared across workflow features.
  * Sub-features have been promoted to top-level features:
- *   - @/features/analytics
  *   - @/features/collection
  *   - @/features/command-center
  *   - @/features/validation
