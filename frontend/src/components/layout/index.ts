@@ -7,4 +7,5 @@ export { AppShell as AppLayout } from './AppShell';
 export * from './DetailPageHeader';
 export * from './DetailPageShell';
 export * from './PageHeaderBar';
+export * from './sidebarMenu';
 export * from './Sidebar';
