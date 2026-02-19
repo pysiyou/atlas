@@ -1,12 +1,14 @@
 /**
- * FormField — Reusable form controls: Input, Textarea, Select (was Input.tsx).
+ * FormField — Reusable form controls: Input, Textarea, Select.
  * All standard form field components live here to keep the file in one place.
+ * Uses FormFieldWrapper to handle label, error, and helper text rendering consistently.
  */
 
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { ICONS } from '@/utils';
 import { inputBase, inputError } from '@/components/inputs/inputStyles';
+import { FormFieldWrapper } from './FormFieldWrapper';
 
 const getInputClasses = (hasError: boolean, hasIcon: boolean) => {
   const iconPadding = hasIcon ? 'pl-10' : '';
@@ -22,15 +24,15 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input: React.FC<InputProps> = ({
-  label: labelProp,
+  label,
   error,
-  helperText: helperTextProp,
+  helperText,
   className = '',
   id,
   icon,
   ...props
 }) => {
-  const inputId = id || labelProp?.toLowerCase().replace(/\s+/g, '-');
+  const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
   const getDefaultIcon = (): IconName | undefined => {
     if (icon !== undefined) return icon;
@@ -50,18 +52,14 @@ export const Input: React.FC<InputProps> = ({
   const displayIcon = getDefaultIcon();
 
   return (
-    <div className="w-full group">
-      {labelProp && (
-        <div className="flex justify-between items-baseline mb-1 gap-2">
-          <label
-            htmlFor={inputId}
-            className="text-xs font-normal text-text-tertiary cursor-pointer truncate min-w-0"
-          >
-            {labelProp}
-            {props.required && <span className="text-danger-fg ml-1">*</span>}
-          </label>
-        </div>
-      )}
+    <FormFieldWrapper
+      label={label}
+      error={error}
+      helperText={helperText}
+      id={inputId}
+      required={props.required}
+      className={`w-full group ${className.includes('w-') ? '' : ''}`} // wrapper className handling if needed, but FormFieldWrapper defaults to w-full group. Let's pass className if it affects layout.
+    >
       <div className="relative">
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -77,11 +75,7 @@ export const Input: React.FC<InputProps> = ({
           {...props}
         />
       </div>
-      {error && <p className="text-danger-fg text-xs mt-1">{error}</p>}
-      {helperTextProp && !error && (
-        <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>
-      )}
-    </div>
+    </FormFieldWrapper>
   );
 };
 
@@ -93,15 +87,15 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 }
 
 export const Textarea: React.FC<TextareaProps> = ({
-  label: labelProp,
+  label,
   error,
-  helperText: helperTextProp,
+  helperText,
   className = '',
   id,
   icon,
   ...props
 }) => {
-  const inputId = id || labelProp?.toLowerCase().replace(/\s+/g, '-');
+  const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
   const getDefaultIcon = (): IconName | undefined => {
     if (icon !== undefined) return icon;
@@ -115,18 +109,13 @@ export const Textarea: React.FC<TextareaProps> = ({
   const displayIcon = getDefaultIcon();
 
   return (
-    <div className="w-full group">
-      {labelProp && (
-        <div className="flex justify-between items-baseline mb-1 gap-2">
-          <label
-            htmlFor={inputId}
-            className="text-xs font-normal text-text-tertiary cursor-pointer truncate min-w-0"
-          >
-            {labelProp}
-            {props.required && <span className="text-danger-fg ml-1">*</span>}
-          </label>
-        </div>
-      )}
+    <FormFieldWrapper
+      label={label}
+      error={error}
+      helperText={helperText}
+      id={inputId}
+      required={props.required}
+    >
       <div className="relative">
         {displayIcon && (
           <div className="absolute top-2.5 left-3 pointer-events-none">
@@ -143,11 +132,7 @@ export const Textarea: React.FC<TextareaProps> = ({
           {...props}
         />
       </div>
-      {error && <p className="text-danger-fg text-xs mt-1">{error}</p>}
-      {helperTextProp && !error && (
-        <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>
-      )}
-    </div>
+    </FormFieldWrapper>
   );
 };
 
@@ -160,16 +145,16 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 export const Select: React.FC<SelectProps> = ({
-  label: labelProp,
+  label,
   error,
-  helperText: helperTextProp,
+  helperText,
   options,
   className = '',
   id,
   icon,
   ...props
 }) => {
-  const inputId = id || labelProp?.toLowerCase().replace(/\s+/g, '-');
+  const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
   const getDefaultIcon = (): IconName | undefined => {
     if (icon !== undefined) return icon;
@@ -183,18 +168,13 @@ export const Select: React.FC<SelectProps> = ({
   const displayIcon = getDefaultIcon();
 
   return (
-    <div className="w-full group">
-      {labelProp && (
-        <div className="flex justify-between items-baseline mb-1 gap-2">
-          <label
-            htmlFor={inputId}
-            className="text-xs font-normal text-text-tertiary cursor-pointer truncate min-w-0"
-          >
-            {labelProp}
-            {props.required && <span className="text-danger-fg ml-1">*</span>}
-          </label>
-        </div>
-      )}
+    <FormFieldWrapper
+      label={label}
+      error={error}
+      helperText={helperText}
+      id={inputId}
+      required={props.required}
+    >
       <div className="relative">
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -216,10 +196,6 @@ export const Select: React.FC<SelectProps> = ({
           ))}
         </select>
       </div>
-      {error && <p className="text-danger-fg text-xs mt-1">{error}</p>}
-      {helperTextProp && !error && (
-        <p className="text-text-tertiary text-xs mt-1">{helperTextProp}</p>
-      )}
-    </div>
+    </FormFieldWrapper>
   );
 };

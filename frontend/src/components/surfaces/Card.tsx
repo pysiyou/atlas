@@ -1,62 +1,23 @@
 /**
- * Card — container and callout in one file (max-depth-1).
- * Variants: default | lab | metric (box); neutral | info | success | warning | danger (callout).
+ * Card — container box.
+ * 
+ * Note: Callout variants are now handled by the <Callout> component.
+ * This component handles standard CardBoxes and provides backward-compatibility
+ * for the 'Callout' style usage by delegating to the new component.
  */
 
 import React, { type ReactNode } from 'react';
-import { Icon } from '@/components';
-import type { IconName } from '@/components';
+import { Callout, type CalloutVariant, type CalloutProps } from '@/components/display/Callout';
+
 
 export type CardVariant = 'default' | 'lab' | 'metric';
-export type CalloutVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+// Re-export CalloutVariant for backward compatibility imports
+export type { CalloutVariant };
 
 const BOX_VARIANT_CLASSES: Record<CardVariant, string> = {
   default: '',
   lab: 'shadow-sm hover:bg-surface-hover transition-colors duration-200',
   metric: 'hover:border-brand hover:border-opacity-50 transition-colors duration-200',
-};
-
-const CALLOUT_STYLES: Record<
-  CalloutVariant,
-  { container: string; title: string; body: string; dot: string }
-> = {
-  neutral: {
-    container: 'bg-neutral-100 border border-border-default',
-    title: 'text-text-tertiary font-medium',
-    body: 'text-text-tertiary',
-    dot: 'bg-neutral-400',
-  },
-  info: {
-    container: 'bg-brand-muted border border-border-focus',
-    title: 'text-brand-fg font-medium',
-    body: 'text-brand-fg',
-    dot: 'bg-brand',
-  },
-  success: {
-    container: 'bg-success-bg border border-success-stroke',
-    title: 'text-success-fg-emphasis font-medium',
-    body: 'text-success-fg-emphasis',
-    dot: 'bg-success-fg-emphasis',
-  },
-  warning: {
-    container: 'bg-warning-bg border border-warning-stroke',
-    title: 'text-warning-fg-emphasis font-medium',
-    body: 'text-warning-fg-emphasis',
-    dot: 'bg-warning-fg-emphasis',
-  },
-  danger: {
-    container: 'bg-danger-bg border border-danger-stroke',
-    title: 'text-danger-fg-emphasis font-medium',
-    body: 'text-danger-fg-emphasis',
-    dot: 'bg-danger-fg-emphasis',
-  },
-};
-
-const DEFAULT_CALLOUT_ICONS: Partial<Record<CalloutVariant, IconName>> = {
-  danger: 'alert-circle',
-  warning: 'warning',
-  success: 'check-circle',
-  info: 'info-circle',
 };
 
 interface CardBoxProps {
@@ -68,20 +29,12 @@ interface CardBoxProps {
   onClick?: (e: React.MouseEvent) => void;
 }
 
-interface CardCalloutProps {
-  variant?: CalloutVariant;
-  title: string;
-  icon?: IconName;
-  children?: ReactNode;
-  items?: string[];
-  className?: string;
-}
-
+// Backward-compat: Union with CalloutProps
 export type CardProps =
   | (CardBoxProps & { title?: never })
-  | (CardCalloutProps & { variant: CalloutVariant; children?: ReactNode });
+  | (CalloutProps & { variant: CalloutVariant; children?: ReactNode });
 
-function isCalloutProps(props: CardProps): props is CardCalloutProps & { variant: CalloutVariant } {
+function isCalloutProps(props: CardProps): props is CalloutProps & { variant: CalloutVariant } {
   const v = (props as CardProps).variant;
   return v === 'neutral' || v === 'info' || v === 'success' || v === 'warning' || v === 'danger';
 }
@@ -93,34 +46,7 @@ export const Card: React.FC<CardProps> = (props) => {
   } = props;
 
   if (isCalloutProps(props)) {
-    const { title, icon, children, items } = props;
-    const calloutVariant = variant as CalloutVariant;
-    const styles = CALLOUT_STYLES[calloutVariant];
-    const iconName = icon ?? DEFAULT_CALLOUT_ICONS[calloutVariant];
-    return (
-      <div
-        className={`flex items-start gap-2 p-2 rounded ${styles.container} ${className}`}
-        role={variant === 'danger' || variant === 'warning' ? 'alert' : undefined}
-      >
-        {iconName ? (
-          <Icon name={iconName} className={`w-4 h-4 mt-0.5 shrink-0 ${styles.body}`} />
-        ) : (
-          <span className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${styles.dot}`} />
-        )}
-        <div className="flex-1 min-w-0">
-          <div className={`text-xs mb-1 ${styles.title}`}>{title}</div>
-          {items && items.length > 0 ? (
-            <ul className="list-disc list-inside space-y-0.5">
-              {items.map((item, idx) => (
-                <li key={idx} className={`text-xs ${styles.body}`}>{item}</li>
-              ))}
-            </ul>
-          ) : (
-            <div className={`text-xs ${styles.body}`}>{children}</div>
-          )}
-        </div>
-      </div>
-    );
+    return <Callout {...props} className={className} />;
   }
 
   const { children, padding: paddingProp = 'md', hover = false, onClick } = props;
@@ -158,7 +84,7 @@ export const Card: React.FC<CardProps> = (props) => {
 };
 
 /** Backward-compat alias: CalloutCard is Card with callout variant */
-export const CalloutCard: React.FC<CardCalloutProps> = (props) => (
+export const CalloutCard: React.FC<CalloutProps> = (props) => (
   <Card {...props} variant={props.variant ?? 'neutral'} />
 );
 

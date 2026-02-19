@@ -5,7 +5,7 @@
  * Based on the cargoplan modal implementation.
  */
 
-import React, { memo, useCallback, useEffect } from 'react';
+import React, { memo, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Portal } from './Portal';
 import { IconButton } from '@/components/primitives/IconButton';
@@ -16,7 +16,7 @@ import { IconButton } from '@/components/primitives/IconButton';
 const Backdrop = ({
   onClick,
   zIndex = 40,
-  opacity: _opacity,
+  opacity = 0.3,
   className = '',
 }: {
   onClick?: () => void;
@@ -26,22 +26,35 @@ const Backdrop = ({
 }) => {
   const inlineStyle: React.CSSProperties = {
     zIndex,
-    backgroundColor: 'var(--overlay)',
+    backgroundColor: 'var(--overlay)', // usually a dark color
     backdropFilter: 'blur(2px)',
   };
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: 1 }} // We animate to 1, but we use the opacity prop to control the *max* opacity via style
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
       className={`fixed inset-0 ${className}`}
-      style={inlineStyle}
+      style={{ ...inlineStyle, opacity }} // Apply the requested opacity here
       onClick={onClick}
     />
   );
 };
+
+const SIZE_CLASSES: Record<string, string> = {
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-xl',
+  '2xl': 'max-w-2xl',
+  '3xl': 'max-w-3xl',
+  '4xl': 'max-w-4xl',
+  '5xl': 'max-w-5xl',
+};
+
+const BASE_MODAL_CLASSES = 'relative bg-surface border border-border-default rounded-lg shadow-xl w-full';
 
 interface ModalProps {
   isOpen: boolean;
@@ -68,6 +81,7 @@ interface ModalProps {
  * - Animated entrance/exit
  * - Backdrop with configurable opacity and blur
  * - Keyboard support (Escape to close)
+ * - Focus trap
  * - Optional confirm button
  * - Responsive design
  */
@@ -89,22 +103,8 @@ const Modal = memo(
     backdropZIndex = 40,
     size,
   }: ModalProps) => {
-    const sizeClasses: Record<string, string> = {
-      sm: 'max-w-sm',
-      md: 'max-w-md',
-      lg: 'max-w-lg',
-      xl: 'max-w-xl',
-      '2xl': 'max-w-2xl',
-      '3xl': 'max-w-3xl',
-      '4xl': 'max-w-4xl',
-      '5xl': 'max-w-5xl',
-    };
-
-    const maxWidthClass = size && sizeClasses[size] ? sizeClasses[size] : maxWidth;
-
-    const getModalClasses = () => {
-      return 'relative bg-surface border border-border-default rounded-lg shadow-xl w-full';
-    };
+    const modalRef = useRef<HTMLDivElement>(null);
+    const maxWidthClass = size && SIZE_CLASSES[size] ? SIZE_CLASSES[size] : maxWidth;
 
     /**
      * Prevent modal click from closing the modal
@@ -123,24 +123,57 @@ const Modal = memo(
     }, [closeOnBackdropClick, disableClose, onClose]);
 
     /**
-     * Handle keyboard events (Escape to close)
+     * Handle keyboard events (Escape to close, Tab to trap focus)
      */
-    const handleKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        if (e.key === 'Escape' && isOpen && !disableClose) {
-          onClose();
-        }
-      },
-      [isOpen, disableClose, onClose]
-    );
-
-    // Register keyboard event listener
     useEffect(() => {
-      if (isOpen) {
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-      }
-    }, [isOpen, handleKeyDown]);
+      if (!isOpen) return;
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape' && !disableClose) {
+          onClose();
+          return;
+        }
+
+        // Focus trap
+        if (e.key === 'Tab' && modalRef.current) {
+          const focusableElements = modalRef.current.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          if (focusableElements.length === 0) return;
+
+          const firstElement = focusableElements[0] as HTMLElement;
+          const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+          if (e.shiftKey) {
+            if (document.activeElement === firstElement) {
+              e.preventDefault();
+              lastElement.focus();
+            }
+          } else {
+            if (document.activeElement === lastElement) {
+              e.preventDefault();
+              firstElement.focus();
+            }
+          }
+        }
+      };
+
+      document.addEventListener('keydown', handleKeyDown);
+      
+      // Focus the first element when opening
+      // Use a small timeout to allow animation/rendering to complete
+      const timer = setTimeout(() => {
+        const firstFocusable = modalRef.current?.querySelector(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        ) as HTMLElement;
+        firstFocusable?.focus();
+      }, 50);
+
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+        clearTimeout(timer);
+      };
+    }, [isOpen, disableClose, onClose]);
 
     return (
       <Portal>
@@ -153,8 +186,9 @@ const Modal = memo(
                 zIndex={backdropZIndex}
               />
 
-              <div className="fixed inset-0 z-50 flex items-start justify-center lg:justify-end p-2 md:p-6">
+              <div className="fixed inset-0 z-50 flex items-start justify-center lg:justify-end p-2 md:p-6 pointer-events-none">
                 <motion.div
+                  ref={modalRef}
                   role="dialog"
                   aria-modal="true"
                   aria-labelledby="modal-title"
@@ -180,7 +214,7 @@ const Modal = memo(
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className={`${getModalClasses()} ${maxWidthClass} ${className} flex flex-col h-[calc(100vh-16px)] md:h-[calc(100vh-48px)] origin-top lg:origin-top-right`}
+                  className={`${BASE_MODAL_CLASSES} ${maxWidthClass} ${className} flex flex-col h-[calc(100vh-16px)] md:h-[calc(100vh-48px)] origin-top lg:origin-top-right pointer-events-auto`}
                   onClick={handleModalClick}
                 >
                   {/* Header */}

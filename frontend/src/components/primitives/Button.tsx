@@ -14,40 +14,17 @@
 import React, { type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from './Icon';
 import { SpinnerLoader as DnaHelixLoader, type SpinnerLoaderSize as DnaHelixLoaderSize } from '@/components/loaders/SpinnerLoader';
-import { ICONS } from '@/utils';
+import {
+  type BaseVariant,
+  type SemanticVariant,
+  VARIANT_CONFIG,
+  BASE_STYLES,
+  BUTTON_SIZE_STYLES,
+  BUTTON_ICON_SIZES,
+} from './buttonHelpers';
 
 /**
- * Base style variants (no default icon)
- */
-type BaseVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'outline' | 'warning';
-
-type SemanticVariant =
-  | 'save'
-  | 'cancel'
-  | 'delete'
-  | 'reject'
-  | 'approve'
-  | 'edit'
-  | 'add'
-  | 'create'
-  | 'close'
-  | 'next'
-  | 'previous'
-  | 'submit'
-  | 'retry'
-  | 'print'
-  | 'view'
-  | 'download'
-  | 'filter'
-  | 'search'
-  | 'refresh'
-  | 'back'
-  | 'logout'
-  | 'remove'
-  | 'home';
-
-/**
- * All available button variants
+ * All available button variants (Base + Semantic)
  */
 export type ButtonVariant = BaseVariant | SemanticVariant;
 
@@ -56,97 +33,11 @@ export type ButtonVariant = BaseVariant | SemanticVariant;
  */
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 
-/**
- * Configuration for semantic variants
- */
-interface VariantConfig {
-  /** Base style to apply */
-  style: BaseVariant;
-  /** Default icon name */
-  icon: IconName;
-}
-
-/**
- * Maps semantic variants to their style and icon configuration
- */
-const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
-  // Primary actions
-  save: { style: 'primary', icon: ICONS.actions.save },
-  submit: { style: 'primary', icon: ICONS.actions.check },
-  approve: { style: 'success', icon: ICONS.actions.check },
-  add: { style: 'primary', icon: ICONS.actions.add },
-  create: { style: 'primary', icon: ICONS.actions.add },
-  edit: { style: 'primary', icon: ICONS.actions.edit },
-
-  // Secondary/Navigation actions
-  cancel: { style: 'danger', icon: ICONS.actions.cross },
-  close: { style: 'danger', icon: ICONS.actions.cross },
-  back: { style: 'outline', icon: ICONS.actions.arrowLeft },
-  previous: { style: 'outline', icon: ICONS.actions.chevronLeft },
-  next: { style: 'primary', icon: ICONS.actions.chevronRight },
-  home: { style: 'primary', icon: ICONS.actions.home },
-
-  // Destructive actions
-  delete: { style: 'danger', icon: ICONS.actions.delete },
-  reject: { style: 'danger', icon: ICONS.actions.delete },
-
-  // Utility actions
-  retry: { style: 'primary', icon: ICONS.actions.loading },
-  refresh: { style: 'secondary', icon: ICONS.actions.loading },
-  print: { style: 'secondary', icon: ICONS.actions.printer },
-  view: { style: 'secondary', icon: ICONS.actions.view },
-  download: { style: 'secondary', icon: ICONS.actions.download },
-  filter: { style: 'primary', icon: ICONS.actions.filter },
-  search: { style: 'primary', icon: ICONS.actions.search },
-
-  // User actions
-  logout: { style: 'danger', icon: ICONS.actions.logout },
-
-  // Item actions
-  remove: { style: 'danger', icon: ICONS.actions.cross },
-};
-
-/**
- * Base classes applied to all buttons
- */
-const BASE_CLASSES =
-  'inline-flex shrink-0 items-center justify-center gap-1.5 font-normal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap overflow-hidden';
-
-/**
- * Base style classes for each variant
- */
-const BASE_STYLES: Record<BaseVariant, string> = {
-  primary: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
-  secondary: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
-  danger: 'bg-danger text-on-danger hover:opacity-90 focus:ring-danger',
-  success: 'bg-success text-on-success hover:opacity-90 focus:ring-success',
-  warning: 'bg-warning text-on-warning hover:opacity-90 focus:ring-warning',
-  outline:
-    'border-2 border-border-strong bg-transparent text-text-secondary hover:bg-surface-hover focus:ring-neutral-500',
-};
-
-/**
- * Size-specific padding and text classes
- */
-const SIZE_STYLES: Record<ButtonSize, string> = {
-  xs: 'px-2 py-1 text-xs',
-  sm: 'px-3 py-1.5 text-xs',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-base',
-};
-
-/**
- * Icon size classes based on button size
- */
-const ICON_SIZES: Record<ButtonSize, string> = {
-  xs: 'w-3 h-3',
-  sm: 'w-3.5 h-3.5',
-  md: 'w-4 h-4',
-  lg: 'w-5 h-5',
-};
-
 /** Always use smallest loader so it stays inside button; size does not change. */
 const BUTTON_LOADER_SIZE: DnaHelixLoaderSize = 'xs';
+
+const BASE_CLASSES =
+  'inline-flex shrink-0 items-center justify-center gap-1.5 font-normal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap overflow-hidden';
 
 /**
  * Check if a variant is a semantic variant (has bundled icon)
@@ -229,7 +120,7 @@ export const Button: React.FC<ButtonProps> = ({
     if (icon) {
       if (React.isValidElement(icon)) {
         return React.cloneElement(icon as React.ReactElement<{ className?: string }>, {
-          className: ICON_SIZES[size],
+          className: BUTTON_ICON_SIZES[size],
         });
       }
       return icon;
@@ -237,15 +128,14 @@ export const Button: React.FC<ButtonProps> = ({
 
     // Otherwise use default icon from variant config
     if (defaultIconName) {
-      return <Icon name={defaultIconName} className={ICON_SIZES[size]} />;
+      return <Icon name={defaultIconName} className={BUTTON_ICON_SIZES[size]} />;
     }
 
     return null;
   };
 
   const widthClass = fullWidth ? 'w-full' : '';
-
-  const iconWrapperClass = `inline-flex items-center justify-center shrink-0 ${ICON_SIZES[size]}`;
+  const iconWrapperClass = `inline-flex items-center justify-center shrink-0 ${BUTTON_ICON_SIZES[size]}`;
 
   const showText = isLoading ? showTextWhenLoading : true;
   const normalContent = (
@@ -265,6 +155,7 @@ export const Button: React.FC<ButtonProps> = ({
       <DnaHelixLoader size={BUTTON_LOADER_SIZE} />
     </span>
   );
+  
   const content = isLoading ? (
     showText ? (
       <>
@@ -286,7 +177,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
-      className={`${BASE_CLASSES} ${BASE_STYLES[baseStyle]} ${SIZE_STYLES[size]} ${widthClass} ${className}`}
+      className={`${BASE_CLASSES} ${BASE_STYLES[baseStyle]} ${BUTTON_SIZE_STYLES[size]} ${widthClass} ${className}`}
       disabled={disabled || isLoading}
       {...props}
     >

@@ -12,42 +12,17 @@
 
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName } from './Icon';
-import { ICONS } from '@/utils';
+import {
+  type BaseVariant,
+  type SemanticVariant,
+  VARIANT_CONFIG,
+  BASE_STYLES,
+  ICON_BUTTON_SIZE_STYLES,
+  ICON_BUTTON_ICON_SIZES,
+} from './buttonHelpers';
 
 /**
- * Base style variants (require custom icon)
- */
-type BaseVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'warning';
-
-/**
- * Semantic action variants (bundled icon + style)
- */
-type SemanticVariant =
-  | 'close'
-  | 'confirm'
-  | 'approve'
-  | 'delete'
-  | 'reject'
-  | 'remove'
-  | 'add'
-  | 'edit'
-  | 'print'
-  | 'view'
-  | 'download'
-  | 'next'
-  | 'previous'
-  | 'expand'
-  | 'collapse'
-  | 'sidebarClose'
-  | 'menu'
-  | 'search'
-  | 'filter'
-  | 'refresh'
-  | 'save'
-  | 'logout';
-
-/**
- * All available icon button variants
+ * All available icon button variants (Base + Semantic)
  */
 export type IconButtonVariant = BaseVariant | SemanticVariant;
 
@@ -57,71 +32,9 @@ export type IconButtonVariant = BaseVariant | SemanticVariant;
 export type IconButtonSize = 'xs' | 'sm' | 'md';
 
 /**
- * Configuration for semantic variants
- */
-interface VariantConfig {
-  /** Base style to apply */
-  style: BaseVariant;
-  /** Default icon name */
-  icon: IconName;
-}
-
-/**
- * Maps semantic variants to their style and icon configuration
- */
-const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
-  // Close/Cancel actions
-  close: { style: 'danger', icon: ICONS.actions.cross },
-
-  // Confirmation actions
-  confirm: { style: 'success', icon: ICONS.actions.check },
-  approve: { style: 'success', icon: ICONS.actions.check },
-  save: { style: 'primary', icon: ICONS.actions.save },
-
-  // Destructive actions
-  delete: { style: 'danger', icon: ICONS.actions.delete },
-  reject: { style: 'danger', icon: ICONS.actions.delete },
-
-  // CRUD actions
-  add: { style: 'primary', icon: ICONS.actions.add },
-  edit: { style: 'primary', icon: ICONS.actions.edit },
-  view: { style: 'primary', icon: ICONS.actions.view },
-
-  // Utility actions
-  print: { style: 'secondary', icon: ICONS.actions.printer },
-  download: { style: 'secondary', icon: ICONS.actions.download },
-  search: { style: 'primary', icon: ICONS.actions.search },
-  filter: { style: 'secondary', icon: ICONS.actions.filter },
-  refresh: { style: 'secondary', icon: ICONS.actions.loading },
-
-  // Navigation actions
-  next: { style: 'primary', icon: ICONS.actions.chevronRight },
-  previous: { style: 'secondary', icon: ICONS.actions.chevronLeft },
-  expand: { style: 'secondary', icon: ICONS.actions.chevronDown },
-  collapse: { style: 'secondary', icon: ICONS.actions.chevronLeft },
-  sidebarClose: { style: 'secondary', icon: ICONS.actions.doubleArrowLeft },
-  menu: { style: 'primary', icon: ICONS.actions.menuDots },
-
-  // User actions
-  logout: { style: 'danger', icon: ICONS.actions.logout },
-
-  // Item actions
-  remove: { style: 'danger', icon: ICONS.actions.cross },
-};
-
-/**
- * Base style classes for each variant
- */
-const BASE_STYLES: Record<BaseVariant, string> = {
-  primary: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
-  secondary: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
-  danger: 'bg-danger text-on-danger hover:opacity-90 focus:ring-danger',
-  success: 'bg-success text-on-success hover:opacity-90 focus:ring-success',
-  warning: 'bg-warning text-on-warning hover:opacity-90 focus:ring-warning',
-};
-
-/**
  * IconButton-specific variants (for actions like approve, delete, edit, etc.)
+ * These override the base style mapped in VARIANT_CONFIG for specific aesthetic tweaks
+ * (mainly specialized background/text colors for icon-only buttons).
  */
 const ICON_BUTTON_VARIANTS: Record<string, string> = {
   approve: 'bg-success text-on-success hover:opacity-90 focus:ring-success',
@@ -131,24 +44,6 @@ const ICON_BUTTON_VARIANTS: Record<string, string> = {
   print: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
   add: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
   sidebarClose: 'bg-surface-hover text-text-secondary hover:opacity-90 focus:ring-neutral-500',
-};
-
-/**
- * Size-specific padding classes
- */
-const SIZE_STYLES: Record<IconButtonSize, string> = {
-  xs: 'p-1',
-  sm: 'p-1.5',
-  md: 'p-2',
-};
-
-/**
- * Icon size classes based on button size
- */
-const ICON_SIZE_STYLES: Record<IconButtonSize, string> = {
-  xs: '[&_svg]:w-3 [&_svg]:h-3 [&>span]:w-3 [&>span]:h-3',
-  sm: '[&_svg]:w-4 [&_svg]:h-4 [&>span]:w-4 [&>span]:h-4',
-  md: '[&_svg]:w-5 [&_svg]:h-5 [&>span]:w-5 [&>span]:h-5',
 };
 
 /**
@@ -200,7 +95,7 @@ export const IconButton = memo(
       // Determine the actual style to apply
       const baseStyle = getBaseStyle(variant);
 
-      // Check if this is an IconButton-specific variant
+      // Check if this is an IconButton-specific variant override, otherwise use shared base style
       const variantStyle =
         variant in ICON_BUTTON_VARIANTS ? ICON_BUTTON_VARIANTS[variant] : BASE_STYLES[baseStyle];
 
@@ -229,8 +124,8 @@ export const IconButton = memo(
           disabled={disabled}
           className={`
             ${variantStyle}
-            ${SIZE_STYLES[size]}
-            ${ICON_SIZE_STYLES[size]}
+            ${ICON_BUTTON_SIZE_STYLES[size]}
+            ${ICON_BUTTON_ICON_SIZES[size]}
             ${variant === 'sidebarClose' ? 'rounded-xl' : 'rounded-full'}
             transition-all duration-200
             disabled:opacity-50 disabled:cursor-not-allowed
