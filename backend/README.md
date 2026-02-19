@@ -2,22 +2,17 @@
 
 ## Quick Start
 
-### 1. Start PostgreSQL Database
+### 1. Install and start PostgreSQL locally
 
-Using Docker (recommended):
-
-```bash
-cd backend
-docker-compose up -d
-```
-
-Or install PostgreSQL locally and create database:
+Create the database and user (e.g. with `psql` as a superuser):
 
 ```sql
 CREATE DATABASE atlas_lab;
 CREATE USER atlas WITH PASSWORD 'atlas123';
 GRANT ALL PRIVILEGES ON DATABASE atlas_lab TO atlas;
 ```
+
+Ensure PostgreSQL is running (e.g. via your OS service manager or `pg_ctl`).
 
 ### 2. Install Dependencies
 
