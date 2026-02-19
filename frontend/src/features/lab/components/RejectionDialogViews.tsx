@@ -4,21 +4,52 @@
  */
 
 import React from 'react';
-import { Alert, Button, DnaHelixLoader } from '@/components';
+import { Alert, Button, Skeleton } from '@/components';
 import { RadioCard } from './PopoverForm';
 import type { ResultRejectionType } from '@/types';
 import { cn } from '@/utils';
 import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejection-dialog-constants';
 
+/** Skeleton that mirrors PopoverForm layout (header, body, footer) to avoid layout shift when options load. */
 export const RejectionDialogLoadingView: React.FC = () => (
   <div
     className={cn(
       REJECTION_DIALOG_LAYOUT.widthClass,
-      'bg-surface rounded-lg shadow-xl border border-border-default p-4 flex flex-col items-center justify-center gap-4'
+      'bg-surface rounded-lg shadow-xl border border-border-default overflow-hidden flex flex-col max-h-[600px]'
     )}
   >
-    <DnaHelixLoader size="md" />
-    <p className="text-sm text-text-tertiary">{REJECTION_DIALOG_COPY.loading.message}</p>
+    {/* Header */}
+    <div className="px-4 py-3 bg-surface-page border-b border-border-subtle flex items-start justify-between">
+      <div className="space-y-0.5">
+        <Skeleton height={20} width="60%" className="rounded-md" />
+        <Skeleton height={12} width="40%" className="rounded-md" />
+      </div>
+      <Skeleton width={32} height={32} className="rounded-md shrink-0" />
+    </div>
+    {/* Body */}
+    <div className="p-4 space-y-4 overflow-y-auto flex-1">
+      <div className="space-y-1.5">
+        <Skeleton height={14} width="100%" className="rounded-md" />
+        <Skeleton height={12} width="85%" className="rounded-md" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton height={12} width="30%" className="rounded-md" />
+        <Skeleton height={52} width="100%" className="rounded-md" />
+        <Skeleton height={52} width="100%" className="rounded-md" />
+      </div>
+      <div>
+        <Skeleton height={12} width="35%" className="rounded-md mb-1" />
+        <Skeleton height={60} width="100%" className="rounded-md" />
+      </div>
+    </div>
+    {/* Footer */}
+    <div className="p-3 bg-surface-page border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
+      <Skeleton height={12} width="50%" className="rounded-md" />
+      <div className="flex items-center gap-2">
+        <Skeleton height={32} width={70} className="rounded-md" />
+        <Skeleton height={32} width={70} className="rounded-md" />
+      </div>
+    </div>
   </div>
 );
 
