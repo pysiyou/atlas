@@ -243,9 +243,9 @@ function DetailListRow({ item, index, total: _total, getItemIcon }: DetailListRo
           )}
         </div>
         <div className="flex items-center justify-between gap-2 text-xs text-text-tertiary tabular-nums min-w-0">
-          <span>{item.avgWaitMs != null ? `avg ${formatDuration(item.avgWaitMs)}` : '—'}</span>
+          <span>{item.avgWaitMs != null ? `Avg. ${formatDuration(item.avgWaitMs)}` : '—'}</span>
           <span className="shrink-0 text-text-tertiary">
-            {item.oldestEntryAt ? `oldest ${formatTimeAgo(item.oldestEntryAt)}` : '—'}
+            {item.oldestEntryAt ? `Oldest ${formatTimeAgo(item.oldestEntryAt)}` : '—'}
           </span>
         </div>
       </div>
