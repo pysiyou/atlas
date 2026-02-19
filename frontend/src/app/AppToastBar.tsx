@@ -10,11 +10,11 @@ import { resolveValue, type Toast } from 'react-hot-toast';
 type ToastMessage = React.ReactElement | string | null | ToastMessageObject;
 
 /** Dismiss all toasts so only one is active; new toast replaces existing. */
-function dismissThen<T extends (...args: unknown[]) => string>(fn: T): T {
-  return ((...args: Parameters<T>) => {
+function dismissThen<A extends unknown[], R extends string>(fn: (...args: A) => R): (...args: A) => R {
+  return ((...args: A) => {
     toastLib.dismiss();
     return fn(...args);
-  }) as T;
+  }) as (...args: A) => R;
 }
 
 /** Typed toast API: one toast at a time; message can be string or ToastMessageObject. */
