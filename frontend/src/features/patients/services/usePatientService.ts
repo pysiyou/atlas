@@ -24,9 +24,9 @@ export function usePatientService() {
       const response = await apiClient.post<Patient>('/patients', transformed);
       return patientSchema.parse(response);
     },
-    onSuccess: async () => {
+    onSuccess: () => {
       invalidatePatientQueries(queryClient);
-      await queryClient.refetchQueries({ queryKey: queryKeys.patients.lists() });
+      queryClient.refetchQueries({ queryKey: queryKeys.patients.list() });
       toast.success('Patient created successfully');
     },
     onError: error => {

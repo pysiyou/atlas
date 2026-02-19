@@ -138,7 +138,10 @@ export const PatientList: React.FC = () => {
 
       <EditPatientModal
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={() => {
+          refetch();
+          setIsCreateModalOpen(false);
+        }}
         mode="create"
       />
     </>
