@@ -8,7 +8,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { Button } from '@/components/ui';
+import { Button } from '@/components';
 import { cn } from '@/utils';
 
 interface BulkValidationItem {

@@ -10,14 +10,14 @@
  */
 
 import React, { useState } from 'react';
-import { Popover, IconButton, Alert, FooterInfo, DnaHelixLoader } from '@/components/ui';
+import { Popover, IconButton, Alert, FooterInfo, DnaHelixLoader } from '@/components';
 import { PopoverForm } from './PopoverForm';
 import { useRejectionManager } from '../hooks/useRejectionManager';
 import { useRejectionDialogState } from '../hooks/useRejectionDialogState';
 import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
 import { cn, ICONS } from '@/utils';
-import { inputBase } from '@/components/ui/inputStyles';
+import { inputBase } from '@/components/inputs/inputStyles';
 import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejection-dialog-constants';
 import {
   RejectionDialogLoadingView,

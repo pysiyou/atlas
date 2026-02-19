@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Button, Avatar, Icon, IconButton } from '@/components/ui';
+import { Button, Avatar, Icon, IconButton } from '@/components';
 import { DetailPageHeader } from '@/components';
 import type { Patient } from '@/types/patient';
 import { usePatientService } from '../services/usePatientService';

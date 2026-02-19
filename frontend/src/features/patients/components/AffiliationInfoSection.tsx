@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Badge } from '@/components/ui';
+import { Badge } from '@/components';
 import { formatDate } from '@/utils';
 import type { Affiliation } from '@/types';
 import { usePatientService } from '../services/usePatientService';

@@ -10,14 +10,16 @@ import { Toaster } from 'react-hot-toast';
 
 // Composed Providers
 import { AppProviders } from '@/app/providers/AppProviders';
-import { AppToastBar, DataLoader, ErrorBoundary, LoadingState } from '@/components';
+import { ErrorBoundary, LoadingState } from '@/components';
+import { AppToastBar } from '@/app/AppToastBar';
+import { DataLoader } from '@/app/DataLoader';
 import { AuthRehydrationGate } from '@/features/auth/AuthRehydrationGate';
 
 // Eagerly loaded components (small, frequently accessed)
 import { LoginForm } from '@/features/auth/LoginForm';
-import { AppLayout as DashboardLayout } from '@/components/layout';
+import { AppShell as DashboardLayout } from '@/components/layout';
 import { useAuthStore } from '@/app/store';
-import { ModalRenderer } from '@/components/ui';
+import { ModalRenderer } from '@/components';
 import { PublicRoute } from '@/app/PublicRoute';
 
 // Utils & Config

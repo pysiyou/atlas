@@ -7,7 +7,7 @@ import React, { useMemo } from 'react';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import { usePatientsList } from '@/features/patients/api/usePatients';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
-import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/components/ui';
+import { Card, SectionContainer, Table, Icon, type ColumnConfig } from '@/components';
 import { AdminPageSkeleton } from './AdminPageSkeleton';
 import { DATA_AMOUNT, DATA_ID_PRIMARY } from '@/utils/constants';
 import { formatCurrency } from '@/utils';

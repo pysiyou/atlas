@@ -10,7 +10,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import type { Order, Patient, PriorityLevel, PaymentMethod } from '@/types';
 import { PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG } from '@/types';
-import { Modal, Input, Textarea, MultiSelectFilter, FooterInfo, Icon } from '@/components/ui';
+import { Modal, Input, Textarea, MultiSelectFilter, FooterInfo, Icon } from '@/components';
 import { displayId, ICONS, formatCurrency } from '@/utils';
 import { createFilterOptions } from '@/utils/filtering';
 import { getErrorMessage } from '@/utils/errors';
@@ -23,7 +23,7 @@ import { PatientSelect } from './PatientSelect';
 import { TestSelect } from './TestSelect';
 import { OrderModalFooter } from './order-modal/OrderModalFooter';
 import { OrderPaymentSection } from './order-modal/OrderPaymentSection';
-import type { BaseModalProps } from '@/components/ui';
+import type { BaseModalProps } from '@/components';
 
 export interface OrderUpsertModalProps extends BaseModalProps {
   /** Existing order when editing. */

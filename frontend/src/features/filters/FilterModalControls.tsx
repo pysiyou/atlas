@@ -4,9 +4,9 @@
  */
 
 import React from 'react';
-import { Icon } from '@/components/ui';
+import { Icon } from '@/components';
 import { ICONS, uppercaseLabel, cn } from '@/utils';
-import { ModalDebouncedSearch, ModalRangeSlider } from '@/components/ui';
+import { ModalDebouncedSearch, ModalRangeSlider } from '@/components';
 
 export const ModalSearchInput = ModalDebouncedSearch;
 

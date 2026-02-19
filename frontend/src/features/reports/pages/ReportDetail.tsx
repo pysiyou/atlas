@@ -15,7 +15,7 @@ import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import type { ReportData, ValidatedTest } from '../types';
 import { formatDate } from '@/utils';
 import { companyConfig } from '@/config';
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 import { DetailPageShell, DetailPageHeader } from '@/components';
 import { ReportDetailSkeleton } from './ReportDetailSkeleton';
 

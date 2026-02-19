@@ -14,7 +14,7 @@ import { LabWorkflowView, createLabItemFilter } from '@/features/lab/components/
 import { LabFilters } from '@/features/lab/components/LabFilters';
 import { useLabWorkflowFilters } from '@/features/lab/hooks/useLabWorkflowFilters';
 import { validationFilterConfig } from '@/features/lab/constants';
-import { ErrorBoundary } from '@/components/feedback';
+import { ErrorBoundary } from '@/components/loaders';
 import { LabWorkflowViewSkeleton } from '@/features/lab/components/LabWorkflowViewSkeleton';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';

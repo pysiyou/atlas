@@ -4,8 +4,8 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Card, Icon } from '@/components/ui';
-import type { IconName } from '@/components/ui';
+import { Card, Icon } from '@/components';
+import type { IconName } from '@/components';
 import { cn } from '@/utils';
 
 export interface WidgetCardChange {

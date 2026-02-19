@@ -5,7 +5,7 @@
  * Shows a check-circle icon when paid, or a payment popover when unpaid.
  */
 import React from 'react';
-import { Icon } from '@/components/ui';
+import { Icon } from '@/components';
 import { PaymentPopover } from './PaymentPopover';
 import type { Order } from '@/types';
 import { ICONS } from '@/utils';

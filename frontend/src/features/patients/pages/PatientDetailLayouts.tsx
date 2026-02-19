@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { SectionContainer, IconButton } from '@/components/ui';
+import { SectionContainer, IconButton } from '@/components';
 import type { Patient, Order } from '@/types';
 import { GeneralInfoSection } from '../components/GeneralInfoSection';
 import { MedicalHistorySectionDisplay } from '../components/MedicalHistorySectionDisplay';

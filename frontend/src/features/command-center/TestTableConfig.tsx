@@ -5,8 +5,8 @@
  */
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
-import { Badge, Card, Avatar } from '@/components/ui';
-import type { CardComponentProps } from '@/components/ui';
+import { Badge, Card, Avatar } from '@/components';
+import type { CardComponentProps } from '@/components';
 import type { TestWithContext } from '@/types';
 
 export function TestTableCard({ item: test, onClick }: CardComponentProps<TestWithContext>) {

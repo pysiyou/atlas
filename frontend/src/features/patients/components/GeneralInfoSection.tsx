@@ -5,7 +5,7 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import { InfoField } from '@/components/ui/InfoField';
+import { InfoField } from '@/components/display/InfoField';
 import { formatDetailDate, formatAddress } from '../utils/patient-formatters';
 import { ICONS } from '@/utils';
 

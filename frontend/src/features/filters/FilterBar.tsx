@@ -11,8 +11,8 @@ import { FilterFactory } from './FilterFactory';
 import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
 import { FilterModal } from './FilterModal';
-import { Button } from '@/components/ui';
-import { Badge } from '@/components/ui';
+import { Button } from '@/components';
+import { Badge } from '@/components';
 import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
 
 // Style constants for consistent styling

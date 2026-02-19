@@ -3,7 +3,7 @@ import { orderCreateSchema, orderUpdateSchema, orderSchema } from '../schemas/or
 import type { Order } from '@/types';
 import { apiClient } from '@/lib/api/client';
 import { invalidateOrderQueries } from '@/lib/query/invalidate';
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 import { getErrorMessage } from '@/utils/errors';
 import { formInputToPayload } from '../utils/form-transformers';
 

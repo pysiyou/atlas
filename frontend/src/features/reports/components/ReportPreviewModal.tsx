@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Modal, Button, FooterInfo } from '@/components/ui';
+import { Modal, Button, FooterInfo } from '@/components';
 import type { ReportData } from '../types';
 import { format } from 'date-fns';
 import { cn, ICONS } from '@/utils';

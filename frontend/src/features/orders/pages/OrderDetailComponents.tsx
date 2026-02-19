@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import { SectionContainer, Badge, Avatar, CalloutCard } from '@/components/ui';
+import { SectionContainer, Badge, Avatar, CalloutCard } from '@/components';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
 import type { OrderTest, PaymentStatus } from '@/types';

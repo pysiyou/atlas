@@ -9,12 +9,12 @@
  * - Each list row shows: `code - name - price` and a green check icon when already selected.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Icon } from '@/components/ui';
+import { Icon } from '@/components';
 import type { Test } from '@/types';
 import { cn, ICONS, formatCurrency } from '@/utils';
 import { getBadgeAppearance } from '@/components/theme/theme';
-import { TAG_STYLES } from '@/components/ui/badgeHelpers';
-import { inputContainerBase, inputContainerError } from '@/components/ui/inputStyles';
+import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
+import { inputContainerBase, inputContainerError } from '@/components/inputs/inputStyles';
 
 interface TestSelectorProps {
   selectedTests: string[];

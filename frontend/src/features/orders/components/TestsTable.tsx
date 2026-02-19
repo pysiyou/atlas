@@ -4,8 +4,8 @@
  */
 
 import React, { useMemo } from 'react';
-import { Table, Badge, EmptyState } from '@/components/ui';
-import type { TableViewConfig, CardComponentProps } from '@/components/ui';
+import { Table, Badge, EmptyState } from '@/components';
+import type { TableViewConfig, CardComponentProps } from '@/components';
 import { DATA_AMOUNT, DATA_ID_PRIMARY_INLINE } from '@/utils/constants';
 import { formatCurrency } from '@/utils';
 import { getTestName, getTestSampleType } from '@/features/catalog/utils';
@@ -13,7 +13,7 @@ import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import type { OrderTest, Test } from '@/types';
 import { ICONS } from '@/utils';
 import { getBadgeAppearance } from '@/components/theme/theme';
-import { TAG_STYLES } from '@/components/ui/badgeHelpers';
+import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
 
 export interface TestsTableProps {
   tests: OrderTest[];

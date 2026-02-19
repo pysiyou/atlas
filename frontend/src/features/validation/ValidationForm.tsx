@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import { Textarea } from '@/components/ui';
+import { Textarea } from '@/components';
 import { PanicValueAlert } from './components/PanicValueAlert';
 import type { ResultStatus } from '@/types/enums';
 

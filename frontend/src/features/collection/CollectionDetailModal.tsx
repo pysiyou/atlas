@@ -14,7 +14,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import type { ContainerType, RejectedSample, RejectionReason } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import Barcode from 'react-barcode';
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { displayId } from '@/utils';
 import { CollectionInfoLine } from '@/features/lab/components/StatusBadges';

@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { EmptyState } from '@/components/ui';
+import { EmptyState } from '@/components';
 import { DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import { ICONS } from '@/utils';
 import type { ProductivityMetrics } from '../types';

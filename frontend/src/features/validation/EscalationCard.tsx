@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Badge, Card, Button, Alert, Icon } from '@/components/ui';
+import { Badge, Card, Button, Alert, Icon } from '@/components';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/features/admin/api/useUsers';

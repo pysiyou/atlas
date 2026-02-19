@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { Input, MultiSelectFilter } from '@/components/ui';
-import type { FilterOption } from '@/components/ui';
+import { Input, MultiSelectFilter } from '@/components';
+import type { FilterOption } from '@/components';
 import { RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG, type Relationship } from '@/types';
 import { ICONS } from '@/utils';
 import type { PatientFormSectionProps } from './types';

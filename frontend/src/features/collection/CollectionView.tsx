@@ -13,7 +13,7 @@ import { useOrderLookup } from '@/features/orders/utils/useOrderUtils';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useCollectSample, useSamplesList } from '@/features/collection/api/useSamples';
 import { queryKeys } from '@/lib/query';
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { getErrorMessage, getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errors';
 import type { ContainerType, ContainerTopColor, SampleStatus } from '@/types';

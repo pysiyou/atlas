@@ -16,7 +16,7 @@ import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useSampleLookup } from '@/features/collection/api/useSamples';
 import { useFiltering } from '@/hooks/useFiltering';
 import { ListView } from '@/components';
-import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/ui';
+import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
 import { createReportTableConfig } from './ReportTableConfig';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { ReportFilters } from '../components/ReportFilters';
@@ -24,7 +24,7 @@ import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import type { ReportData, ValidatedTest } from '../types';
 import { formatDate } from '@/utils';
 import { companyConfig } from '@/config';
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 
 /**
  * ReportList Component

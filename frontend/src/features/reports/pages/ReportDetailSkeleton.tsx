@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { Skeleton } from '@/components/loaders/Skeleton';
 
 export const ReportDetailSkeleton: React.FC = () => (
   <div

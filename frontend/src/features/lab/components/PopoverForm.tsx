@@ -8,7 +8,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Button, IconButton, FooterInfo, Icon } from '@/components/ui';
+import { Button, IconButton, FooterInfo, Icon } from '@/components';
 import { useAuthStore } from '@/app/store';
 import { ICONS } from '@/utils';
 

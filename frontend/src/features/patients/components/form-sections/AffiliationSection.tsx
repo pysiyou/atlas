@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Badge, Button, Checkbox } from '@/components/ui';
+import { Badge, Button, Checkbox } from '@/components';
 import { useAsyncHandler } from '@/hooks';
 import type { AffiliationDuration } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';

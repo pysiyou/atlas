@@ -5,14 +5,14 @@
  */
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { toast } from '@/components/feedback';
-import { Popover, Button, Icon, FooterInfo } from '@/components/ui';
+import { toast } from '@/app/AppToastBar';
+import { Popover, Button, Icon, FooterInfo } from '@/components';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';
 import type { SampleRequirement } from '@/features/lab/utils';
 import { cn, ICONS, getContainerIcon } from '@/utils';
-import { inputBase, inputError } from '@/components/ui/inputStyles';
+import { inputBase, inputError } from '@/components/inputs/inputStyles';
 
 /** Container type choices for collection: tube or cup only */
 const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = [

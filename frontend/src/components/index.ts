@@ -1,14 +1,16 @@
 /**
- * Global Design System — barrel export for @/components
+ * components/index.ts — Top-level barrel for @/components.
  *
- * Re-exports the most commonly imported items from each sub-folder.
- * Import from the specific sub-path for tree-shaking where possible.
+ * These are the NEW canonical paths. Old subdirectory indexes (ui/, feedback/, data/, form/)
+ * remain untouched and continue to work for any imports that haven't migrated yet.
  */
 
-export * from './ui';
+export * from './primitives';
+export * from './inputs';
+export * from './overlays';
+export * from './display';
+export * from './surfaces';
+export * from './data-table';
+export * from './loaders';
 export * from './layout';
-export * from './ui';
-export * from './layout';
-export * from './feedback';
-export * from './data';
-export * from './form';
+export * from './theme';

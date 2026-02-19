@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { SectionContainer, Badge, Icon } from '@/components/ui';
+import { SectionContainer, Badge, Icon } from '@/components';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
 import type { Patient } from '@/types';

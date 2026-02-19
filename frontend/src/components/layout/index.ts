@@ -2,8 +2,9 @@
  * Global Layout Components — barrel export for @/components/layout
  */
 
-export { DashboardLayout, DashboardLayout as AppLayout } from './AppLayout';
-export type { DashboardLayoutProps } from './AppLayout';
+export * from './AppShell';
+export { AppShell as AppLayout } from './AppShell';
 export * from './DetailPageHeader';
 export * from './DetailPageShell';
+export * from './PageHeaderBar';
 export * from './Sidebar';

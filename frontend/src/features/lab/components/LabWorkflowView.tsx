@@ -8,7 +8,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { SearchBar, EmptyState } from '@/components/ui';
+import { SearchBar, EmptyState } from '@/components';
 import { useSearch } from '@/hooks/useFiltering';
 import { ICONS } from '@/utils';
 import {

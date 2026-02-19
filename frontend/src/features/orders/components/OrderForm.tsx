@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import { Input, MultiSelectFilter, Textarea } from '@/components/ui';
+import { Input, MultiSelectFilter, Textarea } from '@/components';
 import type { PriorityLevel } from '@/types';
 import { PRIORITY_LEVEL_OPTIONS } from '@/types';
-import type { FilterOption } from '@/components/ui';
+import type { FilterOption } from '@/components';
 import { ICONS } from '@/utils';
 
 interface OrderDetailsFormProps {

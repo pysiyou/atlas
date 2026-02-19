@@ -11,14 +11,14 @@
 /* eslint-disable max-lines */
 
 import React from 'react';
-import { Badge, Card, Icon, IconButton, Alert, Avatar } from '@/components/ui';
+import { Badge, Card, Icon, IconButton, Alert, Avatar } from '@/components';
 import Barcode from 'react-barcode';
 import type { ContainerType, RejectedSample, Sample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { useRejectSample } from '@/features/collection/api/useSamples';
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/utils';

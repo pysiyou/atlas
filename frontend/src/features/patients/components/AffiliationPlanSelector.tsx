@@ -5,8 +5,8 @@
  */
 
 import React, { useMemo } from 'react';
-import { Button, CalloutCard, Icon } from '@/components/ui';
-import { DnaHelixLoader } from '@/components/ui';
+import { Button, CalloutCard, Icon } from '@/components';
+import { DnaHelixLoader } from '@/components';
 import { useAffiliationPricing } from '@/features/patients/api/useAffiliationPricing';
 import { formatCurrency } from '@/utils';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';

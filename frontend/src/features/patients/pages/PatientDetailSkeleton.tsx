@@ -5,8 +5,8 @@
 
 import React from 'react';
 import { useResponsiveLayout } from '@/hooks';
-import { SectionContainer } from '@/components/ui';
-import { SkeletonInfoSection, SkeletonTableRow } from '@/components/ui/Skeleton';
+import { SectionContainer } from '@/components';
+import { SkeletonInfoSection, SkeletonTableRow } from '@/components/loaders/Skeleton';
 
 const InfoRows = 6;
 const TableSkeletonRows = 4;

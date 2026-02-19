@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import type { PaymentMethod } from '@/types';
 import { getEnabledPaymentMethods } from '@/types/billing';
-import { PaymentMethodSelector, Alert } from '@/components/ui';
+import { PaymentMethodSelector, Alert } from '@/components';
 
 export interface OrderPaymentSectionProps {
   mode: 'create' | 'edit';

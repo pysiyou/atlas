@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Button, Icon } from '@/components/ui';
+import { Button, Icon } from '@/components';
 import type { ContainerType, Sample, RejectedSample, Order, RejectionReason } from '@/types';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';

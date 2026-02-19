@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { SectionContainer } from '@/components/ui';
-import { SkeletonCard, SkeletonTableRow } from '@/components/ui/Skeleton';
+import { SectionContainer } from '@/components';
+import { SkeletonCard, SkeletonTableRow } from '@/components/loaders/Skeleton';
 
 const STAT_CARDS = 4;
 const TABLE_ROWS = 6;

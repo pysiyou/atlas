@@ -4,9 +4,9 @@
  */
 
 import React from 'react';
-import { Button, Icon } from '@/components/ui';
+import { Button, Icon } from '@/components';
 import { cn, ICONS } from '@/utils';
-import { inputBase } from '@/components/ui/inputStyles';
+import { inputBase } from '@/components/inputs/inputStyles';
 import type { DateRangeFilter } from '../types';
 
 export type DateRangePreset = 'thisWeek' | 'last7' | 'last30' | 'last90';

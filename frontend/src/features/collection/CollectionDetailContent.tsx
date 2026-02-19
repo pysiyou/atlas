@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Icon, SectionContainer } from '@/components/ui';
+import { Icon, SectionContainer } from '@/components';
 import Barcode from 'react-barcode';
 import type { Sample, RejectedSample, Test } from '@/types';
 import { displayId } from '@/utils';

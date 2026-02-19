@@ -10,7 +10,7 @@ import { ValidationView } from '@/features/validation/ValidationView';
 import { EscalationView } from '@/features/validation/EscalationView';
 import { CommandCenterView } from '@/features/command-center';
 import { useAuthStore } from '@/app/store';
-import { Icon, PageHeaderBar } from '@/components/ui';
+import { Icon, PageHeaderBar } from '@/components';
 import { ICONS } from '@/utils';
 
 type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation' | 'dashboard';

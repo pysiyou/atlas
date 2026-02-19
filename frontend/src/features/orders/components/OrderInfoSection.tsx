@@ -4,10 +4,10 @@
  */
 
 import React from 'react';
-import { Badge } from '@/components/ui';
+import { Badge } from '@/components';
 import { displayId } from '@/utils';
 import type { Order } from '@/types';
-import { InfoField } from '@/components/ui/InfoField';
+import { InfoField } from '@/components/display/InfoField';
 import { formatOrderDate } from '@/utils/date';
 import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/utils';
 

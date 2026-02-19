@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { Skeleton } from '@/components/loaders/Skeleton';
 
 const DATE_GROUPS = 2;
 const ITEMS_PER_GROUP = 3;

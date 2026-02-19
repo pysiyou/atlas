@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Badge, Button, Icon, IconButton } from '@/components/ui';
+import { Badge, Button, Icon, IconButton } from '@/components';
 import { DetailPageHeader } from '@/components';
 import { displayId } from '@/utils';
 import type { Order, Invoice } from '@/types';

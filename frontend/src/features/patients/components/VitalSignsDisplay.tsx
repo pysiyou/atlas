@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { Icon, EmptyState } from '@/components/ui';
-import type { IconName } from '@/components/ui';
+import { Icon, EmptyState } from '@/components';
+import type { IconName } from '@/components';
 import type { VitalSigns } from '@/types/patient';
 import { ICONS } from '@/utils';
 import { DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';

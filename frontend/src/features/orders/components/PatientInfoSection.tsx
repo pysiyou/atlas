@@ -4,11 +4,11 @@
  */
 
 import React from 'react';
-import { Icon, Avatar } from '@/components/ui';
+import { Icon, Avatar } from '@/components';
 import { calculateAge } from '@/utils';
 import { displayId } from '@/utils';
 import type { Patient } from '@/types';
-import { InfoField } from '@/components/ui/InfoField';
+import { InfoField } from '@/components/display/InfoField';
 import { formatOrderDate } from '@/utils/date';
 import { ICONS } from '@/utils';
 

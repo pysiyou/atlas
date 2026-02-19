@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/ui';
+import { Button } from '@/components';
 
 export interface OrderModalFooterProps {
   onClose: () => void;

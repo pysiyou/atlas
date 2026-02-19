@@ -1,5 +1,5 @@
 import React from 'react';
-import { Popover, FooterInfo } from '@/components/ui';
+import { Popover, FooterInfo } from '@/components';
 import type { Affiliation } from '@/types';
 import { AffiliationInfo } from './AffiliationInfoSection';
 import { ICONS } from '@/utils';

@@ -22,11 +22,11 @@ import {
   CalloutCard,
   FooterInfo,
   PaymentMethodSelector,
-} from '@/components/ui';
+} from '@/components';
 import { ErrorBoundary } from '@/components';
 import { cn, formatDate, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
-import { inputBase } from '@/components/ui/inputStyles';
+import { inputBase } from '@/components/inputs/inputStyles';
 import { useCreatePayment } from '@/features/billing/api/usePayments';
 import {
   getEnabledPaymentMethods,

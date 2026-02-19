@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Avatar } from '@/components/ui';
+import { Avatar } from '@/components';
 import { useUserLookup } from '@/features/admin/api/useUsers';
 import {
   STATUS_TIMELINE_STEPS,

@@ -4,7 +4,7 @@
  * Icons reference the IconName type from @/components/ui.
  */
 
-import type { IconName } from '@/components/ui';
+import type { IconName } from '@/components';
 import type { ContainerType } from '@/types';
 
 export const ICONS = {

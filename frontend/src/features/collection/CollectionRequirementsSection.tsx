@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { CalloutCard, SectionContainer } from '@/components/ui';
+import { CalloutCard, SectionContainer } from '@/components';
 
 /** Test detail for requirements display */
 export interface TestDetail {

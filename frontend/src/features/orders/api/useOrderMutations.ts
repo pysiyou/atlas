@@ -8,7 +8,7 @@ import { queryKeys } from '@/lib/query';
 import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import { orderAPI } from '@/features/orders/api/orders';
 import { getErrorMessage } from '@/utils/errors';
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 import type { Order, TestStatus } from '@/types';
 
 /**

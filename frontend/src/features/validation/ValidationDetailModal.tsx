@@ -11,7 +11,7 @@
  */
 
 import React, { useCallback } from 'react';
-import { Button, SectionContainer } from '@/components/ui';
+import { Button, SectionContainer } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';

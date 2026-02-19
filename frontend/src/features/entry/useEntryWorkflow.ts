@@ -18,7 +18,7 @@ import { useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
 import { useEnterResults } from '@/features/validation/api/useResultMutations';
 import { queryKeys } from '@/lib/query';
 import { checkReferenceRangeWithDemographics } from '@/features/lab/utils';
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import type { TestResult, TestWithContext, Test, Order } from '@/types';
 

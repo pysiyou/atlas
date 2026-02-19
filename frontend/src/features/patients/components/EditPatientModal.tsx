@@ -7,7 +7,7 @@ import React, { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Patient } from '@/types';
-import { Button, Modal, CircularProgress, FooterInfo } from '@/components/ui';
+import { Button, Modal, CircularProgress, FooterInfo } from '@/components';
 import { ICONS } from '@/utils';
 import { displayId } from '@/utils';
 import { ErrorBoundary } from '@/components';

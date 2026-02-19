@@ -9,7 +9,7 @@
 /* eslint-disable max-lines */
 
 import React from 'react';
-import { Badge, Button, Card, Icon, Alert } from '@/components/ui';
+import { Badge, Button, Card, Icon, Alert } from '@/components';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';

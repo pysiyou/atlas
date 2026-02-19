@@ -4,7 +4,7 @@
  */
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@/components/primitives/Badge';
 import { ActivitiesTimelineSkeleton } from './ActivitiesTimelineSkeleton';
 import { formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
 import type { LabOperationRecord } from '@/types/lab-operations';

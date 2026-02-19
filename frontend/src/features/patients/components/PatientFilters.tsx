@@ -4,10 +4,10 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Icon, Button, Badge, Modal, FooterInfo, DnaHelixLoader } from '@/components/ui';
-import { MultiSelectFilter } from '@/components/ui';
-import { CheckboxList } from '@/components/ui';
-import { ModalRangeSlider } from '@/components/ui';
+import { Icon, Button, Badge, Modal, FooterInfo, DnaHelixLoader } from '@/components';
+import { MultiSelectFilter } from '@/components';
+import { CheckboxList } from '@/components';
+import { ModalRangeSlider } from '@/components';
 import { AgeFilter } from './AgeFilter';
 import {
   inputWrapper,
@@ -15,7 +15,7 @@ import {
   inputText,
   inputContainerBase,
   inputClearButton,
-} from '@/components/ui/inputStyles';
+} from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';

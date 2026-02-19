@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Table, EmptyState } from '@/components/ui';
+import { Table, EmptyState } from '@/components';
 import type { Order } from '@/types/order';
 import { useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';

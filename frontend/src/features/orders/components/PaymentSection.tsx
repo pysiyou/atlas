@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Alert, PaymentMethodSelector } from '@/components/ui';
+import { Alert, PaymentMethodSelector } from '@/components';
 import type { PaymentMethodOption, PaymentMethod } from '@/types/billing';
 
 export interface PaymentSectionProps {

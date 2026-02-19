@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Alert, Button, DnaHelixLoader } from '@/components/ui';
+import { Alert, Button, DnaHelixLoader } from '@/components';
 import { RadioCard } from './PopoverForm';
 import type { ResultRejectionType } from '@/types';
 import { cn } from '@/utils';

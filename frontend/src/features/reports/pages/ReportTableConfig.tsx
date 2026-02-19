@@ -9,8 +9,8 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
-import { Badge } from '@/components/ui';
-import type { TableViewConfig } from '@/components/ui';
+import { Badge } from '@/components';
+import type { TableViewConfig } from '@/components';
 import type { ValidatedTest } from '../types';
 import { DATA_ID_PRIMARY, DATA_ID_PRIMARY_CLICKABLE, DATA_ID_SECONDARY } from '@/utils/constants';
 import { ReportPreviewButton } from '../components/ReportPreviewButton';

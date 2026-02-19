@@ -3,7 +3,7 @@
  * Builds the dynamic grid sections for the collection detail modal
  */
 
-import { Badge } from '@/components/ui';
+import { Badge } from '@/components';
 import type { ContainerType, Sample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { formatVolume } from '@/features/lab/utils';

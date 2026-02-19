@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Popover, Icon, FilterTriggerShell } from '@/components/ui';
+import { Popover, Icon, FilterTriggerShell } from '@/components';
 import { useRangeValue } from '@/hooks/useRangeValue';
 import { cn } from '@/utils';
 import { ICONS } from '@/utils';

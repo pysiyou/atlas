@@ -4,7 +4,7 @@
  * Shared utility functions for lab workflow components.
  */
 
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 import { getCollectionRequirements } from './sample-helpers';
 import { getTestNames } from '@/features/catalog/utils';
 import { printCollectionLabel } from '@/features/collection/CollectionLabel';

@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react';
-import { Card } from '@/components/ui';
+import { Card } from '@/components';
 import { OrderCardHeader, OrderMetadata } from '../pages/OrderDetailComponents';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import type { Order } from '@/types';

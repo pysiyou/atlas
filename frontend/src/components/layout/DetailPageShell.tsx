@@ -4,9 +4,9 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { LoadingState } from '../feedback/LoadingState';
-import { ErrorAlert } from '../feedback/ErrorAlert';
-import { EmptyState } from '@/components/ui';
+import { LoadingState } from '@/components/loaders/LoadingState';
+import { ErrorAlert } from '@/components/loaders/ErrorAlert';
+import { EmptyState } from '@/components';
 import { ICONS } from '@/utils';
 
 export interface DetailPageShellError {

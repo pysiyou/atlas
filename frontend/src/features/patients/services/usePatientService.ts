@@ -8,7 +8,7 @@ import {
 import { apiClient } from '@/lib/api/client';
 import { queryKeys } from '@/lib/query/keys';
 import { invalidatePatientQueries } from '@/lib/query/invalidate';
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 import { getErrorMessage } from '@/utils/errors';
 import type { Affiliation, AffiliationDuration } from '@/types';
 import { formInputToPayload } from '../utils/form-transformers';

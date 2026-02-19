@@ -6,7 +6,7 @@
 import React, { useMemo } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { ChartContainer } from './ChartContainer';
-import { Icon, type IconName } from '@/components/ui';
+import { Icon, type IconName } from '@/components';
 
 export interface DonutChartSegment {
   name: string;

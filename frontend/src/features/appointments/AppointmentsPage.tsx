@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { SectionContainer, Icon, PageHeaderBar } from '@/components/ui';
+import { SectionContainer, Icon, PageHeaderBar } from '@/components';
 import { ICONS } from '@/utils';
 
 export const Appointments: React.FC = () => {

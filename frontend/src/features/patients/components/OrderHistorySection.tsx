@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { SectionContainer, Badge, Button, Icon } from '@/components/ui';
+import { SectionContainer, Badge, Button, Icon } from '@/components';
 import { formatDate, formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
 import type { Order } from '@/types';

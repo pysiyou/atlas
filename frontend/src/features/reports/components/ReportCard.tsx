@@ -4,8 +4,8 @@
  * Custom mobile card component for report data in table view.
  * Displays validated test information in a mobile-friendly card layout.
  */
-import { Badge, Card, Avatar } from '@/components/ui';
-import type { CardComponentProps } from '@/components/ui';
+import { Badge, Card, Avatar } from '@/components';
+import type { CardComponentProps } from '@/components';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import type { ValidatedTest } from '../types';

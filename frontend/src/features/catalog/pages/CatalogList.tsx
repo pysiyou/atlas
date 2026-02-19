@@ -10,7 +10,7 @@ import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import { ListView } from '@/components';
-import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/ui';
+import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
 import { CatalogFilters } from '../components/CatalogFilters';
 import { createCatalogTableConfig } from './CatalogTableConfig';
 import { useCatalogFilters } from '../hooks/useCatalogFilters';

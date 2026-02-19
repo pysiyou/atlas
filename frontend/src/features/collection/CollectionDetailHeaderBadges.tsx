@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Badge, Icon } from '@/components/ui';
+import { Badge, Icon } from '@/components';
 import type { ContainerType, ContainerTopColor, Sample, RejectedSample } from '@/types';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/features/lab/utils';
 import { displayId } from '@/utils';

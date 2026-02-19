@@ -9,10 +9,10 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Modal } from '@/components/ui';
-import { Badge, SectionContainer, DetailFieldGroup, FooterInfo } from '@/components/ui';
+import { Modal } from '@/components';
+import { Badge, SectionContainer, DetailFieldGroup, FooterInfo } from '@/components';
 import { ICONS } from '@/utils';
-import type { DetailFieldConfig } from '@/components/ui';
+import type { DetailFieldConfig } from '@/components';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/features/admin/api/useUsers';

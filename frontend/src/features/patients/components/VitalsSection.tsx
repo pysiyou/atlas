@@ -6,10 +6,10 @@
  */
 
 import React from 'react';
-import { Icon, type IconName } from '@/components/ui';
+import { Icon, type IconName } from '@/components';
 import type { VitalSigns } from '@/types/patient';
 import { cn, ICONS } from '@/utils';
-import { inputBase, inputError } from '@/components/ui/inputStyles';
+import { inputBase, inputError } from '@/components/inputs/inputStyles';
 
 export interface VitalsSectionProps {
   /** Current vital signs data */

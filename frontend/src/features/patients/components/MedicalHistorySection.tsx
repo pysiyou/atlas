@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { SectionContainer, Badge, Icon, EmptyState } from '@/components/ui';
+import { SectionContainer, Badge, Icon, EmptyState } from '@/components';
 import type { Patient } from '@/types';
 import { formatFamilyHistory } from '../utils/patient-formatters';
 import { DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';

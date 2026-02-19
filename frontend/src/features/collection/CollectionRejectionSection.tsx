@@ -8,7 +8,7 @@
 import React from 'react';
 import { REJECTION_REASON_CONFIG } from '@/types/enums';
 import { formatDate } from '@/utils';
-import { SectionContainer } from '@/components/ui';
+import { SectionContainer } from '@/components';
 import type { RejectionRecord } from '@/types';
 
 /**

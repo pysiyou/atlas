@@ -5,9 +5,9 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Button, Popover, SectionContainer } from '@/components/ui';
+import { Button, Popover, SectionContainer } from '@/components';
 import { cn, displayId } from '@/utils';
-import { inputBase } from '@/components/ui/inputStyles';
+import { inputBase } from '@/components/inputs/inputStyles';
 import { ValidationForm } from './ValidationForm';
 import {
   LabDetailModal,
@@ -20,7 +20,7 @@ import { EntryRejectionSection } from '../entry/EntryRejectionSection';
 import { EntryInfoLine } from '@/features/lab/components/StatusBadges';
 import { useResolveEscalation } from '@/features/validation/api/useResultMutations';
 import { useAuthStore } from '@/app/store';
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 import type { TestWithContext } from '@/types';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 

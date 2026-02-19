@@ -3,8 +3,8 @@
  */
 
 import React, { useCallback, useState } from 'react';
-import { Button, Textarea, Popover, Icon } from '@/components/ui';
-import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/components/ui/inputStyles';
+import { Button, Textarea, Popover, Icon } from '@/components';
+import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
 import type { Test, TestParameter, Patient } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '@/features/lab/utils';

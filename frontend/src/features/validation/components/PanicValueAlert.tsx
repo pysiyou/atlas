@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { CalloutCard, Icon, Badge } from '@/components/ui';
+import { CalloutCard, Icon, Badge } from '@/components';
 import { cn } from '@/utils';
 
 export interface PanicValueAlertProps {

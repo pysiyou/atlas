@@ -5,12 +5,12 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Popover, IconButton, Alert, Badge, FooterInfo } from '@/components/ui';
+import { Popover, IconButton, Alert, Badge, FooterInfo } from '@/components';
 import { PopoverForm, CheckboxCard } from '@/features/lab/components/PopoverForm';
 import { cn, displayId } from '@/utils';
 import type { RejectionReason } from '@/types';
 import { ICONS } from '@/utils';
-import { inputBase } from '@/components/ui/inputStyles';
+import { inputBase } from '@/components/inputs/inputStyles';
 
 /** Rejection reason options with labels and descriptions */
 const REJECTION_REASONS: { value: RejectionReason; label: string; description: string }[] = [

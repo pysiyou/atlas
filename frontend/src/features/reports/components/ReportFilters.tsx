@@ -4,15 +4,15 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Icon, Button, Badge, Modal, FooterInfo, DnaHelixLoader } from '@/components/ui';
-import { DateFilter } from '@/components/ui';
+import { Icon, Button, Badge, Modal, FooterInfo, DnaHelixLoader } from '@/components';
+import { DateFilter } from '@/components';
 import {
   inputWrapper,
   inputInner,
   inputText,
   inputContainerBase,
   inputClearButton,
-} from '@/components/ui/inputStyles';
+} from '@/components/inputs/inputStyles';
 import { cn, ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { DatePresetBadges, REPORT_FILTER_PLACEHOLDERS } from '@/features/filters';

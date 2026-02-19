@@ -6,7 +6,7 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { format } from 'date-fns';
-import { EmptyState } from '@/components/ui';
+import { EmptyState } from '@/components';
 import { ICONS } from '@/utils';
 
 const BAR_COLOR = 'var(--chart-success)';

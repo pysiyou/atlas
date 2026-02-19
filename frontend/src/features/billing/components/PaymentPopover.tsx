@@ -14,11 +14,11 @@ import {
   Badge,
   FooterInfo,
   PaymentMethodSelector,
-} from '@/components/ui';
+} from '@/components';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { cn, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
-import { inputBase } from '@/components/ui/inputStyles';
+import { inputBase } from '@/components/inputs/inputStyles';
 import type { Order } from '@/types';
 import {
   getEnabledPaymentMethods,

@@ -14,7 +14,7 @@ import {
   useRejectResults,
   useValidateBulk,
 } from '@/features/validation/api/useResultMutations';
-import { toast } from '@/components/feedback';
+import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { orderHasValidatedTests } from '@/features/orders/utils';

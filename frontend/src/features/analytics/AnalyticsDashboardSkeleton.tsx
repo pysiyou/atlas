@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { Card } from '@/components/ui';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { Card } from '@/components';
+import { Skeleton } from '@/components/loaders/Skeleton';
 
 const WIDGET_COUNT = 6;
 

@@ -10,7 +10,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Badge, Button, Icon, SectionContainer, CircularProgress } from '@/components/ui';
+import { Badge, Button, Icon, SectionContainer, CircularProgress } from '@/components';
 import { useAsyncHandler } from '@/hooks';
 import { displayId } from '@/utils';
 import { EntryForm } from './EntryForm';

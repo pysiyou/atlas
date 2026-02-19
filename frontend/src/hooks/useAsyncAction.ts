@@ -5,8 +5,8 @@
  */
 
 import { useState, useCallback, useRef, useEffect, useId } from 'react';
-import type { UseAsyncActionOptions, LoadingStatus } from '@/components/feedback';
-import { useLoadingScopeActions } from '@/components/feedback';
+import type { UseAsyncActionOptions, LoadingStatus } from '@/components/loaders';
+import { useLoadingScopeActions } from '@/components/loaders';
 
 export interface UseAsyncActionReturn<T extends unknown[]> {
   execute: (...args: T) => Promise<void>;

@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { Badge, Card, Alert, Icon, IconButton } from '@/components/ui';
+import { Badge, Card, Alert, Icon, IconButton } from '@/components';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';

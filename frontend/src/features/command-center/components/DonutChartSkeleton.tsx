@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { Skeleton } from '@/components/loaders/Skeleton';
 
 const SEGMENT_ROWS = 4;
 const LIST_ROWS = 4;
