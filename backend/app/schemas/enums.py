@@ -50,14 +50,16 @@ class SampleType(str, enum.Enum):
 
 
 class SampleStatus(str, enum.Enum):
+    """
+    Sample status enum - simplified to only actively used states.
+    
+    Lifecycle:
+    - PENDING: Awaiting collection from patient
+    - COLLECTED: Sample has been collected and is ready for testing
+    - REJECTED: Sample failed quality checks (terminal - recollection creates new sample)
+    """
     PENDING = "pending"
     COLLECTED = "collected"
-    RECEIVED = "received"
-    ACCESSIONED = "accessioned"
-    IN_PROGRESS = "in-progress"
-    COMPLETED = "completed"
-    STORED = "stored"
-    DISPOSED = "disposed"
     REJECTED = "rejected"
 
 

@@ -351,11 +351,10 @@ class LabOperationsService:
 
         # Check recollection limit.
         # Note: When called from reject_and_recollect, the rejectionHistory already includes
-        # the current rejection (added by reject_sample). We use ">" to allow exactly
-        # MAX_RECOLLECTION_ATTEMPTS recollections. The pre-check in reject_and_recollect
-        # uses ">=" on the history BEFORE the new rejection is added.
+        # the current rejection (added by reject_sample), so we check if it already reached
+        # the limit (>=). This ensures exactly MAX_RECOLLECTION_ATTEMPTS total recollections.
         rejection_count = len(original_sample.rejectionHistory or [])
-        if rejection_count > MAX_RECOLLECTION_ATTEMPTS:
+        if rejection_count >= MAX_RECOLLECTION_ATTEMPTS:
             raise LabOperationError(
                 f"Maximum recollection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. Please escalate to supervisor."
             )

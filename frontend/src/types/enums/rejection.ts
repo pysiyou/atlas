@@ -1,28 +1,33 @@
+/**
+ * Rejection Reason Enum - Aligned with backend
+ * 
+ * Must match backend/app/schemas/enums.py RejectionReason exactly
+ */
 export const REJECTION_REASON_VALUES = [
-  'insufficient-volume',
   'hemolyzed',
   'clotted',
+  'qns', // Quantity Not Sufficient
+  'wrong_container',
+  'labeling_error',
+  'transport_delay',
   'contaminated',
-  'mislabeled',
-  'expired',
-  'wrong-container',
-  'damaged-container',
-  'incorrect-storage',
+  'lipemic',
+  'icteric',
   'other',
 ] as const;
 
 export type RejectionReason = (typeof REJECTION_REASON_VALUES)[number];
 
 export const REJECTION_REASON_CONFIG: Record<RejectionReason, { label: string }> = {
-  'insufficient-volume': { label: 'Insufficient Volume' },
   hemolyzed: { label: 'Hemolyzed' },
   clotted: { label: 'Clotted' },
+  qns: { label: 'Quantity Not Sufficient (QNS)' },
+  wrong_container: { label: 'Wrong Container' },
+  labeling_error: { label: 'Labeling Error' },
+  transport_delay: { label: 'Transport Delay' },
   contaminated: { label: 'Contaminated' },
-  mislabeled: { label: 'Mislabeled' },
-  expired: { label: 'Expired' },
-  'wrong-container': { label: 'Wrong Container' },
-  'damaged-container': { label: 'Damaged Container' },
-  'incorrect-storage': { label: 'Incorrect Storage' },
+  lipemic: { label: 'Lipemic' },
+  icteric: { label: 'Icteric' },
   other: { label: 'Other' },
 };
 

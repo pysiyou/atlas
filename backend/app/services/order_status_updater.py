@@ -14,8 +14,9 @@ from app.models.lab_audit import LabOperationLog
 
 logger = logging.getLogger(__name__)
 
-# Terminal states that should not regress (CANCELLED is set manually, not calculated)
-TERMINAL_STATUSES = {OrderStatus.COMPLETED, OrderStatus.CANCELLED}
+# CANCELLED is the only truly terminal state (set manually, not calculated)
+# COMPLETED can regress to IN_PROGRESS when retests/escalations are created
+TERMINAL_STATUSES = {OrderStatus.CANCELLED}
 
 
 def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
@@ -73,7 +74,8 @@ def update_order_status(db: Session, order_id: int) -> None:
     """
     Update order status based on the status of its samples and tests.
 
-    Prevents backward transitions from terminal states (COMPLETED, CANCELLED).
+    Allows transitions from COMPLETED back to IN_PROGRESS when retests/escalations are created.
+    CANCELLED is the only truly terminal state (set manually).
     
     Args:
         db: Database session
@@ -85,46 +87,13 @@ def update_order_status(db: Session, order_id: int) -> None:
 
     current_status = order.overallStatus
     
-    # Prevent regression from terminal states
-    if current_status in TERMINAL_STATUSES:
-        logger.debug(f"Order {order_id} is in terminal state {current_status}, skipping status update")
+    # Only CANCELLED is truly terminal - it's set manually and should not be auto-changed
+    if current_status == OrderStatus.CANCELLED:
+        logger.debug(f"Order {order_id} is cancelled, skipping status update")
         return
 
     samples = db.query(Sample).filter(Sample.orderId == order_id).all()
     new_status = _calculate_order_status(order, samples)
-    
-    # Handle regression from COMPLETED to earlier states
-    # This can legitimately happen when a test is rejected and a retest is created
-    if current_status == OrderStatus.COMPLETED and new_status == OrderStatus.ORDERED:
-        # Check if there are active tests that need work (not VALIDATED, SUPERSEDED, or REMOVED)
-        active_tests = [t for t in order.tests if t.status not in {
-            TestStatus.VALIDATED,
-            TestStatus.SUPERSEDED,
-            TestStatus.REMOVED
-        }]
-        has_pending_work = any(
-            t.status in {
-                TestStatus.PENDING,
-                TestStatus.SAMPLE_COLLECTED,
-                TestStatus.IN_PROGRESS,
-                TestStatus.RESULTED,  # Needs validation
-                TestStatus.ESCALATED,  # Needs supervisor review
-            }
-            for t in active_tests
-        )
-
-        if has_pending_work:
-            # Allow regression to IN_PROGRESS - there's legitimate work to do (e.g., retest)
-            new_status = OrderStatus.IN_PROGRESS
-            logger.info(
-                f"Order {order_id} regressing from {current_status} to {new_status} due to pending work"
-            )
-        else:
-            # No pending work, block the regression
-            logger.warning(
-                f"Prevented regression of order {order_id} from {current_status} to {new_status}"
-            )
-            return
     
     if order.overallStatus != new_status:
         old_status = order.overallStatus

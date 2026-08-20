@@ -5,14 +5,44 @@
 
 import type { Order, OrderStatus, TestStatus, OrderTest } from '@/types';
 
+/**
+ * Calculate order status based on test statuses.
+ * 
+ * Logic matches backend order_status_updater.py:
+ * 1. All tests rejected/superseded/removed -> cancelled
+ * 2. All ACTIVE tests validated -> completed
+ * 3. Any active test started (not pending) -> in-progress
+ * 4. All pending -> ordered
+ */
 export const calculateOrderStatus = (testStatuses: TestStatus[]): OrderStatus => {
-  if (testStatuses.every(s => s === 'rejected' || s === 'superseded' || s === 'removed')) {
+  // Filter out superseded and removed tests - only consider active tests
+  const activeStatuses = testStatuses.filter(
+    s => s !== 'superseded' && s !== 'removed'
+  );
+
+  if (activeStatuses.length === 0) {
     return 'cancelled';
   }
-  if (testStatuses.some(s => s === 'validated')) return 'completed';
-  if (testStatuses.some(s => s === 'in-progress' || s === 'sample-collected' || s === 'resulted')) {
+
+  // Check if ALL active tests are validated -> COMPLETED (not just some)
+  if (activeStatuses.every(s => s === 'validated')) {
+    return 'completed';
+  }
+
+  // Check if any active test has started (not pending) -> IN_PROGRESS
+  const startedStatuses: TestStatus[] = [
+    'sample-collected',
+    'in-progress',
+    'resulted',
+    'validated',
+    'rejected',
+    'escalated',
+  ];
+  if (activeStatuses.some(s => startedStatuses.includes(s))) {
     return 'in-progress';
   }
+
+  // All tests are pending -> ORDERED
   return 'ordered';
 };
 

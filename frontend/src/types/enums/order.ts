@@ -24,24 +24,22 @@ export const ORDER_STATUS_TIMELINE = ORDER_STATUS_VALUES.map(status => ({
   label: ORDER_STATUS_CONFIG[status].label,
 }));
 
+/**
+ * Payment Status Enum - Aligned with backend
+ * 
+ * Must match backend/app/schemas/enums.py PaymentStatus exactly
+ * Backend only supports unpaid and paid states.
+ */
 export const PAYMENT_STATUS_VALUES = [
   'unpaid',
-  'pending',
-  'partial',
   'paid',
-  'refunded',
-  'cancelled',
 ] as const;
 
 export type PaymentStatus = (typeof PAYMENT_STATUS_VALUES)[number];
 
 export const PAYMENT_STATUS_CONFIG: Record<PaymentStatus, { label: string }> = {
   unpaid: { label: 'Unpaid' },
-  pending: { label: 'Pending' },
-  partial: { label: 'Partial' },
   paid: { label: 'Paid' },
-  refunded: { label: 'Refunded' },
-  cancelled: { label: 'Cancelled' },
 };
 
 export const PAYMENT_STATUS_OPTIONS = PAYMENT_STATUS_VALUES.map(value => ({

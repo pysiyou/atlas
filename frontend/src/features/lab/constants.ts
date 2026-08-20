@@ -30,20 +30,22 @@ export const LAB_SAMPLE_STATUSES = {
   PENDING: 'pending' as SampleStatus,
   COLLECTED: 'collected' as SampleStatus,
   REJECTED: 'rejected' as SampleStatus,
-  SAMPLE_COLLECTED: 'sample-collected' as SampleStatus,
-  IN_PROGRESS: 'in-progress' as SampleStatus,
-  RESULTED: 'resulted' as TestStatus,
 } as const;
 
 /**
  * Test status values used in lab workflows
+ * Note: Removed 'completed' as it doesn't exist in TestStatus enum (use 'resulted' instead)
  */
 export const LAB_TEST_STATUSES = {
   PENDING: 'pending' as TestStatus,
+  SAMPLE_COLLECTED: 'sample-collected' as TestStatus,
   IN_PROGRESS: 'in-progress' as TestStatus,
-  COMPLETED: 'completed' as TestStatus,
+  RESULTED: 'resulted' as TestStatus,
   VALIDATED: 'validated' as TestStatus,
   REJECTED: 'rejected' as TestStatus,
+  ESCALATED: 'escalated' as TestStatus,
+  SUPERSEDED: 'superseded' as TestStatus,
+  REMOVED: 'removed' as TestStatus,
 } as const;
 
 /**
@@ -134,11 +136,10 @@ export const collectionFilterConfig: FilterConfig = {
 // Entry Workflow Filter Config
 // ============================================================================
 
-/** Entry workflow: sample-collected, in-progress only */
-const ENTRY_STATUS_VALUES = ['sample-collected', 'in-progress'] as const;
+/** Entry workflow: sample-collected only (backend RESULT_ENTRY_STATES) */
+const ENTRY_STATUS_VALUES = ['sample-collected'] as const;
 const entryStatusOptions = createFilterOptions(ENTRY_STATUS_VALUES, {
   'sample-collected': { label: TEST_STATUS_CONFIG['sample-collected'].label },
-  'in-progress': { label: TEST_STATUS_CONFIG['in-progress'].label },
 } as Record<(typeof ENTRY_STATUS_VALUES)[number], { label: string }>);
 
 /** Entry filter configuration */

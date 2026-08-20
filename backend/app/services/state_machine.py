@@ -22,32 +22,23 @@ class SampleStateMachine:
     """
     State machine for Sample status transitions.
 
-    Sample Lifecycle:
-    PENDING -> COLLECTED -> RECEIVED -> ACCESSIONED -> IN_PROGRESS -> COMPLETED -> STORED/DISPOSED
-    Any post-collection state can transition to REJECTED (quality issue).
-    REJECTED is terminal - recollection creates a new sample.
+    Sample Lifecycle (Simplified):
+    PENDING -> COLLECTED -> REJECTED (optional)
+    
+    - PENDING: Sample awaiting collection from patient
+    - COLLECTED: Sample collected and ready for testing
+    - REJECTED: Sample failed quality checks (terminal - recollection creates new sample)
     """
 
     TRANSITIONS: Dict[SampleStatus, Set[SampleStatus]] = {
         SampleStatus.PENDING: {SampleStatus.COLLECTED},
-        SampleStatus.COLLECTED: {SampleStatus.RECEIVED, SampleStatus.REJECTED},
-        SampleStatus.RECEIVED: {SampleStatus.ACCESSIONED, SampleStatus.REJECTED},
-        SampleStatus.ACCESSIONED: {SampleStatus.IN_PROGRESS, SampleStatus.REJECTED},
-        SampleStatus.IN_PROGRESS: {SampleStatus.COMPLETED, SampleStatus.REJECTED},
-        SampleStatus.COMPLETED: {SampleStatus.STORED, SampleStatus.DISPOSED, SampleStatus.REJECTED},
-        SampleStatus.STORED: {SampleStatus.DISPOSED, SampleStatus.REJECTED},
+        SampleStatus.COLLECTED: {SampleStatus.REJECTED},
         SampleStatus.REJECTED: set(),  # Terminal - recollection creates new sample
-        SampleStatus.DISPOSED: set(),  # Terminal
     }
 
     # States that can be rejected (have had collection)
     REJECTABLE_STATES: Set[SampleStatus] = {
         SampleStatus.COLLECTED,
-        SampleStatus.RECEIVED,
-        SampleStatus.ACCESSIONED,
-        SampleStatus.IN_PROGRESS,
-        SampleStatus.COMPLETED,
-        SampleStatus.STORED
     }
 
     @classmethod
@@ -88,8 +79,6 @@ class SampleStateMachine:
             return False, "Sample must be collected before it can be rejected"
         if status == SampleStatus.REJECTED:
             return False, "Sample is already rejected"
-        if status == SampleStatus.DISPOSED:
-            return False, "Cannot reject a disposed sample"
         return False, f"Cannot reject sample with status '{status.value}'"
 
     @classmethod
@@ -103,15 +92,18 @@ class TestStateMachine:
     State machine for OrderTest status transitions.
 
     Test Lifecycle:
-    PENDING -> SAMPLE_COLLECTED -> IN_PROGRESS -> COMPLETED -> VALIDATED
+    PENDING -> SAMPLE_COLLECTED -> IN_PROGRESS -> RESULTED -> VALIDATED
 
     Rejection paths:
-    - COMPLETED -> SUPERSEDED (when retest is created)
+    - RESULTED -> SUPERSEDED (when retest is created)
+    - RESULTED -> ESCALATED (when rejection limits exhausted)
     - SAMPLE_COLLECTED/IN_PROGRESS -> REJECTED (sample rejection)
     - REJECTED -> PENDING (when recollection sample is linked)
     
     Removal path:
     - PENDING -> REMOVED (when test is removed from order during edit)
+    
+    Terminal states: VALIDATED, SUPERSEDED, REMOVED
     """
 
     TRANSITIONS: Dict[TestStatus, Set[TestStatus]] = {
