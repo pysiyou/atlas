@@ -1,7 +1,6 @@
 /**
- * Data Loader Component
- * Loads initial data from backend after authentication
- * Provides centralized data initialization for all features
+ * Prefetches shared lists after login so feature pages hit a warm cache.
+ * Inactive while logged out (children render immediately).
  */
 
 import React from 'react';
@@ -10,8 +9,7 @@ import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import { usePatientsList } from '@/features/patients/api/usePatients';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useSamplesList } from '@/features/collection/api/useSamples';
-import { LoadingState } from '@/components/loaders/LoadingState';
-import { ErrorFallback } from '@/components/loaders/ErrorFallback';
+import { ErrorFallback, PageLoadingFallback } from '@/components/loaders';
 
 function toErrorEntry(
   isError: boolean,
@@ -24,23 +22,19 @@ function toErrorEntry(
   };
 }
 
-interface DataLoaderProps {
+interface AuthenticatedPreloadProps {
   children: React.ReactNode;
-  /** Show full-screen loading (DnaHelixLoader) while data is being fetched; if false, children render and queries show their own loading states */
-  showLoadingSkeleton?: boolean;
+  showLoadingSkeleton: boolean;
 }
 
 /**
- * DataLoader Component
- * Initializes all required data after authentication
- * Shows loading state and handles initialization errors
- *
- * Note: Data loading is triggered by the individual providers on mount,
- * this component primarily handles the loading UI state
+ * Runs query hooks only when mounted under an authenticated session.
+ * Separated so hooks are never called on the public login tree.
  */
-export const DataLoader: React.FC<DataLoaderProps> = ({ children, showLoadingSkeleton = true }) => {
-  const { isAuthenticated } = useAuthStore();
-
+const AuthenticatedPreload: React.FC<AuthenticatedPreloadProps> = ({
+  children,
+  showLoadingSkeleton,
+}) => {
   const patientsQuery = usePatientsList();
   const ordersQuery = useOrdersList();
   const testsQuery = useTestCatalog();
@@ -68,13 +62,12 @@ export const DataLoader: React.FC<DataLoaderProps> = ({ children, showLoadingSke
     ]);
   };
 
-  if (isAuthenticated && isLoading && showLoadingSkeleton) {
-    return <LoadingState message="Loading..." fullScreen size="lg" />;
+  if (isLoading && showLoadingSkeleton) {
+    return <PageLoadingFallback />;
   }
 
-  // Show error state if any provider has errors (same layout as ErrorBoundary)
-  if (isAuthenticated && errors.length > 0 && !isLoading) {
-    const message = errors.map(e => e?.message ?? 'Unknown error').join('; ');
+  if (errors.length > 0 && !isLoading) {
+    const message = errors.map(e => e.message).join('; ');
     return (
       <ErrorFallback
         error={new Error(message)}
@@ -86,3 +79,29 @@ export const DataLoader: React.FC<DataLoaderProps> = ({ children, showLoadingSke
 
   return <>{children}</>;
 };
+
+interface InitialDataPreloadProps {
+  children: React.ReactNode;
+  /** Full-screen loader while shared lists fetch; if false, children render immediately */
+  showLoadingSkeleton?: boolean;
+}
+
+export const InitialDataPreload: React.FC<InitialDataPreloadProps> = ({
+  children,
+  showLoadingSkeleton = true,
+}) => {
+  const { isAuthenticated } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <>{children}</>;
+  }
+
+  return (
+    <AuthenticatedPreload showLoadingSkeleton={showLoadingSkeleton}>
+      {children}
+    </AuthenticatedPreload>
+  );
+};
+
+/** @deprecated Use InitialDataPreload */
+export const DataLoader = InitialDataPreload;

@@ -7,6 +7,7 @@ export * from './ErrorAlert';
 export * from './ErrorBoundary';
 export * from './ErrorFallback';
 export * from './LoadingState';
+export * from './PageLoadingFallback';
 export * from './LoadingScopeContext';
 export * from './loadingTypes';
 export * from './SectionLoadingBoundary';

@@ -27,7 +27,6 @@
     "noUncheckedSideEffectImports": true,
 
     /* Path Aliases — Feature-Sliced Design */
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "@/types": ["./src/types"],

@@ -135,13 +135,17 @@ export const useAuthStore = create<AuthState>()(
         },
       },
       onRehydrateStorage: () => {
-        // If persist never calls the completion callback (e.g. storage error), stop blocking login after 300ms
+        // Clears isLoading when persist finishes (or after timeout).
+        // Must defer setState: sync rehydrate runs during create(), so calling
+        // useAuthStore.setState inline hits TDZ and leaves isLoading true forever.
         const REHYDRATE_TIMEOUT_MS = 300;
         let done = false;
         const finish = () => {
           if (done) return;
           done = true;
-          useAuthStore.setState({ isLoading: false });
+          queueMicrotask(() => {
+            useAuthStore.setState({ isLoading: false });
+          });
         };
         const timeoutId = window.setTimeout(finish, REHYDRATE_TIMEOUT_MS);
         return () => {
