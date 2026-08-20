@@ -1,8 +1,8 @@
 // src/components/loaders/SpinnerLoader.tsx
 /**
- * SpinnerLoader – Modern circular loading spinner.
+ * SpinnerLoader – Modern dual-ring loading spinner.
  *
- * A clean, minimalist spinner with a rotating arc animation.
+ * A stylish spinner with two rotating arcs creating a dynamic visual.
  * Uses pure CSS transforms for optimal performance.
  * Supports multiple sizes and respects reduced motion preferences.
  */
@@ -12,7 +12,7 @@ import React from 'react';
 /**
  * Size configuration for the spinner
  * - size: outer diameter of the spinner circle
- * - strokeWidth: thickness of the spinner arc
+ * - strokeWidth: thickness of the spinner arcs
  */
 interface SizeConfig {
   size: number;
@@ -42,7 +42,7 @@ export type DnaHelixLoaderProps = SpinnerLoaderProps;
 /**
  * SpinnerLoader Component
  *
- * Renders a modern circular spinner with a rotating arc animation.
+ * Renders a modern dual-ring spinner with counter-rotating arcs.
  * The animation is GPU-accelerated for smooth 60fps performance.
  *
  * @example
@@ -52,12 +52,18 @@ export type DnaHelixLoaderProps = SpinnerLoaderProps;
  */
 export const SpinnerLoader: React.FC<SpinnerLoaderProps> = ({ size = 'md', className = '' }) => {
   const { size: diameter, strokeWidth } = SIZES[size] ?? SIZES.md;
-  const radius = (diameter - strokeWidth) / 2;
+  const radius = (diameter - strokeWidth * 2) / 2;
   const circumference = radius * 2 * Math.PI;
   
-  // Calculate the stroke-dasharray for a 3/4 arc
-  const arcLength = circumference * 0.75;
-  const gapLength = circumference * 0.25;
+  // Outer arc - 60% of circle
+  const outerArcLength = circumference * 0.6;
+  const outerGapLength = circumference * 0.4;
+  
+  // Inner arc - 40% of circle, offset
+  const innerRadius = radius * 0.7;
+  const innerCircumference = innerRadius * 2 * Math.PI;
+  const innerArcLength = innerCircumference * 0.4;
+  const innerGapLength = innerCircumference * 0.6;
 
   return (
     <div
@@ -75,22 +81,26 @@ export const SpinnerLoader: React.FC<SpinnerLoaderProps> = ({ size = 'md', class
         viewBox={`0 0 ${diameter} ${diameter}`}
         xmlns="http://www.w3.org/2000/svg"
         className="text-current"
-        style={{
-          animation: 'spin 0.8s linear infinite',
-        }}
       >
         <style>{`
-          @keyframes spin {
+          @keyframes spin-outer {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
           }
+          @keyframes spin-inner {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+          }
           @media (prefers-reduced-motion: reduce) {
-            svg {
+            .spinner-outer, .spinner-inner {
               animation-play-state: paused !important;
             }
           }
         `}</style>
+        
+        {/* Outer arc - clockwise rotation */}
         <circle
+          className="spinner-outer"
           cx={diameter / 2}
           cy={diameter / 2}
           r={radius}
@@ -98,10 +108,29 @@ export const SpinnerLoader: React.FC<SpinnerLoaderProps> = ({ size = 'md', class
           stroke="currentColor"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
-          strokeDasharray={`${arcLength} ${gapLength}`}
-          opacity="0.9"
+          strokeDasharray={`${outerArcLength} ${outerGapLength}`}
+          opacity="0.85"
           style={{
             transformOrigin: 'center',
+            animation: 'spin-outer 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+          }}
+        />
+        
+        {/* Inner arc - counter-clockwise rotation */}
+        <circle
+          className="spinner-inner"
+          cx={diameter / 2}
+          cy={diameter / 2}
+          r={innerRadius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth * 0.9}
+          strokeLinecap="round"
+          strokeDasharray={`${innerArcLength} ${innerGapLength}`}
+          opacity="0.5"
+          style={{
+            transformOrigin: 'center',
+            animation: 'spin-inner 1s cubic-bezier(0.4, 0, 0.2, 1) infinite',
           }}
         />
       </svg>
