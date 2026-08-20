@@ -1,147 +1,110 @@
 // src/components/loaders/SpinnerLoader.tsx
 /**
- * SpinnerLoader – Animated DNA double-helix loading indicator.
+ * SpinnerLoader – Modern circular loading spinner.
  *
- * Each "rung" is a thin bar that rotates around the X-axis with a
- * staggered delay, creating a travelling 3D helix wave. Coloured dots sit
- * at each end to represent the two strands. The whole assembly is tilted
- * Displayed horizontally (no Z-axis tilt).
- *
- * Pure CSS 3D transforms · compositor-only animation → locked 60 fps.
+ * A clean, minimalist spinner with a rotating arc animation.
+ * Uses pure CSS transforms for optimal performance.
+ * Supports multiple sizes and respects reduced motion preferences.
  */
 
-import React, { useId, useEffect } from 'react';
-
-
-const PERIOD = 4.2;
-const DELAY_STEP = 0.18;
-
-interface Cfg {
-  b: number;
-  d: number;
-  h: number;
-  g: number;
-  l: number;
-}
-
-const SIZES: Record<string, Cfg> = {
-  xs: { b: 6, d: 2, h: 8, g: 1, l: 1 },
-  sm: { b: 10, d: 4, h: 24, g: 2, l: 1 },
-  md: { b: 14, d: 6, h: 36, g: 3, l: 1 },
-  lg: { b: 18, d: 8, h: 50, g: 5, l: 1 },
-};
+import React from 'react';
 
 /**
- * Module-level singleton: tracks which keyframe sheets have already been
- * injected into the document so we never inject the same @keyframes twice,
- * even when many SpinnerLoader instances are mounted simultaneously.
+ * Size configuration for the spinner
+ * - size: outer diameter of the spinner circle
+ * - strokeWidth: thickness of the spinner arc
  */
-const _injectedIds = new Set<string>();
-
-function ensureStyleSheet(id: string): void {
-  if (_injectedIds.has(id)) return;
-  _injectedIds.add(id);
-  const style = document.createElement('style');
-  style.dataset.dnaId = id;
-  style.textContent = [
-    `@keyframes ${id}R{0%{transform:rotateX(0deg)}100%{transform:rotateX(360deg)}}`,
-    `@media(prefers-reduced-motion:reduce){[data-dna="${id}"] *{animation-play-state:paused!important}}`,
-  ].join('');
-  document.head.appendChild(style);
+interface SizeConfig {
+  size: number;
+  strokeWidth: number;
 }
+
+const SIZES: Record<string, SizeConfig> = {
+  xs: { size: 16, strokeWidth: 2.5 },
+  sm: { size: 24, strokeWidth: 3 },
+  md: { size: 36, strokeWidth: 3.5 },
+  lg: { size: 48, strokeWidth: 4 },
+};
 
 export type SpinnerLoaderSize = keyof typeof SIZES;
 /** @deprecated Use SpinnerLoaderSize */
 export type DnaHelixLoaderSize = SpinnerLoaderSize;
 
 export interface SpinnerLoaderProps {
+  /** Size of the spinner */
   size?: SpinnerLoaderSize;
+  /** Additional CSS classes */
   className?: string;
 }
 /** @deprecated Use SpinnerLoaderProps */
 export type DnaHelixLoaderProps = SpinnerLoaderProps;
 
-const rootStyle: React.CSSProperties = {
-  position: 'relative',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  transformStyle: 'preserve-3d',
-  transform: 'rotateZ(0deg)',
-};
-
 /**
- * SpinnerLoader
+ * SpinnerLoader Component
  *
- * Renders a DNA double-helix animation. Styles are injected once per unique
- * animation ID into the document head — not duplicated per instance.
+ * Renders a modern circular spinner with a rotating arc animation.
+ * The animation is GPU-accelerated for smooth 60fps performance.
+ *
+ * @example
+ * ```tsx
+ * <SpinnerLoader size="md" />
+ * ```
  */
 export const SpinnerLoader: React.FC<SpinnerLoaderProps> = ({ size = 'md', className = '' }) => {
-  const rawId = useId();
-  const id = `dna${rawId.replace(/:/g, '')}`;
-  const { b: barCount, d, h, g, l } = SIZES[size] ?? SIZES.md;
-  const timing = `${PERIOD}s linear infinite`;
-
-  // Inject keyframe CSS once per unique id — never duplicated across instances.
-  useEffect(() => {
-    ensureStyleSheet(id);
-  }, [id]);
-
-  const bars = Array.from({ length: barCount }, (_, i) => {
-    const delay = `-${(i * DELAY_STEP).toFixed(2)}s`;
-    return (
-      <div
-        key={i}
-        style={{
-          position: 'relative',
-          width: l,
-          height: h,
-          border: `${l}px solid var(--dna-helix-connector)`,
-          background: 'transparent',
-          margin: `0 ${g}px`,
-          animation: `${id}R ${timing}`,
-          animationDelay: delay,
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            marginLeft: -d / 2,
-            width: d,
-            height: d,
-            backgroundColor: 'var(--dna-helix-primary-node)',
-            borderRadius: '50%',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.06)',
-            top: -d / 2,
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            marginLeft: -d / 2,
-            width: d,
-            height: d,
-            backgroundColor: 'var(--dna-helix-secondary-node)',
-            borderRadius: '50%',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.06)',
-            bottom: -d / 2,
-          }}
-        />
-      </div>
-    );
-  });
+  const { size: diameter, strokeWidth } = SIZES[size] ?? SIZES.md;
+  const radius = (diameter - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  
+  // Calculate the stroke-dasharray for a 3/4 arc
+  const arcLength = circumference * 0.75;
+  const gapLength = circumference * 0.25;
 
   return (
     <div
       role="status"
       aria-label="Loading"
-      data-dna={id}
-      className={className}
-      style={rootStyle}
+      className={`inline-flex items-center justify-center ${className}`}
+      style={{
+        width: diameter,
+        height: diameter,
+      }}
     >
-      {bars}
+      <svg
+        width={diameter}
+        height={diameter}
+        viewBox={`0 0 ${diameter} ${diameter}`}
+        xmlns="http://www.w3.org/2000/svg"
+        className="text-current"
+        style={{
+          animation: 'spin 0.8s linear infinite',
+        }}
+      >
+        <style>{`
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            svg {
+              animation-play-state: paused !important;
+            }
+          }
+        `}</style>
+        <circle
+          cx={diameter / 2}
+          cy={diameter / 2}
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={`${arcLength} ${gapLength}`}
+          opacity="0.9"
+          style={{
+            transformOrigin: 'center',
+          }}
+        />
+      </svg>
     </div>
   );
 };

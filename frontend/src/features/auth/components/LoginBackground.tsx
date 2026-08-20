@@ -212,10 +212,6 @@ export const LoginBackground: React.FC = () => {
           0% { background-position: -200% 0; }
           100% { background-position: 200% 0; }
         }
-        @keyframes gradient-shift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
         @keyframes pulse-ring {
           0% { transform: scale(0.95); opacity: 0.5; }
           50% { transform: scale(1); opacity: 0.3; }
@@ -225,10 +221,6 @@ export const LoginBackground: React.FC = () => {
           background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
           background-size: 200% 100%;
           animation: shimmer 2s infinite;
-        }
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient-shift 8s ease infinite;
         }
         .font-display {
           font-family: var(--font-sans);
