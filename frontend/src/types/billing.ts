@@ -76,8 +76,7 @@ export interface Invoice {
   patientName?: string;
 
   // Status
-  status: 'pending' | 'paid' | 'overdue' | 'cancelled' | 'unpaid';
-  paymentStatus?: 'unpaid' | 'paid'; // Deprecated alias
+  status: 'unpaid' | 'paid';
 
   // Financials
   items: InvoiceItem[];
@@ -85,9 +84,7 @@ export interface Invoice {
   discount: number;
   tax: number;
   total: number;
-  totalAmount?: number; // Alias
   amountPaid: number;
-  paidAmount?: number; // Alias
   amountDue: number;
 
   // Dates

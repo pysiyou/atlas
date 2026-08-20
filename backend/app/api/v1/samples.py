@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 from app.database import get_db
 
 logger = logging.getLogger(__name__)
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_sample_collector, require_lab_tech
 from app.models.user import User
 from app.models.sample import Sample
 from app.models.order import Order, OrderTest
@@ -143,7 +143,7 @@ def collect_sample(
     sampleId: int,
     collect_data: SampleCollectRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_sample_collector)  # Sample collector required
 ):
     """
     Mark sample as collected.
@@ -169,7 +169,7 @@ def reject_sample(
     sampleId: int,
     reject_data: SampleRejectRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_lab_tech)  # Lab tech required
 ):
     """
     Reject a sample and append to rejection history.
@@ -194,7 +194,7 @@ def request_recollection(
     sampleId: int,
     recollection_data: RecollectionRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_lab_tech)  # Lab tech required
 ):
     """
     Request recollection for a rejected sample.
@@ -224,7 +224,7 @@ def reject_and_recollect_sample(
     sampleId: int,
     request_data: RejectAndRecollectRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_lab_tech)  # Lab tech required
 ):
     """
     Atomically reject a sample and request recollection.

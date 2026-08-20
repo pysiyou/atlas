@@ -21,32 +21,28 @@ const REJECTION_REASONS: { value: RejectionReason; label: string; description: s
     description: 'Sample clotted when anticoagulant was required',
   },
   {
-    value: 'insufficient-volume',
+    value: 'qns',
     label: 'Quantity Not Sufficient (QNS)',
     description: 'Insufficient volume for testing',
   },
   {
-    value: 'wrong-container',
+    value: 'wrong_container',
     label: 'Wrong Container',
     description: 'Collected in incorrect tube type',
   },
   {
-    value: 'mislabeled',
+    value: 'labeling_error',
     label: 'Labeling Error',
     description: 'Missing or incorrect patient identification',
   },
   {
-    value: 'incorrect-storage',
+    value: 'transport_delay',
     label: 'Transport Delay',
     description: 'Exceeded acceptable transport time',
   },
   { value: 'contaminated', label: 'Contaminated', description: 'Visible contamination present' },
-  { value: 'expired', label: 'Expired', description: 'Sample past expiration time' },
-  {
-    value: 'damaged-container',
-    label: 'Damaged Container',
-    description: 'Container integrity compromised',
-  },
+  { value: 'lipemic', label: 'Lipemic', description: 'Lipemia detected (fatty/milky appearance)' },
+  { value: 'icteric', label: 'Icteric', description: 'Icterus detected (yellowish discoloration)' },
   { value: 'other', label: 'Other', description: 'Other reason (specify in notes)' },
 ];
 

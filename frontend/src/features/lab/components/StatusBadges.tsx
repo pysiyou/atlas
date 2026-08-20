@@ -5,8 +5,9 @@
  * Centralized components for:
  * - Container info display
  * - Collection/Entry metadata lines
- * - Volume, flag, and progress badges
+ * - Parameter progress badges
  * - Retest and recollection status badges
+ * - Result status and flag count badges
  */
 
 import React from 'react';
@@ -91,88 +92,6 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
         </>
       )}
     </span>
-  );
-};
-
-/**
- * VolumeBadge - Displays volume information
- */
-interface VolumeBadgeProps {
-  volume: number;
-  label?: string;
-  className?: string;
-}
-
-export const VolumeBadge: React.FC<VolumeBadgeProps> = ({
-  volume,
-  label = 'mL',
-  className = 'text-text-tertiary',
-}) => (
-  <Badge size="sm" variant="default" className={className}>
-    {volume.toFixed(1)} {label}
-  </Badge>
-);
-
-/**
- * FlagBadge - Displays flag count for results with abnormal values
- */
-interface FlagBadgeProps {
-  count: number;
-}
-
-export const FlagBadge: React.FC<FlagBadgeProps> = ({ count }) => {
-  if (count === 0) return null;
-
-  return (
-    <Badge size="sm" variant="danger" icon="warning">
-      {count} FLAG{count > 1 ? 'S' : ''}
-    </Badge>
-  );
-};
-
-/**
- * RecollectionBadge - Badge indicating recollection status
- */
-interface RecollectionBadgeProps {
-  originalSampleId?: string | number;
-  recollectionSampleId?: string | number;
-}
-
-export const RecollectionBadge: React.FC<RecollectionBadgeProps> = ({
-  originalSampleId,
-  recollectionSampleId,
-}) => {
-  if (!originalSampleId && !recollectionSampleId) return null;
-
-  const formattedOriginalId =
-    originalSampleId !== undefined
-      ? typeof originalSampleId === 'number'
-        ? displayId.sample(originalSampleId)
-        : originalSampleId
-      : undefined;
-  const formattedRecollectionId =
-    recollectionSampleId !== undefined
-      ? typeof recollectionSampleId === 'number'
-        ? displayId.sample(recollectionSampleId)
-        : recollectionSampleId
-      : undefined;
-
-  return (
-    <div className="flex items-center gap-2 flex-wrap">
-      {formattedOriginalId && (
-        <Badge size="sm" variant="warning" className="flex items-center gap-1">
-          <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-          Recollection of <span className="font-mono text-brand">{formattedOriginalId}</span>
-        </Badge>
-      )}
-      {formattedRecollectionId && (
-        <Badge size="sm" variant="info" className="flex items-center gap-1">
-          <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-          Recollection requested:{' '}
-          <span className="font-mono text-brand">{formattedRecollectionId}</span>
-        </Badge>
-      )}
-    </div>
   );
 };
 

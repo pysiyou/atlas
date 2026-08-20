@@ -33,9 +33,8 @@ export const PanicValueAlert: React.FC<PanicValueAlertProps> = ({
   const isCriticalLow = isNumeric && criticalLow !== undefined && numericValue < criticalLow;
   const isCriticalHigh = isNumeric && criticalHigh !== undefined && numericValue > criticalHigh;
 
-  if (isNumeric && !isCriticalLow && !isCriticalHigh) {
-    return null;
-  }
+  // Trust caller - if PanicValueAlert is rendered, the value is critical
+  // (removed check that returned null for numeric values without thresholds)
 
   return (
     <div

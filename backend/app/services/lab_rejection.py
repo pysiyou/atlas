@@ -17,9 +17,7 @@ from app.schemas.enums import TestStatus, RejectionAction
 from app.services.state_machine import SampleStateMachine, TestStateMachine
 from app.services.audit_service import AuditService
 from app.utils.exceptions import LabOperationError
-
-MAX_RETEST_ATTEMPTS = 3
-MAX_RECOLLECTION_ATTEMPTS = 3
+from app.services.lab_constants import MAX_RETEST_ATTEMPTS, MAX_RECOLLECTION_ATTEMPTS
 
 
 class AvailableAction(BaseModel):
@@ -111,10 +109,11 @@ class LabRejectionHandler:
         can_retest = current_retest_number < MAX_RETEST_ATTEMPTS
         retest_attempts_remaining = MAX_RETEST_ATTEMPTS - current_retest_number
 
-        recollection_attempt = sample.recollectionAttempt if sample else 1
-        can_recollect = recollection_attempt <= MAX_RECOLLECTION_ATTEMPTS if sample else False
+        # Use rejectionHistory length for consistency with enforcement in lab_operations
+        rejection_count = len(sample.rejectionHistory or []) if sample else 0
+        can_recollect = rejection_count < MAX_RECOLLECTION_ATTEMPTS if sample else False
         recollection_attempts_remaining = (
-            MAX_RECOLLECTION_ATTEMPTS - (recollection_attempt - 1) if sample else 0
+            MAX_RECOLLECTION_ATTEMPTS - rejection_count if sample else 0
         )
 
         available_actions = [

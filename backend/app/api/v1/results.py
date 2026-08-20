@@ -12,7 +12,13 @@ from typing import Optional, List, Any, Literal
 from app.database import get_db
 
 logger = logging.getLogger(__name__)
-from app.core.dependencies import get_current_user, require_role
+from app.core.dependencies import (
+    get_current_user,
+    require_role,
+    require_lab_tech,
+    require_lab_tech_plus,
+    require_admin,
+)
 from app.models.user import User
 from app.models.order import Order, OrderTest
 from app.models.sample import Sample
@@ -328,7 +334,7 @@ def enter_results(
     testCode: str,
     result_data: ResultEntryRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_lab_tech)  # Lab tech required
 ):
     """
     Enter results for a test.
@@ -354,7 +360,7 @@ def validate_results(
     testCode: str,
     validation_data: ResultValidationRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_lab_tech)  # Lab tech required
 ):
     """
     Validate test results - APPROVAL ONLY.
@@ -385,7 +391,7 @@ def reject_results(
     testCode: str,
     rejection_data: ResultRejectionRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_lab_tech)  # Lab tech required
 ):
     """
     Reject test results during validation with proper tracking.
@@ -502,7 +508,7 @@ def resolve_escalation(
 def validate_bulk(
     request: BulkValidationRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_lab_tech)  # Lab tech required
 ):
     """
     Validate multiple test results in a single transaction.

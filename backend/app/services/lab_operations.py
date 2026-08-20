@@ -23,7 +23,6 @@ from app.services.audit_service import AuditService
 from app.services.order_status_updater import update_order_status
 from app.services.result_validator import ResultValidatorService
 from app.services.flag_calculator import FlagCalculatorService
-from app.services.critical_notification_service import CriticalNotificationService
 from app.utils.exceptions import LabOperationError
 from app.services.lab_rejection import (
     LabRejectionHandler,
@@ -32,9 +31,8 @@ from app.services.lab_rejection import (
     RejectionResult,
 )
 
-# Constants for limits (used by sample/result ops; rejection limits live in lab_rejection)
-MAX_RETEST_ATTEMPTS = 3
-MAX_RECOLLECTION_ATTEMPTS = 3
+# Import shared constants
+from app.services.lab_constants import MAX_RETEST_ATTEMPTS, MAX_RECOLLECTION_ATTEMPTS
 
 
 class LabOperationsService:
@@ -53,7 +51,6 @@ class LabOperationsService:
         self.audit = AuditService(db)
         self.result_validator = ResultValidatorService()
         self.flag_calculator = FlagCalculatorService()
-        self.critical_notification = CriticalNotificationService(db)
         self._rejection_handler = LabRejectionHandler(
             db,
             self.audit,
@@ -189,7 +186,10 @@ class LabOperationsService:
         before_state = self._serialize_sample_state(sample)
 
         # Validate state transition
-        SampleStateMachine.validate_transition(sample.status, SampleStatus.COLLECTED)
+        try:
+            SampleStateMachine.validate_transition(sample.status, SampleStatus.COLLECTED)
+        except StateTransitionError as e:
+            raise LabOperationError(e.message, status_code=400)
 
         # Update sample
         sample.status = SampleStatus.COLLECTED
@@ -240,7 +240,8 @@ class LabOperationsService:
         user_id: int,
         rejection_reasons: List[str],
         rejection_notes: Optional[str] = None,
-        recollection_required: bool = True
+        recollection_required: bool = True,
+        commit: bool = True
     ) -> Sample:
         """
         Reject a sample.
@@ -251,6 +252,7 @@ class LabOperationsService:
             rejection_reasons: List of rejection reason codes
             rejection_notes: Optional notes
             recollection_required: Whether recollection is required
+            commit: Whether to commit the transaction (default True)
 
         Returns:
             The updated sample
@@ -311,8 +313,9 @@ class LabOperationsService:
             comment=rejection_notes
         )
 
-        self.db.commit()
-        self.db.refresh(sample)
+        if commit:
+            self.db.commit()
+            self.db.refresh(sample)
 
         # Update order status
         update_order_status(self.db, sample.orderId)
@@ -324,7 +327,8 @@ class LabOperationsService:
         sample_id: int,
         user_id: int,
         recollection_reason: str,
-        update_order_tests: bool = True
+        update_order_tests: bool = True,
+        commit: bool = True
     ) -> Sample:
         """
         Request recollection for a rejected sample.
@@ -334,6 +338,7 @@ class LabOperationsService:
             user_id: The user requesting recollection
             recollection_reason: Reason for recollection
             update_order_tests: Whether to update order tests to point to new sample
+            commit: Whether to commit the transaction (default True)
 
         Returns:
             The newly created recollection sample
@@ -420,8 +425,9 @@ class LabOperationsService:
             comment=recollection_reason
         )
 
-        self.db.commit()
-        self.db.refresh(new_sample)
+        if commit:
+            self.db.commit()
+            self.db.refresh(new_sample)
 
         # Update order status
         update_order_status(self.db, original_sample.orderId)
@@ -465,26 +471,33 @@ class LabOperationsService:
                 f"Maximum recollection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. Please escalate to supervisor."
             )
 
-        # Step 1: Reject the sample
+        # Step 1: Reject the sample (no commit yet)
         rejected_sample = self.reject_sample(
             sample_id=sample_id,
             user_id=user_id,
             rejection_reasons=rejection_reasons,
             rejection_notes=rejection_notes,
-            recollection_required=True
+            recollection_required=True,
+            commit=False
         )
 
-        # Refresh to get updated state
-        self.db.refresh(rejected_sample)
+        # Flush to make changes available in the same transaction
+        self.db.flush()
 
-        # Step 2: Create recollection sample
+        # Step 2: Create recollection sample (no commit yet)
         reason = recollection_reason or rejection_notes or "Recollection requested"
         new_sample = self.request_recollection(
             sample_id=sample_id,
             user_id=user_id,
             recollection_reason=reason,
-            update_order_tests=True
+            update_order_tests=True,
+            commit=False
         )
+
+        # Commit both operations atomically
+        self.db.commit()
+        self.db.refresh(rejected_sample)
+        self.db.refresh(new_sample)
 
         return rejected_sample, new_sample
 
@@ -748,7 +761,11 @@ class LabOperationsService:
         Original -> SUPERSEDED; new OrderTest with retestNumber=0 (fresh retry chain).
         """
         original_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
-        TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.SUPERSEDED)
+        
+        try:
+            TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.SUPERSEDED)
+        except StateTransitionError as e:
+            raise LabOperationError(e.message, status_code=400)
 
         rejection_record = {
             "rejectedAt": datetime.now(timezone.utc).isoformat(),
@@ -821,7 +838,11 @@ class LabOperationsService:
         Rejects sample and requests recollection.
         """
         original_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
-        TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.REJECTED)
+        
+        try:
+            TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.REJECTED)
+        except StateTransitionError as e:
+            raise LabOperationError(e.message, status_code=400)
 
         if not original_test.sampleId:
             raise LabOperationError("Cannot final reject - no sample linked to this test")
