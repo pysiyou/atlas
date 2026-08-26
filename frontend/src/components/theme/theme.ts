@@ -52,11 +52,6 @@ export function initializeTheme(): void {
   setTheme(DEFAULT_THEME);
 }
 
-export function getRSuiteTheme(): 'light' | 'dark' {
-  const active = getActiveTheme();
-  return active === 'studio-light' ? 'light' : 'dark';
-}
-
 export function getBadgeAppearance(): BadgeAppearance {
   const theme = getActiveTheme();
   return THEME_BADGE_APPEARANCE[theme] ?? 'unified';

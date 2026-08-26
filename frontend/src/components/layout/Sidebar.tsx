@@ -130,17 +130,25 @@ function ThemeSwitch({ isCollapsed }: ThemeSwitchProps) {
     setTheme(next);
     setEffective(next);
   }, [isLight]);
+  const themeIcon = (name: 'sun' | 'moon') => (
+    <span className="flex items-center justify-center size-3.5 shrink-0">
+      <Icon name={name} className="size-3.5" />
+    </span>
+  );
+
   if (isCollapsed) {
     return (
       <div className="flex items-center justify-center py-3 border-t border-border-default">
         <button
           type="button"
           onClick={toggle}
-          className="p-2 rounded-lg bg-surface-hover text-text-secondary hover:text-text-primary hover:bg-surface-hover/80 transition-colors"
+          className="flex items-center justify-center size-8 rounded-lg bg-surface-hover text-text-secondary hover:text-text-primary hover:bg-surface-hover/80 transition-colors"
           title={isLight ? 'Switch to dark theme' : 'Switch to light theme'}
           aria-label={isLight ? 'Switch to dark theme' : 'Switch to light theme'}
         >
-          {isLight ? <Icon name="sun" className="w-4 h-4" /> : <Icon name="moon" className="w-4 h-4" />}
+          <span className="flex items-center justify-center size-4 shrink-0">
+            {isLight ? <Icon name="sun" className="size-4" /> : <Icon name="moon" className="size-4" />}
+          </span>
         </button>
       </div>
     );
@@ -155,21 +163,21 @@ function ThemeSwitch({ isCollapsed }: ThemeSwitchProps) {
         aria-label={isLight ? 'Dark mode' : 'Light mode'}
       >
         <div className="absolute inset-0 flex">
-          <span className="flex-1 flex items-center justify-center text-text-secondary/70 [&>svg]:w-3.5 [&>svg]:h-3.5" aria-hidden>
-            <Icon name="sun" className="w-4 h-4" />
+          <span className="flex-1 flex items-center justify-center text-text-secondary/70" aria-hidden>
+            {themeIcon('sun')}
           </span>
-          <span className="flex-1 flex items-center justify-center text-text-secondary/70 [&>svg]:w-3.5 [&>svg]:h-3.5" aria-hidden>
-            <Icon name="moon" className="w-4 h-4" />
+          <span className="flex-1 flex items-center justify-center text-text-secondary/70" aria-hidden>
+            {themeIcon('moon')}
           </span>
         </div>
         <motion.span
-          className="absolute top-0.5 bottom-0.5 w-11 rounded-full bg-text-primary flex items-center justify-center shadow-sm ring-1 ring-black/5 text-surface [&>svg]:w-3 [&>svg]:h-3"
+          className="absolute top-0.5 bottom-0.5 w-11 rounded-full bg-text-primary flex items-center justify-center shadow-sm ring-1 ring-black/5 text-surface"
           initial={false}
-          animate={{ left: isLight ? '4px' : 'calc(100% - 4px - 2.75rem)' }}
+          animate={{ left: isLight ? '2px' : 'calc(100% - 2px - 2.75rem)' }}
           transition={{ type: 'spring', stiffness: 380, damping: 28 }}
           aria-hidden
         >
-          {isLight ? <Icon name="sun" className="w-4 h-4" /> : <Icon name="moon" className="w-4 h-4" />}
+          {isLight ? themeIcon('sun') : themeIcon('moon')}
         </motion.span>
       </button>
     </div>

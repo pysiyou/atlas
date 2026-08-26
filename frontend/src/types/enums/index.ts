@@ -4,7 +4,6 @@
  */
 export * from './affiliation';
 export * from './aliquot';
-export * from './appointment';
 export * from './container';
 export * from './gender';
 export * from './order';

@@ -67,7 +67,6 @@ const PROTECTED_ROUTES: ProtectedRouteConfig[] = [
   { path: `${ROUTES.CATALOG}/*`, element: Catalog },
   { path: ROUTES.LABORATORY, element: Laboratory },
   { path: `${ROUTES.LABORATORY}/:tab`, element: Laboratory },
-  { path: ROUTES.APPOINTMENTS, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
   { path: ROUTES.PAYMENTS, element: Payments },
   { path: `${ROUTES.REPORTS}/*`, element: Reports },
 ];

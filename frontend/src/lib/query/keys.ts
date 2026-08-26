@@ -142,18 +142,6 @@ export const queryKeys = {
   },
 
   /**
-   * Appointment queries (dynamic data)
-   */
-  appointments: {
-    all: ['appointments'] as const,
-    lists: () => [...queryKeys.appointments.all, 'list'] as const,
-    list: (filters?: { patientId?: string; date?: string }) =>
-      [...queryKeys.appointments.lists(), filters] as const,
-    details: () => [...queryKeys.appointments.all, 'detail'] as const,
-    byId: (id: string) => [...queryKeys.appointments.details(), id] as const,
-  },
-
-  /**
    * Lab results / escalation (role-gated)
    */
   results: {
@@ -191,7 +179,7 @@ export const queryKeys = {
  * - After RESULT mutations (entry/validate/reject): invalidate orders.all, samples.all (when relevant), results.all;
  *   when resolving escalation also invalidate results.pendingEscalation().
  * - After PAYMENT mutations: invalidate payments.all and orders.all.
- * - Billing / aliquots / appointments: when adding mutations, invalidate the corresponding *.all and cross-entity keys.
+ * - Billing / aliquots: when adding mutations, invalidate the corresponding *.all and cross-entity keys.
  */
 
 /**

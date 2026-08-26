@@ -23,7 +23,6 @@ export const menuItems: MenuItem[] = [
   { path: ROUTES.PATIENTS, label: 'Patients', icon: React.createElement(Icon, { name: 'users-group', className: 'w-5 h-5' }), roles: [] },
   { path: ROUTES.ORDERS, label: 'Orders', icon: React.createElement(Icon, { name: 'document', className: 'w-5 h-5' }), roles: [] },
   { path: ROUTES.LABORATORY, label: 'Laboratory', icon: React.createElement(Icon, { name: 'flask', className: 'w-5 h-5' }), roles: [] },
-  { path: ROUTES.APPOINTMENTS, label: 'Appointments', icon: React.createElement(Icon, { name: 'calendar', className: 'w-5 h-5' }), roles: [] },
   { path: ROUTES.PAYMENTS, label: 'Payments', icon: React.createElement(Icon, { name: 'wallet', className: 'w-5 h-5' }), roles: [] },
   { path: ROUTES.REPORTS, label: 'Reports', icon: React.createElement(Icon, { name: 'document-medicine', className: 'w-5 h-5' }), roles: [] },
   { path: ROUTES.CATALOG, label: 'Catalog', icon: React.createElement(Icon, { name: 'book', className: 'w-5 h-5' }), roles: [] },

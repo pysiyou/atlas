@@ -1,33 +1,29 @@
 /**
- * Test setup file for Vitest
- * Configures testing library and global test utilities
+ * Vitest global setup — DOM mocks and testing-library cleanup
  */
 
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach } from 'vitest';
 
-// Cleanup after each test
 afterEach(() => {
   cleanup();
 });
 
-// Mock window.matchMedia for responsive tests
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: () => {}, // deprecated
-    removeListener: () => {}, // deprecated
+    addListener: () => {},
+    removeListener: () => {},
     addEventListener: () => {},
     removeEventListener: () => {},
     dispatchEvent: () => {},
   }),
 });
 
-// Mock IntersectionObserver
 globalThis.IntersectionObserver = class IntersectionObserver {
   constructor() {}
   disconnect() {}
@@ -38,7 +34,6 @@ globalThis.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
 } as unknown as typeof IntersectionObserver;
 
-// Mock ResizeObserver
 globalThis.ResizeObserver = class ResizeObserver {
   constructor() {}
   disconnect() {}

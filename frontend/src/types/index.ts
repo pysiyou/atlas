@@ -31,7 +31,6 @@ export type {
 } from './sample';
 export { isCollectedSample } from './sample'; // Export value (function)
 export type { Aliquot, AliquotPlan } from './aliquot';
-export type { Appointment } from './appointment';
 export type { User, AuthUser } from './user';
 export type {
   Test,

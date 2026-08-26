@@ -21,7 +21,6 @@ export default defineConfig({
       '@/lib': path.resolve(__dirname, './src/lib'),
       '@/config': path.resolve(__dirname, './src/config'),
       '@/assets': path.resolve(__dirname, './src/assets'),
-      '@/test': path.resolve(__dirname, './src/test'),
     },
   },
   build: {
