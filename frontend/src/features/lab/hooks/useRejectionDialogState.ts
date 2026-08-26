@@ -15,26 +15,35 @@ interface RejectionManagerState {
   isActionEnabled: (action: 're-test' | 're-collect') => boolean;
   getDisabledReason: (action: 're-test' | 're-collect') => string | null;
   escalationRequired: boolean;
+  isEscalateEnabled: boolean;
 }
 
 function getDefaultRejectionType(
   options: RejectionOptionsResponse | null,
   isActionEnabled: (action: 're-test' | 're-collect') => boolean,
-  isRecollectBlocked: boolean
+  isRecollectBlocked: boolean,
+  isEscalateEnabled: boolean
 ): ResultRejectionType {
   if (options && isActionEnabled('re-test')) return 're-test';
   if (!isRecollectBlocked) return 're-collect';
+  if (isEscalateEnabled) return 'escalate';
   return 're-test';
 }
 
 function getIsConfirmDisabled(
   escalationRequired: boolean,
   hasReason: boolean,
+  selectedType: ResultRejectionType,
   isActionEnabled: (action: 're-test' | 're-collect') => boolean,
-  isRecollectBlocked: boolean
+  isRecollectBlocked: boolean,
+  isEscalateEnabled: boolean
 ): boolean {
   if (escalationRequired) return !hasReason;
-  return !hasReason || (!isActionEnabled('re-test') && isRecollectBlocked);
+  if (!hasReason) return true;
+  if (selectedType === 'escalate') return !isEscalateEnabled;
+  if (selectedType === 're-test') return !isActionEnabled('re-test');
+  if (selectedType === 're-collect') return isRecollectBlocked;
+  return true;
 }
 
 export interface UseRejectionDialogStateArgs {
@@ -59,7 +68,8 @@ export function useRejectionDialogState({
 }: UseRejectionDialogStateArgs): UseRejectionDialogStateReturn {
   const [userOverride, setUserOverride] = useState<ResultRejectionType | null>(null);
 
-  const { options, isActionEnabled, getDisabledReason, escalationRequired } = manager;
+  const { options, isActionEnabled, getDisabledReason, escalationRequired, isEscalateEnabled } =
+    manager;
 
   const isRecollectBlocked = orderHasValidatedTests || !isActionEnabled('re-collect');
   const recollectBlockedReason = orderHasValidatedTests
@@ -67,16 +77,25 @@ export function useRejectionDialogState({
     : getDisabledReason('re-collect');
 
   const defaultType = useMemo(
-    () => getDefaultRejectionType(options, isActionEnabled, isRecollectBlocked),
-    [options, isActionEnabled, isRecollectBlocked]
+    () =>
+      getDefaultRejectionType(options, isActionEnabled, isRecollectBlocked, isEscalateEnabled),
+    [options, isActionEnabled, isRecollectBlocked, isEscalateEnabled]
   );
 
   const selectedType = userOverride ?? defaultType;
 
   const hasReason = reason.trim().length > 0;
   const isConfirmDisabled = useMemo(
-    () => getIsConfirmDisabled(escalationRequired, hasReason, isActionEnabled, isRecollectBlocked),
-    [escalationRequired, hasReason, isActionEnabled, isRecollectBlocked]
+    () =>
+      getIsConfirmDisabled(
+        escalationRequired,
+        hasReason,
+        selectedType,
+        isActionEnabled,
+        isRecollectBlocked,
+        isEscalateEnabled
+      ),
+    [escalationRequired, hasReason, selectedType, isActionEnabled, isRecollectBlocked, isEscalateEnabled]
   );
 
   return {

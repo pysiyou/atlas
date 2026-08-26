@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
+import { useOrderHasValidatedTests } from '@/features/validation/hooks/useOrderHasValidatedTests';
 import { useRejectionManager } from './useRejectionManager';
 import { useRejectionDialogState } from './useRejectionDialogState';
 import { REJECTION_DIALOG_COPY } from '../components/rejection-dialog-constants';
@@ -25,7 +26,6 @@ export interface UseRejectionDialogParams {
   testCode: string;
   testName?: string;
   patientName?: string;
-  orderHasValidatedTests?: boolean;
   onConfirm: (result: RejectionResult) => void;
   onCancel: () => void;
   onSubmittingChange?: (submitting: boolean) => void;
@@ -36,12 +36,12 @@ export function useRejectionDialog({
   testCode,
   testName,
   patientName,
-  orderHasValidatedTests = false,
   onConfirm,
   onCancel: _onCancel,
   onSubmittingChange,
 }: UseRejectionDialogParams) {
   const [reason, setReason] = useState('');
+  const orderHasValidatedTests = useOrderHasValidatedTests(orderId);
 
   const manager = useRejectionManager({ orderId, testCode, autoFetch: true });
   const {
@@ -56,6 +56,7 @@ export function useRejectionDialog({
     retestAttemptsRemaining,
     recollectionAttemptsRemaining,
     escalationRequired,
+    isEscalateEnabled,
     clearError,
   } = manager;
 
@@ -71,6 +72,7 @@ export function useRejectionDialog({
       isActionEnabled,
       getDisabledReason,
       escalationRequired,
+      isEscalateEnabled,
     },
     orderHasValidatedTests,
     reason,
@@ -108,6 +110,7 @@ export function useRejectionDialog({
     error,
     options,
     escalationRequired,
+    isEscalateEnabled,
     retestAttemptsRemaining,
     recollectionAttemptsRemaining,
     orderHasValidatedTests,

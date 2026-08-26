@@ -52,6 +52,8 @@ interface UseRejectionManagerReturn {
   recollectionAttemptsRemaining: number;
   /** Whether escalation is required (all options exhausted) */
   escalationRequired: boolean;
+  /** Whether escalate action is offered by the API */
+  isEscalateEnabled: boolean;
   /** Clear any error state */
   clearError: () => void;
 }
@@ -172,6 +174,9 @@ export function useRejectionManager({
     setError(null);
   }, []);
 
+  const isEscalateEnabled =
+    options?.availableActions.some(a => a.action === 'escalate' && a.enabled) ?? false;
+
   // Auto-fetch options if enabled (orderId 0 is valid)
   useEffect(() => {
     if (autoFetch && orderId != null && orderId !== '' && testCode != null && testCode !== '') {
@@ -191,6 +196,7 @@ export function useRejectionManager({
     retestAttemptsRemaining: options?.retestAttemptsRemaining ?? 0,
     recollectionAttemptsRemaining: options?.recollectionAttemptsRemaining ?? 0,
     escalationRequired: options?.escalationRequired ?? false,
+    isEscalateEnabled,
     clearError,
   };
 }

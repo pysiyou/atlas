@@ -38,6 +38,7 @@ export interface RejectionFormState {
   retestAttemptsRemaining: number;
   recollectionAttemptsRemaining: number;
   orderHasValidatedTests: boolean;
+  isEscalateEnabled: boolean;
 }
 
 /** Grouped actions for form body. */
@@ -67,6 +68,7 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
     retestAttemptsRemaining,
     recollectionAttemptsRemaining,
     orderHasValidatedTests,
+    isEscalateEnabled,
   } = state;
   const { onSelectType, onReasonChange, isActionEnabled, getDisabledReason } = actions;
 
@@ -111,7 +113,7 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
           retestAttemptsRemaining={retestAttemptsRemaining}
           recollectionAttemptsRemaining={recollectionAttemptsRemaining}
           orderHasValidatedTests={orderHasValidatedTests}
-          showEscalationOption={true}
+          showEscalationOption={isEscalateEnabled}
         />
       )}
 
@@ -145,7 +147,6 @@ interface RejectionDialogContentProps {
   patientName?: string;
   onConfirm: (result: RejectionResult) => void;
   onCancel: () => void;
-  orderHasValidatedTests?: boolean;
   /** Notify parent when submitting state changes (for preventClose). */
   onSubmittingChange?: (submitting: boolean) => void;
 }
@@ -158,7 +159,6 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   patientName,
   onConfirm,
   onCancel,
-  orderHasValidatedTests = false,
   onSubmittingChange,
 }) => {
   const {
@@ -174,6 +174,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     error,
     options,
     escalationRequired,
+    isEscalateEnabled,
     retestAttemptsRemaining,
     recollectionAttemptsRemaining,
     orderHasValidatedTests: orderHasValidated,
@@ -188,7 +189,6 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     testCode,
     testName,
     patientName,
-    orderHasValidatedTests,
     onConfirm,
     onCancel,
     onSubmittingChange,
@@ -222,6 +222,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
           retestAttemptsRemaining,
           recollectionAttemptsRemaining,
           orderHasValidatedTests: orderHasValidated,
+          isEscalateEnabled,
         }}
         actions={{
           onSelectType: setUserOverride,
@@ -241,7 +242,6 @@ interface RejectionDialogProps {
   patientName?: string;
   onReject: (result: RejectionResult) => void;
   trigger?: React.ReactNode;
-  orderHasValidatedTests?: boolean;
 }
 
 export const RejectionDialog: React.FC<RejectionDialogProps> = ({
@@ -251,7 +251,6 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
   patientName,
   onReject,
   trigger,
-  orderHasValidatedTests,
 }) => {
   const [effectiveSubmitting, setEffectiveSubmitting] = useState(false);
 
@@ -273,7 +272,6 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
             testCode={testCode}
             testName={testName}
             patientName={patientName}
-            orderHasValidatedTests={orderHasValidatedTests}
             onSubmittingChange={setEffectiveSubmitting}
             onConfirm={result => {
               onReject(result);

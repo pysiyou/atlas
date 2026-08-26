@@ -111,10 +111,29 @@ class LabRejectionHandler:
 
         # Use rejectionHistory length for consistency with enforcement in lab_operations
         rejection_count = len(sample.rejectionHistory or []) if sample else 0
-        can_recollect = rejection_count < MAX_RECOLLECTION_ATTEMPTS if sample else False
         recollection_attempts_remaining = (
             MAX_RECOLLECTION_ATTEMPTS - rejection_count if sample else 0
         )
+        can_recollect_by_attempts = rejection_count < MAX_RECOLLECTION_ATTEMPTS if sample else False
+
+        # Recollection is blocked when the order already has validated tests because
+        # rejecting the sample would invalidate finalized results on the same order.
+        order_tests = self.db.query(OrderTest).filter(OrderTest.orderId == order_id).all()
+        order_has_validated_tests = any(
+            t.status == TestStatus.VALIDATED for t in order_tests
+        )
+        can_recollect = can_recollect_by_attempts and not order_has_validated_tests
+
+        recollect_disabled_reason: Optional[str] = None
+        if not can_recollect:
+            if order_has_validated_tests:
+                recollect_disabled_reason = (
+                    "Cannot collect new sample - order has validated tests"
+                )
+            elif not can_recollect_by_attempts:
+                recollect_disabled_reason = (
+                    f"Maximum {MAX_RECOLLECTION_ATTEMPTS} recollection attempts reached"
+                )
 
         available_actions = [
             AvailableAction(
@@ -127,7 +146,7 @@ class LabRejectionHandler:
             AvailableAction(
                 action=RejectionAction.RECOLLECT_NEW_SAMPLE,
                 enabled=can_recollect,
-                disabledReason=f"Maximum {MAX_RECOLLECTION_ATTEMPTS} recollection attempts reached" if not can_recollect else None,
+                disabledReason=recollect_disabled_reason,
                 label="Request New Sample",
                 description="Reject the current sample and request a new collection"
             ),
