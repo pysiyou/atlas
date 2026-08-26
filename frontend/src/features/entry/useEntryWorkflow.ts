@@ -2,17 +2,12 @@
  * useEntryWorkflow
  *
  * Encapsulates result entry state, result formatting, validation,
- * and mutation logic for the result entry workflow.
- *
- * Extracted from EntryView.tsx to separate data/action logic from rendering.
- *
- * Note: openTestModal is intentionally kept in EntryView because it needs
- * a closure over allTests/testCatalog/orders which are fetched in the view.
+ * mutation logic, and modal opening for the result entry workflow.
  */
 
 /* eslint-disable complexity */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
 import { useEnterResults } from '@/features/validation/api/useResultMutations';
@@ -20,7 +15,14 @@ import { queryKeys } from '@/lib/query';
 import { checkReferenceRangeWithDemographics } from '@/features/lab/utils';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
+import { useModal, ModalType } from '@/lib/context/ModalContext';
 import type { TestResult, TestWithContext, Test, Order } from '@/types';
+
+export interface UseEntryWorkflowOptions {
+  allTests: TestWithContext[];
+  testCatalog: Test[] | undefined;
+  orders: Order[] | undefined;
+}
 
 export interface EntryWorkflow {
   results: Record<string, Record<string, string>>;
@@ -38,14 +40,23 @@ export interface EntryWorkflow {
     finalResults?: Record<string, string>,
     finalNotes?: string
   ) => Promise<void>;
+  openTestModal: (test: TestWithContext, filteredTests: TestWithContext[]) => void;
 }
 
-export function useEntryWorkflow(): EntryWorkflow {
+export function useEntryWorkflow({
+  allTests,
+  testCatalog,
+  orders,
+}: UseEntryWorkflowOptions): EntryWorkflow {
   const queryClient = useQueryClient();
   const { getTest } = useTestNameLookup();
+  const { openModal } = useModal();
   const [results, setResults] = useState<Record<string, Record<string, string>>>({});
   const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
   const enterMutation = useEnterResults();
+
+  const openTestModalRef =
+    useRef<(test: TestWithContext, filteredTests: TestWithContext[]) => void>(undefined);
 
   const handleResultChange = useCallback((resultKey: string, paramCode: string, value: string) => {
     setResults(prev => ({
@@ -71,13 +82,13 @@ export function useEntryWorkflow(): EntryWorkflow {
     async (
       orderId: number | string,
       testCode: string,
-      allTests: TestWithContext[],
-      testCatalog: Test[] | undefined,
-      orders: Order[] | undefined,
+      saveAllTests: TestWithContext[],
+      saveTestCatalog: Test[] | undefined,
+      saveOrders: Order[] | undefined,
       finalResults?: Record<string, string>,
       finalNotes?: string
     ) => {
-      if (!testCatalog || !orders) return;
+      if (!saveTestCatalog || !saveOrders) return;
 
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
       const resultKey = `${orderIdStr}-${testCode}`;
@@ -106,7 +117,7 @@ export function useEntryWorkflow(): EntryWorkflow {
 
       const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
       const formattedResults: Record<string, unknown> = {};
-      const testItem = allTests.find(t => t.orderId === numericOrderId && t.testCode === testCode);
+      const testItem = saveAllTests.find(t => t.orderId === numericOrderId && t.testCode === testCode);
       if (!testItem) {
         toast.error({
           title: 'Test not found in current list',
@@ -191,6 +202,70 @@ export function useEntryWorkflow(): EntryWorkflow {
     [results, technicianNotes, getTest, enterMutation, queryClient]
   );
 
+  const openTestModal = useCallback(
+    (test: TestWithContext, filteredTests: TestWithContext[]) => {
+      if (!testCatalog) return;
+
+      const testDef = getTest(test.testCode);
+      const resultKey = `${test.orderId}-${test.testCode}`;
+      if (!testDef?.parameters) return;
+
+      const isComplete = areAllParametersFilled(resultKey, testDef.parameters.length);
+      const currentIndex = filteredTests.findIndex(
+        t => t.orderId === test.orderId && t.testCode === test.testCode
+      );
+
+      const onNext =
+        currentIndex < filteredTests.length - 1
+          ? () => openTestModalRef.current?.(filteredTests[currentIndex + 1], filteredTests)
+          : undefined;
+      const onPrev =
+        currentIndex > 0
+          ? () => openTestModalRef.current?.(filteredTests[currentIndex - 1], filteredTests)
+          : undefined;
+
+      openModal(ModalType.RESULT_DETAIL, {
+        test,
+        testDef,
+        resultKey,
+        results: results[resultKey] || {},
+        technicianNotes: technicianNotes[resultKey] || '',
+        isComplete,
+        onResultsChange: handleResultChange,
+        onNotesChange: handleNotesChange,
+        onSave: (finalResults?: Record<string, string>, finalNotes?: string) =>
+          handleSaveResults(
+            test.orderId,
+            test.testCode,
+            allTests,
+            testCatalog,
+            orders,
+            finalResults,
+            finalNotes
+          ),
+        onNext,
+        onPrev,
+      });
+    },
+    [
+      testCatalog,
+      getTest,
+      results,
+      technicianNotes,
+      areAllParametersFilled,
+      handleResultChange,
+      handleNotesChange,
+      handleSaveResults,
+      allTests,
+      orders,
+      openModal,
+    ]
+  );
+
+  useEffect(() => {
+    openTestModalRef.current = openTestModal;
+  }, [openTestModal]);
+
   return {
     results,
     technicianNotes,
@@ -199,5 +274,6 @@ export function useEntryWorkflow(): EntryWorkflow {
     handleNotesChange,
     areAllParametersFilled,
     handleSaveResults,
+    openTestModal,
   };
 }

@@ -25,6 +25,7 @@ import { displayId } from '@/utils';
 import { LabCard, TestList } from '@/features/lab/components/LabCard';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
 import { QueueAgeBadge } from '@/features/lab/components/QueueAgeBadge';
+import { useLabCardClickGuard } from '@/features/lab/hooks';
 import { LAB_CONFIG } from '@/features/lab/config';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
@@ -76,18 +77,7 @@ function useCollectionCardActions(
   const { rejectSample, isRejecting } = useRejectSampleHandler();
   const { sample, order } = display;
 
-  const handleCardClick = (e?: React.MouseEvent) => {
-    if (e) {
-      const target = e.target as HTMLElement;
-      if (
-        target.closest('button') ||
-        target.closest('input') ||
-        target.closest('form') ||
-        target.closest('[data-popover-content]')
-      ) {
-        return;
-      }
-    }
+  const openSampleModal = () => {
     const isPending = sample?.status === 'pending';
     const isCollected = sample?.status === 'collected';
     const isRejected = sample?.status === 'rejected';
@@ -97,6 +87,8 @@ function useCollectionCardActions(
       openModal(ModalType.SAMPLE_DETAIL, { pendingSampleDisplay: display, onCollect });
     }
   };
+
+  const handleCardClick = useLabCardClickGuard(openSampleModal);
 
   const handleRejectSample = async (
     reasons: string[],

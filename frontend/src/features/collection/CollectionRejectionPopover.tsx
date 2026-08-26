@@ -14,7 +14,7 @@ import type { RejectionReason } from '@/types';
 import { REJECTION_REASON_VALUES, REJECTION_REASON_CONFIG } from '@/types/enums';
 import { ICONS } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { LAB_CONFIG } from '@/features/lab/config';
+import { useSampleRejectionOptions } from '@/features/collection/hooks/useSampleRejectionOptions';
 
 const REJECTION_REASONS = REJECTION_REASON_VALUES.map(value => ({
   value,
@@ -52,6 +52,19 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
   const [notes, setNotes] = useState('');
   const [requireRecollection, setRequireRecollection] = useState(true);
   const [localSubmitting, setLocalSubmitting] = useState(false);
+
+  const numericSampleId =
+    typeof sampleId === 'string' && /^\d+$/.test(sampleId) ? parseInt(sampleId, 10) : undefined;
+  const { options, isLoading: optionsLoading } = useSampleRejectionOptions({
+    sampleId: numericSampleId,
+    enabled: Boolean(numericSampleId),
+  });
+
+  const rejectionHistoryUsed =
+    options?.recollectionAttemptsUsed ?? rejectionHistoryCount;
+  const maxAttempts = options?.maxRecollectionAttempts ?? 3;
+  const escalationRequired = options?.escalationRequired ?? rejectionHistoryCount >= maxAttempts;
+  const canRequireRecollection = options?.canRequireRecollection ?? true;
 
   const isValid = reasons.length > 0 && (!reasons.includes('other') || notes.trim());
   const isSubmitting = isSubmittingProp ?? localSubmitting;
@@ -121,12 +134,21 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text={POPOVER_FOOTER_MESSAGES.REJECTING_SAMPLE} />}
     >
       {/* Warning Alert */}
-      {rejectionHistoryCount > 1 ? (
+      {escalationRequired ? (
+        <Alert variant="danger" className="py-2">
+          <div className="space-y-0.5">
+            <p className="font-normal text-xs">Escalation Required</p>
+            <p className="text-xxs opacity-90 leading-tight">
+              Maximum recollection attempts reached. Escalate to supervisor before rejecting.
+            </p>
+          </div>
+        </Alert>
+      ) : rejectionHistoryUsed > 1 ? (
         <Alert variant="danger" className="py-2">
           <div className="space-y-0.5">
             <p className="font-normal text-xs">Multiple Rejections Detected</p>
             <p className="text-xxs opacity-90 leading-tight">
-              This sample has been rejected {rejectionHistoryCount} times already. Consider
+              This sample has been rejected {rejectionHistoryUsed} times already. Consider
               escalating to supervisor.
             </p>
           </div>
@@ -145,17 +167,20 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       )}
 
       {/* Attempt Progress Bar */}
-      {rejectionHistoryCount > 0 && (
+      {rejectionHistoryUsed > 0 && (
         <div className="space-y-1">
           <label className="block text-xs font-normal text-text-tertiary">
             Rejection History
           </label>
           <AttemptProgressBar
-            used={rejectionHistoryCount}
-            total={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
+            used={rejectionHistoryUsed}
+            total={maxAttempts}
             label="Rejection"
             variant="warning"
           />
+          {optionsLoading && (
+            <p className="text-xxs text-text-tertiary">Loading attempt limits...</p>
+          )}
         </div>
       )}
 
@@ -193,7 +218,11 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           onChange={() => setRequireRecollection(!requireRecollection)}
           label="Require Recollection"
           description="A new pending sample will be automatically created and linked to this rejection."
+          disabled={!canRequireRecollection}
         />
+        {!canRequireRecollection && options?.requireRecollectionDisabledReason && (
+          <p className="text-xs text-warning-fg mt-1">{options.requireRecollectionDisabledReason}</p>
+        )}
       </div>
 
       {/* Notes */}

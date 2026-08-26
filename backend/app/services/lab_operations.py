@@ -322,6 +322,44 @@ class LabOperationsService:
 
         return sample
 
+    def get_sample_rejection_options(self, sample_id: int) -> Dict[str, Any]:
+        """Return API-driven limits and flags for sample rejection UI."""
+        sample = self._get_sample(sample_id)
+        can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
+
+        rejection_count = len(sample.rejectionHistory or [])
+        recollection_attempts_remaining = max(0, MAX_RECOLLECTION_ATTEMPTS - rejection_count)
+
+        order_tests = self.db.query(OrderTest).filter(OrderTest.orderId == sample.orderId).all()
+        order_has_validated_tests = any(t.status == TestStatus.VALIDATED for t in order_tests)
+
+        can_require_recollection = (
+            recollection_attempts_remaining > 0 and not order_has_validated_tests
+        )
+
+        require_recollection_disabled_reason: Optional[str] = None
+        if not can_require_recollection:
+            if order_has_validated_tests:
+                require_recollection_disabled_reason = (
+                    "Cannot collect new sample - order has validated tests"
+                )
+            elif recollection_attempts_remaining <= 0:
+                require_recollection_disabled_reason = (
+                    f"Maximum {MAX_RECOLLECTION_ATTEMPTS} recollection attempts reached"
+                )
+
+        return {
+            "canReject": can_reject,
+            "rejectDisabledReason": reject_reason if not can_reject else None,
+            "recollectionAttemptsUsed": rejection_count,
+            "recollectionAttemptsRemaining": recollection_attempts_remaining,
+            "maxRecollectionAttempts": MAX_RECOLLECTION_ATTEMPTS,
+            "canRequireRecollection": can_require_recollection,
+            "requireRecollectionDisabledReason": require_recollection_disabled_reason,
+            "orderHasValidatedTests": order_has_validated_tests,
+            "escalationRequired": rejection_count >= MAX_RECOLLECTION_ATTEMPTS,
+        }
+
     def request_recollection(
         self,
         sample_id: int,

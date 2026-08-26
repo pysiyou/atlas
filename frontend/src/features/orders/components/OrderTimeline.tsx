@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Avatar } from '@/components';
 import { useUserLookup } from '@/features/admin/api/useUsers';
+import { getLabTabPath, type LabTabId } from '@/features/lab/constants/labTabs';
 import {
   STATUS_TIMELINE_STEPS,
   getOrderStepProgress,
@@ -13,6 +15,12 @@ import type { Order } from '@/types';
 interface OrderTimelineProps {
   order: Order;
 }
+
+const LAB_STEP_TABS: Partial<Record<string, LabTabId>> = {
+  'sample-collected': 'collection',
+  'results-entered': 'entry',
+  completed: 'validation',
+};
 
 interface StepIndicatorProps {
   progress: StepProgress;
@@ -237,8 +245,11 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
 
         // Show test dots for test-based steps (not for order-level steps like created, paid, delivered)
         // Always show dots even for single-test orders to maintain visual consistency
-        const testBasedSteps = ['sample-collected', 'results-entered', 'validated'];
+        const testBasedSteps = ['sample-collected', 'results-entered', 'completed'];
         const showTestDots = testBasedSteps.includes(step.status) && order.tests.length >= 1;
+        const labTab = LAB_STEP_TABS[step.status];
+        const showLabLink =
+          labTab && progress.isStarted && !progress.isFullyComplete && !blocked;
 
         // Determine label color based on state
         const getLabelColor = () => {
@@ -274,9 +285,18 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
               {/* Left: Label with dots, and Timestamp */}
               <div className="flex flex-col flex-1 min-w-0">
                 <div className="flex items-center">
-                  <p className={`text-xxs uppercase font-normal ${getLabelColor()}`}>
-                    {step.label}
-                  </p>
+                  {showLabLink ? (
+                    <Link
+                      to={getLabTabPath(labTab)}
+                      className={`text-xxs uppercase font-normal hover:underline ${getLabelColor()}`}
+                    >
+                      {step.label}
+                    </Link>
+                  ) : (
+                    <p className={`text-xxs uppercase font-normal ${getLabelColor()}`}>
+                      {step.label}
+                    </p>
+                  )}
                   {/* Test completion dots */}
                   {showTestDots && <TestDots progress={progress} />}
                 </div>

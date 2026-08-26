@@ -4,12 +4,15 @@
 
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { SectionContainer, Badge } from '@/components';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import { useLabTestsFromOrders } from '@/features/lab/hooks';
 import { getLabTabPath } from '@/features/lab/constants/labTabs';
 import { ROUTES } from '@/config';
+import { auditAPI } from '@/features/command-center/api/audit';
+import { ActivitiesTimeline } from '@/features/command-center/components/ActivitiesTimeline';
 
 export const AnalyzerStatusPanel: React.FC = () => {
   const { orders } = useOrdersList();
@@ -21,10 +24,16 @@ export const AnalyzerStatusPanel: React.FC = () => {
     statusFilter: ['sample-collected'],
   });
 
+  const ingestionLogsQuery = useQuery({
+    queryKey: ['analyzer', 'ingestion-logs'],
+    queryFn: () => auditAPI.getLogs({ operationType: 'result_entry', hoursBack: 72, limit: 10 }),
+    staleTime: 60_000,
+  });
+
   const endpoints = useMemo(
     () => [
       { label: 'HL7 ingestion', path: '/api/v1/analyzer/hl7', method: 'POST' },
-      { label: 'JSON results', path: '/api/v1/analyzer/results', method: 'POST' },
+      { label: 'JSON results', path: '/api/v1/analyzer/json', method: 'POST' },
       { label: 'Pending work poll', path: '/api/v1/analyzer/pending/{analyzer_id}', method: 'GET' },
     ],
     []
@@ -70,6 +79,23 @@ export const AnalyzerStatusPanel: React.FC = () => {
               Open Entry Queue
             </Link>
           </div>
+        </div>
+
+        <div>
+          <p className="text-xs font-normal text-text-primary mb-2">Recent result ingestions</p>
+          <ActivitiesTimeline
+            logs={ingestionLogsQuery.data ?? []}
+            isLoading={ingestionLogsQuery.isLoading}
+            isError={ingestionLogsQuery.isError}
+            error={ingestionLogsQuery.error instanceof Error ? ingestionLogsQuery.error : null}
+            onRetry={() => ingestionLogsQuery.refetch()}
+            className="max-h-48 overflow-y-auto"
+          />
+          {!ingestionLogsQuery.isLoading && (ingestionLogsQuery.data?.length ?? 0) === 0 && (
+            <p className="text-xs text-text-tertiary py-2">
+              No result entries logged in the last 72 hours.
+            </p>
+          )}
         </div>
 
         <p className="text-xs text-text-tertiary">

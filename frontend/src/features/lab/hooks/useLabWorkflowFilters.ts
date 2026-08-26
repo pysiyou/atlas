@@ -4,6 +4,7 @@
  */
 
 import { useState, useMemo } from 'react';
+import { compareQueuePriority } from '@/features/lab/utils/compareQueuePriority';
 
 export interface UseLabWorkflowFiltersOptions<T, S> {
   items: T[];
@@ -14,6 +15,10 @@ export interface UseLabWorkflowFiltersOptions<T, S> {
   initialStatusFilters?: S[];
   /** Pre-fill search from URL query param (e.g. cross-links from order detail). */
   initialSearchQuery?: string;
+  /** Sort by priority (urgent first) then oldest queue timestamp. */
+  sortByQueuePriority?: boolean;
+  getPriority?: (item: T) => string | undefined;
+  getQueueSince?: (item: T) => string | undefined;
 }
 
 function applyDateRange<T>(
@@ -43,6 +48,9 @@ export function useLabWorkflowFilters<T, S>({
   searchFilterFn,
   initialStatusFilters = [],
   initialSearchQuery = '',
+  sortByQueuePriority = false,
+  getPriority,
+  getQueueSince,
 }: UseLabWorkflowFiltersOptions<T, S>) {
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
@@ -67,6 +75,16 @@ export function useLabWorkflowFilters<T, S>({
     if (searchQuery.trim()) {
       out = out.filter(item => searchFilterFn(item, searchQuery));
     }
+    if (sortByQueuePriority && getPriority && getQueueSince) {
+      out = [...out].sort((a, b) =>
+        compareQueuePriority(
+          getPriority(a),
+          getPriority(b),
+          getQueueSince(a),
+          getQueueSince(b)
+        )
+      );
+    }
     return out;
   }, [
     items,
@@ -78,6 +96,9 @@ export function useLabWorkflowFilters<T, S>({
     getSampleType,
     getStatus,
     searchFilterFn,
+    sortByQueuePriority,
+    getPriority,
+    getQueueSince,
   ]);
 
   return {

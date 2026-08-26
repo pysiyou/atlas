@@ -5,10 +5,10 @@
 
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Badge, EmptyState } from '@/components';
+import { Table, Badge, EmptyState, Icon } from '@/components';
 import type { TableViewConfig, CardComponentProps } from '@/components';
 import { DATA_AMOUNT, DATA_ID_PRIMARY_INLINE } from '@/utils/constants';
-import { formatCurrency } from '@/utils';
+import { formatCurrency, formatDate, displayId } from '@/utils';
 import { getTestName, getTestSampleType } from '@/features/catalog/utils';
 import { getLabQueueUrlForTest } from '@/features/lab/utils/lab-queue-links';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
@@ -109,22 +109,45 @@ function createTestsTableConfig(
   ];
 
   const detailedColumns = [
-    ...simpleColumns,
-    // {
-    //   key: 'category',
-    //   header: 'Category',
-    //   width: 'md' as const,
-    //   render: (test: OrderTest) => {
-    //     const category = getTestCategory(test.testCode, testCatalog);
-    //     const isSuperseded = test.status === 'superseded';
-    //     return (
-    //       <Badge variant={category as 'default'} size="sm" strikethrough={isSuperseded} />
-    //     );
-    //   },
-    // },
+    ...simpleColumns.slice(0, 3),
+    {
+      key: 'sampleId',
+      header: 'Sample',
+      width: 'sm' as const,
+      render: (test: OrderTest) =>
+        test.sampleId ? (
+          <span className="font-mono text-xs text-brand">{displayId.sample(test.sampleId)}</span>
+        ) : (
+          <span className="text-xs text-text-tertiary">—</span>
+        ),
+    },
+    {
+      key: 'resultEnteredAt',
+      header: 'Entered',
+      width: 'md' as const,
+      render: (test: OrderTest) =>
+        test.resultEnteredAt ? (
+          <span className="text-xs text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
+        ) : (
+          <span className="text-xs text-text-tertiary">—</span>
+        ),
+    },
+    {
+      key: 'critical',
+      header: '',
+      width: 'sm' as const,
+      render: (test: OrderTest) =>
+        test.hasCriticalValues || test.flags?.some(f => f.toLowerCase().includes('critical')) ? (
+          <Badge variant="danger" size="xs" className="flex items-center gap-1 w-fit">
+            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
+            Critical
+          </Badge>
+        ) : null,
+    },
+    simpleColumns[3],
     {
       key: 'sampleType',
-      header: 'Sample',
+      header: 'Type',
       width: 'sm' as const,
       render: (test: OrderTest) => {
         const sampleType = getTestSampleType(test.testCode, testCatalog);

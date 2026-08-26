@@ -11,6 +11,7 @@ import { displayId } from '@/utils';
 import { useUserLookup } from '@/features/admin/api/useUsers';
 import { LabCard } from '@/features/lab/components/LabCard';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
+import { useLabCardClickGuard } from '@/features/lab/hooks';
 import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
 import type { TestWithContext } from '@/types';
 import { ICONS } from '@/utils';
@@ -27,11 +28,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   isMobile = false,
 }) => {
   const { getUserName } = useUserLookup();
-
-  const handleCardClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    onClick();
-  };
+  const handleCardClick = useLabCardClickGuard(onClick);
 
   const rejection = deriveTestRejectionContext(test);
   const {

@@ -10,15 +10,14 @@
 
 import React from 'react';
 import { Badge, Button, Card, Icon, Alert } from '@/components';
-import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { formatDate } from '@/utils';
-import { displayId } from '@/utils';
+import { formatDate, displayId } from '@/utils';
 import { useUserLookup } from '@/features/admin/api/useUsers';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard } from '@/features/lab/components/LabCard';
 import { RejectionDialog } from '@/features/lab/components';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
 import { QueueAgeBadge } from '@/features/lab/components/QueueAgeBadge';
+import { useLabCardClickGuard } from '@/features/lab/hooks';
 import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
 import type { TestWithContext } from '@/types';
 import { ICONS } from '@/utils';
@@ -120,7 +119,7 @@ export interface ValidationCardProps {
   onCommentsChange: (commentKey: string, value: string) => void;
   onApprove: () => void;
   onReject: () => void;
-  onClick?: () => void;
+  onClick: () => void;
   /** When true, approve action is in progress (show loading on approve button) */
   isApproving?: boolean;
   /** When true, renders mobile-optimized layout */
@@ -413,28 +412,13 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   isApproving = false,
   isMobile = false,
 }) => {
-  const { openModal } = useModal();
   const { getUserName } = useUserLookup();
   const { getPatientName } = usePatientNameLookup();
+  const handleCardClick = useLabCardClickGuard(onClick);
 
   if (!test.results) return null;
 
   const patientName = getPatientName(test.patientId);
-
-  const handleCardClick = () => {
-    if (onClick) {
-      onClick();
-      return;
-    }
-    openModal(ModalType.VALIDATION_DETAIL, {
-      test,
-      commentKey,
-      comments,
-      onCommentsChange,
-      onApprove,
-      onReject,
-    });
-  };
 
   if (isMobile) {
     return (

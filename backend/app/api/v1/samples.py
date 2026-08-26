@@ -60,6 +60,33 @@ class RejectAndRecollectResponse(BaseModel):
         from_attributes = True
 
 
+class SampleRejectionOptionsResponse(BaseModel):
+    """Response for sample rejection options query"""
+    canReject: bool
+    rejectDisabledReason: Optional[str] = None
+    recollectionAttemptsUsed: int
+    recollectionAttemptsRemaining: int
+    maxRecollectionAttempts: int
+    canRequireRecollection: bool
+    requireRecollectionDisabledReason: Optional[str] = None
+    orderHasValidatedTests: bool
+    escalationRequired: bool = False
+
+
+@router.get("/samples/{sampleId}/rejection-options", response_model=SampleRejectionOptionsResponse)
+def get_sample_rejection_options(
+    sampleId: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_lab_tech),
+):
+    """Get available sample rejection options and attempt limits."""
+    try:
+        service = LabOperationsService(db)
+        return service.get_sample_rejection_options(sampleId)
+    except LabOperationError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
+
+
 @router.get("/samples")
 def get_samples(
     pagination: PaginationParams,

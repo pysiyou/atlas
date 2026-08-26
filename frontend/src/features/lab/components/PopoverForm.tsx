@@ -220,6 +220,7 @@ interface CheckboxCardProps {
   label: string;
   /** Description text below the label */
   description: string;
+  disabled?: boolean;
 }
 
 export const CheckboxCard: React.FC<CheckboxCardProps> = ({
@@ -227,21 +228,35 @@ export const CheckboxCard: React.FC<CheckboxCardProps> = ({
   onChange,
   label,
   description,
+  disabled = false,
 }) => (
   <div
     role="checkbox"
     aria-checked={checked}
-    tabIndex={0}
+    aria-disabled={disabled}
+    tabIndex={disabled ? -1 : 0}
     onKeyDown={e => {
+      if (disabled) return;
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         onChange();
       }
     }}
-    className="relative flex items-start p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200 cursor-pointer"
-    onClick={onChange}
+    className={`relative flex items-start p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+    onClick={() => {
+      if (!disabled) onChange();
+    }}
   >
-    <input type="checkbox" checked={checked} onChange={onChange} className="sr-only" aria-hidden />
+    <input
+      type="checkbox"
+      checked={checked}
+      onChange={() => {
+        if (!disabled) onChange();
+      }}
+      disabled={disabled}
+      className="sr-only"
+      aria-hidden
+    />
     <div className="flex-1 min-w-0 pr-8">
       <span className="block text-xs font-normal text-text-secondary">{label}</span>
       <span className="block text-xxs mt-0.5 text-text-tertiary">{description}</span>

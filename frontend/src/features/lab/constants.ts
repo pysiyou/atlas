@@ -6,8 +6,6 @@
  */
 
 import type { SampleStatus, TestStatus, PriorityLevel } from '@/types';
-import type { FilterConfig } from '@/features/filters';
-import { SHARED_FILTER_PLACEHOLDERS } from '@/features/filters';
 import type { FilterOption } from '@/utils/filtering';
 import { createFilterOptions } from '@/utils/filtering';
 import {
@@ -18,7 +16,8 @@ import {
   PRIORITY_LEVEL_CONFIG,
 } from '@/types';
 import { ICONS } from '@/utils';
-import { LAB_CONFIG } from './config';
+import { SHARED_FILTER_PLACEHOLDERS } from '@/features/filters';
+import { buildLabFilterConfig } from '@/features/lab/utils/buildLabFilterConfig';
 
 // ============================================================================
 // Status Constants
@@ -35,7 +34,6 @@ export const LAB_SAMPLE_STATUSES = {
 
 /**
  * Test status values used in lab workflows
- * Note: Removed 'completed' as it doesn't exist in TestStatus enum (use 'resulted' instead)
  */
 export const LAB_TEST_STATUSES = {
   PENDING: 'pending' as TestStatus,
@@ -73,134 +71,61 @@ export const LAB_SAMPLE_TYPE_OPTIONS: FilterOption[] = SAMPLE_TYPE_VALUES.map(
 // Collection Workflow Filter Config
 // ============================================================================
 
-/** Sample status for collection: pending, collected, rejected */
 const COLLECTION_STATUS_OPTIONS: FilterOption[] = [
   { id: 'pending', label: 'Pending', color: 'pending' },
   { id: 'collected', label: 'Collected', color: 'collected' },
   { id: 'rejected', label: 'Rejected', color: 'rejected' },
 ];
 
-/** Collection filter configuration */
-export const collectionFilterConfig: FilterConfig = {
-  quickFilters: [],
-  primaryFilters: {
-    title: 'Filters',
-    collapsible: false,
-    controls: [
-      {
-        type: 'search',
-        key: 'searchQuery',
-        label: 'Search',
-        placeholder: 'Search samples by order ID, sample ID, patient, or test...',
-        debounceMs: LAB_CONFIG.SEARCH_DEBOUNCE_MS,
-        helpText: 'Search by order ID, sample ID, patient name, or test name.',
-      },
-      {
-        type: 'dateRange',
-        key: 'dateRange',
-        label: 'Date Range',
-        placeholder: SHARED_FILTER_PLACEHOLDERS.dateRange,
-        icon: ICONS.dataFields.date,
-        helpText: 'Filter samples by collection or order date range.',
-      },
-      {
-        type: 'multiSelect',
-        key: 'sampleType',
-        label: 'Sample Type',
-        options: LAB_SAMPLE_TYPE_OPTIONS,
-        selectAllLabel: 'All sample types',
-        icon: ICONS.dataFields.sampleCollection,
-        placeholder: SHARED_FILTER_PLACEHOLDERS.sampleType,
-        helpText: 'Filter by specimen type (e.g. blood, urine, swab).',
-      },
-      {
-        type: 'multiSelect',
-        key: 'status',
-        label: 'Status',
-        options: COLLECTION_STATUS_OPTIONS,
-        selectAllLabel: 'All statuses',
-        icon: ICONS.sampleStatus,
-        placeholder: SHARED_FILTER_PLACEHOLDERS.status,
-        helpText: 'Filter by collection status: Pending, Collected, or Rejected.',
-      },
-    ],
-  },
-  advancedFilters: {
-    title: 'Advanced Filters',
-    collapsible: true,
-    defaultCollapsed: true,
-    controls: [],
-  },
-};
+export const collectionFilterConfig = buildLabFilterConfig({
+  searchPlaceholder: 'Search samples by order ID, sample ID, patient, or test...',
+  searchHelpText: 'Search by order ID, sample ID, patient name, or test name.',
+  dateRangeHelpText: 'Filter samples by collection or order date range.',
+  extraControls: [
+    {
+      type: 'multiSelect',
+      key: 'status',
+      label: 'Status',
+      options: COLLECTION_STATUS_OPTIONS,
+      selectAllLabel: 'All statuses',
+      icon: ICONS.sampleStatus,
+      placeholder: SHARED_FILTER_PLACEHOLDERS.status,
+      helpText: 'Filter by collection status: Pending, Collected, or Rejected.',
+    },
+  ],
+});
 
 // ============================================================================
 // Entry Workflow Filter Config
 // ============================================================================
 
-/** Entry workflow: sample-collected only (backend RESULT_ENTRY_STATES) */
 const ENTRY_STATUS_VALUES = ['sample-collected'] as const;
 const entryStatusOptions = createFilterOptions(ENTRY_STATUS_VALUES, {
   'sample-collected': { label: TEST_STATUS_CONFIG['sample-collected'].label },
 } as Record<(typeof ENTRY_STATUS_VALUES)[number], { label: string }>);
 
-/** Entry filter configuration */
-export const entryFilterConfig: FilterConfig = {
-  quickFilters: [],
-  primaryFilters: {
-    title: 'Filters',
-    collapsible: false,
-    controls: [
-      {
-        type: 'search',
-        key: 'searchQuery',
-        label: 'Search',
-        placeholder: 'Search tests by order ID, patient, or test name...',
-        debounceMs: LAB_CONFIG.SEARCH_DEBOUNCE_MS,
-        helpText: 'Search by order ID, patient name, or test name.',
-      },
-      {
-        type: 'dateRange',
-        key: 'dateRange',
-        label: 'Date Range',
-        placeholder: SHARED_FILTER_PLACEHOLDERS.dateRange,
-        icon: ICONS.dataFields.date,
-        helpText: 'Filter by order or result date range.',
-      },
-      {
-        type: 'multiSelect',
-        key: 'sampleType',
-        label: 'Sample Type',
-        options: LAB_SAMPLE_TYPE_OPTIONS,
-        selectAllLabel: 'All sample types',
-        icon: ICONS.dataFields.sampleCollection,
-        placeholder: SHARED_FILTER_PLACEHOLDERS.sampleType,
-        helpText: 'Filter by specimen type (e.g. blood, urine).',
-      },
-      {
-        type: 'multiSelect',
-        key: 'status',
-        label: 'Status',
-        options: entryStatusOptions,
-        selectAllLabel: 'All statuses',
-        icon: ICONS.testStatus,
-        placeholder: SHARED_FILTER_PLACEHOLDERS.status,
-        helpText: 'Filter by test status: Sample Collected or In Progress.',
-      },
-    ],
-  },
-  advancedFilters: {
-    title: 'Advanced Filters',
-    collapsible: true,
-    defaultCollapsed: true,
-    controls: [],
-  },
-};
+export const entryFilterConfig = buildLabFilterConfig({
+  searchPlaceholder: 'Search tests by order ID, patient, or test name...',
+  searchHelpText: 'Search by order ID, patient name, or test name.',
+  dateRangeHelpText: 'Filter by order or result date range.',
+  extraControls: [
+    {
+      type: 'multiSelect',
+      key: 'status',
+      label: 'Status',
+      options: entryStatusOptions,
+      selectAllLabel: 'All statuses',
+      icon: ICONS.testStatus,
+      placeholder: SHARED_FILTER_PLACEHOLDERS.status,
+      helpText: 'Filter by test status: Sample Collected or In Progress.',
+    },
+  ],
+});
 
 // ============================================================================
 // Validation Workflow Filter Config
 // ============================================================================
 
-/** Priority options for validation workflow */
 const priorityOptions = createFilterOptions(PRIORITY_LEVEL_VALUES, {
   low: { label: PRIORITY_LEVEL_CONFIG.low.label },
   medium: { label: PRIORITY_LEVEL_CONFIG.medium.label },
@@ -208,55 +133,20 @@ const priorityOptions = createFilterOptions(PRIORITY_LEVEL_VALUES, {
   urgent: { label: PRIORITY_LEVEL_CONFIG.urgent.label },
 } as Record<PriorityLevel, { label: string }>);
 
-/** Validation filter configuration */
-export const validationFilterConfig: FilterConfig = {
-  quickFilters: [],
-  primaryFilters: {
-    title: 'Filters',
-    collapsible: false,
-    controls: [
-      {
-        type: 'search',
-        key: 'searchQuery',
-        label: 'Search',
-        placeholder: 'Search tests by order ID, patient, or test name...',
-        debounceMs: LAB_CONFIG.SEARCH_DEBOUNCE_MS,
-        helpText: 'Search by order ID, patient name, or test name.',
-      },
-      {
-        type: 'dateRange',
-        key: 'dateRange',
-        label: 'Date Range',
-        placeholder: SHARED_FILTER_PLACEHOLDERS.dateRange,
-        icon: ICONS.dataFields.date,
-        helpText: 'Filter by order or validation date range.',
-      },
-      {
-        type: 'multiSelect',
-        key: 'sampleType',
-        label: 'Sample Type',
-        options: LAB_SAMPLE_TYPE_OPTIONS,
-        selectAllLabel: 'All sample types',
-        icon: ICONS.dataFields.sampleCollection,
-        placeholder: SHARED_FILTER_PLACEHOLDERS.sampleType,
-        helpText: 'Filter by specimen type (e.g. blood, urine).',
-      },
-      {
-        type: 'multiSelect',
-        key: 'priority',
-        label: 'Priority',
-        options: priorityOptions,
-        selectAllLabel: 'All priorities',
-        icon: ICONS.priority,
-        placeholder: 'All priorities',
-        helpText: 'Filter by priority level: Low, Medium, High, or Urgent.',
-      },
-    ],
-  },
-  advancedFilters: {
-    title: 'Advanced Filters',
-    collapsible: true,
-    defaultCollapsed: true,
-    controls: [],
-  },
-};
+export const validationFilterConfig = buildLabFilterConfig({
+  searchPlaceholder: 'Search tests by order ID, patient, or test name...',
+  searchHelpText: 'Search by order ID, patient name, or test name.',
+  dateRangeHelpText: 'Filter by order or validation date range.',
+  extraControls: [
+    {
+      type: 'multiSelect',
+      key: 'priority',
+      label: 'Priority',
+      options: priorityOptions,
+      selectAllLabel: 'All priorities',
+      icon: ICONS.priority,
+      placeholder: 'All priorities',
+      helpText: 'Filter by priority level: Low, Medium, High, or Urgent.',
+    },
+  ],
+});

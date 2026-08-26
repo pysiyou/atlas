@@ -8,13 +8,13 @@
 
 import React from 'react';
 import { Badge, Card, Alert, Icon, IconButton } from '@/components';
-import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard, ProgressBadge } from '@/features/lab/components/LabCard';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
 import { QueueAgeBadge } from '@/features/lab/components/QueueAgeBadge';
+import { useLabCardClickGuard } from '@/features/lab/hooks';
 import { LAB_CONFIG } from '@/features/lab/config';
 import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
 import type { Test, TestWithContext } from '@/types';
@@ -32,7 +32,7 @@ interface EntryCardProps {
   onSave: () => void;
   onNext?: () => void;
   onPrev?: () => void;
-  onClick?: () => void;
+  onClick: () => void;
   /** When true, renders mobile-optimized layout */
   isMobile?: boolean;
 }
@@ -54,8 +54,8 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   onClick,
   isMobile = false,
 }) => {
-  const { openModal } = useModal();
   const { getPatientName } = usePatientNameLookup();
+  const handleCardClick = useLabCardClickGuard(onClick);
 
   if (!testDef?.parameters) return null;
 
@@ -73,26 +73,6 @@ export const EntryCard: React.FC<EntryCardProps> = ({
     lastSampleRejection,
     hasAnyRejectionHistory,
   } = rejection;
-
-  const handleCardClick = () => {
-    if (onClick) {
-      onClick();
-      return;
-    }
-    openModal(ModalType.RESULT_DETAIL, {
-      test,
-      testDef,
-      resultKey,
-      results,
-      technicianNotes,
-      isComplete,
-      onResultsChange,
-      onNotesChange,
-      onSave,
-      onNext,
-      onPrev,
-    });
-  };
 
   // Mobile layout
   if (isMobile) {

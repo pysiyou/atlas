@@ -5,7 +5,7 @@
  * Backend enter_results accepts only SAMPLE_COLLECTED; in-progress is not supported.
  */
 
-import React, { useMemo, useCallback, useRef, useEffect } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useTestCatalog, useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import type { TestWithContext } from '@/types';
@@ -16,7 +16,6 @@ import { useLabWorkflowFilters, useLabTestsFromOrders, useLabUrlSearch } from '@
 import { entryFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components';
 import { LabWorkflowViewSkeleton } from '@/features/lab/components/LabWorkflowViewSkeleton';
-import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useEntryWorkflow } from './useEntryWorkflow';
 import type { TestStatus } from '@/types';
@@ -26,18 +25,8 @@ export const EntryView: React.FC = () => {
   const { orders, isLoading: ordersLoading } = useOrdersList();
   const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();
   const { getTest } = useTestNameLookup();
-  const { openModal } = useModal();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
-
-  const {
-    results,
-    technicianNotes,
-    handleResultChange,
-    handleNotesChange,
-    areAllParametersFilled,
-    handleSaveResults,
-  } = useEntryWorkflow();
 
   const allTests = useLabTestsFromOrders({
     orders,
@@ -46,6 +35,16 @@ export const EntryView: React.FC = () => {
     includePatient: true,
   });
 
+  const {
+    results,
+    technicianNotes,
+    handleResultChange,
+    handleNotesChange,
+    areAllParametersFilled,
+    handleSaveResults,
+    openTestModal,
+  } = useEntryWorkflow({ allTests, testCatalog, orders });
+
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
   const getOrderDate = useCallback(
     (t: TestWithContext & { orderDate?: string }) => t.orderDate,
@@ -53,6 +52,11 @@ export const EntryView: React.FC = () => {
   );
   const getSampleType = useCallback((t: TestWithContext) => t.sampleType, []);
   const getStatus = useCallback((t: TestWithContext) => t.status as TestStatus, []);
+  const getPriority = useCallback((t: TestWithContext) => t.priority, []);
+  const getQueueSince = useCallback(
+    (t: TestWithContext) => t.collectedAt ?? t.orderDate,
+    []
+  );
 
   const urlSearch = useLabUrlSearch();
 
@@ -73,67 +77,10 @@ export const EntryView: React.FC = () => {
     getStatus,
     searchFilterFn: filterTest,
     initialSearchQuery: urlSearch,
+    sortByQueuePriority: true,
+    getPriority,
+    getQueueSince,
   });
-
-  // openTestModal stays in the view because it needs a closure over allTests/testCatalog/orders
-  const openTestModalRef =
-    useRef<(test: TestWithContext, filteredTests: TestWithContext[]) => void>(undefined);
-
-  const openTestModal = useCallback(
-    (test: TestWithContext, filteredTests: TestWithContext[]) => {
-      if (!testCatalog) return;
-
-      const testDef = getTest(test.testCode);
-      const resultKey = `${test.orderId}-${test.testCode}`;
-      if (!testDef?.parameters) return;
-
-      const isComplete = areAllParametersFilled(resultKey, testDef.parameters.length);
-      const currentIndex = filteredTests.findIndex(
-        t => t.orderId === test.orderId && t.testCode === test.testCode
-      );
-
-      const onNext =
-        currentIndex < filteredTests.length - 1
-          ? () => openTestModalRef.current?.(filteredTests[currentIndex + 1], filteredTests)
-          : undefined;
-      const onPrev =
-        currentIndex > 0
-          ? () => openTestModalRef.current?.(filteredTests[currentIndex - 1], filteredTests)
-          : undefined;
-
-      openModal(ModalType.RESULT_DETAIL, {
-        test,
-        testDef,
-        resultKey,
-        results: results[resultKey] || {},
-        technicianNotes: technicianNotes[resultKey] || '',
-        isComplete,
-        onResultsChange: handleResultChange,
-        onNotesChange: handleNotesChange,
-        onSave: (finalResults?: Record<string, string>, finalNotes?: string) =>
-          handleSaveResults(test.orderId, test.testCode, allTests, testCatalog, orders, finalResults, finalNotes),
-        onNext,
-        onPrev,
-      });
-    },
-    [
-      testCatalog,
-      getTest,
-      results,
-      technicianNotes,
-      areAllParametersFilled,
-      handleResultChange,
-      handleNotesChange,
-      handleSaveResults,
-      allTests,
-      orders,
-      openModal,
-    ]
-  );
-
-  useEffect(() => {
-    openTestModalRef.current = openTestModal;
-  }, [openTestModal]);
 
   const isLoading = ordersLoading || testsLoading;
   const hasNoItems = allTests.length === 0;

@@ -61,6 +61,10 @@ export const ValidationView: React.FC = () => {
     (t: TestWithContext & { hasCriticalValues?: boolean }) => t.priority as PriorityLevel,
     []
   );
+  const getQueueSince = useCallback(
+    (t: TestWithContext) => t.resultEnteredAt ?? t.orderDate,
+    []
+  );
 
   const {
     filteredItems: filteredTests,
@@ -79,6 +83,9 @@ export const ValidationView: React.FC = () => {
     getStatus: getPriority,
     searchFilterFn: filterTest,
     initialSearchQuery: urlSearch,
+    sortByQueuePriority: true,
+    getPriority,
+    getQueueSince,
   });
 
   const filteredTestsWithId = useMemo(

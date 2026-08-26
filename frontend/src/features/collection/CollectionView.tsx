@@ -69,6 +69,9 @@ export const CollectionView: React.FC = () => {
     searchFilterFn: filterSample,
     initialStatusFilters: ['pending'],
     initialSearchQuery: urlSearch,
+    sortByQueuePriority: true,
+    getPriority: display => display.priority,
+    getQueueSince: display => display.order?.orderDate,
   });
 
   /**

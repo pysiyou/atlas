@@ -50,10 +50,6 @@ const Laboratory = lazyNamed(
   () => import('@/features/lab/pages/LaboratoryPage'),
   'Laboratory'
 );
-const Appointments = lazyNamed(
-  () => import('@/features/appointments/AppointmentsPage'),
-  'Appointments'
-);
 const Payments = lazyNamed(
   () => import('@/features/billing/pages/PaymentsPage'),
   'Payments'
@@ -73,7 +69,7 @@ const PROTECTED_ROUTES: ProtectedRouteConfig[] = [
   { path: `${ROUTES.CATALOG}/*`, element: Catalog },
   { path: ROUTES.LABORATORY, element: Laboratory },
   { path: `${ROUTES.LABORATORY}/:tab`, element: Laboratory },
-  { path: ROUTES.APPOINTMENTS, element: Appointments },
+  { path: ROUTES.APPOINTMENTS, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
   { path: ROUTES.PAYMENTS, element: Payments },
   { path: `${ROUTES.REPORTS}/*`, element: Reports },
   { path: ROUTES.ADMIN, element: Admin },
