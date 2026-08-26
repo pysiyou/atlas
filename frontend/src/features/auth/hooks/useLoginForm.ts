@@ -6,7 +6,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/app/store';
-import { getDefaultRouteForRole } from '@/components/layout/sidebarMenu';
+import { ROUTES } from '@/config';
 
 const getErrorMessage = (err: unknown): string => {
   if (!(err instanceof Error)) {
@@ -65,8 +65,7 @@ export const useLoginForm = () => {
 
     try {
       await login(username, password);
-      const { user: loggedInUser } = useAuthStore.getState();
-      navigate(getDefaultRouteForRole(loggedInUser?.role));
+      navigate(ROUTES.DASHBOARD);
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {

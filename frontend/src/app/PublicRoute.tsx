@@ -8,7 +8,7 @@
 import { type ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '@/app/store';
-import { getDefaultRouteForRole } from '@/components/layout/sidebarMenu';
+import { ROUTES } from '@/config';
 import { PageLoadingFallback } from '@/components/loaders';
 
 interface Props {
@@ -16,14 +16,14 @@ interface Props {
 }
 
 export const PublicRoute = ({ children }: Props) => {
-  const { isAuthenticated, isLoading, user } = useAuthStore();
+  const { isAuthenticated, isLoading } = useAuthStore();
 
   if (isLoading) {
     return <PageLoadingFallback />;
   }
 
   if (isAuthenticated) {
-    return <Navigate to={getDefaultRouteForRole(user?.role)} replace />;
+    return <Navigate to={ROUTES.DASHBOARD} replace />;
   }
 
   return <>{children}</>;

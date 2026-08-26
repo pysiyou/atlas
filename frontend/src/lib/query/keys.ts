@@ -47,7 +47,6 @@ export const queryKeys = {
     all: ['users'] as const,
     lists: () => [...queryKeys.users.all, 'list'] as const,
     list: () => [...queryKeys.users.lists()] as const,
-    adminList: () => [...queryKeys.users.all, 'admin-list'] as const,
     details: () => [...queryKeys.users.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.users.details(), id] as const,
   },

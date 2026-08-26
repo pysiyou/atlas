@@ -55,8 +55,6 @@ const Payments = lazyNamed(
   'Payments'
 );
 const Reports = lazyNamed(() => import('@/features/reports/pages/ReportsPage'), 'Reports');
-const Admin = lazyNamed(() => import('@/features/admin/AdminPage'), 'Admin');
-
 interface ProtectedRouteConfig {
   path: string;
   element: LazyPage;
@@ -72,7 +70,6 @@ const PROTECTED_ROUTES: ProtectedRouteConfig[] = [
   { path: ROUTES.APPOINTMENTS, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
   { path: ROUTES.PAYMENTS, element: Payments },
   { path: `${ROUTES.REPORTS}/*`, element: Reports },
-  { path: ROUTES.ADMIN, element: Admin },
 ];
 
 const AppRoutes: React.FC = () => {

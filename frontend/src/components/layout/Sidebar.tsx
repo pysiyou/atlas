@@ -92,7 +92,6 @@ function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavProps) {
           </NavLink>
         ))}
       </nav>
-      {settingsItems.length > 0 && (
       <div className="mt-4 pt-4 border-t border-border-default">
         <div className="space-y-1" role="group" aria-label="Settings">
           {settingsItems.map((item, index) => (
@@ -110,7 +109,6 @@ function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavProps) {
           ))}
         </div>
       </div>
-      )}
     </div>
   );
 }
@@ -300,7 +298,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 }) => {
   const { user: currentUser, logout } = useAuthStore();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const filteredMenuItems = getFilteredMenuItems(currentUser?.role);
+  const filteredMenuItems = getFilteredMenuItems();
 
   useEffect(() => {
     if (isMobile && isMobileOpen) document.body.style.overflow = 'hidden';
