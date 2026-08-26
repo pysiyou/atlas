@@ -13,7 +13,7 @@ import { useAuthStore } from '@/app/store';
 import { Icon, PageHeaderBar, Badge } from '@/components';
 import { ICONS } from '@/utils';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
-import { useSamplesList } from '@/features/collection/api/samples';
+import { useSamplesList } from '@/features/collection/api/useSamples';
 import { usePendingEscalation } from '@/features/validation/api/usePendingEscalation';
 
 type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation' | 'dashboard';
