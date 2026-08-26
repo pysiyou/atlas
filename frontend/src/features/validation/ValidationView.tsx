@@ -64,7 +64,7 @@ export const ValidationView: React.FC = () => {
     []
   );
   const getSampleType = useCallback((t: TestWithContext) => t.sampleType, []);
-  const getStatus = useCallback(
+  const getPriority = useCallback(
     (t: TestWithContext & { hasCriticalValues?: boolean }) => t.priority as PriorityLevel,
     []
   );
@@ -77,13 +77,13 @@ export const ValidationView: React.FC = () => {
     setDateRange,
     sampleTypeFilters,
     setSampleTypeFilters,
-    statusFilters,
-    setStatusFilters,
+    statusFilters: priorityFilters,
+    setStatusFilters: setPriorityFilters,
   } = useLabWorkflowFilters<TestWithContext & { hasCriticalValues?: boolean }, PriorityLevel>({
     items: allTests,
     getOrderDate,
     getSampleType,
-    getStatus,
+    getStatus: getPriority,
     searchFilterFn: filterTest,
   });
 
@@ -175,8 +175,8 @@ export const ValidationView: React.FC = () => {
               onDateRangeChange={setDateRange}
               sampleTypeFilters={sampleTypeFilters}
               onSampleTypeFiltersChange={setSampleTypeFilters}
-              statusFilters={statusFilters}
-              onStatusFiltersChange={setStatusFilters}
+              statusFilters={priorityFilters}
+              onStatusFiltersChange={setPriorityFilters}
             />
           }
           afterFilterRow={

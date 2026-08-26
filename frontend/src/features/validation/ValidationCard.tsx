@@ -18,6 +18,8 @@ import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard } from '@/features/lab/components/LabCard';
 import { RejectionDialog } from '@/features/lab/components';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
+import { ContextPanel, buildValidationContext } from '@/features/lab/components/ContextPanel';
+import { LAB_CONFIG } from '@/features/lab/config';
 import type { TestWithContext } from '@/types';
 import { getResultRejectionType } from '@/types/order';
 import { ICONS } from '@/utils';
@@ -42,7 +44,7 @@ function ResultGrid({
   const entries = Object.entries(results);
 
   if (compact) {
-    const maxVisible = 8;
+    const maxVisible = LAB_CONFIG.COMPACT_RESULT_GRID_LIMIT;
     const visibleEntries = entries.slice(0, maxVisible);
     const remainingCount = entries.length - maxVisible;
 
@@ -280,13 +282,21 @@ function ValidationCardDesktop({
   const showRetestBadge = isRetest && test.retestOfTestId;
   const showRecollectionBadge = isRecollection && !isRetest;
 
+  // Build context panel items
+  const contextItems = buildValidationContext({
+    technicianNotes: test.technicianNotes,
+    enteredBy: test.enteredBy,
+    enteredAt: test.resultEnteredAt,
+    rejectionHistory: test.resultRejectionHistory,
+  });
+
   const badges = (
     <>
       {/* Attempt indicator in top corner */}
       {hasRejectionHistory && (isRetest || isRecollection) && (
         <AttemptIndicator
           attemptNumber={isRetest ? (test.retestNumber ?? 1) : rejectionHistory.length + 1}
-          maxAttempts={3}
+          maxAttempts={LAB_CONFIG.MAX_RETEST_ATTEMPTS}
           type={isRetest ? 'retest' : 'recollection'}
           previousReason={lastRejection?.rejectionReason || lastRejection?.reason}
         />
@@ -383,7 +393,19 @@ function ValidationCardDesktop({
       }
       badges={badges}
       actions={actions}
-      content={<ResultGrid results={test.results!} flagStatusMap={flagStatusMap} />}
+      content={
+        <div className="space-y-3">
+          <ResultGrid results={test.results!} flagStatusMap={flagStatusMap} />
+          {contextItems.length > 0 && (
+            <ContextPanel 
+              title="Entry & History" 
+              items={contextItems}
+              defaultCollapsed={false}
+              variant={hasRejectionHistory ? 'warning' : 'info'}
+            />
+          )}
+        </div>
+      }
       contentTitle={`Results (${resultCount})`}
     />
   );

@@ -25,6 +25,8 @@ import { getTestNames } from '@/features/catalog/utils';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/features/lab/utils';
 import { displayId } from '@/utils';
 import { LabCard, TestList } from '@/features/lab/components/LabCard';
+import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
+import { LAB_CONFIG } from '@/features/lab/config';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import { handlePrintCollectionLabel, getEffectiveContainerType } from '@/features/lab/utils/lab-helpers';
@@ -198,7 +200,10 @@ function CollectionCardMobile({
       <div className="flex items-center justify-between gap-2 mt-auto pt-3">
         <div className="flex items-center gap-2">
           <Badge variant={sample.sampleType} size="xs" />
-          {sample.priority && <Badge variant={sample.priority} size="xs" />}
+          {/* Only show priority badge if urgent or high */}
+          {(sample.priority === 'urgent' || sample.priority === 'high') && (
+            <Badge variant={sample.priority} size="xs" />
+          )}
           {isRecollection && (
             <Badge variant="warning" size="xs">
               RECOLLECTION
@@ -275,6 +280,19 @@ function CollectionCardDesktop({
 
   const badges = (
     <>
+      {/* Attempt indicator for recollections */}
+      {isRecollection && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (
+        <AttemptIndicator
+          attemptNumber={sample.rejectionHistory.length + 1}
+          maxAttempts={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
+          type="recollection"
+          previousReason={
+            sample.rejectionHistory[sample.rejectionHistory.length - 1]?.rejectionReasons
+              ? formatRejectionReasons(sample.rejectionHistory[sample.rejectionHistory.length - 1]?.rejectionReasons)
+              : sample.rejectionHistory[sample.rejectionHistory.length - 1]?.rejectionNotes
+          }
+        />
+      )}
       <h3 className="text-sm font-medium text-text-primary capitalize">{patientName}</h3>
       {/* Only show priority badge if urgent or high */}
       {(sample.priority === 'urgent' || sample.priority === 'high') && (
@@ -369,27 +387,6 @@ function CollectionCardDesktop({
     </div>
   );
 
-  const recollectionBanner =
-    isPending && isRecollection
-      ? (() => {
-          const rejectionCount = sample.rejectionHistory?.length || 0;
-          const lastRejection = sample.rejectionHistory?.[rejectionCount - 1];
-          const reasonsText = formatRejectionReasons(lastRejection?.rejectionReasons);
-          return (
-            <Alert variant="warning" className="py-2">
-              <div className="space-y-0.5">
-                <p className="font-normal text-xs">Recollection Required</p>
-                <p className="text-xxs opacity-90 leading-tight">
-                  {reasonsText
-                    ? `Reason: ${reasonsText}.`
-                    : sample.recollectionReason || 'Previous sample was rejected.'}
-                </p>
-              </div>
-            </Alert>
-          );
-        })()
-      : undefined;
-
   const additionalInfo =
     (isRecollection && sample.originalSampleId) || rejectedSample?.recollectionSampleId ? (
       <div className="flex items-center gap-2 flex-wrap">
@@ -430,7 +427,6 @@ function CollectionCardDesktop({
       additionalInfo={additionalInfo}
       badges={badges}
       actions={actions}
-      recollectionBanner={recollectionBanner}
       content={
         <TestList
           tests={testNames.map((name, i) => ({ name, code: requirement.testCodes[i] || '' }))}

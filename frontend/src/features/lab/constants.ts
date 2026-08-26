@@ -18,6 +18,7 @@ import {
   PRIORITY_LEVEL_CONFIG,
 } from '@/types';
 import { ICONS } from '@/utils';
+import { LAB_CONFIG } from './config';
 
 // ============================================================================
 // Status Constants
@@ -91,7 +92,7 @@ export const collectionFilterConfig: FilterConfig = {
         key: 'searchQuery',
         label: 'Search',
         placeholder: 'Search samples by order ID, sample ID, patient, or test...',
-        debounceMs: 300,
+        debounceMs: LAB_CONFIG.SEARCH_DEBOUNCE_MS,
         helpText: 'Search by order ID, sample ID, patient name, or test name.',
       },
       {
@@ -154,7 +155,7 @@ export const entryFilterConfig: FilterConfig = {
         key: 'searchQuery',
         label: 'Search',
         placeholder: 'Search tests by order ID, patient, or test name...',
-        debounceMs: 300,
+        debounceMs: LAB_CONFIG.SEARCH_DEBOUNCE_MS,
         helpText: 'Search by order ID, patient name, or test name.',
       },
       {
@@ -219,7 +220,7 @@ export const validationFilterConfig: FilterConfig = {
         key: 'searchQuery',
         label: 'Search',
         placeholder: 'Search tests by order ID, patient, or test name...',
-        debounceMs: 300,
+        debounceMs: LAB_CONFIG.SEARCH_DEBOUNCE_MS,
         helpText: 'Search by order ID, patient name, or test name.',
       },
       {
@@ -242,12 +243,12 @@ export const validationFilterConfig: FilterConfig = {
       },
       {
         type: 'multiSelect',
-        key: 'status',
+        key: 'priority',
         label: 'Priority',
         options: priorityOptions,
         selectAllLabel: 'All priorities',
         icon: ICONS.priority,
-        placeholder: SHARED_FILTER_PLACEHOLDERS.status,
+        placeholder: 'All priorities',
         helpText: 'Filter by priority level: Low, Medium, High, or Urgent.',
       },
     ],

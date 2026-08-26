@@ -10,6 +10,8 @@ import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/features/admin/api/useUsers';
 import { LabCard } from '@/features/lab/components/LabCard';
+import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
+import { LAB_CONFIG } from '@/features/lab/config';
 import type { TestWithContext } from '@/types';
 import { getResultRejectionType } from '@/types/order';
 import { ICONS } from '@/utils';
@@ -119,6 +121,15 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   // Desktop layout (LabCard - same structure as ValidationCard/EntryCard)
   const badges = (
     <>
+      {/* Attempt indicator for retests/recollections */}
+      {hasRejectionHistory && (isRetest || isRecollection) && (
+        <AttemptIndicator
+          attemptNumber={isRetest ? (test.retestNumber ?? 1) : rejectionHistory.length + 1}
+          maxAttempts={LAB_CONFIG.MAX_RETEST_ATTEMPTS}
+          type={isRetest ? 'retest' : 'recollection'}
+          previousReason={lastRejection?.rejectionReason}
+        />
+      )}
       <h3 className="text-sm font-medium text-text-primary">{test.testName ?? test.testCode}</h3>
       <Badge variant="escalated" size="sm" />
       {test.priority && (
@@ -180,28 +191,6 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
       </div>
     ) : undefined;
 
-  const recollectionBanner =
-    hasRejectionHistory && lastRejection ? (
-      <Alert variant="warning" className="py-2">
-        <div className="space-y-0.5">
-          <p className="font-normal text-xs">
-            {isRetest
-              ? `Re-test #${test.retestNumber ?? 0} - Previous Result Rejected`
-              : `Re-collect #${rejectionHistory.length} - Previous Sample Rejected`}
-          </p>
-          <p className="text-xxs opacity-90 leading-tight">
-            Reason: {lastRejection.rejectionReason}
-          </p>
-          {rejectionHistory.length > 1 && (
-            <p className="text-xxs opacity-75">
-              ({rejectionHistory.length} previous rejection
-              {rejectionHistory.length > 1 ? 's' : ''})
-            </p>
-          )}
-        </div>
-      </Alert>
-    ) : undefined;
-
   const content = (
     <div className="text-xs text-text-secondary">
       <span className="font-mono text-brand">{test.testCode}</span>
@@ -240,7 +229,6 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
       }
       badges={badges}
       actions={actions}
-      recollectionBanner={recollectionBanner}
       content={content}
       contentTitle="Details"
     />
