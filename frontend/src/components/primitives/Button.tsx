@@ -143,7 +143,7 @@ export const Button: React.FC<ButtonProps> = ({
     </span>
   );
 
-  const normalContent = (
+  const labelContent = (
     <>
       {iconPosition === 'left' && shouldShowIcon && (
         <span className={iconWrapperClass}>{renderIconElement()}</span>
@@ -155,15 +155,31 @@ export const Button: React.FC<ButtonProps> = ({
     </>
   );
 
-  const showLoaderLeft = (iconPosition === 'left' && shouldShowIcon) || !shouldShowIcon;
   const content = isLoading ? (
-    <span className="inline-flex items-center justify-center gap-1.5">
-      {showLoaderLeft ? loaderEl : null}
-      {showTextWhenLoading ? children : <span className="invisible" aria-hidden>{children}</span>}
-      {iconPosition === 'right' && shouldShowIcon ? loaderEl : null}
-    </span>
+    showTextWhenLoading ? (
+      <span className="inline-flex items-center justify-center gap-1.5">
+        {loaderEl}
+        {children}
+      </span>
+    ) : (
+      <span
+        className={`grid *:col-start-1 *:row-start-1 ${fullWidth ? 'w-full' : ''}`}
+      >
+        <span
+          className={`inline-flex items-center justify-center gap-1.5 invisible ${fullWidth ? 'w-full' : ''}`}
+          aria-hidden
+        >
+          {labelContent}
+        </span>
+        <span
+          className={`inline-flex items-center justify-center ${fullWidth ? 'w-full' : ''}`}
+        >
+          {loaderEl}
+        </span>
+      </span>
+    )
   ) : (
-    normalContent
+    labelContent
   );
 
   return (
