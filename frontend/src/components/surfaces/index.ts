@@ -9,4 +9,3 @@ export * from './Pagination';
 export * from './SectionPanel';
 export * from './TableActionMenu';
 export * from './Tabs';
-export * from './TabbedPanel';

@@ -30,7 +30,7 @@ export type {
 } from './types';
 
 // Hooks
-export { useFilterState, useFilterPersistence, useQuickFilters } from './hooks';
+export { useFilterState, useQuickFilters } from './hooks';
 
 // Components
 export { FilterBar, type FilterBarProps } from './FilterBar';

@@ -8,14 +8,11 @@ export const ID_PREFIXES = {
   order: 'ORD',
   sample: 'SAM',
   orderTest: 'TST',
-  aliquot: 'ALQ',
   invoice: 'INV',
   payment: 'PAY',
-  claim: 'CLM',
   report: 'RPT',
   user: 'USR',
   audit: 'AUD',
-  appointment: 'APT',
 } as const;
 
 export type EntityType = keyof typeof ID_PREFIXES;
@@ -32,14 +29,11 @@ export const displayId = {
   order: (id: number | null | undefined) => formatDisplayId('order', id),
   sample: (id: number | null | undefined) => formatDisplayId('sample', id),
   orderTest: (id: number | null | undefined) => formatDisplayId('orderTest', id),
-  aliquot: (id: number | null | undefined) => formatDisplayId('aliquot', id),
   invoice: (id: number | null | undefined) => formatDisplayId('invoice', id),
   payment: (id: number | null | undefined) => formatDisplayId('payment', id),
-  claim: (id: number | null | undefined) => formatDisplayId('claim', id),
   report: (id: number | null | undefined) => formatDisplayId('report', id),
   user: (id: number | null | undefined) => formatDisplayId('user', id),
   audit: (id: number | null | undefined) => formatDisplayId('audit', id),
-  appointment: (id: number | null | undefined) => formatDisplayId('appointment', id),
 };
 
 export function parseDisplayId(

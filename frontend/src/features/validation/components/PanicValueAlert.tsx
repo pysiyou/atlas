@@ -59,7 +59,3 @@ export const CriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
     </Alert>
   );
 };
-
-// Keep old component name as alias for backwards compatibility
-export const PanicValueAlert = CriticalValueBanner;
-export type PanicValueAlertProps = CriticalValueBannerProps;

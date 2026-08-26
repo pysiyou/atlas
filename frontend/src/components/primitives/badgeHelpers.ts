@@ -134,7 +134,6 @@ export const DISPLAY_LABELS: Record<string, string> = {
   escalated: 'ESCALATED',
   superseded: 'SUPERSEDED',
   removed: 'REMOVED',
-  'no-show': 'NO SHOW',
   'chronic-condition': 'CHRONIC',
   'credit-card': 'CREDIT CARD',
   'debit-card': 'DEBIT CARD',

@@ -2,6 +2,5 @@
   "$schema": "https://unpkg.com/knip@4/schema.json",
   "entry": ["src/main.tsx", "src/app/App.tsx"],
   "project": ["src/**/*.{ts,tsx}"],
-  "ignoreFiles": ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
   "ignoreDependencies": ["tailwindcss"]
 }

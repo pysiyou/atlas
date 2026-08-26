@@ -57,8 +57,6 @@ export const getDefaultPaymentMethod = (): PaymentMethod => {
   return enabledMethods.length > 0 ? enabledMethods[0].value : 'cash';
 };
 
-export type ClaimStatus = 'submitted' | 'processing' | 'approved' | 'denied' | 'paid';
-
 export interface InvoiceItem {
   testCode: string;
   testName: string;
@@ -106,20 +104,4 @@ export interface Payment {
   orderTotalPrice?: number;
   numberOfTests?: number;
   patientName?: string;
-}
-
-export interface InsuranceClaim {
-  claimId: number; // Integer ID, displayed as CLM{id}
-  orderId: number;
-  invoiceId: number;
-  patientId: number;
-  insuranceProvider: string;
-  insuranceNumber: string;
-  claimAmount: number;
-  approvedAmount?: number;
-  claimStatus: ClaimStatus;
-  submittedDate: string;
-  processedDate?: string;
-  denialReason?: string;
-  notes?: string;
 }

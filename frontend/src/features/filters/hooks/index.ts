@@ -1,6 +1,5 @@
 /**
  * Filter Hooks
- * Export all filter-related hooks
  */
 
 export {
@@ -8,7 +7,6 @@ export {
   type UseFilterStateOptions,
   type UseFilterStateReturn,
 } from './useFilterState';
-export { useFilterPersistence, type UseFilterPersistenceOptions } from './useFilterPersistence';
 export {
   useQuickFilters,
   type UseQuickFiltersOptions,

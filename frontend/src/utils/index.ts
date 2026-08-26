@@ -29,14 +29,8 @@ export * from './id';
 // Error handling
 export * from './errors';
 
-// Validation (functions + constants)
-export * from './validation';
-
 // UI/style constants
 export * from './constants';
-
-// Form utilities
-export * from './form';
 
 // Filtering (pure functions + types; hooks are in @/hooks/useFiltering)
 export * from './filtering';

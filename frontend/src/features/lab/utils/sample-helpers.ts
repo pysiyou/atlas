@@ -98,10 +98,6 @@ export function calculateRequiredSamples(
   return requiredSamples;
 }
 
-export function formatAliquotDisplay(sampleId: number, aliquotNumber: number): string {
-  return `SAM${sampleId}-ALQ${aliquotNumber}`;
-}
-
 export function formatVolume(volumeInMl: number): string {
   if (volumeInMl < 1) return `${(volumeInMl * 1000).toFixed(0)}µL`;
   return `${volumeInMl.toFixed(1)}mL`;

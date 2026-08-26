@@ -144,7 +144,6 @@ export interface Order {
   overallStatus: OrderStatus;
 
   // Scheduling
-  appointmentId?: number; // Links to Appointment
   scheduledCollectionTime?: string;
 
   // Instructions

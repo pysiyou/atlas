@@ -3,7 +3,6 @@
  * Re-exports all enum modules. Badge colors live in Badge component; use enum values as variants.
  */
 export * from './affiliation';
-export * from './aliquot';
 export * from './container';
 export * from './gender';
 export * from './order';

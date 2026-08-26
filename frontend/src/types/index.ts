@@ -30,7 +30,6 @@ export type {
   RejectionRecord,
 } from './sample';
 export { isCollectedSample } from './sample'; // Export value (function)
-export type { Aliquot, AliquotPlan } from './aliquot';
 export type { User, AuthUser } from './user';
 export type {
   Test,
@@ -42,6 +41,4 @@ export type {
   TestWithContext,
 } from './test';
 export type { Payment, PaymentMethod, Invoice } from './billing';
-
-// Note: Container and AffiliationDuration are already in consolidated enums
 // SampleDisplay is a lab feature type; import from @/features/lab/types

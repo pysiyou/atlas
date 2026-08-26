@@ -184,7 +184,6 @@ export const getMedicalHistoryIcon = (field: string): IconName => {
   const fieldKey = field as keyof typeof ICONS.medicalHistory;
   return ICONS.medicalHistory[fieldKey] || ICONS.medicalHistory.chronicCondition;
 };
-
 export const getDemographicIcon = (field: string): IconName => getDataFieldIcon(field);
 
 export const getStatusIcon = (_status?: string): IconName => ICONS.orderStatus;
@@ -201,3 +200,4 @@ export const TEST_STATUS_ICON = ICONS.testStatus;
 export const PAYMENT_STATUS_ICON = ICONS.paymentStatus;
 /** @deprecated Use ICONS directly */
 export const SAMPLE_TYPE_ICON = ICONS.sampleType;
+

@@ -16,19 +16,3 @@ export function formatArray(
   }
   return validItems.join(', ');
 }
-
-export function formatList(
-  items: unknown[] | undefined | null,
-  singularLabel: string,
-  pluralLabel?: string
-): string {
-  if (!items || items.length === 0) return `0 ${pluralLabel || `${singularLabel}s`}`;
-  const count = items.length;
-  const label = count === 1 ? singularLabel : pluralLabel || `${singularLabel}s`;
-  return `${count} ${label}`;
-}
-
-export function formatBoolean(value: boolean | undefined | null): string {
-  if (value === undefined || value === null) return 'N/A';
-  return value ? 'Yes' : 'No';
-}

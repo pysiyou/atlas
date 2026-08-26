@@ -1,4 +1,4 @@
-/** Base, priority, appointment, gender, relationships, medical, user roles → badge color */
+/** Base, priority, gender, relationships, medical, user roles → badge color */
 import type { BadgeColor } from '@/components/primitives/types';
 
 export const MISC_COLOR_MAP: Record<string, BadgeColor> = {
@@ -12,9 +12,6 @@ export const MISC_COLOR_MAP: Record<string, BadgeColor> = {
   medium: 'info',
   high: 'warning',
   urgent: 'danger',
-  scheduled: 'info',
-  confirmed: 'success',
-  'no-show': 'danger',
   male: 'info',
   female: 'pink',
   friend: 'purple',

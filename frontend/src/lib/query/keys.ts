@@ -121,27 +121,6 @@ export const queryKeys = {
   },
 
   /**
-   * Billing queries (dynamic data)
-   */
-  billing: {
-    all: ['billing'] as const,
-    lists: () => [...queryKeys.billing.all, 'list'] as const,
-    list: () => [...queryKeys.billing.lists()] as const,
-  },
-
-  /**
-   * Aliquot queries (dynamic data)
-   */
-  aliquots: {
-    all: ['aliquots'] as const,
-    lists: () => [...queryKeys.aliquots.all, 'list'] as const,
-    list: (filters?: { sampleId?: string }) => [...queryKeys.aliquots.lists(), filters] as const,
-    details: () => [...queryKeys.aliquots.all, 'detail'] as const,
-    byId: (id: string) => [...queryKeys.aliquots.details(), id] as const,
-    bySample: (sampleId: string) => [...queryKeys.aliquots.all, 'sample', sampleId] as const,
-  },
-
-  /**
    * Lab results / escalation (role-gated)
    */
   results: {
@@ -179,7 +158,6 @@ export const queryKeys = {
  * - After RESULT mutations (entry/validate/reject): invalidate orders.all, samples.all (when relevant), results.all;
  *   when resolving escalation also invalidate results.pendingEscalation().
  * - After PAYMENT mutations: invalidate payments.all and orders.all.
- * - Billing / aliquots: when adding mutations, invalidate the corresponding *.all and cross-entity keys.
  */
 
 /**
