@@ -9,6 +9,7 @@ import Barcode from 'react-barcode';
 import type { Sample, RejectedSample, Test } from '@/types';
 import { displayId } from '@/utils';
 import { CollectionRequirementsSection } from './CollectionRequirementsSection';
+import { AuditHistorySection } from '@/features/lab/components/AuditHistorySection';
 import { CollectionRejectionSection } from './CollectionRejectionSection';
 import { CollectionInfoLine } from '@/features/lab/components/StatusBadges';
 import { DetailGrid, type DetailGridSectionConfig } from '@/features/lab/components/LabDetailModal';
@@ -134,6 +135,10 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
 
       {/* Detail Sections */}
       <DetailGrid sections={gridSections} />
+
+      {sample.sampleId && (
+        <AuditHistorySection entityType="sample" entityId={sample.sampleId} />
+      )}
     </>
   );
 };

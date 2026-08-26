@@ -24,6 +24,7 @@ import { getContainerIconColor, getCollectionRequirements, formatVolume } from '
 import { displayId } from '@/utils';
 import { LabCard, TestList } from '@/features/lab/components/LabCard';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
+import { QueueAgeBadge } from '@/features/lab/components/QueueAgeBadge';
 import { LAB_CONFIG } from '@/features/lab/config';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
@@ -188,6 +189,7 @@ function CollectionCardMobile({
               RECOLLECTION
             </Badge>
           )}
+          {isPending && <QueueAgeBadge since={order.orderDate} />}
         </div>
         {isPending ? (
           <div onClick={e => e.stopPropagation()}>
@@ -278,6 +280,7 @@ function CollectionCardDesktop({
         <Badge variant={sample.priority} size="sm" />
       )}
       <Badge variant={sample.sampleType} size="sm" />
+      {isPending && <QueueAgeBadge since={order.orderDate} />}
       <Badge size="sm" variant="default" className="text-text-tertiary">
         {isPending
           ? `${formatVolume(requirement.totalVolume)} required`

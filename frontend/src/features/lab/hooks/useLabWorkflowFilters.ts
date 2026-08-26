@@ -12,6 +12,8 @@ export interface UseLabWorkflowFiltersOptions<T, S> {
   getStatus: (item: T) => S | undefined;
   searchFilterFn: (item: T, query: string) => boolean;
   initialStatusFilters?: S[];
+  /** Pre-fill search from URL query param (e.g. cross-links from order detail). */
+  initialSearchQuery?: string;
 }
 
 function applyDateRange<T>(
@@ -40,8 +42,9 @@ export function useLabWorkflowFilters<T, S>({
   getStatus,
   searchFilterFn,
   initialStatusFilters = [],
+  initialSearchQuery = '',
 }: UseLabWorkflowFiltersOptions<T, S>) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
   const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
   const [statusFilters, setStatusFilters] = useState<S[]>(initialStatusFilters);

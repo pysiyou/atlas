@@ -22,7 +22,7 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';
 import { LabWorkflowView } from '@/features/lab/components/LabWorkflowView';
 import { LabFilters } from '@/features/lab/components/LabFilters';
-import { useLabWorkflowFilters } from '@/features/lab/hooks/useLabWorkflowFilters';
+import { useLabWorkflowFilters, useLabUrlSearch } from '@/features/lab/hooks';
 import { collectionFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components';
 import { LabWorkflowViewSkeleton } from '@/features/lab/components/LabWorkflowViewSkeleton';
@@ -49,6 +49,8 @@ export const CollectionView: React.FC = () => {
       getPatientName,
     });
 
+  const urlSearch = useLabUrlSearch();
+
   const {
     filteredItems: filteredDisplays,
     searchQuery,
@@ -66,6 +68,7 @@ export const CollectionView: React.FC = () => {
     getStatus,
     searchFilterFn: filterSample,
     initialStatusFilters: ['pending'],
+    initialSearchQuery: urlSearch,
   });
 
   /**

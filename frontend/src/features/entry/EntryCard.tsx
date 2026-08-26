@@ -14,7 +14,9 @@ import { displayId } from '@/utils';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard, ProgressBadge } from '@/features/lab/components/LabCard';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
+import { QueueAgeBadge } from '@/features/lab/components/QueueAgeBadge';
 import { LAB_CONFIG } from '@/features/lab/config';
+import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/utils';
 
@@ -61,24 +63,16 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   const filledCount = Object.values(results).filter(v => v?.trim()).length;
   const patientName = getPatientName(test.patientId);
 
-  // Determine if this is a retest (result validation re-test flow)
-  const isRetest = test.isRetest === true;
-  const retestNumber = test.retestNumber || 0;
-  const rejectionHistory = test.resultRejectionHistory || [];
-  const lastRejection =
-    rejectionHistory.length > 0 ? rejectionHistory[rejectionHistory.length - 1] : null;
-
-  // Determine if this is a sample recollection (sample re-collect flow)
-  const isSampleRecollection = test.sampleIsRecollection === true;
-  const sampleRecollectionAttempt = test.sampleRecollectionAttempt || 1;
-  const sampleRejectionHistory = test.sampleRejectionHistory || [];
-  const lastSampleRejection =
-    sampleRejectionHistory.length > 0
-      ? sampleRejectionHistory[sampleRejectionHistory.length - 1]
-      : null;
-
-  // Has any kind of rejection history (either from result validation or sample rejection)
-  const hasAnyRejectionHistory = isRetest || isSampleRecollection;
+  const rejection = deriveTestRejectionContext(test);
+  const {
+    isRetest,
+    retestNumber,
+    isSampleRecollection,
+    sampleRecollectionAttempt,
+    lastResultRejection,
+    lastSampleRejection,
+    hasAnyRejectionHistory,
+  } = rejection;
 
   const handleCardClick = () => {
     if (onClick) {
@@ -175,7 +169,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
           type={isRetest ? 'retest' : 'recollection'}
           previousReason={
             isRetest
-              ? lastRejection?.rejectionReason
+              ? lastResultRejection?.rejectionReason
               : lastSampleRejection?.rejectionNotes || undefined
           }
         />
@@ -186,6 +180,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <Badge variant={test.priority} size="sm" />
       )}
       <Badge variant={test.sampleType} size="sm" />
+      {test.collectedAt && <QueueAgeBadge since={test.collectedAt} />}
     </>
   );
 

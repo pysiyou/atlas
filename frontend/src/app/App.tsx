@@ -72,6 +72,7 @@ const PROTECTED_ROUTES: ProtectedRouteConfig[] = [
   { path: `${ROUTES.ORDERS}/*`, element: Orders },
   { path: `${ROUTES.CATALOG}/*`, element: Catalog },
   { path: ROUTES.LABORATORY, element: Laboratory },
+  { path: `${ROUTES.LABORATORY}/:tab`, element: Laboratory },
   { path: ROUTES.APPOINTMENTS, element: Appointments },
   { path: ROUTES.PAYMENTS, element: Payments },
   { path: `${ROUTES.REPORTS}/*`, element: Reports },

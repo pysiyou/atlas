@@ -18,9 +18,9 @@ import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard } from '@/features/lab/components/LabCard';
 import { RejectionDialog } from '@/features/lab/components';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
-import { LAB_CONFIG } from '@/features/lab/config';
+import { QueueAgeBadge } from '@/features/lab/components/QueueAgeBadge';
+import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
 import type { TestWithContext } from '@/types';
-import { getResultRejectionType } from '@/types/order';
 import { ICONS } from '@/utils';
 import {
   type ResultStatus,
@@ -130,16 +130,25 @@ export interface ValidationCardProps {
 // ─── Shared derived state helper ──────────────────────────────────────────────
 
 function deriveCardState(test: TestWithContext) {
-  const rejectionHistory = test.resultRejectionHistory ?? [];
-  const lastRejection = rejectionHistory.at(-1) ?? null;
-  const hasRejectionHistory = rejectionHistory.length > 0;
-  const isRetest = test.isRetest === true;
-  const isRecollection = lastRejection
-    ? getResultRejectionType(lastRejection) === 're-collect'
-    : false;
+  const rejection = deriveTestRejectionContext(test);
   const hasFlags = test.flags && test.flags.length > 0;
   const flagStatusMap = statusMapFromFlags(test.flags);
-  return { rejectionHistory, lastRejection, hasRejectionHistory, isRetest, isRecollection, hasFlags, flagStatusMap };
+  return {
+    rejectionHistory: rejection.resultRejectionHistory,
+    lastRejection: rejection.lastResultRejection,
+    hasRejectionHistory: rejection.hasResultRejectionHistory,
+    isRetest: rejection.isRetest,
+    isRecollection: rejection.isResultRecollection,
+    showRetestBadge: rejection.showRetestBadge,
+    showRecollectionBadge: rejection.showRecollectionBadge,
+    showAttemptIndicator: rejection.showAttemptIndicator,
+    attemptNumber: rejection.attemptNumber,
+    attemptMax: rejection.attemptMax,
+    attemptType: rejection.attemptType,
+    previousReason: rejection.previousReason,
+    hasFlags,
+    flagStatusMap,
+  };
 }
 
 // ─── ValidationCardMobile ─────────────────────────────────────────────────────
@@ -266,25 +275,31 @@ function ValidationCardDesktop({
   handleCardClick: () => void;
   getUserName: (id: string) => string;
 }) {
-  const { rejectionHistory, lastRejection, hasRejectionHistory, isRetest, isRecollection, flagStatusMap } =
-    deriveCardState(test);
+  const {
+    rejectionHistory,
+    lastRejection,
+    hasRejectionHistory,
+    showRetestBadge,
+    showRecollectionBadge,
+    showAttemptIndicator,
+    attemptNumber,
+    attemptMax,
+    attemptType,
+    previousReason,
+    flagStatusMap,
+  } = deriveCardState(test);
   const handleRejectionResult = () => onReject();
   const resultCount = Object.keys(test.results!).length;
-
-  const showRetestBadge = isRetest && test.retestOfTestId;
-  const showRecollectionBadge = isRecollection && !isRetest;
 
   const badges = (
     <>
       {/* Attempt indicator in top corner */}
-      {hasRejectionHistory && (isRetest || isRecollection) && (
+      {showAttemptIndicator && (
         <AttemptIndicator
-          attemptNumber={isRetest ? (test.retestNumber ?? 1) : rejectionHistory.length + 1}
-          maxAttempts={
-            isRetest ? LAB_CONFIG.MAX_RETEST_ATTEMPTS : LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS
-          }
-          type={isRetest ? 'retest' : 'recollection'}
-          previousReason={lastRejection?.rejectionReason || lastRejection?.reason}
+          attemptNumber={attemptNumber}
+          maxAttempts={attemptMax}
+          type={attemptType}
+          previousReason={previousReason}
         />
       )}
       <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
@@ -298,6 +313,7 @@ function ValidationCardDesktop({
         <Badge variant={test.priority} size="sm" />
       ) : null}
       <Badge variant={test.sampleType} size="sm" />
+      {test.resultEnteredAt && <QueueAgeBadge since={test.resultEnteredAt} />}
     </>
   );
 

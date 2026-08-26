@@ -1,6 +1,6 @@
 /**
  * Admin Page
- * Administration and system settings
+ * System administration: users, integrations, and catalog overview.
  */
 
 import React, { useMemo } from 'react';
@@ -13,11 +13,9 @@ import { DATA_AMOUNT, DATA_ID_PRIMARY } from '@/utils/constants';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { ICONS } from '@/utils';
+import { UserManagementSection } from './components/UserManagementSection';
+import { AnalyzerStatusPanel } from './components/AnalyzerStatusPanel';
 
-/**
- * Admin Test Table Columns
- * Simple column definition for admin page test overview
- */
 const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
   {
     key: 'code',
@@ -54,30 +52,16 @@ const getAdminTestTableColumns = (): ColumnConfig<Test>[] => [
       <div className={`${DATA_AMOUNT} truncate`}>{formatCurrency(test.price)}</div>
     ),
   },
-  {
-    key: 'turnaroundTime',
-    header: 'TAT (hrs)',
-    width: 'sm',
-    sortable: true,
-    render: (test: Test) => (
-      <div className="text-xs text-text-tertiary truncate">{test.turnaroundTime}h</div>
-    ),
-  },
 ];
 
-/**
- * Admin Test Table Component
- * Displays a simple table of active tests
- */
 const AdminTestTable: React.FC<{ tests: Test[] }> = ({ tests }) => {
   const columns = useMemo(() => getAdminTestTableColumns(), []);
 
-  // Create a simple viewConfig for the Table component
   const viewConfig = useMemo(
     () => ({
       fullColumns: columns,
       mediumColumns: columns,
-      compactColumns: columns.slice(0, 3), // Code, Name, Category
+      compactColumns: columns.slice(0, 3),
       CardComponent: ({ item }: { item: Test }) => (
         <div className="p-3 border rounded">
           <div className="font-normal">{item.name}</div>
@@ -108,50 +92,40 @@ export const Admin: React.FC = () => {
     return <AdminPageSkeleton />;
   }
 
-  // Calculate total revenue from orders (billing context removed)
-  const getTotalRevenue = () => {
-    return orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
-  };
+  const totalRevenue = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
 
   const stats = [
     {
       label: 'Total Patients',
       value: patients.length,
       icon: <Icon name={ICONS.ui.usersGroup} className="w-6 h-6" />,
-      color: 'sky',
     },
     {
       label: 'Total Orders',
       value: orders.length,
       icon: <Icon name={ICONS.dataFields.document} className="w-6 h-6" />,
-      color: 'green',
     },
     {
       label: 'Active Tests',
       value: tests.filter(t => t.isActive).length,
       icon: <Icon name={ICONS.dataFields.flask} className="w-6 h-6" />,
-      color: 'purple',
     },
     {
       label: 'Total Revenue',
-      value: formatCurrency(getTotalRevenue()),
+      value: formatCurrency(totalRevenue),
       icon: <Icon name={ICONS.dataFields.dollarSign} className="w-6 h-6" />,
-      color: 'orange',
     },
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-2">
       <h1 className="text-2xl font-bold text-text-primary">Administration</h1>
 
-      {/* System Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {stats.map((stat, idx) => (
-          <Card key={idx}>
+          <Card key={idx} padding="md">
             <div className="flex items-start gap-3">
-              <div className={`p-3 bg-${stat.color}-50 rounded text-${stat.color}-600`}>
-                {stat.icon}
-              </div>
+              <div className="p-3 bg-brand-muted rounded text-brand">{stat.icon}</div>
               <div>
                 <div className="text-sm text-text-tertiary">{stat.label}</div>
                 <div className="text-2xl font-normal text-text-primary">{stat.value}</div>
@@ -161,7 +135,9 @@ export const Admin: React.FC = () => {
         ))}
       </div>
 
-      {/* Test Catalog */}
+      <UserManagementSection />
+      <AnalyzerStatusPanel />
+
       <SectionContainer title="Test Catalog">
         <div className="text-sm text-text-tertiary mb-3">{tests.length} total tests</div>
         <AdminTestTable tests={tests.filter(t => t.isActive).slice(0, 10)} />

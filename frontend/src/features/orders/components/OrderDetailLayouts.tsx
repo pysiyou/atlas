@@ -13,6 +13,7 @@ import { TestsTable } from './TestsTable';
 import { BillingSummarySection } from './BillingSummarySection';
 import { OrderCircularProgress } from './OrderCircularProgress';
 import { OrderTimeline } from './OrderTimeline';
+import { AuditHistorySection } from '@/features/lab/components/AuditHistorySection';
 
 interface LayoutProps {
   order: Order;
@@ -40,6 +41,13 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
   onViewInvoice,
   onPaymentSuccess,
 }) => {
+  const relatedTestIds = order.tests.map(t => t.id).filter((id): id is number => typeof id === 'number');
+  const relatedSampleIds = [
+    ...new Set(
+      order.tests.map(t => t.sampleId).filter((id): id is number => typeof id === 'number')
+    ),
+  ];
+
   return (
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
       <SectionContainer
@@ -82,7 +90,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         className="shrink-0 bg-surface"
         contentClassName="p-0 overflow-visible"
       >
-        <TestsTable tests={order.tests} supersededCount={supersededCount} variant="simple" />
+        <TestsTable tests={order.tests} orderId={order.orderId} supersededCount={supersededCount} variant="simple" />
       </SectionContainer>
 
       <SectionContainer
@@ -93,6 +101,13 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
       >
         <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
       </SectionContainer>
+
+      <AuditHistorySection
+        entityType="order"
+        entityId={order.orderId}
+        relatedTestIds={relatedTestIds}
+        relatedSampleIds={relatedSampleIds}
+      />
     </div>
   );
 };
@@ -111,6 +126,13 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
   onViewInvoice,
   onPaymentSuccess,
 }) => {
+  const relatedTestIds = order.tests.map(t => t.id).filter((id): id is number => typeof id === 'number');
+  const relatedSampleIds = [
+    ...new Set(
+      order.tests.map(t => t.sampleId).filter((id): id is number => typeof id === 'number')
+    ),
+  ];
+
   return (
     <div className="grid grid-cols-2 gap-4 w-full pb-6">
       <SectionContainer
@@ -163,8 +185,16 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         className="bg-surface col-span-2"
         contentClassName="p-0 overflow-visible"
       >
-        <TestsTable tests={order.tests} supersededCount={supersededCount} variant="detailed" />
+        <TestsTable tests={order.tests} orderId={order.orderId} supersededCount={supersededCount} variant="detailed" />
       </SectionContainer>
+
+      <AuditHistorySection
+        className="col-span-2"
+        entityType="order"
+        entityId={order.orderId}
+        relatedTestIds={relatedTestIds}
+        relatedSampleIds={relatedSampleIds}
+      />
     </div>
   );
 };
@@ -182,6 +212,13 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
   onViewInvoice,
   onPaymentSuccess,
 }) => {
+  const relatedTestIds = order.tests.map(t => t.id).filter((id): id is number => typeof id === 'number');
+  const relatedSampleIds = [
+    ...new Set(
+      order.tests.map(t => t.sampleId).filter((id): id is number => typeof id === 'number')
+    ),
+  ];
+
   return (
     <div
       className="flex-1 grid grid-cols-3 gap-4 min-h-0 h-full"
@@ -222,18 +259,18 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           className="h-full flex flex-col col-span-2 min-h-0"
           contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
         >
-          <TestsTable tests={order.tests} supersededCount={supersededCount} variant="detailed" />
+          <TestsTable tests={order.tests} orderId={order.orderId} supersededCount={supersededCount} variant="detailed" />
         </SectionContainer>
       </div>
 
       <div
-        className="col-span-1 grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
-        style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
+        className="col-span-1 flex flex-col gap-4 min-h-0 h-full overflow-y-auto"
+        style={{ height: '100%', maxHeight: '100%' }}
       >
         <SectionContainer
           title="Order Progress"
-          className="h-full flex flex-col min-h-0"
-          contentClassName="flex-1 min-h-0 overflow-y-auto p-0"
+          className="shrink-0 flex flex-col min-h-0"
+          contentClassName="overflow-y-auto p-0"
           headerClassName="!py-1.5"
           headerRight={<OrderCircularProgress order={order} />}
         >
@@ -242,12 +279,19 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
 
         <SectionContainer
           title="Billing Summary"
-          className="h-full flex flex-col min-h-0"
-          contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
+          className="shrink-0 flex flex-col min-h-0"
+          contentClassName="overflow-y-auto flex flex-col"
           headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
         >
           <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
         </SectionContainer>
+
+        <AuditHistorySection
+          entityType="order"
+          entityId={order.orderId}
+          relatedTestIds={relatedTestIds}
+          relatedSampleIds={relatedSampleIds}
+        />
       </div>
     </div>
   );

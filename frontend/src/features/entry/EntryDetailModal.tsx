@@ -21,7 +21,7 @@ import {
   ModalFooter,
   StatusBadgeRow,
 } from '@/features/lab/components/LabDetailModal';
-import { getResultRejectionType } from '@/types/order';
+import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
 import { ICONS } from '@/utils';
 import {
   CollectionInfoLine,
@@ -101,15 +101,14 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const turnaroundTime = testDef.turnaroundTime;
   const remainingParams = totalParams - filledCount;
 
-  // Determine if this is a retest or recollection
-  const isRetest = test.isRetest === true;
-  const retestNumber = test.retestNumber || 0;
-  const rejectionHistory = test.resultRejectionHistory || [];
-  const hasRejectionHistory = rejectionHistory.length > 0;
-  const lastRejection = hasRejectionHistory ? rejectionHistory[rejectionHistory.length - 1] : null;
-  const isRecollection = lastRejection
-    ? getResultRejectionType(lastRejection) === 're-collect'
-    : false;
+  const {
+    isRetest,
+    retestNumber,
+    isResultRecollection,
+    hasResultRejectionHistory,
+    resultRejectionHistory,
+    rejectionHistoryTitle,
+  } = deriveTestRejectionContext(test);
 
   const handleLocalResultChange = (key: string, paramCode: string, value: string) => {
     setLocalResults(prev => ({ ...prev, [paramCode]: value }));
@@ -152,8 +151,8 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const headerExtraBadges = (
     <>
       {isRetest && <RetestBadge retestNumber={retestNumber} />}
-      {isRecollection && !isRetest && (
-        <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} />
+      {isResultRecollection && !isRetest && (
+        <RecollectionAttemptBadge attemptNumber={resultRejectionHistory.length} />
       )}
       <Badge size="sm" variant="default" className="text-text-secondary">
         {filledCount} / {totalParams} parameters
@@ -170,13 +169,6 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       )}
     </>
   );
-
-  /**
-   * Build rejection history title based on type
-   */
-  const rejectionHistoryTitle = isRetest
-    ? `Previous Rejection${rejectionHistory.length > 1 ? ` (${rejectionHistory.length} attempts)` : ''}`
-    : `Recollection History (${rejectionHistory.length} attempt${rejectionHistory.length > 1 ? 's' : ''})`;
 
   return (
     <LabDetailModal
@@ -265,10 +257,10 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       </SectionContainer>
 
       {/* Previous Rejection History - show for both retests and recollections */}
-      {hasRejectionHistory && (
+      {hasResultRejectionHistory && (
         <EntryRejectionSection
           title={rejectionHistoryTitle}
-          rejectionHistory={rejectionHistory}
+          rejectionHistory={resultRejectionHistory}
           showOnlyLatest={false}
         />
       )}

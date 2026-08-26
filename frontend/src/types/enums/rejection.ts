@@ -18,17 +18,20 @@ export const REJECTION_REASON_VALUES = [
 
 export type RejectionReason = (typeof REJECTION_REASON_VALUES)[number];
 
-export const REJECTION_REASON_CONFIG: Record<RejectionReason, { label: string }> = {
-  hemolyzed: { label: 'Hemolyzed' },
-  clotted: { label: 'Clotted' },
-  qns: { label: 'Quantity Not Sufficient (QNS)' },
-  wrong_container: { label: 'Wrong Container' },
-  labeling_error: { label: 'Labeling Error' },
-  transport_delay: { label: 'Transport Delay' },
-  contaminated: { label: 'Contaminated' },
-  lipemic: { label: 'Lipemic' },
-  icteric: { label: 'Icteric' },
-  other: { label: 'Other' },
+export const REJECTION_REASON_CONFIG: Record<
+  RejectionReason,
+  { label: string; description: string }
+> = {
+  hemolyzed: { label: 'Hemolyzed', description: 'Red blood cell breakdown detected' },
+  clotted: { label: 'Clotted', description: 'Sample clotted when anticoagulant was required' },
+  qns: { label: 'Quantity Not Sufficient (QNS)', description: 'Insufficient volume for testing' },
+  wrong_container: { label: 'Wrong Container', description: 'Collected in incorrect tube type' },
+  labeling_error: { label: 'Labeling Error', description: 'Missing or incorrect patient identification' },
+  transport_delay: { label: 'Transport Delay', description: 'Exceeded acceptable transport time' },
+  contaminated: { label: 'Contaminated', description: 'Visible contamination present' },
+  lipemic: { label: 'Lipemic', description: 'Lipemia detected (fatty/milky appearance)' },
+  icteric: { label: 'Icteric', description: 'Icterus detected (yellowish discoloration)' },
+  other: { label: 'Other', description: 'Other reason (specify in notes)' },
 };
 
 export const REJECTION_REASON_OPTIONS = REJECTION_REASON_VALUES.map(value => ({

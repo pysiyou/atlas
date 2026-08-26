@@ -15,7 +15,7 @@ import {
 } from './BulkValidationToolbar';
 import { LabWorkflowView, createLabItemFilter } from '@/features/lab/components/LabWorkflowView';
 import { LabFilters } from '@/features/lab/components/LabFilters';
-import { useLabWorkflowFilters, useLabTestsFromOrders } from '@/features/lab/hooks';
+import { useLabWorkflowFilters, useLabTestsFromOrders, useLabUrlSearch } from '@/features/lab/hooks';
 import { validationFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components';
 import { SectionLoadingBoundary } from '@/components/loaders';
@@ -24,18 +24,12 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
 import { useValidationWorkflow } from './useValidationWorkflow';
 
-/**
- * Feature flag to enable/disable bulk validation (select all) feature
- * Set to false to disable the select all checkbox and bulk validation toolbar
- */
-const ENABLE_BULK_VALIDATION = false;
-
-// eslint-disable-next-line max-lines-per-function
 export const ValidationView: React.FC = () => {
   const { orders, isLoading: ordersLoading } = useOrdersList();
   const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
+  const urlSearch = useLabUrlSearch();
 
   const {
     comments,
@@ -84,6 +78,7 @@ export const ValidationView: React.FC = () => {
     getSampleType,
     getStatus: getPriority,
     searchFilterFn: filterTest,
+    initialSearchQuery: urlSearch,
   });
 
   const filteredTestsWithId = useMemo(
@@ -92,7 +87,7 @@ export const ValidationView: React.FC = () => {
   );
 
   const { selectedIds, setSelectedIds, toggleItem, isSelected } = useBulkSelection(
-    ENABLE_BULK_VALIDATION ? filteredTestsWithId : []
+    !isMobile ? filteredTestsWithId : []
   );
 
   const onBulkApprove = useCallback(
@@ -137,9 +132,10 @@ export const ValidationView: React.FC = () => {
               onClick: () => openValidationModal(test),
               isApproving:
                 validateMutation.isPending && pendingValidateKey === commentKey,
+              isMobile,
             };
 
-            if (!isMobile && typeof test.id === 'number' && ENABLE_BULK_VALIDATION) {
+            if (!isMobile && typeof test.id === 'number') {
               return (
                 <div className="flex items-start gap-3">
                   <div className="pt-4">
@@ -151,13 +147,13 @@ export const ValidationView: React.FC = () => {
                     />
                   </div>
                   <div className="flex-1">
-                    <ValidationCard {...cardProps} isMobile={isMobile} />
+                    <ValidationCard {...cardProps} />
                   </div>
                 </div>
               );
             }
 
-            return <ValidationCard {...cardProps} isMobile={isMobile} />;
+            return <ValidationCard {...cardProps} />;
           }}
           getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
           emptyIcon="shield-check"
@@ -177,14 +173,13 @@ export const ValidationView: React.FC = () => {
             />
           }
           afterFilterRow={
-            ENABLE_BULK_VALIDATION && !isMobile && filteredTestsWithId.length > 0 ? (
+            !isMobile && filteredTestsWithId.length > 0 ? (
               <BulkValidationToolbar
                 items={bulkItems}
                 selectedIds={selectedIds}
                 onSelectionChange={setSelectedIds}
                 onBulkApprove={onBulkApprove}
                 isProcessing={bulkMutation.isPending}
-                enabled={ENABLE_BULK_VALIDATION}
               />
             ) : undefined
           }

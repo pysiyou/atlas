@@ -12,7 +12,7 @@ import type { TestWithContext } from '@/types';
 import { EntryCard } from './EntryCard';
 import { LabWorkflowView, createLabItemFilter } from '@/features/lab/components/LabWorkflowView';
 import { LabFilters } from '@/features/lab/components/LabFilters';
-import { useLabWorkflowFilters, useLabTestsFromOrders } from '@/features/lab/hooks';
+import { useLabWorkflowFilters, useLabTestsFromOrders, useLabUrlSearch } from '@/features/lab/hooks';
 import { entryFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components';
 import { LabWorkflowViewSkeleton } from '@/features/lab/components/LabWorkflowViewSkeleton';
@@ -54,6 +54,8 @@ export const EntryView: React.FC = () => {
   const getSampleType = useCallback((t: TestWithContext) => t.sampleType, []);
   const getStatus = useCallback((t: TestWithContext) => t.status as TestStatus, []);
 
+  const urlSearch = useLabUrlSearch();
+
   const {
     filteredItems: filteredTests,
     searchQuery,
@@ -70,6 +72,7 @@ export const EntryView: React.FC = () => {
     getSampleType,
     getStatus,
     searchFilterFn: filterTest,
+    initialSearchQuery: urlSearch,
   });
 
   // openTestModal stays in the view because it needs a closure over allTests/testCatalog/orders

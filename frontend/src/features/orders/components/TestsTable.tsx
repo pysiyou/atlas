@@ -4,11 +4,13 @@
  */
 
 import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Table, Badge, EmptyState } from '@/components';
 import type { TableViewConfig, CardComponentProps } from '@/components';
 import { DATA_AMOUNT, DATA_ID_PRIMARY_INLINE } from '@/utils/constants';
 import { formatCurrency } from '@/utils';
 import { getTestName, getTestSampleType } from '@/features/catalog/utils';
+import { getLabQueueUrlForTest } from '@/features/lab/utils/lab-queue-links';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import type { OrderTest, Test } from '@/types';
 import { ICONS } from '@/utils';
@@ -17,6 +19,7 @@ import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
 
 export interface TestsTableProps {
   tests: OrderTest[];
+  orderId: number;
   supersededCount?: number;
   variant?: 'simple' | 'detailed';
 }
@@ -29,7 +32,10 @@ const EMPTY_MESSAGE = (
   />
 );
 
-function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest> {
+function createTestsTableConfig(
+  testCatalog: Test[],
+  orderId: number
+): TableViewConfig<OrderTest> {
   const appearance = getBadgeAppearance();
   const tagStyles = TAG_STYLES[appearance];
 
@@ -81,6 +87,24 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
       render: (test: OrderTest) => (
         <Badge variant={test.status} size="sm" strikethrough={test.status === 'superseded'} />
       ),
+    },
+    {
+      key: 'lab',
+      header: '',
+      width: 'sm' as const,
+      render: (test: OrderTest) => {
+        const labUrl = getLabQueueUrlForTest(test, orderId);
+        if (!labUrl) return null;
+        return (
+          <Link
+            to={labUrl}
+            className="text-xs text-brand hover:underline whitespace-nowrap"
+            onClick={e => e.stopPropagation()}
+          >
+            View in Lab
+          </Link>
+        );
+      },
     },
   ];
 
@@ -163,16 +187,16 @@ function createTestsTableConfig(testCatalog: Test[]): TableViewConfig<OrderTest>
   };
 }
 
-export const TestsTable: React.FC<TestsTableProps> = ({ tests, variant = 'simple' }) => {
+export const TestsTable: React.FC<TestsTableProps> = ({ tests, orderId, variant = 'simple' }) => {
   const { tests: testCatalog = [] } = useTestCatalog();
   const visibleTests = useMemo(() => tests.filter(t => t.status !== 'removed'), [tests]);
 
   const viewConfig = useMemo(
     () =>
       variant === 'detailed'
-        ? createTestsTableConfig(testCatalog)
+        ? createTestsTableConfig(testCatalog, orderId)
         : (() => {
-            const config = createTestsTableConfig(testCatalog);
+            const config = createTestsTableConfig(testCatalog, orderId);
             return {
               ...config,
               fullColumns: config.compactColumns,
@@ -180,7 +204,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({ tests, variant = 'simple
               compactColumns: config.compactColumns,
             };
           })(),
-    [testCatalog, variant]
+    [testCatalog, orderId, variant]
   );
 
   const rowClassName = (test: OrderTest) =>

@@ -223,6 +223,15 @@ export interface TestWithContext {
   /** Whether this test has critical values flagged — used by ValidationView. */
   hasCriticalValues?: boolean;
 
+  /** Order test row id — required for critical value API calls. */
+  id?: number;
+
+  // Critical value notification state (from OrderTest)
+  criticalNotificationSent?: boolean;
+  criticalNotifiedAt?: string;
+  criticalNotifiedTo?: string;
+  criticalAcknowledgedAt?: string;
+
   // Retest tracking fields (for result validation re-test flow)
   isRetest?: boolean;
   retestOfTestId?: number;

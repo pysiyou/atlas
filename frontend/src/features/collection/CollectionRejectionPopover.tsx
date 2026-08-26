@@ -11,43 +11,16 @@ import { AttemptProgressBar } from '@/features/lab/components/AttemptProgressBar
 import { POPOVER_FOOTER_MESSAGES } from '@/features/lab/components/popover-footer-constants';
 import { cn, displayId } from '@/utils';
 import type { RejectionReason } from '@/types';
+import { REJECTION_REASON_VALUES, REJECTION_REASON_CONFIG } from '@/types/enums';
 import { ICONS } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { LAB_CONFIG } from '@/features/lab/config';
 
-/** Rejection reason options with labels and descriptions */
-const REJECTION_REASONS: { value: RejectionReason; label: string; description: string }[] = [
-  { value: 'hemolyzed', label: 'Hemolyzed', description: 'Red blood cell breakdown detected' },
-  {
-    value: 'clotted',
-    label: 'Clotted',
-    description: 'Sample clotted when anticoagulant was required',
-  },
-  {
-    value: 'qns',
-    label: 'Quantity Not Sufficient (QNS)',
-    description: 'Insufficient volume for testing',
-  },
-  {
-    value: 'wrong_container',
-    label: 'Wrong Container',
-    description: 'Collected in incorrect tube type',
-  },
-  {
-    value: 'labeling_error',
-    label: 'Labeling Error',
-    description: 'Missing or incorrect patient identification',
-  },
-  {
-    value: 'transport_delay',
-    label: 'Transport Delay',
-    description: 'Exceeded acceptable transport time',
-  },
-  { value: 'contaminated', label: 'Contaminated', description: 'Visible contamination present' },
-  { value: 'lipemic', label: 'Lipemic', description: 'Lipemia detected (fatty/milky appearance)' },
-  { value: 'icteric', label: 'Icteric', description: 'Icterus detected (yellowish discoloration)' },
-  { value: 'other', label: 'Other', description: 'Other reason (specify in notes)' },
-];
+const REJECTION_REASONS = REJECTION_REASON_VALUES.map(value => ({
+  value,
+  label: REJECTION_REASON_CONFIG[value].label,
+  description: REJECTION_REASON_CONFIG[value].description,
+}));
 
 interface CollectionRejectionPopoverContentProps {
   onConfirm: (

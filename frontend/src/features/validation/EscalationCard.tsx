@@ -11,9 +11,8 @@ import { displayId } from '@/utils';
 import { useUserLookup } from '@/features/admin/api/useUsers';
 import { LabCard } from '@/features/lab/components/LabCard';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
-import { LAB_CONFIG } from '@/features/lab/config';
+import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
 import type { TestWithContext } from '@/types';
-import { getResultRejectionType } from '@/types/order';
 import { ICONS } from '@/utils';
 
 interface EscalationCardProps {
@@ -34,13 +33,20 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
     onClick();
   };
 
-  const rejectionHistory = test.resultRejectionHistory ?? [];
-  const lastRejection = rejectionHistory.at(-1) ?? null;
-  const hasRejectionHistory = rejectionHistory.length > 0;
-  const isRetest = test.isRetest === true;
-  const isRecollection = lastRejection
-    ? getResultRejectionType(lastRejection) === 're-collect'
-    : false;
+  const rejection = deriveTestRejectionContext(test);
+  const {
+    resultRejectionHistory: rejectionHistory,
+    lastResultRejection: lastRejection,
+    hasResultRejectionHistory: hasRejectionHistory,
+    isRetest,
+    showRetestBadge,
+    showRecollectionBadge,
+    showAttemptIndicator,
+    attemptNumber,
+    attemptMax,
+    attemptType,
+    previousReason,
+  } = rejection;
 
   // Mobile layout (same structure as ValidationCard/EntryCard)
   if (isMobile) {
@@ -122,14 +128,12 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   const badges = (
     <>
       {/* Attempt indicator for retests/recollections */}
-      {hasRejectionHistory && (isRetest || isRecollection) && (
+      {showAttemptIndicator && (
         <AttemptIndicator
-          attemptNumber={isRetest ? (test.retestNumber ?? 1) : rejectionHistory.length + 1}
-          maxAttempts={
-            isRetest ? LAB_CONFIG.MAX_RETEST_ATTEMPTS : LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS
-          }
-          type={isRetest ? 'retest' : 'recollection'}
-          previousReason={lastRejection?.rejectionReason}
+          attemptNumber={attemptNumber}
+          maxAttempts={attemptMax}
+          type={attemptType}
+          previousReason={previousReason}
         />
       )}
       <h3 className="text-sm font-medium text-text-primary">{test.testName ?? test.testCode}</h3>
@@ -173,8 +177,6 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
     </span>
   );
 
-  const showRetestBadge = isRetest && test.retestOfTestId;
-  const showRecollectionBadge = isRecollection && !isRetest;
   const rejectionTrackingInfo =
     hasRejectionHistory && (showRetestBadge || showRecollectionBadge) ? (
       <div className="flex items-center gap-2 flex-wrap">

@@ -10,7 +10,8 @@
  * - EntryInfoLine for result entry metadata
  */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button, SectionContainer } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { displayId } from '@/utils';
@@ -23,7 +24,10 @@ import {
 } from '@/features/lab/components/LabDetailModal';
 import { RejectionDialog } from '@/features/lab/components/RejectionDialog';
 import { EntryRejectionSection } from '../entry/EntryRejectionSection';
-import { getResultRejectionType } from '@/types/order';
+import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
+import { CriticalValueActions } from '@/features/critical-values/components/CriticalValueActions';
+import { buildCriticalValueRecord } from '@/features/critical-values/utils/buildCriticalValueRecord';
+import { queryKeys } from '@/lib/query';
 import {
   RetestBadge,
   RecollectionAttemptBadge,
@@ -59,6 +63,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   // High complexity is necessary for comprehensive validation logic with multiple conditional branches and state management
   // eslint-disable-next-line complexity
 }) => {
+  const queryClient = useQueryClient();
   const approveHandler = useCallback(
     async (_signal: AbortSignal) => {
       await onApprove();
@@ -77,18 +82,21 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   const hasFlags = test.flags && test.flags.length > 0;
   const flagCount = test.flags?.length || 0;
 
-  // Determine if this is a retest or recollection
-  const isRetest = test.isRetest === true;
-  const retestNumber = test.retestNumber || 0;
-  const rejectionHistory = test.resultRejectionHistory || [];
+  const {
+    isRetest,
+    retestNumber,
+    isResultRecollection,
+    hasResultRejectionHistory,
+    resultRejectionHistory,
+    rejectionHistoryTitle,
+  } = deriveTestRejectionContext(test);
 
-  // Check if this has any rejection history (covers both re-test and re-collect scenarios)
-  const hasRejectionHistory = rejectionHistory.length > 0;
-  // For re-collect, the last rejection type will be 're-collect'
-  const lastRejection = hasRejectionHistory ? rejectionHistory[rejectionHistory.length - 1] : null;
-  const isRecollection = lastRejection
-    ? getResultRejectionType(lastRejection) === 're-collect'
-    : false;
+  const criticalRecord = useMemo(() => buildCriticalValueRecord(test), [test]);
+
+  const handleCriticalValueUpdated = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+    queryClient.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
+  }, [queryClient]);
 
   /**
    * Build header badges using centralized badge components
@@ -96,8 +104,8 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   const headerExtraBadges = (
     <>
       {isRetest && <RetestBadge retestNumber={retestNumber} />}
-      {isRecollection && !isRetest && (
-        <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} />
+      {isResultRecollection && !isRetest && (
+        <RecollectionAttemptBadge attemptNumber={resultRejectionHistory.length} />
       )}
       {hasFlags && <FlagCountBadge count={flagCount} />}
     </>
@@ -109,19 +117,12 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   const validationSectionHeaderRight = (
     <>
       {isRetest && <RetestBadge retestNumber={retestNumber} className="mr-2" />}
-      {isRecollection && !isRetest && (
-        <RecollectionAttemptBadge attemptNumber={rejectionHistory.length} className="mr-2" />
+      {isResultRecollection && !isRetest && (
+        <RecollectionAttemptBadge attemptNumber={resultRejectionHistory.length} className="mr-2" />
       )}
       {hasFlags && <ReviewRequiredBadge />}
     </>
   );
-
-  /**
-   * Build rejection history title based on type
-   */
-  const rejectionHistoryTitle = isRetest
-    ? `Previous Rejection${rejectionHistory.length > 1 ? ` (${rejectionHistory.length} attempts)` : ''}`
-    : `Recollection History (${rejectionHistory.length} attempt${rejectionHistory.length > 1 ? 's' : ''})`;
 
   return (
     <LabDetailModal
@@ -191,11 +192,20 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
         />
       </SectionContainer>
 
+      {criticalRecord && (
+        <SectionContainer title="Critical Value Notification">
+          <CriticalValueActions
+            record={criticalRecord}
+            onUpdated={handleCriticalValueUpdated}
+          />
+        </SectionContainer>
+      )}
+
       {/* Previous Rejection History - show for both retests and recollections */}
-      {hasRejectionHistory && (
+      {hasResultRejectionHistory && (
         <EntryRejectionSection
           title={rejectionHistoryTitle}
-          rejectionHistory={rejectionHistory}
+          rejectionHistory={resultRejectionHistory}
           showOnlyLatest={false}
         />
       )}

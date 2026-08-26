@@ -46,7 +46,7 @@ export interface ValidationDetailProps {
   comments: string;
   onCommentsChange: (commentKey: string, comments: string) => void;
   onApprove: () => void;
-  onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
+  onReject: () => void;
 }
 
 /** Payload for escalation resolution modal. */
@@ -68,9 +68,6 @@ export interface NewOrderProps {
  */
 export interface ModalPropsMap {
   SAMPLE_DETAIL: SampleDetailByIdProps | SampleDetailPendingProps;
-  PATIENT_DETAIL: Record<string, never>;
-  ORDER_DETAIL: Record<string, never>;
-  CONFIRMATION: Record<string, never>;
   RESULT_DETAIL: ResultDetailProps;
   VALIDATION_DETAIL: ValidationDetailProps;
   ESCALATION_RESOLUTION_DETAIL: EscalationResolutionDetailProps;

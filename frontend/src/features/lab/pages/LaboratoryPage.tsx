@@ -3,7 +3,8 @@
  * Lab operations - sample collection, result entry, validation, escalation, command center
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { CollectionView } from '@/features/collection/CollectionView';
 import { EntryView } from '@/features/entry/EntryView';
 import { ValidationView } from '@/features/validation/ValidationView';
@@ -12,85 +13,62 @@ import { CommandCenterView } from '@/features/command-center';
 import { useAuthStore } from '@/app/store';
 import { Icon, PageHeaderBar, Badge } from '@/components';
 import { ICONS } from '@/utils';
-import { useOrdersList } from '@/features/orders/api/useOrderQueries';
-import { useSamplesList } from '@/features/collection/api/useSamples';
-import { usePendingEscalation } from '@/features/validation/api/usePendingEscalation';
-import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
-import { usePatientNameLookup } from '@/features/patients/api/usePatients';
-import { useOrderLookup } from '@/features/orders/utils/useOrderUtils';
-import { useCollectionSampleDisplays } from '@/features/collection/hooks/useCollectionSampleDisplays';
-import { useLabTestsFromOrders } from '@/features/lab/hooks';
-
-type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation' | 'dashboard';
+import { useLabPipelineCounts } from '@/features/lab/hooks';
+import {
+  DEFAULT_LAB_TAB,
+  isLabTabId,
+  LAB_TAB_LABELS,
+  type LabTabId,
+  getLabTabPath,
+} from '@/features/lab/constants/labTabs';
 
 export const Laboratory: React.FC = () => {
+  const navigate = useNavigate();
+  const { tab: tabParam } = useParams<{ tab?: string }>();
   const { hasRole } = useAuthStore();
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
+  const { counts } = useLabPipelineCounts();
 
-  const [activeTab, setActiveTab] = useState<LabTabId>('dashboard');
+  const activeTab: LabTabId = isLabTabId(tabParam) ? tabParam : DEFAULT_LAB_TAB;
 
-  // Fetch data for counts (aligned with each tab's view logic)
-  const { orders } = useOrdersList();
-  const { samples = [] } = useSamplesList();
-  const { tests = [] } = useTestCatalog();
-  const { getPatient, getPatientName } = usePatientNameLookup();
-  const { getOrder } = useOrderLookup();
-  const { escalatedTests } = usePendingEscalation();
+  useEffect(() => {
+    if (!tabParam) {
+      navigate(getLabTabPath(DEFAULT_LAB_TAB), { replace: true });
+      return;
+    }
+    if (!isLabTabId(tabParam)) {
+      navigate(getLabTabPath(DEFAULT_LAB_TAB), { replace: true });
+      return;
+    }
+    if (tabParam === 'escalation' && !canResolveEscalation) {
+      navigate(getLabTabPath(DEFAULT_LAB_TAB), { replace: true });
+    }
+  }, [tabParam, canResolveEscalation, navigate]);
 
-  const { displays: collectionDisplays } = useCollectionSampleDisplays({
-    samples,
-    tests,
-    getOrder,
-    getPatient,
-    getPatientName,
-  });
-
-  const entryTests = useLabTestsFromOrders({
-    orders,
-    testCatalog: tests,
-    statusFilter: ['sample-collected'],
-    includePatient: true,
-  });
-
-  const validationTests = useLabTestsFromOrders({
-    orders,
-    testCatalog: tests,
-    statusFilter: ['resulted'],
-    onlyUnvalidated: true,
-  });
-
-  // Calculate counts for each tab
-  const counts = useMemo(() => {
-    const collectionCount = collectionDisplays.filter(d => d.sample.status === 'pending').length;
-    const entryCount = entryTests.length;
-    const validationCount = validationTests.length;
-    const escalationCount = escalatedTests?.length || 0;
-
-    return {
-      collection: collectionCount,
-      entry: entryCount,
-      validation: validationCount,
-      escalation: escalationCount,
-    };
-  }, [collectionDisplays, entryTests, validationTests, escalatedTests]);
+  const handleTabChange = useCallback(
+    (tab: LabTabId) => {
+      navigate(getLabTabPath(tab));
+    },
+    [navigate]
+  );
 
   const tabs = useMemo((): Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> => {
     const base: Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> = [
       {
         id: 'collection',
-        label: 'Sample Collection',
+        label: LAB_TAB_LABELS.collection,
         icon: <Icon name={ICONS.dataFields.flask} className="w-4 h-4" />,
         count: counts.collection,
       },
       {
         id: 'entry',
-        label: 'Result Entry',
+        label: LAB_TAB_LABELS.entry,
         icon: <Icon name={ICONS.dataFields.notebook} className="w-4 h-4" />,
         count: counts.entry,
       },
       {
         id: 'validation',
-        label: 'Result Validation',
+        label: LAB_TAB_LABELS.validation,
         icon: <Icon name={ICONS.ui.shieldCheck} className="w-4 h-4" />,
         count: counts.validation,
       },
@@ -98,25 +76,31 @@ export const Laboratory: React.FC = () => {
     if (canResolveEscalation) {
       base.push({
         id: 'escalation',
-        label: 'Supervisor Review',
+        label: LAB_TAB_LABELS.escalation,
         icon: <Icon name={ICONS.actions.alertCircle} className="w-4 h-4" />,
         count: counts.escalation,
       });
     }
     base.push({
       id: 'dashboard',
-      label: 'Command Center',
+      label: LAB_TAB_LABELS.dashboard,
       icon: <Icon name={ICONS.ui.dashboard} className="w-4 h-4" />,
     });
     return base;
   }, [canResolveEscalation, counts]);
 
-  const activeTabConfig = tabs.find(t => t.id === activeTab);
-  const pageTitle = activeTabConfig?.label ?? 'Laboratory';
+  if (!tabParam || !isLabTabId(tabParam)) {
+    return <Navigate to={getLabTabPath(DEFAULT_LAB_TAB)} replace />;
+  }
+
+  if (tabParam === 'escalation' && !canResolveEscalation) {
+    return <Navigate to={getLabTabPath(DEFAULT_LAB_TAB)} replace />;
+  }
+
+  const pageTitle = LAB_TAB_LABELS[activeTab];
 
   return (
     <div className="min-h-full flex flex-col p-2 gap-2 min-w-0">
-      {/* Page Header: title with tabs on the right */}
       <PageHeaderBar title={pageTitle}>
         <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">
           {tabs.map(tab => {
@@ -125,7 +109,7 @@ export const Laboratory: React.FC = () => {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={`
                   relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal transition-all duration-200 cursor-pointer
                   ${
@@ -156,9 +140,7 @@ export const Laboratory: React.FC = () => {
         </div>
       </PageHeaderBar>
 
-      {/* Main Content Card */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-surface rounded border border-border-default shadow-sm overflow-hidden">
-        {/* Content Area: flex column, no scroll – filter + grid handle layout like ListView */}
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-surface-page">
           {activeTab === 'collection' && <CollectionView />}
           {activeTab === 'entry' && <EntryView />}

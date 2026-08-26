@@ -37,4 +37,8 @@ export const LAB_CONFIG = {
   
   /** Validation error display duration (milliseconds) */
   VALIDATION_ERROR_DISPLAY_MS: 3000,
+
+  /** Queue age thresholds for SLA badges (hours) */
+  QUEUE_AGE_WARNING_HOURS: 4,
+  QUEUE_AGE_CRITICAL_HOURS: 8,
 } as const;

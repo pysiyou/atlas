@@ -13,6 +13,7 @@ import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { LabWorkflowView, createLabItemFilter } from '@/features/lab/components/LabWorkflowView';
 import { LabFilters } from '@/features/lab/components/LabFilters';
 import { useLabWorkflowFilters } from '@/features/lab/hooks/useLabWorkflowFilters';
+import { useLabUrlSearch } from '@/features/lab/hooks/useLabUrlSearch';
 import { validationFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components/loaders';
 import { LabWorkflowViewSkeleton } from '@/features/lab/components/LabWorkflowViewSkeleton';
@@ -34,6 +35,7 @@ export const EscalationView: React.FC = () => {
   const escalatedTests = rawEscalated;
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
+  const urlSearch = useLabUrlSearch();
 
   const {
     filteredItems: filteredTests,
@@ -51,6 +53,7 @@ export const EscalationView: React.FC = () => {
     getSampleType: t => t.sampleType,
     getStatus: t => t.priority as PriorityLevel,
     searchFilterFn: filterTest,
+    initialSearchQuery: urlSearch,
   });
 
   const openEscalationModal = useCallback(
