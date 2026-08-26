@@ -210,11 +210,10 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           : undefined
       }
       additionalContextInfo={
-        // Show collection info only if no sampleId (otherwise it's in sampleInfo)
-        test.collectedAt &&
-        !test.sampleId && (
+        // Show collection info only if no sampleId (means collection info not in sampleInfo above)
+        test.collectedAt && !test.sampleId ? (
           <CollectionInfoLine collectedAt={test.collectedAt} collectedBy={test.collectedBy} />
-        )
+        ) : undefined
       }
       footer={
         <ModalFooter statusMessage="">

@@ -8,6 +8,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { toast } from '@/app/AppToastBar';
 import { Popover, Button, Icon, FooterInfo } from '@/components';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
+import { POPOVER_FOOTER_MESSAGES } from '@/features/lab/components/popover-footer-constants';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';
 import type { SampleRequirement } from '@/features/lab/utils';
@@ -59,6 +60,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   const [volume, setVolume] = useState<number>(minimumVolume);
   const [notes, setNotes] = useState('');
   const [selectedColor, setSelectedColor] = useState<string>('');
+  const [showVolumeError, setShowVolumeError] = useState(false);
 
   const defaultContainerType: ContainerType = useMemo(() => {
     const sampleType = requirement.sampleType?.toLowerCase() || '';
@@ -86,10 +88,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       return;
     }
     if (volume < minimumVolume) {
-      toast.error({
-        title: `Volume must be at least ${minimumVolume} mL`,
-        subtitle: 'Enter a volume that meets the minimum required for this sample type.',
-      });
+      setShowVolumeError(true);
       return;
     }
     await Promise.resolve(
@@ -121,7 +120,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       confirmVariant="primary"
       disabled={!isValid}
       isSubmitting={isSubmitting}
-      footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text="Collecting sample" />}
+      footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text={POPOVER_FOOTER_MESSAGES.COLLECTING_SAMPLE} />}
     >
       {/* Required quantity (volume) */}
       <div>
@@ -144,6 +143,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             onChange={e => {
               const v = Number(e.target.value);
               setVolume(Number.isNaN(v) ? minimumVolume : v);
+              if (showVolumeError && v >= minimumVolume) {
+                setShowVolumeError(false);
+              }
             }}
             className={cn(inputBase, 'pr-8', volume < minimumVolume && inputError)}
             placeholder="0.0"
@@ -152,6 +154,11 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             mL
           </span>
         </div>
+        {showVolumeError && volume < minimumVolume && (
+          <p className="text-xxs text-danger-fg mt-1">
+            Volume must be at least {minimumVolume} mL
+          </p>
+        )}
       </div>
 
       {/* Container Type: tube or cup only */}

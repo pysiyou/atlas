@@ -30,4 +30,14 @@ export const LAB_CONFIG = {
   
   /** Maximum visible results in compact result grid */
   COMPACT_RESULT_GRID_LIMIT: 8,
+  
+  /** Popover offset value (pixels) */
+  POPOVER_OFFSET: 8,
+  
+  /** Modal sizes */
+  MODAL_SIZE_DEFAULT: '3xl' as const,
+  MODAL_SIZE_LARGE: '4xl' as const,
+  
+  /** Validation error display duration (milliseconds) */
+  VALIDATION_ERROR_DISPLAY_MS: 3000,
 } as const;

@@ -7,10 +7,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Popover, IconButton, Alert, Badge, FooterInfo } from '@/components';
 import { PopoverForm, CheckboxCard } from '@/features/lab/components/PopoverForm';
+import { AttemptProgressBar } from '@/features/lab/components/AttemptProgressBar';
+import { POPOVER_FOOTER_MESSAGES } from '@/features/lab/components/popover-footer-constants';
 import { cn, displayId } from '@/utils';
 import type { RejectionReason } from '@/types';
 import { ICONS } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
+import { LAB_CONFIG } from '@/features/lab/config';
 
 /** Rejection reason options with labels and descriptions */
 const REJECTION_REASONS: { value: RejectionReason; label: string; description: string }[] = [
@@ -142,7 +145,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       confirmVariant="danger"
       isSubmitting={isSubmitting}
       disabled={!isValid}
-      footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text="Rejecting sample" />}
+      footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text={POPOVER_FOOTER_MESSAGES.REJECTING_SAMPLE} />}
     >
       {/* Warning Alert */}
       {rejectionHistoryCount > 1 ? (
@@ -166,6 +169,21 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
             </p>
           </div>
         </Alert>
+      )}
+
+      {/* Attempt Progress Bar */}
+      {rejectionHistoryCount > 0 && (
+        <div className="space-y-1">
+          <label className="block text-xs font-normal text-text-tertiary">
+            Rejection History
+          </label>
+          <AttemptProgressBar
+            currentAttempt={rejectionHistoryCount}
+            maxAttempts={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
+            label="Rejection"
+            variant="warning"
+          />
+        </div>
       )}
 
       {/* Rejection Reasons */}

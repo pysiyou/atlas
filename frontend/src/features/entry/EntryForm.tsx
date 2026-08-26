@@ -295,7 +295,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
   return (
     <div className="bg-surface-page rounded-lg p-4 border border-border-subtle">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-7">
         {testDef.parameters.map(param => {
           const value = results[param.code] ?? '';
           const refRange = getReferenceRangeDisplay(param, patient);
@@ -305,7 +305,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
             (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
 
           return (
-            <div key={param.code} className="group">
+            <div key={param.code} className="group min-h-[72px] flex flex-col">
               <div className="flex justify-between items-baseline mb-1 gap-2">
                 <label
                   htmlFor={`result-${resultKey}-${param.code}`}
@@ -325,7 +325,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 </div>
               </div>
 
-              <div className="relative">
+              <div className="relative flex-1">
                 <ParameterInput
                   param={param}
                   value={value}
@@ -347,15 +347,15 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                     </span>
                   </div>
                 )}
-                {validationErrors[param.code] && (
-                  <div
-                    className="absolute -bottom-5 left-0 text-xxs text-danger-fg font-normal truncate max-w-full"
-                    title={validationErrors[param.code]}
-                  >
-                    Invalid value
-                  </div>
-                )}
               </div>
+              {validationErrors[param.code] && (
+                <div
+                  className="text-xxs text-danger-fg font-normal truncate max-w-full mt-1"
+                  title={validationErrors[param.code]}
+                >
+                  Invalid value
+                </div>
+              )}
             </div>
           );
         })}

@@ -3,9 +3,10 @@
  */
 
 import React, { useMemo } from 'react';
-import { Textarea } from '@/components';
+import { Textarea, Icon } from '@/components';
 import { CriticalValueBanner } from './components/PanicValueAlert';
 import { statusMapFromFlags, parseResultEntry, isCritical } from '@/features/lab/utils/lab-helpers';
+import { ICONS } from '@/utils';
 import type { ResultStatus } from '@/types/enums';
 
 interface ValidationFormProps {
@@ -79,8 +80,9 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
               // Parse the result entry to handle different formats
               const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
               const abnormal = status !== 'normal';
+              const critical = isCritical(status);
               const valueColor = abnormal
-                ? isCritical(status)
+                ? critical
                   ? 'text-danger-fg'
                   : 'text-warning-fg'
                 : 'text-text-primary';
@@ -90,7 +92,13 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
                   key={key}
                   className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
                 >
-                  <span className="text-xs text-text-tertiary text-left" title={key}>
+                  <span className="text-xs text-text-tertiary text-left flex items-center gap-1" title={key}>
+                    {critical && (
+                      <Icon 
+                        name={ICONS.actions.alertCircle} 
+                        className="w-3 h-3 text-danger-fg animate-pulse" 
+                      />
+                    )}
                     {key}:
                   </span>
                   <span className={`text-sm font-normal text-left ${valueColor}`}>
