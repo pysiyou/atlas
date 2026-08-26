@@ -238,8 +238,6 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
         getTest={getTest}
         getUserName={getUserName}
         collectionNotes={collectionNotes}
-        collectedAt={collectedAt}
-        collectedBy={collectedBy}
         gridSections={gridSections}
       />
     </LabDetailModal>

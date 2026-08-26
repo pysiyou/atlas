@@ -8,11 +8,6 @@ import React, { useMemo, useCallback } from 'react';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { ValidationCard } from './ValidationCard';
-import {
-  BulkValidationToolbar,
-  useBulkSelection,
-  ValidationCheckbox,
-} from './BulkValidationToolbar';
 import { LabWorkflowView, createLabItemFilter } from '@/features/lab/components/LabWorkflowView';
 import { LabFilters } from '@/features/lab/components/LabFilters';
 import { useLabWorkflowFilters, useLabTestsFromOrders, useLabUrlSearch } from '@/features/lab/hooks';
@@ -36,10 +31,8 @@ export const ValidationView: React.FC = () => {
     pendingValidateKey,
     handleCommentsChange,
     handleValidate,
-    handleBulkApprove,
     openValidationModal,
     validateMutation,
-    bulkMutation,
   } = useValidationWorkflow(ordersLoading);
 
   const allTests = useLabTestsFromOrders({
@@ -88,34 +81,6 @@ export const ValidationView: React.FC = () => {
     getQueueSince,
   });
 
-  const filteredTestsWithId = useMemo(
-    () => filteredTests.filter((t): t is typeof t & { id: number } => typeof t.id === 'number'),
-    [filteredTests]
-  );
-
-  const { selectedIds, setSelectedIds, toggleItem, isSelected } = useBulkSelection(
-    !isMobile ? filteredTestsWithId : []
-  );
-
-  const onBulkApprove = useCallback(
-    async (testIds: number[]) => {
-      await handleBulkApprove(testIds, allTests);
-      setSelectedIds(new Set());
-    },
-    [handleBulkApprove, allTests, setSelectedIds]
-  );
-
-  const bulkItems = useMemo(
-    () =>
-      filteredTestsWithId.map(test => ({
-        id: test.id,
-        orderId: test.orderId,
-        testCode: test.testCode,
-        hasCriticalValues: test.hasCriticalValues,
-      })),
-    [filteredTestsWithId]
-  );
-
   const sectionLoading = useMinDisplay(ordersLoading || testsLoading, 500);
 
   return (
@@ -129,38 +94,19 @@ export const ValidationView: React.FC = () => {
           items={filteredTests}
           renderCard={test => {
             const commentKey = `${test.orderId}-${test.testCode}`;
-            const cardProps = {
-              test,
-              commentKey,
-              comments: comments[commentKey] || '',
-              onCommentsChange: handleCommentsChange,
-              onApprove: () => handleValidate(test.orderId, test.testCode, true),
-              onReject: () => handleValidate(test.orderId, test.testCode, false),
-              onClick: () => openValidationModal(test),
-              isApproving:
-                validateMutation.isPending && pendingValidateKey === commentKey,
-              isMobile,
-            };
-
-            if (!isMobile && typeof test.id === 'number') {
-              return (
-                <div className="flex items-start gap-3">
-                  <div className="pt-4">
-                    <ValidationCheckbox
-                      id={test.id}
-                      isSelected={isSelected(test.id)}
-                      onToggle={toggleItem}
-                      disabled={bulkMutation.isPending}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <ValidationCard {...cardProps} />
-                  </div>
-                </div>
-              );
-            }
-
-            return <ValidationCard {...cardProps} />;
+            return (
+              <ValidationCard
+                test={test}
+                commentKey={commentKey}
+                comments={comments[commentKey] || ''}
+                onCommentsChange={handleCommentsChange}
+                onApprove={() => handleValidate(test.orderId, test.testCode, true)}
+                onReject={() => handleValidate(test.orderId, test.testCode, false)}
+                onClick={() => openValidationModal(test)}
+                isApproving={validateMutation.isPending && pendingValidateKey === commentKey}
+                isMobile={isMobile}
+              />
+            );
           }}
           getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
           emptyIcon="shield-check"
@@ -178,17 +124,6 @@ export const ValidationView: React.FC = () => {
               statusFilters={priorityFilters}
               onStatusFiltersChange={setPriorityFilters}
             />
-          }
-          afterFilterRow={
-            !isMobile && filteredTestsWithId.length > 0 ? (
-              <BulkValidationToolbar
-                items={bulkItems}
-                selectedIds={selectedIds}
-                onSelectionChange={setSelectedIds}
-                onBulkApprove={onBulkApprove}
-                isProcessing={bulkMutation.isPending}
-              />
-            ) : undefined
           }
         />
       </SectionLoadingBoundary>

@@ -294,11 +294,7 @@ export const CollectionPopover: React.FC<CollectionPopoverProps> = ({
       preventClose={effectiveSubmitting}
       trigger={
         trigger || (
-          <Button
-            variant="primary"
-            size="xs"
-            icon={<Icon name={ICONS.dataFields.flask} className="text-on-brand" />}
-          >
+          <Button variant="approve" size="xs">
             {isRecollection ? 'RECOLLECT' : 'COLLECT'}
           </Button>
         )

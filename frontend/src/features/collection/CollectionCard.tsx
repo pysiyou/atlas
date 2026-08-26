@@ -332,7 +332,7 @@ function CollectionCardDesktop({
             <>
               {hasValidatedTests ? (
                 <IconButton
-                  variant="delete"
+                  variant="reject"
                   size="sm"
                   title="Cannot reject: order has validated tests"
                   disabled
@@ -368,7 +368,7 @@ function CollectionCardDesktop({
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Recollection of{' '}
-            <span className="font-mono text-text-inverse">
+            <span className="font-mono text-brand">
               {displayId.sample(sample.originalSampleId)}
             </span>
           </Badge>
@@ -377,7 +377,7 @@ function CollectionCardDesktop({
           <Badge size="sm" variant="info" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Recollection requested:{' '}
-            <span className="font-mono text-text-inverse">
+            <span className="font-mono text-brand">
               {displayId.sample(rejectedSample.recollectionSampleId)}
             </span>
           </Badge>

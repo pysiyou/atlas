@@ -77,7 +77,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
           }}
           onSubmittingChange={onPopoverSubmittingChange}
           trigger={
-            <Button variant="primary" size="md" icon={<Icon name={ICONS.dataFields.flask} />}>
+            <Button variant="approve" size="md">
               {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
             </Button>
           }
@@ -90,44 +90,40 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
   if (isCollected && sample.sampleId) {
     const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
     const validatedCount = order ? getValidatedTestCount(order) : 0;
+    const cannotRejectMessage = `Cannot reject - ${validatedCount} test${validatedCount > 1 ? 's' : ''} already validated`;
+
+    if (hasValidatedTests) {
+      return (
+        <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
+          <div className="text-xs text-warning-fg flex items-center gap-1.5">
+            <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5 shrink-0" />
+            <span>{cannotRejectMessage}</span>
+          </div>
+        </ModalFooter>
+      );
+    }
 
     return (
       <ModalFooter
         statusIcon={
-          <Icon name={getSampleStatusIcon('collected')} className="w-4 h-4 text-text-disabled" />
+          <Icon name={getSampleStatusIcon('collected')} className="w-3.5 h-3.5 text-text-disabled" />
         }
-        statusMessage={
-          hasValidatedTests
-            ? `Cannot reject - ${validatedCount} test${validatedCount > 1 ? 's' : ''} already validated`
-            : ''
-        }
-        statusClassName={hasValidatedTests ? 'text-warning-fg' : 'text-text-tertiary'}
+        statusMessage=""
+        statusClassName="text-text-tertiary"
       >
-        {/* Print button - functionality handled by parent component */}
-        {hasValidatedTests ? (
-          <Button
-            variant="reject"
-            size="md"
-            disabled
-            title={`Cannot reject sample: ${validatedCount} test${validatedCount > 1 ? 's have' : ' has'} already been validated`}
-          >
-            Reject Sample
-          </Button>
-        ) : (
-          <CollectionRejectionPopover
-            sampleId={sample.sampleId.toString()}
-            sampleType={sample.sampleType}
-            patientName={patientName}
-            isRecollection={sample.isRecollection || false}
-            rejectionHistoryCount={sample.rejectionHistory?.length || 0}
-            onReject={onReject}
-            trigger={
-              <Button variant="reject" size="md">
-                Reject Sample
-              </Button>
-            }
-          />
-        )}
+        <CollectionRejectionPopover
+          sampleId={sample.sampleId.toString()}
+          sampleType={sample.sampleType}
+          patientName={patientName}
+          isRecollection={sample.isRecollection || false}
+          rejectionHistoryCount={sample.rejectionHistory?.length || 0}
+          onReject={onReject}
+          trigger={
+            <Button variant="reject" size="md">
+              Reject Sample
+            </Button>
+          }
+        />
       </ModalFooter>
     );
   }
@@ -137,7 +133,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
     return (
       <ModalFooter
         statusIcon={
-          <Icon name={getSampleStatusIcon('rejected')} className="w-4 h-4 text-text-disabled" />
+          <Icon name={getSampleStatusIcon('rejected')} className="w-3.5 h-3.5 text-text-disabled" />
         }
         statusMessage={
           rejectedSample?.recollectionRequired

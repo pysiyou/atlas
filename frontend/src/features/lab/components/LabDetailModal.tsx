@@ -300,8 +300,10 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
         <span>{statusMessage}</span>
       </div>
     ) : (
-      <div className={`flex items-center gap-2 text-sm ${statusClassName}`}>
-        {statusIcon}
+      <div className={`flex items-center gap-1.5 text-xs ${statusClassName}`}>
+        {statusIcon && (
+          <div className="w-3.5 h-3.5 flex items-center justify-center shrink-0">{statusIcon}</div>
+        )}
         {statusMessage && <span>{statusMessage}</span>}
       </div>
     )}

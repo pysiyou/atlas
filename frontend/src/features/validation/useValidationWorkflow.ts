@@ -9,7 +9,7 @@
 
 import { useState, useCallback } from 'react';
 import { useInvalidateOrders } from '@/features/orders/utils/useOrderUtils';
-import { useValidateResults, useValidateBulk } from '@/features/validation/api/useResultMutations';
+import { useValidateResults } from '@/features/validation/api/useResultMutations';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
@@ -21,13 +21,10 @@ export interface ValidationWorkflow {
   pendingValidateKey: string | null;
   handleCommentsChange: (commentKey: string, value: string) => void;
   handleValidate: (orderId: number | string, testCode: string, approve: boolean) => Promise<void>;
-  handleBulkApprove: (testIds: number[], allTests: TestWithContext[]) => Promise<void>;
   openValidationModal: (test: TestWithContext) => void;
   validateMutation: ReturnType<typeof useValidateResults>;
-  bulkMutation: ReturnType<typeof useValidateBulk>;
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflow {
   const { invalidateAll: invalidateOrders } = useInvalidateOrders();
   const { openModal } = useModal();
@@ -35,7 +32,6 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
   const [pendingValidateKey, setPendingValidateKey] = useState<string | null>(null);
 
   const validateMutation = useValidateResults();
-  const bulkMutation = useValidateBulk();
 
   const handleCommentsChange = useCallback((commentKey: string, value: string) => {
     setComments(prev => ({ ...prev, [commentKey]: value }));
@@ -105,60 +101,6 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
     [comments, ordersLoading, invalidateOrders, validateMutation, clearComment]
   );
 
-  const handleBulkApprove = useCallback(
-    async (testIds: number[], allTests: TestWithContext[]): Promise<void> => {
-      if (testIds.length === 0) return;
-
-      const items = testIds
-        .map(testId => {
-          const test = allTests.find(t => t.id === testId);
-          return test ? { orderId: test.orderId, testCode: test.testCode } : null;
-        })
-        .filter((item): item is { orderId: number; testCode: string } => item !== null);
-
-      if (items.length === 0) {
-        toast.error({
-          title: 'No valid tests selected',
-          subtitle: 'Select at least one test from the list before running bulk approval.',
-        });
-        return;
-      }
-
-      try {
-        const response = await bulkMutation.mutateAsync({
-          items,
-          validationNotes: 'Bulk approved',
-        });
-        const results = response?.results ?? [];
-        const successCount = response?.successCount ?? 0;
-        const failureCount = response?.failureCount ?? 0;
-        if (failureCount === 0) {
-          toast.success({
-            title: `Successfully approved ${successCount} result(s)`,
-            subtitle: 'All selected results have been approved and the orders have been updated.',
-          });
-        } else {
-          const failedItems = results
-            .filter(r => !r.success)
-            .map(r => `${r.testCode} (Order ${r.orderId})`)
-            .join(', ');
-          toast.error({
-            title: `Approved ${successCount}, failed ${failureCount}${failedItems ? `: ${failedItems}` : ''}`,
-            subtitle:
-              'Some results could not be approved. Check the failed items and try again if needed.',
-          });
-        }
-      } catch (error) {
-        logger.error('Error in bulk validation', error instanceof Error ? error : undefined);
-        toast.error({
-          title: 'Failed to approve results. Please try again.',
-          subtitle: 'The bulk approval request failed. Check your connection and try again.',
-        });
-      }
-    },
-    [bulkMutation]
-  );
-
   const openValidationModal = useCallback(
     (test: TestWithContext) => {
       const commentKey = `${test.orderId}-${test.testCode}`;
@@ -180,9 +122,7 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
     pendingValidateKey,
     handleCommentsChange,
     handleValidate,
-    handleBulkApprove,
     openValidationModal,
     validateMutation,
-    bulkMutation,
   };
 }

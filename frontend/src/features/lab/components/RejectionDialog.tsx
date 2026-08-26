@@ -261,7 +261,7 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
       preventClose={effectiveSubmitting}
       trigger={
         trigger ?? (
-          <IconButton variant="delete" size="sm" title={REJECTION_DIALOG_COPY.triggerTitle} />
+          <IconButton variant="reject" size="sm" title={REJECTION_DIALOG_COPY.triggerTitle} />
         )
       }
     >

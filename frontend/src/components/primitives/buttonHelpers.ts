@@ -63,7 +63,7 @@ export const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   // Primary actions
   save: { style: 'primary', icon: ICONS.actions.save },
   submit: { style: 'primary', icon: ICONS.actions.check },
-  approve: { style: 'success', icon: ICONS.actions.check },
+  approve: { style: 'success', icon: ICONS.actions.like },
   confirm: { style: 'success', icon: ICONS.actions.check },
   add: { style: 'primary', icon: ICONS.actions.add },
   create: { style: 'primary', icon: ICONS.actions.add },
@@ -83,7 +83,7 @@ export const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
 
   // Destructive actions
   delete: { style: 'danger', icon: ICONS.actions.delete },
-  reject: { style: 'danger', icon: ICONS.actions.delete },
+  reject: { style: 'danger', icon: ICONS.actions.dislike },
 
   // Utility actions
   retry: { style: 'primary', icon: ICONS.actions.loading },

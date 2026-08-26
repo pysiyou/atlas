@@ -6,7 +6,7 @@
  *
  * Usage:
  *   <IconButton variant="close" />           // Cross icon + danger style
- *   <IconButton variant="approve" />         // Check icon + success style
+ *   <IconButton variant="approve" />         // Like icon + success style
  *   <IconButton variant="primary" icon={<Icon name="custom" />} />  // Custom icon + primary style
  */
 
@@ -38,6 +38,7 @@ export type IconButtonSize = 'xs' | 'sm' | 'md';
  */
 const ICON_BUTTON_VARIANTS: Record<string, string> = {
   approve: 'bg-success text-on-success hover:opacity-90 focus:ring-success',
+  reject: 'bg-danger text-on-danger hover:opacity-90 focus:ring-danger',
   delete: 'bg-danger text-on-danger hover:opacity-90 focus:ring-danger',
   edit: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
   view: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',

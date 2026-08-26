@@ -359,7 +359,7 @@ function ValidationCardDesktop({
         {showRetestBadge && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Re-test of <span className="font-mono">{displayId.orderTest(test.retestOfTestId)}</span>
+            Re-test of <span className="font-mono text-brand">{displayId.orderTest(test.retestOfTestId)}</span>
           </Badge>
         )}
         {showRecollectionBadge && (

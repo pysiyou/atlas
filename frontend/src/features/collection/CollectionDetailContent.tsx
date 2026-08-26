@@ -5,13 +5,9 @@
 
 import React from 'react';
 import { Icon, SectionContainer } from '@/components';
-import Barcode from 'react-barcode';
 import type { Sample, RejectedSample, Test } from '@/types';
-import { displayId } from '@/utils';
 import { CollectionRequirementsSection } from './CollectionRequirementsSection';
-import { AuditHistorySection } from '@/features/lab/components/AuditHistorySection';
 import { CollectionRejectionSection } from './CollectionRejectionSection';
-import { CollectionInfoLine } from '@/features/lab/components/StatusBadges';
 import { DetailGrid, type DetailGridSectionConfig } from '@/features/lab/components/LabDetailModal';
 import { ICONS } from '@/utils';
 
@@ -27,8 +23,6 @@ interface CollectionDetailContentProps {
   getTest: (code: string) => Test | undefined;
   getUserName: (userId: string) => string;
   collectionNotes?: string;
-  collectedAt?: string;
-  collectedBy?: string;
   gridSections: DetailGridSectionConfig[];
 }
 
@@ -48,35 +42,10 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
   getTest,
   getUserName,
   collectionNotes,
-  collectedAt,
-  collectedBy,
   gridSections,
 }) => {
   return (
     <>
-      {/* Barcode */}
-      {(isCollected || isRejected) && sample.sampleId && (
-        <div className="flex items-center justify-center bg-surface-page rounded p-4 border border-border-default mt-2">
-          <Barcode
-            value={displayId.sample(sample.sampleId)}
-            height={40}
-            displayValue={false}
-            background="transparent"
-            lineColor="var(--text)"
-            margin={0}
-          />
-        </div>
-      )}
-
-      {/* Collection info */}
-      {collectedAt && (
-        <CollectionInfoLine
-          collectedAt={collectedAt}
-          collectedBy={collectedBy}
-          className="text-xs text-text-tertiary mt-1"
-        />
-      )}
-
       {/* Linked Tests */}
       <SectionContainer title={isCollected ? 'Linked Tests' : 'Required for'}>
         <ul className="space-y-1">
@@ -135,10 +104,6 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
 
       {/* Detail Sections */}
       <DetailGrid sections={gridSections} />
-
-      {sample.sampleId && (
-        <AuditHistorySection entityType="sample" entityId={sample.sampleId} />
-      )}
     </>
   );
 };

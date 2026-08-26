@@ -91,6 +91,8 @@ export const ICONS = {
     arrowDown: 'arrow-down' as IconName,
     check: 'check' as IconName,
     checkCircle: 'check-circle' as IconName,
+    like: 'like' as IconName,
+    dislike: 'dislike' as IconName,
     close: 'close' as IconName,
     closeCircle: 'close-circle' as IconName,
     cross: 'cross' as IconName,

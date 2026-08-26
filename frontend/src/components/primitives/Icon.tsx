@@ -122,6 +122,8 @@ export type IconName =
   | 'settings'
   | 'bell'
   | 'user-cog'
+  | 'like'
+  | 'dislike'
   | 'menu';
 
 export interface IconProps {
