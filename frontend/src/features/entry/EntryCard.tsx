@@ -14,7 +14,8 @@ import { displayId } from '@/utils';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard, ProgressBadge } from '@/features/lab/components/LabCard';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
-import { ContextPanel, buildCollectionContext, buildValidationContext } from '@/features/lab/components/ContextPanel';
+import { InfoBanner } from '@/features/lab/components/InfoBanner';
+import { buildCollectionContext, buildValidationContext } from '@/features/lab/components/ContextPanel';
 import { LAB_CONFIG } from '@/features/lab/config';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/utils';
@@ -237,12 +238,36 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         )}
       </div>
       {contextItems.length > 0 && (
-        <ContextPanel 
+        <InfoBanner 
           title="Historical Context" 
-          items={contextItems}
-          defaultCollapsed={false}
           variant={hasAnyRejectionHistory ? 'warning' : 'info'}
-        />
+          collapsible={true}
+          defaultCollapsed={false}
+          itemCount={contextItems.length}
+        >
+          <div className="space-y-2">
+            {contextItems.map((item, index) => (
+              <div key={index} className="space-y-0.5">
+                <div className="flex items-center gap-1.5">
+                  {item.icon && (
+                    <Icon name={item.icon} className="w-3 h-3 text-text-tertiary" />
+                  )}
+                  <span className="text-xxs font-normal text-text-secondary">
+                    {item.label}
+                  </span>
+                </div>
+                <p className="text-xs text-text-primary leading-tight pl-4">
+                  {item.content}
+                </p>
+                {item.metadata && (
+                  <p className="text-xxs text-text-disabled pl-4">
+                    {item.metadata}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </InfoBanner>
       )}
     </div>
   );

@@ -8,6 +8,7 @@ import { Card, Badge } from '@/components';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/features/admin/api/useUsers';
+import { InfoBanner } from './InfoBanner';
 import {
   LAB_CARD_TYPOGRAPHY,
   LAB_CARD_SPACING,
@@ -135,11 +136,7 @@ export const LabCard: React.FC<LabCardProps> = ({
 
           {/* Row 3: Content section */}
           <div className={LAB_CARD_CONTAINERS.contentSection}>
-            <div
-              className={`${LAB_CARD_TYPOGRAPHY.sectionTitle} ${LAB_CARD_SPACING.sectionTitleMargin}`}
-            >
-              {contentTitle}
-            </div>
+            <InfoBanner title={contentTitle} variant="default" />
             {content}
           </div>
 

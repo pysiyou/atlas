@@ -18,7 +18,8 @@ import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard } from '@/features/lab/components/LabCard';
 import { RejectionDialog } from '@/features/lab/components';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
-import { ContextPanel, buildValidationContext } from '@/features/lab/components/ContextPanel';
+import { InfoBanner } from '@/features/lab/components/InfoBanner';
+import { buildValidationContext } from '@/features/lab/components/ContextPanel';
 import { LAB_CONFIG } from '@/features/lab/config';
 import type { TestWithContext } from '@/types';
 import { getResultRejectionType } from '@/types/order';
@@ -397,12 +398,36 @@ function ValidationCardDesktop({
         <div className="space-y-3">
           <ResultGrid results={test.results!} flagStatusMap={flagStatusMap} />
           {contextItems.length > 0 && (
-            <ContextPanel 
+            <InfoBanner 
               title="Entry & History" 
-              items={contextItems}
-              defaultCollapsed={false}
               variant={hasRejectionHistory ? 'warning' : 'info'}
-            />
+              collapsible={true}
+              defaultCollapsed={false}
+              itemCount={contextItems.length}
+            >
+              <div className="space-y-2">
+                {contextItems.map((item, index) => (
+                  <div key={index} className="space-y-0.5">
+                    <div className="flex items-center gap-1.5">
+                      {item.icon && (
+                        <Icon name={item.icon} className="w-3 h-3 text-text-tertiary" />
+                      )}
+                      <span className="text-xxs font-normal text-text-secondary">
+                        {item.label}
+                      </span>
+                    </div>
+                    <p className="text-xs text-text-primary leading-tight pl-4">
+                      {item.content}
+                    </p>
+                    {item.metadata && (
+                      <p className="text-xxs text-text-disabled pl-4">
+                        {item.metadata}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </InfoBanner>
           )}
         </div>
       }
