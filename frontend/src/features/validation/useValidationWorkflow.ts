@@ -8,16 +8,11 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useInvalidateOrders, useOrderLookup } from '@/features/orders/utils/useOrderUtils';
-import {
-  useValidateResults,
-  useRejectResults,
-  useValidateBulk,
-} from '@/features/validation/api/useResultMutations';
+import { useInvalidateOrders } from '@/features/orders/utils/useOrderUtils';
+import { useValidateResults, useValidateBulk } from '@/features/validation/api/useResultMutations';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { orderHasValidatedTests } from '@/features/orders/utils';
 import { getErrorMessage, isLikelyNetworkOrTimeout } from '@/utils/errors';
 import type { TestWithContext } from '@/types';
 
@@ -25,30 +20,21 @@ export interface ValidationWorkflow {
   comments: Record<string, string>;
   pendingValidateKey: string | null;
   handleCommentsChange: (commentKey: string, value: string) => void;
-  handleValidate: (
-    orderId: number | string,
-    testCode: string,
-    approve: boolean,
-    rejectionNotes?: string,
-    rejectionType?: 're-test' | 're-collect'
-  ) => Promise<void>;
+  handleValidate: (orderId: number | string, testCode: string, approve: boolean) => Promise<void>;
   handleBulkApprove: (testIds: number[], allTests: TestWithContext[]) => Promise<void>;
   openValidationModal: (test: TestWithContext) => void;
   validateMutation: ReturnType<typeof useValidateResults>;
-  rejectMutation: ReturnType<typeof useRejectResults>;
   bulkMutation: ReturnType<typeof useValidateBulk>;
 }
 
 // eslint-disable-next-line max-lines-per-function
 export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflow {
   const { invalidateAll: invalidateOrders } = useInvalidateOrders();
-  const { getOrder } = useOrderLookup();
   const { openModal } = useModal();
   const [comments, setComments] = useState<Record<string, string>>({});
   const [pendingValidateKey, setPendingValidateKey] = useState<string | null>(null);
 
   const validateMutation = useValidateResults();
-  const rejectMutation = useRejectResults();
   const bulkMutation = useValidateBulk();
 
   const handleCommentsChange = useCallback((commentKey: string, value: string) => {
@@ -64,13 +50,7 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
   }, []);
 
   const handleValidate = useCallback(
-    async (
-      orderId: number | string,
-      testCode: string,
-      approve: boolean,
-      rejectionNotes?: string,
-      rejectionType?: 're-test' | 're-collect'
-    ): Promise<void> => {
+    async (orderId: number | string, testCode: string, approve: boolean): Promise<void> => {
       if (ordersLoading) return;
 
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
@@ -113,61 +93,16 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
         return;
       }
 
-      const alreadyRejected = rejectionNotes === undefined && rejectionType === undefined;
-      if (alreadyRejected) {
-        await invalidateOrders();
-        toast.success({
-          title: 'Results rejected',
-          subtitle:
-            'These results have been rejected. A re-test or new sample may have been requested.',
-        });
-        clearComment(commentKey);
-        return;
-      }
-
-      if (!rejectionNotes) {
-        const confirmed = window.confirm('Are you sure you want to reject these results?');
-        if (!confirmed) return;
-      }
-      const rejectType = rejectionType || 're-test';
-      setPendingValidateKey(commentKey);
-      try {
-        await rejectMutation.mutateAsync({
-          orderId: orderIdStr,
-          testCode,
-          rejectionReason: rejectionNotes || 'Rejected by validator',
-          rejectionType: rejectType,
-        });
-        const message =
-          rejectType === 're-collect'
-            ? 'Sample rejected - new collection required'
-            : 'Results rejected - re-test created';
-        toast.error({
-          title: message,
-          subtitle:
-            'The rejection has been recorded. Follow up on re-test or recollection as needed.',
-        });
-        clearComment(commentKey);
-      } catch (error) {
-        logger.error('Error rejecting results', error instanceof Error ? error : undefined);
-        if (isLikelyNetworkOrTimeout(error)) {
-          toast.error({
-            title: 'Action may have completed',
-            subtitle:
-              'The request did not complete. Please refresh the page to see the latest status.',
-          });
-        } else {
-          toast.error({
-            title: `Failed to reject results: ${getErrorMessage(error, 'Unknown error')}`,
-            subtitle: 'Please try again or contact support if the issue persists.',
-          });
-        }
-        throw error;
-      } finally {
-        clearPending();
-      }
+      // RejectionDialog already called the API; refresh cache and notify.
+      await invalidateOrders();
+      toast.success({
+        title: 'Results rejected',
+        subtitle:
+          'These results have been rejected. A re-test or new sample may have been requested.',
+      });
+      clearComment(commentKey);
     },
-    [comments, ordersLoading, invalidateOrders, validateMutation, rejectMutation, clearComment]
+    [comments, ordersLoading, invalidateOrders, validateMutation, clearComment]
   );
 
   const handleBulkApprove = useCallback(
@@ -227,8 +162,6 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
   const openValidationModal = useCallback(
     (test: TestWithContext) => {
       const commentKey = `${test.orderId}-${test.testCode}`;
-      const order = getOrder(test.orderId);
-      const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
 
       openModal(ModalType.VALIDATION_DETAIL, {
         test,
@@ -236,12 +169,10 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
         comments: comments[commentKey] || '',
         onCommentsChange: handleCommentsChange,
         onApprove: () => handleValidate(test.orderId, test.testCode, true),
-        onReject: (reason?: string, type?: 're-test' | 're-collect') =>
-          handleValidate(test.orderId, test.testCode, false, reason, type),
-        orderHasValidatedTests: hasValidatedTests,
+        onReject: () => handleValidate(test.orderId, test.testCode, false),
       });
     },
-    [comments, handleCommentsChange, handleValidate, openModal, getOrder]
+    [comments, handleCommentsChange, handleValidate, openModal]
   );
 
   return {
@@ -252,7 +183,6 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
     handleBulkApprove,
     openValidationModal,
     validateMutation,
-    rejectMutation,
     bulkMutation,
   };
 }

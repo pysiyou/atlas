@@ -18,8 +18,6 @@ import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard } from '@/features/lab/components/LabCard';
 import { RejectionDialog } from '@/features/lab/components';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
-import { InfoBanner } from '@/features/lab/components/InfoBanner';
-import { buildValidationContext } from '@/features/lab/components/ContextPanel';
 import { LAB_CONFIG } from '@/features/lab/config';
 import type { TestWithContext } from '@/types';
 import { getResultRejectionType } from '@/types/order';
@@ -121,10 +119,8 @@ export interface ValidationCardProps {
   comments: string;
   onCommentsChange: (commentKey: string, value: string) => void;
   onApprove: () => void;
-  onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
+  onReject: () => void;
   onClick?: () => void;
-  /** When true, re-collect is disabled (order has validated tests). */
-  orderHasValidatedTests?: boolean;
   /** When true, approve action is in progress (show loading on approve button) */
   isApproving?: boolean;
   /** When true, renders mobile-optimized layout */
@@ -153,20 +149,18 @@ function ValidationCardMobile({
   patientName,
   onApprove,
   onReject,
-  orderHasValidatedTests,
   isApproving,
   handleCardClick,
 }: {
   test: TestWithContext;
   patientName: string;
   onApprove: () => void;
-  onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
-  orderHasValidatedTests: boolean;
+  onReject: () => void;
   isApproving: boolean;
   handleCardClick: () => void;
 }) {
   const { hasFlags, isRetest, hasRejectionHistory, flagStatusMap } = deriveCardState(test);
-  const handleRejectionResult = () => onReject(undefined, undefined);
+  const handleRejectionResult = () => onReject();
 
   return (
     <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
@@ -234,7 +228,6 @@ function ValidationCardMobile({
               testCode={test.testCode}
               testName={test.testName}
               patientName={patientName}
-              orderHasValidatedTests={orderHasValidatedTests}
               onReject={handleRejectionResult}
             />
           </div>
@@ -262,34 +255,24 @@ function ValidationCardDesktop({
   test,
   onApprove,
   onReject,
-  orderHasValidatedTests,
   isApproving,
   handleCardClick,
   getUserName,
 }: {
   test: TestWithContext;
   onApprove: () => void;
-  onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
-  orderHasValidatedTests: boolean;
+  onReject: () => void;
   isApproving: boolean;
   handleCardClick: () => void;
   getUserName: (id: string) => string;
 }) {
   const { rejectionHistory, lastRejection, hasRejectionHistory, isRetest, isRecollection, flagStatusMap } =
     deriveCardState(test);
-  const handleRejectionResult = () => onReject(undefined, undefined);
+  const handleRejectionResult = () => onReject();
   const resultCount = Object.keys(test.results!).length;
 
   const showRetestBadge = isRetest && test.retestOfTestId;
   const showRecollectionBadge = isRecollection && !isRetest;
-
-  // Build context panel items
-  const contextItems = buildValidationContext({
-    technicianNotes: test.technicianNotes,
-    enteredBy: test.enteredBy,
-    enteredAt: test.resultEnteredAt,
-    rejectionHistory: test.resultRejectionHistory,
-  });
 
   const badges = (
     <>
@@ -297,7 +280,9 @@ function ValidationCardDesktop({
       {hasRejectionHistory && (isRetest || isRecollection) && (
         <AttemptIndicator
           attemptNumber={isRetest ? (test.retestNumber ?? 1) : rejectionHistory.length + 1}
-          maxAttempts={LAB_CONFIG.MAX_RETEST_ATTEMPTS}
+          maxAttempts={
+            isRetest ? LAB_CONFIG.MAX_RETEST_ATTEMPTS : LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS
+          }
           type={isRetest ? 'retest' : 'recollection'}
           previousReason={lastRejection?.rejectionReason || lastRejection?.reason}
         />
@@ -323,7 +308,6 @@ function ValidationCardDesktop({
         testCode={test.testCode}
         testName={test.testName}
         patientName={test.patientName}
-        orderHasValidatedTests={orderHasValidatedTests}
         onReject={handleRejectionResult}
       />
       <Button
@@ -394,43 +378,7 @@ function ValidationCardDesktop({
       }
       badges={badges}
       actions={actions}
-      content={
-        <div className="space-y-3">
-          <ResultGrid results={test.results!} flagStatusMap={flagStatusMap} />
-          {contextItems.length > 0 && (
-            <InfoBanner 
-              title="Entry & History" 
-              variant={hasRejectionHistory ? 'warning' : 'info'}
-              collapsible={true}
-              defaultCollapsed={false}
-              itemCount={contextItems.length}
-            >
-              <div className="space-y-2">
-                {contextItems.map((item, index) => (
-                  <div key={index} className="space-y-0.5">
-                    <div className="flex items-center gap-1.5">
-                      {item.icon && (
-                        <Icon name={item.icon} className="w-3 h-3 text-text-tertiary" />
-                      )}
-                      <span className="text-xxs font-normal text-text-secondary">
-                        {item.label}
-                      </span>
-                    </div>
-                    <p className="text-xs text-text-primary leading-tight pl-4">
-                      {item.content}
-                    </p>
-                    {item.metadata && (
-                      <p className="text-xxs text-text-disabled pl-4">
-                        {item.metadata}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </InfoBanner>
-          )}
-        </div>
-      }
+      content={<ResultGrid results={test.results!} flagStatusMap={flagStatusMap} />}
       contentTitle={`Results (${resultCount})`}
     />
   );
@@ -446,7 +394,6 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
   onApprove,
   onReject,
   onClick,
-  orderHasValidatedTests = false,
   isApproving = false,
   isMobile = false,
 }) => {
@@ -470,7 +417,6 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
       onCommentsChange,
       onApprove,
       onReject,
-      orderHasValidatedTests,
     });
   };
 
@@ -481,7 +427,6 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
         patientName={patientName}
         onApprove={onApprove}
         onReject={onReject}
-        orderHasValidatedTests={orderHasValidatedTests}
         isApproving={isApproving}
         handleCardClick={handleCardClick}
       />
@@ -493,7 +438,6 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
       test={test}
       onApprove={onApprove}
       onReject={onReject}
-      orderHasValidatedTests={orderHasValidatedTests}
       isApproving={isApproving}
       handleCardClick={handleCardClick}
       getUserName={getUserName}

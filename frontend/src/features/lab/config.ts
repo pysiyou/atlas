@@ -10,9 +10,6 @@ export const LAB_CONFIG = {
   /** Maximum recollection attempts before escalation required */
   MAX_RECOLLECTION_ATTEMPTS: 3,
   
-  /** Maximum sample rejection attempts */
-  MAX_SAMPLE_REJECTION_ATTEMPTS: 3,
-  
   /** Search input debounce in milliseconds */
   SEARCH_DEBOUNCE_MS: 300,
   

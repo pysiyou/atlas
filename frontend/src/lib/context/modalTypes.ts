@@ -47,7 +47,6 @@ export interface ValidationDetailProps {
   onCommentsChange: (commentKey: string, comments: string) => void;
   onApprove: () => void;
   onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
-  orderHasValidatedTests?: boolean;
 }
 
 /** Payload for escalation resolution modal. */

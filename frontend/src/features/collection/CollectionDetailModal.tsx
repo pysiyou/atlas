@@ -14,8 +14,6 @@ import React, { useCallback, useMemo, useState } from 'react';
 import type { ContainerType, RejectedSample, RejectionReason } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import Barcode from 'react-barcode';
-import { toast } from '@/app/AppToastBar';
-import { logger } from '@/utils/logger';
 import { displayId } from '@/utils';
 import { CollectionInfoLine } from '@/features/lab/components/StatusBadges';
 import { CollectionDetailHeaderBadges } from './CollectionDetailHeaderBadges';
@@ -26,7 +24,8 @@ import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import { useUserLookup } from '@/features/admin/api/useUsers';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { useOrderLookup } from '@/features/orders/utils/useOrderUtils';
-import { useRejectSample, useSampleLookup } from '@/features/collection/api/useSamples';
+import { useSampleLookup } from '@/features/collection/api/useSamples';
+import { useRejectSampleHandler } from '@/features/collection/hooks/useRejectSampleHandler';
 import { getTestNames } from '@/features/catalog/utils';
 import { LabDetailModal } from '@/features/lab/components/LabDetailModal';
 import type { SampleDisplay } from '@/features/lab/types';
@@ -61,7 +60,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   const { getPatientName } = usePatientNameLookup();
   const { getOrder } = useOrderLookup();
   const { tests = [] } = useTestCatalog();
-  const rejectSampleMutation = useRejectSample();
+  const { rejectSample } = useRejectSampleHandler({ onSuccess: onClose });
   const [isPopoverSubmitting, setIsPopoverSubmitting] = useState(false);
 
   const getTest = useCallback((code: string) => tests.find(t => t.code === code), [tests]);
@@ -117,28 +116,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
     requireRecollection?: boolean
   ) => {
     if (!sample.sampleId) return;
-    try {
-      await rejectSampleMutation.mutateAsync({
-        sampleId: sample.sampleId.toString(),
-        reasons,
-        notes,
-        requireRecollection,
-      });
-      toast.success({
-        title: requireRecollection
-          ? 'Sample rejected - recollection will be requested'
-          : 'Sample rejected',
-        subtitle:
-          'The sample has been rejected. Recollection will be requested if you chose that option.',
-      });
-      onClose();
-    } catch (error) {
-      logger.error('Failed to reject sample', error instanceof Error ? error : undefined);
-      toast.error({
-        title: 'Failed to reject sample',
-        subtitle: 'The rejection could not be saved. Please try again or check the sample status.',
-      });
-    }
+    await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
   };
 
   // Collection info for collected/rejected samples

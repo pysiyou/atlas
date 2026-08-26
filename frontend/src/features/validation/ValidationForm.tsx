@@ -1,5 +1,5 @@
 /**
- * ValidationForm - Form for reviewing and approving/rejecting test results
+ * ValidationForm - Form for reviewing and approving test results
  */
 
 import React, { useMemo } from 'react';
@@ -7,7 +7,6 @@ import { Textarea, Icon } from '@/components';
 import { CriticalValueBanner } from './components/PanicValueAlert';
 import { statusMapFromFlags, parseResultEntry, isCritical } from '@/features/lab/utils/lab-helpers';
 import { ICONS } from '@/utils';
-import type { ResultStatus } from '@/types/enums';
 
 interface ValidationFormProps {
   results: Record<string, unknown>;
@@ -16,10 +15,8 @@ interface ValidationFormProps {
   comments: string;
   onCommentsChange: (comments: string) => void;
   onApprove: () => void;
-  onReject: (reason: string, type: 're-test' | 're-collect') => void;
-  testName?: string;
-  testCode?: string;
-  patientName?: string;
+  /** When false, Ctrl+Enter shortcut is disabled (e.g. escalation review modal). */
+  enableApproveShortcut?: boolean;
 }
 
 export const ValidationForm: React.FC<ValidationFormProps> = ({
@@ -29,15 +26,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   comments,
   onCommentsChange,
   onApprove,
-  // Props available for future use when rejection UI is implemented
-
-  onReject: _onReject,
-
-  testName: _testName,
-
-  testCode: _testCode,
-
-  patientName: _patientName,
+  enableApproveShortcut = true,
 }) => {
   const hasResults = results && Object.keys(results).length > 0;
   const hasFlags = flags && flags.length > 0;
@@ -77,7 +66,6 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
         <div className="mb-6">
           <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,max-content))] gap-x-12 gap-y-1">
             {Object.entries(results).map(([key, rawValue]) => {
-              // Parse the result entry to handle different formats
               const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
               const abnormal = status !== 'normal';
               const critical = isCritical(status);
@@ -92,11 +80,14 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
                   key={key}
                   className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
                 >
-                  <span className="text-xs text-text-tertiary text-left flex items-center gap-1" title={key}>
+                  <span
+                    className="text-xs text-text-tertiary text-left flex items-center gap-1"
+                    title={key}
+                  >
                     {critical && (
-                      <Icon 
-                        name={ICONS.actions.alertCircle} 
-                        className="w-3 h-3 text-danger-fg animate-pulse" 
+                      <Icon
+                        name={ICONS.actions.alertCircle}
+                        className="w-3 h-3 text-danger-fg animate-pulse"
                       />
                     )}
                     {key}:
@@ -135,7 +126,7 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
           value={comments}
           onChange={e => onCommentsChange(e.target.value)}
           onKeyDown={e => {
-            if (e.ctrlKey && e.key === 'Enter') {
+            if (enableApproveShortcut && e.ctrlKey && e.key === 'Enter') {
               e.preventDefault();
               onApprove();
             }
@@ -143,9 +134,11 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
           placeholder="Add validation notes..."
           rows={2}
         />
-        <span className="text-xs text-text-disabled hidden sm:inline-block">
-          Ctrl+Enter to approve
-        </span>
+        {enableApproveShortcut && (
+          <span className="text-xs text-text-disabled hidden sm:inline-block">
+            Ctrl+Enter to approve
+          </span>
+        )}
       </div>
     </div>
   );

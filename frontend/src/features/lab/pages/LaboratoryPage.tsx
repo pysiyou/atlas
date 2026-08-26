@@ -15,6 +15,11 @@ import { ICONS } from '@/utils';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useSamplesList } from '@/features/collection/api/useSamples';
 import { usePendingEscalation } from '@/features/validation/api/usePendingEscalation';
+import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
+import { usePatientNameLookup } from '@/features/patients/api/usePatients';
+import { useOrderLookup } from '@/features/orders/utils/useOrderUtils';
+import { useCollectionSampleDisplays } from '@/features/collection/hooks/useCollectionSampleDisplays';
+import { useLabTestsFromOrders } from '@/features/lab/hooks';
 
 type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation' | 'dashboard';
 
@@ -24,23 +29,41 @@ export const Laboratory: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<LabTabId>('dashboard');
 
-  // Fetch data for counts
+  // Fetch data for counts (aligned with each tab's view logic)
   const { orders } = useOrdersList();
-  const { samples } = useSamplesList();
+  const { samples = [] } = useSamplesList();
+  const { tests = [] } = useTestCatalog();
+  const { getPatient, getPatientName } = usePatientNameLookup();
+  const { getOrder } = useOrderLookup();
   const { escalatedTests } = usePendingEscalation();
+
+  const { displays: collectionDisplays } = useCollectionSampleDisplays({
+    samples,
+    tests,
+    getOrder,
+    getPatient,
+    getPatientName,
+  });
+
+  const entryTests = useLabTestsFromOrders({
+    orders,
+    testCatalog: tests,
+    statusFilter: ['sample-collected'],
+    includePatient: true,
+  });
+
+  const validationTests = useLabTestsFromOrders({
+    orders,
+    testCatalog: tests,
+    statusFilter: ['resulted'],
+    onlyUnvalidated: true,
+  });
 
   // Calculate counts for each tab
   const counts = useMemo(() => {
-    const collectionCount = samples?.filter(s => s.status === 'pending').length || 0;
-    
-    const entryCount = orders?.reduce((count, order) => {
-      return count + (order.tests?.filter(t => t.status === 'sample-collected').length || 0);
-    }, 0) || 0;
-    
-    const validationCount = orders?.reduce((count, order) => {
-      return count + (order.tests?.filter(t => t.status === 'resulted' && !t.resultValidatedAt).length || 0);
-    }, 0) || 0;
-    
+    const collectionCount = collectionDisplays.filter(d => d.sample.status === 'pending').length;
+    const entryCount = entryTests.length;
+    const validationCount = validationTests.length;
     const escalationCount = escalatedTests?.length || 0;
 
     return {
@@ -49,7 +72,7 @@ export const Laboratory: React.FC = () => {
       validation: validationCount,
       escalation: escalationCount,
     };
-  }, [orders, samples, escalatedTests]);
+  }, [collectionDisplays, entryTests, validationTests, escalatedTests]);
 
   const tabs = useMemo((): Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> => {
     const base: Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> = [

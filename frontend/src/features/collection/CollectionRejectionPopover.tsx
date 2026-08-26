@@ -178,8 +178,8 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
             Rejection History
           </label>
           <AttemptProgressBar
-            currentAttempt={rejectionHistoryCount}
-            maxAttempts={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
+            used={rejectionHistoryCount}
+            total={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
             label="Rejection"
             variant="warning"
           />

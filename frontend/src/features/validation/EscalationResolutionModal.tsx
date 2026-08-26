@@ -111,8 +111,6 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
     ]
   );
 
-  const handleForceValidate = () => resolveAsync('force_validate', validationNotesForceValidate);
-
   const rejectionHistory = test.resultRejectionHistory || [];
   const hasRejectionHistory = rejectionHistory.length > 0;
 
@@ -315,11 +313,8 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           technicianNotes={test.technicianNotes}
           comments=""
           onCommentsChange={() => {}}
-          onApprove={handleForceValidate}
-          onReject={() => {}}
-          testName={test.testName}
-          testCode={test.testCode}
-          patientName={test.patientName}
+          onApprove={() => {}}
+          enableApproveShortcut={false}
         />
       </SectionContainer>
 

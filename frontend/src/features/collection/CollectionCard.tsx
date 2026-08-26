@@ -13,13 +13,11 @@
 import React from 'react';
 import { Badge, Card, Icon, IconButton, Alert, Avatar } from '@/components';
 import Barcode from 'react-barcode';
-import type { ContainerType, RejectedSample, Sample } from '@/types';
+import type { ContainerType, RejectedSample, Sample, RejectionReason } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
-import { useRejectSample } from '@/features/collection/api/useSamples';
-import { toast } from '@/app/AppToastBar';
-import { logger } from '@/utils/logger';
+import { useRejectSampleHandler } from '@/features/collection/hooks/useRejectSampleHandler';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/utils';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/features/lab/utils';
@@ -69,9 +67,12 @@ interface CardLayoutProps {
 
 // ─── useCollectionCardActions ─────────────────────────────────────────────────
 
-function useCollectionCardActions(display: SampleDisplay) {
+function useCollectionCardActions(
+  display: SampleDisplay,
+  onCollect: CollectionCardProps['onCollect']
+) {
   const { openModal } = useModal();
-  const rejectSampleMutation = useRejectSample();
+  const { rejectSample, isRejecting } = useRejectSampleHandler();
   const { sample, order } = display;
 
   const handleCardClick = (e?: React.MouseEvent) => {
@@ -92,7 +93,7 @@ function useCollectionCardActions(display: SampleDisplay) {
     if ((isCollected || isRejected) && sample?.sampleId) {
       openModal(ModalType.SAMPLE_DETAIL, { sampleId: sample.sampleId.toString() });
     } else if (isPending) {
-      openModal(ModalType.SAMPLE_DETAIL, { pendingSampleDisplay: display, onCollect: undefined });
+      openModal(ModalType.SAMPLE_DETAIL, { pendingSampleDisplay: display, onCollect });
     }
   };
 
@@ -102,32 +103,10 @@ function useCollectionCardActions(display: SampleDisplay) {
     requireRecollection: boolean
   ) => {
     if (!sample?.sampleId) return;
-    try {
-      await rejectSampleMutation.mutateAsync({
-        sampleId: sample.sampleId.toString(),
-        reasons: reasons as Parameters<typeof rejectSampleMutation.mutateAsync>[0]['reasons'],
-        notes,
-        requireRecollection,
-      });
-      toast.success({
-        title: requireRecollection
-          ? 'Sample rejected - recollection will be requested'
-          : 'Sample rejected',
-        subtitle:
-          'The sample has been rejected. Recollection will be requested if you chose that option.',
-      });
-    } catch (error) {
-      logger.error('Failed to reject sample', error instanceof Error ? error : undefined);
-      toast.error({
-        title: 'Failed to reject sample',
-        subtitle:
-          'The rejection could not be saved. Please try again or check the sample status.',
-      });
-    }
+    await rejectSample(sample.sampleId, reasons as RejectionReason[], notes, requireRecollection);
   };
 
   const hasValidatedTests = orderHasValidatedTests(order);
-  const isRejecting = rejectSampleMutation.isPending;
 
   return { handleCardClick, handleRejectSample, hasValidatedTests, isRejecting };
 }
@@ -449,7 +428,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
   const { tests } = useTestCatalog();
   // Hook must be called before any early return (rules-of-hooks)
   const { handleCardClick, handleRejectSample, hasValidatedTests, isRejecting } =
-    useCollectionCardActions(display);
+    useCollectionCardActions(display, onCollect);
 
   const { sample, requirement } = display;
   if (!sample || !requirement) return null;

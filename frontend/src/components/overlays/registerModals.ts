@@ -40,6 +40,8 @@ registerModal(ModalType.RESULT_DETAIL, EntryDetailModal, (props, baseProps) => (
   onResultsChange: props.onResultsChange,
   onNotesChange: props.onNotesChange,
   onSave: props.onSave,
+  onNext: props.onNext,
+  onPrev: props.onPrev,
 }));
 
 // Register Validation Detail Modal
@@ -51,7 +53,6 @@ registerModal(ModalType.VALIDATION_DETAIL, ValidationDetailModal, (props, basePr
   onCommentsChange: props.onCommentsChange,
   onApprove: props.onApprove,
   onReject: props.onReject,
-  orderHasValidatedTests: props.orderHasValidatedTests,
 }));
 
 // Register Escalation Resolution Modal (admin/labtech_plus only)

@@ -136,8 +136,7 @@ export const LabCard: React.FC<LabCardProps> = ({
 
           {/* Row 3: Content section */}
           <div className={LAB_CARD_CONTAINERS.contentSection}>
-            <InfoBanner title={contentTitle} variant="default" />
-            {content}
+            <InfoBanner title={contentTitle}>{content}</InfoBanner>
           </div>
 
           {/* Row 4: Optional flags */}

@@ -6,7 +6,7 @@
  * Supports both desktop (LabCard) and mobile layouts via isMobile prop.
  */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Badge, Card, Alert, Icon, IconButton } from '@/components';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatDate } from '@/utils';
@@ -14,8 +14,6 @@ import { displayId } from '@/utils';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard, ProgressBadge } from '@/features/lab/components/LabCard';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
-import { InfoBanner } from '@/features/lab/components/InfoBanner';
-import { buildCollectionContext, buildValidationContext } from '@/features/lab/components/ContextPanel';
 import { LAB_CONFIG } from '@/features/lab/config';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/utils';
@@ -171,7 +169,9 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       {(isRetest || isSampleRecollection) && (
         <AttemptIndicator
           attemptNumber={isRetest ? retestNumber : sampleRecollectionAttempt}
-          maxAttempts={LAB_CONFIG.MAX_RETEST_ATTEMPTS}
+          maxAttempts={
+            isRetest ? LAB_CONFIG.MAX_RETEST_ATTEMPTS : LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS
+          }
           type={isRetest ? 'retest' : 'recollection'}
           previousReason={
             isRetest
@@ -199,75 +199,23 @@ export const EntryCard: React.FC<EntryCardProps> = ({
     />
   );
 
-  // Build context panel items
-  const contextItems = useMemo(() => {
-    const items = buildCollectionContext({
-      collectionNotes: test.collectionNotes,
-      collectedBy: test.collectedBy,
-      collectedAt: test.collectedAt,
-    });
-
-    // Add rejection history if present
-    if (rejectionHistory.length > 0 || sampleRejectionHistory.length > 0) {
-      items.push(...buildValidationContext({
-        rejectionHistory: rejectionHistory.length > 0 ? rejectionHistory : sampleRejectionHistory,
-      }));
-    }
-
-    return items;
-  }, [test.collectionNotes, test.collectedBy, test.collectedAt, rejectionHistory, sampleRejectionHistory]);
-
   // Parameter preview badges
   const content = (
-    <div className="space-y-3">
-      <div className="flex flex-wrap gap-1.5">
-        {testDef.parameters.slice(0, LAB_CONFIG.PARAMETER_PREVIEW_LIMIT).map(param => (
-          <Badge
-            key={param.code}
-            size="sm"
-            className={results[param.code] ? 'text-brand-fg' : 'text-text-tertiary'}
-            variant={results[param.code] ? 'primary' : 'default'}
-          >
-            {param.name}
-          </Badge>
-        ))}
-        {parameterCount > LAB_CONFIG.PARAMETER_PREVIEW_LIMIT && (
-          <Badge size="sm" variant="default" className="text-text-tertiary">
-            +{parameterCount - LAB_CONFIG.PARAMETER_PREVIEW_LIMIT} more
-          </Badge>
-        )}
-      </div>
-      {contextItems.length > 0 && (
-        <InfoBanner 
-          title="Historical Context" 
-          variant={hasAnyRejectionHistory ? 'warning' : 'info'}
-          collapsible={true}
-          defaultCollapsed={false}
-          itemCount={contextItems.length}
+    <div className="flex flex-wrap gap-1.5">
+      {testDef.parameters.slice(0, LAB_CONFIG.PARAMETER_PREVIEW_LIMIT).map(param => (
+        <Badge
+          key={param.code}
+          size="sm"
+          className={results[param.code] ? 'text-brand-fg' : 'text-text-tertiary'}
+          variant={results[param.code] ? 'primary' : 'default'}
         >
-          <div className="space-y-2">
-            {contextItems.map((item, index) => (
-              <div key={index} className="space-y-0.5">
-                <div className="flex items-center gap-1.5">
-                  {item.icon && (
-                    <Icon name={item.icon} className="w-3 h-3 text-text-tertiary" />
-                  )}
-                  <span className="text-xxs font-normal text-text-secondary">
-                    {item.label}
-                  </span>
-                </div>
-                <p className="text-xs text-text-primary leading-tight pl-4">
-                  {item.content}
-                </p>
-                {item.metadata && (
-                  <p className="text-xxs text-text-disabled pl-4">
-                    {item.metadata}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </InfoBanner>
+          {param.name}
+        </Badge>
+      ))}
+      {parameterCount > LAB_CONFIG.PARAMETER_PREVIEW_LIMIT && (
+        <Badge size="sm" variant="default" className="text-text-tertiary">
+          +{parameterCount - LAB_CONFIG.PARAMETER_PREVIEW_LIMIT} more
+        </Badge>
       )}
     </div>
   );

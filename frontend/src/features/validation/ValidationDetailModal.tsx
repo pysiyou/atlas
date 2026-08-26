@@ -41,19 +41,8 @@ interface ValidationDetailModalProps {
   comments: string;
   onCommentsChange: (commentKey: string, value: string) => void;
   onApprove: () => void;
-  /**
-   * Called when rejection is performed.
-   * When RejectionDialog is used, it calls the API directly.
-   * Passing undefined values signals that the API was already called and
-   * the parent should only refresh data.
-   */
-  onReject: (reason?: string, type?: 're-test' | 're-collect') => void;
-  /**
-   * When true, the re-collect option is blocked because the order contains
-   * validated tests. This prevents contradictory actions where a sample
-   * recollection would invalidate already-validated results.
-   */
-  orderHasValidatedTests?: boolean;
+  /** Called after RejectionDialog completes (API already called). */
+  onReject: () => void;
 }
 
 // Large component is necessary for comprehensive validation detail modal with result display, validation actions, and conditional rendering
@@ -67,7 +56,6 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   onCommentsChange,
   onApprove,
   onReject,
-  orderHasValidatedTests = false,
   // High complexity is necessary for comprehensive validation logic with multiple conditional branches and state management
   // eslint-disable-next-line complexity
 }) => {
@@ -175,14 +163,13 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
             testCode={test.testCode}
             testName={test.testName}
             patientName={test.patientName}
-            orderHasValidatedTests={orderHasValidatedTests}
             trigger={
               <Button variant="reject" size="md">
                 Reject
               </Button>
             }
             onReject={() => {
-              onReject(undefined, undefined);
+              onReject();
               onClose();
             }}
           />
@@ -201,13 +188,6 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           comments={comments}
           onCommentsChange={value => onCommentsChange(commentKey, value)}
           onApprove={handleApprove}
-          onReject={(reason, type) => {
-            onReject(reason, type);
-            onClose();
-          }}
-          testName={test.testName}
-          testCode={test.testCode}
-          patientName={test.patientName}
         />
       </SectionContainer>
 

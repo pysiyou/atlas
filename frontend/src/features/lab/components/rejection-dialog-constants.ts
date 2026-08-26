@@ -3,13 +3,15 @@
  * Single place for all user-visible strings and magic numbers.
  */
 
+import { LAB_CONFIG } from '@/features/lab/config';
+
 export const REJECTION_DIALOG_LAYOUT = {
   /** Width class for loading/error/content containers */
   widthClass: 'w-90 md:w-96',
   /** Textarea rows for rejection/escalation reason */
   reasonTextareaRows: 3,
   /** Popover offset from trigger (px) */
-  popoverOffset: 8,
+  popoverOffset: LAB_CONFIG.POPOVER_OFFSET,
 } as const;
 
 export const REJECTION_DIALOG_COPY = {

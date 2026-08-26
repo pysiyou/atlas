@@ -10,6 +10,7 @@ import { AttemptProgressBar } from './AttemptProgressBar';
 import type { ResultRejectionType } from '@/types';
 import { cn } from '@/utils';
 import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejection-dialog-constants';
+import { LAB_CONFIG } from '@/features/lab/config';
 
 /** Skeleton that mirrors PopoverForm layout (header, body, footer) to avoid layout shift when options load. */
 export const RejectionDialogLoadingView: React.FC = () => (
@@ -111,9 +112,10 @@ export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
   orderHasValidatedTests,
   showEscalationOption = true,
 }) => {
-  const MAX_ATTEMPTS = 3;
-  const retestUsed = MAX_ATTEMPTS - retestAttemptsRemaining;
-  const recollectUsed = MAX_ATTEMPTS - recollectionAttemptsRemaining;
+  const retestTotal = LAB_CONFIG.MAX_RETEST_ATTEMPTS;
+  const recollectTotal = LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS;
+  const retestUsed = retestTotal - retestAttemptsRemaining;
+  const recollectUsed = recollectTotal - recollectionAttemptsRemaining;
 
   return (
     <div>
@@ -134,7 +136,7 @@ export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
               {retestAttemptsRemaining > 0 && (
                 <AttemptProgressBar
                   used={retestUsed}
-                  total={MAX_ATTEMPTS}
+                  total={retestTotal}
                   label="Attempts"
                   variant="sky"
                 />
@@ -158,7 +160,7 @@ export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
               {!orderHasValidatedTests && recollectionAttemptsRemaining > 0 && (
                 <AttemptProgressBar
                   used={recollectUsed}
-                  total={MAX_ATTEMPTS}
+                  total={recollectTotal}
                   label="Attempts"
                   variant="red"
                 />

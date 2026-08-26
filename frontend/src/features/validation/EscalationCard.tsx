@@ -125,7 +125,9 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
       {hasRejectionHistory && (isRetest || isRecollection) && (
         <AttemptIndicator
           attemptNumber={isRetest ? (test.retestNumber ?? 1) : rejectionHistory.length + 1}
-          maxAttempts={LAB_CONFIG.MAX_RETEST_ATTEMPTS}
+          maxAttempts={
+            isRetest ? LAB_CONFIG.MAX_RETEST_ATTEMPTS : LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS
+          }
           type={isRetest ? 'retest' : 'recollection'}
           previousReason={lastRejection?.rejectionReason}
         />

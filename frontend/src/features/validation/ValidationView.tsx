@@ -45,7 +45,6 @@ export const ValidationView: React.FC = () => {
     handleBulkApprove,
     openValidationModal,
     validateMutation,
-    rejectMutation,
     bulkMutation,
   } = useValidationWorkflow(ordersLoading);
 
@@ -134,12 +133,10 @@ export const ValidationView: React.FC = () => {
               comments: comments[commentKey] || '',
               onCommentsChange: handleCommentsChange,
               onApprove: () => handleValidate(test.orderId, test.testCode, true),
-              onReject: (reason?: string, type?: 're-test' | 're-collect') =>
-                handleValidate(test.orderId, test.testCode, false, reason, type),
+              onReject: () => handleValidate(test.orderId, test.testCode, false),
               onClick: () => openValidationModal(test),
               isApproving:
-                (validateMutation.isPending || rejectMutation.isPending) &&
-                pendingValidateKey === commentKey,
+                validateMutation.isPending && pendingValidateKey === commentKey,
             };
 
             if (!isMobile && typeof test.id === 'number' && ENABLE_BULK_VALIDATION) {
