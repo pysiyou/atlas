@@ -111,6 +111,7 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
           retestAttemptsRemaining={retestAttemptsRemaining}
           recollectionAttemptsRemaining={recollectionAttemptsRemaining}
           orderHasValidatedTests={orderHasValidatedTests}
+          showEscalationOption={true}
         />
       )}
 

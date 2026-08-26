@@ -17,6 +17,7 @@ import { useUserLookup } from '@/features/admin/api/useUsers';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard } from '@/features/lab/components/LabCard';
 import { RejectionDialog } from '@/features/lab/components';
+import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
 import type { TestWithContext } from '@/types';
 import { getResultRejectionType } from '@/types/order';
 import { ICONS } from '@/utils';
@@ -281,10 +282,26 @@ function ValidationCardDesktop({
 
   const badges = (
     <>
+      {/* Attempt indicator in top corner */}
+      {hasRejectionHistory && (isRetest || isRecollection) && (
+        <AttemptIndicator
+          attemptNumber={isRetest ? (test.retestNumber ?? 1) : rejectionHistory.length + 1}
+          maxAttempts={3}
+          type={isRetest ? 'retest' : 'recollection'}
+          previousReason={lastRejection?.rejectionReason || lastRejection?.reason}
+        />
+      )}
       <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
-      <Badge variant={test.priority} size="sm" />
+      {/* Merge priority and critical flags into single alert badge */}
+      {test.hasCriticalValues ? (
+        <Badge variant="danger" size="sm" className="flex items-center gap-1">
+          <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
+          CRITICAL
+        </Badge>
+      ) : test.priority === 'urgent' || test.priority === 'high' ? (
+        <Badge variant={test.priority} size="sm" />
+      ) : null}
       <Badge variant={test.sampleType} size="sm" />
-      <span className="text-xs text-brand font-mono">{test.testCode}</span>
     </>
   );
 
@@ -326,28 +343,6 @@ function ValidationCardDesktop({
     </span>
   );
 
-  const rejectionBanner =
-    hasRejectionHistory && lastRejection ? (
-      <Alert variant="warning" className="py-2">
-        <div className="space-y-0.5">
-          <p className="font-normal text-xs">
-            {isRetest
-              ? `Re-test #${test.retestNumber ?? 0} - Previous Result Rejected`
-              : `Re-collect #${rejectionHistory.length} - Previous Sample Rejected`}
-          </p>
-          <p className="text-xxs opacity-90 leading-tight">
-            Reason: {lastRejection.rejectionReason}
-          </p>
-          {rejectionHistory.length > 1 && (
-            <p className="text-xxs opacity-75">
-              ({rejectionHistory.length} previous rejection
-              {rejectionHistory.length > 1 ? 's' : ''})
-            </p>
-          )}
-        </div>
-      </Alert>
-    ) : undefined;
-
   const rejectionTrackingInfo =
     hasRejectionHistory && (showRetestBadge || showRecollectionBadge) ? (
       <div className="flex items-center gap-2 flex-wrap">
@@ -388,7 +383,6 @@ function ValidationCardDesktop({
       }
       badges={badges}
       actions={actions}
-      recollectionBanner={rejectionBanner}
       content={<ResultGrid results={test.results!} flagStatusMap={flagStatusMap} />}
       contentTitle={`Results (${resultCount})`}
     />

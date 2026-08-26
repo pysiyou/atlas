@@ -2,9 +2,9 @@
  * ValidationForm - Form for reviewing and approving/rejecting test results
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Textarea } from '@/components';
-import { PanicValueAlert } from './components/PanicValueAlert';
+import { CriticalValueBanner } from './components/PanicValueAlert';
 import { statusMapFromFlags, parseResultEntry, isCritical } from '@/features/lab/utils/lab-helpers';
 import type { ResultStatus } from '@/types/enums';
 
@@ -44,11 +44,8 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
   // Build flag status map for result parsing
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
 
-  // Track acknowledged panic values
-  const [acknowledgedPanicValues, setAcknowledgedPanicValues] = useState<Set<string>>(new Set());
-
-  // Detect panic values
-  const panicValues = useMemo(() => {
+  // Detect critical values
+  const criticalValues = useMemo(() => {
     if (!hasResults) return [];
 
     return Object.entries(results)
@@ -57,35 +54,20 @@ export const ValidationForm: React.FC<ValidationFormProps> = ({
         if (!isCritical(status)) return null;
 
         return {
-          key,
-          parameterName: key,
+          name: key,
           value: resultValue,
           unit,
-          status,
         };
       })
-      .filter((pv): pv is NonNullable<typeof pv> => pv !== null);
+      .filter((cv): cv is NonNullable<typeof cv> => cv !== null);
   }, [results, flagStatusMap, hasResults]);
-
-  const handleAcknowledgePanicValue = (key: string) => {
-    setAcknowledgedPanicValues(prev => new Set([...prev, key]));
-  };
 
   return (
     <div className="bg-surface-page rounded border border-border-default p-4 border">
-      {/* Panic Value Alerts */}
-      {panicValues.length > 0 && (
-        <div className="mb-6 space-y-4">
-          {panicValues.map(pv => (
-            <PanicValueAlert
-              key={pv.key}
-              parameterName={pv.parameterName}
-              value={pv.value}
-              unit={pv.unit}
-              onAcknowledge={() => handleAcknowledgePanicValue(pv.key)}
-              isAcknowledged={acknowledgedPanicValues.has(pv.key)}
-            />
-          ))}
+      {/* Critical Value Banner */}
+      {criticalValues.length > 0 && (
+        <div className="mb-6">
+          <CriticalValueBanner criticalParameters={criticalValues} />
         </div>
       )}
 

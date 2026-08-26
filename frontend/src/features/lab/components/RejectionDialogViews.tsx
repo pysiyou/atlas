@@ -6,6 +6,7 @@
 import React from 'react';
 import { Alert, Button, Skeleton } from '@/components';
 import { RadioCard } from './PopoverForm';
+import { AttemptProgressBar } from './AttemptProgressBar';
 import type { ResultRejectionType } from '@/types';
 import { cn } from '@/utils';
 import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejection-dialog-constants';
@@ -95,6 +96,7 @@ export interface RejectionActionCardsProps {
   retestAttemptsRemaining: number;
   recollectionAttemptsRemaining: number;
   orderHasValidatedTests: boolean;
+  showEscalationOption?: boolean;
 }
 
 export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
@@ -107,32 +109,78 @@ export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
   retestAttemptsRemaining,
   recollectionAttemptsRemaining,
   orderHasValidatedTests,
-}) => (
-  <div>
-    <label className="block text-xs font-normal text-text-tertiary mb-1">
-      {REJECTION_DIALOG_COPY.actions.followUpLabel}
-    </label>
-    <div className="grid grid-cols-1 gap-2">
-      <RadioCard
-        name="rejection-type"
-        selected={selectedType === 're-test'}
-        onClick={() => isActionEnabled('re-test') && onSelect('re-test')}
-        label={`${REJECTION_DIALOG_COPY.actions.retestLabel}${retestAttemptsRemaining > 0 ? REJECTION_DIALOG_COPY.actions.remaining(retestAttemptsRemaining) : ''}`}
-        description={REJECTION_DIALOG_COPY.actions.retestDescription}
-        variant="sky"
-        disabled={!isActionEnabled('re-test')}
-        disabledReason={getDisabledReason('re-test') || undefined}
-      />
-      <RadioCard
-        name="rejection-type"
-        selected={selectedType === 're-collect'}
-        onClick={() => !isRecollectBlocked && onSelect('re-collect')}
-        label={`${REJECTION_DIALOG_COPY.actions.newSampleLabel}${!orderHasValidatedTests && recollectionAttemptsRemaining > 0 ? REJECTION_DIALOG_COPY.actions.remaining(recollectionAttemptsRemaining) : ''}`}
-        description={REJECTION_DIALOG_COPY.actions.newSampleDescription}
-        variant="red"
-        disabled={isRecollectBlocked}
-        disabledReason={recollectBlockedReason || undefined}
-      />
+  showEscalationOption = true,
+}) => {
+  const MAX_ATTEMPTS = 3;
+  const retestUsed = MAX_ATTEMPTS - retestAttemptsRemaining;
+  const recollectUsed = MAX_ATTEMPTS - recollectionAttemptsRemaining;
+
+  return (
+    <div>
+      <label className="block text-xs font-normal text-text-tertiary mb-1">
+        {REJECTION_DIALOG_COPY.actions.followUpLabel}
+      </label>
+      <div className="grid grid-cols-1 gap-2">
+        <RadioCard
+          name="rejection-type"
+          selected={selectedType === 're-test'}
+          onClick={() => isActionEnabled('re-test') && onSelect('re-test')}
+          label={REJECTION_DIALOG_COPY.actions.retestLabel}
+          description={
+            <div className="space-y-2">
+              <p className="text-xxs text-text-tertiary">
+                {REJECTION_DIALOG_COPY.actions.retestDescription}
+              </p>
+              {retestAttemptsRemaining > 0 && (
+                <AttemptProgressBar
+                  used={retestUsed}
+                  total={MAX_ATTEMPTS}
+                  label="Attempts"
+                  variant="sky"
+                />
+              )}
+            </div>
+          }
+          variant="sky"
+          disabled={!isActionEnabled('re-test')}
+          disabledReason={getDisabledReason('re-test') || undefined}
+        />
+        <RadioCard
+          name="rejection-type"
+          selected={selectedType === 're-collect'}
+          onClick={() => !isRecollectBlocked && onSelect('re-collect')}
+          label={REJECTION_DIALOG_COPY.actions.newSampleLabel}
+          description={
+            <div className="space-y-2">
+              <p className="text-xxs text-text-tertiary">
+                {REJECTION_DIALOG_COPY.actions.newSampleDescription}
+              </p>
+              {!orderHasValidatedTests && recollectionAttemptsRemaining > 0 && (
+                <AttemptProgressBar
+                  used={recollectUsed}
+                  total={MAX_ATTEMPTS}
+                  label="Attempts"
+                  variant="red"
+                />
+              )}
+            </div>
+          }
+          variant="red"
+          disabled={isRecollectBlocked}
+          disabledReason={recollectBlockedReason || undefined}
+        />
+        {showEscalationOption && (
+          <RadioCard
+            name="rejection-type"
+            selected={selectedType === 'escalate'}
+            onClick={() => onSelect('escalate')}
+            label={REJECTION_DIALOG_COPY.actions.escalateLabel}
+            description={REJECTION_DIALOG_COPY.actions.escalateDescription}
+            variant="warning"
+            disabled={false}
+          />
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};

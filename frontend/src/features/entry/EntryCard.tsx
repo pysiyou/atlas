@@ -13,6 +13,7 @@ import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard, ProgressBadge } from '@/features/lab/components/LabCard';
+import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/utils';
 
@@ -163,10 +164,25 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   // Badges ordered by importance for result entry workflow
   const badges = (
     <>
+      {/* Attempt indicator in top corner */}
+      {(isRetest || isSampleRecollection) && (
+        <AttemptIndicator
+          attemptNumber={isRetest ? retestNumber : sampleRecollectionAttempt}
+          maxAttempts={3}
+          type={isRetest ? 'retest' : 'recollection'}
+          previousReason={
+            isRetest
+              ? lastRejection?.rejectionReason
+              : lastSampleRejection?.rejectionNotes || undefined
+          }
+        />
+      )}
       <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
-      <Badge variant={test.priority} size="sm" />
+      {/* Only show priority badge if urgent or high */}
+      {(test.priority === 'urgent' || test.priority === 'high') && (
+        <Badge variant={test.priority} size="sm" />
+      )}
       <Badge variant={test.sampleType} size="sm" />
-      <span className="text-xs text-brand font-mono">{test.testCode}</span>
     </>
   );
 
@@ -200,41 +216,6 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       )}
     </div>
   );
-
-  // Rejection banner (shows previous rejection info for both re-test and re-collect)
-  const rejectionBanner = (() => {
-    if (isRetest && lastRejection) {
-      return (
-        <Alert variant="warning" className="py-2">
-          <div className="space-y-0.5">
-            <p className="font-normal text-xs">Re-test Required (#{retestNumber})</p>
-            <p className="text-xxs opacity-90 leading-tight">
-              Previous rejection: {lastRejection.rejectionReason}
-            </p>
-          </div>
-        </Alert>
-      );
-    }
-    if (isSampleRecollection && lastSampleRejection) {
-      return (
-        <Alert variant="warning" className="py-2">
-          <div className="space-y-0.5">
-            <p className="font-normal text-xs">Sample Recollection #{sampleRecollectionAttempt}</p>
-            <p className="text-xxs opacity-90 leading-tight">
-              Previous sample rejected: {lastSampleRejection.rejectionNotes || 'See history'}
-            </p>
-            {sampleRejectionHistory.length > 1 && (
-              <p className="text-xxs opacity-75">
-                ({sampleRejectionHistory.length} previous rejection
-                {sampleRejectionHistory.length > 1 ? 's' : ''})
-              </p>
-            )}
-          </div>
-        </Alert>
-      );
-    }
-    return undefined;
-  })();
 
   // Additional info for retest/recollection tracking
   const additionalInfo = (() => {
@@ -281,7 +262,6 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       additionalInfo={additionalInfo}
       badges={badges}
       actions={actions}
-      recollectionBanner={rejectionBanner}
       content={content}
       contentTitle={`Parameters (${parameterCount})`}
     />

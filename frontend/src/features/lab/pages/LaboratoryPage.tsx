@@ -10,8 +10,11 @@ import { ValidationView } from '@/features/validation/ValidationView';
 import { EscalationView } from '@/features/validation/EscalationView';
 import { CommandCenterView } from '@/features/command-center';
 import { useAuthStore } from '@/app/store';
-import { Icon, PageHeaderBar } from '@/components';
+import { Icon, PageHeaderBar, Badge } from '@/components';
 import { ICONS } from '@/utils';
+import { useOrdersList } from '@/features/orders/api/useOrderQueries';
+import { useSamplesList } from '@/features/collection/api/samples';
+import { usePendingEscalation } from '@/features/validation/api/usePendingEscalation';
 
 type LabTabId = 'collection' | 'entry' | 'validation' | 'escalation' | 'dashboard';
 
@@ -21,29 +24,60 @@ export const Laboratory: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<LabTabId>('dashboard');
 
-  const tabs = useMemo((): Array<{ id: LabTabId; label: string; icon: React.ReactNode }> => {
-    const base: Array<{ id: LabTabId; label: string; icon: React.ReactNode }> = [
+  // Fetch data for counts
+  const { orders } = useOrdersList();
+  const { samples } = useSamplesList();
+  const { escalatedTests } = usePendingEscalation();
+
+  // Calculate counts for each tab
+  const counts = useMemo(() => {
+    const collectionCount = samples?.filter(s => s.status === 'pending').length || 0;
+    
+    const entryCount = orders?.reduce((count, order) => {
+      return count + (order.tests?.filter(t => t.status === 'sample-collected').length || 0);
+    }, 0) || 0;
+    
+    const validationCount = orders?.reduce((count, order) => {
+      return count + (order.tests?.filter(t => t.status === 'resulted' && !t.resultValidatedAt).length || 0);
+    }, 0) || 0;
+    
+    const escalationCount = escalatedTests?.length || 0;
+
+    return {
+      collection: collectionCount,
+      entry: entryCount,
+      validation: validationCount,
+      escalation: escalationCount,
+    };
+  }, [orders, samples, escalatedTests]);
+
+  const tabs = useMemo((): Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> => {
+    const base: Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> = [
       {
         id: 'collection',
         label: 'Sample Collection',
         icon: <Icon name={ICONS.dataFields.flask} className="w-4 h-4" />,
+        count: counts.collection,
       },
       {
         id: 'entry',
         label: 'Result Entry',
         icon: <Icon name={ICONS.dataFields.notebook} className="w-4 h-4" />,
+        count: counts.entry,
       },
       {
         id: 'validation',
         label: 'Result Validation',
         icon: <Icon name={ICONS.ui.shieldCheck} className="w-4 h-4" />,
+        count: counts.validation,
       },
     ];
     if (canResolveEscalation) {
       base.push({
         id: 'escalation',
-        label: 'Escalation',
+        label: 'Supervisor Review',
         icon: <Icon name={ICONS.actions.alertCircle} className="w-4 h-4" />,
+        count: counts.escalation,
       });
     }
     base.push({
@@ -52,7 +86,7 @@ export const Laboratory: React.FC = () => {
       icon: <Icon name={ICONS.ui.dashboard} className="w-4 h-4" />,
     });
     return base;
-  }, [canResolveEscalation]);
+  }, [canResolveEscalation, counts]);
 
   const activeTabConfig = tabs.find(t => t.id === activeTab);
   const pageTitle = activeTabConfig?.label ?? 'Laboratory';
@@ -64,6 +98,7 @@ export const Laboratory: React.FC = () => {
         <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">
           {tabs.map(tab => {
             const isActive = activeTab === tab.id;
+            const hasCount = typeof tab.count === 'number' && tab.count > 0;
             return (
               <button
                 key={tab.id}
@@ -83,6 +118,15 @@ export const Laboratory: React.FC = () => {
                   {tab.icon}
                 </div>
                 {tab.label}
+                {hasCount && (
+                  <Badge
+                    variant={isActive ? 'primary' : 'default'}
+                    size="xs"
+                    className="ml-1"
+                  >
+                    {tab.count}
+                  </Badge>
+                )}
               </button>
             );
           })}
