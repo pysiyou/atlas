@@ -3,7 +3,7 @@ import { Badge, type BadgeVariant } from '@/components/primitives/Badge';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { DETAIL_LABEL, DETAIL_VALUE } from '@/utils/constants';
 import { formatDate } from '@/utils';
-import { useUserLookup } from '@/features/admin/api/useUsers';
+import { useUserLookup } from '@/features/admin';
 
 /**
  * Badge configuration for DetailField

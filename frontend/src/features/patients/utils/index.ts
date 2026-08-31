@@ -3,5 +3,5 @@
  */
 
 export * from './patientHelpers';
-export * from './patient-formatters';
-export * from './form-transformers';
+export * from './patientFormatters';
+export * from './formTransformers';

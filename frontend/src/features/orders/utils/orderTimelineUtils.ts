@@ -1,5 +1,5 @@
 import type { Order } from '@/types';
-import { getActiveTests } from './order-calculator';
+import { getActiveTests } from './orderCalculator';
 
 /**
  * Timeline steps for order progress visualization.

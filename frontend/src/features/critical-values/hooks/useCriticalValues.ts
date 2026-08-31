@@ -8,7 +8,7 @@ import {
   criticalValuesAPI,
   type AcknowledgeCriticalValueRequest,
   type NotifyCriticalValueRequest,
-} from '@/features/critical-values/api/criticalValues';
+} from '../api/criticalValues';
 import { queryKeys } from '@/lib/query';
 
 export function usePendingCriticalValues() {

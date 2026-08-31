@@ -30,7 +30,7 @@ import { LAB_CONFIG } from '@/features/lab/constants';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import { handlePrintCollectionLabel, getEffectiveContainerType } from '@/features/lab/utils/labHelpers';
-import { formatRejectionReasons } from '@/features/lab/utils/lab-formatters';
+import { formatRejectionReasons } from '@/features/lab/utils/labFormatters';
 import type { SampleDisplay, SampleRequirement } from '@/features/lab/types';
 import { orderHasValidatedTests } from '@/features/orders/utils';
 import { ICONS, getContainerIcon } from '@/utils';

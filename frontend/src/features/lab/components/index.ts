@@ -37,4 +37,4 @@ export {
 
 // Utilities (moved to utils)
 export { handlePrintCollectionLabel, getEffectiveContainerType } from '../utils/labHelpers';
-export { formatRejectionReasons } from '../utils/lab-formatters';
+export { formatRejectionReasons } from '../utils/labFormatters';

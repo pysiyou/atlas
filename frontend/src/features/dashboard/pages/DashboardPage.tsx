@@ -10,7 +10,7 @@ import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { usePaymentsList } from '@/features/billing/api/usePayments';
 import { formatDate } from '@/utils';
 import { LabPipelineSummary } from '../components/LabPipelineSummary';
-import { CriticalValuesPanel } from '@/features/critical-values/components/CriticalValuesPanel';
+import { CriticalValuesPanel } from '@/features/critical-values';
 import {
   DashboardStatsGrid,
 } from '../components/DashboardStatsGrid';

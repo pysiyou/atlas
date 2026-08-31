@@ -7,7 +7,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Popover, IconButton, FooterInfo } from '@/components';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
-import { POPOVER_FOOTER_MESSAGES } from '@/features/lab/components/popover-footer-constants';
+import { POPOVER_FOOTER_MESSAGES } from '@/features/lab/components/popoverFooterConstants';
 import type { RejectionReason } from '@/types';
 import { ICONS } from '@/utils';
 import { useSampleRejectionOptions } from '@/features/collection/hooks/useSampleRejectionOptions';

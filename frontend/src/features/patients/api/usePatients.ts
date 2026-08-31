@@ -21,7 +21,7 @@ import {
   patientCreateSchema,
   patientUpdateSchema,
 } from '../schemas/patient.schema';
-import { formInputToPayload } from '../utils/form-transformers';
+import { formInputToPayload } from '../utils/formTransformers';
 import type { Patient } from '@/types';
 
 /**

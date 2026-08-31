@@ -11,8 +11,8 @@ import { toast } from '@/app/AppToastBar';
 import {
   useAcknowledgeCriticalValue,
   useNotifyCriticalValue,
-} from '@/features/critical-values/hooks/useCriticalValues';
-import type { CriticalValueRecord } from '@/features/critical-values/api/criticalValues';
+} from '../hooks/useCriticalValues';
+import type { CriticalValueRecord } from '../api/criticalValues';
 import { inputBase } from '@/components/inputs/inputStyles';
 
 interface CriticalValueActionsProps {

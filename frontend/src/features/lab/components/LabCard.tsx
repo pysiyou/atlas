@@ -7,7 +7,7 @@ import React, { type ReactNode } from 'react';
 import { Card, Badge } from '@/components';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
-import { useUserLookup } from '@/features/admin/api/useUsers';
+import { useUserLookup } from '@/features/admin';
 import { InfoBanner } from './InfoBanner';
 import {
   LAB_CARD_TYPOGRAPHY,
@@ -16,7 +16,7 @@ import {
   LAB_CARD_LIST_ITEMS,
   LAB_CARD_CONTEXT,
   LAB_CARD_HEADER,
-} from '../utils/lab-styles';
+} from '../utils/labStyles';
 
 interface PatientContext {
   patientName?: string;

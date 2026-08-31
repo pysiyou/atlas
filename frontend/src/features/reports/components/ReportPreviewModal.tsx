@@ -10,7 +10,7 @@ import type { ReportData } from '../types';
 import { format } from 'date-fns';
 import { ICONS } from '@/utils';
 import { companyConfig } from '@/config';
-import { useUserLookup } from '@/features/admin/api/useUsers';
+import { useUserLookup } from '@/features/admin';
 import { ReportPreviewHeader } from './ReportPreviewHeader';
 import { ReportPreviewResults } from './ReportPreviewResults';
 

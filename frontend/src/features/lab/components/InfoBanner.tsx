@@ -5,7 +5,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { LAB_CARD_SPACING, LAB_CARD_LIST_ITEMS } from '../utils/lab-styles';
+import { LAB_CARD_SPACING, LAB_CARD_LIST_ITEMS } from '../utils/labStyles';
 
 const TITLE_CLASS = 'text-xxs font-medium text-text-tertiary uppercase tracking-wide';
 

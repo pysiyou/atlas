@@ -25,7 +25,7 @@ import { AffiliationSection } from './AffiliationSection';
 import { MedicalHistorySection } from './MedicalHistorySection';
 import { VitalsSection } from './VitalsSection';
 import { usePatientFormAdapter } from '../hooks/usePatientFormAdapter';
-import { createFormDataAdapter, createErrorsAdapter } from '../utils/form-transformers';
+import { createFormDataAdapter, createErrorsAdapter } from '../utils/formTransformers';
 
 export interface PatientFormTabsProps {
   activeTab: string;

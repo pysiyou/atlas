@@ -2,7 +2,7 @@
  * Maps an enriched lab test to a CriticalValueRecord for notification UI.
  */
 
-import type { CriticalValueRecord } from '@/features/critical-values/api/criticalValues';
+import type { CriticalValueRecord } from '../api/criticalValues';
 import type { TestWithContext } from '@/types';
 
 export type TestWithCriticalFields = TestWithContext & {

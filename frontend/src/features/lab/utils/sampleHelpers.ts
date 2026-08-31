@@ -5,7 +5,7 @@
 
 import type { SampleType, ContainerType, ContainerTopColor, OrderTest, Test } from '@/types';
 import { CONTAINER_COLOR_CONFIG } from '@/types';
-import { getSampleDefinition } from './sample-definitions';
+import { getSampleDefinition } from './sampleDefinitions';
 
 export interface SampleRequirement {
   sampleType: SampleType;

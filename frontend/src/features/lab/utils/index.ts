@@ -3,11 +3,11 @@
  */
 
 export * from './labHelpers';
-export * from './lab-styles';
-export * from './lab-formatters';
-export * from './physiologic-limits';
-export * from './reference-ranges';
-export * from './sample-definitions';
+export * from './labStyles';
+export * from './labFormatters';
+export * from './physiologicLimits';
+export * from './referenceRanges';
+export * from './sampleDefinitions';
 export * from './sampleHelpers';
 export * from './deriveTestRejectionContext';
 export * from './buildLabFilterConfig';

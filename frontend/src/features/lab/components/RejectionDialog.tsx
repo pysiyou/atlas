@@ -17,7 +17,7 @@ import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
 import { cn, ICONS } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejection-dialog-constants';
+import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejectionDialogConstants';
 import {
   RejectionDialogLoadingView,
   RejectionDialogErrorView,

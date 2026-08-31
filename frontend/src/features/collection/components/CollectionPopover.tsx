@@ -8,7 +8,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { toast } from '@/app/AppToastBar';
 import { Popover, Button, Icon, FooterInfo } from '@/components';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
-import { POPOVER_FOOTER_MESSAGES } from '@/features/lab/components/popover-footer-constants';
+import { POPOVER_FOOTER_MESSAGES } from '@/features/lab/components/popoverFooterConstants';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';
 import type { SampleRequirement } from '@/features/lab/utils';

@@ -11,7 +11,7 @@
 import React from 'react';
 import { Badge, Button, Card, Icon } from '@/components';
 import { formatDate, displayId } from '@/utils';
-import { useUserLookup } from '@/features/admin/api/useUsers';
+import { useUserLookup } from '@/features/admin';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard } from '@/features/lab/components/LabCard';
 import { LAB_CONFIG } from '@/features/lab/constants';

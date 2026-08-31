@@ -9,7 +9,7 @@ import { RadioCard } from './PopoverForm';
 import { AttemptProgressBar } from './AttemptProgressBar';
 import type { ResultRejectionType } from '@/types';
 import { cn } from '@/utils';
-import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejection-dialog-constants';
+import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejectionDialogConstants';
 import { LAB_CONFIG } from '@/features/lab/constants';
 
 /** Skeleton that mirrors PopoverForm layout (header, body, footer) to avoid layout shift when options load. */

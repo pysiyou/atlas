@@ -3,4 +3,4 @@
  */
 
 export * from './catalogFormatters';
-export * from './test-lookup';
+export * from './testLookup';

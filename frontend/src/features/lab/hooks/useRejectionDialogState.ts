@@ -8,7 +8,7 @@
 import { useState, useMemo } from 'react';
 import type { ResultRejectionType } from '@/types';
 import type { RejectionOptionsResponse } from '@/types/lab-operations';
-import { REJECTION_DIALOG_COPY } from '../components/rejection-dialog-constants';
+import { REJECTION_DIALOG_COPY } from '../components/rejectionDialogConstants';
 
 interface RejectionManagerState {
   options: RejectionOptionsResponse | null;

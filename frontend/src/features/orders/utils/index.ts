@@ -4,4 +4,4 @@
 
 export * from './orderTimelineUtils';
 export * from './orderHelpers';
-export * from './order-calculator';
+export * from './orderCalculator';

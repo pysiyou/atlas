@@ -7,7 +7,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
-import { useUserLookup } from '@/features/admin/api/useUsers';
+import { useUserLookup } from '@/features/admin';
 import { usePatientNameLookup, usePatientsList } from '@/features/patients/api/usePatients';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useSampleLookup } from '@/features/collection/api/useSamples';

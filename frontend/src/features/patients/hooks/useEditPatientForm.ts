@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { Patient } from '@/types';
 import { patientFormSchema, type PatientFormInput } from '../schemas/patient.schema';
 import { useCreatePatient, useUpdatePatient } from '../api/usePatients';
-import { patientToFormInput } from '../utils/form-transformers';
+import { patientToFormInput } from '../utils/formTransformers';
 import { calculateFormProgressV2 } from '../utils/patientHelpers';
 
 export interface UseEditPatientFormParams {

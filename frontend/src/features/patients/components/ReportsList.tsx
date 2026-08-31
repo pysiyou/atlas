@@ -7,7 +7,7 @@ import React from 'react';
 import { Icon, IconButton, EmptyState } from '@/components';
 import { displayId } from '@/utils';
 import type { Order } from '@/types';
-import { formatDetailDate, getReportableOrders } from '../utils/patient-formatters';
+import { formatDetailDate, getReportableOrders } from '../utils/patientFormatters';
 import { ICONS } from '@/utils';
 
 export interface ReportsListProps {

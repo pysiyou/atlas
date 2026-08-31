@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { useUserLookup } from '@/features/admin/api/useUsers';
+import { useUserLookup } from '@/features/admin';
 import { useLabCardClickGuard } from '@/features/lab/hooks';
 import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
 import type { TestWithContext } from '@/types';

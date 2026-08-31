@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { SectionPanel, Badge, Icon } from '@/components';
 import { ICONS } from '@/utils';
 import { getLabQueueUrl } from '@/features/lab/constants/labTabs';
-import { usePendingCriticalValues } from '@/features/critical-values/hooks/useCriticalValues';
+import { usePendingCriticalValues } from '../hooks/useCriticalValues';
 import { CriticalValueActions } from './CriticalValueActions';
 
 export const CriticalValuesPanel: React.FC = () => {

@@ -9,7 +9,7 @@ import type { RejectionResult } from '@/types/lab-operations';
 import { useOrderHasValidatedTests } from '@/features/validation/hooks/useOrderHasValidatedTests';
 import { useRejectionManager } from './useRejectionManager';
 import { useRejectionDialogState } from './useRejectionDialogState';
-import { REJECTION_DIALOG_COPY } from '../components/rejection-dialog-constants';
+import { REJECTION_DIALOG_COPY } from '../components/rejectionDialogConstants';
 
 function buildSubtitle(
   testName?: string,

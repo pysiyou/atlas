@@ -21,7 +21,7 @@ import { CollectionDetailFooter } from './CollectionDetailFooter';
 import { buildCollectionDetailGridSections } from './CollectionDetailGridSections';
 import { CollectionDetailContent } from './CollectionDetailContent';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
-import { useUserLookup } from '@/features/admin/api/useUsers';
+import { useUserLookup } from '@/features/admin';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { useOrderLookup } from '@/features/orders/utils/useOrderUtils';
 import { useSampleLookup } from '@/features/collection/api/useSamples';

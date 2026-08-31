@@ -25,8 +25,7 @@ import {
 import { RejectionDialog } from '@/features/lab/components/RejectionDialog';
 import { RejectionHistorySection } from '@/features/lab/components/RejectionHistorySection';
 import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
-import { CriticalValueActions } from '@/features/critical-values/components/CriticalValueActions';
-import { buildCriticalValueRecord } from '@/features/critical-values/utils/buildCriticalValueRecord';
+import { CriticalValueActions, buildCriticalValueRecord } from '@/features/critical-values';
 import { queryKeys } from '@/lib/query';
 import {
   RetestBadge,
