@@ -1,0 +1,7 @@
+{
+  "name": "atlas",
+  "private": true,
+  "scripts": {
+    "codegen": "npm run codegen --prefix scripts/codegen"
+  }
+}

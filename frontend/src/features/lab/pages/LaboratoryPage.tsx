@@ -5,11 +5,11 @@
 
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import { CollectionView } from '@/features/collection/pages/CollectionView';
-import { EntryView } from '@/features/entry/pages/EntryView';
-import { ValidationView } from '@/features/validation/pages/ValidationView';
-import { EscalationView } from '@/features/validation/pages/EscalationView';
-import { CommandCenterView } from '@/features/command-center';
+import { CollectionView } from '@/features/lab-collection/pages/CollectionView';
+import { EntryView } from '@/features/lab-entry/pages/EntryView';
+import { ValidationView } from '@/features/lab-validation/pages/ValidationView';
+import { EscalationView } from '@/features/lab-validation/pages/EscalationView';
+import { CommandCenterView } from '@/features/lab-command-center';
 import { useAuthStore } from '@/app/store';
 import { Icon, PageHeaderBar, Badge } from '@/components';
 import { ICONS } from '@/utils';

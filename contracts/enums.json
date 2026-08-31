@@ -1,0 +1,226 @@
+{
+  "Gender": {
+    "type": "string",
+    "values": {
+      "MALE": "male",
+      "FEMALE": "female"
+    }
+  },
+  "AffiliationDuration": {
+    "type": "int",
+    "values": {
+      "SIX_MONTHS": 6,
+      "TWELVE_MONTHS": 12,
+      "TWENTY_FOUR_MONTHS": 24
+    }
+  },
+  "Relationship": {
+    "type": "string",
+    "values": {
+      "SPOUSE": "spouse",
+      "PARENT": "parent",
+      "SIBLING": "sibling",
+      "CHILD": "child",
+      "FRIEND": "friend",
+      "OTHER": "other"
+    }
+  },
+  "UserRole": {
+    "type": "string",
+    "values": {
+      "ADMIN": "administrator",
+      "RECEPTIONIST": "receptionist",
+      "LAB_TECH": "lab-technician",
+      "LAB_TECH_PLUS": "lab-technician-plus"
+    }
+  },
+  "SampleType": {
+    "type": "string",
+    "values": {
+      "BLOOD": "blood",
+      "URINE": "urine",
+      "STOOL": "stool",
+      "SALIVA": "saliva",
+      "SWAB": "swab",
+      "TISSUE": "tissue",
+      "SPUTUM": "sputum",
+      "CSF": "csf",
+      "PLEURAL_FLUID": "pleural_fluid",
+      "SERUM": "serum",
+      "PLASMA": "plasma",
+      "OTHER": "other"
+    }
+  },
+  "SampleStatus": {
+    "type": "string",
+    "values": {
+      "PENDING": "pending",
+      "COLLECTED": "collected",
+      "REJECTED": "rejected"
+    }
+  },
+  "ContainerType": {
+    "type": "string",
+    "values": {
+      "TUBE": "tube",
+      "CUP": "cup"
+    }
+  },
+  "ContainerTopColor": {
+    "type": "string",
+    "values": {
+      "RED": "red",
+      "PURPLE": "purple",
+      "BLUE": "blue",
+      "GREEN": "green",
+      "GRAY": "gray",
+      "YELLOW": "yellow",
+      "LIGHT_BLUE": "light-blue",
+      "PINK": "pink",
+      "WHITE": "white",
+      "BLACK": "black",
+      "ORANGE": "orange",
+      "CLEAR": "clear"
+    }
+  },
+  "RejectionReason": {
+    "type": "string",
+    "values": {
+      "HEMOLYZED": "hemolyzed",
+      "CLOTTED": "clotted",
+      "QNS": "qns",
+      "WRONG_CONTAINER": "wrong_container",
+      "LABELING_ERROR": "labeling_error",
+      "TRANSPORT_DELAY": "transport_delay",
+      "CONTAMINATED": "contaminated",
+      "LIPEMIC": "lipemic",
+      "ICTERIC": "icteric",
+      "OTHER": "other"
+    }
+  },
+  "TestStatus": {
+    "type": "string",
+    "values": {
+      "PENDING": "pending",
+      "SAMPLE_COLLECTED": "sample-collected",
+      "IN_PROGRESS": "in-progress",
+      "RESULTED": "resulted",
+      "VALIDATED": "validated",
+      "REJECTED": "rejected",
+      "ESCALATED": "escalated",
+      "SUPERSEDED": "superseded",
+      "REMOVED": "removed"
+    }
+  },
+  "OrderStatus": {
+    "type": "string",
+    "values": {
+      "ORDERED": "ordered",
+      "IN_PROGRESS": "in-progress",
+      "COMPLETED": "completed",
+      "CANCELLED": "cancelled"
+    }
+  },
+  "PriorityLevel": {
+    "type": "string",
+    "values": {
+      "LOW": "low",
+      "MEDIUM": "medium",
+      "HIGH": "high",
+      "URGENT": "urgent"
+    }
+  },
+  "PaymentStatus": {
+    "type": "string",
+    "values": {
+      "UNPAID": "unpaid",
+      "PAID": "paid"
+    }
+  },
+  "PaymentMethod": {
+    "type": "string",
+    "values": {
+      "CASH": "cash",
+      "CREDIT_CARD": "credit-card",
+      "DEBIT_CARD": "debit-card",
+      "INSURANCE": "insurance",
+      "BANK_TRANSFER": "bank-transfer",
+      "MOBILE_MONEY": "mobile-money"
+    }
+  },
+  "ClaimStatus": {
+    "type": "string",
+    "values": {
+      "SUBMITTED": "submitted",
+      "PROCESSING": "processing",
+      "APPROVED": "approved",
+      "DENIED": "denied",
+      "PAID": "paid"
+    }
+  },
+  "AliquotStatus": {
+    "type": "string",
+    "values": {
+      "AVAILABLE": "available",
+      "IN_USE": "in-use",
+      "CONSUMED": "consumed",
+      "STORED": "stored",
+      "DISPOSED": "disposed"
+    }
+  },
+  "ResultStatus": {
+    "type": "string",
+    "values": {
+      "NORMAL": "normal",
+      "HIGH": "high",
+      "LOW": "low",
+      "CRITICAL": "critical",
+      "CRITICAL_HIGH": "critical-high",
+      "CRITICAL_LOW": "critical-low"
+    }
+  },
+  "ValidationDecision": {
+    "type": "string",
+    "values": {
+      "APPROVED": "approved",
+      "REJECTED": "rejected",
+      "REPEAT_REQUIRED": "repeat-required"
+    }
+  },
+  "LabOperationType": {
+    "type": "string",
+    "values": {
+      "SAMPLE_COLLECT": "sample_collect",
+      "SAMPLE_REJECT": "sample_reject",
+      "SAMPLE_RECOLLECTION_REQUEST": "sample_recollection_request",
+      "RESULT_ENTRY": "result_entry",
+      "RESULT_VALIDATION_APPROVE": "result_validation_approve",
+      "RESULT_VALIDATION_REJECT_RETEST": "result_validation_reject_retest",
+      "RESULT_VALIDATION_REJECT_RECOLLECT": "result_validation_reject_recollect",
+      "RESULT_VALIDATION_ESCALATE": "result_validation_escalate",
+      "ESCALATION_RESOLUTION_AUTHORIZE_RETEST": "escalation_resolution_authorize_retest",
+      "ESCALATION_RESOLUTION_FINAL_REJECT": "escalation_resolution_final_reject",
+      "ORDER_STATUS_CHANGE": "order_status_change",
+      "TEST_REMOVED": "test_removed",
+      "TEST_ADDED": "test_added",
+      "CRITICAL_VALUE_DETECTED": "critical_value_detected",
+      "CRITICAL_VALUE_NOTIFIED": "critical_value_notified",
+      "CRITICAL_VALUE_ACKNOWLEDGED": "critical_value_acknowledged"
+    }
+  },
+  "RejectionAction": {
+    "type": "string",
+    "values": {
+      "RETEST_SAME_SAMPLE": "retest_same_sample",
+      "RECOLLECT_NEW_SAMPLE": "recollect_new_sample",
+      "ESCALATE_TO_SUPERVISOR": "escalate"
+    }
+  },
+  "RejectionSource": {
+    "type": "string",
+    "values": {
+      "SAMPLE_COLLECTION": "sample_collection",
+      "RESULT_VALIDATION": "result_validation"
+    }
+  }
+}

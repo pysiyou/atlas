@@ -8,16 +8,16 @@
 
 import React, { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
-import { usePatientNameLookup } from '@/features/patients/api/usePatients';
-import { useOrdersList } from '@/features/orders/api/useOrderQueries';
+import { useTestNameLookup } from '@/features/catalog/data/tests';
+import { usePatientNameLookup } from '@/features/patients/data/patients';
+import { useOrdersList } from '@/features/orders/data/orders';
 import { useFiltering } from '@/hooks/useFiltering';
 import { ListView } from '@/components';
 import { Button } from '@/components';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { OrderFilters } from '../components/OrderFilters';
-import { createOrderTableConfig } from './OrderTableConfig';
+import { createOrderTableConfig } from '../config/OrderTableConfig';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
 
 /**

@@ -7,6 +7,8 @@ Prevents entry of impossible values that could lead to patient harm.
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 
+from app.services.physiologic_limits import PHYSIOLOGIC_LIMITS
+
 
 @dataclass
 class ValidationError:
@@ -16,104 +18,6 @@ class ValidationError:
     error_type: str  # 'physiologic_limit', 'type_error', 'range_warning'
     message: str
     is_blocking: bool  # If True, prevents result entry
-
-
-# Physiologic limits - values outside these are physically impossible
-# These are absolute limits that should block result entry
-PHYSIOLOGIC_LIMITS: Dict[str, Dict[str, float]] = {
-    # Blood gases
-    'pH': {'min': 6.5, 'max': 8.0},
-    'pCO2': {'min': 5, 'max': 150},
-    'pO2': {'min': 0, 'max': 700},
-    'HCO3': {'min': 1, 'max': 60},
-
-    # Electrolytes (mEq/L or mmol/L)
-    'Na': {'min': 90, 'max': 200},
-    'K': {'min': 1.0, 'max': 12.0},
-    'Cl': {'min': 60, 'max': 150},
-    'Ca': {'min': 2.0, 'max': 20.0},
-    'Mg': {'min': 0.3, 'max': 10.0},
-    'P': {'min': 0.5, 'max': 20.0},
-    'Phosphorus': {'min': 0.5, 'max': 20.0},
-
-    # Glucose (mg/dL)
-    'Glucose': {'min': 5, 'max': 2000},
-    'GLU': {'min': 5, 'max': 2000},
-
-    # Renal function
-    'BUN': {'min': 0, 'max': 300},
-    'Creatinine': {'min': 0.1, 'max': 50},
-    'Cr': {'min': 0.1, 'max': 50},
-    'eGFR': {'min': 0, 'max': 200},
-
-    # Liver function
-    'AST': {'min': 0, 'max': 10000},
-    'ALT': {'min': 0, 'max': 10000},
-    'ALP': {'min': 0, 'max': 5000},
-    'Bilirubin': {'min': 0, 'max': 100},
-    'TBil': {'min': 0, 'max': 100},
-    'DBil': {'min': 0, 'max': 50},
-    'Albumin': {'min': 0.5, 'max': 10},
-    'Protein': {'min': 1, 'max': 20},
-
-    # Hematology
-    'WBC': {'min': 0.1, 'max': 500},
-    'RBC': {'min': 0.5, 'max': 12},
-    'Hemoglobin': {'min': 1, 'max': 30},
-    'Hgb': {'min': 1, 'max': 30},
-    'HGB': {'min': 1, 'max': 30},
-    'Hematocrit': {'min': 5, 'max': 80},
-    'Hct': {'min': 5, 'max': 80},
-    'HCT': {'min': 5, 'max': 80},
-    'Platelets': {'min': 1, 'max': 2000},
-    'PLT': {'min': 1, 'max': 2000},
-    'MCV': {'min': 30, 'max': 200},
-    'MCH': {'min': 10, 'max': 60},
-    'MCHC': {'min': 20, 'max': 50},
-    'RDW': {'min': 5, 'max': 40},
-
-    # Coagulation
-    'PT': {'min': 5, 'max': 200},
-    'INR': {'min': 0.5, 'max': 20},
-    'PTT': {'min': 10, 'max': 250},
-    'aPTT': {'min': 10, 'max': 250},
-    'Fibrinogen': {'min': 20, 'max': 2000},
-
-    # Cardiac markers
-    'Troponin': {'min': 0, 'max': 1000},
-    'TnI': {'min': 0, 'max': 1000},
-    'TnT': {'min': 0, 'max': 1000},
-    'BNP': {'min': 0, 'max': 100000},
-    'CK': {'min': 0, 'max': 50000},
-    'CK-MB': {'min': 0, 'max': 5000},
-
-    # Thyroid
-    'TSH': {'min': 0, 'max': 500},
-    'T3': {'min': 0, 'max': 1000},
-    'T4': {'min': 0, 'max': 50},
-    'FT3': {'min': 0, 'max': 50},
-    'FT4': {'min': 0, 'max': 20},
-
-    # Lipids
-    'Cholesterol': {'min': 20, 'max': 1000},
-    'TotalCholesterol': {'min': 20, 'max': 1000},
-    'Triglycerides': {'min': 10, 'max': 10000},
-    'HDL': {'min': 5, 'max': 200},
-    'LDL': {'min': 5, 'max': 500},
-
-    # Urinalysis
-    'UrineSpecificGravity': {'min': 1.000, 'max': 1.060},
-    'SG': {'min': 1.000, 'max': 1.060},
-
-    # Inflammatory markers
-    'CRP': {'min': 0, 'max': 500},
-    'ESR': {'min': 0, 'max': 200},
-    'Procalcitonin': {'min': 0, 'max': 1000},
-
-    # Vital signs (if entered as lab values)
-    'Temperature': {'min': 85, 'max': 115},  # Fahrenheit
-    'TemperatureC': {'min': 25, 'max': 45},  # Celsius
-}
 
 
 class ResultValidatorService:

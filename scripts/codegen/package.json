@@ -1,0 +1,12 @@
+{
+  "name": "atlas-codegen",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "codegen": "node generate.mjs"
+  },
+  "dependencies": {
+    "yaml": "^2.7.0"
+  }
+}

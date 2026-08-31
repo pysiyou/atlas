@@ -3,16 +3,26 @@
  * Responsive filter controls with modal for smaller screens
  */
 
-import React, { useState } from 'react';
-import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { ResponsiveFilterMobileBar, ORDER_FILTER_PLACEHOLDERS } from '@/filters';
+import React from 'react';
+import { CheckboxList } from '@/components';
+import {
+  ResponsiveEntityFilters,
+  DatePresetBadges,
+  ORDER_FILTER_PLACEHOLDERS,
+} from '@/components/filters';
+import {
+  ORDER_STATUS_VALUES,
+  PAYMENT_STATUS_VALUES,
+  ORDER_STATUS_CONFIG,
+  PAYMENT_STATUS_CONFIG,
+} from '@/types';
+import { createFilterOptions } from '@/utils/filtering';
 import { OrderFiltersInlineControls } from './OrderFiltersInlineControls';
-import { OrderFiltersModal } from './OrderFiltersModal';
 import type { OrderStatus, PaymentStatus } from '@/types';
 
-/**
- * Props interface for OrderFilters component
- */
+const orderStatusOptions = createFilterOptions(ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG);
+const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
+
 export interface OrderFiltersProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
@@ -24,59 +34,53 @@ export interface OrderFiltersProps {
   onPaymentFiltersChange: (values: PaymentStatus[]) => void;
 }
 
-/**
- * OrderFilters - Responsive filter layout
- * - lg+: 4-column grid (search + date + order status + payment status)
- * - md: 2-column grid
- * - sm/xs: Search bar + Filters button (opens modal with all filters)
- */
 export const OrderFilters: React.FC<OrderFiltersProps> = props => {
-  const breakpoint = useBreakpoint();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const activeFilterCount =
     (props.dateRange ? 1 : 0) + props.statusFilters.length + props.paymentFilters.length;
 
-  const showModalView = isBreakpointAtMost(breakpoint, 'sm');
-  const showTwoColumn = breakpoint === 'md';
-
-  if (showModalView) {
-    return (
-      <>
-        <ResponsiveFilterMobileBar
-          searchQuery={props.searchQuery}
-          onSearchChange={props.onSearchChange}
-          searchPlaceholder={ORDER_FILTER_PLACEHOLDERS.search}
-          activeFilterCount={activeFilterCount}
-          onOpenModal={() => setIsModalOpen(true)}
-          searchRowHeight="h-9"
-        />
-        <OrderFiltersModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          {...props}
-        />
-      </>
-    );
-  }
-
-  const inlineControls = <OrderFiltersInlineControls {...props} />;
-
-  if (showTwoColumn) {
-    return (
-      <div className="w-full bg-surface border-b border-border-default">
-        <div className="px-3 py-2 w-full">
-          <div className="grid grid-cols-2 gap-2 items-center w-full">{inlineControls}</div>
-        </div>
+  const modalContent = (
+    <>
+      <div className="w-full">
+        <h4 className="text-sm font-semibold text-text-primary mb-3">Date Range</h4>
+        <DatePresetBadges value={props.dateRange} onChange={props.onDateRangeChange} />
+        <div className="border-b border-border-default mt-4" />
       </div>
-    );
-  }
+      <div className="w-full">
+        <h4 className="text-sm font-semibold text-text-primary mb-3">Order Status</h4>
+        <CheckboxList
+          options={orderStatusOptions}
+          selectedIds={props.statusFilters}
+          onChange={values => props.onStatusFiltersChange(values as OrderStatus[])}
+          columns={orderStatusOptions.length > 4 ? 2 : 1}
+        />
+        <div className="border-b border-border-default mt-4" />
+      </div>
+      <div className="w-full">
+        <h4 className="text-sm font-semibold text-text-primary mb-3">Payment Status</h4>
+        <CheckboxList
+          options={paymentStatusOptions}
+          selectedIds={props.paymentFilters}
+          onChange={values => props.onPaymentFiltersChange(values as PaymentStatus[])}
+          columns={paymentStatusOptions.length > 4 ? 2 : 1}
+        />
+      </div>
+    </>
+  );
 
   return (
-    <div className="w-full bg-surface border-b border-border-default">
-      <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
-        <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">{inlineControls}</div>
-      </div>
-    </div>
+    <ResponsiveEntityFilters
+      searchQuery={props.searchQuery}
+      onSearchChange={props.onSearchChange}
+      searchPlaceholder={ORDER_FILTER_PLACEHOLDERS.search}
+      activeFilterCount={activeFilterCount}
+      inlineControls={<OrderFiltersInlineControls {...props} />}
+      modalContent={modalContent}
+      onReset={() => {
+        props.onDateRangeChange(null);
+        props.onStatusFiltersChange([]);
+        props.onPaymentFiltersChange([]);
+      }}
+      searchRowHeight="h-9"
+    />
   );
 };

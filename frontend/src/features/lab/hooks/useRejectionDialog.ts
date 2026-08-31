@@ -1,14 +1,13 @@
 /**
- * useRejectionDialog — facade over useRejectionManager + useRejectionDialogState.
+ * useRejectionDialog — facade over useRejectionManager with dialog UI state.
  * Single hook for RejectionDialogContent; keeps views presentational.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { ResultRejectionType } from '@/types';
-import type { RejectionResult } from '@/types/lab-operations';
-import { useOrderHasValidatedTests } from '@/features/validation/hooks/useOrderHasValidatedTests';
+import type { RejectionResult, RejectionOptionsResponse } from '@/types/lab-operations';
+import { useOrderHasValidatedTests } from '@/features/lab-validation/hooks/useOrderHasValidatedTests';
 import { useRejectionManager } from './useRejectionManager';
-import { useRejectionDialogState } from './useRejectionDialogState';
 import { REJECTION_DIALOG_COPY } from '../components/rejectionDialogConstants';
 
 function buildSubtitle(
@@ -19,6 +18,34 @@ function buildSubtitle(
   return [testName, testCode ? `(${testCode})` : '', patientName ? `- ${patientName}` : '']
     .filter(Boolean)
     .join(' ');
+}
+
+function getDefaultRejectionType(
+  options: RejectionOptionsResponse | null,
+  isActionEnabled: (action: 're-test' | 're-collect') => boolean,
+  isRecollectBlocked: boolean,
+  isEscalateEnabled: boolean
+): ResultRejectionType {
+  if (options && isActionEnabled('re-test')) return 're-test';
+  if (!isRecollectBlocked) return 're-collect';
+  if (isEscalateEnabled) return 'escalate';
+  return 're-test';
+}
+
+function getIsConfirmDisabled(
+  escalationRequired: boolean,
+  hasReason: boolean,
+  selectedType: ResultRejectionType,
+  isActionEnabled: (action: 're-test' | 're-collect') => boolean,
+  isRecollectBlocked: boolean,
+  isEscalateEnabled: boolean
+): boolean {
+  if (escalationRequired) return !hasReason;
+  if (!hasReason) return true;
+  if (selectedType === 'escalate') return !isEscalateEnabled;
+  if (selectedType === 're-test') return !isActionEnabled('re-test');
+  if (selectedType === 're-collect') return isRecollectBlocked;
+  return true;
 }
 
 export interface UseRejectionDialogParams {
@@ -41,6 +68,7 @@ export function useRejectionDialog({
   onSubmittingChange,
 }: UseRejectionDialogParams) {
   const [reason, setReason] = useState('');
+  const [userOverride, setUserOverride] = useState<ResultRejectionType | null>(null);
   const orderHasValidatedTests = useOrderHasValidatedTests(orderId);
 
   const manager = useRejectionManager({ orderId, testCode, autoFetch: true });
@@ -60,23 +88,31 @@ export function useRejectionDialog({
     clearError,
   } = manager;
 
-  const {
-    selectedType,
-    setUserOverride,
-    isRecollectBlocked,
-    recollectBlockedReason,
-    isConfirmDisabled,
-  } = useRejectionDialogState({
-    manager: {
-      options,
-      isActionEnabled,
-      getDisabledReason,
-      escalationRequired,
-      isEscalateEnabled,
-    },
-    orderHasValidatedTests,
-    reason,
-  });
+  const isRecollectBlocked = orderHasValidatedTests || !isActionEnabled('re-collect');
+  const recollectBlockedReason = orderHasValidatedTests
+    ? REJECTION_DIALOG_COPY.recollectBlocked
+    : getDisabledReason('re-collect');
+
+  const defaultType = useMemo(
+    () =>
+      getDefaultRejectionType(options, isActionEnabled, isRecollectBlocked, isEscalateEnabled),
+    [options, isActionEnabled, isRecollectBlocked, isEscalateEnabled]
+  );
+
+  const selectedType = userOverride ?? defaultType;
+  const hasReason = reason.trim().length > 0;
+  const isConfirmDisabled = useMemo(
+    () =>
+      getIsConfirmDisabled(
+        escalationRequired,
+        hasReason,
+        selectedType,
+        isActionEnabled,
+        isRecollectBlocked,
+        isEscalateEnabled
+      ),
+    [escalationRequired, hasReason, selectedType, isActionEnabled, isRecollectBlocked, isEscalateEnabled]
+  );
 
   useEffect(() => {
     onSubmittingChange?.(isRejecting);

@@ -15,7 +15,7 @@ import { Badge, Icon, DnaHelixLoader } from '@/components';
 import { formatDate } from '@/utils';
 import { getContainerIconColor } from '@/features/lab/utils';
 import { displayId } from '@/utils';
-import { useUserLookup } from '@/features/admin';
+import { useUserLookup } from '@/features/users';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { getContainerIcon, ICONS } from '@/utils';

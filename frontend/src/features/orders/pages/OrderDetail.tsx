@@ -6,8 +6,8 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks';
-import { usePatient } from '@/features/patients/api/usePatients';
-import { useOrder } from '@/features/orders/api/useOrderQueries';
+import { usePatient } from '@/features/patients/data/patients';
+import { useOrder } from '@/features/orders/data/orders';
 import { getActiveTests } from '@/features/orders/utils';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import type { Invoice } from '@/types';
@@ -18,7 +18,11 @@ import {
   MediumScreenLayout,
   LargeScreenLayout,
 } from '../components/OrderDetailLayouts';
-import { OrderDetailSkeleton } from './OrderDetailSkeleton';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import {
+  ORDER_DETAIL_SKELETON_SECTIONS,
+  renderOrderDetailLargeSkeleton,
+} from '../config/orderDetailSkeleton';
 
 export const OrderDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -80,7 +84,13 @@ export const OrderDetail: React.FC = () => {
       header={header}
       loading={orderLoading || patientLoading}
       loadingMessage="Loading order..."
-      loadingSkeleton={<OrderDetailSkeleton />}
+      loadingSkeleton={
+        <DetailPageSkeleton
+          sections={ORDER_DETAIL_SKELETON_SECTIONS}
+          renderLargeLayout={renderOrderDetailLargeSkeleton}
+          aria-label="Loading order"
+        />
+      }
       notFound={!order}
       notFoundTitle="Order Not Found"
       notFoundDescription="The order could not be found."

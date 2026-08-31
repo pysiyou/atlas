@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { formatDate } from '@/utils';
-import { useUserLookup } from '@/features/admin';
+import { useUserLookup } from '@/features/users';
 import { Badge, SectionPanel } from '@/components';
 import { REJECTION_REASON_CONFIG } from '@/types/enums';
 import type { RejectionRecord } from '@/types';

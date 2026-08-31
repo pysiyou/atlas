@@ -4,7 +4,7 @@
 
 import { displayId } from '@/utils';
 import type { OrderTest } from '@/types';
-import type { TestStatus } from '@/types/enums/test';
+import type { TestStatus } from '@/types/enums';
 import { getLabQueueUrl, getLabTabForTestStatus, type LabTabId } from '@/features/lab/constants/labTabs';
 
 /**

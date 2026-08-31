@@ -14,4 +14,5 @@ export * from './loadingTypes';
 export * from './useLoadingScope';
 export * from './SectionLoadingBoundary';
 export * from './Skeleton';
+export * from './DetailPageSkeleton';
 export * from './SpinnerLoader';

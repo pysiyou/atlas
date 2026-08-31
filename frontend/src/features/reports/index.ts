@@ -10,4 +10,4 @@ export * from './components/ReportCard';
 export * from './components/ReportFilters';
 export * from './pages/ReportList';
 export * from './pages/ReportDetail';
-export * from './pages/ReportTableConfig';
+export * from './config/ReportTableConfig';

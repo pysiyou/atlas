@@ -5,10 +5,10 @@
 
 import React from 'react';
 import { useAuthStore } from '@/app/store';
-import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
-import { usePatientsList } from '@/features/patients/api/usePatients';
-import { useOrdersList } from '@/features/orders/api/useOrderQueries';
-import { useSamplesList } from '@/features/collection/api/useSamples';
+import { useTestCatalog } from '@/features/catalog/data/tests';
+import { usePatientsList } from '@/features/patients/data/patients';
+import { useOrdersList } from '@/features/orders/data/orders';
+import { useSamplesList } from '@/features/lab-collection/data/samples';
 import { ErrorFallback, PageLoadingFallback } from '@/components/loaders';
 
 function toErrorEntry(

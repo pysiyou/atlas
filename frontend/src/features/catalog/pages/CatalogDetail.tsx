@@ -7,12 +7,13 @@
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useTest } from '@/features/catalog/api/useTestCatalog';
+import { useTest } from '@/features/catalog/data/tests';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { BalancedColumnsLayout } from '@/components';
 import type { TableInput } from '@/components';
 import { DetailPageShell, DetailPageHeader } from '@/components';
-import { CatalogDetailSkeleton } from './CatalogDetailSkeleton';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/catalogDetailSkeleton';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDetailDate } from '@/utils';
 import {
@@ -54,7 +55,13 @@ export const CatalogDetail: React.FC = () => {
       <DetailPageShell
         header={<DetailPageHeader title="Test" />}
         loading
-        loadingSkeleton={<CatalogDetailSkeleton />}
+        loadingSkeleton={
+          <DetailPageSkeleton
+            variant="balanced-grid"
+            sections={CATALOG_DETAIL_SKELETON_SECTIONS}
+            aria-label="Loading test details"
+          />
+        }
       >
         {null}
       </DetailPageShell>

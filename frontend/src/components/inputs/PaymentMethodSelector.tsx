@@ -9,7 +9,7 @@ import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import type { IconName } from '@/components/primitives/Icon';
 import { ICONS } from '@/utils';
-import type { PaymentMethodOption, PaymentMethod } from '@/types/billing';
+import type { PaymentMethodOption, PaymentMethod } from '@/types/payments';
 
 export interface PaymentMethodSelectorProps {
   /** Available options (e.g. from getEnabledPaymentMethods()) */

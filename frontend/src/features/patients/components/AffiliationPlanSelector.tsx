@@ -7,7 +7,7 @@
 import React, { useMemo } from 'react';
 import { Button, CalloutCard, Icon } from '@/components';
 import { DnaHelixLoader } from '@/components';
-import { useAffiliationPricing } from '@/features/patients/api/useAffiliationPricing';
+import { useAffiliationPricing } from '@/features/patients/data/affiliations';
 import { formatCurrency } from '@/utils';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan } from '@/types/affiliation';

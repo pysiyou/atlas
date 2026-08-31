@@ -5,11 +5,11 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
-import { useUserLookup } from '@/features/admin';
-import { usePatientNameLookup, usePatientsList } from '@/features/patients/api/usePatients';
-import { useOrdersList } from '@/features/orders/api/useOrderQueries';
-import { useSampleLookup } from '@/features/collection/api/useSamples';
+import { useTestCatalog } from '@/features/catalog/data/tests';
+import { useUserLookup } from '@/features/users';
+import { usePatientNameLookup, usePatientsList } from '@/features/patients/data/patients';
+import { useOrdersList } from '@/features/orders/data/orders';
+import { useSampleLookup } from '@/features/lab-collection/data/samples';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import {
@@ -20,7 +20,7 @@ import {
 import { formatDate } from '@/utils';
 import { toast } from '@/app/AppToastBar';
 import { DetailPageShell, DetailPageHeader } from '@/components';
-import { ReportDetailSkeleton } from './ReportDetailSkeleton';
+import { ReportDetailSkeletonContent } from '../config/reportDetailSkeleton';
 
 export const ReportDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -99,7 +99,7 @@ export const ReportDetail: React.FC = () => {
       <DetailPageShell
         header={<DetailPageHeader title="Report" />}
         loading
-        loadingSkeleton={<ReportDetailSkeleton />}
+        loadingSkeleton={<ReportDetailSkeletonContent />}
       >
         {null}
       </DetailPageShell>

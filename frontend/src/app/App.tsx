@@ -51,7 +51,7 @@ const Laboratory = lazyNamed(
   'Laboratory'
 );
 const Payments = lazyNamed(
-  () => import('@/features/billing/pages/PaymentList'),
+  () => import('@/features/payments/pages/PaymentList'),
   'PaymentList'
 );
 const Reports = lazyNamed(() => import('@/features/reports/pages/ReportsPage'), 'Reports');

@@ -8,7 +8,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar, type FilterValues } from '@/filters';
+import { FilterBar, type FilterValues } from '@/components/filters';
 import { catalogFilterConfig } from '../constants/catalogConfig';
 import type { TestCategory } from '@/types';
 

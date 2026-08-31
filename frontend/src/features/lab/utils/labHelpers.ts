@@ -7,7 +7,7 @@
 import { toast } from '@/app/AppToastBar';
 import { getCollectionRequirements } from './sampleHelpers';
 import { getTestNames } from '@/features/catalog/utils';
-import { printCollectionLabel } from '@/features/collection/components/CollectionLabel';
+import { printCollectionLabel } from '@/features/lab-collection/components/CollectionLabel';
 import type { SampleDisplay } from '../types';
 import type { Test } from '@/types';
 

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useUserLookup } from '@/features/admin';
+import { useUserLookup } from '@/features/users';
 import type { LabTabId } from '@/features/lab/constants/labTabs';
 import {
   STATUS_TIMELINE_STEPS,

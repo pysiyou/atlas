@@ -21,7 +21,7 @@ export default defineConfig({
       '@/lib': path.resolve(__dirname, './src/lib'),
       '@/config': path.resolve(__dirname, './src/config'),
       '@/assets': path.resolve(__dirname, './src/assets'),
-      '@/filters': path.resolve(__dirname, './src/filters'),
+      '@/components/filters': path.resolve(__dirname, './src/components/filters'),
     },
   },
   build: {

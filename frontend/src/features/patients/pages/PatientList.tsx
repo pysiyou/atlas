@@ -7,14 +7,14 @@
 
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePatientContextList } from '@/features/patients/api/usePatientContext';
+import { usePatientContextList } from '@/features/patients/data/patients';
 import { useFiltering } from '@/hooks/useFiltering';
 import { ListView } from '@/components';
 import { Button } from '@/components';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
 import { useModal } from '@/lib/context/ModalContext';
 import { PatientFilters, type AffiliationStatus } from '../components/PatientFilters';
-import { createPatientTableConfig } from './PatientTableConfig';
+import { createPatientTableConfig } from '../config/PatientTableConfig';
 import { calculateAge } from '@/utils';
 import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';

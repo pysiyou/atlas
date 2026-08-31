@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useRef } from 'react';
 import { orderFormSchema, type OrderFormInput } from '../schemas/order.schema';
-import { useCreateOrder, useUpdateOrder } from '../api/useOrderMutations';
+import { useCreateOrder, useUpdateOrder } from '../data/orders';
 import type { Order } from '@/types';
 
 interface UseOrderFormOptions {

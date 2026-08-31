@@ -9,5 +9,4 @@ export * from './useLabUrlSearch';
 export * from './useEntityAuditLogs';
 export * from './useLabCardClickGuard';
 export * from './useRejectionDialog';
-export * from './useRejectionDialogState';
 export * from './useRejectionManager';

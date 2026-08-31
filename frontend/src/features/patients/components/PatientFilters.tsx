@@ -3,22 +3,27 @@
  * Responsive filter controls with modal for smaller screens
  */
 
-import React, { useState } from 'react';
-import { cn } from '@/utils';
-import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { ResponsiveFilterMobileBar, PATIENT_FILTER_PLACEHOLDERS } from '@/filters';
+import React from 'react';
+import { CheckboxList, OverlayRangeSlider } from '@/components';
+import {
+  ResponsiveEntityFilters,
+  PATIENT_FILTER_PLACEHOLDERS,
+} from '@/components/filters';
+import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
+import { createFilterOptions } from '@/utils/filtering';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import { PatientFiltersInlineControls } from './PatientFiltersInlineControls';
-import { PatientFiltersModal } from './PatientFiltersModal';
 import type { Gender } from '@/types';
-
 import type { AffiliationStatus } from './PatientFilterTypes';
 
 export type { AffiliationStatus } from './PatientFilterTypes';
 
-/**
- * Props interface for PatientFilters component
- */
+const genderOptions = createFilterOptions(GENDER_VALUES, GENDER_CONFIG);
+const affiliationStatusOptions = [
+  { id: 'active', label: 'Active', color: 'success' },
+  { id: 'inactive', label: 'Inactive', color: 'default' },
+];
+
 export interface PatientFiltersProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
@@ -30,60 +35,63 @@ export interface PatientFiltersProps {
   onAffiliationStatusFiltersChange: (values: AffiliationStatus[]) => void;
 }
 
-/**
- * PatientFilters - Responsive filter layout
- * - lg+: 4-column grid (search + age + sex + affiliation)
- * - md: 2-column grid
- * - sm/xs: Search bar + Filters button (opens modal with all filters)
- */
 export const PatientFilters: React.FC<PatientFiltersProps> = props => {
-  const breakpoint = useBreakpoint();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const activeFilterCount =
     (props.ageRange[0] !== AGE_RANGE_MIN || props.ageRange[1] !== AGE_RANGE_MAX ? 1 : 0) +
     props.sexFilters.length +
     props.affiliationStatusFilters.length;
 
-  const showModalView = isBreakpointAtMost(breakpoint, 'sm');
-  const showTwoColumn = breakpoint === 'md';
-
-  if (showModalView) {
-    return (
-      <>
-        <ResponsiveFilterMobileBar
-          searchQuery={props.searchQuery}
-          onSearchChange={props.onSearchChange}
-          searchPlaceholder={PATIENT_FILTER_PLACEHOLDERS.search}
-          activeFilterCount={activeFilterCount}
-          onOpenModal={() => setIsModalOpen(true)}
+  const modalContent = (
+    <>
+      <div className="w-full">
+        <h4 className="text-sm font-semibold text-text-primary mb-3">Age Range</h4>
+        <OverlayRangeSlider
+          value={props.ageRange}
+          onChange={props.onAgeRangeChange}
+          min={AGE_RANGE_MIN}
+          max={AGE_RANGE_MAX}
+          hint="Move the slider to filter by age"
+          formatLabel={v => `${v} years`}
         />
-        <PatientFiltersModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          {...props}
-        />
-      </>
-    );
-  }
-
-  const inlineControls = <PatientFiltersInlineControls {...props} />;
-
-  if (showTwoColumn) {
-    return (
-      <div className={cn('w-full bg-surface border-b', 'border-border-default')}>
-        <div className="px-3 py-2 w-full">
-          <div className="grid grid-cols-2 gap-2 items-center w-full">{inlineControls}</div>
-        </div>
+        <div className="border-b border-border-default mt-4" />
       </div>
-    );
-  }
+      <div className="w-full">
+        <h4 className="text-sm font-semibold text-text-primary mb-3">Sex</h4>
+        <CheckboxList
+          options={genderOptions}
+          selectedIds={props.sexFilters}
+          onChange={values => props.onSexFiltersChange(values as Gender[])}
+          columns={genderOptions.length > 4 ? 2 : 1}
+        />
+        <div className="border-b border-border-default mt-4" />
+      </div>
+      <div className="w-full">
+        <h4 className="text-sm font-semibold text-text-primary mb-3">Affiliation Status</h4>
+        <CheckboxList
+          options={affiliationStatusOptions}
+          selectedIds={props.affiliationStatusFilters}
+          onChange={values =>
+            props.onAffiliationStatusFiltersChange(values as AffiliationStatus[])
+          }
+          columns={affiliationStatusOptions.length > 4 ? 2 : 1}
+        />
+      </div>
+    </>
+  );
 
   return (
-    <div className={cn('w-full bg-surface border-b', 'border-border-default')}>
-      <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
-        <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">{inlineControls}</div>
-      </div>
-    </div>
+    <ResponsiveEntityFilters
+      searchQuery={props.searchQuery}
+      onSearchChange={props.onSearchChange}
+      searchPlaceholder={PATIENT_FILTER_PLACEHOLDERS.search}
+      activeFilterCount={activeFilterCount}
+      inlineControls={<PatientFiltersInlineControls {...props} />}
+      modalContent={modalContent}
+      onReset={() => {
+        props.onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX]);
+        props.onSexFiltersChange([]);
+        props.onAffiliationStatusFiltersChange([]);
+      }}
+    />
   );
 };

@@ -3,7 +3,7 @@
  */
 
 import { ROUTES } from '@/config';
-import type { TestStatus } from '@/types/enums/test';
+import type { TestStatus } from '@/types/enums';
 
 export const LAB_TAB_IDS = [
   'collection',

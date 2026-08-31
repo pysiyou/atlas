@@ -41,5 +41,5 @@ export type {
   ResultItem,
   TestWithContext,
 } from './test';
-export type { Payment, PaymentMethod, Invoice } from './billing';
+export type { Payment, PaymentMethod, Invoice } from './payments';
 // SampleDisplay is a lab feature type; import from @/features/lab/types

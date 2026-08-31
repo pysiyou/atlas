@@ -6,14 +6,15 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks';
-import { usePatient } from '@/features/patients/api/usePatients';
-import { useOrdersByPatient } from '@/features/orders/api/useOrderQueries';
+import { usePatient } from '@/features/patients/data/patients';
+import { useOrdersByPatient } from '@/features/orders/data/orders';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { DetailPageShell, DetailPageHeader } from '@/components';
 import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
-import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from './PatientDetailLayouts';
-import { PatientDetailSkeleton } from './PatientDetailSkeleton';
+import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import { PATIENT_DETAIL_SKELETON_SECTIONS } from '../config/patientDetailSkeleton';
 
 export const PatientDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -61,7 +62,9 @@ export const PatientDetail: React.FC = () => {
         header={header}
         loading={patientLoading || ordersLoading}
         loadingMessage="Loading patient..."
-        loadingSkeleton={<PatientDetailSkeleton />}
+        loadingSkeleton={
+          <DetailPageSkeleton sections={PATIENT_DETAIL_SKELETON_SECTIONS} aria-label="Loading patient" />
+        }
         notFound={!patient}
         notFoundTitle="Patient Not Found"
         notFoundDescription="The patient could not be found."

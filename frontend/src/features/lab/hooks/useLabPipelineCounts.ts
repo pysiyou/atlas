@@ -4,13 +4,13 @@
  */
 
 import { useMemo } from 'react';
-import { useOrdersList } from '@/features/orders/api/useOrderQueries';
-import { useSamplesList } from '@/features/collection/api/useSamples';
-import { usePendingEscalation } from '@/features/validation/api/usePendingEscalation';
-import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
-import { usePatientNameLookup } from '@/features/patients/api/usePatients';
-import { useOrderLookup } from '@/features/orders/utils/useOrderUtils';
-import { useCollectionSampleDisplays } from '@/features/collection/hooks/useCollectionSampleDisplays';
+import { useOrdersList } from '@/features/orders/data/orders';
+import { useSamplesList } from '@/features/lab-collection/data/samples';
+import { usePendingEscalation } from '@/features/lab-validation/data/results';
+import { useTestCatalog } from '@/features/catalog/data/tests';
+import { usePatientNameLookup } from '@/features/patients/data/patients';
+import { useOrderLookup } from '@/features/orders/hooks/useOrderUtils';
+import { useCollectionSampleDisplays } from '@/features/lab-collection/hooks/useCollectionSampleDisplays';
 import { useLabTestsFromOrders } from '@/features/lab/hooks';
 
 export interface LabPipelineCounts {

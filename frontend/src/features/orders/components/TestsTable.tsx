@@ -5,10 +5,10 @@
 
 import React, { useMemo } from 'react';
 import { Table, EmptyState } from '@/components';
-import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
+import { useTestCatalog } from '@/features/catalog/data/tests';
 import type { OrderTest } from '@/types';
 import { ICONS } from '@/utils';
-import { createTestsTableConfig } from '../pages/testsTableConfig';
+import { createTestsTableConfig } from '../config/TestsTableConfig';
 
 export interface TestsTableProps {
   tests: OrderTest[];

@@ -4,6 +4,7 @@
  */
 
 export * from './Alert';
+export * from './Callout';
 export * from './BalancedColumnsLayout';
 export * from './DetailField';
 export * from './DetailFieldGroup';

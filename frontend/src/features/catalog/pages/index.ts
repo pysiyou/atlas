@@ -4,5 +4,5 @@
 
 export * from './CatalogList';
 export * from './CatalogDetail';
-export * from './CatalogTableConfig';
+export * from '../config/CatalogTableConfig';
 export { Catalog as CatalogPage } from './CatalogPage';

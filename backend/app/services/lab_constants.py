@@ -1,11 +1,5 @@
 """
-Laboratory Constants
-
-Shared constants used across lab services to ensure consistency.
+Laboratory Constants — GENERATED from contracts/lab-constants.json. DO NOT EDIT.
 """
-
-# Maximum number of retest attempts before escalation is required
 MAX_RETEST_ATTEMPTS = 3
-
-# Maximum number of sample recollection attempts before escalation is required
 MAX_RECOLLECTION_ATTEMPTS = 3

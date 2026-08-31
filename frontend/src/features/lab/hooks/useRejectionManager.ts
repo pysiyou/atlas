@@ -9,7 +9,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { resultAPI } from '@/features/validation/api/results';
+import { resultAPI } from '@/features/lab-validation/data/results';
 import { getErrorMessage } from '@/utils/errors';
 import { logger } from '@/utils/logger';
 import { useFetchedResource } from '@/hooks/useFetchedResource';

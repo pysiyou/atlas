@@ -5,12 +5,12 @@
 
 import React from 'react';
 import { useAuthStore } from '@/app/store';
-import { usePatientNameLookup, usePatientsList } from '@/features/patients/api/usePatients';
-import { useOrdersList } from '@/features/orders/api/useOrderQueries';
-import { usePaymentsList } from '@/features/billing/api/usePayments';
+import { usePatientNameLookup, usePatientsList } from '@/features/patients/data/patients';
+import { useOrdersList } from '@/features/orders/data/orders';
+import { usePaymentsList } from '@/features/payments/data/payments';
 import { formatDate } from '@/utils';
 import { LabPipelineSummary } from '../components/LabPipelineSummary';
-import { CriticalValuesPanel } from '@/features/critical-values';
+import { CriticalValuesPanel } from '@/features/lab-critical-values';
 import {
   DashboardStatsGrid,
 } from '../components/DashboardStatsGrid';

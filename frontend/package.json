@@ -12,6 +12,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,json,css,md}\"",
     "knip": "npx knip --tsConfig tsconfig.app.json",
     "knip:production": "npx knip --production --tsConfig tsconfig.app.json",
+    "codegen": "npm run codegen --prefix ../scripts/codegen",
     "preview": "vite preview"
   },
   "dependencies": {

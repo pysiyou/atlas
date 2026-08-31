@@ -15,7 +15,7 @@ import {
 } from '@/components/inputs/inputStyles';
 import { cn, ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { DatePresetBadges, REPORT_FILTER_PLACEHOLDERS } from '@/filters';
+import { DatePresetBadges, REPORT_FILTER_PLACEHOLDERS } from '@/components/filters';
 
 /**
  * Props interface for ReportFilters component

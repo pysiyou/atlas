@@ -13,3 +13,8 @@ export { useRangeValue } from './useRangeValue';
 export type { UseRangeValueOptions, UseRangeValueReturn } from './useRangeValue';
 export { useResponsiveLayout } from './useResponsiveLayout';
 export type { ResponsiveLayoutConfig } from './useResponsiveLayout';
+export { useBreakpoint, isBreakpointAtMost } from './useBreakpoint';
+export { useFiltering } from './useFiltering';
+export { useTablePagination, useTableSort, useColumnStyles, getColumnStyle } from './useTable';
+export { useMutationToastHandler } from './useMutationToastHandler';
+export type { MutationToastMessages } from './useMutationToastHandler';

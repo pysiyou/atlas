@@ -1,15 +1,14 @@
 /**
- * Consolidated Enums - Single Source of Truth
- * Re-exports all enum modules. Badge colors live in Badge component; use enum values as variants.
+ * Consolidated Enums — re-exports generated enum modules.
  */
-export * from './affiliation';
-export * from './container';
-export * from './gender';
-export * from './order';
-export * from './rejection';
-export * from './relationship';
-export * from './result';
-export * from './sample';
-export * from './test';
-export * from './user';
-export * from './validation';
+export * from './generated/affiliation';
+export * from './generated/container';
+export * from './generated/gender';
+export * from './generated/order';
+export * from './generated/rejection';
+export * from './generated/relationship';
+export * from './generated/result';
+export * from './generated/sample';
+export * from './generated/test';
+export * from './generated/user';
+export * from './generated/validation';
