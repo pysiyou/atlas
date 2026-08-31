@@ -7,8 +7,8 @@ import React from 'react';
 import { Icon, SectionPanel } from '@/components';
 import type { Sample, RejectedSample, Test } from '@/types';
 import { CollectionRequirementsSection } from './CollectionRequirementsSection';
-import { RejectionHistorySection } from '@/features/lab/components/RejectionHistorySection';
-import { DetailGrid, type DetailGridSectionConfig } from '@/features/lab/components/LabDetailModal';
+import { RejectionHistorySection } from '../components/RejectionHistorySection';
+import { DetailGrid, type DetailGridSectionConfig } from '../components/LabDetailModal';
 import { ICONS } from '@/config/icons';
 
 interface CollectionDetailContentProps {

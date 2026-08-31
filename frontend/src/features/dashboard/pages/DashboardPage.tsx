@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { useAuthStore } from '@/app/store';
-import { usePatientNameLookup, usePatientsList } from '@/features/patients/api/patients.api';
-import { useOrdersList } from '@/features/orders/api/orders.api';
-import { usePaymentsList } from '@/features/payments/api/payments.api';
+import { usePatientNameLookup, usePatientsList } from '@/features/patients';
+import { useOrdersList } from '@/features/orders';
+import { usePaymentsList } from '@/features/payments';
 import { formatDate } from '@/utils';
 import { LabPipelineSummary } from '../components/LabPipelineSummary';
 import { CriticalValuesPanel } from '@/features/lab';

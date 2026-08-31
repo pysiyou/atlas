@@ -17,7 +17,7 @@ import {
 } from '@/types';
 import { ICONS } from '@/config/icons';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/components/filters';
-import { buildLabFilterConfig } from '@/features/lab/utils/buildLabFilterConfig';
+import { buildLabFilterConfig } from '../utils/buildLabFilterConfig';
 
 // ============================================================================
 // Status Constants

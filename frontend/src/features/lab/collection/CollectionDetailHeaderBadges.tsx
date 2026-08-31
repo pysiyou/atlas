@@ -8,7 +8,7 @@ import { Badge, Icon } from '@/components';
 import type { ContainerType, ContainerTopColor, Sample, RejectedSample } from '@/types';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/features/lab/utils';
 import { displayId } from '@/utils';
-import { StatusBadgeRow } from '@/features/lab/components/LabDetailModal';
+import { StatusBadgeRow } from '../components/LabDetailModal';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 

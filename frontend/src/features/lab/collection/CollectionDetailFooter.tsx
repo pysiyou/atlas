@@ -8,7 +8,7 @@ import { Button, Icon } from '@/components';
 import type { ContainerType, Sample, RejectedSample, Order, RejectionReason } from '@/types';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
-import { ModalFooter } from '@/features/lab/components/LabDetailModal';
+import { ModalFooter } from '../components/LabDetailModal';
 import type { SampleDisplay } from '@/features/lab/types';
 import { orderHasValidatedTests, getValidatedTestCount } from '@/features/orders/utils';
 import { getSampleStatusIcon } from '@/config/icons';

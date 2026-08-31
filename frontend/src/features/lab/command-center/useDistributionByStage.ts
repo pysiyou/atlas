@@ -6,7 +6,7 @@
  */
 
 import { useMemo } from 'react';
-import { useOrdersList } from '@/features/orders/api/orders.api';
+import { useOrdersList } from '@/features/orders';
 import { useSamplesList } from '@/features/lab/collection/samples.api';
 import { isActiveTest } from '@/features/orders/utils';
 import type { Order, OrderTest } from '@/types';

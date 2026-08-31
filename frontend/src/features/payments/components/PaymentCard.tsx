@@ -4,7 +4,7 @@ import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
-import { useInvalidatePayments } from '@/features/payments/api/payments.api';
+import { useInvalidatePayments } from '../api/payments.api';
 
 /**
  * PaymentCard Component

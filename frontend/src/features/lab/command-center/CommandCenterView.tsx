@@ -5,9 +5,9 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTestCatalog } from '@/features/catalog/api/tests.api';
-import { usePatientNameLookup } from '@/features/patients/api/patients.api';
-import { useOrdersList } from '@/features/orders/api/orders.api';
+import { useTestCatalog } from '@/features/catalog';
+import { usePatientNameLookup } from '@/features/patients';
+import { useOrdersList } from '@/features/orders';
 import { Table } from '@/components';
 import { ICONS } from '@/config/icons';
 import type { IconName } from '@/components';

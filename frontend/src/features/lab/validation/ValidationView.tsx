@@ -5,11 +5,11 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
-import { useTestCatalog } from '@/features/catalog/api/tests.api';
-import { useOrdersList } from '@/features/orders/api/orders.api';
+import { useTestCatalog } from '@/features/catalog';
+import { useOrdersList } from '@/features/orders';
 import { ValidationCard } from './ValidationCard';
-import { LabWorkflowView, createLabItemFilter } from '@/features/lab/components/LabWorkflowView';
-import { LabFilters } from '@/features/lab/components/LabFilters';
+import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
+import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters, useLabTestsFromOrders, useLabUrlSearch } from '@/features/lab/hooks';
 import { validationFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components';

@@ -12,14 +12,14 @@ import React from 'react';
 import { Badge, Button, Card, Icon } from '@/components';
 import { formatDate, displayId } from '@/utils';
 import { useUserLookup } from '@/lib/api/users.api';
-import { usePatientNameLookup } from '@/features/patients/api/patients.api';
-import { LabCard } from '@/features/lab/components/LabCard';
+import { usePatientNameLookup } from '@/features/patients';
+import { LabCard } from '../components/LabCard';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import { RejectionDialog } from '@/features/lab/components';
-import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
-import { QueueAgeBadge } from '@/features/lab/components/QueueAgeBadge';
+import { AttemptIndicator } from '../components/AttemptIndicator';
+import { QueueAgeBadge } from '../components/QueueAgeBadge';
 import { useLabCardClickGuard } from '@/features/lab/hooks';
-import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
+import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
 import type { TestWithContext } from '@/types';
 import { ICONS } from '@/config/icons';
 import {
@@ -27,7 +27,7 @@ import {
   isCritical,
   statusMapFromFlags,
   parseResultEntry,
-} from '@/features/lab/utils/labHelpers';
+} from '../utils/labHelpers';
 
 // ─── ResultGrid ───────────────────────────────────────────────────────────────
 

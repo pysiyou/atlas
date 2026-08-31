@@ -15,7 +15,7 @@ import {
   FooterInfo,
   PaymentMethodSelector,
 } from '@/components';
-import { PopoverForm } from '@/features/lab/components/PopoverForm';
+import { PopoverForm } from '@/features/lab';
 import { cn, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
@@ -25,7 +25,7 @@ import {
   getDefaultPaymentMethod,
   type PaymentMethod,
 } from '@/types/payments';
-import { useCreatePayment } from '@/features/payments/api/payments.api';
+import { useCreatePayment } from '../api/payments.api';
 import { ICONS } from '@/config/icons';
 import { getPaymentErrorMessage } from '@/utils/errors';
 

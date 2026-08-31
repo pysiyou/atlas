@@ -6,12 +6,12 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
-import { useTestCatalog, useTestNameLookup } from '@/features/catalog/api/tests.api';
-import { useOrdersList } from '@/features/orders/api/orders.api';
+import { useTestCatalog, useTestNameLookup } from '@/features/catalog';
+import { useOrdersList } from '@/features/orders';
 import type { TestWithContext } from '@/types';
 import { EntryCard } from './EntryCard';
-import { LabWorkflowView, createLabItemFilter } from '@/features/lab/components/LabWorkflowView';
-import { LabFilters } from '@/features/lab/components/LabFilters';
+import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
+import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters, useLabTestsFromOrders, useLabUrlSearch } from '@/features/lab/hooks';
 import { entryFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components';
@@ -96,7 +96,7 @@ export const EntryView: React.FC = () => {
     <ErrorBoundary>
       <LabWorkflowView
         items={filteredTests}
-        renderCard={(test, idx, filtered) => {
+        renderCard={(test, idx, _filtered) => {
           const testDef = getTest(test.testCode);
           const resultKey = `${test.orderId}-${test.testCode}`;
           const isComplete = testDef?.parameters
@@ -113,7 +113,7 @@ export const EntryView: React.FC = () => {
             onResultsChange: handleResultChange,
             onNotesChange: handleNotesChange,
             onSave: () => handleSaveResults(test.orderId, test.testCode, allTests, testCatalog, orders),
-            onClick: () => openTestModal(test),
+            onClick: () => openTestModal(test, _filtered),
           };
 
           return (

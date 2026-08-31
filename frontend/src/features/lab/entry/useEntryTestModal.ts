@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useTestNameLookup } from '@/features/catalog/api/tests.api';
+import { useTestNameLookup } from '@/features/catalog';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import type { TestWithContext, Test, Order } from '@/types';
 

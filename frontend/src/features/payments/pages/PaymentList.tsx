@@ -16,8 +16,8 @@ import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
 import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
-import { useOrdersList } from '@/features/orders/api/orders.api';
-import { usePaymentsList } from '@/features/payments/api/payments.api';
+import { useOrdersList } from '@/features/orders';
+import { usePaymentsList } from '../api/payments.api';
 import type { Order, Payment, PaymentStatus, PaymentMethod } from '@/types';
 import type { OrderPaymentView } from '../types';
 

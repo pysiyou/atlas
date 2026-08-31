@@ -8,7 +8,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useInvalidateOrders } from '@/features/orders/hooks/useOrderUtils';
+import { useInvalidateOrders } from '@/features/orders';
 import { useValidateResults } from '@/features/lab/validation/results.api';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';

@@ -3,8 +3,8 @@
  */
 
 import { Alert, Badge } from '@/components';
-import { AttemptProgressBar } from '@/features/lab/components/AttemptProgressBar';
-import { CheckboxCard } from '@/features/lab/components/PopoverForm';
+import { AttemptProgressBar } from '../components/AttemptProgressBar';
+import { CheckboxCard } from '../components/PopoverForm';
 import { cn } from '@/utils';
 import type { RejectionReason } from '@/types';
 import { inputBase } from '@/components/inputs/inputStyles';

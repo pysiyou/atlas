@@ -3,7 +3,7 @@
  */
 
 import { useMemo } from 'react';
-import { useOrderLookup } from '@/features/orders/hooks/useOrderUtils';
+import { useOrderLookup } from '@/features/orders';
 import { orderHasValidatedTests } from '@/features/orders/utils';
 
 export function useOrderHasValidatedTests(orderId: number | string): boolean {

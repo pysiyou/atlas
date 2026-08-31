@@ -5,7 +5,7 @@
 
 import type { PatientFormInput } from '../schemas/patient.schema';
 import type { FieldErrors } from 'react-hook-form';
-import type { Patient as PatientType } from '@/types';
+import type { Patient as PatientType, AffiliationDuration } from '@/types';
 
 /**
  * Transform Patient from API to form input structure
@@ -185,7 +185,7 @@ export function createFormDataAdapter(
     city: formValues.address?.city || '',
     postalCode: formValues.address?.postalCode || '',
     hasAffiliation: hasAffiliationChecked || !!formValues.affiliation,
-    affiliationDuration: formValues.affiliation?.duration ?? undefined,
+    affiliationDuration: formValues.affiliation?.duration as AffiliationDuration | undefined,
     emergencyContactFullName: formValues.emergencyContact?.fullName || '',
     emergencyContactRelationship: formValues.emergencyContact?.relationship,
     emergencyContactPhone: formValues.emergencyContact?.phone || '',

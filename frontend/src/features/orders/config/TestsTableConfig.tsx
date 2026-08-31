@@ -5,7 +5,7 @@ import type { TableViewConfig, CardComponentProps } from '@/components';
 import { DATA_ID_PRIMARY_INLINE } from '@/utils/constants';
 import { formatCurrency, formatDate, displayId } from '@/utils';
 import { getTestName } from '@/features/catalog/utils';
-import { getLabQueueUrlForTest } from '@/features/lab/utils/labQueueLinks';
+import { getLabQueueUrlForTest } from '@/features/lab';
 import type { OrderTest, Test } from '@/types';
 import { getBadgeAppearance } from '@/components/theme/theme';
 import { TAG_STYLES } from '@/components/primitives/badgeHelpers';

@@ -18,3 +18,4 @@ export { CriticalValuesPanel } from './critical-values/CriticalValuesPanel';
 export * from './components';
 export * from './hooks';
 export * from './constants';
+export * from './utils';

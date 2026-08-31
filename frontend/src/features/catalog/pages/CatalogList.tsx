@@ -8,7 +8,7 @@
 
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTestCatalog } from '@/features/catalog/api/tests.api';
+import { useTestCatalog } from '../api/tests.api';
 import { ListView } from '@/components';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
 import { CatalogFilters } from '../components/CatalogFilters';

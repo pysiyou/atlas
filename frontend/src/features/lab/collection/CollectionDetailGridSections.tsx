@@ -7,7 +7,7 @@ import { Badge } from '@/components';
 import type { ContainerType, Sample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { formatVolume } from '@/features/lab/utils';
-import type { DetailGridSectionConfig } from '@/features/lab/components/LabDetailModal';
+import type { DetailGridSectionConfig } from '../components/LabDetailModal';
 
 interface CollectionDetailGridSectionsProps {
   sample: Sample;

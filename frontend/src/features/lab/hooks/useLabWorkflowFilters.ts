@@ -4,7 +4,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import { compareQueuePriority } from '@/features/lab/utils/compareQueuePriority';
+import { compareQueuePriority } from '../utils/compareQueuePriority';
 
 export interface UseLabWorkflowFiltersOptions<T, S> {
   items: T[];

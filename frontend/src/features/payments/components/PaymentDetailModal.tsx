@@ -27,7 +27,7 @@ import { ErrorBoundary } from '@/components';
 import { cn, formatDate, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { useCreatePayment } from '@/features/payments/api/payments.api';
+import { useCreatePayment } from '../api/payments.api';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,

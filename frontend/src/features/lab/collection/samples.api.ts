@@ -1,6 +1,7 @@
 /**
  * Samples API Service + React Query hooks
  */
+/* eslint-disable max-lines -- API module aggregates service methods and React Query hooks */
 
 import { apiClient } from '@/lib/apiClient';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';

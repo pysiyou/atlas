@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { SectionPanel, IconButton } from '@/components';
-import { PaymentPopover } from '@/features/payments/components/PaymentPopover';
+import { PaymentPopover } from '@/features/payments';
 import type { Order, OrderTest, Patient, Invoice } from '@/types';
 import { OrderInfoSection } from './OrderInfoSection';
 import { PatientInfoSection } from './PatientInfoSection';

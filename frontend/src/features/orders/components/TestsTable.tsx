@@ -5,7 +5,7 @@
 
 import React, { useMemo } from 'react';
 import { Table, EmptyState } from '@/components';
-import { useTestCatalog } from '@/features/catalog/api/tests.api';
+import { useTestCatalog } from '@/features/catalog';
 import type { OrderTest } from '@/types';
 import { ICONS } from '@/config/icons';
 import { createTestsTableConfig } from '../config/TestsTableConfig';

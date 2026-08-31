@@ -5,7 +5,7 @@
 import React from 'react';
 import { useUserLookup } from '@/lib/api/users.api';
 import { useLabCardClickGuard } from '@/features/lab/hooks';
-import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
+import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
 import type { TestWithContext } from '@/types';
 import { EscalationCardMobile } from './EscalationCardMobile';
 import { EscalationCardDesktop } from './EscalationCardDesktop';

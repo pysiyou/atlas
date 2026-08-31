@@ -17,7 +17,7 @@ import {
   patientUpdateSchema,
 } from '../schemas/patient.schema';
 import { formInputToPayload } from '../utils/formTransformers';
-import { useOrdersList } from '@/features/orders/api/orders.api';
+import { useOrdersList } from '@/features/orders';
 import type { Patient, PatientContext } from '@/types';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 

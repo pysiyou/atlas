@@ -6,18 +6,18 @@
 
 import React from 'react';
 import { useAuthStore } from '@/app/store';
-import { useTestCatalog } from '@/features/catalog/api/tests.api';
-import { usePatientNameLookup } from '@/features/patients/api/patients.api';
-import { useOrderLookup } from '@/features/orders/hooks/useOrderUtils';
-import { useOrdersList } from '@/features/orders/api/orders.api';
+import { useTestCatalog } from '@/features/catalog';
+import { usePatientNameLookup } from '@/features/patients';
+import { useOrderLookup } from '@/features/orders';
+import { useOrdersList } from '@/features/orders';
 import { useCollectSample, useSamplesList } from '@/features/lab/collection/samples.api';
 import { useCollectionSampleDisplays } from '@/features/lab/collection/useCollectionSampleDisplays';
 import { useCollectionCollectHandler } from '@/features/lab/collection/useCollectionCollectHandler';
 import type { SampleStatus } from '@/types';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';
-import { LabWorkflowView } from '@/features/lab/components/LabWorkflowView';
-import { LabFilters } from '@/features/lab/components/LabFilters';
+import { LabWorkflowView } from '../components/LabWorkflowView';
+import { LabFilters } from '../components/LabFilters';
 import { useLabWorkflowFilters, useLabUrlSearch } from '@/features/lab/hooks';
 import { collectionFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components';

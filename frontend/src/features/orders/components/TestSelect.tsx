@@ -121,6 +121,88 @@ const TestSearchTagInput: React.FC<{
   );
 };
 
+interface TestSelectPopoverProps {
+  visibleTests: Test[];
+  selectedSet: Set<string>;
+  tagStyles: (typeof TAG_STYLES)[ReturnType<typeof getBadgeAppearance>];
+  onToggleTest: (testCode: string) => void;
+}
+
+const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
+  visibleTests,
+  selectedSet,
+  tagStyles,
+  onToggleTest,
+}) => (
+  <div
+    className={[
+      'mt-1 text-text-primary',
+      'border border-border-default/80',
+      'rounded',
+      'overflow-hidden',
+      'bg-surface',
+      'shadow-md',
+      'ring-1 ring-black/5',
+    ].join(' ')}
+  >
+    <div className="px-4 py-2.5 bg-surface-page/70 border-b border-border-default/70 flex items-center justify-between">
+      <div className="text-xs font-normal text-text-tertiary">Matching tests</div>
+      <div className="text-xs text-text-tertiary">{visibleTests.length} result(s)</div>
+    </div>
+
+    {visibleTests.length === 0 ? (
+      <div className="px-4 py-3 text-xs text-text-tertiary">No tests found</div>
+    ) : (
+      <div className="max-h-[320px] overflow-y-auto divide-y divide-border-subtle">
+        {visibleTests.map(test => {
+          const code = typeof test.code === 'string' ? test.code : String(test.code);
+          const isSelected = selectedSet.has(code);
+          const safeName = typeof test.name === 'string' ? test.name : String(test.name);
+          const price = typeof test.price === 'number' ? test.price : Number(test.price) || 0;
+
+          return (
+            <button
+              key={code}
+              type="button"
+              onClick={() => onToggleTest(code)}
+              className={[
+                'w-full text-left px-4 py-3 text-text-primary',
+                'transition-colors',
+                'flex items-center justify-between gap-4',
+                'hover:bg-surface-hover',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30 focus-visible:bg-surface-hover',
+                'bg-surface',
+              ].join(' ')}
+            >
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span
+                    className={`shrink-0 text-xs font-normal font-mono px-2 py-0.5 rounded ${tagStyles.container} ${tagStyles.code}`}
+                  >
+                    {code}
+                  </span>
+                  <span className="shrink-0 text-xs font-normal px-2 py-0.5 rounded truncate">
+                    {safeName}
+                  </span>
+                </div>
+              </div>
+
+              <div className="shrink-0 flex items-center gap-3">
+                <div
+                  className={`text-xs font-normal px-2 py-1 rounded ${tagStyles.container} ${tagStyles.code}`}
+                >
+                  {formatCurrency(price)}
+                </div>
+                <SelectionCheck isSelected={isSelected} />
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    )}
+  </div>
+);
+
 export const TestSelect: React.FC<TestSelectorProps> = ({
   selectedTests,
   testSearch,
@@ -148,12 +230,17 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
   }, [selectedTests]);
 
   const hasSearch = testSearch.trim().length > 0;
-  const visibleTests = hasSearch ? filteredTests : [];
+  const visibleTests = useMemo(
+    () => (hasSearch ? filteredTests : []),
+    [hasSearch, filteredTests]
+  );
 
   const visibleTestsRef = useRef(visibleTests);
   const selectedSetRef = useRef(selectedSet);
-  visibleTestsRef.current = visibleTests;
-  selectedSetRef.current = selectedSet;
+  useEffect(() => {
+    visibleTestsRef.current = visibleTests;
+    selectedSetRef.current = selectedSet;
+  }, [visibleTests, selectedSet]);
 
   const canClosePopover = () => {
     const tests = visibleTestsRef.current;
@@ -227,74 +314,12 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
 
       {/* "Popover" results shown directly under the input */}
       {isPopoverOpen && hasSearch && (
-        <div
-          className={[
-            'mt-1 text-text-primary',
-            'border border-border-default/80',
-            'rounded',
-            'overflow-hidden',
-            'bg-surface',
-            'shadow-md',
-            'ring-1 ring-black/5',
-          ].join(' ')}
-        >
-          {/* Header row */}
-          <div className="px-4 py-2.5 bg-surface-page/70 border-b border-border-default/70 flex items-center justify-between">
-            <div className="text-xs font-normal text-text-tertiary">Matching tests</div>
-            <div className="text-xs text-text-tertiary">{visibleTests.length} result(s)</div>
-          </div>
-
-          {visibleTests.length === 0 ? (
-            <div className="px-4 py-3 text-xs text-text-tertiary">No tests found</div>
-          ) : (
-            <div className="max-h-[320px] overflow-y-auto divide-y divide-border-subtle">
-              {visibleTests.map(test => {
-                const code = typeof test.code === 'string' ? test.code : String(test.code);
-                const isSelected = selectedSet.has(code);
-                const safeName = typeof test.name === 'string' ? test.name : String(test.name);
-                const price = typeof test.price === 'number' ? test.price : Number(test.price) || 0;
-
-                return (
-                  <button
-                    key={code}
-                    type="button"
-                    onClick={() => onToggleTest(code)}
-                    className={[
-                      'w-full text-left px-4 py-3 text-text-primary',
-                      'transition-colors',
-                      'flex items-center justify-between gap-4',
-                      'hover:bg-surface-hover',
-                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30 focus-visible:bg-surface-hover',
-                      'bg-surface',
-                    ].join(' ')}
-                  >
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span
-                          className={`shrink-0 text-xs font-normal font-mono px-2 py-0.5 rounded ${tagStyles.container} ${tagStyles.code}`}
-                        >
-                          {code}
-                        </span>
-                        <span className="shrink-0 text-xs font-normal px-2 py-0.5 rounded truncate">
-                          {safeName}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="shrink-0 flex items-center gap-3">
-                      <div
-                        className={`text-xs font-normal px-2 py-1 rounded ${tagStyles.container} ${tagStyles.code}`}
-                      >
-                        {formatCurrency(price)}
-                      </div>
-                      <SelectionCheck isSelected={isSelected} />
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
+        <TestSelectPopover
+          visibleTests={visibleTests}
+          selectedSet={selectedSet}
+          tagStyles={tagStyles}
+          onToggleTest={onToggleTest}
+        />
       )}
     </div>
   );

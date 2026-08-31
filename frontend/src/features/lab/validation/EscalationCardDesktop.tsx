@@ -1,8 +1,8 @@
 import React from 'react';
 import { Badge, Button, Icon } from '@/components';
 import { formatDate, displayId } from '@/utils';
-import { LabCard } from '@/features/lab/components/LabCard';
-import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
+import { LabCard } from '../components/LabCard';
+import { AttemptIndicator } from '../components/AttemptIndicator';
 import type { TestWithContext } from '@/types';
 import { ICONS } from '@/config/icons';
 

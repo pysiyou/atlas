@@ -21,10 +21,10 @@ import {
   DetailGrid,
   ModalFooter,
   StatusBadgeRow,
-} from '@/features/lab/components/LabDetailModal';
-import { RejectionDialog } from '@/features/lab/components/RejectionDialog';
-import { RejectionHistorySection } from '@/features/lab/components/RejectionHistorySection';
-import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
+} from '../components/LabDetailModal';
+import { RejectionDialog } from '../components/RejectionDialog';
+import { RejectionHistorySection } from '../components/RejectionHistorySection';
+import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
 import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
 import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';
 import { queryKeys } from '@/lib/query';
@@ -34,7 +34,7 @@ import {
   FlagCountBadge,
   ReviewRequiredBadge,
   EntryInfoLine,
-} from '@/features/lab/components/StatusBadges';
+} from '../components/StatusBadges';
 import type { TestWithContext } from '@/types';
 
 interface ValidationDetailModalProps {

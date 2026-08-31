@@ -10,13 +10,13 @@ import React from 'react';
 import { Badge, Card, Icon, IconButton } from '@/components';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
-import { usePatientNameLookup } from '@/features/patients/api/patients.api';
-import { LabCard, ProgressBadge } from '@/features/lab/components/LabCard';
-import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
-import { QueueAgeBadge } from '@/features/lab/components/QueueAgeBadge';
+import { usePatientNameLookup } from '@/features/patients';
+import { LabCard, ProgressBadge } from '../components/LabCard';
+import { AttemptIndicator } from '../components/AttemptIndicator';
+import { QueueAgeBadge } from '../components/QueueAgeBadge';
 import { useLabCardClickGuard } from '@/features/lab/hooks';
 import { LAB_CONFIG } from '@/features/lab/constants';
-import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
+import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/config/icons';
 

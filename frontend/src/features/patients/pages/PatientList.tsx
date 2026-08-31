@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePatientContextList } from '@/features/patients/api/patients.api';
+import { usePatientContextList } from '../api/patients.api';
 import { useFiltering } from '@/hooks/useFiltering';
 import { ListView } from '@/components';
 import { Button } from '@/components';

@@ -4,12 +4,12 @@
  */
 
 import { useMemo } from 'react';
-import { useOrdersList } from '@/features/orders/api/orders.api';
+import { useOrdersList } from '@/features/orders';
 import { useSamplesList } from '@/features/lab/collection/samples.api';
 import { usePendingEscalation } from '@/features/lab/validation/results.api';
-import { useTestCatalog } from '@/features/catalog/api/tests.api';
-import { usePatientNameLookup } from '@/features/patients/api/patients.api';
-import { useOrderLookup } from '@/features/orders/hooks/useOrderUtils';
+import { useTestCatalog } from '@/features/catalog';
+import { usePatientNameLookup } from '@/features/patients';
+import { useOrderLookup } from '@/features/orders';
 import { useCollectionSampleDisplays } from '@/features/lab/collection/useCollectionSampleDisplays';
 import { useLabTestsFromOrders } from '@/features/lab/hooks';
 

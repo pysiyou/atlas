@@ -9,7 +9,7 @@ import { CollectionDetailModal } from '@/features/lab/collection/CollectionDetai
 import { EntryDetailModal } from '@/features/lab/entry/EntryDetailModal';
 import { ValidationDetailModal } from '@/features/lab/validation/ValidationDetailModal';
 import { EscalationResolutionModal } from '@/features/lab/validation/EscalationResolutionModal';
-import { OrderUpsertModal } from '@/features/orders/components/OrderUpsertModal';
+import { OrderUpsertModal } from '@/features/orders';
 
 // Register Collection Detail Modal (Sample Detail)
 registerModal(ModalType.SAMPLE_DETAIL, CollectionDetailModal, (props, baseProps, helpers) => {

@@ -24,7 +24,6 @@ import { OrderTableCard } from '../components/OrderTableCard';
  * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
  */
 // Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
-// eslint-disable-next-line max-lines-per-function
 export const createOrderTableConfig = (
   _navigate: NavigateFunction,
   getPatientNameFn: (patientId: number | string) => string,

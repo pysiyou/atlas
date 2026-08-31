@@ -19,7 +19,9 @@ export function useModalFocusTrap({
   onClose: () => void;
 }) {
   const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   // Focus the first field only when the modal opens — not on every parent re-render.
   useEffect(() => {

@@ -5,10 +5,10 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useTestCatalog } from '@/features/catalog/api/tests.api';
+import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users.api';
-import { usePatientNameLookup, usePatientsList } from '@/features/patients/api/patients.api';
-import { useOrdersList } from '@/features/orders/api/orders.api';
+import { usePatientNameLookup, usePatientsList } from '@/features/patients';
+import { useOrdersList } from '@/features/orders';
 import { useSampleLookup } from '@/features/lab/collection/samples.api';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';

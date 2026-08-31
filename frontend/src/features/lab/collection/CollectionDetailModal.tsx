@@ -15,19 +15,19 @@ import type { ContainerType, RejectedSample, RejectionReason } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import Barcode from 'react-barcode';
 import { displayId } from '@/utils';
-import { CollectionInfoLine } from '@/features/lab/components/StatusBadges';
+import { CollectionInfoLine } from '../components/StatusBadges';
 import { CollectionDetailHeaderBadges } from './CollectionDetailHeaderBadges';
 import { CollectionDetailFooter } from './CollectionDetailFooter';
 import { buildCollectionDetailGridSections } from './CollectionDetailGridSections';
 import { CollectionDetailContent } from './CollectionDetailContent';
-import { useTestCatalog } from '@/features/catalog/api/tests.api';
+import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users.api';
-import { usePatientNameLookup } from '@/features/patients/api/patients.api';
-import { useOrderLookup } from '@/features/orders/hooks/useOrderUtils';
+import { usePatientNameLookup } from '@/features/patients';
+import { useOrderLookup } from '@/features/orders';
 import { useSampleLookup } from '@/features/lab/collection/samples.api';
 import { useRejectSampleHandler } from '@/features/lab/collection/useRejectSampleHandler';
 import { getTestNames } from '@/features/catalog/utils';
-import { LabDetailModal } from '@/features/lab/components/LabDetailModal';
+import { LabDetailModal } from '../components/LabDetailModal';
 import type { SampleDisplay } from '@/features/lab/types';
 
 interface CollectionDetailModalProps {

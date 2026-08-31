@@ -6,14 +6,14 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
-import { useInvalidateOrders } from '@/features/orders/hooks/useOrderUtils';
+import { useInvalidateOrders } from '@/features/orders';
 import { usePendingEscalation } from '@/features/lab/validation/results.api';
 import { EscalationCard } from './EscalationCard';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { LabWorkflowView, createLabItemFilter } from '@/features/lab/components/LabWorkflowView';
-import { LabFilters } from '@/features/lab/components/LabFilters';
-import { useLabWorkflowFilters } from '@/features/lab/hooks/useLabWorkflowFilters';
-import { useLabUrlSearch } from '@/features/lab/hooks/useLabUrlSearch';
+import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
+import { LabFilters } from '../components/LabFilters';
+import { useLabWorkflowFilters } from '../hooks/useLabWorkflowFilters';
+import { useLabUrlSearch } from '../hooks/useLabUrlSearch';
 import { validationFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components/loaders';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';

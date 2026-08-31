@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { useAuthStore } from '@/app/store';
-import { useTestCatalog } from '@/features/catalog/api/tests.api';
-import { usePatientsList } from '@/features/patients/api/patients.api';
-import { useOrdersList } from '@/features/orders/api/orders.api';
+import { useTestCatalog } from '@/features/catalog';
+import { usePatientsList } from '@/features/patients';
+import { useOrdersList } from '@/features/orders';
 import { useSamplesList } from '@/features/lab/collection/samples.api';
 import { ErrorFallback, PageLoadingFallback } from '@/components/loaders';
 

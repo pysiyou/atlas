@@ -14,20 +14,20 @@ import { Badge, Button, Icon, SectionPanel, CircularProgress } from '@/component
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { displayId } from '@/utils';
 import { EntryForm } from './EntryForm';
-import { RejectionHistorySection } from '@/features/lab/components/RejectionHistorySection';
+import { RejectionHistorySection } from '../components/RejectionHistorySection';
 import {
   LabDetailModal,
   DetailGrid,
   ModalFooter,
   StatusBadgeRow,
-} from '@/features/lab/components/LabDetailModal';
-import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
+} from '../components/LabDetailModal';
+import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
 import { ICONS } from '@/config/icons';
 import {
   CollectionInfoLine,
   RetestBadge,
   RecollectionAttemptBadge,
-} from '@/features/lab/components/StatusBadges';
+} from '../components/StatusBadges';
 import type { Test, TestWithContext } from '@/types';
 
 interface EntryDetailModalProps {

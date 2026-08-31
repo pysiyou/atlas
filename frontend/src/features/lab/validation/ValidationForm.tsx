@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { Textarea, Icon } from '@/components';
 import { CriticalValueBanner } from './PanicValueAlert';
-import { statusMapFromFlags, parseResultEntry, isCritical } from '@/features/lab/utils/labHelpers';
+import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labHelpers';
 import { ICONS } from '@/config/icons';
 
 interface ValidationFormProps {

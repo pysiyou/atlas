@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { SectionPanel } from '@/components';
 import { ActivitiesTimeline } from '@/features/lab/command-center/ActivitiesTimeline';
-import { useEntityAuditLogs } from '@/features/lab/hooks/useEntityAuditLogs';
+import { useEntityAuditLogs } from '../hooks/useEntityAuditLogs';
 
 interface AuditHistorySectionProps {
   title?: string;

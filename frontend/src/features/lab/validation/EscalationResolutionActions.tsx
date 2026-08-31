@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Popover } from '@/components';
 import { cn } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { PopoverForm } from '@/features/lab/components/PopoverForm';
+import { PopoverForm } from '../components/PopoverForm';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 
 interface ResolutionPopoverProps {

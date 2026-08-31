@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalFooter } from '@/features/lab/components/LabDetailModal';
+import { ModalFooter } from '../components/LabDetailModal';
 import { toast } from '@/app/AppToastBar';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import { EscalationResolutionActions } from './EscalationResolutionActions';

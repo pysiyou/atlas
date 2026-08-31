@@ -1,6 +1,7 @@
 /**
  * Order API Service + React Query hooks
  */
+/* eslint-disable max-lines -- API module aggregates service methods and React Query hooks */
 
 import { apiClient } from '@/lib/apiClient';
 import { useQuery, keepPreviousData, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -17,7 +18,7 @@ import {
   orderUpdateSchema,
   orderSchema,
 } from '@/features/orders/schemas/order.schema';
-import { formInputToPayload } from '@/features/orders/utils/formTransformers';
+import { formInputToPayload } from '../utils/formTransformers';
 
 export type { PaginatedResponse, PaginationMeta };
 
