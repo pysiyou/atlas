@@ -1,7 +1,7 @@
 import { Controller, type Control } from 'react-hook-form';
 import type { Patient, PriorityLevel } from '@/types';
 import { Input, Textarea, MultiSelectFilter } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import type { OrderFormInput } from '../schemas/order.schema';
 import { PatientSelect } from './PatientSelect';
 import { TestSelect } from './TestSelect';

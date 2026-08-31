@@ -3,7 +3,7 @@ import { Input, DateInput, MultiSelectFilter } from '@/components';
 import type { FilterOption } from '@/components';
 import { GENDER_VALUES, GENDER_CONFIG, type Gender } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import type { PatientFormSectionProps } from './patientFormSectionTypes';
 
 export const DemographicsSection: React.FC<

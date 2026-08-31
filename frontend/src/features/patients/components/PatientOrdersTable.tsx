@@ -5,10 +5,10 @@
 import React, { useMemo } from 'react';
 import { Table, EmptyState } from '@/components';
 import type { Order } from '@/types/order';
-import { useTestNameLookup } from '@/features/catalog/data/tests';
-import { usePatientNameLookup } from '@/features/patients/data/patients';
-import { createOrderTableConfig } from '@/features/orders/config/OrderTableConfig';
-import { ICONS } from '@/utils';
+import { useTestNameLookup } from '@/features/catalog/api/tests.api';
+import { usePatientNameLookup } from '@/features/patients/api/patients.api';
+import { createOrderTableConfig } from '@/features/orders/config/OrderTable.config';
+import { ICONS } from '@/config/icons';
 
 export interface PatientOrdersTableProps {
   orders: Order[];

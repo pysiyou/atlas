@@ -9,7 +9,7 @@ import { displayId } from '@/utils';
 import type { Order } from '@/types';
 import { DetailField } from '@/components/display/DetailField';
 import { formatOrderDate } from '@/utils/date';
-import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/utils';
+import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/config/icons';
 
 export interface OrderInfoSectionProps {
   order: Order;

@@ -3,5 +3,11 @@
   "entry": ["src/main.tsx", "src/app/App.tsx"],
   "project": ["src/**/*.{ts,tsx}"],
   "ignoreDependencies": ["tailwindcss"],
+  "ignore": ["dist/**"],
+  "rules": {
+    "exports": "warn",
+    "files": "warn",
+    "dependencies": "warn"
+  },
   "vite": false
 }

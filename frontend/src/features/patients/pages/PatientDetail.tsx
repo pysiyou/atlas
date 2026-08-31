@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useResponsiveLayout } from '@/hooks';
-import { usePatient } from '@/features/patients/data/patients';
-import { useOrdersByPatient } from '@/features/orders/data/orders';
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { usePatient } from '@/features/patients/api/patients.api';
+import { useOrdersByPatient } from '@/features/orders/api/orders.api';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { DetailPageShell, DetailPageHeader } from '@/components';
 import { EditPatientModal } from '../components/EditPatientModal';

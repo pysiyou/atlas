@@ -25,8 +25,8 @@ import {
   getDefaultPaymentMethod,
   type PaymentMethod,
 } from '@/types/payments';
-import { useCreatePayment } from '@/features/payments/data/payments';
-import { ICONS } from '@/utils';
+import { useCreatePayment } from '@/features/payments/api/payments.api';
+import { ICONS } from '@/config/icons';
 import { getPaymentErrorMessage } from '@/utils/errors';
 
 interface PaymentPopoverProps {

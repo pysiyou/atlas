@@ -8,9 +8,9 @@ import React from 'react';
 import { Modal, Button, FooterInfo } from '@/components';
 import type { ReportData } from '../types';
 import { format } from 'date-fns';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { companyConfig } from '@/config';
-import { useUserLookup } from '@/features/users';
+import { useUserLookup } from '@/lib/api/users.api';
 import { ReportPreviewHeader } from './ReportPreviewHeader';
 import { ReportPreviewResults } from './ReportPreviewResults';
 

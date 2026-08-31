@@ -9,7 +9,7 @@
 import React from 'react';
 import { EmptyState } from '@/components';
 import { DETAIL_LABEL, DETAIL_VALUE, DEFAULT_EMPTY_TITLE } from '@/utils/constants';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';
 
 /** Re-export for consumers */

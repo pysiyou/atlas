@@ -5,7 +5,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { format, isBefore, isSameDay, startOfDay, endOfDay } from 'date-fns';
 import { Popover, Icon, FilterTriggerShell } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import {
   isDateDisabledForPicker,
   isSelectedDateForPicker,

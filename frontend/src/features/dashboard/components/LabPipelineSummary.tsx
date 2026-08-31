@@ -5,7 +5,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Badge, Icon, type IconName } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { useLabPipelineCounts } from '@/features/lab/hooks';
 import { getLabTabPath, LAB_TAB_LABELS, type LabTabId } from '@/features/lab/constants/labTabs';
 import { useAuthStore } from '@/app/store';

@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { Icon } from '@/components';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 /**
  * Props for FilterSection component

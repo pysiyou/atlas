@@ -12,9 +12,8 @@ export interface SectionPanelProps {
   title?: string | React.ReactNode;
   /** Content to display in the section */
   children: React.ReactNode;
-  /** Additional content to display in the header (right side)
-   * @deprecated Use `headerRight` instead. */
-  headerContent?: React.ReactNode;
+  /** Content to display on the right side of header */
+  headerRight?: React.ReactNode;
   /** Additional CSS classes for the wrapper */
   className?: string;
   /** Additional CSS classes for the header */
@@ -25,8 +24,6 @@ export interface SectionPanelProps {
   hideHeader?: boolean;
   /** Content to display on the left side of header (before title) */
   headerLeft?: React.ReactNode;
-  /** Content to display on the right side of header */
-  headerRight?: React.ReactNode;
   /** Data test ID for testing */
   testId?: string;
   /** Preset spacing between child elements (applies space-y-* class) */
@@ -43,7 +40,6 @@ const SPACING_CLASSES: Record<ContentSpacing, string> = {
 export const SectionPanel: React.FC<SectionPanelProps> = ({
   title,
   children,
-  headerContent,
   className = '',
   headerClassName = '',
   contentClassName = '',
@@ -71,8 +67,8 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
                 <div className="truncate">{title}</div>
               ))}
           </div>
-          {(headerRight || headerContent) && (
-            <div className="flex items-center shrink-0">{headerRight ?? headerContent}</div>
+          {headerRight && (
+            <div className="flex items-center shrink-0">{headerRight}</div>
           )}
         </div>
       )}

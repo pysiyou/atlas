@@ -165,8 +165,7 @@ export interface Order {
   updatedAt: string;
 }
 
-/** Runtime-validated order shape (forms/mutations). */
-export type { Order as ValidatedOrder, OrderTest as ValidatedOrderTest } from '@/features/orders/schemas/order.schema';
+/** Runtime-validated order shape (forms/mutations) — use Order from schemas for form inference. */
 
 export interface ValidationRecord {
   validatedBy: string;

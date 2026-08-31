@@ -3,7 +3,7 @@
  * Components may override base style per variant (e.g. IconButton ICON_BUTTON_VARIANTS).
  */
 
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import type { IconName } from './Icon';
 
 

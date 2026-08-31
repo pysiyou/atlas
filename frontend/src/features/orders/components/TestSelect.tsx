@@ -11,7 +11,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Icon } from '@/components';
 import type { Test } from '@/types';
-import { cn, ICONS, formatCurrency } from '@/utils';
+import { cn, formatCurrency } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { getBadgeAppearance } from '@/components/theme/theme';
 import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
 import { inputContainerBase, inputContainerError } from '@/components/inputs/inputStyles';

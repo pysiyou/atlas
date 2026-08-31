@@ -6,7 +6,7 @@
 import React from 'react';
 import type { Patient } from '@/types';
 import { Button, Modal, CircularProgress, FooterInfo } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
 import { ErrorBoundary } from '@/components';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';

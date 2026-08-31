@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { DebouncedSearchInput, MultiSelectFilter, DateFilter } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { PAYMENT_FILTER_PLACEHOLDERS } from '@/components/filters';

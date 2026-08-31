@@ -4,6 +4,22 @@
 
 export { Table } from './Table';
 export {
+  renderDisplayId,
+  renderPatientId,
+  renderOrderId,
+  renderPatientNameBlock,
+  renderPatientNameWithAge,
+  renderPatientNameWithId,
+  renderOrderPatientName,
+  renderOrderTestsBlock,
+  renderOrderTotalPrice,
+  renderOrderTotalPriceInline,
+  renderContactBlock,
+  renderDateCell,
+  renderOrderDateCell,
+  renderNavigableOrderId,
+} from './columnRenders';
+export {
   createColumn,
   createIdColumn,
   createBadgeColumn,

@@ -4,9 +4,9 @@
  */
 
 import { useMemo } from 'react';
-import { useTestNameLookup } from '@/features/catalog/data/tests';
-import { usePatientNameLookup } from '@/features/patients/data/patients';
-import { useSampleLookup } from '@/features/lab-collection/data/samples';
+import { useTestNameLookup } from '@/features/catalog/api/tests.api';
+import { usePatientNameLookup } from '@/features/patients/api/patients.api';
+import { useSampleLookup } from '@/features/lab/collection/samples.api';
 import { getTestSampleType } from '@/features/catalog/utils';
 import type { Order, OrderTest, TestStatus, TestWithContext } from '@/types';
 import type { Test } from '@/types';

@@ -6,13 +6,13 @@
 
 import React, { useMemo } from 'react';
 import { Button, CalloutCard, Icon } from '@/components';
-import { DnaHelixLoader } from '@/components';
-import { useAffiliationPricing } from '@/features/patients/data/affiliations';
+import { SpinnerLoader } from '@/components';
+import { useAffiliationPricing } from '@/features/patients/api/affiliations.api';
 import { formatCurrency } from '@/utils';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface AffiliationPlanSelectorProps {
   /** Currently selected duration */
@@ -86,7 +86,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
   if (isLoadingPricing) {
     return (
       <div className="flex items-center justify-center py-8">
-        <DnaHelixLoader size="md" />
+        <SpinnerLoader size="md" />
         <span className="ml-3 text-sm text-text-tertiary">Loading plans...</span>
       </div>
     );

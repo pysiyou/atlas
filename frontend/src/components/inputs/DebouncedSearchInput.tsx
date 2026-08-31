@@ -4,8 +4,9 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Icon } from '@/components/primitives';
-import { SpinnerLoader as DnaHelixLoader } from '@/components/loaders/SpinnerLoader';
-import { ICONS, cn } from '@/utils';
+import { SpinnerLoader } from '@/components/loaders/SpinnerLoader';
+import { cn } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { inputWrapper, inputInner, inputText, inputClearButton } from './inputStyles';
 
 export interface DebouncedSearchInputProps {
@@ -66,7 +67,7 @@ export const DebouncedSearchInput: React.FC<DebouncedSearchInputProps> = ({
         className={cn(inputInner, inputText)}
       />
       <div className="flex items-center gap-1 shrink-0">
-        {isDebouncing && <DnaHelixLoader size="xs" />}
+        {isDebouncing && <SpinnerLoader size="xs" />}
         {localValue && !isDebouncing && (
           <button
             onClick={handleClear}

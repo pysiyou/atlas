@@ -6,8 +6,8 @@ import {
   getStepCompletionInfo,
   type StepProgress,
 } from '../utils/orderTimelineUtils';
+import { formatRelativeTime } from '@/utils/date';
 import {
-  formatTimelineTimestamp,
   getTimelineLabelColor,
   getTimelineLineColor,
   getTimelineStatusColor,
@@ -86,7 +86,7 @@ export const OrderTimelineStep: React.FC<OrderTimelineStepProps> = ({
           )}
           {progress.isFullyComplete && completionInfo.completedAt && (
             <p className="text-xxs text-text-tertiary mt-1">
-              {formatTimelineTimestamp(completionInfo.completedAt)}
+              {formatRelativeTime(completionInfo.completedAt)}
             </p>
           )}
         </div>

@@ -1,4 +1,4 @@
-import { Badge, Avatar } from '@/components';
+import { Badge, Avatar, MobileEntityCard } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils';
@@ -9,10 +9,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
   const activeTests = getActiveTests(order.tests);
 
   return (
-    <div
-      onClick={onClick}
-      className="bg-surface border border-border-default rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
-    >
+    <MobileEntityCard onClick={onClick}>
       {/* Header: Avatar (top left) + Total Price (top right) */}
       <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
         {/* Avatar: Patient name + Order ID - positioned at top left */}
@@ -67,6 +64,6 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
           {order.overallStatus && <Badge variant={order.overallStatus} size="xs" />}
         </div>
       </div>
-    </div>
+    </MobileEntityCard>
   );
 }

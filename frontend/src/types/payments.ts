@@ -2,7 +2,7 @@
  * Billing and Financial Management Types
  */
 
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export type PaymentMethod =
   | 'cash'
@@ -56,6 +56,12 @@ export const getDefaultPaymentMethod = (): PaymentMethod => {
   const enabledMethods = getEnabledPaymentMethods();
   return enabledMethods.length > 0 ? enabledMethods[0].value : 'cash';
 };
+
+/** Label map for filter controls — derived from PAYMENT_METHOD_OPTIONS. */
+export const PAYMENT_METHOD_FILTER_CONFIG: Record<PaymentMethod, { label: string }> =
+  Object.fromEntries(
+    PAYMENT_METHOD_OPTIONS.map(method => [method.value, { label: method.label }])
+  ) as Record<PaymentMethod, { label: string }>;
 
 export interface InvoiceItem {
   testCode: string;

@@ -27,7 +27,7 @@ import { ErrorBoundary } from '@/components';
 import { cn, formatDate, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { useCreatePayment } from '@/features/payments/data/payments';
+import { useCreatePayment } from '@/features/payments/api/payments.api';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,
@@ -36,7 +36,7 @@ import {
 import { getPaymentErrorMessage } from '@/utils/errors';
 import type { OrderPaymentView } from '../types';
 import type { Order } from '@/types';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 interface PaymentDetailModalProps {
   /** Whether the modal is open */

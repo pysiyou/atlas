@@ -3,7 +3,8 @@
  * Use in mutation onSuccess/onSettled so all dependent queries refresh without page reload.
  */
 
-import type { QueryClient } from '@tanstack/react-query';
+import type { QueryClient, QueryKey } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './keys';
 
 export interface InvalidateOrderOptions {
@@ -83,4 +84,17 @@ export function invalidateResultQueries(
   if (pendingEscalation) {
     client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
   }
+}
+
+/**
+ * Generic hook to invalidate queries by key prefix.
+ */
+export function useInvalidateQueryKey(queryKey: QueryKey) {
+  const queryClient = useQueryClient();
+
+  const invalidateAll = () => {
+    return queryClient.invalidateQueries({ queryKey });
+  };
+
+  return { invalidateAll };
 }

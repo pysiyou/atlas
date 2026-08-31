@@ -3,7 +3,7 @@ import { Avatar, Icon } from '@/components';
 import { cn, displayId } from '@/utils';
 import { inputContainerBase, inputContainerError } from '@/components/inputs/inputStyles';
 import type { Patient } from '@/types';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { getBadgeAppearance } from '@/components/theme/theme';
 import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
 

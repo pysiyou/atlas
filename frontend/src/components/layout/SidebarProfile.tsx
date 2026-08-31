@@ -2,7 +2,7 @@ import { Avatar, Button, Popover } from '@/components';
 import type { PopoverPlacement } from '@/components';
 import { formatStatus } from '@/utils/string';
 import type { AuthUser } from '@/types';
-import defaultAvatar from '@/assets/images/default-avatar.jpg';
+import defaultAvatar from '@/assets/default-avatar.jpg';
 
 export interface SidebarProfileProps {
   currentUser: AuthUser;

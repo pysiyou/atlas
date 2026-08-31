@@ -7,7 +7,7 @@ import type { FilterConfig } from '@/components/filters';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/components/filters';
 import type { TestCategory } from '@/types';
 import { PRICE_RANGE } from '@/utils/constants';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 /**
  * Test category configuration for filter display

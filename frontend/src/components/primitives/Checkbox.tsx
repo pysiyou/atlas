@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { Icon } from './Icon';
-import { cn, ICONS } from '@/utils';
+import { cn } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface CheckboxProps {
   id: string;

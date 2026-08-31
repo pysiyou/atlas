@@ -5,7 +5,8 @@
 
 import React, { useState } from 'react';
 import { Badge, Icon } from '@/components';
-import { ICONS, cn } from '@/utils';
+import { cn } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 interface AttemptIndicatorProps {
   /** Current attempt number (1-based) */

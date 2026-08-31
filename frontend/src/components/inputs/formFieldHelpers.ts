@@ -2,7 +2,7 @@
  * Shared helpers for FormField components (Input, Textarea, Select).
  */
 
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import type { IconName } from '@/components/primitives/Icon';
 
 export type FormFieldKind = 'input' | 'textarea' | 'select';

@@ -9,7 +9,7 @@ import { formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
 import type { Order, Invoice } from '@/types';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface BillingSummarySectionProps {
   order: Order;

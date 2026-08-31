@@ -3,7 +3,7 @@
  */
 
 import { Button, Icon } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface ErrorFallbackProps {
   error: Error | null;

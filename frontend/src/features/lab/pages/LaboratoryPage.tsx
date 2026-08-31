@@ -5,22 +5,22 @@
 
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import { CollectionView } from '@/features/lab-collection/pages/CollectionView';
-import { EntryView } from '@/features/lab-entry/pages/EntryView';
-import { ValidationView } from '@/features/lab-validation/pages/ValidationView';
-import { EscalationView } from '@/features/lab-validation/pages/EscalationView';
-import { CommandCenterView } from '@/features/lab-command-center';
+import { CollectionView } from '../collection/CollectionView';
+import { EntryView } from '../entry/EntryView';
+import { ValidationView } from '../validation/ValidationView';
+import { EscalationView } from '../validation/EscalationView';
+import { CommandCenterView } from '../command-center/CommandCenterView';
 import { useAuthStore } from '@/app/store';
 import { Icon, PageHeaderBar, Badge } from '@/components';
-import { ICONS } from '@/utils';
-import { useLabPipelineCounts } from '@/features/lab/hooks';
+import { ICONS } from '@/config/icons';
+import { useLabPipelineCounts } from '../hooks';
 import {
   DEFAULT_LAB_TAB,
   isLabTabId,
   LAB_TAB_LABELS,
   type LabTabId,
   getLabTabPath,
-} from '@/features/lab/constants/labTabs';
+} from '../constants/labTabs';
 
 export const Laboratory: React.FC = () => {
   const navigate = useNavigate();

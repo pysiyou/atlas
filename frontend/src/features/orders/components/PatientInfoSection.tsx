@@ -9,7 +9,7 @@ import { calculateAge } from '@/utils';
 import { displayId } from '@/utils';
 import type { Patient } from '@/types';
 import { formatOrderDate } from '@/utils/date';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface PatientInfoSectionProps {
   patient: Patient | null;

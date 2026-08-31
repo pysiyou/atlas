@@ -2,11 +2,11 @@
  * LoadingState - Standardized loading UI component
  *
  * Provides a consistent loading indicator across the application.
- * Supports different sizes and full-screen mode. Uses DnaHelixLoader.
+ * Supports different sizes and full-screen mode.
  */
 
 import React from 'react';
-import { DnaHelixLoader } from '@/components';
+import { SpinnerLoader } from '@/components';
 
 export interface LoadingStateProps {
   /** Loading message to display */
@@ -40,7 +40,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   return (
     <div className={`${containerClasses} ${className}`}>
       <div className="text-center">
-        <DnaHelixLoader size={size} />
+        <SpinnerLoader size={size} />
         {message && <p className="mt-3 text-sm text-text-tertiary">{message}</p>}
       </div>
     </div>

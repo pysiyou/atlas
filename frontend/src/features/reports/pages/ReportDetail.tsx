@@ -5,11 +5,11 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useTestCatalog } from '@/features/catalog/data/tests';
-import { useUserLookup } from '@/features/users';
-import { usePatientNameLookup, usePatientsList } from '@/features/patients/data/patients';
-import { useOrdersList } from '@/features/orders/data/orders';
-import { useSampleLookup } from '@/features/lab-collection/data/samples';
+import { useTestCatalog } from '@/features/catalog/api/tests.api';
+import { useUserLookup } from '@/lib/api/users.api';
+import { usePatientNameLookup, usePatientsList } from '@/features/patients/api/patients.api';
+import { useOrdersList } from '@/features/orders/api/orders.api';
+import { useSampleLookup } from '@/features/lab/collection/samples.api';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import {

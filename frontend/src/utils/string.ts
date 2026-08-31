@@ -3,6 +3,7 @@
  */
 
 import { parseISO, isValid } from 'date-fns';
+import { formatDurationHours } from './formatDuration.utils';
 
 export function formatPhoneNumber(phone: string | undefined | null): string {
   if (!phone) return '';
@@ -41,14 +42,7 @@ export function getInitials(name: string | undefined | null): string {
 }
 
 export function formatTurnaroundTime(hours: number): string {
-  if (hours < 24) return `${hours}h`;
-  if (hours === 24) return '1 day';
-  if (hours < 168) {
-    const days = Math.round(hours / 24);
-    return `${days} day${days > 1 ? 's' : ''}`;
-  }
-  const weeks = Math.round(hours / 168);
-  return `${weeks} week${weeks > 1 ? 's' : ''}`;
+  return formatDurationHours(hours);
 }
 
 export function capitalizeLabel(s: string | undefined | null): string {
@@ -67,4 +61,24 @@ export function formatStatus(status: string): string {
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+}
+
+/** Title-case each word in a string. */
+export function titleCaseWords(s: string): string {
+  return s
+    .split(/\s+/)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+/** Capitalize first letter of a string. */
+export function capitalize(str: string): string {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/** Format boolean as Yes/No with fallback for undefined. */
+export function formatBoolean(val: boolean | undefined, fallback = '-'): string {
+  if (val === undefined) return fallback;
+  return val ? 'Yes' : 'No';
 }

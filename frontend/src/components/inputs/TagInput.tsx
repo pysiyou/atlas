@@ -8,7 +8,7 @@
 import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { getBadgeAppearance } from '@/components/theme/theme';
 import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
 import { inputContainerBase, inputContainerError } from './inputStyles';

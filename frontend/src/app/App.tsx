@@ -8,13 +8,13 @@ import React, { lazy, type ComponentType, type LazyExoticComponent } from 'react
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
-import { AppProviders } from '@/app/providers/AppProviders';
+import { AppProviders } from '@/app/AppProviders';
 import { ErrorBoundary } from '@/components';
 import { AppToastBar } from '@/app/AppToastBar';
 import { InitialDataPreload } from '@/app/InitialDataPreload';
 import { ProtectedLayout } from '@/app/ProtectedLayout';
 import { PublicRoute } from '@/app/PublicRoute';
-import { LoginPage } from '@/features/auth/pages/LoginPage';
+import { LoginPage } from '@/features/auth/LoginPage';
 import { ModalRenderer } from '@/components';
 import { ROUTES } from '@/config';
 

@@ -12,7 +12,7 @@ import {
   PriceRangeControl,
   MultiSelectControl,
   SingleSelectControl,
-} from '../controls';
+} from '..';
 import { DatePresetBadges } from '../DatePresetBadges';
 import { ModalSearchInput, ModalPriceSlider, ModalRadioList } from '../FilterModalControls';
 

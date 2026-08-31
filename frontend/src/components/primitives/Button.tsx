@@ -13,7 +13,7 @@
 
 import React, { type ButtonHTMLAttributes } from 'react';
 import { Icon } from './Icon';
-import { SpinnerLoader as DnaHelixLoader, type SpinnerLoaderSize as DnaHelixLoaderSize } from '@/components/loaders/SpinnerLoader';
+import { SpinnerLoader, type SpinnerLoaderSize } from '@/components/loaders/SpinnerLoader';
 import {
   type ButtonLikeVariant,
   BASE_STYLES,
@@ -34,7 +34,7 @@ export type ButtonVariant = ButtonLikeVariant;
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 
 /** Always use smallest loader so it stays inside button; size does not change. */
-const BUTTON_LOADER_SIZE: DnaHelixLoaderSize = 'xs';
+const BUTTON_LOADER_SIZE: SpinnerLoaderSize = 'xs';
 
 const BASE_CLASSES =
   'inline-flex shrink-0 items-center justify-center gap-1.5 font-normal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap overflow-hidden';
@@ -112,7 +112,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   const loaderEl = (
     <span className="inline-flex shrink-0 items-center justify-center">
-      <DnaHelixLoader size={BUTTON_LOADER_SIZE} />
+      <SpinnerLoader size={BUTTON_LOADER_SIZE} />
     </span>
   );
 

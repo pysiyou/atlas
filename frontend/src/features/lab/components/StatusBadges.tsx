@@ -11,14 +11,15 @@
  */
 
 import React from 'react';
-import { Badge, Icon, DnaHelixLoader } from '@/components';
+import { Badge, Icon, SpinnerLoader } from '@/components';
 import { formatDate } from '@/utils';
 import { getContainerIconColor } from '@/features/lab/utils';
 import { displayId } from '@/utils';
-import { useUserLookup } from '@/features/users';
+import { useUserLookup } from '@/lib/api/users.api';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
-import { getContainerIcon, ICONS } from '@/utils';
+import { getContainerIcon } from '@/config/icons';
+import { ICONS } from '@/config/icons';
 
 /**
  * ContainerInfo - Displays container type and color with icon
@@ -216,7 +217,7 @@ export const RecollectionAttemptBadge: React.FC<RecollectionAttemptBadgeProps> =
   showIcon = false,
 }) => (
   <Badge size={size} variant="warning" className={`flex items-center gap-1 ${className}`}>
-    {showIcon && <DnaHelixLoader size="xs" />}
+    {showIcon && <SpinnerLoader size="xs" />}
     RE-COLLECT #{attemptNumber}
   </Badge>
 );

@@ -1,4 +1,4 @@
-import { Badge } from '@/components';
+import { Badge, MobileEntityCard } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { Test } from '@/types';
@@ -15,10 +15,7 @@ import type { Test } from '@/types';
  */
 export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
   return (
-    <div
-      onClick={onClick}
-      className="bg-surface border border-border-default rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
-    >
+    <MobileEntityCard onClick={onClick}>
       {/* Header: Test name + code (left) + Price (right) */}
       <div className="flex justify-between items-center mb-3 pb-3 border-b border-border-default">
         <div className="flex flex-col min-w-0">
@@ -57,6 +54,6 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
           <Badge variant={test.sampleType} size="xs" />
         </div>
       </div>
-    </div>
+    </MobileEntityCard>
   );
 }

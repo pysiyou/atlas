@@ -6,15 +6,15 @@
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTestCatalog } from '@/features/catalog/data/tests';
-import { useUserLookup } from '@/features/users';
-import { usePatientNameLookup, usePatientsList } from '@/features/patients/data/patients';
-import { useOrdersList } from '@/features/orders/data/orders';
-import { useSampleLookup } from '@/features/lab-collection/data/samples';
+import { useTestCatalog } from '@/features/catalog/api/tests.api';
+import { useUserLookup } from '@/lib/api/users.api';
+import { usePatientNameLookup, usePatientsList } from '@/features/patients/api/patients.api';
+import { useOrdersList } from '@/features/orders/api/orders.api';
+import { useSampleLookup } from '@/features/lab/collection/samples.api';
 import { useFiltering } from '@/hooks/useFiltering';
 import { ListView } from '@/components';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
-import { createReportTableConfig } from '../config/ReportTableConfig';
+import { createReportTableConfig } from '../config/ReportTable.config';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { ReportFilters } from '../components/ReportFilters';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';

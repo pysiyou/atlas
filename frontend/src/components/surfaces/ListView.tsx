@@ -7,7 +7,7 @@ import { Table, type TableViewConfig } from '@/components/data-table';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/data-table';
 import { EmptyState, PageHeaderBar, SkeletonCard, SkeletonList } from '@/components';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH, EMPTY_ICON_SEARCH } from '@/utils/constants';
 
 type TableDataItem = Record<string, unknown> | object;

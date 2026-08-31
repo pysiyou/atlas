@@ -10,12 +10,13 @@
  */
 
 import React, { useState } from 'react';
-import { Popover, IconButton, Alert, FooterInfo, DnaHelixLoader } from '@/components';
+import { Popover, IconButton, Alert, FooterInfo, SpinnerLoader } from '@/components';
 import { PopoverForm } from './PopoverForm';
 import { useRejectionDialog } from '../hooks/useRejectionDialog';
 import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
-import { cn, ICONS } from '@/utils';
+import { cn } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejectionDialogConstants';
 import {
@@ -316,7 +317,7 @@ export const RejectionHistoryBanner: React.FC<RejectionHistoryBannerProps> = ({
   return (
     <div className="mt-2 px-2 py-1.5 bg-warning-bg border border-warning-stroke rounded text-warning-fg">
       <div className="flex items-center gap-1.5">
-        <DnaHelixLoader size="xs" />
+        <SpinnerLoader size="xs" />
         <span className="text-xxs font-normal">{message}</span>
       </div>
       {rejectionReason && (

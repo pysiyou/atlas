@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Card, Icon } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface DashboardOrdersInProgressBannerProps {
   pendingOrders: number;

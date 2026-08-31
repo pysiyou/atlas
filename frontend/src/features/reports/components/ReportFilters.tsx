@@ -13,7 +13,8 @@ import {
   inputText,
   inputClearButton,
 } from '@/components/inputs/inputStyles';
-import { cn, ICONS } from '@/utils';
+import { cn } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { DatePresetBadges, REPORT_FILTER_PLACEHOLDERS } from '@/components/filters';
 

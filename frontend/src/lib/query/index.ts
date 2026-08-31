@@ -11,6 +11,7 @@ export {
   invalidateOrderQueries,
   invalidatePatientQueries,
   invalidateResultQueries,
+  useInvalidateQueryKey,
 } from './invalidate';
 export type {
   InvalidateOrderOptions,

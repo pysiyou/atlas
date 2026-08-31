@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 
 import { Icon } from '@/components/primitives/Icon';
-import { cn, ICONS } from '@/utils';
+import { cn } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { inputBase } from '@/components/inputs/inputStyles';
 
 interface PaginationProps {

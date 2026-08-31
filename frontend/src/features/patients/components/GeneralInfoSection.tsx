@@ -6,8 +6,8 @@
 import React from 'react';
 import type { Patient } from '@/types';
 import { DetailField } from '@/components/display/DetailField';
-import { formatDetailDate, formatAddress } from '../utils/patientFormatters';
-import { ICONS } from '@/utils';
+import { formatPatientDetailDate, formatAddress } from '../utils/patientFormatters';
+import { ICONS } from '@/config/icons';
 
 export interface GeneralInfoSectionProps {
   patient: Patient;
@@ -34,7 +34,7 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
         label="Birthday"
         value={
           <span className="whitespace-nowrap truncate">
-            {formatDetailDate(patient.dateOfBirth, 'long')}
+            {formatPatientDetailDate(patient.dateOfBirth, 'long')}
           </span>
         }
         orientation="vertical"

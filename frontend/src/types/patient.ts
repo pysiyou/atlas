@@ -79,9 +79,6 @@ export interface Patient {
   updatedBy: string; // Backend returns string user ID
 }
 
-/** Runtime-validated patient shape (forms/mutations). */
-export type { Patient as ValidatedPatient } from '@/features/patients/schemas/patient.schema';
-
 /**
  * PatientContext — Superset type for all patient-facing views.
  *

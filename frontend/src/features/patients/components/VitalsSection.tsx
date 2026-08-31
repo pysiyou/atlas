@@ -8,7 +8,8 @@
 import React from 'react';
 import { Icon, type IconName } from '@/components';
 import type { VitalSigns } from '@/types/patient';
-import { cn, ICONS } from '@/utils';
+import { cn } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { inputBase, inputError } from '@/components/inputs/inputStyles';
 
 export interface VitalsSectionProps {

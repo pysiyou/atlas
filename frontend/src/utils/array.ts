@@ -16,3 +16,14 @@ export function formatArray(
   }
   return validItems.join(', ');
 }
+
+/**
+ * Formats an array into a comma-separated string with a configurable fallback.
+ */
+export function formatArrayWithFallback(
+  items: (string | number | undefined | null)[] | undefined | null,
+  fallback = ''
+): string {
+  const formatted = formatArray(items);
+  return formatted || fallback;
+}

@@ -7,7 +7,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { queryKeys } from '@/lib/query';
-import { useOrdersList } from '@/features/orders/data/orders';
+import { useInvalidateQueryKey } from '@/lib/query/invalidate';
+import { useOrdersList } from '@/features/orders/api/orders.api';
 
 /**
  * Hook to search orders by order ID
@@ -50,10 +51,7 @@ export function useOrderLookup() {
  */
 export function useInvalidateOrders() {
   const queryClient = useQueryClient();
-
-  const invalidateAll = () => {
-    return queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-  };
+  const { invalidateAll } = useInvalidateQueryKey(queryKeys.orders.all);
 
   const invalidateOrder = (orderId: string) => {
     return queryClient.invalidateQueries({ queryKey: queryKeys.orders.byId(orderId) });

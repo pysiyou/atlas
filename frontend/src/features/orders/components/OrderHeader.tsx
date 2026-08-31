@@ -8,7 +8,7 @@ import { Badge, Button, Icon, IconButton } from '@/components';
 import { DetailPageHeader } from '@/components';
 import { displayId } from '@/utils';
 import type { Order, Invoice } from '@/types';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface OrderHeaderProps {
   order: Order;

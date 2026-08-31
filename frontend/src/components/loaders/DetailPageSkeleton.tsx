@@ -3,7 +3,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { useResponsiveLayout } from '@/hooks';
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { SectionPanel } from '@/components';
 import { Skeleton, SkeletonCard, SkeletonInfoSection, SkeletonTableRow } from './Skeleton';

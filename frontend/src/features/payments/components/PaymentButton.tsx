@@ -8,7 +8,7 @@ import React from 'react';
 import { Icon } from '@/components';
 import { PaymentPopover } from './PaymentPopover';
 import type { Order } from '@/types';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 interface PaymentButtonProps {
   /** Order to display payment action for */

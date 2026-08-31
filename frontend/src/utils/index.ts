@@ -5,9 +5,6 @@
 // Classnames
 export * from './cn';
 
-// Icons & icon helpers
-export * from '@/config/icons';
-
 // Logger
 export * from './logger';
 
@@ -34,3 +31,4 @@ export * from './constants';
 
 // Filtering (pure functions + types; hooks are in @/hooks/useFiltering)
 export * from './filtering';
+export * from './formatDuration.utils';

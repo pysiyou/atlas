@@ -26,7 +26,8 @@ export type {
   ActiveFilterBadge,
 } from './types';
 
-export { useFilterState, useQuickFilters } from './hooks';
+export { useFilterState } from './useFilterState';
+export { useQuickFilters } from './useQuickFilters';
 
 export { FilterBar, type FilterBarProps } from './FilterBar';
 export { FilterModal, type FilterModalProps } from './FilterModal';
@@ -37,7 +38,6 @@ export {
 } from './ResponsiveFilterMobileBar';
 export { FilterSection, type FilterSectionProps } from './FilterSection';
 export { DatePresetBadges, type DatePresetBadgesProps } from './DatePresetBadges';
-export { ActiveFilterBadges, type ActiveFilterBadgesProps } from './ActiveFilterBadges';
 export { QuickFilters, type QuickFiltersProps } from './QuickFilters';
 export { FilterFactory, type FilterFactoryProps } from './FilterFactory';
 export { EntityFilterModal, type EntityFilterModalProps } from './EntityFilterModal';
@@ -46,19 +46,9 @@ export {
   type ResponsiveEntityFiltersProps,
 } from './ResponsiveEntityFilters';
 
-export {
-  SearchControl,
-  DateRangeControl,
-  AgeRangeControl,
-  PriceRangeControl,
-  MultiSelectControl,
-  SingleSelectControl,
-  FilterHelpIcon,
-  type SearchControlProps,
-  type DateRangeControlProps,
-  type AgeRangeControlProps,
-  type PriceRangeControlProps,
-  type MultiSelectControlProps,
-  type SingleSelectControlProps,
-  type FilterHelpIconProps,
-} from './controls';
+export { SearchControl, type SearchControlProps } from './SearchControl';
+export { DateRangeControl, type DateRangeControlProps } from './DateRangeControl';
+export { AgeRangeControl, type AgeRangeControlProps } from './AgeRangeControl';
+export { PriceRangeControl, type PriceRangeControlProps } from './PriceRangeControl';
+export { MultiSelectControl, type MultiSelectControlProps } from './MultiSelectControl';
+export { SingleSelectControl, type SingleSelectControlProps } from './SingleSelectControl';

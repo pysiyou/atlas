@@ -9,7 +9,7 @@ import React from 'react';
 import { Popover, Icon, FilterTriggerShell } from '@/components';
 import { useRangeValue } from '@/hooks/useRangeValue';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 interface AgeFilterProps {
   value: [number, number];

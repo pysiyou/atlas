@@ -3,7 +3,7 @@
  * Centralized company-specific data configuration for multi-tenant support
  */
 
-import companyConfigData from '../data/company-config.json';
+import companyConfigData from './company-config.json';
 
 /**
  * Company configuration type definitions

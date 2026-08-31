@@ -7,7 +7,7 @@ import React from 'react';
 import type { Patient } from '@/types';
 import { DetailField } from '@/components/display/DetailField';
 import { formatList, formatFamilyHistory } from '../utils/patientFormatters';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface MedicalHistorySectionDisplayProps {
   patient: Patient;

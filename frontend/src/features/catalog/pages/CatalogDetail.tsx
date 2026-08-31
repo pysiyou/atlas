@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useTest } from '@/features/catalog/data/tests';
+import { useTest } from '@/features/catalog/api/tests.api';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { BalancedColumnsLayout } from '@/components';
 import type { TableInput } from '@/components';
@@ -16,11 +16,7 @@ import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/catalogDetailSkeleton';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDetailDate } from '@/utils';
-import {
-  formatArrayWithFallback,
-  formatBooleanWithFallback,
-  capitalize,
-} from '../utils/catalogFormatters';
+import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';
 
 /**
  * CatalogDetail Component
@@ -97,9 +93,9 @@ export const CatalogDetail: React.FC = () => {
         { label: 'Category', value: capitalize(test.category) },
         { label: 'Turnaround Time', value: formatTurnaroundTime(test.turnaroundTime) },
         { label: 'Methodology', value: test.methodology || '-' },
-        { label: 'Synonyms', value: formatArrayWithFallback(test.synonyms) },
-        { label: 'LOINC Codes', value: formatArrayWithFallback(test.loincCodes) },
-        { label: 'Panels', value: formatArrayWithFallback(test.panels) },
+        { label: 'Synonyms', value: formatArrayWithFallback(test.synonyms, '-') },
+        { label: 'LOINC Codes', value: formatArrayWithFallback(test.loincCodes, '-') },
+        { label: 'Panels', value: formatArrayWithFallback(test.panels, '-') },
         { label: 'Notes', value: test.notes || '-' },
       ],
     },
@@ -109,14 +105,14 @@ export const CatalogDetail: React.FC = () => {
       rows: [
         { label: 'Sample Type', value: capitalize(test.sampleType) },
         { label: 'Container', value: test.containerDescription || '-' },
-        { label: 'Container Types', value: formatArrayWithFallback(test.containerTypes) },
-        { label: 'Container Colors', value: formatArrayWithFallback(test.containerTopColors) },
+        { label: 'Container Types', value: formatArrayWithFallback(test.containerTypes, '-') },
+        { label: 'Container Colors', value: formatArrayWithFallback(test.containerTopColors, '-') },
         { label: 'Sample Volume', value: test.sampleVolume },
         { label: 'Minimum Volume', value: test.minimumVolume ? `${test.minimumVolume} mL` : '-' },
-        { label: 'Fasting Required', value: formatBooleanWithFallback(test.fastingRequired) },
+        { label: 'Fasting Required', value: formatBoolean(test.fastingRequired) },
         { label: 'Collection Notes', value: test.collectionNotes || '-' },
         { label: 'Special Requirements', value: test.specialRequirements || '-' },
-        { label: 'Rejection Criteria', value: formatArrayWithFallback(test.rejectionCriteria) },
+        { label: 'Rejection Criteria', value: formatArrayWithFallback(test.rejectionCriteria, '-') },
       ],
     },
     {

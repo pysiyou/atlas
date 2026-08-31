@@ -7,7 +7,7 @@
 import React from 'react';
 
 /**
- * Row type for table data (renamed to avoid clash with DetailRow component)
+ * Row type for table data used by DetailsTable and BalancedColumnsLayout.
  */
 export interface DetailTableRow {
   /** Label displayed on the left */

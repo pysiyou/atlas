@@ -5,10 +5,10 @@
 
 import { ModalType } from '@/lib/context/ModalContext';
 import { registerModal } from './modalRegistry';
-import { CollectionDetailModal } from '@/features/lab-collection/components/CollectionDetailModal';
-import { EntryDetailModal } from '@/features/lab-entry/components/EntryDetailModal';
-import { ValidationDetailModal } from '@/features/lab-validation/components/ValidationDetailModal';
-import { EscalationResolutionModal } from '@/features/lab-validation/components/EscalationResolutionModal';
+import { CollectionDetailModal } from '@/features/lab/collection/CollectionDetailModal';
+import { EntryDetailModal } from '@/features/lab/entry/EntryDetailModal';
+import { ValidationDetailModal } from '@/features/lab/validation/ValidationDetailModal';
+import { EscalationResolutionModal } from '@/features/lab/validation/EscalationResolutionModal';
 import { OrderUpsertModal } from '@/features/orders/components/OrderUpsertModal';
 
 // Register Collection Detail Modal (Sample Detail)

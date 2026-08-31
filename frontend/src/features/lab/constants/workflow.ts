@@ -15,7 +15,7 @@ import {
   PRIORITY_LEVEL_VALUES,
   PRIORITY_LEVEL_CONFIG,
 } from '@/types';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/components/filters';
 import { buildLabFilterConfig } from '@/features/lab/utils/buildLabFilterConfig';
 

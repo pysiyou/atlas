@@ -5,7 +5,7 @@
 
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { auditAPI } from '@/features/lab-command-center/data/audit';
+import { auditAPI } from '@/features/lab/command-center/audit.api';
 import type { LabOperationRecord } from '@/types/lab-operations';
 
 export interface UseEntityAuditLogsOptions {

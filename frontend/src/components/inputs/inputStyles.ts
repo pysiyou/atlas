@@ -3,7 +3,7 @@
  * Single source of truth: border, text, hover, focus.
  */
 
-/** Focus-within variant for wrappers (SearchBar, SearchControl) */
+/** Focus-within variant for wrappers (SearchControl, DebouncedSearchInput) */
 const inputBorderFocusWithin =
   'border border-border-default rounded transition-colors duration-200 hover:border-border-hover focus-within:outline-none focus-within:border-brand focus-within:ring-1 focus-within:ring-brand focus-within:ring-opacity-20';
 

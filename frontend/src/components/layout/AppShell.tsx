@@ -1,6 +1,5 @@
 /**
  * AppShell — Main application shell with responsive sidebar.
- * (was AppLayout.tsx / DashboardLayout)
  *
  * Features:
  * - Desktop: Fixed sidebar with collapse/expand
@@ -65,8 +64,3 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
     </div>
   );
 };
-
-/** @deprecated Use AppShell */
-export const DashboardLayout = AppShell;
-/** @deprecated Use AppShellProps */
-export type DashboardLayoutProps = AppShellProps;

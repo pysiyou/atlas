@@ -8,7 +8,7 @@
 import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import type { IconName } from '@/components/primitives/Icon';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import type { PaymentMethodOption, PaymentMethod } from '@/types/payments';
 
 export interface PaymentMethodSelectorProps {

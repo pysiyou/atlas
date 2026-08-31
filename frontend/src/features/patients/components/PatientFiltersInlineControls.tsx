@@ -5,7 +5,7 @@
 import React from 'react';
 import { DebouncedSearchInput, MultiSelectFilter } from '@/components';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { PATIENT_FILTER_PLACEHOLDERS } from '@/components/filters';

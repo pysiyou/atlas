@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Button, FooterInfo } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface FilterModalFooterProps {
   onReset: () => void;

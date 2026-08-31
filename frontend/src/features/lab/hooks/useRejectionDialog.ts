@@ -6,7 +6,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import type { ResultRejectionType } from '@/types';
 import type { RejectionResult, RejectionOptionsResponse } from '@/types/lab-operations';
-import { useOrderHasValidatedTests } from '@/features/lab-validation/hooks/useOrderHasValidatedTests';
+import { useOrderHasValidatedTests } from '@/features/lab/validation/useOrderHasValidatedTests';
 import { useRejectionManager } from './useRejectionManager';
 import { REJECTION_DIALOG_COPY } from '../components/rejectionDialogConstants';
 

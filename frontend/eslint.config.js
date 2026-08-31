@@ -65,6 +65,21 @@ export default defineConfig([
       'prefer-arrow-callback': 'error',
       // Allow separate type and value imports from same source
       'no-duplicate-imports': 'off',
+
+      // Import boundaries — prefer feature barrels for cross-feature access
+      'no-restricted-imports': ['warn', {
+        patterns: [
+          {
+            group: ['@/features/*/components/*', '@/features/*/hooks/*', '@/features/*/api/*', '@/features/*/utils/*'],
+            message: 'Import from the feature public API (@/features/<name>) unless this is an intra-feature relative import.',
+          },
+          {
+            group: ['@/utils'],
+            importNames: ['ICONS'],
+            message: 'Import ICONS from @/config/icons instead of @/utils.',
+          },
+        ],
+      }],
     },
   },
 ])

@@ -4,7 +4,7 @@
 
 import { format } from 'date-fns';
 import { Icon } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { generateCalendarYears } from '@/utils/date';
 import type { DateInputCalendarView } from './DateInputCalendarGrid';
 

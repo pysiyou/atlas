@@ -9,10 +9,10 @@
  */
 
 import { useState, useCallback } from 'react';
-import { resultAPI } from '@/features/lab-validation/data/results';
+import { useQuery } from '@tanstack/react-query';
+import { resultAPI } from '@/features/lab/validation/results.api';
 import { getErrorMessage } from '@/utils/errors';
 import { logger } from '@/utils/logger';
-import { useFetchedResource } from '@/hooks/useFetchedResource';
 import type {
   RejectionOptionsResponse,
   RejectionResult,
@@ -76,16 +76,22 @@ export function useRejectionManager({
   }, [orderId, testCode]);
 
   const {
-    data: options,
+    data: options = null,
     isLoading,
     error: fetchError,
-    refetch: fetchOptions,
-    clearError: clearFetchError,
-  } = useFetchedResource(fetcher, [orderId, testCode], {
+    refetch: fetchOptionsQuery,
+  } = useQuery({
+    queryKey: ['rejection-options', orderId, testCode],
+    queryFn: fetcher,
     enabled: autoFetch && !isMissing(orderId, testCode),
-    errorMessage: 'Failed to fetch rejection options',
-    logContext: { orderId, testCode },
+    retry: false,
   });
+
+  const fetchOptions = useCallback(async () => {
+    await fetchOptionsQuery();
+  }, [fetchOptionsQuery]);
+
+  const clearFetchError = useCallback(() => {}, []);
 
   const rejectWithAction = useCallback(
     async (rejectionType: ResultRejectionType, reason: string): Promise<RejectionResult | null> => {
@@ -176,7 +182,7 @@ export function useRejectionManager({
     options: options ?? null,
     isLoading,
     isRejecting,
-    error: actionError ?? fetchError,
+    error: actionError ?? (fetchError ? getErrorMessage(fetchError, 'Failed to fetch rejection options') : null),
     fetchOptions,
     rejectWithAction,
     isActionEnabled,

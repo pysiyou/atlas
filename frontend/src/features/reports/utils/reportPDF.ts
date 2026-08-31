@@ -30,7 +30,7 @@ export function generateLabReport(
 }
 
 /** Re-export helpers for consumers that need template or formatting. */
-export { getDefaultTemplate, formatReportTimestamp } from './reportPDFHelpers';
+export { getDefaultTemplate } from './reportPDFHelpers';
 
 /**
  * Open PDF in new window for preview

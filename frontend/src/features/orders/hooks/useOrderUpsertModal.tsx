@@ -9,9 +9,9 @@ import { displayId, formatCurrency } from '@/utils';
 import { createFilterOptions } from '@/utils/filtering';
 import { getErrorMessage } from '@/utils/errors';
 import { useOrderForm } from './useOrderForm';
-import { useTestCatalog, useTestSearch } from '@/features/catalog/data/tests';
-import { usePatientSearch, usePatientsList } from '@/features/patients/data/patients';
-import { useCreatePayment } from '@/features/payments/data/payments';
+import { useTestCatalog, useTestSearch } from '@/features/catalog/api/tests.api';
+import { usePatientSearch, usePatientsList } from '@/features/patients/api/patients.api';
+import { useCreatePayment } from '@/features/payments/api/payments.api';
 
 export interface UseOrderUpsertModalParams {
   isOpen: boolean;

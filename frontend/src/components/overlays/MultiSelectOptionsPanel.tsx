@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { Icon } from '@/components/primitives/Icon';
 import { MultiSelectListItem, type FilterOption } from './MultiSelectListItem';
 

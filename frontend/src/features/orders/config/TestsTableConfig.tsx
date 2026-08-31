@@ -7,7 +7,7 @@ import { formatCurrency, formatDate, displayId } from '@/utils';
 import { getTestName, getTestSampleType } from '@/features/catalog/utils';
 import { getLabQueueUrlForTest } from '@/features/lab/utils/labQueueLinks';
 import type { OrderTest, Test } from '@/types';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { getBadgeAppearance } from '@/components/theme/theme';
 import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
 

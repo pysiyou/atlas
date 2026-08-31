@@ -1,6 +1,6 @@
 import { companyConfig } from '@/config';
 import { Icon, IconButton } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface SidebarHeaderProps {
   isCollapsed: boolean;

@@ -8,11 +8,11 @@
 
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTestCatalog } from '@/features/catalog/data/tests';
+import { useTestCatalog } from '@/features/catalog/api/tests.api';
 import { ListView } from '@/components';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
 import { CatalogFilters } from '../components/CatalogFilters';
-import { createCatalogTableConfig } from '../config/CatalogTableConfig';
+import { createCatalogTableConfig } from '../config/CatalogTable.config';
 import { useCatalogFilters } from '../hooks/useCatalogFilters';
 import type { Test } from '@/types';
 

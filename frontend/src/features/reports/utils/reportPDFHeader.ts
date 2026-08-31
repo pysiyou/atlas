@@ -5,7 +5,7 @@
 import type jsPDF from 'jspdf';
 import type { ReportData, ReportTemplate } from '../types';
 import { companyConfig } from '@/config';
-import { formatReportTimestamp } from './reportPDFHelpers';
+import { formatReportTime } from '@/utils/date';
 
 interface HeaderLayout {
   pageWidth: number;
@@ -173,7 +173,7 @@ function drawProcessingDetails(
       subCol2X + 5,
       subColY,
       'Sample:',
-      formatReportTimestamp(collectedAt),
+      formatReportTime(collectedAt),
       subCol2X + 25
     );
     subColY += 4;
@@ -185,7 +185,7 @@ function drawProcessingDetails(
     subCol2X + 5,
     subColY,
     'Results:',
-    formatReportTimestamp(reportedAt || new Date().toISOString()),
+    formatReportTime(reportedAt || new Date().toISOString()),
     subCol2X + 25
   );
   subColY += 4;

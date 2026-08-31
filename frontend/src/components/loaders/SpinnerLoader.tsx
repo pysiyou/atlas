@@ -27,8 +27,6 @@ const SIZES: Record<string, SizeConfig> = {
 };
 
 export type SpinnerLoaderSize = keyof typeof SIZES;
-/** @deprecated Use SpinnerLoaderSize */
-export type DnaHelixLoaderSize = SpinnerLoaderSize;
 
 export interface SpinnerLoaderProps {
   /** Size of the spinner */
@@ -36,8 +34,6 @@ export interface SpinnerLoaderProps {
   /** Additional CSS classes */
   className?: string;
 }
-/** @deprecated Use SpinnerLoaderProps */
-export type DnaHelixLoaderProps = SpinnerLoaderProps;
 
 /**
  * SpinnerLoader Component
@@ -137,6 +133,3 @@ export const SpinnerLoader: React.FC<SpinnerLoaderProps> = ({ size = 'md', class
     </div>
   );
 };
-
-/** @deprecated Use SpinnerLoader */
-export const DnaHelixLoader = SpinnerLoader;

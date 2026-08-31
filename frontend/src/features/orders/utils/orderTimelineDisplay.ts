@@ -1,32 +1,6 @@
 import type { StepProgress } from './orderTimelineUtils';
 
 /**
- * Format timestamp for display.
- * Shows relative time for recent events, full date for older ones.
- */
-export function formatTimelineTimestamp(dateString?: string): string {
-  if (!dateString) return '';
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
-
-  if (diffInHours < 24) {
-    const diffInMinutes = Math.floor(diffInHours * 60);
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes}m ago`;
-    }
-    return `${Math.floor(diffInHours)}h ago`;
-  }
-
-  return date.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
-/**
  * Get the status message for a step that is in progress or blocked.
  */
 export function getTimelineStatusMessage(

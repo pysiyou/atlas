@@ -7,7 +7,7 @@ import React, { type ReactNode } from 'react';
 import { LoadingState } from '@/components/loaders/LoadingState';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
 import { EmptyState } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface DetailPageShellError {
   message: string;

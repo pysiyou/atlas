@@ -11,11 +11,11 @@
 import React, { type ReactNode } from 'react';
 import { Modal } from '@/components';
 import { Badge, SectionPanel, DetailFieldGroup, FooterInfo } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import type { DetailFieldConfig } from '@/components';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
-import { useUserLookup } from '@/features/users';
+import { useUserLookup } from '@/lib/api/users.api';
 
 interface ContextInfo {
   patientName: string;

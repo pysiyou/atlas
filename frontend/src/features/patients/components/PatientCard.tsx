@@ -1,5 +1,5 @@
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { Badge, Avatar, IconButton } from '@/components';
+import { Badge, Avatar, IconButton, MobileEntityCard } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
@@ -24,10 +24,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
   };
 
   return (
-    <div
-      onClick={onClick}
-      className="bg-surface border border-border-default rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full"
-    >
+    <MobileEntityCard onClick={onClick}>
       {/* Header: Avatar (top left) + Gender badge (top right) */}
       <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
         {/* Avatar: Patient name + Patient ID - positioned at top left */}
@@ -76,6 +73,6 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
         <div></div>
         <IconButton variant="add" size="sm" title="Add Order" onClick={handleAddOrder} />
       </div>
-    </div>
+    </MobileEntityCard>
   );
 }

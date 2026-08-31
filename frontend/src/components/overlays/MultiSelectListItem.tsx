@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { cn, uppercaseLabel, ICONS } from '@/utils';
+import { cn, uppercaseLabel } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { Badge } from '@/components/primitives/Badge';
 import { Icon } from '@/components/primitives/Icon';
 

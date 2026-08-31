@@ -9,7 +9,7 @@ import { DetailPageHeader } from '@/components';
 import type { Patient } from '@/types/patient';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPopover } from './AffiliationPopover';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface PatientHeaderProps {
   patient: Patient;

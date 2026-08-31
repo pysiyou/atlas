@@ -1,29 +1,20 @@
 /**
- * Lab Feature - Main Exports
+ * Lab Feature — public API
  *
- * Core lab infrastructure shared across workflow features.
- * Sub-features have been promoted to top-level features:
- *   - @/features/lab-collection
- *   - @/features/lab-command-center
- *   - @/features/lab-validation
- *   - @/features/lab-entry
- *   - @/features/reports
+ * Consolidated lab domain: collection, entry, validation, command-center, critical-values.
  */
 
-// Shared lab components (LabCard, LabFilters, LabWorkflowView, etc.)
+export { Laboratory } from './pages/LaboratoryPage';
+
+// Sub-domain views (for cross-feature imports)
+export { CollectionView } from './collection/CollectionView';
+export { EntryView } from './entry/EntryView';
+export { ValidationView } from './validation/ValidationView';
+export { EscalationView } from './validation/EscalationView';
+export { CommandCenterView } from './command-center/CommandCenterView';
+export { CriticalValuesPanel } from './critical-values/CriticalValuesPanel';
+
+// Shared infrastructure
 export * from './components';
-
-// Pages (LaboratoryPage router)
-export * from './pages';
-
-// Hooks (useLabWorkflowFilters, useRejectionManager, etc.)
 export * from './hooks';
-
-// Utils
-export * from './utils';
-
-// Types (SampleDisplay, LabOperationType, etc.)
-export * from './types';
-
-// Constants
 export * from './constants';

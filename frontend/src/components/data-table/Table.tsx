@@ -27,7 +27,7 @@ import {
 } from '@/utils/table';
 import { Pagination, EmptyState, Skeleton, Icon } from '@/components';
 import type { IconName } from '@/components';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 
 function TableHeader<T>({

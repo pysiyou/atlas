@@ -8,7 +8,8 @@
 import React from 'react';
 import type { Order } from '@/types';
 import { Modal, FooterInfo, Icon } from '@/components';
-import { displayId, ICONS, formatCurrency } from '@/utils';
+import { displayId, formatCurrency } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderModalFooter } from './OrderModalFooter';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';

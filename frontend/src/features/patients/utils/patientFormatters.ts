@@ -4,9 +4,9 @@
  */
 
 import type { Patient, Order } from '@/types';
-import { formatDetailDate as formatDetailDateUtil, formatArray, formatOrderDate } from '@/utils';
+import { formatDetailDate as formatDetailDateUtil, formatArrayWithFallback, formatOrderDate } from '@/utils';
 
-export const formatDetailDate = (
+export const formatPatientDetailDate = (
   date: string | Date | undefined | null,
   format: 'long' | 'short' = 'long'
 ): string => {
@@ -20,8 +20,7 @@ export const formatDetailDate = (
  * Formats an array of strings into a comma-separated list or returns fallback
  */
 export const formatList = (items: string[] | undefined, fallback: string = 'None'): string => {
-  const formatted = formatArray(items);
-  return formatted || fallback;
+  return formatArrayWithFallback(items, fallback);
 };
 
 /**

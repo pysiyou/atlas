@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Popover, Icon } from '@/components';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { inputTrigger, inputTriggerOpen, inputError, inputClearButton } from '@/components/inputs/inputStyles';
 import { DateInputHeader } from './DateInputHeader';
 import { DateInputCalendarGrid, type DateInputCalendarView } from './DateInputCalendarGrid';

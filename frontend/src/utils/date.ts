@@ -80,6 +80,56 @@ export function formatRelativeDateLabel(date: string | Date | undefined | null):
   }
 }
 
+/**
+ * Relative time for recent events; absolute short format for older timestamps.
+ * Used by order timeline and similar activity feeds.
+ */
+export function formatRelativeTime(
+  dateString: string | undefined | null,
+  options?: { absoluteFormat?: string }
+): string {
+  if (!dateString) return '';
+  try {
+    const date = typeof dateString === 'string' ? parseISO(dateString) : dateString;
+    if (!isValid(date)) return '';
+    const now = new Date();
+    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+
+    if (diffInHours < 24) {
+      const diffInMinutes = Math.floor(diffInHours * 60);
+      if (diffInMinutes < 60) {
+        return `${diffInMinutes}m ago`;
+      }
+      return `${Math.floor(diffInHours)}h ago`;
+    }
+
+    if (options?.absoluteFormat) {
+      return format(date, options.absoluteFormat);
+    }
+
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return '';
+  }
+}
+
+/** PDF/report timestamp format. */
+export function formatReportTime(dateString?: string | null, emptyLabel = 'N/A'): string {
+  if (!dateString) return emptyLabel;
+  try {
+    const date = parseISO(dateString);
+    if (!isValid(date)) return emptyLabel;
+    return format(date, 'yyyy-MM-dd hh:mm a');
+  } catch {
+    return emptyLabel;
+  }
+}
+
 export function formatRelativeDateTime(date: string | Date | undefined | null): string {
   if (!date) return '';
   try {

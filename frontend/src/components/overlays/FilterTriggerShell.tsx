@@ -8,7 +8,7 @@ import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import { inputTrigger, inputTriggerOpen, filterTriggerText, inputClearButton } from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils';
+import { ICONS } from '@/config/icons';
 
 export interface FilterTriggerShellProps {
   /** Whether the popover is open (for border/chevron state) */

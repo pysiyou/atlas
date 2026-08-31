@@ -12,7 +12,8 @@ import {
   setYear,
 } from 'date-fns';
 import { Icon } from '@/components';
-import { cn, ICONS } from '@/utils';
+import { cn } from '@/utils';
+import { ICONS } from '@/config/icons';
 import {
   generateCalendarDays,
   generateCalendarMonths,

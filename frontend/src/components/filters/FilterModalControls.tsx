@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { Icon } from '@/components';
-import { ICONS, uppercaseLabel, cn } from '@/utils';
+import { uppercaseLabel, cn } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { OverlaySearchInput, OverlayRangeSlider } from '@/components';
 
 export const ModalSearchInput = OverlaySearchInput;

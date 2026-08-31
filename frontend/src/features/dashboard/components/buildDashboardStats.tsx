@@ -3,7 +3,8 @@
  */
 
 import { Icon } from '@/components';
-import { formatCurrency, ICONS } from '@/utils';
+import { formatCurrency } from '@/utils';
+import { ICONS } from '@/config/icons';
 import type { DashboardStat } from './DashboardStatsGrid';
 
 export function buildDashboardStats({
