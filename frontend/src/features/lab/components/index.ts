@@ -36,5 +36,5 @@ export {
 } from './StatusBadges';
 
 // Utilities (moved to utils)
-export { handlePrintCollectionLabel, getEffectiveContainerType } from '../utils/lab-helpers';
+export { handlePrintCollectionLabel, getEffectiveContainerType } from '../utils/labHelpers';
 export { formatRejectionReasons } from '../utils/lab-formatters';

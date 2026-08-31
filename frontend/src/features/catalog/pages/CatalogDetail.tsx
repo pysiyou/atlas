@@ -19,7 +19,7 @@ import {
   formatArrayWithFallback,
   formatBooleanWithFallback,
   capitalize,
-} from '../utils/catalog-formatters';
+} from '../utils/catalogFormatters';
 
 /**
  * CatalogDetail Component

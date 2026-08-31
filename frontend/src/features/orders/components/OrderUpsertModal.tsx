@@ -10,8 +10,8 @@ import type { Order } from '@/types';
 import { Modal, FooterInfo, Icon } from '@/components';
 import { displayId, ICONS, formatCurrency } from '@/utils';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
-import { OrderModalFooter } from './order-modal/OrderModalFooter';
-import { OrderUpsertFormFields } from './order-modal/OrderUpsertFormFields';
+import { OrderModalFooter } from './OrderModalFooter';
+import { OrderUpsertFormFields } from './OrderUpsertFormFields';
 import type { BaseModalProps } from '@/components';
 
 export interface OrderUpsertModalProps extends BaseModalProps {

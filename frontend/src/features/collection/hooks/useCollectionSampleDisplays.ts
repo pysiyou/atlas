@@ -5,7 +5,7 @@
 import { useMemo, useCallback } from 'react';
 import { calculateRequiredSamples } from '@/features/lab/utils';
 import { isActiveTest } from '@/features/orders/utils';
-import { createSampleSearchFilter } from '@/features/lab/utils/lab-helpers';
+import { createSampleSearchFilter } from '@/features/lab/utils/labHelpers';
 import type { SampleDisplay } from '@/features/lab/types';
 import type { Order, Patient, Sample, Test } from '@/types';
 

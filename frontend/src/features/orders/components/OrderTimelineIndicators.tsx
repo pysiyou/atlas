@@ -1,5 +1,5 @@
 import React from 'react';
-import type { StepProgress } from '../utils/order-timeline-utils';
+import type { StepProgress } from '../utils/orderTimelineUtils';
 
 interface StepIndicatorProps {
   progress: StepProgress;

@@ -18,7 +18,7 @@ import { createPatientTableConfig } from './PatientTableConfig';
 import { calculateAge } from '@/utils';
 import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
-import { isAffiliationActive } from '../utils/patient-helpers';
+import { isAffiliationActive } from '../utils/patientHelpers';
 
 export const PatientList: React.FC = () => {
   const navigate = useNavigate();

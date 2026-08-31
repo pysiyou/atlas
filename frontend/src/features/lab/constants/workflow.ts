@@ -16,7 +16,7 @@ import {
   PRIORITY_LEVEL_CONFIG,
 } from '@/types';
 import { ICONS } from '@/utils';
-import { SHARED_FILTER_PLACEHOLDERS } from '@/features/filters';
+import { SHARED_FILTER_PLACEHOLDERS } from '@/filters';
 import { buildLabFilterConfig } from '@/features/lab/utils/buildLabFilterConfig';
 
 // ============================================================================

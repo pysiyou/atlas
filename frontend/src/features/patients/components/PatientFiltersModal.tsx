@@ -7,7 +7,7 @@ import { Modal, CheckboxList, OverlaySearchInput, OverlayRangeSlider } from '@/c
 import {
   FilterModalFooter,
   PATIENT_FILTER_PLACEHOLDERS,
-} from '@/features/filters';
+} from '@/filters';
 import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';

@@ -14,7 +14,7 @@ import { AppToastBar } from '@/app/AppToastBar';
 import { InitialDataPreload } from '@/app/InitialDataPreload';
 import { ProtectedLayout } from '@/app/ProtectedLayout';
 import { PublicRoute } from '@/app/PublicRoute';
-import { LoginForm } from '@/features/auth/LoginForm';
+import { LoginPage } from '@/features/auth/pages/LoginPage';
 import { ModalRenderer } from '@/components';
 import { ROUTES } from '@/config';
 
@@ -37,7 +37,7 @@ function lazyNamed(
 }
 
 const Dashboard = lazyNamed(
-  () => import('@/features/dashboard/DashboardPage'),
+  () => import('@/features/dashboard/pages/DashboardPage'),
   'Dashboard'
 );
 const Patients = lazyNamed(
@@ -78,7 +78,7 @@ const AppRoutes: React.FC = () => {
         path={ROUTES.LOGIN}
         element={
           <PublicRoute>
-            <LoginForm />
+            <LoginPage />
           </PublicRoute>
         }
       />

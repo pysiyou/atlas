@@ -9,7 +9,7 @@ import type { Patient } from '@/types';
 import { patientFormSchema, type PatientFormInput } from '../schemas/patient.schema';
 import { useCreatePatient, useUpdatePatient } from '../api/usePatients';
 import { patientToFormInput } from '../utils/form-transformers';
-import { calculateFormProgressV2 } from '../utils/patient-helpers';
+import { calculateFormProgressV2 } from '../utils/patientHelpers';
 
 export interface UseEditPatientFormParams {
   patient?: Patient;

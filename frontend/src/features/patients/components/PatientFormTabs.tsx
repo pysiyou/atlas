@@ -18,11 +18,11 @@ import type {
 } from 'react-hook-form';
 import type { PatientFormInput } from '../schemas/patient.schema';
 import type { Patient } from '@/types';
-import { DemographicsSection } from './form-sections/DemographicsSection';
-import { AddressSection } from './form-sections/AddressSection';
-import { EmergencyContactSection } from './form-sections/EmergencyContactSection';
-import { AffiliationSection } from './form-sections/AffiliationSection';
-import { MedicalHistorySection } from './form-sections/MedicalHistorySection';
+import { DemographicsSection } from './DemographicsSection';
+import { AddressSection } from './AddressSection';
+import { EmergencyContactSection } from './EmergencyContactSection';
+import { AffiliationSection } from './AffiliationSection';
+import { MedicalHistorySection } from './MedicalHistorySection';
 import { VitalsSection } from './VitalsSection';
 import { usePatientFormAdapter } from '../hooks/usePatientFormAdapter';
 import { createFormDataAdapter, createErrorsAdapter } from '../utils/form-transformers';

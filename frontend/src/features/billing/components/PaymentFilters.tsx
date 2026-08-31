@@ -8,7 +8,7 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import {
   ResponsiveFilterMobileBar,
   PAYMENT_FILTER_PLACEHOLDERS,
-} from '@/features/filters';
+} from '@/filters';
 import { PaymentFiltersInlineControls } from './PaymentFiltersInlineControls';
 import { PaymentFiltersModal } from './PaymentFiltersModal';
 import type { PaymentStatus, PaymentMethod } from '@/types';

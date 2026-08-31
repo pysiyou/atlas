@@ -5,14 +5,14 @@ import { getLabTabPath, type LabTabId } from '@/features/lab/constants/labTabs';
 import {
   getStepCompletionInfo,
   type StepProgress,
-} from '../utils/order-timeline-utils';
+} from '../utils/orderTimelineUtils';
 import {
   formatTimelineTimestamp,
   getTimelineLabelColor,
   getTimelineLineColor,
   getTimelineStatusColor,
   getTimelineStatusMessage,
-} from '../utils/order-timeline-display';
+} from '../utils/orderTimelineDisplay';
 import type { Order } from '@/types';
 import { StepIndicator, TestDots } from './OrderTimelineIndicators';
 

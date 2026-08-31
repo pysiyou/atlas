@@ -7,7 +7,7 @@ import { DebouncedSearchInput, MultiSelectFilter, DateFilter } from '@/component
 import { ICONS } from '@/utils';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
-import { PAYMENT_FILTER_PLACEHOLDERS } from '@/features/filters';
+import { PAYMENT_FILTER_PLACEHOLDERS } from '@/filters';
 import { getEnabledPaymentMethods } from '@/types/billing';
 import type { PaymentStatus, PaymentMethod } from '@/types';
 

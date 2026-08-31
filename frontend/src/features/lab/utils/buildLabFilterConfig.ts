@@ -2,8 +2,8 @@
  * Factory for lab workflow filter configs — deduplicates shared search/date/sample controls.
  */
 
-import type { FilterConfig, FilterControl } from '@/features/filters';
-import { SHARED_FILTER_PLACEHOLDERS } from '@/features/filters';
+import type { FilterConfig, FilterControl } from '@/filters';
+import { SHARED_FILTER_PLACEHOLDERS } from '@/filters';
 import { ICONS } from '@/utils';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import { SAMPLE_TYPE_VALUES, SAMPLE_TYPE_CONFIG } from '@/types';

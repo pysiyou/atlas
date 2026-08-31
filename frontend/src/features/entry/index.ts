@@ -2,7 +2,7 @@
  * Entry Workflow Index
  */
 
-export { EntryDetailModal } from './EntryDetailModal';
-export { EntryCard } from './EntryCard';
-export { EntryView } from './EntryView';
-export { EntryForm } from './EntryForm';
+export { EntryDetailModal } from './components/EntryDetailModal';
+export { EntryCard } from './components/EntryCard';
+export { EntryView } from './pages/EntryView';
+export { EntryForm } from './components/EntryForm';

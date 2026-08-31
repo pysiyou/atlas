@@ -6,7 +6,7 @@ import {
   getOrderStepProgress,
   isStepBlocked,
   type StepProgress,
-} from '../utils/order-timeline-utils';
+} from '../utils/orderTimelineUtils';
 import type { Order } from '@/types';
 import { OrderTimelineStep } from './OrderTimelineStep';
 

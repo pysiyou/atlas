@@ -8,7 +8,7 @@ import { Table, EmptyState } from '@/components';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import type { OrderTest } from '@/types';
 import { ICONS } from '@/utils';
-import { createTestsTableConfig } from './testsTableConfig';
+import { createTestsTableConfig } from '../pages/testsTableConfig';
 
 export interface TestsTableProps {
   tests: OrderTest[];

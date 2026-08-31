@@ -1,1 +1,1 @@
-export { CommandCenterView } from './CommandCenterView';
+export { CommandCenterView } from './pages/CommandCenterView';

@@ -4,8 +4,8 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar, type FilterValues } from '@/features/filters';
-import type { FilterConfig } from '@/features/filters';
+import { FilterBar, type FilterValues } from '@/filters';
+import type { FilterConfig } from '@/filters';
 
 export interface LabFiltersProps<S = string[]> {
   config: FilterConfig;

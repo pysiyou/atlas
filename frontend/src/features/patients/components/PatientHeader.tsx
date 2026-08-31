@@ -7,7 +7,7 @@ import React from 'react';
 import { Button, Avatar, Icon, IconButton } from '@/components';
 import { DetailPageHeader } from '@/components';
 import type { Patient } from '@/types/patient';
-import { isAffiliationActive } from '../utils/patient-helpers';
+import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPopover } from './AffiliationPopover';
 import { ICONS } from '@/utils';
 

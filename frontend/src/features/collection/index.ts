@@ -2,14 +2,14 @@
  * Collection Workflow Index
  */
 
-export { CollectionDetailModal } from './CollectionDetailModal';
-export { CollectionCard } from './CollectionCard';
-export { CollectionView } from './CollectionView';
-export { CollectionPopover } from './CollectionPopover';
-export { CollectionRejectionPopover } from './CollectionRejectionPopover';
-export { CollectionRequirementsSection } from './CollectionRequirementsSection';
-export { printCollectionLabel } from './CollectionLabel';
-export { CollectionDetailContent } from './CollectionDetailContent';
-export { CollectionDetailFooter } from './CollectionDetailFooter';
-export { buildCollectionDetailGridSections } from './CollectionDetailGridSections';
-export { CollectionDetailHeaderBadges } from './CollectionDetailHeaderBadges';
+export { CollectionDetailModal } from './components/CollectionDetailModal';
+export { CollectionCard } from './components/CollectionCard';
+export { CollectionView } from './pages/CollectionView';
+export { CollectionPopover } from './components/CollectionPopover';
+export { CollectionRejectionPopover } from './components/CollectionRejectionPopover';
+export { CollectionRequirementsSection } from './components/CollectionRequirementsSection';
+export { printCollectionLabel } from './components/CollectionLabel';
+export { CollectionDetailContent } from './components/CollectionDetailContent';
+export { CollectionDetailFooter } from './components/CollectionDetailFooter';
+export { buildCollectionDetailGridSections } from './components/CollectionDetailGridSections';
+export { CollectionDetailHeaderBadges } from './components/CollectionDetailHeaderBadges';

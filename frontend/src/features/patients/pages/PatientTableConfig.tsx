@@ -5,7 +5,7 @@ import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
 import type { PatientContext } from '@/types';
 import { DATA_ID_PRIMARY } from '@/utils/constants';
-import { isAffiliationActive } from '../utils/patient-helpers';
+import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';
 
 /**

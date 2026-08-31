@@ -12,7 +12,7 @@ import {
   PAYMENT_STATUS_CONFIG,
 } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
-import { ORDER_FILTER_PLACEHOLDERS } from '@/features/filters';
+import { ORDER_FILTER_PLACEHOLDERS } from '@/filters';
 import type { OrderStatus, PaymentStatus } from '@/types';
 
 const orderStatusOptions = createFilterOptions(ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG);

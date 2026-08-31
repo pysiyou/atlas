@@ -8,7 +8,7 @@ import { cn } from '@/utils';
 import { ICONS } from '@/utils';
 import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
-import { PATIENT_FILTER_PLACEHOLDERS } from '@/features/filters';
+import { PATIENT_FILTER_PLACEHOLDERS } from '@/filters';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import { AgeFilter } from './AgeFilter';
 import type { Gender } from '@/types';

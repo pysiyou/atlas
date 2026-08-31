@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { ResponsiveFilterMobileBar, ORDER_FILTER_PLACEHOLDERS } from '@/features/filters';
+import { ResponsiveFilterMobileBar, ORDER_FILTER_PLACEHOLDERS } from '@/filters';
 import { OrderFiltersInlineControls } from './OrderFiltersInlineControls';
 import { OrderFiltersModal } from './OrderFiltersModal';
 import type { OrderStatus, PaymentStatus } from '@/types';

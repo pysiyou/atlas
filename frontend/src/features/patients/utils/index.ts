@@ -2,6 +2,6 @@
  * Patient Feature Utils
  */
 
-export * from './patient-helpers';
+export * from './patientHelpers';
 export * from './patient-formatters';
 export * from './form-transformers';

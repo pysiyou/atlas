@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { cn } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { ResponsiveFilterMobileBar, PATIENT_FILTER_PLACEHOLDERS } from '@/features/filters';
+import { ResponsiveFilterMobileBar, PATIENT_FILTER_PLACEHOLDERS } from '@/filters';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import { PatientFiltersInlineControls } from './PatientFiltersInlineControls';
 import { PatientFiltersModal } from './PatientFiltersModal';

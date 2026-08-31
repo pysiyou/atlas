@@ -2,5 +2,5 @@
  * Catalog Feature Utils
  */
 
-export * from './catalog-formatters';
+export * from './catalogFormatters';
 export * from './test-lookup';

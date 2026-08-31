@@ -8,8 +8,8 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar, type FilterValues } from '@/features/filters';
-import { catalogFilterConfig } from '../constants/catalog-config';
+import { FilterBar, type FilterValues } from '@/filters';
+import { catalogFilterConfig } from '../constants/catalogConfig';
 import type { TestCategory } from '@/types';
 
 /**

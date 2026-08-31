@@ -8,7 +8,7 @@ import {
   FilterModalFooter,
   DatePresetBadges,
   PAYMENT_FILTER_PLACEHOLDERS,
-} from '@/features/filters';
+} from '@/filters';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { getEnabledPaymentMethods } from '@/types/billing';

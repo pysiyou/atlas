@@ -2,4 +2,4 @@
  * Catalog Feature Constants
  */
 
-export * from './catalog-config';
+export * from './catalogConfig';

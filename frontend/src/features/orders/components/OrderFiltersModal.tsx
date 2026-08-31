@@ -8,7 +8,7 @@ import {
   FilterModalFooter,
   DatePresetBadges,
   ORDER_FILTER_PLACEHOLDERS,
-} from '@/features/filters';
+} from '@/filters';
 import {
   ORDER_STATUS_VALUES,
   PAYMENT_STATUS_VALUES,
