@@ -42,8 +42,6 @@ interface EntryDetailModalProps {
   onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
   onNotesChange: (resultKey: string, notes: string) => void;
   onSave: (finalResults?: Record<string, string>, finalNotes?: string) => void | Promise<void>;
-  onNext?: () => void;
-  onPrev?: () => void;
 }
 
 // Large component is necessary for comprehensive entry detail modal with result entry, validation, and multiple conditional sections
@@ -59,15 +57,13 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   onResultsChange,
   onNotesChange,
   onSave,
-  onNext,
-  onPrev,
   // High complexity is necessary for comprehensive result entry logic with validation, conditional rendering, and state management
    
 }) => {
   const [localResults, setLocalResults] = useState<Record<string, string>>(() => initialResults);
   const [localNotes, setLocalNotes] = useState<string>(() => initialTechnicianNotes);
 
-  const saveThenClose = useAsyncAction(
+  const saveAction = useAsyncAction(
     useCallback(
       async (_signal: AbortSignal) => {
         await Promise.resolve(onSave(localResults, localNotes));
@@ -77,18 +73,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     ),
     { minDisplayMs: 100 }
   );
-  const saveThenNext = useAsyncAction(
-    useCallback(
-      async (_signal: AbortSignal) => {
-        if (!onNext) return;
-        await Promise.resolve(onSave(localResults, localNotes));
-        onNext();
-      },
-      [onSave, localResults, localNotes, onNext]
-    ),
-    { minDisplayMs: 100 }
-  );
-  const isSaving = saveThenClose.isPending || saveThenNext.isPending;
+  const isSaving = saveAction.isPending;
 
   const filledCount = useMemo(
     () => Object.values(localResults).filter(v => v?.trim()).length,
@@ -128,12 +113,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
 
   const handleSave = () => {
     if (!isComplete) return;
-    saveThenClose.execute();
-  };
-
-  const handleSaveAndNext = () => {
-    if (!isComplete || !onNext) return;
-    saveThenNext.execute();
+    saveAction.execute();
   };
 
   /**
@@ -227,22 +207,6 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           >
             Save
           </Button>
-          {onNext && (
-            <Button
-              onClick={handleSaveAndNext}
-              variant="save"
-              size="md"
-              disabled={!isComplete}
-              isLoading={isSaving}
-            >
-              Save & Next
-            </Button>
-          )}
-          {onPrev && (
-            <Button onClick={onPrev} variant="previous" size="md" disabled={isSaving}>
-              Previous
-            </Button>
-          )}
         </ModalFooter>
       }
     >

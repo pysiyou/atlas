@@ -40,8 +40,6 @@ registerModal(ModalType.RESULT_DETAIL, EntryDetailModal, (props, baseProps) => (
   onResultsChange: props.onResultsChange,
   onNotesChange: props.onNotesChange,
   onSave: props.onSave,
-  onNext: props.onNext,
-  onPrev: props.onPrev,
 }));
 
 // Register Validation Detail Modal

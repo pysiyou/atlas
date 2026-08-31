@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Badge, Icon } from '@/components';
+import { Badge } from '@/components';
 import type { TableViewConfig, CardComponentProps } from '@/components';
-import { DATA_AMOUNT, DATA_ID_PRIMARY_INLINE } from '@/utils/constants';
+import { DATA_ID_PRIMARY_INLINE } from '@/utils/constants';
 import { formatCurrency, formatDate, displayId } from '@/utils';
-import { getTestName, getTestSampleType } from '@/features/catalog/utils';
+import { getTestName } from '@/features/catalog/utils';
 import { getLabQueueUrlForTest } from '@/features/lab/utils/labQueueLinks';
 import type { OrderTest, Test } from '@/types';
-import { ICONS } from '@/config/icons';
 import { getBadgeAppearance } from '@/components/theme/theme';
 import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
 
@@ -44,7 +43,7 @@ function createTestNameColumn(testCatalog: Test[]) {
   return {
     key: 'testName',
     header: 'Name',
-    width: 'fill' as const,
+    width: { min: 280, grow: 2, shrink: 1 },
     render: (test: OrderTest) => {
       const name = getTestName(test.testCode, testCatalog);
       const isSuperseded = test.status === 'superseded';
@@ -72,7 +71,7 @@ function createLabLinkColumn(orderId: number) {
   return {
     key: 'lab',
     header: '',
-    width: 'sm' as const,
+    width: { min: 100, base: 108, grow: 0, shrink: 0 },
     render: (test: OrderTest) => {
       const labUrl = getLabQueueUrlForTest(test, orderId);
       if (!labUrl) return null;
@@ -89,7 +88,7 @@ function createLabLinkColumn(orderId: number) {
   };
 }
 
-function createDetailedExtraColumns(testCatalog: Test[], labColumn: ReturnType<typeof createLabLinkColumn>) {
+function createDetailedExtraColumns(_testCatalog: Test[], labColumn: ReturnType<typeof createLabLinkColumn>) {
   return [
     {
       key: 'sampleId',
@@ -105,7 +104,7 @@ function createDetailedExtraColumns(testCatalog: Test[], labColumn: ReturnType<t
     {
       key: 'resultEnteredAt',
       header: 'Entered',
-      width: 'md' as const,
+      width: 'lg' as const,
       render: (test: OrderTest) =>
         test.resultEnteredAt ? (
           <span className="text-xs text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
@@ -113,43 +112,43 @@ function createDetailedExtraColumns(testCatalog: Test[], labColumn: ReturnType<t
           <span className="text-xs text-text-tertiary">—</span>
         ),
     },
-    {
-      key: 'critical',
-      header: '',
-      width: 'sm' as const,
-      render: (test: OrderTest) =>
-        test.hasCriticalValues || test.flags?.some(f => f.toLowerCase().includes('critical')) ? (
-          <Badge variant="danger" size="xs" className="flex items-center gap-1 w-fit">
-            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Critical
-          </Badge>
-        ) : null,
-    },
+    // {
+    //   key: 'critical',
+    //   header: '',
+    //   width: 'sm' as const,
+    //   render: (test: OrderTest) =>
+    //     test.hasCriticalValues || test.flags?.some(f => f.toLowerCase().includes('critical')) ? (
+    //       <Badge variant="danger" size="xs" className="flex items-center gap-1 w-fit">
+    //         <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
+    //         Critical
+    //       </Badge>
+    //     ) : null,
+    // },
     labColumn,
-    {
-      key: 'sampleType',
-      header: 'Type',
-      width: 'sm' as const,
-      render: (test: OrderTest) => {
-        const sampleType = getTestSampleType(test.testCode, testCatalog);
-        const isSuperseded = test.status === 'superseded';
-        return <Badge variant={sampleType as 'default'} size="sm" strikethrough={isSuperseded} />;
-      },
-    },
-    {
-      key: 'priceAtOrder',
-      header: 'Price',
-      width: 'sm' as const,
-      align: 'right' as const,
-      render: (test: OrderTest) => {
-        const isSuperseded = test.status === 'superseded';
-        return (
-          <span className={isSuperseded ? 'text-text-disabled line-through' : DATA_AMOUNT}>
-            {formatCurrency(test.priceAtOrder)}
-          </span>
-        );
-      },
-    },
+    // {
+    //   key: 'sampleType',
+    //   header: 'Type',
+    //   width: 'sm' as const,
+    //   render: (test: OrderTest) => {
+    //     const sampleType = getTestSampleType(test.testCode, testCatalog);
+    //     const isSuperseded = test.status === 'superseded';
+    //     return <Badge variant={sampleType as 'default'} size="sm" strikethrough={isSuperseded} />;
+    //   },
+    // },
+    // {
+    //   key: 'priceAtOrder',
+    //   header: 'Price',
+    //   width: 'sm' as const,
+    //   align: 'right' as const,
+    //   render: (test: OrderTest) => {
+    //     const isSuperseded = test.status === 'superseded';
+    //     return (
+    //       <span className={isSuperseded ? 'text-text-disabled line-through' : DATA_AMOUNT}>
+    //         {formatCurrency(test.priceAtOrder)}
+    //       </span>
+    //     );
+    //   },
+    // },
   ];
 }
 

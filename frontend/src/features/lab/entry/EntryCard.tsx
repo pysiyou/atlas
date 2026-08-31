@@ -30,8 +30,6 @@ interface EntryCardProps {
   onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
   onNotesChange: (resultKey: string, notes: string) => void;
   onSave: () => void;
-  onNext?: () => void;
-  onPrev?: () => void;
   onClick: () => void;
   /** When true, renders mobile-optimized layout */
   isMobile?: boolean;
@@ -49,8 +47,6 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   onResultsChange: _onResultsChange,
   onNotesChange: _onNotesChange,
   onSave: _onSave,
-  onNext: _onNext,
-  onPrev: _onPrev,
   onClick,
   isMobile = false,
 }) => {

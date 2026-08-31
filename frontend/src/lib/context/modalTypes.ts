@@ -35,8 +35,6 @@ export interface ResultDetailProps {
   onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
   onNotesChange: (resultKey: string, notes: string) => void;
   onSave: (finalResults?: Record<string, string>, finalNotes?: string) => void;
-  onNext?: () => void;
-  onPrev?: () => void;
 }
 
 /** Payload for validation detail modal. */

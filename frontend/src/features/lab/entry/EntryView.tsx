@@ -113,7 +113,7 @@ export const EntryView: React.FC = () => {
             onResultsChange: handleResultChange,
             onNotesChange: handleNotesChange,
             onSave: () => handleSaveResults(test.orderId, test.testCode, allTests, testCatalog, orders),
-            onClick: () => openTestModal(test, filtered as TestWithContext[]),
+            onClick: () => openTestModal(test),
           };
 
           return (

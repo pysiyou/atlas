@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useTestNameLookup } from '@/features/catalog/api/tests.api';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import type { TestWithContext, Test, Order } from '@/types';
@@ -36,11 +36,9 @@ export function useEntryTestModal({
 }: UseEntryTestModalOptions) {
   const { getTest } = useTestNameLookup();
   const { openModal } = useModal();
-  const openTestModalRef =
-    useRef<(test: TestWithContext, filteredTests: TestWithContext[]) => void>(undefined);
 
   const openTestModal = useCallback(
-    (test: TestWithContext, filteredTests: TestWithContext[]) => {
+    (test: TestWithContext) => {
       if (!testCatalog) return;
 
       const testDef = getTest(test.testCode);
@@ -48,18 +46,6 @@ export function useEntryTestModal({
       if (!testDef?.parameters) return;
 
       const isComplete = areAllParametersFilled(resultKey, testDef.parameters.length);
-      const currentIndex = filteredTests.findIndex(
-        t => t.orderId === test.orderId && t.testCode === test.testCode
-      );
-
-      const onNext =
-        currentIndex < filteredTests.length - 1
-          ? () => openTestModalRef.current?.(filteredTests[currentIndex + 1], filteredTests)
-          : undefined;
-      const onPrev =
-        currentIndex > 0
-          ? () => openTestModalRef.current?.(filteredTests[currentIndex - 1], filteredTests)
-          : undefined;
 
       openModal(ModalType.RESULT_DETAIL, {
         test,
@@ -80,8 +66,6 @@ export function useEntryTestModal({
             finalResults,
             finalNotes
           ),
-        onNext,
-        onPrev,
       });
     },
     [
@@ -98,10 +82,6 @@ export function useEntryTestModal({
       openModal,
     ]
   );
-
-  useEffect(() => {
-    openTestModalRef.current = openTestModal;
-  }, [openTestModal]);
 
   return openTestModal;
 }
