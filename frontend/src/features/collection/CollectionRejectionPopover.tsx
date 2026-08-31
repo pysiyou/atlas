@@ -5,22 +5,26 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Popover, IconButton, Alert, Badge, FooterInfo } from '@/components';
-import { PopoverForm, CheckboxCard } from '@/features/lab/components/PopoverForm';
-import { AttemptProgressBar } from '@/features/lab/components/AttemptProgressBar';
+import { Popover, IconButton, FooterInfo } from '@/components';
+import { PopoverForm } from '@/features/lab/components/PopoverForm';
 import { POPOVER_FOOTER_MESSAGES } from '@/features/lab/components/popover-footer-constants';
-import { cn, displayId } from '@/utils';
 import type { RejectionReason } from '@/types';
-import { REJECTION_REASON_VALUES, REJECTION_REASON_CONFIG } from '@/types/enums';
 import { ICONS } from '@/utils';
-import { inputBase } from '@/components/inputs/inputStyles';
 import { useSampleRejectionOptions } from '@/features/collection/hooks/useSampleRejectionOptions';
-
-const REJECTION_REASONS = REJECTION_REASON_VALUES.map(value => ({
-  value,
-  label: REJECTION_REASON_CONFIG[value].label,
-  description: REJECTION_REASON_CONFIG[value].description,
-}));
+import {
+  formatSampleId,
+  isRejectionFormValid,
+  parseNumericSampleId,
+  toggleRejectionReason,
+} from './collectionRejectionPopoverHelpers';
+import {
+  RecollectionToggleSection,
+  RejectionHeaderBadges,
+  RejectionHistorySection,
+  RejectionNotesSection,
+  RejectionReasonsSection,
+  RejectionWarningAlert,
+} from './collectionRejectionPopoverSections';
 
 interface CollectionRejectionPopoverContentProps {
   onConfirm: (
@@ -53,8 +57,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
   const [requireRecollection, setRequireRecollection] = useState(true);
   const [localSubmitting, setLocalSubmitting] = useState(false);
 
-  const numericSampleId =
-    typeof sampleId === 'string' && /^\d+$/.test(sampleId) ? parseInt(sampleId, 10) : undefined;
+  const numericSampleId = parseNumericSampleId(sampleId);
   const { options, isLoading: optionsLoading } = useSampleRejectionOptions({
     sampleId: numericSampleId,
     enabled: Boolean(numericSampleId),
@@ -66,7 +69,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
   const escalationRequired = options?.escalationRequired ?? rejectionHistoryCount >= maxAttempts;
   const canRequireRecollection = options?.canRequireRecollection ?? true;
 
-  const isValid = reasons.length > 0 && (!reasons.includes('other') || notes.trim());
+  const isValid = isRejectionFormValid(reasons, notes);
   const isSubmitting = isSubmittingProp ?? localSubmitting;
 
   const handleConfirm = useCallback(async () => {
@@ -79,11 +82,10 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
     }
   }, [isValid, reasons, notes, requireRecollection, onConfirm]);
 
-  const toggleReason = (value: RejectionReason) => {
-    setReasons(prev => (prev.includes(value) ? prev.filter(r => r !== value) : [...prev, value]));
+  const handleToggleReason = (value: RejectionReason) => {
+    setReasons(prev => toggleRejectionReason(prev, value));
   };
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter' && !e.shiftKey && isValid) {
@@ -98,33 +100,16 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isValid, handleConfirm, onCancel]);
 
-  // Header badges for recollection and rejection history
-  const headerBadges = (
-    <>
-      {isRecollection && (
-        <Badge size="sm" variant="warning">
-          Recollection
-        </Badge>
-      )}
-      {rejectionHistoryCount > 0 && (
-        <Badge size="sm" variant="error">
-          {rejectionHistoryCount} Previous Rejection{rejectionHistoryCount > 1 ? 's' : ''}
-        </Badge>
-      )}
-    </>
-  );
-
-  // Format sampleId if it's a number or numeric string
-  const formattedSampleId =
-    typeof sampleId === 'string' && /^\d+$/.test(sampleId)
-      ? displayId.sample(parseInt(sampleId, 10))
-      : sampleId;
-
   return (
     <PopoverForm
       title={patientName || 'Reject Sample'}
-      subtitle={`${sampleType?.toUpperCase() || 'SAMPLE'} - ${formattedSampleId}`}
-      headerBadges={headerBadges}
+      subtitle={`${sampleType?.toUpperCase() || 'SAMPLE'} - ${formatSampleId(sampleId)}`}
+      headerBadges={
+        <RejectionHeaderBadges
+          isRecollection={isRecollection}
+          rejectionHistoryCount={rejectionHistoryCount}
+        />
+      }
       onCancel={onCancel}
       onConfirm={handleConfirm}
       confirmLabel="Reject"
@@ -133,114 +118,28 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       disabled={!isValid}
       footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text={POPOVER_FOOTER_MESSAGES.REJECTING_SAMPLE} />}
     >
-      {/* Warning Alert */}
-      {escalationRequired ? (
-        <Alert variant="danger" className="py-2">
-          <div className="space-y-0.5">
-            <p className="font-normal text-xs">Escalation Required</p>
-            <p className="text-xxs opacity-90 leading-tight">
-              Maximum recollection attempts reached. Escalate to supervisor before rejecting.
-            </p>
-          </div>
-        </Alert>
-      ) : rejectionHistoryUsed > 1 ? (
-        <Alert variant="danger" className="py-2">
-          <div className="space-y-0.5">
-            <p className="font-normal text-xs">Multiple Rejections Detected</p>
-            <p className="text-xxs opacity-90 leading-tight">
-              This sample has been rejected {rejectionHistoryUsed} times already. Consider
-              escalating to supervisor.
-            </p>
-          </div>
-        </Alert>
-      ) : (
-        <Alert variant="warning" className="py-2">
-          <div className="space-y-0.5">
-            <p className="font-normal text-xs">Action Required</p>
-            <p className="text-xxs opacity-90 leading-tight">
-              {patientName
-                ? `Sample for ${patientName} will be marked as rejected.`
-                : 'The sample will be marked as rejected.'}
-            </p>
-          </div>
-        </Alert>
-      )}
+      <RejectionWarningAlert
+        escalationRequired={escalationRequired}
+        rejectionHistoryUsed={rejectionHistoryUsed}
+        patientName={patientName}
+      />
 
-      {/* Attempt Progress Bar */}
-      {rejectionHistoryUsed > 0 && (
-        <div className="space-y-1">
-          <label className="block text-xs font-normal text-text-tertiary">
-            Rejection History
-          </label>
-          <AttemptProgressBar
-            used={rejectionHistoryUsed}
-            total={maxAttempts}
-            label="Rejection"
-            variant="warning"
-          />
-          {optionsLoading && (
-            <p className="text-xxs text-text-tertiary">Loading attempt limits...</p>
-          )}
-        </div>
-      )}
+      <RejectionHistorySection
+        rejectionHistoryUsed={rejectionHistoryUsed}
+        maxAttempts={maxAttempts}
+        optionsLoading={optionsLoading}
+      />
 
-      {/* Rejection Reasons */}
-      <div className="space-y-2">
-        <label className="block text-xs font-normal text-text-tertiary">Rejection Reasons</label>
-        <div className="border border-border-default rounded-md max-h-[200px] overflow-y-auto">
-          {REJECTION_REASONS.map(r => (
-            <label
-              key={r.value}
-              className={`flex items-start p-2 hover:bg-surface-page cursor-pointer border-b border-border-subtle last:border-0 transition-colors ${reasons.includes(r.value) ? 'bg-brand-muted' : ''}`}
-            >
-              <div className="flex items-center h-5">
-                <input
-                  type="checkbox"
-                  checked={reasons.includes(r.value)}
-                  onChange={() => toggleReason(r.value)}
-                  className="h-4 w-4 text-brand border-border-strong rounded focus:ring-brand"
-                />
-              </div>
-              <div className="ml-2 text-xs">
-                <div className="font-normal text-text-primary">{r.label}</div>
-                <div className="text-text-tertiary">{r.description}</div>
-              </div>
-            </label>
-          ))}
-        </div>
-      </div>
+      <RejectionReasonsSection reasons={reasons} onToggleReason={handleToggleReason} />
 
-      {/* Recollection Toggle */}
-      <div>
-        <label className="block text-xs font-normal text-text-tertiary mb-1">Next Step</label>
-        <CheckboxCard
-          checked={requireRecollection}
-          onChange={() => setRequireRecollection(!requireRecollection)}
-          label="Require Recollection"
-          description="A new pending sample will be automatically created and linked to this rejection."
-          disabled={!canRequireRecollection}
-        />
-        {!canRequireRecollection && options?.requireRecollectionDisabledReason && (
-          <p className="text-xs text-warning-fg mt-1">{options.requireRecollectionDisabledReason}</p>
-        )}
-      </div>
+      <RecollectionToggleSection
+        requireRecollection={requireRecollection}
+        canRequireRecollection={canRequireRecollection}
+        disabledReason={options?.requireRecollectionDisabledReason}
+        onToggle={() => setRequireRecollection(!requireRecollection)}
+      />
 
-      {/* Notes */}
-      <div>
-        <label className="block text-xs font-normal text-text-tertiary mb-1">
-          Notes {reasons.includes('other') && <span className="text-danger-fg">*</span>}
-        </label>
-        <textarea
-          rows={2}
-          placeholder="Additional details..."
-          value={notes}
-          onChange={e => setNotes(e.target.value)}
-          className={cn(inputBase, 'resize-none')}
-        />
-        {reasons.includes('other') && !notes.trim() && (
-          <p className="text-xs text-danger-fg mt-1">Required when "Other" is selected</p>
-        )}
-      </div>
+      <RejectionNotesSection reasons={reasons} notes={notes} onNotesChange={setNotes} />
     </PopoverForm>
   );
 };

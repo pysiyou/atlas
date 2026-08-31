@@ -61,7 +61,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   onApprove,
   onReject,
   // High complexity is necessary for comprehensive validation logic with multiple conditional branches and state management
-  // eslint-disable-next-line complexity
+   
 }) => {
   const queryClient = useQueryClient();
   const approveHandler = useCallback(

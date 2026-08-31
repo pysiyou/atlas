@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/store';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
@@ -13,11 +12,8 @@ import { useOrderLookup } from '@/features/orders/utils/useOrderUtils';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useCollectSample, useSamplesList } from '@/features/collection/api/useSamples';
 import { useCollectionSampleDisplays } from '@/features/collection/hooks/useCollectionSampleDisplays';
-import { queryKeys } from '@/lib/query';
-import { toast } from '@/app/AppToastBar';
-import { logger } from '@/utils/logger';
-import { getErrorMessage, getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errors';
-import type { ContainerType, ContainerTopColor, SampleStatus } from '@/types';
+import { useCollectionCollectHandler } from '@/features/collection/hooks/useCollectionCollectHandler';
+import type { SampleStatus } from '@/types';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { CollectionCard } from './CollectionCard';
 import { LabWorkflowView } from '@/features/lab/components/LabWorkflowView';
@@ -29,7 +25,6 @@ import { LabWorkflowViewSkeleton } from '@/features/lab/components/LabWorkflowVi
 import type { SampleDisplay } from '@/features/lab/types';
 
 export const CollectionView: React.FC = () => {
-  const queryClient = useQueryClient();
   const { user: currentUser } = useAuthStore();
   const { refetch: refreshOrders, isLoading: ordersLoading } = useOrdersList();
   const { tests, isLoading: testsLoading } = useTestCatalog();
@@ -74,91 +69,11 @@ export const CollectionView: React.FC = () => {
     getQueueSince: display => display.order?.orderDate,
   });
 
-  /**
-   * Handle sample collection
-   */
-  const handleCollect = async (
-    display: SampleDisplay,
-    volume: number,
-    notes?: string,
-    selectedColor?: string,
-    selectedContainerType?: ContainerType
-  ) => {
-    if (!currentUser) {
-      toast.error({
-        title: 'You must be logged in to collect samples',
-        subtitle: 'Please sign in to record sample collections, then try again.',
-      });
-      return;
-    }
-    if (!display.sample || !display.requirement) {
-      toast.error({
-        title: 'Invalid sample data',
-        subtitle:
-          'The sample or requirement data is missing or invalid. Refresh the page and try again.',
-      });
-      return;
-    }
-    if (!selectedColor) {
-      toast.error({
-        title: 'Container color is required',
-        subtitle: 'Select the container cap color before confirming the collection.',
-      });
-      return;
-    }
-    if (!selectedContainerType) {
-      toast.error({
-        title: 'Container type is required',
-        subtitle: 'Select the container type (e.g. cup or tube) before confirming the collection.',
-      });
-      return;
-    }
-
-    try {
-      await collectSampleMutation.mutateAsync({
-        sampleId: display.sample.sampleId.toString(),
-        collectedVolume: volume,
-        actualContainerType: selectedContainerType,
-        actualContainerColor: selectedColor as ContainerTopColor,
-        collectionNotes: notes,
-      });
-      toast.success({
-        title: `${(display.sample.sampleType ?? 'sample').toString().toUpperCase()} sample collected`,
-        subtitle:
-          'The sample has been recorded and the order has been updated. You can continue with the next sample.',
-      });
-      try {
-        await refreshOrders();
-      } catch (refetchError) {
-        const err = refetchError as Error & { name?: string };
-        if (err?.name !== 'AbortError') {
-          logger.error('Error refreshing orders after collection', getErrorDetails(refetchError));
-        }
-        queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-        queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
-      }
-    } catch (error) {
-      logger.error('Error collecting sample', getErrorDetails(error));
-      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-      if (isLikelyNetworkOrTimeout(error)) {
-        toast.error({
-          title: 'Action may have completed',
-          subtitle:
-            'The request did not complete. Please refresh the page to see the latest status.',
-        });
-      } else {
-        const message = getErrorMessage(
-          error,
-          'The collection could not be saved. Check your connection and try again.'
-        );
-        toast.error({
-          title: 'Failed to collect sample',
-          subtitle: message,
-        });
-      }
-    }
-  };
+  const { handleCollect } = useCollectionCollectHandler({
+    isAuthenticated: !!currentUser,
+    collectSampleMutation,
+    refreshOrders,
+  });
 
   const isLoading = ordersLoading || testsLoading || samplesLoading;
   const hasNoItems = allSampleDisplays.length === 0;

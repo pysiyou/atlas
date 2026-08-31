@@ -22,7 +22,6 @@ export interface UseOrderUpsertModalParams {
 }
 
 export function useOrderUpsertModal({
-  isOpen,
   order,
   mode,
   patientId,
@@ -42,6 +41,18 @@ export function useOrderUpsertModal({
     }
     return undefined;
   }, [mode, patientId]);
+
+  const resetPaymentState = () => {
+    setPaymentMethod(undefined);
+    setPaymentError(null);
+  };
+
+  const handleClose = () => {
+    if (mode === 'create') {
+      resetPaymentState();
+    }
+    onClose();
+  };
 
   const {
     control,
@@ -76,7 +87,7 @@ export function useOrderUpsertModal({
           return;
         }
       }
-      onClose();
+      handleClose();
     },
   });
 
@@ -109,13 +120,6 @@ export function useOrderUpsertModal({
       if (patient) setValue('patientId', initialPatientId, { shouldValidate: false });
     }
   }, [mode, initialPatientId, patients, selectedPatientId, setValue]);
-
-  useEffect(() => {
-    if (isOpen && mode === 'create') {
-      setPaymentMethod(undefined);
-      setPaymentError(null);
-    }
-  }, [isOpen, mode]);
 
   const priorityOptions = useMemo(
     () => createFilterOptions(PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG),
@@ -171,6 +175,7 @@ export function useOrderUpsertModal({
     modalTitle,
     subtitle,
     submitLabel,
+    handleClose,
   };
 }
 

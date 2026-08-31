@@ -4,31 +4,17 @@
  */
 
 import React, { useState } from 'react';
-import { Icon, Button, Badge, Modal, FooterInfo } from '@/components';
-import { MultiSelectFilter } from '@/components';
-import { CheckboxList } from '@/components';
-import { OverlayRangeSlider } from '@/components';
-import { DebouncedSearchInput } from '@/components';
-import { AgeFilter } from './AgeFilter';
-import {
-  inputContainerBase,
-  inputInner,
-  inputText,
-  inputClearButton,
-} from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
-import { ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
-import { createFilterOptions } from '@/utils/filtering';
+import { ResponsiveFilterMobileBar, PATIENT_FILTER_PLACEHOLDERS } from '@/features/filters';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
-import { PATIENT_FILTER_PLACEHOLDERS } from '@/features/filters';
+import { PatientFiltersInlineControls } from './PatientFiltersInlineControls';
+import { PatientFiltersModal } from './PatientFiltersModal';
 import type { Gender } from '@/types';
 
-/**
- * Affiliation status type
- */
-export type AffiliationStatus = 'active' | 'inactive';
+import type { AffiliationStatus } from './PatientFilterTypes';
+
+export type { AffiliationStatus } from './PatientFilterTypes';
 
 /**
  * Props interface for PatientFilters component
@@ -44,251 +30,59 @@ export interface PatientFiltersProps {
   onAffiliationStatusFiltersChange: (values: AffiliationStatus[]) => void;
 }
 
-// Prepare filter options
-const genderOptions = createFilterOptions(GENDER_VALUES, GENDER_CONFIG);
-const affiliationStatusOptions = [
-  { id: 'active', label: 'Active', color: 'success' },
-  { id: 'inactive', label: 'Inactive', color: 'default' },
-];
-
 /**
  * PatientFilters - Responsive filter layout
  * - lg+: 4-column grid (search + age + sex + affiliation)
  * - md: 2-column grid
  * - sm/xs: Search bar + Filters button (opens modal with all filters)
  */
-export const PatientFilters: React.FC<PatientFiltersProps> = ({
-  searchQuery,
-  onSearchChange,
-  ageRange,
-  onAgeRangeChange,
-  sexFilters,
-  onSexFiltersChange,
-  affiliationStatusFilters,
-  onAffiliationStatusFiltersChange,
-}) => {
+export const PatientFilters: React.FC<PatientFiltersProps> = props => {
   const breakpoint = useBreakpoint();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Count active filters for badge
   const activeFilterCount =
-    (ageRange[0] !== AGE_RANGE_MIN || ageRange[1] !== AGE_RANGE_MAX ? 1 : 0) +
-    sexFilters.length +
-    affiliationStatusFilters.length;
+    (props.ageRange[0] !== AGE_RANGE_MIN || props.ageRange[1] !== AGE_RANGE_MAX ? 1 : 0) +
+    props.sexFilters.length +
+    props.affiliationStatusFilters.length;
 
-  // Check if we should show modal view (sm and below)
   const showModalView = isBreakpointAtMost(breakpoint, 'sm');
   const showTwoColumn = breakpoint === 'md';
 
-  /**
-   * Render all filter controls (used in both inline and modal views)
-   */
-  const renderFilters = () => (
-    <>
-      {/* Search */}
-      <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
-        <DebouncedSearchInput
-          value={searchQuery}
-          onChange={onSearchChange}
-          placeholder={PATIENT_FILTER_PLACEHOLDERS.searchLong}
-        />
-      </div>
-
-      {/* Age Range */}
-      <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
-        <AgeFilter
-          value={ageRange}
-          onChange={onAgeRangeChange}
-          min={AGE_RANGE_MIN}
-          max={AGE_RANGE_MAX}
-          placeholder={PATIENT_FILTER_PLACEHOLDERS.ageRange}
-          className="w-full"
-        />
-      </div>
-
-      {/* Sex */}
-      <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
-        <MultiSelectFilter
-          label="Sex"
-          options={genderOptions}
-          selectedIds={sexFilters}
-          onChange={values => onSexFiltersChange(values as Gender[])}
-          placeholder={PATIENT_FILTER_PLACEHOLDERS.sex}
-          selectAllLabel="All genders"
-          icon={ICONS.dataFields.userHands}
-          className="w-full"
-        />
-      </div>
-
-      {/* Affiliation Status */}
-      <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
-        <MultiSelectFilter
-          label="Affiliation Status"
-          options={affiliationStatusOptions}
-          selectedIds={affiliationStatusFilters}
-          onChange={values => onAffiliationStatusFiltersChange(values as AffiliationStatus[])}
-          placeholder={PATIENT_FILTER_PLACEHOLDERS.affiliationStatus}
-          selectAllLabel="All statuses"
-          icon={ICONS.actions.infoCircle}
-          className="w-full"
-        />
-      </div>
-    </>
-  );
-
-  // Mobile view: Search bar + Filters button
   if (showModalView) {
     return (
       <>
-        <div className={cn('w-full bg-surface border-b', 'border-border-default')}>
-          <div className="px-3 py-2 w-full">
-            <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
-              {/* Search control */}
-              <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
-                <DebouncedSearchInput
-                  value={searchQuery}
-                  onChange={onSearchChange}
-                  placeholder={PATIENT_FILTER_PLACEHOLDERS.search}
-                />
-              </div>
-
-              {/* Filters button */}
-              <div className="relative flex shrink-0">
-                <Button variant="filter" size="sm" onClick={() => setIsModalOpen(true)}>
-                  Filters
-                </Button>
-                {activeFilterCount > 0 && (
-                  <Badge
-                    variant="primary"
-                    size="xs"
-                    className="absolute -top-1 -right-1 min-w-[18px] h-4 px-1 flex items-center justify-center"
-                  >
-                    {activeFilterCount}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Filter Modal */}
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Filter" size="md">
-          <div className="flex flex-col h-full bg-surface">
-            {/* Filter Controls - Scrollable */}
-            <div className="flex-1 overflow-y-auto px-5 py-4">
-              {/* Search Section */}
-              <div className="mb-6">
-                <div className={cn(inputContainerBase, 'flex items-center h-10 px-4')}>
-                  <input
-                    type="text"
-                    placeholder={PATIENT_FILTER_PLACEHOLDERS.search}
-                    value={searchQuery}
-                    onChange={e => onSearchChange(e.target.value)}
-                    className={cn(inputInner, inputText, 'whitespace-nowrap overflow-hidden')}
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => onSearchChange('')}
-                      className={cn(inputClearButton, 'hover:bg-surface-hover')}
-                    >
-                      <Icon
-                        name={ICONS.actions.closeCircle}
-                        className="w-4 h-4 text-text-tertiary"
-                      />
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Filter Sections */}
-              <div className="space-y-5">
-                {/* Age Range Section */}
-                <div className="w-full">
-                  <h4 className="text-sm font-semibold text-text-primary mb-3">Age Range</h4>
-                  <OverlayRangeSlider
-                    value={ageRange}
-                    onChange={onAgeRangeChange}
-                    min={AGE_RANGE_MIN}
-                    max={AGE_RANGE_MAX}
-                    hint="Move the slider to filter by age"
-                    formatLabel={v => `${v} years`}
-                  />
-                  <div className="border-b border-border-default mt-4" />
-                </div>
-
-                {/* Sex Section */}
-                <div className="w-full">
-                  <h4 className="text-sm font-semibold text-text-primary mb-3">Sex</h4>
-                  <CheckboxList
-                    options={genderOptions}
-                    selectedIds={sexFilters}
-                    onChange={values => onSexFiltersChange(values as Gender[])}
-                    columns={genderOptions.length > 4 ? 2 : 1}
-                  />
-                  <div className="border-b border-border-default mt-4" />
-                </div>
-
-                {/* Affiliation Status Section */}
-                <div className="w-full">
-                  <h4 className="text-sm font-semibold text-text-primary mb-3">
-                    Affiliation Status
-                  </h4>
-                  <CheckboxList
-                    options={affiliationStatusOptions}
-                    selectedIds={affiliationStatusFilters}
-                    onChange={values =>
-                      onAffiliationStatusFiltersChange(values as AffiliationStatus[])
-                    }
-                    columns={affiliationStatusOptions.length > 4 ? 2 : 1}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Footer with Filter Button */}
-            <div className="px-5 py-4 border-t border-border-default bg-surface shrink-0">
-              <div className="flex items-center justify-between gap-3">
-                <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX]);
-                      onSexFiltersChange([]);
-                      onAffiliationStatusFiltersChange([]);
-                    }}
-                    showIcon={false}
-                  >
-                    Reset
-                  </Button>
-                  <Button variant="primary" onClick={() => setIsModalOpen(false)} showIcon={false}>
-                    Filter
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Modal>
+        <ResponsiveFilterMobileBar
+          searchQuery={props.searchQuery}
+          onSearchChange={props.onSearchChange}
+          searchPlaceholder={PATIENT_FILTER_PLACEHOLDERS.search}
+          activeFilterCount={activeFilterCount}
+          onOpenModal={() => setIsModalOpen(true)}
+        />
+        <PatientFiltersModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          {...props}
+        />
       </>
     );
   }
 
-  // Tablet view: 2-column grid
+  const inlineControls = <PatientFiltersInlineControls {...props} />;
+
   if (showTwoColumn) {
     return (
       <div className={cn('w-full bg-surface border-b', 'border-border-default')}>
         <div className="px-3 py-2 w-full">
-          <div className="grid grid-cols-2 gap-2 items-center w-full">{renderFilters()}</div>
+          <div className="grid grid-cols-2 gap-2 items-center w-full">{inlineControls}</div>
         </div>
       </div>
     );
   }
 
-  // Desktop view: 4-column grid
   return (
     <div className={cn('w-full bg-surface border-b', 'border-border-default')}>
       <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
-        <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">{renderFilters()}</div>
+        <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">{inlineControls}</div>
       </div>
     </div>
   );

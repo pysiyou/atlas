@@ -23,6 +23,161 @@ export interface RenderFilterControlOptions {
   className?: string;
 }
 
+function renderSearchControl(
+  control: Extract<FilterControl, { type: 'search' }>,
+  filterValue: unknown,
+  onChange: (value: unknown) => void,
+  variant: FilterControlVariant,
+  className?: string
+): ReactNode {
+  if (variant === 'modal') {
+    return (
+      <ModalSearchInput
+        value={(filterValue as string) || ''}
+        onChange={v => onChange(v)}
+        placeholder={control.placeholder}
+      />
+    );
+  }
+
+  return (
+    <SearchControl
+      value={(filterValue as string) || ''}
+      onChange={onChange}
+      placeholder={control.placeholder || `Search ${control.label.toLowerCase()}...`}
+      debounceMs={control.debounceMs}
+      className={className}
+    />
+  );
+}
+
+function renderDateRangeControl(
+  control: Extract<FilterControl, { type: 'dateRange' }>,
+  filterValue: unknown,
+  onChange: (value: unknown) => void,
+  variant: FilterControlVariant,
+  className?: string
+): ReactNode {
+  const value = (filterValue as [Date, Date] | null) || null;
+
+  if (variant === 'modal') {
+    return <DatePresetBadges value={value} onChange={v => onChange(v)} />;
+  }
+
+  return (
+    <DateRangeControl value={value} onChange={onChange} config={control} className={className} />
+  );
+}
+
+function renderAgeRangeControl(
+  control: Extract<FilterControl, { type: 'ageRange' }>,
+  filterValue: unknown,
+  onChange: (value: unknown) => void,
+  variant: FilterControlVariant,
+  className?: string
+): ReactNode {
+  if (variant === 'modal') {
+    return (
+      <div className="text-sm text-text-tertiary italic">
+        Use the main filter bar for this filter type
+      </div>
+    );
+  }
+
+  return (
+    <AgeRangeControl
+      value={(filterValue as [number, number]) || [control.min ?? 0, control.max ?? 150]}
+      onChange={onChange}
+      config={control}
+      className={className}
+    />
+  );
+}
+
+function renderPriceRangeControl(
+  control: Extract<FilterControl, { type: 'priceRange' }>,
+  filterValue: unknown,
+  onChange: (value: unknown) => void,
+  variant: FilterControlVariant,
+  className?: string
+): ReactNode {
+  const min = control.min ?? 0;
+  const max = control.max ?? 10000;
+  const value = (filterValue as [number, number]) || [min, max];
+
+  if (variant === 'modal') {
+    return (
+      <ModalPriceSlider
+        value={value}
+        onChange={v => onChange(v)}
+        min={min}
+        max={max}
+        currency={control.currency}
+      />
+    );
+  }
+
+  return (
+    <PriceRangeControl value={value} onChange={onChange} config={control} className={className} />
+  );
+}
+
+function renderMultiSelectControl(
+  control: Extract<FilterControl, { type: 'multiSelect' }>,
+  filterValue: unknown,
+  onChange: (value: unknown) => void,
+  variant: FilterControlVariant,
+  className?: string
+): ReactNode {
+  if (variant === 'modal') {
+    return (
+      <CheckboxList
+        options={control.options}
+        selectedIds={(filterValue as string[]) || []}
+        onChange={v => onChange(v)}
+        columns={control.options.length > 4 ? 2 : 1}
+      />
+    );
+  }
+
+  return (
+    <MultiSelectControl
+      value={(filterValue as string[]) || []}
+      onChange={onChange}
+      config={control}
+      className={className}
+    />
+  );
+}
+
+function renderSingleSelectControl(
+  control: Extract<FilterControl, { type: 'singleSelect' }>,
+  filterValue: unknown,
+  onChange: (value: unknown) => void,
+  variant: FilterControlVariant,
+  className?: string
+): ReactNode {
+  if (variant === 'modal') {
+    return (
+      <ModalRadioList
+        options={control.options}
+        selectedId={(filterValue as string | null) || null}
+        onChange={v => onChange(v)}
+        columns={control.options.length > 4 ? 2 : 1}
+      />
+    );
+  }
+
+  return (
+    <SingleSelectControl
+      value={(filterValue as string | null) || null}
+      onChange={onChange}
+      config={control}
+      className={className}
+    />
+  );
+}
+
 /**
  * Renders the appropriate filter control for bar or modal.
  * Single dispatch so bar and modal stay in sync on control types.
@@ -37,110 +192,17 @@ export function renderFilterControl(
 
   switch (control.type) {
     case 'search':
-      return variant === 'modal' ? (
-        <ModalSearchInput
-          value={(filterValue as string) || ''}
-          onChange={v => onChange(v)}
-          placeholder={control.placeholder}
-        />
-      ) : (
-        <SearchControl
-          value={(filterValue as string) || ''}
-          onChange={onChange}
-          placeholder={control.placeholder || `Search ${control.label.toLowerCase()}...`}
-          debounceMs={control.debounceMs}
-          className={className}
-        />
-      );
-
+      return renderSearchControl(control, filterValue, onChange, variant, className);
     case 'dateRange':
-      return variant === 'modal' ? (
-        <DatePresetBadges
-          value={(filterValue as [Date, Date] | null) || null}
-          onChange={v => onChange(v)}
-        />
-      ) : (
-        <DateRangeControl
-          value={(filterValue as [Date, Date] | null) || null}
-          onChange={onChange}
-          config={control}
-          className={className}
-        />
-      );
-
+      return renderDateRangeControl(control, filterValue, onChange, variant, className);
     case 'ageRange':
-      if (variant === 'modal') {
-        return (
-          <div className="text-sm text-text-tertiary italic">
-            Use the main filter bar for this filter type
-          </div>
-        );
-      }
-      return (
-        <AgeRangeControl
-          value={(filterValue as [number, number]) || [control.min ?? 0, control.max ?? 150]}
-          onChange={onChange}
-          config={control}
-          className={className}
-        />
-      );
-
-    case 'priceRange': {
-      const min = control.min ?? 0;
-      const max = control.max ?? 10000;
-      const value = (filterValue as [number, number]) || [min, max];
-      return variant === 'modal' ? (
-        <ModalPriceSlider
-          value={value}
-          onChange={v => onChange(v)}
-          min={min}
-          max={max}
-          currency={control.currency}
-        />
-      ) : (
-        <PriceRangeControl
-          value={value}
-          onChange={onChange}
-          config={control}
-          className={className}
-        />
-      );
-    }
-
+      return renderAgeRangeControl(control, filterValue, onChange, variant, className);
+    case 'priceRange':
+      return renderPriceRangeControl(control, filterValue, onChange, variant, className);
     case 'multiSelect':
-      return variant === 'modal' ? (
-        <CheckboxList
-          options={control.options}
-          selectedIds={(filterValue as string[]) || []}
-          onChange={v => onChange(v)}
-          columns={control.options.length > 4 ? 2 : 1}
-        />
-      ) : (
-        <MultiSelectControl
-          value={(filterValue as string[]) || []}
-          onChange={onChange}
-          config={control}
-          className={className}
-        />
-      );
-
+      return renderMultiSelectControl(control, filterValue, onChange, variant, className);
     case 'singleSelect':
-      return variant === 'modal' ? (
-        <ModalRadioList
-          options={control.options}
-          selectedId={(filterValue as string | null) || null}
-          onChange={v => onChange(v)}
-          columns={control.options.length > 4 ? 2 : 1}
-        />
-      ) : (
-        <SingleSelectControl
-          value={(filterValue as string | null) || null}
-          onChange={onChange}
-          config={control}
-          className={className}
-        />
-      );
-
+      return renderSingleSelectControl(control, filterValue, onChange, variant, className);
     default:
       return null;
   }

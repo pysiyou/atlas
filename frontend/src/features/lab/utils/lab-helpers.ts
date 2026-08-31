@@ -104,6 +104,49 @@ export function parseResultEntry(
   return { resultValue, unit, status };
 }
 
+function getRejectionReasonsText(sample: SampleDisplay['sample']): string {
+  if (sample?.status !== 'rejected' || !('rejectionReasons' in sample)) return '';
+  return (sample.rejectionReasons || []).join(' ').toLowerCase();
+}
+
+function getRejectionNotesText(sample: SampleDisplay['sample']): string {
+  if (sample?.status !== 'rejected' || !('rejectionNotes' in sample)) return '';
+  return (sample.rejectionNotes || '').toLowerCase();
+}
+
+function getCollectionNotesText(sample: SampleDisplay['sample']): string {
+  const hasNotes =
+    sample?.status === 'collected' || sample?.status === 'rejected';
+  if (!hasNotes || !('collectionNotes' in sample)) return '';
+  return (sample.collectionNotes || '').toLowerCase();
+}
+
+function matchesSampleSearchQuery(
+  display: SampleDisplay,
+  lowerQuery: string,
+  patientName: string,
+  collectionType: string,
+  testNames: string[],
+  rejectionReasons: string,
+  rejectionNotes: string,
+  collectionNotes: string
+): boolean {
+  const sample = display.sample;
+  const sampleType = sample?.sampleType;
+
+  return (
+    display.order.orderId.toString().toLowerCase().includes(lowerQuery) ||
+    sample?.sampleId?.toString().toLowerCase().includes(lowerQuery) ||
+    patientName.toLowerCase().includes(lowerQuery) ||
+    Boolean(sampleType?.toLowerCase()?.includes(lowerQuery)) ||
+    (collectionType.toLowerCase().includes(lowerQuery) && collectionType !== sampleType) ||
+    testNames.some(name => name.toLowerCase().includes(lowerQuery)) ||
+    rejectionReasons.includes(lowerQuery) ||
+    rejectionNotes.includes(lowerQuery) ||
+    collectionNotes.includes(lowerQuery)
+  );
+}
+
 /**
  * Creates a search filter for SampleDisplay (collection workflow).
  * Searches order ID, sample ID, patient name, sample type, test names, rejection/collection notes.
@@ -120,30 +163,15 @@ export function createSampleSearchFilter(
     const patientName = getPatientName(display.order.patientId);
     const testNames = sample?.testCodes ? getTestNames(sample.testCodes, tests) : [];
 
-    const rejectionReasons =
-      sample?.status === 'rejected' && 'rejectionReasons' in sample
-        ? (sample.rejectionReasons || []).join(' ').toLowerCase()
-        : '';
-    const rejectionNotes =
-      sample?.status === 'rejected' && 'rejectionNotes' in sample
-        ? (sample.rejectionNotes || '').toLowerCase()
-        : '';
-    const collectionNotes =
-      (sample?.status === 'collected' || sample?.status === 'rejected') &&
-      'collectionNotes' in sample
-        ? (sample.collectionNotes || '').toLowerCase()
-        : '';
-
-    return (
-      display.order.orderId.toString().toLowerCase().includes(lowerQuery) ||
-      sample?.sampleId?.toString().toLowerCase().includes(lowerQuery) ||
-      patientName.toLowerCase().includes(lowerQuery) ||
-      sampleType?.toLowerCase()?.includes(lowerQuery) ||
-      (collectionType.toLowerCase().includes(lowerQuery) && collectionType !== sampleType) ||
-      testNames.some((name: string) => name.toLowerCase().includes(lowerQuery)) ||
-      rejectionReasons.includes(lowerQuery) ||
-      rejectionNotes.includes(lowerQuery) ||
-      collectionNotes.includes(lowerQuery)
+    return matchesSampleSearchQuery(
+      display,
+      lowerQuery,
+      patientName,
+      collectionType,
+      testNames,
+      getRejectionReasonsText(sample),
+      getRejectionNotesText(sample),
+      getCollectionNotesText(sample)
     );
   };
 }

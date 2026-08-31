@@ -4,10 +4,10 @@
  */
 
 import React from 'react';
-import { Modal, FooterInfo, Button } from '@/components';
-import { ICONS } from '@/utils';
+import { Modal } from '@/components';
 import { QuickFilters } from './QuickFilters';
 import { renderFilterControl } from './utils/renderFilterControl';
+import { FilterModalFooter } from './FilterModalFooter';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
 
 export interface FilterModalProps {
@@ -98,19 +98,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
         </div>
 
         {/* Footer with Filter Button */}
-        <div className="px-5 py-4 border-t border-border-default bg-surface shrink-0">
-          <div className="flex items-center justify-between gap-3">
-            <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
-            <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={onClearAll} showIcon={false}>
-                Reset
-              </Button>
-              <Button variant="primary" onClick={handleApplyFilters} showIcon={false}>
-                Filter
-              </Button>
-            </div>
-          </div>
-        </div>
+        <FilterModalFooter onReset={onClearAll} onApply={handleApplyFilters} />
       </div>
     </Modal>
   );

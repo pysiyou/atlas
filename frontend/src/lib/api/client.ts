@@ -13,6 +13,94 @@ export type APIError = ApiError;
 type TokenGetter = () => string | null;
 type RefreshHandler = () => Promise<string | null>;
 
+function linkAbortSignal(
+  externalSignal: AbortSignal | undefined,
+  controller: AbortController,
+  timeoutId: ReturnType<typeof setTimeout>
+): void {
+  if (!externalSignal) return;
+
+  if (externalSignal.aborted) {
+    clearTimeout(timeoutId);
+    throw Object.assign(new Error('Aborted'), { name: 'AbortError' });
+  }
+
+  externalSignal.addEventListener('abort', () => controller.abort());
+}
+
+function buildAuthHeaders(
+  baseHeaders: Record<string, string>,
+  getToken: TokenGetter
+): Record<string, string> {
+  const headers = { ...baseHeaders };
+  const token = getToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+}
+
+async function parseSuccessResponse<T>(response: Response): Promise<T> {
+  const text = await response.text();
+  try {
+    return text ? JSON.parse(text) : ({} as T);
+  } catch (parseError) {
+    const err: ApiError = {
+      message: (parseError as Error).message || 'Invalid response',
+      status: response.status,
+    };
+    throw err;
+  }
+}
+
+function parseErrorMessage(body: unknown, fallback: string): string {
+  if (!body || typeof body !== 'object') return fallback;
+
+  const raw = 'detail' in body ? body.detail : 'message' in body ? body.message : undefined;
+  if (Array.isArray(raw)) {
+    return (
+      raw
+        .map((d: { msg?: string }) => d?.msg)
+        .filter(Boolean)
+        .join('; ') || fallback
+    );
+  }
+  if (typeof raw === 'string') return raw;
+  if (raw != null) return String(raw);
+  return fallback;
+}
+
+async function parseErrorResponse(response: Response): Promise<ApiError> {
+  let message = response.statusText || 'Request failed';
+  try {
+    const body = await response.json();
+    message = parseErrorMessage(body, message);
+  } catch {
+    // Use statusText
+  }
+
+  return { message, status: response.status };
+}
+
+function isApiError(error: unknown): error is ApiError {
+  return Boolean(error && typeof error === 'object' && 'status' in error);
+}
+
+function isAbortError(error: unknown): boolean {
+  return Boolean(
+    error &&
+      typeof error === 'object' &&
+      'name' in error &&
+      (error as { name?: string }).name === 'AbortError'
+  );
+}
+
+function toNetworkError(error: unknown): ApiError {
+  const err = error as Error;
+  logger.error('API request failed', err);
+  return { message: err.message || 'Network error' };
+}
+
 class APIClient {
   private baseURL = API_CONFIG.baseURL;
   private timeout = API_CONFIG.timeout;
@@ -39,19 +127,9 @@ class APIClient {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
-    if (externalSignal) {
-      if (externalSignal.aborted) {
-        clearTimeout(timeoutId);
-        throw Object.assign(new Error('Aborted'), { name: 'AbortError' });
-      }
-      externalSignal.addEventListener('abort', () => controller.abort());
-    }
+    linkAbortSignal(externalSignal, controller, timeoutId);
 
-    const headers: Record<string, string> = { ...this.headers };
-    const token = this.getToken();
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
+    const headers = buildAuthHeaders(this.headers, this.getToken);
 
     try {
       const response = await fetch(`${this.baseURL}${endpoint}`, {
@@ -64,19 +142,9 @@ class APIClient {
       clearTimeout(timeoutId);
 
       if (response.ok) {
-        const text = await response.text();
-        try {
-          return text ? JSON.parse(text) : ({} as T);
-        } catch (parseError) {
-          const err: ApiError = {
-            message: (parseError as Error).message || 'Invalid response',
-            status: response.status,
-          };
-          throw err;
-        }
+        return parseSuccessResponse<T>(response);
       }
 
-      // Handle 401 - try refresh once
       if (response.status === 401 && !isRetry) {
         const newToken = await this.refreshToken();
         if (newToken) {
@@ -84,43 +152,15 @@ class APIClient {
         }
       }
 
-      // Parse error response (FastAPI 422 returns detail as array of { loc, msg, type })
-      let message = response.statusText || 'Request failed';
-      try {
-        const body = await response.json();
-        const raw = body.detail ?? body.message;
-        if (Array.isArray(raw)) {
-          message =
-            raw
-              .map((d: { msg?: string }) => d?.msg)
-              .filter(Boolean)
-              .join('; ') || message;
-        } else if (typeof raw === 'string') {
-          message = raw;
-        } else if (raw != null) {
-          message = String(raw);
-        }
-      } catch {
-        // Use statusText
-      }
-
-      const err: ApiError = { message, status: response.status };
-      throw err;
+      throw await parseErrorResponse(response);
     } catch (error) {
       clearTimeout(timeoutId);
 
-      if (error && typeof error === 'object' && 'status' in error) {
+      if (isApiError(error) || isAbortError(error)) {
         throw error;
       }
 
-      const err = error as Error & { name?: string };
-      if (err?.name === 'AbortError') {
-        throw error;
-      }
-
-      logger.error('API request failed', err);
-      const apiErr: ApiError = { message: err.message || 'Network error' };
-      throw apiErr;
+      throw toNetworkError(error);
     }
   }
 

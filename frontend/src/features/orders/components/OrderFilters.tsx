@@ -4,28 +4,10 @@
  */
 
 import React, { useState } from 'react';
-import { Icon, Button, Badge, Modal, FooterInfo } from '@/components';
-import { DebouncedSearchInput } from '@/components';
-import { MultiSelectFilter } from '@/components';
-import { CheckboxList } from '@/components';
-import { DateFilter } from '@/components';
-import {
-  inputContainerBase,
-  inputInner,
-  inputText,
-  inputClearButton,
-} from '@/components/inputs/inputStyles';
-import { cn } from '@/utils';
-import { ICONS } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import {
-  ORDER_STATUS_VALUES,
-  PAYMENT_STATUS_VALUES,
-  ORDER_STATUS_CONFIG,
-  PAYMENT_STATUS_CONFIG,
-} from '@/types';
-import { createFilterOptions } from '@/utils/filtering';
-import { DatePresetBadges, ORDER_FILTER_PLACEHOLDERS } from '@/features/filters';
+import { ResponsiveFilterMobileBar, ORDER_FILTER_PLACEHOLDERS } from '@/features/filters';
+import { OrderFiltersInlineControls } from './OrderFiltersInlineControls';
+import { OrderFiltersModal } from './OrderFiltersModal';
 import type { OrderStatus, PaymentStatus } from '@/types';
 
 /**
@@ -42,232 +24,58 @@ export interface OrderFiltersProps {
   onPaymentFiltersChange: (values: PaymentStatus[]) => void;
 }
 
-// Prepare filter options
-const orderStatusOptions = createFilterOptions(ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG);
-const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
-
 /**
  * OrderFilters - Responsive filter layout
  * - lg+: 4-column grid (search + date + order status + payment status)
  * - md: 2-column grid
  * - sm/xs: Search bar + Filters button (opens modal with all filters)
  */
-export const OrderFilters: React.FC<OrderFiltersProps> = ({
-  searchQuery,
-  onSearchChange,
-  dateRange,
-  onDateRangeChange,
-  statusFilters,
-  onStatusFiltersChange,
-  paymentFilters,
-  onPaymentFiltersChange,
-}) => {
+export const OrderFilters: React.FC<OrderFiltersProps> = props => {
   const breakpoint = useBreakpoint();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Count active filters for badge
-  const activeFilterCount = (dateRange ? 1 : 0) + statusFilters.length + paymentFilters.length;
+  const activeFilterCount =
+    (props.dateRange ? 1 : 0) + props.statusFilters.length + props.paymentFilters.length;
 
-  // Check if we should show modal view (sm and below)
   const showModalView = isBreakpointAtMost(breakpoint, 'sm');
   const showTwoColumn = breakpoint === 'md';
 
-  /**
-   * Render all filter controls (used in both inline and modal views)
-   */
-  const renderFilters = () => (
-    <>
-      {/* Search */}
-      <div className="flex h-9 w-full items-center">
-        <DebouncedSearchInput
-          value={searchQuery}
-          onChange={onSearchChange}
-          placeholder={ORDER_FILTER_PLACEHOLDERS.searchLong}
-        />
-      </div>
-
-      {/* Date Range */}
-      <div className="flex h-9 w-full items-center">
-        <DateFilter
-          value={dateRange}
-          onChange={onDateRangeChange}
-          placeholder={ORDER_FILTER_PLACEHOLDERS.dateRange}
-          className="w-full"
-        />
-      </div>
-
-      {/* Order Status */}
-      <div className="flex h-9 w-full items-center">
-        <MultiSelectFilter
-          label="Order Status"
-          options={orderStatusOptions}
-          selectedIds={statusFilters}
-          onChange={values => onStatusFiltersChange(values as OrderStatus[])}
-          placeholder={ORDER_FILTER_PLACEHOLDERS.orderStatus}
-          selectAllLabel="All statuses"
-          icon={ICONS.actions.infoCircle}
-          className="w-full"
-        />
-      </div>
-
-      {/* Payment Status */}
-      <div className="flex h-9 w-full items-center">
-        <MultiSelectFilter
-          label="Payment Status"
-          options={paymentStatusOptions}
-          selectedIds={paymentFilters}
-          onChange={values => onPaymentFiltersChange(values as PaymentStatus[])}
-          placeholder={ORDER_FILTER_PLACEHOLDERS.paymentStatus}
-          selectAllLabel="All payment statuses"
-          icon={ICONS.dataFields.wallet}
-          className="w-full"
-        />
-      </div>
-    </>
-  );
-
-  // Mobile view: Search bar + Filters button
   if (showModalView) {
     return (
       <>
-        <div className="w-full bg-surface border-b border-border-default">
-          <div className="px-3 py-2 w-full">
-            <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
-              {/* Search control */}
-              <div className="flex h-9 w-full items-center">
-                <DebouncedSearchInput
-                  value={searchQuery}
-                  onChange={onSearchChange}
-                  placeholder={ORDER_FILTER_PLACEHOLDERS.search}
-                />
-              </div>
-
-              {/* Filters button */}
-              <div className="relative flex shrink-0">
-                <Button variant="filter" size="sm" onClick={() => setIsModalOpen(true)}>
-                  Filters
-                </Button>
-                {activeFilterCount > 0 && (
-                  <Badge
-                    variant="primary"
-                    size="xs"
-                    className="absolute -top-1 -right-1 min-w-[18px] h-4 px-1 flex items-center justify-center"
-                  >
-                    {activeFilterCount}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Filter Modal */}
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Filter" size="md">
-          <div className="flex flex-col h-full bg-surface">
-            {/* Filter Controls - Scrollable */}
-            <div className="flex-1 overflow-y-auto px-5 py-4">
-              {/* Search Section */}
-              <div className="mb-6">
-                <div className={cn(inputContainerBase, 'flex items-center h-10 px-4')}>
-                  <input
-                    type="text"
-                    placeholder={ORDER_FILTER_PLACEHOLDERS.search}
-                    value={searchQuery}
-                    onChange={e => onSearchChange(e.target.value)}
-                    className={cn(inputInner, inputText)}
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => onSearchChange('')}
-                      className={cn(inputClearButton, 'hover:bg-surface-hover')}
-                    >
-                      <Icon
-                        name={ICONS.actions.closeCircle}
-                        className="w-4 h-4 text-text-tertiary"
-                      />
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Filter Sections */}
-              <div className="space-y-5">
-                {/* Date Range Section */}
-                <div className="w-full">
-                  <h4 className="text-sm font-semibold text-text-primary mb-3">Date Range</h4>
-                  <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
-                  <div className="border-b border-border-default mt-4" />
-                </div>
-
-                {/* Order Status Section */}
-                <div className="w-full">
-                  <h4 className="text-sm font-semibold text-text-primary mb-3">Order Status</h4>
-                  <CheckboxList
-                    options={orderStatusOptions}
-                    selectedIds={statusFilters}
-                    onChange={values => onStatusFiltersChange(values as OrderStatus[])}
-                    columns={orderStatusOptions.length > 4 ? 2 : 1}
-                  />
-                  <div className="border-b border-border-default mt-4" />
-                </div>
-
-                {/* Payment Status Section */}
-                <div className="w-full">
-                  <h4 className="text-sm font-semibold text-text-primary mb-3">Payment Status</h4>
-                  <CheckboxList
-                    options={paymentStatusOptions}
-                    selectedIds={paymentFilters}
-                    onChange={values => onPaymentFiltersChange(values as PaymentStatus[])}
-                    columns={paymentStatusOptions.length > 4 ? 2 : 1}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Footer with Filter Button */}
-            <div className="px-5 py-4 border-t border-border-default bg-surface shrink-0">
-              <div className="flex items-center justify-between gap-3">
-                <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      onDateRangeChange(null);
-                      onStatusFiltersChange([]);
-                      onPaymentFiltersChange([]);
-                    }}
-                    showIcon={false}
-                  >
-                    Reset
-                  </Button>
-                  <Button variant="primary" onClick={() => setIsModalOpen(false)} showIcon={false}>
-                    Filter
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Modal>
+        <ResponsiveFilterMobileBar
+          searchQuery={props.searchQuery}
+          onSearchChange={props.onSearchChange}
+          searchPlaceholder={ORDER_FILTER_PLACEHOLDERS.search}
+          activeFilterCount={activeFilterCount}
+          onOpenModal={() => setIsModalOpen(true)}
+          searchRowHeight="h-9"
+        />
+        <OrderFiltersModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          {...props}
+        />
       </>
     );
   }
 
-  // Tablet view: 2-column grid
+  const inlineControls = <OrderFiltersInlineControls {...props} />;
+
   if (showTwoColumn) {
     return (
       <div className="w-full bg-surface border-b border-border-default">
         <div className="px-3 py-2 w-full">
-          <div className="grid grid-cols-2 gap-2 items-center w-full">{renderFilters()}</div>
+          <div className="grid grid-cols-2 gap-2 items-center w-full">{inlineControls}</div>
         </div>
       </div>
     );
   }
 
-  // Desktop view: 4-column grid
   return (
     <div className="w-full bg-surface border-b border-border-default">
       <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
-        <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">{renderFilters()}</div>
+        <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">{inlineControls}</div>
       </div>
     </div>
   );

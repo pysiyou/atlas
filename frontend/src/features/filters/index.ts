@@ -35,6 +35,8 @@ export { useFilterState, useQuickFilters } from './hooks';
 // Components
 export { FilterBar, type FilterBarProps } from './FilterBar';
 export { FilterModal, type FilterModalProps } from './FilterModal';
+export { FilterModalFooter, type FilterModalFooterProps } from './FilterModalFooter';
+export { ResponsiveFilterMobileBar, type ResponsiveFilterMobileBarProps } from './ResponsiveFilterMobileBar';
 export { FilterSection, type FilterSectionProps } from './FilterSection';
 export { DatePresetBadges, type DatePresetBadgesProps } from './DatePresetBadges';
 export { ActiveFilterBadges, type ActiveFilterBadgesProps } from './ActiveFilterBadges';

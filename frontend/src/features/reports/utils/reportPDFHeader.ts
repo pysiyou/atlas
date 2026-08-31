@@ -7,20 +7,40 @@ import type { ReportData, ReportTemplate } from '../types';
 import { companyConfig } from '@/config';
 import { formatReportTimestamp } from './reportPDFHelpers';
 
-export function drawReportHeader(
-  doc: jsPDF,
-  reportData: ReportData,
-  _template: ReportTemplate,
-  margin: number
-): number {
+interface HeaderLayout {
+  pageWidth: number;
+  margin: number;
+  headerStartY: number;
+  headerHeight: number;
+  leftPanelWidth: number;
+  rightPanelWidth: number;
+  leftPanelX: number;
+  rightPanelX: number;
+}
+
+function getHeaderLayout(doc: jsPDF, margin: number): HeaderLayout {
   const pageWidth = doc.internal.pageSize.getWidth();
   const headerStartY = margin;
   const headerHeight = 50;
-
   const leftPanelWidth = (pageWidth - margin * 2) * 0.4;
   const rightPanelWidth = (pageWidth - margin * 2) * 0.6;
   const leftPanelX = margin;
   const rightPanelX = leftPanelX + leftPanelWidth;
+
+  return {
+    pageWidth,
+    margin,
+    headerStartY,
+    headerHeight,
+    leftPanelWidth,
+    rightPanelWidth,
+    leftPanelX,
+    rightPanelX,
+  };
+}
+
+function drawCompanyPanel(doc: jsPDF, layout: HeaderLayout): void {
+  const { headerStartY, headerHeight, leftPanelWidth, leftPanelX } = layout;
 
   doc.setFillColor(224, 242, 247);
   doc.rect(leftPanelX, headerStartY, leftPanelWidth, headerHeight, 'F');
@@ -57,8 +77,12 @@ export function drawReportHeader(
   if (contact.address.country) {
     doc.text(contact.address.country, leftPanelX + 5, currentY);
   }
+}
 
-  currentY = headerStartY + 5;
+function drawReportTitle(doc: jsPDF, layout: HeaderLayout, reportData: ReportData): number {
+  const { headerStartY, rightPanelX } = layout;
+  const currentY = headerStartY + 5;
+
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(0, 0, 0);
@@ -67,36 +91,49 @@ export function drawReportHeader(
       ? `${reportData.testResults.map(t => t.testName).join(', ')} Results ( ${reportData.testResults.map(t => t.testCode).join(', ')} )`
       : 'Test Results';
   doc.text(reportTitle, rightPanelX + 5, currentY);
-  currentY += 6;
+  return currentY + 6;
+}
 
-  const subCol1Width = rightPanelWidth * 0.5;
+function drawLabelValue(
+  doc: jsPDF,
+  x: number,
+  y: number,
+  label: string,
+  value: string,
+  valueX: number
+): void {
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(55, 65, 81);
+  doc.text(label, x, y);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(31, 41, 55);
+  doc.text(value, valueX, y);
+}
+
+function drawPatientDetails(doc: jsPDF, layout: HeaderLayout, reportData: ReportData, startY: number): void {
+  const { rightPanelX } = layout;
   const subCol1X = rightPanelX;
-  const subCol2X = rightPanelX + subCol1Width;
+  let subColY = startY;
 
-  let subColY = currentY;
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.text(reportData.patientName, subCol1X + 5, subColY);
   subColY += 5;
 
   if (reportData.patientAge !== undefined) {
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(55, 65, 81);
-    doc.text('Age:', subCol1X + 5, subColY);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(31, 41, 55);
-    doc.text(String(reportData.patientAge), subCol1X + 20, subColY);
+    drawLabelValue(doc, subCol1X + 5, subColY, 'Age:', String(reportData.patientAge), subCol1X + 20);
     subColY += 4;
   }
   if (reportData.patientGender) {
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(55, 65, 81);
-    doc.text('Gender:', subCol1X + 5, subColY);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(31, 41, 55);
-    doc.text(reportData.patientGender.toUpperCase(), subCol1X + 25, subColY);
+    drawLabelValue(
+      doc,
+      subCol1X + 5,
+      subColY,
+      'Gender:',
+      reportData.patientGender.toUpperCase(),
+      subCol1X + 25
+    );
     subColY += 4;
   }
 
@@ -105,25 +142,23 @@ export function drawReportHeader(
     patientEmail?: string;
   };
   if (orderExtended.patientPhone) {
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(55, 65, 81);
-    doc.text('Phone:', subCol1X + 5, subColY);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(31, 41, 55);
-    doc.text(orderExtended.patientPhone, subCol1X + 25, subColY);
-    subColY += 4;
+    drawLabelValue(doc, subCol1X + 5, subColY, 'Phone:', orderExtended.patientPhone, subCol1X + 25);
   } else if (orderExtended.patientEmail) {
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(55, 65, 81);
-    doc.text('Email:', subCol1X + 5, subColY);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(31, 41, 55);
-    doc.text(orderExtended.patientEmail, subCol1X + 25, subColY);
+    drawLabelValue(doc, subCol1X + 5, subColY, 'Email:', orderExtended.patientEmail, subCol1X + 25);
   }
+}
 
-  subColY = currentY;
+function drawProcessingDetails(
+  doc: jsPDF,
+  layout: HeaderLayout,
+  reportData: ReportData,
+  startY: number
+): void {
+  const { rightPanelWidth, rightPanelX } = layout;
+  const subCol1Width = rightPanelWidth * 0.5;
+  const subCol2X = rightPanelX + subCol1Width;
+  let subColY = startY;
+
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(31, 41, 55);
@@ -133,33 +168,26 @@ export function drawReportHeader(
   const collectedAt =
     reportData.timestamps?.collectedAt || reportData.sampleCollection?.collectedAt;
   if (collectedAt) {
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(55, 65, 81);
-    doc.text('Sample:', subCol2X + 5, subColY);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(31, 41, 55);
-    doc.text(formatReportTimestamp(collectedAt), subCol2X + 25, subColY);
+    drawLabelValue(
+      doc,
+      subCol2X + 5,
+      subColY,
+      'Sample:',
+      formatReportTimestamp(collectedAt),
+      subCol2X + 25
+    );
     subColY += 4;
   }
+
   const reportedAt = reportData.timestamps?.reportedAt;
-  if (reportedAt) {
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(55, 65, 81);
-    doc.text('Results:', subCol2X + 5, subColY);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(31, 41, 55);
-    doc.text(formatReportTimestamp(reportedAt), subCol2X + 25, subColY);
-  } else {
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(55, 65, 81);
-    doc.text('Results:', subCol2X + 5, subColY);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(31, 41, 55);
-    doc.text(formatReportTimestamp(new Date().toISOString()), subCol2X + 25, subColY);
-  }
+  drawLabelValue(
+    doc,
+    subCol2X + 5,
+    subColY,
+    'Results:',
+    formatReportTimestamp(reportedAt || new Date().toISOString()),
+    subCol2X + 25
+  );
   subColY += 4;
 
   if (reportData.testResults[0]) {
@@ -173,23 +201,34 @@ export function drawReportHeader(
       verifiedByName = testResult.validatedByName;
     } else if (testResult.validatedBy) {
       verifiedByName = testResult.validatedBy;
-    } else if (testResult.validatedAt) {
-      verifiedByName = 'N/A';
-    } else {
+    } else if (!testResult.validatedAt) {
       verifiedByName = '-';
     }
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(55, 65, 81);
-    doc.text('Verified by:', subCol2X + 5, subColY);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(31, 41, 55);
-    doc.text(verifiedByName, subCol2X + 30, subColY);
+    drawLabelValue(doc, subCol2X + 5, subColY, 'Verified by:', verifiedByName, subCol2X + 30);
   }
+}
+
+export function drawReportHeader(
+  doc: jsPDF,
+  reportData: ReportData,
+  _template: ReportTemplate,
+  margin: number
+): number {
+  const layout = getHeaderLayout(doc, margin);
+
+  drawCompanyPanel(doc, layout);
+  const titleEndY = drawReportTitle(doc, layout, reportData);
+  drawPatientDetails(doc, layout, reportData, titleEndY);
+  drawProcessingDetails(doc, layout, reportData, titleEndY);
 
   doc.setDrawColor(220, 220, 220);
   doc.setLineWidth(0.3);
-  doc.line(margin, headerStartY + headerHeight, pageWidth - margin, headerStartY + headerHeight);
+  doc.line(
+    layout.margin,
+    layout.headerStartY + layout.headerHeight,
+    layout.pageWidth - layout.margin,
+    layout.headerStartY + layout.headerHeight
+  );
 
-  return headerStartY + headerHeight + 10;
+  return layout.headerStartY + layout.headerHeight + 10;
 }

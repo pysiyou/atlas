@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useSamplesList } from '@/features/collection/api/useSamples';
 import { isActiveTest } from '@/features/orders/utils';
+import type { Order, OrderTest } from '@/types';
 
 export interface DistributionByStagePoint {
   name: string;
@@ -31,6 +32,24 @@ const STAGE_COLORS: Record<(typeof STAGE_ORDER)[number], string> = {
   Escalation: 'var(--chart-danger)',
 };
 
+type StageName = (typeof STAGE_ORDER)[number];
+
+interface StageAccumulator {
+  count: number;
+  arrivals: number;
+  waitSum: number;
+  oldest: string;
+}
+
+function createStageAccumulators(): Record<StageName, StageAccumulator> {
+  return {
+    Collection: { count: 0, arrivals: 0, waitSum: 0, oldest: '' },
+    Results: { count: 0, arrivals: 0, waitSum: 0, oldest: '' },
+    Validation: { count: 0, arrivals: 0, waitSum: 0, oldest: '' },
+    Escalation: { count: 0, arrivals: 0, waitSum: 0, oldest: '' },
+  };
+}
+
 /** True if the ISO datetime falls on today in the user's local timezone. */
 function isTodayLocal(isoString: string | undefined): boolean {
   if (!isoString) return false;
@@ -43,6 +62,102 @@ function isTodayLocal(isoString: string | undefined): boolean {
   );
 }
 
+function buildSampleCollectedAtMap(
+  samples: Array<{ sampleId: number; status: string; collectedAt?: string }>
+): Map<number, string> {
+  const sampleCollectedAt = new Map<number, string>();
+  samples.forEach(s => {
+    if (s.status !== 'pending' && s.collectedAt) {
+      sampleCollectedAt.set(s.sampleId, s.collectedAt);
+    }
+  });
+  return sampleCollectedAt;
+}
+
+function updateStageMetrics(
+  stage: StageAccumulator,
+  enteredAt: string | undefined,
+  arrivedToday: boolean,
+  now: number
+): void {
+  stage.count++;
+  if (arrivedToday) stage.arrivals++;
+  if (!enteredAt) return;
+  stage.waitSum += now - new Date(enteredAt).getTime();
+  if (!stage.oldest || enteredAt < stage.oldest) {
+    stage.oldest = enteredAt;
+  }
+}
+
+function accumulateTestStage(
+  test: OrderTest,
+  stages: Record<StageName, StageAccumulator>,
+  sampleCollectedAt: Map<number, string>,
+  now: number
+): void {
+  if (!isActiveTest(test) || test.status === 'validated') return;
+
+  const sampleCA = test.sampleId != null ? sampleCollectedAt.get(test.sampleId) : undefined;
+  const wasCollectedToday = sampleCA ? isTodayLocal(sampleCA) : false;
+  const wasResultedToday = isTodayLocal(test.resultEnteredAt);
+
+  switch (test.status) {
+    case 'pending':
+    case 'rejected':
+      updateStageMetrics(
+        stages.Collection,
+        test.createdAt ?? test.updatedAt,
+        isTodayLocal(test.createdAt),
+        now
+      );
+      break;
+    case 'sample-collected':
+    case 'in-progress':
+      updateStageMetrics(stages.Results, sampleCA, wasCollectedToday, now);
+      break;
+    case 'resulted':
+      updateStageMetrics(stages.Validation, test.resultEnteredAt, wasResultedToday, now);
+      break;
+    case 'escalated':
+      updateStageMetrics(stages.Escalation, test.updatedAt, isTodayLocal(test.updatedAt), now);
+      break;
+    default:
+      break;
+  }
+}
+
+function accumulateDistributionMetrics(
+  orders: Order[] | undefined,
+  sampleCollectedAt: Map<number, string>
+): Record<StageName, StageAccumulator> {
+  const stages = createStageAccumulators();
+  const now = Date.now();
+
+  (orders ?? []).forEach(order => {
+    (order.tests ?? []).forEach(test => {
+      accumulateTestStage(test, stages, sampleCollectedAt, now);
+    });
+  });
+
+  return stages;
+}
+
+function toDistributionPoints(
+  stages: Record<StageName, StageAccumulator>
+): DistributionByStagePoint[] {
+  return STAGE_ORDER.map(name => {
+    const stage = stages[name];
+    return {
+      name,
+      color: STAGE_COLORS[name],
+      value: stage.count,
+      arrivedToday: stage.arrivals,
+      avgWaitMs: stage.count > 0 ? stage.waitSum / stage.count : undefined,
+      oldestEntryAt: stage.oldest || undefined,
+    };
+  });
+}
+
 export function useDistributionByStage(): {
   data: DistributionByStagePoint[];
   isLoading: boolean;
@@ -52,124 +167,9 @@ export function useDistributionByStage(): {
   const isLoading = ordersLoading || samplesLoading;
 
   const data = useMemo((): DistributionByStagePoint[] => {
-    const sampleCollectedAt = new Map<number, string>();
-    (samples ?? []).forEach(s => {
-      if (s.status !== 'pending' && 'collectedAt' in s) {
-        const ca = (s as { collectedAt: string }).collectedAt;
-        if (ca) sampleCollectedAt.set(s.sampleId, ca);
-      }
-    });
-
-    let collection = 0;
-    let results = 0;
-    let validation = 0;
-    let escalation = 0;
-    let collectionArrivals = 0;
-    let resultsArrivals = 0;
-    let validationArrivals = 0;
-    let escalationArrivals = 0;
-    let collectionWaitSum = 0;
-    let resultsWaitSum = 0;
-    let validationWaitSum = 0;
-    let escalationWaitSum = 0;
-    let oldestCollection = '';
-    let oldestResults = '';
-    let oldestValidation = '';
-    let oldestEscalation = '';
-    const now = Date.now();
-
-    (orders ?? []).forEach(order => {
-      (order.tests ?? []).forEach(test => {
-        if (!isActiveTest(test)) return;
-        if (test.status === 'validated') return;
-
-        const sampleCA = test.sampleId != null ? sampleCollectedAt.get(test.sampleId) : undefined;
-        const wasCollectedToday = sampleCA ? isTodayLocal(sampleCA) : false;
-        const wasResultedToday = isTodayLocal(test.resultEnteredAt);
-
-        switch (test.status) {
-          case 'pending':
-          case 'rejected': {
-            collection++;
-            if (isTodayLocal(test.createdAt)) collectionArrivals++;
-            const enteredAt = test.createdAt ?? test.updatedAt ?? '';
-            if (enteredAt) {
-              collectionWaitSum += now - new Date(enteredAt).getTime();
-              if (!oldestCollection || enteredAt < oldestCollection) oldestCollection = enteredAt;
-            }
-            break;
-          }
-          case 'sample-collected':
-          case 'in-progress': {
-            results++;
-            if (wasCollectedToday) resultsArrivals++;
-            if (sampleCA) {
-              resultsWaitSum += now - new Date(sampleCA).getTime();
-              if (!oldestResults || sampleCA < oldestResults) oldestResults = sampleCA;
-            }
-            break;
-          }
-          case 'resulted': {
-            validation++;
-            if (wasResultedToday) validationArrivals++;
-            if (test.resultEnteredAt) {
-              validationWaitSum += now - new Date(test.resultEnteredAt).getTime();
-              if (!oldestValidation || test.resultEnteredAt < oldestValidation)
-                oldestValidation = test.resultEnteredAt;
-            }
-            break;
-          }
-          case 'escalated': {
-            escalation++;
-            if (isTodayLocal(test.updatedAt)) escalationArrivals++;
-            if (test.updatedAt) {
-              escalationWaitSum += now - new Date(test.updatedAt).getTime();
-              if (!oldestEscalation || test.updatedAt < oldestEscalation)
-                oldestEscalation = test.updatedAt;
-            }
-            break;
-          }
-          default:
-            break;
-        }
-      });
-    });
-
-    const metrics: Record<
-      (typeof STAGE_ORDER)[number],
-      Omit<DistributionByStagePoint, 'name' | 'color'>
-    > = {
-      Collection: {
-        value: collection,
-        arrivedToday: collectionArrivals,
-        avgWaitMs: collection > 0 ? collectionWaitSum / collection : undefined,
-        oldestEntryAt: oldestCollection || undefined,
-      },
-      Results: {
-        value: results,
-        arrivedToday: resultsArrivals,
-        avgWaitMs: results > 0 ? resultsWaitSum / results : undefined,
-        oldestEntryAt: oldestResults || undefined,
-      },
-      Validation: {
-        value: validation,
-        arrivedToday: validationArrivals,
-        avgWaitMs: validation > 0 ? validationWaitSum / validation : undefined,
-        oldestEntryAt: oldestValidation || undefined,
-      },
-      Escalation: {
-        value: escalation,
-        arrivedToday: escalationArrivals,
-        avgWaitMs: escalation > 0 ? escalationWaitSum / escalation : undefined,
-        oldestEntryAt: oldestEscalation || undefined,
-      },
-    };
-
-    return STAGE_ORDER.map(name => ({
-      name,
-      color: STAGE_COLORS[name],
-      ...metrics[name],
-    }));
+    const sampleCollectedAt = buildSampleCollectedAtMap(samples ?? []);
+    const stages = accumulateDistributionMetrics(orders, sampleCollectedAt);
+    return toDistributionPoints(stages);
   }, [orders, samples]);
 
   return { data, isLoading };

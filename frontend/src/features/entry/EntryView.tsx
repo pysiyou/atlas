@@ -20,7 +20,7 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useEntryWorkflow } from './useEntryWorkflow';
 import type { TestStatus } from '@/types';
 
-// eslint-disable-next-line max-lines-per-function
+ 
 export const EntryView: React.FC = () => {
   const { orders, isLoading: ordersLoading } = useOrdersList();
   const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();

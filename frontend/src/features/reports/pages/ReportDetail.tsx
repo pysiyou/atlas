@@ -3,7 +3,7 @@
  * Detail view for a specific report - opens preview modal for a validated test
  */
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTestCatalog } from '@/features/catalog/api/useTestCatalog';
 import { useUserLookup } from '@/features/admin/api/useUsers';
@@ -12,9 +12,12 @@ import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { useSampleLookup } from '@/features/collection/api/useSamples';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';
-import type { ReportData, ValidatedTest } from '../types';
+import {
+  findValidatedTestById,
+  prepareReportData,
+  downloadValidatedTestReport,
+} from '../utils/prepareReportData';
 import { formatDate } from '@/utils';
-import { companyConfig } from '@/config';
 import { toast } from '@/app/AppToastBar';
 import { DetailPageShell, DetailPageHeader } from '@/components';
 import { ReportDetailSkeleton } from './ReportDetailSkeleton';
@@ -24,176 +27,51 @@ export const ReportDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const testId = id ? parseInt(id, 10) : null;
 
-  // Use TanStack Query hooks
   const { orders, isLoading: ordersLoading } = useOrdersList();
   const { patients, isLoading: patientsLoading } = usePatientsList();
   const { tests, isLoading: testsLoading } = useTestCatalog();
   const { getPatientName } = usePatientNameLookup();
   const { getSample } = useSampleLookup();
-  const { getUserName, isLoading: _usersLoading } = useUserLookup();
+  const { getUserName } = useUserLookup();
 
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Find the validated test by ID
   const validatedTest = useMemo(() => {
     if (!testId) return null;
-
-    for (const order of orders) {
-      const test = order.tests.find(t => t.id === testId && t.status === 'validated');
-      if (test) {
-        const patient = patients?.find(p => p.id === order.patientId);
-
-        // Calculate age if DOB available
-        let age: number | undefined;
-        if (patient?.dateOfBirth) {
-          const birthDate = new Date(patient.dateOfBirth);
-          const today = new Date();
-          age = today.getFullYear() - birthDate.getFullYear();
-          const monthDiff = today.getMonth() - birthDate.getMonth();
-          if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-          }
-        }
-
-        const validatedTest: ValidatedTest = {
-          testId: test.id!,
-          testCode: test.testCode,
-          testName: test.testName,
-          orderId: order.orderId,
-          orderDate: order.orderDate,
-          patientId: order.patientId,
-          patientName: getPatientName(order.patientId),
-          patientAge: age,
-          patientGender: patient?.gender,
-          test,
-          order,
-        };
-        return validatedTest;
-      }
-    }
-    return null;
+    return findValidatedTestById(testId, orders, patients, getPatientName);
   }, [testId, orders, patients, getPatientName]);
 
-  // Redirect if test not found
   useEffect(() => {
     if (!ordersLoading && !patientsLoading && !testsLoading && !validatedTest) {
       navigate('/reports', { replace: true });
     }
   }, [ordersLoading, patientsLoading, testsLoading, validatedTest, navigate]);
 
-  if (ordersLoading || patientsLoading || testsLoading) {
-    return (
-      <DetailPageShell
-        header={<DetailPageHeader title="Report" />}
-        loading
-        loadingSkeleton={<ReportDetailSkeleton />}
-      >
-        {null}
-      </DetailPageShell>
-    );
-  }
+  const buildReportData = useCallback(() => {
+    if (!validatedTest) return null;
+    return prepareReportData({
+      validatedTest,
+      patients,
+      catalogTests: tests,
+      getSample,
+      getUserName: id => getUserName(id),
+    });
+  }, [validatedTest, patients, tests, getSample, getUserName]);
 
-  // If test not found after loading, return null (useEffect will redirect)
-  if (!validatedTest) {
-    return null;
-  }
-
-  /**
-   * Prepare report data from validated test
-   */
-  const prepareReportData = (test: ValidatedTest): ReportData => {
-    // Find patient to get phone and email
-    const patient = patients?.find(p => p.id === test.patientId);
-
-    // Get sample collection data if sampleId is available
-    const sample = test.test.sampleId ? getSample(test.test.sampleId) : undefined;
-    const collectedAt =
-      sample && sample.status === 'collected'
-        ? (sample as { collectedAt?: string }).collectedAt
-        : undefined;
-    const collectedBy =
-      sample && sample.status === 'collected'
-        ? (sample as { collectedBy?: string }).collectedBy
-        : undefined;
-
-    // Find test in catalog to get parameter names
-    const catalogTest = tests.find(t => t.code === test.test.testCode);
-
-    const testResults = [
-      {
-        testCode: test.test.testCode,
-        testName: test.test.testName,
-        parameters: Object.entries(test.test.results || {}).map(([code, result]) => {
-          // Look up parameter name from catalog
-          const parameter = catalogTest?.parameters?.find(p => p.code === code);
-          const fullName = parameter?.name || code;
-
-          return {
-            name: fullName,
-            code,
-            value: result.value,
-            unit: result.unit,
-            referenceRange: result.referenceRange,
-            status: result.status,
-            isCritical:
-              result.status === 'critical' ||
-              result.status === 'critical-high' ||
-              result.status === 'critical-low',
-          };
-        }),
-        technicianNotes: test.test.technicianNotes,
-        validationNotes: test.test.validationNotes,
-        enteredBy: test.test.enteredBy?.toString(),
-        validatedBy: test.test.validatedBy?.toString(),
-        validatedByName: test.test.validatedBy
-          ? getUserName(String(test.test.validatedBy).trim())
-          : undefined,
-        enteredAt: test.test.resultEnteredAt,
-        validatedAt: test.test.resultValidatedAt,
-      },
-    ];
-
-    // Extend order with patient contact info
-    const orderWithPatientInfo = {
-      ...test.order,
-      patientPhone: patient?.phone,
-      patientEmail: patient?.email,
-    };
-
-    return {
-      order: orderWithPatientInfo,
-      patientId: test.patientId,
-      patientName: test.patientName,
-      patientAge: test.patientAge,
-      patientGender: test.patientGender,
-      timestamps: {
-        registeredAt: test.order.orderDate || test.order.createdAt,
-        collectedAt,
-        reportedAt: test.test.resultValidatedAt || new Date().toISOString(),
-      },
-      sampleCollection: {
-        collectedAt,
-        collectedBy,
-        address: companyConfig.getContact().address.fullAddress,
-      },
-      testResults,
-    };
-  };
-
-  /**
-   * Handle report generation
-   */
   const handleGenerateReport = async () => {
     if (!validatedTest) return;
+    const reportData = buildReportData();
+    if (!reportData) return;
 
     try {
       setIsGenerating(true);
-      const reportData = prepareReportData(validatedTest);
-      const doc = generateLabReport(reportData);
-
-      const filename = `Lab_Report_TST${validatedTest.testId.toString().padStart(6, '0')}_${formatDate(new Date())}.pdf`;
-      downloadPDF(doc, filename);
-
+      await downloadValidatedTestReport(
+        validatedTest,
+        reportData,
+        generateLabReport,
+        downloadPDF,
+        formatDate
+      );
       toast.success({
         title: 'Report downloaded successfully',
         subtitle:
@@ -212,18 +90,36 @@ export const ReportDetail: React.FC = () => {
     }
   };
 
-  /**
-   * Handle modal close
-   */
   const handleClose = () => {
     navigate('/reports');
   };
+
+  if (ordersLoading || patientsLoading || testsLoading) {
+    return (
+      <DetailPageShell
+        header={<DetailPageHeader title="Report" />}
+        loading
+        loadingSkeleton={<ReportDetailSkeleton />}
+      >
+        {null}
+      </DetailPageShell>
+    );
+  }
+
+  if (!validatedTest) {
+    return null;
+  }
+
+  const reportData = buildReportData();
+  if (!reportData) {
+    return null;
+  }
 
   return (
     <ReportPreviewModal
       isOpen={true}
       onClose={handleClose}
-      reportData={prepareReportData(validatedTest)}
+      reportData={reportData}
       onGenerate={handleGenerateReport}
       isGenerating={isGenerating}
     />

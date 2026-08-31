@@ -5,18 +5,16 @@
  * mutation logic, and modal opening for the result entry workflow.
  */
 
-/* eslint-disable complexity */
-
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTestNameLookup } from '@/features/catalog/api/useTestCatalog';
 import { useEnterResults } from '@/features/validation/api/useResultMutations';
 import { queryKeys } from '@/lib/query';
-import { checkReferenceRangeWithDemographics } from '@/features/lab/utils';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
-import { useModal, ModalType } from '@/lib/context/ModalContext';
-import type { TestResult, TestWithContext, Test, Order } from '@/types';
+import { formatParameterResults, findTestInList } from './entryWorkflowHelpers';
+import { useEntryTestModal } from './useEntryTestModal';
+import type { TestWithContext, Test, Order } from '@/types';
 
 export interface UseEntryWorkflowOptions {
   allTests: TestWithContext[];
@@ -50,13 +48,9 @@ export function useEntryWorkflow({
 }: UseEntryWorkflowOptions): EntryWorkflow {
   const queryClient = useQueryClient();
   const { getTest } = useTestNameLookup();
-  const { openModal } = useModal();
   const [results, setResults] = useState<Record<string, Record<string, string>>>({});
   const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
   const enterMutation = useEnterResults();
-
-  const openTestModalRef =
-    useRef<(test: TestWithContext, filteredTests: TestWithContext[]) => void>(undefined);
 
   const handleResultChange = useCallback((resultKey: string, paramCode: string, value: string) => {
     setResults(prev => ({
@@ -84,11 +78,11 @@ export function useEntryWorkflow({
       testCode: string,
       saveAllTests: TestWithContext[],
       saveTestCatalog: Test[] | undefined,
-      saveOrders: Order[] | undefined,
+      _saveOrders: Order[] | undefined,
       finalResults?: Record<string, string>,
       finalNotes?: string
     ) => {
-      if (!saveTestCatalog || !saveOrders) return;
+      if (!saveTestCatalog) return;
 
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
       const resultKey = `${orderIdStr}-${testCode}`;
@@ -115,9 +109,7 @@ export function useEntryWorkflow({
         return;
       }
 
-      const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
-      const formattedResults: Record<string, unknown> = {};
-      const testItem = saveAllTests.find(t => t.orderId === numericOrderId && t.testCode === testCode);
+      const testItem = findTestInList(saveAllTests, orderId, testCode);
       if (!testItem) {
         toast.error({
           title: 'Test not found in current list',
@@ -126,46 +118,9 @@ export function useEntryWorkflow({
         });
         return;
       }
-      const patient = testItem.patient;
 
-      for (const param of testDef.parameters) {
-        const value = testResults[param.code];
-        if (!value) continue;
-
-        let status: TestResult['status'] = 'normal';
-        let processedValue: string | number = value;
-
-        if (param.valueType === 'NUMERIC' || param.type === 'numeric') {
-          const numValue = parseFloat(value);
-          if (!isNaN(numValue)) {
-            processedValue = numValue;
-            status = checkReferenceRangeWithDemographics(numValue, param, patient);
-            if (param.criticalLow !== undefined && numValue < param.criticalLow)
-              status = 'critical';
-            else if (param.criticalHigh !== undefined && numValue > param.criticalHigh)
-              status = 'critical';
-          }
-        } else if (
-          (param.valueType === 'SELECT' || param.type === 'select') &&
-          param.allowedValues
-        ) {
-          if (!param.allowedValues.includes(value)) {
-            toast.error({
-              title: `${param.name}: Invalid value. Must be one of: ${param.allowedValues.join(', ')}`,
-              subtitle:
-                'The value entered is not in the allowed list for this parameter. Choose one of the options shown.',
-            });
-            return;
-          }
-        }
-
-        formattedResults[param.code] = {
-          value: processedValue,
-          unit: param.unit,
-          referenceRange: param.referenceRange,
-          status,
-        };
-      }
+      const formattedResults = formatParameterResults(testResults, testDef, testItem);
+      if (!formattedResults) return;
 
       try {
         await enterMutation.mutateAsync({
@@ -202,69 +157,17 @@ export function useEntryWorkflow({
     [results, technicianNotes, getTest, enterMutation, queryClient]
   );
 
-  const openTestModal = useCallback(
-    (test: TestWithContext, filteredTests: TestWithContext[]) => {
-      if (!testCatalog) return;
-
-      const testDef = getTest(test.testCode);
-      const resultKey = `${test.orderId}-${test.testCode}`;
-      if (!testDef?.parameters) return;
-
-      const isComplete = areAllParametersFilled(resultKey, testDef.parameters.length);
-      const currentIndex = filteredTests.findIndex(
-        t => t.orderId === test.orderId && t.testCode === test.testCode
-      );
-
-      const onNext =
-        currentIndex < filteredTests.length - 1
-          ? () => openTestModalRef.current?.(filteredTests[currentIndex + 1], filteredTests)
-          : undefined;
-      const onPrev =
-        currentIndex > 0
-          ? () => openTestModalRef.current?.(filteredTests[currentIndex - 1], filteredTests)
-          : undefined;
-
-      openModal(ModalType.RESULT_DETAIL, {
-        test,
-        testDef,
-        resultKey,
-        results: results[resultKey] || {},
-        technicianNotes: technicianNotes[resultKey] || '',
-        isComplete,
-        onResultsChange: handleResultChange,
-        onNotesChange: handleNotesChange,
-        onSave: (finalResults?: Record<string, string>, finalNotes?: string) =>
-          handleSaveResults(
-            test.orderId,
-            test.testCode,
-            allTests,
-            testCatalog,
-            orders,
-            finalResults,
-            finalNotes
-          ),
-        onNext,
-        onPrev,
-      });
-    },
-    [
-      testCatalog,
-      getTest,
-      results,
-      technicianNotes,
-      areAllParametersFilled,
-      handleResultChange,
-      handleNotesChange,
-      handleSaveResults,
-      allTests,
-      orders,
-      openModal,
-    ]
-  );
-
-  useEffect(() => {
-    openTestModalRef.current = openTestModal;
-  }, [openTestModal]);
+  const openTestModal = useEntryTestModal({
+    testCatalog,
+    orders,
+    allTests,
+    results,
+    technicianNotes,
+    areAllParametersFilled,
+    handleResultChange,
+    handleNotesChange,
+    handleSaveResults,
+  });
 
   return {
     results,

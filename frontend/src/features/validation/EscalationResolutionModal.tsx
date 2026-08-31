@@ -4,25 +4,16 @@
  * Three paths: Force Validate, Authorize Re-test, Final Reject / New Sample.
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
-import { Button, Popover, SectionPanel, Badge } from '@/components';
-import { cn, displayId } from '@/utils';
-import { inputBase } from '@/components/inputs/inputStyles';
+import React, { useState, useCallback } from 'react';
+import { SectionPanel, Badge } from '@/components';
+import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
-import {
-  LabDetailModal,
-  DetailGrid,
-  ModalFooter,
-  StatusBadgeRow,
-} from '@/features/lab/components/LabDetailModal';
-import { PopoverForm } from '@/features/lab/components/PopoverForm';
+import { LabDetailModal, DetailGrid, StatusBadgeRow } from '@/features/lab/components/LabDetailModal';
 import { RejectionHistorySection } from '@/features/lab/components/RejectionHistorySection';
 import { EntryInfoLine } from '@/features/lab/components/StatusBadges';
-import { useResolveEscalation } from '@/features/validation/api/useResultMutations';
-import { useAuthStore } from '@/app/store';
-import { toast } from '@/app/AppToastBar';
 import type { TestWithContext } from '@/types';
-import type { EscalationResolutionAction } from '@/types/lab-operations';
+import { useEscalationResolution } from './useEscalationResolution';
+import { EscalationResolutionFooter } from './EscalationResolutionFooter';
 
 interface EscalationResolutionModalProps {
   isOpen: boolean;
@@ -41,75 +32,19 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   const [reasonAuthorizeRetest, setReasonAuthorizeRetest] = useState('');
   const [reasonFinalReject, setReasonFinalReject] = useState('');
 
-  const { hasRole } = useAuthStore();
-  const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
+  const resetForm = useCallback(() => {
+    setValidationNotesForceValidate('');
+    setReasonAuthorizeRetest('');
+    setReasonFinalReject('');
+  }, []);
 
-  const resolveEscalation = useResolveEscalation();
-  const resolving = resolveEscalation.isPending;
-
-  const messages: Record<EscalationResolutionAction, string> = useMemo(
-    () => ({
-      force_validate: 'Results force-validated.',
-      authorize_retest: 'Authorized re-test created.',
-      final_reject: 'Sample rejected; new sample requested.',
-    }),
-    []
-  );
-
-  /** Returns a Promise that resolves when the mutation succeeds; popover can await then close. */
-  const resolveAsync = useCallback(
-    (action: EscalationResolutionAction, rejectionReasonOrNotes?: string): Promise<void> => {
-      if (!canResolveEscalation || resolving) return Promise.resolve();
-
-      const variables = {
-        orderId: test.orderId,
-        testCode: test.testCode,
-        action,
-        validationNotes: action === 'force_validate' ? rejectionReasonOrNotes?.trim() : undefined,
-        rejectionReason:
-          action === 'authorize_retest'
-            ? rejectionReasonOrNotes?.trim() || 'Authorized re-test (escalation resolution)'
-            : action === 'final_reject'
-              ? (rejectionReasonOrNotes ?? '').trim()
-              : undefined,
-      };
-
-      return resolveEscalation.mutateAsync(variables, {
-        onSuccess: async () => {
-          await onResolved();
-          onClose();
-          toast.success({
-            title: messages[action] ?? 'Operation completed.',
-            subtitle: 'The escalation has been resolved and the test status updated.',
-          });
-          setValidationNotesForceValidate('');
-          setReasonAuthorizeRetest('');
-          setReasonFinalReject('');
-        },
-        onError: err => {
-          const apiError = err as { message?: string };
-          const msg =
-            apiError && typeof apiError === 'object' && typeof apiError.message === 'string'
-              ? apiError.message
-              : 'Failed to resolve escalation.';
-          toast.error({
-            title: msg,
-            subtitle: 'The escalation could not be resolved. Check the details and try again.',
-          });
-        },
-      }).then(() => {});
-    },
-    [
-      test.orderId,
-      test.testCode,
-      onResolved,
-      onClose,
-      resolving,
-      resolveEscalation,
-      canResolveEscalation,
-      messages,
-    ]
-  );
+  const { canResolveEscalation, resolving, resolveAsync } = useEscalationResolution({
+    orderId: test.orderId,
+    testCode: test.testCode,
+    onResolved,
+    onClose,
+    onResetForm: resetForm,
+  });
 
   const rejectionHistory = test.resultRejectionHistory || [];
   const hasRejectionHistory = rejectionHistory.length > 0;
@@ -154,156 +89,17 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       }
       disableClose={resolving}
       footer={
-        <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
-          {!canResolveEscalation ? (
-            <p className="text-sm text-text-tertiary">
-              You do not have permission to resolve escalations.
-            </p>
-          ) : (
-            <div className="flex items-center gap-3 w-full justify-between">
-              <p className="text-xs text-text-tertiary">
-                Choose resolution action:
-              </p>
-              <div className="flex items-center gap-2">
-                <Popover
-                  placement="top-end"
-                  offsetValue={8}
-                  preventClose={resolving}
-                  trigger={
-                    <Button variant="approve" size="md" disabled={resolving} isLoading={resolving}>
-                      Force Validate
-                    </Button>
-                  }
-                >
-                  {({ close }) => (
-                    <div data-popover-content onClick={e => e.stopPropagation()}>
-                      <PopoverForm
-                        title="Force Validate"
-                        subtitle="Validation notes (optional)"
-                        onCancel={close}
-                        onConfirm={async () => {
-                          await resolveAsync('force_validate', validationNotesForceValidate);
-                          close();
-                        }}
-                        confirmLabel="Confirm"
-                        confirmVariant="success"
-                        isSubmitting={resolving}
-                      >
-                        <div>
-                          <label className="sr-only" htmlFor="escalation-force-validate-notes">
-                            Validation notes
-                          </label>
-                          <textarea
-                            id="escalation-force-validate-notes"
-                            className={cn(inputBase, 'min-h-[80px] resize-none')}
-                            placeholder="e.g. Supervisor override after review"
-                            value={validationNotesForceValidate}
-                            onChange={e => setValidationNotesForceValidate(e.target.value)}
-                            maxLength={1000}
-                          />
-                        </div>
-                      </PopoverForm>
-                    </div>
-                  )}
-                </Popover>
-                <Popover
-                  placement="top-end"
-                  offsetValue={8}
-                  preventClose={resolving}
-                  trigger={
-                    <Button variant="secondary" size="md" disabled={resolving} isLoading={resolving}>
-                      Authorize Re-test
-                    </Button>
-                  }
-                >
-                  {({ close }) => (
-                    <div data-popover-content onClick={e => e.stopPropagation()}>
-                      <PopoverForm
-                        title="Authorize Re-test"
-                        subtitle="Reason (recommended)"
-                        onCancel={close}
-                        onConfirm={async () => {
-                          await resolveAsync(
-                            'authorize_retest',
-                            reasonAuthorizeRetest || 'Authorized re-test (escalation resolution)'
-                          );
-                          close();
-                        }}
-                        confirmLabel="Confirm"
-                        confirmVariant="success"
-                        isSubmitting={resolving}
-                      >
-                        <div>
-                          <label className="sr-only" htmlFor="escalation-authorize-retest-reason">
-                            Reason
-                          </label>
-                          <textarea
-                            id="escalation-authorize-retest-reason"
-                            className={cn(inputBase, 'min-h-[80px] resize-none')}
-                            placeholder="e.g. One more run with senior tech"
-                            value={reasonAuthorizeRetest}
-                            onChange={e => setReasonAuthorizeRetest(e.target.value)}
-                            maxLength={1000}
-                          />
-                        </div>
-                      </PopoverForm>
-                    </div>
-                  )}
-                </Popover>
-                <Popover
-                  placement="top-end"
-                  offsetValue={8}
-                  preventClose={resolving}
-                  trigger={
-                    <Button variant="reject" size="md" disabled={resolving} isLoading={resolving}>
-                      Final Reject / New Sample
-                    </Button>
-                  }
-                >
-                  {({ close }) => (
-                    <div data-popover-content onClick={e => e.stopPropagation()}>
-                      <PopoverForm
-                        title="Final Reject / New Sample"
-                        subtitle="Reason (required)"
-                        onCancel={close}
-                        onConfirm={async () => {
-                          if (!reasonFinalReject.trim()) {
-                            toast.error({
-                              title: 'Please provide a reason for final reject.',
-                              subtitle:
-                                'A reason is required when final rejecting. This will request a new sample from the patient.',
-                            });
-                            return;
-                          }
-                          await resolveAsync('final_reject', reasonFinalReject.trim());
-                          close();
-                        }}
-                        confirmLabel="Confirm"
-                        confirmVariant="danger"
-                        isSubmitting={resolving}
-                        disabled={!reasonFinalReject.trim()}
-                      >
-                        <div>
-                          <label className="sr-only" htmlFor="escalation-final-reject-reason">
-                            Reason
-                          </label>
-                          <textarea
-                            id="escalation-final-reject-reason"
-                            className={cn(inputBase, 'min-h-[80px] resize-none')}
-                            placeholder="e.g. Sample compromised; request new collection"
-                            value={reasonFinalReject}
-                            onChange={e => setReasonFinalReject(e.target.value)}
-                            maxLength={1000}
-                          />
-                        </div>
-                      </PopoverForm>
-                    </div>
-                  )}
-                </Popover>
-              </div>
-            </div>
-          )}
-        </ModalFooter>
+        <EscalationResolutionFooter
+          canResolveEscalation={canResolveEscalation}
+          resolving={resolving}
+          validationNotesForceValidate={validationNotesForceValidate}
+          onValidationNotesForceValidateChange={setValidationNotesForceValidate}
+          reasonAuthorizeRetest={reasonAuthorizeRetest}
+          onReasonAuthorizeRetestChange={setReasonAuthorizeRetest}
+          reasonFinalReject={reasonFinalReject}
+          onReasonFinalRejectChange={setReasonFinalReject}
+          resolveAsync={resolveAsync}
+        />
       }
     >
       <SectionPanel title="Result Validation">

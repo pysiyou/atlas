@@ -30,26 +30,6 @@ import type { IconName } from '@/components';
 import { ICONS } from '@/utils';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 
-// Re-export types and constants for consumers
-export type {
-  TableProps,
-  TableViewConfig,
-  CardComponentProps,
-  ColumnConfig,
-  SortConfig,
-  TableVariant,
-  Breakpoint,
-} from '@/utils/table';
-export {
-  createColumn,
-  createIdColumn,
-  createBadgeColumn,
-  pickColumns,
-  DEFAULT_LOADING_ROWS,
-  SHOW_ALL_PAGE_SIZE,
-  DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL,
-} from '@/utils/table';
-
 function TableHeader<T>({
   visibleColumns,
   sort,

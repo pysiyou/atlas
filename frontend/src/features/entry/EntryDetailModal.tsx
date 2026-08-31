@@ -62,7 +62,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   onNext,
   onPrev,
   // High complexity is necessary for comprehensive result entry logic with validation, conditional rendering, and state management
-  // eslint-disable-next-line complexity
+   
 }) => {
   const [localResults, setLocalResults] = useState<Record<string, string>>(() => initialResults);
   const [localNotes, setLocalNotes] = useState<string>(() => initialTechnicianNotes);

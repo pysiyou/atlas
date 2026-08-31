@@ -4,6 +4,7 @@
  */
 
 import type { Affiliation } from '@/types';
+import type { PatientFormInput } from '../schemas/patient.schema';
 
 // ============================================================================
 // AFFILIATION UTILITIES
@@ -29,13 +30,32 @@ export interface FormProgress {
   percentage: number;
 }
 
-/**
- * Calculate form progress for PatientFormInput (schema-based)
- */
-export const calculateFormProgressV2 = (
-  formData: Partial<import('../schemas/patient.schema').PatientFormInput>
-): FormProgress => {
-  const parameters = [
+function isFormParameterFilled(param: unknown): boolean {
+  if (typeof param === 'boolean') return param === true;
+  if (typeof param === 'string') return param.trim() !== '';
+  if (typeof param === 'number') return param !== 0;
+  return param !== undefined && param !== null;
+}
+
+function getFamilyHistoryValue(familyHistory: string | string[] | undefined): string | undefined {
+  if (familyHistory == null) return undefined;
+  if (Array.isArray(familyHistory)) return familyHistory.join(' ');
+  return familyHistory;
+}
+
+function getVitalsValue(vitalSigns: PatientFormInput['vitalSigns']): unknown {
+  return (
+    vitalSigns?.temperature ||
+    vitalSigns?.heartRate ||
+    vitalSigns?.systolicBP ||
+    vitalSigns?.diastolicBP ||
+    vitalSigns?.respiratoryRate ||
+    vitalSigns?.oxygenSaturation
+  );
+}
+
+function buildPatientFormParameters(formData: Partial<PatientFormInput>): unknown[] {
+  return [
     formData.fullName,
     formData.dateOfBirth,
     formData.gender,
@@ -54,25 +74,19 @@ export const calculateFormProgressV2 = (
     formData.medicalHistory?.currentMedications?.join(' '),
     formData.medicalHistory?.allergies?.join(' '),
     formData.medicalHistory?.previousSurgeries?.join(' '),
-    Array.isArray(formData.medicalHistory?.familyHistory)
-      ? formData.medicalHistory.familyHistory.join(' ')
-      : formData.medicalHistory?.familyHistory,
-    // Vitals - count as one parameter
-    formData.vitalSigns?.temperature ||
-      formData.vitalSigns?.heartRate ||
-      formData.vitalSigns?.systolicBP ||
-      formData.vitalSigns?.diastolicBP ||
-      formData.vitalSigns?.respiratoryRate ||
-      formData.vitalSigns?.oxygenSaturation,
+    getFamilyHistoryValue(formData.medicalHistory?.familyHistory),
+    getVitalsValue(formData.vitalSigns),
   ];
+}
 
-  const filled = parameters.filter(param => {
-    if (typeof param === 'boolean') return param === true;
-    if (typeof param === 'string') return param.trim() !== '';
-    if (typeof param === 'number') return param !== 0;
-    return param !== undefined && param !== null;
-  }).length;
-
+/**
+ * Calculate form progress for PatientFormInput (schema-based)
+ */
+export const calculateFormProgressV2 = (
+  formData: Partial<PatientFormInput>
+): FormProgress => {
+  const parameters = buildPatientFormParameters(formData);
+  const filled = parameters.filter(isFormParameterFilled).length;
   const total = parameters.length;
   const percentage = total > 0 ? Math.round((filled / total) * 100) : 0;
 

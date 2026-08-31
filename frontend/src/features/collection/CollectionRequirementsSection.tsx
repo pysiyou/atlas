@@ -4,7 +4,8 @@
 
 import React from 'react';
 import { CalloutCard, SectionPanel } from '@/components';
-import { InfoBanner, InfoBannerList, stringsToInfoBannerListRows } from '@/features/lab/components/InfoBanner';
+import { InfoBanner, InfoBannerList } from '@/features/lab/components/InfoBanner';
+import { stringsToInfoBannerListRows } from '@/features/lab/utils/infoBannerUtils';
 
 /** Test detail for requirements display */
 export interface TestDetail {
