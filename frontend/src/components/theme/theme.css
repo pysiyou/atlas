@@ -302,6 +302,19 @@
   --tone-accent-border: var(--brand);
 
   /* ═══════════════════════════════════════════════════════════════════
+     ENTITY ID (patient, order, sample, test codes, etc.)
+     Usage: class="entity-id" or text-id font-id
+     ═══════════════════════════════════════════════════════════════════ */
+  --id-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+  --id-font-size: 0.75rem;
+  --id-font-size-secondary: var(--text-xxs);
+  --id-color: var(--brand);
+  --id-color-secondary: var(--text-tertiary);
+  --id-letter-spacing: 0.02em;
+  --id-font-weight: var(--font-weight-normal);
+
+  /* ═══════════════════════════════════════════════════════════════════
      FOCUS
      Usage: ring-focus (focus ring color)
      ═══════════════════════════════════════════════════════════════════ */
@@ -803,6 +816,31 @@
   background-color: var(--brand-muted);
   border-color: var(--brand-hover);
   color: var(--brand-fg);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Entity IDs — shared typography for PAT/ORD/SAM/TST codes and catalog codes
+   ───────────────────────────────────────────────────────────────────────── */
+
+.entity-id {
+  font-family: var(--id-font-family);
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
+  color: var(--id-color);
+  letter-spacing: var(--id-letter-spacing);
+}
+
+.entity-id--secondary {
+  font-size: var(--id-font-size-secondary);
+  color: var(--id-color-secondary);
+}
+
+.entity-id--clickable {
+  cursor: pointer;
+}
+
+.entity-id--clickable:hover {
+  text-decoration: underline;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────

@@ -82,7 +82,7 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
     <span className={className}>
       {formattedSampleId && (
         <>
-          Sample <span className="font-mono text-brand">{formattedSampleId}</span>{' '}
+          Sample <span className="entity-id">{formattedSampleId}</span>{' '}
         </>
       )}
       collected <span className="text-text-secondary">{formatDate(collectedAt)}</span>

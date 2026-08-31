@@ -1,15 +1,12 @@
-/** GENERATED — source: contracts/enums. UI config preserved during migration. DO NOT EDIT BY HAND. */
-/** Duration in months (999 = lifetime). */
-export const AFFILIATION_DURATION_VALUES = [1, 3, 6, 12, 999] as const;
+/** GENERATED — source: contracts/enums.json. DO NOT EDIT BY HAND. */
+export const AFFILIATION_DURATION_VALUES = [6, 12, 24] as const;
 
 export type AffiliationDuration = (typeof AFFILIATION_DURATION_VALUES)[number];
 
 export const AFFILIATION_DURATION_CONFIG: Record<AffiliationDuration, { label: string }> = {
-  1: { label: '1 Month' },
-  3: { label: '3 Months' },
-  6: { label: '6 Months' },
-  12: { label: '1 Year' },
-  999: { label: 'Lifetime' },
+  6: { label: "6 Months" },
+  12: { label: "1 Year" },
+  24: { label: "2 Years" },
 };
 
 export const AFFILIATION_DURATION_OPTIONS = AFFILIATION_DURATION_VALUES.map(value => ({

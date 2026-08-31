@@ -56,11 +56,26 @@ async function parseSuccessResponse<T>(response: Response): Promise<T> {
 function parseErrorMessage(body: unknown, fallback: string): string {
   if (!body || typeof body !== 'object') return fallback;
 
-  const raw = 'detail' in body ? body.detail : 'message' in body ? body.message : undefined;
+  const record = body as Record<string, unknown>;
+
+  // Atlas unified error shape: { message, details: [{ field, message }] }
+  if (Array.isArray(record.details) && record.details.length > 0) {
+    const detailMessages = record.details
+      .map(detail => {
+        if (!detail || typeof detail !== 'object') return null;
+        const item = detail as { field?: string; message?: string };
+        if (item.field && item.message) return `${item.field}: ${item.message}`;
+        return item.message ?? null;
+      })
+      .filter(Boolean);
+    if (detailMessages.length > 0) return detailMessages.join('; ');
+  }
+
+  const raw = 'detail' in record ? record.detail : 'message' in record ? record.message : undefined;
   if (Array.isArray(raw)) {
     return (
       raw
-        .map((d: { msg?: string }) => d?.msg)
+        .map((d: { msg?: string; message?: string }) => d?.msg ?? d?.message)
         .filter(Boolean)
         .join('; ') || fallback
     );

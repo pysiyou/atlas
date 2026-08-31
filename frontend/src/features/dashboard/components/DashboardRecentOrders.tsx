@@ -39,7 +39,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
                 {getPatientName(String(order.patientId))}
               </p>
               <p className="text-xs text-text-tertiary">
-                <span className="font-mono">{displayId.order(order.orderId)}</span> •{' '}
+                <span className="entity-id">{displayId.order(order.orderId)}</span> •{' '}
                 {order.tests.length} test(s)
               </p>
             </div>

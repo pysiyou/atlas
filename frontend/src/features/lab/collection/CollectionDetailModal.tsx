@@ -187,7 +187,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
       onClose={onClose}
       disableClose={isPopoverSubmitting}
       title={
-        <span className="font-mono text-brand tracking-wide">
+        <span className="entity-id">
           {displayId.sample(sample.sampleId)}
         </span>
       }

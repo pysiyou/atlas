@@ -20,7 +20,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
       <div className="flex justify-between items-center mb-3 pb-3 border-b border-border-default">
         <div className="flex flex-col min-w-0">
           <div className="text-sm text-text-primary break-words">{test.name}</div>
-          <span className="text-xs text-brand font-mono leading-none">{test.code}</span>
+          <span className="entity-id leading-none">{test.code}</span>
         </div>
         <div className="text-text-primary text-lg leading-none">{formatCurrency(test.price)}</div>
       </div>

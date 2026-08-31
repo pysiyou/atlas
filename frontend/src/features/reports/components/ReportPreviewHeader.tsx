@@ -76,7 +76,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
           {reportData.testResults.length > 0 ? (
             <>
               {reportData.testResults.map(t => t.testName).join(', ')} Results ({' '}
-              <span className="text-brand font-mono">
+              <span className="entity-id">
                 {reportData.testResults.map(t => t.testCode).join(', ')}
               </span>{' '}
               )

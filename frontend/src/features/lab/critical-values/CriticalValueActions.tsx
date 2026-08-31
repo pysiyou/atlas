@@ -79,7 +79,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
           {record.testCode}
         </Badge>
         <span className="text-text-secondary">{record.patientName}</span>
-        <span className="text-text-tertiary font-mono">{displayId.order(record.orderId)}</span>
+        <span className="entity-id entity-id--secondary">{displayId.order(record.orderId)}</span>
       </div>
 
       {record.flags && record.flags.length > 0 && (

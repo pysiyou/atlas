@@ -99,7 +99,6 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
                 ? [...current, code]
                 : current.filter(c => c !== code);
               field.onChange(newValue);
-              if (isAdding) setTestSearch('');
             }}
             error={fieldState.error?.message}
             tests={tests}

@@ -2,7 +2,7 @@
  * useOrderUpsertModal — form, search, payment, and derived state for OrderUpsertModal.
  */
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import type { Order, PaymentMethod } from '@/types';
 import { PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG } from '@/types';
 import { displayId, formatCurrency } from '@/utils';
@@ -47,12 +47,12 @@ export function useOrderUpsertModal({
     setPaymentError(null);
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (mode === 'create') {
       resetPaymentState();
     }
     onClose();
-  };
+  }, [mode, onClose]);
 
   const {
     control,
@@ -131,7 +131,7 @@ export function useOrderUpsertModal({
     if (mode === 'edit' && order) {
       return (
         <span>
-          Editing order <span className="font-mono">{displayId.order(order.orderId)}</span>
+          Editing order <span className="entity-id">{displayId.order(order.orderId)}</span>
         </span>
       );
     }

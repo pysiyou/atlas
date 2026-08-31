@@ -63,7 +63,7 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
       {test.sampleType && (
         <Badge variant={test.sampleType as 'blood' | 'urine' | 'other'} size="sm" />
       )}
-      <span className="text-xs text-brand font-mono">{test.testCode}</span>
+      <span className="entity-id">{test.testCode}</span>
     </>
   );
 
@@ -103,7 +103,7 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Re-test of{' '}
-            <span className="font-mono text-brand">{displayId.orderTest(test.retestOfTestId)}</span>
+            <span className="entity-id">{displayId.orderTest(test.retestOfTestId)}</span>
           </Badge>
         )}
         {showRecollectionBadge && (
@@ -117,15 +117,15 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
 
   const content = (
     <div className="text-xs text-text-secondary">
-      <span className="font-mono text-brand">{test.testCode}</span>
+      <span className="entity-id">{test.testCode}</span>
       {test.orderId != null && (
         <span className="ml-2">
-          Order <span className="font-mono text-brand">{displayId.order(test.orderId)}</span>
+          Order <span className="entity-id">{displayId.order(test.orderId)}</span>
         </span>
       )}
       {test.sampleId && (
         <span className="ml-2">
-          Sample <span className="font-mono text-brand">{displayId.sample(test.sampleId)}</span>
+          Sample <span className="entity-id">{displayId.sample(test.sampleId)}</span>
         </span>
       )}
     </div>

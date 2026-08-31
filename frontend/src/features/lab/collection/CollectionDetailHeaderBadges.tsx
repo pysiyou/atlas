@@ -69,7 +69,7 @@ export const CollectionDetailHeaderBadges: React.FC<CollectionDetailHeaderBadges
         <Badge size="sm" variant="info" className="flex items-center gap-1">
           <Icon name={ICONS.actions.checkCircle} className="w-3 h-3" />
           Recollection:{' '}
-          <span className="font-mono text-brand">
+          <span className="entity-id">
             {displayId.sample(rejectedSample.recollectionSampleId)}
           </span>
         </Badge>

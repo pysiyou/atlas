@@ -26,7 +26,7 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
 }) => {
   const avatar = (
     <div className="flex items-center gap-2">
-      <Avatar primaryText={patient.fullName} size="sm" />
+      <Avatar primaryText={patient.fullName} size="sm" avatarOnly />
       {isAffiliationActive(patient.affiliation) && (
         <AffiliationPopover
           affiliation={patient.affiliation}

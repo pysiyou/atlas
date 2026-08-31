@@ -226,7 +226,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
 
                       <div className="shrink-0 flex items-center gap-2">
                         {/* Patient ID on the right */}
-                        <span className="text-[11px] font-normal font-mono text-brand">
+                        <span className="entity-id">
                           {displayId.patient(patient.id)}
                         </span>
                         {/* Check icon if selected */}

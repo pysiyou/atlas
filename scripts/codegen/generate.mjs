@@ -108,6 +108,74 @@ import enum
 ${blocks.join('\n\n')}
 `;
   writeFile('backend/app/schemas/enums.py', py);
+  generateFrontendEnums(enums);
+}
+
+const FRONTEND_ENUM_UI = {
+  Relationship: {
+    spouse: 'Spouse',
+    parent: 'Parent',
+    sibling: 'Sibling',
+    child: 'Child',
+    friend: 'Friend',
+    other: 'Other',
+  },
+  AffiliationDuration: {
+    6: '6 Months',
+    12: '1 Year',
+    24: '2 Years',
+  },
+};
+
+function generateFrontendEnums(enums) {
+  for (const [name, def] of Object.entries(enums)) {
+    if (!FRONTEND_ENUM_UI[name]) continue;
+
+    const values = Object.values(def.values);
+    const constName =
+      name === 'AffiliationDuration' ? 'AFFILIATION_DURATION' : name.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase();
+    const valuesName = `${constName}_VALUES`;
+    const configName = `${constName}_CONFIG`;
+    const optionsName = `${constName}_OPTIONS`;
+    const typeName = name === 'AffiliationDuration' ? 'AffiliationDuration' : name;
+    const fileStem = name === 'AffiliationDuration' ? 'affiliation' : name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
+    const valuesLiteral = values.map(v => (typeof v === 'string' ? JSON.stringify(v) : v)).join(', ');
+    const configEntries = values
+      .map(v => {
+        const key = typeof v === 'string' ? v : v;
+        const label = FRONTEND_ENUM_UI[name][key];
+        const keyLiteral = typeof v === 'string' ? `${v}` : v;
+        return `  ${JSON.stringify(keyLiteral)}: { label: ${JSON.stringify(label)} }`;
+      })
+      .join(',\n');
+
+    const filterBlock =
+      name === 'Relationship'
+        ? `
+export const RELATIONSHIP_FILTER_OPTIONS = [
+  { value: 'all' as const, label: 'All Relationships' },
+  ...${optionsName},
+];
+`
+        : '';
+
+    const ts = `/** GENERATED — source: contracts/enums.json. DO NOT EDIT BY HAND. */
+export const ${valuesName} = [${valuesLiteral}] as const;
+
+export type ${typeName} = (typeof ${valuesName})[number];
+
+export const ${configName}: Record<${typeName}, { label: string }> = {
+${configEntries},
+};
+
+export const ${optionsName} = ${valuesName}.map(value => ({
+  value,
+  label: ${configName}[value].label,
+}));
+${filterBlock}`;
+    writeFile(`frontend/src/types/enums/generated/${fileStem}.ts`, ts);
+  }
 }
 
 generateLabConstants();

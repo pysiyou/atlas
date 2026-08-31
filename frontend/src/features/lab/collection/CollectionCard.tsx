@@ -134,7 +134,7 @@ function CollectionCardMobile({
           primaryText={patientName}
           primaryTextClassName="font-normal capitalize"
           secondaryText={displayId.order(order.orderId)}
-          secondaryTextClassName="text-brand font-mono"
+          secondaryTextClassName="entity-id"
           size="xs"
         />
         {isPending ? (
@@ -370,7 +370,7 @@ function CollectionCardDesktop({
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Recollection of{' '}
-            <span className="font-mono text-brand">
+            <span className="entity-id">
               {displayId.sample(sample.originalSampleId)}
             </span>
           </Badge>
@@ -379,7 +379,7 @@ function CollectionCardDesktop({
           <Badge size="sm" variant="info" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Recollection requested:{' '}
-            <span className="font-mono text-brand">
+            <span className="entity-id">
               {displayId.sample(rejectedSample.recollectionSampleId)}
             </span>
           </Badge>

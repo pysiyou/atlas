@@ -24,7 +24,7 @@ function createTestCodeColumn(tagStyles: { container: string }) {
         <div className="flex items-center gap-1">
           <span
             className={
-              isSuperseded ? 'text-text-disabled line-through font-mono' : DATA_ID_PRIMARY_INLINE
+              isSuperseded ? 'text-text-disabled line-through font-id' : DATA_ID_PRIMARY_INLINE
             }
           >
             {test.testCode}
@@ -97,7 +97,7 @@ function createDetailedExtraColumns(testCatalog: Test[], labColumn: ReturnType<t
       width: 'sm' as const,
       render: (test: OrderTest) =>
         test.sampleId ? (
-          <span className="font-mono text-xs text-brand">{displayId.sample(test.sampleId)}</span>
+          <span className="entity-id">{displayId.sample(test.sampleId)}</span>
         ) : (
           <span className="text-xs text-text-tertiary">—</span>
         ),
@@ -168,7 +168,7 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
         <div className="flex items-center justify-between gap-2">
           <span
             className={
-              isSuperseded ? 'text-text-disabled line-through font-mono' : DATA_ID_PRIMARY_INLINE
+              isSuperseded ? 'text-text-disabled line-through font-id' : DATA_ID_PRIMARY_INLINE
             }
           >
             {item.testCode}

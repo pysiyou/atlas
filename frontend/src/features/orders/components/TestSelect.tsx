@@ -6,7 +6,8 @@
  * UX requirement:
  * - Tests are NOT selected in a modal.
  * - Selecting happens via a simple "popover" list shown directly under the search input.
- * - Each list row shows: `code - name - price` and a green check icon when already selected.
+ * - Each list row shows: `code - name - price` and a payment-style check circle on the right.
+ * - The popover stays open while selecting; outside click closes only when every visible test is checked.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Icon } from '@/components';
@@ -27,6 +28,18 @@ interface TestSelectorProps {
   /** Full test catalog for looking up test details by code */
   tests?: Test[];
 }
+
+/** Circular check indicator matching PaymentMethodSelector. */
+const SelectionCheck: React.FC<{ isSelected: boolean }> = ({ isSelected }) => (
+  <div
+    className={cn(
+      'w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200 shrink-0',
+      isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'
+    )}
+  >
+    {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
+  </div>
+);
 
 /**
  * TestSearchTagInput
@@ -137,13 +150,27 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
   const hasSearch = testSearch.trim().length > 0;
   const visibleTests = hasSearch ? filteredTests : [];
 
-  // Close popover on outside click and Escape.
+  const visibleTestsRef = useRef(visibleTests);
+  const selectedSetRef = useRef(selectedSet);
+  visibleTestsRef.current = visibleTests;
+  selectedSetRef.current = selectedSet;
+
+  const canClosePopover = () => {
+    const tests = visibleTestsRef.current;
+    if (tests.length === 0) return true;
+    return tests.every(test => {
+      const code = typeof test.code === 'string' ? test.code : String(test.code);
+      return selectedSetRef.current.has(code);
+    });
+  };
+
+  // Close popover on outside click only when every visible test is selected; Escape always closes.
   useEffect(() => {
     const handlePointerDown = (e: MouseEvent | TouchEvent) => {
       const target = e.target as Node | null;
       const container = containerRef.current;
       if (!container || !target) return;
-      if (!container.contains(target)) setIsPopoverOpen(false);
+      if (!container.contains(target) && canClosePopover()) setIsPopoverOpen(false);
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -238,7 +265,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                       'flex items-center justify-between gap-4',
                       'hover:bg-surface-hover',
                       'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30 focus-visible:bg-surface-hover',
-                      isSelected ? 'bg-success-bg' : 'bg-surface',
+                      'bg-surface',
                     ].join(' ')}
                   >
                     <div className="min-w-0">
@@ -254,18 +281,13 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
                       </div>
                     </div>
 
-                    <div className="shrink-0 flex items-center gap-2">
+                    <div className="shrink-0 flex items-center gap-3">
                       <div
                         className={`text-xs font-normal px-2 py-1 rounded ${tagStyles.container} ${tagStyles.code}`}
                       >
                         {formatCurrency(price)}
                       </div>
-                      {isSelected && (
-                        <Icon
-                          name={ICONS.actions.checkCircle}
-                          className="w-5 h-5 text-success-fg"
-                        />
-                      )}
+                      <SelectionCheck isSelected={isSelected} />
                     </div>
                   </button>
                 );

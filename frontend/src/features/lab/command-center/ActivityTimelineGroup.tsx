@@ -59,7 +59,7 @@ export const ActivityTimelineGroup: React.FC<ActivityTimelineGroupProps> = ({ la
                             <Badge
                               variant={segment.variant}
                               size="xs"
-                              className={segment.isId ? 'font-mono' : undefined}
+                              className={segment.isId ? 'font-id' : undefined}
                             >
                               {segment.value}
                             </Badge>
@@ -69,7 +69,7 @@ export const ActivityTimelineGroup: React.FC<ActivityTimelineGroupProps> = ({ la
                             key={idx}
                             variant={segment.variant}
                             size="xs"
-                            className={segment.isId ? 'font-mono' : undefined}
+                            className={segment.isId ? 'font-id' : undefined}
                           >
                             {segment.value}
                           </Badge>

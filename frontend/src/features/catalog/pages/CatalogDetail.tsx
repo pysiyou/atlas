@@ -88,7 +88,7 @@ export const CatalogDetail: React.FC = () => {
       key: 'overview',
       title: 'Test Overview',
       rows: [
-        { label: 'Test Code', value: <span className="text-brand font-mono">{test.code}</span> },
+        { label: 'Test Code', value: <span className="entity-id">{test.code}</span> },
         { label: 'Test Name', value: test.name },
         { label: 'Category', value: capitalize(test.category) },
         { label: 'Turnaround Time', value: formatTurnaroundTime(test.turnaroundTime) },

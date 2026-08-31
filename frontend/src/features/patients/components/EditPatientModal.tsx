@@ -157,7 +157,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                   text={
                     <>
                       Editing{' '}
-                      <span className="text-brand font-mono">{displayId.patient(patient.id)}</span>
+                      <span className="entity-id">{displayId.patient(patient.id)}</span>
                     </>
                   }
                 />

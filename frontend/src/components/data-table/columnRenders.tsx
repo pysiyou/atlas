@@ -74,7 +74,7 @@ export function renderOrderTestsBlock(
   const activeCount = activeTests.length;
   return (
     <div className="min-w-0 font-normal">
-      <div className="truncate font-mono text-xs text-text-primary font-normal">
+      <div className="truncate entity-id font-normal">
         {activeTests.map(t => t.testCode ?? t.testName).join('/')}
       </div>
       <div className="text-xs text-text-tertiary truncate font-normal">

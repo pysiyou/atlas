@@ -32,7 +32,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
           primaryText={patient.fullName}
           primaryTextClassName=""
           secondaryText={displayId.patient(patient.id)}
-          secondaryTextClassName="font-mono text-brand"
+          secondaryTextClassName="entity-id"
           size="xs"
         />
         {/* Gender badge on top right */}

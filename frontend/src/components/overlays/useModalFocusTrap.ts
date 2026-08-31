@@ -2,7 +2,10 @@
  * Keyboard focus trap and escape-to-close for Modal.
  */
 
-import { useEffect, type RefObject } from 'react';
+import { useEffect, useRef, type RefObject } from 'react';
+
+const FOCUSABLE_SELECTOR =
+  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 export function useModalFocusTrap({
   isOpen,
@@ -15,19 +18,34 @@ export function useModalFocusTrap({
   disableClose: boolean;
   onClose: () => void;
 }) {
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  // Focus the first field only when the modal opens — not on every parent re-render.
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const timer = setTimeout(() => {
+      const firstFocusable = modalRef.current?.querySelector(
+        FOCUSABLE_SELECTOR
+      ) as HTMLElement | null;
+      firstFocusable?.focus();
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [isOpen, modalRef]);
+
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !disableClose) {
-        onClose();
+        onCloseRef.current();
         return;
       }
 
       if (e.key === 'Tab' && modalRef.current) {
-        const focusableElements = modalRef.current.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
+        const focusableElements = modalRef.current.querySelectorAll(FOCUSABLE_SELECTOR);
         if (focusableElements.length === 0) return;
 
         const firstElement = focusableElements[0] as HTMLElement;
@@ -38,27 +56,14 @@ export function useModalFocusTrap({
             e.preventDefault();
             lastElement.focus();
           }
-        } else {
-          if (document.activeElement === lastElement) {
-            e.preventDefault();
-            firstElement.focus();
-          }
+        } else if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
         }
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
-
-    const timer = setTimeout(() => {
-      const firstFocusable = modalRef.current?.querySelector(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      ) as HTMLElement;
-      firstFocusable?.focus();
-    }, 50);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      clearTimeout(timer);
-    };
-  }, [isOpen, disableClose, onClose, modalRef]);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, disableClose, modalRef]);
 }

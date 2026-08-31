@@ -85,12 +85,12 @@ export const EntryCard: React.FC<EntryCardProps> = ({
             <div className="flex items-center gap-1.5 text-xs text-text-secondary">
               <span className="truncate capitalize">{patientName}</span>
               <span className="text-text-tertiary">•</span>
-              <span className="text-brand font-normal font-mono truncate">{test.testCode}</span>
+              <span className="entity-id truncate">{test.testCode}</span>
               {test.sampleId && (
                 <>
                   <span className="text-text-tertiary">•</span>
                   <span
-                    className="text-brand font-normal font-mono truncate"
+                    className="entity-id truncate"
                     title={displayId.sample(test.sampleId)}
                   >
                     {displayId.sample(test.sampleId)}
@@ -202,7 +202,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <div className="flex items-center gap-2 flex-wrap">
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Re-test of <span className="font-mono text-brand">{displayId.orderTest(test.retestOfTestId)}</span>
+            Re-test of <span className="entity-id">{displayId.orderTest(test.retestOfTestId)}</span>
           </Badge>
         </div>
       );
@@ -213,7 +213,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Recollection of{' '}
-            <span className="font-mono text-brand">
+            <span className="entity-id">
               {displayId.sample(test.sampleOriginalSampleId)}
             </span>
           </Badge>

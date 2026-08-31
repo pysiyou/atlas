@@ -43,18 +43,36 @@ export const DEFAULT_EMPTY_TITLE_NO_MATCHES = 'No Matches Found';
 // Typography
 // ---------------------------------------------------------------------------
 
-/** Primary ID cell in table rows (patient/order/test/code). */
-export const DATA_ID_PRIMARY = 'text-xs text-text-primary font-mono truncate block';
+// ---------------------------------------------------------------------------
+// Entity ID typography (see theme.css --id-* tokens and .entity-id class)
+// ---------------------------------------------------------------------------
 
-/** Primary ID inline (no block). */
-export const DATA_ID_PRIMARY_INLINE = 'text-xs text-text-primary font-mono truncate';
+/** Base entity ID style (patient, order, sample, test, catalog code, etc.). */
+export const ENTITY_ID = 'entity-id';
 
-/** Primary ID as a clickable control. */
-export const DATA_ID_PRIMARY_CLICKABLE =
-  'text-xs text-text-primary font-mono hover:underline truncate block max-w-full';
+/** Smaller / muted ID under a primary label. */
+export const ENTITY_ID_SECONDARY = 'entity-id entity-id--secondary';
 
-/** Secondary ID under a name (e.g. patient ID under patient name). */
-export const DATA_ID_SECONDARY = 'text-xxs text-text-tertiary  truncate font-mono';
+/** ID as a block-level truncated cell. */
+export const ENTITY_ID_BLOCK = 'entity-id truncate block';
+
+/** ID inline without block layout. */
+export const ENTITY_ID_INLINE = 'entity-id truncate';
+
+/** Clickable ID link style. */
+export const ENTITY_ID_CLICKABLE = 'entity-id entity-id--clickable truncate block max-w-full';
+
+/** @deprecated Use ENTITY_ID_BLOCK */
+export const DATA_ID_PRIMARY = ENTITY_ID_BLOCK;
+
+/** @deprecated Use ENTITY_ID_INLINE */
+export const DATA_ID_PRIMARY_INLINE = ENTITY_ID_INLINE;
+
+/** @deprecated Use ENTITY_ID_CLICKABLE */
+export const DATA_ID_PRIMARY_CLICKABLE = ENTITY_ID_CLICKABLE;
+
+/** @deprecated Use ENTITY_ID_SECONDARY */
+export const DATA_ID_SECONDARY = `${ENTITY_ID_SECONDARY} truncate`;
 
 /** Detail row label. */
 export const DETAIL_LABEL = 'text-xs text-text-tertiary';

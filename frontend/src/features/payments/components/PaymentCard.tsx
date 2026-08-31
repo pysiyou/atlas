@@ -29,7 +29,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
           primaryText={order.patientName || 'N/A'}
           primaryTextClassName=""
           secondaryText={displayId.order(order.orderId)}
-          secondaryTextClassName="font-mono text-brand"
+          secondaryTextClassName="entity-id"
           size="xs"
         />
         {/* Total price on top right */}
@@ -49,7 +49,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
                 <div className="flex items-center flex-1 min-w-0">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 flex-shrink-0" />
                   <span className="mr-1 truncate">{test.testName}</span>
-                  <span className="text-brand font-mono truncate">{test.testCode}</span>
+                  <span className="entity-id truncate">{test.testCode}</span>
                 </div>
                 <span className="text-text-primary ml-2 flex-shrink-0">
                   {formatCurrency(test.priceAtOrder)}

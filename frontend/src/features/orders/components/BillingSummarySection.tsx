@@ -41,7 +41,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
         <div className="px-4 py-2.5 border-b border-dashed border-border-strong">
           <div className="flex justify-between items-center">
             <span className="text-xs font-normal text-text-secondary uppercase tracking-wider">
-              Order <span className="font-mono text-brand">{displayId.order(order.orderId)}</span>
+              Order <span className="entity-id">{displayId.order(order.orderId)}</span>
             </span>
             <Badge variant={order.paymentStatus} size="xs" />
           </div>
@@ -64,7 +64,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
                     <span className="text-text-secondary truncate">
                       {test.testName || test.testCode || 'Test'}
                       {test.testCode && test.testName !== test.testCode && (
-                        <span className="text-brand font-mono ml-1">({test.testCode})</span>
+                        <span className="entity-id ml-1">({test.testCode})</span>
                       )}
                     </span>
                   </span>

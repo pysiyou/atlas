@@ -307,7 +307,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
             fields: [
               {
                 label: 'Test Code',
-                value: <span className="text-brand font-mono">{test.testCode}</span>,
+                value: <span className="entity-id">{test.testCode}</span>,
               },
               {
                 label: 'Sample Type',
@@ -318,7 +318,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Sample ID',
                 value: test.sampleId ? (
-                  <span className="text-brand font-mono">{displayId.sample(test.sampleId)}</span>
+                  <span className="entity-id">{displayId.sample(test.sampleId)}</span>
                 ) : undefined,
               },
               {

@@ -182,14 +182,14 @@ function ValidationCardMobile({
               {patientName}
             </div>
             <div className="text-xxs text-text-disabled">•</div>
-            <div className="text-xxs text-brand font-normal font-mono truncate">
+            <div className="entity-id entity-id--secondary truncate">
               {test.testCode}
             </div>
             {test.sampleId && (
               <>
                 <div className="text-xs text-text-disabled">•</div>
                 <div
-                  className="text-xxs text-brand font-normal font-mono truncate"
+                  className="entity-id entity-id--secondary truncate"
                   title={displayId.sample(test.sampleId)}
                 >
                   {displayId.sample(test.sampleId)}
@@ -360,7 +360,7 @@ function ValidationCardDesktop({
         {showRetestBadge && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Re-test of <span className="font-mono text-brand">{displayId.orderTest(test.retestOfTestId)}</span>
+            Re-test of <span className="entity-id">{displayId.orderTest(test.retestOfTestId)}</span>
           </Badge>
         )}
         {showRecollectionBadge && (

@@ -220,7 +220,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               {
                 label: 'Sample ID',
                 value: test.sampleId ? (
-                  <span className="text-brand font-mono">{displayId.sample(test.sampleId)}</span>
+                  <span className="entity-id">{displayId.sample(test.sampleId)}</span>
                 ) : undefined,
               },
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
@@ -239,13 +239,13 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               {
                 label: 'Test Code',
                 value: test.testCode ? (
-                  <span className="text-brand font-mono">{test.testCode}</span>
+                  <span className="entity-id">{test.testCode}</span>
                 ) : undefined,
               },
               {
                 label: 'Order ID',
                 value: test.orderId ? (
-                  <span className="text-brand font-mono">{displayId.order(test.orderId)}</span>
+                  <span className="entity-id">{displayId.order(test.orderId)}</span>
                 ) : undefined,
               },
             ],

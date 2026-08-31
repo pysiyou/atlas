@@ -30,12 +30,12 @@ export const EscalationCardMobile: React.FC<EscalationCardMobileProps> = ({
             {test.patientName}
           </div>
           <div className="text-xxs text-text-disabled">•</div>
-          <div className="text-xxs text-brand font-normal font-mono truncate">{test.testCode}</div>
+          <div className="entity-id entity-id--secondary truncate">{test.testCode}</div>
           {test.sampleId && (
             <>
               <div className="text-xs text-text-disabled">•</div>
               <div
-                className="text-xxs text-brand font-normal font-mono truncate"
+                className="entity-id entity-id--secondary truncate"
                 title={displayId.sample(test.sampleId)}
               >
                 {displayId.sample(test.sampleId)}

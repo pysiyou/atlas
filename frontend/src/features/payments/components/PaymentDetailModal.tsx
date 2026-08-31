@@ -86,13 +86,13 @@ const PaymentReceipt: React.FC<{
         <div className="space-y-1.5">
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Order Number:</span>
-            <span className="text-brand font-normal font-mono">
+            <span className="entity-id">
               {displayId.order(sourceOrder.orderId)}
             </span>
           </div>
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Patient Number:</span>
-            <span className="text-brand font-normal font-mono">
+            <span className="entity-id">
               {displayId.patient(sourceOrder.patientId)}
             </span>
           </div>
@@ -127,7 +127,7 @@ const PaymentReceipt: React.FC<{
                       {test.testName || test.testCode || 'Test'}
                     </span>
                     {test.testCode && test.testName !== test.testCode && (
-                      <span className="text-xs text-brand font-mono mt-0.5">{test.testCode}</span>
+                      <span className="entity-id mt-0.5">{test.testCode}</span>
                     )}
                   </span>
                 </span>
@@ -238,7 +238,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         subtitle={
           <span>
             Order{' '}
-            <span className="font-mono text-brand">{displayId.order(sourceOrder.orderId)}</span>
+            <span className="entity-id">{displayId.order(sourceOrder.orderId)}</span>
           </span>
         }
         size="xl"

@@ -33,7 +33,7 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
           primaryText={test.patientName}
           primaryTextClassName="capitalize"
           secondaryText={displayId.orderTest(test.testId)}
-          secondaryTextClassName="font-mono text-brand"
+          secondaryTextClassName="entity-id"
           size="xs"
         />
         {/* Status badge on top right */}
@@ -44,10 +44,10 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
       <div className="grow space-y-2">
         <div>
           <div className="text-text-primary text-sm">{test.testName}</div>
-          <div className="text-xs text-brand font-mono">{test.testCode}</div>
+          <div className="entity-id">{test.testCode}</div>
         </div>
         <div className="text-xs text-text-tertiary">
-          Order: <span className="font-mono">{displayId.order(test.orderId)}</span>
+          Order: <span className="entity-id">{displayId.order(test.orderId)}</span>
         </div>
       </div>
 

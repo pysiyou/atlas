@@ -28,37 +28,54 @@ export const ORDER_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
 export function renderOrderDetailLargeSkeleton() {
   return (
     <div
-      className="flex-1 grid grid-cols-3 gap-4 min-h-0 h-full"
-      style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
+      className="flex-1 grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full overflow-hidden"
+      style={{ height: '100%', maxHeight: '100%' }}
     >
-      <div
-        className="col-span-2 grid grid-cols-2 grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
-        style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
-      >
-        <SectionPanel title="Order Information" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto">
+      <div className="grid grid-cols-3 gap-4 min-h-0">
+        <SectionPanel
+          title="Order Information"
+          className="h-full flex flex-col min-h-0"
+          contentClassName="flex-1 min-h-0 overflow-y-auto"
+        >
           <SkeletonInfoSection rows={5} layout="column" />
         </SectionPanel>
-        <SectionPanel title="Patient Information" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto" headerClassName="!py-1.5">
+        <SectionPanel
+          title="Patient Information"
+          className="h-full flex flex-col min-h-0"
+          contentClassName="flex-1 min-h-0 overflow-y-auto"
+          headerClassName="!py-1.5"
+        >
           <SkeletonInfoSection rows={4} layout="column" />
         </SectionPanel>
-        <SectionPanel title="Tests" className="h-full flex flex-col col-span-2 min-h-0" contentClassName="flex-1 min-h-0 p-0 overflow-y-auto">
+        <SectionPanel
+          title="Order Progress"
+          className="h-full flex flex-col min-h-0"
+          contentClassName="flex-1 min-h-0 overflow-y-auto p-0"
+          headerClassName="!py-1.5"
+        >
+          <div className="p-4">
+            <OrderProgressSkeleton />
+          </div>
+        </SectionPanel>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4 min-h-0">
+        <SectionPanel
+          title="Tests"
+          className="h-full flex flex-col min-h-0 col-span-2"
+          contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
+        >
           <div className="border-t border-border-default">
             {Array.from({ length: 4 }).map((_, i) => (
               <SkeletonTableRow key={i} columns={5} />
             ))}
           </div>
         </SectionPanel>
-      </div>
-      <div
-        className="col-span-1 grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
-        style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
-      >
-        <SectionPanel title="Order Progress" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto p-0" headerClassName="!py-1.5">
-          <div className="p-4">
-            <OrderProgressSkeleton />
-          </div>
-        </SectionPanel>
-        <SectionPanel title="Billing Summary" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col">
+        <SectionPanel
+          title="Billing Summary"
+          className="h-full flex flex-col min-h-0"
+          contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
+        >
           <SkeletonInfoSection rows={3} layout="column" />
         </SectionPanel>
       </div>
