@@ -9,35 +9,52 @@ import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import { orderAPI } from '@/features/orders/api/orders';
 import { getErrorMessage } from '@/utils/errors';
 import { toast } from '@/app/AppToastBar';
+import {
+  orderCreateSchema,
+  orderUpdateSchema,
+  orderSchema,
+} from '@/features/orders/schemas/order.schema';
+import { formInputToPayload } from '@/features/orders/utils/form-transformers';
 import type { Order, TestStatus } from '@/types';
 
 /**
- * Mutation hook to create a new order
+ * Mutation hook to create a new order with Zod validation.
  */
 export function useCreateOrder() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (order: Partial<Order>) => orderAPI.create(order),
+    mutationFn: async (input: unknown) => {
+      const validated = orderCreateSchema.parse(input);
+      const transformed = formInputToPayload(validated);
+      const response = await orderAPI.create(transformed);
+      return orderSchema.parse(response) as Order;
+    },
     onSuccess: () => {
       invalidateOrderQueries(queryClient, { samples: true });
+      toast.success('Order created successfully');
+    },
+    onError: error => {
+      toast.error(`Failed to create order: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
 }
 
 /**
- * Mutation hook to update an existing order with optimistic updates
+ * Mutation hook to update an existing order with Zod validation and optimistic updates.
  */
 export function useUpdateOrder() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ orderId, updates }: { orderId: number | string; updates: Partial<Order> }) => {
-      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      return orderAPI.update(orderIdStr, updates);
+    mutationFn: async ({ orderId, data }: { orderId: number; data: unknown }) => {
+      const validated = orderUpdateSchema.parse(data);
+      const transformed = formInputToPayload(validated);
+      const response = await orderAPI.update(orderId.toString(), transformed);
+      return orderSchema.parse(response) as Order;
     },
-    onMutate: async ({ orderId, updates }) => {
-      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+    onMutate: async ({ orderId, data }) => {
+      const orderIdStr = orderId.toString();
 
       await queryClient.cancelQueries({ queryKey: queryKeys.orders.all });
 
@@ -46,7 +63,7 @@ export function useUpdateOrder() {
       if (previousOrder) {
         queryClient.setQueryData<Order>(queryKeys.orders.byId(orderIdStr), {
           ...previousOrder,
-          ...updates,
+          ...(typeof data === 'object' && data !== null ? data : {}),
           updatedAt: new Date().toISOString(),
         });
       }
@@ -54,8 +71,7 @@ export function useUpdateOrder() {
       return { previousOrder };
     },
     onError: (error, variables, context) => {
-      const orderIdStr =
-        typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
+      const orderIdStr = variables.orderId.toString();
       if (context?.previousOrder) {
         queryClient.setQueryData(queryKeys.orders.byId(orderIdStr), context.previousOrder);
       }
@@ -64,9 +80,12 @@ export function useUpdateOrder() {
         subtitle: getErrorMessage(error, 'The order could not be updated. Please try again.'),
       });
     },
+    onSuccess: (_, variables) => {
+      invalidateOrderQueries(queryClient, { orderId: variables.orderId.toString(), samples: true });
+      toast.success('Order updated successfully');
+    },
     onSettled: (_, __, variables) => {
-      const orderIdStr =
-        typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
+      const orderIdStr = variables.orderId.toString();
       invalidateOrderQueries(queryClient, { orderId: orderIdStr, samples: true });
     },
   });

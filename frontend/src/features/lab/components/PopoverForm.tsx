@@ -127,10 +127,10 @@ interface RadioCardProps {
   onClick: () => void;
   /** Main label text */
   label: string;
-  /** Description text below the label */
-  description: string;
+  /** Description content below the label */
+  description: React.ReactNode;
   /** Color variant when selected (unused visually; kept for API compatibility) */
-  variant?: 'sky' | 'red';
+  variant?: 'sky' | 'red' | 'warning';
   /** Radio input name for grouping */
   name: string;
   /** Whether the option is disabled */

@@ -9,6 +9,7 @@
  */
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEntityLookup } from '@/hooks/useEntityLookup';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { testAPI } from '@/features/catalog/api/tests';
 import { useAuthStore } from '@/app/store';
@@ -168,15 +169,10 @@ export function useActiveTests() {
  */
 export function useTestNameLookup() {
   const { tests, isLoading } = useTestCatalog();
+  const { get } = useEntityLookup(tests, t => t.code, { isLoading });
 
-  const getTestName = (testCode: string): string => {
-    const test = tests.find(t => t.code === testCode);
-    return test?.name ?? testCode;
-  };
-
-  const getTest = (testCode: string): Test | undefined => {
-    return tests.find(t => t.code === testCode);
-  };
+  const getTestName = (testCode: string): string => get(testCode)?.name ?? testCode;
+  const getTest = (testCode: string): Test | undefined => get(testCode);
 
   return {
     getTestName,

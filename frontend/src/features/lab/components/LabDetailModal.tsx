@@ -10,7 +10,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Modal } from '@/components';
-import { Badge, SectionContainer, DetailFieldGroup, FooterInfo } from '@/components';
+import { Badge, SectionPanel, DetailFieldGroup, FooterInfo } from '@/components';
 import { ICONS } from '@/utils';
 import type { DetailFieldConfig } from '@/components';
 import { formatDate } from '@/utils';
@@ -94,7 +94,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
       <div className="flex flex-col h-full bg-surface-page">
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {/* Header Section with Badges and Context */}
-          <SectionContainer hideHeader>
+          <SectionPanel hideHeader>
             <div className="flex flex-col gap-4">
               {/* Row 1: Badges */}
               <div className="flex items-center justify-between gap-3 flex-wrap">
@@ -164,7 +164,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                 {additionalContextInfo}
               </div>
             </div>
-          </SectionContainer>
+          </SectionPanel>
 
           {/* Main Content */}
           {children}
@@ -198,7 +198,7 @@ export interface DetailGridSectionConfig {
  * DetailGrid - Two-column grid for detail sections
  *
  * Can be used in two ways:
- * 1. With children (legacy): Pass SectionContainer components as children
+ * 1. With children (legacy): Pass SectionPanel components as children
  * 2. With sections config (new): Pass array of section configurations
  *
  * @example
@@ -224,8 +224,8 @@ export interface DetailGridSectionConfig {
  * @example
  * // Using children (legacy)
  * <DetailGrid>
- *   <SectionContainer title="Section 1">...</SectionContainer>
- *   <SectionContainer title="Section 2">...</SectionContainer>
+ *   <SectionPanel title="Section 1">...</SectionPanel>
+ *   <SectionPanel title="Section 2">...</SectionPanel>
  * </DetailGrid>
  */
 interface DetailGridProps {
@@ -256,14 +256,14 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {visibleSections.map(section => (
-          <SectionContainer
+          <SectionPanel
             key={section.title}
             title={section.title}
             headerRight={section.headerRight}
             spacing="normal"
           >
             <DetailFieldGroup fields={section.fields} />
-          </SectionContainer>
+          </SectionPanel>
         ))}
       </div>
     );

@@ -9,11 +9,12 @@
 /* eslint-disable max-lines */
 
 import React from 'react';
-import { Badge, Button, Card, Icon, Alert } from '@/components';
+import { Badge, Button, Card, Icon } from '@/components';
 import { formatDate, displayId } from '@/utils';
 import { useUserLookup } from '@/features/admin/api/useUsers';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
 import { LabCard } from '@/features/lab/components/LabCard';
+import { LAB_CONFIG } from '@/features/lab/constants';
 import { RejectionDialog } from '@/features/lab/components';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
 import { QueueAgeBadge } from '@/features/lab/components/QueueAgeBadge';
@@ -276,7 +277,7 @@ function ValidationCardDesktop({
 }) {
   const {
     rejectionHistory,
-    lastRejection,
+    lastRejection: _lastRejection,
     hasRejectionHistory,
     showRetestBadge,
     showRecollectionBadge,
@@ -403,9 +404,9 @@ function ValidationCardDesktop({
 
 export const ValidationCard: React.FC<ValidationCardProps> = ({
   test,
-  commentKey,
-  comments,
-  onCommentsChange,
+  commentKey: _commentKey,
+  comments: _comments,
+  onCommentsChange: _onCommentsChange,
   onApprove,
   onReject,
   onClick,

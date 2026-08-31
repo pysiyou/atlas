@@ -4,22 +4,14 @@
  */
 
 import type { Patient, Order } from '@/types';
-import {
-  formatDetailDate as formatDetailDateShared,
-  formatArray,
-  formatOrderDate,
-  formatCurrency,
-} from '@/utils';
+import { formatDetailDate as formatDetailDateUtil, formatArray, formatOrderDate } from '@/utils';
 
-/**
- * Formats a date to a readable string
- */
 export const formatDetailDate = (
   date: string | Date | undefined | null,
   format: 'long' | 'short' = 'long'
 ): string => {
   if (format === 'long') {
-    return formatDetailDateShared(date);
+    return formatDetailDateUtil(date);
   }
   return formatOrderDate(date, 'short');
 };
@@ -61,8 +53,3 @@ export const formatAddress = (address: Patient['address']): string => {
 export const getReportableOrders = (orders: Order[]): Order[] => {
   return orders.filter(order => order.tests.some(test => test.status === 'validated'));
 };
-
-/**
- * Formats currency for display (re-export for convenience)
- */
-export const formatOrderPrice = formatCurrency;

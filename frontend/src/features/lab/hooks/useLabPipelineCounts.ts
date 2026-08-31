@@ -52,7 +52,7 @@ export function useLabPipelineCounts() {
 
   const counts = useMemo<LabPipelineCounts>(() => {
     return {
-      collection: collectionDisplays.filter(d => d.sample.status === 'pending').length,
+      collection: collectionDisplays.filter(d => d.sample?.status === 'pending').length,
       entry: entryTests.length,
       validation: validationTests.length,
       escalation: escalatedTests?.length ?? 0,

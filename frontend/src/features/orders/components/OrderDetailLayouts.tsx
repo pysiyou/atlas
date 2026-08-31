@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { SectionContainer, IconButton } from '@/components';
+import { SectionPanel, IconButton } from '@/components';
 import { PaymentPopover } from '@/features/billing/components/PaymentPopover';
 import type { Order, OrderTest, Patient, Invoice } from '@/types';
 import { OrderInfoSection } from './OrderInfoSection';
@@ -50,15 +50,15 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
   return (
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
-      <SectionContainer
+      <SectionPanel
         title="Order Information"
         className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
       >
         <OrderInfoSection order={order} layout="grid" />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Patient Information"
         className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
@@ -69,9 +69,9 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         }
       >
         <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout="grid" />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Order Progress"
         className="shrink-0 bg-surface"
         contentClassName="overflow-visible p-0"
@@ -79,9 +79,9 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         headerRight={<OrderCircularProgress order={order} />}
       >
         <OrderTimeline order={order} />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title={
           supersededCount > 0
             ? `Tests (${activeTests.length} active)`
@@ -91,16 +91,16 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         contentClassName="p-0 overflow-visible"
       >
         <TestsTable tests={order.tests} orderId={order.orderId} supersededCount={supersededCount} variant="simple" />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Billing Summary"
         className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
         headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
       >
         <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
-      </SectionContainer>
+      </SectionPanel>
 
       <AuditHistorySection
         entityType="order"
@@ -135,15 +135,15 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
   return (
     <div className="grid grid-cols-2 gap-4 w-full pb-6">
-      <SectionContainer
+      <SectionPanel
         title="Order Information"
         className="bg-surface"
         contentClassName="overflow-visible"
       >
         <OrderInfoSection order={order} layout="column" />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Patient Information"
         className="bg-surface"
         contentClassName="overflow-visible"
@@ -155,9 +155,9 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         }
       >
         <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout="column" />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Order Progress"
         className="bg-surface"
         contentClassName="overflow-visible p-0"
@@ -165,18 +165,18 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         headerRight={<OrderCircularProgress order={order} />}
       >
         <OrderTimeline order={order} />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Billing Summary"
         className="bg-surface"
         contentClassName="overflow-visible flex flex-col"
         headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
       >
         <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title={
           supersededCount > 0
             ? `Tests (${activeTests.length} active)`
@@ -186,7 +186,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         contentClassName="p-0 overflow-visible"
       >
         <TestsTable tests={order.tests} orderId={order.orderId} supersededCount={supersededCount} variant="detailed" />
-      </SectionContainer>
+      </SectionPanel>
 
       <AuditHistorySection
         className="col-span-2"
@@ -228,15 +228,15 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
         className="col-span-2 grid grid-cols-2 grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
         style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
       >
-        <SectionContainer
+        <SectionPanel
           title="Order Information"
           className="h-full flex flex-col min-h-0"
           contentClassName="flex-1 min-h-0 overflow-y-auto"
         >
           <OrderInfoSection order={order} layout="column" />
-        </SectionContainer>
+        </SectionPanel>
 
-        <SectionContainer
+        <SectionPanel
           title="Patient Information"
           className="h-full flex flex-col min-h-0"
           contentClassName="flex-1 min-h-0 overflow-y-auto"
@@ -248,9 +248,9 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           }
         >
           <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout="column" />
-        </SectionContainer>
+        </SectionPanel>
 
-        <SectionContainer
+        <SectionPanel
           title={
             supersededCount > 0
               ? `Tests (${activeTests.length} active)`
@@ -260,14 +260,14 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
         >
           <TestsTable tests={order.tests} orderId={order.orderId} supersededCount={supersededCount} variant="detailed" />
-        </SectionContainer>
+        </SectionPanel>
       </div>
 
       <div
         className="col-span-1 flex flex-col gap-4 min-h-0 h-full overflow-y-auto"
         style={{ height: '100%', maxHeight: '100%' }}
       >
-        <SectionContainer
+        <SectionPanel
           title="Order Progress"
           className="shrink-0 flex flex-col min-h-0"
           contentClassName="overflow-y-auto p-0"
@@ -275,16 +275,16 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           headerRight={<OrderCircularProgress order={order} />}
         >
           <OrderTimeline order={order} />
-        </SectionContainer>
+        </SectionPanel>
 
-        <SectionContainer
+        <SectionPanel
           title="Billing Summary"
           className="shrink-0 flex flex-col min-h-0"
           contentClassName="overflow-y-auto flex flex-col"
           headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
         >
           <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
-        </SectionContainer>
+        </SectionPanel>
 
         <AuditHistorySection
           entityType="order"

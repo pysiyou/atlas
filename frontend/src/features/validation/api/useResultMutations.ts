@@ -11,47 +11,12 @@
  * @module hooks/queries/useResultMutations
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { queryKeys, cacheConfig } from '@/lib/query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { invalidateResultQueries } from '@/lib/query/invalidate';
 import { resultAPI } from '@/features/validation/api/results';
 import { useAuthStore } from '@/app/store';
 import type { ValidationDecision, ResultRejectionType } from '@/types';
 import type { RejectionResult, EscalationResolveRequest } from '@/types/lab-operations';
-
-/**
- * Hook to fetch rejection options for a test.
- * Returns available actions, attempt limits, and escalation status.
- *
- * @param orderId - The order ID
- * @param testCode - The test code
- * @param enabled - Whether to enable the query (default: true when ids provided)
- */
-export function useRejectionOptions(
-  orderId: string | number | undefined,
-  testCode: string | undefined,
-  enabled = true
-) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
-  const orderIdStr = orderId ? String(orderId) : '';
-
-  const query = useQuery({
-    queryKey: queryKeys.results.rejectionOptions(orderIdStr, testCode ?? ''),
-    queryFn: () => resultAPI.getRejectionOptions(orderIdStr, testCode!),
-    enabled: isAuthenticated && !isRestoring && enabled && !!orderId && !!testCode,
-    ...cacheConfig.dynamic,
-  });
-
-  return {
-    options: query.data ?? null,
-    isLoading: query.isLoading,
-    isPending: query.isPending,
-    isFetching: query.isFetching,
-    isError: query.isError,
-    error: query.error,
-    refetch: query.refetch,
-  };
-}
 
 /**
  * Hook to enter results for a test.

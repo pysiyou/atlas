@@ -11,20 +11,20 @@
  */
 
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
-import { Icon, type IconName } from './Icon';
+import { Icon } from './Icon';
 import {
-  type BaseVariant,
-  type SemanticVariant,
-  VARIANT_CONFIG,
+  type ButtonLikeVariant,
   BASE_STYLES,
   ICON_BUTTON_SIZE_STYLES,
   ICON_BUTTON_ICON_SIZES,
+  getBaseStyle,
+  getDefaultIcon,
 } from './buttonHelpers';
 
 /**
  * All available icon button variants (Base + Semantic)
  */
-export type IconButtonVariant = BaseVariant | SemanticVariant;
+export type IconButtonVariant = ButtonLikeVariant;
 
 /**
  * Available icon button sizes
@@ -45,33 +45,6 @@ const ICON_BUTTON_VARIANTS: Record<string, string> = {
   print: 'bg-neutral-200 text-text-primary hover:bg-neutral-300 focus:ring-neutral-500',
   add: 'bg-brand text-on-brand hover:opacity-90 focus:ring-brand',
   sidebarClose: 'bg-surface-hover text-text-secondary hover:opacity-90 focus:ring-neutral-500',
-};
-
-/**
- * Check if a variant is a semantic variant (has bundled icon)
- */
-const isSemanticVariant = (variant: IconButtonVariant): variant is SemanticVariant => {
-  return variant in VARIANT_CONFIG;
-};
-
-/**
- * Get the base style for a variant
- */
-const getBaseStyle = (variant: IconButtonVariant): BaseVariant => {
-  if (isSemanticVariant(variant)) {
-    return VARIANT_CONFIG[variant].style;
-  }
-  return variant;
-};
-
-/**
- * Get the default icon for a variant (if any)
- */
-const getDefaultIcon = (variant: IconButtonVariant): IconName | undefined => {
-  if (isSemanticVariant(variant)) {
-    return VARIANT_CONFIG[variant].icon;
-  }
-  return undefined;
 };
 
 interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {

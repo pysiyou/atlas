@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { useResponsiveLayout } from '@/hooks';
-import { SectionContainer } from '@/components';
+import { SectionPanel } from '@/components';
 import { Skeleton, SkeletonInfoSection, SkeletonTableRow } from '@/components/loaders/Skeleton';
 
 const INFO_ROWS = 5;
@@ -39,27 +39,27 @@ export const OrderDetailSkeleton: React.FC = () => {
   if (isSmall) {
     return (
       <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
-        <SectionContainer title="Order Information" className="shrink-0 bg-surface" contentClassName="overflow-visible">
+        <SectionPanel title="Order Information" className="shrink-0 bg-surface" contentClassName="overflow-visible">
           <SkeletonInfoSection rows={INFO_ROWS} layout="grid" />
-        </SectionContainer>
-        <SectionContainer title="Patient Information" className="shrink-0 bg-surface" contentClassName="overflow-visible">
+        </SectionPanel>
+        <SectionPanel title="Patient Information" className="shrink-0 bg-surface" contentClassName="overflow-visible">
           <SkeletonInfoSection rows={4} layout="grid" />
-        </SectionContainer>
-        <SectionContainer title="Order Progress" className="shrink-0 bg-surface" contentClassName="overflow-visible p-0" headerClassName="!py-1.5">
+        </SectionPanel>
+        <SectionPanel title="Order Progress" className="shrink-0 bg-surface" contentClassName="overflow-visible p-0" headerClassName="!py-1.5">
           <div className="p-4">
             <OrderProgressSkeleton />
           </div>
-        </SectionContainer>
-        <SectionContainer title="Tests" className="shrink-0 bg-surface" contentClassName="p-0 overflow-visible">
+        </SectionPanel>
+        <SectionPanel title="Tests" className="shrink-0 bg-surface" contentClassName="p-0 overflow-visible">
           <div className="border-t border-border-default">
             {Array.from({ length: TABLE_SKELETON_ROWS }).map((_, i) => (
               <SkeletonTableRow key={i} columns={4} />
             ))}
           </div>
-        </SectionContainer>
-        <SectionContainer title="Billing Summary" className="shrink-0 bg-surface" contentClassName="overflow-visible">
+        </SectionPanel>
+        <SectionPanel title="Billing Summary" className="shrink-0 bg-surface" contentClassName="overflow-visible">
           <SkeletonInfoSection rows={3} layout="column" />
-        </SectionContainer>
+        </SectionPanel>
       </div>
     );
   }
@@ -67,27 +67,27 @@ export const OrderDetailSkeleton: React.FC = () => {
   if (isMedium) {
     return (
       <div className="grid grid-cols-2 gap-4 w-full pb-6">
-        <SectionContainer title="Order Information" className="bg-surface" contentClassName="overflow-visible">
+        <SectionPanel title="Order Information" className="bg-surface" contentClassName="overflow-visible">
           <SkeletonInfoSection rows={INFO_ROWS} layout="column" />
-        </SectionContainer>
-        <SectionContainer title="Patient Information" className="bg-surface" contentClassName="overflow-visible" headerClassName="!py-1.5">
+        </SectionPanel>
+        <SectionPanel title="Patient Information" className="bg-surface" contentClassName="overflow-visible" headerClassName="!py-1.5">
           <SkeletonInfoSection rows={4} layout="column" />
-        </SectionContainer>
-        <SectionContainer title="Order Progress" className="bg-surface" contentClassName="overflow-visible p-0" headerClassName="!py-1.5">
+        </SectionPanel>
+        <SectionPanel title="Order Progress" className="bg-surface" contentClassName="overflow-visible p-0" headerClassName="!py-1.5">
           <div className="p-4">
             <OrderProgressSkeleton />
           </div>
-        </SectionContainer>
-        <SectionContainer title="Billing Summary" className="bg-surface" contentClassName="overflow-visible flex flex-col">
+        </SectionPanel>
+        <SectionPanel title="Billing Summary" className="bg-surface" contentClassName="overflow-visible flex flex-col">
           <SkeletonInfoSection rows={3} layout="column" />
-        </SectionContainer>
-        <SectionContainer title="Tests" className="bg-surface col-span-2" contentClassName="p-0 overflow-visible">
+        </SectionPanel>
+        <SectionPanel title="Tests" className="bg-surface col-span-2" contentClassName="p-0 overflow-visible">
           <div className="border-t border-border-default">
             {Array.from({ length: TABLE_SKELETON_ROWS }).map((_, i) => (
               <SkeletonTableRow key={i} columns={5} />
             ))}
           </div>
-        </SectionContainer>
+        </SectionPanel>
       </div>
     );
   }
@@ -102,32 +102,32 @@ export const OrderDetailSkeleton: React.FC = () => {
         className="col-span-2 grid grid-cols-2 grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
         style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
       >
-        <SectionContainer title="Order Information" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto">
+        <SectionPanel title="Order Information" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto">
           <SkeletonInfoSection rows={INFO_ROWS} layout="column" />
-        </SectionContainer>
-        <SectionContainer title="Patient Information" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto" headerClassName="!py-1.5">
+        </SectionPanel>
+        <SectionPanel title="Patient Information" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto" headerClassName="!py-1.5">
           <SkeletonInfoSection rows={4} layout="column" />
-        </SectionContainer>
-        <SectionContainer title="Tests" className="h-full flex flex-col col-span-2 min-h-0" contentClassName="flex-1 min-h-0 p-0 overflow-y-auto">
+        </SectionPanel>
+        <SectionPanel title="Tests" className="h-full flex flex-col col-span-2 min-h-0" contentClassName="flex-1 min-h-0 p-0 overflow-y-auto">
           <div className="border-t border-border-default">
             {Array.from({ length: TABLE_SKELETON_ROWS }).map((_, i) => (
               <SkeletonTableRow key={i} columns={5} />
             ))}
           </div>
-        </SectionContainer>
+        </SectionPanel>
       </div>
       <div
         className="col-span-1 grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
         style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
       >
-        <SectionContainer title="Order Progress" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto p-0" headerClassName="!py-1.5">
+        <SectionPanel title="Order Progress" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto p-0" headerClassName="!py-1.5">
           <div className="p-4">
             <OrderProgressSkeleton />
           </div>
-        </SectionContainer>
-        <SectionContainer title="Billing Summary" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col">
+        </SectionPanel>
+        <SectionPanel title="Billing Summary" className="h-full flex flex-col min-h-0" contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col">
           <SkeletonInfoSection rows={3} layout="column" />
-        </SectionContainer>
+        </SectionPanel>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Badge, Card, Button, Alert, Icon } from '@/components';
+import { Badge, Card, Button, Icon } from '@/components';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/features/admin/api/useUsers';
@@ -33,7 +33,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
   const rejection = deriveTestRejectionContext(test);
   const {
     resultRejectionHistory: rejectionHistory,
-    lastResultRejection: lastRejection,
+    lastResultRejection: _lastRejection,
     hasResultRejectionHistory: hasRejectionHistory,
     isRetest,
     showRetestBadge,

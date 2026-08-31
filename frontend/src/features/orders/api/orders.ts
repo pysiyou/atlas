@@ -5,26 +5,9 @@
 
 import { apiClient } from '@/lib/api/client';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
+import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 
-/**
- * Pagination metadata from the API
- */
-export interface PaginationMeta {
-  page: number;
-  pageSize: number;
-  total: number;
-  totalPages: number;
-  hasNext: boolean;
-  hasPrev: boolean;
-}
-
-/**
- * Paginated response wrapper
- */
-export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: PaginationMeta;
-}
+export type { PaginatedResponse, PaginationMeta };
 
 /**
  * Filter options for orders list

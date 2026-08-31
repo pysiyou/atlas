@@ -7,7 +7,7 @@ import React from 'react';
 import { Badge } from '@/components';
 import { displayId } from '@/utils';
 import type { Order } from '@/types';
-import { InfoField } from '@/components/display/InfoField';
+import { DetailField } from '@/components/display/DetailField';
 import { formatOrderDate } from '@/utils/date';
 import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/utils';
 
@@ -22,13 +22,13 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layou
 
   return (
     <div className={containerClass}>
-      <InfoField
+      <DetailField
         icon={getDataFieldIcon('orderId')}
         label="Order ID"
         value={<span className="font-mono text-brand">{displayId.order(order.orderId)}</span>}
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={getDataFieldIcon('orderDate')}
         label="Order Date"
         value={
@@ -38,20 +38,20 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layou
         }
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={getPriorityIcon(order.priority)}
         label="Priority"
         value={<Badge variant={order.priority} size="sm" />}
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={getOrderStatusIcon(order.overallStatus)}
         label="Status"
         value={<Badge variant={order.overallStatus} size="sm" />}
         orientation="vertical"
       />
       {order.referringPhysician && (
-        <InfoField
+        <DetailField
           icon={getDataFieldIcon('referringPhysician')}
           label="Referring Physician"
           value={order.referringPhysician}
@@ -59,7 +59,7 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layou
         />
       )}
       {order.clinicalNotes && (
-        <InfoField
+        <DetailField
           icon={getDataFieldIcon('clinicalNotes')}
           label="Clinical Notes"
           value={<span className="line-clamp-3 wrap-break-word">{order.clinicalNotes}</span>}

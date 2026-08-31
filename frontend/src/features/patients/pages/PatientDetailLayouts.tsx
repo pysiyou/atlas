@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { SectionContainer, IconButton } from '@/components';
+import { SectionPanel, IconButton } from '@/components';
 import type { Patient, Order } from '@/types';
 import { GeneralInfoSection } from '../components/GeneralInfoSection';
 import { MedicalHistorySectionDisplay } from '../components/MedicalHistorySectionDisplay';
@@ -30,23 +30,23 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
-      <SectionContainer
+      <SectionPanel
         title="General Info"
         className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
       >
         <GeneralInfoSection patient={patient} layout="grid" />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Medical History"
         className="shrink-0 bg-surface"
         contentClassName="overflow-visible"
       >
         <MedicalHistorySectionDisplay patient={patient} layout="grid" />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Related Orders"
         className="shrink-0 bg-surface"
         contentClassName="p-0 overflow-visible"
@@ -54,11 +54,11 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer title="Reports" className="bg-surface" contentClassName="overflow-visible">
+      <SectionPanel title="Reports" className="bg-surface" contentClassName="overflow-visible">
         <ReportsList orders={orders} />
-      </SectionContainer>
+      </SectionPanel>
     </div>
   );
 };
@@ -74,31 +74,31 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className="grid grid-cols-2 gap-4 w-full pb-6">
-      <SectionContainer
+      <SectionPanel
         title="General Info"
         className="bg-surface"
         contentClassName="overflow-visible"
       >
         <GeneralInfoSection patient={patient} layout="column" />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Medical History"
         className="bg-surface"
         contentClassName="overflow-visible"
       >
         <MedicalHistorySectionDisplay patient={patient} layout="column" />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Reports"
         className="bg-surface col-span-2"
         contentClassName="overflow-visible flex flex-col"
       >
         <ReportsList orders={orders} />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Related Orders"
         className="bg-surface col-span-2"
         contentClassName="p-0 overflow-visible"
@@ -106,7 +106,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
-      </SectionContainer>
+      </SectionPanel>
     </div>
   );
 };
@@ -126,31 +126,31 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
       className="flex-1 grid grid-cols-3 grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
       style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
     >
-      <SectionContainer
+      <SectionPanel
         title="General Info"
         className="h-full flex flex-col min-h-0"
         contentClassName="flex-1 min-h-0 overflow-y-auto"
       >
         <GeneralInfoSection patient={patient} layout="column" />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Medical History"
         className="h-full flex flex-col min-h-0"
         contentClassName="flex-1 min-h-0 overflow-y-auto"
       >
         <MedicalHistorySectionDisplay patient={patient} layout="column" />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Reports"
         className="h-full flex flex-col min-h-0"
         contentClassName="flex-1 min-h-0 overflow-y-auto flex flex-col"
       >
         <ReportsList orders={orders} />
-      </SectionContainer>
+      </SectionPanel>
 
-      <SectionContainer
+      <SectionPanel
         title="Related Orders"
         className="h-full flex flex-col col-span-3 min-h-0"
         contentClassName="flex-1 min-h-0 p-0 overflow-y-auto"
@@ -158,7 +158,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
         headerRight={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
-      </SectionContainer>
+      </SectionPanel>
     </div>
   );
 };

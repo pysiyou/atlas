@@ -49,6 +49,12 @@ const SAMPLE_DEFINITIONS: Record<SampleType, SampleDefinition> = {
     collectionNotes: 'Collect in provided container', collectionSource: 'patient',
     collectionInstruction: 'Collect in sterile container', isDerived: false,
   },
+  saliva: {
+    sampleType: 'saliva', code: 'SLV', label: 'Saliva',
+    defaultContainer: 'swab-tube', defaultTopColor: 'swab-tube', defaultVolume: 2,
+    collectionNotes: 'Avoid food or drink 30 minutes before collection', collectionSource: 'patient',
+    collectionInstruction: 'Collect saliva in provided tube', isDerived: false,
+  },
   swab: {
     sampleType: 'swab', code: 'SWB', label: 'Swab',
     defaultContainer: 'swab-tube', defaultTopColor: 'swab-tube', defaultVolume: 1,
@@ -59,6 +65,12 @@ const SAMPLE_DEFINITIONS: Record<SampleType, SampleDefinition> = {
     sampleType: 'csf', code: 'CSF', label: 'Cerebrospinal Fluid',
     defaultContainer: 'gray-top', defaultTopColor: 'gray-top', defaultVolume: 2,
     collectionNotes: 'Lumbar puncture required - physician only', collectionSource: 'lumbar puncture',
+    collectionInstruction: 'Physician collection only', isDerived: false,
+  },
+  pleural_fluid: {
+    sampleType: 'pleural_fluid', code: 'PLF', label: 'Pleural Fluid',
+    defaultContainer: 'gray-top', defaultTopColor: 'gray-top', defaultVolume: 10,
+    collectionNotes: 'Thoracentesis required - physician only', collectionSource: 'thoracentesis',
     collectionInstruction: 'Physician collection only', isDerived: false,
   },
   tissue: {

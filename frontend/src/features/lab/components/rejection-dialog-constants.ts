@@ -3,7 +3,7 @@
  * Single place for all user-visible strings and magic numbers.
  */
 
-import { LAB_CONFIG } from '@/features/lab/config';
+import { LAB_CONFIG } from '@/features/lab/constants';
 
 export const REJECTION_DIALOG_LAYOUT = {
   /** Width class for loading/error/content containers */

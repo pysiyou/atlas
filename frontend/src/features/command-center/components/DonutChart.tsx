@@ -33,13 +33,7 @@ function formatDuration(ms: number): string {
   return rh > 0 ? `${d}d ${rh}h` : `${d}d`;
 }
 
-/** Format an ISO timestamp as a compact "time ago" string. */
-function formatTimeAgo(iso: string): string {
-  const ms = Date.now() - new Date(iso).getTime();
-  if (ms < 60_000) return 'just now';
-  return `${formatDuration(ms)} ago`;
-}
-
+import { formatRelativeDateLabel } from '@/utils/date';
 export interface DonutChartProps {
   data: DonutChartSegment[];
   title?: string;
@@ -245,7 +239,7 @@ function DetailListRow({ item, index, total: _total, getItemIcon }: DetailListRo
         <div className="flex items-center justify-between gap-2 text-xs text-text-tertiary tabular-nums min-w-0">
           <span>{item.avgWaitMs != null ? `Avg. ${formatDuration(item.avgWaitMs)}` : '—'}</span>
           <span className="shrink-0 text-text-tertiary">
-            {item.oldestEntryAt ? `Oldest ${formatTimeAgo(item.oldestEntryAt)}` : '—'}
+            {item.oldestEntryAt ? `Oldest ${formatRelativeDateLabel(item.oldestEntryAt)}` : '—'}
           </span>
         </div>
       </div>

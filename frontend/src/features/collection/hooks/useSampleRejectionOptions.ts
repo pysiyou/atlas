@@ -2,13 +2,12 @@
  * Fetches API-driven sample rejection limits for collection workflow.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import {
   sampleRejectionAPI,
   type SampleRejectionOptionsResponse,
 } from '@/features/collection/api/sampleRejection';
-import { getErrorMessage } from '@/utils/errors';
-import { logger } from '@/utils/logger';
+import { useFetchedResource } from '@/hooks/useFetchedResource';
 
 interface UseSampleRejectionOptionsOptions {
   sampleId?: number;
@@ -19,39 +18,23 @@ export function useSampleRejectionOptions({
   sampleId,
   enabled = true,
 }: UseSampleRejectionOptionsOptions) {
-  const [options, setOptions] = useState<SampleRejectionOptionsResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchOptions = useCallback(async () => {
-    if (!sampleId) return;
-
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await sampleRejectionAPI.getOptions(sampleId);
-      setOptions(response);
-    } catch (err) {
-      const message = getErrorMessage(err, 'Failed to load rejection options');
-      setError(message);
-      logger.error('Failed to fetch sample rejection options', err instanceof Error ? err : undefined, {
-        sampleId,
-      });
-    } finally {
-      setIsLoading(false);
+  const fetcher = useCallback(async (): Promise<SampleRejectionOptionsResponse> => {
+    if (!sampleId) {
+      throw new Error('Sample ID is required');
     }
+    return sampleRejectionAPI.getOptions(sampleId);
   }, [sampleId]);
 
-  useEffect(() => {
-    if (enabled && sampleId) {
-      void fetchOptions();
-    }
-  }, [enabled, sampleId, fetchOptions]);
+  const { data, isLoading, error, refetch } = useFetchedResource(fetcher, [sampleId], {
+    enabled: enabled && !!sampleId,
+    errorMessage: 'Failed to load rejection options',
+    logContext: { sampleId },
+  });
 
   return {
-    options,
+    options: data,
     isLoading,
     error,
-    refetch: fetchOptions,
+    refetch,
   };
 }

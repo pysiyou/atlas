@@ -81,7 +81,3 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
   );
 };
 
-/** @deprecated Use SectionPanel */
-export const SectionContainer = SectionPanel;
-/** @deprecated Use SectionPanelProps */
-export type SectionContainerProps = SectionPanelProps;

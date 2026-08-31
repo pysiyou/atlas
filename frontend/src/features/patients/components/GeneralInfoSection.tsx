@@ -5,7 +5,7 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import { InfoField } from '@/components/display/InfoField';
+import { DetailField } from '@/components/display/DetailField';
 import { formatDetailDate, formatAddress } from '../utils/patient-formatters';
 import { ICONS } from '@/utils';
 
@@ -23,13 +23,13 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
 
   return (
     <div className={containerClass}>
-      <InfoField
+      <DetailField
         icon={ICONS.dataFields.gender}
         label="Gender"
         value={<span className="capitalize">{patient.gender}</span>}
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={ICONS.dataFields.birthday}
         label="Birthday"
         value={
@@ -39,37 +39,37 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
         }
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={ICONS.dataFields.phone}
         label="Phone Number"
         value={patient.phone}
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={ICONS.dataFields.email}
         label="Email"
         value={<span className="line-clamp-2 break-all">{patient.email || 'N/A'}</span>}
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={ICONS.dataFields.height}
         label="Height"
         value={patient.height ? `${patient.height} cm` : 'N/A'}
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={ICONS.dataFields.weight}
         label="Weight"
         value={patient.weight ? `${patient.weight} kg` : 'N/A'}
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={ICONS.dataFields.address}
         label="Address"
         value={formatAddress(patient.address)}
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={ICONS.dataFields.phone}
         label="Emergency Contact"
         value={

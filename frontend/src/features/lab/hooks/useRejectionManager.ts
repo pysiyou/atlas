@@ -8,10 +8,11 @@
  * - Handling escalation when limits are reached
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { resultAPI } from '@/features/validation/api/results';
-import { logger } from '@/utils/logger';
 import { getErrorMessage } from '@/utils/errors';
+import { logger } from '@/utils/logger';
+import { useFetchedResource } from '@/hooks/useFetchedResource';
 import type {
   RejectionOptionsResponse,
   RejectionResult,
@@ -63,45 +64,38 @@ export function useRejectionManager({
   testCode,
   autoFetch = false,
 }: UseRejectionManagerProps): UseRejectionManagerReturn {
-  const [options, setOptions] = useState<RejectionOptionsResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const isMissing = (id: string | number | null | undefined, code: string | null | undefined) =>
     id == null || id === '' || code == null || code === '';
 
-  const fetchOptions = useCallback(async () => {
-    if (isMissing(orderId, testCode)) return;
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      const response = await resultAPI.getRejectionOptions(orderIdStr, testCode);
-      setOptions(response);
-    } catch (err) {
-      const message = getErrorMessage(err, 'Failed to fetch rejection options');
-      setError(message);
-      logger.error('Failed to fetch rejection options', err instanceof Error ? err : undefined, {
-        orderId,
-        testCode,
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const fetcher = useCallback(async (): Promise<RejectionOptionsResponse> => {
+    const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
+    return resultAPI.getRejectionOptions(orderIdStr, testCode);
   }, [orderId, testCode]);
+
+  const {
+    data: options,
+    isLoading,
+    error: fetchError,
+    refetch: fetchOptions,
+    clearError: clearFetchError,
+  } = useFetchedResource(fetcher, [orderId, testCode], {
+    enabled: autoFetch && !isMissing(orderId, testCode),
+    errorMessage: 'Failed to fetch rejection options',
+    logContext: { orderId, testCode },
+  });
 
   const rejectWithAction = useCallback(
     async (rejectionType: ResultRejectionType, reason: string): Promise<RejectionResult | null> => {
       if (isMissing(orderId, testCode)) {
-        setError('Order ID and test code are required');
+        setActionError('Order ID and test code are required');
         return null;
       }
 
       setIsRejecting(true);
-      setError(null);
+      setActionError(null);
 
       try {
         const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
@@ -125,7 +119,7 @@ export function useRejectionManager({
           } as RejectionResult;
         }
         const message = getErrorMessage(err, 'Failed to reject results');
-        setError(message);
+        setActionError(message);
         logger.error('Failed to reject results', err instanceof Error ? err : undefined, {
           orderId,
           testCode,
@@ -171,24 +165,18 @@ export function useRejectionManager({
   );
 
   const clearError = useCallback(() => {
-    setError(null);
-  }, []);
+    clearFetchError();
+    setActionError(null);
+  }, [clearFetchError]);
 
   const isEscalateEnabled =
     options?.availableActions.some(a => a.action === 'escalate' && a.enabled) ?? false;
 
-  // Auto-fetch options if enabled (orderId 0 is valid)
-  useEffect(() => {
-    if (autoFetch && orderId != null && orderId !== '' && testCode != null && testCode !== '') {
-      fetchOptions();
-    }
-  }, [autoFetch, orderId, testCode, fetchOptions]);
-
   return {
-    options,
+    options: options ?? null,
     isLoading,
     isRejecting,
-    error,
+    error: actionError ?? fetchError,
     fetchOptions,
     rejectWithAction,
     isActionEnabled,

@@ -4,11 +4,10 @@
  */
 
 import React from 'react';
-import { Icon, Avatar } from '@/components';
+import { Icon, Avatar, DetailField } from '@/components';
 import { calculateAge } from '@/utils';
 import { displayId } from '@/utils';
 import type { Patient } from '@/types';
-import { InfoField } from '@/components/display/InfoField';
 import { formatOrderDate } from '@/utils/date';
 import { ICONS } from '@/utils';
 
@@ -50,7 +49,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
           size="sm"
         />
       </div>
-      <InfoField
+      <DetailField
         icon={ICONS.dataFields.userHands}
         label="Age & Gender"
         value={
@@ -60,7 +59,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
         }
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={ICONS.dataFields.dateOfBirth}
         label="Date of Birth"
         value={
@@ -70,14 +69,14 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
         }
         orientation="vertical"
       />
-      <InfoField
+      <DetailField
         icon={ICONS.dataFields.phone}
         label="Phone"
         value={patient.phone}
         orientation="vertical"
       />
       {patient.email && (
-        <InfoField
+        <DetailField
           icon={ICONS.dataFields.email}
           label="Email"
           value={<span className="line-clamp-2 break-all">{patient.email}</span>}

@@ -18,9 +18,8 @@ export { AFFILIATION_DURATION_VALUES } from '@/types/enums';
 export { RELATIONSHIP_VALUES } from '@/types/enums';
 
 // Local type aliases for use in this file
-type Gender = GenderType;
-type AffiliationDuration = AffiliationDurationType;
 type Relationship = RelationshipType;
+type AffiliationDuration = AffiliationDurationType;
 
 export interface Affiliation {
   assuranceNumber: string; // Auto-generated: ASS-YYYYMMDD-XXX
@@ -36,14 +35,9 @@ export interface EmergencyContact {
   email?: string;
 }
 
-export interface VitalSigns {
-  temperature: number; // Celsius, 30.0-45.0, Normal: 36.5-37.3
-  heartRate: number; // BPM, 30-250, Normal: 60-100
-  systolicBP: number; // mmHg, 50-250, Normal: <120
-  diastolicBP: number; // mmHg, 30-150, Normal: <80
-  respiratoryRate: number; // breaths/min, 4-60, Normal: 12-20
-  oxygenSaturation: number; // SpO2 %, 50-100, Normal: 95-100
-}
+import type { VitalSigns } from '@/features/patients/schemas/vital-signs.schema';
+
+export type { VitalSigns };
 
 export interface Address {
   street: string;
@@ -68,7 +62,7 @@ export interface Patient {
   id: number; // Integer ID, displayed as PAT{id}
   fullName: string;
   dateOfBirth: string;
-  gender: Gender;
+  gender: GenderType;
   phone: string;
   email?: string;
   height?: number; // Height in centimeters
@@ -84,6 +78,9 @@ export interface Patient {
   updatedAt: string;
   updatedBy: string; // Backend returns string user ID
 }
+
+/** Runtime-validated patient shape (forms/mutations). */
+export type { Patient as ValidatedPatient } from '@/features/patients/schemas/patient.schema';
 
 /**
  * PatientContext — Superset type for all patient-facing views.

@@ -9,7 +9,7 @@ import { useAuthStore } from '@/app/store';
 import { usePatientNameLookup, usePatientsList } from '@/features/patients/api/usePatients';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 import { usePaymentsList } from '@/features/billing/api/usePayments';
-import { Card, SectionContainer, Badge, Icon } from '@/components';
+import { Card, SectionPanel, Badge, Icon } from '@/components';
 import { formatCurrency, formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { ICONS } from '@/utils';
@@ -129,7 +129,7 @@ export const Dashboard: React.FC = () => {
           )}
 
           {isReceptionRole && (
-            <SectionContainer
+            <SectionPanel
               title="Recent Orders"
               headerRight={
                 <Link to={ROUTES.ORDERS} className="text-xs text-brand hover:underline">
@@ -173,7 +173,7 @@ export const Dashboard: React.FC = () => {
                   <p className="text-center text-sm text-text-tertiary py-8">No recent orders</p>
                 )}
               </div>
-            </SectionContainer>
+            </SectionPanel>
           )}
         </div>
       </div>

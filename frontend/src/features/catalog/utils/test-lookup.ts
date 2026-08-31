@@ -3,7 +3,7 @@
  * Pure functions for resolving test properties from the test catalog.
  */
 
-import type { Test, SampleType, TestCategory } from '@/types';
+import type { Test, SampleType } from '@/types';
 
 export function getTestProperty<K extends keyof Test>(
   testCode: string,
@@ -23,8 +23,4 @@ export function getTestNames(testCodes: string[], testCatalog: Test[]): string[]
 
 export function getTestSampleType(testCode: string, testCatalog: Test[]): SampleType {
   return (getTestProperty(testCode, 'sampleType', testCatalog) || 'other') as SampleType;
-}
-
-export function getTestCategory(testCode: string, testCatalog: Test[]): TestCategory | 'other' {
-  return getTestProperty(testCode, 'category', testCatalog) || 'other';
 }

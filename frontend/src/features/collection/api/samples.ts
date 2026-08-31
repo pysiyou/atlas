@@ -12,7 +12,7 @@ import type {
   RejectionReason,
 } from '@/types';
 import type { RejectAndRecollectResponse } from '@/types/lab-operations';
-import type { PaginatedResponse, PaginationMeta } from '@/features/orders/api/orders';
+import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 
 export type { PaginatedResponse, PaginationMeta };
 

@@ -7,7 +7,7 @@ import React from 'react';
 import { Button, Avatar, Icon, IconButton } from '@/components';
 import { DetailPageHeader } from '@/components';
 import type { Patient } from '@/types/patient';
-import { usePatientService } from '../services/usePatientService';
+import { isAffiliationActive } from '../utils/patient-helpers';
 import { AffiliationPopover } from './AffiliationPopover';
 import { ICONS } from '@/utils';
 
@@ -24,7 +24,6 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
   onEdit,
   onNewOrder,
 }) => {
-  const { isAffiliationActive } = usePatientService();
   const avatar = (
     <div className="flex items-center gap-2">
       <Avatar primaryText={patient.fullName} size="sm" />

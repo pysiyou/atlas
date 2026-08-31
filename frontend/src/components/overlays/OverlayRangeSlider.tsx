@@ -84,7 +84,3 @@ export const OverlayRangeSlider: React.FC<OverlayRangeSliderProps> = ({
   );
 };
 
-/** @deprecated Use OverlayRangeSlider */
-export const ModalRangeSlider = OverlayRangeSlider;
-/** @deprecated Use OverlayRangeSliderProps */
-export type ModalRangeSliderProps = OverlayRangeSliderProps;

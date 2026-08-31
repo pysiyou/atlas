@@ -51,8 +51,8 @@ const Laboratory = lazyNamed(
   'Laboratory'
 );
 const Payments = lazyNamed(
-  () => import('@/features/billing/pages/PaymentsPage'),
-  'Payments'
+  () => import('@/features/billing/pages/PaymentList'),
+  'PaymentList'
 );
 const Reports = lazyNamed(() => import('@/features/reports/pages/ReportsPage'), 'Reports');
 interface ProtectedRouteConfig {

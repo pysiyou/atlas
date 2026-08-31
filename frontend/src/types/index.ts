@@ -31,6 +31,7 @@ export type {
 } from './sample';
 export { isCollectedSample } from './sample'; // Export value (function)
 export type { User, AuthUser } from './user';
+export type { PaginatedResponse, PaginationMeta } from './pagination';
 export type {
   Test,
   TestCategory,

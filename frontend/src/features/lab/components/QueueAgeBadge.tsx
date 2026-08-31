@@ -5,7 +5,7 @@
 import React from 'react';
 import { differenceInHours, parseISO, isValid } from 'date-fns';
 import { Badge } from '@/components';
-import { LAB_CONFIG } from '@/features/lab/config';
+import { LAB_CONFIG } from '@/features/lab/constants';
 
 type QueueAgeVariant = 'default' | 'warning' | 'danger';
 

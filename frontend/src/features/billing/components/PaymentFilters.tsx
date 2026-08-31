@@ -3,16 +3,16 @@
  * Responsive filter controls with modal for smaller screens
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Icon, Button, Badge, Modal, FooterInfo, DnaHelixLoader } from '@/components';
+import React, { useState } from 'react';
+import { Icon, Button, Badge, Modal, FooterInfo } from '@/components';
+import { DebouncedSearchInput } from '@/components';
 import { MultiSelectFilter } from '@/components';
 import { CheckboxList } from '@/components';
 import { DateFilter } from '@/components';
 import {
-  inputWrapper,
+  inputContainerBase,
   inputInner,
   inputText,
-  inputContainerBase,
   inputClearButton,
 } from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
@@ -56,78 +56,6 @@ const methodOptions = createFilterOptions(
 );
 
 /**
- * SearchInput - Simple debounced search input
- */
-const SearchInput: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-}> = ({ value, onChange, placeholder = 'Search...' }) => {
-  const [localValue, setLocalValue] = useState(value);
-  const [isDebouncing, setIsDebouncing] = useState(false);
-
-  // Sync local value when prop changes
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
-
-  // Debounce effect
-  useEffect(() => {
-    if (localValue === value) {
-      setIsDebouncing(false);
-      return;
-    }
-
-    setIsDebouncing(true);
-    const timer = setTimeout(() => {
-      onChange(localValue);
-      setIsDebouncing(false);
-    }, 300);
-
-    return () => {
-      clearTimeout(timer);
-      setIsDebouncing(false);
-    };
-  }, [localValue, value, onChange]);
-
-  const handleClear = useCallback(() => {
-    setLocalValue('');
-    onChange('');
-  }, [onChange]);
-
-  return (
-    <div className={cn(inputWrapper)}>
-      <Icon
-        name={ICONS.actions.search}
-        className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-brand transition-colors"
-      />
-      <input
-        type="text"
-        placeholder={placeholder}
-        value={localValue}
-        onChange={e => setLocalValue(e.target.value)}
-        className={cn(inputInner, inputText)}
-      />
-      <div className="flex items-center gap-1 shrink-0">
-        {isDebouncing && <DnaHelixLoader size="xs" />}
-        {localValue && !isDebouncing && (
-          <button
-            onClick={handleClear}
-            className={cn(inputClearButton, 'hover:bg-surface-hover duration-200')}
-            aria-label="Clear search"
-          >
-            <Icon
-              name={ICONS.actions.closeCircle}
-              className="w-4 h-4 text-text-muted hover:text-text-tertiary"
-            />
-          </button>
-        )}
-      </div>
-    </div>
-  );
-};
-
-/**
  * PaymentFilters - Responsive filter layout
  * - lg+: 4-column grid (search + date + status + method)
  * - md: 2-column grid (search + date in row 1, status + method in row 2)
@@ -160,7 +88,7 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
     <>
       {/* Search */}
       <div className="flex h-[34px] w-full items-center">
-        <SearchInput
+        <DebouncedSearchInput
           value={searchQuery}
           onChange={onSearchChange}
           placeholder={PAYMENT_FILTER_PLACEHOLDERS.searchLong}
@@ -216,7 +144,7 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
             <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
               {/* Search control */}
               <div className="flex h-[34px] w-full items-center">
-                <SearchInput
+                <DebouncedSearchInput
                   value={searchQuery}
                   onChange={onSearchChange}
                   placeholder={PAYMENT_FILTER_PLACEHOLDERS.search}

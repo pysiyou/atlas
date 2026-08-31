@@ -102,6 +102,3 @@ export const InitialDataPreload: React.FC<InitialDataPreloadProps> = ({
     </AuthenticatedPreload>
   );
 };
-
-/** @deprecated Use InitialDataPreload */
-export const DataLoader = InitialDataPreload;

@@ -9,6 +9,7 @@
 
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
+import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { sampleAPI } from '@/features/collection/api/samples';
 import { useAuthStore } from '@/app/store';
@@ -244,21 +245,10 @@ export function usePendingSamples() {
  */
 export function useSampleLookup() {
   const { samples, isLoading } = useSamplesList();
-
-  const samplesMap = useMemo(() => {
-    const map = new Map<number, Sample>();
-    samples.forEach(s => map.set(s.sampleId, s));
-    return map;
-  }, [samples]);
-
-  const getSample = useCallback(
-    (sampleId: number | string): Sample | undefined => {
-      const numericId = typeof sampleId === 'string' ? parseInt(sampleId, 10) : sampleId;
-      if (isNaN(numericId)) return undefined;
-      return samplesMap.get(numericId);
-    },
-    [samplesMap]
-  );
+  const { get: getSample } = useEntityLookup(samples, s => s.sampleId, {
+    isLoading,
+    normalizeKey: parseNumericKey,
+  });
 
   const getSamplesByOrder = useCallback(
     (orderId: number | string): Sample[] => {

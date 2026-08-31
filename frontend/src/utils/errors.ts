@@ -3,6 +3,24 @@
  * Consistent error message extraction and classification.
  */
 
+export function getLoginErrorMessage(error: unknown, fallback = 'Login failed. Please try again.'): string {
+  if (!(error instanceof Error)) return fallback;
+
+  const msg = error.message.toLowerCase();
+
+  if (msg.includes('fetch') || msg.includes('network') || msg === 'load failed') {
+    return 'Unable to connect to server. Please check your connection.';
+  }
+  if (msg.includes('abort') || msg.includes('timeout')) {
+    return 'Request timed out. Please try again.';
+  }
+  if (msg.includes('invalid') || msg.includes('unauthorized') || msg.includes('401')) {
+    return 'Invalid username or password';
+  }
+
+  return error.message || fallback;
+}
+
 export function getErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof Error) {
     const message = error.message.toLowerCase();

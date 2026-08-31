@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useRef } from 'react';
 import { orderFormSchema, type OrderFormInput } from '../schemas/order.schema';
-import { useOrderService } from '../services/useOrderService';
+import { useCreateOrder, useUpdateOrder } from '../api/useOrderMutations';
 import type { Order } from '@/types';
 
 interface UseOrderFormOptions {
@@ -27,7 +27,8 @@ export function useOrderForm({
   initialPatientId,
   onSubmitSuccess,
 }: UseOrderFormOptions = {}) {
-  const { create, update } = useOrderService();
+  const create = useCreateOrder();
+  const update = useUpdateOrder();
   const isSubmittingRef = useRef(false);
 
   const defaultValues = useMemo(() => {
@@ -66,7 +67,7 @@ export function useOrderForm({
     try {
       let createdOrder: Order | undefined;
       if (mode === 'edit' && order) {
-        await update.mutateAsync({ id: order.orderId, data });
+        await update.mutateAsync({ orderId: order.orderId, data });
       } else {
         createdOrder = await create.mutateAsync(data);
       }

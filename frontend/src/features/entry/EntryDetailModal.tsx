@@ -5,16 +5,16 @@
  *
  * Uses centralized components:
  * - DetailGrid with sections config for consistent layout
- * - SectionContainer for form section
+ * - SectionPanel for form section
  * - CollectionInfoLine for sample metadata
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Badge, Button, Icon, SectionContainer, CircularProgress } from '@/components';
-import { useAsyncHandler } from '@/hooks';
+import { Badge, Button, Icon, SectionPanel, CircularProgress } from '@/components';
+import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { displayId } from '@/utils';
 import { EntryForm } from './EntryForm';
-import { EntryRejectionSection } from './EntryRejectionSection';
+import { RejectionHistorySection } from '@/features/lab/components/RejectionHistorySection';
 import {
   LabDetailModal,
   DetailGrid,
@@ -67,19 +67,25 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const [localResults, setLocalResults] = useState<Record<string, string>>(() => initialResults);
   const [localNotes, setLocalNotes] = useState<string>(() => initialTechnicianNotes);
 
-  const saveThenClose = useAsyncHandler(
-    useCallback(async () => {
-      await Promise.resolve(onSave(localResults, localNotes));
-      onClose();
-    }, [onSave, localResults, localNotes, onClose]),
+  const saveThenClose = useAsyncAction(
+    useCallback(
+      async (_signal: AbortSignal) => {
+        await Promise.resolve(onSave(localResults, localNotes));
+        onClose();
+      },
+      [onSave, localResults, localNotes, onClose]
+    ),
     { minDisplayMs: 100 }
   );
-  const saveThenNext = useAsyncHandler(
-    useCallback(async () => {
-      if (!onNext) return;
-      await Promise.resolve(onSave(localResults, localNotes));
-      onNext();
-    }, [onSave, localResults, localNotes, onNext]),
+  const saveThenNext = useAsyncAction(
+    useCallback(
+      async (_signal: AbortSignal) => {
+        if (!onNext) return;
+        await Promise.resolve(onSave(localResults, localNotes));
+        onNext();
+      },
+      [onSave, localResults, localNotes, onNext]
+    ),
     { minDisplayMs: 100 }
   );
   const isSaving = saveThenClose.isPending || saveThenNext.isPending;
@@ -241,7 +247,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       }
     >
       {/* Result Entry Form Section */}
-      <SectionContainer title="Result Entry" headerRight={progressIndicator}>
+      <SectionPanel title="Result Entry" headerRight={progressIndicator}>
         <EntryForm
           testDef={testDef}
           resultKey={resultKey}
@@ -254,11 +260,12 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           isComplete={isComplete}
           isModal={true}
         />
-      </SectionContainer>
+      </SectionPanel>
 
       {/* Previous Rejection History - show for both retests and recollections */}
       {hasResultRejectionHistory && (
-        <EntryRejectionSection
+        <RejectionHistorySection
+          variant="result"
           title={rejectionHistoryTitle}
           rejectionHistory={resultRejectionHistory}
           showOnlyLatest={false}

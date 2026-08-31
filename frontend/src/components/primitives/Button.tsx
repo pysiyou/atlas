@@ -12,21 +12,21 @@
  */
 
 import React, { type ButtonHTMLAttributes } from 'react';
-import { Icon, type IconName } from './Icon';
+import { Icon } from './Icon';
 import { SpinnerLoader as DnaHelixLoader, type SpinnerLoaderSize as DnaHelixLoaderSize } from '@/components/loaders/SpinnerLoader';
 import {
-  type BaseVariant,
-  type SemanticVariant,
-  VARIANT_CONFIG,
+  type ButtonLikeVariant,
   BASE_STYLES,
   BUTTON_SIZE_STYLES,
   BUTTON_ICON_SIZES,
+  getBaseStyle,
+  getDefaultIcon,
 } from './buttonHelpers';
 
 /**
  * All available button variants (Base + Semantic)
  */
-export type ButtonVariant = BaseVariant | SemanticVariant;
+export type ButtonVariant = ButtonLikeVariant;
 
 /**
  * Available button sizes
@@ -38,33 +38,6 @@ const BUTTON_LOADER_SIZE: DnaHelixLoaderSize = 'xs';
 
 const BASE_CLASSES =
   'inline-flex shrink-0 items-center justify-center gap-1.5 font-normal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded whitespace-nowrap overflow-hidden';
-
-/**
- * Check if a variant is a semantic variant (has bundled icon)
- */
-const isSemanticVariant = (variant: ButtonVariant): variant is SemanticVariant => {
-  return variant in VARIANT_CONFIG;
-};
-
-/**
- * Get the base style for a variant
- */
-const getBaseStyle = (variant: ButtonVariant): BaseVariant => {
-  if (isSemanticVariant(variant)) {
-    return VARIANT_CONFIG[variant].style;
-  }
-  return variant;
-};
-
-/**
- * Get the default icon for a variant (if any)
- */
-const getDefaultIcon = (variant: ButtonVariant): IconName | undefined => {
-  if (isSemanticVariant(variant)) {
-    return VARIANT_CONFIG[variant].icon;
-  }
-  return undefined;
-};
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Button variant - can be a base style or semantic action */

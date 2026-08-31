@@ -2,14 +2,14 @@
  * CatalogDetail Component
  *
  * Displays comprehensive details about a single test from the catalog.
- * Uses BalancedDetailsLayout for automatic table arrangement.
+ * Uses BalancedColumnsLayout for automatic table arrangement.
  */
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useTest } from '@/features/catalog/api/useTestCatalog';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
-import { BalancedDetailsLayout } from '@/components';
+import { BalancedColumnsLayout } from '@/components';
 import type { TableInput } from '@/components';
 import { DetailPageShell, DetailPageHeader } from '@/components';
 import { CatalogDetailSkeleton } from './CatalogDetailSkeleton';
@@ -79,7 +79,7 @@ export const CatalogDetail: React.FC = () => {
     );
   }
 
-  // Build tables for BalancedDetailsLayout
+  // Build tables for BalancedColumnsLayout
   const tables: TableInput[] = [
     {
       key: 'overview',
@@ -173,7 +173,7 @@ export const CatalogDetail: React.FC = () => {
 
   return (
     <DetailPageShell header={<DetailPageHeader title={test.name} subtitle={test.code} />}>
-      <BalancedDetailsLayout tables={tables} columns={getColumnCount()} className="pb-6" />
+      <BalancedColumnsLayout tables={tables} columns={getColumnCount()} className="pb-6" />
     </DetailPageShell>
   );
 };

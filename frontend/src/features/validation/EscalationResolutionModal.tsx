@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Button, Popover, SectionContainer, Badge } from '@/components';
+import { Button, Popover, SectionPanel, Badge } from '@/components';
 import { cn, displayId } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { ValidationForm } from './ValidationForm';
@@ -16,7 +16,7 @@ import {
   StatusBadgeRow,
 } from '@/features/lab/components/LabDetailModal';
 import { PopoverForm } from '@/features/lab/components/PopoverForm';
-import { EntryRejectionSection } from '../entry/EntryRejectionSection';
+import { RejectionHistorySection } from '@/features/lab/components/RejectionHistorySection';
 import { EntryInfoLine } from '@/features/lab/components/StatusBadges';
 import { useResolveEscalation } from '@/features/validation/api/useResultMutations';
 import { useAuthStore } from '@/app/store';
@@ -306,7 +306,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         </ModalFooter>
       }
     >
-      <SectionContainer title="Result Validation">
+      <SectionPanel title="Result Validation">
         <ValidationForm
           results={test.results}
           flags={test.flags}
@@ -316,10 +316,11 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           onApprove={() => {}}
           enableApproveShortcut={false}
         />
-      </SectionContainer>
+      </SectionPanel>
 
       {hasRejectionHistory && (
-        <EntryRejectionSection
+        <RejectionHistorySection
+          variant="result"
           title="Escalation history"
           rejectionHistory={rejectionHistory}
           showOnlyLatest={false}

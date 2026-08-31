@@ -7,9 +7,6 @@
 // Schemas (rarely needed externally, but available)
 export * from './schemas';
 
-// Services (main API for external consumers)
-export * from './services';
-
 // Components
 export * from './components';
 

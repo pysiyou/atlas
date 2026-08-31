@@ -7,7 +7,7 @@ import React from 'react';
 import { Badge } from '@/components';
 import { formatDate } from '@/utils';
 import type { Affiliation } from '@/types';
-import { usePatientService } from '../services/usePatientService';
+import { isAffiliationActive } from '../utils/patient-helpers';
 
 interface AffiliationInfoProps {
   affiliation: Affiliation;
@@ -17,7 +17,6 @@ interface AffiliationInfoProps {
  * AffiliationInfo - Displays affiliation details in grid format
  */
 export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation }) => {
-  const { isAffiliationActive } = usePatientService();
   const isActive = isAffiliationActive(affiliation);
 
   return (

@@ -7,9 +7,6 @@
 // Schemas
 export * from './schemas';
 
-// Services
-export * from './services';
-
 // Components
 export * from './components';
 

@@ -152,3 +152,15 @@ export const ICON_BUTTON_ICON_SIZES = {
   sm: '[&_svg]:w-4 [&_svg]:h-4 [&>span]:w-4 [&>span]:h-4',
   md: '[&_svg]:w-5 [&_svg]:h-5 [&>span]:w-5 [&>span]:h-5',
 };
+
+/** Union of base + semantic button variants */
+export type ButtonLikeVariant = BaseVariant | SemanticVariant;
+
+export const isSemanticVariant = (variant: ButtonLikeVariant): variant is SemanticVariant =>
+  variant in VARIANT_CONFIG;
+
+export const getBaseStyle = (variant: ButtonLikeVariant): BaseVariant =>
+  isSemanticVariant(variant) ? VARIANT_CONFIG[variant].style : variant;
+
+export const getDefaultIcon = (variant: ButtonLikeVariant): IconName | undefined =>
+  isSemanticVariant(variant) ? VARIANT_CONFIG[variant].icon : undefined;

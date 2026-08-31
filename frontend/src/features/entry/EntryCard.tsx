@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { Badge, Card, Alert, Icon, IconButton } from '@/components';
+import { Badge, Card, Icon, IconButton } from '@/components';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { usePatientNameLookup } from '@/features/patients/api/usePatients';
@@ -15,7 +15,7 @@ import { LabCard, ProgressBadge } from '@/features/lab/components/LabCard';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
 import { QueueAgeBadge } from '@/features/lab/components/QueueAgeBadge';
 import { useLabCardClickGuard } from '@/features/lab/hooks';
-import { LAB_CONFIG } from '@/features/lab/config';
+import { LAB_CONFIG } from '@/features/lab/constants';
 import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/utils';
@@ -42,15 +42,15 @@ interface EntryCardProps {
 export const EntryCard: React.FC<EntryCardProps> = ({
   test,
   testDef,
-  resultKey,
+  resultKey: _resultKey,
   results,
-  technicianNotes,
+  technicianNotes: _technicianNotes,
   isComplete,
-  onResultsChange,
-  onNotesChange,
-  onSave,
-  onNext,
-  onPrev,
+  onResultsChange: _onResultsChange,
+  onNotesChange: _onNotesChange,
+  onSave: _onSave,
+  onNext: _onNext,
+  onPrev: _onPrev,
   onClick,
   isMobile = false,
 }) => {

@@ -9,10 +9,19 @@
 
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
+import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { invalidatePatientQueries } from '@/lib/query/invalidate';
 import { patientAPI } from '@/features/patients/api/patients';
 import { useAuthStore } from '@/app/store';
+import { toast } from '@/app/AppToastBar';
+import { getErrorMessage } from '@/utils/errors';
+import {
+  patientSchema,
+  patientCreateSchema,
+  patientUpdateSchema,
+} from '../schemas/patient.schema';
+import { formInputToPayload } from '../utils/form-transformers';
 import type { Patient } from '@/types';
 
 /**
@@ -267,124 +276,70 @@ export function usePatientNames() {
  */
 export function usePatientNameLookup() {
   const { patients, isLoading } = usePatientsList();
-
-  const patientsMap = useMemo(() => {
-    const map = new Map<number, Patient>();
-    patients.forEach(p => map.set(p.id, p));
-    return map;
-  }, [patients]);
+  const { get: getPatient, map: patientsMap } = useEntityLookup(patients, p => p.id, {
+    isLoading,
+    normalizeKey: parseNumericKey,
+  });
 
   const getPatientName = useCallback(
     (patientId: number | string): string => {
-      const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
-      if (isNaN(numericId)) return 'Unknown Patient';
-      const patient = patientsMap.get(numericId);
+      const patient = getPatient(patientId);
       return patient?.fullName ?? 'Unknown Patient';
     },
-    [patientsMap]
-  );
-
-  const getPatient = useCallback(
-    (patientId: number | string): Patient | undefined => {
-      const numericId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
-      if (isNaN(numericId)) return undefined;
-      return patientsMap.get(numericId);
-    },
-    [patientsMap]
+    [getPatient]
   );
 
   return {
     getPatientName,
     getPatient,
     isLoading,
+    patientsMap,
   };
 }
 
 /**
- * Mutation hook to create a new patient.
- * Invalidates the patients list cache on success.
- *
- * @returns Mutation result with mutate function
- *
- * @example
- * ```tsx
- * const { mutate: createPatient, isPending } = useCreatePatient();
- * createPatient(newPatientData);
- * ```
+ * Mutation hook to create a new patient with Zod validation.
  */
 export function useCreatePatient() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (patient: Patient) => patientAPI.create(patient),
+    mutationFn: async (input: unknown) => {
+      const validated = patientCreateSchema.parse(input);
+      const transformed = formInputToPayload(validated);
+      const response = await patientAPI.create(transformed as unknown as Patient);
+      return patientSchema.parse(response);
+    },
     onSuccess: () => {
       invalidatePatientQueries(queryClient);
+      queryClient.refetchQueries({ queryKey: queryKeys.patients.list() });
+      toast.success('Patient created successfully');
+    },
+    onError: error => {
+      toast.error(`Failed to create patient: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
 }
 
 /**
- * Mutation hook to update an existing patient.
- * Invalidates relevant caches on success.
- *
- * @returns Mutation result with mutate function
- *
- * @example
- * ```tsx
- * const { mutate: updatePatient } = useUpdatePatient();
- * updatePatient({ id: 'PAT-001', updates: { phone: '555-1234' } });
- * ```
+ * Mutation hook to update an existing patient with Zod validation.
  */
 export function useUpdatePatient() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, updates }: { id: number | string; updates: Partial<Patient> }) => {
-      const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
-      return patientAPI.update(numericId.toString(), updates);
+    mutationFn: async ({ id, data }: { id: number; data: unknown }) => {
+      const validated = patientUpdateSchema.parse(data);
+      const transformed = formInputToPayload(validated);
+      const response = await patientAPI.update(id.toString(), transformed);
+      return patientSchema.parse(response);
     },
-    onSuccess: (_, variables) => {
-      const idStr = typeof variables.id === 'string' ? variables.id : variables.id.toString();
-      invalidatePatientQueries(queryClient, { patientId: idStr });
+    onSuccess: (_, { id }) => {
+      invalidatePatientQueries(queryClient, { patientId: id });
+      toast.success('Patient updated successfully');
     },
-  });
-}
-
-/**
- * Mutation hook to delete a patient.
- * Invalidates the patients list cache on success.
- *
- * @returns Mutation result with mutate function
- */
-export function useDeletePatient() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (id: number | string) => {
-      const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
-      return patientAPI.delete(numericId.toString());
-    },
-    onSuccess: () => {
-      invalidatePatientQueries(queryClient);
+    onError: error => {
+      toast.error(`Failed to update patient: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
-}
-
-/**
- * Hook to invalidate patient caches.
- *
- * @returns Object with invalidate functions
- */
-export function useInvalidatePatients() {
-  const queryClient = useQueryClient();
-
-  const invalidateAll = () => {
-    return queryClient.invalidateQueries({ queryKey: queryKeys.patients.all });
-  };
-
-  const invalidatePatient = (patientId: string) => {
-    return queryClient.invalidateQueries({ queryKey: queryKeys.patients.byId(patientId) });
-  };
-
-  return { invalidateAll, invalidatePatient };
 }

@@ -4,10 +4,10 @@
  */
 
 import React from 'react';
-import { Icon, SectionContainer } from '@/components';
+import { Icon, SectionPanel } from '@/components';
 import type { Sample, RejectedSample, Test } from '@/types';
 import { CollectionRequirementsSection } from './CollectionRequirementsSection';
-import { CollectionRejectionSection } from './CollectionRejectionSection';
+import { RejectionHistorySection } from '@/features/lab/components/RejectionHistorySection';
 import { DetailGrid, type DetailGridSectionConfig } from '@/features/lab/components/LabDetailModal';
 import { ICONS } from '@/utils';
 
@@ -47,7 +47,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
   return (
     <>
       {/* Linked Tests */}
-      <SectionContainer title={isCollected ? 'Linked Tests' : 'Required for'}>
+      <SectionPanel title={isCollected ? 'Linked Tests' : 'Required for'}>
         <ul className="space-y-1">
           {testNames.map((testName, i) => {
             const testCode = testCodes[i];
@@ -67,11 +67,12 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
             );
           })}
         </ul>
-      </SectionContainer>
+      </SectionPanel>
 
       {/* Rejection Details - for rejected samples */}
       {isRejected && rejectedSample && (
-        <CollectionRejectionSection
+        <RejectionHistorySection
+          variant="sample"
           title={`Rejection Details${(rejectedSample.rejectionHistory?.length || 1) > 1 ? ` (${rejectedSample.rejectionHistory?.length || 1} attempts)` : ''}`}
           reasons={rejectedSample.rejectionReasons}
           notes={rejectedSample.rejectionNotes}
@@ -83,7 +84,8 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
 
       {/* Previous Rejection History */}
       {!isRejected && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (
-        <CollectionRejectionSection
+        <RejectionHistorySection
+          variant="sample"
           title={`Previous Rejection${sample.rejectionHistory.length > 1 ? ` (${sample.rejectionHistory.length} attempts)` : ''}`}
           rejectionHistory={sample.rejectionHistory}
           getUserName={getUserName}
@@ -97,9 +99,9 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
 
       {/* Collection Notes */}
       {collectionNotes && (
-        <SectionContainer title="Collection Notes">
+        <SectionPanel title="Collection Notes">
           <div className="text-sm text-text-primary">{collectionNotes}</div>
-        </SectionContainer>
+        </SectionPanel>
       )}
 
       {/* Detail Sections */}

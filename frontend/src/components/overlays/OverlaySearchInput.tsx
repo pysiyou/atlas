@@ -55,7 +55,3 @@ export const OverlaySearchInput: React.FC<OverlaySearchInputProps> = ({
   );
 };
 
-/** @deprecated Use OverlaySearchInput */
-export const ModalDebouncedSearch = OverlaySearchInput;
-/** @deprecated Use OverlaySearchInputProps */
-export type ModalDebouncedSearchProps = OverlaySearchInputProps;

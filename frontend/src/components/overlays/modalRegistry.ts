@@ -52,7 +52,7 @@ export function registerModal<T extends ModalType, P extends BaseModalProps>(
 ): void {
   registry[type] = {
     component: component as ComponentType<BaseModalProps>,
-    getProps: getProps as ModalRegistryEntry['getProps'],
+    getProps: getProps as unknown as ModalRegistryEntry['getProps'],
   };
 }
 

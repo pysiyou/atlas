@@ -6,7 +6,7 @@
  *
  * Uses centralized components:
  * - DetailGrid with sections config for consistent layout
- * - SectionContainer for custom sections
+ * - SectionPanel for custom sections
  * - CollectionInfoLine for sample metadata
  */
 

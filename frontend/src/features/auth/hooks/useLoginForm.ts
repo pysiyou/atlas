@@ -8,31 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/app/store';
 import { ROUTES } from '@/config';
 
-const getErrorMessage = (err: unknown): string => {
-  if (!(err instanceof Error)) {
-    return 'An unexpected error occurred';
-  }
-
-  const msg = err.message.toLowerCase();
-
-  // Network errors
-  if (msg.includes('fetch') || msg.includes('network') || msg === 'load failed') {
-    return 'Unable to connect to server. Please check your connection.';
-  }
-
-  // Timeout
-  if (msg.includes('abort') || msg.includes('timeout')) {
-    return 'Request timed out. Please try again.';
-  }
-
-  // Auth errors from API (401, 403)
-  if (msg.includes('invalid') || msg.includes('unauthorized')) {
-    return 'Invalid username or password';
-  }
-
-  return err.message || 'Login failed. Please try again.';
-};
-
+import { getLoginErrorMessage } from '@/utils/errors';
 export const useLoginForm = () => {
   const navigate = useNavigate();
   const { login } = useAuthStore();
@@ -67,7 +43,7 @@ export const useLoginForm = () => {
       await login(username, password);
       navigate(ROUTES.DASHBOARD);
     } catch (err) {
-      setError(getErrorMessage(err));
+      setError(getLoginErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }

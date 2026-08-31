@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { SectionContainer } from '@/components';
+import { SectionPanel } from '@/components';
 import { ActivitiesTimeline } from '@/features/command-center/components/ActivitiesTimeline';
 import { useEntityAuditLogs } from '@/features/lab/hooks/useEntityAuditLogs';
 
@@ -38,7 +38,7 @@ export const AuditHistorySection: React.FC<AuditHistorySectionProps> = ({
   }
 
   return (
-    <SectionContainer title={title} spacing="normal" className={className}>
+    <SectionPanel title={title} spacing="normal" className={className}>
       <ActivitiesTimeline
         logs={limitedLogs}
         isLoading={isLoading}
@@ -47,6 +47,6 @@ export const AuditHistorySection: React.FC<AuditHistorySectionProps> = ({
         onRetry={refetch}
         className="max-h-64 overflow-y-auto"
       />
-    </SectionContainer>
+    </SectionPanel>
   );
 };

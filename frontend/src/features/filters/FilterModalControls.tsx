@@ -1,14 +1,14 @@
 /**
  * Modal filter controls: search (shared), price slider (shared range), radio list.
- * Uses shared ModalDebouncedSearch and ModalRangeSlider from @/components/ui/forms.
+ * Uses OverlaySearchInput and OverlayRangeSlider from @/components/overlays.
  */
 
 import React from 'react';
 import { Icon } from '@/components';
 import { ICONS, uppercaseLabel, cn } from '@/utils';
-import { ModalDebouncedSearch, ModalRangeSlider } from '@/components';
+import { OverlaySearchInput, OverlayRangeSlider } from '@/components';
 
-export const ModalSearchInput = ModalDebouncedSearch;
+export const ModalSearchInput = OverlaySearchInput;
 
 export const ModalPriceSlider: React.FC<{
   value: [number, number];
@@ -17,7 +17,7 @@ export const ModalPriceSlider: React.FC<{
   max: number;
   currency?: string;
 }> = ({ value, onChange, min, max, currency = '$' }) => (
-  <ModalRangeSlider
+  <OverlayRangeSlider
     value={value}
     onChange={onChange}
     min={min}

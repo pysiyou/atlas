@@ -188,16 +188,3 @@ export const getDemographicIcon = (field: string): IconName => getDataFieldIcon(
 
 export const getStatusIcon = (_status?: string): IconName => ICONS.orderStatus;
 
-/** @deprecated Use ICONS directly */
-export const PRIORITY_ICON = ICONS.priority;
-/** @deprecated Use ICONS directly */
-export const ORDER_STATUS_ICON = ICONS.orderStatus;
-/** @deprecated Use ICONS directly */
-export const SAMPLE_STATUS_ICON = ICONS.sampleStatus;
-/** @deprecated Use ICONS directly */
-export const TEST_STATUS_ICON = ICONS.testStatus;
-/** @deprecated Use ICONS directly */
-export const PAYMENT_STATUS_ICON = ICONS.paymentStatus;
-/** @deprecated Use ICONS directly */
-export const SAMPLE_TYPE_ICON = ICONS.sampleType;
-

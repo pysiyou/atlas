@@ -6,7 +6,7 @@
 import React from 'react';
 import { formatDate } from '@/utils';
 import { useUserLookup } from '@/features/admin/api/useUsers';
-import { Badge, SectionContainer } from '@/components';
+import { Badge, SectionPanel } from '@/components';
 import { REJECTION_REASON_CONFIG } from '@/types/enums';
 import type { RejectionRecord } from '@/types';
 import type { ResultRejectionRecord } from '@/types/order';
@@ -184,16 +184,16 @@ function ResultRejectionHistorySection({
   if (showOnlyLatest) {
     const latestRecord = sortedHistory[sortedHistory.length - 1];
     return (
-      <SectionContainer title={title} spacing="normal">
+      <SectionPanel title={title} spacing="normal">
         <ResultRecordDisplay record={latestRecord} getUserName={getUserName} />
-      </SectionContainer>
+      </SectionPanel>
     );
   }
 
   const activeRecord = sortedHistory[activeIndex];
 
   return (
-    <SectionContainer
+    <SectionPanel
       title={title}
       headerRight={
         <TabNavigation
@@ -205,7 +205,7 @@ function ResultRejectionHistorySection({
       spacing="normal"
     >
       <ResultRecordDisplay record={activeRecord} getUserName={getUserName} />
-    </SectionContainer>
+    </SectionPanel>
   );
 }
 
@@ -225,7 +225,7 @@ function SampleRejectionHistorySection({
     const activeRecord = sortedHistory[activeIndex];
 
     return (
-      <SectionContainer
+      <SectionPanel
         title={title}
         headerRight={
           <TabNavigation
@@ -243,12 +243,12 @@ function SampleRejectionHistorySection({
           rejectedAt={activeRecord.rejectedAt}
           getUserName={getUserName}
         />
-      </SectionContainer>
+      </SectionPanel>
     );
   }
 
   return (
-    <SectionContainer title={title} spacing="normal">
+    <SectionPanel title={title} spacing="normal">
       <SampleRecordDisplay
         reasons={reasons}
         notes={notes}
@@ -256,7 +256,7 @@ function SampleRejectionHistorySection({
         rejectedAt={rejectedAt}
         getUserName={getUserName}
       />
-    </SectionContainer>
+    </SectionPanel>
   );
 }
 

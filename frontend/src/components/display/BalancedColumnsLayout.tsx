@@ -109,7 +109,3 @@ export const BalancedColumnsLayout: React.FC<BalancedColumnsLayoutProps> = ({
   );
 };
 
-/** @deprecated Use BalancedColumnsLayout */
-export const BalancedDetailsLayout = BalancedColumnsLayout;
-/** @deprecated Use BalancedColumnsLayoutProps */
-export type BalancedDetailsLayoutProps = BalancedColumnsLayoutProps;

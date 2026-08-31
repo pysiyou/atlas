@@ -13,4 +13,3 @@ export * from './detailsTableUtils';
 export * from './displayUtils';
 export * from './EmptyState';
 export * from './FooterInfo';
-export * from './InfoField';

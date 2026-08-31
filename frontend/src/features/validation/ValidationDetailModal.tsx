@@ -12,7 +12,7 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Button, SectionContainer } from '@/components';
+import { Button, SectionPanel } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
@@ -23,7 +23,7 @@ import {
   StatusBadgeRow,
 } from '@/features/lab/components/LabDetailModal';
 import { RejectionDialog } from '@/features/lab/components/RejectionDialog';
-import { EntryRejectionSection } from '../entry/EntryRejectionSection';
+import { RejectionHistorySection } from '@/features/lab/components/RejectionHistorySection';
 import { deriveTestRejectionContext } from '@/features/lab/utils/deriveTestRejectionContext';
 import { CriticalValueActions } from '@/features/critical-values/components/CriticalValueActions';
 import { buildCriticalValueRecord } from '@/features/critical-values/utils/buildCriticalValueRecord';
@@ -76,6 +76,13 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
     scope: 'inline',
   });
 
+  const criticalRecord = useMemo(() => buildCriticalValueRecord(test), [test]);
+
+  const handleCriticalValueUpdated = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+    queryClient.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
+  }, [queryClient]);
+
   if (!test.results) return null;
 
   // Flags and rejection state
@@ -90,13 +97,6 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
     resultRejectionHistory,
     rejectionHistoryTitle,
   } = deriveTestRejectionContext(test);
-
-  const criticalRecord = useMemo(() => buildCriticalValueRecord(test), [test]);
-
-  const handleCriticalValueUpdated = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-    queryClient.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
-  }, [queryClient]);
 
   /**
    * Build header badges using centralized badge components
@@ -181,7 +181,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       }
     >
       {/* Validation Form Section */}
-      <SectionContainer title="Result Validation" headerRight={validationSectionHeaderRight}>
+      <SectionPanel title="Result Validation" headerRight={validationSectionHeaderRight}>
         <ValidationForm
           results={test.results}
           flags={test.flags}
@@ -190,20 +190,21 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           onCommentsChange={value => onCommentsChange(commentKey, value)}
           onApprove={handleApprove}
         />
-      </SectionContainer>
+      </SectionPanel>
 
       {criticalRecord && (
-        <SectionContainer title="Critical Value Notification">
+        <SectionPanel title="Critical Value Notification">
           <CriticalValueActions
             record={criticalRecord}
             onUpdated={handleCriticalValueUpdated}
           />
-        </SectionContainer>
+        </SectionPanel>
       )}
 
       {/* Previous Rejection History - show for both retests and recollections */}
       {hasResultRejectionHistory && (
-        <EntryRejectionSection
+        <RejectionHistorySection
+          variant="result"
           title={rejectionHistoryTitle}
           rejectionHistory={resultRejectionHistory}
           showOnlyLatest={false}

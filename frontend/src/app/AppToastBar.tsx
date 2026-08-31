@@ -4,10 +4,9 @@
  */
 
 import React from 'react';
-import toastLib from 'react-hot-toast';
-import { resolveValue, type Toast } from 'react-hot-toast';
+import toastLib, { resolveValue, type Toast } from 'react-hot-toast';
 
-type ToastMessage = React.ReactElement | string | null | ToastMessageObject;
+type ToastMessage = Parameters<typeof toastLib>[0] | ToastMessageObject;
 
 /** Dismiss all toasts so only one is active; new toast replaces existing. */
 function dismissThen<A extends unknown[], R extends string>(fn: (...args: A) => R): (...args: A) => R {
@@ -19,11 +18,23 @@ function dismissThen<A extends unknown[], R extends string>(fn: (...args: A) => 
 
 /** Typed toast API: one toast at a time; message can be string or ToastMessageObject. */
 // eslint-disable-next-line react-refresh/only-export-components -- single file for toast API + component
-export const toast = Object.assign(dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib>[1]) => toastLib(msg, opts)), {
-  success: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.success>[1]) => toastLib.success(msg, opts)),
-  error: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.error>[1]) => toastLib.error(msg, opts)),
-  loading: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.loading>[1]) => toastLib.loading(msg, opts)),
-  custom: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.custom>[1]) => toastLib.custom(msg, opts)),
+export const toast = Object.assign(
+  dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib>[1]) =>
+    toastLib(msg as Parameters<typeof toastLib>[0], opts)
+  ),
+  {
+  success: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.success>[1]) =>
+    toastLib.success(msg as Parameters<typeof toastLib.success>[0], opts)
+  ),
+  error: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.error>[1]) =>
+    toastLib.error(msg as Parameters<typeof toastLib.error>[0], opts)
+  ),
+  loading: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.loading>[1]) =>
+    toastLib.loading(msg as Parameters<typeof toastLib.loading>[0], opts)
+  ),
+  custom: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.custom>[1]) =>
+    toastLib.custom(msg as Parameters<typeof toastLib.custom>[0], opts)
+  ),
   dismiss: toastLib.dismiss,
   promise: toastLib.promise,
   remove: toastLib.remove,

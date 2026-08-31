@@ -11,7 +11,7 @@
 /* eslint-disable max-lines */
 
 import React from 'react';
-import { Badge, Card, Icon, IconButton, Alert, Avatar } from '@/components';
+import { Badge, Card, Icon, IconButton, Avatar } from '@/components';
 import Barcode from 'react-barcode';
 import type { ContainerType, RejectedSample, Sample, RejectionReason } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
@@ -26,7 +26,7 @@ import { LabCard, TestList } from '@/features/lab/components/LabCard';
 import { AttemptIndicator } from '@/features/lab/components/AttemptIndicator';
 import { QueueAgeBadge } from '@/features/lab/components/QueueAgeBadge';
 import { useLabCardClickGuard } from '@/features/lab/hooks';
-import { LAB_CONFIG } from '@/features/lab/config';
+import { LAB_CONFIG } from '@/features/lab/constants';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import { handlePrintCollectionLabel, getEffectiveContainerType } from '@/features/lab/utils/lab-helpers';
@@ -259,11 +259,12 @@ function CollectionCardDesktop({
           attemptNumber={sample.rejectionHistory.length + 1}
           maxAttempts={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
           type="recollection"
-          previousReason={
-            sample.rejectionHistory[sample.rejectionHistory.length - 1]?.rejectionReasons
-              ? formatRejectionReasons(sample.rejectionHistory[sample.rejectionHistory.length - 1]?.rejectionReasons)
-              : sample.rejectionHistory[sample.rejectionHistory.length - 1]?.rejectionNotes
-          }
+          previousReason={(() => {
+            const last = sample.rejectionHistory[sample.rejectionHistory.length - 1];
+            if (!last) return undefined;
+            if (last.rejectionReasons) return formatRejectionReasons(last.rejectionReasons) ?? undefined;
+            return last.rejectionNotes ?? undefined;
+          })()}
         />
       )}
       <h3 className="text-sm font-medium text-text-primary capitalize">{patientName}</h3>

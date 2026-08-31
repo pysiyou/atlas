@@ -43,9 +43,7 @@ export function usePatientContextList(): {
       );
       const lastOrder = sorted[0];
 
-      const hasUnpaidOrders = patientOrders.some(
-        o => o.paymentStatus === 'unpaid' || o.paymentStatus === 'partial'
-      );
+      const hasUnpaidOrders = patientOrders.some(o => o.paymentStatus === 'unpaid');
 
       return {
         ...patient,

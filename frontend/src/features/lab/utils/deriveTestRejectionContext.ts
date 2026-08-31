@@ -3,7 +3,7 @@
  * Used by lab workflow cards and detail modals to avoid duplicated logic.
  */
 
-import { LAB_CONFIG } from '@/features/lab/config';
+import { LAB_CONFIG } from '@/features/lab/constants';
 import type { RejectionRecord, TestWithContext } from '@/types';
 import type { ResultRejectionRecord } from '@/types/order';
 import { getResultRejectionType } from '@/types/order';

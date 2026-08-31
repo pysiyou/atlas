@@ -39,7 +39,7 @@ export interface TabsListProps {
   onIndicatorChange?: (indicator: { left: number; width: number }) => void;
 }
 
-/** Shared sliding transition for tab indicator (left + width). Used by TabsList and TabbedSectionContainer. */
+/** Shared sliding transition for tab indicator (left + width). Used by TabsList and TabbedSectionPanel. */
 export const TAB_INDICATOR_TRANSITION =
   'left 320ms cubic-bezier(0.32, 0.72, 0, 1), width 320ms cubic-bezier(0.32, 0.72, 0, 1)';
 
@@ -64,7 +64,7 @@ export const TabsList: React.FC<TabsListProps> = ({
    */
   const updateIndicator = useCallback(() => {
     const activeButton = tabsRef.current[activeTabId];
-    // Use headerRef if provided (for TabbedSectionContainer), otherwise use containerRef
+    // Use headerRef if provided (for TabbedSectionPanel), otherwise use containerRef
     const headerEl = headerRef?.current || containerRef.current;
 
     if (!activeButton || !headerEl) {
@@ -151,7 +151,7 @@ export const TabsList: React.FC<TabsListProps> = ({
     };
   }, [updateIndicator]);
 
-  // Sync indicator state to parent component (for TabbedSectionContainer)
+  // Sync indicator state to parent component (for TabbedSectionPanel)
   // This must be in a useEffect to avoid updating parent state during render
   useEffect(() => {
     if (onIndicatorChange) {
@@ -206,7 +206,7 @@ export const TabsList: React.FC<TabsListProps> = ({
 
       {/* Sliding tab indicator - only for underline variant */}
       {/* Positioned at the absolute bottom to align with header border */}
-      {/* If headerRef is provided, indicator is rendered in TabbedSectionContainer wrapper */}
+      {/* If headerRef is provided, indicator is rendered in TabbedSectionPanel wrapper */}
       {variant === 'underline' && !headerRef && (
         <div
           className="absolute bottom-0 h-0.5 bg-brand"

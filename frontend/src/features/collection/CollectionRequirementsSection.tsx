@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { CalloutCard, SectionContainer } from '@/components';
+import { CalloutCard, SectionPanel } from '@/components';
 import { InfoBanner, InfoBannerList, stringsToInfoBannerListRows } from '@/features/lab/components/InfoBanner';
 
 /** Test detail for requirements display */
@@ -33,7 +33,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
   if (!activeTest) return null;
 
   return (
-    <SectionContainer
+    <SectionPanel
       title="Collection Requirements & Instructions"
       headerRight={
         <div className="flex gap-1">
@@ -97,6 +97,6 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           </div>
         )}
       </div>
-    </SectionContainer>
+    </SectionPanel>
   );
 };

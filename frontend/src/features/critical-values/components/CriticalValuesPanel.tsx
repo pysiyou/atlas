@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { SectionContainer, Badge, Icon } from '@/components';
+import { SectionPanel, Badge, Icon } from '@/components';
 import { ICONS } from '@/utils';
 import { getLabQueueUrl } from '@/features/lab/constants/labTabs';
 import { usePendingCriticalValues } from '@/features/critical-values/hooks/useCriticalValues';
@@ -15,9 +15,9 @@ export const CriticalValuesPanel: React.FC = () => {
 
   if (isLoading) {
     return (
-      <SectionContainer title="Critical Values">
+      <SectionPanel title="Critical Values">
         <p className="text-sm text-text-tertiary py-4">Loading critical values...</p>
-      </SectionContainer>
+      </SectionPanel>
     );
   }
 
@@ -26,7 +26,7 @@ export const CriticalValuesPanel: React.FC = () => {
   }
 
   return (
-    <SectionContainer
+    <SectionPanel
       title="Critical Values Pending"
       headerRight={
         <Badge variant="danger" size="sm">
@@ -58,6 +58,6 @@ export const CriticalValuesPanel: React.FC = () => {
           </div>
         ))}
       </div>
-    </SectionContainer>
+    </SectionPanel>
   );
 };

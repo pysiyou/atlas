@@ -3,17 +3,17 @@
  * Responsive filter controls with modal for smaller screens
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Icon, Button, Badge, Modal, FooterInfo, DnaHelixLoader } from '@/components';
+import React, { useState } from 'react';
+import { Icon, Button, Badge, Modal, FooterInfo } from '@/components';
 import { MultiSelectFilter } from '@/components';
 import { CheckboxList } from '@/components';
-import { ModalRangeSlider } from '@/components';
+import { OverlayRangeSlider } from '@/components';
+import { DebouncedSearchInput } from '@/components';
 import { AgeFilter } from './AgeFilter';
 import {
-  inputWrapper,
+  inputContainerBase,
   inputInner,
   inputText,
-  inputContainerBase,
   inputClearButton,
 } from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
@@ -52,76 +52,6 @@ const affiliationStatusOptions = [
 ];
 
 /**
- * SearchInput - Simple debounced search input (inline bar style)
- */
-const SearchInput: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-}> = ({ value, onChange, placeholder = PATIENT_FILTER_PLACEHOLDERS.search }) => {
-  const [localValue, setLocalValue] = useState(value);
-  const [isDebouncing, setIsDebouncing] = useState(false);
-
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
-
-  useEffect(() => {
-    if (localValue === value) {
-      setIsDebouncing(false);
-      return;
-    }
-
-    setIsDebouncing(true);
-    const timer = setTimeout(() => {
-      onChange(localValue);
-      setIsDebouncing(false);
-    }, 300);
-
-    return () => {
-      clearTimeout(timer);
-      setIsDebouncing(false);
-    };
-  }, [localValue, value, onChange]);
-
-  const handleClear = useCallback(() => {
-    setLocalValue('');
-    onChange('');
-  }, [onChange]);
-
-  return (
-    <div className={cn(inputWrapper)}>
-      <Icon
-        name={ICONS.actions.search}
-        className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-brand transition-colors"
-      />
-      <input
-        type="text"
-        placeholder={placeholder}
-        value={localValue}
-        onChange={e => setLocalValue(e.target.value)}
-        className={cn(inputInner, inputText, 'font-normal whitespace-nowrap overflow-hidden')}
-      />
-      <div className="flex items-center gap-1 shrink-0">
-        {isDebouncing && <DnaHelixLoader size="xs" />}
-        {localValue && !isDebouncing && (
-          <button
-            onClick={handleClear}
-            className={cn(inputClearButton, 'hover:bg-surface-hover duration-200')}
-            aria-label="Clear search"
-          >
-            <Icon
-              name={ICONS.actions.closeCircle}
-              className={cn('w-4 h-4', 'text-text-muted', 'hover:text-text-tertiary')}
-            />
-          </button>
-        )}
-      </div>
-    </div>
-  );
-};
-
-/**
  * PatientFilters - Responsive filter layout
  * - lg+: 4-column grid (search + age + sex + affiliation)
  * - md: 2-column grid
@@ -157,7 +87,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
     <>
       {/* Search */}
       <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
-        <SearchInput
+        <DebouncedSearchInput
           value={searchQuery}
           onChange={onSearchChange}
           placeholder={PATIENT_FILTER_PLACEHOLDERS.searchLong}
@@ -215,7 +145,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
             <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
               {/* Search control */}
               <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
-                <SearchInput
+                <DebouncedSearchInput
                   value={searchQuery}
                   onChange={onSearchChange}
                   placeholder={PATIENT_FILTER_PLACEHOLDERS.search}
@@ -275,7 +205,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
                 {/* Age Range Section */}
                 <div className="w-full">
                   <h4 className="text-sm font-semibold text-text-primary mb-3">Age Range</h4>
-                  <ModalRangeSlider
+                  <OverlayRangeSlider
                     value={ageRange}
                     onChange={onAgeRangeChange}
                     min={AGE_RANGE_MIN}

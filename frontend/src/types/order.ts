@@ -23,10 +23,7 @@ export { ORDER_STATUS_VALUES } from '@/types/enums';
 export { PAYMENT_STATUS_VALUES } from '@/types/enums';
 
 // Local type aliases for use in this file
-type TestStatus = TestStatusType;
-type OrderStatus = OrderStatusType;
 type PriorityLevel = PriorityLevelType;
-type PaymentStatus = PaymentStatusType;
 type ResultStatus = ResultStatusType;
 type ValidationDecision = ValidationDecisionType;
 
@@ -78,7 +75,7 @@ export interface OrderTest {
   sampleType: string; // From API relationship
 
   // Order-specific state
-  status: TestStatus;
+  status: TestStatusType;
   priceAtOrder: number; // Snapshot for billing
 
   // Sample linkage
@@ -140,8 +137,8 @@ export interface Order {
 
   // Pricing (snapshot at order time)
   totalPrice: number;
-  paymentStatus: PaymentStatus;
-  overallStatus: OrderStatus;
+  paymentStatus: PaymentStatusType;
+  overallStatus: OrderStatusType;
 
   // Scheduling
   scheduledCollectionTime?: string;
@@ -167,6 +164,9 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
 }
+
+/** Runtime-validated order shape (forms/mutations). */
+export type { Order as ValidatedOrder, OrderTest as ValidatedOrderTest } from '@/features/orders/schemas/order.schema';
 
 export interface ValidationRecord {
   validatedBy: string;

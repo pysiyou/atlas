@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import { Badge, Button, Checkbox } from '@/components';
-import { useAsyncHandler } from '@/hooks';
+import { useAsyncAction } from '@/hooks/useAsyncAction';
 import type { AffiliationDuration } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
-import { usePatientService } from '../../services/usePatientService';
+import { isAffiliationActive } from '../../utils/patient-helpers';
 import { AffiliationPlanSelector } from '../AffiliationPlanSelector';
 import type { PatientFormSectionProps } from './types';
 
@@ -14,11 +14,13 @@ export const AffiliationSection: React.FC<
     'formData' | 'errors' | 'onFieldChange' | 'existingAffiliation' | 'onRenew'
   >
 > = ({ formData, errors, onFieldChange, existingAffiliation, onRenew }) => {
-  const { isAffiliationActive } = usePatientService();
-  const renewHandler = useCallback(async () => {
-    await Promise.resolve(onRenew?.());
-  }, [onRenew]);
-  const { execute: handleRenew, isPending: isRenewing } = useAsyncHandler(renewHandler, {
+  const renewHandler = useCallback(
+    async (_signal: AbortSignal) => {
+      await Promise.resolve(onRenew?.());
+    },
+    [onRenew]
+  );
+  const { execute: handleRenew, isPending: isRenewing } = useAsyncAction(renewHandler, {
     minDisplayMs: 100,
   });
   const hasExistingAffiliation = !!existingAffiliation;

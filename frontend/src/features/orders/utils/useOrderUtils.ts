@@ -4,9 +4,9 @@
  */
 
 import { useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
+import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { queryKeys } from '@/lib/query';
-import type { Order } from '@/types';
 import { useOrdersList } from '@/features/orders/api/useOrderQueries';
 
 /**
@@ -33,21 +33,10 @@ export function useOrderSearch(searchQuery: string) {
  */
 export function useOrderLookup() {
   const { orders, isLoading } = useOrdersList();
-
-  const ordersMap = useMemo(() => {
-    const map = new Map<number, Order>();
-    orders.forEach(o => map.set(o.orderId, o));
-    return map;
-  }, [orders]);
-
-  const getOrder = useCallback(
-    (orderId: number | string): Order | undefined => {
-      const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
-      if (isNaN(numericId)) return undefined;
-      return ordersMap.get(numericId);
-    },
-    [ordersMap]
-  );
+  const { get: getOrder } = useEntityLookup(orders, o => o.orderId, {
+    isLoading,
+    normalizeKey: parseNumericKey,
+  });
 
   return {
     getOrder,

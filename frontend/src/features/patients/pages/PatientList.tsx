@@ -18,13 +18,12 @@ import { createPatientTableConfig } from './PatientTableConfig';
 import { calculateAge } from '@/utils';
 import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
-import { usePatientService } from '../services/usePatientService';
+import { isAffiliationActive } from '../utils/patient-helpers';
 
 export const PatientList: React.FC = () => {
   const navigate = useNavigate();
   useModal(); // openModal reserved for future use
   const { patients, isLoading, isError, refetch } = usePatientContextList();
-  const { isAffiliationActive } = usePatientService();
 
   // Format error for ErrorAlert component
   const error = isError
@@ -94,7 +93,7 @@ export const PatientList: React.FC = () => {
     }
 
     return filtered;
-  }, [preFilteredPatients, ageRange, affiliationStatusFilters, isAffiliationActive]);
+  }, [preFilteredPatients, ageRange, affiliationStatusFilters]);
 
   // Memoize table config — PatientContext has pre-computed order stats, no callback needed
   const patientTableConfig = useMemo(

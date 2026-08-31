@@ -5,16 +5,7 @@ import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
 import type { PatientContext } from '@/types';
 import { DATA_ID_PRIMARY } from '@/utils/constants';
-
-// Helper function for affiliation status (pure function, no hook needed)
-const isAffiliationActive = (affiliation?: { endDate: string }): boolean => {
-  if (!affiliation) return false;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const endDate = new Date(affiliation.endDate);
-  endDate.setHours(0, 0, 0, 0);
-  return endDate >= today;
-};
+import { isAffiliationActive } from '../utils/patient-helpers';
 import { PatientCard } from '../components/PatientCard';
 
 /**

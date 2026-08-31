@@ -10,12 +10,6 @@
  *   - @/features/reports
  */
 
-// Schemas
-export * from './schemas';
-
-// Services
-export * from './services';
-
 // Shared lab components (LabCard, LabFilters, LabWorkflowView, etc.)
 export * from './components';
 

@@ -4,6 +4,7 @@
 
 import type { ResultStatus } from '@/types/enums';
 import type { CatalogReferenceRange, CriticalRange, TestParameter, Patient, Gender } from '@/types';
+import { calculateAge } from '@/utils/string';
 
 interface ParsedRange {
   min?: number;
@@ -52,15 +53,6 @@ export interface ReferenceRangeDisplay {
   low?: number;
   high?: number;
   source: 'adult_male' | 'adult_female' | 'adult_general' | 'pediatric' | 'none';
-}
-
-function calculateAge(dateOfBirth: string): number {
-  const birthDate = new Date(dateOfBirth);
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) age--;
-  return age;
 }
 
 export function getPatientSpecificRange(
