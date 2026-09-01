@@ -6,8 +6,7 @@
 import React from 'react';
 import type { Patient } from '@/types';
 import { Button, Modal, CircularProgress, FooterInfo } from '@/components';
-import { ICONS } from '@/config/icons';
-import { displayId } from '@/utils';
+import { MODULE_ICONS } from '@/config/icons';
 import { ErrorBoundary } from '@/components';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';
@@ -150,21 +149,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
             submitLabel={submitLabel}
             isSubmitting={isSubmitting}
             formId="patient-form"
-            footerInfo={
-              mode === 'edit' && patient ? (
-                <FooterInfo
-                  icon={ICONS.dataFields.user}
-                  text={
-                    <>
-                      Editing{' '}
-                      <span className="entity-id">{displayId.patient(patient.id)}</span>
-                    </>
-                  }
-                />
-              ) : (
-                <FooterInfo icon={ICONS.actions.add} text="Creating new patient" />
-              )
-            }
+            footerInfo={<FooterInfo icon={MODULE_ICONS.patients} label="Patients" size="md" />}
           />
         </div>
       </Modal>

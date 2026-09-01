@@ -7,9 +7,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Popover, IconButton, FooterInfo } from '@/components';
 import { PopoverForm } from '../components/PopoverForm';
-import { POPOVER_FOOTER_MESSAGES } from '../components/popoverFooterConstants';
+import { MODULE_ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
-import { ICONS } from '@/config/icons';
 import { useTestCatalog } from '@/features/catalog';
 import { getUnionRejectionCriteria } from '@/features/lab/utils/catalogRejectionCriteria';
 import { useSampleRejectionOptions } from '@/features/lab/collection/useSampleRejectionOptions';
@@ -125,7 +124,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       confirmVariant="danger"
       isSubmitting={isSubmitting}
       disabled={!isValid}
-      footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text={POPOVER_FOOTER_MESSAGES.REJECTING_SAMPLE} />}
+      footerInfo={<FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
     >
       <RejectionWarningAlert
         escalationRequired={escalationRequired}

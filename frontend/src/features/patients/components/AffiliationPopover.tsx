@@ -2,7 +2,7 @@ import React from 'react';
 import { Popover, FooterInfo } from '@/components';
 import type { Affiliation } from '@/types';
 import { AffiliationInfo } from './AffiliationInfoSection';
-import { ICONS } from '@/config/icons';
+import { MODULE_ICONS } from '@/config/icons';
 
 interface AffiliationPopoverProps {
   affiliation?: Affiliation;
@@ -29,7 +29,7 @@ export const AffiliationPopover: React.FC<AffiliationPopoverProps> = ({ affiliat
             <AffiliationInfo affiliation={affiliation} />
           </div>
           <div className="px-4 py-3 bg-surface-page border-t border-border-subtle">
-            <FooterInfo icon={ICONS.dataFields.user} text="Viewing affiliation" />
+            <FooterInfo icon={MODULE_ICONS.patients} label="Patients" />
           </div>
         </div>
       )}

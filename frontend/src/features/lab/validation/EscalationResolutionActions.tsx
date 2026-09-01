@@ -1,14 +1,16 @@
 import React from 'react';
-import { Button, Popover } from '@/components';
+import { Button, Popover, Icon } from '@/components';
 import { cn } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { PopoverForm } from '../components/PopoverForm';
+import { ICONS } from '@/config/icons';
 import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/lab-operations';
 
 interface ResolutionPopoverProps {
   resolving: boolean;
   triggerLabel: string;
   triggerVariant: 'approve' | 'secondary' | 'reject';
+  triggerIcon?: React.ReactNode;
   title: string;
   subtitle: string;
   textareaId: string;
@@ -26,6 +28,7 @@ function ResolutionPopover({
   resolving,
   triggerLabel,
   triggerVariant,
+  triggerIcon,
   title,
   subtitle,
   textareaId,
@@ -44,7 +47,13 @@ function ResolutionPopover({
       offsetValue={8}
       preventClose={resolving}
       trigger={
-        <Button variant={triggerVariant} size="md" disabled={resolving} isLoading={resolving}>
+        <Button
+          variant={triggerVariant}
+          size="md"
+          icon={triggerIcon}
+          disabled={resolving}
+          isLoading={resolving}
+        >
           {triggerLabel}
         </Button>
       }
@@ -134,7 +143,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
   resolveAsync,
   onValidationError,
 }) => (
-  <div className="flex flex-wrap items-center gap-2">
+  <div className="flex items-center gap-2 flex-nowrap">
     <ResolutionPopover
       resolving={resolving}
       triggerLabel="Force Validate"
@@ -206,6 +215,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
       resolving={resolving}
       triggerLabel="Authorize Re-test"
       triggerVariant="secondary"
+      triggerIcon={<Icon name={ICONS.actions.loading} />}
       title="Authorize Re-test"
       subtitle="Reason (recommended)"
       textareaId="escalation-authorize-retest-reason"
@@ -225,6 +235,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
       resolving={resolving}
       triggerLabel="Authorize Re-collect"
       triggerVariant="secondary"
+      triggerIcon={<Icon name={ICONS.dataFields.sampleCollection} />}
       title="Authorize Re-collect"
       subtitle="Reason (required)"
       textareaId="escalation-authorize-recollect-reason"

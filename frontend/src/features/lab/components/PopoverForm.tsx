@@ -9,7 +9,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Button, IconButton, FooterInfo, Icon } from '@/components';
-import { useAuthStore } from '@/app/store';
+import { MODULE_ICONS } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 
 interface PopoverFormProps {
@@ -58,8 +58,6 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
   headerBadges,
   children,
 }) => {
-  const { user: currentUser } = useAuthStore();
-
   return (
     <div className="w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border-default overflow-hidden flex flex-col max-h-[600px]">
       {/* Header */}
@@ -83,12 +81,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
 
       {/* Footer */}
       <div className="p-3 bg-surface-page border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
-        {footerInfo || (
-          <FooterInfo
-            icon={ICONS.actions.alertCircle}
-            text={`Acting as ${currentUser?.name || 'Lab Staff'}`}
-          />
-        )}
+        {footerInfo || <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
         <div className="flex items-center gap-2">
           <Button
             variant="cancel"

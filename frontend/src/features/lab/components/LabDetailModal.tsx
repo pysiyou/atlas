@@ -11,7 +11,7 @@
 import React, { type ReactNode } from 'react';
 import { Modal } from '@/components';
 import { Badge, SectionPanel, DetailFieldGroup, FooterInfo } from '@/components';
-import { ICONS } from '@/config/icons';
+import { MODULE_ICONS } from '@/config/icons';
 import type { DetailFieldConfig } from '@/components';
 import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
@@ -172,9 +172,9 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 
         {/* Footer */}
         {(footer || footerInfo) && (
-          <div className="shrink-0 bg-surface border-t border-border-default px-6 py-4 flex items-center justify-between">
-            {footerInfo || <FooterInfo icon={ICONS.dataFields.flask} text="Lab workflow" />}
-            {footer}
+          <div className="shrink-0 bg-surface border-t border-border-default px-6 py-4 flex items-center justify-between gap-4">
+            {footerInfo || <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" size="md" />}
+            {footer && <div className="flex-1 min-w-0 flex justify-end">{footer}</div>}
           </div>
         )}
       </div>
@@ -292,24 +292,31 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
   statusMessage,
   statusClassName = 'text-text-tertiary',
   children,
-}) => (
-  <div className="flex items-center justify-between">
-    {statusIcon && statusMessage ? (
-      <div className="text-xs text-text-tertiary flex items-center gap-1.5">
-        <div className="w-3.5 h-3.5 flex items-center justify-center">{statusIcon}</div>
-        <span>{statusMessage}</span>
-      </div>
-    ) : (
-      <div className={`flex items-center gap-1.5 text-xs ${statusClassName}`}>
-        {statusIcon && (
-          <div className="w-3.5 h-3.5 flex items-center justify-center shrink-0">{statusIcon}</div>
-        )}
-        {statusMessage && <span>{statusMessage}</span>}
-      </div>
-    )}
-    <div className="flex items-center gap-3">{children}</div>
-  </div>
-);
+}) => {
+  const hasStatus = Boolean(statusIcon || statusMessage);
+
+  return (
+    <div
+      className={`flex items-center w-full ${hasStatus ? 'justify-between' : 'justify-end'}`}
+    >
+      {hasStatus &&
+        (statusIcon && statusMessage ? (
+          <div className="text-xs text-text-tertiary flex items-center gap-1.5">
+            <div className="w-3.5 h-3.5 flex items-center justify-center">{statusIcon}</div>
+            <span>{statusMessage}</span>
+          </div>
+        ) : (
+          <div className={`flex items-center gap-1.5 text-xs ${statusClassName}`}>
+            {statusIcon && (
+              <div className="w-3.5 h-3.5 flex items-center justify-center shrink-0">{statusIcon}</div>
+            )}
+            {statusMessage && <span>{statusMessage}</span>}
+          </div>
+        ))}
+      <div className="flex items-center gap-3 flex-nowrap">{children}</div>
+    </div>
+  );
+};
 
 /**
  * StatusBadgeRow - Row of status badges commonly used in headers

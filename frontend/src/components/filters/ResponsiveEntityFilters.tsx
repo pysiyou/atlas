@@ -6,6 +6,7 @@
 import React, { useState, type ReactNode } from 'react';
 import { cn } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
+import type { IconName } from '@/components';
 import { ResponsiveFilterMobileBar } from './ResponsiveFilterMobileBar';
 import { EntityFilterModal } from './EntityFilterModal';
 
@@ -17,6 +18,8 @@ export interface ResponsiveEntityFiltersProps {
   inlineControls: ReactNode;
   modalContent: ReactNode;
   onReset: () => void;
+  footerIcon: IconName;
+  footerLabel?: string;
   searchRowHeight?: string;
 }
 
@@ -28,6 +31,8 @@ export const ResponsiveEntityFilters: React.FC<ResponsiveEntityFiltersProps> = (
   inlineControls,
   modalContent,
   onReset,
+  footerIcon,
+  footerLabel,
   searchRowHeight,
 }) => {
   const breakpoint = useBreakpoint();
@@ -54,6 +59,8 @@ export const ResponsiveEntityFilters: React.FC<ResponsiveEntityFiltersProps> = (
           onSearchChange={onSearchChange}
           searchPlaceholder={searchPlaceholder}
           onReset={onReset}
+          footerIcon={footerIcon}
+          footerLabel={footerLabel}
         >
           {modalContent}
         </EntityFilterModal>

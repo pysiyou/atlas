@@ -14,7 +14,7 @@ import {
   inputClearButton,
 } from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { ICONS, MODULE_ICONS } from '@/config/icons';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { DatePresetBadges, REPORT_FILTER_PLACEHOLDERS } from '@/components/filters';
 
@@ -152,7 +152,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
             {/* Footer with Filter Button */}
             <div className="px-5 py-4 border-t border-border-default bg-surface shrink-0">
               <div className="flex items-center justify-between gap-3">
-                <FooterInfo icon={ICONS.actions.filter} text="Filtering results" />
+                <FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"

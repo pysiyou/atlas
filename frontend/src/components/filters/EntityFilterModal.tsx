@@ -4,6 +4,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Modal, OverlaySearchInput } from '@/components';
+import type { IconName } from '@/components';
 import { FilterModalFooter } from './FilterModalFooter';
 
 export interface EntityFilterModalProps {
@@ -13,6 +14,8 @@ export interface EntityFilterModalProps {
   onSearchChange: (value: string) => void;
   searchPlaceholder: string;
   onReset: () => void;
+  footerIcon: IconName;
+  footerLabel?: string;
   children: ReactNode;
 }
 
@@ -23,6 +26,8 @@ export const EntityFilterModal: React.FC<EntityFilterModalProps> = ({
   onSearchChange,
   searchPlaceholder,
   onReset,
+  footerIcon,
+  footerLabel,
   children,
 }) => (
   <Modal isOpen={isOpen} onClose={onClose} title="Filter" size="md">
@@ -37,7 +42,12 @@ export const EntityFilterModal: React.FC<EntityFilterModalProps> = ({
         </div>
         <div className="space-y-5">{children}</div>
       </div>
-      <FilterModalFooter onReset={onReset} onApply={onClose} />
+      <FilterModalFooter
+        onReset={onReset}
+        onApply={onClose}
+        icon={footerIcon}
+        label={footerLabel}
+      />
     </div>
   </Modal>
 );

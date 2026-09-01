@@ -8,7 +8,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { toast } from '@/app/AppToastBar';
 import { Popover, Button, Icon, FooterInfo } from '@/components';
 import { PopoverForm } from '../components/PopoverForm';
-import { POPOVER_FOOTER_MESSAGES } from '../components/popoverFooterConstants';
+import { MODULE_ICONS } from '@/config/icons';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';
 import type { SampleRequirement } from '@/features/lab/utils';
@@ -122,7 +122,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       confirmVariant="primary"
       disabled={!isValid}
       isSubmitting={isSubmitting}
-      footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text={POPOVER_FOOTER_MESSAGES.COLLECTING_SAMPLE} />}
+      footerInfo={<FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
     >
       {/* Required quantity (volume) */}
       <div>

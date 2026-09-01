@@ -1,8 +1,8 @@
 /**
- * FooterInfo - Reusable footer info component for modals and popovers
+ * FooterInfo - Icon-only footer marker for modals and popovers
  *
- * Provides consistent styling for footer information with icon and text.
- * Used in all modals and popovers to display contextual information.
+ * Uses the same module icons as the sidebar menu. Text is omitted for space;
+ * an optional label is available for screen readers.
  */
 
 import React from 'react';
@@ -11,21 +11,19 @@ import { Icon, type IconName } from '@/components/primitives/Icon';
 interface FooterInfoProps {
   /** Icon name to display */
   icon: IconName;
-  /** Text to display (can be string or ReactNode for custom styling) */
-  text: string | React.ReactNode;
+  /** Screen-reader label (not shown visually) */
+  label?: string;
+  /** Icon size — md for modals, sm for popovers (default) */
+  size?: 'sm' | 'md';
 }
 
-/**
- * FooterInfo component with exact styling from PaymentPopover
- *
- * Style matches:
- * - Container: text-xs text-text-tertiary flex items-center gap-1.5
- * - Icon: w-3.5 h-3.5
- * - Text: span (inherits text-text-tertiary from parent)
- */
-export const FooterInfo: React.FC<FooterInfoProps> = ({ icon, text }) => (
-  <div className="text-xs text-text-tertiary flex items-center gap-1.5">
-    <Icon name={icon} className="w-3.5 h-3.5 text-text-muted" />
-    {typeof text === 'string' ? <span>{text}</span> : text}
+const ICON_SIZE_CLASSES = {
+  sm: 'w-3.5 h-3.5',
+  md: 'w-5 h-5',
+} as const;
+
+export const FooterInfo: React.FC<FooterInfoProps> = ({ icon, label, size = 'sm' }) => (
+  <div className="flex items-center shrink-0" aria-label={label} role={label ? 'img' : undefined}>
+    <Icon name={icon} className={`${ICON_SIZE_CLASSES[size]} text-text-muted`} />
   </div>
 );

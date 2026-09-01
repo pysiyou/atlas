@@ -13,6 +13,7 @@ import {
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { getEnabledPaymentMethods } from '@/types/payments';
+import { MODULE_ICONS } from '@/config/icons';
 import { PaymentFiltersInlineControls } from './PaymentFiltersInlineControls';
 import type { PaymentStatus, PaymentMethod } from '@/types';
 
@@ -84,6 +85,8 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = props => {
       activeFilterCount={activeFilterCount}
       inlineControls={<PaymentFiltersInlineControls {...props} />}
       modalContent={modalContent}
+      footerIcon={MODULE_ICONS.payments}
+      footerLabel="Payments"
       onReset={() => {
         props.onDateRangeChange(null);
         props.onStatusFiltersChange([]);
