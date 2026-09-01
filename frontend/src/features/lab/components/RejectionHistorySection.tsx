@@ -80,6 +80,12 @@ function ResultRecordDisplay({ record, getUserName }: ResultRecordDisplayProps) 
           <span className="text-text-primary">{record.rejectionReason ?? record.reason}</span>
         </div>
       )}
+      {(record.notes ?? record.rejectionNotes) && (
+        <div className="flex">
+          <span className="text-text-tertiary w-16 shrink-0">Notes</span>
+          <span className="text-text-primary">{record.notes ?? record.rejectionNotes}</span>
+        </div>
+      )}
       {record.rejectedBy && (
         <div className="flex">
           <span className="text-text-tertiary w-16 shrink-0">By</span>
@@ -237,7 +243,10 @@ function SampleRejectionHistorySection({
         spacing="normal"
       >
         <SampleRecordDisplay
-          reasons={activeRecord.rejectionReasons}
+          reasons={
+            activeRecord.rejectionReasons ??
+            (activeRecord.rejectionReason ? [activeRecord.rejectionReason] : undefined)
+          }
           notes={activeRecord.rejectionNotes}
           rejectedBy={activeRecord.rejectedBy}
           rejectedAt={activeRecord.rejectedAt}

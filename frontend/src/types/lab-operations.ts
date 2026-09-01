@@ -35,7 +35,13 @@ export type LabOperationType =
   | 'result_validation_reject_recollect'
   | 'result_validation_escalate'
   | 'escalation_resolution_authorize_retest'
+  | 'escalation_resolution_authorize_recollect'
+  | 'escalation_resolution_force_validate'
   | 'escalation_resolution_final_reject'
+  | 'escalation_trigger_crit_val'
+  | 'escalation_trigger_rej_samp'
+  | 'escalation_trigger_limit_hit'
+  | 'escalation_trigger_amend_res'
   // Order Operations
   | 'order_status_change'
   | 'test_removed'
@@ -66,6 +72,7 @@ export interface RejectionOptionsResponse {
   recollectionAttemptsRemaining: number;
   availableActions: AvailableAction[];
   escalationRequired: boolean;
+  allowedRejectionCriteria?: string[];
 }
 
 /**
@@ -86,13 +93,23 @@ export interface RejectionResult {
  */
 export interface RejectionRequest {
   rejectionReason: string;
-  rejectionType: 're-test' | 're-collect' | 'escalate';
+  rejectionNotes?: string;
+  rejectionType: 're-test' | 'escalate';
 }
 
 /**
  * Escalation resolution actions (admin/labtech_plus only)
  */
-export type EscalationResolutionAction = 'force_validate' | 'authorize_retest' | 'final_reject';
+export type EscalationResolutionAction = 'force_validate' | 'authorize_retest' | 'authorize_recollect' | 'final_reject';
+
+export type EscalationReasonCode = 'CRIT-VAL' | 'REJ-SAMP' | 'LIMIT-HIT' | 'AMEND-RES';
+
+export interface CriticalReadBackPayload {
+  providerName: string;
+  providerContact: string;
+  notifiedAt: string;
+  readBackConfirmed: boolean;
+}
 
 /**
  * Request body for resolving an escalated test
@@ -101,6 +118,7 @@ export interface EscalationResolveRequest {
   action: EscalationResolutionAction;
   validationNotes?: string;
   rejectionReason?: string;
+  readBack?: CriticalReadBackPayload;
 }
 
 /**
@@ -121,7 +139,7 @@ export interface EscalationResolveResult {
  * Request body for combined reject and recollect operation
  */
 export interface RejectAndRecollectRequest {
-  rejectionReasons: string[];
+  rejectionReason: string;
   rejectionNotes?: string;
   recollectionReason?: string;
 }
@@ -168,8 +186,8 @@ export interface LabOperationRecord {
 /**
  * Constants matching backend limits
  */
-export const MAX_RETEST_ATTEMPTS = 3;
-export const MAX_RECOLLECTION_ATTEMPTS = 3;
+export const MAX_RETEST_ATTEMPTS = 2;
+export const MAX_RECOLLECTION_ATTEMPTS = 2;
 
 /**
  * Map legacy rejection types to new action types

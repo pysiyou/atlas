@@ -36,14 +36,10 @@ interface ResultValidationRequest {
  * Uses the /reject endpoint with proper tracking.
  */
 interface ResultRejectionRequest {
-  /** Reason for rejecting the results */
+  /** Catalog-defined rejection criterion */
   rejectionReason: string;
-  /**
-   * Type of rejection:
-   * - 're-test': Re-run with same sample, creates new OrderTest entry
-   * - 're-collect': New sample required, triggers sample recollection flow
-   * - 'escalate': Escalate to supervisor when limits exceeded
-   */
+  /** Optional additional context */
+  rejectionNotes?: string;
   rejectionType: ResultRejectionType;
 }
 
@@ -265,16 +261,19 @@ export function useRejectResults() {
       orderId,
       testCode,
       rejectionReason,
+      rejectionNotes,
       rejectionType,
     }: {
       orderId: string | number;
       testCode: string;
       rejectionReason: string;
+      rejectionNotes?: string;
       rejectionType: ResultRejectionType;
     }): Promise<RejectionResult> => {
       const orderIdStr = typeof orderId === 'number' ? orderId.toString() : orderId;
       return resultAPI.rejectResults(orderIdStr, testCode, {
         rejectionReason,
+        rejectionNotes,
         rejectionType,
       });
     },
@@ -284,7 +283,7 @@ export function useRejectResults() {
       invalidateResultQueries(queryClient, {
         orderId: orderIdStr,
         samples: true,
-        pendingEscalation: variables.rejectionType === 'escalate',
+        pendingEscalation: true,
       });
     },
   });
@@ -326,12 +325,14 @@ export function useResolveEscalation() {
       action,
       validationNotes,
       rejectionReason,
+      readBack,
     }: {
       orderId: string | number;
       testCode: string;
       action: EscalationResolveRequest['action'];
       validationNotes?: string;
       rejectionReason?: string;
+      readBack?: EscalationResolveRequest['readBack'];
     }) => {
       const { hasRole } = useAuthStore.getState();
       if (!hasRole(['administrator', 'lab-technician-plus'])) {
@@ -342,6 +343,7 @@ export function useResolveEscalation() {
         action,
         validationNotes,
         rejectionReason,
+        readBack,
       });
     },
     onSuccess: (_, variables) => {
@@ -373,6 +375,7 @@ export function usePendingEscalation() {
     queryFn: () => resultAPI.getPendingEscalation(),
     enabled: isAuthenticated && !isRestoring && canResolveEscalation,
     ...cacheConfig.dynamic,
+    refetchInterval: 15_000,
   });
 
   const invalidatePendingEscalation = () => {

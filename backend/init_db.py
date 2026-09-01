@@ -16,9 +16,10 @@ def apply_migrations():
             RETURNS TRIGGER AS $$
             BEGIN
                 -- Check if trying to modify a validated result
-                IF OLD.status = 'VALIDATED' AND (
+                IF OLD.status::text IN ('VALIDATED', 'validated') AND (
                     (NEW.results::text IS DISTINCT FROM OLD.results::text) OR
-                    (NEW.status IS DISTINCT FROM OLD.status)
+                    (NEW.status::text IS DISTINCT FROM OLD.status::text
+                     AND NEW.status::text NOT IN ('ESCALATED', 'escalated'))
                 ) THEN
                     RAISE EXCEPTION 'Cannot modify validated results. Create an amended report instead.';
                 END IF;

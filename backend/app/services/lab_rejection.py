@@ -13,11 +13,13 @@ from pydantic import BaseModel
 
 from app.models.sample import Sample
 from app.models.order import OrderTest
-from app.schemas.enums import TestStatus, RejectionAction
+from app.schemas.enums import TestStatus, RejectionAction, EscalationReasonCode
 from app.services.state_machine import SampleStateMachine, TestStateMachine
 from app.services.audit_service import AuditService
+from app.services.escalation_engine import EscalationEngine
+from app.services.rejection_criteria_service import RejectionCriteriaService
 from app.utils.exceptions import LabOperationError
-from app.services.lab_constants import MAX_RETEST_ATTEMPTS, MAX_RECOLLECTION_ATTEMPTS
+from app.services.lab_constants import MAX_RETEST_ATTEMPTS
 
 
 class AvailableAction(BaseModel):
@@ -37,6 +39,7 @@ class RejectionOptions(BaseModel):
     recollectionAttemptsRemaining: int
     availableActions: List[AvailableAction]
     escalationRequired: bool = False
+    allowedRejectionCriteria: List[str] = []
 
 
 class RejectionResult(BaseModel):
@@ -51,7 +54,7 @@ class RejectionResult(BaseModel):
 
 
 RejectAndRecollectFn = Callable[
-    [int, int, List[str], Optional[str], Optional[str]],
+    [int, int, str, Optional[str], Optional[str]],
     Tuple[Sample, Sample]
 ]
 
@@ -103,73 +106,52 @@ class LabRejectionHandler:
         return order_test
 
     def get_rejection_options(self, order_id: int, test_code: str) -> RejectionOptions:
+        """
+        Result-validation rejection options: re-test on same sample only.
+        When retest limits are exhausted, escalation is required; supervisors may
+        authorize re-collect via the escalation resolution workflow.
+        """
         order_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
-        sample = self._get_sample(order_test.sampleId) if order_test.sampleId else None
 
         current_retest_number = order_test.retestNumber or 0
         can_retest = current_retest_number < MAX_RETEST_ATTEMPTS
-        retest_attempts_remaining = MAX_RETEST_ATTEMPTS - current_retest_number
+        retest_attempts_remaining = max(0, MAX_RETEST_ATTEMPTS - current_retest_number)
+        escalation_required = not can_retest
 
-        # Use rejectionHistory length for consistency with enforcement in lab_operations
-        rejection_count = len(sample.rejectionHistory or []) if sample else 0
-        recollection_attempts_remaining = (
-            MAX_RECOLLECTION_ATTEMPTS - rejection_count if sample else 0
-        )
-        can_recollect_by_attempts = rejection_count < MAX_RECOLLECTION_ATTEMPTS if sample else False
-
-        # Recollection is blocked when the order already has validated tests because
-        # rejecting the sample would invalidate finalized results on the same order.
-        order_tests = self.db.query(OrderTest).filter(OrderTest.orderId == order_id).all()
-        order_has_validated_tests = any(
-            t.status == TestStatus.VALIDATED for t in order_tests
-        )
-        can_recollect = can_recollect_by_attempts and not order_has_validated_tests
-
-        recollect_disabled_reason: Optional[str] = None
-        if not can_recollect:
-            if order_has_validated_tests:
-                recollect_disabled_reason = (
-                    "Cannot collect new sample - order has validated tests"
-                )
-            elif not can_recollect_by_attempts:
-                recollect_disabled_reason = (
-                    f"Maximum {MAX_RECOLLECTION_ATTEMPTS} recollection attempts reached"
-                )
-
-        available_actions = [
+        available_actions: List[AvailableAction] = [
             AvailableAction(
                 action=RejectionAction.RETEST_SAME_SAMPLE,
                 enabled=can_retest,
-                disabledReason=f"Maximum {MAX_RETEST_ATTEMPTS} retest attempts reached" if not can_retest else None,
-                label="Re-test (Same Sample)",
-                description="Run the test again using the existing sample"
-            ),
-            AvailableAction(
-                action=RejectionAction.RECOLLECT_NEW_SAMPLE,
-                enabled=can_recollect,
-                disabledReason=recollect_disabled_reason,
-                label="Request New Sample",
-                description="Reject the current sample and request a new collection"
+                disabledReason=(
+                    f"Maximum {MAX_RETEST_ATTEMPTS} retest attempts reached"
+                    if not can_retest
+                    else None
+                ),
+                label="Try Again with This Sample",
+                description="Run the test again using the existing sample",
             ),
         ]
-        escalation_required = not can_retest and not can_recollect
         if escalation_required:
             available_actions.append(
                 AvailableAction(
                     action=RejectionAction.ESCALATE_TO_SUPERVISOR,
                     enabled=True,
                     label="Escalate to Supervisor",
-                    description="All rejection options exhausted. Please escalate."
+                    description="Retest limit reached. A supervisor will decide next steps.",
                 )
             )
+
+        criteria_service = RejectionCriteriaService(self.db)
+        allowed_criteria = criteria_service.get_criteria_for_test(test_code)
 
         return RejectionOptions(
             canRetest=can_retest,
             retestAttemptsRemaining=retest_attempts_remaining,
-            canRecollect=can_recollect,
-            recollectionAttemptsRemaining=recollection_attempts_remaining,
+            canRecollect=False,
+            recollectionAttemptsRemaining=0,
             availableActions=available_actions,
-            escalationRequired=escalation_required
+            escalationRequired=escalation_required,
+            allowedRejectionCriteria=allowed_criteria,
         )
 
     def reject_with_retest(
@@ -177,8 +159,10 @@ class LabRejectionHandler:
         order_id: int,
         test_code: str,
         user_id: int,
-        rejection_reason: str
+        rejection_reason: str,
+        rejection_notes: Optional[str] = None,
     ) -> RejectionResult:
+        RejectionCriteriaService(self.db).validate_for_test(test_code, rejection_reason)
         original_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
         current_retest_number = original_test.retestNumber or 0
 
@@ -186,6 +170,7 @@ class LabRejectionHandler:
             "rejectedAt": datetime.now(timezone.utc).isoformat(),
             "rejectedBy": str(user_id),
             "rejectionReason": rejection_reason,
+            "rejectionNotes": rejection_notes,
             "rejectionType": "re-test"
         }
         if original_test.resultRejectionHistory is None:
@@ -195,7 +180,9 @@ class LabRejectionHandler:
 
         original_test.resultValidatedAt = datetime.now(timezone.utc)
         original_test.validatedBy = str(user_id)
-        original_test.validationNotes = rejection_reason
+        original_test.validationNotes = (
+            rejection_reason if not rejection_notes else f"{rejection_reason} — {rejection_notes}"
+        )
 
         new_order_test = OrderTest(
             orderId=order_id,
@@ -207,7 +194,8 @@ class LabRejectionHandler:
             retestOfTestId=original_test.id,
             retestNumber=current_retest_number + 1,
             resultRejectionHistory=original_test.resultRejectionHistory,
-            technicianNotes=f"Re-test #{current_retest_number + 1}: {rejection_reason}",
+            technicianNotes=f"Re-test #{current_retest_number + 1}: {rejection_reason}"
+            + (f" — {rejection_notes}" if rejection_notes else ""),
             flags=original_test.flags,
             isReflexTest=original_test.isReflexTest,
             triggeredBy=original_test.triggeredBy,
@@ -246,8 +234,10 @@ class LabRejectionHandler:
         order_id: int,
         test_code: str,
         user_id: int,
-        rejection_reason: str
+        rejection_reason: str,
+        rejection_notes: Optional[str] = None,
     ) -> RejectionResult:
+        RejectionCriteriaService(self.db).validate_for_test(test_code, rejection_reason)
         original_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
         TestStateMachine.validate_transition(TestStatus.RESULTED, TestStatus.ESCALATED)
 
@@ -255,6 +245,7 @@ class LabRejectionHandler:
             "rejectedAt": datetime.now(timezone.utc).isoformat(),
             "rejectedBy": str(user_id),
             "rejectionReason": rejection_reason,
+            "rejectionNotes": rejection_notes,
             "rejectionType": "escalate"
         }
         if original_test.resultRejectionHistory is None:
@@ -262,7 +253,18 @@ class LabRejectionHandler:
         original_test.resultRejectionHistory.append(rejection_record)
         flag_modified(original_test, 'resultRejectionHistory')
 
-        original_test.status = TestStatus.ESCALATED
+        engine = EscalationEngine(self.db, self.audit)
+        engine.escalate_test(
+            original_test,
+            EscalationReasonCode.LIMIT_HIT,
+            user_id,
+            metadata={
+                "rejectionReason": rejection_reason,
+                "rejectionNotes": rejection_notes,
+                "retestNumber": original_test.retestNumber or 0,
+            },
+            from_status=TestStatus.RESULTED,
+        )
 
         self.audit.log_result_validation_escalate(
             order_id=order_id,
@@ -320,7 +322,7 @@ class LabRejectionHandler:
         rejected_sample, new_sample = self._reject_and_recollect(
             sample.sampleId,
             user_id,
-            ["other"],
+            rejection_reason,
             rejection_notes,
             rejection_reason
         )

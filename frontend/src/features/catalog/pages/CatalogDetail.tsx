@@ -112,7 +112,10 @@ export const CatalogDetail: React.FC = () => {
         { label: 'Fasting Required', value: formatBoolean(test.fastingRequired) },
         { label: 'Collection Notes', value: test.collectionNotes || '-' },
         { label: 'Special Requirements', value: test.specialRequirements || '-' },
-        { label: 'Rejection Criteria', value: formatArrayWithFallback(test.rejectionCriteria, '-') },
+        {
+          label: 'Rejection Criteria',
+          value: formatArrayWithFallback(test.rejectionCriteria, 'Not defined'),
+        },
       ],
     },
     {

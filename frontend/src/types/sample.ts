@@ -32,7 +32,8 @@ type RejectionReason = RejectionReasonEnum;
 export interface RejectionRecord {
   rejectedAt: string;
   rejectedBy: string;
-  rejectionReasons: RejectionReason[];
+  rejectionReason?: string;
+  rejectionReasons?: string[];
   rejectionNotes?: string;
   recollectionRequired: boolean;
 }
@@ -118,7 +119,7 @@ export interface RejectedSample extends BaseSample {
   // Rejection info
   rejectedAt: string;
   rejectedBy: string;
-  rejectionReasons: RejectionReason[];
+  rejectionReasons?: string[];
   rejectionNotes?: string;
 
   // If recollection ordered

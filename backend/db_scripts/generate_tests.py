@@ -3,6 +3,14 @@ Generate test data from the test catalog JSON file
 """
 import json
 import os
+import sys
+from pathlib import Path
+
+# Allow `poetry run python db_scripts/generate_tests.py` from backend/
+BACKEND_ROOT = Path(__file__).resolve().parents[1]
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
+
 from sqlalchemy.orm import Session
 from app.models.test import Test
 # Note: ContainerType and ContainerTopColor might be strings or enums in the model, 
@@ -93,3 +101,16 @@ def generate_tests(db: Session):
         print(f"\n❌ Error generating tests: {e}")
         db.rollback()
         raise
+
+
+if __name__ == "__main__":
+    from app.database import SessionLocal
+    from app.core.cache import invalidate_tests_cache
+
+    db = SessionLocal()
+    try:
+        generate_tests(db)
+        invalidate_tests_cache()
+        print("✓ Test catalog cache invalidated")
+    finally:
+        db.close()

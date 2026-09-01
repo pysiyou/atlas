@@ -60,6 +60,7 @@ export const orderTestSchema = z.object({
         rejectedAt: z.string(),
         rejectedBy: z.string(),
         rejectionReason: z.string(),
+        rejectionNotes: z.string().optional(),
         rejectionType: z.enum(['re-test', 're-collect', 'escalate', 'authorize_retest', 'final_reject']),
       })
     )

@@ -4,7 +4,6 @@
  */
 
 import { useCallback } from 'react';
-import type { RejectionReason } from '@/types';
 import { useMutationToastHandler } from '@/hooks/useMutationToastHandler';
 import { useRejectSample } from '@/features/lab/collection/samples.api';
 
@@ -21,7 +20,7 @@ export function useRejectSampleHandler(options?: UseRejectSampleHandlerOptions) 
   const rejectSample = useCallback(
     async (
       sampleId: string | number,
-      reasons: RejectionReason[],
+      reason: string,
       notes?: string,
       requireRecollection?: boolean
     ) => {
@@ -29,7 +28,7 @@ export function useRejectSampleHandler(options?: UseRejectSampleHandlerOptions) 
         async () => {
           await rejectSampleMutation.mutateAsync({
             sampleId: sampleId.toString(),
-            reasons,
+            reason,
             notes,
             requireRecollection,
           });

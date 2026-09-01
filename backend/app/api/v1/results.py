@@ -22,6 +22,8 @@ from app.core.dependencies import (
 from app.models.user import User
 from app.models.order import Order, OrderTest
 from app.models.sample import Sample
+from app.models.escalation import EscalationTicket
+from app.schemas.enums import EscalationTicketStatus
 from app.schemas.enums import TestStatus, UserRole, ValidationDecision, RejectionAction
 from app.schemas.order import OrderTestResponse, TestResultsDict
 from app.services.lab_operations import (
@@ -47,7 +49,7 @@ class ResultValidationRequest(BaseModel):
     validationNotes: Optional[str] = None
 
 
-ResultRejectionTypeLiteral = Literal["re-test", "re-collect", "escalate"]
+ResultRejectionTypeLiteral = Literal["re-test", "escalate"]
 
 
 class ResultRejectionRequest(BaseModel):
@@ -55,10 +57,11 @@ class ResultRejectionRequest(BaseModel):
     Request body for rejecting test results during validation.
     Uses the new action-based approach. rejectionType validated by schema (422 on invalid).
     """
-    rejectionReason: str = Field(..., min_length=1, max_length=1000, description="Reason for rejection")
+    rejectionReason: str = Field(..., min_length=1, max_length=500, description="Catalog rejection criterion")
+    rejectionNotes: Optional[str] = Field(None, max_length=1000, description="Additional context")
     rejectionType: ResultRejectionTypeLiteral = Field(
         ...,
-        description="'re-test' = re-run with same sample, 're-collect' = new sample needed, 'escalate' = escalate to supervisor when limits exceeded"
+        description="'re-test' = re-run with same sample, 'escalate' = escalate when retest limits exceeded"
     )
 
 
@@ -70,6 +73,7 @@ class RejectionOptionsResponse(BaseModel):
     recollectionAttemptsRemaining: int
     availableActions: list
     escalationRequired: bool = False
+    allowedRejectionCriteria: list[str] = []
 
     class Config:
         from_attributes = True
@@ -117,7 +121,15 @@ class BulkValidationResponse(BaseModel):
     failureCount: int
 
 
-EscalationResolveActionLiteral = Literal["force_validate", "authorize_retest", "final_reject"]
+EscalationResolveActionLiteral = Literal["force_validate", "authorize_retest", "authorize_recollect", "final_reject"]
+
+
+class CriticalReadBackPayload(BaseModel):
+    """Required for force_validate on CRIT-VAL escalation tickets."""
+    providerName: str = Field(..., min_length=1, max_length=200)
+    providerContact: str = Field(..., min_length=1, max_length=200)
+    notifiedAt: datetime
+    readBackConfirmed: bool
 
 
 class EscalationResolveRequest(BaseModel):
@@ -127,6 +139,7 @@ class EscalationResolveRequest(BaseModel):
         description="'force_validate' | 'authorize_retest' | 'final_reject'"
     )
     validationNotes: Optional[str] = Field(None, max_length=1000)
+    readBack: Optional[CriticalReadBackPayload] = None
     rejectionReason: Optional[str] = Field(
         None,
         min_length=1,
@@ -136,8 +149,8 @@ class EscalationResolveRequest(BaseModel):
 
     @model_validator(mode="after")
     def require_rejection_reason_for_final_reject(self):
-        if self.action == "final_reject" and not (self.rejectionReason or "").strip():
-            raise ValueError("rejectionReason is required for action 'final_reject'")
+        if self.action in ("final_reject", "authorize_recollect") and not (self.rejectionReason or "").strip():
+            raise ValueError("rejectionReason is required for this action")
         return self
 
 
@@ -179,6 +192,10 @@ class PendingEscalationItemResponse(BaseModel):
     sampleRecollectionReason: Optional[str] = None
     sampleRecollectionAttempt: Optional[int] = None
     sampleRejectionHistory: Optional[List[Any]] = None
+    ticketId: Optional[int] = None
+    reasonCode: Optional[str] = None
+    severity: Optional[str] = None
+    ticketMetadata: Optional[Any] = None
 
     class Config:
         from_attributes = True
@@ -244,6 +261,20 @@ def get_pending_escalation(
         for s in db.query(Sample).filter(Sample.sampleId.in_(sample_ids)).all():
             samples_by_id[s.sampleId] = s
 
+    test_ids = [t.id for t in tests]
+    tickets_by_test: dict[int, EscalationTicket] = {}
+    if test_ids:
+        open_tickets = (
+            db.query(EscalationTicket)
+            .filter(
+                EscalationTicket.orderTestId.in_(test_ids),
+                EscalationTicket.status == EscalationTicketStatus.OPEN,
+            )
+            .all()
+        )
+        for ticket in open_tickets:
+            tickets_by_test[ticket.orderTestId] = ticket
+
     out = []
     for t in tests:
         order = t.order
@@ -285,6 +316,10 @@ def get_pending_escalation(
                 sampleRecollectionReason=sample.recollectionReason if sample else None,
                 sampleRecollectionAttempt=sample.recollectionAttempt if sample else None,
                 sampleRejectionHistory=sample.rejectionHistory if sample else None,
+                ticketId=tickets_by_test[t.id].id if t.id in tickets_by_test else None,
+                reasonCode=tickets_by_test[t.id].reasonCode.value if t.id in tickets_by_test else None,
+                severity=tickets_by_test[t.id].severity.value if t.id in tickets_by_test else None,
+                ticketMetadata=tickets_by_test[t.id].ticketMetadata if t.id in tickets_by_test else None,
             )
         )
     return out
@@ -322,7 +357,8 @@ def get_rejection_options(
                 }
                 for a in options.availableActions
             ],
-            escalationRequired=options.escalationRequired
+            escalationRequired=options.escalationRequired,
+            allowedRejectionCriteria=options.allowedRejectionCriteria,
         )
     except LabOperationError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
@@ -396,21 +432,17 @@ def reject_results(
     """
     Reject test results during validation with proper tracking.
 
-    Two rejection paths:
-    - 're-test': Create a NEW OrderTest linked to original, existing sample remains valid.
-                 Original test is marked as SUPERSEDED.
-    - 're-collect': Reject the sample and trigger sample recollection flow.
-                    Original test gets a new sample when recollection is complete.
+    Rejection paths during validation:
+    - 're-test': Create a NEW OrderTest linked to original; same sample remains valid.
+    - 'escalate': Required when retest limits are exhausted (supervisor decides next steps).
 
-    Both paths maintain rejection history for audit trail.
+    Re-collection is only available via supervisor escalation resolution (authorize_recollect).
 
     Before calling this endpoint, use GET /rejection-options to check what actions
     are available and whether any limits have been reached.
     """
-    # Schema validates rejectionType as Literal['re-test','re-collect','escalate']; map to RejectionAction
     action_map = {
         "re-test": RejectionAction.RETEST_SAME_SAMPLE,
-        "re-collect": RejectionAction.RECOLLECT_NEW_SAMPLE,
         "escalate": RejectionAction.ESCALATE_TO_SUPERVISOR,
     }
     action = action_map[rejection_data.rejectionType]
@@ -422,7 +454,8 @@ def reject_results(
             test_code=testCode,
             user_id=current_user.id,
             action=action,
-            rejection_reason=rejection_data.rejectionReason
+            rejection_reason=rejection_data.rejectionReason,
+            rejection_notes=rejection_data.rejectionNotes,
         )
 
         return RejectionResultResponse(
@@ -453,11 +486,13 @@ def resolve_escalation(
     try:
         service = LabOperationsService(db)
         if body.action == "force_validate":
+            read_back = body.readBack.model_dump() if body.readBack else None
             order_test = service.resolve_escalation_force_validate(
                 order_id=orderId,
                 test_code=testCode,
                 user_id=current_user.id,
-                validation_notes=body.validationNotes
+                validation_notes=body.validationNotes,
+                read_back_payload=read_back,
             )
             return RejectionResultResponse(
                 success=True,
@@ -484,6 +519,22 @@ def resolve_escalation(
                 newSampleId=result.newSampleId,
                 escalationRequired=False
             )
+        if body.action == "authorize_recollect":
+            result = service.resolve_escalation_authorize_recollect(
+                order_id=orderId,
+                test_code=testCode,
+                user_id=current_user.id,
+                reason=(body.rejectionReason or "").strip(),
+            )
+            return RejectionResultResponse(
+                success=result.success,
+                action="authorize_recollect",
+                message=result.message,
+                originalTestId=result.originalTestId,
+                newTestId=result.newTestId,
+                newSampleId=result.newSampleId,
+                escalationRequired=False,
+            )
         # final_reject
         result = service.resolve_escalation_final_reject(
             order_id=orderId,
@@ -500,6 +551,37 @@ def resolve_escalation(
             newSampleId=result.newSampleId,
             escalationRequired=False
         )
+    except LabOperationError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
+
+
+
+
+class AmendRequestBody(BaseModel):
+    """Request body for validated result amendment escalation."""
+    proposedResults: TestResultsDict
+    reason: str = Field(..., min_length=1, max_length=1000)
+
+
+@router.post("/results/{orderId}/tests/{testCode}/amend-request")
+def request_amendment(
+    orderId: int,
+    testCode: str,
+    body: AmendRequestBody,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_lab_tech),
+):
+    """Request amendment on a validated test (creates AMEND-RES escalation ticket)."""
+    try:
+        service = LabOperationsService(db)
+        order_test = service.request_result_amendment(
+            order_id=orderId,
+            test_code=testCode,
+            user_id=current_user.id,
+            proposed_results=body.proposedResults,
+            reason=body.reason,
+        )
+        return order_test
     except LabOperationError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
 

@@ -1,7 +1,7 @@
 """
 Pydantic schemas for Sample
 """
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from app.schemas.enums import SampleStatus, SampleType, ContainerType, ContainerTopColor, PriorityLevel, RejectionReason
 
@@ -24,7 +24,7 @@ class SampleCollectRequest(BaseModel):
 
 
 class SampleRejectRequest(BaseModel):
-    rejectionReasons: list[RejectionReason]
+    rejectionReason: str = Field(..., min_length=1, max_length=500)
     rejectionNotes: str | None = None
     recollectionRequired: bool = True
 
@@ -36,7 +36,7 @@ class RecollectionRequest(BaseModel):
 class RejectionRecord(BaseModel):
     rejectedAt: datetime
     rejectedBy: str
-    rejectionReasons: list[RejectionReason]
+    rejectionReason: str
     rejectionNotes: str | None = None
     recollectionRequired: bool = False
 
@@ -55,7 +55,7 @@ class SampleResponse(SampleBase):
     qualityNotes: str | None = None
     rejectedAt: datetime | None = None
     rejectedBy: str | None = None
-    rejectionReasons: list[RejectionReason] | None = None
+    rejectionReason: str | None = None
     rejectionNotes: str | None = None
     rejectionHistory: list[RejectionRecord] | None = None
     recollectionRequired: bool = False
@@ -70,6 +70,6 @@ class SampleResponse(SampleBase):
     createdBy: str
     updatedAt: datetime
     updatedBy: str
-    
+
     class Config:
         from_attributes = True

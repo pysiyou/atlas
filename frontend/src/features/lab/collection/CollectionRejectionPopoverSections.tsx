@@ -5,10 +5,7 @@
 import { Alert, Badge } from '@/components';
 import { AttemptProgressBar } from '../components/AttemptProgressBar';
 import { CheckboxCard } from '../components/PopoverForm';
-import { cn } from '@/utils';
-import type { RejectionReason } from '@/types';
-import { inputBase } from '@/components/inputs/inputStyles';
-import { REJECTION_REASONS } from './collectionRejectionPopover.helpers';
+import { CatalogRejectionFields } from '../components/CatalogRejectionFields';
 
 interface RejectionHeaderBadgesProps {
   isRecollection: boolean;
@@ -114,37 +111,32 @@ export function RejectionHistorySection({
   );
 }
 
-interface RejectionReasonsSectionProps {
-  reasons: RejectionReason[];
-  onToggleReason: (value: RejectionReason) => void;
+interface CatalogRejectionReasonSectionProps {
+  criteria: string[];
+  criteriaLoading: boolean;
+  rejectionReason: string;
+  rejectionNotes: string;
+  onReasonChange: (value: string) => void;
+  onNotesChange: (value: string) => void;
 }
 
-export function RejectionReasonsSection({ reasons, onToggleReason }: RejectionReasonsSectionProps) {
+export function CatalogRejectionReasonSection({
+  criteria,
+  criteriaLoading,
+  rejectionReason,
+  rejectionNotes,
+  onReasonChange,
+  onNotesChange,
+}: CatalogRejectionReasonSectionProps) {
   return (
-    <div className="space-y-2">
-      <label className="block text-xs font-normal text-text-tertiary">Rejection Reasons</label>
-      <div className="border border-border-default rounded-md max-h-[200px] overflow-y-auto">
-        {REJECTION_REASONS.map(r => (
-          <label
-            key={r.value}
-            className={`flex items-start p-2 hover:bg-surface-page cursor-pointer border-b border-border-subtle last:border-0 transition-colors ${reasons.includes(r.value) ? 'bg-brand-muted' : ''}`}
-          >
-            <div className="flex items-center h-5">
-              <input
-                type="checkbox"
-                checked={reasons.includes(r.value)}
-                onChange={() => onToggleReason(r.value)}
-                className="h-4 w-4 text-brand border-border-strong rounded focus:ring-brand"
-              />
-            </div>
-            <div className="ml-2 text-xs">
-              <div className="font-normal text-text-primary">{r.label}</div>
-              <div className="text-text-tertiary">{r.description}</div>
-            </div>
-          </label>
-        ))}
-      </div>
-    </div>
+    <CatalogRejectionFields
+      criteria={criteria}
+      criteriaLoading={criteriaLoading}
+      rejectionReason={rejectionReason}
+      rejectionNotes={rejectionNotes}
+      onReasonChange={onReasonChange}
+      onNotesChange={onNotesChange}
+    />
   );
 }
 
@@ -178,34 +170,3 @@ export function RecollectionToggleSection({
   );
 }
 
-interface RejectionNotesSectionProps {
-  reasons: RejectionReason[];
-  notes: string;
-  onNotesChange: (notes: string) => void;
-}
-
-export function RejectionNotesSection({
-  reasons,
-  notes,
-  onNotesChange,
-}: RejectionNotesSectionProps) {
-  const otherSelected = reasons.includes('other');
-
-  return (
-    <div>
-      <label className="block text-xs font-normal text-text-tertiary mb-1">
-        Notes {otherSelected && <span className="text-danger-fg">*</span>}
-      </label>
-      <textarea
-        rows={2}
-        placeholder="Additional details..."
-        value={notes}
-        onChange={e => onNotesChange(e.target.value)}
-        className={cn(inputBase, 'resize-none')}
-      />
-      {otherSelected && !notes.trim() && (
-        <p className="text-xs text-danger-fg mt-1">Required when "Other" is selected</p>
-      )}
-    </div>
-  );
-}

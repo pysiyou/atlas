@@ -26,8 +26,8 @@ router = APIRouter()
 
 class RejectAndRecollectRequest(BaseModel):
     """Request body for combined reject and recollect operation"""
-    rejectionReasons: List[RejectionReason] = Field(..., min_length=1, description="Rejection reasons")
-    rejectionNotes: Optional[str] = Field(None, max_length=1000, description="Rejection notes")
+    rejectionReason: str = Field(..., min_length=1, max_length=500, description="Catalog rejection criterion")
+    rejectionNotes: Optional[str] = Field(None, max_length=1000, description="Additional context")
     recollectionReason: Optional[str] = Field(None, max_length=1000, description="Reason for recollection")
 
 
@@ -71,6 +71,7 @@ class SampleRejectionOptionsResponse(BaseModel):
     requireRecollectionDisabledReason: Optional[str] = None
     orderHasValidatedTests: bool
     escalationRequired: bool = False
+    allowedRejectionCriteria: List[str] = []
 
 
 @router.get("/samples/{sampleId}/rejection-options", response_model=SampleRejectionOptionsResponse)
@@ -207,7 +208,7 @@ def reject_sample(
         sample = service.reject_sample(
             sample_id=sampleId,
             user_id=current_user.id,
-            rejection_reasons=[r.value for r in reject_data.rejectionReasons],
+            rejection_reason=reject_data.rejectionReason,
             rejection_notes=reject_data.rejectionNotes,
             recollection_required=reject_data.recollectionRequired
         )
@@ -271,7 +272,7 @@ def reject_and_recollect_sample(
         rejected_sample, new_sample = service.reject_and_recollect(
             sample_id=sampleId,
             user_id=current_user.id,
-            rejection_reasons=[r.value for r in request_data.rejectionReasons],
+            rejection_reason=request_data.rejectionReason,
             rejection_notes=request_data.rejectionNotes,
             recollection_reason=request_data.recollectionReason
         )

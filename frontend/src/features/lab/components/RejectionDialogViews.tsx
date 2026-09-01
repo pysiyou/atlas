@@ -37,7 +37,6 @@ export const RejectionDialogLoadingView: React.FC = () => (
       <div className="space-y-2">
         <Skeleton height={12} width="30%" className="rounded-md" />
         <Skeleton height={52} width="100%" className="rounded-md" />
-        <Skeleton height={52} width="100%" className="rounded-md" />
       </div>
       <div>
         <Skeleton height={12} width="35%" className="rounded-md mb-1" />
@@ -90,32 +89,20 @@ export const RejectionDialogErrorView: React.FC<RejectionDialogErrorViewProps> =
 export interface RejectionActionCardsProps {
   selectedType: ResultRejectionType;
   onSelect: (type: ResultRejectionType) => void;
-  isActionEnabled: (action: 're-test' | 're-collect') => boolean;
-  getDisabledReason: (action: 're-test' | 're-collect') => string | null;
-  isRecollectBlocked: boolean;
-  recollectBlockedReason: string | null;
+  isRetestEnabled: boolean;
+  retestDisabledReason: string | null;
   retestAttemptsRemaining: number;
-  recollectionAttemptsRemaining: number;
-  orderHasValidatedTests: boolean;
-  showEscalationOption?: boolean;
 }
 
 export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
   selectedType,
   onSelect,
-  isActionEnabled,
-  getDisabledReason,
-  isRecollectBlocked,
-  recollectBlockedReason,
+  isRetestEnabled,
+  retestDisabledReason,
   retestAttemptsRemaining,
-  recollectionAttemptsRemaining,
-  orderHasValidatedTests,
-  showEscalationOption = true,
 }) => {
   const retestTotal = LAB_CONFIG.MAX_RETEST_ATTEMPTS;
-  const recollectTotal = LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS;
   const retestUsed = retestTotal - retestAttemptsRemaining;
-  const recollectUsed = recollectTotal - recollectionAttemptsRemaining;
 
   return (
     <div>
@@ -126,7 +113,7 @@ export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
         <RadioCard
           name="rejection-type"
           selected={selectedType === 're-test'}
-          onClick={() => isActionEnabled('re-test') && onSelect('re-test')}
+          onClick={() => isRetestEnabled && onSelect('re-test')}
           label={REJECTION_DIALOG_COPY.actions.retestLabel}
           description={
             <div className="space-y-2">
@@ -144,44 +131,9 @@ export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
             </div>
           }
           variant="sky"
-          disabled={!isActionEnabled('re-test')}
-          disabledReason={getDisabledReason('re-test') || undefined}
+          disabled={!isRetestEnabled}
+          disabledReason={retestDisabledReason || undefined}
         />
-        <RadioCard
-          name="rejection-type"
-          selected={selectedType === 're-collect'}
-          onClick={() => !isRecollectBlocked && onSelect('re-collect')}
-          label={REJECTION_DIALOG_COPY.actions.newSampleLabel}
-          description={
-            <div className="space-y-2">
-              <p className="text-xxs text-text-tertiary">
-                {REJECTION_DIALOG_COPY.actions.newSampleDescription}
-              </p>
-              {!orderHasValidatedTests && recollectionAttemptsRemaining > 0 && (
-                <AttemptProgressBar
-                  used={recollectUsed}
-                  total={recollectTotal}
-                  label="Attempts"
-                  variant="red"
-                />
-              )}
-            </div>
-          }
-          variant="red"
-          disabled={isRecollectBlocked}
-          disabledReason={recollectBlockedReason || undefined}
-        />
-        {showEscalationOption && (
-          <RadioCard
-            name="rejection-type"
-            selected={selectedType === 'escalate'}
-            onClick={() => onSelect('escalate')}
-            label={REJECTION_DIALOG_COPY.actions.escalateLabel}
-            description={REJECTION_DIALOG_COPY.actions.escalateDescription}
-            variant="warning"
-            disabled={false}
-          />
-        )}
       </div>
     </div>
   );

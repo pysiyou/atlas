@@ -70,7 +70,7 @@ export function invalidateResultQueries(
   client: QueryClient,
   options: InvalidateResultOptions = {}
 ): void {
-  const { orderId, samples = true, pendingEscalation = false } = options;
+  const { orderId, samples = true, pendingEscalation = true } = options;
   const orderIdStr = orderId !== undefined ? String(orderId) : undefined;
 
   client.invalidateQueries({ queryKey: queryKeys.orders.all });
@@ -84,6 +84,8 @@ export function invalidateResultQueries(
   if (pendingEscalation) {
     client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
   }
+  client.invalidateQueries({ queryKey: ['labOperationLogs'] });
+  client.invalidateQueries({ queryKey: ['labOperationLogsCount'] });
 }
 
 /**

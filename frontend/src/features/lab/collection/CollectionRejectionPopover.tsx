@@ -1,39 +1,39 @@
 /**
  * CollectionRejectionPopover - Popover for rejecting collected samples
  *
- * Allows lab staff to reject samples with reasons, notes, and recollection options.
+ * Allows lab staff to reject samples with catalog-defined reasons and optional notes.
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Popover, IconButton, FooterInfo } from '@/components';
 import { PopoverForm } from '../components/PopoverForm';
 import { POPOVER_FOOTER_MESSAGES } from '../components/popoverFooterConstants';
-import type { RejectionReason } from '@/types';
 import { displayId } from '@/utils';
 import { ICONS } from '@/config/icons';
+import { useTestCatalog } from '@/features/catalog';
+import { getUnionRejectionCriteria } from '@/features/lab/utils/catalogRejectionCriteria';
 import { useSampleRejectionOptions } from '@/features/lab/collection/useSampleRejectionOptions';
 import {
   isRejectionFormValid,
   parseNumericSampleId,
-  toggleRejectionReason,
 } from './collectionRejectionPopover.helpers';
 import {
   RecollectionToggleSection,
   RejectionHeaderBadges,
   RejectionHistorySection,
-  RejectionNotesSection,
-  RejectionReasonsSection,
+  CatalogRejectionReasonSection,
   RejectionWarningAlert,
 } from './CollectionRejectionPopoverSections';
 
 interface CollectionRejectionPopoverContentProps {
   onConfirm: (
-    reasons: RejectionReason[],
+    rejectionReason: string,
     notes: string,
     requireRecollection: boolean
   ) => void | Promise<void>;
   onCancel: () => void;
   sampleId: string;
+  testCodes: string[];
   sampleType?: string;
   patientName?: string;
   isRecollection?: boolean;
@@ -46,45 +46,51 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
   onConfirm,
   onCancel,
   sampleId,
+  testCodes,
   sampleType,
   patientName,
   isRecollection = false,
   rejectionHistoryCount = 0,
   isSubmitting: isSubmittingProp,
 }) => {
-  const [reasons, setReasons] = useState<RejectionReason[]>([]);
+  const [rejectionReason, setRejectionReason] = useState('');
   const [notes, setNotes] = useState('');
   const [requireRecollection, setRequireRecollection] = useState(true);
   const [localSubmitting, setLocalSubmitting] = useState(false);
 
+  const { tests: catalog = [], isLoading: catalogLoading } = useTestCatalog();
   const numericSampleId = parseNumericSampleId(sampleId);
   const { options, isLoading: optionsLoading } = useSampleRejectionOptions({
     sampleId: numericSampleId,
     enabled: Boolean(numericSampleId),
   });
 
+  const criteria = useMemo(() => {
+    if (options?.allowedRejectionCriteria?.length) {
+      return options.allowedRejectionCriteria;
+    }
+    return getUnionRejectionCriteria(testCodes, catalog);
+  }, [options?.allowedRejectionCriteria, testCodes, catalog]);
+
   const rejectionHistoryUsed =
     options?.recollectionAttemptsUsed ?? rejectionHistoryCount;
   const maxAttempts = options?.maxRecollectionAttempts ?? 3;
   const escalationRequired = options?.escalationRequired ?? rejectionHistoryCount >= maxAttempts;
   const canRequireRecollection = options?.canRequireRecollection ?? true;
+  const criteriaLoading = catalogLoading || optionsLoading;
 
-  const isValid = isRejectionFormValid(reasons, notes);
+  const isValid = isRejectionFormValid(rejectionReason, criteria);
   const isSubmitting = isSubmittingProp ?? localSubmitting;
 
   const handleConfirm = useCallback(async () => {
     if (!isValid) return;
     setLocalSubmitting(true);
     try {
-      await onConfirm(reasons, notes, requireRecollection);
+      await onConfirm(rejectionReason, notes, requireRecollection);
     } finally {
       setLocalSubmitting(false);
     }
-  }, [isValid, reasons, notes, requireRecollection, onConfirm]);
-
-  const handleToggleReason = (value: RejectionReason) => {
-    setReasons(prev => toggleRejectionReason(prev, value));
-  };
+  }, [isValid, rejectionReason, notes, requireRecollection, onConfirm]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -133,7 +139,14 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
         optionsLoading={optionsLoading}
       />
 
-      <RejectionReasonsSection reasons={reasons} onToggleReason={handleToggleReason} />
+      <CatalogRejectionReasonSection
+        criteria={criteria}
+        criteriaLoading={criteriaLoading}
+        rejectionReason={rejectionReason}
+        rejectionNotes={notes}
+        onReasonChange={setRejectionReason}
+        onNotesChange={setNotes}
+      />
 
       <RecollectionToggleSection
         requireRecollection={requireRecollection}
@@ -141,8 +154,6 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
         disabledReason={options?.requireRecollectionDisabledReason}
         onToggle={() => setRequireRecollection(!requireRecollection)}
       />
-
-      <RejectionNotesSection reasons={reasons} notes={notes} onNotesChange={setNotes} />
     </PopoverForm>
   );
 };
@@ -150,6 +161,8 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 interface CollectionRejectionPopoverProps {
   /** Sample ID */
   sampleId: string;
+  /** Test codes linked to this sample (for catalog criteria lookup) */
+  testCodes: string[];
   /** Sample type for display */
   sampleType?: string;
   /** Patient name for display */
@@ -160,7 +173,7 @@ interface CollectionRejectionPopoverProps {
   rejectionHistoryCount?: number;
   /** Callback when rejection is confirmed */
   onReject: (
-    reasons: RejectionReason[],
+    rejectionReason: string,
     notes: string,
     requireRecollection: boolean
   ) => Promise<void> | void;
@@ -172,6 +185,7 @@ interface CollectionRejectionPopoverProps {
 
 export const CollectionRejectionPopover: React.FC<CollectionRejectionPopoverProps> = ({
   sampleId,
+  testCodes,
   sampleType,
   patientName,
   isRecollection,
@@ -190,14 +204,15 @@ export const CollectionRejectionPopover: React.FC<CollectionRejectionPopoverProp
       <div data-popover-content onClick={e => e.stopPropagation()}>
         <CollectionRejectionPopoverContent
           sampleId={sampleId}
+          testCodes={testCodes}
           sampleType={sampleType}
           patientName={patientName}
           isRecollection={isRecollection}
           rejectionHistoryCount={rejectionHistoryCount}
           onCancel={close}
           isSubmitting={isSubmitting}
-          onConfirm={async (reasons, notes, requireRecollection) => {
-            await onReject(reasons, notes, requireRecollection);
+          onConfirm={async (rejectionReason, notes, requireRecollection) => {
+            await onReject(rejectionReason, notes, requireRecollection);
             close();
           }}
         />

@@ -28,6 +28,35 @@ export function formatEscalationResolutionFinalReject(
       { type: 'text', value: 'resolved an escalation with outcome' },
       { type: 'badge', value: 'Final rejection', variant: 'rejected' },
     ],
-    [{ type: 'text', value: 'Result finally rejected; no further action.' }],
+    [{ type: 'text', value: 'Test cancelled; no further action.' }],
+  ];
+}
+
+
+export function formatEscalationResolutionForceValidate(
+  _log: LabOperationRecord,
+  performer: string
+): ActivityLines {
+  return [
+    [
+      { type: 'name', value: performer },
+      { type: 'text', value: 'resolved an escalation with outcome' },
+      { type: 'badge', value: 'Force validated', variant: 'approved' },
+    ],
+    [{ type: 'text', value: 'Supervisor override; results released.' }],
+  ];
+}
+
+export function formatEscalationResolutionAuthorizeRecollect(
+  _log: LabOperationRecord,
+  performer: string
+): ActivityLines {
+  return [
+    [
+      { type: 'name', value: performer },
+      { type: 'text', value: 'resolved an escalation with outcome' },
+      { type: 'badge', value: 'Authorized re-collect', variant: 'authorize_recollect' },
+    ],
+    [{ type: 'text', value: 'New sample and test created for re-collection.' }],
   ];
 }

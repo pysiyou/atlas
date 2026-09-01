@@ -57,6 +57,11 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
       )}
       <h3 className="text-sm font-medium text-text-primary">{test.testName ?? test.testCode}</h3>
       <Badge variant="escalated" size="sm" />
+      {test.reasonCode && (
+        <Badge variant="warning" size="sm">
+          {test.reasonCode}
+        </Badge>
+      )}
       {test.priority && (
         <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="sm" />
       )}

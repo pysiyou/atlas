@@ -38,10 +38,11 @@ interface UseRejectionManagerReturn {
   error: string | null;
   /** Fetch rejection options from the API */
   fetchOptions: () => Promise<void>;
-  /** Execute a rejection with the specified type and reason */
+  /** Execute a rejection with the specified type, catalog reason, and optional notes */
   rejectWithAction: (
     rejectionType: ResultRejectionType,
-    reason: string
+    reason: string,
+    notes?: string
   ) => Promise<RejectionResult | null>;
   /** Check if a specific action is available */
   isActionEnabled: (action: 're-test' | 're-collect') => boolean;
@@ -94,7 +95,11 @@ export function useRejectionManager({
   const clearFetchError = useCallback(() => {}, []);
 
   const rejectWithAction = useCallback(
-    async (rejectionType: ResultRejectionType, reason: string): Promise<RejectionResult | null> => {
+    async (
+      rejectionType: ResultRejectionType,
+      reason: string,
+      notes?: string
+    ): Promise<RejectionResult | null> => {
       if (isMissing(orderId, testCode)) {
         setActionError('Order ID and test code are required');
         return null;
@@ -107,6 +112,7 @@ export function useRejectionManager({
           orderId,
           testCode,
           rejectionReason: reason,
+          rejectionNotes: notes,
           rejectionType,
         });
         return result;
