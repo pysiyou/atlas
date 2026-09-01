@@ -34,7 +34,12 @@ type ValidationDecision = ValidationDecisionType;
  * 'escalate': Escalate to supervisor when retest/recollect limits exceeded
  * 'authorize_retest': Escalation resolved with authorize re-test (history only)
  */
-export type ResultRejectionType = 're-test' | 're-collect' | 'escalate' | 'authorize_retest';
+export type ResultRejectionType =
+  | 're-test'
+  | 're-collect'
+  | 'escalate'
+  | 'authorize_retest'
+  | 'final_reject';
 
 /**
  * Record of a result rejection event during validation.

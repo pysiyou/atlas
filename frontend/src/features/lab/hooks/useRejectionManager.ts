@@ -10,7 +10,7 @@
 
 import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { resultAPI } from '@/features/lab/validation/results.api';
+import { resultAPI, useRejectResults } from '@/features/lab/validation/results.api';
 import { getErrorMessage } from '@/utils/errors';
 import { logger } from '@/utils/logger';
 import type {
@@ -64,7 +64,7 @@ export function useRejectionManager({
   testCode,
   autoFetch = false,
 }: UseRejectionManagerProps): UseRejectionManagerReturn {
-  const [isRejecting, setIsRejecting] = useState(false);
+  const rejectMutation = useRejectResults();
   const [actionError, setActionError] = useState<string | null>(null);
 
   const isMissing = (id: string | number | null | undefined, code: string | null | undefined) =>
@@ -100,12 +100,12 @@ export function useRejectionManager({
         return null;
       }
 
-      setIsRejecting(true);
       setActionError(null);
 
       try {
-        const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-        const result = await resultAPI.rejectResults(orderIdStr, testCode, {
+        const result = await rejectMutation.mutateAsync({
+          orderId,
+          testCode,
           rejectionReason: reason,
           rejectionType,
         });
@@ -133,11 +133,9 @@ export function useRejectionManager({
           reason,
         });
         return null;
-      } finally {
-        setIsRejecting(false);
       }
     },
-    [orderId, testCode]
+    [orderId, testCode, rejectMutation]
   );
 
   const findAction = useCallback(
@@ -181,7 +179,7 @@ export function useRejectionManager({
   return {
     options: options ?? null,
     isLoading,
-    isRejecting,
+    isRejecting: rejectMutation.isPending,
     error: actionError ?? (fetchError ? getErrorMessage(fetchError, 'Failed to fetch rejection options') : null),
     fetchOptions,
     rejectWithAction,

@@ -4,13 +4,17 @@
  * Three paths: Force Validate, Authorize Re-test, Final Reject / New Sample.
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { SectionPanel, Badge } from '@/components';
 import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
 import { LabDetailModal, DetailGrid, StatusBadgeRow } from '../components/LabDetailModal';
 import { RejectionHistorySection } from '../components/RejectionHistorySection';
 import { EntryInfoLine } from '../components/StatusBadges';
+import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
+import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';
+import { queryKeys } from '@/lib/query';
 import type { TestWithContext } from '@/types';
 import { useEscalationResolution } from './useEscalationResolution';
 import { EscalationResolutionFooter } from './EscalationResolutionFooter';
@@ -31,6 +35,15 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   const [validationNotesForceValidate, setValidationNotesForceValidate] = useState('');
   const [reasonAuthorizeRetest, setReasonAuthorizeRetest] = useState('');
   const [reasonFinalReject, setReasonFinalReject] = useState('');
+  const queryClient = useQueryClient();
+
+  const criticalRecord = useMemo(() => buildCriticalValueRecord(test), [test]);
+
+  const handleCriticalValueUpdated = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+    queryClient.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
+    queryClient.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
+  }, [queryClient]);
 
   const resetForm = useCallback(() => {
     setValidationNotesForceValidate('');
@@ -113,6 +126,12 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           enableApproveShortcut={false}
         />
       </SectionPanel>
+
+      {criticalRecord && (
+        <SectionPanel title="Critical Value Notification">
+          <CriticalValueActions record={criticalRecord} onUpdated={handleCriticalValueUpdated} />
+        </SectionPanel>
+      )}
 
       {hasRejectionHistory && (
         <RejectionHistorySection

@@ -281,7 +281,11 @@ export function useRejectResults() {
     onSuccess: (_, variables) => {
       const orderIdStr =
         typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
-      invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: true });
+      invalidateResultQueries(queryClient, {
+        orderId: orderIdStr,
+        samples: true,
+        pendingEscalation: variables.rejectionType === 'escalate',
+      });
     },
   });
 }

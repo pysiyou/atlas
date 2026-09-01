@@ -5,6 +5,7 @@
 
 import type { ModalType } from './ModalContext';
 import type { Order, Test, TestWithContext, ContainerType } from '@/types';
+import type { RejectionResult } from '@/types/lab-operations';
 import type { SampleDisplay } from '@/features/lab/types';
 
 /** Payload for opening the sample/collection detail modal by sample id. */
@@ -44,7 +45,7 @@ export interface ValidationDetailProps {
   comments: string;
   onCommentsChange: (commentKey: string, comments: string) => void;
   onApprove: () => void;
-  onReject: () => void;
+  onReject: (result: RejectionResult) => void;
 }
 
 /** Payload for escalation resolution modal. */

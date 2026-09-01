@@ -101,7 +101,7 @@ export const ValidationView: React.FC = () => {
                 comments={comments[commentKey] || ''}
                 onCommentsChange={handleCommentsChange}
                 onApprove={() => handleValidate(test.orderId, test.testCode, true)}
-                onReject={() => handleValidate(test.orderId, test.testCode, false)}
+                onReject={result => handleValidate(test.orderId, test.testCode, false, result)}
                 onClick={() => openValidationModal(test)}
                 isApproving={validateMutation.isPending && pendingValidateKey === commentKey}
                 isMobile={isMobile}

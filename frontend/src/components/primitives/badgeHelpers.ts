@@ -141,7 +141,9 @@ export const DISPLAY_LABELS: Record<string, string> = {
   'mobile-money': 'MOBILE MONEY',
   're-test': 'RE-TEST',
   're-collect': 'RE-COLLECT',
+  escalate: 'ESCALATE',
   authorize_retest: 'AUTHORIZE RE-TEST',
+  final_reject: 'FINAL REJECT',
 };
 
 export const CRITICAL_VARIANTS = new Set(['critical', 'critical-high', 'critical-low', 'urgent']);

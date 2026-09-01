@@ -83,7 +83,7 @@ class LabOperationsService:
         if status:
             query = query.filter(OrderTest.status == status)
 
-        order_test = query.first()
+        order_test = query.order_by(OrderTest.updatedAt.desc(), OrderTest.id.desc()).first()
         if not order_test:
             status_msg = f" with status '{status.value}'" if status else ""
             raise LabOperationError(
@@ -894,7 +894,7 @@ class LabOperationsService:
             "rejectedAt": datetime.now(timezone.utc).isoformat(),
             "rejectedBy": str(user_id),
             "rejectionReason": rejection_reason,
-            "rejectionType": "re-collect"
+            "rejectionType": "final_reject"
         }
         if original_test.resultRejectionHistory is None:
             original_test.resultRejectionHistory = []

@@ -8,25 +8,30 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useInvalidateOrders } from '@/features/orders';
 import { useValidateResults } from '@/features/lab/validation/results.api';
+import { getRejectionToast } from '@/features/lab/validation/rejectionToastMessages';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { getErrorMessage, isLikelyNetworkOrTimeout } from '@/utils/errors';
 import type { TestWithContext } from '@/types';
+import type { RejectionResult } from '@/types/lab-operations';
 
 export interface ValidationWorkflow {
   comments: Record<string, string>;
   pendingValidateKey: string | null;
   handleCommentsChange: (commentKey: string, value: string) => void;
-  handleValidate: (orderId: number | string, testCode: string, approve: boolean) => Promise<void>;
+  handleValidate: (
+    orderId: number | string,
+    testCode: string,
+    approve: boolean,
+    rejectionResult?: RejectionResult
+  ) => Promise<void>;
   openValidationModal: (test: TestWithContext) => void;
   validateMutation: ReturnType<typeof useValidateResults>;
 }
 
 export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflow {
-  const { invalidateAll: invalidateOrders } = useInvalidateOrders();
   const { openModal } = useModal();
   const [comments, setComments] = useState<Record<string, string>>({});
   const [pendingValidateKey, setPendingValidateKey] = useState<string | null>(null);
@@ -46,7 +51,12 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
   }, []);
 
   const handleValidate = useCallback(
-    async (orderId: number | string, testCode: string, approve: boolean): Promise<void> => {
+    async (
+      orderId: number | string,
+      testCode: string,
+      approve: boolean,
+      rejectionResult?: RejectionResult
+    ): Promise<void> => {
       if (ordersLoading) return;
 
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
@@ -89,16 +99,12 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
         return;
       }
 
-      // RejectionDialog already called the API; refresh cache and notify.
-      await invalidateOrders();
-      toast.success({
-        title: 'Results rejected',
-        subtitle:
-          'These results have been rejected. A re-test or new sample may have been requested.',
-      });
+      // RejectionDialog already called the API and invalidated caches via useRejectResults.
+      const toastMessage = getRejectionToast(rejectionResult);
+      toast.success(toastMessage);
       clearComment(commentKey);
     },
-    [comments, ordersLoading, invalidateOrders, validateMutation, clearComment]
+    [comments, ordersLoading, validateMutation, clearComment]
   );
 
   const openValidationModal = useCallback(
@@ -111,7 +117,7 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
         comments: comments[commentKey] || '',
         onCommentsChange: handleCommentsChange,
         onApprove: () => handleValidate(test.orderId, test.testCode, true),
-        onReject: () => handleValidate(test.orderId, test.testCode, false),
+        onReject: (result) => handleValidate(test.orderId, test.testCode, false, result),
       });
     },
     [comments, handleCommentsChange, handleValidate, openModal]

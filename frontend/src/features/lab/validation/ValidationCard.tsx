@@ -21,6 +21,7 @@ import { QueueAgeBadge } from '../components/QueueAgeBadge';
 import { useLabCardClickGuard } from '@/features/lab/hooks';
 import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
 import type { TestWithContext } from '@/types';
+import type { RejectionResult } from '@/types/lab-operations';
 import { ICONS } from '@/config/icons';
 import {
   type ResultStatus,
@@ -119,7 +120,7 @@ export interface ValidationCardProps {
   comments: string;
   onCommentsChange: (commentKey: string, value: string) => void;
   onApprove: () => void;
-  onReject: () => void;
+  onReject: (result: RejectionResult) => void;
   onClick: () => void;
   /** When true, approve action is in progress (show loading on approve button) */
   isApproving?: boolean;
@@ -164,12 +165,12 @@ function ValidationCardMobile({
   test: TestWithContext;
   patientName: string;
   onApprove: () => void;
-  onReject: () => void;
+  onReject: (result: RejectionResult) => void;
   isApproving: boolean;
   handleCardClick: () => void;
 }) {
   const { hasFlags, isRetest, hasRejectionHistory, flagStatusMap } = deriveCardState(test);
-  const handleRejectionResult = () => onReject();
+  const handleRejectionResult = (result: RejectionResult) => onReject(result);
 
   return (
     <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
@@ -270,7 +271,7 @@ function ValidationCardDesktop({
 }: {
   test: TestWithContext;
   onApprove: () => void;
-  onReject: () => void;
+  onReject: (result: RejectionResult) => void;
   isApproving: boolean;
   handleCardClick: () => void;
   getUserName: (id: string) => string;
@@ -288,7 +289,7 @@ function ValidationCardDesktop({
     previousReason,
     flagStatusMap,
   } = deriveCardState(test);
-  const handleRejectionResult = () => onReject();
+  const handleRejectionResult = (result: RejectionResult) => onReject(result);
   const resultCount = Object.keys(test.results!).length;
 
   const badges = (

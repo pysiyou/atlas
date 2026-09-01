@@ -36,6 +36,7 @@ import {
   EntryInfoLine,
 } from '../components/StatusBadges';
 import type { TestWithContext } from '@/types';
+import type { RejectionResult } from '@/types/lab-operations';
 
 interface ValidationDetailModalProps {
   isOpen: boolean;
@@ -46,7 +47,7 @@ interface ValidationDetailModalProps {
   onCommentsChange: (commentKey: string, value: string) => void;
   onApprove: () => void;
   /** Called after RejectionDialog completes (API already called). */
-  onReject: () => void;
+  onReject: (result: RejectionResult) => void;
 }
 
 // Large component is necessary for comprehensive validation detail modal with result display, validation actions, and conditional rendering
@@ -169,8 +170,8 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
                 Reject
               </Button>
             }
-            onReject={() => {
-              onReject();
+            onReject={result => {
+              onReject(result);
               onClose();
             }}
           />
