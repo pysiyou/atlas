@@ -49,20 +49,10 @@ class ResultValidationRequest(BaseModel):
     validationNotes: Optional[str] = None
 
 
-ResultRejectionTypeLiteral = Literal["re-test", "escalate"]
-
-
 class ResultRejectionRequest(BaseModel):
-    """
-    Request body for rejecting test results during validation.
-    Uses the new action-based approach. rejectionType validated by schema (422 on invalid).
-    """
+    """Reject resulted test — server decides re-test vs auto-escalation."""
     rejectionReason: str = Field(..., min_length=1, max_length=500, description="Catalog rejection criterion")
     rejectionNotes: Optional[str] = Field(None, max_length=1000, description="Additional context")
-    rejectionType: ResultRejectionTypeLiteral = Field(
-        ...,
-        description="'re-test' = re-run with same sample, 'escalate' = escalate when retest limits exceeded"
-    )
 
 
 class RejectionOptionsResponse(BaseModel):
@@ -430,30 +420,17 @@ def reject_results(
     current_user: User = Depends(require_lab_tech)  # Lab tech required
 ):
     """
-    Reject test results during validation with proper tracking.
+    Reject test results during validation.
 
-    Rejection paths during validation:
-    - 're-test': Create a NEW OrderTest linked to original; same sample remains valid.
-    - 'escalate': Required when retest limits are exhausted (supervisor decides next steps).
-
-    Re-collection is only available via supervisor escalation resolution (authorize_recollect).
-
-    Before calling this endpoint, use GET /rejection-options to check what actions
-    are available and whether any limits have been reached.
+    The server counts prior rejections for this test chain. Below the limit it
+    schedules a re-test on the same sample; at the limit it escalates automatically.
     """
-    action_map = {
-        "re-test": RejectionAction.RETEST_SAME_SAMPLE,
-        "escalate": RejectionAction.ESCALATE_TO_SUPERVISOR,
-    }
-    action = action_map[rejection_data.rejectionType]
-
     try:
         service = LabOperationsService(db)
         result = service.reject_results(
             order_id=orderId,
             test_code=testCode,
             user_id=current_user.id,
-            action=action,
             rejection_reason=rejection_data.rejectionReason,
             rejection_notes=rejection_data.rejectionNotes,
         )

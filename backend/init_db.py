@@ -1,5 +1,9 @@
 from sqlalchemy import text
 from app.database import engine, Base, SessionLocal
+from db_scripts.migrate_lab_operation_type_enum import (
+    migrate_legacy_uppercase_operation_logs,
+    sync_lab_operation_type_enum_values,
+)
 from db_scripts.generate_users import generate_users
 from db_scripts.generate_tests import generate_tests
 from db_scripts.seed_affiliation_pricing import seed_affiliation_pricing
@@ -50,6 +54,18 @@ def apply_migrations():
             DO INSTEAD NOTHING;
         """))
         print("  ✓ Audit log immutability rules applied")
+
+        # Lab operation type enum — add values introduced after initial schema
+        print("  ⏳ Syncing laboperationtype enum values...")
+        sync_lab_operation_type_enum_values(conn)
+        print("  ✓ laboperationtype enum values synced")
+
+        print("  ⏳ Normalizing legacy audit log operation types...")
+        updated = migrate_legacy_uppercase_operation_logs(conn)
+        if updated:
+            print(f"  ✓ Normalized {updated} legacy audit log row(s)")
+        else:
+            print("  ✓ No legacy audit log rows to normalize")
 
         conn.commit()
 

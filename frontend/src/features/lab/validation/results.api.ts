@@ -7,7 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { invalidateResultQueries } from '@/lib/query/invalidate';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useAuthStore } from '@/app/store';
-import type { OrderTest, ValidationDecision, ResultRejectionType, TestWithContext } from '@/types';
+import type { OrderTest, ValidationDecision, TestWithContext } from '@/types';
 import type {
   RejectionOptionsResponse,
   RejectionResult,
@@ -36,11 +36,8 @@ interface ResultValidationRequest {
  * Uses the /reject endpoint with proper tracking.
  */
 interface ResultRejectionRequest {
-  /** Catalog-defined rejection criterion */
   rejectionReason: string;
-  /** Optional additional context */
   rejectionNotes?: string;
-  rejectionType: ResultRejectionType;
 }
 
 export const resultAPI = {
@@ -123,18 +120,8 @@ export const resultAPI = {
   },
 
   /**
-   * Reject test results during validation with proper tracking.
-   *
-   * Two rejection paths:
-   * - 're-test': Creates NEW OrderTest linked to original, sample remains valid.
-   *              Original test is marked as SUPERSEDED.
-   * - 're-collect': Rejects the sample and triggers recollection flow.
-   *                 Original test waits for new sample.
-   *
-   * Both paths maintain rejection history for audit trail.
-   *
-   * Before calling this, use getRejectionOptions() to check what actions
-   * are available and whether any limits have been reached.
+   * Reject test results during validation.
+   * Server auto-decides re-test vs escalation based on rejection count.
    */
   async rejectResults(
     orderId: string,
@@ -262,19 +249,16 @@ export function useRejectResults() {
       testCode,
       rejectionReason,
       rejectionNotes,
-      rejectionType,
     }: {
       orderId: string | number;
       testCode: string;
       rejectionReason: string;
       rejectionNotes?: string;
-      rejectionType: ResultRejectionType;
     }): Promise<RejectionResult> => {
       const orderIdStr = typeof orderId === 'number' ? orderId.toString() : orderId;
       return resultAPI.rejectResults(orderIdStr, testCode, {
         rejectionReason,
         rejectionNotes,
-        rejectionType,
       });
     },
     onSuccess: (_, variables) => {

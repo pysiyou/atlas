@@ -94,7 +94,6 @@ export interface RejectionResult {
 export interface RejectionRequest {
   rejectionReason: string;
   rejectionNotes?: string;
-  rejectionType: 're-test' | 'escalate';
 }
 
 /**

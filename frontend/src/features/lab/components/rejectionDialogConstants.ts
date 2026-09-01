@@ -24,22 +24,20 @@ export const REJECTION_DIALOG_COPY = {
     retry: 'Retry',
   },
   escalation: {
-    title: 'Escalate to Supervisor',
-    confirmLabel: 'Escalate to Supervisor',
-    footerInfo: 'Escalating to supervisor',
-    warningTitle: 'Retest Limit Reached',
+    title: 'Reject Results',
+    confirmLabel: 'Reject & Escalate',
+    warningTitle: 'Rejection Limit Reached',
     warningBody:
-      'Maximum re-test attempts have been used. A supervisor will review and may authorize re-collection or other next steps.',
+      'This rejection will escalate automatically. A supervisor will decide the next step.',
     reasonLabel: 'Rejection Reason',
     notesLabel: 'Additional Context / Notes',
   },
   reject: {
     title: 'Reject Results',
-    confirmLabel: 'Try Again with This Sample',
-    footerInfo: 'Scheduling re-test on same sample',
+    confirmLabel: 'Reject & Re-test',
     warningTitle: 'Re-test on Same Sample',
     warningBody:
-      'The test will be run again using the current sample. Re-collection is only available after supervisor escalation.',
+      'The test will be run again on the current sample. If rejected again, it escalates to a supervisor automatically.',
     reasonLabel: 'Rejection Reason',
     notesLabel: 'Additional Context / Notes',
   },
