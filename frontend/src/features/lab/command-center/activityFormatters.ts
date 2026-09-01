@@ -30,6 +30,8 @@ import {
 } from './resultActivityFormatters';
 import {
   formatEscalationResolutionAuthorizeRetest,
+  formatEscalationResolutionAuthorizeRecollect,
+  formatEscalationResolutionForceValidate,
   formatEscalationResolutionFinalReject,
 } from './escalationActivityFormatters';
 import {
@@ -55,6 +57,8 @@ const FORMATTERS: Partial<Record<LabOperationType, ActivityFormatter>> = {
   result_validation_reject_recollect: formatResultValidationRejectRecollect,
   result_validation_escalate: formatResultValidationEscalate,
   escalation_resolution_authorize_retest: formatEscalationResolutionAuthorizeRetest,
+  escalation_resolution_authorize_recollect: formatEscalationResolutionAuthorizeRecollect,
+  escalation_resolution_force_validate: formatEscalationResolutionForceValidate,
   escalation_resolution_final_reject: formatEscalationResolutionFinalReject,
   critical_value_detected: formatCriticalValueDetected,
   critical_value_notified: formatCriticalValueNotified,

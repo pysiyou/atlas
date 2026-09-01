@@ -11,7 +11,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import type { ContainerType, RejectedSample, RejectionReason } from '@/types';
+import type { ContainerType, RejectedSample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import Barcode from 'react-barcode';
 import { displayId } from '@/utils';
@@ -111,12 +111,12 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
 
   // Handle reject sample
   const handleReject = async (
-    reasons: RejectionReason[],
+    rejectionReason: string,
     notes?: string,
     requireRecollection?: boolean
   ) => {
     if (!sample.sampleId) return;
-    await rejectSample(sample.sampleId, reasons, notes, requireRecollection);
+    await rejectSample(sample.sampleId, rejectionReason, notes, requireRecollection);
   };
 
   // Collection info for collected/rejected samples

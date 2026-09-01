@@ -148,6 +148,12 @@ class LabOperationType(str, enum.Enum):
     RESULT_VALIDATION_REJECT_RECOLLECT = "result_validation_reject_recollect"
     RESULT_VALIDATION_ESCALATE = "result_validation_escalate"
     ESCALATION_RESOLUTION_AUTHORIZE_RETEST = "escalation_resolution_authorize_retest"
+    ESCALATION_RESOLUTION_AUTHORIZE_RECOLLECT = "escalation_resolution_authorize_recollect"
+    ESCALATION_RESOLUTION_FORCE_VALIDATE = "escalation_resolution_force_validate"
+    ESCALATION_TRIGGER_CRIT_VAL = "escalation_trigger_crit_val"
+    ESCALATION_TRIGGER_REJ_SAMP = "escalation_trigger_rej_samp"
+    ESCALATION_TRIGGER_LIMIT_HIT = "escalation_trigger_limit_hit"
+    ESCALATION_TRIGGER_AMEND_RES = "escalation_trigger_amend_res"
     ESCALATION_RESOLUTION_FINAL_REJECT = "escalation_resolution_final_reject"
     ORDER_STATUS_CHANGE = "order_status_change"
     TEST_REMOVED = "test_removed"
@@ -164,3 +170,23 @@ class RejectionAction(str, enum.Enum):
 class RejectionSource(str, enum.Enum):
     SAMPLE_COLLECTION = "sample_collection"
     RESULT_VALIDATION = "result_validation"
+
+class EscalationReasonCode(str, enum.Enum):
+    CRIT_VAL = "CRIT-VAL"
+    REJ_SAMP = "REJ-SAMP"
+    LIMIT_HIT = "LIMIT-HIT"
+    AMEND_RES = "AMEND-RES"
+
+class EscalationTicketStatus(str, enum.Enum):
+    OPEN = "OPEN"
+    RESOLVED = "RESOLVED"
+
+class EscalationSeverity(str, enum.Enum):
+    CRITICAL = "CRITICAL"
+    STANDARD = "STANDARD"
+
+class EscalationResolutionAction(str, enum.Enum):
+    FORCE_VALIDATE = "force_validate"
+    AUTHORIZE_RETEST = "authorize_retest"
+    AUTHORIZE_RECOLLECT = "authorize_recollect"
+    FINAL_REJECT = "final_reject"

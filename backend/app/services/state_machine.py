@@ -107,11 +107,11 @@ class TestStateMachine:
     """
 
     TRANSITIONS: Dict[TestStatus, Set[TestStatus]] = {
-        TestStatus.PENDING: {TestStatus.SAMPLE_COLLECTED, TestStatus.REJECTED, TestStatus.REMOVED},
-        TestStatus.SAMPLE_COLLECTED: {TestStatus.IN_PROGRESS, TestStatus.RESULTED, TestStatus.REJECTED},
-        TestStatus.IN_PROGRESS: {TestStatus.RESULTED, TestStatus.REJECTED},
+        TestStatus.PENDING: {TestStatus.SAMPLE_COLLECTED, TestStatus.REJECTED, TestStatus.REMOVED, TestStatus.ESCALATED},
+        TestStatus.SAMPLE_COLLECTED: {TestStatus.IN_PROGRESS, TestStatus.RESULTED, TestStatus.REJECTED, TestStatus.ESCALATED},
+        TestStatus.IN_PROGRESS: {TestStatus.RESULTED, TestStatus.REJECTED, TestStatus.ESCALATED},
         TestStatus.RESULTED: {TestStatus.VALIDATED, TestStatus.ESCALATED, TestStatus.SUPERSEDED},
-        TestStatus.VALIDATED: set(),  # Terminal
+        TestStatus.VALIDATED: {TestStatus.ESCALATED},  # Amendment request escalates for supervisor review
         TestStatus.REJECTED: {TestStatus.PENDING},  # Can transition to pending when recollection is ready
         TestStatus.ESCALATED: {TestStatus.VALIDATED, TestStatus.SUPERSEDED, TestStatus.REJECTED},  # Supervisor: force validate, authorize retest, or final reject
         TestStatus.SUPERSEDED: set(),  # Terminal - replaced by retest
@@ -126,7 +126,6 @@ class TestStateMachine:
     # States from which results can be validated
     VALIDATION_STATES: Set[TestStatus] = {
         TestStatus.RESULTED,
-        TestStatus.ESCALATED,
     }
 
     @classmethod

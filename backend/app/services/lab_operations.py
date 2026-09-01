@@ -16,14 +16,17 @@ from app.models.order import Order, OrderTest
 from app.models.test import Test
 from app.schemas.enums import (
     SampleStatus, TestStatus, PriorityLevel,
-    RejectionAction, LabOperationType
+    RejectionAction, LabOperationType,
+    EscalationReasonCode, EscalationResolutionAction,
 )
 from app.services.state_machine import SampleStateMachine, TestStateMachine, StateTransitionError
 from app.services.audit_service import AuditService
 from app.services.order_status_updater import update_order_status
+from app.services.rejection_criteria_service import RejectionCriteriaService
 from app.services.result_validator import ResultValidatorService
 from app.services.flag_calculator import FlagCalculatorService
 from app.utils.exceptions import LabOperationError
+from app.services.escalation_engine import EscalationEngine
 from app.services.lab_rejection import (
     LabRejectionHandler,
     RejectionOptions,
@@ -49,6 +52,7 @@ class LabOperationsService:
     def __init__(self, db: Session):
         self.db = db
         self.audit = AuditService(db)
+        self.escalation = EscalationEngine(db, self.audit)
         self.result_validator = ResultValidatorService()
         self.flag_calculator = FlagCalculatorService()
         self._rejection_handler = LabRejectionHandler(
@@ -238,10 +242,12 @@ class LabOperationsService:
         self,
         sample_id: int,
         user_id: int,
-        rejection_reasons: List[str],
+        rejection_reason: str,
         rejection_notes: Optional[str] = None,
         recollection_required: bool = True,
-        commit: bool = True
+        commit: bool = True,
+        escalate_linked_tests: bool = True,
+        validate_catalog_criteria: bool = True,
     ) -> Sample:
         """
         Reject a sample.
@@ -249,8 +255,8 @@ class LabOperationsService:
         Args:
             sample_id: The sample ID
             user_id: The user performing the rejection
-            rejection_reasons: List of rejection reason codes
-            rejection_notes: Optional notes
+            rejection_reason: Catalog-defined rejection criterion
+            rejection_notes: Optional additional context
             recollection_required: Whether recollection is required
             commit: Whether to commit the transaction (default True)
 
@@ -258,6 +264,8 @@ class LabOperationsService:
             The updated sample
         """
         sample = self._get_sample(sample_id)
+        if validate_catalog_criteria:
+            RejectionCriteriaService(self.db).validate_for_tests(sample.testCodes, rejection_reason)
         before_state = self._serialize_sample_state(sample)
 
         # Validate state transition
@@ -268,8 +276,8 @@ class LabOperationsService:
         # Create rejection record
         rejection_record = {
             "rejectedAt": datetime.now(timezone.utc).isoformat(),
-            "rejectedBy": str(user_id),  # Convert to string as per schema requirement
-            "rejectionReasons": rejection_reasons,
+            "rejectedBy": str(user_id),
+            "rejectionReason": rejection_reason,
             "rejectionNotes": rejection_notes,
             "recollectionRequired": recollection_required
         }
@@ -284,7 +292,7 @@ class LabOperationsService:
         sample.status = SampleStatus.REJECTED
         sample.rejectedAt = datetime.now(timezone.utc)
         sample.rejectedBy = str(user_id)  # Convert to string as per schema requirement
-        sample.rejectionReasons = rejection_reasons
+        sample.rejectionReason = rejection_reason
         sample.rejectionNotes = rejection_notes
         sample.recollectionRequired = recollection_required
         sample.updatedBy = str(user_id)  # Convert to string as per model requirement
@@ -297,8 +305,21 @@ class LabOperationsService:
             OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED])
         ).all()
 
-        for order_test in order_tests:
-            order_test.status = TestStatus.REJECTED
+        if escalate_linked_tests:
+            for order_test in order_tests:
+                prior_status = order_test.status
+                self.escalation.escalate_test(
+                    order_test,
+                    EscalationReasonCode.REJ_SAMP,
+                    user_id,
+                    metadata={
+                        "rejectionReason": rejection_reason,
+                        "rejectionNotes": rejection_notes,
+                        "sampleRejectionHistory": sample.rejectionHistory,
+                    },
+                    sample_id=sample_id,
+                    from_status=prior_status,
+                )
 
         after_state = self._serialize_sample_state(sample)
 
@@ -308,7 +329,7 @@ class LabOperationsService:
             user_id=user_id,
             before_state=before_state,
             after_state=after_state,
-            rejection_reasons=rejection_reasons,
+            rejection_reason=rejection_reason,
             recollection_required=recollection_required,
             comment=rejection_notes
         )
@@ -348,6 +369,9 @@ class LabOperationsService:
                     f"Maximum {MAX_RECOLLECTION_ATTEMPTS} recollection attempts reached"
                 )
 
+        criteria_service = RejectionCriteriaService(self.db)
+        allowed_criteria = criteria_service.get_criteria_for_tests(sample.testCodes)
+
         return {
             "canReject": can_reject,
             "rejectDisabledReason": reject_reason if not can_reject else None,
@@ -358,6 +382,7 @@ class LabOperationsService:
             "requireRecollectionDisabledReason": require_recollection_disabled_reason,
             "orderHasValidatedTests": order_has_validated_tests,
             "escalationRequired": rejection_count >= MAX_RECOLLECTION_ATTEMPTS,
+            "allowedRejectionCriteria": allowed_criteria,
         }
 
     def request_recollection(
@@ -476,7 +501,7 @@ class LabOperationsService:
         self,
         sample_id: int,
         user_id: int,
-        rejection_reasons: List[str],
+        rejection_reason: str,
         rejection_notes: Optional[str] = None,
         recollection_reason: Optional[str] = None
     ) -> Tuple[Sample, Sample]:
@@ -486,9 +511,9 @@ class LabOperationsService:
         Args:
             sample_id: The sample ID to reject
             user_id: The user performing the operation
-            rejection_reasons: List of rejection reason codes
-            rejection_notes: Optional rejection notes
-            recollection_reason: Optional reason for recollection (defaults to rejection notes)
+            rejection_reason: Catalog-defined rejection criterion
+            rejection_notes: Optional additional context
+            recollection_reason: Optional reason for recollection (defaults to rejection reason/notes)
 
         Returns:
             Tuple of (rejected_sample, new_sample)
@@ -513,7 +538,7 @@ class LabOperationsService:
         rejected_sample = self.reject_sample(
             sample_id=sample_id,
             user_id=user_id,
-            rejection_reasons=rejection_reasons,
+            rejection_reason=rejection_reason,
             rejection_notes=rejection_notes,
             recollection_required=True,
             commit=False
@@ -523,7 +548,7 @@ class LabOperationsService:
         self.db.flush()
 
         # Step 2: Create recollection sample (no commit yet)
-        reason = recollection_reason or rejection_notes or "Recollection requested"
+        reason = recollection_reason or rejection_notes or rejection_reason or "Recollection requested"
         new_sample = self.request_recollection(
             sample_id=sample_id,
             user_id=user_id,
@@ -610,18 +635,15 @@ class LabOperationsService:
         order_test.resultEnteredAt = datetime.now(timezone.utc)
         order_test.enteredBy = str(user_id)  # Convert to string as per model requirement
         order_test.technicianNotes = technician_notes
-        order_test.status = TestStatus.RESULTED
-
         # Update flags
         if flags:
             order_test.flags = self.flag_calculator.flags_to_string_list(flags)
             flag_modified(order_test, 'flags')
 
-        # Check for critical values
+        # Check for critical values — CRIT-VAL trigger diverts to escalated
         has_critical = self.flag_calculator.has_critical_values(flags)
         order_test.hasCriticalValues = has_critical
 
-        # Log critical value detection if found
         if has_critical:
             critical_flags = self.flag_calculator.get_critical_flags(flags)
             self.audit.log_critical_value_detected(
@@ -631,6 +653,18 @@ class LabOperationsService:
                 user_id=user_id,
                 critical_values=self.flag_calculator.flags_to_json(critical_flags)
             )
+            self.escalation.escalate_test(
+                order_test,
+                EscalationReasonCode.CRIT_VAL,
+                user_id,
+                metadata={
+                    "criticalValues": self.flag_calculator.flags_to_json(critical_flags),
+                    "results": results_serializable,
+                },
+                from_status=TestStatus.SAMPLE_COLLECTED,
+            )
+        else:
+            order_test.status = TestStatus.RESULTED
 
         # Log audit (after_state must be JSON-serializable)
         self.audit.log_result_entry(
@@ -711,7 +745,8 @@ class LabOperationsService:
         test_code: str,
         user_id: int,
         action: RejectionAction,
-        rejection_reason: str
+        rejection_reason: str,
+        rejection_notes: Optional[str] = None,
     ) -> RejectionResult:
         """
         Reject test results with specified action.
@@ -738,17 +773,23 @@ class LabOperationsService:
         if not action_info.enabled:
             raise LabOperationError(action_info.disabledReason or f"Action {action.value} is disabled")
 
+        if options.escalationRequired:
+            action = RejectionAction.ESCALATE_TO_SUPERVISOR
+
+        if action == RejectionAction.RECOLLECT_NEW_SAMPLE:
+            raise LabOperationError(
+                "Re-collection during result validation is not allowed. "
+                "When retest limits are reached, the test is escalated for supervisor review.",
+                status_code=400,
+            )
+
         if action == RejectionAction.RETEST_SAME_SAMPLE:
             return self._rejection_handler.reject_with_retest(
-                order_id, test_code, user_id, rejection_reason
-            )
-        if action == RejectionAction.RECOLLECT_NEW_SAMPLE:
-            return self._rejection_handler.reject_with_recollect(
-                order_id, test_code, user_id, rejection_reason
+                order_id, test_code, user_id, rejection_reason, rejection_notes
             )
         if action == RejectionAction.ESCALATE_TO_SUPERVISOR:
             return self._rejection_handler.reject_with_escalate(
-                order_id, test_code, user_id, rejection_reason
+                order_id, test_code, user_id, rejection_reason, rejection_notes
             )
         raise LabOperationError(f"Unknown rejection action: {action.value}")
 
@@ -757,29 +798,32 @@ class LabOperationsService:
         order_id: int,
         test_code: str,
         user_id: int,
-        validation_notes: Optional[str] = None
+        validation_notes: Optional[str] = None,
+        read_back_payload: Optional[Dict[str, Any]] = None,
     ) -> OrderTest:
-        """
-        Resolve escalated test by force-validating (Path 1).
-        Fetches the test with status=ESCALATED so we do not pick up a superseded row
-        when multiple tests exist for the same order_id + test_code.
-        """
+        """Resolve escalated test by force-validating (supervisor override)."""
         order_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
-        can_validate, reason = TestStateMachine.can_validate(order_test.status)
-        if not can_validate:
-            raise LabOperationError(reason)
+        ticket = self.escalation.resolve_ticket(
+            order_test.id,
+            EscalationResolutionAction.FORCE_VALIDATE,
+            user_id,
+            notes=validation_notes,
+            read_back_payload=read_back_payload,
+        )
 
         order_test.resultValidatedAt = datetime.now(timezone.utc)
         order_test.validatedBy = str(user_id)
         order_test.validationNotes = validation_notes
         order_test.status = TestStatus.VALIDATED
 
-        self.audit.log_result_validation_approve(
+        self.audit.log_escalation_resolution_force_validate(
             order_id=order_id,
             test_code=test_code,
             test_id=order_test.id,
+            ticket_id=ticket.id,
             user_id=user_id,
-            validation_notes=validation_notes
+            validation_notes=validation_notes,
+            metadata=ticket.ticketMetadata,
         )
 
         self.db.commit()
@@ -843,6 +887,13 @@ class LabOperationsService:
         original_test.retestOrderTestId = new_order_test.id
         original_test.status = TestStatus.SUPERSEDED
 
+        self.escalation.resolve_ticket(
+            original_test.id,
+            EscalationResolutionAction.AUTHORIZE_RETEST,
+            user_id,
+            notes=reason,
+        )
+
         self.audit.log_escalation_resolution_authorize_retest(
             order_id=order_id,
             test_code=test_code,
@@ -864,75 +915,210 @@ class LabOperationsService:
             newTestId=new_order_test.id
         )
 
-    def resolve_escalation_final_reject(
+    def resolve_escalation_authorize_recollect(
         self,
         order_id: int,
         test_code: str,
         user_id: int,
-        rejection_reason: str
+        reason: str,
     ) -> RejectionResult:
-        """
-        Resolve escalated test by final reject / new sample (Path 3).
-        Rejects sample and requests recollection.
-        """
+        """Resolve escalated test by authorizing re-collect: supersede test, new sample + test pending."""
         original_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
-        
-        try:
-            TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.REJECTED)
-        except StateTransitionError as e:
-            raise LabOperationError(e.message, status_code=400)
-
         if not original_test.sampleId:
-            raise LabOperationError("Cannot final reject - no sample linked to this test")
+            raise LabOperationError("Cannot authorize re-collect - no sample linked to this test")
 
         sample = self._get_sample(original_test.sampleId)
         can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
         if not can_reject:
             raise LabOperationError(reject_reason)
 
+        TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.SUPERSEDED)
+
         rejection_record = {
             "rejectedAt": datetime.now(timezone.utc).isoformat(),
             "rejectedBy": str(user_id),
-            "rejectionReason": rejection_reason,
-            "rejectionType": "final_reject"
+            "rejectionReason": reason,
+            "rejectionType": "authorize_recollect",
         }
         if original_test.resultRejectionHistory is None:
             original_test.resultRejectionHistory = []
         original_test.resultRejectionHistory.append(rejection_record)
-        flag_modified(original_test, 'resultRejectionHistory')
+        flag_modified(original_test, "resultRejectionHistory")
 
-        # Transition ESCALATED -> REJECTED before reject_and_recollect (which does REJECTED -> PENDING)
-        rejection_notes = f"Final reject (escalation resolution): {rejection_reason}"
-        original_test.resultValidatedAt = datetime.now(timezone.utc)
-        original_test.validatedBy = str(user_id)
-        original_test.validationNotes = rejection_notes
-        original_test.status = TestStatus.REJECTED
+        original_test.status = TestStatus.SUPERSEDED
+        original_test.validationNotes = reason
 
-        rejected_sample, new_sample = self.reject_and_recollect(
+        rejected_sample = self.reject_sample(
             sample_id=sample.sampleId,
             user_id=user_id,
-            rejection_reasons=["other"],
-            rejection_notes=rejection_notes,
-            recollection_reason=rejection_reason
+            rejection_reason=reason,
+            rejection_notes=f"Authorized re-collect (escalation resolution): {reason}",
+            recollection_required=True,
+            commit=False,
+            escalate_linked_tests=False,
+            validate_catalog_criteria=False,
+        )
+
+        recollection_attempt = len(rejected_sample.rejectionHistory or [])
+        new_sample = Sample(
+            orderId=rejected_sample.orderId,
+            sampleType=rejected_sample.sampleType,
+            status=SampleStatus.PENDING,
+            testCodes=rejected_sample.testCodes,
+            requiredVolume=rejected_sample.requiredVolume,
+            priority=PriorityLevel.URGENT,
+            requiredContainerTypes=rejected_sample.requiredContainerTypes,
+            requiredContainerColors=rejected_sample.requiredContainerColors,
+            isRecollection=True,
+            originalSampleId=rejected_sample.sampleId,
+            recollectionReason=reason,
+            recollectionAttempt=recollection_attempt,
+            rejectionHistory=rejected_sample.rejectionHistory or [],
+            createdAt=datetime.now(timezone.utc),
+            createdBy=str(user_id),
+            updatedBy=str(user_id),
+        )
+        self.db.add(new_sample)
+        self.db.flush()
+
+        rejected_sample.recollectionSampleId = new_sample.sampleId
+
+        new_order_test = OrderTest(
+            orderId=order_id,
+            testCode=test_code,
+            status=TestStatus.PENDING,
+            priceAtOrder=original_test.priceAtOrder,
+            sampleId=new_sample.sampleId,
+            isRetest=True,
+            retestOfTestId=original_test.id,
+            retestNumber=0,
+            resultRejectionHistory=original_test.resultRejectionHistory,
+            technicianNotes=f"Authorized re-collect (escalation resolution): {reason}",
+            isReflexTest=original_test.isReflexTest,
+            triggeredBy=original_test.triggeredBy,
+            reflexRule=original_test.reflexRule,
+        )
+        self.db.add(new_order_test)
+        self.db.flush()
+
+        original_test.retestOrderTestId = new_order_test.id
+
+        ticket = self.escalation.resolve_ticket(
+            original_test.id,
+            EscalationResolutionAction.AUTHORIZE_RECOLLECT,
+            user_id,
+            notes=reason,
+        )
+
+        self.audit.log_escalation_resolution_authorize_recollect(
+            order_id=order_id,
+            test_code=test_code,
+            original_test_id=original_test.id,
+            new_test_id=new_order_test.id,
+            new_sample_id=new_sample.sampleId,
+            ticket_id=ticket.id,
+            user_id=user_id,
+            reason=reason,
+        )
+
+        self.db.commit()
+        self.db.refresh(new_order_test)
+        update_order_status(self.db, order_id)
+
+        return RejectionResult(
+            success=True,
+            action=RejectionAction.RECOLLECT_NEW_SAMPLE,
+            message=f"Re-collect authorized. New sample ID: {new_sample.sampleId}",
+            originalTestId=original_test.id,
+            newTestId=new_order_test.id,
+            newSampleId=new_sample.sampleId,
+        )
+
+    def resolve_escalation_final_reject(
+        self,
+        order_id: int,
+        test_code: str,
+        user_id: int,
+        rejection_reason: str,
+    ) -> RejectionResult:
+        """Resolve escalated test by terminal cancel (no recollection)."""
+        original_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
+        TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.REJECTED)
+
+        rejection_record = {
+            "rejectedAt": datetime.now(timezone.utc).isoformat(),
+            "rejectedBy": str(user_id),
+            "rejectionReason": rejection_reason,
+            "rejectionType": "final_reject",
+        }
+        if original_test.resultRejectionHistory is None:
+            original_test.resultRejectionHistory = []
+        original_test.resultRejectionHistory.append(rejection_record)
+        flag_modified(original_test, "resultRejectionHistory")
+
+        original_test.status = TestStatus.REJECTED
+        original_test.validationNotes = rejection_reason
+        original_test.resultValidatedAt = datetime.now(timezone.utc)
+        original_test.validatedBy = str(user_id)
+
+        ticket = self.escalation.resolve_ticket(
+            original_test.id,
+            EscalationResolutionAction.FINAL_REJECT,
+            user_id,
+            notes=rejection_reason,
         )
 
         self.audit.log_escalation_resolution_final_reject(
             order_id=order_id,
             test_code=test_code,
             test_id=original_test.id,
-            sample_id=sample.sampleId,
-            new_sample_id=new_sample.sampleId,
+            sample_id=original_test.sampleId or 0,
             user_id=user_id,
-            rejection_reason=rejection_reason
+            rejection_reason=rejection_reason,
+            metadata={"ticketId": ticket.id},
         )
 
         self.db.commit()
         self.db.refresh(original_test)
+        update_order_status(self.db, order_id)
 
         return RejectionResult(
             success=True,
-            action=RejectionAction.RECOLLECT_NEW_SAMPLE,
-            message=f"Sample rejected and new sample requested. New sample ID: {new_sample.sampleId}",
+            action=RejectionAction.ESCALATE_TO_SUPERVISOR,
+            message="Test cancelled (final reject).",
             originalTestId=original_test.id,
-            newSampleId=new_sample.sampleId
         )
+
+    def request_result_amendment(
+        self,
+        order_id: int,
+        test_code: str,
+        user_id: int,
+        proposed_results: Dict[str, Any],
+        reason: str,
+    ) -> OrderTest:
+        """Request amendment on a validated test — creates AMEND-RES escalation ticket."""
+        order_test = self._get_order_test(order_id, test_code, status=TestStatus.VALIDATED)
+        if self.escalation.get_open_ticket(order_test.id):
+            raise LabOperationError(
+                "An open amendment escalation already exists for this test",
+                status_code=409,
+            )
+
+        proposed_serializable = self._results_to_json_serializable(proposed_results)
+        self.escalation.escalate_test(
+            order_test,
+            EscalationReasonCode.AMEND_RES,
+            user_id,
+            metadata={
+                "originalResults": order_test.results,
+                "proposedResults": proposed_serializable,
+                "amendmentReason": reason,
+            },
+            from_status=TestStatus.VALIDATED,
+        )
+
+        self.db.commit()
+        self.db.refresh(order_test)
+        update_order_status(self.db, order_id)
+        return order_test

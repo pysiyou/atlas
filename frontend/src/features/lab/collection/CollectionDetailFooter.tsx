@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Button, Icon } from '@/components';
-import type { ContainerType, Sample, RejectedSample, Order, RejectionReason } from '@/types';
+import type { ContainerType, Sample, RejectedSample, Order } from '@/types';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import { ModalFooter } from '../components/LabDetailModal';
@@ -32,7 +32,7 @@ interface CollectionDetailFooterProps {
     containerType?: ContainerType
   ) => void;
   onReject: (
-    reasons: RejectionReason[],
+    rejectionReason: string,
     notes?: string,
     requireRecollection?: boolean
   ) => Promise<void>;
@@ -113,6 +113,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
       >
         <CollectionRejectionPopover
           sampleId={sample.sampleId.toString()}
+          testCodes={sample.testCodes ?? []}
           sampleType={sample.sampleType}
           patientName={patientName}
           isRecollection={sample.isRecollection || false}

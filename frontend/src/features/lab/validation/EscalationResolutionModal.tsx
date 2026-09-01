@@ -1,7 +1,7 @@
 /**
  * EscalationResolutionModal - Resolve escalated tests (admin/labtech_plus only)
  *
- * Three paths: Force Validate, Authorize Re-test, Final Reject / New Sample.
+ * Four paths: Force Validate, Authorize Re-test, Authorize Re-collect, Cancel Test.
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
@@ -34,7 +34,11 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
 }) => {
   const [validationNotesForceValidate, setValidationNotesForceValidate] = useState('');
   const [reasonAuthorizeRetest, setReasonAuthorizeRetest] = useState('');
+  const [reasonAuthorizeRecollect, setReasonAuthorizeRecollect] = useState('');
   const [reasonFinalReject, setReasonFinalReject] = useState('');
+  const [readBackProviderName, setReadBackProviderName] = useState('');
+  const [readBackProviderContact, setReadBackProviderContact] = useState('');
+  const [readBackConfirmed, setReadBackConfirmed] = useState(false);
   const queryClient = useQueryClient();
 
   const criticalRecord = useMemo(() => buildCriticalValueRecord(test), [test]);
@@ -48,7 +52,11 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   const resetForm = useCallback(() => {
     setValidationNotesForceValidate('');
     setReasonAuthorizeRetest('');
+    setReasonAuthorizeRecollect('');
     setReasonFinalReject('');
+    setReadBackProviderName('');
+    setReadBackProviderContact('');
+    setReadBackConfirmed(false);
   }, []);
 
   const { canResolveEscalation, resolving, resolveAsync } = useEscalationResolution({
@@ -60,6 +68,8 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   });
 
   const rejectionHistory = test.resultRejectionHistory || [];
+  const requiresReadBack = test.reasonCode === 'CRIT-VAL';
+
   const hasRejectionHistory = rejectionHistory.length > 0;
 
   if (!test.results) return null;
@@ -76,9 +86,16 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           priority={test.priority}
           status="escalated"
           extraBadges={
-            <Badge size="sm" variant="danger">
-              Requires Supervisor Action
-            </Badge>
+            <>
+              {test.reasonCode && (
+                <Badge size="sm" variant="warning">
+                  {test.reasonCode}
+                </Badge>
+              )}
+              <Badge size="sm" variant="danger">
+                Requires Supervisor Action
+              </Badge>
+            </>
           }
         />
       }
@@ -105,10 +122,19 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         <EscalationResolutionFooter
           canResolveEscalation={canResolveEscalation}
           resolving={resolving}
+          requiresReadBack={requiresReadBack}
           validationNotesForceValidate={validationNotesForceValidate}
           onValidationNotesForceValidateChange={setValidationNotesForceValidate}
+          readBackProviderName={readBackProviderName}
+          onReadBackProviderNameChange={setReadBackProviderName}
+          readBackProviderContact={readBackProviderContact}
+          onReadBackProviderContactChange={setReadBackProviderContact}
+          readBackConfirmed={readBackConfirmed}
+          onReadBackConfirmedChange={setReadBackConfirmed}
           reasonAuthorizeRetest={reasonAuthorizeRetest}
           onReasonAuthorizeRetestChange={setReasonAuthorizeRetest}
+          reasonAuthorizeRecollect={reasonAuthorizeRecollect}
+          onReasonAuthorizeRecollectChange={setReasonAuthorizeRecollect}
           reasonFinalReject={reasonFinalReject}
           onReasonFinalRejectChange={setReasonFinalReject}
           resolveAsync={resolveAsync}

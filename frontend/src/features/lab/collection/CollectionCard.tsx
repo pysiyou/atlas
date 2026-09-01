@@ -13,7 +13,7 @@
 import React from 'react';
 import { Badge, Card, Icon, IconButton, Avatar } from '@/components';
 import Barcode from 'react-barcode';
-import type { ContainerType, RejectedSample, Sample, RejectionReason } from '@/types';
+import type { ContainerType, RejectedSample, Sample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
@@ -62,7 +62,7 @@ interface CardLayoutProps {
   patientName: string;
   testNames: string[];
   handleCardClick: (e?: React.MouseEvent) => void;
-  handleRejectSample: (reasons: string[], notes: string, requireRecollection: boolean) => Promise<void>;
+  handleRejectSample: (reason: string, notes: string, requireRecollection: boolean) => Promise<void>;
   hasValidatedTests: boolean;
   isRejecting: boolean;
   isCollecting: boolean;
@@ -92,12 +92,12 @@ function useCollectionCardActions(
   const handleCardClick = useLabCardClickGuard(openSampleModal);
 
   const handleRejectSample = async (
-    reasons: string[],
+    reason: string,
     notes: string,
     requireRecollection: boolean
   ) => {
     if (!sample?.sampleId) return;
-    await rejectSample(sample.sampleId, reasons as RejectionReason[], notes, requireRecollection);
+    await rejectSample(sample.sampleId, reason, notes, requireRecollection);
   };
 
   const hasValidatedTests = orderHasValidatedTests(order);
@@ -263,6 +263,7 @@ function CollectionCardDesktop({
           previousReason={(() => {
             const last = sample.rejectionHistory[sample.rejectionHistory.length - 1];
             if (!last) return undefined;
+            if (last.rejectionReason) return last.rejectionReason;
             if (last.rejectionReasons) return formatRejectionReasons(last.rejectionReasons) ?? undefined;
             return last.rejectionNotes ?? undefined;
           })()}
@@ -342,6 +343,7 @@ function CollectionCardDesktop({
               ) : (
                 <CollectionRejectionPopover
                   sampleId={sample.sampleId.toString()}
+                  testCodes={sample.testCodes ?? []}
                   sampleType={sample.sampleType}
                   patientName={patientName}
                   isRecollection={isRecollection}

@@ -56,6 +56,7 @@ export interface ResultRejectionRecord {
   rejectionReason?: string;
   reason?: string;
   notes?: string;
+  rejectionNotes?: string;
 }
 
 /** Reads rejection type from either API shape (rejectionType or type). */

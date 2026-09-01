@@ -44,7 +44,7 @@ class Sample(Base):
     # Rejection info (only when status = rejected)
     rejectedAt = Column("rejected_at", DateTime(timezone=True), nullable=True)
     rejectedBy = Column("rejected_by", String, nullable=True)
-    rejectionReasons = Column("rejection_reasons", JSON, nullable=True)  # Array of RejectionReason
+    rejectionReason = Column("rejection_reason", String, nullable=True)  # Catalog rejection criterion
     rejectionNotes = Column("rejection_notes", String, nullable=True)
     rejectionHistory = Column("rejection_history", JSON, nullable=True, default=list)  # Array of rejection records
 

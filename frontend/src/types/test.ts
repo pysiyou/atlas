@@ -245,5 +245,11 @@ export interface TestWithContext {
   sampleRecollectionAttempt?: number;
   sampleRejectionHistory?: RejectionRecord[];
 
+  // Escalation ticket fields (from pending-escalation API)
+  ticketId?: number;
+  reasonCode?: string;
+  severity?: string;
+  ticketMetadata?: Record<string, unknown>;
+
   [key: string]: unknown;
 }

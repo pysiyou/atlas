@@ -24,9 +24,12 @@
         "fasting_required": false,
         "collection_notes": "Mix gently by inversion 8-10 times",
         "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
           "Clotted sample",
-          "Insufficient quantity",
-          "Hemolyzed severe"
+          "Hemolyzed - Severe",
+          "Insufficient quantity (QNS)"
         ]
       },
       "result_items": [
@@ -202,9 +205,12 @@
         "fasting_required": false,
         "collection_notes": "Process within 24 hours",
         "rejection_criteria": [
-          "Clotted",
-          "Hemolyzed",
-          ">24hrs old"
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Clotted sample",
+          "Hemolyzed - Severe",
+          "Insufficient quantity (QNS)"
         ]
       },
       "result_items": [
@@ -282,7 +288,12 @@
         "fasting_required": false,
         "collection_notes": "Prepare within 30 minutes",
         "rejection_criteria": [
-          "Delayed preparation >2 hours"
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Clotted sample",
+          "Hemolyzed - Severe",
+          "Insufficient quantity (QNS)"
         ]
       },
       "result_items": [
@@ -352,8 +363,12 @@
         "minimum_volume_ml": 1.5,
         "fasting_required": false,
         "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
           "Clotted sample",
-          "Improper tube"
+          "Hemolyzed - Severe",
+          "Insufficient quantity (QNS)"
         ]
       },
       "result_items": [
@@ -418,7 +433,15 @@
         "container": "EDTA tube (purple cap) or serum, 3 mL",
         "minimum_volume_ml": 2,
         "fasting_required": false,
-        "collection_notes": "Use anticoagulated blood for RBC typing"
+        "collection_notes": "Use anticoagulated blood for RBC typing",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Clotted sample",
+          "Hemolyzed - Severe",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -490,8 +513,14 @@
         "fasting_required": true,
         "collection_notes": "8-12 hours fasting required",
         "rejection_criteria": [
-          "Non-fasting specimen",
-          "Hemolyzed"
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Fasting requirements not met"
         ]
       },
       "result_items": [
@@ -555,7 +584,16 @@
         "sample_type": "Serum or Plasma",
         "container": "SST or fluoride tube, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -618,7 +656,16 @@
         "sample_type": "Whole Blood",
         "container": "EDTA tube (purple cap), 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -677,7 +724,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -744,7 +800,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -806,7 +871,16 @@
         "sample_type": "Derived from serum creatinine",
         "container": "N/A",
         "minimum_volume_ml": 0,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -865,7 +939,16 @@
         "sample_type": "Serum or Plasma",
         "container": "SST or lithium heparin, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -931,9 +1014,14 @@
         "fasting_required": false,
         "collection_notes": "Avoid hemolysis; process quickly",
         "rejection_criteria": [
-          "Hemolyzed",
-          "EDTA tube",
-          "Delayed >2 hours"
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Hemolyzed - Mild"
         ]
       },
       "result_items": [
@@ -997,7 +1085,16 @@
         "sample_type": "Serum or Plasma",
         "container": "SST or lithium heparin, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -1056,7 +1153,16 @@
         "sample_type": "Serum or Plasma",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -1114,7 +1220,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -1176,7 +1291,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -1234,7 +1358,17 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": true
+        "fasting_required": true,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Fasting requirements not met"
+        ]
       },
       "result_items": [
         {
@@ -1292,7 +1426,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -1358,7 +1501,17 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Hemolyzed - Mild"
+        ]
       },
       "result_items": [
         {
@@ -1424,7 +1577,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -1482,7 +1644,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -1545,7 +1716,17 @@
         "container": "SST (protect from light), 3 mL",
         "minimum_volume_ml": 2,
         "fasting_required": false,
-        "collection_notes": "Protect from direct sunlight"
+        "collection_notes": "Protect from direct sunlight",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Not protected from light"
+        ]
       },
       "result_items": [
         {
@@ -1607,7 +1788,17 @@
         "sample_type": "Serum",
         "container": "SST (protect from light), 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Not protected from light"
+        ]
       },
       "result_items": [
         {
@@ -1664,7 +1855,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -1722,7 +1922,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -1781,7 +1990,17 @@
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
         "fasting_required": true,
-        "collection_notes": "12-hour fasting recommended"
+        "collection_notes": "12-hour fasting recommended",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Fasting requirements not met"
+        ]
       },
       "result_items": [
         {
@@ -1839,7 +2058,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -1901,7 +2129,17 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": true
+        "fasting_required": true,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Fasting requirements not met"
+        ]
       },
       "result_items": [
         {
@@ -1960,7 +2198,17 @@
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
         "fasting_required": true,
-        "collection_notes": "12-hour fasting essential"
+        "collection_notes": "12-hour fasting essential",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Fasting requirements not met"
+        ]
       },
       "result_items": [
         {
@@ -2018,7 +2266,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -2079,7 +2336,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -2141,7 +2407,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -2200,7 +2475,16 @@
         "container": "SST or EDTA, 2 mL",
         "minimum_volume_ml": 1.5,
         "fasting_required": false,
-        "collection_notes": "Serial sampling 0, 3, 6 hours for ACS rule-out"
+        "collection_notes": "Serial sampling 0, 3, 6 hours for ACS rule-out",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -2263,7 +2547,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -2322,7 +2615,17 @@
         "container": "SST (iron-free), 3 mL",
         "minimum_volume_ml": 2,
         "fasting_required": true,
-        "collection_notes": "12-hour fasting required"
+        "collection_notes": "12-hour fasting required",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Fasting requirements not met"
+        ]
       },
       "result_items": [
         {
@@ -2383,7 +2686,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -2445,7 +2757,17 @@
         "sample_type": "Serum (fasting)",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": true
+        "fasting_required": true,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Fasting requirements not met"
+        ]
       },
       "result_items": [
         {
@@ -2503,7 +2825,17 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Not protected from light"
+        ]
       },
       "result_items": [
         {
@@ -2560,7 +2892,17 @@
         "container": "SST or EDTA, 3 mL",
         "minimum_volume_ml": 2,
         "fasting_required": true,
-        "collection_notes": "Protect from light"
+        "collection_notes": "Protect from light",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)",
+          "Fasting requirements not met"
+        ]
       },
       "result_items": [
         {
@@ -2618,7 +2960,16 @@
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
         "fasting_required": false,
-        "collection_notes": "Protect from light"
+        "collection_notes": "Protect from light",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -2677,9 +3028,14 @@
         "fasting_required": false,
         "collection_notes": "CRITICAL: Must fill to line; clot if delayed >2 hours",
         "rejection_criteria": [
-          "Wrong fill volume",
-          "Clotted",
-          ">2 hours old"
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Clotted sample",
+          "Insufficient quantity (QNS)",
+          "Overfilled tube",
+          "Hemolyzed - Moderate",
+          "Hemolyzed - Severe"
         ]
       },
       "result_items": [
@@ -2759,7 +3115,17 @@
         "container": "Blue-cap tube, 2.7 mL (correct fill critical)",
         "minimum_volume_ml": 2.4,
         "fasting_required": false,
-        "collection_notes": "Test within 4 hours or freeze"
+        "collection_notes": "Test within 4 hours or freeze",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Clotted sample",
+          "Insufficient quantity (QNS)",
+          "Overfilled tube",
+          "Hemolyzed - Moderate",
+          "Hemolyzed - Severe"
+        ]
       },
       "result_items": [
         {
@@ -2822,7 +3188,17 @@
         "sample_type": "Plasma (citrated)",
         "container": "Blue-cap tube, correct fill",
         "minimum_volume_ml": 2.4,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Clotted sample",
+          "Insufficient quantity (QNS)",
+          "Overfilled tube",
+          "Hemolyzed - Moderate",
+          "Hemolyzed - Severe"
+        ]
       },
       "result_items": [
         {
@@ -2883,7 +3259,17 @@
         "sample_type": "Plasma (citrated or EDTA)",
         "container": "Blue-cap or purple-cap tube",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Clotted sample",
+          "Insufficient quantity (QNS)",
+          "Overfilled tube",
+          "Hemolyzed - Moderate",
+          "Hemolyzed - Severe"
+        ]
       },
       "result_items": [
         {
@@ -2945,8 +3331,9 @@
         "fasting_required": false,
         "collection_notes": "Mid-stream clean-catch preferred; analyze within 2 hours",
         "rejection_criteria": [
-          "Contaminated",
-          ">4 hours at room temperature"
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube"
         ]
       },
       "result_items": [
@@ -3178,7 +3565,16 @@
         "container": "Clean/sterile cup, 20-30 mL",
         "minimum_volume_ml": 20,
         "fasting_required": false,
-        "collection_notes": "First morning urine has highest hCG"
+        "collection_notes": "First morning urine has highest hCG",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3231,7 +3627,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3297,7 +3702,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3357,7 +3771,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3419,7 +3842,16 @@
         "container": "SST or EDTA, 3 mL",
         "minimum_volume_ml": 2,
         "fasting_required": false,
-        "collection_notes": "Use 2-test or 3-test algorithm for confirmation"
+        "collection_notes": "Use 2-test or 3-test algorithm for confirmation",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3476,7 +3908,16 @@
         "container": "SST or EDTA, 3-5 mL",
         "minimum_volume_ml": 2.5,
         "fasting_required": false,
-        "collection_notes": "RNA tests require immediate processing/freezing"
+        "collection_notes": "RNA tests require immediate processing/freezing",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3532,7 +3973,16 @@
         "container": "EDTA tube (purple cap), 3-5 mL",
         "minimum_volume_ml": 2.5,
         "fasting_required": false,
-        "collection_notes": "CRITICAL: EDTA only; refrigerate/freeze immediately"
+        "collection_notes": "CRITICAL: EDTA only; refrigerate/freeze immediately",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3591,7 +4041,16 @@
         "sample_type": "Serum or Plasma",
         "container": "SST or EDTA, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3644,7 +4103,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3696,7 +4164,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3748,7 +4225,16 @@
         "sample_type": "Serum or Plasma",
         "container": "SST or EDTA, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3805,7 +4291,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3859,7 +4354,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3912,7 +4416,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -3966,7 +4479,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -4032,7 +4554,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -4098,7 +4629,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -4177,7 +4717,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -4231,7 +4780,16 @@
         "container": "Finger prick or EDTA, 5-10 μL",
         "minimum_volume_ml": 0.005,
         "fasting_required": false,
-        "collection_notes": "Follow WHO pre-qualification requirements"
+        "collection_notes": "Follow WHO pre-qualification requirements",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -4291,7 +4849,16 @@
         "container": "Glass slide or EDTA, 5-10 μL",
         "minimum_volume_ml": 0.01,
         "fasting_required": false,
-        "collection_notes": "Prepare within 30 minutes"
+        "collection_notes": "Prepare within 30 minutes",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -4342,7 +4909,15 @@
         "sample_type": "Whole Blood",
         "container": "EDTA (purple cap), 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Clotted sample",
+          "Hemolyzed - Severe",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -4412,7 +4987,15 @@
         "sample_type": "Whole Blood",
         "container": "EDTA (purple cap), 2-3 mL",
         "minimum_volume_ml": 1.5,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Clotted sample",
+          "Hemolyzed - Severe",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -4468,7 +5051,15 @@
         "container": "Sterile cup with preservative, 10-30 g",
         "minimum_volume_ml": 10,
         "fasting_required": false,
-        "collection_notes": "Three samples on separate days recommended"
+        "collection_notes": "Three samples on separate days recommended",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Leaked or broken container",
+          "Transport time exceeded",
+          "Contaminated sample"
+        ]
       },
       "result_items": [
         {
@@ -4518,7 +5109,15 @@
         "container": "Sterile cup, 5-10 mL",
         "minimum_volume_ml": 5,
         "fasting_required": false,
-        "collection_notes": "Early morning preferred; three separate days recommended"
+        "collection_notes": "Early morning preferred; three separate days recommended",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Leaked or broken container",
+          "Transport time exceeded",
+          "Contaminated sample"
+        ]
       },
       "result_items": [
         {
@@ -4577,7 +5176,15 @@
         "sample_type": "Sputum or respiratory fluids",
         "container": "Sterile tube with sample buffer",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Leaked or broken container",
+          "Transport time exceeded",
+          "Contaminated sample"
+        ]
       },
       "result_items": [
         {
@@ -4631,7 +5238,15 @@
         "sample_type": "Urine (clean-catch mid-stream)",
         "container": "Sterile cup, 20-30 mL",
         "minimum_volume_ml": 10,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Leaked or broken container",
+          "Transport time exceeded",
+          "Contaminated sample"
+        ]
       },
       "result_items": [
         {
@@ -4713,7 +5328,15 @@
         "sample_type": "Stool",
         "container": "Sterile cup, 5-10 g",
         "minimum_volume_ml": 5,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Leaked or broken container",
+          "Transport time exceeded",
+          "Contaminated sample"
+        ]
       },
       "result_items": [
         {
@@ -4784,7 +5407,15 @@
         "container": "Blood culture bottles (aerobic + anaerobic), 5-10 mL each",
         "minimum_volume_ml": 10,
         "fasting_required": false,
-        "collection_notes": "CRITICAL: Sterile venipuncture before antibiotics"
+        "collection_notes": "CRITICAL: Sterile venipuncture before antibiotics",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Leaked or broken container",
+          "Transport time exceeded",
+          "Contaminated sample"
+        ]
       },
       "result_items": [
         {
@@ -4862,7 +5493,16 @@
         "container": "Viral transport medium",
         "minimum_volume_ml": 1,
         "fasting_required": false,
-        "collection_notes": "Nasopharyngeal preferred"
+        "collection_notes": "Nasopharyngeal preferred",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -4917,7 +5557,16 @@
         "container": "Swab + buffer (kit)",
         "minimum_volume_ml": 0.5,
         "fasting_required": false,
-        "collection_notes": "Results in 10-30 minutes"
+        "collection_notes": "Results in 10-30 minutes",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -4971,7 +5620,16 @@
         "sample_type": "Serum or whole blood (RDT)",
         "container": "SST or capillary, 2-5 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -5037,7 +5695,16 @@
         "sample_type": "Serum or whole blood",
         "container": "SST or capillary drop, 2-5 μL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -5090,7 +5757,15 @@
         "sample_type": "Patient serum + donor RBCs",
         "container": "Patient SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Clotted sample",
+          "Hemolyzed - Severe",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -5144,7 +5819,16 @@
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
         "fasting_required": false,
-        "collection_notes": "Draw before DRE; wait 48 hours after DRE"
+        "collection_notes": "Draw before DRE; wait 48 hours after DRE",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -5199,7 +5883,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -5259,7 +5952,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -5315,7 +6017,16 @@
         "container": "Heparin tube (green cap), 3 mL",
         "minimum_volume_ml": 2,
         "fasting_required": false,
-        "collection_notes": "Process immediately - lactate unstable"
+        "collection_notes": "Process immediately - lactate unstable",
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -5371,7 +6082,15 @@
         "sample_type": "Whole Blood",
         "container": "EDTA (purple cap), 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Clotted sample",
+          "Hemolyzed - Severe",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -5420,7 +6139,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {
@@ -5469,7 +6197,15 @@
         "sample_type": "Urine (clean-catch mid-stream)",
         "container": "Sterile cup, 20-30 mL",
         "minimum_volume_ml": 10,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Leaked or broken container",
+          "Transport time exceeded",
+          "Contaminated sample"
+        ]
       },
       "result_items": [
         {
@@ -5519,7 +6255,16 @@
         "sample_type": "Serum",
         "container": "SST, 3 mL",
         "minimum_volume_ml": 2,
-        "fasting_required": false
+        "fasting_required": false,
+        "rejection_criteria": [
+          "Unlabeled sample",
+          "Mislabeled / Patient ID mismatch",
+          "Incorrect container / wrong tube",
+          "Hemolyzed - Severe",
+          "Lipemic sample",
+          "Icteric sample",
+          "Insufficient quantity (QNS)"
+        ]
       },
       "result_items": [
         {

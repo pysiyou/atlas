@@ -92,14 +92,14 @@ class AuditService:
         user_id: int,
         before_state: Dict[str, Any],
         after_state: Dict[str, Any],
-        rejection_reasons: list[str],
+        rejection_reason: str,
         recollection_required: bool,
         metadata: Optional[Dict[str, Any]] = None,
         comment: Optional[str] = None
     ) -> LabOperationLog:
         """Log a sample rejection operation"""
         full_metadata = {
-            "rejectionReasons": rejection_reasons,
+            "rejectionReason": rejection_reason,
             "recollectionRequired": recollection_required,
             **(metadata or {})
         }
@@ -111,7 +111,7 @@ class AuditService:
             before_state=before_state,
             after_state=after_state,
             metadata=full_metadata,
-            comment=comment or ("; ".join(rejection_reasons) if rejection_reasons else None)
+            comment=comment or rejection_reason
         )
 
     def log_recollection_request(
@@ -325,34 +325,132 @@ class AuditService:
             comment=comment or reason
         )
 
+
+    def log_escalation_trigger(
+        self,
+        operation_type: LabOperationType,
+        order_id: int,
+        test_code: str,
+        test_id: int,
+        ticket_id: int,
+        user_id: int,
+        reason_code: str,
+        before_status: str,
+        metadata: Optional[Dict[str, Any]] = None,
+        comment: Optional[str] = None,
+    ) -> LabOperationLog:
+        """Log automatic escalation trigger (CRIT-VAL, REJ-SAMP, LIMIT-HIT, AMEND-RES)."""
+        full_metadata = {
+            "orderId": order_id,
+            "testCode": test_code,
+            "ticketId": ticket_id,
+            "reasonCode": reason_code,
+            **(metadata or {}),
+        }
+        return self.log_operation(
+            operation_type=operation_type,
+            entity_type="test",
+            entity_id=test_id,
+            user_id=user_id,
+            before_state={"status": before_status},
+            after_state={"status": "escalated", "ticketId": ticket_id},
+            metadata=full_metadata,
+            comment=comment or reason_code,
+        )
+
+    def log_escalation_resolution_force_validate(
+        self,
+        order_id: int,
+        test_code: str,
+        test_id: int,
+        ticket_id: int,
+        user_id: int,
+        validation_notes: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> LabOperationLog:
+        """Log escalation resolution: force validate."""
+        full_metadata = {
+            "orderId": order_id,
+            "testCode": test_code,
+            "ticketId": ticket_id,
+            **(metadata or {}),
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.ESCALATION_RESOLUTION_FORCE_VALIDATE,
+            entity_type="test",
+            entity_id=test_id,
+            user_id=user_id,
+            before_state={"status": "escalated"},
+            after_state={"status": "validated"},
+            metadata=full_metadata,
+            comment=validation_notes,
+        )
+
+    def log_escalation_resolution_authorize_recollect(
+        self,
+        order_id: int,
+        test_code: str,
+        original_test_id: int,
+        new_test_id: int,
+        new_sample_id: int,
+        ticket_id: int,
+        user_id: int,
+        reason: str,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> LabOperationLog:
+        """Log escalation resolution: authorize re-collect."""
+        full_metadata = {
+            "orderId": order_id,
+            "testCode": test_code,
+            "originalTestId": original_test_id,
+            "newTestId": new_test_id,
+            "newSampleId": new_sample_id,
+            "ticketId": ticket_id,
+            "reason": reason,
+            **(metadata or {}),
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.ESCALATION_RESOLUTION_AUTHORIZE_RECOLLECT,
+            entity_type="test",
+            entity_id=original_test_id,
+            user_id=user_id,
+            before_state={"status": "escalated"},
+            after_state={"status": "superseded", "newTestId": new_test_id, "newSampleId": new_sample_id},
+            metadata=full_metadata,
+            comment=reason,
+        )
+
     def log_escalation_resolution_final_reject(
         self,
         order_id: int,
         test_code: str,
         test_id: int,
         sample_id: int,
-        new_sample_id: int,
         user_id: int,
         rejection_reason: str,
+        new_sample_id: Optional[int] = None,
         metadata: Optional[Dict[str, Any]] = None,
         comment: Optional[str] = None
     ) -> LabOperationLog:
-        """Log escalation resolution: final reject / new sample (Path 3)."""
+        """Log escalation resolution: terminal final reject (cancel test)."""
         full_metadata = {
             "orderId": order_id,
             "testCode": test_code,
-            "originalSampleId": sample_id,
-            "newSampleId": new_sample_id,
+            "sampleId": sample_id,
             "rejectionReason": rejection_reason,
             **(metadata or {})
         }
+        after_state = {"status": "rejected"}
+        if new_sample_id is not None:
+            full_metadata["newSampleId"] = new_sample_id
+            after_state["sampleId"] = new_sample_id
         return self.log_operation(
             operation_type=LabOperationType.ESCALATION_RESOLUTION_FINAL_REJECT,
             entity_type="test",
             entity_id=test_id,
             user_id=user_id,
             before_state={"status": "escalated", "sampleId": sample_id},
-            after_state={"status": "rejected", "sampleId": new_sample_id},
+            after_state=after_state,
             metadata=full_metadata,
             comment=comment or rejection_reason
         )

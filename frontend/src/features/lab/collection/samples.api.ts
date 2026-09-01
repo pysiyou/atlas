@@ -15,7 +15,6 @@ import type {
   SampleStatus,
   ContainerType,
   ContainerTopColor,
-  RejectionReason,
 } from '@/types';
 import type { RejectAndRecollectResponse } from '@/types/lab-operations';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
@@ -93,13 +92,13 @@ interface CollectSampleRequest {
 }
 
 interface RejectSampleRequest {
-  rejectionReasons: RejectionReason[];
+  rejectionReason: string;
   rejectionNotes?: string;
   recollectionRequired?: boolean;
 }
 
 interface RejectAndRecollectRequest {
-  rejectionReasons: RejectionReason[];
+  rejectionReason: string;
   rejectionNotes?: string;
   recollectionReason?: string;
 }
@@ -510,7 +509,7 @@ export function useCollectSample() {
  */
 interface RejectSampleData {
   sampleId: string;
-  reasons: RejectionReason[];
+  reason: string;
   notes?: string;
   requireRecollection?: boolean;
 }
@@ -527,21 +526,20 @@ export function useRejectSample() {
   return useMutation({
     mutationFn: async ({
       sampleId,
-      reasons,
+      reason,
       notes,
       requireRecollection = true,
     }: RejectSampleData) => {
       // 1. Reject the sample
       await sampleAPI.reject(sampleId, {
-        rejectionReasons: reasons,
+        rejectionReason: reason,
         rejectionNotes: notes,
         recollectionRequired: requireRecollection,
       });
 
       // 2. Automatically request recollection if required
       if (requireRecollection) {
-        const reasonStr = reasons.map(r => r.replace('_', ' ')).join(', ');
-        const fullReason = notes ? `${reasonStr} - ${notes}` : reasonStr;
+        const fullReason = notes ? `${reason} - ${notes}` : reason;
         await sampleAPI.requestRecollection(sampleId, fullReason);
       }
     },
@@ -604,6 +602,7 @@ export interface SampleRejectionOptionsResponse {
   requireRecollectionDisabledReason?: string;
   orderHasValidatedTests: boolean;
   escalationRequired: boolean;
+  allowedRejectionCriteria?: string[];
 }
 
 export const sampleRejectionAPI = {

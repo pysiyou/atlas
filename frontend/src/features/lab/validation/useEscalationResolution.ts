@@ -3,6 +3,7 @@ import { toast } from '@/app/AppToastBar';
 import { useAuthStore } from '@/app/store';
 import { useResolveEscalation } from '@/features/lab/validation/results.api';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
+import type { EscalationResolveOptions } from './EscalationResolutionActions';
 
 interface UseEscalationResolutionOptions {
   orderId: number;
@@ -28,13 +29,18 @@ export function useEscalationResolution({
     () => ({
       force_validate: 'Results force-validated.',
       authorize_retest: 'Authorized re-test created.',
-      final_reject: 'Sample rejected; new sample requested.',
+      authorize_recollect: 'Re-collect authorized; new sample and test created.',
+      final_reject: 'Test cancelled (final reject).',
     }),
     []
   );
 
   const resolveAsync = useCallback(
-    (action: EscalationResolutionAction, rejectionReasonOrNotes?: string): Promise<void> => {
+    (
+      action: EscalationResolutionAction,
+      rejectionReasonOrNotes?: string,
+      options?: EscalationResolveOptions
+    ): Promise<void> => {
       if (!canResolveEscalation || resolving) return Promise.resolve();
 
       const variables = {
@@ -45,9 +51,10 @@ export function useEscalationResolution({
         rejectionReason:
           action === 'authorize_retest'
             ? rejectionReasonOrNotes?.trim() || 'Authorized re-test (escalation resolution)'
-            : action === 'final_reject'
+            : action === 'authorize_recollect' || action === 'final_reject'
               ? (rejectionReasonOrNotes ?? '').trim()
               : undefined,
+        readBack: options?.readBack,
       };
 
       return resolveEscalation.mutateAsync(variables, {

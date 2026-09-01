@@ -5,8 +5,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import type { ResultRejectionType } from '@/types';
-import type { RejectionResult, RejectionOptionsResponse } from '@/types/lab-operations';
-import { useOrderHasValidatedTests } from '@/features/lab/validation/useOrderHasValidatedTests';
+import type { RejectionResult } from '@/types/lab-operations';
 import { useRejectionManager } from './useRejectionManager';
 import { REJECTION_DIALOG_COPY } from '../components/rejectionDialogConstants';
 
@@ -20,32 +19,15 @@ function buildSubtitle(
     .join(' ');
 }
 
-function getDefaultRejectionType(
-  options: RejectionOptionsResponse | null,
-  isActionEnabled: (action: 're-test' | 're-collect') => boolean,
-  isRecollectBlocked: boolean,
-  isEscalateEnabled: boolean
-): ResultRejectionType {
-  if (options && isActionEnabled('re-test')) return 're-test';
-  if (!isRecollectBlocked) return 're-collect';
-  if (isEscalateEnabled) return 'escalate';
-  return 're-test';
-}
-
 function getIsConfirmDisabled(
   escalationRequired: boolean,
   hasReason: boolean,
-  selectedType: ResultRejectionType,
-  isActionEnabled: (action: 're-test' | 're-collect') => boolean,
-  isRecollectBlocked: boolean,
-  isEscalateEnabled: boolean
+  isRetestEnabled: boolean,
+  hasCriteria: boolean
 ): boolean {
-  if (escalationRequired) return !hasReason;
-  if (!hasReason) return true;
-  if (selectedType === 'escalate') return !isEscalateEnabled;
-  if (selectedType === 're-test') return !isActionEnabled('re-test');
-  if (selectedType === 're-collect') return isRecollectBlocked;
-  return true;
+  if (!hasCriteria || !hasReason) return true;
+  if (escalationRequired) return false;
+  return !isRetestEnabled;
 }
 
 export interface UseRejectionDialogParams {
@@ -67,9 +49,8 @@ export function useRejectionDialog({
   onCancel: _onCancel,
   onSubmittingChange,
 }: UseRejectionDialogParams) {
-  const [reason, setReason] = useState('');
-  const [userOverride, setUserOverride] = useState<ResultRejectionType | null>(null);
-  const orderHasValidatedTests = useOrderHasValidatedTests(orderId);
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [rejectionNotes, setRejectionNotes] = useState('');
 
   const manager = useRejectionManager({ orderId, testCode, autoFetch: true });
   const {
@@ -82,36 +63,19 @@ export function useRejectionDialog({
     isActionEnabled,
     getDisabledReason,
     retestAttemptsRemaining,
-    recollectionAttemptsRemaining,
     escalationRequired,
-    isEscalateEnabled,
     clearError,
   } = manager;
 
-  const isRecollectBlocked = orderHasValidatedTests || !isActionEnabled('re-collect');
-  const recollectBlockedReason = orderHasValidatedTests
-    ? REJECTION_DIALOG_COPY.recollectBlocked
-    : getDisabledReason('re-collect');
-
-  const defaultType = useMemo(
-    () =>
-      getDefaultRejectionType(options, isActionEnabled, isRecollectBlocked, isEscalateEnabled),
-    [options, isActionEnabled, isRecollectBlocked, isEscalateEnabled]
-  );
-
-  const selectedType = userOverride ?? defaultType;
-  const hasReason = reason.trim().length > 0;
+  const isRetestEnabled = isActionEnabled('re-test');
+  const retestDisabledReason = getDisabledReason('re-test');
+  const selectedType: ResultRejectionType = escalationRequired ? 'escalate' : 're-test';
+  const allowedCriteria = options?.allowedRejectionCriteria ?? [];
+  const hasReason = rejectionReason.length > 0;
+  const hasCriteria = allowedCriteria.length > 0;
   const isConfirmDisabled = useMemo(
-    () =>
-      getIsConfirmDisabled(
-        escalationRequired,
-        hasReason,
-        selectedType,
-        isActionEnabled,
-        isRecollectBlocked,
-        isEscalateEnabled
-      ),
-    [escalationRequired, hasReason, selectedType, isActionEnabled, isRecollectBlocked, isEscalateEnabled]
+    () => getIsConfirmDisabled(escalationRequired, hasReason, isRetestEnabled, hasCriteria),
+    [escalationRequired, hasReason, isRetestEnabled, hasCriteria]
   );
 
   useEffect(() => {
@@ -119,9 +83,13 @@ export function useRejectionDialog({
   }, [isRejecting, onSubmittingChange]);
 
   const handleConfirm = async () => {
-    if (!reason.trim()) return;
-    const actionType: ResultRejectionType = escalationRequired ? 'escalate' : selectedType;
-    const result = await rejectWithAction(actionType, reason);
+    if (!rejectionReason) return;
+    const actionType: ResultRejectionType = escalationRequired ? 'escalate' : 're-test';
+    const result = await rejectWithAction(
+      actionType,
+      rejectionReason,
+      rejectionNotes.trim() || undefined
+    );
     if (result) onConfirm(result);
   };
 
@@ -134,24 +102,20 @@ export function useRejectionDialog({
   const copy = escalationRequired ? REJECTION_DIALOG_COPY.escalation : REJECTION_DIALOG_COPY.reject;
 
   return {
-    reason,
-    setReason,
+    rejectionReason,
+    setRejectionReason,
+    rejectionNotes,
+    setRejectionNotes,
     selectedType,
-    setUserOverride,
-    isRecollectBlocked,
-    recollectBlockedReason,
     isConfirmDisabled,
     isLoading,
     isRejecting,
     error,
     options,
     escalationRequired,
-    isEscalateEnabled,
     retestAttemptsRemaining,
-    recollectionAttemptsRemaining,
-    orderHasValidatedTests,
-    isActionEnabled,
-    getDisabledReason,
+    isRetestEnabled,
+    retestDisabledReason,
     handleConfirm,
     handleRetry,
     subtitle,

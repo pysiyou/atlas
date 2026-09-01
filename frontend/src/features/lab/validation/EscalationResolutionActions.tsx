@@ -3,7 +3,7 @@ import { Button, Popover } from '@/components';
 import { cn } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { PopoverForm } from '../components/PopoverForm';
-import type { EscalationResolutionAction } from '@/types/lab-operations';
+import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/lab-operations';
 
 interface ResolutionPopoverProps {
   resolving: boolean;
@@ -19,6 +19,7 @@ interface ResolutionPopoverProps {
   confirmVariant: 'success' | 'danger';
   disabled?: boolean;
   onConfirm: () => Promise<void | boolean>;
+  children?: React.ReactNode;
 }
 
 function ResolutionPopover({
@@ -35,6 +36,7 @@ function ResolutionPopover({
   confirmVariant,
   disabled,
   onConfirm,
+  children,
 }: ResolutionPopoverProps) {
   return (
     <Popover
@@ -62,6 +64,7 @@ function ResolutionPopover({
             isSubmitting={resolving}
             disabled={disabled}
           >
+            {children}
             <div>
               <label className="sr-only" htmlFor={textareaId}>
                 {subtitle}
@@ -82,44 +85,123 @@ function ResolutionPopover({
   );
 }
 
+export interface EscalationResolveOptions {
+  readBack?: CriticalReadBackPayload;
+}
+
 interface EscalationResolutionActionsProps {
   resolving: boolean;
+  requiresReadBack: boolean;
   validationNotesForceValidate: string;
   onValidationNotesForceValidateChange: (value: string) => void;
+  readBackProviderName: string;
+  onReadBackProviderNameChange: (value: string) => void;
+  readBackProviderContact: string;
+  onReadBackProviderContactChange: (value: string) => void;
+  readBackConfirmed: boolean;
+  onReadBackConfirmedChange: (value: boolean) => void;
   reasonAuthorizeRetest: string;
   onReasonAuthorizeRetestChange: (value: string) => void;
+  reasonAuthorizeRecollect: string;
+  onReasonAuthorizeRecollectChange: (value: string) => void;
   reasonFinalReject: string;
   onReasonFinalRejectChange: (value: string) => void;
-  resolveAsync: (action: EscalationResolutionAction, reasonOrNotes?: string) => Promise<void>;
-  onFinalRejectValidationError: () => void;
+  resolveAsync: (
+    action: EscalationResolutionAction,
+    reasonOrNotes?: string,
+    options?: EscalationResolveOptions
+  ) => Promise<void>;
+  onValidationError: (message: string, subtitle: string) => void;
 }
 
 export const EscalationResolutionActions: React.FC<EscalationResolutionActionsProps> = ({
   resolving,
+  requiresReadBack,
   validationNotesForceValidate,
   onValidationNotesForceValidateChange,
+  readBackProviderName,
+  onReadBackProviderNameChange,
+  readBackProviderContact,
+  onReadBackProviderContactChange,
+  readBackConfirmed,
+  onReadBackConfirmedChange,
   reasonAuthorizeRetest,
   onReasonAuthorizeRetestChange,
+  reasonAuthorizeRecollect,
+  onReasonAuthorizeRecollectChange,
   reasonFinalReject,
   onReasonFinalRejectChange,
   resolveAsync,
-  onFinalRejectValidationError,
+  onValidationError,
 }) => (
-  <div className="flex items-center gap-2">
+  <div className="flex flex-wrap items-center gap-2">
     <ResolutionPopover
       resolving={resolving}
       triggerLabel="Force Validate"
       triggerVariant="approve"
       title="Force Validate"
-      subtitle="Validation notes (optional)"
+      subtitle={requiresReadBack ? 'Validation notes (optional)' : 'Validation notes (optional)'}
       textareaId="escalation-force-validate-notes"
       placeholder="e.g. Supervisor override after review"
       value={validationNotesForceValidate}
       onChange={onValidationNotesForceValidateChange}
       confirmLabel="Confirm"
       confirmVariant="success"
-      onConfirm={() => resolveAsync('force_validate', validationNotesForceValidate)}
-    />
+      disabled={requiresReadBack && (!readBackConfirmed || !readBackProviderName.trim() || !readBackProviderContact.trim())}
+      onConfirm={async () => {
+        if (requiresReadBack) {
+          if (!readBackProviderName.trim() || !readBackProviderContact.trim()) {
+            onValidationError(
+              'Provider read-back required',
+              'Enter provider name and contact for critical value release.'
+            );
+            return false;
+          }
+          if (!readBackConfirmed) {
+            onValidationError(
+              'Read-back confirmation required',
+              'Confirm provider read-back before force-validating critical results.'
+            );
+            return false;
+          }
+        }
+        await resolveAsync('force_validate', validationNotesForceValidate, {
+          readBack: requiresReadBack
+            ? {
+                providerName: readBackProviderName.trim(),
+                providerContact: readBackProviderContact.trim(),
+                notifiedAt: new Date().toISOString(),
+                readBackConfirmed: true,
+              }
+            : undefined,
+        });
+      }}
+    >
+      {requiresReadBack && (
+        <div className="mb-3 space-y-2">
+          <input
+            className={cn(inputBase, 'w-full')}
+            placeholder="Provider name"
+            value={readBackProviderName}
+            onChange={e => onReadBackProviderNameChange(e.target.value)}
+          />
+          <input
+            className={cn(inputBase, 'w-full')}
+            placeholder="Provider contact"
+            value={readBackProviderContact}
+            onChange={e => onReadBackProviderContactChange(e.target.value)}
+          />
+          <label className="flex items-center gap-2 text-xs text-text-secondary">
+            <input
+              type="checkbox"
+              checked={readBackConfirmed}
+              onChange={e => onReadBackConfirmedChange(e.target.checked)}
+            />
+            Read-back confirmed with ordering provider
+          </label>
+        </div>
+      )}
+    </ResolutionPopover>
     <ResolutionPopover
       resolving={resolving}
       triggerLabel="Authorize Re-test"
@@ -141,20 +223,44 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
     />
     <ResolutionPopover
       resolving={resolving}
-      triggerLabel="Final Reject / New Sample"
-      triggerVariant="reject"
-      title="Final Reject / New Sample"
+      triggerLabel="Authorize Re-collect"
+      triggerVariant="secondary"
+      title="Authorize Re-collect"
       subtitle="Reason (required)"
+      textareaId="escalation-authorize-recollect-reason"
+      placeholder="e.g. Sample compromised; new collection required"
+      value={reasonAuthorizeRecollect}
+      onChange={onReasonAuthorizeRecollectChange}
+      confirmLabel="Confirm"
+      confirmVariant="success"
+      disabled={!reasonAuthorizeRecollect.trim()}
+      onConfirm={async () => {
+        if (!reasonAuthorizeRecollect.trim()) {
+          onValidationError(
+            'Reason required',
+            'Provide a clinical reason to authorize re-collection.'
+          );
+          return false;
+        }
+        await resolveAsync('authorize_recollect', reasonAuthorizeRecollect.trim());
+      }}
+    />
+    <ResolutionPopover
+      resolving={resolving}
+      triggerLabel="Cancel Test"
+      triggerVariant="reject"
+      title="Cancel Test"
+      subtitle="Clinical reason (required)"
       textareaId="escalation-final-reject-reason"
-      placeholder="e.g. Sample compromised; request new collection"
+      placeholder="e.g. Test no longer clinically indicated"
       value={reasonFinalReject}
       onChange={onReasonFinalRejectChange}
-      confirmLabel="Confirm"
+      confirmLabel="Confirm Cancel"
       confirmVariant="danger"
       disabled={!reasonFinalReject.trim()}
       onConfirm={async () => {
         if (!reasonFinalReject.trim()) {
-          onFinalRejectValidationError();
+          onValidationError('Reason required', 'Provide a clinical reason to cancel this test.');
           return false;
         }
         await resolveAsync('final_reject', reasonFinalReject.trim());
