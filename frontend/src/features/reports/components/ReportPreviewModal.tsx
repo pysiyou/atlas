@@ -7,9 +7,7 @@
 import React from 'react';
 import { Modal, Button, FooterInfo } from '@/components';
 import type { ReportData } from '../types';
-import { format } from 'date-fns';
-import { ICONS } from '@/config/icons';
-import { companyConfig } from '@/config';
+import { MODULE_ICONS } from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users.api';
 import { ReportPreviewHeader } from './ReportPreviewHeader';
 import { ReportPreviewResults } from './ReportPreviewResults';
@@ -47,15 +45,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         </div>
 
         <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]">
-          <FooterInfo
-            icon={ICONS.dataFields.document}
-            text={
-              <>
-                {companyConfig.getReports().footerText} Generated:{' '}
-                {format(new Date(), 'MMM dd, yyyy HH:mm')}
-              </>
-            }
-          />
+          <FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />
           <div className="flex items-center gap-3">
             <Button variant="cancel" size="md" onClick={onClose} disabled={isGenerating}>
               Close

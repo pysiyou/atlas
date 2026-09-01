@@ -4,6 +4,7 @@
  */
 
 import type { FilterOption } from '@/utils/filtering';
+import type { IconName } from '@/components';
 
 /**
  * Filter control types
@@ -145,6 +146,10 @@ export interface FilterSection {
  * Complete filter configuration for a page
  */
 export interface FilterConfig {
+  /** Icon shown in the mobile filter modal footer */
+  footerIcon: IconName;
+  /** Screen-reader label for the footer icon */
+  footerLabel?: string;
   /** Quick filter presets */
   quickFilters?: QuickFilterPreset[];
   /** Primary filter section (always visible) */

@@ -188,3 +188,14 @@ export const getDemographicIcon = (field: string): IconName => getDataFieldIcon(
 
 export const getStatusIcon = (_status?: string): IconName => ICONS.orderStatus;
 
+/** Sidebar module icons — shared by navigation and modal/popover footers */
+export const MODULE_ICONS = {
+  dashboard: 'dashboard' as IconName,
+  patients: 'users-group' as IconName,
+  orders: 'document' as IconName,
+  laboratory: 'flask' as IconName,
+  payments: 'wallet' as IconName,
+  reports: 'document-medicine' as IconName,
+  catalog: 'book' as IconName,
+} as const;
+

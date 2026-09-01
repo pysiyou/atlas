@@ -40,14 +40,11 @@ export const EscalationResolutionFooter: React.FC<EscalationResolutionFooterProp
       {!canResolveEscalation ? (
         <p className="text-sm text-text-tertiary">You do not have permission to resolve escalations.</p>
       ) : (
-        <div className="flex items-center gap-3 w-full justify-between">
-          <p className="text-xs text-text-tertiary">Choose resolution action:</p>
-          <EscalationResolutionActions
-            {...actionProps}
-            resolving={resolving}
-            onValidationError={(title, subtitle) => toast.error({ title, subtitle })}
-          />
-        </div>
+        <EscalationResolutionActions
+          {...actionProps}
+          resolving={resolving}
+          onValidationError={(title, subtitle) => toast.error({ title, subtitle })}
+        />
       )}
     </ModalFooter>
   );

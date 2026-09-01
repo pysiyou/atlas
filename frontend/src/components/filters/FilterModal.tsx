@@ -98,7 +98,12 @@ export const FilterModal: React.FC<FilterModalProps> = ({
         </div>
 
         {/* Footer with Filter Button */}
-        <FilterModalFooter onReset={onClearAll} onApply={handleApplyFilters} />
+        <FilterModalFooter
+          onReset={onClearAll}
+          onApply={handleApplyFilters}
+          icon={config.footerIcon}
+          label={config.footerLabel}
+        />
       </div>
     </Modal>
   );

@@ -8,7 +8,8 @@
 import React from 'react';
 import type { Order } from '@/types';
 import { Modal, FooterInfo, Icon } from '@/components';
-import { displayId, formatCurrency } from '@/utils';
+import { MODULE_ICONS } from '@/config/icons';
+import { formatCurrency } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderModalFooter } from './OrderModalFooter';
@@ -73,10 +74,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
             }
             footerInfo={
               mode === 'edit' && order ? (
-                <FooterInfo
-                  icon={ICONS.dataFields.document}
-                  text={`Editing ${displayId.order(order.orderId)}`}
-                />
+                <FooterInfo icon={MODULE_ICONS.orders} label="Orders" size="md" />
               ) : (
                 <div className="text-base font-normal text-brand">
                   Total: {formatCurrency(totalPrice)}

@@ -17,6 +17,7 @@ import {
   PAYMENT_STATUS_CONFIG,
 } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
+import { MODULE_ICONS } from '@/config/icons';
 import { OrderFiltersInlineControls } from './OrderFiltersInlineControls';
 import type { OrderStatus, PaymentStatus } from '@/types';
 
@@ -75,6 +76,8 @@ export const OrderFilters: React.FC<OrderFiltersProps> = props => {
       activeFilterCount={activeFilterCount}
       inlineControls={<OrderFiltersInlineControls {...props} />}
       modalContent={modalContent}
+      footerIcon={MODULE_ICONS.orders}
+      footerLabel="Orders"
       onReset={() => {
         props.onDateRangeChange(null);
         props.onStatusFiltersChange([]);

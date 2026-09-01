@@ -26,7 +26,7 @@ import {
   type PaymentMethod,
 } from '@/types/payments';
 import { useCreatePayment } from '../api/payments.api';
-import { ICONS } from '@/config/icons';
+import { ICONS, MODULE_ICONS } from '@/config/icons';
 import { getPaymentErrorMessage } from '@/utils/errors';
 
 interface PaymentPopoverProps {
@@ -182,7 +182,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       confirmVariant="primary"
       isSubmitting={submitting}
       disabled={!isValid}
-      footerInfo={<FooterInfo icon={ICONS.dataFields.wallet} text="Processing payment" />}
+      footerInfo={<FooterInfo icon={MODULE_ICONS.payments} label="Payments" />}
     >
       <PaymentReceipt order={order} />
 

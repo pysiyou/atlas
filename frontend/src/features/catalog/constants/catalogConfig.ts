@@ -7,7 +7,7 @@ import type { FilterConfig } from '@/components/filters';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/components/filters';
 import type { TestCategory } from '@/types';
 import { PRICE_RANGE } from '@/utils/constants';
-import { ICONS } from '@/config/icons';
+import { ICONS, MODULE_ICONS } from '@/config/icons';
 
 /**
  * Test category configuration for filter display
@@ -97,6 +97,8 @@ const sampleTypeFilterOptions = SAMPLE_TYPE_VALUES.map(sampleType => ({
  * Catalog filter configuration
  */
 export const catalogFilterConfig: FilterConfig = {
+  footerIcon: MODULE_ICONS.catalog,
+  footerLabel: 'Catalog',
   quickFilters: [],
   primaryFilters: {
     title: 'Filters',

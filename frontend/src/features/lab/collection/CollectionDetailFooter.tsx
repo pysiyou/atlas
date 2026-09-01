@@ -51,7 +51,6 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
   isPending,
   isRejected,
   isCollected,
-  rejectedSample,
   pendingSampleDisplay,
   patientName,
   testNames,
@@ -136,11 +135,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
         statusIcon={
           <Icon name={getSampleStatusIcon('rejected')} className="w-3.5 h-3.5 text-text-disabled" />
         }
-        statusMessage={
-          rejectedSample?.recollectionRequired
-            ? 'Sample rejected - recollection requested'
-            : 'Sample rejected'
-        }
+        statusMessage=""
         statusClassName="text-text-tertiary"
       />
     );

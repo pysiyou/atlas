@@ -4,7 +4,7 @@
 
 import type { FilterConfig, FilterControl } from '@/components/filters';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/components/filters';
-import { ICONS } from '@/config/icons';
+import { ICONS, MODULE_ICONS } from '@/config/icons';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import { SAMPLE_TYPE_VALUES, SAMPLE_TYPE_CONFIG } from '@/types';
 import type { FilterOption } from '@/utils/filtering';
@@ -24,6 +24,8 @@ export interface BuildLabFilterConfigOptions {
 
 export function buildLabFilterConfig(options: BuildLabFilterConfigOptions): FilterConfig {
   return {
+    footerIcon: MODULE_ICONS.laboratory,
+    footerLabel: 'Laboratory',
     quickFilters: [],
     primaryFilters: {
       title: 'Filters',

@@ -36,7 +36,7 @@ import {
 import { getPaymentErrorMessage } from '@/utils/errors';
 import type { OrderPaymentView } from '../types';
 import type { Order } from '@/types';
-import { ICONS } from '@/config/icons';
+import { ICONS, MODULE_ICONS } from '@/config/icons';
 
 interface PaymentDetailModalProps {
   /** Whether the modal is open */
@@ -305,10 +305,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
 
           {/* Footer */}
           <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0">
-            <FooterInfo
-              icon={ICONS.dataFields.wallet}
-              text={isPaid ? 'Payment complete' : 'Processing payment'}
-            />
+            <FooterInfo icon={MODULE_ICONS.payments} label="Payments" size="md" />
             <div className="flex items-center gap-3">
               <Button
                 variant={isPaid ? 'close' : 'cancel'}

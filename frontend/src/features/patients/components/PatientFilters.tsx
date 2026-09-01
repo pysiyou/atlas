@@ -10,6 +10,7 @@ import {
   PATIENT_FILTER_PLACEHOLDERS,
 } from '@/components/filters';
 import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
+import { MODULE_ICONS } from '@/config/icons';
 import { createFilterOptions } from '@/utils/filtering';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import { PatientFiltersInlineControls } from './PatientFiltersInlineControls';
@@ -87,6 +88,8 @@ export const PatientFilters: React.FC<PatientFiltersProps> = props => {
       activeFilterCount={activeFilterCount}
       inlineControls={<PatientFiltersInlineControls {...props} />}
       modalContent={modalContent}
+      footerIcon={MODULE_ICONS.patients}
+      footerLabel="Patients"
       onReset={() => {
         props.onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX]);
         props.onSexFiltersChange([]);
