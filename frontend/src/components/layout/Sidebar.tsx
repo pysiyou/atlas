@@ -20,7 +20,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   isMobile = false,
 }) => {
   const { user: currentUser, logout } = useAuthStore();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const filteredMenuItems = getFilteredMenuItems();
 
   useEffect(() => {
