@@ -744,54 +744,17 @@ class LabOperationsService:
         order_id: int,
         test_code: str,
         user_id: int,
-        action: RejectionAction,
         rejection_reason: str,
         rejection_notes: Optional[str] = None,
     ) -> RejectionResult:
-        """
-        Reject test results with specified action.
-
-        Args:
-            order_id: The order ID
-            test_code: The test code
-            user_id: The user rejecting results
-            action: The rejection action to take
-            rejection_reason: Reason for rejection
-
-        Returns:
-            RejectionResult with operation details
-        """
-        # Get rejection options to validate action is available
-        options = self.get_rejection_options(order_id, test_code)
-
-        # Find the requested action
-        action_info = next((a for a in options.availableActions if a.action == action), None)
-
-        if not action_info:
-            raise LabOperationError(f"Action {action.value} is not available for this test")
-
-        if not action_info.enabled:
-            raise LabOperationError(action_info.disabledReason or f"Action {action.value} is disabled")
-
-        if options.escalationRequired:
-            action = RejectionAction.ESCALATE_TO_SUPERVISOR
-
-        if action == RejectionAction.RECOLLECT_NEW_SAMPLE:
-            raise LabOperationError(
-                "Re-collection during result validation is not allowed. "
-                "When retest limits are reached, the test is escalated for supervisor review.",
-                status_code=400,
-            )
-
-        if action == RejectionAction.RETEST_SAME_SAMPLE:
-            return self._rejection_handler.reject_with_retest(
-                order_id, test_code, user_id, rejection_reason, rejection_notes
-            )
-        if action == RejectionAction.ESCALATE_TO_SUPERVISOR:
-            return self._rejection_handler.reject_with_escalate(
-                order_id, test_code, user_id, rejection_reason, rejection_notes
-            )
-        raise LabOperationError(f"Unknown rejection action: {action.value}")
+        """Reject resulted test — backend auto-selects re-test or escalation."""
+        return self._rejection_handler.reject_validated_result(
+            order_id=order_id,
+            test_code=test_code,
+            user_id=user_id,
+            rejection_reason=rejection_reason,
+            rejection_notes=rejection_notes,
+        )
 
     def resolve_escalation_force_validate(
         self,

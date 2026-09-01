@@ -12,17 +12,12 @@
 import React, { useState } from 'react';
 import { Popover, IconButton, Alert, FooterInfo, SpinnerLoader } from '@/components';
 import { PopoverForm } from './PopoverForm';
+import { MODULE_ICONS } from '@/config/icons';
 import { useRejectionDialog } from '../hooks/useRejectionDialog';
-import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
-import { ICONS } from '@/config/icons';
 import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejectionDialogConstants';
 import { CatalogRejectionFields } from './CatalogRejectionFields';
-import {
-  RejectionDialogLoadingView,
-  RejectionDialogErrorView,
-  RejectionActionCards,
-} from './RejectionDialogViews';
+import { RejectionDialogLoadingView, RejectionDialogErrorView } from './RejectionDialogViews';
 
 /** Re-export views for consumers that render them directly */
 export { RejectionDialogLoadingView, RejectionDialogErrorView } from './RejectionDialogViews';
@@ -31,19 +26,14 @@ export { RejectionDialogLoadingView, RejectionDialogErrorView } from './Rejectio
 export interface RejectionFormState {
   error: string | null;
   escalationRequired: boolean;
-  selectedType: ResultRejectionType;
   rejectionReason: string;
   rejectionNotes: string;
   allowedCriteria: string[];
   criteriaLoading: boolean;
-  retestAttemptsRemaining: number;
-  isRetestEnabled: boolean;
-  retestDisabledReason: string | null;
 }
 
 /** Grouped actions for form body. */
 export interface RejectionFormActions {
-  onSelectType: (type: ResultRejectionType) => void;
   onReasonChange: (value: string) => void;
   onNotesChange: (value: string) => void;
 }
@@ -60,16 +50,12 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
   const {
     error,
     escalationRequired,
-    selectedType,
     rejectionReason,
     rejectionNotes,
     allowedCriteria,
     criteriaLoading,
-    retestAttemptsRemaining,
-    isRetestEnabled,
-    retestDisabledReason,
   } = state;
-  const { onSelectType, onReasonChange, onNotesChange } = actions;
+  const { onReasonChange, onNotesChange } = actions;
   const copy = escalationRequired ? REJECTION_DIALOG_COPY.escalation : REJECTION_DIALOG_COPY.reject;
 
   return (
@@ -80,37 +66,12 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
         </Alert>
       )}
 
-      {escalationRequired && (
-        <Alert variant="danger" className="py-2">
-          <div className="space-y-0.5">
-            <p className="font-normal text-xs">{REJECTION_DIALOG_COPY.escalation.warningTitle}</p>
-            <p className="text-xxs opacity-90 leading-tight">
-              {REJECTION_DIALOG_COPY.escalation.warningBody}
-            </p>
-          </div>
-        </Alert>
-      )}
-
-      {!escalationRequired && (
-        <Alert variant="warning" className="py-2">
-          <div className="space-y-0.5">
-            <p className="font-normal text-xs">{REJECTION_DIALOG_COPY.reject.warningTitle}</p>
-            <p className="text-xxs opacity-90 leading-tight">
-              {REJECTION_DIALOG_COPY.reject.warningBody}
-            </p>
-          </div>
-        </Alert>
-      )}
-
-      {!escalationRequired && (
-        <RejectionActionCards
-          selectedType={selectedType}
-          onSelect={onSelectType}
-          isRetestEnabled={isRetestEnabled}
-          retestDisabledReason={retestDisabledReason}
-          retestAttemptsRemaining={retestAttemptsRemaining}
-        />
-      )}
+      <Alert variant={escalationRequired ? 'danger' : 'warning'} className="py-2">
+        <div className="space-y-0.5">
+          <p className="font-normal text-xs">{copy.warningTitle}</p>
+          <p className="text-xxs opacity-90 leading-tight">{copy.warningBody}</p>
+        </div>
+      </Alert>
 
       <CatalogRejectionFields
         criteria={allowedCriteria}
@@ -153,16 +114,12 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     setRejectionReason,
     rejectionNotes,
     setRejectionNotes,
-    selectedType,
     isConfirmDisabled,
     isLoading,
     isRejecting,
     error,
     options,
     escalationRequired,
-    retestAttemptsRemaining,
-    isRetestEnabled,
-    retestDisabledReason,
     handleConfirm,
     handleRetry,
     subtitle,
@@ -192,23 +149,18 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       confirmVariant="danger"
       isSubmitting={isRejecting}
       disabled={isConfirmDisabled}
-      footerInfo={<FooterInfo icon={ICONS.actions.alertCircle} text={copy.footerInfo} />}
+      footerInfo={<FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
     >
       <RejectionDialogFormBody
         state={{
           error,
           escalationRequired,
-          selectedType,
           rejectionReason,
           rejectionNotes,
           allowedCriteria: options?.allowedRejectionCriteria ?? [],
           criteriaLoading: isLoading,
-          retestAttemptsRemaining,
-          isRetestEnabled,
-          retestDisabledReason,
         }}
         actions={{
-          onSelectType: () => {},
           onReasonChange: setRejectionReason,
           onNotesChange: setRejectionNotes,
         }}

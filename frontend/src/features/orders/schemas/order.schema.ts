@@ -61,7 +61,14 @@ export const orderTestSchema = z.object({
         rejectedBy: z.string(),
         rejectionReason: z.string(),
         rejectionNotes: z.string().optional(),
-        rejectionType: z.enum(['re-test', 're-collect', 'escalate', 'authorize_retest', 'final_reject']),
+        rejectionType: z.enum([
+          're-test',
+          're-collect',
+          'escalate',
+          'authorize_retest',
+          'authorize_recollect',
+          'final_reject',
+        ]),
       })
     )
     .nullable()

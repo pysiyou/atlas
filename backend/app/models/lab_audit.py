@@ -15,7 +15,12 @@ class LabOperationLog(Base):
     __tablename__ = "lab_operation_logs"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    operationType = Column("operation_type", Enum(LabOperationType), nullable=False, index=True)
+    operationType = Column(
+        "operation_type",
+        Enum(LabOperationType, values_callable=lambda x: [e.value for e in x]),
+        nullable=False,
+        index=True,
+    )
     entityType = Column("entity_type", String(20), nullable=False, index=True)  # 'sample', 'test', 'order'
     entityId = Column("entity_id", Integer, nullable=False, index=True)
     performedBy = Column("performed_by", String(50), nullable=False, index=True)

@@ -1,10 +1,8 @@
 /**
- * useRejectionDialog — facade over useRejectionManager with dialog UI state.
- * Single hook for RejectionDialogContent; keeps views presentational.
+ * useRejectionDialog — rejection popover state for result validation.
  */
 
 import { useState, useEffect, useMemo } from 'react';
-import type { ResultRejectionType } from '@/types';
 import type { RejectionResult } from '@/types/lab-operations';
 import { useRejectionManager } from './useRejectionManager';
 import { REJECTION_DIALOG_COPY } from '../components/rejectionDialogConstants';
@@ -17,17 +15,6 @@ function buildSubtitle(
   return [testName, testCode ? `(${testCode})` : '', patientName ? `- ${patientName}` : '']
     .filter(Boolean)
     .join(' ');
-}
-
-function getIsConfirmDisabled(
-  escalationRequired: boolean,
-  hasReason: boolean,
-  isRetestEnabled: boolean,
-  hasCriteria: boolean
-): boolean {
-  if (!hasCriteria || !hasReason) return true;
-  if (escalationRequired) return false;
-  return !isRetestEnabled;
 }
 
 export interface UseRejectionDialogParams {
@@ -59,23 +46,17 @@ export function useRejectionDialog({
     isRejecting,
     error,
     fetchOptions,
-    rejectWithAction,
-    isActionEnabled,
-    getDisabledReason,
-    retestAttemptsRemaining,
+    rejectWithReason,
     escalationRequired,
     clearError,
   } = manager;
 
-  const isRetestEnabled = isActionEnabled('re-test');
-  const retestDisabledReason = getDisabledReason('re-test');
-  const selectedType: ResultRejectionType = escalationRequired ? 'escalate' : 're-test';
   const allowedCriteria = options?.allowedRejectionCriteria ?? [];
   const hasReason = rejectionReason.length > 0;
   const hasCriteria = allowedCriteria.length > 0;
   const isConfirmDisabled = useMemo(
-    () => getIsConfirmDisabled(escalationRequired, hasReason, isRetestEnabled, hasCriteria),
-    [escalationRequired, hasReason, isRetestEnabled, hasCriteria]
+    () => !hasCriteria || !hasReason,
+    [hasCriteria, hasReason]
   );
 
   useEffect(() => {
@@ -84,12 +65,7 @@ export function useRejectionDialog({
 
   const handleConfirm = async () => {
     if (!rejectionReason) return;
-    const actionType: ResultRejectionType = escalationRequired ? 'escalate' : 're-test';
-    const result = await rejectWithAction(
-      actionType,
-      rejectionReason,
-      rejectionNotes.trim() || undefined
-    );
+    const result = await rejectWithReason(rejectionReason, rejectionNotes.trim() || undefined);
     if (result) onConfirm(result);
   };
 
@@ -106,16 +82,12 @@ export function useRejectionDialog({
     setRejectionReason,
     rejectionNotes,
     setRejectionNotes,
-    selectedType,
     isConfirmDisabled,
     isLoading,
     isRejecting,
     error,
     options,
     escalationRequired,
-    retestAttemptsRemaining,
-    isRetestEnabled,
-    retestDisabledReason,
     handleConfirm,
     handleRetry,
     subtitle,

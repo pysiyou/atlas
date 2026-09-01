@@ -33,12 +33,14 @@ type ValidationDecision = ValidationDecisionType;
  * 're-collect': New sample required, triggers sample recollection
  * 'escalate': Escalate to supervisor when retest/recollect limits exceeded
  * 'authorize_retest': Escalation resolved with authorize re-test (history only)
+ * 'authorize_recollect': Escalation resolved with authorize re-collect (history only)
  */
 export type ResultRejectionType =
   | 're-test'
   | 're-collect'
   | 'escalate'
   | 'authorize_retest'
+  | 'authorize_recollect'
   | 'final_reject';
 
 /**
