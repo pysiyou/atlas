@@ -4,8 +4,7 @@
 
 import React from 'react';
 import { CalloutCard, SectionPanel } from '@/components';
-import { InfoBanner, InfoBannerList } from '../components/InfoBanner';
-import { stringsToInfoBannerListRows } from '../utils/infoBannerUtils';
+import { formatArray } from '@/utils';
 
 /** Test detail for requirements display */
 export interface TestDetail {
@@ -86,9 +85,15 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
         )}
 
         {activeTest.rejectionCriteria && activeTest.rejectionCriteria.length > 0 && (
-          <InfoBanner title="Rejection Criteria">
-            <InfoBannerList items={stringsToInfoBannerListRows(activeTest.rejectionCriteria)} />
-          </InfoBanner>
+          <div className="flex items-start gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
+            <div className="flex-1">
+              <div className="text-xs font-normal text-text-secondary mb-1">Rejection Criteria</div>
+              <div className="text-xs text-text-tertiary">
+                {formatArray(activeTest.rejectionCriteria)}
+              </div>
+            </div>
+          </div>
         )}
 
         {activeTest.minimumVolume && (
