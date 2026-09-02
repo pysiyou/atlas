@@ -1,7 +1,7 @@
 """
 Sample Generator Service
-Analyzes order tests and generates required samples.
-Syncs to one sample per (order_id, sample_type): updates existing or creates new; removes duplicates and obsolete.
+Analyzes order tests and syncs one active pending sample per sample type.
+Rejected/collected tubes are kept as history; new tests attach to pending recollection samples.
 """
 from typing import List, Dict, Tuple, Any
 from datetime import datetime, timezone
@@ -31,8 +31,9 @@ def _sample_type_matches(sample: Sample, sample_type_key: str | SampleType) -> b
 
 def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> List[Sample]:
     """
-    Sync samples for an order to desired state: one sample per sample type.
-    Groups active tests by sample type; updates existing samples or creates new; removes duplicates and obsolete.
+    Sync samples for an order: one active pending sample per sample type.
+    Groups active tests by sample type; updates the pending/recollection sample or creates one.
+    Rejected tubes are never reused for new or pending tests.
     """
     order = db.query(Order).filter(Order.orderId == orderId).first()
     if not order:
@@ -80,11 +81,11 @@ def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> Lis
 
         sample_type_enum = _normalize_sample_type(sample_type_key)
         existing = [s for s in existing_samples if _sample_type_matches(s, sample_type_key)]
+        active = _choose_active_sample(existing)
 
-        if len(existing) == 1:
-            sample = existing[0]
+        if active:
             _update_sample(
-                sample,
+                active,
                 test_codes=test_codes,
                 required_volume=total_volume,
                 container_types=list(container_types_set),
@@ -92,25 +93,10 @@ def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> Lis
                 priority=order.priority,
                 updated_by=createdBy,
             )
-            samples.append(sample)
-        elif len(existing) > 1:
-            keep = _choose_sample_to_keep(existing)
-            to_remove = [s for s in existing if s.sampleId != keep.sampleId]
-            _update_sample(
-                keep,
-                test_codes=test_codes,
-                required_volume=total_volume,
-                container_types=list(container_types_set),
-                container_colors=list(container_colors_set),
-                priority=order.priority,
-                updated_by=createdBy,
-            )
-            samples.append(keep)
-            for s in to_remove:
-                if s.status == SampleStatus.PENDING and s.collectedAt is None:
-                    _reassign_order_tests_to_sample(db, orderId, from_sample_id=s.sampleId, to_sample_id=keep.sampleId)
-                    db.delete(s)
+            _dedupe_pending_samples(db, orderId, active, existing)
+            samples.append(active)
         else:
+            latest_rejected = _latest_rejected_sample(existing)
             sample = Sample(
                 orderId=orderId,
                 sampleType=sample_type_enum,
@@ -120,14 +106,19 @@ def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> Lis
                 priority=order.priority,
                 requiredContainerTypes=list(container_types_set),
                 requiredContainerColors=list(container_colors_set),
-                isRecollection=False,
-                recollectionAttempt=1,
-                rejectionHistory=[],
+                isRecollection=latest_rejected is not None,
+                originalSampleId=latest_rejected.sampleId if latest_rejected else None,
+                recollectionAttempt=(
+                    len(latest_rejected.rejectionHistory or []) + 1 if latest_rejected else 1
+                ),
+                rejectionHistory=list(latest_rejected.rejectionHistory or []) if latest_rejected else [],
                 createdBy=str(createdBy),
                 updatedBy=str(createdBy),
             )
             db.add(sample)
             db.flush()
+            if latest_rejected and not latest_rejected.recollectionSampleId:
+                latest_rejected.recollectionSampleId = sample.sampleId
             samples.append(sample)
 
     # Delete obsolete: samples for this order whose type is not in sample_groups
@@ -159,12 +150,48 @@ def _update_sample(
     sample.updatedAt = datetime.now(timezone.utc)
 
 
-def _choose_sample_to_keep(existing: List[Sample]) -> Sample:
-    """Prefer collected sample; else first by sampleId."""
-    collected = [s for s in existing if s.collectedAt is not None]
-    if collected:
-        return collected[0]
-    return min(existing, key=lambda s: s.sampleId)
+def _choose_active_sample(existing: List[Sample]) -> Sample | None:
+    """
+    Return the pending, uncollected sample that should receive active tests.
+
+    Rejected/collected tubes are historical — never reuse them when syncing tests.
+    """
+    pending = [
+        s for s in existing
+        if s.status == SampleStatus.PENDING and s.collectedAt is None
+    ]
+    if not pending:
+        return None
+    recollection = [s for s in pending if s.isRecollection]
+    pool = recollection if recollection else pending
+    return max(pool, key=lambda s: s.sampleId)
+
+
+def _dedupe_pending_samples(
+    db: Session,
+    order_id: int,
+    keep: Sample,
+    existing: List[Sample],
+) -> None:
+    """Remove duplicate pending samples for the same type, reassigning tests to keep."""
+    for s in existing:
+        if (
+            s.sampleId != keep.sampleId
+            and s.status == SampleStatus.PENDING
+            and s.collectedAt is None
+            and _sample_type_matches(s, keep.sampleType)
+        ):
+            _reassign_order_tests_to_sample(
+                db, order_id, from_sample_id=s.sampleId, to_sample_id=keep.sampleId
+            )
+            db.delete(s)
+
+
+def _latest_rejected_sample(existing: List[Sample]) -> Sample | None:
+    rejected = [s for s in existing if s.status == SampleStatus.REJECTED]
+    if not rejected:
+        return None
+    return max(rejected, key=lambda s: s.sampleId)
 
 
 def _reassign_order_tests_to_sample(
@@ -195,12 +222,18 @@ def _delete_pending_samples_for_order(
 
 
 def _link_order_tests_to_samples(db: Session, order_id: int, samples: List[Sample]) -> None:
-    """Set OrderTest.sampleId to the sample that contains that test code for this order."""
+    """Link collectable order tests to the active pending sample for their type."""
+    linkable_statuses = [
+        TestStatus.PENDING,
+        TestStatus.REJECTED,
+        TestStatus.SAMPLE_COLLECTED,
+        TestStatus.IN_PROGRESS,
+    ]
     for sample in samples:
         if not sample.testCodes:
             continue
         db.query(OrderTest).filter(
             OrderTest.orderId == order_id,
             OrderTest.testCode.in_(sample.testCodes),
-            OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED]),
+            OrderTest.status.in_(linkable_statuses),
         ).update({OrderTest.sampleId: sample.sampleId}, synchronize_session="fetch")

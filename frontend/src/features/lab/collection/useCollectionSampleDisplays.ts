@@ -31,9 +31,11 @@ export function useCollectionSampleDisplays({
       if (!order) return;
       const patient = getPatient(order.patientId);
       if (!patient) return;
-      const testsForSample = order.tests.filter(
-        t => sample.testCodes.includes(t.testCode) && isActiveTest(t)
-      );
+      const testsForSample = order.tests.filter(t => {
+        if (!isActiveTest(t)) return false;
+        if (t.sampleId != null) return t.sampleId === sample.sampleId;
+        return sample.testCodes.includes(t.testCode);
+      });
       if (testsForSample.length > 0) {
         const requirements = calculateRequiredSamples(
           testsForSample,

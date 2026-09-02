@@ -37,6 +37,26 @@ from app.services.lab_rejection import (
 # Import shared constants
 from app.services.lab_constants import MAX_RETEST_ATTEMPTS, MAX_RECOLLECTION_ATTEMPTS
 
+# Tests not yet run — suspended when their container is rejected.
+_SAMPLE_REJECT_SUSPEND_STATUSES = {
+    TestStatus.PENDING,
+    TestStatus.SAMPLE_COLLECTED,
+    TestStatus.IN_PROGRESS,
+}
+# Tests with entered or released results — escalate for supervisor review.
+_SAMPLE_REJECT_ESCALATE_STATUSES = {
+    TestStatus.RESULTED,
+    TestStatus.VALIDATED,
+}
+
+
+def _is_final_reject_test(test: OrderTest) -> bool:
+    """True when a supervisor permanently cancelled the test (not sample-reject suspend)."""
+    return any(
+        record.get("rejectionType") == "final_reject"
+        for record in (test.resultRejectionHistory or [])
+    )
+
 
 class LabOperationsService:
     """
@@ -312,26 +332,30 @@ class LabOperationsService:
         sample.recollectionRequired = recollection_required
         sample.updatedBy = str(user_id)  # Convert to string as per model requirement
 
-        # Validated tests on this sample escalate to supervisor (REJ-SAMP).
-        # Non-validated tests are reset to pending when recollection is requested.
+        # Dead tube: suspend non-run tests; escalate tests with entered/released results.
         inactive_statuses = [TestStatus.SUPERSEDED, TestStatus.REMOVED]
         linked_tests = self._get_linked_order_tests(sample, exclude_statuses=inactive_statuses)
-        validated_tests = [t for t in linked_tests if t.status == TestStatus.VALIDATED]
 
         if escalate_linked_tests:
-            for order_test in validated_tests:
-                self.escalation.escalate_test(
-                    order_test,
-                    EscalationReasonCode.REJ_SAMP,
-                    user_id,
-                    metadata={
-                        "rejectionReason": rejection_reason,
-                        "rejectionNotes": rejection_notes,
-                        "sampleRejectionHistory": sample.rejectionHistory,
-                    },
-                    sample_id=sample_id,
-                    from_status=TestStatus.VALIDATED,
-                )
+            for order_test in linked_tests:
+                if order_test.status in _SAMPLE_REJECT_ESCALATE_STATUSES:
+                    self.escalation.escalate_test(
+                        order_test,
+                        EscalationReasonCode.REJ_SAMP,
+                        user_id,
+                        metadata={
+                            "rejectionReason": rejection_reason,
+                            "rejectionNotes": rejection_notes,
+                            "sampleRejectionHistory": sample.rejectionHistory,
+                        },
+                        sample_id=sample_id,
+                        from_status=order_test.status,
+                    )
+                elif order_test.status in _SAMPLE_REJECT_SUSPEND_STATUSES:
+                    TestStateMachine.validate_transition(
+                        order_test.status, TestStatus.REJECTED
+                    )
+                    order_test.status = TestStatus.REJECTED
 
         after_state = self._serialize_sample_state(sample)
 
@@ -367,8 +391,16 @@ class LabOperationsService:
             sample,
             exclude_statuses=[TestStatus.SUPERSEDED, TestStatus.REMOVED],
         )
-        validated_tests_on_sample = [t for t in linked_tests if t.status == TestStatus.VALIDATED]
-        validated_tests_count = len(validated_tests_on_sample)
+        suspended_tests_count = sum(
+            1 for t in linked_tests if t.status in _SAMPLE_REJECT_SUSPEND_STATUSES
+        )
+        resulted_tests_count = sum(
+            1 for t in linked_tests if t.status == TestStatus.RESULTED
+        )
+        validated_tests_count = sum(
+            1 for t in linked_tests if t.status == TestStatus.VALIDATED
+        )
+        completed_tests_count = resulted_tests_count + validated_tests_count
 
         can_require_recollection = recollection_attempts_remaining > 0
 
@@ -391,6 +423,9 @@ class LabOperationsService:
             "requireRecollectionDisabledReason": require_recollection_disabled_reason,
             "orderHasValidatedTests": validated_tests_count > 0,
             "validatedTestsCount": validated_tests_count,
+            "suspendedTestsCount": suspended_tests_count,
+            "resultedTestsCount": resulted_tests_count,
+            "completedTestsCount": completed_tests_count,
             "escalationRequired": rejection_count >= MAX_RECOLLECTION_ATTEMPTS,
             "allowedRejectionCriteria": allowed_criteria,
         }
@@ -467,16 +502,18 @@ class LabOperationsService:
         original_sample.recollectionSampleId = new_sample.sampleId
         original_sample.updatedBy = str(user_id)  # Convert to string as per model requirement
 
-        # Update order tests to point to new sample
-        # IMPORTANT: Exclude SUPERSEDED, REMOVED, and VALIDATED tests - these were replaced by retests,
-        # removed from order, or already validated (immutable). Only update active tests that need the new sample.
+        # Revive sample-reject suspended tests (rejected → pending on new sample).
+        # Skip escalated, resulted, validated, and supervisor-final-cancelled tests.
         if update_order_tests:
             order_tests = self._get_linked_order_tests(
                 original_sample,
-                exclude_statuses=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED],
+                exclude_statuses=[TestStatus.SUPERSEDED, TestStatus.REMOVED],
             )
 
             for test in order_tests:
+                if test.status != TestStatus.REJECTED or _is_final_reject_test(test):
+                    continue
+                TestStateMachine.validate_transition(TestStatus.REJECTED, TestStatus.PENDING)
                 test.status = TestStatus.PENDING
                 test.sampleId = new_sample.sampleId
                 test.results = None
@@ -887,6 +924,63 @@ class LabOperationsService:
             newTestId=new_order_test.id
         )
 
+    def _ensure_recollection_sample(
+        self,
+        rejected_sample: Sample,
+        user_id: int,
+        reason: str,
+        test_code: str,
+        *,
+        skip_recollection_limit: bool = False,
+    ) -> Sample:
+        """Return a pending recollection sample, creating one if needed."""
+        if rejected_sample.recollectionSampleId:
+            new_sample = self._get_sample(rejected_sample.recollectionSampleId)
+            if new_sample.status != SampleStatus.PENDING:
+                raise LabOperationError(
+                    f"Recollection sample {new_sample.sampleId} is not pending"
+                )
+        else:
+            if not skip_recollection_limit:
+                rejection_count = len(rejected_sample.rejectionHistory or [])
+                if rejection_count >= MAX_RECOLLECTION_ATTEMPTS:
+                    raise LabOperationError(
+                        f"Maximum recollection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. "
+                        "Please escalate to supervisor."
+                    )
+
+            recollection_attempt = len(rejected_sample.rejectionHistory or []) + 1
+            new_sample = Sample(
+                orderId=rejected_sample.orderId,
+                sampleType=rejected_sample.sampleType,
+                status=SampleStatus.PENDING,
+                testCodes=list(rejected_sample.testCodes or []),
+                requiredVolume=rejected_sample.requiredVolume,
+                priority=PriorityLevel.URGENT,
+                requiredContainerTypes=rejected_sample.requiredContainerTypes,
+                requiredContainerColors=rejected_sample.requiredContainerColors,
+                isRecollection=True,
+                originalSampleId=rejected_sample.sampleId,
+                recollectionReason=reason,
+                recollectionAttempt=recollection_attempt,
+                rejectionHistory=rejected_sample.rejectionHistory or [],
+                createdAt=datetime.now(timezone.utc),
+                createdBy=str(user_id),
+                updatedBy=str(user_id),
+            )
+            self.db.add(new_sample)
+            self.db.flush()
+            rejected_sample.recollectionSampleId = new_sample.sampleId
+            rejected_sample.updatedBy = str(user_id)
+
+        codes = list(new_sample.testCodes or [])
+        if test_code not in codes:
+            codes.append(test_code)
+            new_sample.testCodes = codes
+            flag_modified(new_sample, "testCodes")
+
+        return new_sample
+
     def resolve_escalation_authorize_recollect(
         self,
         order_id: int,
@@ -900,9 +994,6 @@ class LabOperationsService:
             raise LabOperationError("Cannot authorize re-collect - no sample linked to this test")
 
         sample = self._get_sample(original_test.sampleId)
-        can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
-        if not can_reject:
-            raise LabOperationError(reject_reason)
 
         TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.SUPERSEDED)
 
@@ -920,40 +1011,31 @@ class LabOperationsService:
         original_test.status = TestStatus.SUPERSEDED
         original_test.validationNotes = reason
 
-        rejected_sample = self.reject_sample(
-            sample_id=sample.sampleId,
-            user_id=user_id,
-            rejection_reason=reason,
-            rejection_notes=f"Authorized re-collect (escalation resolution): {reason}",
-            recollection_required=True,
-            commit=False,
-            escalate_linked_tests=False,
-            validate_catalog_criteria=False,
-        )
+        if sample.status == SampleStatus.COLLECTED:
+            rejected_sample = self.reject_sample(
+                sample_id=sample.sampleId,
+                user_id=user_id,
+                rejection_reason=reason,
+                rejection_notes=f"Authorized re-collect (escalation resolution): {reason}",
+                recollection_required=True,
+                commit=False,
+                escalate_linked_tests=False,
+                validate_catalog_criteria=False,
+            )
+        elif sample.status == SampleStatus.REJECTED:
+            rejected_sample = sample
+        else:
+            raise LabOperationError(
+                f"Cannot authorize re-collect for sample with status '{sample.status.value}'"
+            )
 
-        recollection_attempt = len(rejected_sample.rejectionHistory or [])
-        new_sample = Sample(
-            orderId=rejected_sample.orderId,
-            sampleType=rejected_sample.sampleType,
-            status=SampleStatus.PENDING,
-            testCodes=rejected_sample.testCodes,
-            requiredVolume=rejected_sample.requiredVolume,
-            priority=PriorityLevel.URGENT,
-            requiredContainerTypes=rejected_sample.requiredContainerTypes,
-            requiredContainerColors=rejected_sample.requiredContainerColors,
-            isRecollection=True,
-            originalSampleId=rejected_sample.sampleId,
-            recollectionReason=reason,
-            recollectionAttempt=recollection_attempt,
-            rejectionHistory=rejected_sample.rejectionHistory or [],
-            createdAt=datetime.now(timezone.utc),
-            createdBy=str(user_id),
-            updatedBy=str(user_id),
+        new_sample = self._ensure_recollection_sample(
+            rejected_sample,
+            user_id,
+            reason,
+            test_code,
+            skip_recollection_limit=True,
         )
-        self.db.add(new_sample)
-        self.db.flush()
-
-        rejected_sample.recollectionSampleId = new_sample.sampleId
 
         new_order_test = OrderTest(
             orderId=order_id,

@@ -240,12 +240,11 @@ export const getOrderStepStatus = (order: Order, stepStatus: string): boolean =>
 /**
  * Check if an order contains any validated tests.
  *
- * This is used to prevent contradictory actions:
- * - Sample rejection when a test from the order is already validated
- * - Re-collect option during result validation when another test is validated
+ * Used to gate re-collect during result validation when another test on the
+ * order is already validated (authorize-recollect path).
  *
- * Once a test is validated, the sample cannot be rejected or recollected
- * because it would invalidate the already-validated results.
+ * Sample rejection is still allowed when validated tests exist — those tests
+ * escalate to supervisor review rather than blocking rejection.
  *
  * @param order - The order to check
  * @returns True if the order has at least one validated test

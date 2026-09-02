@@ -57,28 +57,32 @@ export function useEscalationResolution({
         readBack: options?.readBack,
       };
 
-      return resolveEscalation.mutateAsync(variables, {
-        onSuccess: async () => {
-          await onResolved();
-          onClose();
-          toast.success({
-            title: messages[action] ?? 'Operation completed.',
-            subtitle: 'The escalation has been resolved and the test status updated.',
-          });
-          onResetForm();
-        },
-        onError: err => {
-          const apiError = err as { message?: string };
-          const msg =
-            apiError && typeof apiError === 'object' && typeof apiError.message === 'string'
-              ? apiError.message
-              : 'Failed to resolve escalation.';
-          toast.error({
-            title: msg,
-            subtitle: 'The escalation could not be resolved. Check the details and try again.',
-          });
-        },
-      }).then(() => {});
+      return resolveEscalation
+        .mutateAsync(variables, {
+          onSuccess: async () => {
+            await onResolved();
+            onClose();
+            toast.success({
+              title: messages[action] ?? 'Operation completed.',
+              subtitle: 'The escalation has been resolved and the test status updated.',
+            });
+            onResetForm();
+          },
+          onError: err => {
+            const apiError = err as { message?: string };
+            const msg =
+              apiError && typeof apiError === 'object' && typeof apiError.message === 'string'
+                ? apiError.message
+                : 'Failed to resolve escalation.';
+            toast.error({
+              title: msg,
+              subtitle: 'The escalation could not be resolved. Check the details and try again.',
+            });
+          },
+        })
+        .catch(() => {
+          // Error already surfaced via onError toast.
+        });
     },
     [
       orderId,

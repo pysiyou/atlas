@@ -65,6 +65,15 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
     enabled: Boolean(numericSampleId),
   });
 
+  const canRequireRecollection = options?.canRequireRecollection ?? true;
+
+  // When recollection limit is reached, force reject-only (PATCH /reject, not reject-and-recollect).
+  useEffect(() => {
+    if (!canRequireRecollection) {
+      setRequireRecollection(false);
+    }
+  }, [canRequireRecollection]);
+
   const criteria = useMemo(() => {
     if (options?.allowedRejectionCriteria?.length) {
       return options.allowedRejectionCriteria;
@@ -76,9 +85,10 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
     options?.recollectionAttemptsUsed ?? rejectionHistoryCount;
   const maxAttempts = options?.maxRecollectionAttempts ?? LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS;
   const escalationRequired = options?.escalationRequired ?? rejectionHistoryCount >= maxAttempts;
-  const canRequireRecollection = options?.canRequireRecollection ?? true;
-  const validatedTestsCount =
-    options?.validatedTestsCount ?? (options?.orderHasValidatedTests ? 1 : 0);
+  const suspendedTestsCount = options?.suspendedTestsCount ?? 0;
+  const completedTestsCount =
+    options?.completedTestsCount ??
+    (options?.validatedTestsCount ?? (options?.orderHasValidatedTests ? 1 : 0));
   const criteriaLoading = catalogLoading || optionsLoading;
 
   const isValid = isRejectionFormValid(rejectionReason, criteria);
@@ -86,13 +96,14 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
   const handleConfirm = useCallback(async () => {
     if (!isValid) return;
+    const willRecollect = requireRecollection && canRequireRecollection;
     setLocalSubmitting(true);
     try {
-      await onConfirm(rejectionReason, notes, requireRecollection);
+      await onConfirm(rejectionReason, notes, willRecollect);
     } finally {
       setLocalSubmitting(false);
     }
-  }, [isValid, rejectionReason, notes, requireRecollection, onConfirm]);
+  }, [isValid, rejectionReason, notes, requireRecollection, canRequireRecollection, onConfirm]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -133,7 +144,8 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
         escalationRequired={escalationRequired}
         rejectionHistoryUsed={rejectionHistoryUsed}
         patientName={patientName}
-        validatedTestsCount={validatedTestsCount}
+        suspendedTestsCount={suspendedTestsCount}
+        completedTestsCount={completedTestsCount}
       />
 
       <RejectionHistorySection
@@ -215,8 +227,12 @@ export const CollectionRejectionPopover: React.FC<CollectionRejectionPopoverProp
           onCancel={close}
           isSubmitting={isSubmitting}
           onConfirm={async (rejectionReason, notes, requireRecollection) => {
-            await onReject(rejectionReason, notes, requireRecollection);
-            close();
+            try {
+              await onReject(rejectionReason, notes, requireRecollection);
+              close();
+            } catch {
+              // Error toast handled by useRejectSampleHandler; keep popover open for retry.
+            }
           }}
         />
       </div>
