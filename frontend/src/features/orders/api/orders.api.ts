@@ -424,7 +424,7 @@ export function useOrderSummary(orderId: string | undefined) {
       patientName: order.patientName,
       totalTests: order.tests.length,
       pendingTests: order.tests.filter(t =>
-        ['pending', 'sample-collected', 'in-progress', 'resulted'].includes(t.status)
+        ['pending', 'sample-collected', 'resulted', 'suspended', 'escalated'].includes(t.status)
       ).length,
       completedTests: order.tests.filter(t => t.status === 'validated').length,
       totalAmount: order.totalPrice,

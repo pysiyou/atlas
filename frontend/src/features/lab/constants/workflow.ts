@@ -38,10 +38,10 @@ export const LAB_SAMPLE_STATUSES = {
 export const LAB_TEST_STATUSES = {
   PENDING: 'pending' as TestStatus,
   SAMPLE_COLLECTED: 'sample-collected' as TestStatus,
-  IN_PROGRESS: 'in-progress' as TestStatus,
   RESULTED: 'resulted' as TestStatus,
   VALIDATED: 'validated' as TestStatus,
-  REJECTED: 'rejected' as TestStatus,
+  SUSPENDED: 'suspended' as TestStatus,
+  CANCELLED: 'cancelled' as TestStatus,
   ESCALATED: 'escalated' as TestStatus,
   SUPERSEDED: 'superseded' as TestStatus,
   REMOVED: 'removed' as TestStatus,
@@ -117,7 +117,7 @@ export const entryFilterConfig = buildLabFilterConfig({
       selectAllLabel: 'All statuses',
       icon: ICONS.testStatus,
       placeholder: SHARED_FILTER_PLACEHOLDERS.status,
-      helpText: 'Filter by test status: Sample Collected or In Progress.',
+      helpText: 'Filter by test status: Sample Collected.',
     },
   ],
 });

@@ -79,13 +79,29 @@ class RejectionReason(str, enum.Enum):
 class TestStatus(str, enum.Enum):
     PENDING = "pending"
     SAMPLE_COLLECTED = "sample-collected"
-    IN_PROGRESS = "in-progress"
     RESULTED = "resulted"
     VALIDATED = "validated"
-    REJECTED = "rejected"
+    SUSPENDED = "suspended"
+    CANCELLED = "cancelled"
     ESCALATED = "escalated"
     SUPERSEDED = "superseded"
     REMOVED = "removed"
+
+class QualityStage(str, enum.Enum):
+    COLLECTION = "collection"
+    VALIDATION = "validation"
+    ENTRY = "entry"
+
+class QualityDomain(str, enum.Enum):
+    SPECIMEN = "specimen"
+    ANALYTICAL = "analytical"
+    CLINICAL = "clinical"
+
+class RemedyType(str, enum.Enum):
+    RETRY_SAME_SAMPLE = "retry_same_sample"
+    RECOLLECT = "recollect"
+    ESCALATE = "escalate"
+    CANCEL = "cancel"
 
 class OrderStatus(str, enum.Enum):
     ORDERED = "ordered"
@@ -144,9 +160,7 @@ class LabOperationType(str, enum.Enum):
     SAMPLE_RECOLLECTION_REQUEST = "sample_recollection_request"
     RESULT_ENTRY = "result_entry"
     RESULT_VALIDATION_APPROVE = "result_validation_approve"
-    RESULT_VALIDATION_REJECT_RETEST = "result_validation_reject_retest"
-    RESULT_VALIDATION_REJECT_RECOLLECT = "result_validation_reject_recollect"
-    RESULT_VALIDATION_ESCALATE = "result_validation_escalate"
+    QUALITY_ISSUE_REPORTED = "quality_issue_reported"
     ESCALATION_RESOLUTION_AUTHORIZE_RETEST = "escalation_resolution_authorize_retest"
     ESCALATION_RESOLUTION_AUTHORIZE_RECOLLECT = "escalation_resolution_authorize_recollect"
     ESCALATION_RESOLUTION_FORCE_VALIDATE = "escalation_resolution_force_validate"
@@ -154,7 +168,8 @@ class LabOperationType(str, enum.Enum):
     ESCALATION_TRIGGER_REJ_SAMP = "escalation_trigger_rej_samp"
     ESCALATION_TRIGGER_LIMIT_HIT = "escalation_trigger_limit_hit"
     ESCALATION_TRIGGER_AMEND_RES = "escalation_trigger_amend_res"
-    ESCALATION_RESOLUTION_FINAL_REJECT = "escalation_resolution_final_reject"
+    ESCALATION_RESOLUTION_CANCEL_TEST = "escalation_resolution_cancel_test"
+    ESCALATION_RESOLUTION_APPLY_AMENDMENT = "escalation_resolution_apply_amendment"
     ORDER_STATUS_CHANGE = "order_status_change"
     TEST_REMOVED = "test_removed"
     TEST_ADDED = "test_added"
@@ -162,14 +177,9 @@ class LabOperationType(str, enum.Enum):
     CRITICAL_VALUE_NOTIFIED = "critical_value_notified"
     CRITICAL_VALUE_ACKNOWLEDGED = "critical_value_acknowledged"
 
-class RejectionAction(str, enum.Enum):
-    RETEST_SAME_SAMPLE = "retest_same_sample"
-    RECOLLECT_NEW_SAMPLE = "recollect_new_sample"
-    ESCALATE_TO_SUPERVISOR = "escalate"
-
-class RejectionSource(str, enum.Enum):
-    SAMPLE_COLLECTION = "sample_collection"
-    RESULT_VALIDATION = "result_validation"
+class QualityIssueTargetType(str, enum.Enum):
+    SAMPLE = "sample"
+    TEST = "test"
 
 class EscalationReasonCode(str, enum.Enum):
     CRIT_VAL = "CRIT-VAL"
@@ -189,4 +199,5 @@ class EscalationResolutionAction(str, enum.Enum):
     FORCE_VALIDATE = "force_validate"
     AUTHORIZE_RETEST = "authorize_retest"
     AUTHORIZE_RECOLLECT = "authorize_recollect"
-    FINAL_REJECT = "final_reject"
+    APPLY_AMENDMENT = "apply_amendment"
+    CANCEL_TEST = "cancel_test"

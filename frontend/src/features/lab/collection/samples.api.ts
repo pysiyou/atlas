@@ -9,7 +9,6 @@ import { useCallback, useMemo, useState } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useInvalidateQueryKey } from '@/lib/query/invalidate';
-import { invalidateResultQueries } from '@/lib/query/invalidate';
 import { useAuthStore } from '@/app/store';
 import type {
   Sample,
@@ -17,7 +16,6 @@ import type {
   ContainerType,
   ContainerTopColor,
 } from '@/types';
-import type { RejectAndRecollectResponse } from '@/types/lab-operations';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 
 export type { PaginatedResponse, PaginationMeta };
@@ -92,18 +90,6 @@ interface CollectSampleRequest {
   collectionNotes?: string;
 }
 
-interface RejectSampleRequest {
-  rejectionReason: string;
-  rejectionNotes?: string;
-  recollectionRequired?: boolean;
-}
-
-interface RejectAndRecollectRequest {
-  rejectionReason: string;
-  rejectionNotes?: string;
-  recollectionReason?: string;
-}
-
 export const sampleAPI = {
   /**
    * Get all samples with optional filters (requests up to backend max so tables can show full list)
@@ -163,43 +149,6 @@ export const sampleAPI = {
         : {}),
     };
     return apiClient.patch<Sample>(`/samples/${sampleId}/collect`, body);
-  },
-
-  /**
-   * Reject a sample
-   */
-  async reject(sampleId: string, data: RejectSampleRequest): Promise<Sample> {
-    return apiClient.patch<Sample>(`/samples/${sampleId}/reject`, data);
-  },
-
-  /**
-   * Request recollection for a rejected sample
-   */
-  async requestRecollection(sampleId: string, reason: string): Promise<Sample> {
-    return apiClient.post<Sample>(`/samples/${sampleId}/request-recollection`, { reason });
-  },
-
-  /**
-   * Atomically reject a sample and request recollection.
-   * Combines two operations into one transaction.
-   *
-   * This is useful when you know immediately that a sample needs to be rejected
-   * and a new collection is required.
-   *
-   * - Rejects the current sample with provided reasons
-   * - Creates a new recollection sample in PENDING status
-   * - Links the two samples together
-   * - Updates order tests to point to the new sample
-   * - Escalates priority to urgent
-   */
-  async rejectAndRecollect(
-    sampleId: string,
-    data: RejectAndRecollectRequest
-  ): Promise<RejectAndRecollectResponse> {
-    return apiClient.post<RejectAndRecollectResponse>(
-      `/samples/${sampleId}/reject-and-recollect`,
-      data
-    );
   },
 };
 
@@ -506,70 +455,6 @@ export function useCollectSample() {
 }
 
 /**
- * Reject sample request data
- */
-interface RejectSampleData {
-  sampleId: string;
-  reason: string;
-  notes?: string;
-  requireRecollection?: boolean;
-}
-
-/**
- * Mutation hook to reject a sample.
- * Invalidates relevant caches on success.
- *
- * @returns Mutation result with mutate function
- */
-export function useRejectSample() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      sampleId,
-      reason,
-      notes,
-      requireRecollection = true,
-    }: RejectSampleData) => {
-      if (requireRecollection) {
-        await sampleAPI.rejectAndRecollect(sampleId, {
-          rejectionReason: reason,
-          rejectionNotes: notes,
-          recollectionReason: notes ? `${reason} - ${notes}` : reason,
-        });
-        return;
-      }
-
-      await sampleAPI.reject(sampleId, {
-        rejectionReason: reason,
-        rejectionNotes: notes,
-        recollectionRequired: false,
-      });
-    },
-    onSuccess: () => {
-      invalidateResultQueries(queryClient, { pendingEscalation: true });
-    },
-  });
-}
-
-/**
- * Mutation hook to request sample recollection.
- *
- * @returns Mutation result with mutate function
- */
-export function useRequestRecollection() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ sampleId, reason }: { sampleId: string; reason: string }) =>
-      sampleAPI.requestRecollection(sampleId, reason),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
-    },
-  });
-}
-
-/**
  * Hook to invalidate sample caches.
  *
  * @returns Object with invalidate functions
@@ -589,32 +474,3 @@ export function useInvalidateSamples() {
   return { invalidateAll, invalidateSample, invalidateByOrder };
 }
 
-
-/**
- * Sample rejection options API.
- */
-
-export interface SampleRejectionOptionsResponse {
-  canReject: boolean;
-  rejectDisabledReason?: string;
-  recollectionAttemptsUsed: number;
-  recollectionAttemptsRemaining: number;
-  maxRecollectionAttempts: number;
-  canRequireRecollection: boolean;
-  requireRecollectionDisabledReason?: string;
-  orderHasValidatedTests: boolean;
-  validatedTestsCount?: number;
-  suspendedTestsCount?: number;
-  resultedTestsCount?: number;
-  completedTestsCount?: number;
-  escalationRequired: boolean;
-  allowedRejectionCriteria?: string[];
-}
-
-export const sampleRejectionAPI = {
-  getOptions(sampleId: number): Promise<SampleRejectionOptionsResponse> {
-    return apiClient.get<SampleRejectionOptionsResponse>(
-      `/samples/${sampleId}/rejection-options`
-    );
-  },
-};

@@ -3,18 +3,16 @@
  * Transforms between form structure (with testCodes) and API structure (with tests)
  */
 
-import type { OrderTest } from '@/types';
-import type { OrderFormInput, Order } from '../schemas/order.schema';
-import { getActiveTests } from './orderCalculator';
+import type { Order, OrderTest } from '@/types';
+import type { OrderFormInput } from '../schemas/order.schema';
 
-/**
- * Unique active catalog test codes for order edit forms.
- * Excludes superseded/removed rows and dedupes retest chains that share a code.
- */
-export function getActiveOrderTestCodes(tests: OrderTest[] = []): string[] {
+type OrderTestCodeSource = Pick<OrderTest, 'testCode' | 'status'>;
+
+export function getActiveOrderTestCodes(tests: OrderTestCodeSource[] = []): string[] {
   const seen = new Set<string>();
   const codes: string[] = [];
-  for (const test of getActiveTests(tests)) {
+  for (const test of tests) {
+    if (test.status === 'superseded' || test.status === 'removed') continue;
     if (!seen.has(test.testCode)) {
       seen.add(test.testCode);
       codes.push(test.testCode);

@@ -2,9 +2,9 @@
  * Test Catalog and Laboratory Types
  */
 
-import type { ContainerType, ContainerTopColor, SampleType, RejectionRecord } from './sample';
+import type { ContainerType, ContainerTopColor, SampleType } from './sample';
 import type { Patient } from './patient';
-import type { TestResult, ResultRejectionRecord } from './order';
+import type { TestResult } from './order';
 
 /**
  * Test category types - expanded to match catalog categories
@@ -236,14 +236,12 @@ export interface TestWithContext {
   isRetest?: boolean;
   retestOfTestId?: number;
   retestNumber?: number;
-  resultRejectionHistory?: ResultRejectionRecord[];
 
   // Sample recollection tracking fields (for sample re-collect flow)
   sampleIsRecollection?: boolean;
   sampleOriginalSampleId?: number;
   sampleRecollectionReason?: string;
   sampleRecollectionAttempt?: number;
-  sampleRejectionHistory?: RejectionRecord[];
 
   // Escalation ticket fields (from pending-escalation API)
   ticketId?: number;

@@ -23,7 +23,6 @@ import {
   StatusBadgeRow,
 } from '../components/LabDetailModal';
 import { RejectionDialog } from '../components/RejectionDialog';
-import { RejectionHistorySection } from '../components/RejectionHistorySection';
 import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
 import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
 import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';
@@ -36,7 +35,7 @@ import {
   EntryInfoLine,
 } from '../components/StatusBadges';
 import type { TestWithContext } from '@/types';
-import type { RejectionResult } from '@/types/lab-operations';
+import type { QualityIssueResult } from '@/types/lab-operations';
 
 interface ValidationDetailModalProps {
   isOpen: boolean;
@@ -47,7 +46,7 @@ interface ValidationDetailModalProps {
   onCommentsChange: (commentKey: string, value: string) => void;
   onApprove: () => void;
   /** Called after RejectionDialog completes (API already called). */
-  onReject: (result: RejectionResult) => void;
+  onReject: (result: QualityIssueResult) => void;
 }
 
 // Large component is necessary for comprehensive validation detail modal with result display, validation actions, and conditional rendering
@@ -93,10 +92,8 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   const {
     isRetest,
     retestNumber,
-    isResultRecollection,
-    hasResultRejectionHistory,
-    resultRejectionHistory,
-    rejectionHistoryTitle,
+    showRecollectionBadge,
+    sampleRecollectionAttempt,
   } = deriveTestRejectionContext(test);
 
   /**
@@ -105,8 +102,8 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   const headerExtraBadges = (
     <>
       {isRetest && <RetestBadge retestNumber={retestNumber} />}
-      {isResultRecollection && !isRetest && (
-        <RecollectionAttemptBadge attemptNumber={resultRejectionHistory.length} />
+      {showRecollectionBadge && !isRetest && (
+        <RecollectionAttemptBadge attemptNumber={sampleRecollectionAttempt} />
       )}
       {hasFlags && <FlagCountBadge count={flagCount} />}
     </>
@@ -118,8 +115,8 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   const validationSectionHeaderRight = (
     <>
       {isRetest && <RetestBadge retestNumber={retestNumber} className="mr-2" />}
-      {isResultRecollection && !isRetest && (
-        <RecollectionAttemptBadge attemptNumber={resultRejectionHistory.length} className="mr-2" />
+      {showRecollectionBadge && !isRetest && (
+        <RecollectionAttemptBadge attemptNumber={sampleRecollectionAttempt} className="mr-2" />
       )}
       {hasFlags && <ReviewRequiredBadge />}
     </>
@@ -161,7 +158,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       footer={
         <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
           <RejectionDialog
-            orderId={test.orderId}
+            orderTestId={test.id!}
             testCode={test.testCode}
             testName={test.testName}
             patientName={test.patientName}
@@ -203,15 +200,6 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       )}
 
       {/* Previous Rejection History - show for both retests and recollections */}
-      {hasResultRejectionHistory && (
-        <RejectionHistorySection
-          variant="result"
-          title={rejectionHistoryTitle}
-          rejectionHistory={resultRejectionHistory}
-          showOnlyLatest={false}
-        />
-      )}
-
       {/* Test Details - using declarative sections config */}
       <DetailGrid
         sections={[

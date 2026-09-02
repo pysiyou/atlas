@@ -51,7 +51,6 @@ export function getLabTabForTestStatus(status: TestStatus): LabTabId | null {
     case 'pending':
       return 'collection';
     case 'sample-collected':
-    case 'in-progress':
       return 'entry';
     case 'resulted':
       return 'validation';

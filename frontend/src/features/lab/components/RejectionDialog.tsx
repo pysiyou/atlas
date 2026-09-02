@@ -14,7 +14,7 @@ import { Popover, IconButton, Alert, FooterInfo, SpinnerLoader } from '@/compone
 import { PopoverForm } from './PopoverForm';
 import { MODULE_ICONS } from '@/config/icons';
 import { useRejectionDialog } from '../hooks/useRejectionDialog';
-import type { RejectionResult } from '@/types/lab-operations';
+import type { QualityIssueResult } from '@/types/lab-operations';
 import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejectionDialogConstants';
 import { CatalogRejectionFields } from './CatalogRejectionFields';
 import { RejectionDialogLoadingView, RejectionDialogErrorView } from './RejectionDialogViews';
@@ -89,21 +89,19 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
 };
 
 interface RejectionDialogContentProps {
-  orderId: string | number;
-  testCode: string;
+  orderTestId: number;
   testName?: string;
+  testCode?: string;
   patientName?: string;
-  onConfirm: (result: RejectionResult) => void;
+  onConfirm: (result: QualityIssueResult) => void;
   onCancel: () => void;
-  /** Notify parent when submitting state changes (for preventClose). */
   onSubmittingChange?: (submitting: boolean) => void;
 }
 
-/** Orchestrator: loading → error → form. No long JSX, no inline copy. */
 export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
-  orderId,
-  testCode,
+  orderTestId,
   testName,
+  testCode,
   patientName,
   onConfirm,
   onCancel,
@@ -125,9 +123,9 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     subtitle,
     copy,
   } = useRejectionDialog({
-    orderId,
-    testCode,
+    orderTestId,
     testName,
+    testCode,
     patientName,
     onConfirm,
     onCancel,
@@ -157,7 +155,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
           escalationRequired,
           rejectionReason,
           rejectionNotes,
-          allowedCriteria: options?.allowedRejectionCriteria ?? [],
+          allowedCriteria: options?.allowedCriteria ?? [],
           criteriaLoading: isLoading,
         }}
         actions={{
@@ -170,16 +168,16 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
 };
 
 interface RejectionDialogProps {
-  orderId: string | number;
-  testCode: string;
+  orderTestId: number;
+  testCode?: string;
   testName?: string;
   patientName?: string;
-  onReject: (result: RejectionResult) => void;
+  onReject: (result: QualityIssueResult) => void;
   trigger?: React.ReactNode;
 }
 
 export const RejectionDialog: React.FC<RejectionDialogProps> = ({
-  orderId,
+  orderTestId,
   testCode,
   testName,
   patientName,
@@ -202,7 +200,7 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
       {({ close }) => (
         <div data-popover-content onClick={e => e.stopPropagation()}>
           <RejectionDialogContent
-            orderId={orderId}
+            orderTestId={orderTestId}
             testCode={testCode}
             testName={testName}
             patientName={patientName}

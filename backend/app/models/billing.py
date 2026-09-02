@@ -1,10 +1,10 @@
 """
 Billing Models - Invoice, Payment, InsuranceClaim - All fields use camelCase
 """
-from sqlalchemy import Column, String, Integer, Float, DateTime, JSON, Enum, ForeignKey, Boolean, text
+from sqlalchemy import Column, String, Integer, Float, DateTime, JSON, ForeignKey, Boolean, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from app.database import Base
+from app.database import Base, contract_enum
 from app.schemas.enums import PaymentStatus, PaymentMethod, ClaimStatus
 
 
@@ -26,7 +26,7 @@ class Invoice(Base):
     total = Column(Float, nullable=False)
 
     # Payment tracking
-    paymentStatus = Column("payment_status", Enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
+    paymentStatus = Column("payment_status", contract_enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
     amountPaid = Column("amount_paid", Float, default=0.0)
     amountDue = Column("amount_due", Float, nullable=False)
 
@@ -44,7 +44,7 @@ class Payment(Base):
     invoiceId = Column("invoice_id", Integer, ForeignKey("invoices.invoice_id"), nullable=True, index=True)
 
     amount = Column(Float, nullable=False)
-    paymentMethod = Column("payment_method", Enum(PaymentMethod), nullable=False)
+    paymentMethod = Column("payment_method", contract_enum(PaymentMethod), nullable=False)
 
     paidAt = Column("paid_at", DateTime(timezone=True), nullable=False)
     receivedBy = Column("received_by", String, nullable=False)
@@ -73,7 +73,7 @@ class InsuranceClaim(Base):
     claimAmount = Column("claim_amount", Float, nullable=False)
     approvedAmount = Column("approved_amount", Float, nullable=True)
 
-    claimStatus = Column("claim_status", Enum(ClaimStatus), nullable=False, default=ClaimStatus.SUBMITTED)
+    claimStatus = Column("claim_status", contract_enum(ClaimStatus), nullable=False, default=ClaimStatus.SUBMITTED)
 
     submittedDate = Column("submitted_date", DateTime(timezone=True), nullable=False)
     processedDate = Column("processed_date", DateTime(timezone=True), nullable=True)

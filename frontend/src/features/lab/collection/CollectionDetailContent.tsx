@@ -7,8 +7,9 @@ import React from 'react';
 import { Icon, SectionPanel } from '@/components';
 import type { Sample, RejectedSample, Test } from '@/types';
 import { CollectionRequirementsSection } from './CollectionRequirementsSection';
-import { RejectionHistorySection } from '../components/RejectionHistorySection';
 import { DetailGrid, type DetailGridSectionConfig } from '../components/LabDetailModal';
+import { formatDate } from '@/utils';
+import { formatRejectionReasons } from '../utils/labFormatters';
 import { ICONS } from '@/config/icons';
 
 interface CollectionDetailContentProps {
@@ -26,12 +27,7 @@ interface CollectionDetailContentProps {
   gridSections: DetailGridSectionConfig[];
 }
 
-/**
- * CollectionDetailContent Component
- * Renders all content sections of the collection detail modal
- */
 export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = ({
-  sample,
   isPending,
   isRejected,
   isCollected,
@@ -46,7 +42,6 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
 }) => {
   return (
     <>
-      {/* Linked Tests */}
       <SectionPanel title={isCollected ? 'Linked Tests' : 'Required for'}>
         <ul className="space-y-1">
           {testNames.map((testName, i) => {
@@ -69,42 +64,44 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
         </ul>
       </SectionPanel>
 
-      {/* Rejection Details - for rejected samples */}
       {isRejected && rejectedSample && (
-        <RejectionHistorySection
-          variant="sample"
-          title={`Rejection Details${(rejectedSample.rejectionHistory?.length || 1) > 1 ? ` (${rejectedSample.rejectionHistory?.length || 1} attempts)` : ''}`}
-          reasons={rejectedSample.rejectionReasons}
-          notes={rejectedSample.rejectionNotes}
-          rejectedBy={rejectedSample.rejectedBy}
-          rejectedAt={rejectedSample.rejectedAt}
-          getUserName={getUserName}
-        />
+        <SectionPanel title="Rejection Details">
+          <div className="space-y-2 text-sm text-text-secondary">
+            {rejectedSample.rejectionReasons && rejectedSample.rejectionReasons.length > 0 && (
+              <p>
+                <span className="text-text-tertiary">Reason: </span>
+                {formatRejectionReasons(rejectedSample.rejectionReasons)}
+              </p>
+            )}
+            {rejectedSample.rejectionNotes && (
+              <p>
+                <span className="text-text-tertiary">Notes: </span>
+                {rejectedSample.rejectionNotes}
+              </p>
+            )}
+            <p>
+              <span className="text-text-tertiary">Rejected by </span>
+              {getUserName(rejectedSample.rejectedBy)}
+              <span className="text-text-tertiary"> on </span>
+              {formatDate(rejectedSample.rejectedAt)}
+            </p>
+            {rejectedSample.recollectionRequired && (
+              <p className="text-warning-fg">Recollection required</p>
+            )}
+          </div>
+        </SectionPanel>
       )}
 
-      {/* Previous Rejection History */}
-      {!isRejected && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (
-        <RejectionHistorySection
-          variant="sample"
-          title={`Previous Rejection${sample.rejectionHistory.length > 1 ? ` (${sample.rejectionHistory.length} attempts)` : ''}`}
-          rejectionHistory={sample.rejectionHistory}
-          getUserName={getUserName}
-        />
-      )}
-
-      {/* Requirements Section - pending only */}
       {isPending && testDetails.length > 0 && (
         <CollectionRequirementsSection testDetails={testDetails} />
       )}
 
-      {/* Collection Notes */}
       {collectionNotes && (
         <SectionPanel title="Collection Notes">
           <div className="text-sm text-text-primary">{collectionNotes}</div>
         </SectionPanel>
       )}
 
-      {/* Detail Sections */}
       <DetailGrid sections={gridSections} />
     </>
   );

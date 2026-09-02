@@ -14,7 +14,6 @@ import { Badge, Button, Icon, SectionPanel, CircularProgress } from '@/component
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { displayId } from '@/utils';
 import { EntryForm } from './EntryForm';
-import { RejectionHistorySection } from '../components/RejectionHistorySection';
 import {
   LabDetailModal,
   DetailGrid,
@@ -95,10 +94,8 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const {
     isRetest,
     retestNumber,
-    isResultRecollection,
-    hasResultRejectionHistory,
-    resultRejectionHistory,
-    rejectionHistoryTitle,
+    showRecollectionBadge,
+    sampleRecollectionAttempt,
   } = deriveTestRejectionContext(test);
 
   const handleLocalResultChange = (key: string, paramCode: string, value: string) => {
@@ -137,8 +134,8 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const headerExtraBadges = (
     <>
       {isRetest && <RetestBadge retestNumber={retestNumber} />}
-      {isResultRecollection && !isRetest && (
-        <RecollectionAttemptBadge attemptNumber={resultRejectionHistory.length} />
+      {showRecollectionBadge && !isRetest && (
+        <RecollectionAttemptBadge attemptNumber={sampleRecollectionAttempt} />
       )}
       <Badge size="sm" variant="default" className="text-text-secondary">
         {filledCount} / {totalParams} parameters
@@ -225,16 +222,6 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           isModal={true}
         />
       </SectionPanel>
-
-      {/* Previous Rejection History - show for both retests and recollections */}
-      {hasResultRejectionHistory && (
-        <RejectionHistorySection
-          variant="result"
-          title={rejectionHistoryTitle}
-          rejectionHistory={resultRejectionHistory}
-          showOnlyLatest={false}
-        />
-      )}
 
       {/* Test Details - using declarative sections config */}
       <DetailGrid

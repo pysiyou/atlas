@@ -24,13 +24,12 @@ from app.models.order import Order, OrderTest
 from app.models.sample import Sample
 from app.models.escalation import EscalationTicket
 from app.schemas.enums import EscalationTicketStatus
-from app.schemas.enums import TestStatus, UserRole, ValidationDecision, RejectionAction
+from app.schemas.enums import TestStatus, UserRole, ValidationDecision, EscalationResolutionAction
 from app.schemas.order import OrderTestResponse, TestResultsDict
 from app.services.lab_operations import (
     LabOperationsService,
     LabOperationError,
-    RejectionOptions,
-    RejectionResult
+    EscalationResolveResult,
 )
 from app.services.order_status_updater import update_order_status
 
@@ -49,38 +48,14 @@ class ResultValidationRequest(BaseModel):
     validationNotes: Optional[str] = None
 
 
-class ResultRejectionRequest(BaseModel):
-    """Reject resulted test — server decides re-test vs auto-escalation."""
-    rejectionReason: str = Field(..., min_length=1, max_length=500, description="Catalog rejection criterion")
-    rejectionNotes: Optional[str] = Field(None, max_length=1000, description="Additional context")
-
-
-class RejectionOptionsResponse(BaseModel):
-    """Response for rejection options query"""
-    canRetest: bool
-    retestAttemptsRemaining: int
-    canRecollect: bool
-    recollectionAttemptsRemaining: int
-    availableActions: list
-    escalationRequired: bool = False
-    allowedRejectionCriteria: list[str] = []
-
-    class Config:
-        from_attributes = True
-
-
-class RejectionResultResponse(BaseModel):
-    """Response for rejection operation"""
+class EscalationResolveResponse(BaseModel):
+    """Response for escalation resolution."""
     success: bool
     action: str
     message: str
     originalTestId: int
     newTestId: Optional[int] = None
     newSampleId: Optional[int] = None
-    escalationRequired: bool = False
-
-    class Config:
-        from_attributes = True
 
 
 class BulkValidationItem(BaseModel):
@@ -111,7 +86,13 @@ class BulkValidationResponse(BaseModel):
     failureCount: int
 
 
-EscalationResolveActionLiteral = Literal["force_validate", "authorize_retest", "authorize_recollect", "final_reject"]
+EscalationResolveActionLiteral = Literal[
+    "force_validate",
+    "authorize_retest",
+    "authorize_recollect",
+    "apply_amendment",
+    "cancel_test",
+]
 
 
 class CriticalReadBackPayload(BaseModel):
@@ -123,10 +104,10 @@ class CriticalReadBackPayload(BaseModel):
 
 
 class EscalationResolveRequest(BaseModel):
-    """Request body for resolving an escalated test (admin/labtech_plus only). rejectionReason required when action is final_reject."""
+    """Request body for resolving an escalated test (admin/labtech_plus only)."""
     action: EscalationResolveActionLiteral = Field(
         ...,
-        description="'force_validate' | 'authorize_retest' | 'final_reject'"
+        description="'force_validate' | 'authorize_retest' | 'authorize_recollect' | 'apply_amendment' | 'cancel_test'"
     )
     validationNotes: Optional[str] = Field(None, max_length=1000)
     readBack: Optional[CriticalReadBackPayload] = None
@@ -138,8 +119,8 @@ class EscalationResolveRequest(BaseModel):
     )
 
     @model_validator(mode="after")
-    def require_rejection_reason_for_final_reject(self):
-        if self.action in ("final_reject", "authorize_recollect") and not (self.rejectionReason or "").strip():
+    def require_rejection_reason_for_cancel(self):
+        if self.action in ("cancel_test", "authorize_recollect") and not (self.rejectionReason or "").strip():
             raise ValueError("rejectionReason is required for this action")
         return self
 
@@ -172,7 +153,6 @@ class PendingEscalationItemResponse(BaseModel):
     isRetest: bool = False
     retestOfTestId: Optional[int] = None
     retestNumber: int = 0
-    resultRejectionHistory: Optional[List[Any]] = None
     priority: str
     referringPhysician: Optional[str] = None
     collectedAt: Optional[datetime] = None
@@ -181,7 +161,6 @@ class PendingEscalationItemResponse(BaseModel):
     sampleOriginalSampleId: Optional[int] = None
     sampleRecollectionReason: Optional[str] = None
     sampleRecollectionAttempt: Optional[int] = None
-    sampleRejectionHistory: Optional[List[Any]] = None
     ticketId: Optional[int] = None
     reasonCode: Optional[str] = None
     severity: Optional[str] = None
@@ -296,7 +275,6 @@ def get_pending_escalation(
                 isRetest=t.isRetest or False,
                 retestOfTestId=t.retestOfTestId,
                 retestNumber=t.retestNumber or 0,
-                resultRejectionHistory=t.resultRejectionHistory,
                 priority=order.priority.value if order and order.priority else "low",
                 referringPhysician=order.referringPhysician if order else None,
                 collectedAt=sample.collectedAt if sample else None,
@@ -305,7 +283,6 @@ def get_pending_escalation(
                 sampleOriginalSampleId=sample.originalSampleId if sample else None,
                 sampleRecollectionReason=sample.recollectionReason if sample else None,
                 sampleRecollectionAttempt=sample.recollectionAttempt if sample else None,
-                sampleRejectionHistory=sample.rejectionHistory if sample else None,
                 ticketId=tickets_by_test[t.id].id if t.id in tickets_by_test else None,
                 reasonCode=tickets_by_test[t.id].reasonCode.value if t.id in tickets_by_test else None,
                 severity=tickets_by_test[t.id].severity.value if t.id in tickets_by_test else None,
@@ -313,45 +290,6 @@ def get_pending_escalation(
             )
         )
     return out
-
-
-@router.get("/results/{orderId}/tests/{testCode}/rejection-options", response_model=RejectionOptionsResponse)
-def get_rejection_options(
-    orderId: int,
-    testCode: str,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    """
-    Get available rejection actions for a test.
-
-    Returns information about what rejection actions are available,
-    remaining attempt counts, and whether escalation is required.
-    """
-    try:
-        service = LabOperationsService(db)
-        options = service.get_rejection_options(orderId, testCode)
-
-        return RejectionOptionsResponse(
-            canRetest=options.canRetest,
-            retestAttemptsRemaining=options.retestAttemptsRemaining,
-            canRecollect=options.canRecollect,
-            recollectionAttemptsRemaining=options.recollectionAttemptsRemaining,
-            availableActions=[
-                {
-                    "action": a.action.value,
-                    "enabled": a.enabled,
-                    "disabledReason": a.disabledReason,
-                    "label": a.label,
-                    "description": a.description
-                }
-                for a in options.availableActions
-            ],
-            escalationRequired=options.escalationRequired,
-            allowedRejectionCriteria=options.allowedRejectionCriteria,
-        )
-    except LabOperationError as e:
-        raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
 @router.post("/results/{orderId}/tests/{testCode}")
@@ -389,13 +327,13 @@ def validate_results(
     current_user: User = Depends(require_lab_tech)  # Lab tech required
 ):
     """
-    Validate test results - APPROVAL ONLY.
-    For rejections, use the /reject endpoint instead.
+    Validate test results — approval only.
+    For quality issues, use POST /lab/quality-issues.
     """
     if validation_data.decision != ValidationDecision.APPROVED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="For rejections, use the /reject endpoint. This endpoint only handles approvals."
+            detail="For quality issues, use POST /lab/quality-issues.",
         )
 
     try:
@@ -411,122 +349,34 @@ def validate_results(
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.post("/results/{orderId}/tests/{testCode}/reject", response_model=RejectionResultResponse)
-def reject_results(
+@router.post("/results/{orderId}/tests/{testCode}/escalation/resolve", response_model=EscalationResolveResponse)
+def resolve_escalation(
     orderId: int,
     testCode: str,
-    rejection_data: ResultRejectionRequest,
+    body: EscalationResolveRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)  # Lab tech required
+    current_user: User = Depends(require_escalation_resolver),
 ):
-    """
-    Reject test results during validation.
-
-    The server counts prior rejections for this test chain. Below the limit it
-    schedules a re-test on the same sample; at the limit it escalates automatically.
-    """
+    """Resolve an escalated test (admin/labtech_plus only)."""
     try:
         service = LabOperationsService(db)
-        result = service.reject_results(
+        read_back = body.readBack.model_dump() if body.readBack else None
+        result = service.resolve_escalation(
             order_id=orderId,
             test_code=testCode,
             user_id=current_user.id,
-            rejection_reason=rejection_data.rejectionReason,
-            rejection_notes=rejection_data.rejectionNotes,
+            action=EscalationResolutionAction(body.action),
+            validation_notes=body.validationNotes,
+            rejection_reason=body.rejectionReason,
+            read_back_payload=read_back,
         )
-
-        return RejectionResultResponse(
+        return EscalationResolveResponse(
             success=result.success,
             action=result.action.value,
             message=result.message,
             originalTestId=result.originalTestId,
             newTestId=result.newTestId,
             newSampleId=result.newSampleId,
-            escalationRequired=result.escalationRequired
-        )
-    except LabOperationError as e:
-        raise HTTPException(status_code=e.status_code, detail=e.message)
-
-
-@router.post("/results/{orderId}/tests/{testCode}/escalation/resolve", response_model=RejectionResultResponse)
-def resolve_escalation(
-    orderId: int,
-    testCode: str,
-    body: EscalationResolveRequest,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_escalation_resolver)
-):
-    """
-    Resolve an escalated test (admin/labtech_plus only).
-    Actions: force_validate, authorize_retest, final_reject. Schema validates action and requires rejectionReason for final_reject.
-    """
-    try:
-        service = LabOperationsService(db)
-        if body.action == "force_validate":
-            read_back = body.readBack.model_dump() if body.readBack else None
-            order_test = service.resolve_escalation_force_validate(
-                order_id=orderId,
-                test_code=testCode,
-                user_id=current_user.id,
-                validation_notes=body.validationNotes,
-                read_back_payload=read_back,
-            )
-            return RejectionResultResponse(
-                success=True,
-                action="force_validate",
-                message="Results force-validated.",
-                originalTestId=order_test.id,
-                newTestId=None,
-                newSampleId=None,
-                escalationRequired=False
-            )
-        if body.action == "authorize_retest":
-            result = service.resolve_escalation_authorize_retest(
-                order_id=orderId,
-                test_code=testCode,
-                user_id=current_user.id,
-                reason=body.rejectionReason or "Authorized re-test (escalation resolution)"
-            )
-            return RejectionResultResponse(
-                success=result.success,
-                action="authorize_retest",
-                message=result.message,
-                originalTestId=result.originalTestId,
-                newTestId=result.newTestId,
-                newSampleId=result.newSampleId,
-                escalationRequired=False
-            )
-        if body.action == "authorize_recollect":
-            result = service.resolve_escalation_authorize_recollect(
-                order_id=orderId,
-                test_code=testCode,
-                user_id=current_user.id,
-                reason=(body.rejectionReason or "").strip(),
-            )
-            return RejectionResultResponse(
-                success=result.success,
-                action="authorize_recollect",
-                message=result.message,
-                originalTestId=result.originalTestId,
-                newTestId=result.newTestId,
-                newSampleId=result.newSampleId,
-                escalationRequired=False,
-            )
-        # final_reject
-        result = service.resolve_escalation_final_reject(
-            order_id=orderId,
-            test_code=testCode,
-            user_id=current_user.id,
-            rejection_reason=(body.rejectionReason or "").strip()
-        )
-        return RejectionResultResponse(
-            success=result.success,
-            action="final_reject",
-            message=result.message,
-            originalTestId=result.originalTestId,
-            newTestId=result.newTestId,
-            newSampleId=result.newSampleId,
-            escalationRequired=False
         )
     except LabOperationError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)

@@ -25,7 +25,6 @@ import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
 import { useSampleLookup } from '@/features/lab/collection/samples.api';
-import { useRejectSampleHandler } from '@/features/lab/collection/useRejectSampleHandler';
 import { getTestNames } from '@/features/catalog/utils';
 import { LabDetailModal } from '../components/LabDetailModal';
 import type { SampleDisplay } from '@/features/lab/types';
@@ -60,7 +59,6 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   const { getPatientName } = usePatientNameLookup();
   const { getOrder } = useOrderLookup();
   const { tests = [] } = useTestCatalog();
-  const { rejectSample } = useRejectSampleHandler({ onSuccess: onClose });
   const [isPopoverSubmitting, setIsPopoverSubmitting] = useState(false);
 
   const getTest = useCallback((code: string) => tests.find(t => t.code === code), [tests]);
@@ -109,17 +107,6 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
     (containerType as ContainerType) ||
     (sample.sampleType === 'urine' || sample.sampleType === 'stool' ? 'cup' : 'tube');
 
-  // Handle reject sample
-  const handleReject = async (
-    rejectionReason: string,
-    notes?: string,
-    requireRecollection?: boolean
-  ) => {
-    if (!sample.sampleId) return;
-    await rejectSample(sample.sampleId, rejectionReason, notes, requireRecollection);
-  };
-
-  // Collection info for collected/rejected samples
   const collectedAt =
     (isCollected || isRejected) && 'collectedAt' in sample ? sample.collectedAt : undefined;
   const collectedBy =
@@ -158,13 +145,11 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
       patientName={patientName}
       testNames={testNames}
       onCollect={onCollect}
-      onReject={handleReject}
       onClose={onClose}
       onPopoverSubmittingChange={setIsPopoverSubmitting}
     />
   );
 
-  // Build grid sections
   const gridSections = buildCollectionDetailGridSections({
     sample,
     isPending,

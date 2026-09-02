@@ -9,8 +9,6 @@ import { queryKeys, cacheConfig } from '@/lib/query';
 import { useAuthStore } from '@/app/store';
 import type { OrderTest, ValidationDecision, TestWithContext } from '@/types';
 import type {
-  RejectionOptionsResponse,
-  RejectionResult,
   EscalationResolveRequest,
   EscalationResolveResult,
 } from '@/types/lab-operations';
@@ -29,15 +27,6 @@ interface ResultEntryRequest {
 interface ResultValidationRequest {
   decision: ValidationDecision;
   validationNotes?: string;
-}
-
-/**
- * Request body for rejecting test results during validation.
- * Uses the /reject endpoint with proper tracking.
- */
-interface ResultRejectionRequest {
-  rejectionReason: string;
-  rejectionNotes?: string;
 }
 
 export const resultAPI = {
@@ -67,7 +56,7 @@ export const resultAPI = {
 
   /**
    * Resolve an escalated test (admin/labtech_plus only).
-   * Actions: force_validate, authorize_retest, final_reject.
+   * Actions: force_validate, authorize_retest, authorize_recollect, apply_amendment, cancel_test.
    */
   async resolveEscalation(
     orderId: string | number,
@@ -78,21 +67,6 @@ export const resultAPI = {
     return apiClient.post<EscalationResolveResult>(
       `/results/${orderIdStr}/tests/${testCode}/escalation/resolve`,
       payload
-    );
-  },
-
-  /**
-   * Get available rejection options for a test.
-   *
-   * Returns information about what rejection actions are available,
-   * remaining attempt counts, and whether escalation is required.
-   *
-   * Use this before showing the rejection dialog to know what options
-   * to enable/disable.
-   */
-  async getRejectionOptions(orderId: string, testCode: string): Promise<RejectionOptionsResponse> {
-    return apiClient.get<RejectionOptionsResponse>(
-      `/results/${orderId}/tests/${testCode}/rejection-options`
     );
   },
 
@@ -109,7 +83,7 @@ export const resultAPI = {
 
   /**
    * Validate test results - approval only.
-   * For rejections, use rejectResults() instead.
+   * For quality issues, use POST /lab/quality-issues.
    */
   async validateResults(
     orderId: string,
@@ -117,18 +91,6 @@ export const resultAPI = {
     data: ResultValidationRequest
   ): Promise<OrderTest> {
     return apiClient.post<OrderTest>(`/results/${orderId}/tests/${testCode}/validate`, data);
-  },
-
-  /**
-   * Reject test results during validation.
-   * Server auto-decides re-test vs escalation based on rejection count.
-   */
-  async rejectResults(
-    orderId: string,
-    testCode: string,
-    data: ResultRejectionRequest
-  ): Promise<RejectionResult> {
-    return apiClient.post<RejectionResult>(`/results/${orderId}/tests/${testCode}/reject`, data);
   },
 
   /**
@@ -168,7 +130,6 @@ export const resultAPI = {
  * Provides TanStack Query mutation hooks for all result-related operations:
  * - Result entry
  * - Result validation (approval)
- * - Result rejection (re-test, re-collect, escalate)
  * - Bulk validation
  * - Escalation resolution
  *
@@ -236,44 +197,6 @@ export function useValidateResults() {
 }
 
 /**
- * Hook to reject test results with proper tracking.
- * Supports re-test, re-collect, and escalate actions.
- * Invalidates orders, samples, and results queries on success.
- */
-export function useRejectResults() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      orderId,
-      testCode,
-      rejectionReason,
-      rejectionNotes,
-    }: {
-      orderId: string | number;
-      testCode: string;
-      rejectionReason: string;
-      rejectionNotes?: string;
-    }): Promise<RejectionResult> => {
-      const orderIdStr = typeof orderId === 'number' ? orderId.toString() : orderId;
-      return resultAPI.rejectResults(orderIdStr, testCode, {
-        rejectionReason,
-        rejectionNotes,
-      });
-    },
-    onSuccess: (_, variables) => {
-      const orderIdStr =
-        typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
-      invalidateResultQueries(queryClient, {
-        orderId: orderIdStr,
-        samples: true,
-        pendingEscalation: true,
-      });
-    },
-  });
-}
-
-/**
  * Hook to bulk validate multiple test results.
  * Invalidates orders and results queries on success.
  */
@@ -296,7 +219,7 @@ export function useValidateBulk() {
 
 /**
  * Hook to resolve an escalated test (admin/labtech_plus only).
- * Supports force_validate, authorize_retest, and final_reject actions.
+ * Supports force_validate, authorize_retest, authorize_recollect, apply_amendment, and cancel_test.
  * Invalidates orders, samples, and results queries on success.
  */
 export function useResolveEscalation() {

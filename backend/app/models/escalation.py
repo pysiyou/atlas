@@ -1,9 +1,9 @@
 """
 EscalationTicket Model - Tracks LIS escalation events and supervisor resolutions.
 """
-from sqlalchemy import Column, String, DateTime, JSON, Enum, ForeignKey, Integer, Text
+from sqlalchemy import Column, String, DateTime, JSON, ForeignKey, Integer, Text
 from sqlalchemy.sql import func
-from app.database import Base
+from app.database import Base, contract_enum
 from app.schemas.enums import (
     EscalationReasonCode,
     EscalationTicketStatus,
@@ -32,23 +32,23 @@ class EscalationTicket(Base):
     )
     reasonCode = Column(
         "reason_code",
-        Enum(EscalationReasonCode),
+        contract_enum(EscalationReasonCode),
         nullable=False,
         index=True,
     )
     status = Column(
-        Enum(EscalationTicketStatus),
+        contract_enum(EscalationTicketStatus),
         nullable=False,
         default=EscalationTicketStatus.OPEN,
         index=True,
     )
-    severity = Column(Enum(EscalationSeverity), nullable=False)
+    severity = Column(contract_enum(EscalationSeverity), nullable=False)
     ticketMetadata = Column("metadata", JSON, nullable=True)
     createdByUserId = Column("created_by_user_id", String(50), nullable=False)
     resolvedByUserId = Column("resolved_by_user_id", String(50), nullable=True)
     resolutionAction = Column(
         "resolution_action",
-        Enum(EscalationResolutionAction),
+        contract_enum(EscalationResolutionAction),
         nullable=True,
     )
     resolutionNotes = Column("resolution_notes", Text, nullable=True)

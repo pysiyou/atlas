@@ -1,9 +1,9 @@
 """
 Aliquot Model - All fields use camelCase
 """
-from sqlalchemy import Column, String, Integer, Float, DateTime, JSON, Enum, ForeignKey
+from sqlalchemy import Column, String, Integer, Float, DateTime, JSON, ForeignKey
 from sqlalchemy.sql import func
-from app.database import Base
+from app.database import Base, contract_enum
 from app.schemas.enums import AliquotStatus, ContainerType
 
 
@@ -25,11 +25,11 @@ class Aliquot(Base):
     purpose = Column(String, nullable=True)  # e.g., "Sendout tests", "Chemistry panel"
 
     # Container
-    containerType = Column("container_type", Enum(ContainerType), nullable=False)
+    containerType = Column("container_type", contract_enum(ContainerType), nullable=False)
     barcode = Column(String, nullable=False, unique=True, index=True)
 
     # Status and location
-    status = Column(Enum(AliquotStatus), nullable=False, default=AliquotStatus.AVAILABLE)
+    status = Column(contract_enum(AliquotStatus), nullable=False, default=AliquotStatus.AVAILABLE)
     currentLocation = Column("current_location", String, nullable=False)
 
     # Usage tracking

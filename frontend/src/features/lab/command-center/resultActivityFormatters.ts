@@ -15,7 +15,7 @@ export function formatResultEntry(log: LabOperationRecord, performer: string): A
       {
         type: 'badge',
         value: testCode || displayId.orderTest(log.entityId),
-        variant: 'in-progress',
+        variant: 'resulted',
         isId: true,
       },
     ],

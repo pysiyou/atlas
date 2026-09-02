@@ -10,7 +10,6 @@ import { SectionPanel, Badge } from '@/components';
 import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
 import { LabDetailModal, DetailGrid, StatusBadgeRow } from '../components/LabDetailModal';
-import { RejectionHistorySection } from '../components/RejectionHistorySection';
 import { EntryInfoLine } from '../components/StatusBadges';
 import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
 import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';
@@ -67,10 +66,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
     onResetForm: resetForm,
   });
 
-  const rejectionHistory = test.resultRejectionHistory || [];
   const requiresReadBack = test.reasonCode === 'CRIT-VAL';
-
-  const hasRejectionHistory = rejectionHistory.length > 0;
 
   if (!test.results) return null;
 
@@ -122,6 +118,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         <EscalationResolutionFooter
           canResolveEscalation={canResolveEscalation}
           resolving={resolving}
+          reasonCode={test.reasonCode}
           requiresReadBack={requiresReadBack}
           validationNotesForceValidate={validationNotesForceValidate}
           onValidationNotesForceValidateChange={setValidationNotesForceValidate}
@@ -157,15 +154,6 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         <SectionPanel title="Critical Value Notification">
           <CriticalValueActions record={criticalRecord} onUpdated={handleCriticalValueUpdated} />
         </SectionPanel>
-      )}
-
-      {hasRejectionHistory && (
-        <RejectionHistorySection
-          variant="result"
-          title="Escalation history"
-          rejectionHistory={rejectionHistory}
-          showOnlyLatest={false}
-        />
       )}
 
       <DetailGrid

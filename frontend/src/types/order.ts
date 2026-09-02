@@ -28,12 +28,7 @@ type ResultStatus = ResultStatusType;
 type ValidationDecision = ValidationDecisionType;
 
 /**
- * Type for result rejection during validation.
- * 're-test': Re-run test with same sample, creates new OrderTest
- * 're-collect': New sample required, triggers sample recollection
- * 'escalate': Escalate to supervisor when retest/recollect limits exceeded
- * 'authorize_retest': Escalation resolved with authorize re-test (history only)
- * 'authorize_recollect': Escalation resolved with authorize re-collect (history only)
+ * Type for result rejection during validation (legacy labels for display only).
  */
 export type ResultRejectionType =
   | 're-test'
@@ -41,32 +36,7 @@ export type ResultRejectionType =
   | 'escalate'
   | 'authorize_retest'
   | 'authorize_recollect'
-  | 'final_reject';
-
-/**
- * Record of a result rejection event during validation.
- * Stored in resultRejectionHistory array on OrderTest.
- * API may send either rejectionType/rejectionReason (camelCase) or type/reason.
- */
-export interface ResultRejectionRecord {
-  id?: number;
-  resultId?: number;
-  rejectedAt: string;
-  rejectedBy: string;
-  rejectionType?: ResultRejectionType;
-  type?: ResultRejectionType;
-  rejectionReason?: string;
-  reason?: string;
-  notes?: string;
-  rejectionNotes?: string;
-}
-
-/** Reads rejection type from either API shape (rejectionType or type). */
-export function getResultRejectionType(
-  record: ResultRejectionRecord
-): ResultRejectionType | undefined {
-  return record.rejectionType ?? record.type;
-}
+  | 'cancel_test';
 
 export interface TestResult {
   value: string | number;
@@ -117,9 +87,6 @@ export interface OrderTest {
   retestOfTestId?: number; // Links to original OrderTest.id that was rejected
   retestNumber?: number; // 0 = original, 1 = 1st retest, etc.
   retestOrderTestId?: number; // Points to the new retest entry created after rejection
-
-  // Result rejection history (for validation rejections)
-  resultRejectionHistory?: ResultRejectionRecord[];
 
   // Critical values (order-specific)
   hasCriticalValues?: boolean;

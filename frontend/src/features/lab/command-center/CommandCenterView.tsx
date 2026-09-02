@@ -38,9 +38,9 @@ const TEST_TABLE_LIMIT = 50;
 const ALL_ACTIVE_STATUSES = [
   'pending',
   'sample-collected',
-  'completed',
+  'resulted',
   'escalated',
-  'in-progress',
+  'suspended',
 ] as const;
 
 export const CommandCenterView: React.FC = () => {

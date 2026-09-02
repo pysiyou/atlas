@@ -21,7 +21,7 @@ import { QueueAgeBadge } from '../components/QueueAgeBadge';
 import { useLabCardClickGuard } from '@/features/lab/hooks';
 import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
 import type { TestWithContext } from '@/types';
-import type { RejectionResult } from '@/types/lab-operations';
+import type { QualityIssueResult } from '@/types/lab-operations';
 import { ICONS } from '@/config/icons';
 import {
   type ResultStatus,
@@ -120,7 +120,7 @@ export interface ValidationCardProps {
   comments: string;
   onCommentsChange: (commentKey: string, value: string) => void;
   onApprove: () => void;
-  onReject: (result: RejectionResult) => void;
+  onReject: (result: QualityIssueResult) => void;
   onClick: () => void;
   /** When true, approve action is in progress (show loading on approve button) */
   isApproving?: boolean;
@@ -135,18 +135,15 @@ function deriveCardState(test: TestWithContext) {
   const hasFlags = test.flags && test.flags.length > 0;
   const flagStatusMap = statusMapFromFlags(test.flags);
   return {
-    rejectionHistory: rejection.resultRejectionHistory,
-    lastRejection: rejection.lastResultRejection,
-    hasRejectionHistory: rejection.hasResultRejectionHistory,
+    hasRejectionHistory: rejection.showAttemptIndicator,
     isRetest: rejection.isRetest,
-    isRecollection: rejection.isResultRecollection,
+    isRecollection: rejection.showRecollectionBadge,
     showRetestBadge: rejection.showRetestBadge,
     showRecollectionBadge: rejection.showRecollectionBadge,
     showAttemptIndicator: rejection.showAttemptIndicator,
     attemptNumber: rejection.attemptNumber,
     attemptMax: rejection.attemptMax,
     attemptType: rejection.attemptType,
-    previousReason: rejection.previousReason,
     hasFlags,
     flagStatusMap,
   };
@@ -165,12 +162,12 @@ function ValidationCardMobile({
   test: TestWithContext;
   patientName: string;
   onApprove: () => void;
-  onReject: (result: RejectionResult) => void;
+  onReject: (result: QualityIssueResult) => void;
   isApproving: boolean;
   handleCardClick: () => void;
 }) {
   const { hasFlags, isRetest, hasRejectionHistory, flagStatusMap } = deriveCardState(test);
-  const handleRejectionResult = (result: RejectionResult) => onReject(result);
+  const handleRejectionResult = (result: QualityIssueResult) => onReject(result);
 
   return (
     <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
@@ -234,7 +231,7 @@ function ValidationCardMobile({
         <div className="flex items-center gap-2">
           <div onClick={e => e.stopPropagation()}>
             <RejectionDialog
-              orderId={test.orderId}
+              orderTestId={test.id!}
               testCode={test.testCode}
               testName={test.testName}
               patientName={patientName}
@@ -271,14 +268,12 @@ function ValidationCardDesktop({
 }: {
   test: TestWithContext;
   onApprove: () => void;
-  onReject: (result: RejectionResult) => void;
+  onReject: (result: QualityIssueResult) => void;
   isApproving: boolean;
   handleCardClick: () => void;
   getUserName: (id: string) => string;
 }) {
   const {
-    rejectionHistory,
-    lastRejection: _lastRejection,
     hasRejectionHistory,
     showRetestBadge,
     showRecollectionBadge,
@@ -286,10 +281,9 @@ function ValidationCardDesktop({
     attemptNumber,
     attemptMax,
     attemptType,
-    previousReason,
     flagStatusMap,
   } = deriveCardState(test);
-  const handleRejectionResult = (result: RejectionResult) => onReject(result);
+  const handleRejectionResult = (result: QualityIssueResult) => onReject(result);
   const resultCount = Object.keys(test.results!).length;
 
   const badges = (
@@ -300,7 +294,7 @@ function ValidationCardDesktop({
           attemptNumber={attemptNumber}
           maxAttempts={attemptMax}
           type={attemptType}
-          previousReason={previousReason}
+          previousReason={undefined}
         />
       )}
       <h3 className="text-sm font-medium text-text-primary">{test.testName}</h3>
@@ -321,7 +315,7 @@ function ValidationCardDesktop({
   const actions = (
     <div className="flex items-center gap-2 z-10" onClick={e => e.stopPropagation()}>
       <RejectionDialog
-        orderId={test.orderId}
+        orderTestId={test.id!}
         testCode={test.testCode}
         testName={test.testName}
         patientName={test.patientName}
@@ -367,7 +361,7 @@ function ValidationCardDesktop({
         {showRecollectionBadge && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection attempt #{rejectionHistory.length}
+            Recollection attempt #{attemptNumber}
           </Badge>
         )}
       </div>

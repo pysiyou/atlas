@@ -30,16 +30,17 @@ export function useEscalationResolution({
       force_validate: 'Results force-validated.',
       authorize_retest: 'Authorized re-test created.',
       authorize_recollect: 'Re-collect authorized; new sample and test created.',
-      final_reject: 'Test cancelled (final reject).',
+      apply_amendment: 'Amendment applied and test validated.',
+      cancel_test: 'Test cancelled.',
     }),
-    []
+    [],
   );
 
   const resolveAsync = useCallback(
     (
       action: EscalationResolutionAction,
       rejectionReasonOrNotes?: string,
-      options?: EscalationResolveOptions
+      options?: EscalationResolveOptions,
     ): Promise<void> => {
       if (!canResolveEscalation || resolving) return Promise.resolve();
 
@@ -47,11 +48,14 @@ export function useEscalationResolution({
         orderId,
         testCode,
         action,
-        validationNotes: action === 'force_validate' ? rejectionReasonOrNotes?.trim() : undefined,
+        validationNotes:
+          action === 'force_validate' || action === 'apply_amendment'
+            ? rejectionReasonOrNotes?.trim()
+            : undefined,
         rejectionReason:
           action === 'authorize_retest'
             ? rejectionReasonOrNotes?.trim() || 'Authorized re-test (escalation resolution)'
-            : action === 'authorize_recollect' || action === 'final_reject'
+            : action === 'authorize_recollect' || action === 'cancel_test'
               ? (rejectionReasonOrNotes ?? '').trim()
               : undefined,
         readBack: options?.readBack,
@@ -74,15 +78,11 @@ export function useEscalationResolution({
               apiError && typeof apiError === 'object' && typeof apiError.message === 'string'
                 ? apiError.message
                 : 'Failed to resolve escalation.';
-            toast.error({
-              title: msg,
-              subtitle: 'The escalation could not be resolved. Check the details and try again.',
-            });
+            toast.error({ title: msg, subtitle: 'Check the details and try again.' });
           },
         })
-        .catch(() => {
-          // Error already surfaced via onError toast.
-        });
+        .then(() => undefined)
+        .catch(() => undefined);
     },
     [
       orderId,
@@ -94,7 +94,7 @@ export function useEscalationResolution({
       canResolveEscalation,
       messages,
       onResetForm,
-    ]
+    ],
   );
 
   return { canResolveEscalation, resolving, resolveAsync };

@@ -65,9 +65,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
     retestNumber,
     isSampleRecollection,
     sampleRecollectionAttempt,
-    lastResultRejection,
-    lastSampleRejection,
-    hasAnyRejectionHistory,
+    showAttemptIndicator,
   } = rejection;
 
   // Mobile layout
@@ -145,8 +143,8 @@ export const EntryCard: React.FC<EntryCardProps> = ({
           type={isRetest ? 'retest' : 'recollection'}
           previousReason={
             isRetest
-              ? lastResultRejection?.rejectionReason
-              : lastSampleRejection?.rejectionNotes || undefined
+              ? undefined
+              : undefined
           }
         />
       )}
@@ -222,7 +220,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasAnyRejectionHistory ? 'border-warning-stroke-emphasis' : ''}
+      className={showAttemptIndicator ? 'border-warning-stroke-emphasis' : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,

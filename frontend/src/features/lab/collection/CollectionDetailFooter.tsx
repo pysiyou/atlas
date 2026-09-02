@@ -1,8 +1,6 @@
 /**
  * CollectionDetailFooter Component
- * Builds the footer content with action buttons based on sample status
  */
-
 import React from 'react';
 import { Button, Icon } from '@/components';
 import type { ContainerType, Sample, RejectedSample, Order } from '@/types';
@@ -27,22 +25,12 @@ interface CollectionDetailFooterProps {
     volume: number,
     notes?: string,
     selectedColor?: string,
-    containerType?: ContainerType
+    containerType?: ContainerType,
   ) => void;
-  onReject: (
-    rejectionReason: string,
-    notes?: string,
-    requireRecollection?: boolean
-  ) => Promise<void>;
   onClose: () => void;
-  /** Called when the collect popover submitting state changes (so modal can set disableClose) */
   onPopoverSubmittingChange?: (submitting: boolean) => void;
 }
 
-/**
- * CollectionDetailFooter Component
- * Renders footer content with action buttons based on sample status
- */
 export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
   sample,
   isPending,
@@ -52,14 +40,11 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
   patientName,
   testNames,
   onCollect,
-  onReject,
   onClose,
   onPopoverSubmittingChange,
 }) => {
-  // For pending samples - show collect button
   if (isPending && pendingSampleDisplay && onCollect) {
-    const isRecollection =
-      sample.isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0);
+    const isRecollection = sample.isRecollection === true;
     return (
       <ModalFooter statusIcon={undefined} statusMessage="" statusClassName="text-text-tertiary">
         <CollectionPopover
@@ -82,7 +67,6 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
     );
   }
 
-  // For collected samples - show print and reject buttons
   if (isCollected && sample.sampleId) {
     return (
       <ModalFooter
@@ -98,11 +82,10 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
           sampleType={sample.sampleType}
           patientName={patientName}
           isRecollection={sample.isRecollection || false}
-          rejectionHistoryCount={sample.rejectionHistory?.length || 0}
-          onReject={onReject}
+          onSuccess={onClose}
           trigger={
             <Button variant="reject" size="md">
-              Reject Sample
+              Report Specimen Issue
             </Button>
           }
         />
@@ -110,7 +93,6 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
     );
   }
 
-  // For rejected samples - show status only
   if (isRejected) {
     return (
       <ModalFooter

@@ -1,9 +1,9 @@
 """
 Lab Audit Log Model - Tracks all laboratory operations for compliance and traceability.
 """
-from sqlalchemy import Column, String, Integer, DateTime, JSON, Enum
+from sqlalchemy import Column, String, Integer, DateTime, JSON
 from sqlalchemy.sql import func
-from app.database import Base
+from app.database import Base, contract_enum
 from app.schemas.enums import LabOperationType
 
 
@@ -17,7 +17,7 @@ class LabOperationLog(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     operationType = Column(
         "operation_type",
-        Enum(LabOperationType, values_callable=lambda x: [e.value for e in x]),
+        contract_enum(LabOperationType),
         nullable=False,
         index=True,
     )

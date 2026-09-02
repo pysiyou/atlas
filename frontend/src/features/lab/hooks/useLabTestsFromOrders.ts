@@ -95,12 +95,10 @@ export function useLabTestsFromOrders({
             isRetest: test.isRetest,
             retestOfTestId: test.retestOfTestId,
             retestNumber: test.retestNumber,
-            resultRejectionHistory: test.resultRejectionHistory,
             sampleIsRecollection: sample?.isRecollection,
             sampleOriginalSampleId: sample?.originalSampleId,
             sampleRecollectionReason: sample?.recollectionReason,
             sampleRecollectionAttempt: sample?.recollectionAttempt,
-            sampleRejectionHistory: sample?.rejectionHistory,
           };
 
           if (includePatient && patient) {

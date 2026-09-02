@@ -26,26 +26,6 @@ class TestResultValue(BaseModel):
 TestResultsDict = Dict[str, Union[TestResultValue, Dict[str, Any], str, float, int, None]]
 
 
-class ResultRejectionRecord(BaseModel):
-    """
-    Record of a result rejection event during validation.
-    Stored in resultRejectionHistory array on OrderTest.
-    """
-    rejectedAt: datetime
-    rejectedBy: str
-    rejectionReason: str
-    rejectionNotes: Optional[str] = None
-    rejectionType: Literal[
-        're-test', 're-collect', 'escalate', 'authorize_retest', 'authorize_recollect', 'final_reject'
-    ]
-
-
-class ResultRejectionRequest(BaseModel):
-    """Reject resulted test — server decides re-test vs auto-escalation."""
-    rejectionReason: str = Field(..., min_length=1, max_length=500, description="Catalog rejection criterion")
-    rejectionNotes: Optional[str] = Field(None, max_length=1000, description="Additional context")
-
-
 class OrderTestCreate(BaseModel):
     """Schema for creating a test within an order."""
     testCode: str = Field(..., min_length=1, max_length=50, description="Test code from catalog")
@@ -73,12 +53,8 @@ class OrderTestResponse(BaseModel):
     isRetest: bool = False
     retestOfTestId: int | None = None  # Original test ID that was rejected
     retestNumber: int = 0  # 0 = original, 1 = 1st retest, etc.
-    retestOrderTestId: int | None = None  # New test ID created after rejection
-    
-    # Result rejection history
-    resultRejectionHistory: list[ResultRejectionRecord] | None = None
-    
-    # Metadata
+    retestOrderTestId: int | None = None
+
     createdAt: datetime
     updatedAt: datetime
     

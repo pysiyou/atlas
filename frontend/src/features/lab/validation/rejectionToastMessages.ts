@@ -1,41 +1,39 @@
 /**
- * Toast copy for result rejection outcomes (re-test, re-collect, escalate).
+ * Toast copy for quality issue outcomes.
  */
+import type { QualityIssueResult } from '@/types/lab-operations';
 
-import type { RejectionResult } from '@/types/lab-operations';
-
-export function getRejectionToast(result?: RejectionResult | null): {
+export function getRejectionToast(result?: QualityIssueResult | null): {
   title: string;
   subtitle: string;
 } {
   if (!result) {
     return {
-      title: 'Results rejected',
-      subtitle: 'The rejection has been recorded and the test status updated.',
+      title: 'Quality issue reported',
+      subtitle: 'The issue has been recorded and the workflow updated.',
     };
   }
 
-  switch (result.action) {
+  switch (result.remedy) {
     case 'escalate':
       return {
         title: 'Escalated to supervisor',
-        subtitle:
-          'This test has been sent to the escalation queue for supervisor review.',
+        subtitle: 'This test has been sent to the escalation queue for supervisor review.',
       };
-    case 'retest_same_sample':
+    case 'retry_same_sample':
       return {
         title: 'Re-test requested',
         subtitle: 'A new result entry has been created using the same sample.',
       };
-    case 'recollect_new_sample':
+    case 'recollect':
       return {
         title: 'New sample requested',
         subtitle: 'The sample has been rejected and recollection has been requested.',
       };
     default:
       return {
-        title: 'Results rejected',
-        subtitle: result.message || 'The rejection has been recorded.',
+        title: 'Quality issue reported',
+        subtitle: result.message || 'The issue has been recorded.',
       };
   }
 }

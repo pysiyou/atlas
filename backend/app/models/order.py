@@ -1,10 +1,10 @@
 """
 Order and OrderTest Models - All fields use camelCase
 """
-from sqlalchemy import Column, String, Float, DateTime, JSON, Enum, ForeignKey, Boolean, Integer
+from sqlalchemy import Column, String, Float, DateTime, JSON, ForeignKey, Boolean, Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from app.database import Base
+from app.database import Base, contract_enum
 from app.schemas.enums import OrderStatus, PaymentStatus, PriorityLevel, TestStatus
 
 
@@ -17,8 +17,8 @@ class Order(Base):
 
     # Pricing
     totalPrice = Column("total_price", Float, nullable=False)
-    paymentStatus = Column("payment_status", Enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
-    overallStatus = Column("overall_status", Enum(OrderStatus), nullable=False, default=OrderStatus.ORDERED)
+    paymentStatus = Column("payment_status", contract_enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
+    overallStatus = Column("overall_status", contract_enum(OrderStatus), nullable=False, default=OrderStatus.ORDERED)
 
     # Scheduling (optional - for future appointment integration)
     appointmentId = Column("appointment_id", Integer, nullable=True)
@@ -29,7 +29,7 @@ class Order(Base):
     patientPrepInstructions = Column("patient_prep_instructions", String, nullable=True)
     clinicalNotes = Column("clinical_notes", String, nullable=True)
     referringPhysician = Column("referring_physician", String, nullable=True)
-    priority = Column(Enum(PriorityLevel), nullable=False, default=PriorityLevel.LOW)
+    priority = Column(contract_enum(PriorityLevel), nullable=False, default=PriorityLevel.LOW)
 
     # Metadata
     createdBy = Column("created_by", String, nullable=False)
@@ -55,7 +55,7 @@ class OrderTest(Base):
     testCode = Column("test_code", String, ForeignKey("tests.code"), nullable=False, index=True)
 
     # Order-specific state
-    status = Column(Enum(TestStatus), nullable=False, default=TestStatus.PENDING, index=True)
+    status = Column(contract_enum(TestStatus), nullable=False, default=TestStatus.PENDING, index=True)
     priceAtOrder = Column("price_at_order", Float, nullable=False)  # Snapshot for billing
 
     # Sample linkage
@@ -89,9 +89,6 @@ class OrderTest(Base):
     retestOfTestId = Column("retest_of_test_id", Integer, nullable=True)  # Links to original OrderTest.id that was rejected
     retestNumber = Column("retest_number", Integer, default=0)  # 0 = original, 1 = 1st retest, etc.
     retestOrderTestId = Column("retest_order_test_id", Integer, nullable=True)  # Points to the new retest entry created after rejection
-
-    # Result rejection history (for validation rejections)
-    resultRejectionHistory = Column("result_rejection_history", JSON, nullable=True, default=list)  # Array of ResultRejectionRecord
 
     # Critical values
     hasCriticalValues = Column("has_critical_values", Boolean, default=False)

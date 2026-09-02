@@ -15,7 +15,7 @@ import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { getErrorMessage, isLikelyNetworkOrTimeout } from '@/utils/errors';
 import type { TestWithContext } from '@/types';
-import type { RejectionResult } from '@/types/lab-operations';
+import type { QualityIssueResult } from '@/types/lab-operations';
 
 export interface ValidationWorkflow {
   comments: Record<string, string>;
@@ -25,7 +25,7 @@ export interface ValidationWorkflow {
     orderId: number | string,
     testCode: string,
     approve: boolean,
-    rejectionResult?: RejectionResult
+    rejectionResult?: QualityIssueResult
   ) => Promise<void>;
   openValidationModal: (test: TestWithContext) => void;
   validateMutation: ReturnType<typeof useValidateResults>;
@@ -55,7 +55,7 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
       orderId: number | string,
       testCode: string,
       approve: boolean,
-      rejectionResult?: RejectionResult
+      rejectionResult?: QualityIssueResult
     ): Promise<void> => {
       if (ordersLoading) return;
 
@@ -99,7 +99,7 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
         return;
       }
 
-      // RejectionDialog already called the API and invalidated caches via useRejectResults.
+      // RejectionDialog already reported the quality issue and invalidated caches.
       const toastMessage = getRejectionToast(rejectionResult);
       toast.success(toastMessage);
       clearComment(commentKey);
