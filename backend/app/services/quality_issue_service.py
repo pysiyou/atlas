@@ -28,7 +28,8 @@ from app.schemas.enums import (
 )
 from app.services.audit_service import AuditService
 from app.services.escalation_engine import EscalationEngine
-from app.services.lab_constants import MAX_RECOLLECTION_ATTEMPTS, MAX_RETEST_ATTEMPTS
+from app.services.lab_constants import MAX_RETEST_ATTEMPTS
+from app.services.sample_collection import SampleCollectionService
 from app.services.order_status_updater import update_order_status
 from app.services.rejection_criteria_service import RejectionCriteriaService
 from app.services.state_machine import SampleStateMachine, TestStateMachine, StateTransitionError
@@ -97,6 +98,7 @@ class QualityIssueService:
         self.db = db
         self.audit = audit
         self.escalation = escalation
+        self.collection = SampleCollectionService(db)
 
     # ── helpers ──────────────────────────────────────────────────────────
 
@@ -262,53 +264,19 @@ class QualityIssueService:
         rejected_sample: Sample,
         user_id: int,
         reason: str,
+        *,
+        test_codes: Optional[list[str]] = None,
+        priority: Optional[PriorityLevel] = None,
+        supervisor_authorized: bool = False,
     ) -> Sample:
-        if rejected_sample.recollectionSampleId:
-            existing = self._get_sample(rejected_sample.recollectionSampleId)
-            if existing.status == SampleStatus.PENDING:
-                return existing
-            raise LabOperationError(
-                f"Recollection sample {existing.sampleId} is not pending",
-                status_code=400,
-            )
-
-        root = self._chain_root_sample(rejected_sample)
-        recollection_used = self._count_remedies(
-            order_id=rejected_sample.orderId,
-            test_code=None,
-            sample_id=root.sampleId,
-            remedy=RemedyType.RECOLLECT,
+        return self.collection.request_recollection(
+            rejected_sample,
+            user_id,
+            reason,
+            test_codes=test_codes,
+            priority=priority,
+            supervisor_authorized=supervisor_authorized,
         )
-        if recollection_used >= MAX_RECOLLECTION_ATTEMPTS:
-            raise LabOperationError(
-                f"Maximum recollection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached.",
-                status_code=400,
-            )
-
-        recollection_attempt = recollection_used + 1
-        new_sample = Sample(
-            orderId=rejected_sample.orderId,
-            sampleType=rejected_sample.sampleType,
-            status=SampleStatus.PENDING,
-            testCodes=list(rejected_sample.testCodes or []),
-            requiredVolume=rejected_sample.requiredVolume,
-            priority=PriorityLevel.URGENT,
-            requiredContainerTypes=rejected_sample.requiredContainerTypes,
-            requiredContainerColors=rejected_sample.requiredContainerColors,
-            isRecollection=True,
-            originalSampleId=rejected_sample.sampleId,
-            recollectionReason=reason,
-            recollectionAttempt=recollection_attempt,
-            createdAt=datetime.now(timezone.utc),
-            createdBy=str(user_id),
-            updatedBy=str(user_id),
-        )
-        self.db.add(new_sample)
-        self.db.flush()
-
-        rejected_sample.recollectionSampleId = new_sample.sampleId
-        rejected_sample.updatedBy = str(user_id)
-        return new_sample
 
     def _revive_suspended_tests(self, rejected_sample: Sample, new_sample: Sample) -> None:
         for test in self._linked_tests(
@@ -375,15 +343,8 @@ class QualityIssueService:
 
     def _sample_options(self, sample_id: int) -> QualityIssueOptions:
         sample = self._get_sample(sample_id)
-        can_reject, _ = SampleStateMachine.can_reject(sample.status)
-        root = self._chain_root_sample(sample)
-        recollection_used = self._count_remedies(
-            order_id=sample.orderId,
-            test_code=None,
-            sample_id=root.sampleId,
-            remedy=RemedyType.RECOLLECT,
-        )
-        recollection_remaining = max(0, MAX_RECOLLECTION_ATTEMPTS - recollection_used)
+        recollection_used = self.collection.attempts_used(sample)
+        recollection_remaining = self.collection.attempts_remaining_after(sample)
         will_escalate = recollection_remaining == 0
 
         linked = self._linked_tests(sample, exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED])
@@ -440,14 +401,7 @@ class QualityIssueService:
         sample_remaining = 0
         if order_test.sampleId:
             sample = self._get_sample(order_test.sampleId)
-            root_sample = self._chain_root_sample(sample)
-            recollection_used = self._count_remedies(
-                order_id=order_test.orderId,
-                test_code=None,
-                sample_id=root_sample.sampleId,
-                remedy=RemedyType.RECOLLECT,
-            )
-            sample_remaining = max(0, MAX_RECOLLECTION_ATTEMPTS - recollection_used)
+            sample_remaining = self.collection.attempts_remaining_after(sample)
 
         criteria = RejectionCriteriaService(self.db).get_criteria_for_test(order_test.testCode)
         has_specimen = any(c in SPECIMEN_CRITERIA for c in criteria)
@@ -669,6 +623,15 @@ class QualityIssueService:
         self.db.add(new_test)
         self.db.flush()
         order_test.retestOrderTestId = new_test.id
+
+        self.audit.log_recollection_request(
+            original_sample_id=sample.sampleId,
+            new_sample_id=new_sample.sampleId,
+            user_id=user_id,
+            recollection_reason=reason,
+            recollection_attempt=new_sample.recollectionAttempt,
+            comment=notes,
+        )
 
         issue = self._record_issue(
             order_id=order_test.orderId,

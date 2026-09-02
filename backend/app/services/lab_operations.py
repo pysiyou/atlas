@@ -475,7 +475,9 @@ class LabOperationsService:
         if sample.status == SampleStatus.COLLECTED:
             self.quality._reject_sample_record(sample, user_id, reason, None)
 
-        new_sample = self.quality._create_recollection_sample(sample, user_id, reason)
+        new_sample = self.quality._create_recollection_sample(
+            sample, user_id, reason, supervisor_authorized=True
+        )
         self.quality._revive_suspended_tests(sample, new_sample)
 
         codes = list(new_sample.testCodes or [])
@@ -534,6 +536,15 @@ class LabOperationsService:
             ticket_id=ticket.id,
             user_id=user_id,
             reason=reason,
+        )
+
+        self.audit.log_recollection_request(
+            original_sample_id=sample.sampleId,
+            new_sample_id=new_sample.sampleId,
+            user_id=user_id,
+            recollection_reason=reason,
+            recollection_attempt=new_sample.recollectionAttempt,
+            comment=reason,
         )
 
         self.db.commit()

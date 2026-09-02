@@ -24,27 +24,58 @@ from sqlalchemy.engine import Connection
 from app.database import engine
 from app.models.quality_issue import QualityIssue
 from app.schemas.enums import (
+    AliquotStatus,
+    ClaimStatus,
     ContainerTopColor,
     ContainerType,
+    EscalationReasonCode,
     EscalationResolutionAction,
+    EscalationSeverity,
+    EscalationTicketStatus,
     Gender,
     LabOperationType,
     OrderStatus,
     PaymentMethod,
     PaymentStatus,
     PriorityLevel,
+    QualityDomain,
+    QualityStage,
+    RemedyType,
     SampleStatus,
     SampleType,
     TestStatus,
     UserRole,
 )
 
-# Canonical value sets — single source of truth
+# PostgreSQL enum type → contract enum class (all enums used by contract_enum columns)
+PG_ENUM_REGISTRY: dict[str, type] = {
+    "teststatus": TestStatus,
+    "samplestatus": SampleStatus,
+    "orderstatus": OrderStatus,
+    "laboperationtype": LabOperationType,
+    "escalationresolutionaction": EscalationResolutionAction,
+    "escalationreasoncode": EscalationReasonCode,
+    "escalationticketstatus": EscalationTicketStatus,
+    "escalationseverity": EscalationSeverity,
+    "paymentstatus": PaymentStatus,
+    "prioritylevel": PriorityLevel,
+    "sampletype": SampleType,
+    "userrole": UserRole,
+    "gender": Gender,
+    "containertype": ContainerType,
+    "containertopcolor": ContainerTopColor,
+    "paymentmethod": PaymentMethod,
+    "remedytype": RemedyType,
+    "qualitystage": QualityStage,
+    "qualitydomain": QualityDomain,
+    "aliquotstatus": AliquotStatus,
+    "claimstatus": ClaimStatus,
+}
+
 CANONICAL_TEST_STATUSES = {s.value for s in TestStatus}
 CANONICAL_SAMPLE_STATUSES = {s.value for s in SampleStatus}
 CANONICAL_ORDER_STATUSES = {s.value for s in OrderStatus}
 CANONICAL_LAB_OPERATIONS = {s.value for s in LabOperationType}
-CANONICAL_ESCALATION_ACTIONS = {s.value for s in EscalationResolutionAction}
 
 
 def _member_name_map(enum_cls) -> dict[str, str]:
@@ -52,47 +83,15 @@ def _member_name_map(enum_cls) -> dict[str, str]:
     return {member.name: member.value for member in enum_cls}
 
 
-# table, column, postgres enum type, mapping source enum
-CONTRACT_ENUM_COLUMNS: list[tuple[str, str, str, type]] = [
-    ("orders", "payment_status", "paymentstatus", PaymentStatus),
-    ("invoices", "payment_status", "paymentstatus", PaymentStatus),
-    ("orders", "priority", "prioritylevel", PriorityLevel),
-    ("samples", "priority", "prioritylevel", PriorityLevel),
-    ("samples", "sample_type", "sampletype", SampleType),
-    ("users", "role", "userrole", UserRole),
-    ("patients", "gender", "gender", Gender),
-    ("samples", "actual_container_type", "containertype", ContainerType),
-    ("samples", "actual_container_color", "containertopcolor", ContainerTopColor),
-    ("payments", "payment_method", "paymentmethod", PaymentMethod),
-]
-TEST_STATUS_TO_CANONICAL: dict[str, str] = {
-    "PENDING": TestStatus.PENDING.value,
-    "SAMPLE_COLLECTED": TestStatus.SAMPLE_COLLECTED.value,
-    "RESULTED": TestStatus.RESULTED.value,
-    "VALIDATED": TestStatus.VALIDATED.value,
-    "ESCALATED": TestStatus.ESCALATED.value,
-    "SUPERSEDED": TestStatus.SUPERSEDED.value,
-    "REMOVED": TestStatus.REMOVED.value,
-    "IN_PROGRESS": TestStatus.SAMPLE_COLLECTED.value,
-    "REJECTED": TestStatus.SUSPENDED.value,
-    "in-progress": TestStatus.SAMPLE_COLLECTED.value,
-    "rejected": TestStatus.SUSPENDED.value,
-}
+def _legacy_map(enum_cls, extra: dict[str, str] | None = None) -> dict[str, str]:
+    """Merge member-name and extra legacy label mappings (skip identity pairs)."""
+    merged = _member_name_map(enum_cls)
+    if extra:
+        merged.update(extra)
+    return {source: target for source, target in merged.items() if source != target}
 
-SAMPLE_STATUS_TO_CANONICAL: dict[str, str] = {
-    "PENDING": SampleStatus.PENDING.value,
-    "COLLECTED": SampleStatus.COLLECTED.value,
-    "REJECTED": SampleStatus.REJECTED.value,
-}
 
-ORDER_STATUS_TO_CANONICAL: dict[str, str] = {
-    "ORDERED": OrderStatus.ORDERED.value,
-    "IN_PROGRESS": OrderStatus.IN_PROGRESS.value,
-    "COMPLETED": OrderStatus.COMPLETED.value,
-    "CANCELLED": OrderStatus.CANCELLED.value,
-}
-
-OPERATION_TYPE_TO_CANONICAL: dict[str, str] = {
+OPERATION_TYPE_EXTRA: dict[str, str] = {
     # Removed rejection flows → quality_issue_reported
     "result_validation_reject": LabOperationType.QUALITY_ISSUE_REPORTED.value,
     "result_validation_reject_retest": LabOperationType.QUALITY_ISSUE_REPORTED.value,
@@ -121,9 +120,26 @@ OPERATION_TYPE_TO_CANONICAL: dict[str, str] = {
     "ESCALATION_RESOLUTION_FORCE_VALIDATE": LabOperationType.ESCALATION_RESOLUTION_FORCE_VALIDATE.value,
 }
 
-ESCALATION_ACTION_TO_CANONICAL: dict[str, str] = {
-    "final_reject": EscalationResolutionAction.CANCEL_TEST.value,
-    "FINAL_REJECT": EscalationResolutionAction.CANCEL_TEST.value,
+LEGACY_EXTRA_MAPS: dict[str, dict[str, str]] = {
+    "teststatus": {
+        "IN_PROGRESS": TestStatus.SAMPLE_COLLECTED.value,
+        "REJECTED": TestStatus.SUSPENDED.value,
+        "in-progress": TestStatus.SAMPLE_COLLECTED.value,
+        "rejected": TestStatus.SUSPENDED.value,
+    },
+    "samplestatus": {
+        "RECEIVED": SampleStatus.COLLECTED.value,
+        "ACCESSIONED": SampleStatus.COLLECTED.value,
+        "IN_PROGRESS": SampleStatus.COLLECTED.value,
+        "COMPLETED": SampleStatus.COLLECTED.value,
+        "STORED": SampleStatus.REJECTED.value,
+        "DISPOSED": SampleStatus.REJECTED.value,
+    },
+    "laboperationtype": OPERATION_TYPE_EXTRA,
+    "escalationresolutionaction": {
+        "final_reject": EscalationResolutionAction.CANCEL_TEST.value,
+        "FINAL_REJECT": EscalationResolutionAction.CANCEL_TEST.value,
+    },
 }
 
 
@@ -230,19 +246,53 @@ def ensure_enum_values(conn: Connection, enum_type: str, values: Iterable[str], 
 
 def ensure_schema_enums(conn: Connection, dry_run: bool) -> None:
     _section("Ensuring PostgreSQL enum values")
-    ensure_enum_values(conn, "teststatus", CANONICAL_TEST_STATUSES, dry_run)
-    ensure_enum_values(conn, "samplestatus", CANONICAL_SAMPLE_STATUSES, dry_run)
-    ensure_enum_values(conn, "orderstatus", CANONICAL_ORDER_STATUSES, dry_run)
-    ensure_enum_values(conn, "laboperationtype", CANONICAL_LAB_OPERATIONS, dry_run)
-    ensure_enum_values(conn, "escalationresolutionaction", CANONICAL_ESCALATION_ACTIONS, dry_run)
-    ensure_enum_values(conn, "paymentstatus", {s.value for s in PaymentStatus}, dry_run)
-    ensure_enum_values(conn, "prioritylevel", {s.value for s in PriorityLevel}, dry_run)
-    ensure_enum_values(conn, "sampletype", {s.value for s in SampleType}, dry_run)
-    ensure_enum_values(conn, "userrole", {s.value for s in UserRole}, dry_run)
-    ensure_enum_values(conn, "gender", {s.value for s in Gender}, dry_run)
-    ensure_enum_values(conn, "containertype", {s.value for s in ContainerType}, dry_run)
-    ensure_enum_values(conn, "containertopcolor", {s.value for s in ContainerTopColor}, dry_run)
-    ensure_enum_values(conn, "paymentmethod", {s.value for s in PaymentMethod}, dry_run)
+    for pg_type, enum_cls in PG_ENUM_REGISTRY.items():
+        ensure_enum_values(conn, pg_type, {member.value for member in enum_cls}, dry_run)
+
+
+def _discover_enum_columns(conn: Connection) -> list[tuple[str, str, str]]:
+    """Return (table_name, column_name, pg_enum_type) for all enum columns."""
+    rows = conn.execute(
+        text(
+            """
+            SELECT c.table_name, c.column_name, c.udt_name
+            FROM information_schema.columns c
+            WHERE c.table_schema = 'public'
+              AND c.data_type = 'USER-DEFINED'
+              AND c.udt_name = ANY(:types)
+            ORDER BY c.table_name, c.column_name
+            """
+        ),
+        {"types": list(PG_ENUM_REGISTRY.keys())},
+    ).fetchall()
+    return [(table, column, udt) for table, column, udt in rows]
+
+
+def normalize_discovered_enum_columns(conn: Connection, dry_run: bool) -> None:
+    """Normalize every enum column in the database to canonical contract values."""
+    _section("Normalizing all enum columns")
+    skip_columns = {
+        ("order_tests", "status"),  # handled by normalize_order_tests
+        ("lab_operation_logs", "operation_type"),  # handled by normalize_audit_logs (audit immutability rule)
+    }
+    for table, column, udt in _discover_enum_columns(conn):
+        if (table, column) in skip_columns:
+            continue
+        if not _table_exists(conn, table):
+            continue
+        enum_cls = PG_ENUM_REGISTRY[udt]
+        mapping = _legacy_map(enum_cls, LEGACY_EXTRA_MAPS.get(udt))
+        if not mapping:
+            continue
+        print(f"\n  {table}.{column} ({udt})")
+        _apply_mapped_updates(
+            conn,
+            table=table,
+            column=column,
+            enum_type=udt,
+            mapping=mapping,
+            dry_run=dry_run,
+        )
 
 
 def _apply_mapped_updates(
@@ -372,7 +422,7 @@ def normalize_order_tests(conn: Connection, dry_run: bool) -> None:
         table="order_tests",
         column="status",
         enum_type="teststatus",
-        mapping=TEST_STATUS_TO_CANONICAL,
+        mapping=_legacy_map(TestStatus, LEGACY_EXTRA_MAPS["teststatus"]),
         dry_run=dry_run,
     )
 
@@ -407,50 +457,6 @@ def _count_special_order_tests(conn: Connection, label: str) -> int:
     return _count(conn, queries.get(label, "SELECT 0"))
 
 
-def normalize_samples(conn: Connection, dry_run: bool) -> None:
-    _section("Normalizing samples.status")
-    if not _table_exists(conn, "samples"):
-        return
-    _apply_mapped_updates(
-        conn,
-        table="samples",
-        column="status",
-        enum_type="samplestatus",
-        mapping=SAMPLE_STATUS_TO_CANONICAL,
-        dry_run=dry_run,
-    )
-
-
-def normalize_contract_enums(conn: Connection, dry_run: bool) -> None:
-    _section("Normalizing remaining contract enums")
-    for table, column, enum_type, enum_cls in CONTRACT_ENUM_COLUMNS:
-        if not _table_exists(conn, table) or not _column_exists(conn, table, column):
-            continue
-        mapping = _member_name_map(enum_cls)
-        _apply_mapped_updates(
-            conn,
-            table=table,
-            column=column,
-            enum_type=enum_type,
-            mapping=mapping,
-            dry_run=dry_run,
-        )
-
-
-def normalize_orders(conn: Connection, dry_run: bool) -> None:
-    _section("Normalizing orders.overall_status")
-    if not _table_exists(conn, "orders"):
-        return
-    _apply_mapped_updates(
-        conn,
-        table="orders",
-        column="overall_status",
-        enum_type="orderstatus",
-        mapping=ORDER_STATUS_TO_CANONICAL,
-        dry_run=dry_run,
-    )
-
-
 def normalize_audit_logs(conn: Connection, dry_run: bool) -> None:
     _section("Normalizing lab_operation_logs.operation_type")
     if not _table_exists(conn, "lab_operation_logs"):
@@ -464,7 +470,7 @@ def normalize_audit_logs(conn: Connection, dry_run: bool) -> None:
         table="lab_operation_logs",
         column="operation_type",
         enum_type="laboperationtype",
-        mapping=OPERATION_TYPE_TO_CANONICAL,
+        mapping=_legacy_map(LabOperationType, LEGACY_EXTRA_MAPS["laboperationtype"]),
         dry_run=dry_run,
     )
 
@@ -477,22 +483,6 @@ def normalize_audit_logs(conn: Connection, dry_run: bool) -> None:
                 """
             )
         )
-
-
-def normalize_escalation_actions(conn: Connection, dry_run: bool) -> None:
-    _section("Normalizing escalation_tickets.resolution_action")
-    if not _table_exists(conn, "escalation_tickets"):
-        return
-    if not _column_exists(conn, "escalation_tickets", "resolution_action"):
-        return
-    _apply_mapped_updates(
-        conn,
-        table="escalation_tickets",
-        column="resolution_action",
-        enum_type="escalationresolutionaction",
-        mapping=ESCALATION_ACTION_TO_CANONICAL,
-        dry_run=dry_run,
-    )
 
 
 def ensure_quality_issues_table(conn: Connection, dry_run: bool) -> None:
@@ -524,62 +514,19 @@ def assert_canonical(conn: Connection) -> None:
     _section("Verification")
     errors: list[str] = []
 
-    if _table_exists(conn, "order_tests"):
-        bad = conn.execute(
+    for table, column, udt in _discover_enum_columns(conn):
+        enum_cls = PG_ENUM_REGISTRY[udt]
+        allowed = {member.value for member in enum_cls}
+        rows = conn.execute(
             text(
-                """
-                SELECT status::text, COUNT(*) FROM order_tests
-                WHERE status::text NOT IN (
-                  'pending', 'sample-collected', 'resulted', 'validated',
-                  'suspended', 'cancelled', 'escalated', 'superseded', 'removed'
-                )
+                f"""
+                SELECT {column}::text, COUNT(*) FROM {table}
+                WHERE {column} IS NOT NULL
                 GROUP BY 1
                 """
             )
         ).fetchall()
-        for value, count in bad:
-            errors.append(f"order_tests.status '{value}' ({count} rows)")
-
-    if _table_exists(conn, "samples"):
-        bad = conn.execute(
-            text(
-                """
-                SELECT status::text, COUNT(*) FROM samples
-                WHERE status::text NOT IN ('pending', 'collected', 'rejected')
-                GROUP BY 1
-                """
-            )
-        ).fetchall()
-        for value, count in bad:
-            errors.append(f"samples.status '{value}' ({count} rows)")
-
-    if _table_exists(conn, "orders"):
-        bad = conn.execute(
-            text(
-                """
-                SELECT overall_status::text, COUNT(*) FROM orders
-                WHERE overall_status::text NOT IN ('ordered', 'in-progress', 'completed', 'cancelled')
-                GROUP BY 1
-                """
-            )
-        ).fetchall()
-        for value, count in bad:
-            errors.append(f"orders.overall_status '{value}' ({count} rows)")
-
-    if errors:
-        print("  ✗ Non-canonical values remain:")
-        for err in errors:
-            print(f"    - {err}")
-        raise RuntimeError("Migration incomplete — non-canonical enum values remain")
-
-    for table, column, _, enum_cls in CONTRACT_ENUM_COLUMNS:
-        if not _table_exists(conn, table) or not _column_exists(conn, table, column):
-            continue
-        allowed = {m.value for m in enum_cls}
-        bad = conn.execute(
-            text(f"SELECT {column}::text, COUNT(*) FROM {table} GROUP BY 1")
-        ).fetchall()
-        for value, count in bad:
+        for value, count in rows:
             if value not in allowed:
                 errors.append(f"{table}.{column} '{value}' ({count} rows)")
 
@@ -602,10 +549,7 @@ def migrate(*, dry_run: bool = False) -> None:
         with engine.connect() as conn:
             ensure_schema_enums(conn, dry_run=True)
             normalize_order_tests(conn, dry_run=True)
-            normalize_samples(conn, dry_run=True)
-            normalize_orders(conn, dry_run=True)
-            normalize_contract_enums(conn, dry_run=True)
-            normalize_escalation_actions(conn, dry_run=True)
+            normalize_discovered_enum_columns(conn, dry_run=True)
             normalize_audit_logs(conn, dry_run=True)
             ensure_quality_issues_table(conn, dry_run=True)
             drop_deprecated_columns(conn, dry_run=True)
@@ -622,10 +566,7 @@ def migrate(*, dry_run: bool = False) -> None:
     # Phase 2: normalize data + schema cleanup
     with engine.connect() as conn:
         normalize_order_tests(conn, dry_run=False)
-        normalize_samples(conn, dry_run=False)
-        normalize_orders(conn, dry_run=False)
-        normalize_contract_enums(conn, dry_run=False)
-        normalize_escalation_actions(conn, dry_run=False)
+        normalize_discovered_enum_columns(conn, dry_run=False)
         normalize_audit_logs(conn, dry_run=False)
         ensure_quality_issues_table(conn, dry_run=False)
         drop_deprecated_columns(conn, dry_run=False)
