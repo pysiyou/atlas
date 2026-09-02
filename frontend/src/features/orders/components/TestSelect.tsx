@@ -83,9 +83,9 @@ const TestSearchTagInput: React.FC<{
           />
         </div>
 
-        {selectedTags.map(({ code, name }) => (
+        {selectedTags.map(({ code, name }, idx) => (
           <div
-            key={code}
+            key={`${code}-${idx}`}
             className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
           >
             <span className={`text-xs font-normal truncate min-w-0 ${tagStyles.text}`}>{name}</span>

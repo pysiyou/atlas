@@ -3,7 +3,25 @@
  * Transforms between form structure (with testCodes) and API structure (with tests)
  */
 
+import type { OrderTest } from '@/types';
 import type { OrderFormInput, Order } from '../schemas/order.schema';
+import { getActiveTests } from './orderCalculator';
+
+/**
+ * Unique active catalog test codes for order edit forms.
+ * Excludes superseded/removed rows and dedupes retest chains that share a code.
+ */
+export function getActiveOrderTestCodes(tests: OrderTest[] = []): string[] {
+  const seen = new Set<string>();
+  const codes: string[] = [];
+  for (const test of getActiveTests(tests)) {
+    if (!seen.has(test.testCode)) {
+      seen.add(test.testCode);
+      codes.push(test.testCode);
+    }
+  }
+  return codes;
+}
 
 /**
  * Transform Order from API to form input structure
@@ -19,7 +37,7 @@ export function orderToFormInput(order?: Partial<Order>): Partial<OrderFormInput
     referringPhysician: order.referringPhysician || '',
     priority: order.priority || 'low',
     clinicalNotes: order.clinicalNotes || '',
-    testCodes: order.tests?.map(test => test.testCode) || [],
+    testCodes: getActiveOrderTestCodes(order.tests ?? []),
     // paymentMethod is form-only, not in Order type
   };
 }
