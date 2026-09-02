@@ -53,4 +53,27 @@ export const REJECTION_DIALOG_COPY = {
   },
   recollectBlocked: 'Cannot collect new sample - order has validated tests',
   triggerTitle: 'Reject',
+  collection: {
+    recollect: {
+      warningTitle: 'New Collection Required',
+      warningBody:
+        'This specimen will be rejected and a recollection will be requested from the patient.',
+      reasonLabel: 'Specimen Issue',
+      notesLabel: 'Additional Context / Notes',
+    },
+    escalateLimit: {
+      warningTitle: 'Recollection Limit Reached',
+      warningBody:
+        'This rejection will escalate automatically. A supervisor will decide the next step.',
+      reasonLabel: 'Specimen Issue',
+      notesLabel: 'Additional Context / Notes',
+    },
+    escalateResults: {
+      warningTitle: 'Supervisor Review Required',
+      warningBody:
+        'Linked tests already have results. Reporting this specimen issue will escalate to a supervisor for review.',
+      reasonLabel: 'Specimen Issue',
+      notesLabel: 'Additional Context / Notes',
+    },
+  },
 } as const;

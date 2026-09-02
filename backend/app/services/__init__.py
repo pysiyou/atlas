@@ -2,6 +2,7 @@
 Services package for business logic
 """
 from app.services.sample_generator import generate_samples_for_order
+from app.services.sample_collection import SampleCollectionService
 from app.services.order_status_updater import update_order_status
 from app.services.state_machine import (
     SampleStateMachine,
@@ -27,4 +28,5 @@ __all__ = [
     "QualityIssueResult",
     "MAX_RETEST_ATTEMPTS",
     "MAX_RECOLLECTION_ATTEMPTS",
+    "SampleCollectionService",
 ]

@@ -6,8 +6,30 @@ import { Alert, SpinnerLoader } from '@/components';
 import { CatalogRejectionFields } from './CatalogRejectionFields';
 import { AttemptProgressBar } from './AttemptProgressBar';
 import { useQualityIssueOptions } from '@/features/lab/api/quality-issues.api';
-import type { QualityIssueTargetType } from '@/types/lab-operations';
+import type { QualityIssueOptions, QualityIssueTargetType } from '@/types/lab-operations';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
+import { REJECTION_DIALOG_COPY } from './rejectionDialogConstants';
+
+type CollectionAlertCopy = {
+  variant: 'warning' | 'danger';
+  warningTitle: string;
+  warningBody: string;
+  reasonLabel: string;
+  notesLabel: string;
+};
+
+function getCollectionAlertCopy(options: QualityIssueOptions): CollectionAlertCopy {
+  const hasResultedTests =
+    (options.resultedTestsCount ?? 0) > 0 || (options.validatedTestsCount ?? 0) > 0;
+
+  if (hasResultedTests) {
+    return { variant: 'danger', ...REJECTION_DIALOG_COPY.collection.escalateResults };
+  }
+  if (options.willEscalate) {
+    return { variant: 'danger', ...REJECTION_DIALOG_COPY.collection.escalateLimit };
+  }
+  return { variant: 'warning', ...REJECTION_DIALOG_COPY.collection.recollect };
+}
 
 export interface QualityIssueFormProps {
   targetType: QualityIssueTargetType;
@@ -45,12 +67,12 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
       ? GENERATED_LAB_CONSTANTS.MAX_RECOLLECTION_ATTEMPTS
       : GENERATED_LAB_CONSTANTS.MAX_RETEST_ATTEMPTS;
 
+  const alertCopy =
+    targetType === 'sample' && options ? getCollectionAlertCopy(options) : null;
+
   return (
     <div className="space-y-3">
-      <div>
-        <p className="text-sm font-medium">{title}</p>
-        {subtitle && <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
-      </div>
+      {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
 
       {isLoading || isSubmitting ? (
         <div className="flex justify-center py-4">
@@ -58,20 +80,23 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
         </div>
       ) : (
         <>
-          {options?.previewMessage && (
-            <Alert variant={options.willEscalate ? 'danger' : 'warning'} className="py-2">
-              <p className="text-xs">{options.previewMessage}</p>
+          {error && (
+            <Alert variant="danger" className="py-2">
+              <p className="text-xs">{error}</p>
+            </Alert>
+          )}
+
+          {alertCopy && (
+            <Alert variant={alertCopy.variant} className="py-2">
+              <div className="space-y-0.5">
+                <p className="font-normal text-xs">{alertCopy.warningTitle}</p>
+                <p className="text-xxs opacity-90 leading-tight">{alertCopy.warningBody}</p>
+              </div>
             </Alert>
           )}
 
           {attemptMax > 0 && (
             <AttemptProgressBar used={attemptUsed} total={attemptMax} label={targetType === 'sample' ? 'Recollection' : 'Re-test'} />
-          )}
-
-          {error && (
-            <Alert variant="danger" className="py-2">
-              <p className="text-xs">{error}</p>
-            </Alert>
           )}
 
           <CatalogRejectionFields
@@ -81,6 +106,8 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
             rejectionNotes={notes}
             onReasonChange={onReasonChange ?? (() => {})}
             onNotesChange={onNotesChange ?? (() => {})}
+            reasonLabel={alertCopy?.reasonLabel ?? title}
+            notesLabel={alertCopy?.notesLabel}
           />
         </>
       )}

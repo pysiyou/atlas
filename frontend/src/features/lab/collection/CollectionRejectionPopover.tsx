@@ -66,7 +66,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
         <QualityIssueForm
           targetType="sample"
           targetId={numericSampleId}
-          title="What is wrong with this specimen?"
+          title="Specimen Issue"
           reason={reason}
           notes={notes}
           onReasonChange={setReason}

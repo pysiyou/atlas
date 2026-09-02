@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 
 from app.models import Order, OrderTest, Test, Sample
+from app.services.sample_collection import SampleCollectionService
 from app.schemas.enums import SampleStatus, PriorityLevel, SampleType, TestStatus
 
 
@@ -64,6 +65,7 @@ def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> Lis
         sample_groups[sample_type_key].append((order_test, test))
 
     existing_samples = db.query(Sample).filter(Sample.orderId == orderId).all()
+    collection = SampleCollectionService(db)
     samples: List[Sample] = []
     for sample_type_key, test_list in sample_groups.items():
         total_volume = 0.0
@@ -97,28 +99,31 @@ def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> Lis
             samples.append(active)
         else:
             latest_rejected = _latest_rejected_sample(existing)
-            sample = Sample(
-                orderId=orderId,
-                sampleType=sample_type_enum,
-                status=SampleStatus.PENDING,
-                testCodes=test_codes,
-                requiredVolume=total_volume,
-                priority=order.priority,
-                requiredContainerTypes=list(container_types_set),
-                requiredContainerColors=list(container_colors_set),
-                isRecollection=latest_rejected is not None,
-                originalSampleId=latest_rejected.sampleId if latest_rejected else None,
-                recollectionAttempt=(
-                    (latest_rejected.recollectionAttempt or 1) + 1 if latest_rejected else 1
-                ),
-                createdBy=str(createdBy),
-                updatedBy=str(createdBy),
-            )
-            db.add(sample)
-            db.flush()
-            if latest_rejected and not latest_rejected.recollectionSampleId:
-                latest_rejected.recollectionSampleId = sample.sampleId
-            samples.append(sample)
+            pending_recollection = _pending_recollection_sample(existing, latest_rejected)
+            if pending_recollection:
+                _update_sample(
+                    pending_recollection,
+                    test_codes=test_codes,
+                    required_volume=total_volume,
+                    container_types=list(container_types_set),
+                    container_colors=list(container_colors_set),
+                    priority=order.priority,
+                    updated_by=createdBy,
+                )
+                _dedupe_pending_samples(db, orderId, pending_recollection, existing)
+                samples.append(pending_recollection)
+            elif not latest_rejected:
+                sample = collection.create_initial_pending_sample(
+                    order_id=orderId,
+                    sample_type=sample_type_enum,
+                    test_codes=test_codes,
+                    required_volume=total_volume,
+                    priority=order.priority,
+                    required_container_types=list(container_types_set),
+                    required_container_colors=list(container_colors_set),
+                    created_by=createdBy,
+                )
+                samples.append(sample)
 
     # Delete obsolete: samples for this order whose type is not in sample_groups
     desired_types = {_normalize_sample_type(k) for k in sample_groups}
@@ -191,6 +196,26 @@ def _latest_rejected_sample(existing: List[Sample]) -> Sample | None:
     if not rejected:
         return None
     return max(rejected, key=lambda s: s.sampleId)
+
+
+def _pending_recollection_sample(
+    existing: List[Sample],
+    latest_rejected: Sample | None,
+) -> Sample | None:
+    """Return the pending recollection tube created by the quality workflow, if any."""
+    if not latest_rejected or not latest_rejected.recollectionSampleId:
+        return None
+    recollection = next(
+        (s for s in existing if s.sampleId == latest_rejected.recollectionSampleId),
+        None,
+    )
+    if (
+        recollection
+        and recollection.status == SampleStatus.PENDING
+        and recollection.collectedAt is None
+    ):
+        return recollection
+    return None
 
 
 def _reassign_order_tests_to_sample(
