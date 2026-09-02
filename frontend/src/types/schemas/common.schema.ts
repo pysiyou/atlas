@@ -36,6 +36,18 @@ export const dateStringSchema = z.string().refine(
   },
   { message: 'Invalid date format' }
 );
+
+/** ISO datetime from API: accepts Z or numeric offset; normalizes null/empty to undefined. */
+export const nullableApiDatetimeSchema = z.preprocess(
+  val => (val === null || val === '' ? undefined : val),
+  z
+    .string()
+    .refine(val => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(val), {
+      message: 'Invalid datetime format',
+    })
+    .optional()
+);
+
 export const dateSchema = z.coerce.date();
 
 // Numeric ranges

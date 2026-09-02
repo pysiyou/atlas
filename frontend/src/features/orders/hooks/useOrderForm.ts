@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useRef } from 'react';
 import { orderFormSchema, type OrderFormInput } from '../schemas/order.schema';
+import { orderToFormInput } from '../utils/formTransformers';
 import { useCreateOrder, useUpdateOrder } from '../api/orders.api';
 import type { Order } from '@/types';
 
@@ -34,11 +35,7 @@ export function useOrderForm({
   const defaultValues = useMemo(() => {
     if (mode === 'edit' && order) {
       return {
-        patientId: order.patientId,
-        referringPhysician: order.referringPhysician,
-        priority: order.priority,
-        clinicalNotes: order.clinicalNotes || '',
-        testCodes: order.tests.map(t => t.testCode),
+        ...orderToFormInput(order),
         paymentMethod: undefined, // Payment method not stored on order
       } as Partial<OrderFormInput>;
     }

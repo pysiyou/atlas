@@ -1,5 +1,9 @@
 import { z } from 'zod';
-import { dateStringSchema, positiveIntSchema } from '@/types/schemas/common.schema';
+import {
+  dateStringSchema,
+  nullableApiDatetimeSchema,
+  positiveIntSchema,
+} from '@/types/schemas/common.schema';
 import type { TestStatus } from '@/types';
 
 const apiTestStatusSchema = z.enum([
@@ -36,9 +40,9 @@ export const orderTestSchema = z.object({
     .optional()
     .transform(v => (v === null ? undefined : v)), // Backend returns null; normalize to undefined
   results: z.record(z.string(), z.unknown()).nullable().optional(),
-  resultEnteredAt: z.string().datetime().nullable().optional(), // Backend returns null
+  resultEnteredAt: nullableApiDatetimeSchema,
   enteredBy: z.string().nullable().optional(), // Backend returns null
-  resultValidatedAt: z.string().datetime().nullable().optional(), // Backend returns null
+  resultValidatedAt: nullableApiDatetimeSchema,
   validatedBy: z.string().nullable().optional(), // Backend returns null
   validationNotes: z.string().nullable().optional(), // Backend returns null
   flags: z.array(z.string()).nullable().optional(), // Backend returns null
@@ -60,7 +64,7 @@ export const orderTestSchema = z.object({
         rejectedAt: z.string(),
         rejectedBy: z.string(),
         rejectionReason: z.string(),
-        rejectionNotes: z.string().optional(),
+        rejectionNotes: z.string().nullable().optional(),
         rejectionType: z.enum([
           're-test',
           're-collect',

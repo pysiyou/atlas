@@ -31,7 +31,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
             {/* Display first 2 tests */}
             {activeTests.slice(0, 2).map((test, index) => (
               <div
-                key={test.testCode || index}
+                key={test.id ?? `${test.testCode}-${index}`}
                 className="flex items-center justify-between text-xs text-text-secondary"
               >
                 <div className="flex items-center flex-1 min-w-0">
