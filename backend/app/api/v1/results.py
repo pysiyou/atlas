@@ -360,7 +360,7 @@ def resolve_escalation(
     """Resolve an escalated test (admin/labtech_plus only)."""
     try:
         service = LabOperationsService(db)
-        read_back = body.readBack.model_dump() if body.readBack else None
+        read_back = body.readBack.model_dump(mode="json") if body.readBack else None
         result = service.resolve_escalation(
             order_id=orderId,
             test_code=testCode,

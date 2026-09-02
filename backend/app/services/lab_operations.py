@@ -184,11 +184,11 @@ class LabOperationsService:
         technician_notes: Optional[str] = None,
         skip_validation: bool = False,
     ) -> OrderTest:
-        order_test = self._get_order_test(order_id, test_code, status=TestStatus.SAMPLE_COLLECTED)
+        order_test = self._get_order_test(order_id, test_code)
 
         can_enter, reason = TestStateMachine.can_enter_results(order_test.status)
         if not can_enter:
-            raise LabOperationError(reason)
+            raise LabOperationError(reason, status_code=400)
 
         test_def = self.db.query(Test).filter(Test.code == test_code).first()
         result_items = test_def.resultItems if test_def else []

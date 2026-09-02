@@ -34,19 +34,7 @@ from app.services.order_status_updater import update_order_status
 from app.services.rejection_criteria_service import RejectionCriteriaService
 from app.services.state_machine import SampleStateMachine, TestStateMachine, StateTransitionError
 from app.utils.exceptions import LabOperationError
-
-# Catalog criteria that indicate a specimen (not analytical) problem during validation.
-SPECIMEN_CRITERIA = frozenset({
-    "hemolyzed",
-    "clotted",
-    "qns",
-    "wrong_container",
-    "labeling_error",
-    "transport_delay",
-    "contaminated",
-    "lipemic",
-    "icteric",
-})
+from app.utils.specimen_reasons import is_specimen_rejection_reason
 
 _SAMPLE_SUSPEND_STATUSES = {
     TestStatus.PENDING,
@@ -404,7 +392,7 @@ class QualityIssueService:
             sample_remaining = self.collection.attempts_remaining_after(sample)
 
         criteria = RejectionCriteriaService(self.db).get_criteria_for_test(order_test.testCode)
-        has_specimen = any(c in SPECIMEN_CRITERIA for c in criteria)
+        has_specimen = any(is_specimen_rejection_reason(c) for c in criteria)
 
         if will_escalate:
             preview = RemedyType.ESCALATE
@@ -462,6 +450,18 @@ class QualityIssueService:
         has_resulted = any(t.status in _SAMPLE_ESCALATE_STATUSES for t in linked)
 
         if has_resulted or options.willEscalate:
+            if options.willEscalate and not has_resulted:
+                for order_test in linked:
+                    if order_test.status == TestStatus.SUSPENDED:
+                        self.escalation.escalate_test(
+                            order_test,
+                            EscalationReasonCode.REJ_SAMP,
+                            user_id,
+                            metadata={"rejectionReason": reason, "rejectionNotes": notes},
+                            sample_id=sample_id,
+                            from_status=TestStatus.SUSPENDED,
+                        )
+
             issue = self._record_issue(
                 order_id=sample.orderId,
                 stage=QualityStage.COLLECTION,
@@ -536,7 +536,7 @@ class QualityIssueService:
 
         RejectionCriteriaService(self.db).validate_for_test(order_test.testCode, reason)
         options = self._test_options(order_test_id)
-        is_specimen = reason in SPECIMEN_CRITERIA
+        is_specimen = is_specimen_rejection_reason(reason)
 
         if options.willEscalate:
             return self._escalate_test_issue(order_test, user_id, reason, notes, QualityDomain.ANALYTICAL)

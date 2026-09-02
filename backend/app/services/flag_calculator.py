@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from app.schemas.enums import ResultStatus
+from app.utils.result_values import parse_numeric_result_value
 
 
 @dataclass
@@ -68,16 +69,9 @@ class FlagCalculatorService:
             if value_type not in ('NUMERIC', 'numeric'):
                 continue
 
-            # Parse numeric value
-            try:
-                if isinstance(value, str):
-                    if value.startswith('<') or value.startswith('>'):
-                        numeric_value = float(value[1:])
-                    else:
-                        numeric_value = float(value)
-                else:
-                    numeric_value = float(value)
-            except (ValueError, TypeError):
+            # Parse numeric value (scalar or structured {"value": ...})
+            numeric_value = parse_numeric_result_value(value)
+            if numeric_value is None:
                 continue
 
             # Get applicable reference range
