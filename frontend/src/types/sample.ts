@@ -27,18 +27,6 @@ type ContainerTopColor = ContainerTopColorEnum;
 type RejectionReason = RejectionReasonEnum;
 
 /**
- * Single rejection record in the history
- */
-export interface RejectionRecord {
-  rejectedAt: string;
-  rejectedBy: string;
-  rejectionReason?: string;
-  rejectionReasons?: string[];
-  rejectionNotes?: string;
-  recollectionRequired: boolean;
-}
-
-/**
  * Base sample fields - always present regardless of status
  */
 interface BaseSample {
@@ -54,9 +42,6 @@ interface BaseSample {
   // Required specs (what catalog says we need)
   requiredContainerTypes: ContainerType[];
   requiredContainerColors: ContainerTopColor[];
-
-  // Rejection history - tracks all rejection attempts
-  rejectionHistory?: RejectionRecord[];
 
   // Recollection tracking (present if this sample is a recollection)
   isRecollection?: boolean;

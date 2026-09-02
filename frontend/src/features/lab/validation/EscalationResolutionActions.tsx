@@ -115,10 +115,11 @@ interface EscalationResolutionActionsProps {
   onReasonAuthorizeRecollectChange: (value: string) => void;
   reasonFinalReject: string;
   onReasonFinalRejectChange: (value: string) => void;
+  reasonCode?: string;
   resolveAsync: (
     action: EscalationResolutionAction,
     reasonOrNotes?: string,
-    options?: EscalationResolveOptions
+    options?: EscalationResolveOptions,
   ) => Promise<void>;
   onValidationError: (message: string, subtitle: string) => void;
 }
@@ -140,142 +141,180 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
   onReasonAuthorizeRecollectChange,
   reasonFinalReject,
   onReasonFinalRejectChange,
+  reasonCode,
   resolveAsync,
   onValidationError,
-}) => (
-  <div className="flex items-center gap-2 flex-nowrap">
-    <ResolutionPopover
-      resolving={resolving}
-      triggerLabel="Force Validate"
-      triggerVariant="approve"
-      title="Force Validate"
-      subtitle={requiresReadBack ? 'Validation notes (optional)' : 'Validation notes (optional)'}
-      textareaId="escalation-force-validate-notes"
-      placeholder="e.g. Supervisor override after review"
-      value={validationNotesForceValidate}
-      onChange={onValidationNotesForceValidateChange}
-      confirmLabel="Confirm"
-      confirmVariant="success"
-      disabled={requiresReadBack && (!readBackConfirmed || !readBackProviderName.trim() || !readBackProviderContact.trim())}
-      onConfirm={async () => {
-        if (requiresReadBack) {
-          if (!readBackProviderName.trim() || !readBackProviderContact.trim()) {
-            onValidationError(
-              'Provider read-back required',
-              'Enter provider name and contact for critical value release.'
-            );
-            return false;
+}) => {
+  const showRetest = !reasonCode || reasonCode === 'LIMIT-HIT';
+  const showRecollect = !reasonCode || reasonCode === 'LIMIT-HIT' || reasonCode === 'REJ-SAMP';
+  const showApplyAmendment = reasonCode === 'AMEND-RES';
+  const showForceValidate =
+    reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || reasonCode === 'REJ-SAMP' || !reasonCode;
+
+  return (
+    <div className="flex items-center gap-2 flex-nowrap">
+      {showForceValidate && (
+        <ResolutionPopover
+          resolving={resolving}
+          triggerLabel="Force Validate"
+          triggerVariant="approve"
+          title="Force Validate"
+          subtitle="Validation notes (optional)"
+          textareaId="escalation-force-validate-notes"
+          placeholder="e.g. Supervisor override after review"
+          value={validationNotesForceValidate}
+          onChange={onValidationNotesForceValidateChange}
+          confirmLabel="Confirm"
+          confirmVariant="success"
+          disabled={
+            requiresReadBack &&
+            (!readBackConfirmed || !readBackProviderName.trim() || !readBackProviderContact.trim())
           }
-          if (!readBackConfirmed) {
-            onValidationError(
-              'Read-back confirmation required',
-              'Confirm provider read-back before force-validating critical results.'
-            );
-            return false;
-          }
-        }
-        await resolveAsync('force_validate', validationNotesForceValidate, {
-          readBack: requiresReadBack
-            ? {
-                providerName: readBackProviderName.trim(),
-                providerContact: readBackProviderContact.trim(),
-                notifiedAt: new Date().toISOString(),
-                readBackConfirmed: true,
+          onConfirm={async () => {
+            if (requiresReadBack) {
+              if (!readBackProviderName.trim() || !readBackProviderContact.trim()) {
+                onValidationError(
+                  'Provider read-back required',
+                  'Enter provider name and contact for critical value release.',
+                );
+                return false;
               }
-            : undefined,
-        });
-      }}
-    >
-      {requiresReadBack && (
-        <div className="mb-3 space-y-2">
-          <input
-            className={cn(inputBase, 'w-full')}
-            placeholder="Provider name"
-            value={readBackProviderName}
-            onChange={e => onReadBackProviderNameChange(e.target.value)}
-          />
-          <input
-            className={cn(inputBase, 'w-full')}
-            placeholder="Provider contact"
-            value={readBackProviderContact}
-            onChange={e => onReadBackProviderContactChange(e.target.value)}
-          />
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
-            <input
-              type="checkbox"
-              checked={readBackConfirmed}
-              onChange={e => onReadBackConfirmedChange(e.target.checked)}
-            />
-            Read-back confirmed with ordering provider
-          </label>
-        </div>
+              if (!readBackConfirmed) {
+                onValidationError(
+                  'Read-back confirmation required',
+                  'Confirm provider read-back before force-validating critical results.',
+                );
+                return false;
+              }
+            }
+            await resolveAsync('force_validate', validationNotesForceValidate, {
+              readBack: requiresReadBack
+                ? {
+                    providerName: readBackProviderName.trim(),
+                    providerContact: readBackProviderContact.trim(),
+                    notifiedAt: new Date().toISOString(),
+                    readBackConfirmed: true,
+                  }
+                : undefined,
+            });
+          }}
+        >
+          {requiresReadBack && (
+            <div className="mb-3 space-y-2">
+              <input
+                className={cn(inputBase, 'w-full')}
+                placeholder="Provider name"
+                value={readBackProviderName}
+                onChange={e => onReadBackProviderNameChange(e.target.value)}
+              />
+              <input
+                className={cn(inputBase, 'w-full')}
+                placeholder="Provider contact"
+                value={readBackProviderContact}
+                onChange={e => onReadBackProviderContactChange(e.target.value)}
+              />
+              <label className="flex items-center gap-2 text-xs text-text-secondary">
+                <input
+                  type="checkbox"
+                  checked={readBackConfirmed}
+                  onChange={e => onReadBackConfirmedChange(e.target.checked)}
+                />
+                Read-back confirmed with ordering provider
+              </label>
+            </div>
+          )}
+        </ResolutionPopover>
       )}
-    </ResolutionPopover>
-    <ResolutionPopover
-      resolving={resolving}
-      triggerLabel="Authorize Re-test"
-      triggerVariant="secondary"
-      triggerIcon={<Icon name={ICONS.actions.loading} />}
-      title="Authorize Re-test"
-      subtitle="Reason (recommended)"
-      textareaId="escalation-authorize-retest-reason"
-      placeholder="e.g. One more run with senior tech"
-      value={reasonAuthorizeRetest}
-      onChange={onReasonAuthorizeRetestChange}
-      confirmLabel="Confirm"
-      confirmVariant="success"
-      onConfirm={() =>
-        resolveAsync(
-          'authorize_retest',
-          reasonAuthorizeRetest || 'Authorized re-test (escalation resolution)'
-        )
-      }
-    />
-    <ResolutionPopover
-      resolving={resolving}
-      triggerLabel="Authorize Re-collect"
-      triggerVariant="secondary"
-      triggerIcon={<Icon name={ICONS.dataFields.sampleCollection} />}
-      title="Authorize Re-collect"
-      subtitle="Reason (required)"
-      textareaId="escalation-authorize-recollect-reason"
-      placeholder="e.g. Sample compromised; new collection required"
-      value={reasonAuthorizeRecollect}
-      onChange={onReasonAuthorizeRecollectChange}
-      confirmLabel="Confirm"
-      confirmVariant="success"
-      disabled={!reasonAuthorizeRecollect.trim()}
-      onConfirm={async () => {
-        if (!reasonAuthorizeRecollect.trim()) {
-          onValidationError(
-            'Reason required',
-            'Provide a clinical reason to authorize re-collection.'
-          );
-          return false;
-        }
-        await resolveAsync('authorize_recollect', reasonAuthorizeRecollect.trim());
-      }}
-    />
-    <ResolutionPopover
-      resolving={resolving}
-      triggerLabel="Cancel Test"
-      triggerVariant="reject"
-      title="Cancel Test"
-      subtitle="Clinical reason (required)"
-      textareaId="escalation-final-reject-reason"
-      placeholder="e.g. Test no longer clinically indicated"
-      value={reasonFinalReject}
-      onChange={onReasonFinalRejectChange}
-      confirmLabel="Confirm Cancel"
-      confirmVariant="danger"
-      disabled={!reasonFinalReject.trim()}
-      onConfirm={async () => {
-        if (!reasonFinalReject.trim()) {
-          onValidationError('Reason required', 'Provide a clinical reason to cancel this test.');
-          return false;
-        }
-        await resolveAsync('final_reject', reasonFinalReject.trim());
-      }}
-    />
-  </div>
-);
+
+      {showApplyAmendment && (
+        <ResolutionPopover
+          resolving={resolving}
+          triggerLabel="Apply Amendment"
+          triggerVariant="approve"
+          title="Apply Amendment"
+          subtitle="Validation notes (optional)"
+          textareaId="escalation-apply-amendment-notes"
+          placeholder="e.g. Supervisor approved corrected values"
+          value={validationNotesForceValidate}
+          onChange={onValidationNotesForceValidateChange}
+          confirmLabel="Apply & Validate"
+          confirmVariant="success"
+          onConfirm={() => resolveAsync('apply_amendment', validationNotesForceValidate)}
+        />
+      )}
+
+      {showRetest && (
+        <ResolutionPopover
+          resolving={resolving}
+          triggerLabel="Authorize Re-test"
+          triggerVariant="secondary"
+          triggerIcon={<Icon name={ICONS.actions.loading} />}
+          title="Authorize Re-test"
+          subtitle="Reason (recommended)"
+          textareaId="escalation-authorize-retest-reason"
+          placeholder="e.g. One more run with senior tech"
+          value={reasonAuthorizeRetest}
+          onChange={onReasonAuthorizeRetestChange}
+          confirmLabel="Confirm"
+          confirmVariant="success"
+          onConfirm={() =>
+            resolveAsync(
+              'authorize_retest',
+              reasonAuthorizeRetest || 'Authorized re-test (escalation resolution)',
+            )
+          }
+        />
+      )}
+
+      {showRecollect && (
+        <ResolutionPopover
+          resolving={resolving}
+          triggerLabel="Authorize Re-collect"
+          triggerVariant="secondary"
+          triggerIcon={<Icon name={ICONS.dataFields.sampleCollection} />}
+          title="Authorize Re-collect"
+          subtitle="Reason (required)"
+          textareaId="escalation-authorize-recollect-reason"
+          placeholder="e.g. Sample compromised; new collection required"
+          value={reasonAuthorizeRecollect}
+          onChange={onReasonAuthorizeRecollectChange}
+          confirmLabel="Confirm"
+          confirmVariant="success"
+          disabled={!reasonAuthorizeRecollect.trim()}
+          onConfirm={async () => {
+            if (!reasonAuthorizeRecollect.trim()) {
+              onValidationError(
+                'Reason required',
+                'Provide a clinical reason to authorize re-collection.',
+              );
+              return false;
+            }
+            await resolveAsync('authorize_recollect', reasonAuthorizeRecollect.trim());
+          }}
+        />
+      )}
+
+      <ResolutionPopover
+        resolving={resolving}
+        triggerLabel="Cancel Test"
+        triggerVariant="reject"
+        title="Cancel Test"
+        subtitle="Clinical reason (required)"
+        textareaId="escalation-cancel-test-reason"
+        placeholder="e.g. Test no longer clinically indicated"
+        value={reasonFinalReject}
+        onChange={onReasonFinalRejectChange}
+        confirmLabel="Confirm Cancel"
+        confirmVariant="danger"
+        disabled={!reasonFinalReject.trim()}
+        onConfirm={async () => {
+          if (!reasonFinalReject.trim()) {
+            onValidationError('Reason required', 'Provide a clinical reason to cancel this test.');
+            return false;
+          }
+          await resolveAsync('cancel_test', reasonFinalReject.trim());
+        }}
+      />
+    </div>
+  );
+};

@@ -1,9 +1,9 @@
 """
 Sample Model - All fields use camelCase
 """
-from sqlalchemy import Column, String, Float, DateTime, JSON, Enum, ForeignKey, Boolean, Integer
+from sqlalchemy import Column, String, Float, DateTime, JSON, ForeignKey, Boolean, Integer
 from sqlalchemy.sql import func
-from app.database import Base
+from app.database import Base, contract_enum
 from app.schemas.enums import SampleStatus, SampleType, ContainerType, ContainerTopColor, PriorityLevel
 
 
@@ -12,13 +12,13 @@ class Sample(Base):
 
     sampleId = Column("sample_id", Integer, primary_key=True, autoincrement=True, index=True)
     orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
-    sampleType = Column("sample_type", Enum(SampleType), nullable=False)
-    status = Column(Enum(SampleStatus), nullable=False, default=SampleStatus.PENDING, index=True)
+    sampleType = Column("sample_type", contract_enum(SampleType), nullable=False)
+    status = Column(contract_enum(SampleStatus), nullable=False, default=SampleStatus.PENDING, index=True)
 
     # What this sample is for
     testCodes = Column("test_codes", JSON, nullable=False)  # Array of test codes
     requiredVolume = Column("required_volume", Float, nullable=False)
-    priority = Column(Enum(PriorityLevel), nullable=False)
+    priority = Column(contract_enum(PriorityLevel), nullable=False)
 
     # Required specs
     requiredContainerTypes = Column("required_container_types", JSON, nullable=False)  # Array of ContainerType
@@ -30,8 +30,8 @@ class Sample(Base):
     collectedVolume = Column("collected_volume", Float, nullable=True)
 
     # Actual container used (only when collected)
-    actualContainerType = Column("actual_container_type", Enum(ContainerType), nullable=True)
-    actualContainerColor = Column("actual_container_color", Enum(ContainerTopColor), nullable=True)
+    actualContainerType = Column("actual_container_type", contract_enum(ContainerType), nullable=True)
+    actualContainerColor = Column("actual_container_color", contract_enum(ContainerTopColor), nullable=True)
 
     # Optional collection fields
     collectionNotes = Column("collection_notes", String, nullable=True)
@@ -46,8 +46,6 @@ class Sample(Base):
     rejectedBy = Column("rejected_by", String, nullable=True)
     rejectionReason = Column("rejection_reason", String, nullable=True)  # Catalog rejection criterion
     rejectionNotes = Column("rejection_notes", String, nullable=True)
-    rejectionHistory = Column("rejection_history", JSON, nullable=True, default=list)  # Array of rejection records
-
     # Recollection
     recollectionRequired = Column("recollection_required", Boolean, default=False)
     recollectionSampleId = Column("recollection_sample_id", Integer, nullable=True)

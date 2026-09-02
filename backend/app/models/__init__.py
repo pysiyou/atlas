@@ -11,6 +11,7 @@ from app.models.billing import Invoice, Payment, InsuranceClaim
 from app.models.report import Report
 from app.models.lab_audit import LabOperationLog
 from app.models.escalation import EscalationTicket
+from app.models.quality_issue import QualityIssue
 from app.models.affiliation_pricing import AffiliationPricing
 
 __all__ = [
@@ -27,5 +28,6 @@ __all__ = [
     "Report",
     "LabOperationLog",
     "EscalationTicket",
+    "QualityIssue",
     "AffiliationPricing",
 ]

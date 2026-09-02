@@ -121,13 +121,22 @@ export const queryKeys = {
   },
 
   /**
+   * Quality issues (unified rejection / remedy flow)
+   */
+  qualityIssues: {
+    all: ['quality-issues'] as const,
+    options: (targetType?: string, targetId?: number) =>
+      [...queryKeys.qualityIssues.all, 'options', targetType, targetId] as const,
+    forOrder: (orderId?: number) =>
+      [...queryKeys.qualityIssues.all, 'order', orderId] as const,
+  },
+
+  /**
    * Lab results / escalation (role-gated)
    */
   results: {
     all: ['results'] as const,
     pendingEscalation: () => [...queryKeys.results.all, 'pending-escalation'] as const,
-    rejectionOptions: (orderId: string, testCode: string) =>
-      [...queryKeys.results.all, 'rejection-options', orderId, testCode] as const,
   },
 
   /**

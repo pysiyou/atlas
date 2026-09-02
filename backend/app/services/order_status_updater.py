@@ -56,11 +56,11 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
     # This includes rejected tests since work continues (retest/recollection)
     started_statuses = {
         TestStatus.SAMPLE_COLLECTED,
-        TestStatus.IN_PROGRESS,
         TestStatus.RESULTED,
         TestStatus.VALIDATED,
-        TestStatus.REJECTED,
+        TestStatus.SUSPENDED,
         TestStatus.ESCALATED,
+        TestStatus.CANCELLED,
     }
     any_started = any(t.status in started_statuses for t in active_tests)
     if any_started:

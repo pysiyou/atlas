@@ -4,26 +4,15 @@ import { formatDate, displayId } from '@/utils';
 import { LabCard } from '../components/LabCard';
 import { AttemptIndicator } from '../components/AttemptIndicator';
 import type { TestWithContext } from '@/types';
+import type { TestRejectionContext } from '../utils/deriveTestRejectionContext';
 import { ICONS } from '@/config/icons';
-
-interface EscalationRejectionContext {
-  resultRejectionHistory: { length: number };
-  hasResultRejectionHistory: boolean;
-  showRetestBadge: boolean;
-  showRecollectionBadge: boolean;
-  showAttemptIndicator: boolean;
-  attemptNumber: number;
-  attemptMax: number;
-  attemptType: 'retest' | 'recollection';
-  previousReason?: string;
-}
 
 interface EscalationCardDesktopProps {
   test: TestWithContext;
   onClick: () => void;
   handleCardClick: () => void;
   getUserName: (userId: number | string) => string;
-  rejection: EscalationRejectionContext;
+  rejection: TestRejectionContext;
 }
 
 export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
@@ -34,15 +23,13 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
   rejection,
 }) => {
   const {
-    resultRejectionHistory: rejectionHistory,
-    hasResultRejectionHistory: hasRejectionHistory,
     showRetestBadge,
     showRecollectionBadge,
     showAttemptIndicator,
     attemptNumber,
     attemptMax,
     attemptType,
-    previousReason,
+    sampleRecollectionAttempt,
   } = rejection;
 
   const badges = (
@@ -52,7 +39,6 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
           attemptNumber={attemptNumber}
           maxAttempts={attemptMax}
           type={attemptType}
-          previousReason={previousReason}
         />
       )}
       <h3 className="text-sm font-medium text-text-primary">{test.testName ?? test.testCode}</h3>
@@ -102,7 +88,7 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
   );
 
   const rejectionTrackingInfo =
-    hasRejectionHistory && (showRetestBadge || showRecollectionBadge) ? (
+    showAttemptIndicator && (showRetestBadge || showRecollectionBadge) ? (
       <div className="flex items-center gap-2 flex-wrap">
         {showRetestBadge && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
@@ -114,7 +100,7 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
         {showRecollectionBadge && (
           <Badge size="sm" variant="warning" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection attempt #{rejectionHistory.length}
+            Recollection attempt #{sampleRecollectionAttempt}
           </Badge>
         )}
       </div>
@@ -139,7 +125,7 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
   return (
     <LabCard
       onClick={handleCardClick}
-      className={hasRejectionHistory ? 'border-warning-stroke-emphasis' : ''}
+      className={showAttemptIndicator ? 'border-warning-stroke-emphasis' : ''}
       context={{
         patientName: test.patientName,
         orderId: test.orderId,

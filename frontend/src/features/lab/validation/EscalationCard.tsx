@@ -32,7 +32,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
         onClick={onClick}
         handleCardClick={handleCardClick}
         isRetest={rejection.isRetest}
-        hasRejectionHistory={rejection.hasResultRejectionHistory}
+        hasRejectionHistory={rejection.showAttemptIndicator}
       />
     );
   }

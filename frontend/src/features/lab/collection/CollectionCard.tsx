@@ -17,7 +17,6 @@ import type { ContainerType, RejectedSample, Sample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
-import { useRejectSampleHandler } from '@/features/lab/collection/useRejectSampleHandler';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/utils';
 import { getContainerIconColor, getCollectionRequirements, formatVolume } from '@/features/lab/utils';
@@ -30,7 +29,6 @@ import { LAB_CONFIG } from '@/features/lab/constants';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import { handlePrintCollectionLabel, getEffectiveContainerType } from '../utils/labHelpers';
-import { formatRejectionReasons } from '../utils/labFormatters';
 import type { SampleDisplay, SampleRequirement } from '@/features/lab/types';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
@@ -61,19 +59,14 @@ interface CardLayoutProps {
   patientName: string;
   testNames: string[];
   handleCardClick: (e?: React.MouseEvent) => void;
-  handleRejectSample: (reason: string, notes: string, requireRecollection: boolean) => Promise<void>;
-  isRejecting: boolean;
   isCollecting: boolean;
 }
-
-// ─── useCollectionCardActions ─────────────────────────────────────────────────
 
 function useCollectionCardActions(
   display: SampleDisplay,
   onCollect: CollectionCardProps['onCollect']
 ) {
   const { openModal } = useModal();
-  const { rejectSample, isRejecting } = useRejectSampleHandler();
   const { sample } = display;
 
   const openSampleModal = () => {
@@ -89,16 +82,7 @@ function useCollectionCardActions(
 
   const handleCardClick = useLabCardClickGuard(openSampleModal);
 
-  const handleRejectSample = async (
-    reason: string,
-    notes: string,
-    requireRecollection: boolean
-  ) => {
-    if (!sample?.sampleId) return;
-    await rejectSample(sample.sampleId, reason, notes, requireRecollection);
-  };
-
-  return { handleCardClick, handleRejectSample, isRejecting };
+  return { handleCardClick };
 }
 
 // ─── CollectionCardMobile ─────────────────────────────────────────────────────
@@ -186,9 +170,7 @@ function CollectionCardMobile({
               requirement={requirement}
               patientName={patientName}
               testName={testNames.join(', ')}
-              isRecollection={
-                isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)
-              }
+              isRecollection={isRecollection}
               onConfirm={(volume, notes, color, containerType) =>
                 onCollect(display, volume, notes, color, containerType)
               }
@@ -222,8 +204,6 @@ function CollectionCardDesktop({
   patientName,
   testNames,
   handleCardClick,
-  handleRejectSample,
-  isRejecting,
 }: CardLayoutProps) {
   const { order } = display;
   const isPending = sample.status === 'pending';
@@ -250,18 +230,12 @@ function CollectionCardDesktop({
   const badges = (
     <>
       {/* Attempt indicator for recollections */}
-      {isRecollection && sample.rejectionHistory && sample.rejectionHistory.length > 0 && (
+      {isRecollection && (sample.recollectionAttempt ?? 1) > 1 && (
         <AttemptIndicator
-          attemptNumber={sample.rejectionHistory.length + 1}
+          attemptNumber={sample.recollectionAttempt ?? 1}
           maxAttempts={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
           type="recollection"
-          previousReason={(() => {
-            const last = sample.rejectionHistory[sample.rejectionHistory.length - 1];
-            if (!last) return undefined;
-            if (last.rejectionReason) return last.rejectionReason;
-            if (last.rejectionReasons) return formatRejectionReasons(last.rejectionReasons) ?? undefined;
-            return last.rejectionNotes ?? undefined;
-          })()}
+          previousReason={sample.recollectionReason}
         />
       )}
       <h3 className="text-sm font-medium text-text-primary capitalize">{patientName}</h3>
@@ -314,9 +288,7 @@ function CollectionCardDesktop({
           requirement={requirement}
           patientName={patientName}
           testName={testNames.join(', ')}
-          isRecollection={
-            isRecollection || (sample.rejectionHistory && sample.rejectionHistory.length > 0)
-          }
+          isRecollection={isRecollection}
           onConfirm={(volume, notes, color, containerType) =>
             onCollect(display, volume, notes, color, containerType)
           }
@@ -334,9 +306,6 @@ function CollectionCardDesktop({
                 sampleType={sample.sampleType}
                 patientName={patientName}
                 isRecollection={isRecollection}
-                rejectionHistoryCount={sample.rejectionHistory?.length || 0}
-                isSubmitting={isRejecting}
-                onReject={handleRejectSample}
               />
               <IconButton
                 onClick={() => handlePrintCollectionLabel(display, patientName)}
@@ -412,8 +381,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
   const { getPatientName } = usePatientNameLookup();
   const { tests } = useTestCatalog();
   // Hook must be called before any early return (rules-of-hooks)
-  const { handleCardClick, handleRejectSample, isRejecting } =
-    useCollectionCardActions(display, onCollect);
+  const { handleCardClick } = useCollectionCardActions(display, onCollect);
 
   const { sample, requirement } = display;
   if (!sample || !requirement) return null;
@@ -429,8 +397,6 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
     patientName,
     testNames,
     handleCardClick,
-    handleRejectSample,
-    isRejecting,
     isCollecting,
   };
 

@@ -1,36 +1,31 @@
 /**
- * useRejectionDialog — rejection popover state for result validation.
+ * useRejectionDialog — quality issue popover state for result validation.
  */
-
 import { useState, useEffect, useMemo } from 'react';
-import type { RejectionResult } from '@/types/lab-operations';
-import { useRejectionManager } from './useRejectionManager';
+import type { QualityIssueResult } from '@/types/lab-operations';
+import { useQualityIssueOptions, useReportQualityIssue } from '@/features/lab/api/quality-issues.api';
 import { REJECTION_DIALOG_COPY } from '../components/rejectionDialogConstants';
 
-function buildSubtitle(
-  testName?: string,
-  testCode?: string,
-  patientName?: string
-): string {
+function buildSubtitle(testName?: string, testCode?: string, patientName?: string): string {
   return [testName, testCode ? `(${testCode})` : '', patientName ? `- ${patientName}` : '']
     .filter(Boolean)
     .join(' ');
 }
 
 export interface UseRejectionDialogParams {
-  orderId: string | number;
-  testCode: string;
+  orderTestId: number;
   testName?: string;
+  testCode?: string;
   patientName?: string;
-  onConfirm: (result: RejectionResult) => void;
+  onConfirm: (result: QualityIssueResult) => void;
   onCancel: () => void;
   onSubmittingChange?: (submitting: boolean) => void;
 }
 
 export function useRejectionDialog({
-  orderId,
-  testCode,
+  orderTestId,
   testName,
+  testCode,
   patientName,
   onConfirm,
   onCancel: _onCancel,
@@ -39,39 +34,34 @@ export function useRejectionDialog({
   const [rejectionReason, setRejectionReason] = useState('');
   const [rejectionNotes, setRejectionNotes] = useState('');
 
-  const manager = useRejectionManager({ orderId, testCode, autoFetch: true });
-  const {
-    options,
-    isLoading,
-    isRejecting,
-    error,
-    fetchOptions,
-    rejectWithReason,
-    escalationRequired,
-    clearError,
-  } = manager;
+  const { data: options, isLoading, error: fetchError, refetch } = useQualityIssueOptions(
+    'test',
+    orderTestId,
+  );
+  const reportMutation = useReportQualityIssue();
 
-  const allowedCriteria = options?.allowedRejectionCriteria ?? [];
+  const allowedCriteria = options?.allowedCriteria ?? [];
+  const escalationRequired = options?.willEscalate ?? false;
   const hasReason = rejectionReason.length > 0;
   const hasCriteria = allowedCriteria.length > 0;
-  const isConfirmDisabled = useMemo(
-    () => !hasCriteria || !hasReason,
-    [hasCriteria, hasReason]
-  );
+  const isConfirmDisabled = useMemo(() => !hasCriteria || !hasReason, [hasCriteria, hasReason]);
 
   useEffect(() => {
-    onSubmittingChange?.(isRejecting);
-  }, [isRejecting, onSubmittingChange]);
+    onSubmittingChange?.(reportMutation.isPending);
+  }, [reportMutation.isPending, onSubmittingChange]);
 
   const handleConfirm = async () => {
     if (!rejectionReason) return;
-    const result = await rejectWithReason(rejectionReason, rejectionNotes.trim() || undefined);
-    if (result) onConfirm(result);
+    const result = await reportMutation.mutateAsync({
+      target: { type: 'test', id: orderTestId },
+      reason: rejectionReason,
+      notes: rejectionNotes.trim() || undefined,
+    });
+    onConfirm(result);
   };
 
   const handleRetry = () => {
-    clearError();
-    fetchOptions();
+    refetch();
   };
 
   const subtitle = buildSubtitle(testName, testCode, patientName);
@@ -84,8 +74,8 @@ export function useRejectionDialog({
     setRejectionNotes,
     isConfirmDisabled,
     isLoading,
-    isRejecting,
-    error,
+    isRejecting: reportMutation.isPending,
+    error: reportMutation.error?.message ?? (fetchError ? String(fetchError) : null),
     options,
     escalationRequired,
     handleConfirm,

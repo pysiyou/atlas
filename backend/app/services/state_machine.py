@@ -2,7 +2,6 @@
 State Machine Service for Laboratory Operations
 
 Provides strict validation of status transitions for samples and tests.
-Ensures that only valid state transitions are allowed.
 """
 from typing import Set, Dict, Tuple
 from app.schemas.enums import SampleStatus, TestStatus
@@ -20,41 +19,25 @@ class StateTransitionError(Exception):
 
 class SampleStateMachine:
     """
-    State machine for Sample status transitions.
-
-    Sample Lifecycle (Simplified):
-    PENDING -> COLLECTED -> REJECTED (optional)
-    
-    - PENDING: Sample awaiting collection from patient
-    - COLLECTED: Sample collected and ready for testing
-    - REJECTED: Sample failed quality checks (terminal - recollection creates new sample)
+    Sample Lifecycle:
+    PENDING -> COLLECTED -> REJECTED (terminal — recollection creates new sample)
     """
 
     TRANSITIONS: Dict[SampleStatus, Set[SampleStatus]] = {
         SampleStatus.PENDING: {SampleStatus.COLLECTED},
         SampleStatus.COLLECTED: {SampleStatus.REJECTED},
-        SampleStatus.REJECTED: set(),  # Terminal - recollection creates new sample
+        SampleStatus.REJECTED: set(),
     }
 
-    # States that can be rejected (have had collection)
-    REJECTABLE_STATES: Set[SampleStatus] = {
-        SampleStatus.COLLECTED,
-    }
+    REJECTABLE_STATES: Set[SampleStatus] = {SampleStatus.COLLECTED}
 
     @classmethod
     def can_transition(cls, from_status: SampleStatus, to_status: SampleStatus) -> bool:
-        """Check if a transition is valid"""
         allowed = cls.TRANSITIONS.get(from_status, set())
         return to_status in allowed
 
     @classmethod
     def validate_transition(cls, from_status: SampleStatus, to_status: SampleStatus) -> None:
-        """
-        Validate a transition, raising an exception if invalid.
-
-        Raises:
-            StateTransitionError: If the transition is not allowed
-        """
         if not cls.can_transition(from_status, to_status):
             allowed = cls.TRANSITIONS.get(from_status, set())
             allowed_str = ", ".join(s.value for s in allowed) if allowed else "none (terminal state)"
@@ -67,12 +50,6 @@ class SampleStateMachine:
 
     @classmethod
     def can_reject(cls, status: SampleStatus) -> Tuple[bool, str]:
-        """
-        Check if a sample with given status can be rejected.
-
-        Returns:
-            Tuple of (can_reject, reason)
-        """
         if status in cls.REJECTABLE_STATES:
             return True, ""
         if status == SampleStatus.PENDING:
@@ -83,65 +60,64 @@ class SampleStateMachine:
 
     @classmethod
     def is_terminal(cls, status: SampleStatus) -> bool:
-        """Check if a status is terminal (no further transitions)"""
         return len(cls.TRANSITIONS.get(status, set())) == 0
 
 
 class TestStateMachine:
     """
-    State machine for OrderTest status transitions.
-
     Test Lifecycle:
-    PENDING -> SAMPLE_COLLECTED -> IN_PROGRESS -> RESULTED -> VALIDATED
+    PENDING -> SAMPLE_COLLECTED -> RESULTED -> VALIDATED
 
-    Rejection paths:
-    - RESULTED -> SUPERSEDED (when retest is created)
-    - RESULTED -> ESCALATED (rejection limits exhausted, or sample rejection)
-    - PENDING/SAMPLE_COLLECTED/IN_PROGRESS -> REJECTED (sample rejection — suspended)
-    - REJECTED -> PENDING (when recollection sample is linked)
-    
-    Removal path:
-    - PENDING -> REMOVED (when test is removed from order during edit)
-    
-    Terminal states: VALIDATED, SUPERSEDED, REMOVED
+    Quality issue paths:
+    - SAMPLE_COLLECTED/PENDING/SUSPENDED -> SUSPENDED (specimen issue, awaiting recollection)
+    - RESULTED -> SUPERSEDED (retry) or ESCALATED (limit/critical)
+    - SUSPENDED -> PENDING (recollection linked)
+    - ESCALATED -> VALIDATED | SUPERSEDED | CANCELLED | PENDING (supervisor)
+
+    Terminal: VALIDATED, SUPERSEDED, REMOVED, CANCELLED
     """
 
     TRANSITIONS: Dict[TestStatus, Set[TestStatus]] = {
-        TestStatus.PENDING: {TestStatus.SAMPLE_COLLECTED, TestStatus.REJECTED, TestStatus.REMOVED, TestStatus.ESCALATED},
-        TestStatus.SAMPLE_COLLECTED: {TestStatus.IN_PROGRESS, TestStatus.RESULTED, TestStatus.REJECTED, TestStatus.ESCALATED},
-        TestStatus.IN_PROGRESS: {TestStatus.RESULTED, TestStatus.REJECTED, TestStatus.ESCALATED},
-        TestStatus.RESULTED: {TestStatus.VALIDATED, TestStatus.ESCALATED, TestStatus.SUPERSEDED},
-        TestStatus.VALIDATED: {TestStatus.ESCALATED},  # Amendment request escalates for supervisor review
-        TestStatus.REJECTED: {TestStatus.PENDING},  # Can transition to pending when recollection is ready
-        TestStatus.ESCALATED: {TestStatus.VALIDATED, TestStatus.SUPERSEDED, TestStatus.REJECTED},  # Supervisor: force validate, authorize retest, or final reject
-        TestStatus.SUPERSEDED: set(),  # Terminal - replaced by retest
-        TestStatus.REMOVED: set(),  # Terminal - removed from order during edit
+        TestStatus.PENDING: {
+            TestStatus.SAMPLE_COLLECTED,
+            TestStatus.SUSPENDED,
+            TestStatus.REMOVED,
+            TestStatus.ESCALATED,
+        },
+        TestStatus.SAMPLE_COLLECTED: {
+            TestStatus.RESULTED,
+            TestStatus.SUSPENDED,
+            TestStatus.ESCALATED,
+        },
+        TestStatus.RESULTED: {
+            TestStatus.VALIDATED,
+            TestStatus.ESCALATED,
+            TestStatus.SUPERSEDED,
+        },
+        TestStatus.VALIDATED: {TestStatus.ESCALATED},
+        TestStatus.SUSPENDED: {TestStatus.PENDING},
+        TestStatus.ESCALATED: {
+            TestStatus.VALIDATED,
+            TestStatus.SUPERSEDED,
+            TestStatus.CANCELLED,
+            TestStatus.PENDING,
+        },
+        TestStatus.SUPERSEDED: set(),
+        TestStatus.REMOVED: set(),
+        TestStatus.CANCELLED: set(),
     }
 
-    # States from which results can be entered
-    RESULT_ENTRY_STATES: Set[TestStatus] = {
-        TestStatus.SAMPLE_COLLECTED,
-    }
+    RESULT_ENTRY_STATES: Set[TestStatus] = {TestStatus.SAMPLE_COLLECTED}
 
-    # States from which results can be validated
-    VALIDATION_STATES: Set[TestStatus] = {
-        TestStatus.RESULTED,
-    }
+    VALIDATION_STATES: Set[TestStatus] = {TestStatus.RESULTED}
 
     @classmethod
     def can_transition(cls, from_status: TestStatus, to_status: TestStatus) -> bool:
-        """Check if a transition is valid"""
         allowed = cls.TRANSITIONS.get(from_status, set())
         return to_status in allowed
 
     @classmethod
     def validate_transition(cls, from_status: TestStatus, to_status: TestStatus) -> None:
-        """
-        Validate a transition, raising an exception if invalid.
-
-        Raises:
-            StateTransitionError: If the transition is not allowed
-        """
         if not cls.can_transition(from_status, to_status):
             allowed = cls.TRANSITIONS.get(from_status, set())
             allowed_str = ", ".join(s.value for s in allowed) if allowed else "none (terminal state)"
@@ -154,12 +130,6 @@ class TestStateMachine:
 
     @classmethod
     def can_enter_results(cls, status: TestStatus) -> Tuple[bool, str]:
-        """
-        Check if results can be entered for a test with given status.
-
-        Returns:
-            Tuple of (can_enter, reason)
-        """
         if status in cls.RESULT_ENTRY_STATES:
             return True, ""
         if status == TestStatus.PENDING:
@@ -172,18 +142,14 @@ class TestStateMachine:
             return False, "Test has already been validated"
         if status == TestStatus.SUPERSEDED:
             return False, "This test has been superseded by a retest"
+        if status == TestStatus.CANCELLED:
+            return False, "This test has been cancelled"
         if status == TestStatus.REMOVED:
             return False, "This test has been removed from the order"
         return False, f"Cannot enter results for test with status '{status.value}'"
 
     @classmethod
     def can_validate(cls, status: TestStatus) -> Tuple[bool, str]:
-        """
-        Check if a test with given status can be validated.
-
-        Returns:
-            Tuple of (can_validate, reason)
-        """
         if status in cls.VALIDATION_STATES:
             return True, ""
         if status == TestStatus.PENDING:
@@ -194,16 +160,16 @@ class TestStateMachine:
             return False, "Test has already been validated"
         if status == TestStatus.SUPERSEDED:
             return False, "This test has been superseded by a retest"
+        if status == TestStatus.CANCELLED:
+            return False, "This test has been cancelled"
         if status == TestStatus.REMOVED:
             return False, "This test has been removed from the order"
         return False, f"Cannot validate test with status '{status.value}'"
 
     @classmethod
     def is_terminal(cls, status: TestStatus) -> bool:
-        """Check if a status is terminal (no further transitions)"""
         return len(cls.TRANSITIONS.get(status, set())) == 0
 
     @classmethod
     def is_active(cls, status: TestStatus) -> bool:
-        """Check if a test is active (not superseded, removed, or validated)"""
-        return status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED}
+        return status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED, TestStatus.CANCELLED}

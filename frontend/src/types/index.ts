@@ -20,14 +20,12 @@ export type {
   OrderTest,
   TestResult,
   ResultRejectionType,
-  ResultRejectionRecord,
 } from './order';
 export type {
   Sample,
   PendingSample,
   CollectedSample,
   RejectedSample,
-  RejectionRecord,
 } from './sample';
 export { isCollectedSample } from './sample'; // Export value (function)
 export type { User, AuthUser } from './user';

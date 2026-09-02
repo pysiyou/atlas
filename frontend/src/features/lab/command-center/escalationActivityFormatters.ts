@@ -26,7 +26,7 @@ export function formatEscalationResolutionFinalReject(
     [
       { type: 'name', value: performer },
       { type: 'text', value: 'resolved an escalation with outcome' },
-      { type: 'badge', value: 'Final rejection', variant: 'rejected' },
+      { type: 'badge', value: 'Test cancelled', variant: 'cancelled' },
     ],
     [{ type: 'text', value: 'Test cancelled; no further action.' }],
   ];

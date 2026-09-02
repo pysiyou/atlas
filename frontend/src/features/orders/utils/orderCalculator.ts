@@ -32,10 +32,10 @@ export const calculateOrderStatus = (testStatuses: TestStatus[]): OrderStatus =>
   // Check if any active test has started (not pending) -> IN_PROGRESS
   const startedStatuses: TestStatus[] = [
     'sample-collected',
-    'in-progress',
     'resulted',
     'validated',
-    'rejected',
+    'suspended',
+    'cancelled',
     'escalated',
   ];
   if (activeStatuses.some(s => startedStatuses.includes(s))) {

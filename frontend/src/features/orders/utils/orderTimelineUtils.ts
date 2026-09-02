@@ -24,7 +24,7 @@ export const STATUS_TIMELINE_STEPS = [
  * Used to calculate progress for test-based steps.
  */
 const TEST_STATUS_THRESHOLDS: Record<string, string[]> = {
-  'sample-collected': ['sample-collected', 'in-progress', 'resulted', 'validated', 'rejected'],
+  'sample-collected': ['sample-collected', 'resulted', 'validated', 'suspended', 'cancelled'],
   'results-entered': ['resulted', 'validated'],
   completed: ['validated'], // Order is completed when all tests are validated
 };
@@ -134,10 +134,11 @@ export const getOverallOrderProgress = (order: Order): number => {
   const statusWeights: Record<string, number> = {
     pending: 0,
     'sample-collected': 25,
-    'in-progress': 50,
-    completed: 75,
+    resulted: 75,
     validated: 100,
-    rejected: 100, // Rejected tests are considered "done" for progress purposes
+    suspended: 50,
+    cancelled: 100,
+    escalated: 50,
     superseded: 0, // Superseded tests don't count toward progress
   };
 
@@ -183,7 +184,7 @@ export const getStepCompletionInfo = (
     case 'sample-collected': {
       // Find the first test that has been collected
       const collectedTest = order.tests.find(t =>
-        ['sample-collected', 'in-progress', 'resulted', 'validated', 'rejected'].includes(t.status)
+        ['sample-collected', 'resulted', 'validated', 'suspended', 'cancelled'].includes(t.status)
       );
       return {
         completedBy: order.createdBy.toString(),

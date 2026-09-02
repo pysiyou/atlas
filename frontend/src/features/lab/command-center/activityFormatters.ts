@@ -24,8 +24,6 @@ import {
 import {
   formatResultEntry,
   formatResultValidationApprove,
-  formatResultValidationRejectRetest,
-  formatResultValidationRejectRecollect,
   formatResultValidationEscalate,
 } from './resultActivityFormatters';
 import {
@@ -53,13 +51,12 @@ const FORMATTERS: Partial<Record<LabOperationType, ActivityFormatter>> = {
   sample_recollection_request: formatSampleRecollectionRequest,
   result_entry: formatResultEntry,
   result_validation_approve: formatResultValidationApprove,
-  result_validation_reject_retest: formatResultValidationRejectRetest,
-  result_validation_reject_recollect: formatResultValidationRejectRecollect,
-  result_validation_escalate: formatResultValidationEscalate,
+  quality_issue_reported: formatResultValidationEscalate,
+  escalation_resolution_apply_amendment: formatEscalationResolutionForceValidate,
+  escalation_resolution_cancel_test: formatEscalationResolutionFinalReject,
   escalation_resolution_authorize_retest: formatEscalationResolutionAuthorizeRetest,
   escalation_resolution_authorize_recollect: formatEscalationResolutionAuthorizeRecollect,
   escalation_resolution_force_validate: formatEscalationResolutionForceValidate,
-  escalation_resolution_final_reject: formatEscalationResolutionFinalReject,
   critical_value_detected: formatCriticalValueDetected,
   critical_value_notified: formatCriticalValueNotified,
   critical_value_acknowledged: formatCriticalValueAcknowledged,

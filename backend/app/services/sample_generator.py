@@ -109,9 +109,8 @@ def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> Lis
                 isRecollection=latest_rejected is not None,
                 originalSampleId=latest_rejected.sampleId if latest_rejected else None,
                 recollectionAttempt=(
-                    len(latest_rejected.rejectionHistory or []) + 1 if latest_rejected else 1
+                    (latest_rejected.recollectionAttempt or 1) + 1 if latest_rejected else 1
                 ),
-                rejectionHistory=list(latest_rejected.rejectionHistory or []) if latest_rejected else [],
                 createdBy=str(createdBy),
                 updatedBy=str(createdBy),
             )
@@ -225,9 +224,8 @@ def _link_order_tests_to_samples(db: Session, order_id: int, samples: List[Sampl
     """Link collectable order tests to the active pending sample for their type."""
     linkable_statuses = [
         TestStatus.PENDING,
-        TestStatus.REJECTED,
+        TestStatus.SUSPENDED,
         TestStatus.SAMPLE_COLLECTED,
-        TestStatus.IN_PROGRESS,
     ]
     for sample in samples:
         if not sample.testCodes:

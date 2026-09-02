@@ -8,22 +8,16 @@ import type { TestStatus } from '@/types';
 
 const apiTestStatusSchema = z.enum([
   'pending',
-  'collected',
-  'processing',
+  'sample-collected',
+  'resulted',
   'validated',
+  'suspended',
+  'cancelled',
   'escalated',
   'superseded',
   'removed',
-  'sample-collected',
-  'in-progress',
-  'resulted',
-  'rejected',
 ]);
-const normalizedStatusSchema = apiTestStatusSchema.transform((s): TestStatus => {
-  if (s === 'collected') return 'sample-collected';
-  if (s === 'processing') return 'in-progress';
-  return s as TestStatus;
-});
+const normalizedStatusSchema = apiTestStatusSchema.transform((s): TestStatus => s as TestStatus);
 
 export const orderTestSchema = z.object({
   id: z.number().int().positive().optional(),
@@ -57,26 +51,7 @@ export const orderTestSchema = z.object({
   isRetest: z.boolean().optional(),
   retestOfTestId: z.number().int().positive().nullable().optional(), // Backend returns null
   retestNumber: z.number().int().nonnegative().optional(), // Backend returns 0 for original, allow 0
-  retestOrderTestId: z.number().int().positive().nullable().optional(), // Backend returns null
-  resultRejectionHistory: z
-    .array(
-      z.object({
-        rejectedAt: z.string(),
-        rejectedBy: z.string(),
-        rejectionReason: z.string(),
-        rejectionNotes: z.string().nullable().optional(),
-        rejectionType: z.enum([
-          're-test',
-          're-collect',
-          'escalate',
-          'authorize_retest',
-          'authorize_recollect',
-          'final_reject',
-        ]),
-      })
-    )
-    .nullable()
-    .optional(), // Backend returns null
+  retestOrderTestId: z.number().int().positive().nullable().optional(),
 });
 
 export const orderSchema = z.object({

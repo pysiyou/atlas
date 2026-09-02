@@ -25,6 +25,7 @@ interface EscalationResolutionFooterProps {
   onReasonAuthorizeRecollectChange: (value: string) => void;
   reasonFinalReject: string;
   onReasonFinalRejectChange: (value: string) => void;
+  reasonCode?: string;
   resolveAsync: (
     action: EscalationResolutionAction,
     reasonOrNotes?: string,

@@ -1,107 +1,88 @@
 /**
- * Lab Operations Types
- *
- * Centralized type definitions for laboratory operations including
- * rejection actions, options, and results.
+ * Quality issue and lab operation types — aligned with backend contracts.
  */
 
-/**
- * Action to take when rejecting a result or sample
- */
-export type RejectionAction =
-  | 'retest_same_sample' // Use existing sample, run test again
-  | 'recollect_new_sample' // Get new sample from patient
-  | 'escalate'; // Limits exceeded, need supervisor
+import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
 
-/**
- * Source of the rejection
- */
-export type RejectionSource =
-  | 'sample_collection' // Rejected during/after collection
-  | 'result_validation'; // Rejected during result validation
+export type QualityIssueTargetType = 'sample' | 'test';
 
-/**
- * Lab operation types for audit tracking
- */
-export type LabOperationType =
-  // Sample Operations
-  | 'sample_collect'
-  | 'sample_reject'
-  | 'sample_recollection_request'
-  // Result Operations
-  | 'result_entry'
-  | 'result_validation_approve'
-  | 'result_validation_reject_retest'
-  | 'result_validation_reject_recollect'
-  | 'result_validation_escalate'
-  | 'escalation_resolution_authorize_retest'
-  | 'escalation_resolution_authorize_recollect'
-  | 'escalation_resolution_force_validate'
-  | 'escalation_resolution_final_reject'
-  | 'escalation_trigger_crit_val'
-  | 'escalation_trigger_rej_samp'
-  | 'escalation_trigger_limit_hit'
-  | 'escalation_trigger_amend_res'
-  // Order Operations
-  | 'order_status_change'
-  | 'test_removed'
-  | 'test_added'
-  // Critical Value Operations
-  | 'critical_value_detected'
-  | 'critical_value_notified'
-  | 'critical_value_acknowledged';
+export type QualityStage = 'collection' | 'validation' | 'entry';
 
-/**
- * Available rejection action with metadata
- */
-export interface AvailableAction {
-  action: RejectionAction;
-  enabled: boolean;
-  disabledReason?: string;
-  label: string;
-  description: string;
-}
+export type QualityDomain = 'specimen' | 'analytical' | 'clinical';
 
-/**
- * Response from the rejection options endpoint
- */
-export interface RejectionOptionsResponse {
-  canRetest: boolean;
-  retestAttemptsRemaining: number;
-  canRecollect: boolean;
-  recollectionAttemptsRemaining: number;
-  availableActions: AvailableAction[];
-  escalationRequired: boolean;
-  allowedRejectionCriteria?: string[];
-}
+export type RemedyType = 'retry_same_sample' | 'recollect' | 'escalate' | 'cancel';
 
-/**
- * Result of a rejection operation
- */
-export interface RejectionResult {
-  success: boolean;
-  action: RejectionAction;
-  message: string;
-  originalTestId: number;
-  newTestId?: number;
-  newSampleId?: number;
-  escalationRequired: boolean;
-}
-
-/**
- * Request body for rejecting test results
- */
-export interface RejectionRequest {
-  rejectionReason: string;
-  rejectionNotes?: string;
-}
-
-/**
- * Escalation resolution actions (admin/labtech_plus only)
- */
-export type EscalationResolutionAction = 'force_validate' | 'authorize_retest' | 'authorize_recollect' | 'final_reject';
+export type EscalationResolutionAction =
+  | 'force_validate'
+  | 'authorize_retest'
+  | 'authorize_recollect'
+  | 'apply_amendment'
+  | 'cancel_test';
 
 export type EscalationReasonCode = 'CRIT-VAL' | 'REJ-SAMP' | 'LIMIT-HIT' | 'AMEND-RES';
+
+export interface QualityIssueTarget {
+  type: QualityIssueTargetType;
+  id: number;
+}
+
+export interface QualityIssueOptions {
+  targetType: QualityIssueTargetType;
+  targetId: number;
+  orderId: number;
+  testCode?: string;
+  sampleId?: number;
+  stage: QualityStage;
+  allowedCriteria: string[];
+  retestAttemptsUsed: number;
+  retestAttemptsRemaining: number;
+  recollectionAttemptsUsed: number;
+  recollectionAttemptsRemaining: number;
+  willEscalate: boolean;
+  previewRemedy?: RemedyType;
+  previewMessage: string;
+  resultedTestsCount?: number;
+  validatedTestsCount?: number;
+  suspendedTestsCount?: number;
+}
+
+export interface ReportQualityIssueRequest {
+  target: QualityIssueTarget;
+  reason: string;
+  notes?: string;
+  preferredRemedy?: RemedyType;
+}
+
+export interface QualityIssueResult {
+  success: boolean;
+  remedy: RemedyType;
+  message: string;
+  qualityIssueId: number;
+  orderId: number;
+  testCode?: string;
+  sampleId?: number;
+  orderTestId?: number;
+  createdTestId?: number;
+  createdSampleId?: number;
+  escalationRequired: boolean;
+}
+
+export interface QualityIssueRecord {
+  id: number;
+  orderId: number;
+  orderTestId?: number;
+  sampleId?: number;
+  testCode?: string;
+  stage: QualityStage;
+  domain: QualityDomain;
+  reason: string;
+  notes?: string;
+  remedy: RemedyType;
+  createdTestId?: number;
+  createdSampleId?: number;
+  createdBy: string;
+  createdAt: string;
+}
 
 export interface CriticalReadBackPayload {
   providerName: string;
@@ -110,9 +91,6 @@ export interface CriticalReadBackPayload {
   readBackConfirmed: boolean;
 }
 
-/**
- * Request body for resolving an escalated test
- */
 export interface EscalationResolveRequest {
   action: EscalationResolutionAction;
   validationNotes?: string;
@@ -120,10 +98,6 @@ export interface EscalationResolveRequest {
   readBack?: CriticalReadBackPayload;
 }
 
-/**
- * Result of resolving an escalated test (POST .../escalation/resolve).
- * action is one of force_validate | authorize_retest | final_reject, not RejectionAction.
- */
 export interface EscalationResolveResult {
   success: boolean;
   action: EscalationResolutionAction;
@@ -131,48 +105,40 @@ export interface EscalationResolveResult {
   originalTestId: number;
   newTestId?: number;
   newSampleId?: number;
-  escalationRequired: boolean;
 }
 
-/**
- * Request body for combined reject and recollect operation
- */
-export interface RejectAndRecollectRequest {
-  rejectionReason: string;
-  rejectionNotes?: string;
-  recollectionReason?: string;
-}
+export type LabOperationType =
+  | 'sample_collect'
+  | 'sample_reject'
+  | 'sample_recollection_request'
+  | 'result_entry'
+  | 'result_validation_approve'
+  | 'quality_issue_reported'
+  | 'escalation_resolution_authorize_retest'
+  | 'escalation_resolution_authorize_recollect'
+  | 'escalation_resolution_force_validate'
+  | 'escalation_resolution_apply_amendment'
+  | 'escalation_resolution_cancel_test'
+  | 'escalation_trigger_crit_val'
+  | 'escalation_trigger_rej_samp'
+  | 'escalation_trigger_limit_hit'
+  | 'escalation_trigger_amend_res'
+  | 'order_status_change'
+  | 'test_removed'
+  | 'test_added'
+  | 'critical_value_detected'
+  | 'critical_value_notified'
+  | 'critical_value_acknowledged';
 
-/**
- * Response from combined reject and recollect operation
- */
-export interface RejectAndRecollectResponse {
-  rejectedSample: {
-    sampleId: number;
-    status: string;
-    rejectedAt: string | null;
-    recollectionSampleId: number | null;
-  };
-  newSample?: {
-    sampleId: number;
-    status: string;
-    priority: string;
-    isRecollection: boolean;
-    originalSampleId: number;
-    recollectionAttempt: number;
-  } | null;
-  recollectionAttempt?: number | null;
-  escalatedForSupervisorRecollection?: boolean;
-  message: string;
-}
+export const {
+  MAX_RETEST_ATTEMPTS,
+  MAX_RECOLLECTION_ATTEMPTS,
+} = GENERATED_LAB_CONSTANTS;
 
-/**
- * Audit log record for lab operations
- */
 export interface LabOperationRecord {
   id: number;
   operationType: LabOperationType;
-  entityType: 'sample' | 'test' | 'order' | 'order_test';
+  entityType: 'sample' | 'test' | 'order' | 'order_test' | 'quality_issue';
   entityId: number;
   performedBy: string;
   performedByName?: string | null;
@@ -183,29 +149,5 @@ export interface LabOperationRecord {
   comment?: string | null;
 }
 
-/**
- * Constants matching backend limits
- */
-export const MAX_RETEST_ATTEMPTS = 2;
-export const MAX_RECOLLECTION_ATTEMPTS = 2;
-
-/**
- * Map legacy rejection types to new action types
- */
-export function mapRejectionTypeToAction(rejectionType: 're-test' | 're-collect'): RejectionAction {
-  return rejectionType === 're-test' ? 'retest_same_sample' : 'recollect_new_sample';
-}
-
-/**
- * Map new action types to legacy rejection types (for backwards compatibility)
- */
-export function mapActionToRejectionType(action: RejectionAction): 're-test' | 're-collect' | null {
-  switch (action) {
-    case 'retest_same_sample':
-      return 're-test';
-    case 'recollect_new_sample':
-      return 're-collect';
-    default:
-      return null;
-  }
-}
+/** @deprecated Use QualityIssueResult */
+export type RejectionResult = QualityIssueResult;

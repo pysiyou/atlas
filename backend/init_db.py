@@ -1,9 +1,6 @@
 from sqlalchemy import text
 from app.database import engine, Base, SessionLocal
-from db_scripts.migrate_lab_operation_type_enum import (
-    migrate_legacy_uppercase_operation_logs,
-    sync_lab_operation_type_enum_values,
-)
+from db_scripts.migrate_quality_issue_workflow import migrate as migrate_quality_issue_workflow
 from db_scripts.generate_users import generate_users
 from db_scripts.generate_tests import generate_tests
 from db_scripts.seed_affiliation_pricing import seed_affiliation_pricing
@@ -20,10 +17,10 @@ def apply_migrations():
             RETURNS TRIGGER AS $$
             BEGIN
                 -- Check if trying to modify a validated result
-                IF OLD.status::text IN ('VALIDATED', 'validated') AND (
+                IF OLD.status::text = 'validated' AND (
                     (NEW.results::text IS DISTINCT FROM OLD.results::text) OR
                     (NEW.status::text IS DISTINCT FROM OLD.status::text
-                     AND NEW.status::text NOT IN ('ESCALATED', 'escalated'))
+                     AND NEW.status::text <> 'escalated')
                 ) THEN
                     RAISE EXCEPTION 'Cannot modify validated results. Create an amended report instead.';
                 END IF;
@@ -54,20 +51,12 @@ def apply_migrations():
             DO INSTEAD NOTHING;
         """))
         print("  ✓ Audit log immutability rules applied")
-
-        # Lab operation type enum — add values introduced after initial schema
-        print("  ⏳ Syncing laboperationtype enum values...")
-        sync_lab_operation_type_enum_values(conn)
-        print("  ✓ laboperationtype enum values synced")
-
-        print("  ⏳ Normalizing legacy audit log operation types...")
-        updated = migrate_legacy_uppercase_operation_logs(conn)
-        if updated:
-            print(f"  ✓ Normalized {updated} legacy audit log row(s)")
-        else:
-            print("  ✓ No legacy audit log rows to normalize")
-
         conn.commit()
+
+    # Lab workflow — canonical enum values only
+    print("  ⏳ Applying quality-issue workflow migration...")
+    migrate_quality_issue_workflow(dry_run=False)
+    print("  ✓ Quality-issue workflow migration applied")
 
     print("✓ All migrations applied")
 
