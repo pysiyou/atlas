@@ -96,8 +96,8 @@ class TestStateMachine:
 
     Rejection paths:
     - RESULTED -> SUPERSEDED (when retest is created)
-    - RESULTED -> ESCALATED (when rejection limits exhausted)
-    - SAMPLE_COLLECTED/IN_PROGRESS -> REJECTED (sample rejection)
+    - RESULTED -> ESCALATED (rejection limits exhausted, or sample rejection)
+    - PENDING/SAMPLE_COLLECTED/IN_PROGRESS -> REJECTED (sample rejection — suspended)
     - REJECTED -> PENDING (when recollection sample is linked)
     
     Removal path:

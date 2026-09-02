@@ -71,6 +71,9 @@ class SampleRejectionOptionsResponse(BaseModel):
     requireRecollectionDisabledReason: Optional[str] = None
     orderHasValidatedTests: bool
     validatedTestsCount: int = 0
+    suspendedTestsCount: int = 0
+    resultedTestsCount: int = 0
+    completedTestsCount: int = 0
     escalationRequired: bool = False
     allowedRejectionCriteria: List[str] = []
 

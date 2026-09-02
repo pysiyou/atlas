@@ -36,22 +36,25 @@ interface RejectionWarningAlertProps {
   escalationRequired: boolean;
   rejectionHistoryUsed: number;
   patientName?: string;
-  validatedTestsCount?: number;
+  suspendedTestsCount?: number;
+  completedTestsCount?: number;
 }
 
 export function RejectionWarningAlert({
   escalationRequired,
   rejectionHistoryUsed,
   patientName,
-  validatedTestsCount = 0,
+  suspendedTestsCount = 0,
+  completedTestsCount = 0,
 }: RejectionWarningAlertProps) {
   if (escalationRequired) {
     return (
       <Alert variant="danger" className="py-2">
         <div className="space-y-0.5">
-          <p className="font-normal text-xs">Escalation Required</p>
+          <p className="font-normal text-xs">Recollection Limit Reached</p>
           <p className="text-xxs opacity-90 leading-tight">
-            Maximum recollection attempts reached. Escalate to supervisor before rejecting.
+            Maximum recollection attempts reached. You can still reject this sample, but no new
+            collection will be created. Escalate suspended tests to a supervisor.
           </p>
         </div>
       </Alert>
@@ -72,14 +75,31 @@ export function RejectionWarningAlert({
     );
   }
 
-  if (validatedTestsCount > 0) {
+  if (completedTestsCount > 0) {
     return (
       <Alert variant="warning" className="py-2">
         <div className="space-y-0.5">
-          <p className="font-normal text-xs">Validated Results on This Sample</p>
+          <p className="font-normal text-xs">Completed Results on This Sample</p>
           <p className="text-xxs opacity-90 leading-tight">
-            {validatedTestsCount} validated test{validatedTestsCount > 1 ? 's' : ''} will be
-            escalated to a supervisor. Other tests will wait for recollection.
+            {completedTestsCount} test{completedTestsCount > 1 ? 's' : ''} with entered or
+            validated results will be escalated to a supervisor for review.
+            {suspendedTestsCount > 0
+              ? ` ${suspendedTestsCount} other test${suspendedTestsCount > 1 ? 's' : ''} will be suspended pending recollection.`
+              : ''}
+          </p>
+        </div>
+      </Alert>
+    );
+  }
+
+  if (suspendedTestsCount > 0) {
+    return (
+      <Alert variant="warning" className="py-2">
+        <div className="space-y-0.5">
+          <p className="font-normal text-xs">Tests Will Be Suspended</p>
+          <p className="text-xxs opacity-90 leading-tight">
+            {suspendedTestsCount} test{suspendedTestsCount > 1 ? 's' : ''} will be suspended and
+            require recollection on a new sample.
           </p>
         </div>
       </Alert>

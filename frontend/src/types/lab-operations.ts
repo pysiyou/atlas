@@ -153,15 +153,16 @@ export interface RejectAndRecollectResponse {
     rejectedAt: string | null;
     recollectionSampleId: number | null;
   };
-  newSample: {
+  newSample?: {
     sampleId: number;
     status: string;
     priority: string;
     isRecollection: boolean;
     originalSampleId: number;
     recollectionAttempt: number;
-  };
-  recollectionAttempt: number;
+  } | null;
+  recollectionAttempt?: number | null;
+  escalatedForSupervisorRecollection?: boolean;
   message: string;
 }
 

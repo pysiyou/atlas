@@ -604,6 +604,9 @@ export interface SampleRejectionOptionsResponse {
   requireRecollectionDisabledReason?: string;
   orderHasValidatedTests: boolean;
   validatedTestsCount?: number;
+  suspendedTestsCount?: number;
+  resultedTestsCount?: number;
+  completedTestsCount?: number;
   escalationRequired: boolean;
   allowedRejectionCriteria?: string[];
 }
