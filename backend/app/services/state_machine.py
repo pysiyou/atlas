@@ -95,7 +95,7 @@ class TestStateMachine:
             TestStatus.SUPERSEDED,
         },
         TestStatus.VALIDATED: {TestStatus.ESCALATED},
-        TestStatus.SUSPENDED: {TestStatus.PENDING},
+        TestStatus.SUSPENDED: {TestStatus.PENDING, TestStatus.ESCALATED},
         TestStatus.ESCALATED: {
             TestStatus.VALIDATED,
             TestStatus.SUPERSEDED,

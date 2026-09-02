@@ -48,6 +48,7 @@ class OrderTestResponse(BaseModel):
     validationNotes: str | None = None
     flags: list[str] | None = None
     technicianNotes: str | None = None
+    hasCriticalValues: bool = False
 
     # Re-test tracking fields
     isRetest: bool = False

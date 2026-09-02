@@ -8,6 +8,7 @@ from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 
 from app.services.physiologic_limits import PHYSIOLOGIC_LIMITS
+from app.utils.result_values import PHYSIOLOGIC_LIMIT_ALIASES, parse_numeric_result_value
 
 
 @dataclass
@@ -82,18 +83,9 @@ class ResultValidatorService:
         if value_type not in ('NUMERIC', 'numeric'):
             return errors
 
-        # Try to parse as number
-        try:
-            if isinstance(value, str):
-                # Handle special cases like "<5" or ">100"
-                if value.startswith('<') or value.startswith('>'):
-                    numeric_value = float(value[1:])
-                else:
-                    numeric_value = float(value)
-            else:
-                numeric_value = float(value)
-        except (ValueError, TypeError):
-            # Can't parse as number - may be acceptable for some tests
+        # Try to parse as number (scalar or structured {"value": ...})
+        numeric_value = parse_numeric_result_value(value)
+        if numeric_value is None:
             return errors
 
         # Check physiologic limits
@@ -143,20 +135,26 @@ class ResultValidatorService:
         return errors
 
     def _get_physiologic_limit(self, item_code: str) -> Optional[Dict[str, float]]:
-        """Get physiologic limit for an item code, checking various naming conventions"""
-        # Direct match
-        if item_code in self.physiologic_limits:
-            return self.physiologic_limits[item_code]
+        """Get physiologic limit for an item code, checking various naming conventions."""
+        resolved_code = PHYSIOLOGIC_LIMIT_ALIASES.get(item_code, item_code)
 
-        # Case-insensitive match
-        item_code_upper = item_code.upper()
+        # Direct match
+        if resolved_code in self.physiologic_limits:
+            return self.physiologic_limits[resolved_code]
+
+        # Case-insensitive exact match
+        resolved_upper = resolved_code.upper()
         for key, limit in self.physiologic_limits.items():
-            if key.upper() == item_code_upper:
+            if key.upper() == resolved_upper:
                 return limit
 
-        # Partial match (e.g., "Hemoglobin_value" should match "Hemoglobin")
+        # Partial match for longer keys only (avoid "P" matching "PLAT")
+        resolved_lower = resolved_code.lower()
         for key, limit in self.physiologic_limits.items():
-            if key.lower() in item_code.lower() or item_code.lower() in key.lower():
+            if len(key) < 3:
+                continue
+            key_lower = key.lower()
+            if key_lower in resolved_lower or resolved_lower in key_lower:
                 return limit
 
         return None
