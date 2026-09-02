@@ -163,6 +163,22 @@ class LabOperationsService:
 
     # ==================== SAMPLE OPERATIONS ====================
 
+    def _get_linked_order_tests(
+        self,
+        sample: Sample,
+        *,
+        exclude_statuses: Optional[List[TestStatus]] = None,
+    ) -> List[OrderTest]:
+        """Order tests tied to this sample's test codes and sample id."""
+        query = self.db.query(OrderTest).filter(
+            OrderTest.orderId == sample.orderId,
+            OrderTest.testCode.in_(sample.testCodes),
+            OrderTest.sampleId == sample.sampleId,
+        )
+        if exclude_statuses:
+            query = query.filter(OrderTest.status.notin_(exclude_statuses))
+        return query.all()
+
     def collect_sample(
         self,
         sample_id: int,
@@ -208,11 +224,10 @@ class LabOperationsService:
 
         # Update associated order tests
         # Exclude SUPERSEDED, REMOVED, and VALIDATED tests - validated results are immutable (PostgreSQL trigger)
-        order_tests = self.db.query(OrderTest).filter(
-            OrderTest.orderId == sample.orderId,
-            OrderTest.testCode.in_(sample.testCodes),
-            OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED])
-        ).all()
+        order_tests = self._get_linked_order_tests(
+            sample,
+            exclude_statuses=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED],
+        )
 
         for order_test in order_tests:
             order_test.status = TestStatus.SAMPLE_COLLECTED
@@ -297,17 +312,14 @@ class LabOperationsService:
         sample.recollectionRequired = recollection_required
         sample.updatedBy = str(user_id)  # Convert to string as per model requirement
 
-        # Update associated order tests
-        # Exclude SUPERSEDED, REMOVED, and VALIDATED tests - validated results are immutable (PostgreSQL trigger)
-        order_tests = self.db.query(OrderTest).filter(
-            OrderTest.orderId == sample.orderId,
-            OrderTest.testCode.in_(sample.testCodes),
-            OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED])
-        ).all()
+        # Validated tests on this sample escalate to supervisor (REJ-SAMP).
+        # Non-validated tests are reset to pending when recollection is requested.
+        inactive_statuses = [TestStatus.SUPERSEDED, TestStatus.REMOVED]
+        linked_tests = self._get_linked_order_tests(sample, exclude_statuses=inactive_statuses)
+        validated_tests = [t for t in linked_tests if t.status == TestStatus.VALIDATED]
 
         if escalate_linked_tests:
-            for order_test in order_tests:
-                prior_status = order_test.status
+            for order_test in validated_tests:
                 self.escalation.escalate_test(
                     order_test,
                     EscalationReasonCode.REJ_SAMP,
@@ -318,7 +330,7 @@ class LabOperationsService:
                         "sampleRejectionHistory": sample.rejectionHistory,
                     },
                     sample_id=sample_id,
-                    from_status=prior_status,
+                    from_status=TestStatus.VALIDATED,
                 )
 
         after_state = self._serialize_sample_state(sample)
@@ -351,23 +363,20 @@ class LabOperationsService:
         rejection_count = len(sample.rejectionHistory or [])
         recollection_attempts_remaining = max(0, MAX_RECOLLECTION_ATTEMPTS - rejection_count)
 
-        order_tests = self.db.query(OrderTest).filter(OrderTest.orderId == sample.orderId).all()
-        order_has_validated_tests = any(t.status == TestStatus.VALIDATED for t in order_tests)
-
-        can_require_recollection = (
-            recollection_attempts_remaining > 0 and not order_has_validated_tests
+        linked_tests = self._get_linked_order_tests(
+            sample,
+            exclude_statuses=[TestStatus.SUPERSEDED, TestStatus.REMOVED],
         )
+        validated_tests_on_sample = [t for t in linked_tests if t.status == TestStatus.VALIDATED]
+        validated_tests_count = len(validated_tests_on_sample)
+
+        can_require_recollection = recollection_attempts_remaining > 0
 
         require_recollection_disabled_reason: Optional[str] = None
         if not can_require_recollection:
-            if order_has_validated_tests:
-                require_recollection_disabled_reason = (
-                    "Cannot collect new sample - order has validated tests"
-                )
-            elif recollection_attempts_remaining <= 0:
-                require_recollection_disabled_reason = (
-                    f"Maximum {MAX_RECOLLECTION_ATTEMPTS} recollection attempts reached"
-                )
+            require_recollection_disabled_reason = (
+                f"Maximum {MAX_RECOLLECTION_ATTEMPTS} recollection attempts reached"
+            )
 
         criteria_service = RejectionCriteriaService(self.db)
         allowed_criteria = criteria_service.get_criteria_for_tests(sample.testCodes)
@@ -380,7 +389,8 @@ class LabOperationsService:
             "maxRecollectionAttempts": MAX_RECOLLECTION_ATTEMPTS,
             "canRequireRecollection": can_require_recollection,
             "requireRecollectionDisabledReason": require_recollection_disabled_reason,
-            "orderHasValidatedTests": order_has_validated_tests,
+            "orderHasValidatedTests": validated_tests_count > 0,
+            "validatedTestsCount": validated_tests_count,
             "escalationRequired": rejection_count >= MAX_RECOLLECTION_ATTEMPTS,
             "allowedRejectionCriteria": allowed_criteria,
         }
@@ -461,11 +471,10 @@ class LabOperationsService:
         # IMPORTANT: Exclude SUPERSEDED, REMOVED, and VALIDATED tests - these were replaced by retests,
         # removed from order, or already validated (immutable). Only update active tests that need the new sample.
         if update_order_tests:
-            order_tests = self.db.query(OrderTest).filter(
-                OrderTest.orderId == original_sample.orderId,
-                OrderTest.testCode.in_(original_sample.testCodes),
-                OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED])
-            ).all()
+            order_tests = self._get_linked_order_tests(
+                original_sample,
+                exclude_statuses=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED],
+            )
 
             for test in order_tests:
                 test.status = TestStatus.PENDING

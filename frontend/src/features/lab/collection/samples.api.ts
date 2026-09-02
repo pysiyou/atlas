@@ -9,6 +9,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useInvalidateQueryKey } from '@/lib/query/invalidate';
+import { invalidateResultQueries } from '@/lib/query/invalidate';
 import { useAuthStore } from '@/app/store';
 import type {
   Sample,
@@ -530,22 +531,23 @@ export function useRejectSample() {
       notes,
       requireRecollection = true,
     }: RejectSampleData) => {
-      // 1. Reject the sample
+      if (requireRecollection) {
+        await sampleAPI.rejectAndRecollect(sampleId, {
+          rejectionReason: reason,
+          rejectionNotes: notes,
+          recollectionReason: notes ? `${reason} - ${notes}` : reason,
+        });
+        return;
+      }
+
       await sampleAPI.reject(sampleId, {
         rejectionReason: reason,
         rejectionNotes: notes,
-        recollectionRequired: requireRecollection,
+        recollectionRequired: false,
       });
-
-      // 2. Automatically request recollection if required
-      if (requireRecollection) {
-        const fullReason = notes ? `${reason} - ${notes}` : reason;
-        await sampleAPI.requestRecollection(sampleId, fullReason);
-      }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      invalidateResultQueries(queryClient, { pendingEscalation: true });
     },
   });
 }
@@ -601,6 +603,7 @@ export interface SampleRejectionOptionsResponse {
   canRequireRecollection: boolean;
   requireRecollectionDisabledReason?: string;
   orderHasValidatedTests: boolean;
+  validatedTestsCount?: number;
   escalationRequired: boolean;
   allowedRejectionCriteria?: string[];
 }

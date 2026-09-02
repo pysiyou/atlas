@@ -36,12 +36,14 @@ interface RejectionWarningAlertProps {
   escalationRequired: boolean;
   rejectionHistoryUsed: number;
   patientName?: string;
+  validatedTestsCount?: number;
 }
 
 export function RejectionWarningAlert({
   escalationRequired,
   rejectionHistoryUsed,
   patientName,
+  validatedTestsCount = 0,
 }: RejectionWarningAlertProps) {
   if (escalationRequired) {
     return (
@@ -64,6 +66,20 @@ export function RejectionWarningAlert({
           <p className="text-xxs opacity-90 leading-tight">
             This sample has been rejected {rejectionHistoryUsed} times already. Consider escalating
             to supervisor.
+          </p>
+        </div>
+      </Alert>
+    );
+  }
+
+  if (validatedTestsCount > 0) {
+    return (
+      <Alert variant="warning" className="py-2">
+        <div className="space-y-0.5">
+          <p className="font-normal text-xs">Validated Results on This Sample</p>
+          <p className="text-xxs opacity-90 leading-tight">
+            {validatedTestsCount} validated test{validatedTestsCount > 1 ? 's' : ''} will be
+            escalated to a supervisor. Other tests will wait for recollection.
           </p>
         </div>
       </Alert>

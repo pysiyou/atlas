@@ -10,9 +10,7 @@ import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import { ModalFooter } from '../components/LabDetailModal';
 import type { SampleDisplay } from '@/features/lab/types';
-import { orderHasValidatedTests, getValidatedTestCount } from '@/features/orders/utils';
 import { getSampleStatusIcon } from '@/config/icons';
-import { ICONS } from '@/config/icons';
 
 interface CollectionDetailFooterProps {
   sample: Sample;
@@ -47,7 +45,6 @@ interface CollectionDetailFooterProps {
  */
 export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
   sample,
-  order,
   isPending,
   isRejected,
   isCollected,
@@ -87,21 +84,6 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
 
   // For collected samples - show print and reject buttons
   if (isCollected && sample.sampleId) {
-    const hasValidatedTests = order ? orderHasValidatedTests(order) : false;
-    const validatedCount = order ? getValidatedTestCount(order) : 0;
-    const cannotRejectMessage = `Cannot reject - ${validatedCount} test${validatedCount > 1 ? 's' : ''} already validated`;
-
-    if (hasValidatedTests) {
-      return (
-        <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
-          <div className="text-xs text-warning-fg flex items-center gap-1.5">
-            <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5 shrink-0" />
-            <span>{cannotRejectMessage}</span>
-          </div>
-        </ModalFooter>
-      );
-    }
-
     return (
       <ModalFooter
         statusIcon={
