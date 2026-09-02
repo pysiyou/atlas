@@ -11,6 +11,7 @@ import { MODULE_ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
 import { useTestCatalog } from '@/features/catalog';
 import { getUnionRejectionCriteria } from '@/features/lab/utils/catalogRejectionCriteria';
+import { LAB_CONFIG } from '@/features/lab/constants';
 import { useSampleRejectionOptions } from '@/features/lab/collection/useSampleRejectionOptions';
 import {
   isRejectionFormValid,
@@ -73,9 +74,11 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
   const rejectionHistoryUsed =
     options?.recollectionAttemptsUsed ?? rejectionHistoryCount;
-  const maxAttempts = options?.maxRecollectionAttempts ?? 3;
+  const maxAttempts = options?.maxRecollectionAttempts ?? LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS;
   const escalationRequired = options?.escalationRequired ?? rejectionHistoryCount >= maxAttempts;
   const canRequireRecollection = options?.canRequireRecollection ?? true;
+  const validatedTestsCount =
+    options?.validatedTestsCount ?? (options?.orderHasValidatedTests ? 1 : 0);
   const criteriaLoading = catalogLoading || optionsLoading;
 
   const isValid = isRejectionFormValid(rejectionReason, criteria);
@@ -130,6 +133,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
         escalationRequired={escalationRequired}
         rejectionHistoryUsed={rejectionHistoryUsed}
         patientName={patientName}
+        validatedTestsCount={validatedTestsCount}
       />
 
       <RejectionHistorySection

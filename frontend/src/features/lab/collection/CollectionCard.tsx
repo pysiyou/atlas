@@ -32,7 +32,6 @@ import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import { handlePrintCollectionLabel, getEffectiveContainerType } from '../utils/labHelpers';
 import { formatRejectionReasons } from '../utils/labFormatters';
 import type { SampleDisplay, SampleRequirement } from '@/features/lab/types';
-import { orderHasValidatedTests } from '@/features/orders/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 
@@ -63,7 +62,6 @@ interface CardLayoutProps {
   testNames: string[];
   handleCardClick: (e?: React.MouseEvent) => void;
   handleRejectSample: (reason: string, notes: string, requireRecollection: boolean) => Promise<void>;
-  hasValidatedTests: boolean;
   isRejecting: boolean;
   isCollecting: boolean;
 }
@@ -76,7 +74,7 @@ function useCollectionCardActions(
 ) {
   const { openModal } = useModal();
   const { rejectSample, isRejecting } = useRejectSampleHandler();
-  const { sample, order } = display;
+  const { sample } = display;
 
   const openSampleModal = () => {
     const isPending = sample?.status === 'pending';
@@ -100,9 +98,7 @@ function useCollectionCardActions(
     await rejectSample(sample.sampleId, reason, notes, requireRecollection);
   };
 
-  const hasValidatedTests = orderHasValidatedTests(order);
-
-  return { handleCardClick, handleRejectSample, hasValidatedTests, isRejecting };
+  return { handleCardClick, handleRejectSample, isRejecting };
 }
 
 // ─── CollectionCardMobile ─────────────────────────────────────────────────────
@@ -227,7 +223,6 @@ function CollectionCardDesktop({
   testNames,
   handleCardClick,
   handleRejectSample,
-  hasValidatedTests,
   isRejecting,
 }: CardLayoutProps) {
   const { order } = display;
@@ -333,25 +328,16 @@ function CollectionCardDesktop({
           <Badge size="sm" variant="collected" />
           {sample.sampleId && (
             <>
-              {hasValidatedTests ? (
-                <IconButton
-                  variant="reject"
-                  size="sm"
-                  title="Cannot reject: order has validated tests"
-                  disabled
-                />
-              ) : (
-                <CollectionRejectionPopover
-                  sampleId={sample.sampleId.toString()}
-                  testCodes={sample.testCodes ?? []}
-                  sampleType={sample.sampleType}
-                  patientName={patientName}
-                  isRecollection={isRecollection}
-                  rejectionHistoryCount={sample.rejectionHistory?.length || 0}
-                  isSubmitting={isRejecting}
-                  onReject={handleRejectSample}
-                />
-              )}
+              <CollectionRejectionPopover
+                sampleId={sample.sampleId.toString()}
+                testCodes={sample.testCodes ?? []}
+                sampleType={sample.sampleType}
+                patientName={patientName}
+                isRecollection={isRecollection}
+                rejectionHistoryCount={sample.rejectionHistory?.length || 0}
+                isSubmitting={isRejecting}
+                onReject={handleRejectSample}
+              />
               <IconButton
                 onClick={() => handlePrintCollectionLabel(display, patientName)}
                 variant="print"
@@ -426,7 +412,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
   const { getPatientName } = usePatientNameLookup();
   const { tests } = useTestCatalog();
   // Hook must be called before any early return (rules-of-hooks)
-  const { handleCardClick, handleRejectSample, hasValidatedTests, isRejecting } =
+  const { handleCardClick, handleRejectSample, isRejecting } =
     useCollectionCardActions(display, onCollect);
 
   const { sample, requirement } = display;
@@ -444,7 +430,6 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
     testNames,
     handleCardClick,
     handleRejectSample,
-    hasValidatedTests,
     isRejecting,
     isCollecting,
   };

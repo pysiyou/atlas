@@ -36,10 +36,11 @@ export function useRejectSampleHandler(options?: UseRejectSampleHandlerOptions) 
         },
         {
           successTitle: requireRecollection
-            ? 'Sample rejected - recollection will be requested'
+            ? 'Sample rejected - recollection requested'
             : 'Sample rejected',
-          successSubtitle:
-            'The sample has been rejected. Recollection will be requested if you chose that option.',
+          successSubtitle: requireRecollection
+            ? 'Non-validated tests are waiting for recollection. Validated tests were escalated to a supervisor if applicable.'
+            : 'The sample has been rejected.',
           errorTitle: 'Failed to reject sample',
           errorSubtitle:
             'The rejection could not be saved. Please try again or check the sample status.',
