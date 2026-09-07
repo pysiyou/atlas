@@ -1,16 +1,11 @@
 /**
- * Lab Feature Constants and Filter Configurations
- *
- * Centralized constants for lab workflows including filter configurations
- * for collection, entry, and validation.
+ * Lab workflow filter configurations.
  */
 
-import type { SampleStatus, TestStatus, PriorityLevel } from '@/types';
+import type { PriorityLevel } from '@/types';
 import type { FilterOption } from '@/utils/filtering';
 import { createFilterOptions } from '@/utils/filtering';
 import {
-  SAMPLE_TYPE_VALUES,
-  SAMPLE_TYPE_CONFIG,
   TEST_STATUS_CONFIG,
   PRIORITY_LEVEL_VALUES,
   PRIORITY_LEVEL_CONFIG,
@@ -18,58 +13,6 @@ import {
 import { ICONS } from '@/config/icons';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/components/filters';
 import { buildLabFilterConfig } from '../utils/buildLabFilterConfig';
-
-// ============================================================================
-// Status Constants
-// ============================================================================
-
-/**
- * Sample status values used in lab workflows
- */
-export const LAB_SAMPLE_STATUSES = {
-  PENDING: 'pending' as SampleStatus,
-  COLLECTED: 'collected' as SampleStatus,
-  REJECTED: 'rejected' as SampleStatus,
-} as const;
-
-/**
- * Test status values used in lab workflows
- */
-export const LAB_TEST_STATUSES = {
-  PENDING: 'pending' as TestStatus,
-  SAMPLE_COLLECTED: 'sample-collected' as TestStatus,
-  RESULTED: 'resulted' as TestStatus,
-  VALIDATED: 'validated' as TestStatus,
-  SUSPENDED: 'suspended' as TestStatus,
-  CANCELLED: 'cancelled' as TestStatus,
-  ESCALATED: 'escalated' as TestStatus,
-  SUPERSEDED: 'superseded' as TestStatus,
-  REMOVED: 'removed' as TestStatus,
-} as const;
-
-/**
- * Filter options for lab workflows
- */
-export const LAB_FILTER_OPTIONS = {
-  STATUS: Object.values(LAB_SAMPLE_STATUSES),
-} as const;
-
-// ============================================================================
-// Shared Filter Options
-// ============================================================================
-
-/** Sample type filter options - shared across all lab workflows */
-export const LAB_SAMPLE_TYPE_OPTIONS: FilterOption[] = SAMPLE_TYPE_VALUES.map(
-  (st): FilterOption => ({
-    id: st,
-    label: SAMPLE_TYPE_CONFIG[st].label,
-    color: st,
-  })
-);
-
-// ============================================================================
-// Collection Workflow Filter Config
-// ============================================================================
 
 const COLLECTION_STATUS_OPTIONS: FilterOption[] = [
   { id: 'pending', label: 'Pending', color: 'pending' },
@@ -95,10 +38,6 @@ export const collectionFilterConfig = buildLabFilterConfig({
   ],
 });
 
-// ============================================================================
-// Entry Workflow Filter Config
-// ============================================================================
-
 const ENTRY_STATUS_VALUES = ['sample-collected'] as const;
 const entryStatusOptions = createFilterOptions(ENTRY_STATUS_VALUES, {
   'sample-collected': { label: TEST_STATUS_CONFIG['sample-collected'].label },
@@ -121,10 +60,6 @@ export const entryFilterConfig = buildLabFilterConfig({
     },
   ],
 });
-
-// ============================================================================
-// Validation Workflow Filter Config
-// ============================================================================
 
 const priorityOptions = createFilterOptions(PRIORITY_LEVEL_VALUES, {
   low: { label: PRIORITY_LEVEL_CONFIG.low.label },

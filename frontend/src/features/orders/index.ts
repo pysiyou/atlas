@@ -15,9 +15,7 @@ export {
   useCreateOrder,
   useUpdateOrder,
   useDeleteOrder,
-  useUpdateTestStatus,
   useUpdatePaymentStatus,
-  useMarkTestCritical,
 } from './api/orders.api';
 export type { OrdersFilter, OrdersFilters, PaginationOptions } from './api/orders.api';
 

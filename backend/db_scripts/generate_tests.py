@@ -17,6 +17,25 @@ from app.models.test import Test
 # but simply mapping from JSON strings usually works if they are just strings in DB or matched Enums. 
 # Looking at the model definition, they are JSON arrays, so lists of strings are expected.
 
+from app.utils.specimen_reasons import infer_criterion_domain
+
+
+def _normalize_rejection_criteria(raw_items: list) -> list[dict]:
+    """Store criteria with explicit domain for routing (specimen vs analytical)."""
+    normalized: list[dict] = []
+    for item in raw_items or []:
+        if isinstance(item, dict):
+            reason = str(item.get("reason") or item.get("label") or "").strip()
+            domain = str(item.get("domain") or infer_criterion_domain(reason)).lower()
+            if domain not in {"specimen", "analytical"}:
+                domain = infer_criterion_domain(reason)
+            normalized.append({"reason": reason, "domain": domain})
+        else:
+            reason = str(item).strip()
+            normalized.append({"reason": reason, "domain": infer_criterion_domain(reason)})
+    return normalized
+
+
 def load_test_catalog():
     """Load the test catalog from the JSON file"""
     file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'app', 'data', 'test-catalog.json')
@@ -62,7 +81,9 @@ def generate_tests(db: Session):
                 "specialRequirements": None, # Could be mapped if available
                 "fastingRequired": item.get("sample", {}).get("fasting_required", False),
                 "collectionNotes": item.get("sample", {}).get("collection_notes"),
-                "rejectionCriteria": item.get("sample", {}).get("rejection_criteria", []),
+                "rejectionCriteria": _normalize_rejection_criteria(
+                    item.get("sample", {}).get("rejection_criteria", [])
+                ),
                 
                 # Reference ranges and parameters
                 # The model has referenceRanges (JSON) and resultItems (JSON). 

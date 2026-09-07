@@ -8,7 +8,7 @@ import { formatDate } from '@/utils';
 import { displayId } from '@/utils';
 import { Badge } from '@/components';
 import type { TableViewConfig } from '@/components';
-import { DATA_ID_PRIMARY, DATA_ID_PRIMARY_CLICKABLE, DATA_ID_SECONDARY } from '@/utils/constants';
+import { ENTITY_ID_BLOCK, ENTITY_ID_CLICKABLE, ENTITY_ID_SECONDARY } from '@/utils/constants';
 import type { TestWithContext } from '@/types';
 import { TestTableCard } from './TestTableConfig';
 
@@ -17,7 +17,7 @@ export function createTestTableConfig(
   _getPatientName: (patientId: number | string) => string
 ): TableViewConfig<TestWithContext> {
   const renderTestId = (row: TestWithContext) => (
-    <span className={`${DATA_ID_PRIMARY} font-normal`}>{displayId.orderTest(row.id as number)}</span>
+    <span className={`${ENTITY_ID_BLOCK} font-normal`}>{displayId.orderTest(row.id as number)}</span>
   );
 
   const renderOrderId = (row: TestWithContext) => (
@@ -27,7 +27,7 @@ export function createTestTableConfig(
         e.stopPropagation();
         navigate(`/orders/${row.orderId}`);
       }}
-      className={`${DATA_ID_PRIMARY_CLICKABLE} font-normal`}
+      className={`${ENTITY_ID_CLICKABLE} font-normal`}
     >
       {displayId.order(row.orderId)}
     </button>
@@ -36,14 +36,14 @@ export function createTestTableConfig(
   const renderPatientName = (row: TestWithContext) => (
     <div className="min-w-0 font-normal">
       <div className="text-text-primary truncate font-normal capitalize">{row.patientName}</div>
-      <div className={`${DATA_ID_SECONDARY} font-normal`}>{displayId.patient(row.patientId)}</div>
+      <div className={`${`${ENTITY_ID_SECONDARY} truncate`} font-normal`}>{displayId.patient(row.patientId)}</div>
     </div>
   );
 
   const renderTestName = (row: TestWithContext) => (
     <div className="min-w-0 font-normal">
       <div className="text-text-primary truncate font-normal">{row.testName}</div>
-      <div className={`${DATA_ID_SECONDARY} font-normal`}>{row.testCode}</div>
+      <div className={`${`${ENTITY_ID_SECONDARY} truncate`} font-normal`}>{row.testCode}</div>
     </div>
   );
 

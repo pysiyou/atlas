@@ -1,6 +1,6 @@
 /**
  * Laboratory Page (canonical)
- * Lab operations - sample collection, result entry, validation, escalation, command center
+ * Lab operations - sample collection, result entry, validation, command center
  */
 
 import React, { useMemo, useCallback, useEffect } from 'react';
@@ -8,9 +8,7 @@ import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { CollectionView } from '../collection/CollectionView';
 import { EntryView } from '../entry/EntryView';
 import { ValidationView } from '../validation/ValidationView';
-import { EscalationView } from '../validation/EscalationView';
 import { CommandCenterView } from '../command-center/CommandCenterView';
-import { useAuthStore } from '@/app/store';
 import { Icon, PageHeaderBar, Badge } from '@/components';
 import { ICONS } from '@/config/icons';
 import { useLabPipelineCounts } from '../hooks';
@@ -25,8 +23,6 @@ import {
 export const Laboratory: React.FC = () => {
   const navigate = useNavigate();
   const { tab: tabParam } = useParams<{ tab?: string }>();
-  const { hasRole } = useAuthStore();
-  const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
   const { counts } = useLabPipelineCounts();
 
   const activeTab: LabTabId = isLabTabId(tabParam) ? tabParam : DEFAULT_LAB_TAB;
@@ -38,12 +34,8 @@ export const Laboratory: React.FC = () => {
     }
     if (!isLabTabId(tabParam)) {
       navigate(getLabTabPath(DEFAULT_LAB_TAB), { replace: true });
-      return;
     }
-    if (tabParam === 'escalation' && !canResolveEscalation) {
-      navigate(getLabTabPath(DEFAULT_LAB_TAB), { replace: true });
-    }
-  }, [tabParam, canResolveEscalation, navigate]);
+  }, [tabParam, navigate]);
 
   const handleTabChange = useCallback(
     (tab: LabTabId) => {
@@ -53,7 +45,7 @@ export const Laboratory: React.FC = () => {
   );
 
   const tabs = useMemo((): Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> => {
-    const base: Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> = [
+    return [
       {
         id: 'collection',
         label: LAB_TAB_LABELS.collection,
@@ -72,28 +64,19 @@ export const Laboratory: React.FC = () => {
         icon: <Icon name={ICONS.ui.shieldCheck} className="w-4 h-4" />,
         count: counts.validation,
       },
+      {
+        id: 'dashboard',
+        label: LAB_TAB_LABELS.dashboard,
+        icon: <Icon name={ICONS.ui.dashboard} className="w-4 h-4" />,
+      },
     ];
-    if (canResolveEscalation) {
-      base.push({
-        id: 'escalation',
-        label: LAB_TAB_LABELS.escalation,
-        icon: <Icon name={ICONS.actions.alertCircle} className="w-4 h-4" />,
-        count: counts.escalation,
-      });
-    }
-    base.push({
-      id: 'dashboard',
-      label: LAB_TAB_LABELS.dashboard,
-      icon: <Icon name={ICONS.ui.dashboard} className="w-4 h-4" />,
-    });
-    return base;
-  }, [canResolveEscalation, counts]);
+  }, [counts]);
 
-  if (!tabParam || !isLabTabId(tabParam)) {
+  if (!tabParam) {
     return <Navigate to={getLabTabPath(DEFAULT_LAB_TAB)} replace />;
   }
 
-  if (tabParam === 'escalation' && !canResolveEscalation) {
+  if (!isLabTabId(tabParam)) {
     return <Navigate to={getLabTabPath(DEFAULT_LAB_TAB)} replace />;
   }
 
@@ -145,7 +128,6 @@ export const Laboratory: React.FC = () => {
           {activeTab === 'collection' && <CollectionView />}
           {activeTab === 'entry' && <EntryView />}
           {activeTab === 'validation' && <ValidationView />}
-          {activeTab === 'escalation' && canResolveEscalation && <EscalationView />}
           {activeTab === 'dashboard' && (
             <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
               <CommandCenterView />

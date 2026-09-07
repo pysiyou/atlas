@@ -24,7 +24,7 @@ export const STATUS_TIMELINE_STEPS = [
  * Used to calculate progress for test-based steps.
  */
 const TEST_STATUS_THRESHOLDS: Record<string, string[]> = {
-  'sample-collected': ['sample-collected', 'resulted', 'validated', 'suspended', 'cancelled'],
+  'sample-collected': ['sample-collected', 'resulted', 'validated', 'cancelled'],
   'results-entered': ['resulted', 'validated'],
   completed: ['validated'], // Order is completed when all tests are validated
 };
@@ -136,7 +136,6 @@ export const getOverallOrderProgress = (order: Order): number => {
     'sample-collected': 25,
     resulted: 75,
     validated: 100,
-    suspended: 50,
     cancelled: 100,
     escalated: 50,
     superseded: 0, // Superseded tests don't count toward progress
@@ -184,7 +183,7 @@ export const getStepCompletionInfo = (
     case 'sample-collected': {
       // Find the first test that has been collected
       const collectedTest = order.tests.find(t =>
-        ['sample-collected', 'resulted', 'validated', 'suspended', 'cancelled'].includes(t.status)
+        ['sample-collected', 'resulted', 'validated', 'cancelled'].includes(t.status)
       );
       return {
         completedBy: order.createdBy.toString(),
@@ -230,43 +229,4 @@ export const isStepBlocked = (order: Order, stepStatus: string): boolean => {
     return true;
   }
   return false;
-};
-
-// Legacy function - kept for backward compatibility
-export const getOrderStepStatus = (order: Order, stepStatus: string): boolean => {
-  const progress = getOrderStepProgress(order, stepStatus);
-  return progress.isStarted;
-};
-
-/**
- * Check if an order contains any validated tests.
- *
- * Used to gate re-collect during result validation when another test on the
- * order is already validated (authorize-recollect path).
- *
- * Sample rejection is still allowed when validated tests exist — those tests
- * escalate to supervisor review rather than blocking rejection.
- *
- * @param order - The order to check
- * @returns True if the order has at least one validated test
- */
-export const orderHasValidatedTests = (order: Order): boolean => {
-  if (!order?.tests || order.tests.length === 0) {
-    return false;
-  }
-  return order.tests.some(test => test.status === 'validated');
-};
-
-/**
- * Get the count of validated tests in an order.
- * Useful for displaying more detailed blocking messages.
- *
- * @param order - The order to check
- * @returns Number of validated tests
- */
-export const getValidatedTestCount = (order: Order): number => {
-  if (!order?.tests || order.tests.length === 0) {
-    return 0;
-  }
-  return order.tests.filter(test => test.status === 'validated').length;
 };

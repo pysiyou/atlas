@@ -9,7 +9,6 @@ export const LAB_TAB_IDS = [
   'collection',
   'entry',
   'validation',
-  'escalation',
   'dashboard',
 ] as const;
 
@@ -18,8 +17,7 @@ export type LabTabId = (typeof LAB_TAB_IDS)[number];
 export const LAB_TAB_LABELS: Record<LabTabId, string> = {
   collection: 'Sample Collection',
   entry: 'Result Entry',
-  validation: 'Result Validation',
-  escalation: 'Supervisor Review',
+  validation: 'Result Review',
   dashboard: 'Command Center',
 };
 
@@ -55,7 +53,7 @@ export function getLabTabForTestStatus(status: TestStatus): LabTabId | null {
     case 'resulted':
       return 'validation';
     case 'escalated':
-      return 'escalation';
+      return 'validation';
     default:
       return null;
   }

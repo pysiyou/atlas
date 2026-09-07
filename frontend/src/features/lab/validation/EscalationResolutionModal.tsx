@@ -59,16 +59,24 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   }, []);
 
   const { canResolveEscalation, resolving, resolveAsync } = useEscalationResolution({
-    orderId: test.orderId,
-    testCode: test.testCode,
+    orderTestId: test.id ?? 0,
     onResolved,
     onClose,
     onResetForm: resetForm,
   });
 
   const requiresReadBack = test.reasonCode === 'CRIT-VAL';
+  const hasResults = Boolean(test.results && Object.keys(test.results).length > 0);
+  const rejectionReason =
+    typeof test.ticketMetadata?.rejectionReason === 'string'
+      ? test.ticketMetadata.rejectionReason
+      : undefined;
+  const rejectionNotes =
+    typeof test.ticketMetadata?.rejectionNotes === 'string'
+      ? test.ticketMetadata.rejectionNotes
+      : undefined;
 
-  if (!test.results) return null;
+  if (test.id == null) return null;
 
   return (
     <LabDetailModal
@@ -119,6 +127,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           canResolveEscalation={canResolveEscalation}
           resolving={resolving}
           reasonCode={test.reasonCode}
+          hasResults={hasResults}
           requiresReadBack={requiresReadBack}
           validationNotesForceValidate={validationNotesForceValidate}
           onValidationNotesForceValidateChange={setValidationNotesForceValidate}
@@ -138,17 +147,43 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         />
       }
     >
-      <SectionPanel title="Result Validation">
-        <ValidationForm
-          results={test.results}
-          flags={test.flags}
-          technicianNotes={test.technicianNotes}
-          comments=""
-          onCommentsChange={() => {}}
-          onApprove={() => {}}
-          enableApproveShortcut={false}
-        />
-      </SectionPanel>
+      {hasResults ? (
+        <SectionPanel title="Result Validation">
+          <ValidationForm
+            results={test.results!}
+            flags={test.flags}
+            technicianNotes={test.technicianNotes}
+            comments=""
+            onCommentsChange={() => {}}
+            onApprove={() => {}}
+            enableApproveShortcut={false}
+          />
+        </SectionPanel>
+      ) : (
+        <SectionPanel title="Escalation Summary">
+          <p className="text-sm text-text-secondary">
+            {test.reasonCode === 'REJ-SAMP'
+              ? 'This test was escalated after sample rejection and the redraw limit was reached. No results are on file — choose an action below.'
+              : 'This test was escalated before results were entered. Review the context below and choose an action.'}
+          </p>
+          {(rejectionReason || rejectionNotes) && (
+            <dl className="mt-3 space-y-2 text-sm">
+              {rejectionReason && (
+                <div>
+                  <dt className="text-text-tertiary">Rejection reason</dt>
+                  <dd className="text-text-primary">{rejectionReason}</dd>
+                </div>
+              )}
+              {rejectionNotes && (
+                <div>
+                  <dt className="text-text-tertiary">Notes</dt>
+                  <dd className="text-text-primary whitespace-pre-wrap">{rejectionNotes}</dd>
+                </div>
+              )}
+            </dl>
+          )}
+        </SectionPanel>
+      )}
 
       {criticalRecord && (
         <SectionPanel title="Critical Value Notification">

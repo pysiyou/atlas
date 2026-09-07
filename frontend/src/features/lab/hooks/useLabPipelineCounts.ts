@@ -4,9 +4,11 @@
  */
 
 import { useMemo } from 'react';
+import { useAuthStore } from '@/app/store';
 import { useOrdersList } from '@/features/orders';
 import { useSamplesList } from '@/features/lab/collection/samples.api';
 import { usePendingEscalation } from '@/features/lab/validation/results.api';
+import { usePendingRecollectionRequests } from '@/features/lab/api/recollection-requests.api';
 import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
@@ -17,16 +19,18 @@ export interface LabPipelineCounts {
   collection: number;
   entry: number;
   validation: number;
-  escalation: number;
 }
 
 export function useLabPipelineCounts() {
+  const { hasRole } = useAuthStore();
+  const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
   const { orders } = useOrdersList();
   const { samples = [] } = useSamplesList();
   const { tests = [] } = useTestCatalog();
   const { getPatient, getPatientName } = usePatientNameLookup();
   const { getOrder } = useOrderLookup();
   const { escalatedTests } = usePendingEscalation();
+  const { requests: recollectionRequests } = usePendingRecollectionRequests();
 
   const { displays: collectionDisplays } = useCollectionSampleDisplays({
     samples,
@@ -51,13 +55,14 @@ export function useLabPipelineCounts() {
   });
 
   const counts = useMemo<LabPipelineCounts>(() => {
+    const escalatedCount = canResolveEscalation ? escalatedTests?.length ?? 0 : 0;
+    const recollectionCount = canResolveEscalation ? recollectionRequests?.length ?? 0 : 0;
     return {
       collection: collectionDisplays.filter(d => d.sample?.status === 'pending').length,
       entry: entryTests.length,
-      validation: validationTests.length,
-      escalation: escalatedTests?.length ?? 0,
+      validation: validationTests.length + escalatedCount + recollectionCount,
     };
-  }, [collectionDisplays, entryTests, validationTests, escalatedTests]);
+  }, [collectionDisplays, entryTests, validationTests, escalatedTests, recollectionRequests, canResolveEscalation]);
 
   return { counts };
 }

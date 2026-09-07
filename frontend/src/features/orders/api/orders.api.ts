@@ -91,31 +91,6 @@ export const orderAPI = {
     return apiClient.delete<void>(`/orders/${orderId}`);
   },
 
-  /**
-   * Update test status within an order
-   */
-  async updateTestStatus(
-    orderId: string,
-    testCode: string,
-    status: string,
-    additionalData?: Record<string, unknown>
-  ): Promise<Order> {
-    return apiClient.patch<Order>(`/orders/${orderId}/tests/${testCode}`, {
-      status,
-      ...additionalData,
-    });
-  },
-
-  /**
-   * Mark test as having critical values
-   */
-  async markTestCritical(orderId: string, testCode: string, notifiedTo: string): Promise<Order> {
-    return apiClient.post<Order>(`/orders/${orderId}/tests/${testCode}/critical`, { notifiedTo });
-  },
-
-  /**
-   * Update payment status
-   */
   async updatePaymentStatus(
     orderId: string,
     paymentStatus: string,
@@ -424,7 +399,7 @@ export function useOrderSummary(orderId: string | undefined) {
       patientName: order.patientName,
       totalTests: order.tests.length,
       pendingTests: order.tests.filter(t =>
-        ['pending', 'sample-collected', 'resulted', 'suspended', 'escalated'].includes(t.status)
+        ['pending', 'sample-collected', 'resulted', 'escalated'].includes(t.status)
       ).length,
       completedTests: order.tests.filter(t => t.status === 'validated').length,
       totalAmount: order.totalPrice,
@@ -488,8 +463,6 @@ export function useRecentOrders(limit = 10) {
  * Order Mutation Hooks
  * Provides hooks for creating, updating, and deleting orders
  */
-
-import type { TestStatus } from '@/types';
 
 /**
  * Mutation hook to create a new order with Zod validation.
@@ -589,35 +562,6 @@ export function useDeleteOrder() {
 }
 
 /**
- * Mutation hook to update test status within an order
- */
-export function useUpdateTestStatus() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      orderId,
-      testCode,
-      status,
-      additionalData,
-    }: {
-      orderId: number | string;
-      testCode: string;
-      status: TestStatus;
-      additionalData?: Record<string, unknown>;
-    }) => {
-      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      return orderAPI.updateTestStatus(orderIdStr, testCode, status, additionalData);
-    },
-    onSuccess: (_, variables) => {
-      const orderIdStr =
-        typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
-      invalidateOrderQueries(queryClient, { orderId: orderIdStr, samples: true });
-    },
-  });
-}
-
-/**
  * Mutation hook to update payment status
  */
 export function useUpdatePaymentStatus() {
@@ -640,33 +584,6 @@ export function useUpdatePaymentStatus() {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
       invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
-    },
-  });
-}
-
-/**
- * Mutation hook to mark a test as having critical values
- */
-export function useMarkTestCritical() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      orderId,
-      testCode,
-      notifiedTo,
-    }: {
-      orderId: number | string;
-      testCode: string;
-      notifiedTo: string;
-    }) => {
-      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      return orderAPI.markTestCritical(orderIdStr, testCode, notifiedTo);
-    },
-    onSuccess: (_, variables) => {
-      const orderIdStr =
-        typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
-      invalidateOrderQueries(queryClient, { orderId: orderIdStr, samples: false });
     },
   });
 }

@@ -10,24 +10,24 @@ import { useLabPipelineCounts } from '@/features/lab/hooks';
 import { getLabTabPath, LAB_TAB_LABELS, type LabTabId } from '@/features/lab/constants/labTabs';
 import { useAuthStore } from '@/app/store';
 
-const LAB_QUEUE_ITEMS: Array<{ id: LabTabId; icon: string; countKey: keyof ReturnType<typeof useLabPipelineCounts>['counts'] }> = [
+const LAB_QUEUE_ITEMS: Array<{
+  id: LabTabId;
+  icon: string;
+  countKey: keyof ReturnType<typeof useLabPipelineCounts>['counts'];
+}> = [
   { id: 'collection', icon: ICONS.dataFields.flask, countKey: 'collection' },
   { id: 'entry', icon: ICONS.dataFields.notebook, countKey: 'entry' },
   { id: 'validation', icon: ICONS.ui.shieldCheck, countKey: 'validation' },
-  { id: 'escalation', icon: ICONS.actions.alertCircle, countKey: 'escalation' },
 ];
 
 export const LabPipelineSummary: React.FC = () => {
   const { hasRole } = useAuthStore();
   const canViewLab = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
-  const canViewEscalation = hasRole(['administrator', 'lab-technician-plus']);
   const { counts } = useLabPipelineCounts();
 
   if (!canViewLab) {
     return null;
   }
-
-  const items = LAB_QUEUE_ITEMS.filter(item => item.id !== 'escalation' || canViewEscalation);
 
   return (
     <Card padding="md">
@@ -37,8 +37,8 @@ export const LabPipelineSummary: React.FC = () => {
           Command Center
         </Link>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {items.map(item => {
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {LAB_QUEUE_ITEMS.map(item => {
           const count = counts[item.countKey];
           return (
             <Link

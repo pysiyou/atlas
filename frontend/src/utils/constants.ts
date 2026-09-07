@@ -62,18 +62,6 @@ export const ENTITY_ID_INLINE = 'entity-id truncate';
 /** Clickable ID link style. */
 export const ENTITY_ID_CLICKABLE = 'entity-id entity-id--clickable truncate block max-w-full';
 
-/** @deprecated Use ENTITY_ID_BLOCK */
-export const DATA_ID_PRIMARY = ENTITY_ID_BLOCK;
-
-/** @deprecated Use ENTITY_ID_INLINE */
-export const DATA_ID_PRIMARY_INLINE = ENTITY_ID_INLINE;
-
-/** @deprecated Use ENTITY_ID_CLICKABLE */
-export const DATA_ID_PRIMARY_CLICKABLE = ENTITY_ID_CLICKABLE;
-
-/** @deprecated Use ENTITY_ID_SECONDARY */
-export const DATA_ID_SECONDARY = `${ENTITY_ID_SECONDARY} truncate`;
-
 /** Detail row label. */
 export const DETAIL_LABEL = 'text-xs text-text-tertiary';
 

@@ -8,16 +8,16 @@ import { formatDate, formatPhoneNumber, calculateAge, formatCurrency } from '@/u
 import { displayId } from '@/utils';
 import {
   DATA_AMOUNT,
-  DATA_ID_PRIMARY,
-  DATA_ID_PRIMARY_CLICKABLE,
-  DATA_ID_SECONDARY,
+  ENTITY_ID_BLOCK,
+  ENTITY_ID_CLICKABLE,
+  ENTITY_ID_SECONDARY,
 } from '@/utils/constants';
 import type { OrderTest } from '@/types';
 
 export function renderDisplayId(
   id: string | number,
   formatter: (id: number | null | undefined) => string,
-  className = DATA_ID_PRIMARY
+  className = ENTITY_ID_BLOCK
 ): ReactNode {
   const numericId = typeof id === 'string' ? Number(id) : id;
   return <span className={`${className} font-normal`}>{formatter(numericId)}</span>;
@@ -31,7 +31,7 @@ export function renderOrderId(orderId: string | number, clickable = false): Reac
   return renderDisplayId(
     orderId,
     displayId.order,
-    clickable ? DATA_ID_PRIMARY_CLICKABLE : DATA_ID_PRIMARY
+    clickable ? ENTITY_ID_CLICKABLE : ENTITY_ID_BLOCK
   );
 }
 
@@ -57,7 +57,7 @@ export function renderPatientNameWithId(fullName: string, patientId: string | nu
   const numericId = typeof patientId === 'string' ? Number(patientId) : patientId;
   return renderPatientNameBlock(
     fullName,
-    <div className={`${DATA_ID_SECONDARY} font-normal`}>{displayId.patient(numericId)}</div>
+    <div className={`${ENTITY_ID_SECONDARY} truncate font-normal`}>{displayId.patient(numericId)}</div>
   );
 }
 
@@ -143,7 +143,7 @@ export function renderNavigableOrderId(
         e.stopPropagation();
         navigate(`/orders/${orderId}`);
       }}
-      className={`${DATA_ID_PRIMARY_CLICKABLE} font-normal`}
+      className={`${ENTITY_ID_CLICKABLE} font-normal`}
     >
       {displayId.order(typeof orderId === 'string' ? Number(orderId) : orderId)}
     </button>

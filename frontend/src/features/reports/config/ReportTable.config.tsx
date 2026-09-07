@@ -12,7 +12,7 @@ import { displayId } from '@/utils';
 import { Badge } from '@/components';
 import type { TableViewConfig } from '@/components';
 import type { ValidatedTest } from '../types';
-import { DATA_ID_PRIMARY, DATA_ID_PRIMARY_CLICKABLE, DATA_ID_SECONDARY } from '@/utils/constants';
+import { ENTITY_ID_BLOCK, ENTITY_ID_CLICKABLE, ENTITY_ID_SECONDARY } from '@/utils/constants';
 import { ReportPreviewButton } from '../components/ReportPreviewButton';
 import { ReportCard } from '../components/ReportCard';
 
@@ -33,7 +33,7 @@ export const createReportTableConfig = (
 ): TableViewConfig<ValidatedTest> => {
   // Shared render functions
   const renderTestId = (test: ValidatedTest) => (
-    <span className={`${DATA_ID_PRIMARY} font-normal`}>{displayId.orderTest(test.testId)}</span>
+    <span className={`${ENTITY_ID_BLOCK} font-normal`}>{displayId.orderTest(test.testId)}</span>
   );
 
   const renderOrderId = (test: ValidatedTest) => (
@@ -42,7 +42,7 @@ export const createReportTableConfig = (
         e.stopPropagation();
         navigate(`/orders/${test.orderId}`);
       }}
-      className={`${DATA_ID_PRIMARY_CLICKABLE} font-normal`}
+      className={`${ENTITY_ID_CLICKABLE} font-normal`}
     >
       {displayId.order(test.orderId)}
     </button>
@@ -51,14 +51,14 @@ export const createReportTableConfig = (
   const renderPatientName = (test: ValidatedTest) => (
     <div className="min-w-0 font-normal">
       <div className="text-text-primary truncate font-normal capitalize">{test.patientName}</div>
-      <div className={`${DATA_ID_SECONDARY} font-normal`}>{displayId.patient(test.patientId)}</div>
+      <div className={`${`${ENTITY_ID_SECONDARY} truncate`} font-normal`}>{displayId.patient(test.patientId)}</div>
     </div>
   );
 
   const renderTestName = (test: ValidatedTest) => (
     <div className="min-w-0 font-normal">
       <div className="text-text-primary truncate font-normal">{test.testName}</div>
-      <div className={`${DATA_ID_SECONDARY} font-normal`}>{test.testCode}</div>
+      <div className={`${`${ENTITY_ID_SECONDARY} truncate`} font-normal`}>{test.testCode}</div>
     </div>
   );
 

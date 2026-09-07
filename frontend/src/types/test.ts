@@ -152,7 +152,7 @@ export interface Test {
   methodology?: string; // Method description
   containerDescription?: string; // Detailed container description from sample.container
   collectionNotes?: string; // Special collection instructions
-  rejectionCriteria?: string[]; // Sample rejection criteria
+  rejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string }>;
   fastingRequired?: boolean; // Whether fasting is required
   confidence?: 'HIGH' | 'MEDIUM' | 'LOW'; // Data confidence level
   notes?: string; // Additional test notes

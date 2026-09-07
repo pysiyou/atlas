@@ -25,10 +25,14 @@ function getCollectionAlertCopy(options: QualityIssueOptions): CollectionAlertCo
   if (hasResultedTests) {
     return { variant: 'danger', ...REJECTION_DIALOG_COPY.collection.escalateResults };
   }
-  if (options.willEscalate) {
-    return { variant: 'danger', ...REJECTION_DIALOG_COPY.collection.escalateLimit };
-  }
-  return { variant: 'warning', ...REJECTION_DIALOG_COPY.collection.recollect };
+  const atLimit = (options.recollectionAttemptsRemaining ?? 0) === 0;
+  return {
+    variant: atLimit ? 'danger' : 'warning',
+    warningTitle: REJECTION_DIALOG_COPY.collection.recollect.warningTitle,
+    warningBody: options.previewMessage || REJECTION_DIALOG_COPY.collection.recollect.warningBody,
+    reasonLabel: REJECTION_DIALOG_COPY.collection.recollect.reasonLabel,
+    notesLabel: REJECTION_DIALOG_COPY.collection.recollect.notesLabel,
+  };
 }
 
 export interface QualityIssueFormProps {

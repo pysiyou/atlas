@@ -69,9 +69,8 @@ class TestStateMachine:
     PENDING -> SAMPLE_COLLECTED -> RESULTED -> VALIDATED
 
     Quality issue paths:
-    - SAMPLE_COLLECTED/PENDING/SUSPENDED -> SUSPENDED (specimen issue, awaiting recollection)
+    - SAMPLE_COLLECTED -> PENDING (specimen rejection, awaiting recollection on new tube)
     - RESULTED -> SUPERSEDED (retry) or ESCALATED (limit/critical)
-    - SUSPENDED -> PENDING (recollection linked)
     - ESCALATED -> VALIDATED | SUPERSEDED | CANCELLED | PENDING (supervisor)
 
     Terminal: VALIDATED, SUPERSEDED, REMOVED, CANCELLED
@@ -80,13 +79,12 @@ class TestStateMachine:
     TRANSITIONS: Dict[TestStatus, Set[TestStatus]] = {
         TestStatus.PENDING: {
             TestStatus.SAMPLE_COLLECTED,
-            TestStatus.SUSPENDED,
             TestStatus.REMOVED,
             TestStatus.ESCALATED,
         },
         TestStatus.SAMPLE_COLLECTED: {
             TestStatus.RESULTED,
-            TestStatus.SUSPENDED,
+            TestStatus.PENDING,
             TestStatus.ESCALATED,
         },
         TestStatus.RESULTED: {
@@ -95,7 +93,6 @@ class TestStateMachine:
             TestStatus.SUPERSEDED,
         },
         TestStatus.VALIDATED: {TestStatus.ESCALATED},
-        TestStatus.SUSPENDED: {TestStatus.PENDING, TestStatus.ESCALATED},
         TestStatus.ESCALATED: {
             TestStatus.VALIDATED,
             TestStatus.SUPERSEDED,
@@ -113,11 +110,15 @@ class TestStateMachine:
 
     @classmethod
     def can_transition(cls, from_status: TestStatus, to_status: TestStatus) -> bool:
+        if from_status == to_status:
+            return True
         allowed = cls.TRANSITIONS.get(from_status, set())
         return to_status in allowed
 
     @classmethod
     def validate_transition(cls, from_status: TestStatus, to_status: TestStatus) -> None:
+        if from_status == to_status:
+            return
         if not cls.can_transition(from_status, to_status):
             allowed = cls.TRANSITIONS.get(from_status, set())
             allowed_str = ", ".join(s.value for s in allowed) if allowed else "none (terminal state)"

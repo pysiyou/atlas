@@ -25,7 +25,7 @@ from app.models.sample import Sample
 from app.models.escalation import EscalationTicket
 from app.schemas.enums import EscalationTicketStatus
 from app.schemas.enums import TestStatus, UserRole, ValidationDecision, EscalationResolutionAction
-from app.schemas.order import OrderTestResponse, TestResultsDict
+from app.schemas.order import TestResultsDict
 from app.services.lab_operations import (
     LabOperationsService,
     LabOperationError,
@@ -53,37 +53,9 @@ class EscalationResolveResponse(BaseModel):
     success: bool
     action: str
     message: str
-    originalTestId: int
+    escalatedTestId: int
     newTestId: Optional[int] = None
     newSampleId: Optional[int] = None
-
-
-class BulkValidationItem(BaseModel):
-    """Single item in bulk validation request"""
-    orderId: int
-    testCode: str
-
-
-class BulkValidationRequest(BaseModel):
-    """Request body for bulk validation"""
-    items: List[BulkValidationItem] = Field(..., min_length=1, description="List of tests to validate")
-    validationNotes: Optional[str] = None
-
-
-class BulkValidationResult(BaseModel):
-    """Result for a single validation in bulk operation"""
-    orderId: int
-    testCode: str
-    success: bool
-    error: Optional[str] = None
-    testId: Optional[int] = None
-
-
-class BulkValidationResponse(BaseModel):
-    """Response for bulk validation operation"""
-    results: List[BulkValidationResult]
-    successCount: int
-    failureCount: int
 
 
 EscalationResolveActionLiteral = Literal[
@@ -168,42 +140,6 @@ class PendingEscalationItemResponse(BaseModel):
 
     class Config:
         from_attributes = True
-
-
-@router.get("/results/pending-entry", response_model=List[OrderTestResponse])
-def get_pending_entry(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    """
-    Get tests awaiting result entry.
-    Returns tests with status SAMPLE_COLLECTED (not SUPERSEDED).
-    """
-    tests = (
-        db.query(OrderTest)
-        .filter(OrderTest.status == TestStatus.SAMPLE_COLLECTED)
-        .options(joinedload(OrderTest.test))
-        .all()
-    )
-    return [OrderTestResponse.model_validate(t).model_dump(mode="json") for t in tests]
-
-
-@router.get("/results/pending-validation", response_model=List[OrderTestResponse])
-def get_pending_validation(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    """
-    Get tests awaiting validation.
-    Returns tests with status RESULTED (not SUPERSEDED).
-    """
-    tests = (
-        db.query(OrderTest)
-        .filter(OrderTest.status == TestStatus.RESULTED)
-        .options(joinedload(OrderTest.test))
-        .all()
-    )
-    return [OrderTestResponse.model_validate(t).model_dump(mode="json") for t in tests]
 
 
 @router.get("/results/pending-escalation", response_model=List[PendingEscalationItemResponse])
@@ -292,44 +228,34 @@ def get_pending_escalation(
     return out
 
 
-@router.post("/results/{orderId}/tests/{testCode}")
+@router.post("/results/order-tests/{orderTestId}")
 def enter_results(
-    orderId: int,
-    testCode: str,
+    orderTestId: int,
     result_data: ResultEntryRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)  # Lab tech required
+    current_user: User = Depends(require_lab_tech),
 ):
-    """
-    Enter results for a test.
-    For retests, finds the active (non-superseded) test entry.
-    """
+    """Enter results for a specific order test."""
     try:
         service = LabOperationsService(db)
-        order_test = service.enter_results(
-            order_id=orderId,
-            test_code=testCode,
+        return service.enter_results(
+            order_test_id=orderTestId,
             user_id=current_user.id,
             results=result_data.results,
-            technician_notes=result_data.technicianNotes
+            technician_notes=result_data.technicianNotes,
         )
-        return order_test
     except LabOperationError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.post("/results/{orderId}/tests/{testCode}/validate")
+@router.post("/results/order-tests/{orderTestId}/validate")
 def validate_results(
-    orderId: int,
-    testCode: str,
+    orderTestId: int,
     validation_data: ResultValidationRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)  # Lab tech required
+    current_user: User = Depends(require_lab_tech),
 ):
-    """
-    Validate test results — approval only.
-    For quality issues, use POST /lab/quality-issues.
-    """
+    """Validate (approve) a specific order test."""
     if validation_data.decision != ValidationDecision.APPROVED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -338,32 +264,28 @@ def validate_results(
 
     try:
         service = LabOperationsService(db)
-        order_test = service.validate_results(
-            order_id=orderId,
-            test_code=testCode,
+        return service.validate_results(
+            order_test_id=orderTestId,
             user_id=current_user.id,
-            validation_notes=validation_data.validationNotes
+            validation_notes=validation_data.validationNotes,
         )
-        return order_test
     except LabOperationError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.post("/results/{orderId}/tests/{testCode}/escalation/resolve", response_model=EscalationResolveResponse)
+@router.post("/results/order-tests/{orderTestId}/escalation/resolve", response_model=EscalationResolveResponse)
 def resolve_escalation(
-    orderId: int,
-    testCode: str,
+    orderTestId: int,
     body: EscalationResolveRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_escalation_resolver),
 ):
-    """Resolve an escalated test (admin/labtech_plus only)."""
+    """Resolve an escalated order test (admin/labtech_plus only)."""
     try:
         service = LabOperationsService(db)
         read_back = body.readBack.model_dump(mode="json") if body.readBack else None
         result = service.resolve_escalation(
-            order_id=orderId,
-            test_code=testCode,
+            order_test_id=orderTestId,
             user_id=current_user.id,
             action=EscalationResolutionAction(body.action),
             validation_notes=body.validationNotes,
@@ -374,113 +296,9 @@ def resolve_escalation(
             success=result.success,
             action=result.action.value,
             message=result.message,
-            originalTestId=result.originalTestId,
+            escalatedTestId=result.escalatedTestId,
             newTestId=result.newTestId,
             newSampleId=result.newSampleId,
         )
     except LabOperationError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
-
-
-
-
-class AmendRequestBody(BaseModel):
-    """Request body for validated result amendment escalation."""
-    proposedResults: TestResultsDict
-    reason: str = Field(..., min_length=1, max_length=1000)
-
-
-@router.post("/results/{orderId}/tests/{testCode}/amend-request")
-def request_amendment(
-    orderId: int,
-    testCode: str,
-    body: AmendRequestBody,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech),
-):
-    """Request amendment on a validated test (creates AMEND-RES escalation ticket)."""
-    try:
-        service = LabOperationsService(db)
-        order_test = service.request_result_amendment(
-            order_id=orderId,
-            test_code=testCode,
-            user_id=current_user.id,
-            proposed_results=body.proposedResults,
-            reason=body.reason,
-        )
-        return order_test
-    except LabOperationError as e:
-        raise HTTPException(status_code=e.status_code, detail=e.message)
-
-
-@router.post("/results/validate-bulk", response_model=BulkValidationResponse)
-def validate_bulk(
-    request: BulkValidationRequest,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech)  # Lab tech required
-):
-    """
-    Validate multiple test results in a single transaction.
-    
-    Processes all validations in a single database transaction for consistency.
-    Partial failures are reported but do not roll back successful validations.
-    
-    Note: Tests with critical values should be excluded from bulk validation
-    and handled individually to ensure proper notification workflow.
-    """
-    service = LabOperationsService(db)
-    results = []
-    success_count = 0
-    failure_count = 0
-
-    # Process all validations in a single transaction
-    for item in request.items:
-        try:
-            order_test = service.validate_results(
-                order_id=item.orderId,
-                test_code=item.testCode,
-                user_id=current_user.id,
-                validation_notes=request.validationNotes
-            )
-            results.append(BulkValidationResult(
-                orderId=item.orderId,
-                testCode=item.testCode,
-                success=True,
-                testId=order_test.id
-            ))
-            success_count += 1
-        except LabOperationError as e:
-            results.append(BulkValidationResult(
-                orderId=item.orderId,
-                testCode=item.testCode,
-                success=False,
-                error=e.message
-            ))
-            failure_count += 1
-        except Exception:
-            # Catch any unexpected errors - log but don't expose details
-            logger.exception(f"Unexpected error validating {item.orderId}/{item.testCode}")
-            results.append(BulkValidationResult(
-                orderId=item.orderId,
-                testCode=item.testCode,
-                success=False,
-                error="An unexpected error occurred"
-            ))
-            failure_count += 1
-
-    # Commit all successful validations
-    try:
-        db.commit()
-    except Exception:
-        db.rollback()
-        logger.exception("Failed to commit bulk validation")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to commit bulk validation"
-        )
-
-    return BulkValidationResponse(
-        results=results,
-        successCount=success_count,
-        failureCount=failure_count
-    )

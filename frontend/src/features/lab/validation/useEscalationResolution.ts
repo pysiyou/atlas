@@ -6,16 +6,14 @@ import type { EscalationResolutionAction } from '@/types/lab-operations';
 import type { EscalationResolveOptions } from './EscalationResolutionActions';
 
 interface UseEscalationResolutionOptions {
-  orderId: number;
-  testCode: string;
+  orderTestId: number;
   onResolved: () => void | Promise<void>;
   onClose: () => void;
   onResetForm: () => void;
 }
 
 export function useEscalationResolution({
-  orderId,
-  testCode,
+  orderTestId,
   onResolved,
   onClose,
   onResetForm,
@@ -45,8 +43,7 @@ export function useEscalationResolution({
       if (!canResolveEscalation || resolving) return Promise.resolve();
 
       const variables = {
-        orderId,
-        testCode,
+        orderTestId,
         action,
         validationNotes:
           action === 'force_validate' || action === 'apply_amendment'
@@ -85,8 +82,7 @@ export function useEscalationResolution({
         .catch(() => undefined);
     },
     [
-      orderId,
-      testCode,
+      orderTestId,
       onResolved,
       onClose,
       resolving,

@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
+import { orderTestKey } from '@/features/lab/utils/orderTestKey';
+import { toast } from '@/app/AppToastBar';
 import type { TestWithContext, Test, Order } from '@/types';
 
 interface UseEntryTestModalOptions {
@@ -13,11 +15,10 @@ interface UseEntryTestModalOptions {
   handleResultChange: (resultKey: string, paramCode: string, value: string) => void;
   handleNotesChange: (resultKey: string, notes: string) => void;
   handleSaveResults: (
+    orderTestId: number,
     orderId: number | string,
-    testCode: string,
     allTests: TestWithContext[],
     testCatalog: Test[] | undefined,
-    orders: Order[] | undefined,
     finalResults?: Record<string, string>,
     finalNotes?: string
   ) => Promise<void>;
@@ -25,7 +26,6 @@ interface UseEntryTestModalOptions {
 
 export function useEntryTestModal({
   testCatalog,
-  orders,
   allTests,
   results,
   technicianNotes,
@@ -39,10 +39,16 @@ export function useEntryTestModal({
 
   const openTestModal = useCallback(
     (test: TestWithContext) => {
-      if (!testCatalog) return;
+      if (!testCatalog || test.id == null) {
+        toast.error({
+          title: 'Test record unavailable',
+          subtitle: 'Refresh the page and try again.',
+        });
+        return;
+      }
 
       const testDef = getTest(test.testCode);
-      const resultKey = `${test.orderId}-${test.testCode}`;
+      const resultKey = orderTestKey(test.id);
       if (!testDef?.parameters) return;
 
       const isComplete = areAllParametersFilled(resultKey, testDef.parameters.length);
@@ -58,11 +64,10 @@ export function useEntryTestModal({
         onNotesChange: handleNotesChange,
         onSave: (finalResults?: Record<string, string>, finalNotes?: string) =>
           handleSaveResults(
+            test.id!,
             test.orderId,
-            test.testCode,
             allTests,
             testCatalog,
-            orders,
             finalResults,
             finalNotes
           ),
@@ -78,7 +83,6 @@ export function useEntryTestModal({
       handleNotesChange,
       handleSaveResults,
       allTests,
-      orders,
       openModal,
     ]
   );

@@ -10,7 +10,19 @@ export type QualityStage = 'collection' | 'validation' | 'entry';
 
 export type QualityDomain = 'specimen' | 'analytical' | 'clinical';
 
-export type RemedyType = 'retry_same_sample' | 'recollect' | 'escalate' | 'cancel';
+export type RemedyType =
+  | 'retry_same_sample'
+  | 'recollect'
+  | 'request_recollection'
+  | 'escalate'
+  | 'cancel';
+
+export type RecollectionRequestStatus =
+  | 'pending-approval'
+  | 'approved'
+  | 'denied'
+  | 'fulfilled'
+  | 'cancelled';
 
 export type EscalationResolutionAction =
   | 'force_validate'
@@ -43,7 +55,7 @@ export interface QualityIssueOptions {
   previewMessage: string;
   resultedTestsCount?: number;
   validatedTestsCount?: number;
-  suspendedTestsCount?: number;
+  awaitingRecollectionTestsCount?: number;
 }
 
 export interface ReportQualityIssueRequest {
@@ -64,7 +76,45 @@ export interface QualityIssueResult {
   orderTestId?: number;
   createdTestId?: number;
   createdSampleId?: number;
+  recollectionRequestId?: number;
   escalationRequired: boolean;
+}
+
+export interface RecollectionRequestSummary {
+  id: number;
+  orderId: number;
+  qualityIssueId?: number;
+  rejectedSampleId: number;
+  orderTestId?: number;
+  stage: QualityStage;
+  status: RecollectionRequestStatus;
+  reason: string;
+  notes?: string;
+  testCodes: string[];
+  affectedOrderTestIds: number[];
+  recollectionAttemptsUsed: number;
+  recollectionAttemptsRemaining: number;
+  requiresSupervisorOverride: boolean;
+  requestedByUserId: string;
+  reviewedByUserId?: string;
+  reviewNotes?: string;
+  reviewedAt?: string;
+  createdSampleId?: number;
+  createdTestId?: number;
+  createdAt: string;
+  patientId?: number;
+  patientName?: string;
+  orderNumber?: string;
+  sampleType?: string;
+}
+
+export interface RecollectionRequestResult {
+  success: boolean;
+  message: string;
+  requestId: number;
+  status: RecollectionRequestStatus;
+  createdSampleId?: number;
+  createdTestId?: number;
 }
 
 export interface QualityIssueRecord {
@@ -102,7 +152,7 @@ export interface EscalationResolveResult {
   success: boolean;
   action: EscalationResolutionAction;
   message: string;
-  originalTestId: number;
+  escalatedTestId: number;
   newTestId?: number;
   newSampleId?: number;
 }
@@ -148,6 +198,3 @@ export interface LabOperationRecord {
   operationData?: Record<string, unknown> | null;
   comment?: string | null;
 }
-
-/** @deprecated Use QualityIssueResult */
-export type RejectionResult = QualityIssueResult;
