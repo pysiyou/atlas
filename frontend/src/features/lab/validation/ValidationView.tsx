@@ -122,13 +122,13 @@ export const ValidationView: React.FC = () => {
       try {
         await approveRecollection.mutateAsync({ requestId, reviewNotes });
         toast.success({
-          title: 'Redraw approved',
+          title: 'Recollection approved',
           subtitle: 'A pending collection tube is now available in Sample Collection.',
         });
         await invalidateOrders();
         await refetchRecollection();
       } catch {
-        toast.error({ title: 'Failed to approve redraw', subtitle: 'Please try again.' });
+        toast.error({ title: 'Failed to approve recollection', subtitle: 'Please try again.' });
       }
     },
     [approveRecollection, invalidateOrders, refetchRecollection]
@@ -139,13 +139,13 @@ export const ValidationView: React.FC = () => {
       try {
         await denyRecollection.mutateAsync({ requestId, reviewNotes });
         toast.success({
-          title: 'Redraw denied',
+          title: 'Recollection denied',
           subtitle: 'Affected tests have been cancelled.',
         });
         await invalidateOrders();
         await refetchRecollection();
       } catch {
-        toast.error({ title: 'Failed to deny redraw', subtitle: 'Please try again.' });
+        toast.error({ title: 'Failed to deny recollection', subtitle: 'Please try again.' });
       }
     },
     [denyRecollection, invalidateOrders, refetchRecollection]

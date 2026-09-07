@@ -61,6 +61,8 @@ class QualityIssueOptions(BaseModel):
     willEscalate: bool = False
     previewRemedy: Optional[RemedyType] = None
     previewMessage: str = ""
+    hasSpecimenCriteria: bool = False
+    hasAnalyticalCriteria: bool = False
     resultedTestsCount: int = 0
     validatedTestsCount: int = 0
     awaitingRecollectionTestsCount: int = 0
@@ -385,13 +387,13 @@ class QualityIssueService:
             preview = RemedyType.REQUEST_RECOLLECTION
             if will_escalate:
                 message = (
-                    "Supervisor must approve patient redraw. "
+                    "Supervisor must approve recollection. "
                     "Recollection limit reached — override required if approved."
                 )
             else:
-                message = "Supervisor must approve before the patient is contacted for redraw."
+                message = "Supervisor must approve before the patient is contacted for a new sample."
 
-        criteria = RejectionCriteriaService(self.db).get_criteria_for_tests(sample.testCodes)
+        criteria = RejectionCriteriaService(self.db).get_specimen_criteria_for_tests(sample.testCodes)
 
         return QualityIssueOptions(
             targetType=QualityIssueTargetType.SAMPLE,
@@ -427,21 +429,30 @@ class QualityIssueService:
             sample_remaining = self.collection.attempts_remaining_after(sample)
 
         criteria_service = RejectionCriteriaService(self.db)
-        criteria = criteria_service.get_criteria_for_test(order_test.testCode)
-        has_specimen = criteria_service.has_specimen_criteria([order_test.testCode])
+        criteria = criteria_service.get_validation_criteria_for_test(order_test.testCode)
+        criteria_items = criteria_service.get_validation_criteria_items_for_test(order_test.testCode)
+        has_specimen = any(item.domain == "specimen" for item in criteria_items)
+        has_analytical = any(item.domain == "analytical" for item in criteria_items)
 
         if will_escalate:
             preview = RemedyType.ESCALATE
             message = "Rejection limit reached — will escalate to supervisor."
+        elif has_specimen and has_analytical and order_test.sampleId:
+            preview = RemedyType.RETRY_SAME_SAMPLE
+            message = (
+                "Specimen reasons submit a recollection request for supervisor approval. "
+                "Analytical reasons schedule a re-test on the same sample "
+                f"(attempt {retest_used + 1} of {MAX_RETEST_ATTEMPTS})."
+            )
         elif has_specimen and order_test.sampleId:
             preview = RemedyType.REQUEST_RECOLLECTION
             if sample_remaining == 0:
                 message = (
-                    "Specimen issue — supervisor must approve redraw. "
+                    "Specimen issue — supervisor must approve recollection. "
                     "Recollection limit reached — override required if approved."
                 )
             else:
-                message = "Specimen issue — supervisor must approve before patient redraw."
+                message = "Specimen issue — supervisor must approve before patient recollection."
         else:
             preview = RemedyType.RETRY_SAME_SAMPLE
             message = f"Re-run on same sample (attempt {retest_used + 1} of {MAX_RETEST_ATTEMPTS})."
@@ -460,6 +471,8 @@ class QualityIssueService:
             willEscalate=will_escalate,
             previewRemedy=preview,
             previewMessage=message,
+            hasSpecimenCriteria=has_specimen,
+            hasAnalyticalCriteria=has_analytical,
         )
 
     def report_issue(
@@ -483,7 +496,7 @@ class QualityIssueService:
         notes: Optional[str],
     ) -> QualityIssueResult:
         sample = self._get_sample(sample_id)
-        RejectionCriteriaService(self.db).validate_for_tests(sample.testCodes, reason)
+        RejectionCriteriaService(self.db).validate_for_tests(sample.testCodes, reason, context="sample")
         options = self._sample_options(sample_id)
         had_resulted_tests = (options.resultedTestsCount or 0) + (options.validatedTestsCount or 0) > 0
 
@@ -530,10 +543,12 @@ class QualityIssueService:
         if order_test.status != TestStatus.RESULTED:
             raise LabOperationError("Only resulted tests can be reported at validation", status_code=400)
 
-        RejectionCriteriaService(self.db).validate_for_test(order_test.testCode, reason)
+        RejectionCriteriaService(self.db).validate_for_test(order_test.testCode, reason, context="validation")
         options = self._test_options(order_test_id)
         criteria_service = RejectionCriteriaService(self.db)
-        matched = criteria_service.get_criterion_for_reason([order_test.testCode], reason)
+        matched = criteria_service.get_criterion_for_reason(
+            [order_test.testCode], reason, context="validation"
+        )
         is_specimen = (
             matched.domain == "specimen"
             if matched

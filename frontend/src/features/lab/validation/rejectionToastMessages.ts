@@ -28,11 +28,11 @@ export function getRejectionToast(result?: QualityIssueResult | null): {
     case 'recollect':
       return {
         title: 'Recollection approved',
-        subtitle: 'A pending collection tube has been created for the patient redraw.',
+        subtitle: 'A pending collection tube has been created for a new sample.',
       };
     case 'request_recollection':
       return {
-        title: 'Redraw request submitted',
+        title: 'Recollection request submitted',
         subtitle: 'A supervisor will review before the patient is contacted.',
       };
     default:

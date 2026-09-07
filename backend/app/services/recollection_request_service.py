@@ -15,6 +15,7 @@ from app.models.recollection_request import RecollectionRequest
 from app.models.sample import Sample
 from app.schemas.enums import (
     LabOperationType,
+    QualityDomain,
     QualityStage,
     RecollectionRequestStatus,
     RemedyType,
@@ -76,7 +77,7 @@ class RecollectionRequestService:
         order = self.db.query(Order).filter(Order.orderId == request.orderId).first()
         patient = None
         if order:
-            patient = self.db.query(Patient).filter(Patient.patientId == order.patientId).first()
+            patient = self.db.query(Patient).filter(Patient.id == order.patientId).first()
         sample = (
             self.db.query(Sample).filter(Sample.sampleId == request.rejectedSampleId).first()
         )
@@ -300,14 +301,42 @@ class RecollectionRequestService:
         if request.status != RecollectionRequestStatus.PENDING_APPROVAL:
             raise LabOperationError("Only pending recollection requests can be denied", status_code=400)
 
-        for test_id in request.affectedOrderTestIds or []:
+        cancel_reason = review_notes or f"Recollection denied: {request.reason}"
+        test_ids: set[int] = set(request.affectedOrderTestIds or [])
+        if request.orderTestId:
+            test_ids.add(request.orderTestId)
+
+        for test_id in test_ids:
             order_test = self.db.query(OrderTest).filter(OrderTest.id == test_id).first()
             if not order_test:
                 continue
-            if order_test.status in {TestStatus.SUPERSEDED, TestStatus.VALIDATED, TestStatus.CANCELLED}:
+            if order_test.status in {TestStatus.VALIDATED, TestStatus.CANCELLED}:
                 continue
-            if TestStateMachine.can_transition(order_test.status, TestStatus.CANCELLED):
+
+            # Validation rejections supersede the originating test before approval.
+            # Deny must still close that line so it does not linger as a ghost superseded row.
+            if order_test.status == TestStatus.SUPERSEDED:
+                if test_id != request.orderTestId:
+                    continue
                 order_test.status = TestStatus.CANCELLED
+            elif not TestStateMachine.can_transition(order_test.status, TestStatus.CANCELLED):
+                continue
+            else:
+                order_test.status = TestStatus.CANCELLED
+
+            order_test.validationNotes = cancel_reason
+            self.quality._record_issue(
+                order_id=request.orderId,
+                stage=request.stage,
+                domain=QualityDomain.SPECIMEN,
+                reason=cancel_reason,
+                notes=review_notes,
+                remedy=RemedyType.CANCEL,
+                user_id=user_id,
+                order_test_id=order_test.id,
+                sample_id=order_test.sampleId or request.rejectedSampleId,
+                test_code=order_test.testCode,
+            )
 
         request.status = RecollectionRequestStatus.DENIED
         request.reviewedByUserId = str(user_id)

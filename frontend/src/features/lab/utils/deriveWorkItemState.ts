@@ -39,13 +39,13 @@ export interface WorkItemState {
 
 const BLOCKED_LABELS: Record<BlockedReason, string> = {
   payment_unpaid: 'Payment required',
-  specimen_recollection: 'Redraw required',
+  specimen_recollection: 'Recollection required',
   specimen_rejected: 'Specimen rejected',
   retest_pending: 'Re-test in progress',
   critical_value: 'Critical value — supervisor review',
   amendment_pending: 'Amendment pending',
   retry_limit: 'Re-test limit reached',
-  recollection_limit: 'Redraw limit reached',
+  recollection_limit: 'Recollection limit reached',
 };
 
 function stageFromTestStatus(status: TestStatus): WorkItemStage {

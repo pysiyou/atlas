@@ -54,7 +54,7 @@ function RecollectionRequestCardDesktop({
         type="recollection"
       />
       <h3 className="text-sm font-medium text-text-primary">{title}</h3>
-      <BlockedReasonBadge label="Redraw approval" size="sm" />
+      <BlockedReasonBadge label="Recollection approval" size="sm" />
       {request.sampleType && (
         <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size="sm" />
       )}
@@ -201,7 +201,7 @@ function RecollectionRequestCardMobile({
 
       <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
         <div className="flex items-center gap-2 flex-wrap">
-          <BlockedReasonBadge label="Redraw approval" size="xs" />
+          <BlockedReasonBadge label="Recollection approval" size="xs" />
           {request.sampleType && (
             <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size="xs" />
           )}

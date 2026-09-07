@@ -67,7 +67,9 @@ export const createReflexTest = (
 });
 
 export const isActiveTest = (test: OrderTest): boolean =>
-  test.status !== 'superseded' && test.status !== 'removed';
+  test.status !== 'superseded' &&
+  test.status !== 'removed' &&
+  test.status !== 'cancelled';
 
 export const getActiveTests = (tests: OrderTest[]): OrderTest[] => tests.filter(isActiveTest);
 

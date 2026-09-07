@@ -108,6 +108,7 @@ export interface TestCatalogEntry {
   method_common?: string;
   turnaround_time_hours: number;
   sample: SampleRequirements;
+  validation_rejection_criteria?: Array<string | { reason: string; domain?: string }>;
   result_items: ResultItem[];
   sources?: string[];
   confidence?: 'HIGH' | 'MEDIUM' | 'LOW';
@@ -153,6 +154,7 @@ export interface Test {
   containerDescription?: string; // Detailed container description from sample.container
   collectionNotes?: string; // Special collection instructions
   rejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string }>;
+  validationRejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string }>;
   fastingRequired?: boolean; // Whether fasting is required
   confidence?: 'HIGH' | 'MEDIUM' | 'LOW'; // Data confidence level
   notes?: string; // Additional test notes

@@ -110,7 +110,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
             rejectionNotes={notes}
             onReasonChange={onReasonChange ?? (() => {})}
             onNotesChange={onNotesChange ?? (() => {})}
-            reasonLabel={alertCopy?.reasonLabel ?? title}
+        reasonLabel={alertCopy?.reasonLabel ?? (targetType === 'test' ? 'Result rejection reason' : 'Specimen issue')}
             notesLabel={alertCopy?.notesLabel}
           />
         </>
