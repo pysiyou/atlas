@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components';
 import type { TableViewConfig, CardComponentProps } from '@/components';
-import { DATA_ID_PRIMARY_INLINE } from '@/utils/constants';
+import { ENTITY_ID_INLINE } from '@/utils/constants';
 import { formatCurrency, formatDate, displayId } from '@/utils';
 import { getTestName } from '@/features/catalog/utils';
 import { getLabQueueUrlForTest } from '@/features/lab';
@@ -23,7 +23,7 @@ function createTestCodeColumn(tagStyles: { container: string }) {
         <div className="flex items-center gap-1">
           <span
             className={
-              isSuperseded ? 'text-text-disabled line-through font-id' : DATA_ID_PRIMARY_INLINE
+              isSuperseded ? 'text-text-disabled line-through font-id' : ENTITY_ID_INLINE
             }
           >
             {test.testCode}
@@ -167,7 +167,7 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
         <div className="flex items-center justify-between gap-2">
           <span
             className={
-              isSuperseded ? 'text-text-disabled line-through font-id' : DATA_ID_PRIMARY_INLINE
+              isSuperseded ? 'text-text-disabled line-through font-id' : ENTITY_ID_INLINE
             }
           >
             {item.testCode}

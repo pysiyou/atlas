@@ -139,6 +139,11 @@ export const queryKeys = {
     pendingEscalation: () => [...queryKeys.results.all, 'pending-escalation'] as const,
   },
 
+  recollectionRequests: {
+    all: ['recollection-requests'] as const,
+    pending: () => [...queryKeys.recollectionRequests.all, 'pending'] as const,
+  },
+
   /**
    * Critical value notifications
    */

@@ -4,6 +4,7 @@
  */
 
 import { LAB_CONFIG } from '@/features/lab/constants';
+import type { QualityIssueOptions } from '@/types/lab-operations';
 
 export const REJECTION_DIALOG_LAYOUT = {
   /** Width class for loading/error/content containers */
@@ -55,9 +56,9 @@ export const REJECTION_DIALOG_COPY = {
   triggerTitle: 'Reject',
   collection: {
     recollect: {
-      warningTitle: 'New Collection Required',
+      warningTitle: 'Supervisor Approval Required',
       warningBody:
-        'This specimen will be rejected and a recollection will be requested from the patient.',
+        'This specimen will be rejected. A supervisor must approve before the patient is contacted for redraw.',
       reasonLabel: 'Specimen Issue',
       notesLabel: 'Additional Context / Notes',
     },
@@ -77,3 +78,42 @@ export const REJECTION_DIALOG_COPY = {
     },
   },
 } as const;
+
+export interface ValidationAlertCopy {
+  variant: 'warning' | 'danger';
+  warningTitle: string;
+  warningBody: string;
+  confirmLabel: string;
+  reasonLabel: string;
+  notesLabel: string;
+}
+
+/** Dialog copy derived from GET /lab/quality-issues/options preview fields. */
+export function getValidationAlertCopy(options: QualityIssueOptions): ValidationAlertCopy {
+  if (options.willEscalate) {
+    return {
+      variant: 'danger',
+      ...REJECTION_DIALOG_COPY.escalation,
+    };
+  }
+  if (options.previewRemedy === 'request_recollection' || options.previewRemedy === 'recollect') {
+    return {
+      variant: 'warning',
+      warningTitle: 'Supervisor Approval Required',
+      warningBody:
+        options.previewMessage ||
+        'A supervisor must approve before the patient is contacted for redraw.',
+      confirmLabel: 'Submit Redraw Request',
+      reasonLabel: REJECTION_DIALOG_COPY.reject.reasonLabel,
+      notesLabel: REJECTION_DIALOG_COPY.reject.notesLabel,
+    };
+  }
+  return {
+    variant: 'warning',
+    warningTitle: REJECTION_DIALOG_COPY.reject.warningTitle,
+    warningBody: options.previewMessage || REJECTION_DIALOG_COPY.reject.warningBody,
+    confirmLabel: REJECTION_DIALOG_COPY.reject.confirmLabel,
+    reasonLabel: REJECTION_DIALOG_COPY.reject.reasonLabel,
+    notesLabel: REJECTION_DIALOG_COPY.reject.notesLabel,
+  };
+}

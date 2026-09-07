@@ -18,7 +18,8 @@ import { LAB_CONFIG } from '@/features/lab/constants';
 import { RejectionDialog } from '@/features/lab/components';
 import { AttemptIndicator } from '../components/AttemptIndicator';
 import { QueueAgeBadge } from '../components/QueueAgeBadge';
-import { useLabCardClickGuard } from '@/features/lab/hooks';
+import { useLabCardClickGuard, useTestWorkItemState } from '@/features/lab/hooks';
+import { BlockedReasonBadge } from '../components/StatusBadges';
 import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
 import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
@@ -167,6 +168,7 @@ function ValidationCardMobile({
   handleCardClick: () => void;
 }) {
   const { hasFlags, isRetest, hasRejectionHistory, flagStatusMap } = deriveCardState(test);
+  const workItem = useTestWorkItemState(test);
   const handleRejectionResult = (result: QualityIssueResult) => onReject(result);
 
   return (
@@ -227,6 +229,9 @@ function ValidationCardMobile({
               RE-TEST
             </Badge>
           )}
+          {workItem.blockedReason && (
+            <BlockedReasonBadge label={workItem.label} size="xs" />
+          )}
         </div>
         <div className="flex items-center gap-2">
           <div onClick={e => e.stopPropagation()}>
@@ -283,6 +288,7 @@ function ValidationCardDesktop({
     attemptType,
     flagStatusMap,
   } = deriveCardState(test);
+  const workItem = useTestWorkItemState(test);
   const handleRejectionResult = (result: QualityIssueResult) => onReject(result);
   const resultCount = Object.keys(test.results!).length;
 
@@ -309,6 +315,7 @@ function ValidationCardDesktop({
       ) : null}
       <Badge variant={test.sampleType} size="sm" />
       {test.resultEnteredAt && <QueueAgeBadge since={test.resultEnteredAt} />}
+      {workItem.blockedReason && <BlockedReasonBadge label={workItem.label} size="sm" />}
     </>
   );
 

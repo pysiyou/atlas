@@ -7,235 +7,141 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { invalidateResultQueries } from '@/lib/query/invalidate';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useAuthStore } from '@/app/store';
-import type { OrderTest, ValidationDecision, TestWithContext } from '@/types';
+import type { ValidationDecision, TestWithContext } from '@/types';
 import type {
   EscalationResolveRequest,
   EscalationResolveResult,
 } from '@/types/lab-operations';
 
-/**
- * Request body for entering test results
- */
 interface ResultEntryRequest {
-  results: Record<string, unknown>; // TestResult objects
+  results: Record<string, unknown>;
   technicianNotes?: string;
 }
 
-/**
- * Request body for validating test results (approval only)
- */
 interface ResultValidationRequest {
   decision: ValidationDecision;
   validationNotes?: string;
 }
 
 export const resultAPI = {
-  /**
-   * Get tests pending result entry (status: sample-collected)
-   * Excludes superseded tests.
-   */
-  async getPendingEntry(): Promise<OrderTest[]> {
-    return apiClient.get<OrderTest[]>('/results/pending-entry');
-  },
-
-  /**
-   * Get tests pending validation (status: completed)
-   * Excludes superseded tests.
-   */
-  async getPendingValidation(): Promise<OrderTest[]> {
-    return apiClient.get<OrderTest[]>('/results/pending-validation');
-  },
-
-  /**
-   * Get tests pending escalation resolution (admin/labtech_plus only).
-   * Returns enriched list (order + patient + test + sample context) as TestWithContext[].
-   */
   async getPendingEscalation(): Promise<TestWithContext[]> {
     return apiClient.get<TestWithContext[]>('/results/pending-escalation');
   },
 
-  /**
-   * Resolve an escalated test (admin/labtech_plus only).
-   * Actions: force_validate, authorize_retest, authorize_recollect, apply_amendment, cancel_test.
-   */
   async resolveEscalation(
-    orderId: string | number,
-    testCode: string,
-    payload: EscalationResolveRequest
+    payload: EscalationResolveRequest & { orderTestId: number }
   ): Promise<EscalationResolveResult> {
-    const orderIdStr = typeof orderId === 'number' ? orderId.toString() : orderId;
     return apiClient.post<EscalationResolveResult>(
-      `/results/${orderIdStr}/tests/${testCode}/escalation/resolve`,
-      payload
+      `/results/order-tests/${payload.orderTestId}/escalation/resolve`,
+      {
+        action: payload.action,
+        validationNotes: payload.validationNotes,
+        rejectionReason: payload.rejectionReason,
+        readBack: payload.readBack,
+      }
     );
   },
 
-  /**
-   * Enter results for a test
-   */
-  async enterResults(
-    orderId: string,
-    testCode: string,
-    data: ResultEntryRequest
-  ): Promise<OrderTest> {
-    return apiClient.post<OrderTest>(`/results/${orderId}/tests/${testCode}`, data);
+  async enterResults(params: {
+    orderTestId: number;
+    data: ResultEntryRequest;
+  }) {
+    return apiClient.post(`/results/order-tests/${params.orderTestId}`, params.data);
   },
 
-  /**
-   * Validate test results - approval only.
-   * For quality issues, use POST /lab/quality-issues.
-   */
-  async validateResults(
-    orderId: string,
-    testCode: string,
-    data: ResultValidationRequest
-  ): Promise<OrderTest> {
-    return apiClient.post<OrderTest>(`/results/${orderId}/tests/${testCode}/validate`, data);
-  },
-
-  /**
-   * Bulk validate multiple test results in a single transaction.
-   *
-   * Processes all validations atomically. Partial failures are reported
-   * but do not roll back successful validations.
-   *
-   * Note: Tests with critical values should be excluded from bulk validation
-   * and handled individually to ensure proper notification workflow.
-   */
-  async validateBulk(
-    items: Array<{ orderId: number; testCode: string }>,
-    validationNotes?: string
-  ): Promise<{
-    results: Array<{
-      orderId: number;
-      testCode: string;
-      success: boolean;
-      error?: string;
-      testId?: number;
-    }>;
-    successCount: number;
-    failureCount: number;
-  }> {
-    return apiClient.post('/results/validate-bulk', {
-      items,
-      validationNotes,
-    });
+  async validateResults(params: {
+    orderTestId: number;
+    data: ResultValidationRequest;
+  }) {
+    return apiClient.post(
+      `/results/order-tests/${params.orderTestId}/validate`,
+      params.data
+    );
   },
 };
 
-
-/**
- * Result Mutations Hooks
- *
- * Provides TanStack Query mutation hooks for all result-related operations:
- * - Result entry
- * - Result validation (approval)
- * - Bulk validation
- * - Escalation resolution
- *
- *  */
-
-/**
- * Hook to enter results for a test.
- * Invalidates orders and results queries on success.
- */
 export function useEnterResults() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({
-      orderId,
-      testCode,
+      orderTestId,
       results,
       technicianNotes,
     }: {
-      orderId: string | number;
-      testCode: string;
+      orderTestId: number;
+      orderId?: string | number;
       results: Record<string, unknown>;
       technicianNotes?: string;
     }) => {
-      const orderIdStr = typeof orderId === 'number' ? orderId.toString() : orderId;
-      return resultAPI.enterResults(orderIdStr, testCode, { results, technicianNotes });
+      if (orderTestId == null) {
+        throw new Error('orderTestId is required to enter results.');
+      }
+      return resultAPI.enterResults({
+        orderTestId,
+        data: { results, technicianNotes },
+      });
     },
     onSuccess: (_, variables) => {
       const orderIdStr =
-        typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
+        variables.orderId != null
+          ? typeof variables.orderId === 'number'
+            ? variables.orderId.toString()
+            : variables.orderId
+          : undefined;
       invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
     },
   });
 }
 
-/**
- * Hook to validate (approve) test results.
- * Invalidates orders and results queries on success.
- */
 export function useValidateResults() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({
-      orderId,
-      testCode,
+      orderTestId,
       validationNotes,
     }: {
-      orderId: string | number;
-      testCode: string;
+      orderTestId: number;
+      orderId?: string | number;
       validationNotes?: string;
     }) => {
-      const orderIdStr = typeof orderId === 'number' ? orderId.toString() : orderId;
-      return resultAPI.validateResults(orderIdStr, testCode, {
-        decision: 'approved' as ValidationDecision,
-        validationNotes,
+      if (orderTestId == null) {
+        throw new Error('orderTestId is required to validate results.');
+      }
+      return resultAPI.validateResults({
+        orderTestId,
+        data: {
+          decision: 'approved' as ValidationDecision,
+          validationNotes,
+        },
       });
     },
     onSuccess: (_, variables) => {
       const orderIdStr =
-        typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
+        variables.orderId != null
+          ? typeof variables.orderId === 'number'
+            ? variables.orderId.toString()
+            : variables.orderId
+          : undefined;
       invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
     },
   });
 }
 
-/**
- * Hook to bulk validate multiple test results.
- * Invalidates orders and results queries on success.
- */
-export function useValidateBulk() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      items,
-      validationNotes,
-    }: {
-      items: Array<{ orderId: number; testCode: string }>;
-      validationNotes?: string;
-    }) => resultAPI.validateBulk(items, validationNotes),
-    onSuccess: () => {
-      invalidateResultQueries(queryClient, { samples: false });
-    },
-  });
-}
-
-/**
- * Hook to resolve an escalated test (admin/labtech_plus only).
- * Supports force_validate, authorize_retest, authorize_recollect, apply_amendment, and cancel_test.
- * Invalidates orders, samples, and results queries on success.
- */
 export function useResolveEscalation() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({
-      orderId,
-      testCode,
+      orderTestId,
       action,
       validationNotes,
       rejectionReason,
       readBack,
     }: {
-      orderId: string | number;
-      testCode: string;
+      orderId?: string | number;
+      orderTestId: number;
       action: EscalationResolveRequest['action'];
       validationNotes?: string;
       rejectionReason?: string;
@@ -245,8 +151,11 @@ export function useResolveEscalation() {
       if (!hasRole(['administrator', 'lab-technician-plus'])) {
         throw new Error('You do not have permission to resolve escalations.');
       }
-      const orderIdStr = typeof orderId === 'number' ? orderId.toString() : orderId;
-      return resultAPI.resolveEscalation(orderIdStr, testCode, {
+      if (orderTestId == null) {
+        throw new Error('orderTestId is required to resolve an escalation.');
+      }
+      return resultAPI.resolveEscalation({
+        orderTestId,
         action,
         validationNotes,
         rejectionReason,
@@ -255,7 +164,11 @@ export function useResolveEscalation() {
     },
     onSuccess: (_, variables) => {
       const orderIdStr =
-        typeof variables.orderId === 'number' ? variables.orderId.toString() : variables.orderId;
+        variables.orderId != null
+          ? typeof variables.orderId === 'number'
+            ? variables.orderId.toString()
+            : variables.orderId
+          : undefined;
       invalidateResultQueries(queryClient, {
         orderId: orderIdStr,
         samples: true,
@@ -264,13 +177,6 @@ export function useResolveEscalation() {
     },
   });
 }
-
-
-/**
- * Pending Escalation Query Hook
- *
- * Fetches tests pending escalation resolution (admin/labtech_plus only).
- */
 
 export function usePendingEscalation() {
   const { isAuthenticated, isLoading: isRestoring, hasRole } = useAuthStore();

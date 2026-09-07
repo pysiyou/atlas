@@ -6,12 +6,12 @@ from app.models.patient import Patient
 from app.models.test import Test
 from app.models.order import Order, OrderTest
 from app.models.sample import Sample
-from app.models.aliquot import Aliquot
 from app.models.billing import Invoice, Payment, InsuranceClaim
 from app.models.report import Report
 from app.models.lab_audit import LabOperationLog
 from app.models.escalation import EscalationTicket
 from app.models.quality_issue import QualityIssue
+from app.models.recollection_request import RecollectionRequest
 from app.models.affiliation_pricing import AffiliationPricing
 
 __all__ = [
@@ -21,7 +21,6 @@ __all__ = [
     "Order",
     "OrderTest",
     "Sample",
-    "Aliquot",
     "Invoice",
     "Payment",
     "InsuranceClaim",
@@ -29,5 +28,6 @@ __all__ = [
     "LabOperationLog",
     "EscalationTicket",
     "QualityIssue",
+    "RecollectionRequest",
     "AffiliationPricing",
 ]

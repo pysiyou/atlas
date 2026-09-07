@@ -10,12 +10,12 @@
  */
 
 import React, { useState } from 'react';
-import { Popover, IconButton, Alert, FooterInfo, SpinnerLoader } from '@/components';
+import { Popover, Button, Alert, FooterInfo } from '@/components';
 import { PopoverForm } from './PopoverForm';
 import { MODULE_ICONS } from '@/config/icons';
 import { useRejectionDialog } from '../hooks/useRejectionDialog';
 import type { QualityIssueResult } from '@/types/lab-operations';
-import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY } from './rejectionDialogConstants';
+import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY, type ValidationAlertCopy } from './rejectionDialogConstants';
 import { CatalogRejectionFields } from './CatalogRejectionFields';
 import { RejectionDialogLoadingView, RejectionDialogErrorView } from './RejectionDialogViews';
 
@@ -26,6 +26,7 @@ export { RejectionDialogLoadingView, RejectionDialogErrorView } from './Rejectio
 export interface RejectionFormState {
   error: string | null;
   escalationRequired: boolean;
+  alertCopy: ValidationAlertCopy | null;
   rejectionReason: string;
   rejectionNotes: string;
   allowedCriteria: string[];
@@ -49,14 +50,21 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
 }) => {
   const {
     error,
-    escalationRequired,
+    alertCopy,
     rejectionReason,
     rejectionNotes,
     allowedCriteria,
     criteriaLoading,
   } = state;
   const { onReasonChange, onNotesChange } = actions;
-  const copy = escalationRequired ? REJECTION_DIALOG_COPY.escalation : REJECTION_DIALOG_COPY.reject;
+  const copy = alertCopy ?? {
+    variant: 'warning' as const,
+    warningTitle: REJECTION_DIALOG_COPY.reject.warningTitle,
+    warningBody: REJECTION_DIALOG_COPY.reject.warningBody,
+    confirmLabel: REJECTION_DIALOG_COPY.reject.confirmLabel,
+    reasonLabel: REJECTION_DIALOG_COPY.reject.reasonLabel,
+    notesLabel: REJECTION_DIALOG_COPY.reject.notesLabel,
+  };
 
   return (
     <>
@@ -66,7 +74,7 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
         </Alert>
       )}
 
-      <Alert variant={escalationRequired ? 'danger' : 'warning'} className="py-2">
+      <Alert variant={copy.variant} className="py-2">
         <div className="space-y-0.5">
           <p className="font-normal text-xs">{copy.warningTitle}</p>
           <p className="text-xxs opacity-90 leading-tight">{copy.warningBody}</p>
@@ -98,7 +106,7 @@ interface RejectionDialogContentProps {
   onSubmittingChange?: (submitting: boolean) => void;
 }
 
-export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
+const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   orderTestId,
   testName,
   testCode,
@@ -117,7 +125,7 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     isRejecting,
     error,
     options,
-    escalationRequired,
+    alertCopy,
     handleConfirm,
     handleRetry,
     subtitle,
@@ -152,7 +160,8 @@ export const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       <RejectionDialogFormBody
         state={{
           error,
-          escalationRequired,
+          escalationRequired: alertCopy?.variant === 'danger',
+          alertCopy,
           rejectionReason,
           rejectionNotes,
           allowedCriteria: options?.allowedCriteria ?? [],
@@ -193,7 +202,9 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
       preventClose={effectiveSubmitting}
       trigger={
         trigger ?? (
-          <IconButton variant="reject" size="sm" title={REJECTION_DIALOG_COPY.triggerTitle} />
+          <Button variant="reject" size="sm" title={REJECTION_DIALOG_COPY.triggerTitle}>
+            {REJECTION_DIALOG_COPY.triggerTitle}
+          </Button>
         )
       }
     >
@@ -214,48 +225,5 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
         </div>
       )}
     </Popover>
-  );
-};
-
-interface RejectionHistoryBannerProps {
-  isRetest?: boolean;
-  retestNumber?: number;
-  isRecollection?: boolean;
-  recollectionAttempt?: number;
-  rejectionReason?: string;
-}
-
-export const RejectionHistoryBanner: React.FC<RejectionHistoryBannerProps> = ({
-  isRetest,
-  retestNumber,
-  isRecollection,
-  recollectionAttempt,
-  rejectionReason,
-}) => {
-  if (!isRetest && !isRecollection) return null;
-
-  const getMessage = () => {
-    if (isRetest && retestNumber) return `Re-test #${retestNumber}`;
-    if (isRecollection && recollectionAttempt && recollectionAttempt > 1) {
-      return `Recollection #${recollectionAttempt - 1}`;
-    }
-    return null;
-  };
-
-  const message = getMessage();
-  if (!message) return null;
-
-  return (
-    <div className="mt-2 px-2 py-1.5 bg-warning-bg border border-warning-stroke rounded text-warning-fg">
-      <div className="flex items-center gap-1.5">
-        <SpinnerLoader size="xs" />
-        <span className="text-xxs font-normal">{message}</span>
-      </div>
-      {rejectionReason && (
-        <p className="text-xxs mt-0.5 opacity-80 line-clamp-2">
-          Previous rejection: {rejectionReason}
-        </p>
-      )}
-    </div>
   );
 };

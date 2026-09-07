@@ -4,7 +4,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { useQualityIssueOptions, useReportQualityIssue } from '@/features/lab/api/quality-issues.api';
-import { REJECTION_DIALOG_COPY } from '../components/rejectionDialogConstants';
+import {
+  REJECTION_DIALOG_COPY,
+  getValidationAlertCopy,
+} from '../components/rejectionDialogConstants';
 
 function buildSubtitle(testName?: string, testCode?: string, patientName?: string): string {
   return [testName, testCode ? `(${testCode})` : '', patientName ? `- ${patientName}` : '']
@@ -46,6 +49,11 @@ export function useRejectionDialog({
   const hasCriteria = allowedCriteria.length > 0;
   const isConfirmDisabled = useMemo(() => !hasCriteria || !hasReason, [hasCriteria, hasReason]);
 
+  const alertCopy = useMemo(
+    () => (options ? getValidationAlertCopy(options) : null),
+    [options],
+  );
+
   useEffect(() => {
     onSubmittingChange?.(reportMutation.isPending);
   }, [reportMutation.isPending, onSubmittingChange]);
@@ -65,7 +73,10 @@ export function useRejectionDialog({
   };
 
   const subtitle = buildSubtitle(testName, testCode, patientName);
-  const copy = escalationRequired ? REJECTION_DIALOG_COPY.escalation : REJECTION_DIALOG_COPY.reject;
+  const copy = {
+    title: REJECTION_DIALOG_COPY.reject.title,
+    confirmLabel: alertCopy?.confirmLabel ?? REJECTION_DIALOG_COPY.reject.confirmLabel,
+  };
 
   return {
     rejectionReason,
@@ -78,6 +89,7 @@ export function useRejectionDialog({
     error: reportMutation.error?.message ?? (fetchError ? String(fetchError) : null),
     options,
     escalationRequired,
+    alertCopy,
     handleConfirm,
     handleRetry,
     subtitle,

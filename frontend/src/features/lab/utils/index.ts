@@ -13,3 +13,4 @@ export * from './deriveTestRejectionContext';
 export * from './buildLabFilterConfig';
 export * from './compareQueuePriority';
 export * from './labQueueLinks';
+export * from './orderTestKey';

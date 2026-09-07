@@ -27,8 +27,13 @@ export function getRejectionToast(result?: QualityIssueResult | null): {
       };
     case 'recollect':
       return {
-        title: 'New sample requested',
-        subtitle: 'The sample has been rejected and recollection has been requested.',
+        title: 'Recollection approved',
+        subtitle: 'A pending collection tube has been created for the patient redraw.',
+      };
+    case 'request_recollection':
+      return {
+        title: 'Redraw request submitted',
+        subtitle: 'A supervisor will review before the patient is contacted.',
       };
     default:
       return {

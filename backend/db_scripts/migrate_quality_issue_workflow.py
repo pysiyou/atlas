@@ -24,7 +24,6 @@ from sqlalchemy.engine import Connection
 from app.database import engine
 from app.models.quality_issue import QualityIssue
 from app.schemas.enums import (
-    AliquotStatus,
     ClaimStatus,
     ContainerTopColor,
     ContainerType,
@@ -68,7 +67,6 @@ PG_ENUM_REGISTRY: dict[str, type] = {
     "remedytype": RemedyType,
     "qualitystage": QualityStage,
     "qualitydomain": QualityDomain,
-    "aliquotstatus": AliquotStatus,
     "claimstatus": ClaimStatus,
 }
 
@@ -123,9 +121,9 @@ OPERATION_TYPE_EXTRA: dict[str, str] = {
 LEGACY_EXTRA_MAPS: dict[str, dict[str, str]] = {
     "teststatus": {
         "IN_PROGRESS": TestStatus.SAMPLE_COLLECTED.value,
-        "REJECTED": TestStatus.SUSPENDED.value,
+        "REJECTED": TestStatus.PENDING.value,
         "in-progress": TestStatus.SAMPLE_COLLECTED.value,
-        "rejected": TestStatus.SUSPENDED.value,
+        "rejected": TestStatus.PENDING.value,
     },
     "samplestatus": {
         "RECEIVED": SampleStatus.COLLECTED.value,
@@ -401,7 +399,7 @@ def normalize_order_tests(conn: Connection, dry_run: bool) -> None:
             SET status = CAST(:target AS teststatus)
             WHERE status::text IN ('REJECTED', 'rejected')
             """,
-            {"target": TestStatus.SUSPENDED.value},
+            {"target": TestStatus.PENDING.value},
         ),
     ]
 

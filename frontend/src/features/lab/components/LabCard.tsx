@@ -174,33 +174,6 @@ export const ProgressBadge: React.FC<InfoBadgeProps> = ({
 );
 
 /**
- * FlagsSection - Display flags with red styling
- */
-interface FlagsSectionProps {
-  flags: string[];
-}
-
-export const FlagsSection: React.FC<FlagsSectionProps> = ({ flags }) => {
-  if (!flags.length) return null;
-
-  return (
-    <div className={LAB_CARD_CONTAINERS.flagsSection}>
-      <div className={`${LAB_CARD_TYPOGRAPHY.flagTitle} ${LAB_CARD_SPACING.flagsTitleMargin}`}>
-        Flags
-      </div>
-      <ul className={LAB_CARD_SPACING.flagsListGap}>
-        {flags.map((flag, i) => (
-          <li key={i} className={`flex items-center ${LAB_CARD_TYPOGRAPHY.flagText}`}>
-            <span className={LAB_CARD_LIST_ITEMS.bulletRed} />
-            {flag}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-/**
  * TestList - Display list of tests with codes
  */
 interface TestListProps {

@@ -81,7 +81,6 @@ class TestStatus(str, enum.Enum):
     SAMPLE_COLLECTED = "sample-collected"
     RESULTED = "resulted"
     VALIDATED = "validated"
-    SUSPENDED = "suspended"
     CANCELLED = "cancelled"
     ESCALATED = "escalated"
     SUPERSEDED = "superseded"
@@ -90,7 +89,6 @@ class TestStatus(str, enum.Enum):
 class QualityStage(str, enum.Enum):
     COLLECTION = "collection"
     VALIDATION = "validation"
-    ENTRY = "entry"
 
 class QualityDomain(str, enum.Enum):
     SPECIMEN = "specimen"
@@ -100,8 +98,16 @@ class QualityDomain(str, enum.Enum):
 class RemedyType(str, enum.Enum):
     RETRY_SAME_SAMPLE = "retry_same_sample"
     RECOLLECT = "recollect"
+    REQUEST_RECOLLECTION = "request_recollection"
     ESCALATE = "escalate"
     CANCEL = "cancel"
+
+class RecollectionRequestStatus(str, enum.Enum):
+    PENDING_APPROVAL = "pending-approval"
+    APPROVED = "approved"
+    DENIED = "denied"
+    FULFILLED = "fulfilled"
+    CANCELLED = "cancelled"
 
 class OrderStatus(str, enum.Enum):
     ORDERED = "ordered"
@@ -134,13 +140,6 @@ class ClaimStatus(str, enum.Enum):
     DENIED = "denied"
     PAID = "paid"
 
-class AliquotStatus(str, enum.Enum):
-    AVAILABLE = "available"
-    IN_USE = "in-use"
-    CONSUMED = "consumed"
-    STORED = "stored"
-    DISPOSED = "disposed"
-
 class ResultStatus(str, enum.Enum):
     NORMAL = "normal"
     HIGH = "high"
@@ -151,13 +150,14 @@ class ResultStatus(str, enum.Enum):
 
 class ValidationDecision(str, enum.Enum):
     APPROVED = "approved"
-    REJECTED = "rejected"
-    REPEAT_REQUIRED = "repeat-required"
 
 class LabOperationType(str, enum.Enum):
     SAMPLE_COLLECT = "sample_collect"
     SAMPLE_REJECT = "sample_reject"
     SAMPLE_RECOLLECTION_REQUEST = "sample_recollection_request"
+    RECOLLECTION_REQUEST_CREATED = "recollection_request_created"
+    RECOLLECTION_REQUEST_APPROVED = "recollection_request_approved"
+    RECOLLECTION_REQUEST_DENIED = "recollection_request_denied"
     RESULT_ENTRY = "result_entry"
     RESULT_VALIDATION_APPROVE = "result_validation_approve"
     QUALITY_ISSUE_REPORTED = "quality_issue_reported"

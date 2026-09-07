@@ -1,5 +1,5 @@
 """
-Detect specimen-related rejection reasons from catalog strings or slug enums.
+Detect specimen vs analytical rejection criteria from catalog strings or slug enums.
 """
 from app.schemas.enums import RejectionReason
 
@@ -16,7 +16,7 @@ SPECIMEN_CRITERIA = frozenset({
     RejectionReason.ICTERIC.value,
 })
 
-# Catalog rejection strings map to specimen slugs via keyword matching.
+# Catalog rejection strings map to specimen slugs via keyword matching (fallback only).
 _SPECIMEN_KEYWORDS: dict[str, tuple[str, ...]] = {
     RejectionReason.HEMOLYZED.value: ("hemolyz",),
     RejectionReason.CLOTTED.value: ("clot",),
@@ -28,6 +28,11 @@ _SPECIMEN_KEYWORDS: dict[str, tuple[str, ...]] = {
     RejectionReason.LIPEMIC.value: ("lipemic", "lipemia"),
     RejectionReason.ICTERIC.value: ("icteric",),
 }
+
+
+def infer_criterion_domain(reason: str) -> str:
+    """Return specimen or analytical for a catalog string or slug."""
+    return "specimen" if is_specimen_rejection_reason(reason) else "analytical"
 
 
 def is_specimen_rejection_reason(reason: str) -> bool:

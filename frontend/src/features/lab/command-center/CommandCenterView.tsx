@@ -40,7 +40,6 @@ const ALL_ACTIVE_STATUSES = [
   'sample-collected',
   'resulted',
   'escalated',
-  'suspended',
 ] as const;
 
 export const CommandCenterView: React.FC = () => {

@@ -2,7 +2,7 @@
  * Collection quality issue popover — reports specimen problems via unified API.
  */
 import React, { useCallback } from 'react';
-import { Popover, IconButton, FooterInfo } from '@/components';
+import { Popover, Button, FooterInfo } from '@/components';
 import { PopoverForm } from '../components/PopoverForm';
 import { MODULE_ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
@@ -103,7 +103,11 @@ export const CollectionRejectionPopover: React.FC<CollectionRejectionPopoverProp
       offsetValue={8}
       preventClose={false}
       trigger={
-        trigger ?? <IconButton variant="reject" size="sm" title="Report specimen issue" />
+        trigger ?? (
+          <Button variant="reject" size="sm" title="Report specimen issue">
+            Report Specimen Issue
+          </Button>
+        )
       }
     >
       {({ close }) => (

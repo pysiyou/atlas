@@ -7,34 +7,31 @@ import type { Order, OrderStatus, TestStatus, OrderTest } from '@/types';
 
 /**
  * Calculate order status based on test statuses.
- * 
+ *
  * Logic matches backend order_status_updater.py:
- * 1. All tests rejected/superseded/removed -> cancelled
- * 2. All ACTIVE tests validated -> completed
- * 3. Any active test started (not pending) -> in-progress
- * 4. All pending -> ordered
+ * 1. All active tests validated -> completed
+ * 2. Any active test started (not pending) -> in-progress
+ * 3. All pending -> ordered
+ *
+ * Note: cancelled is set manually on the order and is not derived here.
  */
 export const calculateOrderStatus = (testStatuses: TestStatus[]): OrderStatus => {
-  // Filter out superseded and removed tests - only consider active tests
   const activeStatuses = testStatuses.filter(
     s => s !== 'superseded' && s !== 'removed'
   );
 
   if (activeStatuses.length === 0) {
-    return 'cancelled';
+    return 'ordered';
   }
 
-  // Check if ALL active tests are validated -> COMPLETED (not just some)
   if (activeStatuses.every(s => s === 'validated')) {
     return 'completed';
   }
 
-  // Check if any active test has started (not pending) -> IN_PROGRESS
   const startedStatuses: TestStatus[] = [
     'sample-collected',
     'resulted',
     'validated',
-    'suspended',
     'cancelled',
     'escalated',
   ];
@@ -42,7 +39,6 @@ export const calculateOrderStatus = (testStatuses: TestStatus[]): OrderStatus =>
     return 'in-progress';
   }
 
-  // All tests are pending -> ORDERED
   return 'ordered';
 };
 
@@ -68,22 +64,6 @@ export const createReflexTest = (
   isReflexTest: true,
   triggeredBy: triggeredByTestCode,
   reflexRule,
-});
-
-export const createRepeatTest = (
-  originalTest: OrderTest,
-  repeatReason: string,
-  existingRepeats: number,
-  sampleId?: number | string
-): OrderTest => ({
-  ...originalTest,
-  status: sampleId ? 'sample-collected' : 'pending',
-  isRepeatTest: true,
-  repeatReason,
-  originalTestId: originalTest.id,
-  repeatNumber: existingRepeats + 1,
-  sampleId: typeof sampleId === 'string' ? parseInt(sampleId, 10) : sampleId,
-  results: null,
 });
 
 export const isActiveTest = (test: OrderTest): boolean =>

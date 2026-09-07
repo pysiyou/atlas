@@ -30,21 +30,10 @@ from app.schemas.responses import OrderReportResponse
 router = APIRouter()
 
 
-class OrderTestStatusUpdate(BaseModel):
-    """Body for PATCH /orders/{orderId}/tests/{testCode}. Only notes; status is controlled by lab workflow endpoints."""
-    technicianNotes: Optional[str] = None
-    validationNotes: Optional[str] = None
-
-
 class OrderPaymentUpdate(BaseModel):
     """Body for PATCH /orders/{orderId}/payment"""
     paymentStatus: PaymentStatus = Field(..., description="paid | unpaid")
     amountPaid: Optional[float] = Field(None, ge=0)
-
-
-class CriticalNotifyRequest(BaseModel):
-    """Body for POST /orders/{orderId}/tests/{testCode}/critical"""
-    notifiedTo: str = Field(..., min_length=1)
 
 
 @router.get("/orders")
@@ -192,138 +181,6 @@ def delete_order(
             detail="Failed to delete order"
         )
     return None
-
-
-@router.patch("/orders/{orderId}/tests/{testCode}", response_model=OrderResponse)
-def update_order_test_status(
-    orderId: int,
-    testCode: str,
-    body: OrderTestStatusUpdate,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    """
-    Update technicianNotes or validationNotes for an order test. Test status is controlled
-    only by lab workflow endpoints (collect, enter results, validate/reject, resolve escalation).
-    """
-    order = db.query(Order).filter(Order.orderId == orderId).options(
-        selectinload(Order.tests).joinedload(OrderTest.test),
-        joinedload(Order.patient),
-    ).first()
-    if not order:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Order {orderId} not found"
-        )
-    order_test = next((t for t in order.tests if t.testCode == testCode), None)
-    if not order_test:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Test {testCode} not found in order {orderId}"
-        )
-    if body.technicianNotes is not None:
-        order_test.technicianNotes = body.technicianNotes
-    if body.validationNotes is not None:
-        order_test.validationNotes = body.validationNotes
-
-    try:
-        db.commit()
-        db.refresh(order)
-    except HTTPException:
-        raise
-    except Exception:
-        db.rollback()
-        logger.exception(f"Failed to update test status for order {orderId}/{testCode}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update test status"
-        )
-    return order
-
-
-@router.post("/orders/{orderId}/tests/{testCode}/critical", response_model=OrderResponse)
-def mark_order_test_critical(
-    orderId: int,
-    testCode: str,
-    body: CriticalNotifyRequest,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    """
-    Record that a critical value notification was sent for this order test.
-    Resolves OrderTest by orderId + testCode and delegates to critical notification + audit.
-    """
-    from app.services.critical_notification_service import CriticalNotificationService
-    from app.services.flag_calculator import ResultFlag
-    from app.schemas.enums import ResultStatus
-
-    order = db.query(Order).filter(Order.orderId == orderId).options(
-        selectinload(Order.tests).joinedload(OrderTest.test),
-        joinedload(Order.patient),
-    ).first()
-    if not order:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Order {orderId} not found"
-        )
-    order_test = next((t for t in order.tests if t.testCode == testCode), None)
-    if not order_test:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Test {testCode} not found in order {orderId}"
-        )
-    if not order_test.hasCriticalValues:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Test does not have critical values"
-        )
-    service = CriticalNotificationService(db)
-    critical_flags = []
-    if order_test.flags:
-        for flag_str in order_test.flags:
-            parts = flag_str.split(":")
-            if len(parts) >= 2:
-                critical_flags.append(
-                    ResultFlag(
-                        item_code=parts[0],
-                        item_name=parts[0],
-                        value=float(parts[2]) if len(parts) > 2 else 0,
-                        status=ResultStatus(parts[1]) if parts[1] in [s.value for s in ResultStatus] else ResultStatus.CRITICAL,
-                        reference_low=None,
-                        reference_high=None,
-                        critical_low=None,
-                        critical_high=None,
-                        unit=None,
-                    )
-                )
-    service.create_notification(
-        order_test=order_test,
-        order=order,
-        critical_flags=critical_flags,
-        notified_to=body.notifiedTo,
-        notification_method="phone",
-    )
-    audit = AuditService(db)
-    audit.log_critical_value_notified(
-        order_id=orderId,
-        test_id=order_test.id,
-        test_code=testCode,
-        user_id=current_user.id,
-        notified_to=body.notifiedTo,
-        notification_method="phone",
-    )
-
-    try:
-        db.commit()
-        db.refresh(order)
-    except Exception:
-        db.rollback()
-        logger.exception(f"Failed to record critical value notification for order {orderId}/{testCode}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to record critical value notification"
-        )
-    return order
 
 
 @router.patch("/orders/{orderId}/payment", response_model=OrderResponse)

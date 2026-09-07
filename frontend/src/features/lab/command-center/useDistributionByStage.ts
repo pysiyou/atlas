@@ -103,7 +103,6 @@ function accumulateTestStage(
 
   switch (test.status) {
     case 'pending':
-    case 'suspended':
       updateStageMetrics(
         stages.Collection,
         test.createdAt ?? test.updatedAt,

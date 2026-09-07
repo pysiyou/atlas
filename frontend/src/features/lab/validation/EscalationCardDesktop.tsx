@@ -3,6 +3,7 @@ import { Badge, Button, Icon } from '@/components';
 import { formatDate, displayId } from '@/utils';
 import { LabCard } from '../components/LabCard';
 import { AttemptIndicator } from '../components/AttemptIndicator';
+import { BlockedReasonBadge } from '../components/StatusBadges';
 import type { TestWithContext } from '@/types';
 import type { TestRejectionContext } from '../utils/deriveTestRejectionContext';
 import { ICONS } from '@/config/icons';
@@ -13,6 +14,7 @@ interface EscalationCardDesktopProps {
   handleCardClick: () => void;
   getUserName: (userId: number | string) => string;
   rejection: TestRejectionContext;
+  blockedLabel?: string;
 }
 
 export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
@@ -21,6 +23,7 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
   handleCardClick,
   getUserName,
   rejection,
+  blockedLabel,
 }) => {
   const {
     showRetestBadge,
@@ -48,6 +51,7 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
           {test.reasonCode}
         </Badge>
       )}
+      {blockedLabel && <BlockedReasonBadge label={blockedLabel} size="sm" />}
       {test.priority && (
         <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="sm" />
       )}

@@ -79,10 +79,6 @@ class OrderTest(Base):
     isReflexTest = Column("is_reflex_test", Boolean, default=False)
     triggeredBy = Column("triggered_by", String, nullable=True)
     reflexRule = Column("reflex_rule", String, nullable=True)
-    isRepeatTest = Column("is_repeat_test", Boolean, default=False)
-    repeatReason = Column("repeat_reason", String, nullable=True)
-    originalTestId = Column("original_test_id", Integer, nullable=True)
-    repeatNumber = Column("repeat_number", Integer, nullable=True)
 
     # Re-test tracking (for result validation rejection flow)
     isRetest = Column("is_retest", Boolean, default=False)

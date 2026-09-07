@@ -18,6 +18,7 @@ import { ErrorBoundary } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useEntryWorkflow } from './useEntryWorkflow';
+import { orderTestKey } from '@/features/lab/utils/orderTestKey';
 import type { TestStatus } from '@/types';
 
  
@@ -97,8 +98,9 @@ export const EntryView: React.FC = () => {
       <LabWorkflowView
         items={filteredTests}
         renderCard={(test, idx, _filtered) => {
+          if (test.id == null) return null;
           const testDef = getTest(test.testCode);
-          const resultKey = `${test.orderId}-${test.testCode}`;
+          const resultKey = orderTestKey(test.id);
           const isComplete = testDef?.parameters
             ? areAllParametersFilled(resultKey, testDef.parameters.length)
             : false;
@@ -112,19 +114,19 @@ export const EntryView: React.FC = () => {
             isComplete,
             onResultsChange: handleResultChange,
             onNotesChange: handleNotesChange,
-            onSave: () => handleSaveResults(test.orderId, test.testCode, allTests, testCatalog, orders),
+            onSave: () => handleSaveResults(test.id!, test.orderId, allTests, testCatalog),
             onClick: () => openTestModal(test, _filtered),
           };
 
           return (
             <EntryCard
-              key={`${test.orderId}-${test.testCode}-${idx}`}
+              key={`entry-${test.id}-${idx}`}
               {...cardProps}
               isMobile={isMobile}
             />
           );
         }}
-        getItemKey={(test, idx) => `${test.orderId}-${test.testCode}-${idx}`}
+        getItemKey={(test, idx) => (test.id != null ? `entry-${test.id}-${idx}` : `entry-${idx}`)}
         emptyIcon="checklist"
         emptyTitle="No Pending Results"
         emptyDescription="There are no samples waiting for result entry."

@@ -1,10 +1,8 @@
 /**
  * useValidationWorkflow
  *
- * Encapsulates all mutation logic, toast orchestration, comment state,
+ * Encapsulates mutation logic, toast orchestration, comment state,
  * and modal opening for the result validation workflow.
- *
- * Extracted from ValidationView.tsx to separate data/action logic from rendering.
  */
 
 import { useState, useCallback } from 'react';
@@ -14,6 +12,7 @@ import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { getErrorMessage, isLikelyNetworkOrTimeout } from '@/utils/errors';
+import { orderTestKey } from '@/features/lab/utils/orderTestKey';
 import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 
@@ -22,8 +21,8 @@ export interface ValidationWorkflow {
   pendingValidateKey: string | null;
   handleCommentsChange: (commentKey: string, value: string) => void;
   handleValidate: (
+    orderTestId: number,
     orderId: number | string,
-    testCode: string,
     approve: boolean,
     rejectionResult?: QualityIssueResult
   ) => Promise<void>;
@@ -52,15 +51,15 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
 
   const handleValidate = useCallback(
     async (
+      orderTestId: number,
       orderId: number | string,
-      testCode: string,
       approve: boolean,
       rejectionResult?: QualityIssueResult
     ): Promise<void> => {
       if (ordersLoading) return;
 
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      const commentKey = `${orderIdStr}-${testCode}`;
+      const commentKey = orderTestKey(orderTestId);
       const clearPending = () => setPendingValidateKey(null);
 
       if (approve) {
@@ -68,7 +67,7 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
         try {
           await validateMutation.mutateAsync({
             orderId: orderIdStr,
-            testCode,
+            orderTestId,
             validationNotes: comments[commentKey] || undefined,
           });
           toast.success({
@@ -99,7 +98,6 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
         return;
       }
 
-      // RejectionDialog already reported the quality issue and invalidated caches.
       const toastMessage = getRejectionToast(rejectionResult);
       toast.success(toastMessage);
       clearComment(commentKey);
@@ -109,15 +107,23 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
 
   const openValidationModal = useCallback(
     (test: TestWithContext) => {
-      const commentKey = `${test.orderId}-${test.testCode}`;
+      if (test.id == null) {
+        toast.error({
+          title: 'Test record unavailable',
+          subtitle: 'Refresh the page and try again.',
+        });
+        return;
+      }
+
+      const commentKey = orderTestKey(test.id);
 
       openModal(ModalType.VALIDATION_DETAIL, {
         test,
         commentKey,
         comments: comments[commentKey] || '',
         onCommentsChange: handleCommentsChange,
-        onApprove: () => handleValidate(test.orderId, test.testCode, true),
-        onReject: (result) => handleValidate(test.orderId, test.testCode, false, result),
+        onApprove: () => handleValidate(test.id!, test.orderId, true),
+        onReject: result => handleValidate(test.id!, test.orderId, false, result),
       });
     },
     [comments, handleCommentsChange, handleValidate, openModal]
