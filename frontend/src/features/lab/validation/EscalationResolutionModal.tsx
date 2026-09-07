@@ -163,7 +163,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         <SectionPanel title="Escalation Summary">
           <p className="text-sm text-text-secondary">
             {test.reasonCode === 'REJ-SAMP'
-              ? 'This test was escalated after sample rejection and the redraw limit was reached. No results are on file — choose an action below.'
+              ? 'This test was escalated after sample rejection and the recollection limit was reached. No results are on file — choose an action below.'
               : 'This test was escalated before results were entered. Review the context below and choose an action.'}
           </p>
           {(rejectionReason || rejectionNotes) && (

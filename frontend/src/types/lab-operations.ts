@@ -53,6 +53,8 @@ export interface QualityIssueOptions {
   willEscalate: boolean;
   previewRemedy?: RemedyType;
   previewMessage: string;
+  hasSpecimenCriteria?: boolean;
+  hasAnalyticalCriteria?: boolean;
   resultedTestsCount?: number;
   validatedTestsCount?: number;
   awaitingRecollectionTestsCount?: number;

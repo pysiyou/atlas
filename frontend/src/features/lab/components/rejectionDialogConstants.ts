@@ -39,7 +39,7 @@ export const REJECTION_DIALOG_COPY = {
     warningTitle: 'Re-test on Same Sample',
     warningBody:
       'The test will be run again on the current sample. If rejected again, it escalates to a supervisor automatically.',
-    reasonLabel: 'Rejection Reason',
+    reasonLabel: 'Result rejection reason',
     notesLabel: 'Additional Context / Notes',
   },
   actions: {
@@ -58,7 +58,7 @@ export const REJECTION_DIALOG_COPY = {
     recollect: {
       warningTitle: 'Supervisor Approval Required',
       warningBody:
-        'This specimen will be rejected. A supervisor must approve before the patient is contacted for redraw.',
+        'This specimen will be rejected. A supervisor must approve before the patient is contacted for a new sample.',
       reasonLabel: 'Specimen Issue',
       notesLabel: 'Additional Context / Notes',
     },
@@ -96,14 +96,26 @@ export function getValidationAlertCopy(options: QualityIssueOptions): Validation
       ...REJECTION_DIALOG_COPY.escalation,
     };
   }
+  if (options.hasSpecimenCriteria && options.hasAnalyticalCriteria) {
+    return {
+      variant: 'warning',
+      warningTitle: 'Rejection routes by reason',
+      warningBody:
+        options.previewMessage ||
+        'Specimen reasons require supervisor-approved recollection. Analytical reasons re-test on the same sample.',
+      confirmLabel: 'Submit Rejection',
+      reasonLabel: REJECTION_DIALOG_COPY.reject.reasonLabel,
+      notesLabel: REJECTION_DIALOG_COPY.reject.notesLabel,
+    };
+  }
   if (options.previewRemedy === 'request_recollection' || options.previewRemedy === 'recollect') {
     return {
       variant: 'warning',
       warningTitle: 'Supervisor Approval Required',
       warningBody:
         options.previewMessage ||
-        'A supervisor must approve before the patient is contacted for redraw.',
-      confirmLabel: 'Submit Redraw Request',
+        'A supervisor must approve before the patient is contacted for a new sample.',
+      confirmLabel: 'Submit Recollection Request',
       reasonLabel: REJECTION_DIALOG_COPY.reject.reasonLabel,
       notesLabel: REJECTION_DIALOG_COPY.reject.notesLabel,
     };
