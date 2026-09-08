@@ -74,6 +74,7 @@ class LabMonitoringService:
                 "metadata": log.operationData or {},
                 "beforeState": log.beforeState,
                 "afterState": log.afterState,
+                "comment": log.comment,
             }
             events.append(event)
         

@@ -15,6 +15,7 @@ export interface TimelineEvent {
   metadata: Record<string, unknown>;
   beforeState?: Record<string, unknown> | null;
   afterState?: Record<string, unknown> | null;
+  comment?: string | null;
 }
 
 export interface TimelineResponse {

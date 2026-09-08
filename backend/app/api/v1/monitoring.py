@@ -27,6 +27,7 @@ class TimelineEvent(BaseModel):
     metadata: dict
     beforeState: dict | None = None
     afterState: dict | None = None
+    comment: str | None = None
 
 
 class TimelineResponse(BaseModel):

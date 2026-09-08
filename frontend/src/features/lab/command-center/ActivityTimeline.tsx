@@ -79,6 +79,7 @@ interface FormattedEvent {
     | { type: 'status'; value: string }
     | { type: 'sampleType'; value: string }
   >;
+  note?: string;
 }
 
 function formatTestCodes(meta: Record<string, unknown>): string {
@@ -167,12 +168,89 @@ function testCompletedDetails(meta: Record<string, unknown>): FormattedEvent['de
   return details;
 }
 
+function metaString(value: unknown): string | null {
+  if (typeof value !== 'string' || !value.trim()) return null;
+  return value.trim();
+}
+
+function testRef(testId: unknown): FormattedEvent['details'][number] | null {
+  const id = Number(testId);
+  if (!Number.isFinite(id) || id <= 0) return null;
+  return { type: 'id', value: displayId.orderTest(id) };
+}
+
+function orderAndTestDetails(meta: Record<string, unknown>): FormattedEvent['details'] {
+  const details: FormattedEvent['details'] = [];
+  if (meta.testCode || meta.testCodes) {
+    details.push({ type: 'testCode', value: formatTestCodes(meta) });
+  }
+  const link = orderLink(meta.orderId);
+  if (link) {
+    if (details.length > 0) details.push({ type: 'text', value: 'for order' });
+    details.push(link);
+  }
+  const sample = sampleRef(meta.sampleId);
+  if (sample) {
+    details.push({ type: 'text', value: 'on' }, sample);
+  }
+  return details;
+}
+
+function appendNote(event: TimelineEvent, formatted: FormattedEvent): FormattedEvent {
+  const note = metaString(event.comment);
+  if (!note) return formatted;
+
+  const detailText = formatted.details
+    .filter(detail => detail.type === 'text')
+    .map(detail => detail.value)
+    .join(' ');
+  if (detailText.includes(note)) return formatted;
+
+  return { ...formatted, note };
+}
+
+function formatEscalationTriggerAction(type: string): string {
+  const labels: Record<string, string> = {
+    escalation_trigger_crit_val: 'Critical value escalation',
+    escalation_trigger_limit_hit: 'Limit hit escalation',
+    escalation_trigger_rej_samp: 'Rejected sample escalation',
+    escalation_trigger_amend_res: 'Amendment escalation',
+  };
+  return labels[type] ?? 'Escalation triggered';
+}
+
+function formatCriticalValuesSummary(values: unknown): string | null {
+  if (!Array.isArray(values) || values.length === 0) return null;
+
+  const parts = values
+    .map(item => {
+      if (!item || typeof item !== 'object') return null;
+      const row = item as Record<string, unknown>;
+      const name = row.item_name ?? row.itemName ?? row.item_code ?? row.itemCode;
+      const value = row.value;
+      const unit = row.unit;
+      if (!name || value == null) return null;
+      return unit ? `${name}: ${value} ${unit}` : `${name}: ${value}`;
+    })
+    .filter((part): part is string => Boolean(part));
+
+  return parts.length > 0 ? parts.join(', ') : null;
+}
+
+function escalationTriggerDetails(meta: Record<string, unknown>): FormattedEvent['details'] {
+  const details = escalationTriggeredDetails(meta);
+  const reason = metaString(meta.reasonCode);
+  if (reason) {
+    details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
+  }
+  return details;
+}
 function getSampleTypeValue(meta: Record<string, unknown>): string | null {
   const sampleType = meta.sampleType;
   return typeof sampleType === 'string' ? sampleType : null;
 }
 
-function formatEvent(event: TimelineEvent): FormattedEvent {
+function formatEventDetails(event: TimelineEvent): FormattedEvent {
   const meta = event.metadata;
   
   const entityLink = 
@@ -204,15 +282,22 @@ function formatEvent(event: TimelineEvent): FormattedEvent {
         ],
       };
 
-    case 'sample_recollection_request':
-      return {
-        action: 'Recollection requested',
-        details: [
-          { type: 'link', value: displayId.sample(event.entityId), to: entityLink },
-          { type: 'text', value: 'replacing' },
-          { type: 'id', value: displayId.sample(meta.originalSampleId as number) },
-        ],
-      };
+    case 'sample_recollection_request': {
+      const details: FormattedEvent['details'] = [
+        { type: 'link', value: displayId.sample(event.entityId), to: entityLink },
+        { type: 'text', value: 'replacing' },
+        { type: 'id', value: displayId.sample(meta.originalSampleId as number) },
+      ];
+      const reason = metaString(meta.recollectionReason as string);
+      if (reason) {
+        details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
+      }
+      const attempt = meta.recollectionAttempt;
+      if (typeof attempt === 'number' && attempt > 0) {
+        details.push({ type: 'text', value: `(attempt ${attempt})` });
+      }
+      return { action: 'Recollection requested', details };
+    }
 
     case 'result_entry':
       return {
@@ -230,35 +315,62 @@ function formatEvent(event: TimelineEvent): FormattedEvent {
         details: testCompletedDetails(meta),
       };
 
-    case 'quality_issue_reported':
-      return {
-        action: 'Quality issue reported',
-        details: [
-          { type: 'text', value: (meta.domain as string) || 'Issue' },
-          { type: 'text', value: '—' },
-          { type: 'text', value: (meta.reason as string) || 'Reported' },
-        ],
-      };
+    case 'quality_issue_reported': {
+      const details = orderAndTestDetails(meta);
+      const domain = metaString(meta.domain as string) ?? metaString(event.afterState?.domain as string);
+      const reason = metaString(meta.reason as string);
+      const remedy = metaString(event.afterState?.remedy as string);
 
-    case 'escalation_resolution_authorize_retest':
-      return {
-        action: 'Retest authorized',
-        details: [
-          { type: 'testCode', value: formatTestCodes(meta) },
+      if (domain) {
+        if (details.length > 0) details.push({ type: 'text', value: '—' });
+        details.push({ type: 'text', value: domain });
+      }
+      if (reason) {
+        details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
+      }
+      if (remedy) {
+        details.push(
           { type: 'text', value: '→' },
-          { type: 'text', value: 'New test' },
-        ],
-      };
+          { type: 'text', value: remedy.replace(/_/g, ' ') }
+        );
+      }
+      if (details.length === 0) {
+        details.push({ type: 'text', value: 'Reported' });
+      }
+      return { action: 'Quality issue reported', details };
+    }
 
-    case 'escalation_resolution_authorize_recollect':
-      return {
-        action: 'Recollection authorized',
-        details: [
-          { type: 'testCode', value: formatTestCodes(meta) },
-          { type: 'text', value: '→' },
-          { type: 'id', value: displayId.sample(meta.newSampleId as number) },
-        ],
-      };
+    case 'escalation_resolution_authorize_retest': {
+      const details: FormattedEvent['details'] = [
+        { type: 'testCode', value: formatTestCodes(meta) },
+        { type: 'text', value: '→' },
+      ];
+      const newTest = testRef(meta.newTestId);
+      if (newTest) {
+        details.push(newTest);
+      } else {
+        details.push({ type: 'text', value: 'New test' });
+      }
+      const link = orderLink(meta.orderId);
+      if (link) details.push({ type: 'text', value: 'on order' }, link);
+      const reason = metaString(meta.reason as string);
+      if (reason) details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
+      return { action: 'Retest authorized', details };
+    }
+
+    case 'escalation_resolution_authorize_recollect': {
+      const details: FormattedEvent['details'] = [
+        { type: 'testCode', value: formatTestCodes(meta) },
+        { type: 'text', value: '→' },
+      ];
+      const newSample = sampleRef(meta.newSampleId);
+      if (newSample) details.push(newSample);
+      const link = orderLink(meta.orderId);
+      if (link) details.push({ type: 'text', value: 'on order' }, link);
+      const reason = metaString(meta.reason as string);
+      if (reason) details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
+      return { action: 'Recollection authorized', details };
+    }
 
     case 'escalation_resolution_force_validate':
       return {
@@ -280,45 +392,52 @@ function formatEvent(event: TimelineEvent): FormattedEvent {
         ],
       };
 
-    case 'escalation_resolution_cancel_test':
-      return {
-        action: 'Test cancelled',
-        details: [
-          { type: 'testCode', value: formatTestCodes(meta) },
-          { type: 'text', value: '—' },
-          { type: 'text', value: (meta.reason as string) || 'Cancelled' },
-        ],
-      };
+    case 'escalation_resolution_cancel_test': {
+      const details: FormattedEvent['details'] = [
+        { type: 'testCode', value: formatTestCodes(meta) },
+      ];
+      const link = orderLink(meta.orderId);
+      if (link) details.push({ type: 'text', value: 'on order' }, link);
+      const reason = metaString(meta.reason as string) ?? 'Cancelled';
+      details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
+      return { action: 'Test cancelled', details };
+    }
 
-    case 'critical_value_detected':
-      return {
-        action: 'Critical value detected',
-        details: [
-          { type: 'testCode', value: formatTestCodes(meta) },
-          { type: 'text', value: 'in order' },
-          { type: 'link', value: displayId.order(meta.orderId as number), to: `/orders/${meta.orderId || ''}` },
-        ],
-      };
+    case 'critical_value_detected': {
+      const details: FormattedEvent['details'] = [
+        { type: 'testCode', value: formatTestCodes(meta) },
+        { type: 'text', value: 'in order' },
+      ];
+      const link = orderLink(meta.orderId);
+      if (link) details.push(link);
+      const summary = formatCriticalValuesSummary(meta.criticalValues);
+      if (summary) details.push({ type: 'text', value: '—' }, { type: 'text', value: summary });
+      return { action: 'Critical value detected', details };
+    }
 
-    case 'critical_value_notified':
-      return {
-        action: 'Critical value notified',
-        details: [
-          { type: 'testCode', value: formatTestCodes(meta) },
-          { type: 'text', value: '→' },
-          { type: 'text', value: (meta.notifiedTo as string) || 'Provider' },
-        ],
-      };
+    case 'critical_value_notified': {
+      const details: FormattedEvent['details'] = [
+        { type: 'testCode', value: formatTestCodes(meta) },
+        { type: 'text', value: '→' },
+        { type: 'text', value: (meta.notifiedTo as string) || 'Provider' },
+      ];
+      const method = metaString(meta.notificationMethod as string);
+      if (method) details.push({ type: 'text', value: `via ${method}` });
+      const link = orderLink(meta.orderId);
+      if (link) details.push({ type: 'text', value: 'on order' }, link);
+      return { action: 'Critical value notified', details };
+    }
 
-    case 'critical_value_acknowledged':
-      return {
-        action: 'Critical value acknowledged',
-        details: [
-          { type: 'testCode', value: formatTestCodes(meta) },
-          { type: 'text', value: 'by' },
-          { type: 'text', value: (meta.acknowledgedBy as string) || 'Provider' },
-        ],
-      };
+    case 'critical_value_acknowledged': {
+      const details: FormattedEvent['details'] = [
+        { type: 'testCode', value: formatTestCodes(meta) },
+        { type: 'text', value: 'by' },
+        { type: 'text', value: (meta.acknowledgedBy as string) || 'Provider' },
+      ];
+      const link = orderLink(meta.orderId);
+      if (link) details.push({ type: 'text', value: 'on order' }, link);
+      return { action: 'Critical value acknowledged', details };
+    }
 
     case 'recollection_request_created': {
       const details: FormattedEvent['details'] = [];
@@ -327,6 +446,10 @@ function formatEvent(event: TimelineEvent): FormattedEvent {
       const rejected = sampleRef(meta.rejectedSampleId);
       if (rejected) {
         details.push({ type: 'text', value: 'for' }, rejected);
+      }
+      const stage = metaString(meta.stage as string);
+      if (stage) {
+        details.push({ type: 'text', value: 'at' }, { type: 'text', value: stage });
       }
       return { action: 'Recollection request created', details };
     }
@@ -346,6 +469,10 @@ function formatEvent(event: TimelineEvent): FormattedEvent {
       const details: FormattedEvent['details'] = [];
       const link = orderLink(event.entityId);
       if (link) details.push(link);
+      const notes = metaString(meta.reviewNotes as string);
+      if (notes) {
+        details.push({ type: 'text', value: '—' }, { type: 'text', value: notes });
+      }
       return { action: 'Recollection request denied', details };
     }
 
@@ -354,8 +481,8 @@ function formatEvent(event: TimelineEvent): FormattedEvent {
     case 'escalation_trigger_limit_hit':
     case 'escalation_trigger_amend_res':
       return {
-        action: 'Escalation triggered',
-        details: escalationTriggeredDetails(meta),
+        action: formatEscalationTriggerAction(event.type),
+        details: escalationTriggerDetails(meta),
       };
 
     case 'test_added':
@@ -392,6 +519,11 @@ function formatEvent(event: TimelineEvent): FormattedEvent {
         { type: 'link', value: displayId.order(event.entityId), to: `/orders/${event.entityId}` },
         { type: 'text', value: '→' },
       ];
+      const beforeStatus = metaString(event.beforeState?.status as string);
+      if (beforeStatus && beforeStatus !== status) {
+        details.push({ type: 'status', value: beforeStatus });
+        details.push({ type: 'text', value: '→' });
+      }
       if (status) {
         details.push({ type: 'status', value: status });
       }
@@ -404,6 +536,10 @@ function formatEvent(event: TimelineEvent): FormattedEvent {
         details: entityDetails(event),
       };
   }
+}
+
+function formatEvent(event: TimelineEvent): FormattedEvent {
+  return appendNote(event, formatEventDetails(event));
 }
 
 type EventTone = 'problem' | 'resolution' | 'neutral';
@@ -434,24 +570,10 @@ const RESOLUTION_EVENT_TYPES = new Set([
   'escalation_resolution_authorize_recollect',
 ]);
 
-const EVENT_TONE_STYLES: Record<
-  EventTone,
-  { dot: string; action: string; row?: string }
-> = {
-  problem: {
-    dot: 'bg-danger-fg-emphasis',
-    action: 'text-danger-fg-emphasis',
-    row: 'bg-danger-bg/20',
-  },
-  resolution: {
-    dot: 'bg-success-fg-emphasis',
-    action: 'text-success-fg-emphasis',
-    row: 'bg-success-bg/20',
-  },
-  neutral: {
-    dot: 'bg-brand',
-    action: 'text-text-primary',
-  },
+const EVENT_TONE_DOT: Record<EventTone, string> = {
+  problem: 'bg-danger-fg-emphasis',
+  resolution: 'bg-success-fg-emphasis',
+  neutral: 'bg-brand',
 };
 
 function getEventTone(event: TimelineEvent): EventTone {
@@ -499,20 +621,16 @@ function TimelineGroup({ label, items }: GroupedEvents) {
         />
         {items.map(event => {
           const tone = getEventTone(event);
-          const toneStyle = EVENT_TONE_STYLES[tone];
           const formatted = formatEvent(event);
 
           return (
-            <li
-              key={event.id}
-              className={`flex items-start gap-2.5 relative -mx-2 px-2 rounded-md ${toneStyle.row ?? ''}`}
-            >
+            <li key={event.id} className="flex items-start gap-2.5 relative">
               <div
-                className={`w-2 h-2 rounded-full border-2 border-surface shrink-0 mt-1.5 z-10 ${toneStyle.dot}`}
+                className={`w-2 h-2 rounded-full border-2 border-surface shrink-0 mt-1.5 z-10 ${EVENT_TONE_DOT[tone]}`}
               />
               <div className="flex-1 min-w-0 pb-3">
                 <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-                  <span className={`text-sm font-light ${toneStyle.action}`}>
+                  <span className="text-sm font-normal text-text-secondary">
                     {formatted.action}
                   </span>
                   {formatted.details.map((detail, idx) => {
@@ -544,6 +662,9 @@ function TimelineGroup({ label, items }: GroupedEvents) {
                     );
                   })}
                 </div>
+                {formatted.note && (
+                  <p className="text-xs text-text-tertiary mt-0.5">{formatted.note}</p>
+                )}
                 <p className="text-xs text-text-tertiary mt-1">
                   {event.performedByName || `User ${event.performedBy}`}
                   {' · '}
