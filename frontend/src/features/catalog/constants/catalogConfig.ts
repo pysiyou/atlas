@@ -12,7 +12,7 @@ import { ICONS, MODULE_ICONS } from '@/config/icons';
 /**
  * Test category configuration for filter display
  */
-const TEST_CATEGORY_CONFIG: Record<string, { label: string; color: string }> = {
+export const TEST_CATEGORY_CONFIG: Record<string, { label: string; color: string }> = {
   hematology: { label: 'Hematology', color: 'hematology' },
   biochemistry: { label: 'Biochemistry', color: 'biochemistry' },
   chemistry: { label: 'Chemistry', color: 'chemistry' },
@@ -25,6 +25,14 @@ const TEST_CATEGORY_CONFIG: Record<string, { label: string; color: string }> = {
   toxicology: { label: 'Toxicology', color: 'toxicology' },
   coagulation: { label: 'Coagulation', color: 'coagulation' },
 };
+
+/** Human-readable label for a test category slug. */
+export function getCategoryLabel(category: string): string {
+  return (
+    TEST_CATEGORY_CONFIG[category]?.label ??
+    category.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase())
+  );
+}
 
 /**
  * Available test category values for filtering

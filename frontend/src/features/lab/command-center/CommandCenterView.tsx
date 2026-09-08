@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { ActivityTimeline } from './ActivityTimeline';
+import { CategorySummary } from './CategorySummary';
 import { useTimelineQuery } from './useTimelineQuery';
 
 interface GridBoxProps {
@@ -59,7 +60,7 @@ export const CommandCenterView: React.FC = () => {
         <div className="min-h-[360px] lg:min-h-0 lg:col-span-4 lg:row-start-2 lg:row-span-2 overflow-hidden">
           <div className="h-full bg-surface rounded-lg border border-border-default shadow-sm overflow-hidden flex flex-col">
             <div className="shrink-0 px-4 py-2 border-b border-border-default flex items-center justify-between gap-2">
-              <h3 className="text-sm font-medium text-text-primary">Recent Activity</h3>
+              <h3 className="text-sm font-light text-text-primary">Recent Activity</h3>
               <span className="text-xxs text-text-tertiary shrink-0">Last 24 hours</span>
             </div>
             <div className="flex-1 min-h-0 overflow-hidden">
@@ -76,8 +77,8 @@ export const CommandCenterView: React.FC = () => {
           </div>
         </div>
 
-        <div className="min-h-[220px] lg:min-h-0 lg:col-span-3 lg:row-start-3">
-          <GridBox label="Box 7" />
+        <div className="min-h-[220px] lg:min-h-0 lg:col-span-3 lg:row-start-3 overflow-hidden">
+          <CategorySummary />
         </div>
 
         <div className="min-h-[220px] lg:min-h-0 lg:col-span-3 lg:row-start-3">

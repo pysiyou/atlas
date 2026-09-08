@@ -166,6 +166,23 @@
   --color-chart-danger: var(--chart-danger);
   --color-chart-accent: var(--chart-accent);
   --color-chart-accent-muted: var(--chart-accent-muted);
+  --color-chart-warning: var(--chart-warning);
+
+  /* ═══════════════════════════════════════════════════════════════════
+     TEST CATEGORY (breakdowns / charts)
+     ═══════════════════════════════════════════════════════════════════ */
+  --color-category-hematology: var(--category-hematology);
+  --color-category-biochemistry: var(--category-biochemistry);
+  --color-category-chemistry: var(--category-chemistry);
+  --color-category-microbiology: var(--category-microbiology);
+  --color-category-serology: var(--category-serology);
+  --color-category-urinalysis: var(--category-urinalysis);
+  --color-category-imaging: var(--category-imaging);
+  --color-category-immunology: var(--category-immunology);
+  --color-category-molecular: var(--category-molecular);
+  --color-category-toxicology: var(--category-toxicology);
+  --color-category-coagulation: var(--category-coagulation);
+  --color-category-default: var(--category-default);
 
   /* ═══════════════════════════════════════════════════════════════════
      NEUTRALS (for direct use when semantic doesn't fit)

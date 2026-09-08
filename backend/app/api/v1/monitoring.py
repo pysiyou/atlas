@@ -2,17 +2,14 @@
 Lab Monitoring API - Command center timeline and metrics.
 """
 from typing import List
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.services.lab_monitoring_service import LabMonitoringService
 
 
 router = APIRouter(tags=["monitoring"])
-
-
-# Pydantic models
-from pydantic import BaseModel
 
 
 class TimelineEvent(BaseModel):
@@ -34,6 +31,19 @@ class TimelineResponse(BaseModel):
     """Timeline response with events and total count."""
     events: List[TimelineEvent]
     total: int
+
+
+class CategorySummaryItem(BaseModel):
+    """Single category row in the test category breakdown."""
+    category: str
+    count: int
+    percentage: int
+
+
+class CategorySummaryResponse(BaseModel):
+    """Test volume grouped by catalog category."""
+    total: int
+    categories: List[CategorySummaryItem]
 
 
 @router.get(
@@ -71,3 +81,24 @@ def get_timeline(
         events=events,
         total=total
     )
+
+
+@router.get(
+    "/monitoring/category-summary",
+    response_model=CategorySummaryResponse,
+    status_code=status.HTTP_200_OK,
+)
+def get_category_summary(
+    days: int = Query(90, description="Lookback window in days (7, 30, or 90)"),
+    db: Session = Depends(get_db),
+):
+    """
+    Get test volume breakdown by catalog category for the command center.
+
+    Counts non-superseded order tests on orders created within the window.
+    """
+    if days not in (7, 30, 90):
+        raise HTTPException(status_code=422, detail="days must be 7, 30, or 90")
+
+    service = LabMonitoringService(db)
+    return service.get_category_summary(days=days)
