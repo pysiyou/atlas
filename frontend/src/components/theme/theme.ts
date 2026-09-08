@@ -14,6 +14,37 @@ const THEME_BADGE_APPEARANCE: Record<ThemeName, BadgeAppearance> = {
   'noir-studio': 'unified',
 };
 
+/** Known test category slugs with theme tokens (see theme.css --category-*). */
+const CATEGORY_COLOR_SLUGS = new Set([
+  'hematology',
+  'biochemistry',
+  'chemistry',
+  'microbiology',
+  'serology',
+  'urinalysis',
+  'imaging',
+  'immunology',
+  'molecular',
+  'toxicology',
+  'coagulation',
+]);
+
+const CATEGORY_FALLBACK_BAR_CLASSES = [
+  'bg-chart-brand',
+  'bg-chart-accent',
+  'bg-chart-success',
+  'bg-chart-accent-muted',
+] as const;
+
+/** Tailwind bg class for a test category segment (theme token: bg-category-*). */
+export function getCategoryBarColorClass(category: string, index = 0): string {
+  const slug = category.toLowerCase();
+  if (CATEGORY_COLOR_SLUGS.has(slug)) {
+    return `bg-category-${slug}`;
+  }
+  return CATEGORY_FALLBACK_BAR_CLASSES[index % CATEGORY_FALLBACK_BAR_CLASSES.length];
+}
+
 const isValidTheme = (value: string): value is ThemeName => VALID_THEMES.has(value as ThemeName);
 
 export function getActiveTheme(): ThemeName {

@@ -260,6 +260,23 @@
   --chart-warning: var(--primitive-warning-500);
 
   /* ═══════════════════════════════════════════════════════════════════
+     TEST CATEGORY (breakdowns / charts)
+     Usage: bg-category-hematology
+     ═══════════════════════════════════════════════════════════════════ */
+  --category-hematology: var(--chart-danger);
+  --category-biochemistry: var(--chart-warning);
+  --category-chemistry: var(--orange-fg-emphasis);
+  --category-microbiology: var(--teal-fg-emphasis);
+  --category-serology: var(--indigo-fg-emphasis);
+  --category-urinalysis: var(--cyan-fg-emphasis);
+  --category-imaging: var(--purple-fg-emphasis);
+  --category-immunology: var(--pink-fg-emphasis);
+  --category-molecular: var(--chart-accent);
+  --category-toxicology: var(--chart-success);
+  --category-coagulation: var(--danger-fg-emphasis);
+  --category-default: var(--chart-brand);
+
+  /* ═══════════════════════════════════════════════════════════════════
      OVERLAY
      Usage: bg-overlay (modal backdrop)
      ═══════════════════════════════════════════════════════════════════ */

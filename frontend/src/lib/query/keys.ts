@@ -159,6 +159,8 @@ export const queryKeys = {
     all: ['monitoring'] as const,
     timeline: (params: { hoursBack: number; limit: number }) =>
       [...queryKeys.monitoring.all, 'timeline', params] as const,
+    categorySummary: (days: number) =>
+      [...queryKeys.monitoring.all, 'category-summary', days] as const,
   },
 
   /**

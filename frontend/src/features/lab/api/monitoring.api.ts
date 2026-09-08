@@ -23,6 +23,19 @@ export interface TimelineResponse {
   total: number;
 }
 
+export interface CategorySummaryItem {
+  category: string;
+  count: number;
+  percentage: number;
+}
+
+export interface CategorySummaryResponse {
+  total: number;
+  categories: CategorySummaryItem[];
+}
+
+export type CategorySummaryDays = 7 | 30 | 90;
+
 export const monitoringAPI = {
   async getTimeline(params?: {
     hoursBack?: number;
@@ -35,5 +48,9 @@ export const monitoringAPI = {
     if (params?.offset) queryParams.offset = String(params.offset);
 
     return apiClient.get<TimelineResponse>('/monitoring/timeline', queryParams);
+  },
+
+  async getCategorySummary(days: CategorySummaryDays): Promise<CategorySummaryResponse> {
+    return apiClient.get<CategorySummaryResponse>('/monitoring/category-summary', { days: String(days) });
   },
 };

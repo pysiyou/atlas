@@ -6,7 +6,10 @@ from typing import List
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.models.lab_audit import LabOperationLog
+from app.models.order import Order, OrderTest
+from app.models.test import Test
 from app.models.user import User
+from app.schemas.enums import TestStatus
 
 
 class LabMonitoringService:
@@ -90,3 +93,30 @@ class LabMonitoringService:
         return self.db.query(func.count(LabOperationLog.id))\
             .filter(LabOperationLog.performedAt >= cutoff)\
             .scalar() or 0
+
+    def get_category_summary(self, days: int = 90) -> dict:
+        """Aggregate order tests by catalog category within a date window."""
+        cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+
+        rows = (
+            self.db.query(Test.category, func.count(OrderTest.id))
+            .join(Test, OrderTest.testCode == Test.code)
+            .join(Order, OrderTest.orderId == Order.orderId)
+            .filter(Order.createdAt >= cutoff)
+            .filter(OrderTest.status != TestStatus.SUPERSEDED)
+            .group_by(Test.category)
+            .order_by(func.count(OrderTest.id).desc())
+            .all()
+        )
+
+        total = sum(count for _, count in rows)
+        categories = []
+        for category, count in rows:
+            percentage = round((count / total) * 100) if total else 0
+            categories.append({
+                "category": category,
+                "count": count,
+                "percentage": percentage,
+            })
+
+        return {"total": total, "categories": categories}
