@@ -58,10 +58,10 @@ export const CommandCenterView: React.FC = () => {
         </div>
 
         <div className="min-h-[360px] lg:min-h-0 lg:col-span-4 lg:row-start-2 lg:row-span-2 overflow-hidden">
-          <div className="h-full bg-surface rounded-lg border border-border-default shadow-sm overflow-hidden flex flex-col">
-            <div className="shrink-0 px-4 py-2 border-b border-border-default flex items-center justify-between gap-2">
+          <div className="h-full bg-surface rounded border border-border-default shadow-sm overflow-hidden flex flex-col">
+            <div className="shrink-0 px-4 py-2.5 border-b border-border-default flex items-center justify-between gap-3">
               <h3 className="text-sm font-light text-text-primary">Recent Activity</h3>
-              <span className="text-xxs text-text-tertiary shrink-0">Last 24 hours</span>
+              <span className="flex h-6 items-center text-xxs text-text-tertiary shrink-0">Last 24 hours</span>
             </div>
             <div className="flex-1 min-h-0 overflow-hidden">
               <ActivityTimeline
