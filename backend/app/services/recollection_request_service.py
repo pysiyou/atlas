@@ -310,7 +310,12 @@ class RecollectionRequestService:
             order_test = self.db.query(OrderTest).filter(OrderTest.id == test_id).first()
             if not order_test:
                 continue
-            if order_test.status in {TestStatus.VALIDATED, TestStatus.CANCELLED}:
+            # Leave released and in-review results for validator / amendment paths.
+            if order_test.status in {
+                TestStatus.VALIDATED,
+                TestStatus.CANCELLED,
+                TestStatus.RESULTED,
+            }:
                 continue
 
             # Validation rejections supersede the originating test before approval.

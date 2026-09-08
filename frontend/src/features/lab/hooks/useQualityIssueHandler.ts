@@ -5,7 +5,11 @@ import { useCallback } from 'react';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { useReportQualityIssue } from '@/features/lab/api/quality-issues.api';
-import type { QualityIssueResult, QualityIssueTargetType } from '@/types/lab-operations';
+import type {
+  QualityIssueResult,
+  QualityIssueTargetType,
+  RemedyType,
+} from '@/types/lab-operations';
 import { getRejectionToast } from '@/features/lab/validation/rejectionToastMessages';
 
 interface UseQualityIssueHandlerOptions {
@@ -13,8 +17,7 @@ interface UseQualityIssueHandlerOptions {
 }
 
 function collectionSuccessToast(result: QualityIssueResult) {
-  const toastMessage = getRejectionToast(result);
-  return toastMessage;
+  return getRejectionToast(result);
 }
 
 export function useQualityIssueHandler(options?: UseQualityIssueHandlerOptions) {
@@ -27,15 +30,16 @@ export function useQualityIssueHandler(options?: UseQualityIssueHandlerOptions) 
       targetId: number,
       reason: string,
       notes?: string,
+      preferredRemedy?: RemedyType,
     ) => {
       try {
         const result = await reportMutation.mutateAsync({
           target: { type: targetType, id: targetId },
           reason,
           notes: notes?.trim() || undefined,
+          preferredRemedy,
         });
-        const toastMessage = collectionSuccessToast(result);
-        toast.success(toastMessage);
+        toast.success(collectionSuccessToast(result));
         onSuccess?.(result);
         return result;
       } catch (error) {

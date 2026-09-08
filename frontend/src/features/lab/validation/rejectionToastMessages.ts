@@ -31,9 +31,22 @@ export function getRejectionToast(result?: QualityIssueResult | null): {
         subtitle: 'A pending collection tube has been created for a new sample.',
       };
     case 'request_recollection':
+      if (result.recollectionRequestId) {
+        return {
+          title: 'Recollection request submitted',
+          subtitle: 'A supervisor will review before the patient is contacted.',
+        };
+      }
       return {
-        title: 'Recollection request submitted',
-        subtitle: 'A supervisor will review before the patient is contacted.',
+        title: 'Specimen rejected',
+        subtitle:
+          result.message ||
+          'Linked resulted tests remain in Review for validator decision.',
+      };
+    case 'cancel':
+      return {
+        title: 'Cancelled',
+        subtitle: result.message || 'The selected work item(s) were cancelled.',
       };
     default:
       return {

@@ -1,5 +1,6 @@
 /**
  * Collection quality issue popover — reports specimen problems via unified API.
+ * Operator chooses unfinished-test fate when linked unfinished work exists.
  */
 import React, { useCallback } from 'react';
 import { Popover, Button, FooterInfo } from '@/components';
@@ -8,6 +9,7 @@ import { MODULE_ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
 import { QualityIssueForm, useQualityIssueFormState } from '../components/QualityIssueForm';
 import { useQualityIssueHandler } from '../hooks/useQualityIssueHandler';
+import { useQualityIssueOptions } from '@/features/lab/api/quality-issues.api';
 import { parseNumericSampleId } from './collectionRejectionPopover.helpers';
 
 interface CollectionRejectionPopoverContentProps {
@@ -29,16 +31,49 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
   patientName,
   isRecollection = false,
 }) => {
-  const { reason, notes, setReason, setNotes, reset } = useQualityIssueFormState();
+  const {
+    reason,
+    notes,
+    setReason,
+    setNotes,
+    preferredRemedy,
+    setPreferredRemedy,
+    reset,
+  } = useQualityIssueFormState();
   const numericSampleId = parseNumericSampleId(sampleId);
   const { reportIssue, isSubmitting } = useQualityIssueHandler({ onSuccess });
+  const { data: options } = useQualityIssueOptions(
+    numericSampleId ? 'sample' : undefined,
+    numericSampleId ?? undefined,
+  );
+
+  const unfinishedCount = options?.unfinishedTestsCount ?? 0;
+  const requiresUnfinishedChoice = unfinishedCount > 0;
+  const canSubmit =
+    !!reason && (!requiresUnfinishedChoice || preferredRemedy !== '');
 
   const handleConfirm = useCallback(async () => {
     if (!numericSampleId || !reason) return;
-    await reportIssue('sample', numericSampleId, reason, notes);
+    if (requiresUnfinishedChoice && !preferredRemedy) return;
+    await reportIssue(
+      'sample',
+      numericSampleId,
+      reason,
+      notes,
+      preferredRemedy || undefined,
+    );
     reset();
     onSuccess();
-  }, [numericSampleId, reason, notes, reportIssue, reset, onSuccess]);
+  }, [
+    numericSampleId,
+    reason,
+    notes,
+    preferredRemedy,
+    requiresUnfinishedChoice,
+    reportIssue,
+    reset,
+    onSuccess,
+  ]);
 
   const subtitle = [
     numericSampleId != null ? displayId.sample(numericSampleId) : sampleId,
@@ -59,7 +94,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       confirmLabel="Report Issue"
       confirmVariant="danger"
       isSubmitting={isSubmitting}
-      disabled={!reason}
+      disabled={!canSubmit}
       footerInfo={<FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
     >
       {numericSampleId ? (
@@ -69,8 +104,10 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           title="Specimen Issue"
           reason={reason}
           notes={notes}
+          preferredRemedy={preferredRemedy}
           onReasonChange={setReason}
           onNotesChange={setNotes}
+          onPreferredRemedyChange={setPreferredRemedy}
           isSubmitting={isSubmitting}
         />
       ) : null}

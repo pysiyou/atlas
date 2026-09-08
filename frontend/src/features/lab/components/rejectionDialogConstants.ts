@@ -26,55 +26,64 @@ export const REJECTION_DIALOG_COPY = {
   },
   escalation: {
     title: 'Reject Results',
-    confirmLabel: 'Reject & Escalate',
-    warningTitle: 'Rejection Limit Reached',
+    confirmLabel: 'Submit Rejection',
+    warningTitle: 'Re-test Limit Reached',
     warningBody:
-      'This rejection will escalate automatically. A supervisor will decide the next step.',
+      'Re-test attempts are exhausted. Escalate or cancel is recommended — you still choose the destination.',
     reasonLabel: 'Rejection Reason',
     notesLabel: 'Additional Context / Notes',
   },
   reject: {
     title: 'Reject Results',
-    confirmLabel: 'Reject & Re-test',
-    warningTitle: 'Re-test on Same Sample',
+    confirmLabel: 'Submit Rejection',
+    warningTitle: 'Choose Next Step',
     warningBody:
-      'The test will be run again on the current sample. If rejected again, it escalates to a supervisor automatically.',
+      'Select a rejection reason and where to send this test. The system will not decide automatically.',
     reasonLabel: 'Result rejection reason',
     notesLabel: 'Additional Context / Notes',
   },
   actions: {
-    followUpLabel: 'Choose an Action',
-    retestLabel: 'Try Again with This Sample',
-    retestDescription: 'Run the test again using the same sample.',
-    newSampleLabel: 'Collect New Sample',
-    newSampleDescription: 'Get a fresh sample from the patient and retest.',
-    escalateLabel: 'Escalate to Supervisor',
-    escalateDescription: 'Let a supervisor decide the next step.',
+    followUpLabel: 'Send to',
+    retestLabel: 'Re-test same sample',
+    retestDescription: 'Supersede this result and create a new entry on the same tube.',
+    newSampleLabel: 'Request recollection',
+    newSampleDescription: 'Reject the specimen and ask a supervisor to approve a patient redraw.',
+    cancelLabel: 'Cancel this test',
+    cancelDescription: 'Close this test line. Other tests on the order are not affected.',
+    escalateLabel: 'Escalate to supervisor',
+    escalateDescription: 'Send to the supervisor queue for decision.',
     remaining: (n: number) => ` (${n} left)`,
   },
   recollectBlocked: 'Cannot collect new sample - order has validated tests',
   triggerTitle: 'Reject',
   collection: {
     recollect: {
-      warningTitle: 'Supervisor Approval Required',
+      warningTitle: 'Reject Specimen',
       warningBody:
-        'This specimen will be rejected. A supervisor must approve before the patient is contacted for a new sample.',
+        'Decide what happens to unfinished tests. Resulted tests stay in Review with a Specimen rejected signal. Validated results stay released.',
       reasonLabel: 'Specimen Issue',
       notesLabel: 'Additional Context / Notes',
     },
     escalateLimit: {
       warningTitle: 'Recollection Limit Reached',
       warningBody:
-        'This rejection will escalate automatically. A supervisor will decide the next step.',
+        'Recollection attempts are exhausted. Supervisor override will be required if recollection is approved.',
       reasonLabel: 'Specimen Issue',
       notesLabel: 'Additional Context / Notes',
     },
     escalateResults: {
-      warningTitle: 'Supervisor Review Required',
+      warningTitle: 'Linked Tests Have Results',
       warningBody:
-        'Linked tests already have results. Reporting this specimen issue will escalate to a supervisor for review.',
+        'Resulted tests will stay in Review for the validator. Validated results will remain released.',
       reasonLabel: 'Specimen Issue',
       notesLabel: 'Additional Context / Notes',
+    },
+    actions: {
+      followUpLabel: 'Unfinished linked tests',
+      recollectLabel: 'Request recollection',
+      recollectDescription: 'Supervisor must approve before the patient is contacted for a new sample.',
+      cancelUnfinishedLabel: 'Cancel unfinished tests',
+      cancelUnfinishedDescription: 'Cancel pending / sample-collected tests on this tube. Resulted and validated stay.',
     },
   },
 } as const;
@@ -88,36 +97,12 @@ export interface ValidationAlertCopy {
   notesLabel: string;
 }
 
-/** Dialog copy derived from GET /lab/quality-issues/options preview fields. */
+/** Dialog copy for validation rejection — destination is always operator-chosen. */
 export function getValidationAlertCopy(options: QualityIssueOptions): ValidationAlertCopy {
   if (options.willEscalate) {
     return {
       variant: 'danger',
       ...REJECTION_DIALOG_COPY.escalation,
-    };
-  }
-  if (options.hasSpecimenCriteria && options.hasAnalyticalCriteria) {
-    return {
-      variant: 'warning',
-      warningTitle: 'Rejection routes by reason',
-      warningBody:
-        options.previewMessage ||
-        'Specimen reasons require supervisor-approved recollection. Analytical reasons re-test on the same sample.',
-      confirmLabel: 'Submit Rejection',
-      reasonLabel: REJECTION_DIALOG_COPY.reject.reasonLabel,
-      notesLabel: REJECTION_DIALOG_COPY.reject.notesLabel,
-    };
-  }
-  if (options.previewRemedy === 'request_recollection' || options.previewRemedy === 'recollect') {
-    return {
-      variant: 'warning',
-      warningTitle: 'Supervisor Approval Required',
-      warningBody:
-        options.previewMessage ||
-        'A supervisor must approve before the patient is contacted for a new sample.',
-      confirmLabel: 'Submit Recollection Request',
-      reasonLabel: REJECTION_DIALOG_COPY.reject.reasonLabel,
-      notesLabel: REJECTION_DIALOG_COPY.reject.notesLabel,
     };
   }
   return {
