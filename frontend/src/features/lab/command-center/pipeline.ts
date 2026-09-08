@@ -4,7 +4,7 @@
 
 import { useMemo } from 'react';
 import { useOrdersList } from '@/features/orders';
-import { useSamplesList } from '@/features/lab/collection/samples.api';
+import { useSamplesList } from '@/features/lab/api/samples.api';
 import { isActiveTest } from '@/features/orders/utils';
 import { formatDurationMs } from '@/utils/formatDuration.utils';
 import type { LabTabId } from '@/features/lab/constants/labTabs';

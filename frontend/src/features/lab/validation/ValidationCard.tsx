@@ -15,12 +15,12 @@ import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup } from '@/features/patients';
 import { LabCard } from '../components/LabCard';
 import { LAB_CONFIG } from '@/features/lab/constants';
-import { RejectionDialog } from '@/features/lab/components';
+import { QualityIssueDialog } from '@/features/lab/components';
 import { AttemptIndicator } from '../components/AttemptIndicator';
 import { QueueAgeBadge } from '../components/QueueAgeBadge';
 import { useLabCardClickGuard, useTestWorkItemState } from '@/features/lab/hooks';
 import { BlockedReasonBadge } from '../components/StatusBadges';
-import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
+import { deriveRetestContext } from '../utils/deriveRetestContext';
 import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { ICONS } from '@/config/icons';
@@ -53,24 +53,18 @@ function SpecimenRejectedAlert({
   return (
     <Alert variant="warning" className={isCompact ? 'py-1.5' : 'py-2'}>
       <div className="space-y-1">
-        <div className="flex items-start gap-2">
-          <Icon 
-            name={ICONS.actions.alertCircle} 
-            className={`shrink-0 ${isCompact ? 'w-3.5 h-3.5 mt-0.5' : 'w-4 h-4 mt-0.5'}`} 
-          />
-          <div className="min-w-0 flex-1">
-            <p className={`font-semibold ${isCompact ? 'text-xxs' : 'text-xs'}`}>
-              Specimen Rejected — Validator Decision Required
-            </p>
-            <p className={`text-text-secondary leading-tight mt-0.5 ${isCompact ? 'text-xxs' : 'text-xs'}`}>
-              Sample {displayId.sample(sampleId)} was rejected
-              {sampleRejectionReason && (
-                <>: <span className="italic">{sampleRejectionReason}</span></>
-              )}
-            </p>
-          </div>
+        <div>
+          <p className={`font-semibold ${isCompact ? 'text-xxs' : 'text-xs'}`}>
+            Specimen Rejected — Validator Decision Required
+          </p>
+          <p className={`text-text-secondary leading-tight mt-0.5 ${isCompact ? 'text-xxs' : 'text-xs'}`}>
+            Sample {displayId.sample(sampleId)} was rejected
+            {sampleRejectionReason && (
+              <>: <span className="italic">{sampleRejectionReason}</span></>
+            )}
+          </p>
         </div>
-        <div className={`pl-5 space-y-0.5 ${isCompact ? 'text-xxs' : 'text-xs'} text-text-tertiary leading-tight`}>
+        <div className={`space-y-0.5 ${isCompact ? 'text-xxs' : 'text-xs'} text-text-tertiary leading-tight`}>
           <p>⚠️ This result was entered before specimen rejection.</p>
           <p className="font-medium">You may still approve this result (clinical judgment) or choose another action:</p>
           <ul className="list-disc list-inside pl-2 space-y-0.5 mt-1">
@@ -186,7 +180,7 @@ export interface ValidationCardProps {
 // ─── Shared derived state helper ──────────────────────────────────────────────
 
 function deriveCardState(test: TestWithContext) {
-  const rejection = deriveTestRejectionContext(test);
+  const rejection = deriveRetestContext(test);
   const hasFlags = test.flags && test.flags.length > 0;
   const flagStatusMap = statusMapFromFlags(test.flags);
   return {
@@ -224,7 +218,7 @@ function ValidationCardMobile({
   const { hasFlags, isRetest, hasRejectionHistory, flagStatusMap } = deriveCardState(test);
   const workItem = useTestWorkItemState(test);
   const handleRejectionResult = (result: QualityIssueResult) => onReject(result);
-  const isSpecimenRejected = workItem.blockedReason === 'specimen_rejected';
+  const isSpecimenRejected = workItem.blockedReason === 'sample_rejected';
 
   return (
     <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
@@ -301,7 +295,7 @@ function ValidationCardMobile({
         </div>
         <div className="flex items-center gap-2">
           <div onClick={e => e.stopPropagation()}>
-            <RejectionDialog
+            <QualityIssueDialog
               orderTestId={test.id!}
               testCode={test.testCode}
               testName={test.testName}
@@ -357,7 +351,7 @@ function ValidationCardDesktop({
   const workItem = useTestWorkItemState(test);
   const handleRejectionResult = (result: QualityIssueResult) => onReject(result);
   const resultCount = Object.keys(test.results!).length;
-  const isSpecimenRejected = workItem.blockedReason === 'specimen_rejected';
+  const isSpecimenRejected = workItem.blockedReason === 'sample_rejected';
 
   const badges = (
     <>
@@ -388,7 +382,7 @@ function ValidationCardDesktop({
 
   const actions = (
     <div className="flex items-center gap-2 z-10" onClick={e => e.stopPropagation()}>
-      <RejectionDialog
+      <QualityIssueDialog
         orderTestId={test.id!}
         testCode={test.testCode}
         testName={test.testName}

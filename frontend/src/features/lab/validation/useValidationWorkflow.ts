@@ -6,8 +6,8 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useValidateResults } from '@/features/lab/validation/results.api';
-import { getRejectionToast } from '@/features/lab/validation/rejectionToastMessages';
+import { useValidateResults } from '@/features/lab/api/results.api';
+import { getRejectionToast } from '@/features/lab/validation/qualityIssueToastMessages';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';

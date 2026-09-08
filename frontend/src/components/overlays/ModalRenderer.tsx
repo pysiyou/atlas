@@ -8,7 +8,7 @@
 
 import React, { useMemo, createElement } from 'react';
 import { useModal } from '@/lib/context/ModalContext';
-import { useSampleLookup } from '@/features/lab/collection/samples.api';
+import { useSampleLookup } from '@/features/lab/api/samples.api';
 import { getRegisteredModal } from './modalRegistry';
 import { initializeModalRegistry } from './registerModals';
 import { logger } from '@/utils/logger';

@@ -24,7 +24,7 @@ import { useModal, ModalType } from '@/lib/context/ModalContext';
 import type { PriorityLevel, TestWithContext } from '@/types';
 import { useValidationWorkflow } from './useValidationWorkflow';
 import { orderTestKey } from '@/features/lab/utils/orderTestKey';
-import { usePendingEscalation } from './results.api';
+import { usePendingEscalation } from '../api/results.api';
 import {
   usePendingRecollectionRequests,
   useApproveRecollectionRequest,

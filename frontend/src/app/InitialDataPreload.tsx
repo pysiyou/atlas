@@ -8,7 +8,7 @@ import { useAuthStore } from '@/app/store';
 import { useTestCatalog } from '@/features/catalog';
 import { usePatientsList } from '@/features/patients';
 import { useOrdersList } from '@/features/orders';
-import { useSamplesList } from '@/features/lab/collection/samples.api';
+import { useSamplesList } from '@/features/lab/api/samples.api';
 import { ErrorFallback, PageLoadingFallback } from '@/components/loaders';
 
 function toErrorEntry(

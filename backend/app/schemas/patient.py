@@ -24,6 +24,14 @@ class EmergencyContact(BaseModel):
     email: str | None = Field(None, max_length=254)
 
 
+class EmergencyContactResponse(BaseModel):
+    """Emergency contact as stored in DB (may include legacy short phone numbers)."""
+    fullName: str = Field(..., min_length=2, max_length=100)
+    relationship: Relationship
+    phone: str = Field(..., min_length=1, max_length=20)
+    email: str | None = Field(None, max_length=254)
+
+
 class VitalSigns(BaseModel):
     """Current patient vital signs (2026 Reference Standards)."""
     temperature: float | None = Field(None, description="In Celsius. Normal: 36.5-37.3", ge=30.0, le=45.0)
@@ -253,6 +261,9 @@ class PatientUpdate(BaseModel):
 
 
 class PatientResponse(PatientBase):
+    # Allow legacy DB values shorter than the 10-char create/update minimum.
+    phone: str = Field(..., min_length=1, max_length=20)
+    emergencyContact: EmergencyContactResponse
     id: int
     registrationDate: datetime
     createdBy: str

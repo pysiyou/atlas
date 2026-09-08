@@ -8,13 +8,13 @@ import { useAuthStore } from '@/app/store';
 import { useOrdersList } from '@/features/orders';
 import { useTestCatalog } from '@/features/catalog';
 import { useLabPipelineCounts, useLabTestsFromOrders } from '@/features/lab/hooks';
-import { usePendingEscalation } from '@/features/lab/validation/results.api';
+import { usePendingEscalation } from '@/features/lab/api/results.api';
 import { usePendingRecollectionRequests } from '@/features/lab/api/recollection-requests.api';
 import { usePendingCriticalValues } from '@/features/lab/critical-values/useCriticalValues';
 import { createLabItemFilter } from '@/features/lab/components/LabWorkflowView';
 import { compareQueuePriority } from '@/features/lab/utils/compareQueuePriority';
 import { isActiveTest } from '@/features/orders/utils';
-import { auditAPI, type GetLogsParams } from './audit.api';
+import { auditAPI, type GetLogsParams } from '../api/audit.api';
 import {
   deriveQueueSince,
   deriveWaitMs,

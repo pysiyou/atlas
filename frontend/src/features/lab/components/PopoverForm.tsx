@@ -109,19 +109,23 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
 };
 
 /**
- * RadioCard - Styled radio option card for use in popover forms.
+ * RadioCard - Styled radio option card for lab workflow popovers.
  *
  * Matches PaymentMethodSelector: static border and text; only the checkmark appears when selected.
  */
-interface RadioCardProps {
+export interface RadioCardProps {
   /** Whether this option is selected */
   selected: boolean;
   /** Click handler to select this option */
   onClick: () => void;
   /** Main label text */
   label: string;
-  /** Description content below the label */
-  description: React.ReactNode;
+  /** Optional description content below the label */
+  description?: React.ReactNode;
+  /** Optional leading content (e.g. icon) */
+  leading?: React.ReactNode;
+  /** Vertical alignment for leading content and label block */
+  align?: 'start' | 'center';
   /** Color variant when selected (unused visually; kept for API compatibility) */
   variant?: 'sky' | 'red' | 'warning';
   /** Radio input name for grouping */
@@ -137,6 +141,8 @@ export const RadioCard: React.FC<RadioCardProps> = ({
   onClick,
   label,
   description,
+  leading,
+  align = 'start',
   name,
   disabled = false,
   disabledReason,
@@ -144,6 +150,9 @@ export const RadioCard: React.FC<RadioCardProps> = ({
   const handleClick = () => {
     if (!disabled) onClick();
   };
+
+  const hasDescription =
+    description != null && description !== '' && description !== false;
 
   return (
     <div
@@ -157,7 +166,8 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         }
       }}
       className={`
-        relative flex items-start p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200
+        relative flex p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200
+        ${align === 'center' ? 'items-center' : 'items-start'}
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
       `}
       onClick={handleClick}
@@ -172,20 +182,27 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         className="sr-only"
         aria-hidden
       />
-      <div className="flex-1 min-w-0 pr-8">
-        <span
-          className={`block text-xs font-normal ${disabled ? 'text-text-disabled' : 'text-text-secondary'}`}
-        >
-          {label}
-        </span>
-        <span
-          className={`block text-xxs mt-0.5 ${disabled ? 'text-text-disabled' : 'text-text-tertiary'}`}
-        >
-          {description}
-        </span>
-        {disabled && disabledReason && (
-          <span className="block text-xxs mt-1 text-danger-fg font-normal">{disabledReason}</span>
-        )}
+      <div
+        className={`flex-1 min-w-0 pr-8 flex gap-2.5 ${align === 'center' ? 'items-center' : 'items-start'}`}
+      >
+        {leading ? <div className="shrink-0">{leading}</div> : null}
+        <div className="min-w-0 flex-1">
+          <span
+            className={`block text-xs font-normal ${disabled ? 'text-text-disabled' : 'text-text-secondary'}`}
+          >
+            {label}
+          </span>
+          {hasDescription ? (
+            <span
+              className={`block text-xxs mt-0.5 ${disabled ? 'text-text-disabled' : 'text-text-tertiary'}`}
+            >
+              {description}
+            </span>
+          ) : null}
+          {disabled && disabledReason ? (
+            <span className="block text-xxs mt-1 text-danger-fg font-normal">{disabledReason}</span>
+          ) : null}
+        </div>
       </div>
       <div
         className={`

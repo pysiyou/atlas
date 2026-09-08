@@ -18,12 +18,13 @@ logger = logging.getLogger(__name__)
 # COMPLETED can regress to IN_PROGRESS when retests/escalations are created
 TERMINAL_STATUSES = {OrderStatus.CANCELLED}
 
+# Tests in these statuses count as "started" work (order is IN_PROGRESS)
+# Note: CANCELLED is NOT included - cancelled tests don't keep order in progress
 _STARTED_STATUSES = {
     TestStatus.SAMPLE_COLLECTED,
     TestStatus.RESULTED,
     TestStatus.VALIDATED,
     TestStatus.ESCALATED,
-    TestStatus.CANCELLED,
 }
 
 
@@ -56,11 +57,11 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
     Calculate the appropriate order status based on tests.
 
     Logic:
-    1. If all tests VALIDATED -> COMPLETED
-    2. If any test started (including pending on rejected/recollection tubes) -> IN_PROGRESS
+    1. If all active tests are VALIDATED or CANCELLED -> COMPLETED
+    2. If any active test started (including pending on rejected/recollection tubes) -> IN_PROGRESS
     3. Default -> ORDERED
 
-    Note: CANCELLED status is set manually, not calculated.
+    Note: CANCELLED status is set manually on the order level, not calculated.
     """
     tests = order.tests
     if not tests:
@@ -72,7 +73,16 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
 
     samples_by_id = {s.sampleId: s for s in samples}
 
-    if all(t.status == TestStatus.VALIDATED for t in active_tests):
+    # Order is completed when all active tests are in terminal states (validated or cancelled)
+    # This includes scenarios like:
+    # - All tests validated (normal completion)
+    # - Some tests validated, others cancelled (specimen rejection + cancellation)
+    # - All tests cancelled (complete cancellation of work)
+    all_terminal = all(
+        t.status in {TestStatus.VALIDATED, TestStatus.CANCELLED}
+        for t in active_tests
+    )
+    if all_terminal:
         return OrderStatus.COMPLETED
 
     if any(_test_has_started(t, samples_by_id) for t in active_tests):

@@ -38,7 +38,9 @@ export const OrderDetail: React.FC = () => {
   const invoice: Invoice | null = null;
 
   const activeTests = order != null ? getActiveTests(order.tests) : [];
-  const supersededCount = order != null ? order.tests.length - activeTests.length : 0;
+  // Count tests that are not shown: removed, and optionally superseded (shown with reduced opacity)
+  const removedCount = order != null ? order.tests.filter(t => t.status === 'removed').length : 0;
+  const supersededCount = order != null ? order.tests.filter(t => t.status === 'superseded').length : 0;
 
   const handleViewPatient = () => navigate(`/patients/${order?.patientId}`);
   const handleViewInvoice = () => {
@@ -58,6 +60,7 @@ export const OrderDetail: React.FC = () => {
       invoice,
       activeTests,
       supersededCount,
+      removedCount,
       onViewPatient: handleViewPatient,
       onViewInvoice: handleViewInvoice,
     };

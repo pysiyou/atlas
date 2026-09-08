@@ -9,7 +9,7 @@ export * from './physiologicLimits';
 export * from './referenceRanges';
 export * from './sampleDefinitions';
 export * from './sampleHelpers';
-export * from './deriveTestRejectionContext';
+export * from './deriveRetestContext';
 export * from './buildLabFilterConfig';
 export * from './compareQueuePriority';
 export * from './labQueueLinks';

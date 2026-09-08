@@ -17,7 +17,7 @@ export type WorkItemStage =
 export type BlockedReason =
   | 'payment_unpaid'
   | 'specimen_recollection'
-  | 'specimen_rejected'
+  | 'sample_rejected'
   | 'retest_pending'
   | 'critical_value'
   | 'amendment_pending'
@@ -40,7 +40,7 @@ export interface WorkItemState {
 const BLOCKED_LABELS: Record<BlockedReason, string> = {
   payment_unpaid: 'Payment required',
   specimen_recollection: 'Recollection required',
-  specimen_rejected: 'Specimen rejected',
+  sample_rejected: 'Sample rejected',
   retest_pending: 'Re-test in progress',
   critical_value: 'Critical value — supervisor review',
   amendment_pending: 'Amendment pending',
@@ -88,11 +88,10 @@ export function deriveWorkItemState(
       blockedReason = 'amendment_pending';
     } else if (context.escalationReasonCode === 'LIMIT-HIT') {
       blockedReason = 'retry_limit';
-    } else if (context.escalationReasonCode === 'REJ-SAMP') {
-      blockedReason = 'recollection_limit';
     }
+    // Note: REJ-SAMP reason code has no active trigger path, removed from handling
   } else if (context.sampleStatus === 'rejected') {
-    blockedReason = 'specimen_rejected';
+    blockedReason = 'sample_rejected';
   } else if (context.sampleIsRecollection && stage === 'awaiting_collection') {
     blockedReason = 'specimen_recollection';
   } else if (test.isRetest && stage === 'awaiting_results') {

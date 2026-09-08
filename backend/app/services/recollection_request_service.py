@@ -134,6 +134,18 @@ class RecollectionRequestService:
         quality_issue_id: int,
         affected_tests: List[OrderTest],
     ) -> RecollectionRequest:
+        # Check for existing pending request for this sample
+        existing = (
+            self.db.query(RecollectionRequest)
+            .filter(
+                RecollectionRequest.rejectedSampleId == sample.sampleId,
+                RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL
+            )
+            .first()
+        )
+        if existing:
+            return existing  # Return existing instead of creating duplicate
+        
         attempts_used = self.collection.attempts_used(sample)
         attempts_remaining = self.collection.attempts_remaining_after(sample)
         request = RecollectionRequest(
@@ -178,6 +190,18 @@ class RecollectionRequestService:
         quality_issue_id: int,
         affected_tests: List[OrderTest],
     ) -> RecollectionRequest:
+        # Check for existing pending request for this sample
+        existing = (
+            self.db.query(RecollectionRequest)
+            .filter(
+                RecollectionRequest.rejectedSampleId == sample.sampleId,
+                RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL
+            )
+            .first()
+        )
+        if existing:
+            return existing  # Return existing instead of creating duplicate
+        
         attempts_used = self.collection.attempts_used(sample)
         attempts_remaining = self.collection.attempts_remaining_after(sample)
         request = RecollectionRequest(
@@ -213,7 +237,16 @@ class RecollectionRequestService:
         return request
 
     def approve(self, request_id: int, user_id: int, review_notes: Optional[str] = None) -> RecollectionRequestResult:
-        request = self.get_request(request_id)
+        # Lock the request row to prevent concurrent approvals
+        request = (
+            self.db.query(RecollectionRequest)
+            .filter(RecollectionRequest.id == request_id)
+            .with_for_update()
+            .first()
+        )
+        if not request:
+            raise LabOperationError(f"Recollection request {request_id} not found", status_code=404)
+        
         if request.status != RecollectionRequestStatus.PENDING_APPROVAL:
             raise LabOperationError("Only pending recollection requests can be approved", status_code=400)
 
@@ -323,7 +356,16 @@ class RecollectionRequestService:
         user_id: int,
         review_notes: Optional[str] = None,
     ) -> RecollectionRequestResult:
-        request = self.get_request(request_id)
+        # Lock the request row to prevent concurrent denials
+        request = (
+            self.db.query(RecollectionRequest)
+            .filter(RecollectionRequest.id == request_id)
+            .with_for_update()
+            .first()
+        )
+        if not request:
+            raise LabOperationError(f"Recollection request {request_id} not found", status_code=404)
+        
         if request.status != RecollectionRequestStatus.PENDING_APPROVAL:
             raise LabOperationError("Only pending recollection requests can be denied", status_code=400)
 

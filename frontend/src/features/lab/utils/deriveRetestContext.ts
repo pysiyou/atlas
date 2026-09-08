@@ -4,7 +4,7 @@
 import { LAB_CONFIG } from '@/features/lab/constants';
 import type { TestWithContext } from '@/types';
 
-export interface TestRejectionContext {
+export interface TestRetestContext {
   isRetest: boolean;
   retestNumber: number;
   isSampleRecollection: boolean;
@@ -17,7 +17,7 @@ export interface TestRejectionContext {
   showRecollectionBadge: boolean;
 }
 
-export function deriveTestRejectionContext(test: TestWithContext): TestRejectionContext {
+export function deriveRetestContext(test: TestWithContext): TestRetestContext {
   const isRetest = test.isRetest === true;
   const retestNumber = test.retestNumber ?? 0;
   const isSampleRecollection = test.sampleIsRecollection === true;

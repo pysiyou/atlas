@@ -10,7 +10,7 @@ import type {
   QualityIssueTargetType,
   RemedyType,
 } from '@/types/lab-operations';
-import { getRejectionToast } from '@/features/lab/validation/rejectionToastMessages';
+import { getRejectionToast } from '@/features/lab/validation/qualityIssueToastMessages';
 
 interface UseQualityIssueHandlerOptions {
   onSuccess?: (result: QualityIssueResult) => void;
