@@ -52,6 +52,24 @@ def _test_has_started(test: OrderTest, samples_by_id: Dict[int, Sample]) -> bool
     return False
 
 
+def build_order_completion_metadata(order: Order) -> dict:
+    """Snapshot whether all active tests on an order are now terminal."""
+    active_tests = [
+        t for t in order.tests
+        if t.status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED}
+    ]
+    active_count = len(active_tests)
+    all_terminal = all(
+        t.status in {TestStatus.VALIDATED, TestStatus.CANCELLED}
+        for t in active_tests
+    )
+    return {
+        "orderCompleted": bool(all_terminal and active_count > 0),
+        "activeTestCount": active_count,
+        "singleTestOrder": active_count == 1,
+    }
+
+
 def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
     """
     Calculate the appropriate order status based on tests.

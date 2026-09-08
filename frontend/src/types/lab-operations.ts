@@ -164,44 +164,7 @@ export interface EscalationResolveResult {
   newSampleId?: number;
 }
 
-export type LabOperationType =
-  | 'sample_collect'
-  | 'sample_reject'
-  | 'sample_recollection_request'
-  | 'result_entry'
-  | 'result_validation_approve'
-  | 'quality_issue_reported'
-  | 'escalation_resolution_authorize_retest'
-  | 'escalation_resolution_authorize_recollect'
-  | 'escalation_resolution_force_validate'
-  | 'escalation_resolution_apply_amendment'
-  | 'escalation_resolution_cancel_test'
-  | 'escalation_trigger_crit_val'
-  | 'escalation_trigger_rej_samp'
-  | 'escalation_trigger_limit_hit'
-  | 'escalation_trigger_amend_res'
-  | 'order_status_change'
-  | 'test_removed'
-  | 'test_added'
-  | 'critical_value_detected'
-  | 'critical_value_notified'
-  | 'critical_value_acknowledged';
-
 export const {
   MAX_RETEST_ATTEMPTS,
   MAX_RECOLLECTION_ATTEMPTS,
 } = GENERATED_LAB_CONSTANTS;
-
-export interface LabOperationRecord {
-  id: number;
-  operationType: LabOperationType;
-  entityType: 'sample' | 'test' | 'order' | 'order_test' | 'quality_issue';
-  entityId: number;
-  performedBy: string;
-  performedByName?: string | null;
-  performedAt: string;
-  beforeState: Record<string, unknown> | null;
-  afterState: Record<string, unknown> | null;
-  operationData?: Record<string, unknown> | null;
-  comment?: string | null;
-}
