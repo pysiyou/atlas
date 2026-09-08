@@ -84,8 +84,6 @@ export function invalidateResultQueries(
   if (pendingEscalation) {
     client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
   }
-  client.invalidateQueries({ queryKey: ['labOperationLogs'] });
-  client.invalidateQueries({ queryKey: ['labOperationLogsCount'] });
 }
 
 /**

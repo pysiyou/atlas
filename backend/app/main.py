@@ -11,7 +11,7 @@ from app.middleware import CacheHeadersMiddleware, DelayMiddleware
 from app.middleware.error_handlers import register_exception_handlers
 
 # Import routers
-from app.api.v1 import auth, patients, tests, orders, samples, results, users, payments, affiliations, critical_values, analyzer, audit, quality_issues, recollection_requests
+from app.api.v1 import auth, patients, tests, orders, samples, results, users, payments, affiliations, critical_values, analyzer, audit, quality_issues, recollection_requests, monitoring
 
 
 @asynccontextmanager
@@ -76,4 +76,5 @@ app.include_router(analyzer.router, prefix=settings.API_V1_PREFIX, tags=["analyz
 app.include_router(audit.router, prefix=settings.API_V1_PREFIX, tags=["audit"])
 app.include_router(quality_issues.router, prefix=settings.API_V1_PREFIX, tags=["quality-issues"])
 app.include_router(recollection_requests.router, prefix=settings.API_V1_PREFIX, tags=["recollection-requests"])
+app.include_router(monitoring.router, prefix=settings.API_V1_PREFIX, tags=["monitoring"])
 

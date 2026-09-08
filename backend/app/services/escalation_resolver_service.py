@@ -20,7 +20,7 @@ from app.schemas.enums import (
 from app.services.audit_service import AuditService
 from app.services.escalation_engine import EscalationEngine
 from app.services.flag_calculator import FlagCalculatorService
-from app.services.order_status_updater import update_order_status
+from app.services.order_status_updater import update_order_status, build_order_completion_metadata
 from app.services.quality import QualityIssueService
 from app.services.result_validator import ResultValidatorService
 from app.services.sample_collection import SampleCollectionService
@@ -116,6 +116,9 @@ class EscalationResolverService:
         order_test.validatedBy = str(user_id)
         order_test.validationNotes = validation_notes
         order_test.status = TestStatus.VALIDATED
+
+        order = self.db.query(Order).filter(Order.orderId == order_test.orderId).first()
+        completion_meta = build_order_completion_metadata(order) if order else {}
         
         self.audit.log_escalation_resolution_force_validate(
             order_id=order_test.orderId,
@@ -124,7 +127,7 @@ class EscalationResolverService:
             ticket_id=ticket.id,
             user_id=user_id,
             validation_notes=validation_notes,
-            metadata=ticket.ticketMetadata,
+            metadata={**(ticket.ticketMetadata or {}), **completion_meta},
         )
         
         self.db.commit()
@@ -329,6 +332,9 @@ class EscalationResolverService:
             user_id,
             notes=validation_notes,
         )
+
+        order = self.db.query(Order).filter(Order.orderId == order_test.orderId).first()
+        completion_meta = build_order_completion_metadata(order) if order else {}
         
         self.audit.log_escalation_resolution_apply_amendment(
             order_id=order_test.orderId,
@@ -337,6 +343,7 @@ class EscalationResolverService:
             ticket_id=ticket.id,
             user_id=user_id,
             validation_notes=validation_notes,
+            metadata=completion_meta,
         )
         
         self.db.commit()
