@@ -153,6 +153,15 @@ export const queryKeys = {
   },
 
   /**
+   * Lab monitoring (command center timeline)
+   */
+  monitoring: {
+    all: ['monitoring'] as const,
+    timeline: (params: { hoursBack: number; limit: number }) =>
+      [...queryKeys.monitoring.all, 'timeline', params] as const,
+  },
+
+  /**
    * Affiliation pricing (static data)
    */
   affiliations: {

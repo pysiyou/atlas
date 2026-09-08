@@ -1,51 +1,46 @@
 /**
- * useTimelineQuery - React Query hook for command center timeline.
+ * useTimelineQuery - Paginated timeline data for the command center.
  */
 
-import { useCallback, useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { monitoringAPI, type TimelineEvent } from '../api/monitoring.api';
+import { useCallback } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/query/keys';
+import { monitoringAPI } from '../api/monitoring.api';
 
 const MAX_ACCUMULATED = 200;
 
-export function useTimelineQuery(hoursBack: number = 24, limit: number = 50) {
-  const [offset, setOffset] = useState(0);
-  const [accumulated, setAccumulated] = useState<TimelineEvent[]>([]);
-
-  const query = useQuery({
-    queryKey: ['timeline', { hoursBack, limit, offset }],
-    queryFn: () => monitoringAPI.getTimeline({ hoursBack, limit, offset }),
+export function useTimelineQuery(hoursBack = 24, limit = 50) {
+  const query = useInfiniteQuery({
+    queryKey: queryKeys.monitoring.timeline({ hoursBack, limit }),
+    queryFn: ({ pageParam }) =>
+      monitoringAPI.getTimeline({ hoursBack, limit, offset: pageParam }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const loaded = allPages.reduce((sum, page) => sum + page.events.length, 0);
+      if (loaded >= lastPage.total || loaded >= MAX_ACCUMULATED) return undefined;
+      return loaded;
+    },
     staleTime: 30_000,
-    refetchInterval: offset === 0 ? 60_000 : false,
+    refetchInterval: 60_000,
   });
 
-  useEffect(() => {
-    if (!query.isSuccess || !query.data) return;
-    const page = query.data.events;
-    if (offset === 0) {
-      setAccumulated(page);
-    } else {
-      setAccumulated(prev => [...prev, ...page]);
-    }
-  }, [offset, query.isSuccess, query.dataUpdatedAt, query.data]);
+  const events = query.data?.pages.flatMap(page => page.events) ?? [];
+  const hasMore = Boolean(query.hasNextPage) && events.length < MAX_ACCUMULATED;
 
   const refetchTimeline = useCallback(() => {
-    setOffset(0);
-    setAccumulated([]);
-    query.refetch();
+    void query.refetch();
   }, [query]);
 
   const loadMore = useCallback(() => {
-    setOffset(prev => prev + limit);
-  }, [limit]);
-
-  const total = query.data?.total ?? 0;
-  const hasMore = accumulated.length < total && accumulated.length < MAX_ACCUMULATED;
+    if (query.hasNextPage && !query.isFetchingNextPage) {
+      void query.fetchNextPage();
+    }
+  }, [query]);
 
   return {
-    events: accumulated,
-    isLoading: query.isLoading && offset === 0,
-    isLoadingMore: offset > 0 && query.isFetching,
+    events,
+    isLoading: query.isLoading,
+    isLoadingMore: query.isFetchingNextPage,
     isError: query.isError,
     refetchTimeline,
     loadMore,
