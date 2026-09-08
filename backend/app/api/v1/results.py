@@ -273,6 +273,37 @@ def validate_results(
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
+class AmendmentRequest(BaseModel):
+    """Request body for requesting amendment of validated results"""
+    amendmentReason: str = Field(..., min_length=1, max_length=1000)
+    proposedResults: Optional[TestResultsDict] = None
+    notes: Optional[str] = Field(None, max_length=1000)
+
+
+@router.post("/results/order-tests/{orderTestId}/request-amendment")
+def request_amendment(
+    orderTestId: int,
+    amendment_data: AmendmentRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_lab_tech),
+):
+    """
+    Request amendment for a validated test result.
+    Creates AMEND-RES escalation ticket for supervisor review.
+    """
+    try:
+        service = LabOperationsService(db)
+        return service.request_amendment(
+            order_test_id=orderTestId,
+            user_id=current_user.id,
+            amendment_reason=amendment_data.amendmentReason,
+            proposed_results=amendment_data.proposedResults,
+            notes=amendment_data.notes,
+        )
+    except LabOperationError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
+
+
 @router.post("/results/order-tests/{orderTestId}/escalation/resolve", response_model=EscalationResolveResponse)
 def resolve_escalation(
     orderTestId: int,

@@ -328,6 +328,68 @@ class LabOperationsService:
         update_order_status(self.db, order_id)
         return order_test
 
+    # ── Amendment workflow ────────────────────────────────────────────
+
+    def request_amendment(
+        self,
+        order_test_id: int,
+        user_id: int,
+        amendment_reason: str,
+        proposed_results: Optional[Dict[str, Any]] = None,
+        notes: Optional[str] = None,
+    ) -> OrderTest:
+        """
+        Request amendment for a validated test result.
+        Creates AMEND-RES escalation for supervisor review.
+        """
+        order_test = self._get_order_test(order_test_id, status=TestStatus.VALIDATED)
+        order_id = order_test.orderId
+        test_code = order_test.testCode
+
+        # Validate transition from VALIDATED to ESCALATED
+        can_escalate, reason = TestStateMachine.can_transition(
+            TestStatus.VALIDATED, TestStatus.ESCALATED
+        )
+        if not can_escalate:
+            raise LabOperationError(reason, status_code=400)
+
+        # Prepare metadata with amendment details
+        metadata = {
+            "amendmentReason": amendment_reason,
+            "originalResults": order_test.results,
+            "originalValidatedAt": order_test.resultValidatedAt.isoformat() if order_test.resultValidatedAt else None,
+            "originalValidatedBy": order_test.validatedBy,
+            "requestNotes": notes,
+        }
+        if proposed_results:
+            metadata["proposedResults"] = proposed_results
+
+        # Create escalation ticket
+        ticket = self.escalation.escalate_test(
+            order_test,
+            EscalationReasonCode.AMEND_RES,
+            user_id,
+            metadata=metadata,
+            from_status=TestStatus.VALIDATED,
+        )
+
+        self.audit.log_operation(
+            operation_type=LabOperationType.QUALITY_ISSUE_REPORTED,
+            entity_type="order_test",
+            entity_id=order_test.id,
+            user_id=user_id,
+            metadata={
+                "stage": "amendment",
+                "reason": amendment_reason,
+                "ticketId": ticket.id,
+            },
+        )
+
+        self.db.commit()
+        self.db.refresh(order_test)
+        update_order_status(self.db, order_id)
+        return order_test
+
     # ── Escalation resolution ────────────────────────────────────────────
 
     def resolve_escalation(
@@ -517,7 +579,7 @@ class LabOperationsService:
             domain=QualityDomain.SPECIMEN,
             reason=reason,
             notes=None,
-            remedy=RemedyType.RECOLLECT,
+            remedy=RemedyType.REQUEST_RECOLLECTION,  # Supervisor-authorized recollection
             user_id=user_id,
             order_test_id=original_test.id,
             sample_id=sample.sampleId,

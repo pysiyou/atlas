@@ -51,6 +51,10 @@ export function useRejectionDialog({
       buildValidationRemedyOptions(options?.allowedRemedies, {
         retestRemaining: options?.retestAttemptsRemaining,
         recollectionRemaining: options?.recollectionAttemptsRemaining,
+        sampleRejected: options?.sampleRejected ?? false,
+        unfinishedTestsCount: options?.unfinishedTestsCount,
+        resultedTestsCount: options?.resultedTestsCount,
+        validatedTestsCount: options?.validatedTestsCount,
       }),
     [options],
   );

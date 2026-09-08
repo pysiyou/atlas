@@ -25,11 +25,6 @@ export function getRejectionToast(result?: QualityIssueResult | null): {
         title: 'Re-test requested',
         subtitle: 'A new result entry has been created using the same sample.',
       };
-    case 'recollect':
-      return {
-        title: 'Recollection approved',
-        subtitle: 'A pending collection tube has been created for a new sample.',
-      };
     case 'request_recollection':
       if (result.recollectionRequestId) {
         return {
