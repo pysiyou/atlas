@@ -123,8 +123,18 @@ export const Laboratory: React.FC = () => {
         </div>
       </PageHeaderBar>
 
-      <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-surface rounded border border-border-default shadow-sm overflow-hidden">
-        <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-surface-page">
+      <div
+        className={`flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden ${
+          activeTab === 'dashboard'
+            ? ''
+            : 'bg-surface rounded border border-border-default shadow-sm'
+        }`}
+      >
+        <div
+          className={`flex-1 flex flex-col min-h-0 overflow-hidden ${
+            activeTab === 'dashboard' ? '' : 'bg-surface-page'
+          }`}
+        >
           {activeTab === 'collection' && <CollectionView />}
           {activeTab === 'entry' && <EntryView />}
           {activeTab === 'validation' && <ValidationView />}
