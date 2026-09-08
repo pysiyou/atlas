@@ -221,6 +221,32 @@ class RecollectionRequestService:
         if not sample:
             raise LabOperationError("Rejected sample not found", status_code=404)
 
+        # Validate that there are pending tests to reattach (collection-stage recollection)
+        # or that the original test is still superseded (validation-stage recollection)
+        pending_tests_to_reattach = [
+            test for test in self.quality._linked_tests(
+                sample,
+                exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED],
+            )
+            if test.status == TestStatus.PENDING and test.sampleId == sample.sampleId
+        ]
+        
+        # For validation-stage requests, check if the original test is still superseded
+        original_test_valid = False
+        if request.orderTestId and request.stage == QualityStage.VALIDATION:
+            original_test = (
+                self.db.query(OrderTest).filter(OrderTest.id == request.orderTestId).first()
+            )
+            original_test_valid = original_test and original_test.status == TestStatus.SUPERSEDED
+        
+        # If no pending tests to reattach and no valid original test for validation-stage, reject approval
+        if not pending_tests_to_reattach and not original_test_valid:
+            raise LabOperationError(
+                "Cannot approve recollection request: no pending tests remain to recollect. "
+                "All affected tests have been cancelled, validated, or are no longer associated with this request.",
+                status_code=400
+            )
+
         supervisor_override = request.requiresSupervisorOverride
         new_sample = self.quality._create_recollection_sample(
             sample,

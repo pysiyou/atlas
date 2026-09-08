@@ -97,10 +97,10 @@ class QualityDomain(str, enum.Enum):
 
 class RemedyType(str, enum.Enum):
     RETRY_SAME_SAMPLE = "retry_same_sample"
-    RECOLLECT = "recollect"
     REQUEST_RECOLLECTION = "request_recollection"
     ESCALATE = "escalate"
     CANCEL = "cancel"
+    # NOTE: 'recollect' removed - consolidated with REQUEST_RECOLLECTION
 
 class RecollectionRequestStatus(str, enum.Enum):
     PENDING_APPROVAL = "pending-approval"
@@ -183,9 +183,9 @@ class QualityIssueTargetType(str, enum.Enum):
 
 class EscalationReasonCode(str, enum.Enum):
     CRIT_VAL = "CRIT-VAL"
-    REJ_SAMP = "REJ-SAMP"
+    REJ_SAMP = "REJ-SAMP"  # NOTE: No active trigger path; unfinished tests reset to PENDING instead
     LIMIT_HIT = "LIMIT-HIT"
-    AMEND_RES = "AMEND-RES"
+    AMEND_RES = "AMEND-RES"  # NOTE: Resolution implemented; trigger path not yet implemented
 
 class EscalationTicketStatus(str, enum.Enum):
     OPEN = "OPEN"

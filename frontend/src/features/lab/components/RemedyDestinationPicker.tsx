@@ -13,6 +13,10 @@ export interface RemedyOption {
   description: string;
   disabled?: boolean;
   hint?: string;
+  /** Detailed consequence preview for this remedy choice */
+  consequences?: string[];
+  /** Warning message for this remedy */
+  warning?: string;
 }
 
 const VALIDATION_REMEDY_META: Record<
@@ -52,11 +56,18 @@ const SAMPLE_REMEDY_META: Record<
 };
 
 /**
- * Build validation destination options from API allowedRemedies.
+ * Build validation destination options from API allowedRemedies with rich consequence previews.
  */
 export function buildValidationRemedyOptions(
   allowed: RemedyType[] | undefined,
-  hints?: { retestRemaining?: number; recollectionRemaining?: number }
+  context?: {
+    retestRemaining?: number;
+    recollectionRemaining?: number;
+    sampleRejected?: boolean;
+    unfinishedTestsCount?: number;
+    resultedTestsCount?: number;
+    validatedTestsCount?: number;
+  }
 ): RemedyOption[] {
   const order: RemedyType[] = [
     'retry_same_sample',
@@ -65,18 +76,72 @@ export function buildValidationRemedyOptions(
     'escalate',
   ];
   const allowedSet = new Set(allowed ?? order);
+  
   return order
     .filter(value => allowedSet.has(value) && value in VALIDATION_REMEDY_META)
     .map(value => {
       const meta = VALIDATION_REMEDY_META[value as keyof typeof VALIDATION_REMEDY_META];
       let hint: string | undefined;
-      if (value === 'retry_same_sample' && hints?.retestRemaining != null) {
-        hint = REJECTION_DIALOG_COPY.actions.remaining(hints.retestRemaining);
+      const consequences: string[] = [];
+      let warning: string | undefined;
+      
+      // Build context-aware consequences and hints
+      if (value === 'retry_same_sample') {
+        if (context?.retestRemaining != null) {
+          hint = REJECTION_DIALOG_COPY.actions.remaining(context.retestRemaining);
+        }
+        consequences.push('Test status: RESULTED → SUPERSEDED');
+        consequences.push('New test created: SAMPLE_COLLECTED (same tube)');
+        consequences.push('New result entry required');
+        if (context?.retestRemaining === 0) {
+          warning = 'Last retry attempt - next rejection will require escalation';
+        }
       }
-      if (value === 'request_recollection' && hints?.recollectionRemaining != null) {
-        hint = REJECTION_DIALOG_COPY.actions.remaining(hints.recollectionRemaining);
+      
+      if (value === 'request_recollection') {
+        if (context?.recollectionRemaining != null) {
+          hint = REJECTION_DIALOG_COPY.actions.remaining(context.recollectionRemaining);
+        }
+        consequences.push('Test status: RESULTED → SUPERSEDED');
+        if (!context?.sampleRejected) {
+          consequences.push('Sample status: COLLECTED → REJECTED');
+        }
+        consequences.push('Recollection request sent to supervisor');
+        if (context?.unfinishedTestsCount) {
+          consequences.push(`${context.unfinishedTestsCount} other unfinished test(s) will be reset to pending`);
+        }
+        if (context?.resultedTestsCount) {
+          consequences.push(`${context.resultedTestsCount} other resulted test(s) stay in review`);
+        }
+        if (context?.validatedTestsCount) {
+          consequences.push(`${context.validatedTestsCount} validated test(s) remain released`);
+        }
+        consequences.push('New sample created after supervisor approval');
+        if (context?.recollectionRemaining === 0) {
+          warning = 'Recollection limit reached - supervisor override required';
+        }
       }
-      return { value, label: meta.label, description: meta.description, hint };
+      
+      if (value === 'cancel') {
+        consequences.push('Test status: RESULTED → CANCELLED (terminal)');
+        consequences.push('Test removed from order');
+        consequences.push('No further work on this test');
+      }
+      
+      if (value === 'escalate') {
+        consequences.push('Test status: RESULTED → ESCALATED');
+        consequences.push('Sent to supervisor queue');
+        consequences.push('Supervisor will choose next action');
+      }
+      
+      return {
+        value,
+        label: meta.label,
+        description: meta.description,
+        hint,
+        consequences: consequences.length > 0 ? consequences : undefined,
+        warning,
+      };
     });
 }
 
@@ -137,16 +202,35 @@ export const RemedyDestinationPicker: React.FC<RemedyDestinationPickerProps> = (
                 disabled={option.disabled || disabled}
                 onChange={() => onChange(option.value)}
               />
-              <span className="min-w-0">
+              <span className="min-w-0 flex-1">
                 <span className="block text-xs font-medium text-text-primary">
                   {option.label}
                   {option.hint ? (
-                    <span className="text-text-tertiary font-normal">{option.hint}</span>
+                    <span className="text-text-tertiary font-normal ml-1">{option.hint}</span>
                   ) : null}
                 </span>
                 <span className="block text-xxs text-text-tertiary leading-snug mt-0.5">
                   {option.description}
                 </span>
+                
+                {/* Rich consequence preview */}
+                {option.consequences && option.consequences.length > 0 && (
+                  <ul className="mt-1.5 space-y-0.5">
+                    {option.consequences.map((consequence, idx) => (
+                      <li key={idx} className="text-xxs text-text-secondary leading-tight flex items-start gap-1">
+                        <span className="text-text-tertiary mt-0.5">•</span>
+                        <span>{consequence}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                
+                {/* Warning message */}
+                {option.warning && (
+                  <div className="mt-1.5 px-2 py-1 bg-warning/10 border border-warning/20 rounded text-xxs text-warning leading-tight">
+                    ⚠️ {option.warning}
+                  </div>
+                )}
               </span>
             </label>
           );

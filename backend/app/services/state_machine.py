@@ -65,14 +65,17 @@ class SampleStateMachine:
 
 class TestStateMachine:
     """
-    Test Lifecycle:
-    PENDING -> SAMPLE_COLLECTED -> RESULTED -> VALIDATED
-
+    Test Lifecycle - Active Paths:
+    PENDING -> SAMPLE_COLLECTED -> RESULTED -> VALIDATED (happy path)
+    SAMPLE_COLLECTED -> ESCALATED (critical value trigger)
+    RESULTED -> ESCALATED (limit-hit, validator escalate)
+    VALIDATED -> ESCALATED (amendment request - AMEND-RES)
+    ESCALATED -> VALIDATED | SUPERSEDED | CANCELLED (supervisor resolution)
+    
     Quality issue paths:
-    - SAMPLE_COLLECTED -> PENDING (specimen rejection, awaiting recollection on new tube)
-    - RESULTED -> SUPERSEDED (retry) or ESCALATED (limit/critical)
-    - ESCALATED -> VALIDATED | SUPERSEDED | CANCELLED | PENDING (supervisor)
-
+    - SAMPLE_COLLECTED -> PENDING (specimen rejection reset)
+    - RESULTED -> SUPERSEDED (retest/recollection)
+    
     Terminal: VALIDATED, SUPERSEDED, REMOVED, CANCELLED
     """
 
@@ -80,27 +83,27 @@ class TestStateMachine:
         TestStatus.PENDING: {
             TestStatus.SAMPLE_COLLECTED,
             TestStatus.REMOVED,
-            TestStatus.ESCALATED,
             TestStatus.CANCELLED,
         },
         TestStatus.SAMPLE_COLLECTED: {
             TestStatus.RESULTED,
             TestStatus.PENDING,
-            TestStatus.ESCALATED,
-            TestStatus.CANCELLED,
+            TestStatus.ESCALATED,  # Critical value trigger
+            TestStatus.CANCELLED,  # Sample rejection + cancel remedy
         },
         TestStatus.RESULTED: {
             TestStatus.VALIDATED,
-            TestStatus.ESCALATED,
-            TestStatus.SUPERSEDED,
+            TestStatus.ESCALATED,  # Limit-hit or validator escalate
+            TestStatus.SUPERSEDED,  # Retest/recollection
             TestStatus.CANCELLED,
         },
-        TestStatus.VALIDATED: {TestStatus.ESCALATED},
+        TestStatus.VALIDATED: {
+            TestStatus.ESCALATED,  # Amendment request (AMEND-RES)
+        },
         TestStatus.ESCALATED: {
-            TestStatus.VALIDATED,
-            TestStatus.SUPERSEDED,
-            TestStatus.CANCELLED,
-            TestStatus.PENDING,
+            TestStatus.VALIDATED,  # Force validate or apply amendment
+            TestStatus.SUPERSEDED,  # Authorize retest/recollect
+            TestStatus.CANCELLED,  # Cancel test
         },
         TestStatus.SUPERSEDED: set(),
         TestStatus.REMOVED: set(),

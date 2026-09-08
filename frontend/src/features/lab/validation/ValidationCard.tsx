@@ -9,7 +9,7 @@
 /* eslint-disable max-lines */
 
 import React from 'react';
-import { Badge, Button, Card, Icon } from '@/components';
+import { Badge, Button, Card, Icon, Alert } from '@/components';
 import { formatDate, displayId } from '@/utils';
 import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup } from '@/features/patients';
@@ -30,6 +30,60 @@ import {
   statusMapFromFlags,
   parseResultEntry,
 } from '../utils/labHelpers';
+
+// ─── ResultGrid ───────────────────────────────────────────────────────────────
+
+/**
+ * SpecimenRejectedAlert - Prominent warning when test has rejected specimen.
+ * Shows rejection reason and explains validator authority.
+ */
+function SpecimenRejectedAlert({
+  sampleId,
+  sampleRejectionReason,
+  size = 'default',
+}: {
+  sampleId?: number;
+  sampleRejectionReason?: string;
+  size?: 'default' | 'compact';
+}) {
+  if (!sampleId) return null;
+
+  const isCompact = size === 'compact';
+
+  return (
+    <Alert variant="warning" className={isCompact ? 'py-1.5' : 'py-2'}>
+      <div className="space-y-1">
+        <div className="flex items-start gap-2">
+          <Icon 
+            name={ICONS.actions.alertCircle} 
+            className={`shrink-0 ${isCompact ? 'w-3.5 h-3.5 mt-0.5' : 'w-4 h-4 mt-0.5'}`} 
+          />
+          <div className="min-w-0 flex-1">
+            <p className={`font-semibold ${isCompact ? 'text-xxs' : 'text-xs'}`}>
+              Specimen Rejected — Validator Decision Required
+            </p>
+            <p className={`text-text-secondary leading-tight mt-0.5 ${isCompact ? 'text-xxs' : 'text-xs'}`}>
+              Sample {displayId.sample(sampleId)} was rejected
+              {sampleRejectionReason && (
+                <>: <span className="italic">{sampleRejectionReason}</span></>
+              )}
+            </p>
+          </div>
+        </div>
+        <div className={`pl-5 space-y-0.5 ${isCompact ? 'text-xxs' : 'text-xs'} text-text-tertiary leading-tight`}>
+          <p>⚠️ This result was entered before specimen rejection.</p>
+          <p className="font-medium">You may still approve this result (clinical judgment) or choose another action:</p>
+          <ul className="list-disc list-inside pl-2 space-y-0.5 mt-1">
+            <li>Approve result (add validation notes explaining decision)</li>
+            <li>Request recollection with new sample</li>
+            <li>Cancel this test</li>
+            <li>Escalate to supervisor</li>
+          </ul>
+        </div>
+      </div>
+    </Alert>
+  );
+}
 
 // ─── ResultGrid ───────────────────────────────────────────────────────────────
 
@@ -170,9 +224,21 @@ function ValidationCardMobile({
   const { hasFlags, isRetest, hasRejectionHistory, flagStatusMap } = deriveCardState(test);
   const workItem = useTestWorkItemState(test);
   const handleRejectionResult = (result: QualityIssueResult) => onReject(result);
+  const isSpecimenRejected = workItem.blockedReason === 'specimen_rejected';
 
   return (
     <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
+      {/* Specimen Rejection Alert */}
+      {isSpecimenRejected && (
+        <div className="mb-3">
+          <SpecimenRejectedAlert
+            sampleId={test.sampleId}
+            sampleRejectionReason={test.sample?.rejectionReason}
+            size="compact"
+          />
+        </div>
+      )}
+      
       {/* Header: Test name + Patient name, Test code, Sample ID */}
       <div className="flex items-center justify-between gap-2 mb-2">
         <div className="min-w-0 overflow-hidden">
@@ -291,6 +357,7 @@ function ValidationCardDesktop({
   const workItem = useTestWorkItemState(test);
   const handleRejectionResult = (result: QualityIssueResult) => onReject(result);
   const resultCount = Object.keys(test.results!).length;
+  const isSpecimenRejected = workItem.blockedReason === 'specimen_rejected';
 
   const badges = (
     <>
@@ -396,7 +463,19 @@ function ValidationCardDesktop({
       }
       badges={badges}
       actions={actions}
-      content={<ResultGrid results={test.results!} flagStatusMap={flagStatusMap} />}
+      content={
+        <>
+          {isSpecimenRejected && (
+            <div className="mb-3">
+              <SpecimenRejectedAlert
+                sampleId={test.sampleId}
+                sampleRejectionReason={test.sample?.rejectionReason}
+              />
+            </div>
+          )}
+          <ResultGrid results={test.results!} flagStatusMap={flagStatusMap} />
+        </>
+      }
       contentTitle={`Results (${resultCount})`}
     />
   );

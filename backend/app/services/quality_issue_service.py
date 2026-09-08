@@ -81,6 +81,7 @@ class QualityIssueOptions(BaseModel):
     validatedTestsCount: int = 0
     unfinishedTestsCount: int = 0
     awaitingRecollectionTestsCount: int = 0
+    sampleRejected: bool = False
 
 
 class QualityIssueResult(BaseModel):
@@ -169,35 +170,6 @@ class QualityIssueService:
             )
             .count()
         )
-
-    def _escalate_pending_tests_on_sample(
-        self,
-        sample: Sample,
-        user_id: int,
-        reason: str,
-        notes: Optional[str],
-        *,
-        skip_test_ids: Optional[set[int]] = None,
-    ) -> None:
-        """Escalate tests still awaiting work on a rejected tube."""
-        skip = skip_test_ids or set()
-        for order_test in self._linked_tests(
-            sample, exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED]
-        ):
-            if order_test.id in skip:
-                continue
-            if order_test.sampleId != sample.sampleId:
-                continue
-            if order_test.status not in _SAMPLE_RESET_STATUSES:
-                continue
-            self.escalation.escalate_test(
-                order_test,
-                EscalationReasonCode.REJ_SAMP,
-                user_id,
-                metadata={"rejectionReason": reason, "rejectionNotes": notes},
-                sample_id=sample.sampleId,
-                from_status=order_test.status,
-            )
 
     def _record_issue(
         self,
@@ -519,6 +491,7 @@ class QualityIssueService:
             previewMessage=" ".join(message_parts),
             hasSpecimenCriteria=has_specimen,
             hasAnalyticalCriteria=has_analytical,
+            sampleRejected=sample_rejected,
         )
 
     def report_issue(

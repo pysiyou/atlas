@@ -12,7 +12,6 @@ export type QualityDomain = 'specimen' | 'analytical' | 'clinical';
 
 export type RemedyType =
   | 'retry_same_sample'
-  | 'recollect'
   | 'request_recollection'
   | 'escalate'
   | 'cancel';
@@ -63,6 +62,7 @@ export interface QualityIssueOptions {
   validatedTestsCount?: number;
   unfinishedTestsCount?: number;
   awaitingRecollectionTestsCount?: number;
+  sampleRejected?: boolean;
 }
 
 export interface ReportQualityIssueRequest {
