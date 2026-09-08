@@ -240,6 +240,7 @@ export interface TestWithContext {
   retestNumber?: number;
 
   // Sample recollection tracking fields (for sample re-collect flow)
+  sampleStatus?: string;
   sampleIsRecollection?: boolean;
   sampleOriginalSampleId?: number;
   sampleRecollectionReason?: string;

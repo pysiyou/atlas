@@ -1,12 +1,6 @@
 /**
- * RejectionDialog - Popover for rejecting test results
- *
- * Provides a consistent interface for all rejection scenarios:
- * - Fetches available actions from the API (dynamic limits)
- * - Displays remaining attempts for each action
- * - Shows escalation warning when all options exhausted
- * - Handles loading, error, and success states
- * - Result rejection is popover-only (no modal).
+ * RejectionDialog - Popover for rejecting test results.
+ * Validator chooses reason + destination (retest / recollect / cancel / escalate).
  */
 
 import React, { useState } from 'react';
@@ -14,10 +8,16 @@ import { Popover, Button, Alert, FooterInfo } from '@/components';
 import { PopoverForm } from './PopoverForm';
 import { MODULE_ICONS } from '@/config/icons';
 import { useRejectionDialog } from '../hooks/useRejectionDialog';
-import type { QualityIssueResult } from '@/types/lab-operations';
+import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
 import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY, type ValidationAlertCopy } from './rejectionDialogConstants';
 import { CatalogRejectionFields } from './CatalogRejectionFields';
 import { RejectionDialogLoadingView, RejectionDialogErrorView } from './RejectionDialogViews';
+import {
+  RemedyDestinationPicker,
+  type RemedyOption,
+} from './RemedyDestinationPicker';
+import { AttemptProgressBar } from './AttemptProgressBar';
+import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
 
 /** Re-export views for consumers that render them directly */
 export { RejectionDialogLoadingView, RejectionDialogErrorView } from './RejectionDialogViews';
@@ -31,12 +31,17 @@ export interface RejectionFormState {
   rejectionNotes: string;
   allowedCriteria: string[];
   criteriaLoading: boolean;
+  preferredRemedy: RemedyType | '';
+  remedyOptions: RemedyOption[];
+  retestAttemptsUsed?: number;
+  retestAttemptsRemaining?: number;
 }
 
 /** Grouped actions for form body. */
 export interface RejectionFormActions {
   onReasonChange: (value: string) => void;
   onNotesChange: (value: string) => void;
+  onRemedyChange: (value: RemedyType) => void;
 }
 
 interface RejectionDialogFormBodyProps {
@@ -55,8 +60,11 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
     rejectionNotes,
     allowedCriteria,
     criteriaLoading,
+    preferredRemedy,
+    remedyOptions,
+    retestAttemptsUsed = 0,
   } = state;
-  const { onReasonChange, onNotesChange } = actions;
+  const { onReasonChange, onNotesChange, onRemedyChange } = actions;
   const copy = alertCopy ?? {
     variant: 'warning' as const,
     warningTitle: REJECTION_DIALOG_COPY.reject.warningTitle,
@@ -81,6 +89,12 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
         </div>
       </Alert>
 
+      <AttemptProgressBar
+        used={retestAttemptsUsed}
+        total={GENERATED_LAB_CONSTANTS.MAX_RETEST_ATTEMPTS}
+        label="Re-test"
+      />
+
       <CatalogRejectionFields
         criteria={allowedCriteria}
         criteriaLoading={criteriaLoading}
@@ -91,6 +105,12 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
         reasonLabel={copy.reasonLabel}
         notesLabel={copy.notesLabel}
         notesRows={REJECTION_DIALOG_LAYOUT.reasonTextareaRows}
+      />
+
+      <RemedyDestinationPicker
+        options={remedyOptions}
+        value={preferredRemedy}
+        onChange={onRemedyChange}
       />
     </>
   );
@@ -120,6 +140,9 @@ const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     setRejectionReason,
     rejectionNotes,
     setRejectionNotes,
+    preferredRemedy,
+    setPreferredRemedy,
+    remedyOptions,
     isConfirmDisabled,
     isLoading,
     isRejecting,
@@ -166,10 +189,15 @@ const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
           rejectionNotes,
           allowedCriteria: options?.allowedCriteria ?? [],
           criteriaLoading: isLoading,
+          preferredRemedy,
+          remedyOptions,
+          retestAttemptsUsed: options?.retestAttemptsUsed,
+          retestAttemptsRemaining: options?.retestAttemptsRemaining,
         }}
         actions={{
           onReasonChange: setRejectionReason,
           onNotesChange: setRejectionNotes,
+          onRemedyChange: setPreferredRemedy,
         }}
       />
     </PopoverForm>

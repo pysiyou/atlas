@@ -295,6 +295,21 @@ class LabOperationsService:
         if not can_validate:
             raise LabOperationError(reason)
 
+        # Allow approve even when linked specimen is rejected — validator owns the decision.
+        # Record that context in validation notes for audit when applicable.
+        if order_test.sampleId:
+            sample = self._get_sample(order_test.sampleId)
+            if sample.status == SampleStatus.REJECTED:
+                reject_note = (
+                    f"[Approved with rejected specimen {sample.sampleId}"
+                    f"{f': {sample.rejectionReason}' if sample.rejectionReason else ''}]"
+                )
+                validation_notes = (
+                    f"{validation_notes.strip()} {reject_note}".strip()
+                    if validation_notes and validation_notes.strip()
+                    else reject_note
+                )
+
         order_test.resultValidatedAt = datetime.now(timezone.utc)
         order_test.validatedBy = str(user_id)
         order_test.validationNotes = validation_notes

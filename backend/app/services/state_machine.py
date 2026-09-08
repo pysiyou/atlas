@@ -81,16 +81,19 @@ class TestStateMachine:
             TestStatus.SAMPLE_COLLECTED,
             TestStatus.REMOVED,
             TestStatus.ESCALATED,
+            TestStatus.CANCELLED,
         },
         TestStatus.SAMPLE_COLLECTED: {
             TestStatus.RESULTED,
             TestStatus.PENDING,
             TestStatus.ESCALATED,
+            TestStatus.CANCELLED,
         },
         TestStatus.RESULTED: {
             TestStatus.VALIDATED,
             TestStatus.ESCALATED,
             TestStatus.SUPERSEDED,
+            TestStatus.CANCELLED,
         },
         TestStatus.VALIDATED: {TestStatus.ESCALATED},
         TestStatus.ESCALATED: {

@@ -6,16 +6,22 @@
 import type { Order, OrderStatus, TestStatus, OrderTest } from '@/types';
 
 /**
- * Calculate order status based on test statuses.
+ * Calculate order status based on test statuses and optional sample context.
  *
  * Logic matches backend order_status_updater.py:
  * 1. All active tests validated -> completed
- * 2. Any active test started (not pending) -> in-progress
+ * 2. Any active test started (including pending on rejected/recollection tubes) -> in-progress
  * 3. All pending -> ordered
  *
  * Note: cancelled is set manually on the order and is not derived here.
  */
-export const calculateOrderStatus = (testStatuses: TestStatus[]): OrderStatus => {
+export const calculateOrderStatus = (
+  testStatuses: TestStatus[],
+  options?: {
+    tests?: Array<Pick<OrderTest, 'status' | 'sampleId'>>;
+    samplesById?: Record<number, { status?: string; isRecollection?: boolean }>;
+  }
+): OrderStatus => {
   const activeStatuses = testStatuses.filter(
     s => s !== 'superseded' && s !== 'removed'
   );
@@ -37,6 +43,18 @@ export const calculateOrderStatus = (testStatuses: TestStatus[]): OrderStatus =>
   ];
   if (activeStatuses.some(s => startedStatuses.includes(s))) {
     return 'in-progress';
+  }
+
+  // Mirror backend: pending on rejected or recollection samples counts as started.
+  const { tests, samplesById } = options ?? {};
+  if (tests && samplesById) {
+    const pendingRework = tests.some(test => {
+      if (test.status !== 'pending' || !test.sampleId) return false;
+      const sample = samplesById[test.sampleId];
+      if (!sample) return false;
+      return sample.status === 'rejected' || sample.isRecollection === true;
+    });
+    if (pendingRework) return 'in-progress';
   }
 
   return 'ordered';

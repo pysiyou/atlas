@@ -1,13 +1,15 @@
 /**
  * useRejectionDialog — quality issue popover state for result validation.
+ * Validator must choose reason + destination (preferredRemedy); no auto-routing.
  */
 import { useState, useEffect, useMemo } from 'react';
-import type { QualityIssueResult } from '@/types/lab-operations';
+import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
 import { useQualityIssueOptions, useReportQualityIssue } from '@/features/lab/api/quality-issues.api';
 import {
   REJECTION_DIALOG_COPY,
   getValidationAlertCopy,
 } from '../components/rejectionDialogConstants';
+import { buildValidationRemedyOptions } from '../components/RemedyDestinationPicker';
 
 function buildSubtitle(testName?: string, testCode?: string, patientName?: string): string {
   return [testName, testCode ? `(${testCode})` : '', patientName ? `- ${patientName}` : '']
@@ -36,6 +38,7 @@ export function useRejectionDialog({
 }: UseRejectionDialogParams) {
   const [rejectionReason, setRejectionReason] = useState('');
   const [rejectionNotes, setRejectionNotes] = useState('');
+  const [preferredRemedy, setPreferredRemedy] = useState<RemedyType | ''>('');
 
   const { data: options, isLoading, error: fetchError, refetch } = useQualityIssueOptions(
     'test',
@@ -43,11 +46,32 @@ export function useRejectionDialog({
   );
   const reportMutation = useReportQualityIssue();
 
+  const remedyOptions = useMemo(
+    () =>
+      buildValidationRemedyOptions(options?.allowedRemedies, {
+        retestRemaining: options?.retestAttemptsRemaining,
+        recollectionRemaining: options?.recollectionAttemptsRemaining,
+      }),
+    [options],
+  );
+
+  // Pre-select soft suggestion when options load (still editable).
+  useEffect(() => {
+    if (!options || preferredRemedy) return;
+    const suggested = options.suggestedRemedy ?? options.previewRemedy;
+    if (suggested && remedyOptions.some(o => o.value === suggested)) {
+      setPreferredRemedy(suggested);
+    }
+  }, [options, preferredRemedy, remedyOptions]);
+
   const allowedCriteria = options?.allowedCriteria ?? [];
-  const escalationRequired = options?.willEscalate ?? false;
   const hasReason = rejectionReason.length > 0;
   const hasCriteria = allowedCriteria.length > 0;
-  const isConfirmDisabled = useMemo(() => !hasCriteria || !hasReason, [hasCriteria, hasReason]);
+  const hasDestination = preferredRemedy !== '';
+  const isConfirmDisabled = useMemo(
+    () => !hasCriteria || !hasReason || !hasDestination,
+    [hasCriteria, hasReason, hasDestination]
+  );
 
   const alertCopy = useMemo(
     () => (options ? getValidationAlertCopy(options) : null),
@@ -59,11 +83,12 @@ export function useRejectionDialog({
   }, [reportMutation.isPending, onSubmittingChange]);
 
   const handleConfirm = async () => {
-    if (!rejectionReason) return;
+    if (!rejectionReason || !preferredRemedy) return;
     const result = await reportMutation.mutateAsync({
       target: { type: 'test', id: orderTestId },
       reason: rejectionReason,
       notes: rejectionNotes.trim() || undefined,
+      preferredRemedy,
     });
     onConfirm(result);
   };
@@ -83,12 +108,14 @@ export function useRejectionDialog({
     setRejectionReason,
     rejectionNotes,
     setRejectionNotes,
+    preferredRemedy,
+    setPreferredRemedy,
+    remedyOptions,
     isConfirmDisabled,
     isLoading,
     isRejecting: reportMutation.isPending,
     error: reportMutation.error?.message ?? (fetchError ? String(fetchError) : null),
     options,
-    escalationRequired,
     alertCopy,
     handleConfirm,
     handleRetry,

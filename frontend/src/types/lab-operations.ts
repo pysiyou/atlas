@@ -46,6 +46,10 @@ export interface QualityIssueOptions {
   sampleId?: number;
   stage: QualityStage;
   allowedCriteria: string[];
+  /** Remedies the operator may choose (validation destinations / sample unfinished fate). */
+  allowedRemedies?: RemedyType[];
+  /** Soft suggestion only — UI may pre-select; never auto-applied. */
+  suggestedRemedy?: RemedyType;
   retestAttemptsUsed: number;
   retestAttemptsRemaining: number;
   recollectionAttemptsUsed: number;
@@ -57,6 +61,7 @@ export interface QualityIssueOptions {
   hasAnalyticalCriteria?: boolean;
   resultedTestsCount?: number;
   validatedTestsCount?: number;
+  unfinishedTestsCount?: number;
   awaitingRecollectionTestsCount?: number;
 }
 
