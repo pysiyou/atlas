@@ -733,6 +733,14 @@ class QualityIssueService:
         reason: str,
         notes: Optional[str],
     ) -> QualityIssueResult:
+        # Check retest limit before creating retest
+        retest_count = self._count_retests_in_chain(order_test)
+        if retest_count >= MAX_RETEST_ATTEMPTS:
+            raise LabOperationError(
+                f"Maximum retest limit ({MAX_RETEST_ATTEMPTS}) reached. Escalation required.",
+                status_code=400
+            )
+        
         new_test = self._create_retest(order_test, user_id, reason, notes)
         issue = self._record_issue(
             order_id=order_test.orderId,

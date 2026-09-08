@@ -12,7 +12,7 @@ from app.database import get_db
 from app.models.user import User
 from app.schemas.enums import QualityIssueTargetType, RemedyType
 from app.services.lab_operations import LabOperationsService, LabOperationError
-from app.services.quality_issue_service import QualityIssueOptions, QualityIssueResult
+from app.services.quality import QualityIssueOptions, QualityIssueResult
 from app.utils.exceptions import LabOperationError
 
 router = APIRouter()

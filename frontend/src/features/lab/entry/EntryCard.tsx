@@ -17,7 +17,7 @@ import { QueueAgeBadge } from '../components/QueueAgeBadge';
 import { useLabCardClickGuard, useTestWorkItemState } from '@/features/lab/hooks';
 import { BlockedReasonBadge } from '../components/StatusBadges';
 import { LAB_CONFIG } from '@/features/lab/constants';
-import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
+import { deriveRetestContext } from '../utils/deriveRetestContext';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/config/icons';
 
@@ -61,7 +61,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   const filledCount = Object.values(results).filter(v => v?.trim()).length;
   const patientName = getPatientName(test.patientId);
 
-  const rejection = deriveTestRejectionContext(test);
+  const rejection = deriveRetestContext(test);
   const {
     isRetest,
     retestNumber,

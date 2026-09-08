@@ -4,7 +4,7 @@
 
 export { LabCard, ProgressBadge, TestList } from './LabCard';
 export { PopoverForm, RadioCard } from './PopoverForm';
-export { RejectionDialog } from './RejectionDialog';
+export { QualityIssueDialog } from './QualityIssueDialog';
 export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
 export { LabQueueSection } from './LabQueueSection';
 export { LabFilters } from './LabFilters';

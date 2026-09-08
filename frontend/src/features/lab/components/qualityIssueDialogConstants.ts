@@ -1,12 +1,12 @@
 /**
- * RejectionDialog - Copy and layout constants
+ * QualityIssueDialog - Copy and layout constants
  * Single place for all user-visible strings and magic numbers.
  */
 
 import { LAB_CONFIG } from '@/features/lab/constants';
 import type { QualityIssueOptions } from '@/types/lab-operations';
 
-export const REJECTION_DIALOG_LAYOUT = {
+export const QUALITY_ISSUE_DIALOG_LAYOUT = {
   /** Width class for loading/error/content containers */
   widthClass: 'w-90 md:w-96',
   /** Textarea rows for rejection/escalation reason */
@@ -15,7 +15,7 @@ export const REJECTION_DIALOG_LAYOUT = {
   popoverOffset: LAB_CONFIG.POPOVER_OFFSET,
 } as const;
 
-export const REJECTION_DIALOG_COPY = {
+export const QUALITY_ISSUE_DIALOG_COPY = {
   loading: {
     message: 'Loading options...',
   },
@@ -102,15 +102,15 @@ export function getValidationAlertCopy(options: QualityIssueOptions): Validation
   if (options.willEscalate) {
     return {
       variant: 'danger',
-      ...REJECTION_DIALOG_COPY.escalation,
+      ...QUALITY_ISSUE_DIALOG_COPY.escalation,
     };
   }
   return {
     variant: 'warning',
-    warningTitle: REJECTION_DIALOG_COPY.reject.warningTitle,
-    warningBody: options.previewMessage || REJECTION_DIALOG_COPY.reject.warningBody,
-    confirmLabel: REJECTION_DIALOG_COPY.reject.confirmLabel,
-    reasonLabel: REJECTION_DIALOG_COPY.reject.reasonLabel,
-    notesLabel: REJECTION_DIALOG_COPY.reject.notesLabel,
+    warningTitle: QUALITY_ISSUE_DIALOG_COPY.reject.warningTitle,
+    warningBody: options.previewMessage || QUALITY_ISSUE_DIALOG_COPY.reject.warningBody,
+    confirmLabel: QUALITY_ISSUE_DIALOG_COPY.reject.confirmLabel,
+    reasonLabel: QUALITY_ISSUE_DIALOG_COPY.reject.reasonLabel,
+    notesLabel: QUALITY_ISSUE_DIALOG_COPY.reject.notesLabel,
   };
 }

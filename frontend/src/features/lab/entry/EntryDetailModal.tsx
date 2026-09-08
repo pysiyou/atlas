@@ -20,7 +20,7 @@ import {
   ModalFooter,
   StatusBadgeRow,
 } from '../components/LabDetailModal';
-import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
+import { deriveRetestContext } from '../utils/deriveRetestContext';
 import { ICONS } from '@/config/icons';
 import {
   CollectionInfoLine,
@@ -96,7 +96,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     retestNumber,
     showRecollectionBadge,
     sampleRecollectionAttempt,
-  } = deriveTestRejectionContext(test);
+  } = deriveRetestContext(test);
 
   const handleLocalResultChange = (key: string, paramCode: string, value: string) => {
     setLocalResults(prev => ({ ...prev, [paramCode]: value }));

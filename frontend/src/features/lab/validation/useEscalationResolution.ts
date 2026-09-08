@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { toast } from '@/app/AppToastBar';
 import { useAuthStore } from '@/app/store';
-import { useResolveEscalation } from '@/features/lab/validation/results.api';
+import { useResolveEscalation } from '@/features/lab/api/results.api';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import type { EscalationResolveOptions } from './EscalationResolutionActions';
 

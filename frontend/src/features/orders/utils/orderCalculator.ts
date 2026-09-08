@@ -9,7 +9,7 @@ import type { Order, OrderStatus, TestStatus, OrderTest } from '@/types';
  * Calculate order status based on test statuses and optional sample context.
  *
  * Logic matches backend order_status_updater.py:
- * 1. All active tests validated -> completed
+ * 1. All active tests are validated or cancelled -> completed
  * 2. Any active test started (including pending on rejected/recollection tubes) -> in-progress
  * 3. All pending -> ordered
  *
@@ -30,15 +30,22 @@ export const calculateOrderStatus = (
     return 'ordered';
   }
 
-  if (activeStatuses.every(s => s === 'validated')) {
+  // Order is completed when all active tests are in terminal states (validated or cancelled)
+  // This includes scenarios like:
+  // - All tests validated (normal completion)
+  // - Some tests validated, others cancelled (specimen rejection + cancellation)
+  // - All tests cancelled (complete cancellation of work)
+  const allTerminal = activeStatuses.every(s => s === 'validated' || s === 'cancelled');
+  if (allTerminal) {
     return 'completed';
   }
 
+  // Tests in these statuses count as "started" work
+  // Note: cancelled is NOT included here - it's a terminal state
   const startedStatuses: TestStatus[] = [
     'sample-collected',
     'resulted',
     'validated',
-    'cancelled',
     'escalated',
   ];
   if (activeStatuses.some(s => startedStatuses.includes(s))) {
@@ -69,7 +76,22 @@ export const updateOrderTestStatus = (
   const updatedTests = (order.tests ?? []).map(test =>
     test.testCode === testCode ? { ...test, status, ...additionalData } : test
   );
-  const overallStatus = calculateOrderStatus(updatedTests.map(t => t.status));
+  
+  // Build samples map for accurate order status calculation
+  const samplesById: Record<number, { status?: string; isRecollection?: boolean }> = {};
+  if (order.samples) {
+    order.samples.forEach(sample => {
+      samplesById[sample.sampleId] = {
+        status: sample.status,
+        isRecollection: sample.isRecollection
+      };
+    });
+  }
+  
+  const overallStatus = calculateOrderStatus(
+    updatedTests.map(t => t.status),
+    { tests: updatedTests, samplesById }
+  );
   return { ...order, tests: updatedTests, overallStatus, updatedAt: new Date().toISOString() };
 };
 

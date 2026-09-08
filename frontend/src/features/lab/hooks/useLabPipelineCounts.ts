@@ -6,8 +6,8 @@
 import { useMemo } from 'react';
 import { useAuthStore } from '@/app/store';
 import { useOrdersList } from '@/features/orders';
-import { useSamplesList } from '@/features/lab/collection/samples.api';
-import { usePendingEscalation } from '@/features/lab/validation/results.api';
+import { useSamplesList } from '@/features/lab/api/samples.api';
+import { usePendingEscalation } from '@/features/lab/api/results.api';
 import { usePendingRecollectionRequests } from '@/features/lab/api/recollection-requests.api';
 import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';

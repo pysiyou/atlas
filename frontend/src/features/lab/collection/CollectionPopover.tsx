@@ -7,7 +7,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { toast } from '@/app/AppToastBar';
 import { Popover, Button, Icon, FooterInfo } from '@/components';
-import { PopoverForm } from '../components/PopoverForm';
+import { PopoverForm, RadioCard } from '../components/PopoverForm';
 import { MODULE_ICONS } from '@/config/icons';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';
@@ -169,35 +169,22 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           Container Type <span className="text-danger-fg">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
-          {COLLECTION_CONTAINER_OPTIONS.map(option => {
-            const isSelected = selectedContainerType === option.value;
-            return (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => setSelectedContainerType(option.value)}
-                className="relative flex items-center gap-2.5 p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200 cursor-pointer"
-              >
+          {COLLECTION_CONTAINER_OPTIONS.map(option => (
+            <RadioCard
+              key={option.value}
+              name="collection-container-type"
+              label={option.label}
+              selected={selectedContainerType === option.value}
+              align="center"
+              leading={
                 <Icon
                   name={getContainerIcon(option.value)}
-                  className="w-7 h-7 shrink-0 text-text-disabled"
+                  className="w-7 h-7 text-text-disabled"
                 />
-                <span className="flex-1 text-xs font-normal text-left text-text-secondary">
-                  {option.label}
-                </span>
-                <div
-                  className={`
-                    absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200
-                    ${isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
-                  `}
-                >
-                  {isSelected && (
-                    <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
-                  )}
-                </div>
-              </button>
-            );
-          })}
+              }
+              onClick={() => setSelectedContainerType(option.value)}
+            />
+          ))}
         </div>
       </div>
 

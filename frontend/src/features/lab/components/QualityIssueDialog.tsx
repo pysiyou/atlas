@@ -1,5 +1,5 @@
 /**
- * RejectionDialog - Popover for rejecting test results.
+ * QualityIssueDialog - Popover for reporting quality issues on test results.
  * Validator chooses reason + destination (retest / recollect / cancel / escalate).
  */
 
@@ -7,23 +7,21 @@ import React, { useState } from 'react';
 import { Popover, Button, Alert, FooterInfo } from '@/components';
 import { PopoverForm } from './PopoverForm';
 import { MODULE_ICONS } from '@/config/icons';
-import { useRejectionDialog } from '../hooks/useRejectionDialog';
+import { useQualityIssueDialog } from '../hooks/useQualityIssueDialog';
 import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
-import { REJECTION_DIALOG_LAYOUT, REJECTION_DIALOG_COPY, type ValidationAlertCopy } from './rejectionDialogConstants';
+import { QUALITY_ISSUE_DIALOG_LAYOUT, QUALITY_ISSUE_DIALOG_COPY, type ValidationAlertCopy } from './qualityIssueDialogConstants';
 import { CatalogRejectionFields } from './CatalogRejectionFields';
-import { RejectionDialogLoadingView, RejectionDialogErrorView } from './RejectionDialogViews';
+import { QualityIssueDialogLoadingView, QualityIssueDialogErrorView } from './QualityIssueDialogViews';
 import {
   RemedyDestinationPicker,
   type RemedyOption,
 } from './RemedyDestinationPicker';
-import { AttemptProgressBar } from './AttemptProgressBar';
-import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
 
 /** Re-export views for consumers that render them directly */
-export { RejectionDialogLoadingView, RejectionDialogErrorView } from './RejectionDialogViews';
+export { QualityIssueDialogLoadingView, QualityIssueDialogErrorView } from './QualityIssueDialogViews';
 
 /** Grouped state for form body (readability and future prop additions). */
-export interface RejectionFormState {
+export interface QualityIssueFormState {
   error: string | null;
   escalationRequired: boolean;
   alertCopy: ValidationAlertCopy | null;
@@ -33,23 +31,21 @@ export interface RejectionFormState {
   criteriaLoading: boolean;
   preferredRemedy: RemedyType | '';
   remedyOptions: RemedyOption[];
-  retestAttemptsUsed?: number;
-  retestAttemptsRemaining?: number;
 }
 
 /** Grouped actions for form body. */
-export interface RejectionFormActions {
+export interface QualityIssueFormActions {
   onReasonChange: (value: string) => void;
   onNotesChange: (value: string) => void;
   onRemedyChange: (value: RemedyType) => void;
 }
 
-interface RejectionDialogFormBodyProps {
-  state: RejectionFormState;
-  actions: RejectionFormActions;
+interface QualityIssueDialogFormBodyProps {
+  state: QualityIssueFormState;
+  actions: QualityIssueFormActions;
 }
 
-export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = ({
+export const QualityIssueDialogFormBody: React.FC<QualityIssueDialogFormBodyProps> = ({
   state,
   actions,
 }) => {
@@ -62,16 +58,15 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
     criteriaLoading,
     preferredRemedy,
     remedyOptions,
-    retestAttemptsUsed = 0,
   } = state;
   const { onReasonChange, onNotesChange, onRemedyChange } = actions;
   const copy = alertCopy ?? {
     variant: 'warning' as const,
-    warningTitle: REJECTION_DIALOG_COPY.reject.warningTitle,
-    warningBody: REJECTION_DIALOG_COPY.reject.warningBody,
-    confirmLabel: REJECTION_DIALOG_COPY.reject.confirmLabel,
-    reasonLabel: REJECTION_DIALOG_COPY.reject.reasonLabel,
-    notesLabel: REJECTION_DIALOG_COPY.reject.notesLabel,
+    warningTitle: QUALITY_ISSUE_DIALOG_COPY.reject.warningTitle,
+    warningBody: QUALITY_ISSUE_DIALOG_COPY.reject.warningBody,
+    confirmLabel: QUALITY_ISSUE_DIALOG_COPY.reject.confirmLabel,
+    reasonLabel: QUALITY_ISSUE_DIALOG_COPY.reject.reasonLabel,
+    notesLabel: QUALITY_ISSUE_DIALOG_COPY.reject.notesLabel,
   };
 
   return (
@@ -89,12 +84,6 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
         </div>
       </Alert>
 
-      <AttemptProgressBar
-        used={retestAttemptsUsed}
-        total={GENERATED_LAB_CONSTANTS.MAX_RETEST_ATTEMPTS}
-        label="Re-test"
-      />
-
       <CatalogRejectionFields
         criteria={allowedCriteria}
         criteriaLoading={criteriaLoading}
@@ -103,8 +92,7 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
         onReasonChange={onReasonChange}
         onNotesChange={onNotesChange}
         reasonLabel={copy.reasonLabel}
-        notesLabel={copy.notesLabel}
-        notesRows={REJECTION_DIALOG_LAYOUT.reasonTextareaRows}
+        showNotes={false}
       />
 
       <RemedyDestinationPicker
@@ -112,11 +100,22 @@ export const RejectionDialogFormBody: React.FC<RejectionDialogFormBodyProps> = (
         value={preferredRemedy}
         onChange={onRemedyChange}
       />
+
+      <CatalogRejectionFields
+        criteria={allowedCriteria}
+        rejectionReason={rejectionReason}
+        rejectionNotes={rejectionNotes}
+        onReasonChange={onReasonChange}
+        onNotesChange={onNotesChange}
+        notesLabel={copy.notesLabel}
+        notesRows={QUALITY_ISSUE_DIALOG_LAYOUT.reasonTextareaRows}
+        showReason={false}
+      />
     </>
   );
 };
 
-interface RejectionDialogContentProps {
+interface QualityIssueDialogContentProps {
   orderTestId: number;
   testName?: string;
   testCode?: string;
@@ -126,7 +125,7 @@ interface RejectionDialogContentProps {
   onSubmittingChange?: (submitting: boolean) => void;
 }
 
-const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
+const QualityIssueDialogContent: React.FC<QualityIssueDialogContentProps> = ({
   orderTestId,
   testName,
   testCode,
@@ -153,7 +152,7 @@ const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     handleRetry,
     subtitle,
     copy,
-  } = useRejectionDialog({
+  } = useQualityIssueDialog({
     orderTestId,
     testName,
     testCode,
@@ -163,9 +162,9 @@ const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
     onSubmittingChange,
   });
 
-  if (isLoading) return <RejectionDialogLoadingView />;
+  if (isLoading) return <QualityIssueDialogLoadingView />;
   if (error && !options) {
-    return <RejectionDialogErrorView error={error} onRetry={handleRetry} onCancel={onCancel} />;
+    return <QualityIssueDialogErrorView error={error} onRetry={handleRetry} onCancel={onCancel} />;
   }
 
   return (
@@ -180,7 +179,7 @@ const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
       disabled={isConfirmDisabled}
       footerInfo={<FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
     >
-      <RejectionDialogFormBody
+      <QualityIssueDialogFormBody
         state={{
           error,
           escalationRequired: alertCopy?.variant === 'danger',
@@ -191,8 +190,6 @@ const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
           criteriaLoading: isLoading,
           preferredRemedy,
           remedyOptions,
-          retestAttemptsUsed: options?.retestAttemptsUsed,
-          retestAttemptsRemaining: options?.retestAttemptsRemaining,
         }}
         actions={{
           onReasonChange: setRejectionReason,
@@ -204,7 +201,7 @@ const RejectionDialogContent: React.FC<RejectionDialogContentProps> = ({
   );
 };
 
-interface RejectionDialogProps {
+interface QualityIssueDialogProps {
   orderTestId: number;
   testCode?: string;
   testName?: string;
@@ -213,7 +210,7 @@ interface RejectionDialogProps {
   trigger?: React.ReactNode;
 }
 
-export const RejectionDialog: React.FC<RejectionDialogProps> = ({
+export const QualityIssueDialog: React.FC<QualityIssueDialogProps> = ({
   orderTestId,
   testCode,
   testName,
@@ -226,19 +223,19 @@ export const RejectionDialog: React.FC<RejectionDialogProps> = ({
   return (
     <Popover
       placement="bottom-end"
-      offsetValue={REJECTION_DIALOG_LAYOUT.popoverOffset}
+      offsetValue={QUALITY_ISSUE_DIALOG_LAYOUT.popoverOffset}
       preventClose={effectiveSubmitting}
       trigger={
         trigger ?? (
-          <Button variant="reject" size="sm" title={REJECTION_DIALOG_COPY.triggerTitle}>
-            {REJECTION_DIALOG_COPY.triggerTitle}
+          <Button variant="reject" size="sm" title={QUALITY_ISSUE_DIALOG_COPY.triggerTitle}>
+            {QUALITY_ISSUE_DIALOG_COPY.triggerTitle}
           </Button>
         )
       }
     >
       {({ close }) => (
         <div data-popover-content onClick={e => e.stopPropagation()}>
-          <RejectionDialogContent
+          <QualityIssueDialogContent
             orderTestId={orderTestId}
             testCode={testCode}
             testName={testName}

@@ -5,7 +5,7 @@ import { LabCard } from '../components/LabCard';
 import { AttemptIndicator } from '../components/AttemptIndicator';
 import { BlockedReasonBadge } from '../components/StatusBadges';
 import type { TestWithContext } from '@/types';
-import type { TestRejectionContext } from '../utils/deriveTestRejectionContext';
+import type { TestRetestContext } from '../utils/deriveRetestContext';
 import { ICONS } from '@/config/icons';
 
 interface EscalationCardDesktopProps {
@@ -13,7 +13,7 @@ interface EscalationCardDesktopProps {
   onClick: () => void;
   handleCardClick: () => void;
   getUserName: (userId: number | string) => string;
-  rejection: TestRejectionContext;
+  rejection: TestRetestContext;
   blockedLabel?: string;
 }
 

@@ -10,7 +10,7 @@ import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
 import { useOrdersList } from '@/features/orders';
-import { useCollectSample, useSamplesList } from '@/features/lab/collection/samples.api';
+import { useCollectSample, useSamplesList } from '@/features/lab/api/samples.api';
 import { useCollectionSampleDisplays } from '@/features/lab/collection/useCollectionSampleDisplays';
 import { useCollectionCollectHandler } from '@/features/lab/collection/useCollectionCollectHandler';
 import type { SampleStatus } from '@/types';

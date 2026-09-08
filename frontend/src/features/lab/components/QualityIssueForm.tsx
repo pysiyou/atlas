@@ -1,6 +1,6 @@
 /**
  * Unified quality issue form — used at collection (sample reject).
- * Validation uses RejectionDialog with an explicit destination picker.
+ * Validation uses QualityIssueDialog with an explicit destination picker.
  */
 import React, { useState } from 'react';
 import { Alert, SpinnerLoader } from '@/components';
@@ -9,7 +9,7 @@ import { AttemptProgressBar } from './AttemptProgressBar';
 import { useQualityIssueOptions } from '@/features/lab/api/quality-issues.api';
 import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
-import { REJECTION_DIALOG_COPY } from './rejectionDialogConstants';
+import { QUALITY_ISSUE_DIALOG_COPY } from './qualityIssueDialogConstants';
 import {
   RemedyDestinationPicker,
   buildSampleRemedyOptions,
@@ -31,19 +31,19 @@ function getCollectionAlertCopy(options: QualityIssueOptions): CollectionAlertCo
   if (hasResultedOrValidated) {
     return {
       variant: 'warning',
-      ...REJECTION_DIALOG_COPY.collection.escalateResults,
-      warningBody: options.previewMessage || REJECTION_DIALOG_COPY.collection.escalateResults.warningBody,
+      ...QUALITY_ISSUE_DIALOG_COPY.collection.escalateResults,
+      warningBody: options.previewMessage || QUALITY_ISSUE_DIALOG_COPY.collection.escalateResults.warningBody,
     };
   }
   return {
     variant: atLimit ? 'danger' : 'warning',
     warningTitle: atLimit
-      ? REJECTION_DIALOG_COPY.collection.escalateLimit.warningTitle
-      : REJECTION_DIALOG_COPY.collection.recollect.warningTitle,
+      ? QUALITY_ISSUE_DIALOG_COPY.collection.escalateLimit.warningTitle
+      : QUALITY_ISSUE_DIALOG_COPY.collection.recollect.warningTitle,
     warningBody:
-      options.previewMessage || REJECTION_DIALOG_COPY.collection.recollect.warningBody,
-    reasonLabel: REJECTION_DIALOG_COPY.collection.recollect.reasonLabel,
-    notesLabel: REJECTION_DIALOG_COPY.collection.recollect.notesLabel,
+      options.previewMessage || QUALITY_ISSUE_DIALOG_COPY.collection.recollect.warningBody,
+    reasonLabel: QUALITY_ISSUE_DIALOG_COPY.collection.recollect.reasonLabel,
+    notesLabel: QUALITY_ISSUE_DIALOG_COPY.collection.recollect.notesLabel,
   };
 }
 
@@ -163,7 +163,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
 
           {targetType === 'sample' && sampleRemedyOptions.length > 0 && (
             <RemedyDestinationPicker
-              label={REJECTION_DIALOG_COPY.collection.actions.followUpLabel}
+              label={QUALITY_ISSUE_DIALOG_COPY.collection.actions.followUpLabel}
               options={sampleRemedyOptions}
               value={preferredRemedy}
               onChange={remedy => onPreferredRemedyChange?.(remedy)}

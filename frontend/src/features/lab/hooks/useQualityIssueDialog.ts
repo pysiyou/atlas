@@ -1,14 +1,14 @@
 /**
- * useRejectionDialog — quality issue popover state for result validation.
+ * useQualityIssueDialog — quality issue popover state for result validation.
  * Validator must choose reason + destination (preferredRemedy); no auto-routing.
  */
 import { useState, useEffect, useMemo } from 'react';
 import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
 import { useQualityIssueOptions, useReportQualityIssue } from '@/features/lab/api/quality-issues.api';
 import {
-  REJECTION_DIALOG_COPY,
+  QUALITY_ISSUE_DIALOG_COPY,
   getValidationAlertCopy,
-} from '../components/rejectionDialogConstants';
+} from '../components/qualityIssueDialogConstants';
 import { buildValidationRemedyOptions } from '../components/RemedyDestinationPicker';
 
 function buildSubtitle(testName?: string, testCode?: string, patientName?: string): string {
@@ -17,7 +17,7 @@ function buildSubtitle(testName?: string, testCode?: string, patientName?: strin
     .join(' ');
 }
 
-export interface UseRejectionDialogParams {
+export interface UseQualityIssueDialogParams {
   orderTestId: number;
   testName?: string;
   testCode?: string;
@@ -27,7 +27,7 @@ export interface UseRejectionDialogParams {
   onSubmittingChange?: (submitting: boolean) => void;
 }
 
-export function useRejectionDialog({
+export function useQualityIssueDialog({
   orderTestId,
   testName,
   testCode,
@@ -35,7 +35,7 @@ export function useRejectionDialog({
   onConfirm,
   onCancel: _onCancel,
   onSubmittingChange,
-}: UseRejectionDialogParams) {
+}: UseQualityIssueDialogParams) {
   const [rejectionReason, setRejectionReason] = useState('');
   const [rejectionNotes, setRejectionNotes] = useState('');
   const [preferredRemedy, setPreferredRemedy] = useState<RemedyType | ''>('');
@@ -51,10 +51,6 @@ export function useRejectionDialog({
       buildValidationRemedyOptions(options?.allowedRemedies, {
         retestRemaining: options?.retestAttemptsRemaining,
         recollectionRemaining: options?.recollectionAttemptsRemaining,
-        sampleRejected: options?.sampleRejected ?? false,
-        unfinishedTestsCount: options?.unfinishedTestsCount,
-        resultedTestsCount: options?.resultedTestsCount,
-        validatedTestsCount: options?.validatedTestsCount,
       }),
     [options],
   );
@@ -103,8 +99,8 @@ export function useRejectionDialog({
 
   const subtitle = buildSubtitle(testName, testCode, patientName);
   const copy = {
-    title: REJECTION_DIALOG_COPY.reject.title,
-    confirmLabel: alertCopy?.confirmLabel ?? REJECTION_DIALOG_COPY.reject.confirmLabel,
+    title: QUALITY_ISSUE_DIALOG_COPY.reject.title,
+    confirmLabel: alertCopy?.confirmLabel ?? QUALITY_ISSUE_DIALOG_COPY.reject.confirmLabel,
   };
 
   return {

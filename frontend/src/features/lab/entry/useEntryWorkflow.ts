@@ -8,7 +8,7 @@
 import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTestNameLookup } from '@/features/catalog';
-import { useEnterResults } from '@/features/lab/validation/results.api';
+import { useEnterResults } from '@/features/lab/api/results.api';
 import { queryKeys } from '@/lib/query';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';

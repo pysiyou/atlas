@@ -45,8 +45,11 @@ export const TestsTable: React.FC<TestsTableProps> = ({ tests, orderId, variant 
     [testCatalog, orderId, variant]
   );
 
-  const rowClassName = (test: OrderTest) =>
-    test.status === 'superseded' ? 'bg-surface-page/50 opacity-60' : '';
+  const rowClassName = (test: OrderTest) => {
+    if (test.status === 'superseded') return 'bg-surface-page/50 opacity-60';
+    if (test.status === 'cancelled') return 'bg-danger/5 opacity-75';
+    return '';
+  };
 
   return (
     <Table<OrderTest>

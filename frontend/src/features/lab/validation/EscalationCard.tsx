@@ -5,7 +5,7 @@
 import React from 'react';
 import { useUserLookup } from '@/lib/api/users.api';
 import { useLabCardClickGuard, useTestWorkItemState } from '@/features/lab/hooks';
-import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
+import { deriveRetestContext } from '../utils/deriveRetestContext';
 import type { TestWithContext } from '@/types';
 import { EscalationCardMobile } from './EscalationCardMobile';
 import { EscalationCardDesktop } from './EscalationCardDesktop';
@@ -23,7 +23,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
 }) => {
   const { getUserName } = useUserLookup();
   const handleCardClick = useLabCardClickGuard(onClick);
-  const rejection = deriveTestRejectionContext(test);
+  const rejection = deriveRetestContext(test);
   const workItem = useTestWorkItemState(test);
 
   if (isMobile) {

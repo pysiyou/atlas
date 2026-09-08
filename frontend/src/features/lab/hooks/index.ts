@@ -7,6 +7,6 @@ export * from './useLabTestsFromOrders';
 export * from './useLabPipelineCounts';
 export * from './useLabUrlSearch';
 export * from './useLabCardClickGuard';
-export * from './useRejectionDialog';
+export * from './useQualityIssueDialog';
 export * from './useQualityIssueHandler';
 export * from './useTestWorkItemState';

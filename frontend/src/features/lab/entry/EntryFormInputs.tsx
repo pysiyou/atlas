@@ -10,42 +10,7 @@ import { ICONS } from '@/config/icons';
 import type { TestParameter } from '@/types';
 import { validatePhysiologicValue, getPhysiologicLimit } from '@/features/lab/utils';
 import { titleCaseWords } from '@/utils/string';
-
-const RadioOption: React.FC<{
-  option: string;
-  isSelected: boolean;
-  onSelect: () => void;
-}> = ({ option, isSelected, onSelect }) => (
-  <label
-    className={cn(
-      'group flex items-center px-4 py-2.5 cursor-pointer transition-all duration-150',
-      'hover:bg-surface-page/80',
-      isSelected && 'bg-brand-muted'
-    )}
-  >
-    <div className="flex-shrink-0 mr-3">
-      <input type="radio" checked={isSelected} onChange={onSelect} className="sr-only" />
-      <div
-        className={cn(
-          'w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150',
-          isSelected
-            ? 'bg-brand'
-            : 'bg-transparent border-2 border-border-strong group-hover:border-border-hover'
-        )}
-      >
-        {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
-      </div>
-    </div>
-    <span
-      className={cn(
-        'text-sm transition-colors',
-        isSelected ? 'text-text-primary font-normal' : 'text-text-tertiary group-hover:text-text-primary'
-      )}
-    >
-      {titleCaseWords(option)}
-    </span>
-  </label>
-);
+import { RadioCard } from '../components/PopoverForm';
 
 const SelectParameterInput: React.FC<{
   param: TestParameter;
@@ -97,20 +62,20 @@ const SelectParameterInput: React.FC<{
       className="min-w-[200px]"
     >
       {({ close }) => (
-        <div className="flex flex-col py-1">
-          <div className="max-h-[250px] overflow-y-auto">
-            {param.allowedValues?.map(option => (
-              <RadioOption
-                key={option}
-                option={option}
-                isSelected={value === option}
-                onSelect={() => {
-                  onChange(option);
-                  close();
-                }}
-              />
-            ))}
-          </div>
+        <div className="flex flex-col gap-2 p-2 max-h-[250px] overflow-y-auto">
+          {param.allowedValues?.map(option => (
+            <RadioCard
+              key={option}
+              name={`entry-param-${inputId}`}
+              label={titleCaseWords(option)}
+              selected={value === option}
+              align="center"
+              onClick={() => {
+                onChange(option);
+                close();
+              }}
+            />
+          ))}
         </div>
       )}
     </Popover>

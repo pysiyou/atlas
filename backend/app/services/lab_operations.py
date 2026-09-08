@@ -23,6 +23,7 @@ from app.schemas.enums import (
     EscalationResolutionAction,
     QualityStage,
     QualityDomain,
+    LabOperationType,
 )
 from app.services.state_machine import SampleStateMachine, TestStateMachine, StateTransitionError
 from app.services.audit_service import AuditService
@@ -30,7 +31,14 @@ from app.services.order_status_updater import update_order_status
 from app.services.result_validator import ResultValidatorService
 from app.services.flag_calculator import FlagCalculatorService
 from app.services.escalation_engine import EscalationEngine
-from app.services.quality_issue_service import QualityIssueService
+from app.services.escalation_resolver_service import EscalationResolverService
+from app.services.sample_collection import SampleCollectionService
+from app.services.quality import QualityIssueService
+from app.services.recollection_request_service import RecollectionRequestService
+from app.utils.exceptions import LabOperationError
+from app.services.flag_calculator import FlagCalculatorService
+from app.services.escalation_engine import EscalationEngine
+from app.services.quality import QualityIssueService
 from app.services.recollection_request_service import RecollectionRequestService
 from app.utils.exceptions import LabOperationError
 
@@ -55,8 +63,11 @@ class LabOperationsService:
         self.result_validator = ResultValidatorService()
         self.flag_calculator = FlagCalculatorService()
 
-    def _get_sample(self, sample_id: int) -> Sample:
-        sample = self.db.query(Sample).filter(Sample.sampleId == sample_id).first()
+    def _get_sample(self, sample_id: int, for_update: bool = False) -> Sample:
+        query = self.db.query(Sample).filter(Sample.sampleId == sample_id)
+        if for_update:
+            query = query.with_for_update()
+        sample = query.first()
         if not sample:
             raise LabOperationError(f"Sample {sample_id} not found", status_code=404)
         return sample
@@ -65,10 +76,13 @@ class LabOperationsService:
         self,
         order_test_id: int,
         status: Optional[TestStatus] = None,
+        for_update: bool = False,
     ) -> OrderTest:
         query = self.db.query(OrderTest).filter(OrderTest.id == order_test_id)
         if status:
             query = query.filter(OrderTest.status == status)
+        if for_update:
+            query = query.with_for_update()
         order_test = query.first()
         if not order_test:
             status_msg = f" with status '{status.value}'" if status else ""
@@ -142,7 +156,7 @@ class LabOperationsService:
         container_color: str,
         collection_notes: Optional[str] = None,
     ) -> Sample:
-        sample = self._get_sample(sample_id)
+        sample = self._get_sample(sample_id, for_update=True)  # Add row lock
         self._assert_order_paid_for_collection(sample.orderId)
         before_state = self._serialize_sample_state(sample)
 
@@ -166,8 +180,11 @@ class LabOperationsService:
             exclude_statuses=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED, TestStatus.CANCELLED],
         )
         for order_test in order_tests:
-            order_test.status = TestStatus.SAMPLE_COLLECTED
-            order_test.sampleId = sample_id
+            # Validate state machine transition before forcing status change
+            if TestStateMachine.can_transition(order_test.status, TestStatus.SAMPLE_COLLECTED):
+                order_test.status = TestStatus.SAMPLE_COLLECTED
+                order_test.sampleId = sample_id
+            # else: Skip invalid transitions (log warning if needed in production)
 
         after_state = self._serialize_sample_state(sample)
         self.audit.log_sample_collection(
@@ -196,7 +213,7 @@ class LabOperationsService:
         technician_notes: Optional[str] = None,
         skip_validation: bool = False,
     ) -> OrderTest:
-        order_test = self._get_order_test(order_test_id)
+        order_test = self._get_order_test(order_test_id, for_update=True)  # Add row lock
         order_id = order_test.orderId
         test_code = order_test.testCode
 
@@ -281,15 +298,12 @@ class LabOperationsService:
         user_id: int,
         validation_notes: Optional[str] = None,
     ) -> OrderTest:
-        order_test = self._get_order_test(order_test_id, status=TestStatus.RESULTED)
+        order_test = self._get_order_test(order_test_id, status=TestStatus.RESULTED, for_update=True)  # Add row lock
         order_id = order_test.orderId
         test_code = order_test.testCode
 
-        if order_test.status == TestStatus.ESCALATED:
-            raise LabOperationError(
-                "Escalated tests must be resolved via the Escalation resolution endpoint.",
-                status_code=403,
-            )
+        # Note: The status filter above ensures order_test.status == RESULTED,
+        # so no need for additional escalation check here.
 
         can_validate, reason = TestStateMachine.can_validate(order_test.status)
         if not can_validate:
@@ -636,7 +650,25 @@ class LabOperationsService:
         if not proposed:
             raise LabOperationError("Amendment ticket has no proposed results", status_code=400)
 
-        order_test.results = proposed
+        # Re-validate proposed results
+        order = self.db.query(Order).filter(Order.id == order_id).first()
+        test_def = self.db.query(Test).filter(Test.testCode == test_code).first()
+        
+        if test_def and order:
+            # Validate results against physiologic limits
+            result_items = self.result_validator.validate_results(
+                proposed, test_def, order.patient
+            )
+            # Recalculate flags
+            updated_results = self.flag_calculator.calculate_flags(
+                result_items, test_def
+            )
+            order_test.results = updated_results
+            order_test.hasCriticalValues = any(r.get('isCritical') for r in updated_results)
+        else:
+            # Fallback if test definition is missing
+            order_test.results = proposed
+        
         order_test.resultValidatedAt = datetime.now(timezone.utc)
         order_test.validatedBy = str(user_id)
         order_test.validationNotes = validation_notes
