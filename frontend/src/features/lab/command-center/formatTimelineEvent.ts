@@ -131,16 +131,16 @@ function entityDetails(event: TimelineEvent): EventDetail[] {
 // --- per-type handlers ---
 
 const ESCALATION_TRIGGER_LABELS: Record<string, string> = {
-  escalation_trigger_crit_val: 'Critical value escalation',
-  escalation_trigger_limit_hit: 'Limit hit escalation',
-  escalation_trigger_rej_samp: 'Rejected sample escalation',
-  escalation_trigger_amend_res: 'Amendment escalation',
+  escalation_trigger_crit_val: 'Escalation opened for critical value',
+  escalation_trigger_limit_hit: 'Escalation opened after retest limit',
+  escalation_trigger_rej_samp: 'Escalation opened for rejected sample',
+  escalation_trigger_amend_res: 'Escalation opened for result amendment',
 };
 
-function completedWithLabel(label: string, meta: Record<string, unknown>): FormattedTimelineEvent {
+function completedWithLabel(action: string, meta: Record<string, unknown>): FormattedTimelineEvent {
   return {
-    action: 'Test completed',
-    details: [{ type: 'text', value: label }, { type: 'text', value: '—' }, ...testCompletedDetails(meta)],
+    action,
+    details: testCompletedDetails(meta),
   };
 }
 
@@ -166,11 +166,11 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     ];
     const sampleType = meta.sampleType;
     if (typeof sampleType === 'string') details.push({ type: 'sampleType', value: sampleType });
-    return { action: 'Sample collected', details };
+    return { action: 'Sample collected and ready for testing', details };
   },
 
   sample_reject: event => ({
-    action: 'Sample rejected',
+    action: 'Sample rejected during collection',
     details: [
       { type: 'link', value: displayId.sample(event.entityId), to: entityRoute(event) },
       { type: 'text', value: '—' },
@@ -191,12 +191,12 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (typeof attempt === 'number' && attempt > 0) {
       details.push({ type: 'text', value: `(attempt ${attempt})` });
     }
-    return { action: 'Recollection requested', details };
+    return { action: 'New sample recollection requested', details };
   },
 
-  result_entry: event => ({ action: 'Result entered', details: testOnOrder(event.metadata) }),
+  result_entry: event => ({ action: 'Test results recorded', details: testOnOrder(event.metadata) }),
   result_validation_approve: event => ({
-    action: 'Test completed',
+    action: 'Test validated and marked complete',
     details: testCompletedDetails(event.metadata),
   }),
 
@@ -215,7 +215,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
       details.push({ type: 'text', value: '→' }, { type: 'text', value: remedy.replace(/_/g, ' ') });
     }
     if (details.length === 0) details.push({ type: 'text', value: 'Reported' });
-    return { action: 'Quality issue reported', details };
+    return { action: 'Quality issue flagged for review', details };
   },
 
   escalation_resolution_authorize_retest: event => {
@@ -229,7 +229,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (link) details.push({ type: 'text', value: 'on order' }, link);
     const reason = metaString(meta.reason);
     if (reason) details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
-    return { action: 'Retest authorized', details };
+    return { action: 'Supervisor authorized a retest', details };
   },
 
   escalation_resolution_authorize_recollect: event => {
@@ -244,11 +244,13 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (link) details.push({ type: 'text', value: 'on order' }, link);
     const reason = metaString(meta.reason);
     if (reason) details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
-    return { action: 'Recollection authorized', details };
+    return { action: 'Supervisor authorized sample recollection', details };
   },
 
-  escalation_resolution_force_validate: event => completedWithLabel('Force validate', event.metadata),
-  escalation_resolution_apply_amendment: event => completedWithLabel('Amendment applied', event.metadata),
+  escalation_resolution_force_validate: event =>
+    completedWithLabel('Test force-validated by supervisor', event.metadata),
+  escalation_resolution_apply_amendment: event =>
+    completedWithLabel('Amended results applied and validated', event.metadata),
 
   escalation_resolution_cancel_test: event => {
     const meta = event.metadata;
@@ -259,7 +261,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
       { type: 'text', value: '—' },
       { type: 'text', value: metaString(meta.reason) ?? 'Cancelled' }
     );
-    return { action: 'Test cancelled', details };
+    return { action: 'Test cancelled by supervisor', details };
   },
 
   critical_value_detected: event => {
@@ -286,7 +288,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
         .join(', ');
       if (summary) details.push({ type: 'text', value: '—' }, { type: 'text', value: summary });
     }
-    return { action: 'Critical value detected', details };
+    return { action: 'Critical result detected in testing', details };
   },
 
   critical_value_notified: event => {
@@ -300,7 +302,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (method) details.push({ type: 'text', value: `via ${method}` });
     const link = orderLink(meta.orderId);
     if (link) details.push({ type: 'text', value: 'on order' }, link);
-    return { action: 'Critical value notified', details };
+    return { action: 'Provider notified of critical value', details };
   },
 
   critical_value_acknowledged: event => {
@@ -312,7 +314,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     ];
     const link = orderLink(meta.orderId);
     if (link) details.push({ type: 'text', value: 'on order' }, link);
-    return { action: 'Critical value acknowledged', details };
+    return { action: 'Critical value acknowledged by provider', details };
   },
 
   recollection_request_created: event => {
@@ -324,7 +326,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (rejected) details.push({ type: 'text', value: 'for' }, rejected);
     const stage = metaString(meta.stage);
     if (stage) details.push({ type: 'text', value: 'at' }, { type: 'text', value: stage });
-    return { action: 'Recollection request created', details };
+    return { action: 'Recollection sent for supervisor approval', details };
   },
 
   recollection_request_approved: event => {
@@ -333,7 +335,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (link) details.push(link);
     const created = sampleRef(event.metadata.createdSampleId);
     if (created) details.push({ type: 'text', value: '→' }, created);
-    return { action: 'Recollection request approved', details };
+    return { action: 'Recollection request approved by supervisor', details };
   },
 
   recollection_request_denied: event => {
@@ -342,11 +344,11 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (link) details.push(link);
     const note = metaString(event.metadata.reviewNotes);
     if (note) details.push({ type: 'note', value: note });
-    return { action: 'Recollection request denied', details };
+    return { action: 'Recollection request denied by supervisor', details };
   },
 
-  test_added: event => testOrderChange('Test added', 'to order', event.metadata),
-  test_removed: event => testOrderChange('Test removed', 'from order', event.metadata),
+  test_added: event => testOrderChange('Test added to order', 'to order', event.metadata),
+  test_removed: event => testOrderChange('Test removed from order', 'from order', event.metadata),
 
   order_status_change: event => {
     const details: EventDetail[] = [];
@@ -354,12 +356,16 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (link) details.push(link);
     const status = getStatusValue(event);
     if (status) details.push({ type: 'text', value: '→' }, { type: 'status', value: status });
-    return { action: 'Order status changed', details };
+    const action =
+      event.performedBy === 'system'
+        ? 'Order status automatically updated'
+        : 'Order status manually updated';
+    return { action, details };
   },
 };
 
 const escalationTriggerHandler: EventHandler = event => ({
-  action: ESCALATION_TRIGGER_LABELS[event.type] ?? 'Escalation triggered',
+  action: ESCALATION_TRIGGER_LABELS[event.type] ?? 'Escalation opened for review',
   details: escalationTriggerDetails(event.metadata),
 });
 

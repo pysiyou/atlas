@@ -1,8 +1,21 @@
 /**
- * Monitoring API Client
+ * Lab monitoring API client — timeline, category summary, operations overview.
  */
 
 import { apiClient } from '@/lib/apiClient';
+
+export type CategorySummaryDays = 7 | 30 | 90;
+
+export interface CategorySummaryItem {
+  category: string;
+  count: number;
+  percentage: number;
+}
+
+export interface CategorySummaryResponse {
+  total: number;
+  categories: CategorySummaryItem[];
+}
 
 export interface TimelineEvent {
   id: number;
@@ -23,34 +36,42 @@ export interface TimelineResponse {
   total: number;
 }
 
-export interface CategorySummaryItem {
-  category: string;
-  count: number;
-  percentage: number;
+export interface OperationsOverviewResponse {
+  testFlow: Record<string, number>;
+  escalations: {
+    open: number;
+    resolved: number;
+  };
+  qualityIssues: number;
+  recollectionRequests: {
+    pending: number;
+    approved: number;
+    denied: number;
+  };
 }
-
-export interface CategorySummaryResponse {
-  total: number;
-  categories: CategorySummaryItem[];
-}
-
-export type CategorySummaryDays = 7 | 30 | 90;
 
 export const monitoringAPI = {
-  async getTimeline(params?: {
-    hoursBack?: number;
+  getCategorySummary: async (days: CategorySummaryDays): Promise<CategorySummaryResponse> => {
+    return apiClient.get<CategorySummaryResponse>(
+      `/monitoring/category-summary?days=${days}`
+    );
+  },
+
+  getTimeline: async (params: {
+    hours_back?: number;
     limit?: number;
     offset?: number;
-  }): Promise<TimelineResponse> {
+  }): Promise<TimelineResponse> => {
     const queryParams: Record<string, string> = {};
-    if (params?.hoursBack) queryParams.hours_back = String(params.hoursBack);
-    if (params?.limit) queryParams.limit = String(params.limit);
-    if (params?.offset) queryParams.offset = String(params.offset);
-
+    if (params.hours_back !== undefined) queryParams.hours_back = String(params.hours_back);
+    if (params.limit !== undefined) queryParams.limit = String(params.limit);
+    if (params.offset !== undefined) queryParams.offset = String(params.offset);
     return apiClient.get<TimelineResponse>('/monitoring/timeline', queryParams);
   },
 
-  async getCategorySummary(days: CategorySummaryDays): Promise<CategorySummaryResponse> {
-    return apiClient.get<CategorySummaryResponse>('/monitoring/category-summary', { days: String(days) });
+  getOperationsOverview: async (hours_back = 24): Promise<OperationsOverviewResponse> => {
+    return apiClient.get<OperationsOverviewResponse>(
+      `/monitoring/operations-overview?hours_back=${hours_back}`
+    );
   },
 };

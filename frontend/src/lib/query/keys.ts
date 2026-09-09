@@ -172,6 +172,19 @@ export const queryKeys = {
     priceByDuration: (duration: number) =>
       [...queryKeys.affiliations.all, 'pricing', duration] as const,
   },
+
+  /**
+   * Monitoring queries (command center metrics)
+   */
+  monitoring: {
+    all: ['monitoring'] as const,
+    timeline: (hours_back: number, limit: number, offset: number) =>
+      [...queryKeys.monitoring.all, 'timeline', { hours_back, limit, offset }] as const,
+    categorySummary: (days: number) =>
+      [...queryKeys.monitoring.all, 'category-summary', days] as const,
+    operationsOverview: (hours_back: number) =>
+      [...queryKeys.monitoring.all, 'operations-overview', hours_back] as const,
+  },
 } as const;
 
 /**

@@ -5,7 +5,10 @@
 import React from 'react';
 import { ActivityTimeline } from './ActivityTimeline';
 import { CategorySummary } from './CategorySummary';
+import { OperationsOverview } from './OperationsOverview';
+import { CommandCenterPanel } from './commandCenterShared';
 import { useTimelineQuery } from './useTimelineQuery';
+import { COMMAND_CENTER_PANEL } from './commandCenterStyles';
 
 interface GridBoxProps {
   label: string;
@@ -13,12 +16,7 @@ interface GridBoxProps {
 }
 
 function GridBox({ label, className = '' }: GridBoxProps) {
-  return (
-    <div
-      className={`min-h-0 h-full bg-surface rounded-lg border border-border-default shadow-sm ${className}`}
-      aria-label={label}
-    />
-  );
+  return <div className={`${COMMAND_CENTER_PANEL.gridPlaceholder} ${className}`} aria-label={label} />;
 }
 
 export const CommandCenterView: React.FC = () => {
@@ -33,12 +31,12 @@ export const CommandCenterView: React.FC = () => {
   } = useTimelineQuery(24, 50);
 
   return (
-    <div className="flex-1 min-h-0 min-w-0 overflow-hidden bg-surface-page p-2">
+    <div className={COMMAND_CENTER_PANEL.page}>
       <div
         className="h-full min-h-0 grid gap-2 grid-cols-1 lg:grid-cols-12 auto-rows-fr lg:[grid-template-rows:minmax(0,2fr)_minmax(0,1.35fr)_minmax(0,1.65fr)]"
       >
         <div className="min-h-[280px] lg:min-h-0 lg:col-span-8 lg:row-start-1">
-          <GridBox label="Box 1" />
+          <OperationsOverview />
         </div>
 
         <div className="min-h-[320px] lg:min-h-0 lg:col-span-4 lg:row-start-1">
@@ -58,12 +56,8 @@ export const CommandCenterView: React.FC = () => {
         </div>
 
         <div className="min-h-[360px] lg:min-h-0 lg:col-span-4 lg:row-start-2 lg:row-span-2 overflow-hidden">
-          <div className="h-full bg-surface rounded border border-border-default shadow-sm overflow-hidden flex flex-col">
-            <div className="shrink-0 px-4 py-2.5 border-b border-border-default flex items-center justify-between gap-3">
-              <h3 className="text-sm font-light text-text-primary">Recent Activity</h3>
-              <span className="flex h-6 items-center text-xxs text-text-tertiary shrink-0">Last 24 hours</span>
-            </div>
-            <div className="flex-1 min-h-0 overflow-hidden">
+          <CommandCenterPanel title="Recent Activity" meta="Last 24 hours">
+            <div className={COMMAND_CENTER_PANEL.body}>
               <ActivityTimeline
                 events={events}
                 isLoading={isLoading}
@@ -74,7 +68,7 @@ export const CommandCenterView: React.FC = () => {
                 isLoadingMore={isLoadingMore}
               />
             </div>
-          </div>
+          </CommandCenterPanel>
         </div>
 
         <div className="min-h-[220px] lg:min-h-0 lg:col-span-3 lg:row-start-3 overflow-hidden">

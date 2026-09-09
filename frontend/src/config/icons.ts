@@ -98,18 +98,31 @@ export const ICONS = {
     cross: 'cross' as IconName,
     warning: 'warning' as IconName,
     alertCircle: 'alert-circle' as IconName,
+    alertTriangle: 'warning' as IconName,
     infoCircle: 'info-circle' as IconName,
     dangerSquare: 'danger-square' as IconName,
     loading: 'loading' as IconName,
     spinner: 'loading' as IconName,
     search: 'search' as IconName,
     filter: 'filter' as IconName,
+    flag: 'flag' as IconName,
     download: 'download' as IconName,
     printer: 'printer' as IconName,
     menuDots: 'menu-dots' as IconName,
     logout: 'log-out' as IconName,
     doubleArrowLeft: 'double-arrow-left' as IconName,
     doubleArrowRight: 'double-arrow-right' as IconName,
+  },
+
+  status: {
+    checkCircle: 'check-circle' as IconName,
+    warning: 'warning' as IconName,
+    alertCircle: 'alert-circle' as IconName,
+  },
+
+  lab: {
+    sampleTube: 'lab-tube' as IconName,
+    flask: 'flask' as IconName,
   },
 
   ui: {

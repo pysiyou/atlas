@@ -16,7 +16,8 @@ export function useTimelineQuery(hoursBack = 24, limit = 50) {
       monitoringAPI.getTimeline({ hoursBack, limit, offset: pageParam }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
-      const loaded = allPages.reduce((sum, page) => sum + page.events.length, 0);
+      if (!lastPage?.events) return undefined;
+      const loaded = allPages.reduce((sum, page) => sum + (page?.events?.length ?? 0), 0);
       if (loaded >= lastPage.total || loaded >= MAX_ACCUMULATED) return undefined;
       return loaded;
     },
@@ -24,7 +25,7 @@ export function useTimelineQuery(hoursBack = 24, limit = 50) {
     refetchInterval: 60_000,
   });
 
-  const events = query.data?.pages.flatMap(page => page.events) ?? [];
+  const events = query.data?.pages.flatMap(page => page?.events ?? []) ?? [];
   const hasMore = Boolean(query.hasNextPage) && events.length < MAX_ACCUMULATED;
 
   const refetchTimeline = useCallback(() => {
