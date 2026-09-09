@@ -8,7 +8,7 @@ import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { CollectionView } from '../collection/CollectionView';
 import { EntryView } from '../entry/EntryView';
 import { ValidationView } from '../validation/ValidationView';
-import { CommandCenterView } from '../command-center/CommandCenterView';
+import { CommandCenterPage } from '../command-center';
 import { Icon, PageHeaderBar, Badge } from '@/components';
 import { ICONS } from '@/config/icons';
 import { useLabPipelineCounts } from '../hooks';
@@ -140,7 +140,7 @@ export const Laboratory: React.FC = () => {
           {activeTab === 'validation' && <ValidationView />}
           {activeTab === 'dashboard' && (
             <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-              <CommandCenterView />
+              <CommandCenterPage />
             </div>
           )}
         </div>

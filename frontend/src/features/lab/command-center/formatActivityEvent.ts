@@ -1,10 +1,10 @@
 /**
- * Timeline event formatting — maps audit log events to display labels and detail chips.
+ * Activity event formatting — maps audit log events to display labels and detail chips.
  */
 /* eslint-disable max-lines -- single registry for all audit event type handlers */
 
 import { displayId } from '@/utils';
-import type { TimelineEvent } from '../api/monitoring.api';
+import type { TimelineEvent } from '../api/commandCenter.api';
 
 export type EventDetail =
   | { type: 'text'; value: string }
@@ -384,7 +384,7 @@ function appendNote(event: TimelineEvent, formatted: FormattedTimelineEvent): Fo
   return { ...formatted, note };
 }
 
-export function formatTimelineEvent(event: TimelineEvent): FormattedTimelineEvent {
+export function formatActivityEvent(event: TimelineEvent): FormattedTimelineEvent {
   const handler = EVENT_HANDLERS[event.type];
   const formatted = handler
     ? handler(event)
