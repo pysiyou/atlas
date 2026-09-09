@@ -9,7 +9,10 @@ from app.models.lab_audit import LabOperationLog
 from app.models.order import Order, OrderTest
 from app.models.test import Test
 from app.models.user import User
-from app.schemas.enums import TestStatus
+from app.models.escalation import EscalationTicket
+from app.models.quality_issue import QualityIssue
+from app.models.recollection_request import RecollectionRequest
+from app.schemas.enums import TestStatus, EscalationTicketStatus, RecollectionRequestStatus
 
 
 class LabMonitoringService:
@@ -120,3 +123,75 @@ class LabMonitoringService:
             })
 
         return {"total": total, "categories": categories}
+
+    def get_operations_overview(self, hours_back: int = 24) -> dict:
+        """
+        Aggregate lab operations metrics for command center overview.
+        Shows test flow, escalations, quality issues, and requests.
+        """
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours_back)
+
+        # Test status distribution
+        test_statuses = (
+            self.db.query(OrderTest.status, func.count(OrderTest.id))
+            .join(Order, OrderTest.orderId == Order.orderId)
+            .filter(Order.createdAt >= cutoff)
+            .filter(OrderTest.status != TestStatus.SUPERSEDED)
+            .group_by(OrderTest.status)
+            .all()
+        )
+        status_map = {str(status.value): count for status, count in test_statuses}
+
+        # Escalation tickets
+        open_escalations = (
+            self.db.query(func.count(EscalationTicket.id))
+            .filter(EscalationTicket.status == EscalationTicketStatus.OPEN)
+            .filter(EscalationTicket.createdAt >= cutoff)
+            .scalar() or 0
+        )
+        resolved_escalations = (
+            self.db.query(func.count(EscalationTicket.id))
+            .filter(EscalationTicket.status == EscalationTicketStatus.RESOLVED)
+            .filter(EscalationTicket.resolvedAt >= cutoff)
+            .scalar() or 0
+        )
+
+        # Quality issues
+        quality_issues = (
+            self.db.query(func.count(QualityIssue.id))
+            .filter(QualityIssue.createdAt >= cutoff)
+            .scalar() or 0
+        )
+
+        # Recollection requests
+        pending_recollections = (
+            self.db.query(func.count(RecollectionRequest.id))
+            .filter(RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL)
+            .scalar() or 0
+        )
+        approved_recollections = (
+            self.db.query(func.count(RecollectionRequest.id))
+            .filter(RecollectionRequest.status == RecollectionRequestStatus.APPROVED)
+            .filter(RecollectionRequest.reviewedAt >= cutoff)
+            .scalar() or 0
+        )
+        denied_recollections = (
+            self.db.query(func.count(RecollectionRequest.id))
+            .filter(RecollectionRequest.status == RecollectionRequestStatus.DENIED)
+            .filter(RecollectionRequest.reviewedAt >= cutoff)
+            .scalar() or 0
+        )
+
+        return {
+            "testFlow": status_map,
+            "escalations": {
+                "open": open_escalations,
+                "resolved": resolved_escalations,
+            },
+            "qualityIssues": quality_issues,
+            "recollectionRequests": {
+                "pending": pending_recollections,
+                "approved": approved_recollections,
+                "denied": denied_recollections,
+            },
+        }

@@ -46,6 +46,14 @@ class CategorySummaryResponse(BaseModel):
     categories: List[CategorySummaryItem]
 
 
+class OperationsOverviewResponse(BaseModel):
+    """Operations overview with test flow and exception tracking."""
+    testFlow: dict[str, int]
+    escalations: dict[str, int]
+    qualityIssues: int
+    recollectionRequests: dict[str, int]
+
+
 @router.get(
     "/monitoring/timeline",
     response_model=TimelineResponse,
@@ -102,3 +110,21 @@ def get_category_summary(
 
     service = LabMonitoringService(db)
     return service.get_category_summary(days=days)
+
+
+@router.get(
+    "/monitoring/operations-overview",
+    response_model=OperationsOverviewResponse,
+    status_code=status.HTTP_200_OK,
+)
+def get_operations_overview(
+    hours_back: int = Query(24, description="Lookback window in hours"),
+    db: Session = Depends(get_db),
+):
+    """
+    Get lab operations overview for command center.
+
+    Returns test flow by status, escalations, quality issues, and recollection requests.
+    """
+    service = LabMonitoringService(db)
+    return service.get_operations_overview(hours_back=hours_back)
