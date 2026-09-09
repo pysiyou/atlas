@@ -1,5 +1,5 @@
 /**
- * ActivityTimeline - Lab command center activity feed.
+ * Activity feed — scrollable lab audit trail for the command center.
  */
 
 import React, { useMemo } from 'react';
@@ -8,19 +8,12 @@ import { Badge } from '@/components';
 import { Skeleton } from '@/components/loaders/Skeleton';
 import { cn, formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
 import { ENTITY_ID, ENTITY_ID_CLICKABLE } from '@/utils/constants';
-import type { TimelineEvent } from '../api/monitoring.api';
-import {
-  formatTimelineEvent,
-  type EventDetail,
-} from './formatTimelineEvent';
-import { COMMAND_CENTER_TIMELINE } from './commandCenterStyles';
-import {
-  getCategoryConfig,
-  getEventCategory,
-  getEventTone,
-} from './timelineCategories';
+import type { TimelineEvent } from '../api/commandCenter.api';
+import { formatActivityEvent, type EventDetail } from './formatActivityEvent';
+import { getCategoryConfig, getEventCategory, getEventTone } from './activityCategories';
+import { COMMAND_CENTER_TIMELINE } from './components/styles';
 
-export interface ActivityTimelineProps {
+export interface ActivityFeedProps {
   events: TimelineEvent[];
   isLoading?: boolean;
   isError?: boolean;
@@ -30,10 +23,10 @@ export interface ActivityTimelineProps {
   isLoadingMore?: boolean;
 }
 
-function TimelineSkeleton() {
+function FeedSkeleton() {
   return (
-    <div className="flex flex-col h-full bg-surface" aria-busy="true">
-      <div className="flex-1 overflow-auto px-4 py-2 space-y-4">
+    <div className="flex h-full flex-col bg-surface" aria-busy="true">
+      <div className="flex-1 space-y-4 overflow-auto px-4 py-2">
         {Array.from({ length: 2 }).map((_, g) => (
           <div key={g} className="space-y-3">
             <Skeleton height={10} width={48} className="mx-auto" />
@@ -54,7 +47,7 @@ function TimelineSkeleton() {
   );
 }
 
-function TimelineDetail({ detail }: { detail: EventDetail }) {
+function FeedDetail({ detail }: { detail: EventDetail }) {
   switch (detail.type) {
     case 'note':
       return <span className="text-xs text-text-secondary">Notes: {detail.value}</span>;
@@ -75,11 +68,11 @@ function TimelineDetail({ detail }: { detail: EventDetail }) {
   }
 }
 
-function TimelineEventRow({ event }: { event: TimelineEvent }) {
+function FeedEventRow({ event }: { event: TimelineEvent }) {
   const category = getEventCategory(event.type);
   const categoryConfig = getCategoryConfig(category);
   const tone = getEventTone(event);
-  const formatted = formatTimelineEvent(event);
+  const formatted = formatActivityEvent(event);
 
   return (
     <li className={COMMAND_CENTER_TIMELINE.eventRow}>
@@ -97,12 +90,12 @@ function TimelineEventRow({ event }: { event: TimelineEvent }) {
         {formatted.details.length > 0 && (
           <div className={COMMAND_CENTER_TIMELINE.eventDetails}>
             {formatted.details.map((detail, idx) => (
-              <TimelineDetail key={idx} detail={detail} />
+              <FeedDetail key={idx} detail={detail} />
             ))}
           </div>
         )}
         {formatted.note && (
-          <p className="text-xs text-text-tertiary mt-0.5">Notes: {formatted.note}</p>
+          <p className="mt-0.5 text-xs text-text-tertiary">Notes: {formatted.note}</p>
         )}
         <p className={COMMAND_CENTER_TIMELINE.eventMeta}>
           {event.performedByName || `User ${event.performedBy}`}
@@ -116,7 +109,7 @@ function TimelineEventRow({ event }: { event: TimelineEvent }) {
   );
 }
 
-function TimelineGroup({ label, items }: { label: string; items: TimelineEvent[] }) {
+function FeedGroup({ label, items }: { label: string; items: TimelineEvent[] }) {
   return (
     <section className="px-4 pb-4 first:pt-1">
       <div className={COMMAND_CENTER_TIMELINE.groupHeader}>
@@ -124,17 +117,17 @@ function TimelineGroup({ label, items }: { label: string; items: TimelineEvent[]
         <span className={COMMAND_CENTER_TIMELINE.groupLabel}>{label}</span>
         <div className={COMMAND_CENTER_TIMELINE.groupDivider} />
       </div>
-      <ul className="space-y-0 list-none relative">
+      <ul className="relative list-none space-y-0">
         <div className={COMMAND_CENTER_TIMELINE.connector} aria-hidden="true" />
         {items.map(event => (
-          <TimelineEventRow key={event.id} event={event} />
+          <FeedEventRow key={event.id} event={event} />
         ))}
       </ul>
     </section>
   );
 }
 
-export const ActivityTimeline: React.FC<ActivityTimelineProps> = ({
+export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   events,
   isLoading = false,
   isError = false,
@@ -154,15 +147,15 @@ export const ActivityTimeline: React.FC<ActivityTimelineProps> = ({
     return Array.from(map.entries()).map(([label, items]) => ({
       label,
       items: items.sort(
-        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
       ),
     }));
   }, [events]);
 
   if (isError) {
     return (
-      <div className="flex flex-col h-full bg-surface items-center justify-center gap-2 px-4">
-        <p className="text-sm text-text-secondary">Couldn't load timeline</p>
+      <div className="flex h-full flex-col items-center justify-center gap-2 bg-surface px-4">
+        <p className="text-sm text-text-secondary">Couldn&apos;t load activity feed</p>
         {onRetry && (
           <button type="button" onClick={onRetry} className={COMMAND_CENTER_TIMELINE.retryLink}>
             Retry
@@ -172,21 +165,21 @@ export const ActivityTimeline: React.FC<ActivityTimelineProps> = ({
     );
   }
 
-  if (isLoading) return <TimelineSkeleton />;
+  if (isLoading) return <FeedSkeleton />;
 
   if (groups.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-surface">
+      <div className="flex h-full flex-col items-center justify-center bg-surface">
         <p className="text-sm text-text-secondary">No recent activity</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full bg-surface">
-      <div className="flex-1 overflow-auto min-h-0">
+    <div className="flex h-full flex-col bg-surface">
+      <div className="min-h-0 flex-1 overflow-auto">
         {groups.map(group => (
-          <TimelineGroup key={group.label} label={group.label} items={group.items} />
+          <FeedGroup key={group.label} label={group.label} items={group.items} />
         ))}
         {hasMore && onLoadMore && (
           <div className={COMMAND_CENTER_TIMELINE.loadMore}>

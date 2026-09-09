@@ -1,19 +1,19 @@
 /**
- * useTimelineQuery - Paginated timeline data for the command center.
+ * Paginated activity feed query for the command center.
  */
 
 import { useCallback } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query/keys';
-import { monitoringAPI } from '../api/monitoring.api';
+import { commandCenterAPI } from '../api/commandCenter.api';
 
 const MAX_ACCUMULATED = 200;
 
-export function useTimelineQuery(hoursBack = 24, limit = 50) {
+export function useActivityFeedQuery(hoursBack = 24, limit = 50) {
   const query = useInfiniteQuery({
-    queryKey: queryKeys.monitoring.timeline({ hoursBack, limit }),
+    queryKey: queryKeys.commandCenter.timeline({ hours_back: hoursBack, limit }),
     queryFn: ({ pageParam }) =>
-      monitoringAPI.getTimeline({ hoursBack, limit, offset: pageParam }),
+      commandCenterAPI.getTimeline({ hours_back: hoursBack, limit, offset: pageParam }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage?.events) return undefined;
@@ -28,7 +28,7 @@ export function useTimelineQuery(hoursBack = 24, limit = 50) {
   const events = query.data?.pages.flatMap(page => page?.events ?? []) ?? [];
   const hasMore = Boolean(query.hasNextPage) && events.length < MAX_ACCUMULATED;
 
-  const refetchTimeline = useCallback(() => {
+  const refetchFeed = useCallback(() => {
     void query.refetch();
   }, [query]);
 
@@ -43,7 +43,7 @@ export function useTimelineQuery(hoursBack = 24, limit = 50) {
     isLoading: query.isLoading,
     isLoadingMore: query.isFetchingNextPage,
     isError: query.isError,
-    refetchTimeline,
+    refetchFeed,
     loadMore,
     hasMore,
   };

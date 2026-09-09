@@ -4,8 +4,8 @@
 
 import type { IconName } from '@/components';
 import { ICONS } from '@/config/icons';
-import type { TimelineEvent } from '../api/monitoring.api';
-import type { CommandCenterTimelineTone } from './commandCenterStyles';
+import type { TimelineEvent } from '../api/commandCenter.api';
+import type { CommandCenterTimelineTone } from './components/styles';
 
 export type TimelineEventCategory =
   | 'specimen'

@@ -153,17 +153,6 @@ export const queryKeys = {
   },
 
   /**
-   * Lab monitoring (command center timeline)
-   */
-  monitoring: {
-    all: ['monitoring'] as const,
-    timeline: (params: { hoursBack: number; limit: number }) =>
-      [...queryKeys.monitoring.all, 'timeline', params] as const,
-    categorySummary: (days: number) =>
-      [...queryKeys.monitoring.all, 'category-summary', days] as const,
-  },
-
-  /**
    * Affiliation pricing (static data)
    */
   affiliations: {
@@ -174,16 +163,14 @@ export const queryKeys = {
   },
 
   /**
-   * Monitoring queries (command center metrics)
+   * Lab command center
    */
-  monitoring: {
-    all: ['monitoring'] as const,
-    timeline: (hours_back: number, limit: number, offset: number) =>
-      [...queryKeys.monitoring.all, 'timeline', { hours_back, limit, offset }] as const,
-    categorySummary: (days: number) =>
-      [...queryKeys.monitoring.all, 'category-summary', days] as const,
-    operationsOverview: (hours_back: number) =>
-      [...queryKeys.monitoring.all, 'operations-overview', hours_back] as const,
+  commandCenter: {
+    all: ['command-center'] as const,
+    dashboard: (params: { hours_back: number }) =>
+      [...queryKeys.commandCenter.all, 'dashboard', params] as const,
+    timeline: (params: { hours_back: number; limit: number }) =>
+      [...queryKeys.commandCenter.all, 'timeline', params] as const,
   },
 } as const;
 

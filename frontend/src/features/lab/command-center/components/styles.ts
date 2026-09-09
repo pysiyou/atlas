@@ -1,13 +1,10 @@
 /**
  * Command center shared layout, surface, and tone styles.
- * Uses semantic theme tokens only — no primitive neutral/hex values here.
  */
 
 import type { TestStatus } from '@/types/enums/generated/test';
 
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
-
-export type CommandCenterExceptionTone = 'danger' | 'warning' | 'success' | 'neutral';
 
 export type CommandCenterTimelineTone = 'problem' | 'resolution' | 'neutral';
 
@@ -18,25 +15,11 @@ export const COMMAND_CENTER_PANEL = {
   title: 'text-sm font-light text-text-primary',
   meta: 'flex h-6 shrink-0 items-center text-xxs text-text-tertiary',
   body: 'flex-1 min-h-0 overflow-hidden',
-  bodyScroll: 'flex-1 min-h-0 overflow-y-auto px-4 py-3',
-  gridPlaceholder: 'min-h-0 h-full bg-surface rounded-lg border border-border-default shadow-sm',
   page: 'flex-1 min-h-0 min-w-0 overflow-hidden bg-surface-page p-2',
 } as const;
 
 export const COMMAND_CENTER_SECTION = {
-  title: 'text-xs font-medium text-text-primary',
-  detail: 'shrink-0 text-xxs tabular-nums text-text-tertiary',
-  header: 'mb-2 flex items-center justify-between gap-2 border-b border-border-subtle pb-1.5',
-  summary: 'shrink-0 truncate px-0.5 text-xxs text-text-tertiary',
   statLabel: 'text-xxs uppercase tracking-wide text-text-tertiary',
-} as const;
-
-export const COMMAND_CENTER_CARD = {
-  shell:
-    'flex min-h-0 flex-col overflow-hidden rounded border border-border-default bg-gradient-to-b from-surface via-surface to-surface-page/40 p-2.5 shadow-sm',
-  inner: 'rounded border border-border-subtle bg-surface/80 px-2 py-1.5',
-  row: 'flex items-center justify-between gap-2 border-b border-border-subtle pb-1.5 text-xxs',
-  rowLast: 'flex items-center justify-between gap-2 text-xxs',
 } as const;
 
 export const COMMAND_CENTER_KPI = {
@@ -76,23 +59,6 @@ export const COMMAND_CENTER_KPI_RING_TONE: Record<CommandCenterKpiTone, string> 
   neutral: 'text-text-secondary',
 };
 
-export const COMMAND_CENTER_SEGMENT_BAR = {
-  empty: 'h-5 rounded bg-surface-hover',
-  track: 'flex h-5 gap-0.5 overflow-hidden rounded shadow-inner',
-  segment: 'relative min-w-0.5 transition-[width] duration-500 first:rounded-l last:rounded-r',
-} as const;
-
-export const COMMAND_CENTER_PIPELINE_TEXT: Record<TestStatus, string> = {
-  pending: 'text-text-secondary',
-  'sample-collected': 'text-info-fg-emphasis',
-  resulted: 'text-warning-fg-emphasis',
-  validated: 'text-success-fg-emphasis',
-  escalated: 'text-danger-fg-emphasis',
-  cancelled: 'text-text-tertiary',
-  superseded: 'text-text-tertiary',
-  removed: 'text-text-tertiary',
-};
-
 export const COMMAND_CENTER_PIPELINE_BAR: Record<TestStatus, string> = {
   pending: 'bg-chart-axis',
   'sample-collected': 'bg-info-fg-emphasis',
@@ -102,28 +68,6 @@ export const COMMAND_CENTER_PIPELINE_BAR: Record<TestStatus, string> = {
   cancelled: 'bg-border-strong',
   superseded: 'bg-border-strong',
   removed: 'bg-border-strong',
-};
-
-export const COMMAND_CENTER_EXCEPTION = {
-  shell:
-    'flex flex-col justify-center rounded border border-border-default border-l-[3px] px-2 py-1.5 bg-gradient-to-r from-surface to-transparent transition-colors hover:bg-surface-hover/50',
-  link: 'block min-h-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30',
-  label: 'truncate text-xxs text-text-secondary',
-  value: 'text-base font-semibold leading-tight tabular-nums',
-} as const;
-
-export const COMMAND_CENTER_EXCEPTION_ACCENT: Record<CommandCenterExceptionTone, string> = {
-  danger: 'border-l-danger-fg bg-danger-bg/20',
-  warning: 'border-l-warning-fg bg-warning-bg/20',
-  success: 'border-l-success-fg bg-success-bg/20',
-  neutral: 'border-l-border-strong bg-tone-neutral-bg/50',
-};
-
-export const COMMAND_CENTER_EXCEPTION_VALUE: Record<CommandCenterExceptionTone, string> = {
-  danger: 'text-danger-fg-emphasis',
-  warning: 'text-warning-fg-emphasis',
-  success: 'text-success-fg-emphasis',
-  neutral: 'text-text-primary',
 };
 
 export const COMMAND_CENTER_TIMELINE = {
