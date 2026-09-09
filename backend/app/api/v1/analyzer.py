@@ -158,8 +158,7 @@ async def receive_hl7_result(
     service = LabOperationsService(db)
     try:
         updated_test = service.enter_results(
-            order_id=sample.orderId,
-            test_code=test_code,
+            order_test_id=order_test.id,
             user_id=ANALYZER_USER_ID,
             results=internal_results,
             technician_notes=f"Auto-entered from analyzer {request.analyzer_id or analyzer_result.analyzer_id or 'unknown'}"
@@ -227,8 +226,7 @@ async def receive_json_result(
     service = LabOperationsService(db)
     try:
         updated_test = service.enter_results(
-            order_id=sample.orderId,
-            test_code=request.test_code,
+            order_test_id=order_test.id,
             user_id=ANALYZER_USER_ID,
             results=request.results,
             technician_notes=f"Auto-entered from analyzer {request.analyzer_id or 'unknown'}"

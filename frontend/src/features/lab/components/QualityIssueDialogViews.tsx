@@ -1,0 +1,140 @@
+/**
+ * QualityIssueDialog view subcomponents: Loading, Error, and Action Cards.
+ * Extracted to keep QualityIssueDialog.tsx focused on orchestration.
+ */
+
+import React from 'react';
+import { Alert, Button, Skeleton } from '@/components';
+import { RadioCard } from './PopoverForm';
+import { AttemptProgressBar } from './AttemptProgressBar';
+import type { ResultRejectionType } from '@/types';
+import { cn } from '@/utils';
+import { QUALITY_ISSUE_DIALOG_LAYOUT, QUALITY_ISSUE_DIALOG_COPY } from './qualityIssueDialogConstants';
+import { LAB_CONFIG } from '@/features/lab/constants';
+
+/** Skeleton that mirrors PopoverForm layout (header, body, footer) to avoid layout shift when options load. */
+export const QualityIssueDialogLoadingView: React.FC = () => (
+  <div
+    className={cn(
+      QUALITY_ISSUE_DIALOG_LAYOUT.widthClass,
+      'bg-surface rounded-lg shadow-xl border border-border-default overflow-hidden flex flex-col max-h-[600px]'
+    )}
+  >
+    {/* Header */}
+    <div className="px-4 py-3 bg-surface-page border-b border-border-subtle flex items-start justify-between">
+      <div className="space-y-0.5">
+        <Skeleton height={20} width="60%" className="rounded-md" />
+        <Skeleton height={12} width="40%" className="rounded-md" />
+      </div>
+      <Skeleton width={32} height={32} className="rounded-md shrink-0" />
+    </div>
+    {/* Body */}
+    <div className="p-4 space-y-4 overflow-y-auto flex-1">
+      <div className="space-y-1.5">
+        <Skeleton height={14} width="100%" className="rounded-md" />
+        <Skeleton height={12} width="85%" className="rounded-md" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton height={12} width="30%" className="rounded-md" />
+        <Skeleton height={52} width="100%" className="rounded-md" />
+      </div>
+      <div>
+        <Skeleton height={12} width="35%" className="rounded-md mb-1" />
+        <Skeleton height={60} width="100%" className="rounded-md" />
+      </div>
+    </div>
+    {/* Footer */}
+    <div className="p-3 bg-surface-page border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
+      <Skeleton height={12} width="50%" className="rounded-md" />
+      <div className="flex items-center gap-2">
+        <Skeleton height={32} width={70} className="rounded-md" />
+        <Skeleton height={32} width={70} className="rounded-md" />
+      </div>
+    </div>
+  </div>
+);
+
+export interface QualityIssueDialogErrorViewProps {
+  error: string;
+  onRetry: () => void;
+  onCancel: () => void;
+}
+
+export const QualityIssueDialogErrorView: React.FC<QualityIssueDialogErrorViewProps> = ({
+  error,
+  onRetry,
+  onCancel,
+}) => (
+  <div
+    className={cn(
+      QUALITY_ISSUE_DIALOG_LAYOUT.widthClass,
+      'bg-surface rounded-lg shadow-xl border border-border-default p-4 space-y-4'
+    )}
+  >
+    <Alert variant="danger" className="py-2">
+      <p className="font-normal text-xs">{QUALITY_ISSUE_DIALOG_COPY.error.title}</p>
+      <p className="text-xxs mt-1">{error}</p>
+    </Alert>
+    <div className="flex justify-end gap-2">
+      <Button variant="cancel" size="sm" showIcon={false} onClick={onCancel}>
+        {QUALITY_ISSUE_DIALOG_COPY.error.cancel}
+      </Button>
+      <Button variant="retry" size="sm" onClick={onRetry}>
+        {QUALITY_ISSUE_DIALOG_COPY.error.retry}
+      </Button>
+    </div>
+  </div>
+);
+
+export interface RejectionActionCardsProps {
+  selectedType: ResultRejectionType;
+  onSelect: (type: ResultRejectionType) => void;
+  isRetestEnabled: boolean;
+  retestDisabledReason: string | null;
+  retestAttemptsRemaining: number;
+}
+
+export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
+  selectedType,
+  onSelect,
+  isRetestEnabled,
+  retestDisabledReason,
+  retestAttemptsRemaining,
+}) => {
+  const retestTotal = LAB_CONFIG.MAX_RETEST_ATTEMPTS;
+  const retestUsed = retestTotal - retestAttemptsRemaining;
+
+  return (
+    <div>
+      <label className="block text-xs font-normal text-text-tertiary mb-1">
+        {QUALITY_ISSUE_DIALOG_COPY.actions.followUpLabel}
+      </label>
+      <div className="grid grid-cols-1 gap-2">
+        <RadioCard
+          name="rejection-type"
+          selected={selectedType === 're-test'}
+          onClick={() => isRetestEnabled && onSelect('re-test')}
+          label={QUALITY_ISSUE_DIALOG_COPY.actions.retestLabel}
+          description={
+            <div className="space-y-2">
+              <p className="text-xxs text-text-tertiary">
+                {QUALITY_ISSUE_DIALOG_COPY.actions.retestDescription}
+              </p>
+              {retestAttemptsRemaining > 0 && (
+                <AttemptProgressBar
+                  used={retestUsed}
+                  total={retestTotal}
+                  label="Attempts"
+                  variant="sky"
+                />
+              )}
+            </div>
+          }
+          variant="sky"
+          disabled={!isRetestEnabled}
+          disabledReason={retestDisabledReason || undefined}
+        />
+      </div>
+    </div>
+  );
+};

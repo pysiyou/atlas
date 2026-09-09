@@ -4,7 +4,6 @@ export const TEST_STATUS_VALUES = [
   'sample-collected',
   'resulted',
   'validated',
-  'suspended',
   'cancelled',
   'escalated',
   'superseded',
@@ -18,7 +17,6 @@ export const TEST_STATUS_CONFIG: Record<TestStatus, { label: string }> = {
   'sample-collected': { label: 'Sample Collected' },
   resulted: { label: 'Resulted' },
   validated: { label: 'Validated' },
-  suspended: { label: 'Suspended' },
   cancelled: { label: 'Cancelled' },
   escalated: { label: 'Escalated' },
   superseded: { label: 'Superseded' },
@@ -53,7 +51,6 @@ export function getDisplayStatus(status: TestStatus): DisplayStatus {
       return 'awaiting-validation';
     case 'validated':
       return 'completed';
-    case 'suspended':
     case 'cancelled':
     case 'escalated':
     case 'superseded':

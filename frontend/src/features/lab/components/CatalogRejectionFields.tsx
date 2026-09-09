@@ -17,6 +17,8 @@ export interface CatalogRejectionFieldsProps {
   reasonLabel?: string;
   notesLabel?: string;
   notesRows?: number;
+  showReason?: boolean;
+  showNotes?: boolean;
 }
 
 export const CatalogRejectionFields: React.FC<CatalogRejectionFieldsProps> = ({
@@ -29,12 +31,14 @@ export const CatalogRejectionFields: React.FC<CatalogRejectionFieldsProps> = ({
   reasonLabel = 'Rejection Reason',
   notesLabel = 'Additional Context / Notes',
   notesRows = 2,
+  showReason = true,
+  showNotes = true,
 }) => {
-  if (criteriaLoading) {
+  if (showReason && criteriaLoading) {
     return <p className="text-xs text-text-tertiary">Loading rejection criteria...</p>;
   }
 
-  if (criteria.length === 0) {
+  if (showReason && criteria.length === 0) {
     return (
       <Alert variant="danger" className="py-2">
         <p className="text-xs">No rejection criteria are defined for this test in the catalog.</p>
@@ -44,34 +48,38 @@ export const CatalogRejectionFields: React.FC<CatalogRejectionFieldsProps> = ({
 
   return (
     <>
-      <div>
-        <label className="block text-xs font-normal text-text-tertiary mb-1">
-          {reasonLabel} <span className="text-danger-fg">*</span>
-        </label>
-        <select
-          value={rejectionReason}
-          onChange={e => onReasonChange(e.target.value)}
-          className={cn(inputBase, 'w-full')}
-        >
-          <option value="">Select a reason...</option>
-          {criteria.map(criterion => (
-            <option key={criterion} value={criterion}>
-              {criterion}
-            </option>
-          ))}
-        </select>
-      </div>
+      {showReason && (
+        <div>
+          <label className="block text-xs font-normal text-text-tertiary mb-1">
+            {reasonLabel} <span className="text-danger-fg">*</span>
+          </label>
+          <select
+            value={rejectionReason}
+            onChange={e => onReasonChange(e.target.value)}
+            className={cn(inputBase, 'w-full')}
+          >
+            <option value="">Select a reason...</option>
+            {criteria.map(criterion => (
+              <option key={criterion} value={criterion}>
+                {criterion}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
-      <div>
-        <label className="block text-xs font-normal text-text-tertiary mb-1">{notesLabel}</label>
-        <textarea
-          rows={notesRows}
-          placeholder="Optional additional details..."
-          value={rejectionNotes}
-          onChange={e => onNotesChange(e.target.value)}
-          className={cn(inputBase, 'resize-none')}
-        />
-      </div>
+      {showNotes && (
+        <div>
+          <label className="block text-xs font-normal text-text-tertiary mb-1">{notesLabel}</label>
+          <textarea
+            rows={notesRows}
+            placeholder="Optional additional details..."
+            value={rejectionNotes}
+            onChange={e => onNotesChange(e.target.value)}
+            className={cn(inputBase, 'resize-none')}
+          />
+        </div>
+      )}
     </>
   );
 };

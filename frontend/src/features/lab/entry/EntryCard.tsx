@@ -14,9 +14,10 @@ import { usePatientNameLookup } from '@/features/patients';
 import { LabCard, ProgressBadge } from '../components/LabCard';
 import { AttemptIndicator } from '../components/AttemptIndicator';
 import { QueueAgeBadge } from '../components/QueueAgeBadge';
-import { useLabCardClickGuard } from '@/features/lab/hooks';
+import { useLabCardClickGuard, useTestWorkItemState } from '@/features/lab/hooks';
+import { BlockedReasonBadge } from '../components/StatusBadges';
 import { LAB_CONFIG } from '@/features/lab/constants';
-import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
+import { deriveRetestContext } from '../utils/deriveRetestContext';
 import type { Test, TestWithContext } from '@/types';
 import { ICONS } from '@/config/icons';
 
@@ -52,6 +53,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
 }) => {
   const { getPatientName } = usePatientNameLookup();
   const handleCardClick = useLabCardClickGuard(onClick);
+  const workItem = useTestWorkItemState(test);
 
   if (!testDef?.parameters) return null;
 
@@ -59,7 +61,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   const filledCount = Object.values(results).filter(v => v?.trim()).length;
   const patientName = getPatientName(test.patientId);
 
-  const rejection = deriveTestRejectionContext(test);
+  const rejection = deriveRetestContext(test);
   const {
     isRetest,
     retestNumber,
@@ -114,6 +116,9 @@ export const EntryCard: React.FC<EntryCardProps> = ({
                 {isRetest ? 'RE-TEST' : 'RECOLLECTION'}
               </Badge>
             )}
+            {workItem.blockedReason && (
+              <BlockedReasonBadge label={workItem.label} size="xs" />
+            )}
           </div>
           <IconButton
             variant="edit"
@@ -155,6 +160,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       )}
       <Badge variant={test.sampleType} size="sm" />
       {test.collectedAt && <QueueAgeBadge since={test.collectedAt} />}
+      {workItem.blockedReason && <BlockedReasonBadge label={workItem.label} size="sm" />}
     </>
   );
 

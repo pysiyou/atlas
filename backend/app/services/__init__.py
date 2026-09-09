@@ -11,7 +11,7 @@ from app.services.state_machine import (
 )
 from app.services.audit_service import AuditService
 from app.services.lab_operations import LabOperationsService, LabOperationError
-from app.services.quality_issue_service import QualityIssueService, QualityIssueOptions, QualityIssueResult
+from app.services.quality import QualityIssueService, QualityIssueOptions, QualityIssueResult
 from app.services.lab_constants import MAX_RETEST_ATTEMPTS, MAX_RECOLLECTION_ATTEMPTS
 
 __all__ = [

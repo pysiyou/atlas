@@ -1,8 +1,36 @@
 """
 Pydantic schemas for Test Catalog
 """
-from pydantic import BaseModel
+from typing import Union
+
+from pydantic import BaseModel, field_validator
 from datetime import datetime
+
+
+class RejectionCriterionItem(BaseModel):
+    """Catalog rejection reason with routing domain (specimen vs analytical)."""
+
+    reason: str
+    domain: str = "specimen"
+
+
+RejectionCriterionValue = Union[str, RejectionCriterionItem]
+
+
+def _normalize_rejection_criteria(
+    value: list[RejectionCriterionValue] | None,
+) -> list[RejectionCriterionItem] | None:
+    if value is None:
+        return None
+    normalized: list[RejectionCriterionItem] = []
+    for item in value:
+        if isinstance(item, RejectionCriterionItem):
+            normalized.append(item)
+        elif isinstance(item, dict):
+            normalized.append(RejectionCriterionItem.model_validate(item))
+        else:
+            normalized.append(RejectionCriterionItem(reason=str(item).strip()))
+    return normalized
 
 
 class TestBase(BaseModel):
@@ -28,7 +56,8 @@ class TestCreate(TestBase):
     specialRequirements: str | None = None
     fastingRequired: bool = False
     collectionNotes: str | None = None
-    rejectionCriteria: list[str] | None = None
+    rejectionCriteria: list[RejectionCriterionValue] | None = None
+    validationRejectionCriteria: list[RejectionCriterionValue] | None = None
     referenceRanges: list | None = None
     resultItems: list | None = None
     panels: list[str] | None = None
@@ -36,6 +65,20 @@ class TestCreate(TestBase):
     methodology: str | None = None
     confidence: str | None = None
     notes: str | None = None
+
+    @field_validator("rejectionCriteria", mode="before")
+    @classmethod
+    def normalize_rejection_criteria_create(
+        cls, value: list[RejectionCriterionValue] | None
+    ) -> list[RejectionCriterionItem] | None:
+        return _normalize_rejection_criteria(value)
+
+    @field_validator("validationRejectionCriteria", mode="before")
+    @classmethod
+    def normalize_validation_rejection_criteria_create(
+        cls, value: list[RejectionCriterionValue] | None
+    ) -> list[RejectionCriterionItem] | None:
+        return _normalize_rejection_criteria(value)
 
 
 class TestUpdate(BaseModel):
@@ -53,7 +96,8 @@ class TestResponse(TestBase):
     specialRequirements: str | None = None
     fastingRequired: bool | None = None
     collectionNotes: str | None = None
-    rejectionCriteria: list[str] | None = None
+    rejectionCriteria: list[RejectionCriterionItem] | None = None
+    validationRejectionCriteria: list[RejectionCriterionItem] | None = None
     referenceRanges: list | None = None
     resultItems: list | None = None
     panels: list[str] | None = None
@@ -63,6 +107,20 @@ class TestResponse(TestBase):
     notes: str | None = None
     createdAt: datetime
     updatedAt: datetime
+
+    @field_validator("rejectionCriteria", mode="before")
+    @classmethod
+    def normalize_rejection_criteria_response(
+        cls, value: list[RejectionCriterionValue] | None
+    ) -> list[RejectionCriterionItem] | None:
+        return _normalize_rejection_criteria(value)
+
+    @field_validator("validationRejectionCriteria", mode="before")
+    @classmethod
+    def normalize_validation_rejection_criteria_response(
+        cls, value: list[RejectionCriterionValue] | None
+    ) -> list[RejectionCriterionItem] | None:
+        return _normalize_rejection_criteria(value)
     
     class Config:
         from_attributes = True

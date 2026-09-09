@@ -8,11 +8,12 @@
 import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTestNameLookup } from '@/features/catalog';
-import { useEnterResults } from '@/features/lab/validation/results.api';
+import { useEnterResults } from '@/features/lab/api/results.api';
 import { queryKeys } from '@/lib/query';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
-import { formatParameterResults, findTestInList } from './entryWorkflow.helpers';
+import { formatParameterResults, findTestById } from './entryWorkflow.helpers';
+import { orderTestKey } from '@/features/lab/utils/orderTestKey';
 import { useEntryTestModal } from './useEntryTestModal';
 import type { TestWithContext, Test, Order } from '@/types';
 
@@ -30,11 +31,10 @@ export interface EntryWorkflow {
   handleNotesChange: (resultKey: string, notes: string) => void;
   areAllParametersFilled: (resultKey: string, parameterCount: number) => boolean;
   handleSaveResults: (
+    orderTestId: number,
     orderId: number | string,
-    testCode: string,
     allTests: TestWithContext[],
     testCatalog: Test[] | undefined,
-    orders: Order[] | undefined,
     finalResults?: Record<string, string>,
     finalNotes?: string
   ) => Promise<void>;
@@ -74,18 +74,17 @@ export function useEntryWorkflow({
 
   const handleSaveResults = useCallback(
     async (
+      orderTestId: number,
       orderId: number | string,
-      testCode: string,
       saveAllTests: TestWithContext[],
       saveTestCatalog: Test[] | undefined,
-      _saveOrders: Order[] | undefined,
       finalResults?: Record<string, string>,
       finalNotes?: string
     ) => {
       if (!saveTestCatalog) return;
 
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      const resultKey = `${orderIdStr}-${testCode}`;
+      const resultKey = orderTestKey(orderTestId);
 
       if (enterMutation.isPending) return;
 
@@ -99,22 +98,22 @@ export function useEntryWorkflow({
         return;
       }
 
-      const testDef = getTest(testCode);
-      if (!testDef?.parameters) {
-        toast.error({
-          title: 'Test parameters not found',
-          subtitle:
-            'The test configuration could not be loaded. Refresh the page or contact support.',
-        });
-        return;
-      }
-
-      const testItem = findTestInList(saveAllTests, orderId, testCode);
+      const testItem = findTestById(saveAllTests, orderTestId);
       if (!testItem) {
         toast.error({
           title: 'Test not found in current list',
           subtitle:
             'This test could not be found in the current order. The list may have been updated—refresh and try again.',
+        });
+        return;
+      }
+
+      const testDef = getTest(testItem.testCode);
+      if (!testDef?.parameters) {
+        toast.error({
+          title: 'Test parameters not found',
+          subtitle:
+            'The test configuration could not be loaded. Refresh the page or contact support.',
         });
         return;
       }
@@ -125,7 +124,7 @@ export function useEntryWorkflow({
       try {
         await enterMutation.mutateAsync({
           orderId: orderIdStr,
-          testCode,
+          orderTestId,
           results: formattedResults,
           technicianNotes: finalNotes || technicianNotes[resultKey] || undefined,
         });

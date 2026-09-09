@@ -13,6 +13,7 @@ import { BalancedColumnsLayout } from '@/components';
 import type { TableInput } from '@/components';
 import { DetailPageShell, DetailPageHeader } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import { formatRejectionCriteriaList } from '@/features/lab/utils/catalogRejectionCriteria';
 import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/catalogDetailSkeleton';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDetailDate } from '@/utils';
@@ -113,8 +114,15 @@ export const CatalogDetail: React.FC = () => {
         { label: 'Collection Notes', value: test.collectionNotes || '-' },
         { label: 'Special Requirements', value: test.specialRequirements || '-' },
         {
-          label: 'Rejection Criteria',
-          value: formatArrayWithFallback(test.rejectionCriteria, 'Not defined'),
+          label: 'Specimen Rejection (Collection)',
+          value: formatArrayWithFallback(formatRejectionCriteriaList(test.rejectionCriteria), 'Not defined'),
+        },
+        {
+          label: 'Result Rejection (Validation)',
+          value: formatArrayWithFallback(
+            formatRejectionCriteriaList(test.validationRejectionCriteria),
+            'Not defined'
+          ),
         },
       ],
     },

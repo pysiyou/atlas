@@ -10,7 +10,18 @@ export type QualityStage = 'collection' | 'validation' | 'entry';
 
 export type QualityDomain = 'specimen' | 'analytical' | 'clinical';
 
-export type RemedyType = 'retry_same_sample' | 'recollect' | 'escalate' | 'cancel';
+export type RemedyType =
+  | 'retry_same_sample'
+  | 'request_recollection'
+  | 'escalate'
+  | 'cancel';
+
+export type RecollectionRequestStatus =
+  | 'pending-approval'
+  | 'approved'
+  | 'denied'
+  | 'fulfilled'
+  | 'cancelled';
 
 export type EscalationResolutionAction =
   | 'force_validate'
@@ -34,6 +45,10 @@ export interface QualityIssueOptions {
   sampleId?: number;
   stage: QualityStage;
   allowedCriteria: string[];
+  /** Remedies the operator may choose (validation destinations / sample unfinished fate). */
+  allowedRemedies?: RemedyType[];
+  /** Soft suggestion only — UI may pre-select; never auto-applied. */
+  suggestedRemedy?: RemedyType;
   retestAttemptsUsed: number;
   retestAttemptsRemaining: number;
   recollectionAttemptsUsed: number;
@@ -41,9 +56,13 @@ export interface QualityIssueOptions {
   willEscalate: boolean;
   previewRemedy?: RemedyType;
   previewMessage: string;
+  hasSpecimenCriteria?: boolean;
+  hasAnalyticalCriteria?: boolean;
   resultedTestsCount?: number;
   validatedTestsCount?: number;
-  suspendedTestsCount?: number;
+  unfinishedTestsCount?: number;
+  awaitingRecollectionTestsCount?: number;
+  sampleRejected?: boolean;
 }
 
 export interface ReportQualityIssueRequest {
@@ -64,7 +83,45 @@ export interface QualityIssueResult {
   orderTestId?: number;
   createdTestId?: number;
   createdSampleId?: number;
+  recollectionRequestId?: number;
   escalationRequired: boolean;
+}
+
+export interface RecollectionRequestSummary {
+  id: number;
+  orderId: number;
+  qualityIssueId?: number;
+  rejectedSampleId: number;
+  orderTestId?: number;
+  stage: QualityStage;
+  status: RecollectionRequestStatus;
+  reason: string;
+  notes?: string;
+  testCodes: string[];
+  affectedOrderTestIds: number[];
+  recollectionAttemptsUsed: number;
+  recollectionAttemptsRemaining: number;
+  requiresSupervisorOverride: boolean;
+  requestedByUserId: string;
+  reviewedByUserId?: string;
+  reviewNotes?: string;
+  reviewedAt?: string;
+  createdSampleId?: number;
+  createdTestId?: number;
+  createdAt: string;
+  patientId?: number;
+  patientName?: string;
+  orderNumber?: string;
+  sampleType?: string;
+}
+
+export interface RecollectionRequestResult {
+  success: boolean;
+  message: string;
+  requestId: number;
+  status: RecollectionRequestStatus;
+  createdSampleId?: number;
+  createdTestId?: number;
 }
 
 export interface QualityIssueRecord {
@@ -102,52 +159,12 @@ export interface EscalationResolveResult {
   success: boolean;
   action: EscalationResolutionAction;
   message: string;
-  originalTestId: number;
+  escalatedTestId: number;
   newTestId?: number;
   newSampleId?: number;
 }
-
-export type LabOperationType =
-  | 'sample_collect'
-  | 'sample_reject'
-  | 'sample_recollection_request'
-  | 'result_entry'
-  | 'result_validation_approve'
-  | 'quality_issue_reported'
-  | 'escalation_resolution_authorize_retest'
-  | 'escalation_resolution_authorize_recollect'
-  | 'escalation_resolution_force_validate'
-  | 'escalation_resolution_apply_amendment'
-  | 'escalation_resolution_cancel_test'
-  | 'escalation_trigger_crit_val'
-  | 'escalation_trigger_rej_samp'
-  | 'escalation_trigger_limit_hit'
-  | 'escalation_trigger_amend_res'
-  | 'order_status_change'
-  | 'test_removed'
-  | 'test_added'
-  | 'critical_value_detected'
-  | 'critical_value_notified'
-  | 'critical_value_acknowledged';
 
 export const {
   MAX_RETEST_ATTEMPTS,
   MAX_RECOLLECTION_ATTEMPTS,
 } = GENERATED_LAB_CONSTANTS;
-
-export interface LabOperationRecord {
-  id: number;
-  operationType: LabOperationType;
-  entityType: 'sample' | 'test' | 'order' | 'order_test' | 'quality_issue';
-  entityId: number;
-  performedBy: string;
-  performedByName?: string | null;
-  performedAt: string;
-  beforeState: Record<string, unknown> | null;
-  afterState: Record<string, unknown> | null;
-  operationData?: Record<string, unknown> | null;
-  comment?: string | null;
-}
-
-/** @deprecated Use QualityIssueResult */
-export type RejectionResult = QualityIssueResult;

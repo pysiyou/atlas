@@ -59,7 +59,3 @@ export function validatePhysiologicValue(
     };
   return { isValid: true, limit };
 }
-
-export function isWithinPhysiologicLimits(itemCode: string, value: string | number): boolean {
-  return validatePhysiologicValue(itemCode, value).isValid;
-}

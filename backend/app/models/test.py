@@ -35,7 +35,8 @@ class Test(Base):
     specialRequirements = Column("special_requirements", String, nullable=True)
     fastingRequired = Column("fasting_required", Boolean, default=False)
     collectionNotes = Column("collection_notes", String, nullable=True)
-    rejectionCriteria = Column("rejection_criteria", JSON, nullable=True)  # Array of strings
+    rejectionCriteria = Column("rejection_criteria", JSON, nullable=True)  # specimen criteria for collection
+    validationRejectionCriteria = Column("validation_rejection_criteria", JSON, nullable=True)  # result review
 
     # Reference ranges and parameters (JSON)
     referenceRanges = Column("reference_ranges", JSON, nullable=True)  # Array of ReferenceRange objects

@@ -139,6 +139,11 @@ export const queryKeys = {
     pendingEscalation: () => [...queryKeys.results.all, 'pending-escalation'] as const,
   },
 
+  recollectionRequests: {
+    all: ['recollection-requests'] as const,
+    pending: () => [...queryKeys.recollectionRequests.all, 'pending'] as const,
+  },
+
   /**
    * Critical value notifications
    */
@@ -155,6 +160,17 @@ export const queryKeys = {
     pricing: () => [...queryKeys.affiliations.all, 'pricing'] as const,
     priceByDuration: (duration: number) =>
       [...queryKeys.affiliations.all, 'pricing', duration] as const,
+  },
+
+  /**
+   * Lab command center
+   */
+  commandCenter: {
+    all: ['command-center'] as const,
+    dashboard: (params: { hours_back: number }) =>
+      [...queryKeys.commandCenter.all, 'dashboard', params] as const,
+    timeline: (params: { hours_back: number; limit: number }) =>
+      [...queryKeys.commandCenter.all, 'timeline', params] as const,
   },
 } as const;
 

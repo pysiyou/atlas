@@ -23,6 +23,7 @@ import { getContainerIconColor, getCollectionRequirements, formatVolume } from '
 import { displayId } from '@/utils';
 import { LabCard, TestList } from '../components/LabCard';
 import { AttemptIndicator } from '../components/AttemptIndicator';
+import { BlockedReasonBadge } from '../components/StatusBadges';
 import { QueueAgeBadge } from '../components/QueueAgeBadge';
 import { useLabCardClickGuard } from '@/features/lab/hooks';
 import { LAB_CONFIG } from '@/features/lab/constants';
@@ -102,6 +103,7 @@ function CollectionCardMobile({
   const isCollected = sample.status === 'collected';
   const isRejected = sample.status === 'rejected';
   const isRecollection = sample.isRecollection === true;
+  const paymentBlocked = isPending && order.paymentStatus === 'unpaid';
   const collectedVolume =
     (isCollected || isRejected) && 'collectedVolume' in sample ? sample.collectedVolume : undefined;
   const testCount = testNames.length;
@@ -162,6 +164,7 @@ function CollectionCardMobile({
               RECOLLECTION
             </Badge>
           )}
+          {paymentBlocked && <BlockedReasonBadge label="Payment required" />}
           {isPending && <QueueAgeBadge since={order.orderDate} />}
         </div>
         {isPending ? (
@@ -210,6 +213,7 @@ function CollectionCardDesktop({
   const isCollected = sample.status === 'collected';
   const isRejected = sample.status === 'rejected';
   const isRecollection = sample.isRecollection === true;
+  const paymentBlocked = isPending && order.paymentStatus === 'unpaid';
   const rejectedSample = isRejected ? (sample as RejectedSample) : null;
 
   const hasContainerInfo = (isCollected || isRejected) && 'actualContainerColor' in sample;
@@ -245,6 +249,7 @@ function CollectionCardDesktop({
       )}
       <Badge variant={sample.sampleType} size="sm" />
       {isPending && <QueueAgeBadge since={order.orderDate} />}
+      {paymentBlocked && <BlockedReasonBadge label="Payment required" size="sm" />}
       <Badge size="sm" variant="default" className="text-text-tertiary">
         {isPending
           ? `${formatVolume(requirement.totalVolume)} required`

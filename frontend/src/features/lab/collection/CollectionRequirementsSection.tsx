@@ -5,6 +5,7 @@
 import React from 'react';
 import { CalloutCard, SectionPanel } from '@/components';
 import { formatArray } from '@/utils';
+import { formatRejectionCriteriaList } from '@/features/lab/utils/catalogRejectionCriteria';
 
 /** Test detail for requirements display */
 export interface TestDetail {
@@ -12,7 +13,7 @@ export interface TestDetail {
   fastingRequired?: boolean;
   containerDescription?: string;
   collectionNotes?: string;
-  rejectionCriteria?: string[];
+  rejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string }>;
   minimumVolume?: number;
 }
 
@@ -90,7 +91,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
             <div className="flex-1">
               <div className="text-xs font-normal text-text-secondary mb-1">Rejection Criteria</div>
               <div className="text-xs text-text-tertiary">
-                {formatArray(activeTest.rejectionCriteria)}
+                {formatArray(formatRejectionCriteriaList(activeTest.rejectionCriteria))}
               </div>
             </div>
           </div>

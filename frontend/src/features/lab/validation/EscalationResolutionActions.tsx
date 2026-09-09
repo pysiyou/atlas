@@ -116,6 +116,7 @@ interface EscalationResolutionActionsProps {
   reasonFinalReject: string;
   onReasonFinalRejectChange: (value: string) => void;
   reasonCode?: string;
+  hasResults?: boolean;
   resolveAsync: (
     action: EscalationResolutionAction,
     reasonOrNotes?: string,
@@ -144,12 +145,14 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
   reasonCode,
   resolveAsync,
   onValidationError,
+  hasResults = false,
 }) => {
-  const showRetest = !reasonCode || reasonCode === 'LIMIT-HIT';
+  const showRetest = hasResults && (!reasonCode || reasonCode === 'LIMIT-HIT');
   const showRecollect = !reasonCode || reasonCode === 'LIMIT-HIT' || reasonCode === 'REJ-SAMP';
-  const showApplyAmendment = reasonCode === 'AMEND-RES';
+  const showApplyAmendment = reasonCode === 'AMEND-RES' && hasResults;
   const showForceValidate =
-    reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || reasonCode === 'REJ-SAMP' || !reasonCode;
+    hasResults &&
+    (reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || reasonCode === 'REJ-SAMP' || !reasonCode);
 
   return (
     <div className="flex items-center gap-2 flex-nowrap">

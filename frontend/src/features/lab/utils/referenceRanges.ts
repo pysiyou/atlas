@@ -45,9 +45,6 @@ export const checkReferenceRange = (value: number, referenceRange: string): Resu
   return 'normal';
 };
 
-export const isAbnormal = (status: ResultStatus): boolean =>
-  status === 'high' || status === 'low' || status === 'critical';
-
 
 export interface ReferenceRangeDisplay {
   low?: number;

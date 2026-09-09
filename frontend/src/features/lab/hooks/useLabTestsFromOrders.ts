@@ -6,7 +6,7 @@
 import { useMemo } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
-import { useSampleLookup } from '@/features/lab/collection/samples.api';
+import { useSampleLookup } from '@/features/lab/api/samples.api';
 import { getTestSampleType } from '@/features/catalog/utils';
 import type { Order, OrderTest, TestStatus, TestWithContext } from '@/types';
 import type { Test } from '@/types';
@@ -50,11 +50,12 @@ export function useLabTestsFromOrders({
       return true;
     };
 
-    /** Exclude tests whose sample was rejected at collection (defense in depth). */
+    /** Keep resulted tests visible when sample is rejected so the validator can decide. */
     const excludeRejectedSample = (test: OrderTest) => {
       if (!test.sampleId) return true;
       const sample = getSample(test.sampleId);
-      return sample?.status !== 'rejected';
+      if (sample?.status !== 'rejected') return true;
+      return test.status === 'resulted';
     };
 
     return orders.flatMap(order => {
@@ -95,6 +96,7 @@ export function useLabTestsFromOrders({
             isRetest: test.isRetest,
             retestOfTestId: test.retestOfTestId,
             retestNumber: test.retestNumber,
+            sampleStatus: sample?.status,
             sampleIsRecollection: sample?.isRecollection,
             sampleOriginalSampleId: sample?.originalSampleId,
             sampleRecollectionReason: sample?.recollectionReason,

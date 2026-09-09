@@ -20,16 +20,21 @@ interface LayoutProps {
   invoice: Invoice | null;
   activeTests: OrderTest[];
   supersededCount: number;
+  removedCount: number;
   onViewPatient: () => void;
   onViewInvoice: () => void;
   /** Callback invoked on successful payment */
   onPaymentSuccess?: () => void;
 }
 
-function getTestsTitle(activeTests: OrderTest[], totalTests: number, supersededCount: number): string {
-  return supersededCount > 0
-    ? `Tests (${activeTests.length} active)`
-    : `Tests (${totalTests})`;
+function getTestsTitle(activeTests: OrderTest[], totalTests: number, supersededCount: number, removedCount: number): string {
+  const visibleTests = totalTests - removedCount;
+  
+  if (supersededCount > 0) {
+    return `Tests (${visibleTests} total, ${supersededCount} superseded)`;
+  }
+  
+  return `Tests (${visibleTests})`;
 }
 
 interface OrderDetailPanelsProps extends LayoutProps {
@@ -47,6 +52,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
   invoice,
   activeTests,
   supersededCount,
+  removedCount,
   onViewPatient,
   onViewInvoice,
   onPaymentSuccess,
@@ -56,7 +62,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
 }) => {
   const panelClass = fillHeight ? 'h-full flex flex-col min-h-0' : 'bg-surface';
   const scrollContentClass = fillHeight ? 'flex-1 min-h-0 overflow-y-auto' : 'overflow-visible';
-  const testsTitle = getTestsTitle(activeTests, order.tests.length, supersededCount);
+  const testsTitle = getTestsTitle(activeTests, order.tests.length, supersededCount, removedCount);
 
   return (
     <>
@@ -125,9 +131,9 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
  * SmallScreenLayout - Single column stack for small screens.
  */
 export const SmallScreenLayout: React.FC<LayoutProps> = props => {
-  const { order, patient, invoice, activeTests, supersededCount, onViewPatient, onViewInvoice, onPaymentSuccess } =
+  const { order, patient, invoice, activeTests, supersededCount, removedCount, onViewPatient, onViewInvoice, onPaymentSuccess } =
     props;
-  const testsTitle = getTestsTitle(activeTests, order.tests.length, supersededCount);
+  const testsTitle = getTestsTitle(activeTests, order.tests.length, supersededCount, removedCount);
 
   return (
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">

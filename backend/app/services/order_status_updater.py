@@ -4,7 +4,7 @@ Calculates and updates order status based on test and sample statuses.
 """
 import logging
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Dict
 
 from sqlalchemy.orm import Session
 from app.models.order import Order, OrderTest
@@ -18,55 +18,94 @@ logger = logging.getLogger(__name__)
 # COMPLETED can regress to IN_PROGRESS when retests/escalations are created
 TERMINAL_STATUSES = {OrderStatus.CANCELLED}
 
+# Tests in these statuses count as "started" work (order is IN_PROGRESS)
+# Note: CANCELLED is NOT included - cancelled tests don't keep order in progress
+_STARTED_STATUSES = {
+    TestStatus.SAMPLE_COLLECTED,
+    TestStatus.RESULTED,
+    TestStatus.VALIDATED,
+    TestStatus.ESCALATED,
+}
+
+
+def _pending_test_has_started(test: OrderTest, samples_by_id: Dict[int, Sample]) -> bool:
+    """
+    Pending tests on rejected tubes or recollection tubes count as in-progress work.
+    """
+    if not test.sampleId:
+        return False
+    sample = samples_by_id.get(test.sampleId)
+    if not sample:
+        return False
+    if sample.status == SampleStatus.REJECTED:
+        return True
+    if sample.isRecollection:
+        return True
+    return False
+
+
+def _test_has_started(test: OrderTest, samples_by_id: Dict[int, Sample]) -> bool:
+    if test.status in _STARTED_STATUSES:
+        return True
+    if test.status == TestStatus.PENDING:
+        return _pending_test_has_started(test, samples_by_id)
+    return False
+
+
+def build_order_completion_metadata(order: Order) -> dict:
+    """Snapshot whether all active tests on an order are now terminal."""
+    active_tests = [
+        t for t in order.tests
+        if t.status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED}
+    ]
+    active_count = len(active_tests)
+    all_terminal = all(
+        t.status in {TestStatus.VALIDATED, TestStatus.CANCELLED}
+        for t in active_tests
+    )
+    return {
+        "orderCompleted": bool(all_terminal and active_count > 0),
+        "activeTestCount": active_count,
+        "singleTestOrder": active_count == 1,
+    }
+
 
 def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
     """
     Calculate the appropriate order status based on tests.
 
     Logic:
-    1. If all tests VALIDATED -> COMPLETED
-    2. If any test started (not pending) -> IN_PROGRESS
+    1. If all active tests are VALIDATED or CANCELLED -> COMPLETED
+    2. If any active test started (including pending on rejected/recollection tubes) -> IN_PROGRESS
     3. Default -> ORDERED
 
-    Note: CANCELLED status is set manually, not calculated.
-    Rejected tests are considered "in progress" since work continues (retest/recollection).
-
-    Args:
-        order: The order to calculate status for
-        samples: List of samples associated with the order (unused but kept for API compatibility)
-
-    Returns:
-        The calculated OrderStatus
+    Note: CANCELLED status is set manually on the order level, not calculated.
     """
     tests = order.tests
     if not tests:
         return order.overallStatus
 
-    # Filter out superseded and removed tests - only count active tests
     active_tests = [t for t in tests if t.status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED}]
     if not active_tests:
         return order.overallStatus
 
-    # Check if all active tests are validated -> COMPLETED
-    all_validated = all(t.status == TestStatus.VALIDATED for t in active_tests)
-    if all_validated:
+    samples_by_id = {s.sampleId: s for s in samples}
+
+    # Order is completed when all active tests are in terminal states (validated or cancelled)
+    # This includes scenarios like:
+    # - All tests validated (normal completion)
+    # - Some tests validated, others cancelled (specimen rejection + cancellation)
+    # - All tests cancelled (complete cancellation of work)
+    all_terminal = all(
+        t.status in {TestStatus.VALIDATED, TestStatus.CANCELLED}
+        for t in active_tests
+    )
+    if all_terminal:
         return OrderStatus.COMPLETED
 
-    # Check if any test has started (not pending) -> IN_PROGRESS
-    # This includes rejected tests since work continues (retest/recollection)
-    started_statuses = {
-        TestStatus.SAMPLE_COLLECTED,
-        TestStatus.RESULTED,
-        TestStatus.VALIDATED,
-        TestStatus.SUSPENDED,
-        TestStatus.ESCALATED,
-        TestStatus.CANCELLED,
-    }
-    any_started = any(t.status in started_statuses for t in active_tests)
-    if any_started:
+    if any(_test_has_started(t, samples_by_id) for t in active_tests):
         return OrderStatus.IN_PROGRESS
 
-    # All tests are pending -> ORDERED
     return OrderStatus.ORDERED
 
 
@@ -76,31 +115,25 @@ def update_order_status(db: Session, order_id: int) -> None:
 
     Allows transitions from COMPLETED back to IN_PROGRESS when retests/escalations are created.
     CANCELLED is the only truly terminal state (set manually).
-    
-    Args:
-        db: Database session
-        order_id: The order ID to update
     """
     order = db.query(Order).filter(Order.orderId == order_id).first()
     if not order:
         return
 
     current_status = order.overallStatus
-    
-    # Only CANCELLED is truly terminal - it's set manually and should not be auto-changed
+
     if current_status == OrderStatus.CANCELLED:
         logger.debug(f"Order {order_id} is cancelled, skipping status update")
         return
 
     samples = db.query(Sample).filter(Sample.orderId == order_id).all()
     new_status = _calculate_order_status(order, samples)
-    
+
     if order.overallStatus != new_status:
         old_status = order.overallStatus
         order.overallStatus = new_status
         order.updatedAt = datetime.now(timezone.utc)
 
-        # Log the status change for audit trail
         log_entry = LabOperationLog(
             operationType=LabOperationType.ORDER_STATUS_CHANGE,
             entityType="order",
