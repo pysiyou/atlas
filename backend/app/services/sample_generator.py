@@ -249,7 +249,6 @@ def _link_order_tests_to_samples(db: Session, order_id: int, samples: List[Sampl
     """Link collectable order tests to the active pending sample for their type."""
     linkable_statuses = [
         TestStatus.PENDING,
-        TestStatus.SUSPENDED,
         TestStatus.SAMPLE_COLLECTED,
     ]
     for sample in samples:

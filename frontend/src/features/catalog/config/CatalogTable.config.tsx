@@ -10,7 +10,7 @@ import { Badge } from '@/components';
 import type { TableViewConfig } from '@/components';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
-import { DATA_AMOUNT, DATA_ID_PRIMARY } from '@/utils/constants';
+import { DATA_AMOUNT, ENTITY_ID_BLOCK } from '@/utils/constants';
 import { CatalogCard } from '../components/CatalogCard';
 
 /**
@@ -24,7 +24,7 @@ import { CatalogCard } from '../components/CatalogCard';
 export const createCatalogTableConfig = (_navigate: NavigateFunction): TableViewConfig<Test> => {
   // Shared render functions
   const renderCode = (test: Test) => (
-    <span className={`${DATA_ID_PRIMARY} font-normal`}>{test.code}</span>
+    <span className={`${ENTITY_ID_BLOCK} font-normal`}>{test.code}</span>
   );
 
   const renderName = (test: Test) => (

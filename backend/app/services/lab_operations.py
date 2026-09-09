@@ -15,6 +15,7 @@ from app.models.sample import Sample
 from app.models.order import Order, OrderTest
 from app.models.test import Test
 from app.schemas.enums import (
+    PaymentStatus,
     SampleStatus,
     TestStatus,
     RemedyType,
@@ -22,14 +23,23 @@ from app.schemas.enums import (
     EscalationResolutionAction,
     QualityStage,
     QualityDomain,
+    LabOperationType,
 )
 from app.services.state_machine import SampleStateMachine, TestStateMachine, StateTransitionError
 from app.services.audit_service import AuditService
-from app.services.order_status_updater import update_order_status
+from app.services.order_status_updater import update_order_status, build_order_completion_metadata
 from app.services.result_validator import ResultValidatorService
 from app.services.flag_calculator import FlagCalculatorService
 from app.services.escalation_engine import EscalationEngine
-from app.services.quality_issue_service import QualityIssueService
+from app.services.escalation_resolver_service import EscalationResolverService
+from app.services.sample_collection import SampleCollectionService
+from app.services.quality import QualityIssueService
+from app.services.recollection_request_service import RecollectionRequestService
+from app.utils.exceptions import LabOperationError
+from app.services.flag_calculator import FlagCalculatorService
+from app.services.escalation_engine import EscalationEngine
+from app.services.quality import QualityIssueService
+from app.services.recollection_request_service import RecollectionRequestService
 from app.utils.exceptions import LabOperationError
 
 
@@ -37,7 +47,7 @@ class EscalationResolveResult(BaseModel):
     success: bool
     action: EscalationResolutionAction
     message: str
-    originalTestId: int
+    escalatedTestId: int
     newTestId: Optional[int] = None
     newSampleId: Optional[int] = None
 
@@ -48,35 +58,49 @@ class LabOperationsService:
         self.audit = AuditService(db)
         self.escalation = EscalationEngine(db, self.audit)
         self.quality = QualityIssueService(db, self.audit, self.escalation)
+        self.recollection = RecollectionRequestService(db, self.audit, self.quality)
+        self.quality.recollection_requests = self.recollection
         self.result_validator = ResultValidatorService()
         self.flag_calculator = FlagCalculatorService()
 
-    def _get_sample(self, sample_id: int) -> Sample:
-        sample = self.db.query(Sample).filter(Sample.sampleId == sample_id).first()
+    def _get_sample(self, sample_id: int, for_update: bool = False) -> Sample:
+        query = self.db.query(Sample).filter(Sample.sampleId == sample_id)
+        if for_update:
+            query = query.with_for_update()
+        sample = query.first()
         if not sample:
             raise LabOperationError(f"Sample {sample_id} not found", status_code=404)
         return sample
 
     def _get_order_test(
         self,
-        order_id: int,
-        test_code: str,
+        order_test_id: int,
         status: Optional[TestStatus] = None,
+        for_update: bool = False,
     ) -> OrderTest:
-        query = self.db.query(OrderTest).filter(
-            OrderTest.orderId == order_id,
-            OrderTest.testCode == test_code,
-        )
+        query = self.db.query(OrderTest).filter(OrderTest.id == order_test_id)
         if status:
             query = query.filter(OrderTest.status == status)
-        order_test = query.order_by(OrderTest.updatedAt.desc(), OrderTest.id.desc()).first()
+        if for_update:
+            query = query.with_for_update()
+        order_test = query.first()
         if not order_test:
             status_msg = f" with status '{status.value}'" if status else ""
             raise LabOperationError(
-                f"Test {test_code} not found in order {order_id}{status_msg}",
+                f"Order test {order_test_id} not found{status_msg}",
                 status_code=404,
             )
         return order_test
+
+    def _assert_order_paid_for_collection(self, order_id: int) -> None:
+        order = self.db.query(Order).filter(Order.orderId == order_id).first()
+        if not order:
+            raise LabOperationError(f"Order {order_id} not found", status_code=404)
+        if order.paymentStatus != PaymentStatus.PAID:
+            raise LabOperationError(
+                "Sample collection requires payment. Mark the order as paid before collecting.",
+                status_code=402,
+            )
 
     def _serialize_sample_state(self, sample: Sample) -> Dict[str, Any]:
         return {
@@ -132,7 +156,8 @@ class LabOperationsService:
         container_color: str,
         collection_notes: Optional[str] = None,
     ) -> Sample:
-        sample = self._get_sample(sample_id)
+        sample = self._get_sample(sample_id, for_update=True)  # Add row lock
+        self._assert_order_paid_for_collection(sample.orderId)
         before_state = self._serialize_sample_state(sample)
 
         try:
@@ -155,8 +180,11 @@ class LabOperationsService:
             exclude_statuses=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED, TestStatus.CANCELLED],
         )
         for order_test in order_tests:
-            order_test.status = TestStatus.SAMPLE_COLLECTED
-            order_test.sampleId = sample_id
+            # Validate state machine transition before forcing status change
+            if TestStateMachine.can_transition(order_test.status, TestStatus.SAMPLE_COLLECTED):
+                order_test.status = TestStatus.SAMPLE_COLLECTED
+                order_test.sampleId = sample_id
+            # else: Skip invalid transitions (log warning if needed in production)
 
         after_state = self._serialize_sample_state(sample)
         self.audit.log_sample_collection(
@@ -169,6 +197,8 @@ class LabOperationsService:
         )
 
         self.db.commit()
+        self.recollection.mark_fulfilled_when_sample_collected(sample_id)
+        self.db.commit()
         self.db.refresh(sample)
         update_order_status(self.db, sample.orderId)
         return sample
@@ -177,14 +207,15 @@ class LabOperationsService:
 
     def enter_results(
         self,
-        order_id: int,
-        test_code: str,
+        order_test_id: int,
         user_id: int,
         results: Dict[str, Any],
         technician_notes: Optional[str] = None,
         skip_validation: bool = False,
     ) -> OrderTest:
-        order_test = self._get_order_test(order_id, test_code)
+        order_test = self._get_order_test(order_test_id, for_update=True)  # Add row lock
+        order_id = order_test.orderId
+        test_code = order_test.testCode
 
         can_enter, reason = TestStateMachine.can_enter_results(order_test.status)
         if not can_enter:
@@ -263,27 +294,43 @@ class LabOperationsService:
 
     def validate_results(
         self,
-        order_id: int,
-        test_code: str,
+        order_test_id: int,
         user_id: int,
         validation_notes: Optional[str] = None,
     ) -> OrderTest:
-        order_test = self._get_order_test(order_id, test_code, status=TestStatus.RESULTED)
+        order_test = self._get_order_test(order_test_id, status=TestStatus.RESULTED, for_update=True)  # Add row lock
+        order_id = order_test.orderId
+        test_code = order_test.testCode
 
-        if order_test.status == TestStatus.ESCALATED:
-            raise LabOperationError(
-                "Escalated tests must be resolved via the Escalation resolution endpoint.",
-                status_code=403,
-            )
+        # Note: The status filter above ensures order_test.status == RESULTED,
+        # so no need for additional escalation check here.
 
         can_validate, reason = TestStateMachine.can_validate(order_test.status)
         if not can_validate:
             raise LabOperationError(reason)
 
+        # Allow approve even when linked specimen is rejected — validator owns the decision.
+        # Record that context in validation notes for audit when applicable.
+        if order_test.sampleId:
+            sample = self._get_sample(order_test.sampleId)
+            if sample.status == SampleStatus.REJECTED:
+                reject_note = (
+                    f"[Approved with rejected specimen {sample.sampleId}"
+                    f"{f': {sample.rejectionReason}' if sample.rejectionReason else ''}]"
+                )
+                validation_notes = (
+                    f"{validation_notes.strip()} {reject_note}".strip()
+                    if validation_notes and validation_notes.strip()
+                    else reject_note
+                )
+
         order_test.resultValidatedAt = datetime.now(timezone.utc)
         order_test.validatedBy = str(user_id)
         order_test.validationNotes = validation_notes
         order_test.status = TestStatus.VALIDATED
+
+        order = self.db.query(Order).filter(Order.orderId == order_id).first()
+        completion_meta = build_order_completion_metadata(order) if order else {}
 
         self.audit.log_result_validation_approve(
             order_id=order_id,
@@ -291,6 +338,7 @@ class LabOperationsService:
             test_id=order_test.id,
             user_id=user_id,
             validation_notes=validation_notes,
+            metadata=completion_meta,
         )
 
         self.db.commit()
@@ -298,32 +346,61 @@ class LabOperationsService:
         update_order_status(self.db, order_id)
         return order_test
 
-    def request_result_amendment(
-        self,
-        order_id: int,
-        test_code: str,
-        user_id: int,
-        proposed_results: Dict[str, Any],
-        reason: str,
-    ) -> OrderTest:
-        order_test = self._get_order_test(order_id, test_code, status=TestStatus.VALIDATED)
-        if self.escalation.get_open_ticket(order_test.id):
-            raise LabOperationError(
-                "An open amendment escalation already exists for this test",
-                status_code=409,
-            )
+    # ── Amendment workflow ────────────────────────────────────────────
 
-        proposed_serializable = self._results_to_json_serializable(proposed_results)
-        self.escalation.escalate_test(
+    def request_amendment(
+        self,
+        order_test_id: int,
+        user_id: int,
+        amendment_reason: str,
+        proposed_results: Optional[Dict[str, Any]] = None,
+        notes: Optional[str] = None,
+    ) -> OrderTest:
+        """
+        Request amendment for a validated test result.
+        Creates AMEND-RES escalation for supervisor review.
+        """
+        order_test = self._get_order_test(order_test_id, status=TestStatus.VALIDATED)
+        order_id = order_test.orderId
+        test_code = order_test.testCode
+
+        # Validate transition from VALIDATED to ESCALATED
+        can_escalate, reason = TestStateMachine.can_transition(
+            TestStatus.VALIDATED, TestStatus.ESCALATED
+        )
+        if not can_escalate:
+            raise LabOperationError(reason, status_code=400)
+
+        # Prepare metadata with amendment details
+        metadata = {
+            "amendmentReason": amendment_reason,
+            "originalResults": order_test.results,
+            "originalValidatedAt": order_test.resultValidatedAt.isoformat() if order_test.resultValidatedAt else None,
+            "originalValidatedBy": order_test.validatedBy,
+            "requestNotes": notes,
+        }
+        if proposed_results:
+            metadata["proposedResults"] = proposed_results
+
+        # Create escalation ticket
+        ticket = self.escalation.escalate_test(
             order_test,
             EscalationReasonCode.AMEND_RES,
             user_id,
-            metadata={
-                "originalResults": order_test.results,
-                "proposedResults": proposed_serializable,
-                "amendmentReason": reason,
-            },
+            metadata=metadata,
             from_status=TestStatus.VALIDATED,
+        )
+
+        self.audit.log_operation(
+            operation_type=LabOperationType.QUALITY_ISSUE_REPORTED,
+            entity_type="order_test",
+            entity_id=order_test.id,
+            user_id=user_id,
+            metadata={
+                "stage": "amendment",
+                "reason": amendment_reason,
+                "ticketId": ticket.id,
+            },
         )
 
         self.db.commit()
@@ -335,35 +412,37 @@ class LabOperationsService:
 
     def resolve_escalation(
         self,
-        order_id: int,
-        test_code: str,
+        order_test_id: int,
         user_id: int,
         action: EscalationResolutionAction,
         validation_notes: Optional[str] = None,
         rejection_reason: Optional[str] = None,
         read_back_payload: Optional[Dict[str, Any]] = None,
     ) -> EscalationResolveResult:
+        order_test = self._get_order_test(order_test_id, status=TestStatus.ESCALATED)
+        order_id = order_test.orderId
+        test_code = order_test.testCode
         if action == EscalationResolutionAction.FORCE_VALIDATE:
-            return self._resolve_force_validate(order_id, test_code, user_id, validation_notes, read_back_payload)
+            return self._resolve_force_validate(order_test, user_id, validation_notes, read_back_payload)
         if action == EscalationResolutionAction.AUTHORIZE_RETEST:
-            return self._resolve_authorize_retest(order_id, test_code, user_id, rejection_reason or "Authorized re-test")
+            return self._resolve_authorize_retest(order_test, user_id, rejection_reason or "Authorized re-test")
         if action == EscalationResolutionAction.AUTHORIZE_RECOLLECT:
-            return self._resolve_authorize_recollect(order_id, test_code, user_id, rejection_reason or "Authorized re-collect")
+            return self._resolve_authorize_recollect(order_test, user_id, rejection_reason or "Authorized re-collect")
         if action == EscalationResolutionAction.APPLY_AMENDMENT:
-            return self._resolve_apply_amendment(order_id, test_code, user_id, validation_notes)
+            return self._resolve_apply_amendment(order_test, user_id, validation_notes)
         if action == EscalationResolutionAction.CANCEL_TEST:
-            return self._resolve_cancel_test(order_id, test_code, user_id, rejection_reason or "Test cancelled")
+            return self._resolve_cancel_test(order_test, user_id, rejection_reason or "Test cancelled")
         raise LabOperationError(f"Unknown escalation action: {action}", status_code=400)
 
     def _resolve_force_validate(
         self,
-        order_id: int,
-        test_code: str,
+        order_test: OrderTest,
         user_id: int,
         validation_notes: Optional[str],
         read_back_payload: Optional[Dict[str, Any]],
     ) -> EscalationResolveResult:
-        order_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
+        order_id = order_test.orderId
+        test_code = order_test.testCode
         ticket = self.escalation.resolve_ticket(
             order_test.id,
             EscalationResolutionAction.FORCE_VALIDATE,
@@ -377,6 +456,9 @@ class LabOperationsService:
         order_test.validationNotes = validation_notes
         order_test.status = TestStatus.VALIDATED
 
+        order = self.db.query(Order).filter(Order.orderId == order_id).first()
+        completion_meta = build_order_completion_metadata(order) if order else {}
+
         self.audit.log_escalation_resolution_force_validate(
             order_id=order_id,
             test_code=test_code,
@@ -384,7 +466,7 @@ class LabOperationsService:
             ticket_id=ticket.id,
             user_id=user_id,
             validation_notes=validation_notes,
-            metadata=ticket.ticketMetadata,
+            metadata={**(ticket.ticketMetadata or {}), **completion_meta},
         )
 
         self.db.commit()
@@ -394,17 +476,17 @@ class LabOperationsService:
             success=True,
             action=EscalationResolutionAction.FORCE_VALIDATE,
             message="Test force-validated.",
-            originalTestId=order_test.id,
+            escalatedTestId=order_test.id,
         )
 
     def _resolve_authorize_retest(
         self,
-        order_id: int,
-        test_code: str,
+        original_test: OrderTest,
         user_id: int,
         reason: str,
     ) -> EscalationResolveResult:
-        original_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
+        order_id = original_test.orderId
+        test_code = original_test.testCode
         TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.SUPERSEDED)
 
         new_test = self.quality._create_retest(
@@ -453,18 +535,18 @@ class LabOperationsService:
             success=True,
             action=EscalationResolutionAction.AUTHORIZE_RETEST,
             message="Authorized re-test created.",
-            originalTestId=original_test.id,
+            escalatedTestId=original_test.id,
             newTestId=new_test.id,
         )
 
     def _resolve_authorize_recollect(
         self,
-        order_id: int,
-        test_code: str,
+        original_test: OrderTest,
         user_id: int,
         reason: str,
     ) -> EscalationResolveResult:
-        original_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
+        order_id = original_test.orderId
+        test_code = original_test.testCode
         if not original_test.sampleId:
             raise LabOperationError("Cannot authorize re-collect — no sample linked", status_code=400)
 
@@ -478,7 +560,7 @@ class LabOperationsService:
         new_sample = self.quality._create_recollection_sample(
             sample, user_id, reason, supervisor_authorized=True
         )
-        self.quality._revive_suspended_tests(sample, new_sample)
+        self.quality._reattach_tests_to_recollection(sample, new_sample)
 
         codes = list(new_sample.testCodes or [])
         if test_code not in codes:
@@ -518,7 +600,7 @@ class LabOperationsService:
             domain=QualityDomain.SPECIMEN,
             reason=reason,
             notes=None,
-            remedy=RemedyType.RECOLLECT,
+            remedy=RemedyType.REQUEST_RECOLLECTION,  # Supervisor-authorized recollection
             user_id=user_id,
             order_test_id=original_test.id,
             sample_id=sample.sampleId,
@@ -554,19 +636,19 @@ class LabOperationsService:
             success=True,
             action=EscalationResolutionAction.AUTHORIZE_RECOLLECT,
             message=f"Re-collect authorized. New sample ID: {new_sample.sampleId}",
-            originalTestId=original_test.id,
+            escalatedTestId=original_test.id,
             newTestId=new_test.id,
             newSampleId=new_sample.sampleId,
         )
 
     def _resolve_apply_amendment(
         self,
-        order_id: int,
-        test_code: str,
+        order_test: OrderTest,
         user_id: int,
         validation_notes: Optional[str],
     ) -> EscalationResolveResult:
-        order_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
+        order_id = order_test.orderId
+        test_code = order_test.testCode
         ticket = self.escalation.get_open_ticket(order_test.id)
         if not ticket or ticket.reasonCode != EscalationReasonCode.AMEND_RES:
             raise LabOperationError("No amendment escalation ticket found", status_code=404)
@@ -575,7 +657,25 @@ class LabOperationsService:
         if not proposed:
             raise LabOperationError("Amendment ticket has no proposed results", status_code=400)
 
-        order_test.results = proposed
+        # Re-validate proposed results
+        order = self.db.query(Order).filter(Order.id == order_id).first()
+        test_def = self.db.query(Test).filter(Test.testCode == test_code).first()
+        
+        if test_def and order:
+            # Validate results against physiologic limits
+            result_items = self.result_validator.validate_results(
+                proposed, test_def, order.patient
+            )
+            # Recalculate flags
+            updated_results = self.flag_calculator.calculate_flags(
+                result_items, test_def
+            )
+            order_test.results = updated_results
+            order_test.hasCriticalValues = any(r.get('isCritical') for r in updated_results)
+        else:
+            # Fallback if test definition is missing
+            order_test.results = proposed
+        
         order_test.resultValidatedAt = datetime.now(timezone.utc)
         order_test.validatedBy = str(user_id)
         order_test.validationNotes = validation_notes
@@ -588,6 +688,9 @@ class LabOperationsService:
             notes=validation_notes,
         )
 
+        order = self.db.query(Order).filter(Order.orderId == order_id).first()
+        completion_meta = build_order_completion_metadata(order) if order else {}
+
         self.audit.log_escalation_resolution_apply_amendment(
             order_id=order_id,
             test_code=test_code,
@@ -595,6 +698,7 @@ class LabOperationsService:
             ticket_id=ticket.id,
             user_id=user_id,
             validation_notes=validation_notes,
+            metadata=completion_meta,
         )
 
         self.db.commit()
@@ -604,17 +708,17 @@ class LabOperationsService:
             success=True,
             action=EscalationResolutionAction.APPLY_AMENDMENT,
             message="Amendment applied and test validated.",
-            originalTestId=order_test.id,
+            escalatedTestId=order_test.id,
         )
 
     def _resolve_cancel_test(
         self,
-        order_id: int,
-        test_code: str,
+        original_test: OrderTest,
         user_id: int,
         reason: str,
     ) -> EscalationResolveResult:
-        original_test = self._get_order_test(order_id, test_code, status=TestStatus.ESCALATED)
+        order_id = original_test.orderId
+        test_code = original_test.testCode
         TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.CANCELLED)
         original_test.status = TestStatus.CANCELLED
         original_test.validationNotes = reason
@@ -656,5 +760,5 @@ class LabOperationsService:
             success=True,
             action=EscalationResolutionAction.CANCEL_TEST,
             message="Test cancelled.",
-            originalTestId=original_test.id,
+            escalatedTestId=original_test.id,
         )

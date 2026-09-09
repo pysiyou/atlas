@@ -1,5 +1,6 @@
 import React from 'react';
 import { Badge, Card, Button, Icon } from '@/components';
+import { BlockedReasonBadge } from '../components/StatusBadges';
 import { formatDate, displayId } from '@/utils';
 import type { TestWithContext } from '@/types';
 import { ICONS } from '@/config/icons';
@@ -10,6 +11,7 @@ interface EscalationCardMobileProps {
   handleCardClick: () => void;
   isRetest: boolean;
   hasRejectionHistory: boolean;
+  blockedLabel?: string;
 }
 
 export const EscalationCardMobile: React.FC<EscalationCardMobileProps> = ({
@@ -18,6 +20,7 @@ export const EscalationCardMobile: React.FC<EscalationCardMobileProps> = ({
   handleCardClick,
   isRetest,
   hasRejectionHistory,
+  blockedLabel,
 }) => (
   <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
     <div className="flex items-center justify-between gap-2 mb-2">
@@ -69,6 +72,7 @@ export const EscalationCardMobile: React.FC<EscalationCardMobileProps> = ({
             RE-TEST
           </Badge>
         )}
+        {blockedLabel && <BlockedReasonBadge label={blockedLabel} size="xs" />}
       </div>
       <Button
         variant="primary"

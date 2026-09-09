@@ -10,7 +10,7 @@ import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup, usePatientsList } from '@/features/patients';
 import { useOrdersList } from '@/features/orders';
-import { useSampleLookup } from '@/features/lab/collection/samples.api';
+import { useSampleLookup } from '@/features/lab/api/samples.api';
 import { useFiltering } from '@/hooks/useFiltering';
 import { ListView } from '@/components';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';

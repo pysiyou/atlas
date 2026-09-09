@@ -4,8 +4,8 @@
 
 import React from 'react';
 import { useUserLookup } from '@/lib/api/users.api';
-import { useLabCardClickGuard } from '@/features/lab/hooks';
-import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
+import { useLabCardClickGuard, useTestWorkItemState } from '@/features/lab/hooks';
+import { deriveRetestContext } from '../utils/deriveRetestContext';
 import type { TestWithContext } from '@/types';
 import { EscalationCardMobile } from './EscalationCardMobile';
 import { EscalationCardDesktop } from './EscalationCardDesktop';
@@ -23,7 +23,8 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
 }) => {
   const { getUserName } = useUserLookup();
   const handleCardClick = useLabCardClickGuard(onClick);
-  const rejection = deriveTestRejectionContext(test);
+  const rejection = deriveRetestContext(test);
+  const workItem = useTestWorkItemState(test);
 
   if (isMobile) {
     return (
@@ -33,6 +34,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
         handleCardClick={handleCardClick}
         isRetest={rejection.isRetest}
         hasRejectionHistory={rejection.showAttemptIndicator}
+        blockedLabel={workItem.blockedReason ? workItem.label : undefined}
       />
     );
   }
@@ -44,6 +46,7 @@ export const EscalationCard: React.FC<EscalationCardProps> = ({
       handleCardClick={handleCardClick}
       getUserName={(userId) => getUserName(String(userId))}
       rejection={rejection}
+      blockedLabel={workItem.blockedReason ? workItem.label : undefined}
     />
   );
 };

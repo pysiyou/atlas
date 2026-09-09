@@ -56,6 +56,7 @@ export function useReportQualityIssue() {
         queryClient.invalidateQueries({ queryKey: queryKeys.orders.all }),
         invalidateResultQueries(queryClient),
         queryClient.invalidateQueries({ queryKey: queryKeys.qualityIssues.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all }),
       ]);
     },
   });

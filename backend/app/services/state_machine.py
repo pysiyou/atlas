@@ -65,42 +65,45 @@ class SampleStateMachine:
 
 class TestStateMachine:
     """
-    Test Lifecycle:
-    PENDING -> SAMPLE_COLLECTED -> RESULTED -> VALIDATED
-
+    Test Lifecycle - Active Paths:
+    PENDING -> SAMPLE_COLLECTED -> RESULTED -> VALIDATED (happy path)
+    SAMPLE_COLLECTED -> ESCALATED (critical value trigger)
+    RESULTED -> ESCALATED (limit-hit, validator escalate)
+    VALIDATED -> ESCALATED (amendment request - AMEND-RES)
+    ESCALATED -> VALIDATED | SUPERSEDED | CANCELLED (supervisor resolution)
+    
     Quality issue paths:
-    - SAMPLE_COLLECTED/PENDING/SUSPENDED -> SUSPENDED (specimen issue, awaiting recollection)
-    - RESULTED -> SUPERSEDED (retry) or ESCALATED (limit/critical)
-    - SUSPENDED -> PENDING (recollection linked)
-    - ESCALATED -> VALIDATED | SUPERSEDED | CANCELLED | PENDING (supervisor)
-
+    - SAMPLE_COLLECTED -> PENDING (specimen rejection reset)
+    - RESULTED -> SUPERSEDED (retest/recollection)
+    
     Terminal: VALIDATED, SUPERSEDED, REMOVED, CANCELLED
     """
 
     TRANSITIONS: Dict[TestStatus, Set[TestStatus]] = {
         TestStatus.PENDING: {
             TestStatus.SAMPLE_COLLECTED,
-            TestStatus.SUSPENDED,
             TestStatus.REMOVED,
-            TestStatus.ESCALATED,
+            TestStatus.CANCELLED,
         },
         TestStatus.SAMPLE_COLLECTED: {
             TestStatus.RESULTED,
-            TestStatus.SUSPENDED,
-            TestStatus.ESCALATED,
+            TestStatus.PENDING,
+            TestStatus.ESCALATED,  # Critical value trigger
+            TestStatus.CANCELLED,  # Sample rejection + cancel remedy
         },
         TestStatus.RESULTED: {
             TestStatus.VALIDATED,
-            TestStatus.ESCALATED,
-            TestStatus.SUPERSEDED,
-        },
-        TestStatus.VALIDATED: {TestStatus.ESCALATED},
-        TestStatus.SUSPENDED: {TestStatus.PENDING, TestStatus.ESCALATED},
-        TestStatus.ESCALATED: {
-            TestStatus.VALIDATED,
-            TestStatus.SUPERSEDED,
+            TestStatus.ESCALATED,  # Limit-hit or validator escalate
+            TestStatus.SUPERSEDED,  # Retest/recollection
             TestStatus.CANCELLED,
-            TestStatus.PENDING,
+        },
+        TestStatus.VALIDATED: {
+            TestStatus.ESCALATED,  # Amendment request (AMEND-RES)
+        },
+        TestStatus.ESCALATED: {
+            TestStatus.VALIDATED,  # Force validate or apply amendment
+            TestStatus.SUPERSEDED,  # Authorize retest/recollect
+            TestStatus.CANCELLED,  # Cancel test
         },
         TestStatus.SUPERSEDED: set(),
         TestStatus.REMOVED: set(),
@@ -113,11 +116,15 @@ class TestStateMachine:
 
     @classmethod
     def can_transition(cls, from_status: TestStatus, to_status: TestStatus) -> bool:
+        if from_status == to_status:
+            return True
         allowed = cls.TRANSITIONS.get(from_status, set())
         return to_status in allowed
 
     @classmethod
     def validate_transition(cls, from_status: TestStatus, to_status: TestStatus) -> None:
+        if from_status == to_status:
+            return
         if not cls.can_transition(from_status, to_status):
             allowed = cls.TRANSITIONS.get(from_status, set())
             allowed_str = ", ".join(s.value for s in allowed) if allowed else "none (terminal state)"

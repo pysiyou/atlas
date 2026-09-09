@@ -1,40 +1,23 @@
 /**
  * Lab Shared Components Index
- *
- * Exports all shared components for lab workflows.
  */
 
-// Card components
-export { LabCard, ProgressBadge, FlagsSection, TestList } from './LabCard';
-
-// Popover form
-export { PopoverForm, RadioCard, CheckboxCard } from './PopoverForm';
-
-// Rejection dialog
-export { RejectionDialog, RejectionDialogContent, RejectionHistoryBanner } from './RejectionDialog';
-
-// Workflow view
+export { LabCard, ProgressBadge, TestList } from './LabCard';
+export { PopoverForm, RadioCard } from './PopoverForm';
+export { QualityIssueDialog } from './QualityIssueDialog';
 export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
-
-// Shared lab filters
+export { LabQueueSection } from './LabQueueSection';
 export { LabFilters } from './LabFilters';
 export type { LabFiltersProps } from './LabFilters';
-
-// Detail modal
 export { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from './LabDetailModal';
 export type { DetailGridSectionConfig } from './LabDetailModal';
-
-// Status badges
 export {
   CollectionInfoLine,
-  ResultStatusBadge,
   EntryInfoLine,
   RetestBadge,
   RecollectionAttemptBadge,
   FlagCountBadge,
   ReviewRequiredBadge,
 } from './StatusBadges';
-
-// Utilities (moved to utils)
 export { handlePrintCollectionLabel, getEffectiveContainerType } from '../utils/labHelpers';
 export { formatRejectionReasons } from '../utils/labFormatters';

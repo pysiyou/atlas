@@ -11,7 +11,6 @@ const apiTestStatusSchema = z.enum([
   'sample-collected',
   'resulted',
   'validated',
-  'suspended',
   'cancelled',
   'escalated',
   'superseded',
@@ -44,10 +43,6 @@ export const orderTestSchema = z.object({
   isReflexTest: z.boolean().optional(),
   triggeredBy: z.string().optional(),
   reflexRule: z.string().optional(),
-  isRepeatTest: z.boolean().optional(),
-  repeatReason: z.string().optional(),
-  originalTestId: z.number().int().positive().optional(),
-  repeatNumber: z.number().int().nonnegative().optional(), // Backend returns 0 for original, allow 0
   isRetest: z.boolean().optional(),
   retestOfTestId: z.number().int().positive().nullable().optional(), // Backend returns null
   retestNumber: z.number().int().nonnegative().optional(), // Backend returns 0 for original, allow 0

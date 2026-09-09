@@ -243,7 +243,7 @@ class AuditService:
         full_metadata = {
             "orderId": order_id,
             "testCode": test_code,
-            "originalTestId": original_test_id,
+            "escalatedTestId": original_test_id,
             "newTestId": new_test_id,
             "reason": reason,
             **(metadata or {})
@@ -336,7 +336,7 @@ class AuditService:
         full_metadata = {
             "orderId": order_id,
             "testCode": test_code,
-            "originalTestId": original_test_id,
+            "escalatedTestId": original_test_id,
             "newTestId": new_test_id,
             "newSampleId": new_sample_id,
             "ticketId": ticket_id,

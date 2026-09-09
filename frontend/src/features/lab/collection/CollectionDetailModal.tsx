@@ -24,7 +24,7 @@ import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
-import { useSampleLookup } from '@/features/lab/collection/samples.api';
+import { useSampleLookup } from '@/features/lab/api/samples.api';
 import { getTestNames } from '@/features/catalog/utils';
 import { LabDetailModal } from '../components/LabDetailModal';
 import type { SampleDisplay } from '@/features/lab/types';

@@ -73,14 +73,10 @@ export interface OrderTest {
   flags?: string[];
   technicianNotes?: string;
 
-  // Reflex/Repeat (order-specific)
+  // Reflex (order-specific)
   isReflexTest?: boolean;
   triggeredBy?: string;
   reflexRule?: string;
-  isRepeatTest?: boolean;
-  repeatReason?: string;
-  originalTestId?: number;
-  repeatNumber?: number;
 
   // Re-test tracking (for result validation rejection flow)
   isRetest?: boolean; // True if this is a retest of a rejected result

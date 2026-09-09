@@ -9,7 +9,7 @@ import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup, usePatientsList } from '@/features/patients';
 import { useOrdersList } from '@/features/orders';
-import { useSampleLookup } from '@/features/lab/collection/samples.api';
+import { useSampleLookup } from '@/features/lab/api/samples.api';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import {

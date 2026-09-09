@@ -47,11 +47,9 @@ export function formatParameterResults(
   return formattedResults;
 }
 
-export function findTestInList(
+export function findTestById(
   allTests: TestWithContext[],
-  orderId: number | string,
-  testCode: string
+  orderTestId: number
 ): TestWithContext | undefined {
-  const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
-  return allTests.find(t => t.orderId === numericOrderId && t.testCode === testCode);
+  return allTests.find(t => t.id === orderTestId);
 }

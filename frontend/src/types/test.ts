@@ -108,6 +108,7 @@ export interface TestCatalogEntry {
   method_common?: string;
   turnaround_time_hours: number;
   sample: SampleRequirements;
+  validation_rejection_criteria?: Array<string | { reason: string; domain?: string }>;
   result_items: ResultItem[];
   sources?: string[];
   confidence?: 'HIGH' | 'MEDIUM' | 'LOW';
@@ -152,7 +153,8 @@ export interface Test {
   methodology?: string; // Method description
   containerDescription?: string; // Detailed container description from sample.container
   collectionNotes?: string; // Special collection instructions
-  rejectionCriteria?: string[]; // Sample rejection criteria
+  rejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string }>;
+  validationRejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string }>;
   fastingRequired?: boolean; // Whether fasting is required
   confidence?: 'HIGH' | 'MEDIUM' | 'LOW'; // Data confidence level
   notes?: string; // Additional test notes
@@ -182,7 +184,7 @@ export interface TestParameter {
  * Standardized interface for a test with its associated order and patient context.
  *
  * This is the canonical "Superset" type for all lab workflow views:
- * Result Entry, Result Validation, Escalation, and Command Center test table.
+ * Result Entry, Result Validation, and Escalation workflow views.
  * Use this type instead of creating feature-specific variants.
  *
  * Built by `useLabTestsFromOrders` — the single enrichment hook that joins
@@ -212,7 +214,7 @@ export interface TestWithContext {
   validationNotes?: string;
 
   // Order-level fields (set by useLabTestsFromOrders)
-  /** ISO date string of the order — used by CommandCenterView table and sorting. */
+  /** ISO date string of the order — used for sorting and display in lab workflow views. */
   orderDate?: string;
 
   // Patient-level fields (set by useLabTestsFromOrders when includePatient=true)
@@ -238,6 +240,7 @@ export interface TestWithContext {
   retestNumber?: number;
 
   // Sample recollection tracking fields (for sample re-collect flow)
+  sampleStatus?: string;
   sampleIsRecollection?: boolean;
   sampleOriginalSampleId?: number;
   sampleRecollectionReason?: string;

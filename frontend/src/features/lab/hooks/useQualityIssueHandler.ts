@@ -2,17 +2,26 @@
  * Shared quality issue handler for collection and validation.
  */
 import { useCallback } from 'react';
-import { useMutationToastHandler } from '@/hooks/useMutationToastHandler';
+import { toast } from '@/app/AppToastBar';
+import { logger } from '@/utils/logger';
 import { useReportQualityIssue } from '@/features/lab/api/quality-issues.api';
-import type { QualityIssueResult, QualityIssueTargetType } from '@/types/lab-operations';
+import type {
+  QualityIssueResult,
+  QualityIssueTargetType,
+  RemedyType,
+} from '@/types/lab-operations';
+import { getRejectionToast } from '@/features/lab/validation/qualityIssueToastMessages';
 
 interface UseQualityIssueHandlerOptions {
   onSuccess?: (result: QualityIssueResult) => void;
 }
 
+function collectionSuccessToast(result: QualityIssueResult) {
+  return getRejectionToast(result);
+}
+
 export function useQualityIssueHandler(options?: UseQualityIssueHandlerOptions) {
   const reportMutation = useReportQualityIssue();
-  const { runWithToast } = useMutationToastHandler('Failed to report quality issue');
   const { onSuccess } = options ?? {};
 
   const reportIssue = useCallback(
@@ -21,32 +30,28 @@ export function useQualityIssueHandler(options?: UseQualityIssueHandlerOptions) 
       targetId: number,
       reason: string,
       notes?: string,
+      preferredRemedy?: RemedyType,
     ) => {
-      let result: QualityIssueResult | undefined;
-      await runWithToast(
-        async () => {
-          result = await reportMutation.mutateAsync({
-            target: { type: targetType, id: targetId },
-            reason,
-            notes: notes?.trim() || undefined,
-          });
-          onSuccess?.(result);
-        },
-        {
-          successTitle: result?.escalationRequired
-            ? 'Escalated to supervisor'
-            : result?.remedy === 'recollect'
-              ? 'Recollection requested'
-              : result?.remedy === 'retry_same_sample'
-                ? 'Re-test scheduled'
-                : 'Quality issue recorded',
-          successSubtitle: result?.message,
-          errorTitle: 'Failed to report quality issue',
-        },
-      );
-      return result;
+      try {
+        const result = await reportMutation.mutateAsync({
+          target: { type: targetType, id: targetId },
+          reason,
+          notes: notes?.trim() || undefined,
+          preferredRemedy,
+        });
+        toast.success(collectionSuccessToast(result));
+        onSuccess?.(result);
+        return result;
+      } catch (error) {
+        logger.error('Failed to report quality issue', error instanceof Error ? error : undefined);
+        toast.error({
+          title: 'Failed to report quality issue',
+          subtitle: 'Check the details and try again.',
+        });
+        throw error;
+      }
     },
-    [reportMutation, onSuccess, runWithToast],
+    [reportMutation, onSuccess],
   );
 
   return {

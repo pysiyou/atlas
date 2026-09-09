@@ -22,8 +22,8 @@ import {
   ModalFooter,
   StatusBadgeRow,
 } from '../components/LabDetailModal';
-import { RejectionDialog } from '../components/RejectionDialog';
-import { deriveTestRejectionContext } from '../utils/deriveTestRejectionContext';
+import { QualityIssueDialog } from '../components/QualityIssueDialog';
+import { deriveRetestContext } from '../utils/deriveRetestContext';
 import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
 import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';
 import { queryKeys } from '@/lib/query';
@@ -45,7 +45,7 @@ interface ValidationDetailModalProps {
   comments: string;
   onCommentsChange: (commentKey: string, value: string) => void;
   onApprove: () => void;
-  /** Called after RejectionDialog completes (API already called). */
+  /** Called after QualityIssueDialog completes (API already called). */
   onReject: (result: QualityIssueResult) => void;
 }
 
@@ -94,7 +94,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
     retestNumber,
     showRecollectionBadge,
     sampleRecollectionAttempt,
-  } = deriveTestRejectionContext(test);
+  } = deriveRetestContext(test);
 
   /**
    * Build header badges using centralized badge components
@@ -157,7 +157,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       }
       footer={
         <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
-          <RejectionDialog
+          <QualityIssueDialog
             orderTestId={test.id!}
             testCode={test.testCode}
             testName={test.testName}

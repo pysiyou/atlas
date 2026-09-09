@@ -4,7 +4,7 @@ import type { TableViewConfig } from '@/components';
 import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
 import type { PatientContext } from '@/types';
-import { DATA_ID_PRIMARY } from '@/utils/constants';
+import { ENTITY_ID_BLOCK } from '@/utils/constants';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';
 
@@ -21,7 +21,7 @@ export const createPatientTableConfig = (
 ): TableViewConfig<PatientContext> => {
   // Shared render functions to avoid duplication
   const renderId = (patient: PatientContext) => (
-    <span className={`${DATA_ID_PRIMARY} font-normal`}>{displayId.patient(patient.id)}</span>
+    <span className={`${ENTITY_ID_BLOCK} font-normal`}>{displayId.patient(patient.id)}</span>
   );
 
   const renderName = (patient: PatientContext) => (
@@ -45,7 +45,7 @@ export const createPatientTableConfig = (
 
     return (
       <div className="min-w-0 font-normal">
-        <div className={`${DATA_ID_PRIMARY} font-normal`}>{patient.orderCount} orders</div>
+        <div className={`${ENTITY_ID_BLOCK} font-normal`}>{patient.orderCount} orders</div>
         <div className="text-xs text-text-tertiary truncate font-normal">
           Last: {formatDate(patient.lastOrderDate)}
         </div>

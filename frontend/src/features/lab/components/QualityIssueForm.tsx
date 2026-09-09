@@ -1,14 +1,19 @@
 /**
- * Unified quality issue form — used at collection and validation.
+ * Unified quality issue form — used at collection (sample reject).
+ * Validation uses QualityIssueDialog with an explicit destination picker.
  */
 import React, { useState } from 'react';
 import { Alert, SpinnerLoader } from '@/components';
 import { CatalogRejectionFields } from './CatalogRejectionFields';
 import { AttemptProgressBar } from './AttemptProgressBar';
 import { useQualityIssueOptions } from '@/features/lab/api/quality-issues.api';
-import type { QualityIssueOptions, QualityIssueTargetType } from '@/types/lab-operations';
+import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
-import { REJECTION_DIALOG_COPY } from './rejectionDialogConstants';
+import { QUALITY_ISSUE_DIALOG_COPY } from './qualityIssueDialogConstants';
+import {
+  RemedyDestinationPicker,
+  buildSampleRemedyOptions,
+} from './RemedyDestinationPicker';
 
 type CollectionAlertCopy = {
   variant: 'warning' | 'danger';
@@ -19,16 +24,27 @@ type CollectionAlertCopy = {
 };
 
 function getCollectionAlertCopy(options: QualityIssueOptions): CollectionAlertCopy {
-  const hasResultedTests =
+  const hasResultedOrValidated =
     (options.resultedTestsCount ?? 0) > 0 || (options.validatedTestsCount ?? 0) > 0;
+  const atLimit = (options.recollectionAttemptsRemaining ?? 0) === 0;
 
-  if (hasResultedTests) {
-    return { variant: 'danger', ...REJECTION_DIALOG_COPY.collection.escalateResults };
+  if (hasResultedOrValidated) {
+    return {
+      variant: 'warning',
+      ...QUALITY_ISSUE_DIALOG_COPY.collection.escalateResults,
+      warningBody: options.previewMessage || QUALITY_ISSUE_DIALOG_COPY.collection.escalateResults.warningBody,
+    };
   }
-  if (options.willEscalate) {
-    return { variant: 'danger', ...REJECTION_DIALOG_COPY.collection.escalateLimit };
-  }
-  return { variant: 'warning', ...REJECTION_DIALOG_COPY.collection.recollect };
+  return {
+    variant: atLimit ? 'danger' : 'warning',
+    warningTitle: atLimit
+      ? QUALITY_ISSUE_DIALOG_COPY.collection.escalateLimit.warningTitle
+      : QUALITY_ISSUE_DIALOG_COPY.collection.recollect.warningTitle,
+    warningBody:
+      options.previewMessage || QUALITY_ISSUE_DIALOG_COPY.collection.recollect.warningBody,
+    reasonLabel: QUALITY_ISSUE_DIALOG_COPY.collection.recollect.reasonLabel,
+    notesLabel: QUALITY_ISSUE_DIALOG_COPY.collection.recollect.notesLabel,
+  };
 }
 
 export interface QualityIssueFormProps {
@@ -40,6 +56,9 @@ export interface QualityIssueFormProps {
   isSubmitting?: boolean;
   onReasonChange?: (reason: string) => void;
   onNotesChange?: (notes: string) => void;
+  /** Sample unfinished-work destination (collection only). */
+  preferredRemedy?: RemedyType | '';
+  onPreferredRemedyChange?: (remedy: RemedyType) => void;
   reason: string;
   notes: string;
 }
@@ -47,12 +66,14 @@ export interface QualityIssueFormProps {
 export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
   targetType,
   targetId,
-  title,
+  title: _title,
   subtitle,
   error,
   isSubmitting,
   onReasonChange,
   onNotesChange,
+  preferredRemedy = '',
+  onPreferredRemedyChange,
   reason,
   notes,
 }) => {
@@ -69,6 +90,29 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
 
   const alertCopy =
     targetType === 'sample' && options ? getCollectionAlertCopy(options) : null;
+
+  const sampleRemedyOptions = React.useMemo(
+    () =>
+      targetType === 'sample' ? buildSampleRemedyOptions(options?.allowedRemedies) : [],
+    [targetType, options?.allowedRemedies]
+  );
+
+  // Soft-suggest recollection when unfinished work exists.
+  React.useEffect(() => {
+    if (targetType !== 'sample' || !options || preferredRemedy || !onPreferredRemedyChange) {
+      return;
+    }
+    const suggested = options.suggestedRemedy ?? options.previewRemedy;
+    if (suggested && sampleRemedyOptions.some(o => o.value === suggested)) {
+      onPreferredRemedyChange(suggested);
+    }
+  }, [
+    targetType,
+    options,
+    preferredRemedy,
+    onPreferredRemedyChange,
+    sampleRemedyOptions,
+  ]);
 
   return (
     <div className="space-y-3">
@@ -96,7 +140,11 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
           )}
 
           {attemptMax > 0 && (
-            <AttemptProgressBar used={attemptUsed} total={attemptMax} label={targetType === 'sample' ? 'Recollection' : 'Re-test'} />
+            <AttemptProgressBar
+              used={attemptUsed}
+              total={attemptMax}
+              label={targetType === 'sample' ? 'Recollection' : 'Re-test'}
+            />
           )}
 
           <CatalogRejectionFields
@@ -106,9 +154,21 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
             rejectionNotes={notes}
             onReasonChange={onReasonChange ?? (() => {})}
             onNotesChange={onNotesChange ?? (() => {})}
-            reasonLabel={alertCopy?.reasonLabel ?? title}
+            reasonLabel={
+              alertCopy?.reasonLabel ??
+              (targetType === 'test' ? 'Result rejection reason' : 'Specimen issue')
+            }
             notesLabel={alertCopy?.notesLabel}
           />
+
+          {targetType === 'sample' && sampleRemedyOptions.length > 0 && (
+            <RemedyDestinationPicker
+              label={QUALITY_ISSUE_DIALOG_COPY.collection.actions.followUpLabel}
+              options={sampleRemedyOptions}
+              value={preferredRemedy}
+              onChange={remedy => onPreferredRemedyChange?.(remedy)}
+            />
+          )}
         </>
       )}
     </div>
@@ -118,9 +178,11 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
 export function useQualityIssueFormState() {
   const [reason, setReason] = useState('');
   const [notes, setNotes] = useState('');
+  const [preferredRemedy, setPreferredRemedy] = useState<RemedyType | ''>('');
   const reset = () => {
     setReason('');
     setNotes('');
+    setPreferredRemedy('');
   };
-  return { reason, notes, setReason, setNotes, reset };
+  return { reason, notes, setReason, setNotes, preferredRemedy, setPreferredRemedy, reset };
 }

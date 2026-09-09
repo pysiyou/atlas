@@ -11,11 +11,29 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
+from sqlalchemy import text
 from sqlalchemy.orm import Session
+
+from app.database import engine
 from app.models.test import Test
-# Note: ContainerType and ContainerTopColor might be strings or enums in the model, 
-# but simply mapping from JSON strings usually works if they are just strings in DB or matched Enums. 
-# Looking at the model definition, they are JSON arrays, so lists of strings are expected.
+from app.utils.specimen_reasons import infer_criterion_domain
+
+
+def _normalize_rejection_criteria(raw_items: list) -> list[dict]:
+    """Store criteria with explicit domain for routing (specimen vs analytical)."""
+    normalized: list[dict] = []
+    for item in raw_items or []:
+        if isinstance(item, dict):
+            reason = str(item.get("reason") or item.get("label") or "").strip()
+            domain = str(item.get("domain") or infer_criterion_domain(reason)).lower()
+            if domain not in {"specimen", "analytical"}:
+                domain = infer_criterion_domain(reason)
+            normalized.append({"reason": reason, "domain": domain})
+        else:
+            reason = str(item).strip()
+            normalized.append({"reason": reason, "domain": infer_criterion_domain(reason)})
+    return normalized
+
 
 def load_test_catalog():
     """Load the test catalog from the JSON file"""
@@ -23,9 +41,21 @@ def load_test_catalog():
     with open(file_path, 'r') as f:
         return json.load(f)
 
+
+def _ensure_validation_rejection_column() -> None:
+    with engine.connect() as conn:
+        conn.execute(
+            text(
+                "ALTER TABLE tests ADD COLUMN IF NOT EXISTS validation_rejection_criteria JSON"
+            )
+        )
+        conn.commit()
+
+
 def generate_tests(db: Session):
     """Generate and insert tests into the database"""
     print("🧪 Generating tests from catalog...")
+    _ensure_validation_rejection_column()
     
     try:
         data = load_test_catalog()
@@ -62,7 +92,12 @@ def generate_tests(db: Session):
                 "specialRequirements": None, # Could be mapped if available
                 "fastingRequired": item.get("sample", {}).get("fasting_required", False),
                 "collectionNotes": item.get("sample", {}).get("collection_notes"),
-                "rejectionCriteria": item.get("sample", {}).get("rejection_criteria", []),
+                "rejectionCriteria": _normalize_rejection_criteria(
+                    item.get("sample", {}).get("rejection_criteria", [])
+                ),
+                "validationRejectionCriteria": _normalize_rejection_criteria(
+                    item.get("validation_rejection_criteria", [])
+                ),
                 
                 # Reference ranges and parameters
                 # The model has referenceRanges (JSON) and resultItems (JSON). 

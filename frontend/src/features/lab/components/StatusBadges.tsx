@@ -97,51 +97,6 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
 };
 
 /**
- * ParameterProgressBadge - Shows progress of parameter completion
- */
-interface ParameterProgressBadgeProps {
-  filled: number;
-  total: number;
-  isComplete: boolean;
-}
-
-export const ParameterProgressBadge: React.FC<ParameterProgressBadgeProps> = ({
-  filled,
-  total,
-  isComplete,
-}) => (
-  <Badge size="sm" variant={isComplete ? 'success' : 'warning'}>
-    {filled}/{total} PARAMS
-  </Badge>
-);
-
-/**
- * ResultStatusBadge - Badge for result value status (normal, high, low, critical)
- * Critical values pulse to draw attention
- */
-interface ResultStatusBadgeProps {
-  status: 'normal' | 'high' | 'low' | 'critical' | 'critical-high' | 'critical-low';
-}
-
-export const ResultStatusBadge: React.FC<ResultStatusBadgeProps> = ({ status }) => {
-  if (status === 'normal') return null;
-
-  const isCritical =
-    status === 'critical' || status === 'critical-high' || status === 'critical-low';
-  const variant = isCritical
-    ? 'critical'
-    : status === 'high' || status === 'low'
-      ? 'warning'
-      : 'default';
-
-  return (
-    <Badge size="xs" variant={variant} pulse={isCritical}>
-      {status.toUpperCase().replace('-', ' ')}
-    </Badge>
-  );
-};
-
-/**
  * EntryInfoLine - Displays result entry metadata
  */
 interface EntryInfoLineProps {
@@ -273,5 +228,25 @@ export const ReviewRequiredBadge: React.FC<ReviewRequiredBadgeProps> = ({
   <Badge size={size} variant="danger" className={`flex items-center gap-1 ${className}`}>
     {showIcon && <Icon name={ICONS.actions.warning} className="w-3 h-3" />}
     Review Required
+  </Badge>
+);
+
+/**
+ * BlockedReasonBadge - Shows why a work item is blocked in the pipeline.
+ */
+interface BlockedReasonBadgeProps {
+  label: string;
+  size?: 'sm' | 'xs';
+  className?: string;
+}
+
+export const BlockedReasonBadge: React.FC<BlockedReasonBadgeProps> = ({
+  label,
+  size = 'xs',
+  className = '',
+}) => (
+  <Badge size={size} variant="warning" className={`flex items-center gap-1 ${className}`}>
+    <Icon name={ICONS.actions.alertCircle} className="w-3 h-3 shrink-0" />
+    {label}
   </Badge>
 );

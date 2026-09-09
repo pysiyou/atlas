@@ -26,6 +26,7 @@ interface EscalationResolutionFooterProps {
   reasonFinalReject: string;
   onReasonFinalRejectChange: (value: string) => void;
   reasonCode?: string;
+  hasResults?: boolean;
   resolveAsync: (
     action: EscalationResolutionAction,
     reasonOrNotes?: string,
@@ -43,6 +44,7 @@ export const EscalationResolutionFooter: React.FC<EscalationResolutionFooterProp
       ) : (
         <EscalationResolutionActions
           {...actionProps}
+          hasResults={props.hasResults ?? false}
           resolving={resolving}
           onValidationError={(title, subtitle) => toast.error({ title, subtitle })}
         />
