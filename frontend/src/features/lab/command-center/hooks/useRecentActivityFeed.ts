@@ -11,7 +11,13 @@ const TECH_FEED_HOURS = 24;
 const TECH_FEED_LIMIT = 50;
 const TECH_FEED_MAX_EVENTS = 30;
 
-const TECH_CATEGORIES = new Set<TimelineEventCategory>(['specimen', 'results', 'validation']);
+/** Lab workflow + order-coordination events (status, payments, test changes, recollection). */
+const TECH_CATEGORIES = new Set<TimelineEventCategory>([
+  'specimen',
+  'results',
+  'validation',
+  'order',
+]);
 
 function filterTechEvents(events: TimelineEvent[]): TimelineEvent[] {
   return events

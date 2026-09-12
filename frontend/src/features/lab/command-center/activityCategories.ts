@@ -49,15 +49,16 @@ const RESOLUTION_TYPES = new Set([
   'escalation_resolution_authorize_recollect',
   'escalation_resolution_force_validate',
   'escalation_resolution_apply_amendment',
+  'order_payment_recorded',
 ]);
 
 const TYPE_CATEGORY: Record<string, TimelineEventCategory> = {
   sample_collect: 'specimen',
   sample_reject: 'specimen',
   sample_recollection_request: 'specimen',
-  recollection_request_created: 'specimen',
-  recollection_request_approved: 'specimen',
-  recollection_request_denied: 'specimen',
+  recollection_request_created: 'order',
+  recollection_request_approved: 'order',
+  recollection_request_denied: 'order',
   result_entry: 'results',
   critical_value_detected: 'results',
   critical_value_notified: 'results',
@@ -76,6 +77,7 @@ const TYPE_CATEGORY: Record<string, TimelineEventCategory> = {
   test_added: 'order',
   test_removed: 'order',
   order_status_change: 'order',
+  order_payment_recorded: 'order',
 };
 
 export const TIMELINE_CATEGORY_CONFIG: Record<TimelineEventCategory, TimelineCategoryConfig> = {

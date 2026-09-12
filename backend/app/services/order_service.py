@@ -211,7 +211,15 @@ class OrderService:
                 notes="",
             )
             self.db.add(payment_record)
-        # updatedAt left as set by client if provided via order update; else already datetime.now(timezone.utc) in caller if needed
+            self.db.flush()
+            AuditService(self.db).log_order_payment_recorded(
+                order_id=order_id,
+                payment_id=payment_record.paymentId,
+                user_id=user_id,
+                amount=amount_paid,
+                payment_method=PaymentMethod.CASH.value,
+                payment_status=payment_status.value,
+            )
         order.updatedAt = datetime.now(timezone.utc)
         self.db.commit()
         self.db.refresh(order)

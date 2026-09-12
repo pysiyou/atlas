@@ -1,12 +1,19 @@
 /**
- * LabTimeline — vertical timeline for lab entity audit history (sample / test panels).
+ * LabTimeline — shared vertical timeline for entity history panels and command center.
  */
 import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Badge } from '@/components';
 import { cn, formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
 import { ENTITY_ID, ENTITY_ID_CLICKABLE } from '@/utils/constants';
 import type { TimelineEvent } from '@/features/lab/api/commandCenter.api';
+import {
+  getCategoryConfig,
+  getEventCategory,
+  getEventTone,
+} from '@/features/lab/command-center/activityCategories';
 import { COMMAND_CENTER_TIMELINE } from '@/features/lab/command-center/components/styles';
+import { formatActivityEvent } from '@/features/lab/command-center/formatActivityEvent';
 import { useOpenHistoricalEntity } from '@/features/lab/hooks/useOpenHistoricalEntity';
 import {
   getEntityCategoryConfig,
@@ -17,12 +24,19 @@ import {
   formatEntityTimelineEvent,
   getRetestAttemptDivider,
 } from '@/features/lab/timeline/formatEntityTimelineEvent';
-import type { EventDetail } from '@/features/lab/timeline/timelineDetailBuilders';
+import type { EventDetail as EntityEventDetail } from '@/features/lab/timeline/timelineDetailBuilders';
+import type { EventDetail as FeedEventDetail } from '@/features/lab/command-center/formatActivityEvent';
+
+type TimelineDetailItem = EntityEventDetail | FeedEventDetail;
 
 export interface LabTimelineProps {
   events: TimelineEvent[];
+  /** Entity history panels use workflow-phase categories; command center includes order events. */
+  variant?: 'entity' | 'commandCenter';
   interactiveEntities?: boolean;
   emptyMessage?: string;
+  className?: string;
+  footer?: React.ReactNode;
 }
 
 function TimelineDetail({
@@ -31,7 +45,7 @@ function TimelineDetail({
   onOpenSample,
   onOpenOrderTest,
 }: {
-  detail: EventDetail;
+  detail: TimelineDetailItem;
   interactiveEntities: boolean;
   onOpenSample: (id: number) => void;
   onOpenOrderTest: (id: number) => void;
@@ -45,6 +59,12 @@ function TimelineDetail({
     case 'testCode':
     case 'id':
       return <span className={ENTITY_ID}>{detail.value}</span>;
+    case 'link':
+      return (
+        <Link to={detail.to} className={ENTITY_ID_CLICKABLE}>
+          {detail.value}
+        </Link>
+      );
     case 'entityRef':
       if (!interactiveEntities) {
         return <span className={ENTITY_ID}>{detail.value}</span>;
@@ -70,20 +90,31 @@ function TimelineDetail({
 function TimelineEventRow({
   event,
   isLast,
+  variant,
   interactiveEntities,
   onOpenSample,
   onOpenOrderTest,
 }: {
   event: TimelineEvent;
   isLast: boolean;
+  variant: 'entity' | 'commandCenter';
   interactiveEntities: boolean;
   onOpenSample: (id: number) => void;
   onOpenOrderTest: (id: number) => void;
 }) {
-  const category = getEntityEventCategory(event);
-  const categoryConfig = getEntityCategoryConfig(category);
-  const tone = getEntityEventTone(event);
-  const formatted = formatEntityTimelineEvent(event);
+  const isEntity = variant === 'entity';
+  const category = isEntity ? getEntityEventCategory(event) : getEventCategory(event.type);
+  const categoryConfig = isEntity
+    ? getEntityCategoryConfig(category)
+    : getCategoryConfig(category);
+  const tone = isEntity ? getEntityEventTone(event) : getEventTone(event);
+  const formatted = isEntity
+    ? formatEntityTimelineEvent(event)
+    : formatActivityEvent(event, { interactiveEntities });
+
+  const performerLabel =
+    event.performedByName ??
+    (event.performedBy === 'system' ? 'System' : `User ${event.performedBy}`);
 
   return (
     <li className={COMMAND_CENTER_TIMELINE.eventRow}>
@@ -126,7 +157,7 @@ function TimelineEventRow({
           <p className="text-xs text-text-secondary mt-1 whitespace-pre-wrap">{formatted.note}</p>
         )}
         <p className={COMMAND_CENTER_TIMELINE.eventMeta}>
-          {event.performedByName ?? (event.performedBy === 'system' ? 'System' : 'Unknown')} ·{' '}
+          {performerLabel} ·{' '}
           <time dateTime={event.timestamp} title={formatRelativeDateTime(event.timestamp)}>
             {formatRelativeDateLabel(event.timestamp)}
           </time>
@@ -142,10 +173,14 @@ type TimelineGroupItem =
 
 export const LabTimeline: React.FC<LabTimelineProps> = ({
   events,
+  variant = 'entity',
   interactiveEntities = false,
   emptyMessage = 'No recorded actions yet.',
+  className,
+  footer,
 }) => {
   const { openSample, openOrderTest } = useOpenHistoricalEntity();
+  const showRetestDividers = variant === 'entity';
 
   const grouped = useMemo(() => {
     const groups: { label: string; items: TimelineGroupItem[] }[] = [];
@@ -160,23 +195,25 @@ export const LabTimeline: React.FC<LabTimelineProps> = ({
       }
       const group = groups[groups.length - 1];
 
-      const divider = getRetestAttemptDivider(event, previousEvent);
-      if (divider) {
-        group.items.push({ kind: 'divider', label: divider });
+      if (showRetestDividers) {
+        const divider = getRetestAttemptDivider(event, previousEvent);
+        if (divider) {
+          group.items.push({ kind: 'divider', label: divider });
+        }
       }
 
       group.items.push({ kind: 'event', event });
       previousEvent = event;
     }
     return groups;
-  }, [events]);
+  }, [events, showRetestDividers]);
 
   if (events.length === 0) {
     return <p className="text-sm text-text-tertiary">{emptyMessage}</p>;
   }
 
   return (
-    <div className="max-h-80 overflow-y-auto pr-1">
+    <div className={cn('overflow-y-auto pr-1', className ?? 'max-h-80')}>
       {grouped.map(group => (
         <div key={group.label} className="mb-2">
           <div className={COMMAND_CENTER_TIMELINE.groupHeader}>
@@ -198,6 +235,7 @@ export const LabTimeline: React.FC<LabTimelineProps> = ({
                   key={item.event.id}
                   event={item.event}
                   isLast={isLast}
+                  variant={variant}
                   interactiveEntities={interactiveEntities}
                   onOpenSample={openSample}
                   onOpenOrderTest={openOrderTest}
@@ -207,6 +245,7 @@ export const LabTimeline: React.FC<LabTimelineProps> = ({
           </ul>
         </div>
       ))}
+      {footer}
     </div>
   );
 };

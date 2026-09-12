@@ -1,17 +1,12 @@
 /**
- * Activity feed — scrollable lab audit trail for the command center.
+ * Activity feed — loading/error shell around the shared LabTimeline for command center.
  */
 
-import React, { useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { Badge } from '@/components';
+import React from 'react';
 import { Skeleton } from '@/components/loaders/Skeleton';
-import { cn, formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
-import { ENTITY_ID, ENTITY_ID_CLICKABLE } from '@/utils/constants';
 import type { TimelineEvent } from '../api/commandCenter.api';
-import { formatActivityEvent, type EventDetail } from './formatActivityEvent';
-import { getCategoryConfig, getEventCategory, getEventTone } from './activityCategories';
-import { COMMAND_CENTER_TIMELINE, COMMAND_CENTER_TYPE } from './components/styles';
+import { LabTimeline } from '../components/LabTimeline';
+import { COMMAND_CENTER_TIMELINE } from './components/styles';
 
 export interface ActivityFeedProps {
   events: TimelineEvent[];
@@ -25,116 +20,17 @@ export interface ActivityFeedProps {
 
 function FeedSkeleton() {
   return (
-    <div className="flex h-full flex-col bg-surface" aria-busy="true">
-      <div className="flex-1 space-y-4 overflow-auto px-4 py-2">
-        {Array.from({ length: 2 }).map((_, g) => (
-          <div key={g} className="space-y-3">
-            <Skeleton height={10} width={48} className="mx-auto" />
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="flex gap-3">
-                <Skeleton circle width={10} height={10} className="mt-1 shrink-0" />
-                <div className="flex-1 space-y-1">
-                  <Skeleton height={14} width="70%" />
-                  <Skeleton height={12} width="85%" />
-                  <Skeleton height={10} width="50%" />
-                </div>
-              </div>
-            ))}
+    <div className="space-y-3 py-1" aria-busy="true">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div key={i} className="flex gap-3">
+          <Skeleton circle width={10} height={10} className="mt-1 shrink-0" />
+          <div className="flex-1 space-y-1">
+            <Skeleton height={14} width="70%" />
+            <Skeleton height={12} width="85%" />
           </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function FeedDetail({ detail }: { detail: EventDetail }) {
-  switch (detail.type) {
-    case 'note':
-      return <span className={COMMAND_CENTER_TYPE.label}>Notes: {detail.value}</span>;
-    case 'status':
-    case 'sampleType':
-      return <Badge variant={detail.value} size="xs" />;
-    case 'testCode':
-    case 'id':
-    case 'entityRef':
-      return <span className={ENTITY_ID}>{detail.value}</span>;
-    case 'link':
-      return (
-        <Link to={detail.to} className={ENTITY_ID_CLICKABLE}>
-          {detail.value}
-        </Link>
-      );
-    default:
-      return <span className={COMMAND_CENTER_TYPE.label}>{detail.value}</span>;
-  }
-}
-
-function FeedEventRow({ event, isLast }: { event: TimelineEvent; isLast: boolean }) {
-  const category = getEventCategory(event.type);
-  const categoryConfig = getCategoryConfig(category);
-  const tone = getEventTone(event);
-  const formatted = formatActivityEvent(event);
-
-  return (
-    <li className={COMMAND_CENTER_TIMELINE.eventRow}>
-      <div className={COMMAND_CENTER_TIMELINE.eventDotTrack}>
-        <div
-          className={cn(COMMAND_CENTER_TIMELINE.eventDot, COMMAND_CENTER_TIMELINE.toneDot[tone])}
-          aria-hidden="true"
-        />
-        {!isLast && (
-          <div
-            className={cn(
-              COMMAND_CENTER_TIMELINE.eventConnectorStem,
-              COMMAND_CENTER_TIMELINE.connectorStem,
-            )}
-            aria-hidden="true"
-          />
-        )}
-      </div>
-      <div className={COMMAND_CENTER_TIMELINE.eventBody}>
-        <div className={COMMAND_CENTER_TIMELINE.eventTitleRow}>
-          <Badge variant={categoryConfig.badgeVariant} size="xs" className={categoryConfig.iconClass}>
-            {categoryConfig.label}
-          </Badge>
-          <span className={COMMAND_CENTER_TIMELINE.eventAction}>{formatted.action}</span>
         </div>
-        {formatted.details.length > 0 && (
-          <div className={COMMAND_CENTER_TIMELINE.eventDetails}>
-            {formatted.details.map((detail, idx) => (
-              <FeedDetail key={idx} detail={detail} />
-            ))}
-          </div>
-        )}
-        {formatted.note && (
-          <p className={cn('mt-0.5', COMMAND_CENTER_TYPE.detail)}>Notes: {formatted.note}</p>
-        )}
-        <p className={COMMAND_CENTER_TIMELINE.eventMeta}>
-          {event.performedByName || `User ${event.performedBy}`}
-          {' · '}
-          <time dateTime={event.timestamp}>
-            {formatRelativeDateTime(new Date(event.timestamp))}
-          </time>
-        </p>
-      </div>
-    </li>
-  );
-}
-
-function FeedGroup({ label, items }: { label: string; items: TimelineEvent[] }) {
-  return (
-    <section className="px-4 pb-4 first:pt-1">
-      <div className={COMMAND_CENTER_TIMELINE.groupHeader}>
-        <div className={COMMAND_CENTER_TIMELINE.groupDivider} />
-        <span className={COMMAND_CENTER_TIMELINE.groupLabel}>{label}</span>
-        <div className={COMMAND_CENTER_TIMELINE.groupDivider} />
-      </div>
-      <ul className="list-none space-y-0">
-        {items.map((event, index) => (
-          <FeedEventRow key={event.id} event={event} isLast={index === items.length - 1} />
-        ))}
-      </ul>
-    </section>
+      ))}
+    </div>
   );
 }
 
@@ -147,26 +43,10 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   onLoadMore,
   isLoadingMore = false,
 }) => {
-  const groups = useMemo(() => {
-    const map = new Map<string, TimelineEvent[]>();
-    for (const event of events) {
-      const label = formatRelativeDateLabel(new Date(event.timestamp));
-      const bucket = map.get(label) ?? [];
-      bucket.push(event);
-      map.set(label, bucket);
-    }
-    return Array.from(map.entries()).map(([label, items]) => ({
-      label,
-      items: items.sort(
-        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-      ),
-    }));
-  }, [events]);
-
   if (isError) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-2 bg-surface px-4">
-        <p className="text-sm text-text-secondary">Couldn&apos;t load activity feed</p>
+      <div className="text-sm text-text-secondary">
+        Couldn&apos;t load activity feed.{' '}
         {onRetry && (
           <button type="button" onClick={onRetry} className={COMMAND_CENTER_TIMELINE.retryLink}>
             Retry
@@ -178,33 +58,28 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
   if (isLoading) return <FeedSkeleton />;
 
-  if (groups.length === 0) {
-    return (
-      <div className="flex h-full flex-col items-center justify-center bg-surface">
-        <p className="text-sm text-text-secondary">No recent activity</p>
+  const loadMoreFooter =
+    hasMore && onLoadMore ? (
+      <div className={COMMAND_CENTER_TIMELINE.loadMore}>
+        <button
+          type="button"
+          onClick={onLoadMore}
+          disabled={isLoadingMore}
+          className={COMMAND_CENTER_TIMELINE.retryLinkDisabled}
+        >
+          {isLoadingMore ? 'Loading…' : 'Load more'}
+        </button>
       </div>
-    );
-  }
+    ) : null;
 
   return (
-    <div className="flex h-full flex-col bg-surface">
-      <div className="min-h-0 flex-1 overflow-auto">
-        {groups.map(group => (
-          <FeedGroup key={group.label} label={group.label} items={group.items} />
-        ))}
-        {hasMore && onLoadMore && (
-          <div className={COMMAND_CENTER_TIMELINE.loadMore}>
-            <button
-              type="button"
-              onClick={onLoadMore}
-              disabled={isLoadingMore}
-              className={COMMAND_CENTER_TIMELINE.retryLinkDisabled}
-            >
-              {isLoadingMore ? 'Loading…' : 'Load more'}
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
+    <LabTimeline
+      events={events}
+      variant="commandCenter"
+      interactiveEntities
+      emptyMessage="No recent activity"
+      className="h-full"
+      footer={loadMoreFooter}
+    />
   );
 };
