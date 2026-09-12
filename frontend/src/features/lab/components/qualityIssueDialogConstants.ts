@@ -29,7 +29,7 @@ export const QUALITY_ISSUE_DIALOG_COPY = {
     confirmLabel: 'Submit Rejection',
     warningTitle: 'Re-test Limit Reached',
     warningBody:
-      'Re-test attempts are exhausted. Escalate or cancel is recommended — you still choose the destination.',
+      'Re-test attempts are exhausted. You can still choose re-test — it will escalate to a supervisor for approval before another run.',
     reasonLabel: 'Rejection Reason',
     notesLabel: 'Additional Context / Notes',
   },
@@ -47,12 +47,13 @@ export const QUALITY_ISSUE_DIALOG_COPY = {
     retestLabel: 'Re-test same sample',
     retestDescription: 'Supersede this result and create a new entry on the same tube.',
     newSampleLabel: 'Request recollection',
-    newSampleDescription: 'Reject the specimen and ask a supervisor to approve a patient redraw.',
+    newSampleDescription:
+      'Reject the specimen and submit a recollection request — supervisor must approve before the patient is redrawn.',
     cancelLabel: 'Cancel this test',
     cancelDescription: 'Close this test line. Other tests on the order are not affected.',
-    escalateLabel: 'Escalate to supervisor',
-    escalateDescription: 'Send to the supervisor queue for decision.',
-    remaining: (n: number) => ` (${n} left)`,
+    retestLimitDescription:
+      'Re-test limit reached. Submitting will escalate to a supervisor for approval.',
+    retestSupervisorHint: '(supervisor approval required)',
   },
   recollectBlocked: 'Cannot collect new sample - order has validated tests',
   triggerTitle: 'Reject',
@@ -61,13 +62,6 @@ export const QUALITY_ISSUE_DIALOG_COPY = {
       warningTitle: 'Reject Specimen',
       warningBody:
         'Decide what happens to unfinished tests. Resulted tests stay in Review with a Specimen rejected signal. Validated results stay released.',
-      reasonLabel: 'Specimen Issue',
-      notesLabel: 'Additional Context / Notes',
-    },
-    escalateLimit: {
-      warningTitle: 'Recollection Limit Reached',
-      warningBody:
-        'Recollection attempts are exhausted. Supervisor override will be required if recollection is approved.',
       reasonLabel: 'Specimen Issue',
       notesLabel: 'Additional Context / Notes',
     },

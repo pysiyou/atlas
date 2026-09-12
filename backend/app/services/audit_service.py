@@ -157,6 +157,7 @@ class AuditService:
         full_metadata = {
             "orderId": order_id,
             "testCode": test_code,
+            "orderTestId": test_id,
             **(metadata or {})
         }
         return self.log_operation(
@@ -184,6 +185,7 @@ class AuditService:
         full_metadata = {
             "orderId": order_id,
             "testCode": test_code,
+            "orderTestId": test_id,
             "validationNotes": validation_notes,
             **(metadata or {})
         }
@@ -209,9 +211,25 @@ class AuditService:
         reason: str,
         test_code: Optional[str] = None,
         sample_id: Optional[int] = None,
+        order_test_id: Optional[int] = None,
+        created_test_id: Optional[int] = None,
+        created_sample_id: Optional[int] = None,
         comment: Optional[str] = None,
     ) -> LabOperationLog:
         """Log a unified quality issue report."""
+        metadata: Dict[str, Any] = {
+            "orderId": order_id,
+            "testCode": test_code,
+            "sampleId": sample_id,
+            "reason": reason,
+        }
+        if order_test_id is not None:
+            metadata["orderTestId"] = order_test_id
+        if created_test_id is not None:
+            metadata["newTestId"] = created_test_id
+        if created_sample_id is not None:
+            metadata["newSampleId"] = created_sample_id
+
         return self.log_operation(
             operation_type=LabOperationType.QUALITY_ISSUE_REPORTED,
             entity_type="quality_issue",
@@ -219,12 +237,7 @@ class AuditService:
             user_id=user_id,
             before_state=None,
             after_state={"stage": stage, "domain": domain, "remedy": remedy},
-            metadata={
-                "orderId": order_id,
-                "testCode": test_code,
-                "sampleId": sample_id,
-                "reason": reason,
-            },
+            metadata=metadata,
             comment=comment or reason,
         )
 

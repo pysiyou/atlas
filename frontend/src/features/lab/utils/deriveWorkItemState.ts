@@ -22,7 +22,9 @@ export type BlockedReason =
   | 'critical_value'
   | 'amendment_pending'
   | 'retry_limit'
-  | 'recollection_limit';
+  | 'recollection_limit'
+  | 'supervisor_review'
+  | 'recollection_approval';
 
 export interface WorkItemContext {
   paymentStatus?: PaymentStatus;
@@ -46,6 +48,8 @@ const BLOCKED_LABELS: Record<BlockedReason, string> = {
   amendment_pending: 'Amendment pending',
   retry_limit: 'Re-test limit reached',
   recollection_limit: 'Recollection limit reached',
+  supervisor_review: 'Supervisor approval required',
+  recollection_approval: 'Recollection awaiting supervisor approval',
 };
 
 function stageFromTestStatus(status: TestStatus): WorkItemStage {
@@ -88,8 +92,11 @@ export function deriveWorkItemState(
       blockedReason = 'amendment_pending';
     } else if (context.escalationReasonCode === 'LIMIT-HIT') {
       blockedReason = 'retry_limit';
+    } else if (context.escalationReasonCode === 'REJ-SAMP') {
+      blockedReason = 'recollection_limit';
+    } else {
+      blockedReason = 'supervisor_review';
     }
-    // Note: REJ-SAMP reason code has no active trigger path, removed from handling
   } else if (context.sampleStatus === 'rejected') {
     blockedReason = 'sample_rejected';
   } else if (context.sampleIsRecollection && stage === 'awaiting_collection') {

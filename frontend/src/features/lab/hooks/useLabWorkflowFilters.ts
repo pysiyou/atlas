@@ -21,6 +21,13 @@ export interface UseLabWorkflowFiltersOptions<T, S> {
   getQueueSince?: (item: T) => string | undefined;
 }
 
+export interface LabQueueFilterState<S> {
+  searchQuery: string;
+  dateRange: [Date, Date] | null;
+  sampleTypeFilters: string[];
+  statusFilters: S[];
+}
+
 function applyDateRange<T>(
   out: T[],
   dateRange: [Date, Date] | null,
@@ -40,6 +47,56 @@ function applyDateRange<T>(
   });
 }
 
+/** Apply the same lab queue filters used by workflow views (search, date, sample type, priority). */
+export function applyLabQueueFilters<T, S>({
+  items,
+  filters,
+  getOrderDate,
+  getSampleType,
+  getStatus,
+  searchFilterFn,
+  sortByQueuePriority = false,
+  getPriority,
+  getQueueSince,
+  applyStatusFilter = true,
+}: {
+  items: T[];
+  filters: LabQueueFilterState<S>;
+  getOrderDate: (item: T) => string | undefined;
+  getSampleType: (item: T) => string | undefined;
+  getStatus: (item: T) => S | undefined;
+  searchFilterFn: (item: T, query: string) => boolean;
+  sortByQueuePriority?: boolean;
+  getPriority?: (item: T) => string | undefined;
+  getQueueSince?: (item: T) => string | undefined;
+  /** When false, priority/status filters are skipped (e.g. recollection requests without priority). */
+  applyStatusFilter?: boolean;
+}): T[] {
+  let out = items;
+  out = applyDateRange(out, filters.dateRange, getOrderDate);
+  if (filters.sampleTypeFilters.length > 0) {
+    out = out.filter(item => {
+      const st = getSampleType(item);
+      return st && filters.sampleTypeFilters.includes(st);
+    });
+  }
+  if (applyStatusFilter && filters.statusFilters.length > 0) {
+    out = out.filter(item => {
+      const s = getStatus(item);
+      return s != null && filters.statusFilters.includes(s);
+    });
+  }
+  if (filters.searchQuery.trim()) {
+    out = out.filter(item => searchFilterFn(item, filters.searchQuery));
+  }
+  if (sortByQueuePriority && getPriority && getQueueSince) {
+    out = [...out].sort((a, b) =>
+      compareQueuePriority(getPriority(a), getPriority(b), getQueueSince(a), getQueueSince(b))
+    );
+  }
+  return out;
+}
+
 export function useLabWorkflowFilters<T, S>({
   items,
   getOrderDate,
@@ -57,52 +114,45 @@ export function useLabWorkflowFilters<T, S>({
   const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
   const [statusFilters, setStatusFilters] = useState<S[]>(initialStatusFilters);
 
-  const filteredItems = useMemo(() => {
-    let out = items;
-    out = applyDateRange(out, dateRange, getOrderDate);
-    if (sampleTypeFilters.length > 0) {
-      out = out.filter(item => {
-        const st = getSampleType(item);
-        return st && sampleTypeFilters.includes(st);
-      });
-    }
-    if (statusFilters.length > 0) {
-      out = out.filter(item => {
-        const s = getStatus(item);
-        return s != null && statusFilters.includes(s);
-      });
-    }
-    if (searchQuery.trim()) {
-      out = out.filter(item => searchFilterFn(item, searchQuery));
-    }
-    if (sortByQueuePriority && getPriority && getQueueSince) {
-      out = [...out].sort((a, b) =>
-        compareQueuePriority(
-          getPriority(a),
-          getPriority(b),
-          getQueueSince(a),
-          getQueueSince(b)
-        )
-      );
-    }
-    return out;
-  }, [
-    items,
-    dateRange,
-    sampleTypeFilters,
-    statusFilters,
-    searchQuery,
-    getOrderDate,
-    getSampleType,
-    getStatus,
-    searchFilterFn,
-    sortByQueuePriority,
-    getPriority,
-    getQueueSince,
-  ]);
+  const filterState = useMemo<LabQueueFilterState<S>>(
+    () => ({
+      searchQuery,
+      dateRange,
+      sampleTypeFilters,
+      statusFilters,
+    }),
+    [searchQuery, dateRange, sampleTypeFilters, statusFilters]
+  );
+
+  const filteredItems = useMemo(
+    () =>
+      applyLabQueueFilters({
+        items,
+        filters: filterState,
+        getOrderDate,
+        getSampleType,
+        getStatus,
+        searchFilterFn,
+        sortByQueuePriority,
+        getPriority,
+        getQueueSince,
+      }),
+    [
+      items,
+      filterState,
+      getOrderDate,
+      getSampleType,
+      getStatus,
+      searchFilterFn,
+      sortByQueuePriority,
+      getPriority,
+      getQueueSince,
+    ]
+  );
 
   return {
     filteredItems,
+    filterState,
     searchQuery,
     setSearchQuery,
     dateRange,

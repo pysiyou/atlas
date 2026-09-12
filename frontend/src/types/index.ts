@@ -27,7 +27,7 @@ export type {
   CollectedSample,
   RejectedSample,
 } from './sample';
-export { isCollectedSample } from './sample'; // Export value (function)
+export { isCollectedSample, isRejectedSample } from './sample';
 export type { User, AuthUser } from './user';
 export type { PaginatedResponse, PaginationMeta } from './pagination';
 export type {

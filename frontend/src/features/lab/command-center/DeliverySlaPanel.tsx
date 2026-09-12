@@ -44,7 +44,7 @@ function SlaContent({ sla }: { sla: SlaPerformanceResponse }) {
           ]}
           centerLabel={`${sla.onTimeRate}%`}
           centerDetail="on time"
-          centerTone="text-success-fg-emphasis"
+          centerTone="success"
         />
       }
     >
@@ -64,7 +64,8 @@ function SlaContent({ sla }: { sla: SlaPerformanceResponse }) {
           label="On time"
           value={sla.onTimeCount.toLocaleString()}
           detail={`${sla.onTimeRate}%`}
-          valueTone="text-success-fg-emphasis"
+          tone="success"
+          active
         />
         {sla.delaySeverity[0] && (
           <LegendRow
@@ -80,7 +81,8 @@ function SlaContent({ sla }: { sla: SlaPerformanceResponse }) {
           label="Delayed"
           value={sla.delayedCount.toLocaleString()}
           detail={`${sla.delayedRate}%`}
-          valueTone="text-warning-fg-emphasis"
+          tone="warning"
+          active
         />
         {sla.delaySeverity[1] && (
           <LegendRow

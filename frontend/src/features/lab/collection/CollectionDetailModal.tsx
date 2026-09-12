@@ -11,6 +11,9 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/query';
+import { sampleAPI } from '@/features/lab/api/samples.api';
 import type { ContainerType, RejectedSample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import Barcode from 'react-barcode';
@@ -26,7 +29,9 @@ import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
 import { useSampleLookup } from '@/features/lab/api/samples.api';
 import { getTestNames } from '@/features/catalog/utils';
-import { LabDetailModal } from '../components/LabDetailModal';
+import { LabDetailModal, ModalFooter } from '../components/LabDetailModal';
+import { LabHistoryPanel } from '../components/LabHistoryPanel';
+import { Button } from '@/components';
 import type { SampleDisplay } from '@/features/lab/types';
 
 interface CollectionDetailModalProps {
@@ -41,6 +46,7 @@ interface CollectionDetailModalProps {
     selectedColor?: string,
     containerType?: ContainerType
   ) => void;
+  readOnly?: boolean;
 }
 
 // Large component is necessary for comprehensive collection detail modal with multiple sections, status management, and conditional rendering
@@ -51,6 +57,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
   sampleId,
   pendingSampleDisplay,
   onCollect,
+  readOnly = false,
   // High complexity is necessary for comprehensive modal content with multiple conditional sections and state management
   // eslint-disable-next-line complexity
 }) => {
@@ -63,7 +70,13 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
 
   const getTest = useCallback((code: string) => tests.find(t => t.code === code), [tests]);
 
-  const sample = sampleId ? getSample(sampleId) : pendingSampleDisplay?.sample;
+  const cachedSample = sampleId ? getSample(sampleId) : undefined;
+  const { data: fetchedSample } = useQuery({
+    queryKey: queryKeys.samples.byId(sampleId ?? ''),
+    queryFn: () => sampleAPI.getById(sampleId!),
+    enabled: isOpen && !!sampleId && !cachedSample,
+  });
+  const sample = cachedSample ?? fetchedSample ?? pendingSampleDisplay?.sample;
   const order = pendingSampleDisplay?.order || (sample ? getOrder(sample.orderId) : undefined);
   const requirement = pendingSampleDisplay?.requirement;
 
@@ -184,7 +197,15 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
         orderId,
         referringPhysician: order?.referringPhysician,
       }}
-      footer={footerContent}
+      footer={
+        readOnly ? (
+          <ModalFooter statusMessage="">
+            <Button onClick={onClose} variant="cancel" size="md">Close</Button>
+          </ModalFooter>
+        ) : (
+          footerContent
+        )
+      }
       additionalContextInfo={
         <>
           {/* Barcode */}
@@ -225,6 +246,9 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
         collectionNotes={collectionNotes}
         gridSections={gridSections}
       />
+      {sample.sampleId && (
+        <LabHistoryPanel entityType="sample" entityId={Number(sample.sampleId)} />
+      )}
     </LabDetailModal>
   );
 };

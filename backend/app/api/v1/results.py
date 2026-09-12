@@ -142,13 +142,63 @@ class PendingEscalationItemResponse(BaseModel):
         from_attributes = True
 
 
+def _enrich_order_test(
+    t: OrderTest,
+    samples_by_id: dict[int, Sample],
+    tickets_by_test: Optional[dict[int, EscalationTicket]] = None,
+) -> PendingEscalationItemResponse:
+    order = t.order
+    patient = order.patient if order else None
+    sample = samples_by_id.get(t.sampleId) if t.sampleId else None
+    test_def = t.test
+    ticket = tickets_by_test.get(t.id) if tickets_by_test else None
+    return PendingEscalationItemResponse(
+        id=t.id,
+        orderId=t.orderId,
+        orderDate=order.orderDate,
+        patientId=order.patientId,
+        patientName=patient.fullName if patient else "Unknown",
+        patientDob=patient.dateOfBirth if patient else None,
+        testCode=t.testCode,
+        testName=test_def.displayName if test_def else t.testCode,
+        sampleType=test_def.sampleType if test_def else "Unknown",
+        status=t.status.value,
+        sampleId=t.sampleId,
+        results=t.results,
+        resultEnteredAt=t.resultEnteredAt,
+        enteredBy=t.enteredBy,
+        resultValidatedAt=t.resultValidatedAt,
+        validatedBy=t.validatedBy,
+        validationNotes=t.validationNotes,
+        flags=t.flags,
+        technicianNotes=t.technicianNotes,
+        hasCriticalValues=t.hasCriticalValues or False,
+        isRetest=t.isRetest or False,
+        retestOfTestId=t.retestOfTestId,
+        retestNumber=t.retestNumber or 0,
+        priority=order.priority.value if order and order.priority else "low",
+        referringPhysician=order.referringPhysician if order else None,
+        collectedAt=sample.collectedAt if sample else None,
+        collectedBy=sample.collectedBy if sample else None,
+        sampleIsRecollection=sample.isRecollection if sample else False,
+        sampleOriginalSampleId=sample.originalSampleId if sample else None,
+        sampleRecollectionReason=sample.recollectionReason if sample else None,
+        sampleRecollectionAttempt=sample.recollectionAttempt if sample else None,
+        ticketId=ticket.id if ticket else None,
+        reasonCode=ticket.reasonCode.value if ticket and ticket.reasonCode else None,
+        severity=ticket.severity.value if ticket and ticket.severity else None,
+        ticketMetadata=ticket.ticketMetadata if ticket else None,
+    )
+
+
 @router.get("/results/pending-escalation", response_model=List[PendingEscalationItemResponse])
 def get_pending_escalation(
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_escalation_resolver)
+    current_user: User = Depends(require_lab_tech),
 ):
     """
-    Get tests pending escalation resolution (admin/labtech_plus only).
+    Get tests pending escalation resolution.
+    Readable by all lab tech roles (command center visibility); resolution remains restricted.
     Returns enriched list (order + patient + test + sample context) for Escalation tab.
     """
     tests = (
@@ -180,52 +230,47 @@ def get_pending_escalation(
         for ticket in open_tickets:
             tickets_by_test[ticket.orderTestId] = ticket
 
-    out = []
-    for t in tests:
-        order = t.order
-        patient = order.patient if order else None
-        sample = samples_by_id.get(t.sampleId) if t.sampleId else None
-        test_def = t.test
-        out.append(
-            PendingEscalationItemResponse(
-                id=t.id,
-                orderId=t.orderId,
-                orderDate=order.orderDate,
-                patientId=order.patientId,
-                patientName=patient.fullName if patient else "Unknown",
-                patientDob=patient.dateOfBirth if patient else None,
-                testCode=t.testCode,
-                testName=test_def.displayName if test_def else t.testCode,
-                sampleType=test_def.sampleType if test_def else "Unknown",
-                status=t.status.value,
-                sampleId=t.sampleId,
-                results=t.results,
-                resultEnteredAt=t.resultEnteredAt,
-                enteredBy=t.enteredBy,
-                resultValidatedAt=t.resultValidatedAt,
-                validatedBy=t.validatedBy,
-                validationNotes=t.validationNotes,
-                flags=t.flags,
-                technicianNotes=t.technicianNotes,
-                hasCriticalValues=t.hasCriticalValues or False,
-                isRetest=t.isRetest or False,
-                retestOfTestId=t.retestOfTestId,
-                retestNumber=t.retestNumber or 0,
-                priority=order.priority.value if order and order.priority else "low",
-                referringPhysician=order.referringPhysician if order else None,
-                collectedAt=sample.collectedAt if sample else None,
-                collectedBy=sample.collectedBy if sample else None,
-                sampleIsRecollection=sample.isRecollection if sample else False,
-                sampleOriginalSampleId=sample.originalSampleId if sample else None,
-                sampleRecollectionReason=sample.recollectionReason if sample else None,
-                sampleRecollectionAttempt=sample.recollectionAttempt if sample else None,
-                ticketId=tickets_by_test[t.id].id if t.id in tickets_by_test else None,
-                reasonCode=tickets_by_test[t.id].reasonCode.value if t.id in tickets_by_test else None,
-                severity=tickets_by_test[t.id].severity.value if t.id in tickets_by_test else None,
-                ticketMetadata=tickets_by_test[t.id].ticketMetadata if t.id in tickets_by_test else None,
-            )
+    return [_enrich_order_test(t, samples_by_id, tickets_by_test) for t in tests]
+
+
+@router.get("/results/order-tests/{orderTestId}", response_model=PendingEscalationItemResponse)
+def get_order_test_context(
+    orderTestId: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Get enriched order test context for detail/history modals."""
+    order_test = (
+        db.query(OrderTest)
+        .filter(OrderTest.id == orderTestId)
+        .options(
+            joinedload(OrderTest.order).joinedload(Order.patient),
+            joinedload(OrderTest.test),
         )
-    return out
+        .first()
+    )
+    if not order_test:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Order test {orderTestId} not found")
+
+    samples_by_id: dict[int, Sample] = {}
+    if order_test.sampleId:
+        sample = db.query(Sample).filter(Sample.sampleId == order_test.sampleId).first()
+        if sample:
+            samples_by_id[sample.sampleId] = sample
+
+    tickets_by_test: dict[int, EscalationTicket] = {}
+    open_ticket = (
+        db.query(EscalationTicket)
+        .filter(
+            EscalationTicket.orderTestId == orderTestId,
+            EscalationTicket.status == EscalationTicketStatus.OPEN,
+        )
+        .first()
+    )
+    if open_ticket:
+        tickets_by_test[orderTestId] = open_ticket
+
+    return _enrich_order_test(order_test, samples_by_id, tickets_by_test)
 
 
 @router.post("/results/order-tests/{orderTestId}")

@@ -8,6 +8,7 @@ import {
 } from './EscalationResolutionActions';
 
 interface EscalationResolutionFooterProps {
+  orderTestId?: number;
   canResolveEscalation: boolean;
   resolving: boolean;
   requiresReadBack: boolean;
@@ -44,6 +45,7 @@ export const EscalationResolutionFooter: React.FC<EscalationResolutionFooterProp
       ) : (
         <EscalationResolutionActions
           {...actionProps}
+          orderTestId={props.orderTestId}
           hasResults={props.hasResults ?? false}
           resolving={resolving}
           onValidationError={(title, subtitle) => toast.error({ title, subtitle })}

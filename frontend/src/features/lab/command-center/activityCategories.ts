@@ -3,6 +3,7 @@
  */
 
 import type { IconName } from '@/components';
+import type { BadgeVariant } from '@/components/primitives/badgeHelpers';
 import { ICONS } from '@/config/icons';
 import type { TimelineEvent } from '../api/commandCenter.api';
 import type { CommandCenterTimelineTone } from './components/styles';
@@ -19,7 +20,7 @@ export interface TimelineCategoryConfig {
   id: TimelineEventCategory;
   label: string;
   icon: IconName;
-  pillClass: string;
+  badgeVariant: BadgeVariant;
   iconWrapClass: string;
   iconClass: string;
 }
@@ -82,7 +83,7 @@ export const TIMELINE_CATEGORY_CONFIG: Record<TimelineEventCategory, TimelineCat
     id: 'specimen',
     label: 'Specimen',
     icon: ICONS.lab.sampleTube,
-    pillClass: 'bg-info-bg text-info-fg-emphasis border-info-fg/20',
+    badgeVariant: 'collected',
     iconWrapClass: 'bg-info-bg border-info-fg/15',
     iconClass: 'text-info-fg-emphasis',
   },
@@ -90,7 +91,7 @@ export const TIMELINE_CATEGORY_CONFIG: Record<TimelineEventCategory, TimelineCat
     id: 'results',
     label: 'Results',
     icon: ICONS.lab.flask,
-    pillClass: 'bg-warning-bg text-warning-fg-emphasis border-warning-fg/20',
+    badgeVariant: 'warning',
     iconWrapClass: 'bg-warning-bg border-warning-fg/15',
     iconClass: 'text-warning-fg-emphasis',
   },
@@ -98,7 +99,7 @@ export const TIMELINE_CATEGORY_CONFIG: Record<TimelineEventCategory, TimelineCat
     id: 'validation',
     label: 'Validation',
     icon: ICONS.actions.checkCircle,
-    pillClass: 'bg-success-bg text-success-fg-emphasis border-success-fg/20',
+    badgeVariant: 'validated',
     iconWrapClass: 'bg-success-bg border-success-fg/15',
     iconClass: 'text-success-fg-emphasis',
   },
@@ -106,7 +107,7 @@ export const TIMELINE_CATEGORY_CONFIG: Record<TimelineEventCategory, TimelineCat
     id: 'escalation',
     label: 'Escalation',
     icon: ICONS.actions.alertCircle,
-    pillClass: 'bg-danger-bg text-danger-fg-emphasis border-danger-fg/20',
+    badgeVariant: 'escalated',
     iconWrapClass: 'bg-danger-bg border-danger-fg/15',
     iconClass: 'text-danger-fg-emphasis',
   },
@@ -114,7 +115,7 @@ export const TIMELINE_CATEGORY_CONFIG: Record<TimelineEventCategory, TimelineCat
     id: 'quality',
     label: 'Quality',
     icon: ICONS.actions.warning,
-    pillClass: 'bg-warning-bg text-warning-fg-emphasis border-warning-fg/20',
+    badgeVariant: 'warning',
     iconWrapClass: 'bg-warning-bg border-warning-fg/15',
     iconClass: 'text-warning-fg-emphasis',
   },
@@ -122,7 +123,7 @@ export const TIMELINE_CATEGORY_CONFIG: Record<TimelineEventCategory, TimelineCat
     id: 'order',
     label: 'Order',
     icon: ICONS.dataFields.document,
-    pillClass: 'bg-tone-neutral-bg text-text-secondary border-border-default',
+    badgeVariant: 'neutral',
     iconWrapClass: 'bg-tone-neutral-bg border-border-default',
     iconClass: 'text-text-secondary',
   },

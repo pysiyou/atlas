@@ -21,6 +21,8 @@ interface ContextInfo {
   patientName: string;
   patientId: string | number;
   orderId: string | number;
+  /** Order test row ID (TST####) when the modal is test-centric */
+  orderTestId?: number;
   referringPhysician?: string;
   /** Patient date of birth for additional identification */
   patientDob?: string;
@@ -125,6 +127,14 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
                       ? displayId.order(contextInfo.orderId)
                       : contextInfo.orderId}
                   </span>
+                  {contextInfo.orderTestId != null && (
+                    <>
+                      <span className="text-text-disabled select-none">|</span>
+                      <span className="entity-id whitespace-nowrap">
+                        {displayId.orderTest(contextInfo.orderTestId)}
+                      </span>
+                    </>
+                  )}
                   {contextInfo.referringPhysician && (
                     <>
                       <span className="text-text-disabled select-none">|</span>

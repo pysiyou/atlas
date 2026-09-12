@@ -132,13 +132,6 @@ const OPS_FILL = {
   danger: 'fill-danger-fg-emphasis',
 } as const;
 
-const OPS_VALUE_TONE = {
-  default: 'text-text-primary',
-  success: 'text-success-fg-emphasis',
-  warning: 'text-warning-fg-emphasis',
-  danger: 'text-danger-fg-emphasis',
-} as const;
-
 function OpsLegend({
   label,
   value,
@@ -155,7 +148,8 @@ function OpsLegend({
       colorClass={OPS_FILL[tone]}
       label={label}
       value={String(value)}
-      valueTone={OPS_VALUE_TONE[tone]}
+      tone={tone}
+      active={tone !== 'default'}
     />
   );
 

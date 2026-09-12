@@ -28,6 +28,10 @@ export const resultAPI = {
     return apiClient.get<TestWithContext[]>('/results/pending-escalation');
   },
 
+  async getOrderTestContext(orderTestId: number): Promise<TestWithContext> {
+    return apiClient.get<TestWithContext>(`/results/order-tests/${orderTestId}`);
+  },
+
   async resolveEscalation(
     payload: EscalationResolveRequest & { orderTestId: number }
   ): Promise<EscalationResolveResult> {
@@ -181,12 +185,13 @@ export function useResolveEscalation() {
 export function usePendingEscalation() {
   const { isAuthenticated, isLoading: isRestoring, hasRole } = useAuthStore();
   const queryClient = useQueryClient();
+  const canViewEscalations = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
 
   const query = useQuery({
     queryKey: queryKeys.results.pendingEscalation(),
     queryFn: () => resultAPI.getPendingEscalation(),
-    enabled: isAuthenticated && !isRestoring && canResolveEscalation,
+    enabled: isAuthenticated && !isRestoring && canViewEscalations,
     ...cacheConfig.dynamic,
     refetchInterval: 15_000,
   });
@@ -197,6 +202,8 @@ export function usePendingEscalation() {
 
   return {
     escalatedTests: (query.data ?? []) as TestWithContext[],
+    canViewEscalations,
+    canResolveEscalation,
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,

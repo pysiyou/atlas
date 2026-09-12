@@ -18,12 +18,16 @@ export function getRejectionToast(result?: QualityIssueResult | null): {
     case 'escalate':
       return {
         title: 'Escalated to supervisor',
-        subtitle: 'This test has been sent to the escalation queue for supervisor review.',
+        subtitle: result.escalationRequired
+          ? 'Re-test limit reached. A supervisor must approve before another run — find it under Awaiting supervisor approval on Review.'
+          : 'This test has been sent to the escalation queue for supervisor review.',
       };
     case 'retry_same_sample':
       return {
-        title: 'Re-test requested',
-        subtitle: 'A new result entry has been created using the same sample.',
+        title: result.escalationRequired ? 'Escalated for re-test approval' : 'Re-test requested',
+        subtitle: result.escalationRequired
+          ? 'Re-test limit reached. The test is on Review awaiting supervisor approval.'
+          : 'A new result entry has been created using the same sample.',
       };
     case 'request_recollection':
       if (result.recollectionRequestId) {

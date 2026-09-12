@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Popover, Icon } from '@/components';
-import { cn } from '@/utils';
+import { cn, displayId } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { PopoverForm } from '../components/PopoverForm';
 import { ICONS } from '@/config/icons';
@@ -98,7 +98,13 @@ export interface EscalationResolveOptions {
   readBack?: CriticalReadBackPayload;
 }
 
+function popoverSubtitle(orderTestId?: number, hint?: string): string {
+  const label = orderTestId != null ? displayId.orderTest(orderTestId) : undefined;
+  return [label, hint].filter(Boolean).join(' · ');
+}
+
 interface EscalationResolutionActionsProps {
+  orderTestId?: number;
   resolving: boolean;
   requiresReadBack: boolean;
   validationNotesForceValidate: string;
@@ -126,6 +132,7 @@ interface EscalationResolutionActionsProps {
 }
 
 export const EscalationResolutionActions: React.FC<EscalationResolutionActionsProps> = ({
+  orderTestId,
   resolving,
   requiresReadBack,
   validationNotesForceValidate,
@@ -148,11 +155,10 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
   hasResults = false,
 }) => {
   const showRetest = hasResults && (!reasonCode || reasonCode === 'LIMIT-HIT');
-  const showRecollect = !reasonCode || reasonCode === 'LIMIT-HIT' || reasonCode === 'REJ-SAMP';
+  const showRecollect = !reasonCode || reasonCode === 'LIMIT-HIT';
   const showApplyAmendment = reasonCode === 'AMEND-RES' && hasResults;
   const showForceValidate =
-    hasResults &&
-    (reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || reasonCode === 'REJ-SAMP' || !reasonCode);
+    hasResults && (reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || !reasonCode);
 
   return (
     <div className="flex items-center gap-2 flex-nowrap">
@@ -162,7 +168,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
           triggerLabel="Force Validate"
           triggerVariant="approve"
           title="Force Validate"
-          subtitle="Validation notes (optional)"
+          subtitle={popoverSubtitle(orderTestId, 'Validation notes (optional)')}
           textareaId="escalation-force-validate-notes"
           placeholder="e.g. Supervisor override after review"
           value={validationNotesForceValidate}
@@ -235,7 +241,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
           triggerLabel="Apply Amendment"
           triggerVariant="approve"
           title="Apply Amendment"
-          subtitle="Validation notes (optional)"
+          subtitle={popoverSubtitle(orderTestId, 'Validation notes (optional)')}
           textareaId="escalation-apply-amendment-notes"
           placeholder="e.g. Supervisor approved corrected values"
           value={validationNotesForceValidate}
@@ -253,7 +259,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
           triggerVariant="secondary"
           triggerIcon={<Icon name={ICONS.actions.loading} />}
           title="Authorize Re-test"
-          subtitle="Reason (recommended)"
+          subtitle={popoverSubtitle(orderTestId, 'Reason (recommended)')}
           textareaId="escalation-authorize-retest-reason"
           placeholder="e.g. One more run with senior tech"
           value={reasonAuthorizeRetest}
@@ -276,7 +282,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
           triggerVariant="secondary"
           triggerIcon={<Icon name={ICONS.dataFields.sampleCollection} />}
           title="Authorize Re-collect"
-          subtitle="Reason (required)"
+          subtitle={popoverSubtitle(orderTestId, 'Reason (required)')}
           textareaId="escalation-authorize-recollect-reason"
           placeholder="e.g. Sample compromised; new collection required"
           value={reasonAuthorizeRecollect}
@@ -302,7 +308,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
         triggerLabel="Cancel Test"
         triggerVariant="reject"
         title="Cancel Test"
-        subtitle="Clinical reason (required)"
+        subtitle={popoverSubtitle(orderTestId, 'Clinical reason (required)')}
         textareaId="escalation-cancel-test-reason"
         placeholder="e.g. Test no longer clinically indicated"
         value={reasonFinalReject}

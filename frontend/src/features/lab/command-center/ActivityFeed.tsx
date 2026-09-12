@@ -11,7 +11,7 @@ import { ENTITY_ID, ENTITY_ID_CLICKABLE } from '@/utils/constants';
 import type { TimelineEvent } from '../api/commandCenter.api';
 import { formatActivityEvent, type EventDetail } from './formatActivityEvent';
 import { getCategoryConfig, getEventCategory, getEventTone } from './activityCategories';
-import { COMMAND_CENTER_TIMELINE } from './components/styles';
+import { COMMAND_CENTER_TIMELINE, COMMAND_CENTER_TYPE } from './components/styles';
 
 export interface ActivityFeedProps {
   events: TimelineEvent[];
@@ -32,7 +32,7 @@ function FeedSkeleton() {
             <Skeleton height={10} width={48} className="mx-auto" />
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex gap-3">
-                <Skeleton circle width={8} height={8} className="mt-1 shrink-0" />
+                <Skeleton circle width={10} height={10} className="mt-1 shrink-0" />
                 <div className="flex-1 space-y-1">
                   <Skeleton height={14} width="70%" />
                   <Skeleton height={12} width="85%" />
@@ -50,12 +50,13 @@ function FeedSkeleton() {
 function FeedDetail({ detail }: { detail: EventDetail }) {
   switch (detail.type) {
     case 'note':
-      return <span className="text-xs text-text-secondary">Notes: {detail.value}</span>;
+      return <span className={COMMAND_CENTER_TYPE.label}>Notes: {detail.value}</span>;
     case 'status':
     case 'sampleType':
       return <Badge variant={detail.value} size="xs" />;
     case 'testCode':
     case 'id':
+    case 'entityRef':
       return <span className={ENTITY_ID}>{detail.value}</span>;
     case 'link':
       return (
@@ -64,11 +65,11 @@ function FeedDetail({ detail }: { detail: EventDetail }) {
         </Link>
       );
     default:
-      return <span className="text-xs text-text-secondary">{detail.value}</span>;
+      return <span className={COMMAND_CENTER_TYPE.label}>{detail.value}</span>;
   }
 }
 
-function FeedEventRow({ event }: { event: TimelineEvent }) {
+function FeedEventRow({ event, isLast }: { event: TimelineEvent; isLast: boolean }) {
   const category = getEventCategory(event.type);
   const categoryConfig = getCategoryConfig(category);
   const tone = getEventTone(event);
@@ -76,15 +77,26 @@ function FeedEventRow({ event }: { event: TimelineEvent }) {
 
   return (
     <li className={COMMAND_CENTER_TIMELINE.eventRow}>
-      <div
-        className={cn(COMMAND_CENTER_TIMELINE.eventDot, COMMAND_CENTER_TIMELINE.toneDot[tone])}
-        aria-hidden="true"
-      />
+      <div className={COMMAND_CENTER_TIMELINE.eventDotTrack}>
+        <div
+          className={cn(COMMAND_CENTER_TIMELINE.eventDot, COMMAND_CENTER_TIMELINE.toneDot[tone])}
+          aria-hidden="true"
+        />
+        {!isLast && (
+          <div
+            className={cn(
+              COMMAND_CENTER_TIMELINE.eventConnectorStem,
+              COMMAND_CENTER_TIMELINE.connectorStem,
+            )}
+            aria-hidden="true"
+          />
+        )}
+      </div>
       <div className={COMMAND_CENTER_TIMELINE.eventBody}>
         <div className={COMMAND_CENTER_TIMELINE.eventTitleRow}>
-          <span className={cn(COMMAND_CENTER_TIMELINE.categoryPill, categoryConfig.pillClass)}>
+          <Badge variant={categoryConfig.badgeVariant} size="xs" className={categoryConfig.iconClass}>
             {categoryConfig.label}
-          </span>
+          </Badge>
           <span className={COMMAND_CENTER_TIMELINE.eventAction}>{formatted.action}</span>
         </div>
         {formatted.details.length > 0 && (
@@ -95,7 +107,7 @@ function FeedEventRow({ event }: { event: TimelineEvent }) {
           </div>
         )}
         {formatted.note && (
-          <p className="mt-0.5 text-xs text-text-tertiary">Notes: {formatted.note}</p>
+          <p className={cn('mt-0.5', COMMAND_CENTER_TYPE.detail)}>Notes: {formatted.note}</p>
         )}
         <p className={COMMAND_CENTER_TIMELINE.eventMeta}>
           {event.performedByName || `User ${event.performedBy}`}
@@ -117,10 +129,9 @@ function FeedGroup({ label, items }: { label: string; items: TimelineEvent[] }) 
         <span className={COMMAND_CENTER_TIMELINE.groupLabel}>{label}</span>
         <div className={COMMAND_CENTER_TIMELINE.groupDivider} />
       </div>
-      <ul className="relative list-none space-y-0">
-        <div className={COMMAND_CENTER_TIMELINE.connector} aria-hidden="true" />
-        {items.map(event => (
-          <FeedEventRow key={event.id} event={event} />
+      <ul className="list-none space-y-0">
+        {items.map((event, index) => (
+          <FeedEventRow key={event.id} event={event} isLast={index === items.length - 1} />
         ))}
       </ul>
     </section>

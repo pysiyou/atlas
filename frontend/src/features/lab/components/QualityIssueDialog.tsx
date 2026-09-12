@@ -1,6 +1,6 @@
 /**
  * QualityIssueDialog - Popover for reporting quality issues on test results.
- * Validator chooses reason + destination (retest / recollect / cancel / escalate).
+ * Validator chooses reason + destination (retest / recollect / cancel).
  */
 
 import React, { useState } from 'react';

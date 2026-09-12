@@ -31,13 +31,7 @@ from app.services.order_status_updater import update_order_status, build_order_c
 from app.services.result_validator import ResultValidatorService
 from app.services.flag_calculator import FlagCalculatorService
 from app.services.escalation_engine import EscalationEngine
-from app.services.escalation_resolver_service import EscalationResolverService
 from app.services.sample_collection import SampleCollectionService
-from app.services.quality import QualityIssueService
-from app.services.recollection_request_service import RecollectionRequestService
-from app.utils.exceptions import LabOperationError
-from app.services.flag_calculator import FlagCalculatorService
-from app.services.escalation_engine import EscalationEngine
 from app.services.quality import QualityIssueService
 from app.services.recollection_request_service import RecollectionRequestService
 from app.utils.exceptions import LabOperationError
@@ -657,24 +651,34 @@ class LabOperationsService:
         if not proposed:
             raise LabOperationError("Amendment ticket has no proposed results", status_code=400)
 
-        # Re-validate proposed results
-        order = self.db.query(Order).filter(Order.id == order_id).first()
-        test_def = self.db.query(Test).filter(Test.testCode == test_code).first()
-        
-        if test_def and order:
-            # Validate results against physiologic limits
-            result_items = self.result_validator.validate_results(
-                proposed, test_def, order.patient
+        order = self.db.query(Order).filter(Order.orderId == order_id).first()
+        test_def = self.db.query(Test).filter(Test.code == test_code).first()
+        result_items = test_def.resultItems if test_def else []
+
+        if result_items:
+            validation_errors = self.result_validator.validate_results(proposed, result_items)
+            if self.result_validator.has_blocking_errors(validation_errors):
+                error_msg = self.result_validator.format_error_message(validation_errors)
+                raise LabOperationError(error_msg, status_code=400, error_code="VALIDATION_ERROR")
+
+        patient = order.patient if order else None
+        patient_gender = patient.gender.value if patient and patient.gender else None
+        patient_dob = patient.dateOfBirth if patient else None
+
+        flags = []
+        if result_items:
+            flags = self.flag_calculator.calculate_flags(
+                results=proposed,
+                result_items=result_items,
+                patient_gender=patient_gender,
+                patient_dob=patient_dob,
             )
-            # Recalculate flags
-            updated_results = self.flag_calculator.calculate_flags(
-                result_items, test_def
-            )
-            order_test.results = updated_results
-            order_test.hasCriticalValues = any(r.get('isCritical') for r in updated_results)
-        else:
-            # Fallback if test definition is missing
-            order_test.results = proposed
+
+        order_test.results = self._results_to_json_serializable(proposed)
+        if flags:
+            order_test.flags = self.flag_calculator.flags_to_string_list(flags)
+            flag_modified(order_test, "flags")
+        order_test.hasCriticalValues = self.flag_calculator.has_critical_values(flags)
         
         order_test.resultValidatedAt = datetime.now(timezone.utc)
         order_test.validatedBy = str(user_id)

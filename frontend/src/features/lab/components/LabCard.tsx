@@ -21,6 +21,8 @@ import {
 interface PatientContext {
   patientName?: string;
   orderId: number;
+  /** Order test row ID (TST####) for entry/validation/escalation cards */
+  orderTestId?: number;
   referringPhysician?: string;
 }
 
@@ -99,6 +101,12 @@ export const LabCard: React.FC<LabCardProps> = ({
                 </>
               )}
               <span className="entity-id">{displayId.order(context.orderId)}</span>
+              {context.orderTestId != null && (
+                <>
+                  <span className={LAB_CARD_CONTEXT.separator}>|</span>
+                  <span className="entity-id">{displayId.orderTest(context.orderTestId)}</span>
+                </>
+              )}
               {context.referringPhysician && (
                 <>
                   <span className={LAB_CARD_CONTEXT.separator}>|</span>

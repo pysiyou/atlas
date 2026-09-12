@@ -3,10 +3,32 @@
  */
 
 import { cn } from '@/utils';
+import {
+  COMMAND_CENTER_TEXT,
+  type CommandCenterTextTone,
+  resolveCommandCenterTextTone,
+} from './styles';
 
 export interface DonutSegment {
   value: number;
   colorClass: string;
+}
+
+function describeFullDonutRing(
+  cx: number,
+  cy: number,
+  outerR: number,
+  innerR: number,
+): string {
+  return [
+    `M ${cx + outerR} ${cy}`,
+    `A ${outerR} ${outerR} 0 1 1 ${cx - outerR} ${cy}`,
+    `A ${outerR} ${outerR} 0 1 1 ${cx + outerR} ${cy}`,
+    `M ${cx + innerR} ${cy}`,
+    `A ${innerR} ${innerR} 0 1 0 ${cx - innerR} ${cy}`,
+    `A ${innerR} ${innerR} 0 1 0 ${cx + innerR} ${cy}`,
+    'Z',
+  ].join(' ');
 }
 
 function describeDonutArc(
@@ -17,6 +39,14 @@ function describeDonutArc(
   startPct: number,
   endPct: number,
 ): string {
+  const span = endPct - startPct;
+  if (span >= 0.9999) {
+    return describeFullDonutRing(cx, cy, outerR, innerR);
+  }
+  if (span <= 0) {
+    return '';
+  }
+
   const startAngle = startPct * 2 * Math.PI - Math.PI / 2;
   const endAngle = endPct * 2 * Math.PI - Math.PI / 2;
   const x1 = cx + outerR * Math.cos(startAngle);
@@ -43,32 +73,40 @@ export function DonutChart({
   size = 80,
   centerLabel,
   centerDetail,
-  centerTone = 'text-text-primary',
+  centerTone = 'default',
+  centerSize = 'sm',
 }: {
   segments: DonutSegment[];
   size?: number;
   centerLabel: string;
   centerDetail?: string;
-  centerTone?: string;
+  centerTone?: CommandCenterTextTone;
+  centerSize?: 'sm' | 'md';
 }) {
   const cx = size / 2;
   const cy = size / 2;
   const outerR = size / 2 - 2;
   const innerR = outerR * 0.62;
-  const total = segments.reduce((sum, segment) => sum + segment.value, 0);
+  const activeSegments = segments.filter(segment => segment.value > 0);
+  const total = activeSegments.reduce((sum, segment) => sum + segment.value, 0);
   let cursor = 0;
 
   const arcs =
     total > 0
-      ? segments.map(segment => {
-          const start = cursor;
-          const end = cursor + segment.value / total;
-          cursor = end;
-          return {
-            d: describeDonutArc(cx, cy, outerR, innerR, start, end),
-            colorClass: segment.colorClass,
-          };
-        })
+      ? activeSegments
+          .map(segment => {
+            const start = cursor;
+            const end = cursor + segment.value / total;
+            cursor = end;
+            const d = describeDonutArc(cx, cy, outerR, innerR, start, end);
+            return d
+              ? {
+                  d,
+                  colorClass: segment.colorClass,
+                }
+              : null;
+          })
+          .filter((arc): arc is { d: string; colorClass: string } => arc !== null)
       : [
           {
             d: describeDonutArc(cx, cy, outerR, innerR, 0, 1),
@@ -84,11 +122,27 @@ export function DonutChart({
         ))}
       </svg>
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-1 text-center">
-        <span className={cn('text-sm font-semibold leading-none tabular-nums', centerTone)}>
+        <span
+          className={cn(
+            'leading-none tabular-nums',
+            centerSize === 'md'
+              ? 'text-base font-light'
+              : 'text-sm font-light',
+            resolveCommandCenterTextTone(centerTone),
+          )}
+        >
           {centerLabel}
         </span>
         {centerDetail && (
-          <span className="mt-0.5 text-[9px] leading-none text-text-tertiary">{centerDetail}</span>
+          <span
+            className={cn(
+              'mt-0.5 leading-none',
+              COMMAND_CENTER_TEXT.centerDetail,
+              centerSize === 'md' ? 'text-xs' : 'text-xxs',
+            )}
+          >
+            {centerDetail}
+          </span>
         )}
       </div>
     </div>
@@ -100,25 +154,46 @@ export function LegendRow({
   label,
   value,
   detail,
-  valueTone = 'text-text-primary',
+  tone = 'default',
+  active = true,
+  size = 'sm',
 }: {
   colorClass: string;
   label: string;
   value: string;
   detail?: string;
-  valueTone?: string;
+  tone?: CommandCenterTextTone;
+  active?: boolean;
+  size?: 'sm' | 'md';
 }) {
   const swatchClass = colorClass.replace('fill-', 'bg-');
+  const isMd = size === 'md';
 
   return (
-    <div className="flex items-center justify-between gap-2 text-xxs">
-      <span className="flex min-w-0 items-center gap-1.5 truncate text-text-secondary">
-        <span className={cn('h-1.5 w-1.5 shrink-0 rounded-sm', swatchClass)} />
+    <div className={cn('flex items-center justify-between gap-2', isMd ? 'text-xs' : 'text-xxs')}>
+      <span className={cn('flex min-w-0 items-center gap-1.5 truncate', COMMAND_CENTER_TEXT.label)}>
+        <span
+          className={cn(
+            'shrink-0 rounded-sm',
+            swatchClass,
+            isMd ? 'h-2 w-2' : 'h-1.5 w-1.5',
+          )}
+        />
         {label}
       </span>
       <span className="shrink-0 text-right">
-        <span className={cn('tabular-nums font-medium', valueTone)}>{value}</span>
-        {detail && <span className="ml-1 tabular-nums text-text-tertiary">{detail}</span>}
+        <span
+          className={cn(
+            'tabular-nums font-light',
+            isMd ? 'text-sm' : '',
+            resolveCommandCenterTextTone(tone, active),
+          )}
+        >
+          {value}
+        </span>
+        {detail && (
+          <span className={cn('ml-1 tabular-nums', COMMAND_CENTER_TEXT.detail)}>{detail}</span>
+        )}
       </span>
     </div>
   );
@@ -131,20 +206,4 @@ export function StatLine({ label, value }: { label: string; value: string }) {
       <span className="text-text-secondary">{value}</span>
     </p>
   );
-}
-
-export function ColumnHeader({ title }: { title: string }) {
-  return (
-    <p className="text-[9px] font-medium uppercase tracking-wide text-text-tertiary">{title}</p>
-  );
-}
-
-export const DELTA_TONE_CLASS = {
-  success: 'text-success-fg-emphasis',
-  warning: 'text-warning-fg-emphasis',
-  danger: 'text-danger-fg-emphasis',
-} as const;
-
-export function formatHours(hours: number): string {
-  return `${hours.toFixed(1)}h`;
 }

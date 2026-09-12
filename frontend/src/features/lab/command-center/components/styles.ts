@@ -8,18 +8,71 @@ export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 
 
 export type CommandCenterTimelineTone = 'problem' | 'resolution' | 'neutral';
 
+export type CommandCenterTextTone = 'default' | 'success' | 'warning' | 'danger';
+
+export const COMMAND_CENTER_TEXT = {
+  panelTitle: 'text-text-primary',
+  panelMeta: 'text-text-tertiary',
+  sectionTitle: 'text-text-tertiary',
+  sectionAside: 'text-text-tertiary',
+  summary: 'text-text-tertiary',
+  label: 'text-text-primary',
+  value: 'text-text-primary',
+  detail: 'text-text-tertiary',
+  centerLabel: 'text-text-primary',
+  centerDetail: 'text-text-tertiary',
+  empty: 'text-text-tertiary',
+} as const;
+
+export const COMMAND_CENTER_TEXT_TONE: Record<CommandCenterTextTone, string> = {
+  default: COMMAND_CENTER_TEXT.value,
+  success: 'text-success-fg-emphasis',
+  warning: 'text-warning-fg-emphasis',
+  danger: 'text-danger-fg-emphasis',
+};
+
+export type CommandCenterBadgeTextTone = 'danger' | 'warning' | 'info' | 'success' | 'neutral';
+
+/** Category badge text — matches pre-Badge pill emphasis colors */
+export const COMMAND_CENTER_BADGE_TEXT: Record<CommandCenterBadgeTextTone, string> = {
+  danger: 'text-danger-fg-emphasis',
+  warning: 'text-warning-fg-emphasis',
+  info: 'text-info-fg-emphasis',
+  success: 'text-success-fg-emphasis',
+  neutral: 'text-text-secondary',
+};
+
+export function resolveCommandCenterTextTone(
+  tone: CommandCenterTextTone = 'default',
+  active = true,
+): string {
+  if (!active || tone === 'default') return COMMAND_CENTER_TEXT.value;
+  return COMMAND_CENTER_TEXT_TONE[tone];
+}
+
+/** @deprecated Use COMMAND_CENTER_TEXT_TONE */
+export const COMMAND_CENTER_TYPE = COMMAND_CENTER_TEXT;
+
+export const DELTA_TONE_CLASS = COMMAND_CENTER_TEXT_TONE;
+
 export const COMMAND_CENTER_PANEL = {
   shell: 'h-full bg-surface rounded border border-border-default shadow-sm overflow-hidden flex flex-col',
   header: 'shrink-0 px-4 py-2.5 border-b border-border-default flex items-center gap-3',
   headerBetween: 'shrink-0 px-4 py-2.5 border-b border-border-default flex items-center justify-between gap-3',
-  title: 'text-sm font-light text-text-primary',
-  meta: 'flex h-6 shrink-0 items-center text-xxs text-text-tertiary',
+  title: `text-sm font-light ${COMMAND_CENTER_TEXT.panelTitle}`,
+  meta: `flex h-6 shrink-0 items-center text-xxs ${COMMAND_CENTER_TEXT.panelMeta}`,
   body: 'flex-1 min-h-0 overflow-hidden',
   page: 'flex-1 min-h-0 min-w-0 overflow-hidden bg-surface-page p-2',
 } as const;
 
 export const COMMAND_CENTER_SECTION = {
-  statLabel: 'text-xxs uppercase tracking-wide text-text-tertiary',
+  /** Inner panel section heading (e.g. Shift Output, Wait Per Step). */
+  title: `text-xxs font-medium uppercase tracking-wide ${COMMAND_CENTER_TEXT.sectionTitle}`,
+  /** Footer note under a section or panel body. */
+  summary: `text-xxs leading-snug ${COMMAND_CENTER_TEXT.summary}`,
+  /** Right-aligned section context (counts, totals). */
+  aside: `shrink-0 text-xxs tabular-nums ${COMMAND_CENTER_TEXT.sectionAside}`,
+  statLabel: `text-xxs font-medium uppercase tracking-wide ${COMMAND_CENTER_TEXT.sectionTitle}`,
 } as const;
 
 export const COMMAND_CENTER_KPI = {
@@ -76,13 +129,14 @@ export const COMMAND_CENTER_TIMELINE = {
     resolution: 'bg-success-fg-emphasis',
     neutral: 'bg-brand',
   } satisfies Record<CommandCenterTimelineTone, string>,
-  eventDot: 'w-2 h-2 rounded-full border-2 border-surface shrink-0 mt-1.5 z-10',
-  categoryPill:
-    'inline-flex shrink-0 items-center rounded border px-1.5 py-px text-xxs font-medium uppercase tracking-wide',
+  connectorStem: 'bg-brand',
+  eventDot: 'relative z-10 mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full border-2 border-surface',
+  eventDotTrack: 'relative flex w-2.5 shrink-0 flex-col items-center self-stretch',
+  eventConnectorStem:
+    'pointer-events-none absolute top-[1.375rem] bottom-0 w-px -translate-x-1/2 left-1/2',
   groupHeader: 'flex items-center gap-2 py-2 sticky top-0 z-1 bg-surface/95 backdrop-blur-sm',
   groupDivider: 'flex-1 h-px bg-border-subtle',
   groupLabel: 'text-xxs font-light text-text-tertiary uppercase tracking-widest',
-  connector: 'absolute top-2 bottom-2 w-px bg-border-subtle pointer-events-none left-[3px]',
   eventRow: 'flex items-start gap-2.5 relative',
   eventBody: 'flex-1 min-w-0 pb-3',
   eventTitleRow: 'flex flex-wrap items-center gap-x-2 gap-y-1',
